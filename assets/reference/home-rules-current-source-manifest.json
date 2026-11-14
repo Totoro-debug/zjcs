@@ -696,5 +696,21 @@
     "conditions": 4496,
     "mop_up_unlock_stages_without_stage_info": []
   },
-  "scope": "Selected raw configuration only; runtime migration and validation remain required."
+  "scope": "Selected raw configuration only; runtime migration and validation remain required.",
+  "installed_outputs": {
+    "unity/Assets/Official/Home/home-rules-current.json": "493eb0be246a11e26f84069ed999021d867f4706d5b9934a33745ec5dc387d03",
+    "unity/Assets/Official/Home/home-rules-current.json.meta": "c3271345d0156aecf93edbf9a525f2653ad4e3e5ff4a3954729f0d767f21dfd9",
+    "unity/Assets/Game/Resources/Home/OfficialCurrentHomeRuleAssetCatalog.asset": "a664f27b499231149e2acf40a92434d104954f2939ef52d4aaf210265b64918e",
+    "unity/Assets/Game/Resources/Home/OfficialCurrentHomeRuleAssetCatalog.asset.meta": "1991d6e165b8d6c163f13199739e2b81302417343a81b6a9ee2145722dd26962"
+  },
+  "bindings_sha256": {
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfficialCurrentHomeRuleAssetCatalog.cs": "98f9c117d05be322cf1e82a7f5bded42e696f48502a86a489da9970c64d46ae1",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/Zjcs.Offline.HomeUI.asmdef": "eb63f0f1f2a6f7e55b498b3e8e076b11a8c049241f8bbd94dc3f7f05c1438b5a"
+  },
+  "validation_sha256": {
+    "scripts/fixtures/home_condition_validation.cs": "9051741882be7762503e8d95d4a8c7eb60b7d595f36e1a6803cf9b8c04e0f6f2",
+    "scripts/validate_home_conditions.py": "d67e8f39bf8232424219b45aa390937b29122c8353180fda9153d5cbbd0eefc5",
+    "scripts/prepare_home_conditions_validation.py": "9d48fcdfe2f8764fcc474f2262f777b32b718e0e2bfac1f6fbf702a4a1667daf"
+  },
+  "installer_sha256": "450e527fabd5eb9d9bf9f9ec91bef96bef04935982af3ae15bbe5e9ecdf5ec88"
 }

@@ -8,6 +8,7 @@ using Zjcs.Official.HomeMainUiControls;
 using Zjcs.Official.Partners;
 using Zjcs.Offline.HomeUI;
 using Zjcs.Offline.Progression;
+using Zjcs.Offline.State;
 
 namespace Zjcs.Offline.HomeHudUI
 {
@@ -64,7 +65,7 @@ namespace Zjcs.Offline.HomeHudUI
             conditions = configuration.Rows("conditions").ToDictionary(row => Convert.ToInt32(row["ClassId"]),
                 row => (Dictionary<string, object>)row["Condition"]);
             player = new OfflineHomeConditionPlayer(configuration, () => profile.Save, ownsFurniture);
-            rules = configuration.CreateConditions(partnerRules);
+            rules = configuration.CreateConditions(partnerRules, OfflineOpeningPolicy.Evaluate);
             notifications = new HomeConditionNotifications(player, Debug.LogException);
         }
 

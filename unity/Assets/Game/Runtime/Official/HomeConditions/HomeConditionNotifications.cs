@@ -438,6 +438,9 @@ case "TotalOpenChestCondition": return ConditionType.TotalOpenChest;
 case "DemonBattleLayerPassCondition": return ConditionType.DemonBattleLayerPass;
 case "TaskSubmitCondition": return ConditionType.TaskSubmit;
 case "TaskCompleteCondition": return ConditionType.TaskComplete;
+case "RegionCodeCondition": return ConditionType.RegionCode;
+case "ServerRankUnlockDaysCondition": return ConditionType.ServerRankUnlockDays;
+case "PlanesMergeActivityEnableCondition": return ConditionType.PlanesMergeActivityEnable;
 default: throw new NotSupportedException("Condition outside migrated notification closure: "+name);
 }
 }

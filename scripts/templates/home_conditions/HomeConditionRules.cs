@@ -32,6 +32,14 @@ namespace Zjcs.Official.HomeConditions
 
     public sealed class HomeConditionRules
     {
+        // Explicit snapshot of the three fields consumed by the original predicate.
+        public sealed class PlanesMergeActivityShareSyncData
+        {
+            public bool IsDisabled;
+            public DateTime StartTime, EndTime;
+        }
+        private readonly Func<PlanesMergeActivityShareSyncData> mergeActivity;
+        private readonly Func<DateTime> activityClock;
         private readonly PartnerConditionRules partnerRules;
         private readonly Dictionary<int, Dictionary<string, object>> conditionRows;
         private readonly Dictionary<int, ICondition> cached = new Dictionary<int, ICondition>();
@@ -40,8 +48,11 @@ namespace Zjcs.Official.HomeConditions
 
         public HomeConditionRules(IEnumerable<Dictionary<string, object>> conditions,
             PartnerConditionRules partnerRules, Func<IReadOnlyDictionary<string, object>, bool?> policy = null,
-            IEnumerable<Dictionary<string, object>> professions = null)
+            IEnumerable<Dictionary<string, object>> professions = null,
+            Func<PlanesMergeActivityShareSyncData> mergeActivity = null, Func<DateTime> activityClock = null)
         {
+            this.mergeActivity=mergeActivity;
+            this.activityClock=activityClock;
             this.partnerRules=partnerRules ?? throw new ArgumentNullException(nameof(partnerRules));
             this.policy=policy;
             professionBaseInfoParser=professions==null ? null : new ProfessionBaseInfoParser(professions);
@@ -90,6 +101,10 @@ namespace Zjcs.Official.HomeConditions
                 case "StagePassCondition": return new StagePassCondition(this) { StageId=Number(node,"StageId"),Op=(string)node["Op"] };
                 case "PlayerProfessionCondition": return new PlayerProfessionCondition(this) { Profession=(Profession)Number(node,"Profession") };
                 case "PlayerProfessionFactionCondition": return new PlayerProfessionFactionCondition(this) { Profession=(Profession)Number(node,"Profession") };
+                case "RegionCodeCondition": return new RegionCodeCondition(this) {
+                    RegionCodes=node["RegionCodes"]==null ? null : ((List<object>)node["RegionCodes"]).Select(value=>(RegionCodeEnum)Convert.ToInt32(value)).ToList(),
+                    Not=(bool)node["Not"] };
+                case "PlanesMergeActivityEnableCondition": return new PlanesMergeActivityEnableCondition(this);
                 default: throw new NotSupportedException("Condition outside migrated home closure: "+node["_type"]);
             }
         }
@@ -164,6 +179,7 @@ namespace Zjcs.Official.HomeConditions
         /*RANK*/
         /*ITEM_TYPE*/
         /*PROFESSION*/
+        /*REGION_CODE*/
         /*PROFESSION_PARSER*/
         /*CONDITIONS*/
 

@@ -1,7 +1,7 @@
 {
   "manifest": "884_156692",
   "source_sha256": {
-    "scripts/templates/home_conditions/HomeConditionRules.cs": "fe68b6f3e6d5f7b27046d199cda2a061f8ca758b69c175aca7eb34065e0598cd",
+    "scripts/templates/home_conditions/HomeConditionRules.cs": "be102619c99c4dc3892a54d1ad9d5ce6af78956a7e2bf3b30fc201cbe1e53f79",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ICondition.cs": "12a4005edaf53df080240808b91e6e3e55fc08bceb91fd154e6c3993cdc704ff",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ConditionDataType.cs": "e067894427667bfe5da439df11bef5338c45fa6e3376cdfb307775ecc7ca7921",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ConditionType.cs": "99f4a625e61898abddfef171a4a762e41adc103badf44f9e2bddfcc1ca6ff783",
@@ -9,6 +9,7 @@
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/Rank.cs": "1a91cda306404d54e85e4c2731748da101aca3cf14e9ade5871dffb5e83ce3b6",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemType.cs": "8a1a33483ed28de00b9bc37dd60899ae0cb2fa7d7bd821b42f6e43cdcb3dbcaf",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/Profession.cs": "01c1fedcaeb1cbb24c8c64ef8e1a3dba4159050e41e29ba3d7ba0b3aad550017",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common.LubanGen/RegionCodeEnum.cs": "af8f6997e5991530393e297bbd04557167af397da01fd41bcfe3bc1b562a5e14",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/HasItemTypeCondition.cs": "6da637782893312e7684ec945db2a108b4271c442f37741852b67e107c5f827f",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/RankCondition.cs": "0164b794e73b71125d18dea7633f1dd1f3ceef0a6bbd11039c6bbe2c15951cdb",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/SubRankCondition.cs": "5754156223f0fba2094056f64be9f558868de2d2bd036201a67cdd9cfef5ce29",
@@ -21,6 +22,8 @@
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/CompositeOrCondition.cs": "b4d4f14990bcc59bb196a4bfcc360df4d38f1142e040ec9015c14211b6530aca",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerProfessionCondition.cs": "aab00582befdfa0170aaaadc7b94fff520a3e7a297778ed094f1d6a207c41655",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerProfessionFactionCondition.cs": "bbdc25a4f79632e1cdc03418324198387dc20994772e5ea79dcc94c158ff3eeb",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RegionCodeCondition.cs": "4d1f14fd4fd30a44f59d0b6ac7eebcd704bdb990e054c34bd800820c7c0f0e21",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesMergeActivityEnableCondition.cs": "3be4a2b0ff9cfaf377bd571521cee5c0c7613ca6e4204cac618402a905a01171",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ProfessionBaseInfoParser.cs": "801c076f2df4bce5ad6db9e9647066af7dc111438bdbc80ec556465381225e10",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/Formula.cs": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/EnumExt.cs": "245e7b2e1352e2e86a3e85227bf8dc0e36b6b3d080c6070d67a403443b805d52",
@@ -77,6 +80,14 @@
       "public override bool IsMet(DataHub dataHub)": "3363979ad519b6bacc6856542fceadbba651064a2d0602fa443d5c1d8ea84683",
       "private Profession GetValue(DataHub dataHub)": "deb09c258a0205cf6a8a62ada95fbb9462a30cc37445a5d2e6fcc2bc98348be5"
     },
+    "RegionCodeCondition": {
+      "public override bool IsMet(DataHub dataHub)": "91444f95bf9e0cbc5423f31c9fd247397056bdcc75355b2f5c1275f7c4916cb5",
+      "public override (long current, long target) GetProgress(DataHub dataHub)": "f29e96debd2ef96d39fb3ad83422cafae1b3f3e196e08913cce2f79a07f00874"
+    },
+    "PlanesMergeActivityEnableCondition": {
+      "public override bool IsMet(DataHub dataHub)": "b8d58acb6010aceda785fd2023a1a26c671c8ad75f32318c115a6e026d4e86b3",
+      "public override (long current, long target) GetProgress(DataHub dataHub)": "f29e96debd2ef96d39fb3ad83422cafae1b3f3e196e08913cce2f79a07f00874"
+    },
     "ProfessionBaseInfoParser": {
       "public bool ExistProfession(Profession pro)": "d02bd5bb90adfe0047d8c1fbc320d777922d1858a6779d4b91f30f577a075357",
       "public bool IsPreProfession(Profession pro, Profession pre, bool recursive = true)": "eeb9046a2901c0dce4307213a0483fab1c1d4637476efa56fd52219a7a6724f5"
@@ -88,8 +99,8 @@
       "public static Rank ToRank(this SubRank subRank)": "6ce5dc2ecbc912b1d8eefcc30f09a77558a2e7237ca8f5cf985e8bc76f5d9beb"
     }
   },
-  "generator_sha256": "f89effce64ae912beb909174e63130206668913d1f2050fb7a6bd2cab9fbdd8e",
-  "configuration_sha256": "c16b24c4c5324ae9e98158f9b55b66985296c81cfbc471333827d2bd50830821",
+  "generator_sha256": "ad2a1c781b980448eebf8005b2e815934c7c9140215d6fadcb8751eb1b0e5a7b",
+  "configuration_sha256": "493eb0be246a11e26f84069ed999021d867f4706d5b9934a33745ec5dc387d03",
   "closure": {
     "types": [
       "AnyMapGoddessActivedCondition",
@@ -154,7 +165,7 @@
     ]
   },
   "outputs": {
-    "HomeConditionRules.cs": "14cfa3fd7cd7a24ccc99d4857103f0dac8449a182dd0734514b42bcbe5a18d4f"
+    "HomeConditionRules.cs": "93deeefb3b6d0ad398b2e3a224fbea814225126ca374e692c5243fe6adb39061"
   },
   "adaptations": [
     "Original IsMet/helper/compare methods and enum identities, with diagnostic logging omitted.",
@@ -165,7 +176,7 @@
   ],
   "installed_outputs": {
     "unity/Assets/Game/Runtime/Official/HomeConditions.meta": "dadfa5424eb9159b5367ebffb71b1644078c236e1f39b57f2e5ae3511ef28e88",
-    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionRules.cs": "14cfa3fd7cd7a24ccc99d4857103f0dac8449a182dd0734514b42bcbe5a18d4f",
+    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionRules.cs": "93deeefb3b6d0ad398b2e3a224fbea814225126ca374e692c5243fe6adb39061",
     "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionRules.cs.meta": "353c3ce2021a27fb86a16a74ef45e627ad2eecc8836870f973a1ee59bbab0776",
     "unity/Assets/Game/Runtime/Official/HomeConditions/Zjcs.Official.HomeConditions.asmdef": "dbd35eaf68cab6303e5b0fa05d4a86a3493d66592ff10989b0570f09c771df31",
     "unity/Assets/Game/Runtime/Official/HomeConditions/Zjcs.Official.HomeConditions.asmdef.meta": "d5aa6a12212b0f7aba960a1c92b6ba27186056a474c57bd83b4c282b9924addf",
@@ -174,10 +185,10 @@
   },
   "bindings_sha256": {
     "unity/Assets/Game/Runtime/Offline/HomeUI/OfficialCurrentHomeRuleAssetCatalog.cs": "98f9c117d05be322cf1e82a7f5bded42e696f48502a86a489da9970c64d46ae1",
-    "unity/Assets/Game/Runtime/Offline/HomeUI/Zjcs.Offline.HomeUI.asmdef": "823fb2eb7a67d1f39ec7bb725ed8742ad3f342756ece21078f982fd429664dd5"
+    "unity/Assets/Game/Runtime/Offline/HomeUI/Zjcs.Offline.HomeUI.asmdef": "eb63f0f1f2a6f7e55b498b3e8e076b11a8c049241f8bbd94dc3f7f05c1438b5a"
   },
   "validation_sha256": {
-    "scripts/fixtures/home_condition_validation.cs": "e83a92fa0055265be6620013132da58312465d2abacc1ddbc730e0d45a372894",
+    "scripts/fixtures/home_condition_validation.cs": "9051741882be7762503e8d95d4a8c7eb60b7d595f36e1a6803cf9b8c04e0f6f2",
     "scripts/validate_home_conditions.py": "d67e8f39bf8232424219b45aa390937b29122c8353180fda9153d5cbbd0eefc5",
     "scripts/prepare_home_conditions_validation.py": "9d48fcdfe2f8764fcc474f2262f777b32b718e0e2bfac1f6fbf702a4a1667daf"
   },

@@ -1,10 +1,10 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "549d076906627e934c1bfe9d4ee8c737a622ea0d4a40040a1a16cc97296464a5",
+  "generator_sha256": "206bfe647575469f9e305c933e0e8fc2ec4a3ed85d9404fe937ee374152df8d3",
   "inputs": {
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ConditionType.cs": "99f4a625e61898abddfef171a4a762e41adc103badf44f9e2bddfcc1ca6ff783",
-    "assets/reference/home-condition-source-manifest.json": "133020ba84ee89afc1429ea63d14a8c13daa3500d1565bf706f4ff34bed05d06",
-    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionRules.cs": "14cfa3fd7cd7a24ccc99d4857103f0dac8449a182dd0734514b42bcbe5a18d4f",
+    "assets/reference/home-condition-source-manifest.json": "3269a60fe7c72d295968030bd98eb03c6aa94631daf24a6001bb72d7925654ab",
+    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionRules.cs": "93deeefb3b6d0ad398b2e3a224fbea814225126ca374e692c5243fe6adb39061",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ConditionHandler.cs": "b572aebc41f832d87438c6e824266fde24314ed8f41d7d03c357c285e34f4ebd",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ConditionInfoParser.cs": "ba10895470c4d9d3b330852b968504dd955009179bb75b3685ea67eed998981f",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/NoneCondition.cs": "f52b9e5e8f51ffec64b2781a9a0395ca38f6032ed367960a6198fdd803ad586f",
@@ -30,7 +30,10 @@
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/TotalOpenChestCondition.cs": "8203555b64f53b243e2c62867169d164c18b8bbf85f5be95c2f8ebcd8f44ea55",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/DemonBattleLayerPassCondition.cs": "f9036f38526802373d8edf31d4828c6f771d82afba3c81ac2595f98f5180525a",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/TaskSubmitCondition.cs": "4496a73b13d8647b36d3d43c5082256ef12664146e776787d23399aa246ed116",
-    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TaskCompleteCondition.cs": "912550c79035a77c2be6f38c6b9327fdda9be24c8199ff337215602d116c8940"
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TaskCompleteCondition.cs": "912550c79035a77c2be6f38c6b9327fdda9be24c8199ff337215602d116c8940",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RegionCodeCondition.cs": "4d1f14fd4fd30a44f59d0b6ac7eebcd704bdb990e054c34bd800820c7c0f0e21",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ServerRankUnlockDaysCondition.cs": "f699a9792e9994ed535a006c7dc097316bb9bdafc61d903ceecab5dc7a95ac46",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesMergeActivityEnableCondition.cs": "3be4a2b0ff9cfaf377bd571521cee5c0c7613ca6e4204cac618402a905a01171"
   },
   "methods": {
     "ConditionHandler": {
@@ -70,7 +73,7 @@
     }
   },
   "outputs": {
-    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionNotifications.cs": "3e363af3f4b9b06d5b38929b6ab521764afa06914af0466da9fac8e752821d07",
+    "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionNotifications.cs": "3a28867cc3c6fa870bdf767f5cb81f52e3a07b595fe6da31931888ed667ee139",
     "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionNotifications.cs.meta": "ba35666248606ac8c1115f72e78bde9328d30c28baff5ad9a923db72f636c35e"
   },
   "adaptations": [

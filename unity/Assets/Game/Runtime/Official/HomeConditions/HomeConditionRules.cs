@@ -33,6 +33,14 @@ namespace Zjcs.Official.HomeConditions
 
     public sealed class HomeConditionRules
     {
+        // Explicit snapshot of the three fields consumed by the original predicate.
+        public sealed class PlanesMergeActivityShareSyncData
+        {
+            public bool IsDisabled;
+            public DateTime StartTime, EndTime;
+        }
+        private readonly Func<PlanesMergeActivityShareSyncData> mergeActivity;
+        private readonly Func<DateTime> activityClock;
         private readonly PartnerConditionRules partnerRules;
         private readonly Dictionary<int, Dictionary<string, object>> conditionRows;
         private readonly Dictionary<int, ICondition> cached = new Dictionary<int, ICondition>();
@@ -41,8 +49,11 @@ namespace Zjcs.Official.HomeConditions
 
         public HomeConditionRules(IEnumerable<Dictionary<string, object>> conditions,
             PartnerConditionRules partnerRules, Func<IReadOnlyDictionary<string, object>, bool?> policy = null,
-            IEnumerable<Dictionary<string, object>> professions = null)
+            IEnumerable<Dictionary<string, object>> professions = null,
+            Func<PlanesMergeActivityShareSyncData> mergeActivity = null, Func<DateTime> activityClock = null)
         {
+            this.mergeActivity=mergeActivity;
+            this.activityClock=activityClock;
             this.partnerRules=partnerRules ?? throw new ArgumentNullException(nameof(partnerRules));
             this.policy=policy;
             professionBaseInfoParser=professions==null ? null : new ProfessionBaseInfoParser(professions);
@@ -91,6 +102,10 @@ namespace Zjcs.Official.HomeConditions
                 case "StagePassCondition": return new StagePassCondition(this) { StageId=Number(node,"StageId"),Op=(string)node["Op"] };
                 case "PlayerProfessionCondition": return new PlayerProfessionCondition(this) { Profession=(Profession)Number(node,"Profession") };
                 case "PlayerProfessionFactionCondition": return new PlayerProfessionFactionCondition(this) { Profession=(Profession)Number(node,"Profession") };
+                case "RegionCodeCondition": return new RegionCodeCondition(this) {
+                    RegionCodes=node["RegionCodes"]==null ? null : ((List<object>)node["RegionCodes"]).Select(value=>(RegionCodeEnum)Convert.ToInt32(value)).ToList(),
+                    Not=(bool)node["Not"] };
+                case "PlanesMergeActivityEnableCondition": return new PlanesMergeActivityEnableCondition(this);
                 default: throw new NotSupportedException("Condition outside migrated home closure: "+node["_type"]);
             }
         }
@@ -833,6 +848,19 @@ namespace Zjcs.Official.HomeConditions
     Huimiezhe10,
     Zhangkongzhe10
 }
+        public enum RegionCodeEnum
+{
+    CN,
+    TW,
+    HK,
+    MO,
+    JP,
+    KR,
+    HKMOT,
+    US,
+    VN,
+    All
+}
         private sealed class ProfessionBaseInfo { public Profession PrePro; }
 private sealed class ProfessionBaseInfoParser
 {
@@ -1190,6 +1218,64 @@ public PlayerProfessionFactionCondition(HomeConditionRules configuration) : base
             return player.Profession;
         }
         return Profession.None;
+    }
+}
+
+private class RegionCodeCondition : ICondition
+{
+    public List<RegionCodeEnum> RegionCodes;
+
+    public bool Not;
+
+public RegionCodeCondition(HomeConditionRules configuration) : base(configuration) { }
+
+    public override ConditionType Type => ConditionType.RegionCode;
+
+    public override bool IsMet(DataHub dataHub)
+    {
+        RegionCodeEnum item = RegionCodeEnum.CN;
+        bool flag = RegionCodes.Contains(item);
+        if (!Not)
+        {
+            return flag;
+        }
+        return !flag;
+    }
+
+    public override (long current, long target) GetProgress(DataHub dataHub)
+    {
+        return (current: IsMet(dataHub) ? 1 : 0, target: 1L);
+    }
+}
+
+private class PlanesMergeActivityEnableCondition : ICondition
+{
+public PlanesMergeActivityEnableCondition(HomeConditionRules configuration) : base(configuration) { }
+
+    public override ConditionType Type => ConditionType.PlanesMergeActivityEnable;
+
+    public override bool IsMet(DataHub dataHub)
+    {
+        PlanesMergeActivityShareSyncData mergeActivityData = configuration.mergeActivity?.Invoke();
+        if (mergeActivityData == null)
+        {
+            return false;
+        }
+        if (mergeActivityData.IsDisabled)
+        {
+            return false;
+        }
+        DateTime dateTime = (configuration.activityClock ?? throw new InvalidOperationException("The merge activity owner must supply its clock."))();
+        if (dateTime < mergeActivityData.StartTime || dateTime > mergeActivityData.EndTime)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public override (long current, long target) GetProgress(DataHub dataHub)
+    {
+        return (current: IsMet(dataHub) ? 1 : 0, target: 1L);
     }
 }
 

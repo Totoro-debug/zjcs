@@ -1,0 +1,28 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    "scripts/prepare_home_function_menu_player_validation.py": "a10dc05e9e203af7925f30d36be9e5c865b02904878d75f535f8ec255a32279a",
+    "scripts/fixtures/home_function_menu_player_validation.cs": "f68a76cb2b313b9f5f267de4f9badd06d49be09287a562788d09f6e892258c19",
+    "scripts/fixtures/home_function_menu_owner_validation.cs": "c5a6a5a9cf8bf6463b2fdab43563042fb1765d13fa29d08c746ff3e02abd9fab",
+    "scripts/fixtures/home_function_menu_native_validation.cs": "653dafb5343eecb1bea0b18d4db6cba4c9bd4b3c95fbf2a33d94891b1c10b85f",
+    "assets/reference/home-rules-current-source-manifest.json": "b3f8e225377335866e2f0913d1d0dfb53410d33c285f3d9d9b56324d4d8d7839",
+    "assets/reference/home-function-menu-owner-source-manifest.json": "91e4e48054adb9aeed9ca4d72038cb49e38670e3a1c3b993b971f56f16235957",
+    "unity/Assets/Official/Home/home-rules-current.json": "493eb0be246a11e26f84069ed999021d867f4706d5b9934a33745ec5dc387d03",
+    "unity/Assets/Game/Runtime/Offline/HomeHudUI/OfflineHomeHudConditions.cs": "7dc68117ca12fd0fe5462e042d46a45aab166bf736999b9ff08c99f142f98998",
+    "unity/Assets/Game/Runtime/Offline/State/OfflineOpeningPolicy.cs": "ad192967908321d6775b215f99891226616b4cf38cc68e49b99ae8c4a2515030",
+    "assets/reference/home-condition-source-manifest.json": "3269a60fe7c72d295968030bd98eb03c6aa94631daf24a6001bb72d7925654ab",
+    "assets/reference/home-condition-notifications-source-manifest.json": "4cce8f51c785a91009603b9c57df8ec0bc1bb4ce33d2b15bacb413650e9fff36",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RegionCodeCondition.cs": "4d1f14fd4fd30a44f59d0b6ac7eebcd704bdb990e054c34bd800820c7c0f0e21",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common.LubanGen/RegionCodeEnum.cs": "af8f6997e5991530393e297bbd04557167af397da01fd41bcfe3bc1b562a5e14",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlanesMergeActivityEnableCondition.cs": "3be4a2b0ff9cfaf377bd571521cee5c0c7613ca6e4204cac618402a905a01171",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FunctionLimitInfoParser.cs": "77f31a1cbb6033a1ce2647523357c11a34b554b87981392222a87d73ba6852de",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerUtils.cs": "d42ecf412164ea390b19f6437235435261fafe37348cc76ac075e1e2119565ba",
+    ".tools/source-packages/current/884_156692/official-code/client-source/FriendBtn.cs": "fa1ea90e51918a89419d729263aa6eefd9411e442cdc4f357edb12923a4c19e3",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TopListBtn.cs": "6e2029b76e24e6fc46d2231d38550e126703a71df5133baa3b03d8b42adc3947"
+  },
+  "runtime": {
+    "unity/Assets/Game/Runtime/Offline/HomeFunctionMenuUI/OfflineHomeFunctionMenuPlayer.cs": "946182050fd7187848e141c84dabe1f402ed628675f0ad9244cdff6cc2638373",
+    "unity/Assets/Game/Runtime/Offline/HomeFunctionMenuUI/OfflineHomeFunctionMenuPlayer.cs.meta": "f499d367c82279d9f0c9f83e197bf1548ef3ecb2b28612ceb7fdd2a6f040f601"
+  },
+  "scope": "Ordinary local-player function limits use the shared selected HUD condition scope. Explicit notifications only; no GM overrides or promotion transaction implementation. Native friend/ranking visibility does not authorize online functionality."
+}

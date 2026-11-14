@@ -20,7 +20,7 @@ def build(work):
     inputs, methods={}, {}
 
     def source(name):
-        path=code/(name+'.cs');raw=path.read_bytes()
+        path=(code.parent/'Common.LubanGen' if name=='RegionCodeEnum' else code)/(name+'.cs');raw=path.read_bytes()
         inputs[path.relative_to(ROOT).as_posix()]=sha(raw)
         return raw.decode('utf-8-sig').replace('\r\n','\n')
 
@@ -39,8 +39,10 @@ def build(work):
                         .replace('Log.Warn(','Log.Error('),1).replace('public class DataHub','private class DataHub')
     text=text.replace('/*DATA_HUB*/',hub)
     for name,marker in [('ConditionDataType','CONDITION_DATA_TYPE'),('ConditionType','CONDITION_TYPE'),
-                        ('SubRank','SUB_RANK'),('Rank','RANK'),('ItemType','ITEM_TYPE'),('Profession','PROFESSION')]:
-        value=source(name).split('namespace Common;\n',1)[1].strip()
+                        ('SubRank','SUB_RANK'),('Rank','RANK'),('ItemType','ITEM_TYPE'),('Profession','PROFESSION'),
+                        ('RegionCodeEnum','REGION_CODE')]:
+        namespace='Common.LubanGen' if name=='RegionCodeEnum' else 'Common'
+        value=source(name).split('namespace '+namespace+';\n',1)[1].strip()
         text=text.replace('/*'+marker+'*/',value)
     members={
         'HasItemTypeCondition':['ItemType','Count'], 'RankCondition':['Rank','Op'],
@@ -49,6 +51,8 @@ def build(work):
         'StagePassCondition':['StageId','Op'], 'CompositeCondition':['Ids'],
         'CompositeAndCondition':[], 'CompositeOrCondition':[],
         'PlayerProfessionCondition':['Profession'], 'PlayerProfessionFactionCondition':['Profession'],
+        'RegionCodeCondition':['RegionCodes','Not'],
+        'PlanesMergeActivityEnableCondition':[],
     }
     extra={
         'HasItemTypeCondition':[('public override (long current, long target) GetProgress(DataHub dataHub)',0),('protected long GetValue(DataHub dataHub)',1)],
@@ -60,13 +64,15 @@ def build(work):
         'CompositeCondition':[('public List<ICondition> GetConditions()',1)],
         'PlayerProfessionCondition':[('private Profession GetValue(DataHub dataHub)',0)],
         'PlayerProfessionFactionCondition':[('private Profession GetValue(DataHub dataHub)',0)],
+        'RegionCodeCondition':[('public override (long current, long target) GetProgress(DataHub dataHub)',0)],
+        'PlanesMergeActivityEnableCondition':[('public override (long current, long target) GetProgress(DataHub dataHub)',0)],
     }
     classes=[]
     for name,expected in members.items():
         raw=source(name)
-        fields=re.findall(r'^\tpublic (?:int|string|List<int>|ItemType|Rank|SubRank|Profession) (\w+)(?: = [^;]+)?;',raw,re.M)
+        fields=re.findall(r'^\tpublic (?:int|bool|string|List<int>|List<RegionCodeEnum>|ItemType|Rank|SubRank|Profession) (\w+)(?: = [^;]+)?;',raw,re.M)
         if fields!=expected:raise ValueError('Original condition fields changed: '+name)
-        parts=re.findall(r'^\tpublic (?:int|string|List<int>|ItemType|Rank|SubRank|Profession) \w+(?: = [^;]+)?;',raw,re.M)
+        parts=re.findall(r'^\tpublic (?:int|bool|string|List<int>|List<RegionCodeEnum>|ItemType|Rank|SubRank|Profession) \w+(?: = [^;]+)?;',raw,re.M)
         parts.append('public '+name+'(HomeConditionRules configuration) : base(configuration) { }')
         parts+=re.findall(r'\tpublic override (?:ConditionType Type|bool IsComposite) => [^;]+;',raw)
         if name!='CompositeCondition':
@@ -77,6 +83,9 @@ def build(work):
         body='\n\n'.join(parts).replace('Parsers.Instance.ConditionInfoParser.GetCondition','configuration.GetCondition')
         body=body.replace('Parsers.Instance.ProfessionBaseInfoParser',
             'configuration.professionBaseInfoParser ?? throw new InvalidOperationException("Selected profession configuration is required.")')
+        body=body.replace('PlanesInfoUtils.MergeActivityData','configuration.mergeActivity?.Invoke()')
+        body=body.replace('TimeManager.Instance.GetDateTime()',
+            '(configuration.activityClock ?? throw new InvalidOperationException("The merge activity owner must supply its clock."))()')
         classes.append(declaration+'\n{\n'+body+'\n}')
     text=text.replace('/*CONDITIONS*/','\n\n'.join(classes))
     profession_parser='''private sealed class ProfessionBaseInfo { public Profession PrePro; }

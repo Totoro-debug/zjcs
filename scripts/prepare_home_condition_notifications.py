@@ -119,7 +119,8 @@ namespace Zjcs.Official.HomeConditions
         'StoryCountCondition','AnyMapGoddessActivedCondition','StagePassCondition',
         'WorldMapProgressCondition','MapGameTotalCountCondition','MapLogicEntityEndByTagCondition',
         'MapRegionGoddessCondition','TotalOpenChestCondition','DemonBattleLayerPassCondition',
-        'TaskSubmitCondition','TaskCompleteCondition')
+        'TaskSubmitCondition','TaskCompleteCondition','RegionCodeCondition','ServerRankUnlockDaysCondition',
+        'PlanesMergeActivityEnableCondition')
     for name in leaves:
         value = re.search(r'public override ConditionType Type => ConditionType\.(\w+);', source(name)).group(1)
         text += 'case "'+name+'": return ConditionType.'+value+';\n'
