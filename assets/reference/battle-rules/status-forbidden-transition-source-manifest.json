@@ -1,0 +1,46 @@
+{
+  "code_manifest": "884_156692",
+  "original": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EFightStatusForbiddenType.cs",
+      "bytes": 182,
+      "sha256": "410c9997afb9434a7717022a1401080b49b39328174d80148a47a5f5462dd5f3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusForbiddenStatusModification.cs",
+      "bytes": 2094,
+      "sha256": "3202fa60bca4e01f4e56be32d4d7e74cf0c9eab70d9c02c9bf0661e73dd20a85"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusStartComponent.cs",
+      "bytes": 237,
+      "sha256": "b9cb482f2be9c09a6521c3b6962b815880e7cd04572d9d55c2fb616a87415676"
+    }
+  ],
+  "migration": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs",
+      "bytes": 57180,
+      "sha256": "f1b9c75bedfbfdadf72ffe45173a27086a36f2b626cc03c89e570bd9fc6cefe8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.MissingStatusComponents.cs",
+      "bytes": 29367,
+      "sha256": "4dc90dfe1477c0d240fbbcac4766df40b493dd7d68644231101c81ab1243b4f6"
+    }
+  ],
+  "validation": [
+    {
+      "path": "scripts/fixtures/battle_status_only_harness.cs",
+      "bytes": 11949,
+      "sha256": "2901321779f45bb7d3faa8a51c733a777e322e6d62dc2dc2c2f2b8855a32497a"
+    },
+    {
+      "path": "scripts/test_battle_status_only.ps1",
+      "bytes": 2035,
+      "sha256": "f5b11e2fc23828176c202b354e667dc6cd7130841955f8c4fc122e4191961d60"
+    }
+  ],
+  "operation": "FightStatusStartComponent.ForbiddenStatus uses EFightStatusForbiddenType.StatusTrigger (4). The offline executor routes both set and clear through FightStatusLifecycle.SetForbidden so status view, property rebuild and StatusForbiddenChanged observe the official transition.",
+  "generator": "manual source receipt for the public status forbidden transition migration"
+}
