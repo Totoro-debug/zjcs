@@ -2,6 +2,8 @@
 
 技能职业判定参照由 `scripts/prepare_skill_profession_reference.py` 在标记的隔离工程提取所选 `884_156692` 原职业枚举、两个职业可用性函数和两个武器回退函数；原 `PlayerProfessionDataEx`、`PlayerSkillDataExt`、`PlayerSnapshotData`、`FightUtilsHandler` 调用依据、`FightSkillBaseInfo`／`FightSkillData` 外观映射依据、`SkillPanelSkillDetailDialog` 按钮代码、程序集、既有人物／技能／战斗载荷与参照模板哈希见[职业判定来源](battle-rules/skill-profession-source-manifest.json)。未修改配置或美术；规则与验证范围在[技能页](../../docs/features/skills.md)维护。
 
+不屈意志 `10518／25013→10990→10991→10992→24082` 的来源凭据见 [`battle-rules/indomitable-source-manifest.json`](battle-rules/indomitable-source-manifest.json)，重建入口为 `scripts/prepare_battle_indomitable_sources.py`。记录所选 `884_156692` APK 的五个原实体、技能归属、十三份共享／客户端代码、官方程序集、原状态与治疗图的 16 项原生输入和 16 项现有 Windows 输出、显式绑定及哈希；10992 缺省空驱散排除名单仅投影所选默认值，保留历史载荷字节与身份。行为、待确认规则及验证范围仅维护于[斗士技能页](../../docs/features/skills-fighter.md)。
+
 波纹冲击 `10563／25030→11330→11331→11332→24266` 及受控原护盾由 `scripts/prepare_battle_ripple_impact_sources.py` 按 APK 优先核对所选 `884_156692` 原组件与字段；APK／bundle 凭据、程序集、共享／客户端输入、原秘法／寒冷／子技能 prefab、本地绑定及输入 SHA-256 见[波纹冲击来源](battle-rules/ripple-impact-source-manifest.json)。原载荷及历史来源保留，单机差异与验证范围仅在[骑士所属页](../../docs/features/skills-knight.md#rank-2)维护。
 
 矢量回弹 `10541／25021→11230→11231→11232` 由 `scripts/prepare_battle_vector_reflection_sources.py` 按 APK 优先核对所选 `884_156692` 的原触发图、防御伤害字段与共享代码；APK／bundle 凭据、原配置、程序集、原状态与子技能 prefab、本地绑定及输入 SHA-256 见[矢量回弹来源](battle-rules/vector-reflection-source-manifest.json)。历史载荷不改写；单机规则与验证范围仅在[骑士所属页](../../docs/features/skills-knight.md#rank-2)维护。

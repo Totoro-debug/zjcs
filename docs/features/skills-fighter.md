@@ -51,6 +51,8 @@
 
 #### 实现与验证详情
 
+不屈意志 `10518／25013→10990→10991→10992→24082` 已按所选 APK 逐字段核对：原生命下限为 1、触发次数为 1，原子技能为持有者向自身释放 10990，复用原攻击力治疗系数与固定治疗属性；随后附加不可驱散、持续两回合的原 24082。原共享 `FightStatusHpLimitComponent` 仅提供参数读取，客户端 `MyFightStatusHpLimit` 没有服务器执行正文；现有通用处理只在生命更新后检查下限，尚未接通本秘法的致命伤害保命步骤，不能视为已实现。致命伤害与入场一血的触发时机、伤害技能禁止子触发时的行为待用户决定。核对脚本为 `scripts/prepare_battle_indomitable_sources.py`，[专项来源](../../assets/reference/battle-rules/indomitable-source-manifest.json)记录五个原实体、十三份原代码、两份原状态及原治疗图共 16 项输入／16 项输出与显式绑定；10992 的所选空驱散排除名单仅作版本对照投影，不改写历史载荷。此处仅完成来源核对，规则、原生完整演出及正式发布尚未完成。
+
 秘法 10564 的原 `25029 → 24221` 已接入公共技能结束状态链：读取原排除动作类型、四次累计和三层增益上限；状态被禁用或离场时不累计，继续遵守原子技能触发开关。增益继承秘法本身的培养、祝福及来源，计数、触发次数与增益随战斗检查点保存；旧检查点缺少已解析的不可变定义时从原配置补回，保留已有计数。原 `FightStatusSkillEndComponent`／Info、空客户端处理器及所选 884 配置逐字段核对记录于[技能结束触发来源](../../assets/reference/battle-rules/skill-end-source-manifest.json)，重建入口为 `scripts/prepare_battle_skill_end_sources.py`。`test_battle_status_skill_end.ps1` 已覆盖原 25011／60840 回归、排除与禁用、零伤害实际施法的第四次触发、培养来源、原三层上限及旧档恢复；静态检查（145,655 个 GUID）、Unity 导入／编译与 `ProjectTools.Validate` 已通过。公共 weekly 4800 的隔离 Play Mode 和实际 Windows Player 均通过四次原 10500 施法、原 `200/skill_01` 动作、第四次应用 24221、秘法培养来源及检查点；原开始与结算界面模拟点击、离开返回通过，两端各五张运行截图已查看。测试复用已有 Game View 并设置 PlayUnfocused，不创建或激活验证视图。Windows 脚本增量构建通过；该子模块未作为完整技能功能正式发布，返回家园的既有空头像及异常色块仍未完成视觉验收。
 
 #### 已确认的单机差异与对应实现
