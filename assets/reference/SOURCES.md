@@ -1,5 +1,7 @@
 # 官方来源与提取入口
 
+百战之躯 `10582／25063→24299／25133` 与生命潜能 `10589／25094→24379／25132` 由 `scripts/prepare_battle_fighter_hp_stacks_sources.py` 按所选 `884_156692` APK 核对六个原实体、十一份共享／客户端代码、程序集、十八项原生输入／十八项现有 Windows 输出及显式绑定，凭据和 SHA-256 见[生命变化叠层来源](battle-rules/fighter-hp-stacks-source-manifest.json)。历史输入保持独立；行为缺口、单机规则和验证范围仅维护于[斗士技能页](../../docs/features/skills-fighter.md#rank-2)。
+
 崩破烙印 `10042／11010→11011→11012→24052` 的所选 APK 原配置、程序集、九份共享／客户端代码与十二项原生输入／十二项现有 Windows 输出，由 `scripts/prepare_battle_breaking_brand_sources.py` 核对并记录于[崩破烙印来源](battle-rules/breaking-brand-source-manifest.json)。11012 的空驱散排除名单只投影所选默认值，不改历史载荷；行为与验证范围仅在[斗士技能页](../../docs/features/skills-fighter.md#rank-2)维护。
 
 疾光一闪 `10016／10680→10681／10682→10026` 的所选 APK 原配置、程序集、八份共享／客户端代码与十二项原生输入／十二项现有 Windows 输出，由 `scripts/prepare_battle_lightning_dash_sources.py` 核对并记录于[疾光一闪来源](battle-rules/lightning-dash-source-manifest.json)。原载荷及历史来源保持独立，10026 的空驱散排除名单仅作所选默认值比较；实现缺口、单机决策和验证范围仅维护于[斗士技能页](../../docs/features/skills-fighter.md#rank-2)。
