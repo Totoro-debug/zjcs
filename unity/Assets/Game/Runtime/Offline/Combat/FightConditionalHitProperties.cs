@@ -69,7 +69,7 @@ namespace Zjcs.Combat.Official
                 {
                     if(property==null || property.Id<=0) continue;
                     properties.TryGetValue(property.Id,out long previous);
-                    properties[property.Id]=previous+(long)(property.Value*scale);
+                    properties[property.Id]=previous+FightReturnStrikeStatus.HitProperty(status,property,scale);
                 }
                 if(c.AutoRemove && c.MaxInvokeCount>=0 && c.InvokeCount>=c.MaxInvokeCount)
                     FightStatusLifecycle.End(actor,status);

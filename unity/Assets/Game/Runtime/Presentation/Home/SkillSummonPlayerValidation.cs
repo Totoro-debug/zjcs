@@ -82,7 +82,9 @@ namespace Zjcs.Presentation.Home
             while(waitForStartup && GameObject.Find("OfficialSaveSelectionPanel")==null) yield return null;
             if (Environment.GetEnvironmentVariable("ZJCS_ACTIVE_LOADOUT_ACCEPTANCE") == "1")
             {
-                yield return SkillActiveLoadoutValidation.Exercise(output, CaptureGridFrame, ClickGridControl);
+                if (Environment.GetEnvironmentVariable("ZJCS_RETURN_STRIKE_ACCEPTANCE") == "1")
+                    yield return SkillReturnStrikeValidation.Exercise(output, CaptureGridFrame, ClickGridControl);
+                else yield return SkillActiveLoadoutValidation.Exercise(output, CaptureGridFrame, ClickGridControl);
                 File.WriteAllText(Path.Combine(output,"result.json"),JsonUtility.ToJson(new Result {passed=true},true));
                 Application.Quit(0);
                 yield break;

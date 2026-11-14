@@ -88,6 +88,7 @@ namespace Zjcs.Combat.Official
                             FightStatusLifecycle.End(owner, status);
                     }
 
+                    if (TryApplyReturnStrikeStatus(status, owner, target, skill, hit, resolved)) continue;
                     FightBattleStatusDamageSkillComponentState damageSkill = status.Components?.DamageSkill;
                     if (damageSkill != null && status.Components.Seconds == null && resolved != null
                         && (resolved.Formula != null || resolved.Cure != null || resolved.Settlement != null)

@@ -95,6 +95,7 @@ namespace Zjcs.Presentation.Home
             var runner = home.StartWeeklyChallengeBattle(4800, value => settled = value);
             var controller = runner.Controller;
             int playerTurns = 0, ordinary = 0, counters = 0, diskChecks = 0;
+            FightBattleCheckpoint pendingDisk = null;
             controller.StepCompleted += step =>
             {
                 var currentPlayer = step.Checkpoint.Units.Single(value => value.Id == 1);
@@ -114,9 +115,8 @@ namespace Zjcs.Presentation.Home
                         counters++;
                     }
                 }
-                Require(weekly.TryResumeBattle(4800, out string json, out _), "Active battle was not saved to the isolated weekly store.");
-                VerifySkills(FightBattleCheckpointSerializer.Load(json).Units.Single(value => value.Id == 1), mode);
-                diskChecks++;
+                Require(pendingDisk == null, "A previous active-plan step was not checked on disk.");
+                pendingDisk = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(step.Checkpoint));
             };
             Button start = null;
             while (start == null)
@@ -132,6 +132,22 @@ namespace Zjcs.Presentation.Home
             bool captured = false, resultCaptured = false;
             while (runner != null)
             {
+                if (pendingDisk != null)
+                {
+                    var diskSession = new OfflineWeeklyChallengeSession(Path.Combine(saveRoot, "saves", slot, "weekly-challenge-save.json"));
+                    Require(diskSession.TryResumeBattle(4800, out string json, out _), "Active battle was not saved to the isolated weekly store.");
+                    var saved = FightBattleCheckpointSerializer.Load(json);
+                    Require(saved.Sequence == pendingDisk.Sequence && saved.Counter == pendingDisk.Counter
+                        && saved.RandomSeed == pendingDisk.RandomSeed, "Fresh disk checkpoint has a different receipt or random stream.");
+                    var savedPlayer = saved.Units.Single(value => value.Id == 1);
+                    var expectedPlayer = pendingDisk.Units.Single(value => value.Id == 1);
+                    VerifySkills(savedPlayer, mode);
+                    Require(savedPlayer.Hp == expectedPlayer.Hp && savedPlayer.SkillState.Round == expectedPlayer.SkillState.Round
+                        && savedPlayer.SkillState.Slots.Select(value => value.ReleasedTimes)
+                            .SequenceEqual(expectedPlayer.SkillState.Slots.Select(value => value.ReleasedTimes)),
+                        "Fresh disk player life, round or release counts differ.");
+                    pendingDisk = null; diskChecks++;
+                }
                 if (!captured && playerTurns > 0 && counters > 0)
                 {
                     yield return capture("loadout-round-and-counter"); captured = true;
