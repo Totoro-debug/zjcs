@@ -21,6 +21,7 @@ namespace Zjcs.Presentation.Combat
         private readonly System.Collections.Generic.HashSet<int> firstPromotionGeneratedUnitIds
             = new System.Collections.Generic.HashSet<int>();
         private static readonly float[] FirstPromotionFrameTimes = { .1f, .25f, .45f, .7f };
+        private static readonly float[] SunsetSwordFrameTimes = { .78f, 1.02f, 1.2f, 1.45f };
         private bool ValidateSummonDeath => firstPromotionItemId != 0
             && Environment.GetEnvironmentVariable("ZJCS_SUMMON_DEATH_ACCEPTANCE") == "1";
         private bool summonDeathArmed, summonDeathComplete;
@@ -133,9 +134,10 @@ namespace Zjcs.Presentation.Combat
 
         private bool CaptureFirstPromotionFrame()
         {
+            var frameTimes = firstPromotionItemId == 10053 ? SunsetSwordFrameTimes : FirstPromotionFrameTimes;
             if (firstPromotionItemId == 0 || nativeCasts == 0 || finisherScheduled
-                || firstPromotionFrameCount >= FirstPromotionFrameTimes.Length
-                || Time.time - firstPromotionCastClock < FirstPromotionFrameTimes[firstPromotionFrameCount]) return false;
+                || firstPromotionFrameCount >= frameTimes.Length
+                || Time.time - firstPromotionCastClock < frameTimes[firstPromotionFrameCount]) return false;
             CaptureName = "first-promotion-" + firstPromotionItemId + "-phase-" + (++firstPromotionFrameCount);
             return true;
         }
@@ -238,9 +240,9 @@ namespace Zjcs.Presentation.Combat
                     if (prop.Id == catalog.PropertyType("MaxHp")) prop.Value = hp;
                     if (prop.Id == catalog.PropertyType("Attack")) prop.Value = 100;
                     if (prop.Id == catalog.PropertyType("Speed")) prop.Value = speed;
-                    // Isolate the authored facing of 11010. Ordinary landing AI
+                    // Isolate the authored facing of the adjacent-target probes. Ordinary landing AI
                     // may otherwise relocate around this already adjacent target.
-                    if (itemId == 10042 && unit == player
+                    if ((itemId == 10042 || itemId == 10053) && unit == player
                         && (prop.Id == catalog.PropertyType("MoveDist")
                             || prop.Id == catalog.PropertyType("FixedMoveDist"))) prop.Value = 0;
                 }
@@ -334,6 +336,7 @@ namespace Zjcs.Presentation.Combat
             probe.ConfigureDarkStatusDiagnostic(checkpoint);
             probe.ConfigureChainedHitDiagnostic(checkpoint, enemy, dx, dy);
             probe.ConfigureArcShieldDiagnostic(checkpoint);
+            if (itemId == 10053) probe.firstPromotionCaptureAfter = 1.7f;
             // Preserve short authored particle/action phases across cold-loading frames.
             probe.previousCaptureFramerate = Time.captureFramerate;
             Time.captureFramerate = 60;
@@ -351,6 +354,21 @@ namespace Zjcs.Presentation.Combat
                 + cast.SkillItemId + "/" + firstPromotionItemId + "; entity=" + cast.SkillEntityId + "/" + skillId
                 + "; facing=" + cast.Presentation?.FacingIndex + "/" + firstPromotionFacingIndex
                 + "; releases=" + player.SkillState.Slots[0].ReleasedTimes);
+            if (firstPromotionItemId == 10053)
+            {
+                var hits = step.DamageEvents.Where(value => value.SourceId == player.Id
+                    && value.SkillEntityId == 11250).ToArray();
+                var delays = new[] { .726f, .861f, .987f, 1.14f, 1.39f };
+                Require(hits.Length == 5 && step.Movements.Count == 0 && cast.HitSelections.Count == 5,
+                    "Original 11250 must retain five separate 11251 damage occurrences.");
+                for (int i = 0; i < hits.Length; i++)
+                    Require(hits[i].HitEntityId == 11251 && hits[i].DamageEntityId == 10022
+                        && hits[i].Damage < 0 && hits[i].BeforeHp - hits[i].AfterHp == -hits[i].Damage
+                        && hits[i].ElementType == 0 && !hits[i].TrueDamage
+                        && Math.Abs(hits[i].Delay - cast.Delay - delays[i]) < .0001f,
+                        "Original 11250 damage identity, original timing or settlement differs: " + i);
+                Debug.Log("[Sunset sword] Original 11250/11251/10022 five timed hits passed; isolated ordinary movement=0.");
+            }
             if (firstPromotionItemId == 10042)
             {
                 var hit = step.DamageEvents.Single(value => value.SourceId == player.Id
