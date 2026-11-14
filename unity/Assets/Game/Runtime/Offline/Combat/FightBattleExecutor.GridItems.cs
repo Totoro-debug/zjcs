@@ -5,6 +5,18 @@ namespace Zjcs.Combat.Official
 {
     public sealed partial class FightBattleExecutor
     {
+        private static readonly FightGridPoint[] SmartGridItemAdjacentOffsets =
+        {
+            new FightGridPoint(0, -1),
+            new FightGridPoint(-1, 0),
+            new FightGridPoint(0, 1),
+            new FightGridPoint(1, 0),
+            new FightGridPoint(-1, -1),
+            new FightGridPoint(-1, 1),
+            new FightGridPoint(1, -1),
+            new FightGridPoint(1, 1)
+        };
+
         private List<FightBattleUnitState> StatusOwners(bool includeEnded = false)
         {
             var result = new List<FightBattleUnitState>(units);
@@ -36,13 +48,15 @@ namespace Zjcs.Combat.Official
                 foreach (var skill in unit.Skills)
                 {
                     if (skill?.HitGraphEntities == null || !skill.HitGraphEntities.Exists(hit =>
-                        hit.SummonConfigType == "FightHitSummonGridItemCfg"
+                        (hit.SummonConfigType == "FightHitSummonGridItemCfg"
+                            || hit.SummonConfigType == "FightHitSummonSmartGridItemCfg")
                         && (hit.GridSummonCells == null || hit.GridSummonCells.Count == 0))) continue;
                     var original = statusCatalog.CreateSkill(skill.EntityId, skill.Slot, skill.ItemId,
                         skill.Rank, skill.Level, skill.SubRank, skill.Properties);
                     foreach (var hit in skill.HitGraphEntities)
                     {
-                        if (hit.SummonConfigType != "FightHitSummonGridItemCfg") continue;
+                        if (hit.SummonConfigType != "FightHitSummonGridItemCfg"
+                            && hit.SummonConfigType != "FightHitSummonSmartGridItemCfg") continue;
                         var definition = original.HitGraphEntities.Find(value => value.EntityId == hit.EntityId);
                         if (definition == null) continue;
                         hit.SummonGridItemClassId = definition.SummonGridItemClassId;
@@ -80,25 +94,22 @@ namespace Zjcs.Combat.Official
             if (statusCatalog == null)
                 throw new InvalidOperationException("Official combat catalog is required to spawn grid items.");
             var definition = FightOfficialGridItemRules.Get(hit.SummonGridItemClassId);
-            if (hit.GridItemFindAdjacentIfBlocked)
-                throw new InvalidOperationException("Adjacent grid-item search has not been migrated.");
             var reference = ResolveSummonReference(actor, hit.SummonReferenceType, targets);
             if (reference == null || checkpoint.Grid == null) return 0f;
             var primary = targetPosition ?? (targets.Count > 0 ? targets[0] : null);
             var center = fixedCenter ?? FightHitAnchorExtensions.ResolveCenter(hit.Anchor, actor, primary, gridViewCast?.Presentation);
             float lastCreation = 0f;
+            var reserved = new HashSet<FightGridPoint>();
             foreach (var cell in hit.GridSummonCells)
             {
                 // The original per-cell probability belongs to this cell, not to a monster pool.
                 if (cell == null || cell.Rate <= 0f || cell.Rate < 1f && random.Next() >= cell.Rate)
                     continue;
                 int dx = actor.Direction == 1 ? -cell.Position.X : cell.Position.X;
-                var point = new FightGridPoint(center.X + dx, center.Y + cell.Position.Y);
-                int ground = checkpoint.Grid.GroundAt(point);
-                if (!checkpoint.Grid.Contains(point)
-                    || definition.HasMover && (ground < 0 || ground >= 31 || (definition.MoveMask & (1 << ground)) == 0)
-                    || !definition.IgnoreGridBlocked && checkpoint.Grid.BlockedPositions != null
-                        && checkpoint.Grid.BlockedPositions.Contains(point)) continue;
+                var requested = new FightGridPoint(center.X + dx, center.Y + cell.Position.Y);
+                if (!TryResolveGridItemPoint(definition, requested, hit.GridItemFindAdjacentIfBlocked,
+                    reserved, out var point)) continue;
+                reserved.Add(point);
                 float? previousViewTime = gridViewTimeOverride;
                 try
                 {
@@ -131,6 +142,44 @@ namespace Zjcs.Combat.Official
                 finally { gridViewTimeOverride = previousViewTime; }
             }
             return lastCreation;
+        }
+
+        private bool TryResolveGridItemPoint(FightBattleGridItemDefinition definition,
+            FightGridPoint requested, bool findAdjacent, ISet<FightGridPoint> reserved,
+            out FightGridPoint resolved)
+        {
+            resolved = requested;
+            if (CanPlaceGridItem(definition, requested, reserved, findAdjacent)) return true;
+            if (!findAdjacent) return false;
+
+            foreach (FightGridPoint offset in SmartGridItemAdjacentOffsets)
+            {
+                FightGridPoint candidate = requested + offset;
+                if (CanPlaceGridItem(definition, candidate, reserved, true))
+                {
+                    resolved = candidate;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool CanPlaceGridItem(FightBattleGridItemDefinition definition,
+            FightGridPoint point, ISet<FightGridPoint> reserved, bool avoidExisting)
+        {
+            if (checkpoint.Grid == null || !checkpoint.Grid.Contains(point)
+                || reserved != null && reserved.Contains(point)) return false;
+            int ground = checkpoint.Grid.GroundAt(point);
+            if (definition.CheckGridCanStand
+                && (ground < 0 || ground >= 31 || (definition.MoveMask & (1 << ground)) == 0))
+                return false;
+            if (!definition.IgnoreGridBlocked && checkpoint.Grid.BlockedPositions != null
+                && checkpoint.Grid.BlockedPositions.Contains(point)) return false;
+            if (avoidExisting)
+                foreach (FightBattleGridItemState existing in checkpoint.GridItems)
+                    if (existing != null && !existing.Ended && existing.X == point.X && existing.Y == point.Y)
+                        return false;
+            return true;
         }
     }
 }

@@ -3521,7 +3521,8 @@ namespace Zjcs.Combat.Official
             output.SummonConfigType = config.TryGetValue("_type", out object summonType)
                 ? Convert.ToString(summonType, CultureInfo.InvariantCulture) : null;
             output.SummonReferenceType = Int(config, "ReferenceType");
-            if (output.SummonConfigType == "FightHitSummonGridItemCfg")
+            if (output.SummonConfigType == "FightHitSummonGridItemCfg"
+                || output.SummonConfigType == "FightHitSummonSmartGridItemCfg")
             {
                 output.SummonGridItemClassId = Int(config, "SummonId");
                 output.GridItemFindAdjacentIfBlocked = Bool(config, "GridItemFindAdjacentIfBlocked");

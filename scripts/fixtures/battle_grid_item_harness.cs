@@ -23,6 +23,7 @@ public static class BattleGridItemHarness
         MultiCell(catalog,items,formula);
         PresentationClock(catalog,items,formula);
         ProbabilisticFire(catalog,items,formula);
+        SmartAdjacent(catalog,items,formula);
         StaticGround(catalog,items,formula);
         var creator=Unit(1,1,5,5,1000);var reference=Unit(2,2,6,5,1);
         var item=FightGridItemRuntime.Create(3,3320,creator,reference,new FightGridPoint(6,5),0.78f);
@@ -101,6 +102,31 @@ public static class BattleGridItemHarness
             && restored.Receipts[restored.Receipts.Count-1].Event.GridViewEvents.Count==18,
             "Actual checkpoint persistence lost or changed grid lifecycle receipts.");
         return cp;
+    }
+
+    static void SmartAdjacent(FightOfficialCombatCatalog catalog,
+        FightOfficialSkillItemCatalog items, FightDamageFormula formula)
+    {
+        var actor=Unit(1,1,5,5,1000); var enemy=Unit(2,2,6,5,1);
+        var skill=catalog.CreateSkill(12350,0,12350,1,1,1,null);
+        actor.Skills.Add(skill); actor.SkillState.Slots.Add(catalog.CreateSkillSlot(skill,0));
+        var cp=new FightBattleCheckpoint {StageId=1001,RandomSeed=23,
+            Grid=new FightBattleGrid {Width=20,Height=20,DefaultGroundType=0,
+                BlockedPositions=new List<FightGridPoint> { new FightGridPoint(4,7) }},
+            ResultRules=new FightBattleResultRules()};
+        cp.Units.Add(actor); cp.Units.Add(enemy);
+        var runner=FightBattleExecutor.Begin(cp,formula,new FightDamageSettlement(),catalog,items);
+        FightBattleStepEvent step=null;
+        for(int i=0;i<8 && cp.GridItems.Count==0;i++) step=runner.Step(0,cp.Counter+1).Event;
+        Check(cp.GridItems.Count==2 && cp.GridItems.Exists(value=>value.GridItemClassId==5402),
+            "Original smart grid item did not create both configured entities.");
+        Check(!cp.GridItems.Exists(value=>value.X==4 && value.Y==7)
+            && cp.GridItems.Exists(value=>value.X==4 && value.Y==6),
+            "Blocked smart grid item did not choose the deterministic adjacent cell.");
+        Check(step.GridViewEvents.Count==cp.GridItems.Count*2
+            && cp.GridItems.TrueForAll(value=>value.Runtime.CharacterType==6
+                && value.Runtime.RoleEntityId==value.EntityClassId),
+            "Smart grid item runtime or view receipts lost the original entity identity.");
     }
 
     public static void Restore(FightBattleCheckpoint cp,FightOfficialCombatCatalog catalog,

@@ -23,6 +23,23 @@
       "bytes": 205
     },
     {
+      "asset": "/smart_grid_item.g.bytes",
+      "provenance": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "c127151ca016b1013e487423db2b7090",
+        "path_id": "-7000310915499068675",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+        "raw_size": 2142435,
+        "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+      },
+      "payload_sha256": "732adb469776549182eb756fd411afd8d5f2e2897f906584115c74c66e5f2e2d",
+      "bytes": 53
+    },
+    {
       "asset": "/EC/entity_grid_mover.g.bytes",
       "provenance": {
         "bundle": "defaultpackage_assets_config_luban_ec.bundle",
@@ -95,6 +112,10 @@
       "sha256": "4678062ebe90e17e869b28a15681d4688d6ebc48c04c8f5dc04250a24f3b9e11"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitSummonSmartGridItemCfg.cs",
+      "sha256": "82b674650bb2190ceb2263762623d11523b070420a367fe14cabadff66c13fbf"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightRoleCharacterComponent.cs",
       "sha256": "6e4e17d6993ea3b18a9350ab79ec4d1252c5cb26dbf8e50222ebde6b7e39b473"
     },
@@ -143,6 +164,10 @@
       "sha256": "8129206cd36eefdedf3d3d6a2a011d0c52325e35a7690a42b350ad96669fa8ea"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SmartGridItemInfo.cs",
+      "sha256": "68e2d7297b09871612afe9e0121838c97030de765bbe04ae9b46f529ef19841d"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/StatusAutoRemoveComponentInfo.cs",
       "sha256": "99209260af7cd628bb5de8282fba97ffa46ab451f6af45b1e2323ebfa74fbb63"
     },
@@ -153,6 +178,10 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbGridItemInfo.cs",
       "sha256": "4e04233fa48b985ca50ed4889e088c203a115c54c4a356f9c801b5fe74bb9c79"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbSmartGridItemInfo.cs",
+      "sha256": "30da5e68b492448a312128cd794c6acbfe2bf01137ec52e1e14127847ad23db4"
     },
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightGameplayTagComponentInfoFormatter.cs",
@@ -459,24 +488,62 @@
         3,
         6
       ]
-    }
-  ],
-  "outputs": [
-    {
-      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialGridItemRules.cs",
-      "sha256": "f9a4878b4e701bcf8df5f2e172b91c02ec296683fc14eb60ae69fb3c69f7d806"
     },
     {
-      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialGridItemRules.cs.meta",
-      "sha256": "413a6d4ad35ce9bf8c500781d7506afb59eae7addd17e3a00e89778dd92005f0"
+      "table": {
+        "Id": 5401,
+        "TempEntityId": 5401,
+        "GroundType": 0,
+        "DestoryOnOwnerDie": false,
+        "DestoryOnOwnerDestory": false,
+        "DestoryDelayTime": 0.0,
+        "ActionBehOfSameStatus": 2,
+        "CheckGridCanStand": false
+      }
+    },
+    {
+      "table": {
+        "Id": 5402,
+        "TempEntityId": 5402,
+        "GroundType": 0,
+        "DestoryOnOwnerDie": false,
+        "DestoryOnOwnerDestory": false,
+        "DestoryDelayTime": 0.0,
+        "ActionBehOfSameStatus": 2,
+        "CheckGridCanStand": false
+      }
+    },
+    {
+      "table": {
+        "Id": 5403,
+        "TempEntityId": 5403,
+        "GroundType": 0,
+        "DestoryOnOwnerDie": false,
+        "DestoryOnOwnerDestory": false,
+        "DestoryDelayTime": 0.0,
+        "ActionBehOfSameStatus": 2,
+        "CheckGridCanStand": false
+      }
+    },
+    {
+      "table": {
+        "Id": 5404,
+        "TempEntityId": 5404,
+        "GroundType": 0,
+        "DestoryOnOwnerDie": false,
+        "DestoryOnOwnerDestory": false,
+        "DestoryDelayTime": 0.0,
+        "ActionBehOfSameStatus": 2,
+        "CheckGridCanStand": false
+      }
     }
   ],
   "generator": {
     "path": "scripts/prepare_battle_grid_items.py",
-    "sha256": "c22e16164194f7a8f34c43660edd999be6cc3cd831acb60660f25a88d2265a51"
+    "sha256": "efa79a14754f1c5ce668aaa5f8c7d6e130479a7952c6361d90fab51e7cffb7cd"
   },
-  "conversion": "Original table flags and optional entity mover mask compiled together. An absent mover remains explicit; empty property configuration is preserved. Snapshot inheritance and unrestricted terrain for static items are separately confirmed offline rules.",
+  "conversion": "Original grid-item and smart-grid-item table flags are compiled together. An absent mover remains explicit; empty property configuration is preserved. Snapshot inheritance and unrestricted terrain for static items are separately confirmed offline rules. Smart grid items retain their official TempEntityId and placement flags; server-side adjacent search is implemented by the offline executor.",
   "limits": [
-    "Only 3320/3051, 3322/3050 and 3328/3054 are bound. This receipt does not assert runtime spawning or visual lifecycle completion."
+    "Only the three selected ordinary grid items and smart grid items 5401-5404 are bound. This receipt does not assert runtime spawning or visual lifecycle completion."
   ]
 }

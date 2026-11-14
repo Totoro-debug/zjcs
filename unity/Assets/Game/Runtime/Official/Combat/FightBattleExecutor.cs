@@ -917,7 +917,8 @@ namespace Zjcs.Combat.Official
                     ref statusTriggerDuration, ref statusTriggerActionDuration);
                 if (hit.IsSummon)
                 {
-                    if (hit.SummonConfigType == "FightHitSummonGridItemCfg")
+                    if (hit.SummonConfigType == "FightHitSummonGridItemCfg"
+                        || hit.SummonConfigType == "FightHitSummonSmartGridItemCfg")
                     {
                         lastDelay = Math.Max(lastDelay, SpawnGridItems(actor, skill, hit,
                             hasRandomTargetContext ? hitTargets : targets, targetPosition));

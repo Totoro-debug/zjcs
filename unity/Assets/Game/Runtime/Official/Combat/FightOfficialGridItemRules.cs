@@ -46,6 +46,38 @@ namespace Zjcs.Combat.Official
                     DestroyOnOwnerDie = false, DestroyOnOwnerDestroy = false,
                     OverrideTypes = new[] { 3320, 3328 }
                 };
+                case 5401: return new FightBattleGridItemDefinition
+                {
+                    ClassId = 5401, EntityClassId = 5401, MoveMask = 0,
+                    HasMover = false,
+                    CheckGridCanStand = false, IgnoreGridBlocked = false,
+                    DestroyOnOwnerDie = false, DestroyOnOwnerDestroy = false,
+                    OverrideTypes = new int[0]
+                };
+                case 5402: return new FightBattleGridItemDefinition
+                {
+                    ClassId = 5402, EntityClassId = 5402, MoveMask = 0,
+                    HasMover = false,
+                    CheckGridCanStand = false, IgnoreGridBlocked = false,
+                    DestroyOnOwnerDie = false, DestroyOnOwnerDestroy = false,
+                    OverrideTypes = new int[0]
+                };
+                case 5403: return new FightBattleGridItemDefinition
+                {
+                    ClassId = 5403, EntityClassId = 5403, MoveMask = 0,
+                    HasMover = false,
+                    CheckGridCanStand = false, IgnoreGridBlocked = false,
+                    DestroyOnOwnerDie = false, DestroyOnOwnerDestroy = false,
+                    OverrideTypes = new int[0]
+                };
+                case 5404: return new FightBattleGridItemDefinition
+                {
+                    ClassId = 5404, EntityClassId = 5404, MoveMask = 0,
+                    HasMover = false,
+                    CheckGridCanStand = false, IgnoreGridBlocked = false,
+                    DestroyOnOwnerDie = false, DestroyOnOwnerDestroy = false,
+                    OverrideTypes = new int[0]
+                };
                 default: throw new InvalidOperationException("Unbound official grid item: " + classId);
             }
         }
