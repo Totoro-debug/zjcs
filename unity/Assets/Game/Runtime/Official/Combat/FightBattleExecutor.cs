@@ -1075,6 +1075,8 @@ namespace Zjcs.Combat.Official
                     var configuredTriggerSkills = new List<FightBattleStatusStateTrigger>();
                     var configuredComponentInvocations =
                         new List<FightBattleStatusSkillInvocation>();
+                    FightStatusTriggerRuntime.CollectRippleImpact(target, skill, resolved, units,
+                        random, configuredComponentInvocations, hitDelay);
                     var configuredHpTriggerSkills = new List<FightBattleStatusSkillInvocation>();
                     var configuredKillSkillInvocations =
                         new List<FightBattleStatusSkillInvocation>();

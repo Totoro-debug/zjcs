@@ -602,7 +602,7 @@ namespace Zjcs.Combat.Official
                         }
                     }
                 }
-                if (status.HasActionEndTrigger && status.ActionEndRulesSupported
+                if (status.ClassId != 25030 && status.HasActionEndTrigger && status.ActionEndRulesSupported
                     && (status.ActionEndActionTypes.Count == 0
                         || status.ActionEndActionTypes.Contains(skill.ActionType))
                     && Roll(status.ActionEndRate, random))

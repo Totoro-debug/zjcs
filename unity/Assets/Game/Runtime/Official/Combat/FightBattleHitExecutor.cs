@@ -25,6 +25,7 @@ namespace Zjcs.Combat.Official
         public FightCureFormulaResult Cure;
         public FightDamageEvent Settlement;
         public long ShieldDamage;
+        public List<FightBattleStatusState> BrokenShields = new List<FightBattleStatusState>();
         public bool IsCure;
         public List<int> TriggeredStatusSkills = new List<int>();
         public List<FightBattleStatusStateTrigger> TriggeredStatusSkillInvocations =
@@ -135,7 +136,7 @@ namespace Zjcs.Combat.Official
                 ProcessTransient(result.Type, ref direct, ref absoluteDirect, false, onTransient, onTransientDamage);
                 long absorbed = FightBattleShieldRuntime.AbsorbDamage(random, target, hit,
                     direct, out result.ShieldDamage, result.TriggeredStatusSkills, skill,
-                    result.TriggeredStatusSkillInvocations);
+                    result.TriggeredStatusSkillInvocations, result.BrokenShields);
                 result.Formula = new FightDamageFormulaResult { Damage = absorbed, AbsoluteDamage = absoluteDirect };
                 result.Settlement = damageTest == null ? settlement.Apply(damageId, sourceEntity, targetEntity, absorbed)
                     : damageTest.Settle(settlement, stageType, damageId, sourceEntity, targetEntity, target, absorbed);
@@ -215,7 +216,7 @@ namespace Zjcs.Combat.Official
                     false, onTransient, onTransientDamage);
                 damage = FightBattleShieldRuntime.AbsorbDamage(random, target, hit, damage,
                     out result.ShieldDamage, result.TriggeredStatusSkills, skill,
-                    result.TriggeredStatusSkillInvocations);
+                    result.TriggeredStatusSkillInvocations, result.BrokenShields);
                 result.Formula.Damage = damage;
                 result.Settlement = damageTest == null ? settlement.Apply(damageId, sourceEntity, targetEntity, damage)
                     : damageTest.Settle(settlement, stageType, damageId, sourceEntity, targetEntity, target, damage);
@@ -414,7 +415,8 @@ namespace Zjcs.Combat.Official
         public static long AbsorbDamage(FightRandomStream random, FightBattleUnitState target,
             FightBattleHitDefinition hit, long damage, out long shieldDamage,
             IList<int> destroyedSkills = null, FightBattleSkillDefinition sourceSkill = null,
-            IList<FightBattleStatusStateTrigger> destroyedSkillInvocations = null)
+            IList<FightBattleStatusStateTrigger> destroyedSkillInvocations = null,
+            IList<FightBattleStatusState> brokenShields = null)
         {
             shieldDamage = 0;
             if (damage >= 0 || target == null || hit == null || hit.IgnoreShield
@@ -487,6 +489,7 @@ namespace Zjcs.Combat.Official
                 target.StatusRefreshed?.Invoke(target, status);
                 if (destroyed)
                 {
+                    brokenShields?.Add(status);
                     if (status.ShieldDestroyedSkillId > 0
                         && FightSkillTriggerPolicy.AllowsStatus(sourceSkill, status))
                     {

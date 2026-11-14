@@ -82,7 +82,9 @@ namespace Zjcs.Presentation.Home
             while(waitForStartup && GameObject.Find("OfficialSaveSelectionPanel")==null) yield return null;
             if (Environment.GetEnvironmentVariable("ZJCS_ACTIVE_LOADOUT_ACCEPTANCE") == "1")
             {
-                if (Environment.GetEnvironmentVariable("ZJCS_VECTOR_REFLECTION_ACCEPTANCE") == "1")
+                if (Environment.GetEnvironmentVariable("ZJCS_RIPPLE_IMPACT_ACCEPTANCE") == "1")
+                    yield return SkillRippleImpactValidation.Exercise(output, CaptureGridFrame, ClickGridControl);
+                else if (Environment.GetEnvironmentVariable("ZJCS_VECTOR_REFLECTION_ACCEPTANCE") == "1")
                     yield return SkillVectorReflectionValidation.Exercise(output, CaptureGridFrame, ClickGridControl);
                 else if (Environment.GetEnvironmentVariable("ZJCS_PURSUIT_ACCEPTANCE") == "1")
                     yield return SkillPursuitValidation.Exercise(output, CaptureGridFrame, ClickGridControl);
