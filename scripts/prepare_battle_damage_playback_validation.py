@@ -18,6 +18,7 @@ def main():
     parser.add_argument('--code-only', action='store_true')
     parser.add_argument('--custom-targets', action='store_true')
     parser.add_argument('--summon-spawns', action='store_true')
+    parser.add_argument('--status-models', action='store_true')
     args = parser.parse_args()
     work = Path(os.environ['ZJCS_VALIDATION_DIR']).resolve()
     project = prepare(work)
@@ -56,7 +57,7 @@ def main():
     (editor / 'DamageValidation.asmdef').write_bytes((json.dumps(dict(
         name='DamageEntityValidation', includePlatforms=['Editor'],
         references=sorted(set(selected) | ({'Unity.RenderPipelines.Core.Runtime', 'Unity.RenderPipelines.Universal.Runtime'}
-            if args.summon_spawns else set()))), indent=2) + '\n').encode())
+            if args.summon_spawns or args.status_models else set()))), indent=2) + '\n').encode())
     if args.code_only:
         print('Prepared actual damage code:', len(selected), 'runtime assemblies;', project)
         return
@@ -67,10 +68,13 @@ def main():
     if args.summon_spawns:
         fixture = ROOT / 'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSummonSpawnAcceptance.cs'
         shutil.copy2(fixture, editor / fixture.name)
-    prepare_native_assets(project, work, selected, args.custom_targets, args.summon_spawns)
+    if args.status_models:
+        fixture = ROOT / 'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleStatusModelAcceptance.cs'
+        shutil.copy2(fixture, editor / fixture.name)
+    prepare_native_assets(project, work, selected, args.custom_targets, args.summon_spawns, args.status_models)
 
 
-def prepare_native_assets(project, work, selected, custom_targets=False, summon_spawns=False):
+def prepare_native_assets(project, work, selected, custom_targets=False, summon_spawns=False, status_models=False):
     receipt = json.loads((ROOT / 'assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json').read_bytes())
     catalog_path = ROOT / 'unity/Assets/Game/Resources/Combat/skill-native-graphs.json'
     catalog = json.loads(catalog_path.read_bytes())
@@ -79,7 +83,10 @@ def prepare_native_assets(project, work, selected, custom_targets=False, summon_
     # Build the new native-resource GUID index from the conversion receipt;
     # source scripts and the remaining rule assets are resolved separately.
     index = {}
-    for row in receipt['outputs']:
+    outputs = list(receipt['outputs'])
+    if status_models:
+        outputs.extend(json.loads((ROOT / 'assets/reference/battle-animation/first-promotion-status-assets-source-manifest.json').read_bytes())['outputs'])
+    for row in outputs:
         meta = ROOT / row['path']
         if meta.suffix != '.meta' or not meta.is_file():
             continue
@@ -98,7 +105,7 @@ def prepare_native_assets(project, work, selected, custom_targets=False, summon_
 
     pending = [ROOT / 'unity/Assets/Game/Resources/Combat' / name for name in (
         'OfficialBattleRenderPipelineAssets.asset', 'OfficialCombatAssetCatalog.asset')]
-    if summon_spawns:
+    if summon_spawns or status_models:
         for folder in ('NativeMonsters', 'NativeMonsterAppearance', 'SummonRoleViews', 'SceneCharacterAppearance'):
             source = ROOT / 'unity/Assets/Official/Combat' / folder
             shutil.copytree(source, project / source.relative_to(ROOT / 'unity'), dirs_exist_ok=True)
@@ -119,6 +126,10 @@ def prepare_native_assets(project, work, selected, custom_targets=False, summon_
     for source in resources.iterdir():
         if source.is_file() and source.suffix in ('.json', '.txt', '.bytes'):
             pending.append(source)
+    if status_models:
+        statuses = json.loads((resources / 'first-promotion-statuses.json').read_bytes())
+        pending.extend(ROOT / 'unity/Assets/Official/Combat/FirstPromotionStatuses/Resources' / (row['resource'] + '.prefab')
+            for row in statuses['graphs'])
     # Include actual child casts and trigger/chain hit entities from the rules.
     skills = [row for row in catalog['skills'] if row['skill_entity_id'] in (10100, 10910, 11050, 13520, 13523, 15300)]
     hits = [row for row in catalog['hits'] if row['hit_entity_id'] in (10101, 10911, 10912, 11051, 13521, 13522, 13524, 13525)]

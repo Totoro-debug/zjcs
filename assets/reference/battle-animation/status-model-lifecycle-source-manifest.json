@@ -1,0 +1,114 @@
+{
+  "code_manifest": "884_156692",
+  "configuration_manifest": "854_156383",
+  "original": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatus.cs",
+      "bytes": 13340,
+      "sha256": "6703467530851893a67bd76e3d6a2d15253cf336d3c6abe23b6a1a104ddace1d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusAgent.cs",
+      "bytes": 1145,
+      "sha256": "0ddc9ca4c35266438fbe33ac424b32566012608f6bc19bf4342621f1819f9693"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyAction.cs",
+      "bytes": 5967,
+      "sha256": "6adf75aa0f477aab0ada42d10bd0b3ea7e8b3a77b111e02206faa7aa15e9a140"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntity.cs",
+      "bytes": 9077,
+      "sha256": "1d3cb29ee8e21bb2e8717aa95c8922434f1a20bf90fafb941b5ffcbf26bd2ae1"
+    }
+  ],
+  "assets": [
+    {
+      "path": "assets/reference/battle-animation/first-promotion-status-assets-source-manifest.json",
+      "bytes": 2051526,
+      "sha256": "cee1b517d25192ceb5ec40e7201ef5260642d7b895bca0dc980f3a4210173c7e"
+    },
+    {
+      "path": "assets/reference/battle-animation/first-promotion-status-runtime-source-manifest.json",
+      "bytes": 23458,
+      "sha256": "f774b2202ad8880fea30ee575558981e451562b1b8e8cf47e6e0334ec9567440"
+    },
+    {
+      "path": "assets/reference/battle-animation/live-monsters-source-manifest.json",
+      "bytes": 2439709,
+      "sha256": "29d2353119960a2e8e0f6dbeee222274a6347e960197fe337d368489aadccc20"
+    },
+    {
+      "path": "assets/reference/battle-animation/native-monster-appearance-source-manifest.json",
+      "bytes": 1770915,
+      "sha256": "369b2e22763d8c40339a470d1ba24ed555a64a3d0a936805d9d886dc0efcbdf5"
+    }
+  ],
+  "migration": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleStatusPlayback.cs",
+      "bytes": 16020,
+      "sha256": "4b54ca55a61dce215ecfb34f78bc78aaf52b7dd795dc43cb7998d5b6d8292d56"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs",
+      "bytes": 22973,
+      "sha256": "db5beb32735cb37b1ffef4fad9db9d7bb144c953d5e5a680a3f566ec0a79d396"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
+      "bytes": 83609,
+      "sha256": "0fdcaf4c283b09714e2a3cba9354dc262cbb2d97b59bc6147a9c94d6e29052f1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.UnitEnds.cs",
+      "bytes": 4103,
+      "sha256": "1e5f1712e8a5a3e780751f317c0bacfac2651a5e3769515ef76a0d145aa06d87"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyFightStatus.cs",
+      "bytes": 11531,
+      "sha256": "504c6797a56e88f403e9982f55be9a285f8f4ebd2cc12f2d2b967e088dae4ea2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyFightStatusAgent.cs",
+      "bytes": 1360,
+      "sha256": "a0f4aeeba47f4c71ed6e386e432fc2bf7a506f3968f2b947aa26a250e16ccf10"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityActions/MyAction.cs",
+      "bytes": 5236,
+      "sha256": "1ac1ea7452f26a80a61d9526068f3120ded1e678016272ccc047ab6f3fca95bd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyEntity.cs",
+      "bytes": 6605,
+      "sha256": "c01b13c7c1680320889d887e875f36cd1e613f606d58b82bf444c27319ba0245"
+    }
+  ],
+  "validation": [
+    {
+      "path": "scripts/prepare_battle_damage_playback_validation.py",
+      "bytes": 11657,
+      "sha256": "11b1e308ab2fa3621bcd0c489277262e4c5b1650a4574979b50a845635324835"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleStatusModelAcceptance.cs",
+      "bytes": 17154,
+      "sha256": "eb04a16384afbdb46526a26ad60063f722efced08a8d0c8360b4c2b0e9b4b3a3"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef",
+      "bytes": 1374,
+      "sha256": "5b912bf1a0e887d5863295574f72b7050221a437a03c10814588e4ffb57c88ae"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_battle_status_model_sources.py",
+    "bytes": 2909,
+    "sha256": "2d7e3bd76bef154bbb3df8858db78921c2916527e0cb5c47ce08e7f749a316ba"
+  },
+  "binding": "Original status End/Remove on its bound owner -> retained presentation snapshot -> original OnStart(false) on the current model",
+  "operation": "Keep action owner lookup bound to the original model through removal; defer still-live status views while their owner model is absent and restore their latest layers, forbidden flag and persistent counters when it returns. Preserve original first attachment, pending update/end order and elapsed invocation behavior. No combat state, status lifetime, prefab, texture, skeleton, animation or material payload is changed."
+}

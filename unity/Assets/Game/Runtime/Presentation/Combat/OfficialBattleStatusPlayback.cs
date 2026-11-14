@@ -44,9 +44,11 @@ namespace Zjcs.Presentation.Combat
             }
             public void Invoke() => OnInvoked?.Invoke(this);
         }
-        private sealed class Context : IFightStatusPlayableContext
+        private sealed class Context : IFightStatusPlayableContext, IMyActionEntityLookup
         {
             public State Status;
+            public int OwnerId;
+            public MyEntity OwnerEntity;
             public GameObject Owner { get; set; }
             public GameObject Creator { get; set; }
             public GameObject Master { get; set; }
@@ -54,6 +56,9 @@ namespace Zjcs.Presentation.Combat
             public bool HasIcon { get; set; }
             public IFightStatusPlayableState State => Status;
             public int? ShareId => Status.Value.ShareId > 0 ? (int?)Status.Value.ShareId : null;
+            // Removal belongs to this model, even if the scene already replaced it.
+            public MyEntity GetEntity(EcEntityIdentifier id)
+                => id.Equals(new EcEntityIdentifier(1, OwnerId)) ? OwnerEntity : null;
         }
         private sealed class ActionData : ActionComponentData
         {
@@ -173,6 +178,7 @@ namespace Zjcs.Presentation.Combat
 
         public void DispatchDue()
         {
+            SynchronizeBodies();
             foreach (var value in new List<Deferred>(deferred.Values)) Start(value.Owner, value.Status, value.Fresh);
             while (pending.Count > 0 && pending[0].Remaining <= 0f)
             {
@@ -198,6 +204,23 @@ namespace Zjcs.Presentation.Combat
             }
         }
 
+        private void SynchronizeBodies()
+        {
+            foreach (long key in new List<long>(leases.Keys))
+            {
+                var lease = leases[key];
+                int owner = lease.Context.OwnerId;
+                var target = Body(owner);
+                if (lease.Context.Owner && lease.Context.Owner == target) continue;
+                var status = lease.State.Value;
+                End(key);
+                // The state still exists. Restore its current view when its model
+                // is ready, without replaying already elapsed state transitions.
+                deferred[key] = new Deferred { Owner = owner, Status = status, Fresh = false };
+            }
+            ownedAgents.RemoveAll(agent => !agent);
+        }
+
         private GameObject Body(int id) { var target = body(id); return target ? target.gameObject : null; }
         MyEntity IMyActionEntityLookup.GetEntity(EcEntityIdentifier id)
         {
@@ -221,15 +244,16 @@ namespace Zjcs.Presentation.Combat
             var state = new State { Value = snapshot };
             state.Shield = new ShieldData { Owner = target };
             state.Absolute = new AbsoluteData { Owner = target, Status = state };
-            var context = new Context { Status = state, Owner = target, Creator = Body(snapshot.CreatorId),
+            var context = new Context { Status = state, Owner = target, OwnerId = owner,
+                OwnerEntity = target.GetComponent<MyEntity>(), Creator = Body(snapshot.CreatorId),
                 Master = Body(MasterId(owner)), Agent = agent, HasIcon = hasIcon(snapshot.ClassId) };
             view.Bind(context, scope);
             foreach (var action in go.GetComponents<MyAction>())
             {
                 if ((action.myEffect || action.myEndEffect || action.LoopEffectPlayable)
-                    && !((IMyActionEntityLookup)this).GetEntity(new EcEntityIdentifier(1, owner)))
+                    && !context.OwnerEntity)
                     throw new InvalidOperationException("Original status action owner entity is unbound: " + snapshot.ClassId);
-                action.EntityLookup = this;
+                action.EntityLookup = context;
                 action.mMyPlayableManager = scope;
                 action.mMyPlayableCenter = scope.PlayableCenter;
             }
