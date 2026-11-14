@@ -14,6 +14,7 @@ from official_manifest import read_asset_manifest
 from official_tables import Constructors
 from npc_travel_language import language
 from validation_workspace import validation_directory
+from deduplicate_unity_textures import reuse_staged_shared_textures
 import yaml
 
 RECEIPT = ROOT/'assets/reference/home-fast-hangup-native-source-manifest.json'
@@ -50,7 +51,7 @@ class HomeFastHangUpBinding(HomeCurrencyWindowsBinding):
         constructors = Constructors(code)
         mapping = {name.rsplit('/', 1)[-1]: kind for kind, name in
             re.findall(r'new (Tb\w+)\(loader\("([^"]+)"\)\)', constructors.source('Tables'))}
-        wanted = {'fast_hang_up', 'hang_up', 'item'}
+        wanted = {'fast_hang_up', 'hang_up', 'hang_up_reward', 'reward_rule', 'item'}
         for obj in self.recovery.apk.objects('defaultpackage_assets_config_luban.bundle'):
             if obj.type.name != 'TextAsset': continue
             name = obj.read().m_Name.rsplit('/', 1)[-1].removesuffix('.g')
@@ -66,7 +67,19 @@ class HomeFastHangUpBinding(HomeCurrencyWindowsBinding):
             sha256=sha(settings.get_raw_data()))
         item_ids = {int(key) for row in self.tables['fast_hang_up'] for key in row['FastHangUpItemDic']}
         item_ids.update(self.tables['game_settings'][key] for key in ('MoneyId', 'PlayerExpItemId'))
+        reward_rules = {row['RewardRuleId'] for row in self.tables['hang_up_reward']}
+        self.tables['reward_rule'] = [row for row in self.tables['reward_rule'] if row['Id'] in reward_rules]
+        item_ids.update(item for row in self.tables['reward_rule'] for item in row['IdList'])
         self.tables['item'] = [row for row in self.tables['item'] if row['ClassId'] in item_ids]
+        if {row['ClassId'] for row in self.tables['item']} != item_ids:
+            raise ValueError('Selected income reward item is unavailable')
+        # These actual configured item types all select the original default
+        # template. Preserve the original manager priority; never infer a new
+        # template from an item name or its non-overlap flag.
+        manager = self.icon_manager['fields']
+        for item in self.tables['item']:
+            if item['ClassId'] in manager['IdList'] or item['ItemType'] in manager['TypeList']:
+                raise ValueError('Bind original income icon override before using item: ' + str(item['ClassId']))
         records = read_asset_manifest(self.recovery.apk.source.manifest_bytes('DefaultPackage', self.recovery.apk.archive))
         self.item_images = {}
         for item in self.tables['item']:
@@ -123,6 +136,9 @@ class HomeFastHangUpBinding(HomeCurrencyWindowsBinding):
             icon_config=self.icon_config, attachment_config=self.attachment_config, icon_manager=self.icon_manager,
             hint_attachment=self.hint_attachment,
             scope='Complete original item acceleration selection window and native item dependencies; actual local owner, progress appearance and Player validation remain pending.')
+        helper = ROOT/'scripts/deduplicate_unity_textures.py'
+        receipt['inputs'][helper.relative_to(ROOT).as_posix()] = sha(helper.read_bytes())
+        reuse_staged_shared_textures(folder, receipt)
         (self.work/RECEIPT.name).write_text(json.dumps(receipt, ensure_ascii=False, indent=2)+'\n', 'utf8', newline='\n')
         print('Original acceleration window:', len(receipt['outputs']), 'outputs', flush=True)
 
@@ -172,6 +188,11 @@ def install(work):
     catalog = ROOT/'unity/Assets/Game/Resources/Home/OfficialHomeFastHangUpAssetCatalog.asset'
     script = ROOT/'unity/Assets/Game/Runtime/Official/HomeFastHangUpUI/OfficialHomeFastHangUpAssetCatalog.cs'
     roots = receipt['roots']
+    images = {}
+    for row in receipt['item_images'].values():
+        image = dict(path=row['item']['RawIcon'], assetGuid=row['manifest_asset']['guid'], sprite=row['pointer'])
+        if images.setdefault(image['path'], image) != image:
+            raise ValueError('Selected income image has inconsistent original bindings: ' + image['path'])
     fields = dict(m_ObjectHideFlags=0, m_CorrespondingSourceObject=dict(fileID=0), m_PrefabInstance=dict(fileID=0),
         m_PrefabAsset=dict(fileID=0), m_GameObject=dict(fileID=0), m_Enabled=1, m_EditorHideFlags=0,
         m_Script=dict(fileID=11500000, guid=guid(Path(str(script)+'.meta')), type=3),
@@ -181,8 +202,7 @@ def install(work):
         iconConfig=receipt['icon_config'], attachmentConfig=receipt['attachment_config'],
         texts=dict(fileID=4900000, guid=hashlib.md5(b'zjcs:home-fast-hangup-texts').hexdigest(), type=3),
         rules=dict(fileID=4900000, guid=hashlib.md5(b'zjcs:home-fast-hangup-rules').hexdigest(), type=3),
-        images=[dict(path=row['item']['RawIcon'], assetGuid=row['manifest_asset']['guid'], sprite=row['pointer'])
-            for row in receipt['item_images'].values()])
+        images=list(images.values()))
     raw = '%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!114 &11400000\n'+yaml.dump(dict(MonoBehaviour=fields), Dumper=Dumper, allow_unicode=True, sort_keys=False)
     if catalog.exists() and not equivalent(catalog.read_bytes(), raw.encode('utf8')) and sha(catalog.read_bytes()) != previous.get(catalog.relative_to(ROOT).as_posix()):
         raise ValueError('Preserve changed acceleration catalog')

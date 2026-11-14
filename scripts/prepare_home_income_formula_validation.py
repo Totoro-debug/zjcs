@@ -40,7 +40,7 @@ def prepare():
             'Zjcs.Offline.CharacterCreation', 'Zjcs.Offline.Progression', 'Zjcs.Offline.State',
             'Zjcs.Presentation.Home', 'Unity.TextMeshPro', 'Zjcs.Official.HomeAwardUI',
             'Zjcs.Offline.HomeUI', 'Zjcs.Official.HomeHangUpWindowsUI',
-            'Zjcs.Official.WorldUI']), indent=2) + '\n', 'utf8', newline='\n')
+            'Zjcs.Official.WorldUI', 'Zjcs.Official.HomeFastHangUpUI']), indent=2) + '\n', 'utf8', newline='\n')
     receipt_path = ROOT / 'assets/reference/home-income-formula-source-manifest.json'
     receipt = json.loads(receipt_path.read_bytes())
     source = '.tools/source-packages/current/884_156692/official-code/client-source/FurnitureBedDialog.cs'
@@ -72,6 +72,14 @@ def prepare():
         'window uses selected rule_tip rows, actual blessing level, eleven original pooled rows and real home limits; '
         'its pointer, scrolling, highlight and mask-close behavior are covered. Secondary acceleration and '
         'activity-output details are not covered by this production-bed validation.')
+    source = 'assets/reference/home-fast-hangup-native-source-manifest.json'
+    receipt['inputs'][source] = hashlib.sha256((ROOT / source).read_bytes()).hexdigest()
+    receipt['income_reward_adapter'] = (
+        'Selected hang_up_reward and reward_rule rows select all 259 reward/cost item definitions and 15 unique '
+        'original image addresses; original ItemIconManager priority proves the default template for each. '
+        'The original ignored-award list is retained. Actual cart repair/unlock/claim/drain and its original '
+        'queue display use a real saved receipt; presentation never writes either save. General indexed '
+        'equipment instances, detail popups and the production acceleration sequence remain separate.')
     receipt['validation_inputs'] = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in (
         'scripts/prepare_home_income_formula_validation.py', 'scripts/fixtures/home_income_formula_validation.cs',
         'scripts/fixtures/home_furniture_host_validation.cs')}

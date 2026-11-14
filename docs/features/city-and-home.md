@@ -398,7 +398,7 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 所选 884 的奖励队列源码迁入 `Runtime/Official/HomeAwardUI/`，保留 `AwardListPanel` 的缓冲、合并排序、0.1 秒出队、不可出场时重入队、延迟关闭和全屏关闭；普通路径与节庆单条路径保留原判断，后者最短间隔为 0.6 秒。原奖励条目保留经验／金币额外数量拆分、兑换／回收、产出加成、品质光效、粒子和回池顺序；通用奖励图标及宝石、女神牌分支也沿原代码迁入。网络与全局容器改为明确的数据、资源、窗口及图标服务；`AwardData` 保留原 16 个字段，未被本段表现消费的 `ItemParam`／`AwardExtraData` 暂作为由回执生产者拥有的不透明载荷，不据此声称这些服务器数据已完整迁移。
 
-`Resources/Home/OfficialHomeAwardQueueAssetCatalog` 显式绑定完整原奖励队列、两种条目、原配置选出的奖励图标、物品默认图标、提示附件、品质配置、动画和 PCM。物品模板沿同版 `ItemIconManagerConfig` 的 ID／类型／默认优先级选择，并核对 CAB 对象身份；当前目录仅核验经验 50，不能作为全部挂机奖励的通用目录。原管理器没有奖励图标类型覆盖时，保持空表，不按其他 prefab 名称推断新的覆盖。已证明内容和导入器相同的只读纹理复用仓库已有共享目标，原输入哈希不变。`AnimationAutoNext` 使用完整程序集依赖重新反编译，保留原片段时长等待、延迟、停用取消与下一段播放。
+`Resources/Home/OfficialHomeAwardQueueAssetCatalog` 显式绑定完整原奖励队列、两种条目、原配置选出的奖励图标、物品默认图标、提示附件、品质配置、动画和 PCM。物品模板沿同版 `ItemIconManagerConfig` 的 ID／类型／默认优先级选择，并核对 CAB 对象身份；队列自身目录保存经验 50，其他挂机物品复用下述加速目录。原管理器没有奖励图标类型覆盖时，保持空表，不按其他 prefab 名称推断新的覆盖。已证明内容和导入器相同的只读纹理复用仓库已有共享目标，原输入哈希不变。`AnimationAutoNext` 使用完整程序集依赖重新反编译，保留原片段时长等待、延迟、停用取消与下一段播放。
 
 `HomeAwardQueueValidation.Run` 在完整隔离工程的静音、有图形 Play Mode 通过：同版经验图标与品质框、10＋20 合并为 30、110 按受控 10% 属性拆为 100＋10、原动画自然回池、0.6 秒单条路径间隔、延迟／全屏关闭和事件退订。原奖励条目的 `CanvasGroup.blocksRaycasts=false` 保留，模拟指针核验其事件穿透；独立原默认图标在首帧图形重建后，模拟点击通过原按钮派发正确的详情请求参数，未以直接回调代替点击。已查看普通、独立图标、额外数量及节庆条目四张 608×1080 实际运行画面，中文、经验 Sprite、绿色加成数字与原动画正常；详情内容、其他物品和特殊图标宿主未由此验证。根工作区静态检查通过（151560 个 GUID）；隔离工程同步最新已提交基线后，Unity 2022.3.57f1c2 导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 退出码为 0。此独立夹具未验证正式床铺按钮、通用物品目录与 Windows Player；正式领取业务接线见下文。
 
@@ -421,6 +421,10 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 赐福规则页由正式床铺的原 `BlessingRuleBtn` 打开完整 `BlessingLevelRuleDialog`，保留原入退场动画、模糊遮罩、滚动区及 `RuleDialog`／`TipInfo`。说明标题和三条正文按所选 `rule_tip.g` 的 `BlessingLevelRule` 原记录绑定官方中文键；`BlessingLevelRuleItem` 读取实际赐福等级、原床铺基础产量及 `home_level.FurnitureLevelUpLimit`。保留当前等级前后各五级、低等级从 1 开始共十一行，以及当前行三列文字 1.2 倍缩放的原逻辑。原窗口、行控制器和编号脚本迁入 `Runtime/Official/HomeHangUpWindowsUI/`，新增完整 prefab 纳入同版显式目录；共用只读贴图按原内容与导入器校验后绑定，不改变来源预期哈希。
 
 `HomeIncomeFormulaValidation.Run` 已在完整隔离工程的静音有图形 Play Mode 通过正式床铺规则按钮的首个射线命中、十一行及实际等级高亮、滚轮模拟输入到末行、遮罩模拟点击关闭并保留底层床铺；领取、原奖励队列、失败保留、回执恢复和磁盘重开继续通过，重开断言包含亚秒检查点。已查看 608×1080 的初始规则页与滚动到底部画面，末行等级 11、经验基准产量 680／小时和小推车上限 11 与原配置一致。静态元数据检查通过（151578 个 GUID），Unity 2022.3.57f1c2 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 退出码为 0；工程校验保留前述既有战斗 Edit Mode 诊断。此项未完成加速演出、活动加成详情、完整 HUD 或 Windows Player 发布。
+
+所选 `hang_up_reward` 的 11 条记录经 182 条 `reward_rule` 展开，连同加速费用、金币和经验，共需 259 个原物品定义与 15 个唯一图像地址。`prepare_home_fast_hangup_native.py` 从 APK 优先的官方表和语言中恢复完整定义、名称和图像，显式绑定至 `OfficialHomeFastHangUpAssetCatalog`；逐项核对原 `ItemIconManagerConfig` 的 ID／类型覆盖，全部走原默认模板。`OfflineHomeBedAwards` 复用这一目录，按原物品品质、类型、阶位、叠加标志和图标展示回执，保留 `IgnoreShowAwardId`；展示阶段不写角色或家园存档。该绑定不包含随机装备开箱后的独立实例或物品详情，也不表示加速请求、演出和奖励已在正式入口接通。
+
+实际有图形、静音 Play Mode 已核对全部 259 个物品投影及图像加载句柄。隔离档沿官方个人阶位 2、等级 15 的基础等级条件维修并解锁小推车，普通领取得到实际随机奖励回执；原队列显示本次选择的稀有探索装备图标及数量 2，展示不重复发奖，重开保留背包增量且账本已确认。已查看 608×1080 实际运行截图。此处奖励展示为独立队列宿主的组件验证，小推车正式领取按钮、完整 HUD、加速和 Windows Player 未由此验证；原生床铺指针、赐福说明滚动、经验与领取回执恢复回归通过。静态检查通过（151610 个 GUID）；Unity 2022.3.57f1c2 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 退出码为 0，工程校验仍记录前述战斗 Edit Mode 材质释放诊断。
 
 ## 自定义实现
 

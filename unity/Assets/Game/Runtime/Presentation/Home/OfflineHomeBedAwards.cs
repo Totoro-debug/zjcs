@@ -20,7 +20,7 @@ using FormulaProp = Zjcs.Official.HomeIncomeRules.PropType;
 
 namespace Zjcs.Presentation.Home
 {
-    // This owner presents committed bed receipts. It never changes either save.
+    // This owner presents committed home receipts. It never changes either save.
     public sealed class OfflineHomeBedAwards : IHomeAwardQueueServices, IHomeAwardItemServices,
         IHomeAwardIconServices, IItemIconAttachmentManager, IProfessionItemIconContext,
         IProfessionItemPlayer, IProfessionSoundHost, IDisposable
@@ -28,6 +28,9 @@ namespace Zjcs.Presentation.Home
         [Serializable] sealed class TextRow { public string key, text; }
         [Serializable] sealed class Data { public string manifest; public Info item; public Palette global_colors; public TextRow[] texts; }
         [Serializable] sealed class Info { public int ClassId, Quality, ItemType, Rank; public string RawIcon, IconEffect; public bool CanOverlap; }
+        [Serializable] sealed class IncomeData { public string manifest; public IncomeTables tables; }
+        [Serializable] sealed class IncomeTables { public Info[] item; public IncomeSettings game_settings; }
+        [Serializable] sealed class IncomeSettings { public int[] IgnoreShowAwardId; }
         [Serializable] sealed class TextColor { public Color Color; }
         [Serializable] sealed class ColorList { public int ThemeColorType; public int[] TypeList; public TextColor[] TextColors; }
         [Serializable] sealed class ColorConfig { public ColorList[] TextColorLists; }
@@ -46,7 +49,7 @@ namespace Zjcs.Presentation.Home
                 return row.TextColors[index].Color;
             }
         }
-        sealed class Experience : ItemInfo
+        sealed class IncomeItem : ItemInfo
         {
             internal Info Source;
             public override int ClassId => Source.ClassId;
@@ -75,7 +78,9 @@ namespace Zjcs.Presentation.Home
         readonly Action<AudioClip, GameObject> postSound;
         readonly OfficialHomeAwardQueueAssetCatalog assets;
         readonly Data data;
-        readonly Experience experience;
+        readonly IncomeItem experience;
+        readonly Dictionary<int, IncomeItem> incomeItems;
+        readonly HashSet<int> ignoredAwards;
         readonly Dictionary<string, string> texts;
         readonly FontAssetFontService fonts;
         readonly Transform staging;
@@ -100,8 +105,25 @@ namespace Zjcs.Presentation.Home
                 if (data?.manifest != "884_156692" || data.item?.ClassId != 50
                     || data.item.ItemType != 50 || !data.item.CanOverlap || !string.IsNullOrEmpty(data.item.IconEffect))
                     throw new InvalidOperationException("Selected bed XP award data is unbound.");
-                experience = new Experience { Source = data.item };
+                experience = new IncomeItem { Source = data.item };
                 texts = data.texts.ToDictionary(row => row.key, row => row.text);
+                var incomeAssets = Zjcs.Official.HomeFastHangUpUI.OfficialHomeFastHangUpAssetCatalog.LoadDefault();
+                var incomeData = JsonUtility.FromJson<IncomeData>(incomeAssets.rules.text);
+                if (incomeData?.manifest != data.manifest || incomeData.tables?.item == null
+                    || incomeData.tables.game_settings?.IgnoreShowAwardId == null)
+                    throw new InvalidOperationException("Selected home income reward data is unbound.");
+                incomeItems = incomeData.tables.item.ToDictionary(item => item.ClassId,
+                    item => new IncomeItem { Source = item });
+                if (!incomeItems.TryGetValue(experience.ClassId, out var selectedExperience)
+                    || JsonUtility.ToJson(selectedExperience.Source) != JsonUtility.ToJson(data.item))
+                    throw new InvalidOperationException("Selected income XP definition differs from the bed definition.");
+                ignoredAwards = new HashSet<int>(incomeData.tables.game_settings.IgnoreShowAwardId);
+                foreach (var row in JsonUtility.FromJson<Data>(incomeAssets.texts.text).texts)
+                {
+                    if (texts.TryGetValue(row.key, out string prior) && prior != row.text)
+                        throw new InvalidOperationException("Selected income reward translations disagree: " + row.key);
+                    texts[row.key] = row.text;
+                }
                 var hud = OfflineHomeHudAssets.LoadDefault();
                 fonts = hud.CreateFontService(); fonts.Initialize();
                 staging = new GameObject("HomeAwardInactiveBinding", typeof(RectTransform)).transform;
@@ -110,8 +132,12 @@ namespace Zjcs.Presentation.Home
                 if (bed.bedRewardImagePath != experience.Icon || !bed.bedRewardImage)
                     throw new InvalidOperationException("Selected bed reward sprite differs from its item data.");
                 imageCatalog = ScriptableObject.CreateInstance<OfflineProfessionImageCatalog>();
-                imageCatalog.Entries = new[] { new OfflineProfessionImageCatalog.Entry {
-                    Path = "Assets/Image/" + experience.Icon, AssetGuid = "home-bed-xp", Asset = bed.bedRewardImage } };
+                imageCatalog.Entries = incomeAssets.images.Select(image => new OfflineProfessionImageCatalog.Entry {
+                    Path = "Assets/Image/" + image.path, AssetGuid = image.assetGuid, Asset = image.sprite }).ToArray();
+                foreach (var item in incomeItems.Values)
+                    if (string.IsNullOrEmpty(item.IconEffect) && !imageCatalog.Entries.Any(image =>
+                        image.Path == "Assets/Image/" + item.Icon && image.Asset))
+                        throw new InvalidOperationException("Selected income reward image is unbound: " + item.ClassId);
                 images = new OfflineProfessionImageResourceLoader(imageCatalog);
                 var root = Clone(assets.queuePrefab, canvas.transform);
                 panel = root.GetComponent<AwardListPanel>(); panel.Services = this; panel.BindSoundHost(this);
@@ -123,12 +149,20 @@ namespace Zjcs.Presentation.Home
         }
 
         public void Show(OfflineHomeCollectedReward reward)
+            => Show(new[] { reward });
+
+        public void Show(IEnumerable<OfflineHomeCollectedReward> rewards)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfflineHomeBedAwards));
-            if (reward == null || reward.ItemId != experience.ClassId || reward.Count <= 0)
-                throw new ArgumentException("A committed bed XP receipt is required.", nameof(reward));
-            AwardListPanel.PopupAwardListPanel(this, new List<AwardData> {
-                new AwardData { Catalog = this, AwardId = reward.ItemId, Amount = reward.Count } });
+            var awards = new List<AwardData>();
+            foreach (var reward in rewards ?? throw new ArgumentNullException(nameof(rewards)))
+            {
+                if (reward == null || reward.Count <= 0)
+                    throw new ArgumentException("Positive committed home rewards are required.", nameof(rewards));
+                GetItemInfo(reward.ItemId);
+                awards.Add(new AwardData { Catalog = this, AwardId = reward.ItemId, Amount = reward.Count });
+            }
+            AwardListPanel.PopupAwardListPanel(this, awards);
         }
         GameObject Clone(GameObject prefab, Transform parent)
         {
@@ -142,7 +176,7 @@ namespace Zjcs.Presentation.Home
         public void NotifyWindowOpened(GameObject window) => OnWindowOpened?.Invoke(window);
         public bool IsFullScreen(GameObject window) => window && window.GetComponent<WorldPopupWindow>()?.FullScreenDisplay == true;
         public void Close(GameObject window) { if (window) window.SetActive(false); }
-        public bool IsIgnoreShowAward(int id) { GetItemInfo(id); return false; }
+        public bool IsIgnoreShowAward(int id) { GetItemInfo(id); return ignoredAwards.Contains(id); }
         public IHomeAwardAsset<GameObject> LoadAssetByGuid(string guid)
             => new Asset<GameObject>(assets.itemPrefabs.Single(row => row.originalGuid == guid).prefab);
         public GameObjectPool<AwardListPanelItem> CreatePool(Transform root, AwardListPanelItem prefab)
@@ -157,7 +191,7 @@ namespace Zjcs.Presentation.Home
         {
             panel.gameObject.SetActive(true); initialized(panel); return new Done();
         }
-        public ItemInfo GetItemInfo(int id) => id == experience.ClassId ? experience
+        public ItemInfo GetItemInfo(int id) => incomeItems.TryGetValue(id, out var item) ? item
             : throw new ArgumentOutOfRangeException(nameof(id), "Bind the selected original reward catalog before displaying another item.");
         public HomeAwardIcon InstantiateAward(Transform slot, AwardData award, Action<HomeAwardIcon, AwardData> init,
             bool autoTransition, bool isSelf, bool showOutputAddition)
@@ -232,12 +266,18 @@ namespace Zjcs.Presentation.Home
         public void InstantiateAsync(string prefab, Transform parent, Action<GameObject> callback) => throw OutsideBed("item effect");
         public void PopupInfoDialog(IProfessionItemData item, IWindowOperator owner, long required, Action<GameObject> callback) => throw OutsideBed("indexed item details");
         public void PopupInfoDialog(IProfessionItemInfo item, IWindowOperator owner, long required, Action<GameObject> callback) => throw OutsideBed("independent item details");
-        public long GetItemAmount(int id) { GetItemInfo(id); return home.Profile.Save.Player.Experience; }
+        public long GetItemAmount(int id)
+        {
+            GetItemInfo(id);
+            return id == experience.ClassId ? home.Profile.Save.Player.Experience
+                : Zjcs.Offline.Progression.OfflineItemAutoIncrease.Count(
+                    home.Profile.Save.Player.Inventory.FirstOrDefault(item => item.ItemId == id), DateTime.UtcNow);
+        }
 #pragma warning disable 0067, 0414
         public event Action<IProfessionItemData, long, object> OnItemCountUpdate;
 #pragma warning restore 0067, 0414
         public bool CanGetItemFromMapLocation(object location) => throw OutsideBed("map item sources");
-        static NotSupportedException OutsideBed(string branch) => new NotSupportedException("The selected bed XP queue does not consume " + branch + ".");
+        static NotSupportedException OutsideBed(string branch) => new NotSupportedException("The selected home income queue does not consume " + branch + ".");
         public void Dispose()
         {
             if (disposed) return;

@@ -179,8 +179,9 @@ public sealed partial class HomeIncomeFormulaHostRunner
                 "periodic card non-battle property is included once, without a second commerce merge");
         }
         yield return CheckNativeBedCollection();
+        yield return CheckIncomeRewardCatalog();
         yield return CheckExperienceLedgerRecovery();
-        Debug.Log("HOME_INCOME_FORMULA_PASSED: selected Float flags, original float/double arithmetic and unsettled-preview settlement, actual native repair and production bed pointer, bed output foldout, original blessing rule rows/highlight/scroll/mask close, real lost goddess profile, production collection/experience/free acceleration, original XP award queue, committed reward receipts, rejected experience grants retained, acknowledgement recovery, original remainder, idempotency and precise disk reopen. Acceleration business calls are direct; acceleration/output-detail windows and complete HUD remain pending.");
+        Debug.Log("HOME_INCOME_FORMULA_PASSED: selected Float flags, original float/double arithmetic and unsettled-preview settlement, actual native repair and production bed pointer, bed output foldout, original blessing rule rows/highlight/scroll/mask close, real lost goddess profile, production collection/experience/free acceleration, original XP award queue, all 259 selected income items and 15 images, actual cart repair/unlock/collection and native award queue with disk reopen, committed reward receipts, rejected experience grants retained, acknowledgement recovery, original remainder, idempotency and precise disk reopen. Cart award presentation is a component check; acceleration business calls are direct; acceleration/output-detail windows and complete HUD remain pending.");
     }
 
     private IEnumerator CheckNativeBedCollection()
@@ -265,6 +266,82 @@ public sealed partial class HomeIncomeFormulaHostRunner
         Require(UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeHangUpWindowsUI.FurnitureBedDialog>(),
             "actual native bed can reopen without stale services or subscriptions");
         home.Hud.CloseDialog(); yield return null;
+    }
+
+    [Serializable] private sealed class IncomeRewardPayload { public IncomeRewardTables tables; }
+    [Serializable] private sealed class IncomeRewardTables { public IncomeRewardItem[] item; }
+    [Serializable] private sealed class IncomeRewardItem
+    {
+        public int ClassId, ItemType, Quality, Rank;
+        public string RawIcon;
+        public bool CanOverlap;
+    }
+
+    private IEnumerator CheckIncomeRewardCatalog()
+    {
+        var character = OfficialCharacterAssetCatalog.LoadDefault().Load();
+        Require(home.Profile.ApplyCharacterMutation(player => {
+            // LevelCondition reads BaseLevel, capped by the personal SubRank.
+            // Selected system_level_limit caps SubRank 1 at 10 and SubRank 2 at 20.
+            player.SubRank = 2;
+            player.Level = 15; player.Experience = character.CumulativeLevelExperience[15];
+        }, "income-reward:level").IsApplied, "seed actual cart unlock level in the isolated profile");
+        home.Close(); CloseCapture(); yield return null;
+        Open(); yield return new WaitForSeconds(1);
+        Require(home.TryRepair(10), "actual selected cart repair transaction");
+        Require(home.Session.IsHangUpUnlocked(2) || home.TryUnlockHangUp(2),
+            "actual selected cart unlock condition and transaction");
+        Require(home.Session.Mutate("income-reward:seed", save => {
+            var entry = save.Income.SingleOrDefault(value => value.HangUpId == 2);
+            if (entry == null) save.Income.Add(entry = new OfflineHomeIncomeEntry { HangUpId = 2 });
+            entry.StoredSeconds = 3600; entry.SettledCount = 0;
+        }), "seed actual configured cart income");
+        var definition = home.Session.Definitions.Single(value => value.HangUpId == 2);
+        var possibleItems = definition.OutputItemIds?.Length > 0
+            ? definition.OutputItemIds : new[] { definition.OutputItemId };
+        var inventoryBefore = possibleItems.ToDictionary(id => id, home.Profile.InventoryCount);
+        var reward = home.Session.CollectReward(2, "income-reward:collect");
+        Require(reward != null && possibleItems.Contains(reward.ItemId) && reward.ItemId != 50 && reward.Count > 0,
+            "actual cart response selects the configured non-XP reward");
+        int expectedItem = reward.ItemId;
+        long before = inventoryBefore[expectedItem];
+        home.DrainHomeInventory();
+        Require(home.Profile.InventoryCount(expectedItem) == before + reward.Count,
+            "actual cart receipt reaches the real profile once");
+        var postMethod = home.Hud.GetType().GetMethod("PostPartnerPromptSound", BindingFlags.Instance | BindingFlags.NonPublic);
+        var post = (Action<AudioClip, GameObject>)Delegate.CreateDelegate(typeof(Action<AudioClip, GameObject>), home.Hud, postMethod);
+        using (var awards = new OfflineHomeBedAwards(home, home.Hud.CanvasTransform.GetComponent<Canvas>(), post))
+        {
+            var assets = Zjcs.Official.HomeFastHangUpUI.OfficialHomeFastHangUpAssetCatalog.LoadDefault();
+            var selected = JsonUtility.FromJson<IncomeRewardPayload>(assets.rules.text).tables.item;
+            Require(selected.Length == 259 && assets.images.Length == 15,
+                "all configured income reward and acceleration-cost definitions use unique original images");
+            foreach (var row in selected)
+            {
+                var item = awards.GetItemInfo(row.ClassId);
+                Require(item.ClassId == row.ClassId && item.Icon == row.RawIcon && item.CanOverlap == row.CanOverlap
+                    && (int)item.ItemType == row.ItemType && (int)item.Quality == row.Quality && item.Rank == row.Rank,
+                    "selected original income item projection: " + row.ClassId);
+                using var boundSprite = awards.LoadSprite(item.Icon);
+                Require(boundSprite.Result, "selected original income image lease: " + row.ClassId);
+            }
+            Require(awards.IsIgnoreShowAward(56) && !awards.IsIgnoreShowAward(expectedItem),
+                "original ignored-award setting is applied before queue display");
+            awards.Show(reward);
+            yield return new WaitForSeconds(.3f);
+            var icon = UnityEngine.Object.FindObjectsOfType<Zjcs.Official.HomeAwardUI.HomeAwardIcon>()
+                .Single(value => value.ItemIcon && value.ItemIcon.myInfo?.ClassId == expectedItem);
+            using var expectedSprite = awards.LoadSprite(awards.GetItemInfo(expectedItem).Icon);
+            Require(icon.GetComponentsInChildren<UnityEngine.UI.Image>().Any(value => value.sprite == expectedSprite.Result),
+                "actual cart receipt renders its original reward image through the original queue");
+            Capture("home-income-production-cart-award.png");
+            Require(home.Profile.InventoryCount(expectedItem) == before + reward.Count && home.Session.Save.Inventory.Count == 0,
+                "reward presentation does not issue another grant or recreate a ledger stack");
+        }
+        home.Close(); CloseCapture(); yield return null;
+        Open(); yield return new WaitForSeconds(1);
+        Require(home.Profile.InventoryCount(expectedItem) == before + reward.Count,
+            "cart reward persists after reopening without another grant");
     }
 
     private void CheckCollectionReceipts(ISet<int> flags)
