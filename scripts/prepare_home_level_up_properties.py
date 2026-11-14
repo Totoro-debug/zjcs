@@ -196,8 +196,9 @@ public static class HomeLevelUpDiagnostics
                  'fixtures/home_level_up_properties_checks.cs'):
         p = ROOT/'scripts'/name; inputs[p.relative_to(ROOT).as_posix()] = sha(p)
     folder = ROOT/'unity/Assets/Game/Runtime/Offline/HomeLevelUpUI'
-    for p in sorted(folder.iterdir()):
-        if p.suffix not in ('.cs','.asmdef'): continue
+    # This formula receipt owns the adapter and its assembly definition. New
+    # notification/window owners have independent source receipts.
+    for p in (folder/'OfflineHomeLevelUpProperties.cs', folder/'Zjcs.Offline.HomeLevelUpUI.asmdef'):
         for item in (p,metadata(p)): outputs[item.relative_to(ROOT).as_posix()] = sha(item)
     item = metadata(folder,True); outputs[item.relative_to(ROOT).as_posix()] = sha(item)
     proof = dict(manifest='884_156692',generator_sha256=sha(Path(__file__)),inputs=inputs,outputs=outputs,configuration=configuration,
