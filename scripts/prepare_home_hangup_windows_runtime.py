@@ -182,7 +182,27 @@ namespace Zjcs.Official.HomeHangUpWindowsUI
     text = replace(text, 'WindowManager.Instance.Popup((PopTipOutputAddition panel) =>\n\t\t{\n\t\t\tpanel.Init(mOutputGroupType);\n\t\t});', 'Services.OpenOutputAddition(mOutputGroupType);')
     emit('OutputAdditionDetailButton', text)
 
-    for name in ('HomeHangUpWindowServices', 'OfficialHomeHangUpWindowAssetCatalog'):
+    text = clean(read('BlessingLevelRuleDialog'))
+    text = text.replace('IHomeHangUpWindowServices Services', 'IHomeBlessingRuleServices Services')
+    text = text.replace('Services.Player.', 'Services.Window.Player.')
+    text = text.replace('mRuleDialog.SetRule("BlessingLevelRule");',
+        'mRuleDialog.Rules = Services.RuleTips;\n\t\tmRuleDialog.SetRule("BlessingLevelRule");')
+    emit('BlessingLevelRuleDialog', text)
+
+    text = clean(read('BlessingLevelRuleItem'))
+    text = text.replace('IHomeHangUpWindowServices Services', 'IHomeBlessingRuleServices Services')
+    text = text.replace('Parsers.Instance.HangUpInfoParser.TryGetMainHangUpInfo(', 'Services.Window.TryGetMainHangUpInfo(')
+    text = text.replace('Services.GetHangUpReward(', 'Services.Window.GetHangUpReward(')
+    text = text.replace('Services.TextFormatted(', 'Services.Window.TextFormatted(')
+    text = text.replace('Parsers.Instance.HomeLevelInfoParser.Get(blessingLevel).FurnitureLevelUpLimit',
+        'Services.FurnitureLevelUpLimit(blessingLevel)')
+    emit('BlessingLevelRuleItem', text)
+
+    text = clean(read('RuleTipNumer', 'client-source'))
+    text = text.replace('    public IHomeHangUpWindowServices Services { protected get; set; }', '')
+    emit('RuleTipNumer', text)
+
+    for name in ('HomeHangUpWindowServices', 'HomeBlessingRuleServices', 'OfficialHomeHangUpWindowAssetCatalog'):
         path = DEST/(name+'.cs')
         for item in (path, metadata(path)): outputs[item.relative_to(ROOT).as_posix()] = sha(item)
     path = DEST/'Zjcs.Official.HomeHangUpWindowsUI.asmdef'
@@ -204,7 +224,7 @@ namespace Zjcs.Official.HomeHangUpWindowsUI
         path = DEST/(name+'.cs')
         inputs[path.relative_to(ROOT).as_posix()] = sha(path)
     proof = dict(manifest='884_156692', generator_sha256=sha(Path(__file__)), inputs=inputs, outputs=outputs,
-        scope='Original bed window, output source/upgrade preview and quick-receive controllers. Explicit typed player, property, transaction and presentation owners; native assets, real local binding and Player validation are separate.')
+        scope='Original bed window, output source/upgrade preview, quick-receive and blessing-rule controllers. Explicit typed player, property, transaction and presentation owners; native assets, real local binding and Player validation are separate.')
     (ROOT/'assets/reference/home-hangup-windows-runtime-source-manifest.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
     return proof
 

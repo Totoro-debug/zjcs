@@ -34,7 +34,7 @@ namespace Zjcs.Presentation.Home
                     if (host.TryFastForward(1) > 0) completed?.Invoke();
                 };
                 nativeBedServices.OpenOutputWindow = _ => throw new NotSupportedException("The original activity output-detail owner is not installed.");
-                nativeBedServices.OpenBlessingWindow = () => throw new NotSupportedException("The original blessing-rule owner is not installed.");
+                nativeBedServices.OpenBlessingWindow = nativeBedWindows.ShowBlessingRule;
                 nativeBedWindows.ActiveWindowChanged += root => {
                     activeDialog = root;
                     activeDialogRenderer = null;

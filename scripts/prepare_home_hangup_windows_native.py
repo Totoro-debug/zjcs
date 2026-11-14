@@ -8,7 +8,6 @@ import subprocess
 import sys
 import wave
 
-from prepare_home_hud_native import HomeHudBinding
 from prepare_home_currency_windows_native import HomeCurrencyWindowsBinding
 from prepare_home_repair_native import HomeRepairBinding
 from prepare_partner_gift_native import PartnerGiftBinding
@@ -18,14 +17,16 @@ from prepare_current_partner_native import documents
 from prepare_partner_input_dialog import metadata
 from npc_travel_language import language
 from official_manifest import read_asset_manifest
+from official_tables import Constructors
 from validation_workspace import validation_directory
+from deduplicate_unity_textures import reuse_staged_shared_textures
 
 RECEIPT = ROOT/'assets/reference/home-hangup-windows-native-source-manifest.json'
 DESTINATION = ROOT/'unity/Assets/Official/Home/UI/HangUpWindows'
 CATALOG = ROOT/'unity/Assets/Game/Resources/Home/OfficialHomeHangUpWindowAssetCatalog.asset'
 
 
-class HomeHangUpWindowsBinding(HomeHudBinding, HomeCurrencyWindowsBinding):
+class HomeHangUpWindowsBinding(HomeCurrencyWindowsBinding):
     def sound(self, payload, owner):
         pointer = payload['WwiseObjectReference']
         if not pointer['m_PathID']: return super().sound(payload, owner)
@@ -89,7 +90,7 @@ class HomeHangUpWindowsBinding(HomeHudBinding, HomeCurrencyWindowsBinding):
     def register_scripts(self):
         super().register_scripts()
         for name in ('FurnitureBedDialog', 'FurnitureOutputInfo', 'FurnitureHangUpQuickReceive',
-                     'BlessingRuleBtn', 'OutputAdditionDetailButton'):
+                     'BlessingRuleBtn', 'OutputAdditionDetailButton', 'BlessingLevelRuleDialog', 'BlessingLevelRuleItem', 'RuleTipNumer'):
             path = ROOT/'unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI'/(name+'.cs')
             meta = Path(str(path)+'.meta')
             ref = dict(fileID=11500000, guid=guid(meta), type=3)
@@ -97,6 +98,13 @@ class HomeHangUpWindowsBinding(HomeHudBinding, HomeCurrencyWindowsBinding):
             self.script_guids.add(ref['guid'])
             self.script_sources[name] = dict(path=path.relative_to(ROOT).as_posix(), pointer=ref,
                 sha256=sha(path.read_bytes()), meta_sha256=sha(meta.read_bytes()))
+        for name in ('RuleDialog', 'TipInfo'):
+            path = ROOT/'unity/Assets/Game/Runtime/Official/ProfessionUI'/(name+'.cs')
+            ref = dict(fileID=11500000, guid=guid(Path(str(path)+'.meta')), type=3)
+            self.scripts[name] = ref; self.class_ids[script_id('', name)] = ref
+            self.script_guids.add(ref['guid'])
+            self.script_sources[name] = dict(path=path.relative_to(ROOT).as_posix(), pointer=ref,
+                sha256=sha(path.read_bytes()), meta_sha256=sha(Path(str(path)+'.meta').read_bytes()))
 
     def tip_address(self, obj, original_type):
         key = identity(obj)
@@ -115,6 +123,9 @@ class HomeHangUpWindowsBinding(HomeHudBinding, HomeCurrencyWindowsBinding):
         return result
 
     def friendship_templates(self):
+        self.recovery.recover('BlessingLevelRuleDialog', self.work/'hangup-native',
+            bundle='defaultpackage_assets_prefabs_ui_furniture.bundle',
+            native_relative='Prefabs/UI/Furniture/BlessingLevelRuleDialog.prefab')
         self.recovery.recover('FurnitureBedDialog', self.work/'hangup-native',
             bundle='defaultpackage_assets_prefabs_ui_furniture.bundle',
             native_relative='Prefabs/UI/Furniture/FurnitureBedDialog.prefab')
@@ -162,7 +173,24 @@ class HomeHangUpWindowsBinding(HomeHudBinding, HomeCurrencyWindowsBinding):
         self.entry_text_keys.update('item_'+str(row['ClassId'])+'_name' for row in self.furniture_rows)
         self.entry_text_keys.update(group['TypeNameKey'] for group in self.settings['fields']['mFurnitureClassifications'])
         for name in self.icons: self.entry_text_keys.update(('item_unrepair_'+name, 'item_unrepair_desc_'+name))
-        self.template_selection['scope'] = 'Complete original bed window, repair/property templates and configured furniture icon dependencies.'
+        code = ROOT/'.tools/source-packages/current'/self.recovery.apk.version/'official-code'
+        constructors = Constructors(code)
+        kind, = re.findall(r'new (Tb\w+)\(loader\("(?:[^"/]*/)?rule_tip"\)\)', constructors.source('Tables'))
+        obj, = [obj for obj in self.recovery.apk.objects('defaultpackage_assets_config_luban.bundle')
+            if obj.type.name == 'TextAsset' and obj.read().m_Name.rsplit('/', 1)[-1] == 'rule_tip.g']
+        raw = obj.read().m_Script.encode('utf8', 'surrogateescape')
+        rows = [row for row in constructors.table(raw, kind) if row['RuleKey'] == 'BlessingLevelRule']
+        assert sum(row['Order'] == 0 for row in rows) == 1 and len(rows) > 1
+        self.blessing_rule = dict(Key='BlessingLevelRule', TitleKey='rule_tip_BlessingLevelRule_0',
+            TipKeys=['rule_tip_BlessingLevelRule_'+str(row['Order']) for row in sorted(rows, key=lambda row: row['Order']) if row['Order'] != 0])
+        self.entry_text_keys.update([self.blessing_rule['TitleKey'], *self.blessing_rule['TipKeys'], 'ui_rule_hours'])
+        for name in (*constructors.sources, 'RuleTipInfoParser'):
+            item = code/'common-source/Common'/(name+'.cs')
+            if not item.is_file(): item = code/'common-source/Common.LubanGen'/(name+'.cs')
+            self.inputs[item.relative_to(ROOT).as_posix()] = sha(item.read_bytes())
+        self.template_selection['blessing_rule'] = dict(source=self.recovery.apk.provenance(obj),
+            object_sha256=sha(obj.get_raw_data()), payload_sha256=sha(raw), rows=rows, parsed=self.blessing_rule)
+        self.template_selection['scope'] = 'Complete original bed and blessing-rule windows, repair/property templates and configured furniture icon dependencies.'
         return templates
 
     def build(self):
@@ -184,11 +212,12 @@ class HomeHangUpWindowsBinding(HomeHudBinding, HomeCurrencyWindowsBinding):
         receipt['literal_format_keys'] = sorted(missing)
         path = folder/'home-hangup-window-texts.json'
         path.write_text(json.dumps(dict(manifest=self.recovery.apk.version,
-            texts=[dict(key=key, text=text) for key, text in sorted(texts.items())]), ensure_ascii=False, indent=2)+'\n', 'utf8', newline='\n')
+            texts=[dict(key=key, text=text) for key, text in sorted(texts.items())],
+            blessingRule=self.blessing_rule), ensure_ascii=False, indent=2)+'\n', 'utf8', newline='\n')
         meta = Path(str(path)+'.meta')
         meta.write_text('fileFormatVersion: 2\nguid: '+hashlib.md5(b'zjcs:home-hangup-window-texts').hexdigest()+'\nTextScriptImporter:\n  externalObjects: {}\n', 'utf8', newline='\n')
         for item in (path, meta): receipt['outputs'][item.name] = sha(item.read_bytes())
-        for name in ('prepare_home_hangup_windows_native.py', 'prepare_home_hud_native.py',
+        for name in ('prepare_home_hangup_windows_native.py',
                      'prepare_home_currency_windows_native.py', 'prepare_home_repair_native.py'):
             path = ROOT/'scripts'/name; receipt['inputs'][path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
         used = set()
@@ -199,7 +228,10 @@ class HomeHangUpWindowsBinding(HomeHudBinding, HomeCurrencyWindowsBinding):
         receipt['script_bindings'] = {name: row for name, row in receipt['script_bindings'].items() if row['pointer']['guid'] in used}
         receipt.update(generator_sha256=sha(Path(__file__).read_bytes()),
             reward_image=self.reward_image,
-            scope='Original complete bed window, selected native scripts/layout/animations and Windows dependency closure. Real local host, other income windows and runtime/Player validation remain required.')
+            scope='Original complete bed and blessing-rule windows, selected native scripts/layout/animations and Windows dependency closure. Other income windows and complete runtime/Player validation remain required.')
+        helper = ROOT/'scripts/deduplicate_unity_textures.py'
+        receipt['inputs'][helper.relative_to(ROOT).as_posix()] = sha(helper.read_bytes())
+        reuse_staged_shared_textures(folder, receipt)
         (self.work/'home-hangup-windows-native-source-manifest.json').write_text(json.dumps(receipt, ensure_ascii=False, indent=2)+'\n','utf8',newline='\n')
         print('Original bed window:', len(receipt['outputs']), 'outputs;', len(payload['objects']), 'tip source objects', flush=True)
 
@@ -271,6 +303,8 @@ def install(work):
     raw += '  m_Script: {fileID: 11500000, guid: '+guid(Path(str(script)+'.meta'))+', type: 3}\n'
     raw += "  m_Name: OfficialHomeHangUpWindowAssetCatalog\n  m_EditorClassIdentifier: ''\n"
     raw += '  bedPrefab: {fileID: '+str(root['fileID'])+', guid: '+root['guid']+', type: 3}\n'
+    root = receipt['roots']['BlessingLevelRuleDialog']
+    raw += '  blessingRulePrefab: {fileID: '+str(root['fileID'])+', guid: '+root['guid']+', type: 3}\n'
     raw += '  texts: {fileID: 4900000, guid: '+hashlib.md5(b'zjcs:home-hangup-window-texts').hexdigest()+', type: 3}\n'
     image = receipt['reward_image']
     raw += '  bedRewardImagePath: '+image['path']+'\n'

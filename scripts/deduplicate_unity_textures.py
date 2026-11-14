@@ -269,6 +269,56 @@ def matching_source_manifests(patterns, tracked):
                 if (p := Path(os.fsdecode(raw))) != RECEIPT and p.relative_to(ROOT).as_posix() in tracked]
 
 
+def reuse_staged_shared_textures(folder, receipt):
+    """Apply proved immutable texture aliases to one newly converted closure."""
+    if not RECEIPT.is_file():
+        return
+    staged = {}
+    for name, expected in receipt['outputs'].items():
+        path = folder / name
+        if digest(path.read_bytes()) != expected:
+            raise ValueError('Staged asset changed before texture reuse: ' + name)
+        if name.endswith('.meta'):
+            match = GUID.search(path.read_bytes())
+            if match:
+                staged[match[1].decode()] = name[:-5]
+    aliases, reused = {}, []
+    for row in json.loads(RECEIPT.read_bytes())['textures']:
+        source, canonical = row['source'], row['canonical']
+        relative = staged.get(source['guid'])
+        if relative is None:
+            continue
+        path = folder / relative
+        raw = path.read_bytes()
+        target = checked_path(canonical['path'])
+        local_meta, target_meta = Path(str(path) + '.meta'), Path(str(target) + '.meta')
+        if (b'\nTexture2D:' not in raw[:4096] or not re.search(rb'm_IsReadable: 0\s', raw[:4096])
+                or digest(raw) != source['sha256'] or sha(target) != canonical['sha256']
+                or source['sha256'] != canonical['sha256']
+                or sha(target_meta) != canonical['meta_sha256']
+                or importer(local_meta.read_bytes()) != importer(target_meta.read_bytes())):
+            raise ValueError('Staged texture/importer differs from proved shared source: ' + relative)
+        aliases[source['guid'].encode()] = canonical['guid'].encode()
+        reused.append(dict(staged_path=relative, staged_sha256=digest(raw), canonical=canonical))
+    # All original output and alias checks finish before changing staged bytes.
+    for row in reused:
+        receipt['outputs'].pop(row['staged_path'])
+        receipt['outputs'].pop(row['staged_path'] + '.meta')
+        target = row['canonical']
+        receipt['inputs'][target['path']] = target['sha256']
+        receipt['inputs'][target['path'] + '.meta'] = target['meta_sha256']
+    for name in receipt['outputs']:
+        path = folder / name
+        raw = path.read_bytes()
+        if name.endswith('.meta') or raw.startswith(b'%YAML'):
+            updated = PPTR.sub(lambda match: b'guid: ' + aliases.get(match[1], match[1]), raw)
+            if updated != raw:
+                path.write_bytes(updated)
+                receipt['outputs'][name] = digest(updated)
+    receipt['inputs'][RECEIPT.relative_to(ROOT).as_posix()] = sha(RECEIPT)
+    receipt['shared_textures'] = reused
+
+
 def stage_shared_textures(project):
     """After staging a fixture, include only shared textures it actually references."""
     if not RECEIPT.is_file():

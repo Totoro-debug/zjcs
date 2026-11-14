@@ -26,8 +26,20 @@
       "text": "月卡"
     },
     {
+      "key": "blessing_level_rule_effect_title",
+      "text": "提升效果预览"
+    },
+    {
       "key": "blessing_level_rule_exp_title",
       "text": "经验基准产量"
+    },
+    {
+      "key": "blessing_level_rule_max_level_title",
+      "text": "小推车等级上限"
+    },
+    {
+      "key": "blessing_level_rule_title",
+      "text": "赐福等级规则"
     },
     {
       "key": "fast_hang_up_btn",
@@ -238,6 +250,30 @@
       "text": "森森的售货车常驻家园啦！出售各种各样的好东西。"
     },
     {
+      "key": "rule_tip_BlessingLevelRule_0",
+      "text": "赐福等级"
+    },
+    {
+      "key": "rule_tip_BlessingLevelRule_1",
+      "text": "探索地图主线区域时，每激活1个女神像，可提升1级赐福等级。"
+    },
+    {
+      "key": "rule_tip_BlessingLevelRule_2",
+      "text": "赐福等级越高，木床挂机经验基准产量、小推车等级上限越高。"
+    },
+    {
+      "key": "rule_tip_BlessingLevelRule_3",
+      "text": "探索地图支线区域并激活失落女神像，也会提升木床挂机经验基准产量。"
+    },
+    {
+      "key": "task_panel_delegate_rules_title",
+      "text": "委托任务规则"
+    },
+    {
+      "key": "tipNumer",
+      "text": "{0}."
+    },
+    {
       "key": "ui_any_click_close",
       "text": "点击空白处关闭"
     },
@@ -278,6 +314,10 @@
       "text": "资源"
     },
     {
+      "key": "ui_rule_hours",
+      "text": "{0}/小时"
+    },
+    {
       "key": "ui_sleep_text",
       "text": "全局加速"
     },
@@ -285,5 +325,14 @@
       "key": "ui_visitor_text",
       "text": "来访者"
     }
-  ]
+  ],
+  "blessingRule": {
+    "Key": "BlessingLevelRule",
+    "TitleKey": "rule_tip_BlessingLevelRule_0",
+    "TipKeys": [
+      "rule_tip_BlessingLevelRule_1",
+      "rule_tip_BlessingLevelRule_2",
+      "rule_tip_BlessingLevelRule_3"
+    ]
+  }
 }

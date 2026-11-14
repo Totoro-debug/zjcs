@@ -84,6 +84,9 @@ namespace Zjcs.Presentation.Home
             });
         }
 
+        public void ShowBlessingRule()
+            => Create(assets.blessingRulePrefab, root => root.GetComponent<BlessingLevelRuleDialog>().Init());
+
         GameObject Clone(GameObject prefab, Transform parent, bool keepWorld = false)
         {
             var root = Object.Instantiate(prefab, staging.transform, false);
@@ -99,7 +102,10 @@ namespace Zjcs.Presentation.Home
             foreach (var bed in root.GetComponentsInChildren<FurnitureBedDialog>(true)) bed.Services = services;
             foreach (var quick in root.GetComponentsInChildren<FurnitureHangUpQuickReceive>(true)) quick.Services = services;
             foreach (var addition in root.GetComponentsInChildren<OutputAdditionDetailButton>(true)) addition.Services = services;
+            foreach (var ruleButton in root.GetComponentsInChildren<BlessingRuleBtn>(true)) ruleButton.Services = services;
             foreach (var info in root.GetComponentsInChildren<FurnitureOutputInfo>(true)) info.OutputServices = output;
+            foreach (var rule in root.GetComponentsInChildren<BlessingLevelRuleDialog>(true)) rule.Services = (IHomeBlessingRuleServices)services;
+            foreach (var row in root.GetComponentsInChildren<BlessingLevelRuleItem>(true)) row.Services = (IHomeBlessingRuleServices)services;
             root.transform.SetParent(parent, keepWorld);
             return root;
         }

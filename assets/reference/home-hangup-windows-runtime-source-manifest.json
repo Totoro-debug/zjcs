@@ -1,6 +1,6 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "7c861ac45eb6cb4e1f0c403e42c6dfec163b1854cd340185d55251c6bd795e6d",
+  "generator_sha256": "1cf74d0d44b4289db5174cc2fc9f1dab880a7bd0e321befdc61dec0f42508457",
   "inputs": {
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/EPropHandleType.cs": "8dc76aca8b42057adbdb1139fa168b987d2ae956cfc10c142a83c57b62fdef00",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/OutputGroupType.cs": "2e91a08aa91d55931013fb403d025cee1fbb512e1d36eb5d90c59043462d02e0",
@@ -486,6 +486,11 @@
     ".tools/source-packages/current/884_156692/official-code/client-source-resolved/BlessingRuleBtn.decompilation.json": "13a55f333acd9fb8763e4caa32cfecf067a3e9fabd4f9ee768cf1a6c59d0a3d5",
     ".tools/source-packages/current/884_156692/official-code/client-source-resolved/OutputAdditionDetailButton.cs": "bf5493d5065581f8a23fce0637230b3ef47c13c103b9915269b858220711091d",
     ".tools/source-packages/current/884_156692/official-code/client-source-resolved/OutputAdditionDetailButton.decompilation.json": "0158a2a27ad38b456ea700a586568064fbe2596c797bec9062d9ad5075ef76ab",
+    ".tools/source-packages/current/884_156692/official-code/client-source-resolved/BlessingLevelRuleDialog.cs": "ea82e2ee08a2a16a555a38a10d38138ec81c4d1e79e9aeae00e3977c24783da2",
+    ".tools/source-packages/current/884_156692/official-code/client-source-resolved/BlessingLevelRuleDialog.decompilation.json": "9d92f8473ab621b9b3c068281c60d9e82a3d4bf91593e1a4919a220f2e3e5e01",
+    ".tools/source-packages/current/884_156692/official-code/client-source-resolved/BlessingLevelRuleItem.cs": "c4ffb37cc188ec2ab56884f2cb8ed35ae9f184034cdbce09b759d470c0c85e45",
+    ".tools/source-packages/current/884_156692/official-code/client-source-resolved/BlessingLevelRuleItem.decompilation.json": "670c06606a7f4ade6293b849aea5630e7a17e943e51f0f88f888f887953b00d7",
+    ".tools/source-packages/current/884_156692/official-code/client-source/RuleTipNumer.cs": "40e4fac30b0614af11f50ad7872a4a1e1097ae59a7ea6793fe741837fd9bcb06",
     ".tools/source-packages/current/884_156692/official-code/client-source/NumberDisplayRuleUtils.cs": "51b6d8d214bc6ce96704630cdc7a45550b289e7d4bc6d1ed0bcc69a2eaa35074",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/FunctionType.cs": "a4ba46945936bf793e114d9121a59562727dc321f6b274d84f0d13b9e9562b5c",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/PropType.cs": "265a81dbeab87b90e3a1c1423884610ed43ea9b535e488e20de0e0c41f9831b0",
@@ -515,13 +520,21 @@
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/BlessingRuleBtn.cs.meta": "a7f10629d998fe2b60052ba8883a7dbe69fa6c325540542ecaadc5cbca44f73b",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OutputAdditionDetailButton.cs": "77fd086d5bccbaa6760a4033b7c9c656b405d4ac28914435a197ba1fa9188a2f",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OutputAdditionDetailButton.cs.meta": "296d73d6bc9147570ce36fbf36b514017928eaddf3880ab4716f4f3c4650f250",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/BlessingLevelRuleDialog.cs": "11d7a723f8d7a7e3046390d75b9e2b49389e05e9022c5a3a78baf445ceff0588",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/BlessingLevelRuleDialog.cs.meta": "be59f4141acca9fd38acdefa73680af23bcf603c3cb36f2add56f9d41ccb65d8",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/BlessingLevelRuleItem.cs": "59db319180a48cbb1d6cf09be521295f38eb97e936527b73bd93ff15f15464d7",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/BlessingLevelRuleItem.cs.meta": "9df61cd241af716ee082d9f5f7cbc888658906d9d92c20a2c62254c65cc1dff0",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/RuleTipNumer.cs": "209fda99847350431121022250be65996cc430d67b7881ec6bc39f02fe658056",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/RuleTipNumer.cs.meta": "04cb33441ed853b3eb9969a90beb1be0af483bf23ed7b8f0927e097db29c95e6",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/HomeHangUpWindowServices.cs": "71390947e261a802e7fdd5d6635f8f1cfe61b6c654bcfdde60ec15d6ebeebb8e",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/HomeHangUpWindowServices.cs.meta": "cc9776c3d6d1523dd3c0c05591cd0e291fd457394518ffb5af9ab79a30565658",
-    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OfficialHomeHangUpWindowAssetCatalog.cs": "5d5b5d14734fda5d6672d210154847f92a252f7ba1aa5bc54705768e86f5434e",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/HomeBlessingRuleServices.cs": "1d82f8e820af0000aff027c28221ce327c7b12e49166ad76d2f512dd3b430232",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/HomeBlessingRuleServices.cs.meta": "01ad3f7dc00a98b914a8717fd59dc865c93c468fdc253fd265d246c7863aae55",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OfficialHomeHangUpWindowAssetCatalog.cs": "fd66d3f6df4940cb98b97f6b9108012203076215ed4d4e02b791d863759e717a",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OfficialHomeHangUpWindowAssetCatalog.cs.meta": "c9bc66c36c076b16d15a2a3fe57128b20af413cf4ada8be8d6a0fff861b155af",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/Zjcs.Official.HomeHangUpWindowsUI.asmdef": "b4ca91c83a13fd75e5a3159c50a7de188ee1e6ad5b6a6a8d0d9480821c68ee67",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/Zjcs.Official.HomeHangUpWindowsUI.asmdef.meta": "f3f2953815dbec20009012e2d76c4df1e3a4113c663d40a24296e096961d2ccf",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI.meta": "eea0eb30c1993bdafd10c0be5730c79629d3cfbe3ac7035cc5a402b8ed4be41f"
   },
-  "scope": "Original bed window, output source/upgrade preview and quick-receive controllers. Explicit typed player, property, transaction and presentation owners; native assets, real local binding and Player validation are separate."
+  "scope": "Original bed window, output source/upgrade preview, quick-receive and blessing-rule controllers. Explicit typed player, property, transaction and presentation owners; native assets, real local binding and Player validation are separate."
 }

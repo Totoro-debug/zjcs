@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Zjcs.Official.HomeIncomeRules;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.Progression;
@@ -146,13 +147,15 @@ public sealed partial class HomeIncomeFormulaHostRunner
         profile.Reload(); long awardedExperience = profile.Save.Player.Experience;
         Require(awardedExperience == experience + expected + freeExpected, "free acceleration grants experience once");
         long checkpoint = home.Session.Save.LastLocalUnixSeconds;
+        double checkpointSubsecond = home.Session.Save.LastIncomeSubsecond;
         double remainingSeconds = home.Session.Save.Income.Single(value => value.HangUpId == 1).StoredSeconds;
         Capture("home-income-collected.png");
         home.Close(); CloseCapture(); yield return null;
         Open(); yield return new WaitForSeconds(1); profile.Reload();
         Require(!UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeAwardUI.AwardListPanel>(),
             "closing and reopening home releases the previous production award queue");
-        double elapsed = home.Session.Save.LastLocalUnixSeconds - checkpoint;
+        double elapsed = home.Session.Save.LastLocalUnixSeconds - checkpoint
+            + home.Session.Save.LastIncomeSubsecond - checkpointSubsecond;
         Require(profile.Save.Player.Experience == awardedExperience && home.Session.Save.Inventory.Count == 0
             && Math.Abs(home.Session.Save.Income.Single(value => value.HangUpId == 1).StoredSeconds
                 - Math.Min(36 * 3600, remainingSeconds + elapsed)) < 0.000001,
@@ -177,7 +180,7 @@ public sealed partial class HomeIncomeFormulaHostRunner
         }
         yield return CheckNativeBedCollection();
         yield return CheckExperienceLedgerRecovery();
-        Debug.Log("HOME_INCOME_FORMULA_PASSED: selected Float flags, original float/double arithmetic and unsettled-preview settlement, actual native repair and production bed pointer, bed output foldout, real lost goddess profile, production collection/experience/free acceleration, original XP award queue, committed reward receipts, rejected experience grants retained, acknowledgement recovery, original remainder, idempotency and disk reopen. Acceleration business calls are direct; secondary bed windows and complete HUD remain pending.");
+        Debug.Log("HOME_INCOME_FORMULA_PASSED: selected Float flags, original float/double arithmetic and unsettled-preview settlement, actual native repair and production bed pointer, bed output foldout, original blessing rule rows/highlight/scroll/mask close, real lost goddess profile, production collection/experience/free acceleration, original XP award queue, committed reward receipts, rejected experience grants retained, acknowledgement recovery, original remainder, idempotency and precise disk reopen. Acceleration business calls are direct; acceleration/output-detail windows and complete HUD remain pending.");
     }
 
     private IEnumerator CheckNativeBedCollection()
@@ -196,6 +199,49 @@ public sealed partial class HomeIncomeFormulaHostRunner
         Require(!bed.GetComponentsInChildren<TMPro.TMP_Text>(true).Any(value => value.text == "hang_up_1_base_output"),
             "native bed binds the selected dynamic base-output translation");
         Capture("home-bed-production-native.png");
+        var ruleButton = bed.GetComponentInChildren<Zjcs.Official.HomeHangUpWindowsUI.BlessingRuleBtn>(true);
+        Click(ruleButton.RuleBtn); yield return new WaitForSeconds(.8f);
+        var rule = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeHangUpWindowsUI.BlessingLevelRuleDialog>();
+        Require(rule, "original bed blessing button opens its original rule window");
+        var ruleRows = rule.GetComponentsInChildren<Zjcs.Official.HomeHangUpWindowsUI.BlessingLevelRuleItem>()
+            .Where(row => row.gameObject.activeInHierarchy).ToArray();
+        Require(ruleRows.Length == 11 && ruleRows.Count(row => row.GetComponentsInChildren<TMPro.TMP_Text>()
+            .Any(text => Math.Abs(text.transform.localScale.x - 1.2f) < .0001f)) == 1,
+            "original rule pool displays eleven levels and highlights the actual saved blessing level");
+        Capture("home-bed-production-blessing-rule.png");
+        var ruleScroll = rule.GetComponentInChildren<UnityEngine.UI.ScrollRect>();
+        Vector2 scrollPoint = RectTransformUtility.WorldToScreenPoint(home.Scene.Camera,
+            ruleScroll.viewport.TransformPoint(ruleScroll.viewport.rect.center));
+        var scrollPointer = new PointerEventData(EventSystem.current) {
+            position = scrollPoint, scrollDelta = new Vector2(0, -100) };
+        var scrollHits = new List<RaycastResult>(); EventSystem.current.RaycastAll(scrollPointer, scrollHits);
+        Require(scrollHits.Count > 0 && ExecuteEvents.GetEventHandler<IScrollHandler>(scrollHits[0].gameObject)
+            == ruleScroll.gameObject, "rule table pointer reaches the original scroll view");
+        float scrollBefore = ruleScroll.content.anchoredPosition.y;
+        for (int wheel = 0; wheel < 12 && ruleScroll.verticalNormalizedPosition > .001f; wheel++)
+        {
+            ExecuteEvents.ExecuteHierarchy(scrollHits[0].gameObject, scrollPointer, ExecuteEvents.scrollHandler);
+            yield return null;
+        }
+        yield return new WaitForSeconds(.3f);
+        Require(ruleScroll.content.anchoredPosition.y > scrollBefore && ruleScroll.verticalNormalizedPosition < .01f,
+            "original rule table scrolls to its final level through internal wheel input: "
+                + ruleScroll.verticalNormalizedPosition + ", " + ruleScroll.content.anchoredPosition);
+        Capture("home-bed-production-blessing-scrolled.png");
+        var rulePopup = rule.GetComponent<Zjcs.Official.WorldUI.WorldPopupWindow>();
+        var ruleMask = UnityEngine.Object.FindObjectsOfType<Zjcs.Official.WorldUI.WorldWindowMask>()
+            .Single(value => value.AttachWindow == rulePopup);
+        var outside = new PointerEventData(EventSystem.current) {
+            position = new Vector2(8, target.height - 8), button = PointerEventData.InputButton.Left };
+        var maskHits = new List<RaycastResult>(); EventSystem.current.RaycastAll(outside, maskHits);
+        Require(maskHits.Count > 0 && ExecuteEvents.GetEventHandler<IPointerClickHandler>(maskHits[0].gameObject) == ruleMask.Button.gameObject,
+            "outside rule pointer first hits the original attached mask");
+        ExecuteEvents.ExecuteHierarchy(maskHits[0].gameObject, outside, ExecuteEvents.pointerDownHandler);
+        ExecuteEvents.ExecuteHierarchy(maskHits[0].gameObject, outside, ExecuteEvents.pointerUpHandler);
+        ExecuteEvents.ExecuteHierarchy(maskHits[0].gameObject, outside, ExecuteEvents.pointerClickHandler);
+        yield return new WaitForSeconds(.8f);
+        Require(!UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeHangUpWindowsUI.BlessingLevelRuleDialog>()
+            && bed.isActiveAndEnabled, "original mask click removes the rule while retaining the underlying bed");
         bool folded = bed.OutputFoldout;
         Click(bed.OutputFoldoutBtn); yield return null;
         Require(bed.OutputFoldout != folded, "original output foldout responds to internal pointer");

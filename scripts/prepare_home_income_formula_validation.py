@@ -68,8 +68,10 @@ def prepare():
     receipt['native_bed_adapter'] = (
         'Complete selected FurnitureBedDialog prefab/controller, original output foldouts, quick-receive '
         'condition, property chunks and inventory response phases are bound to the actual local home/profile. '
-        'No remote disable keys are installed, matching original empty-key HasKey=false. Secondary acceleration, '
-        'activity-output details and blessing-rule windows are not covered by this production-bed validation.')
+        'No remote disable keys are installed, matching original empty-key HasKey=false. The original blessing-rule '
+        'window uses selected rule_tip rows, actual blessing level, eleven original pooled rows and real home limits; '
+        'its pointer, scrolling, highlight and mask-close behavior are covered. Secondary acceleration and '
+        'activity-output details are not covered by this production-bed validation.')
     receipt['validation_inputs'] = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in (
         'scripts/prepare_home_income_formula_validation.py', 'scripts/fixtures/home_income_formula_validation.cs',
         'scripts/fixtures/home_furniture_host_validation.cs')}

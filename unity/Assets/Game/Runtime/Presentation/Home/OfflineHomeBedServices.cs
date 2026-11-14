@@ -25,7 +25,7 @@ namespace Zjcs.Presentation.Home
 {
     // The original controller consumes the real home/profile owners through this
     // local request/response boundary. Presentation never grants a second reward.
-    public sealed class OfflineHomeBedServices : IHomeHangUpWindowServices, IHomeHangUpWindowPlayer, IDisposable
+    public sealed class OfflineHomeBedServices : IHomeHangUpWindowServices, IHomeHangUpWindowPlayer, IHomeBlessingRuleServices, IDisposable
     {
         sealed class Response : IHomeWindowAwardMessage
         {
@@ -66,6 +66,10 @@ namespace Zjcs.Presentation.Home
         public Action OpenBlessingWindow;
         public OfflineHomeFurnitureOutput Output { get; }
         public OfflineHomeOutputAddition OutputAddition { get; }
+        public IHomeHangUpWindowServices Window => this;
+        public IProfessionRuleTipData RuleTips => assets;
+        public int FurnitureLevelUpLimit(int blessingLevel)
+            => Number(configuration.Rows("home_level").Single(row => Number(row, "Level") == blessingLevel), "FurnitureLevelUpLimit");
 
         public OfflineHomeBedServices(HomeFeatureRuntime home, Func<int?, bool> outputDisabled,
             Action<string> message, Action<OfflineHomeCollectedReward> popupAward,
