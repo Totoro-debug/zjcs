@@ -14,6 +14,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (playback == null) return;
             playback.BindUnitEnds(UnitEndPlayback);
+            playback.BindUnitSpawns(UnitSpawns);
             unitEndGraphClock = true;
         }
 

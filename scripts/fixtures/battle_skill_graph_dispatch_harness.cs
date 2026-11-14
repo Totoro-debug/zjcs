@@ -33,7 +33,12 @@ namespace Zjcs.Combat.Official
     public class GridItem { public int Id; public bool HasRuntime; public FightBattleUnitState Runtime; }
     public class FightBattleCheckpoint { public List<FightBattleUnitState> Units = new List<FightBattleUnitState>(); public List<GridItem> GridItems = new List<GridItem>(); }
     public class FightBattleSkillCastPresentation { public int FacingIndex, TargetId; }
-    public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId, Slot; public bool IsPetSupport, HasSkillCostHp; public long SkillCostBeforeHp, SkillCostAfterHp; public float Delay; public FightBattleSkillCastPresentation Presentation; public List<int> TargetIds = new List<int>(), DamageEventIds = new List<int>(); }
+    public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId, Slot; public bool IsPetSupport, HasSkillCostHp; public long SkillCostBeforeHp, SkillCostAfterHp; public float Delay; public FightBattleSkillCastPresentation Presentation; public List<int> TargetIds = new List<int>(), DamageEventIds = new List<int>(); public List<FightBattleHitSelectionSnapshot> HitSelections = new List<FightBattleHitSelectionSnapshot>(); }
+    public class FightBattleHitSelectionSnapshot
+    {
+        public sealed class SpawnedUnit { public int UnitId, EffectCenterIndex, ScopeIndex, X, Y; public float Delay; }
+        public List<SpawnedUnit> SpawnedUnits = new List<SpawnedUnit>();
+    }
     public class FightGridPoint { public int X,Y; }
     public class FightBattleMovementEvent { public int UnitId,MoveBehaviourId,MoveSkillEntityId; public FightBattleSkillCastPresentation OrdinarySkillPresentation; public float OrdinaryMoveDelay; public bool HasDirection,HasFacing; public float Delay,MoveDuration,MoveSpeed,NativeDuration; public List<FightGridPoint> Path = new List<FightGridPoint>(); }
     public sealed class FightBattleSkillMove { public float MoveDuration, MoveSpeed, Delay; }
@@ -295,6 +300,33 @@ public static class BattleSkillGraphDispatchHarness
             Require(empty.EntitiesStarted.Count == 1, "Empty graph cast was duplicated");
         }
         actor.Direction = 2;
+        var spawnScope = new OfflineBattleNativePlayableScope();
+        using (var spawnQueue = new OfficialBattleSkillGraphPlayback(catalog, spawnScope, new OfficialBattleSkillEntityPlayback(spawnScope)))
+        {
+            var summonCast = Cast(20, .25f);
+            summonCast.HitSelections.Add(new FightBattleHitSelectionSnapshot { SpawnedUnits = new List<FightBattleHitSelectionSnapshot.SpawnedUnit> {
+                new FightBattleHitSelectionSnapshot.SpawnedUnit { UnitId = 50, Delay = .5f },
+                new FightBattleHitSelectionSnapshot.SpawnedUnit { UnitId = 51, Delay = .5f } } });
+            var spawnStep = new FightBattleStepEvent { SkillCasts = new List<FightBattleSkillCastEvent> { summonCast } };
+            var childCast = Cast(20, 0); childCast.ActorId = 50;
+            spawnStep.SkillCasts.Add(childCast);
+            checkpoint.Units.Add(new FightBattleUnitState {Id=50,CharacterType=3,Hp=100});
+            var spawnTimes = new List<float>();
+            var spawns = new OfficialBattleUnitSpawnPlayback(receipt => { spawnTimes.Add(spawnScope.Clock); transforms[receipt.UnitId] = new Transform("summon"); }, id => transforms.ContainsKey(id));
+            spawnQueue.BindUnitSpawns(spawns);
+            spawns.Enqueue(spawnStep);
+            spawnQueue.Play(spawnStep, checkpoint, resolve);
+            spawnQueue.Tick(.5f);
+            Require(spawnTimes.Count == 0, "Summon appeared before its hit/scope delay");
+            spawnQueue.Tick(.5f);
+            Require(spawnTimes.Count == 2 && spawnTimes.All(time => time == .75f) && spawnScope.Clock == 1f,
+                "Native graph clock did not split exactly at same-time summon creation");
+            Require(spawnScope.Sources.SequenceEqual(new[]{"actor","summon"}) && spawnScope.Times[1] == .75f,
+                "A pending summon lost its initial child skill or cast before its model existed");
+            spawns.Enqueue(spawnStep);
+            spawnQueue.Tick(1);
+            Require(spawnTimes.Count == 2, "Refreshing a receipt repeated summon creation");
+        }
         var timed = new OfflineBattleNativePlayableScope();
         var queue = new OfficialBattleSkillGraphPlayback(catalog, timed, new OfficialBattleSkillEntityPlayback(timed));
         int cloneBindings = 0;

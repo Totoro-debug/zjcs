@@ -17,6 +17,7 @@ def main():
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument('--code-only', action='store_true')
     parser.add_argument('--custom-targets', action='store_true')
+    parser.add_argument('--summon-spawns', action='store_true')
     args = parser.parse_args()
     work = Path(os.environ['ZJCS_VALIDATION_DIR']).resolve()
     project = prepare(work)
@@ -53,7 +54,8 @@ def main():
         shutil.copy2(fixture, editor / fixture.name)
     (editor / 'DamageValidation.asmdef').write_bytes((json.dumps(dict(
         name='DamageEntityValidation', includePlatforms=['Editor'],
-        references=sorted(selected)), indent=2) + '\n').encode())
+        references=sorted(set(selected) | ({'Unity.RenderPipelines.Core.Runtime', 'Unity.RenderPipelines.Universal.Runtime'}
+            if args.summon_spawns else set()))), indent=2) + '\n').encode())
     if args.code_only:
         print('Prepared actual damage code:', len(selected), 'runtime assemblies;', project)
         return
@@ -61,10 +63,13 @@ def main():
     if args.custom_targets:
         for fixture in (ROOT / 'unity/Assets/Game/Editor/Combat/AnimatorPlayback').glob('OfficialBattleHitPlaybackAcceptance*.cs'):
             shutil.copy2(fixture, editor / fixture.name)
-    prepare_native_assets(project, work, selected, args.custom_targets)
+    if args.summon_spawns:
+        fixture = ROOT / 'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSummonSpawnAcceptance.cs'
+        shutil.copy2(fixture, editor / fixture.name)
+    prepare_native_assets(project, work, selected, args.custom_targets, args.summon_spawns)
 
 
-def prepare_native_assets(project, work, selected, custom_targets=False):
+def prepare_native_assets(project, work, selected, custom_targets=False, summon_spawns=False):
     receipt = json.loads((ROOT / 'assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json').read_bytes())
     catalog_path = ROOT / 'unity/Assets/Game/Resources/Combat/skill-native-graphs.json'
     catalog = json.loads(catalog_path.read_bytes())
@@ -92,6 +97,11 @@ def prepare_native_assets(project, work, selected, custom_targets=False):
 
     pending = [ROOT / 'unity/Assets/Game/Resources/Combat' / name for name in (
         'OfficialBattleRenderPipelineAssets.asset', 'OfficialCombatAssetCatalog.asset')]
+    if summon_spawns:
+        for folder in ('NativeMonsters', 'NativeMonsterAppearance', 'SummonRoleViews', 'SceneCharacterAppearance'):
+            source = ROOT / 'unity/Assets/Official/Combat' / folder
+            shutil.copytree(source, project / source.relative_to(ROOT / 'unity'), dirs_exist_ok=True)
+            pending.extend(path for path in source.rglob('*') if path.is_file() and path.suffix in ('.asset', '.mat', '.prefab'))
     # The actual skill host initializes this original embedded renderer adapter
     # even when a receipt fixture has no visible character meshes.
     pending.append(ROOT / 'unity/Assets/Official/Combat/EmbeddedMonsterMecanim/Resources/Combat/EmbeddedMonsterMecanim/catalog.asset')
@@ -110,6 +120,9 @@ def prepare_native_assets(project, work, selected, custom_targets=False):
     if custom_targets:
         skills.extend(row for row in catalog['skills'] if row['skill_entity_id'] in (12060,13300,13670))
         hits.extend(row for row in catalog['hits'] if row['hit_entity_id'] in (12061,12063,13301,13303,13671,13673))
+    if summon_spawns:
+        skills.extend(row for row in catalog['skills'] if row['skill_entity_id'] == 12140)
+        hits.extend(row for row in catalog['hits'] if row['hit_entity_id'] == 12141)
     for row in [*skills, *hits, *catalog['damages']]:
         prefix = row['entity_resource'].removeprefix('Combat/SkillGraphs/')
         pending.append(ROOT / 'unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs' / (prefix + '.prefab'))

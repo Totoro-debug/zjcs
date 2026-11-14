@@ -528,9 +528,12 @@ namespace Zjcs.Presentation.Combat
                     foreach (var unit in checkpoint.Units)
                         if (unit != null && IsWaveSpawned(checkpoint, unit.Id)) restoredNativeUnitIds.Add(unit.Id);
             }
+            UnitSpawns.Enqueue(stepEvent);
+            UnitSpawns.DispatchDue();
             var present = new HashSet<int>();
             foreach (FightBattleUnitState state in checkpoint.Units)
             {
+                if (state != null && UnitSpawns.IsPending(state.Id)) continue;
                 if (state == null || state.Ended && state.Hp > 0 && !UnitEndPlayback.Retains(state.Id)
                     || !IsWaveSpawned(checkpoint, state.Id)) continue;
                 if (units.TryGetValue(state.Id, out UnitView healthView)) healthView.PartnerHp?.Refresh(state);
@@ -797,6 +800,11 @@ namespace Zjcs.Presentation.Combat
             {
                 unitEndPlayback.AdvanceTimers(deltaTime);
                 unitEndPlayback.DispatchDue();
+            }
+            if (!unitEndGraphClock && unitSpawns != null)
+            {
+                unitSpawns.AdvanceTimers(deltaTime);
+                unitSpawns.DispatchDue();
             }
         }
 
@@ -1360,6 +1368,7 @@ namespace Zjcs.Presentation.Combat
         public void Dispose()
         {
             unitEndPlayback?.Clear();
+            unitSpawns?.Clear();
             sourceDeathListeners.Clear();
             notifiedSourceDeaths.Clear();
             ReleasePetFollowers();
@@ -1408,7 +1417,7 @@ namespace Zjcs.Presentation.Combat
             view.PartnerHp = new OfficialBattlePartnerHpView(state, partner.Actor, partnerHpEffects);
         }
 
-        private UnitView GetOrCreate(FightBattleUnitState state)
+        private UnitView GetOrCreate(FightBattleUnitState state, FightGridPoint? initialPosition = null)
         {
             if (units.TryGetValue(state.Id, out UnitView existing)) return existing;
             var player = TryCreatePlayer(state);
@@ -1447,7 +1456,8 @@ namespace Zjcs.Presentation.Combat
                 return partnerView;
             }
             var liveMonster = OfficialBattleLiveMonsterModelView.TryCreate(state, root, nativePlayableScope != null,
-                nativePlayableScope, restoredNativeUnitIds != null && restoredNativeUnitIds.Contains(state.Id));
+                nativePlayableScope, restoredNativeUnitIds != null && restoredNativeUnitIds.Contains(state.Id),
+                gridToWorld(initialPosition ?? new FightGridPoint(state.X, state.Y)));
             if (liveMonster != null)
             {
                 var liveView = new UnitView { State = state, NativeModel = liveMonster };

@@ -874,6 +874,7 @@ namespace Zjcs.Combat.Official
                 List<FightBattleUnitState> hitTargets;
                 IReadOnlyList<FightHitOccurrence> plannedHits = null;
                 FightHitTargetSelection hitSelection = null;
+                FightBattleHitSelectionSnapshot hitReceipt = null;
                 var hitFlight = FightBattleHitTiming.ResolveOverride(statusCatalog, skill,
                     targetingSource, castHit, hit);
                 bool hasRandomTargetContext = hit.RandomTargetGroupId > 0;
@@ -897,8 +898,9 @@ namespace Zjcs.Combat.Official
                     {
                         if (presentationCast.HitSelections == null)
                             presentationCast.HitSelections = new List<FightBattleHitSelectionSnapshot>();
-                        presentationCast.HitSelections.Add(FightBattleHitSelectionSnapshot.Capture(
-                            presentationCast.HitSelections.Count + 1, hit, selection, castHit, hitFlight));
+                        hitReceipt = FightBattleHitSelectionSnapshot.Capture(
+                            presentationCast.HitSelections.Count + 1, hit, selection, castHit, hitFlight);
+                        presentationCast.HitSelections.Add(hitReceipt);
                     }
                 }
                 if (hit.IsViewOnly) continue;
@@ -915,7 +917,8 @@ namespace Zjcs.Combat.Official
                         continue;
                     }
                     SpawnSummons(actor, skill, hit,
-                        hasRandomTargetContext || hit.PreviousCustomHit != null ? hitTargets : targets, hitSelection, castHit);
+                        hasRandomTargetContext || hit.PreviousCustomHit != null ? hitTargets : targets,
+                        hitSelection, castHit, hitReceipt);
                     continue;
                 }
                 decimal hitRemovedHp = 0m;
@@ -1212,7 +1215,8 @@ namespace Zjcs.Combat.Official
 
         private void SpawnSummons(FightBattleUnitState actor, FightBattleSkillDefinition skill,
             FightBattleHitDefinition hit, List<FightBattleUnitState> targets,
-            FightHitTargetSelection selection, FightBattleSkillCastPresentation cast)
+            FightHitTargetSelection selection, FightBattleSkillCastPresentation cast,
+            FightBattleHitSelectionSnapshot receipt)
         {
             if (statusCatalog == null || skillItems == null)
                 throw new InvalidOperationException("Official combat and skill item catalogs are required to spawn monsters.");
@@ -1268,6 +1272,17 @@ namespace Zjcs.Combat.Official
                 turns.RegisterUnit(summon.Turn, hit.SummonImmediateRound);
                 if (currentStepSpawnedUnitIds != null)
                     currentStepSpawnedUnitIds.Add(summon.Id);
+                if (receipt != null)
+                {
+                    int centerIndex = i / offsets.Count, scopeIndex = i % offsets.Count;
+                    receipt.SpawnedUnits.Add(new FightBattleHitSelectionSnapshot.SpawnedUnit {
+                        UnitId = summon.Id, EffectCenterIndex = centerIndex, ScopeIndex = scopeIndex,
+                        X = position.X, Y = position.Y,
+                        Delay = receipt.EffectDelays[centerIndex]
+                            + (hit.ScopeEntries != null && scopeIndex < hit.ScopeEntries.Count
+                                ? hit.ScopeEntries[scopeIndex].Delay : 0f)
+                    });
+                }
                 AddSummonStatuses(summon, actor, skill, pool, hit);
                 if (isDoll)
                 {

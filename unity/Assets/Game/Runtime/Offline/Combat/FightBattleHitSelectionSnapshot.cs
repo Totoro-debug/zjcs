@@ -16,6 +16,14 @@ namespace Zjcs.Combat.Official
             public float ScopeDelay;
         }
 
+        [Serializable]
+        public sealed class SpawnedUnit
+        {
+            public int UnitId, EffectCenterIndex, ScopeIndex, X, Y;
+            // Local to this cast, including flight and the original Base scope delay.
+            public float Delay;
+        }
+
         // Identity is local to the enclosing cast; class ID alone is not an occurrence identity.
         public int Sequence, HitEntityId, RandomTargetGroupId, Anchor;
         public int SourceX, SourceY, FacingIndex;
@@ -32,6 +40,7 @@ namespace Zjcs.Combat.Official
         public List<FightGridPoint> EffectCenters = new List<FightGridPoint>();
         public List<float> EffectDelays = new List<float>();
         public List<TargetOccurrence> Targets = new List<TargetOccurrence>();
+        public List<SpawnedUnit> SpawnedUnits = new List<SpawnedUnit>();
 
         public static FightBattleHitSelectionSnapshot Capture(int sequence, FightBattleHitDefinition hit,
             FightHitTargetSelection selection, FightBattleSkillCastPresentation cast,

@@ -1,0 +1,141 @@
+{
+  "code_manifest": "884_156692",
+  "configuration_manifest": "854_156383",
+  "original": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitSummonComponentInfo.cs",
+      "bytes": 1002,
+      "sha256": "23e8602ce8140c5cacc537b135224cc4882477aa25cf660bb7780edc16b0e862"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/HitScopCfg.cs",
+      "bytes": 1164,
+      "sha256": "86a386d620ab98e0ef53f5fc85a8419fee71edb69f843524cead081a65bc0191"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitBase.cs",
+      "bytes": 11432,
+      "sha256": "815ca26f5525f3023a5deb90a0753a8ee00daad936e596d2fb1bce1ad02c98fc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ECFightRoleCharacterView.cs",
+      "bytes": 9358,
+      "sha256": "6845b6511d5aae48ab3818735b8452f1c152009e2fc8ee22a9521ff415bccac0"
+    }
+  ],
+  "configuration": [
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "bytes": 22729433,
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules-source-manifest.json",
+      "bytes": 566429,
+      "sha256": "e88d754e06c0b334ba1c2d94ae42dfbf3d2007b8f44ff7b7526dabbc983f4017"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "bytes": 32798681,
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules-source-manifest.json",
+      "bytes": 1194901,
+      "sha256": "4794e1977e7ab4b0361743502601446d247384d7a6f1b2b338b8ffa62281a778"
+    }
+  ],
+  "migration": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
+      "bytes": 164648,
+      "sha256": "382c677b922fd44c40249cc036ad9ab19d2cce68f1037927ba5dadaebb1ac997"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleHitSelectionSnapshot.cs",
+      "bytes": 4379,
+      "sha256": "91982c4588155c9f5d3cb71975da7a4c6385aee5c816dc1a4001af8cbc344d38"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
+      "bytes": 83626,
+      "sha256": "22a55e57af2c5f260be214be5538a21a930e482ccd77450a909088ef143416aa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Summons.cs",
+      "bytes": 1168,
+      "sha256": "e709fec64b80bf7dcbcd574da0345597cf20a0c518d22c979eb7a7465f806674"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.UnitEnds.cs",
+      "bytes": 1138,
+      "sha256": "dff44f644a8ecfb34f03b22d2791d8c70503f8af98f74f027b020a5dd06ae901"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleUnitSpawnPlayback.cs",
+      "bytes": 3727,
+      "sha256": "37b142d50fd263648bb0c073756700b96c694f0dc5fc062d47e339548147aa2e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs",
+      "bytes": 24413,
+      "sha256": "62557c8331fdc9d89b232f79dcaa260fceb8e399bf104ca87b931559596b21cd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveMonsterModelView.cs",
+      "bytes": 13774,
+      "sha256": "f5d44b458f2bb2709200d45532c4d58b85e33ac1982f5b95323e957ce19e9066"
+    }
+  ],
+  "assets": [
+    {
+      "path": "assets/reference/battle-animation/live-monsters-source-manifest.json",
+      "bytes": 2340007,
+      "sha256": "5153fcdd0c6bc0451f7701b8e946f9a7cd9879ab337fa21417ee5c4ca480a4c2"
+    },
+    {
+      "path": "assets/reference/battle-animation/summon-role-views-source-manifest.json",
+      "bytes": 128182,
+      "sha256": "4dc02bc471a03768d5369b9218c6a9851ed0e6bf7c473bddeebe21733eb5c7e8"
+    }
+  ],
+  "validation": [
+    {
+      "path": "scripts/test_battle_unit_spawns.ps1",
+      "bytes": 1391,
+      "sha256": "19b678e982b97687f3be89ecb2b1e4c0a9bc384a3ebbd32bf60ecb0bc20f7883"
+    },
+    {
+      "path": "scripts/fixtures/battle_unit_spawn_harness.cs",
+      "bytes": 5955,
+      "sha256": "b0dacef7c22acb459ae9c94e088deb136868a01119fdc34c12a085eb79d288a9"
+    },
+    {
+      "path": "scripts/test_battle_skill_graph_dispatch.ps1",
+      "bytes": 713,
+      "sha256": "80018e5893e80beca25528848486812009156b3487f1f0890453f3f56068a576"
+    },
+    {
+      "path": "scripts/fixtures/battle_skill_graph_dispatch_harness.cs",
+      "bytes": 34277,
+      "sha256": "78e95fbe9f6f8cc28e5d9958b589913bf85966d4709fdda9043725bcee8f9a9a"
+    },
+    {
+      "path": "scripts/prepare_battle_damage_playback_validation.py",
+      "bytes": 10289,
+      "sha256": "1c78b56c889a442f2d40f9441ec62350aef39f0839da7990161996373e211ad2"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSummonSpawnAcceptance.cs",
+      "bytes": 11174,
+      "sha256": "55e4986db76a18511f71db822d974b07512ea5efe2b76aa2a151bfc6c8146b68"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_battle_summon_spawn_sources.py",
+    "bytes": 4222,
+    "sha256": "298f50be44f8aa753e193bc86a29d489cf8419a6e87c4193a0b3f875be7d476d"
+  },
+  "binding": "Successful SpawnSummons -> owning HitSelectionSnapshot.SpawnedUnits -> shared scene -> native graph clock -> original model/generation graph",
+  "operation": "Add presentation-only identity, initial cell and cast-local flight plus original sorted Base scope delay for each successful role summon. Retain eager settlement, RNG, placement and status order. Delay model/HUD creation on the existing native graph clock. Restore existing roles without replaying generation. Position the native monster before original birth graph initialization. No source prefab, texture, mesh, shader or animation asset is changed."
+}

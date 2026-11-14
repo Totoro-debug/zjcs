@@ -68,7 +68,8 @@ namespace Zjcs.Presentation.Combat
         }
 
         public static OfficialBattleLiveMonsterModelView TryCreate(FightBattleUnitState state, Transform parent,
-            bool nativeSkillGraphs = false, OfflineBattleNativePlayableScope scope = null, bool restoring = false)
+            bool nativeSkillGraphs = false, OfflineBattleNativePlayableScope scope = null, bool restoring = false,
+            Vector3? initialPosition = null)
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
             // Role-player arena guards may carry a monster stat row.
@@ -77,11 +78,12 @@ namespace Zjcs.Presentation.Combat
             var assets = BattleNativeMonsterAssets.Load();
             return assets.Find(entityId) == null ? null
                 : new OfficialBattleLiveMonsterModelView(assets, entityId, parent, "BattleUnit_" + state.Id,
-                    nativeSkillGraphs, scope, restoring, state.Hp <= 0);
+                    nativeSkillGraphs, scope, restoring, state.Hp <= 0, initialPosition);
         }
 
         private OfficialBattleLiveMonsterModelView(BattleNativeMonsterAssets assets, int entityId,
-            Transform parent, string name, bool nativeSkillGraphs, OfflineBattleNativePlayableScope scope, bool restoring, bool initialDead)
+            Transform parent, string name, bool nativeSkillGraphs, OfflineBattleNativePlayableScope scope, bool restoring, bool initialDead,
+            Vector3? initialPosition)
         {
             try
             {
@@ -89,6 +91,9 @@ namespace Zjcs.Presentation.Combat
                 states = OfficialBattleMonsterAnimatorBindings.Find(entityId);
                 var appearanceBinding = BattleNativeMonsterAppearanceCatalog.Find(entityId);
                 renderer = BattleNativeMonsterRenderer.Create(assets, entityId, parent, name, appearanceBinding?.Materials);
+                // Generation leaves sample their source while being played below.
+                // Place the entity before initializing those original graphs.
+                if (initialPosition.HasValue) renderer.EntityRoot.position = initialPosition.Value;
                 renderer.BindOriginalAnimator(assets, entityId);
                 renderer.BindOriginalAttachments(entityId);
                 renderer.BindOriginalPhaseAnimator(entityId);
