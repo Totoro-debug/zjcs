@@ -31,6 +31,14 @@ namespace Zjcs.Offline.Progression
         [SerializeField] private TextAsset skillRules;
         [SerializeField] private TextAsset skillRecommendations;
         [SerializeField] private TextAsset skillUiLayouts;
+        [SerializeField] private TextAsset skillPassiveRules;
+        [SerializeField] private TextAsset skillPassiveSourceManifest;
+        [SerializeField] private TextAsset battlePassiveRules;
+        [SerializeField] private TextAsset battlePassiveSourceManifest;
+        [SerializeField] private TextAsset passiveSkillItems;
+        [SerializeField] private TextAsset passiveSkillItemsSourceManifest;
+        private Zjcs.Combat.Official.FightOfficialCombatCatalog loadedSkillProperties;
+        private Zjcs.Combat.Official.FightOfficialSkillItemCatalog loadedSkillPropertyItems;
         [SerializeField] private GameObject confirmDialogPrefab;
         [SerializeField] private AnimationClip skillSlotLevelUpAnimation;
         [SerializeField] private AudioClip skillSlotLevelUpSound;
@@ -137,6 +145,10 @@ namespace Zjcs.Offline.Progression
             if (skillRules == null) missing.Add(nameof(skillRules));
             if (skillRecommendations == null) missing.Add(nameof(skillRecommendations));
             if (skillUiLayouts == null) missing.Add(nameof(skillUiLayouts));
+            if (skillPassiveRules == null || skillPassiveSourceManifest == null
+                || battlePassiveRules == null || battlePassiveSourceManifest == null
+                || passiveSkillItems == null || passiveSkillItemsSourceManifest == null)
+                missing.Add("skill passive property inputs");
             if (petPlanSelectorPanel == null) missing.Add(nameof(petPlanSelectorPanel));
             if (petPlanSelectorItem == null) missing.Add(nameof(petPlanSelectorItem));
             if (missing.Count > 0)
@@ -171,8 +183,23 @@ namespace Zjcs.Offline.Progression
         {
             ValidateBindings();
             var partnerAssets = Resources.Load<OfficialPartnerAssetCatalog>("Partners/OfficialPartnerAssetCatalog");
-            return OfficialCharacterCatalog.Parse(progressionRules.text, timedAppearanceItems.text,
+            var character = OfficialCharacterCatalog.Parse(progressionRules.text, timedAppearanceItems.text,
                 wardrobeItems.text, wardrobeRules.text, characterOverview.text, partnerAssets != null ? partnerAssets.Load() : null);
+            if (loadedSkillProperties == null)
+            {
+                var skillSource = Zjcs.Combat.Official.FightOfficialCombatCatalog.ReadSourceManifest(skillPassiveSourceManifest.text);
+                var battleSource = Zjcs.Combat.Official.FightOfficialCombatCatalog.ReadSourceManifest(battlePassiveSourceManifest.text);
+                loadedSkillProperties = Zjcs.Combat.Official.FightOfficialCombatCatalog.Load(skillPassiveRules.text,
+                    skillSource.OutputSha256, skillSource.Manifest, battlePassiveRules.text,
+                    battleSource.OutputSha256, battleSource.Manifest);
+            }
+            if (loadedSkillPropertyItems == null)
+            {
+                var itemSource = Zjcs.Combat.Official.FightOfficialCombatCatalog.ReadSourceManifest(passiveSkillItemsSourceManifest.text);
+                loadedSkillPropertyItems = Zjcs.Combat.Official.FightOfficialSkillItemCatalog.Load(passiveSkillItems.text,
+                    itemSource.OutputSha256, itemSource.Manifest);
+            }
+            return character.WithSkillPropertyRules(loadedSkillProperties, loadedSkillPropertyItems);
         }
     }
 

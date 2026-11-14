@@ -42,7 +42,11 @@ namespace Zjcs.Offline.Progression
             return new OfficialCharacterCatalog(merged, mergedItems, skins, appearances, allowed,
                 levelExperience, levelLimits, blessLevels, timedAppearanceItems, propertyIds, properties,
                 wardrobeTables, wardrobeDefinitions, rankBySubRank, defaultAppearance, appearanceItemTypes,
-                props, itemIcons, professionNames, professionIcons, skillMergePieces, partnerProperties);
+                props, itemIcons, professionNames, professionIcons, skillMergePieces, partnerProperties)
+            {
+                skillPropertyRules = skillPropertyRules,
+                skillPropertyItems = skillPropertyItems
+            };
         }
     }
 }

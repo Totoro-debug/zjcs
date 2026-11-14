@@ -24,13 +24,20 @@ namespace Zjcs.Editor.Character
             "Assets/Official/Character/character-panels.json",
             "Assets/Official/Character/source-manifest.json",
             "Assets/Official/Skills/skill-runtime-rules.json",
-            "Assets/Official/Skills/skills.json"
+            "Assets/Official/Skills/skills.json",
+            "Assets/Official/Combat/skill-rules.json",
+            "Assets/Official/Combat/skill-rules-source-manifest.json",
+            "Assets/Official/Combat/battle-rules.json",
+            "Assets/Official/Combat/battle-rules-source-manifest.json",
+            "Assets/Official/Combat/rules.json",
+            "Assets/Official/Combat/rules-source-manifest.json"
         };
         private static readonly string[] CatalogFields =
         {
             "characterOverview", "characterProperties", "progressionRules", "timedAppearanceItems",
             "wardrobeItems", "wardrobeRules", "wardrobeUi", "characterPanels", "sourceManifest",
-            "skillRules", "skillRecommendations"
+            "skillRules", "skillRecommendations", "skillPassiveRules", "skillPassiveSourceManifest",
+            "battlePassiveRules", "battlePassiveSourceManifest", "passiveSkillItems", "passiveSkillItemsSourceManifest"
         };
         private const string SpriteRoot = "Assets/Official/Character/Art/";
         private const string SkillSlotLevelUpAnimationPath =

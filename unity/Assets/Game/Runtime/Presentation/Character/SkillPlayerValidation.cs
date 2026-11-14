@@ -26,11 +26,23 @@ namespace Zjcs.Presentation.Character
             int index = Array.IndexOf(args, "--zjcs-validate-skills");
             if (index < 0 || index + 1 >= args.Length) return;
             if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_VALIDATE_SUMMON_ONLY") == "1") return;
+            StartDiagnostic(args[index + 1]);
+        }
+
+        public static void StartPassivePropertyDiagnostic(string directory)
+        {
+            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") != "1")
+                throw new InvalidOperationException("The explicit passive property diagnostic is not enabled.");
+            StartDiagnostic(directory);
+        }
+
+        private static void StartDiagnostic(string directory)
+        {
             Application.runInBackground = true;
             var host = new GameObject("SkillPlayerValidation");
             DontDestroyOnLoad(host);
             var runner = host.AddComponent<SkillPlayerValidation>();
-            runner.output = Path.GetFullPath(args[index + 1]);
+            runner.output = Path.GetFullPath(directory);
             runner.saveRoot = Path.Combine(runner.output, "save-" + Guid.NewGuid().ToString("N"));
             runner.deadline = Time.realtimeSinceStartup + 180f;
             Directory.CreateDirectory(runner.output);
@@ -75,6 +87,11 @@ namespace Zjcs.Presentation.Character
 
         private IEnumerator Run()
         {
+            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") == "1")
+            {
+                yield return RunPassivePropertyFlow();
+                yield break;
+            }
             // Let the real application complete its local startup before exercising the character entry.
             while (GameObject.Find("OfficialSaveSelectionPanel") == null) yield return null;
             var slots = new ProfileSlotCatalog(saveRoot);

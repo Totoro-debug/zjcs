@@ -67,6 +67,11 @@ namespace Zjcs.Editor.Skills
             EditorWindow view = Resources.FindObjectsOfTypeAll(viewType).OfType<EditorWindow>()
                 .OrderByDescending(value => value.titleContent.text == "Battle input validation").FirstOrDefault();
             if (view == null) throw new InvalidOperationException("A background skill validation requires an existing Game view.");
+            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") == "1")
+            {
+                var behavior = editor.GetType("UnityEditor.PlayModeView", true).GetProperty("enterPlayModeBehavior");
+                behavior.SetValue(view, Enum.Parse(behavior.PropertyType, "PlayUnfocused"));
+            }
             viewType.GetProperty("selectedSizeIndex", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).SetValue(view, index);
         }
 
@@ -124,7 +129,8 @@ namespace Zjcs.Editor.Skills
                 ProjectTools.Validate();
             OfficialSkillAssetTools.Validate();
             if ((Application.isBatchMode || Environment.GetEnvironmentVariable("ZJCS_SKILLS_AUTORUN") == "1")
-                && Environment.GetEnvironmentVariable("ZJCS_SKILLS_PET_UI_ONLY") != "1")
+                && Environment.GetEnvironmentVariable("ZJCS_SKILLS_PET_UI_ONLY") != "1"
+                && Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") != "1")
                 Combat.BattleGameViewInput.Focus();
             ConfigurePortraitGameView(675, 1463);
             string root = Path.Combine(ValidationDirectory, "save-" + Guid.NewGuid().ToString("N"));
@@ -181,6 +187,17 @@ namespace Zjcs.Editor.Skills
             if (started)
                 return;
             ConfigureShaderCompilation();
+            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") == "1")
+            {
+                // PlayUnfocused does not initialize the display size through GameView.OnFocus.
+                // Update that render buffer directly, without requesting window focus.
+                Type viewType = typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView", true);
+                MethodInfo displaySize = typeof(EditorWindow).GetMethod("SetDisplayViewSize",
+                    BindingFlags.Instance | BindingFlags.NonPublic);
+                foreach (EditorWindow view in Resources.FindObjectsOfTypeAll(viewType))
+                    displaySize.Invoke(view, new object[] { 0, new Vector2(675f, 1463f) });
+            }
+            AudioListener.volume = 0f;
             started = true;
             EditorApplication.LockReloadAssemblies();
             reloadLocked = true;
@@ -261,6 +278,21 @@ namespace Zjcs.Editor.Skills
                 yield return null;
             }
             yield return null;
+            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") == "1")
+            {
+                string resultPath = Path.Combine(ValidationDirectory, "result.json");
+                Zjcs.Presentation.Character.SkillPlayerValidation.StartPassivePropertyDiagnostic(ValidationDirectory);
+                float deadline = Time.realtimeSinceStartup + 250f;
+                while (!File.Exists(resultPath))
+                {
+                    Require(Time.realtimeSinceStartup < deadline, "Passive property Play Mode diagnostic timed out.");
+                    yield return null;
+                }
+                var result = JsonUtility.FromJson<RuntimeDiagnosticResult>(File.ReadAllText(resultPath));
+                Require(result.passed, result.error ?? "Passive property Play Mode diagnostic failed.");
+                Finish(true, null);
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_STATUS_ABSORPTION_ACCEPTANCE") == "1"
                 || Environment.GetEnvironmentVariable("ZJCS_SKILL_STACK_ACCEPTANCE") == "1"
                 || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_EXPLICIT_GRAPH_ACCEPTANCE"))

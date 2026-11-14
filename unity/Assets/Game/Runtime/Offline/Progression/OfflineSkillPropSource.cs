@@ -233,9 +233,15 @@ namespace Zjcs.Offline.Progression
                     || !IsAvailable(definition, player.Wardrobe == null ? 0 : player.Wardrobe.Profession)) continue;
                 int rank = OfflineSkillProgression.OwnedRank(player.Skills, skillId);
                 if (rank <= 0) continue;
+                int level = SlotLevel(player, itemType, slot);
+                var original = catalog.CalculateEquippedSkillPassiveProps(skillId, rank, level, player.SubRank);
+                if (original != null)
+                {
+                    CharacterPropFormula.Merge(result, original);
+                    continue;
+                }
                 Dictionary<string, object> skill = catalog.Find("skill", skillId);
                 if (skill == null) continue;
-                int level = SlotLevel(player, itemType, slot);
                 int groupId = Integer(skill, "PassiveGroupLevelPropId");
                 Dictionary<string, object> group = catalog.Rows("entity_prop_group_level").FirstOrDefault(row =>
                     Integer(row, "GroupId") == groupId && Integer(row, "SubRank") == player.SubRank);

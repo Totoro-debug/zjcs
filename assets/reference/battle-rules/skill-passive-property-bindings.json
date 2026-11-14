@@ -1,0 +1,93 @@
+{
+  "operation": "Bind already verified local combat TextAssets to the character property catalog; reuse CalcSkillPassiveProps, with original rank, effective slot level and SubRank inputs. No source payload or expected payload hash is changed.",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "bytes": 22729433,
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8",
+      "character_field": "skillPassiveRules",
+      "combat_field": "skillRules",
+      "guid": "56ded5ca833050a4f888836828bf79a4",
+      "manifest": "854_156383",
+      "source_manifest": "unity/Assets/Official/Combat/skill-rules-source-manifest.json"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules-source-manifest.json",
+      "bytes": 566429,
+      "sha256": "e88d754e06c0b334ba1c2d94ae42dfbf3d2007b8f44ff7b7526dabbc983f4017",
+      "normalization": "UTF-8, LF line endings",
+      "character_field": "skillPassiveSourceManifest",
+      "combat_field": "skillSourceManifest",
+      "guid": "194509f899471bc429223fa6f176780b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "bytes": 32798681,
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803",
+      "character_field": "battlePassiveRules",
+      "combat_field": "battleRules",
+      "guid": "3b5e26ce05c495b4886d5bbe51d62278",
+      "manifest": "854_156383",
+      "source_manifest": "unity/Assets/Official/Combat/battle-rules-source-manifest.json"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules-source-manifest.json",
+      "bytes": 1194901,
+      "sha256": "4794e1977e7ab4b0361743502601446d247384d7a6f1b2b338b8ffa62281a778",
+      "normalization": "UTF-8, LF line endings",
+      "character_field": "battlePassiveSourceManifest",
+      "combat_field": "battleSourceManifest",
+      "guid": "38183d3f98267bb4f96b7abfb9b2b1b8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "bytes": 37209479,
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c",
+      "character_field": "passiveSkillItems",
+      "combat_field": "rules",
+      "guid": "5289762e428822f4980f367accd04930",
+      "manifest": "854_156383",
+      "source_manifest": "unity/Assets/Official/Combat/rules-source-manifest.json"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/rules-source-manifest.json",
+      "bytes": 1759,
+      "sha256": "895c97957bb034eed4cc7351ff7477a5d9726a092fa6469f9c57db5d3c1b5250",
+      "normalization": "UTF-8, LF line endings",
+      "character_field": "passiveSkillItemsSourceManifest",
+      "combat_field": "rulesSourceManifest",
+      "guid": "24557a40ab1d2c84999a3918cf501ba5"
+    }
+  ],
+  "original_code": [
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/SkillPropChunck.cs",
+      "bytes": 6581,
+      "sha256": "967437913a268434b7560f31aa0ea133b2a53524d4e5c90f53141a2df5ac82dc"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/BattleFormulaHandler.cs",
+      "bytes": 191212,
+      "sha256": "ce40db54d87030ded0a9f8a6dc95db5a3a4e46ae02bf76a9d273fe092a703d12"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/BattleFormula.cs",
+      "bytes": 2164,
+      "sha256": "c3cc659319bed428ebac076b027832d9010a7589d824756fa4d10e0e7e713273"
+    }
+  ],
+  "selected_scope": {
+    "path": "assets/reference/battle-rules/first-promotion-growth-source-manifest.json",
+    "bytes": 12364,
+    "sha256": "bf76d758306cfbf7264a19bd024d960497940f47c99650beef898068d1658a11",
+    "normalization": "UTF-8, LF line endings"
+  },
+  "output_binding": {
+    "path": "unity/Assets/Game/Resources/Character/OfficialCharacterAssetCatalog.asset",
+    "bytes": 238393,
+    "sha256": "17544db333c6bbed86975f3669c1d10c903b19d3810a1fbcd6ad323e039a0ca2",
+    "normalization": "UTF-8, LF line endings"
+  },
+  "binding_preparation": "Zjcs.Editor.Character.CharacterProgressionValidation.BindOfficialCatalogs",
+  "runtime_entry": "OfficialCharacterAssetCatalog.Load → OfficialCharacterCatalog.WithSkillPropertyRules → OfflineSkillPropSource.CalculateProps → FightOfficialCombatCatalog.CalculatePassiveSkillProps"
+}
