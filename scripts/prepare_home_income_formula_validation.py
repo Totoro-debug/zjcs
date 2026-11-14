@@ -86,7 +86,7 @@ def prepare():
         'return immutable projections of the exact committed output deltas and ledger serials. Older pending '
         'amounts and sealed transfers are excluded. Checks cover random output, duplicate members, capacity '
         'bypass, daily limits, rejected grants, disk reopen and actual bed/cart profile transfers. Extra reward '
-        'handler request integration, paid cost recovery and production progress/window integration remain pending.')
+        'handler request integration and cost recovery use the separate production owner; native progress/window integration remains pending.')
     source = 'assets/reference/home-auto-increase-source-manifest.json'
     receipt['inputs'][source] = hashlib.sha256((ROOT / source).read_bytes()).hexdigest()
     receipt['fast_auto_increase_adapter'] = (
@@ -94,13 +94,25 @@ def prepare():
         'The original update-message timestamp remainder is consumed in the same local profile transaction. '
         'Checks cover elapsed/fraction/bonus inputs, natural-cap crossing, overflow and holding limit, activity '
         'offset, zero result and absent parameters; a real character stamina receipt is applied once and '
-        'reopened from disk. The acceleration request owner has not yet attached these extra handlers.')
+        'reopened from disk. The production acceleration owner now attaches the selected extra handlers.')
     receipt['fast_request_journal_adapter'] = (
         'A local pending operation snapshots selected definitions, numeric properties, duration, costs, '
         'extra-handler inputs and acceptance time before the character transaction. Free usage is reserved '
         'with the intent; normal reward completion requires the exact profile receipt. Reopen, detached '
         'snapshots, duplicate completion, unpaid cancellation and whole-batch overflow rollback are checked. '
-        'This is a persistence component; production free/paid request routing and progress integration remain pending.')
+        'Production free/paid routing uses the separate request owner; sleep-progress presentation remains pending.')
+    for source in (
+        '.tools/source-packages/current/884_156692/official-code/common-source/PlayerServiceProxyImpl.cs',
+        '.tools/source-packages/current/884_156692/official-code/common-source/Common/TreatmentHangUpRewardHandler.cs',
+        '.tools/source-packages/current/884_156692/official-code/common-source/Common/AutoIncreaseItemOutputAdditionUtils.cs'):
+        receipt['inputs'][source] = hashlib.sha256((ROOT / source).read_bytes()).hexdigest()
+    receipt['fast_request_owner_adapter'] = (
+        'Production free/item requests stage one home intent, commit actual character costs and original '
+        'extra-handler effects once, then complete ordinary output against its exact character receipt. '
+        'PlayerServiceProxyImpl.OperPlayerFastHangUpCallback supplies IsFree as hasOutputAddition, loops '
+        'every configured extra and rewinds bed random reward timers by FastHangUpHours seconds exactly. '
+        'Actual recovery after the character phase is exercised by reopening home; the native selection '
+        'and sleep-progress presentation remain pending.')
     receipt['validation_inputs'] = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in (
         'scripts/prepare_home_income_formula_validation.py', 'scripts/fixtures/home_income_formula_validation.cs',
         'scripts/fixtures/home_furniture_host_validation.cs')}

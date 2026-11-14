@@ -773,6 +773,7 @@ namespace Zjcs.Presentation.Home
             ApplyFurnitureStates();
             scene.ApplyHomeSkins(catalog.HomeSkins, session.Skins, rules);
             RefreshIncomeCatalog();
+            RecoverPendingFastForward();
             DrainHomeInventory();
             hud.RefreshAll();
             tutorialHost = new HomeTutorialHost(this, hud);
@@ -1537,14 +1538,18 @@ namespace Zjcs.Presentation.Home
 
         public long TryFastForward(int hangUpId)
         {
+            profile.Reload();
+            ReloadContext();
+            RefreshIncomeCatalog();
             OfflineHomeIncomeDefinition definition = session.Definitions.FirstOrDefault(value => value.HangUpId == hangUpId);
             if (definition == null || definition.FastHangUpId <= 0) return 0;
             HomeFastHangUpRecord fast = rules.FastHangUp(definition.FastHangUpId);
             if (fast == null) return 0;
             string receipt = tutorialHost?.FastForwardReceiptFor(hangUpId, fast.fastHangUpId)
                 ?? ("home:fast:" + slotId + ":" + fast.fastHangUpId + ":" + Guid.NewGuid().ToString("N"));
-            long total = session.ApplyFreeFastForwardGroup(fast.fastHangUpId,
-                fast.hangUpIdList ?? Array.Empty<int>(), fast.freeHours, receipt);
+            session.AdvanceTo(Now());
+            if (FastForwardRequests.PrepareFree(fast.fastHangUpId, receipt) == null) return 0;
+            long total = RecoverPendingFastForward()?.TotalCount ?? 0;
             if (total > 0)
             {
                 FastForwardAppliedForTutorial?.Invoke(receipt);
@@ -1556,6 +1561,9 @@ namespace Zjcs.Presentation.Home
 
         public long TryFastForwardItems(int fastHangUpId, int itemCount)
         {
+            profile.Reload();
+            ReloadContext();
+            RefreshIncomeCatalog();
             HomeFastHangUpRecord fast = rules.FastHangUp(fastHangUpId);
             HomeFastHangUpItem item = fast?.items?.FirstOrDefault(value => value != null && value.itemId > 0);
             if (fast == null || item == null || itemCount <= 0
@@ -1566,8 +1574,10 @@ namespace Zjcs.Presentation.Home
                 .Distinct().ToArray();
             if (unlocked.Length == 0) return 0;
             string receipt = "home:fast-item:" + slotId + ":" + Guid.NewGuid().ToString("N");
-            if (!ConsumeItems(item.itemId, itemCount, receipt + ":cost")) return 0;
-            long total = session.ApplyFastForwardBatch(unlocked, itemCount * item.hours, receipt + ":income");
+            session.AdvanceTo(Now());
+            if (FastForwardRequests.PrepareItems(fastHangUpId,
+                new Dictionary<int, long> { { item.itemId, itemCount } }, receipt) == null) return 0;
+            long total = RecoverPendingFastForward()?.TotalCount ?? 0;
             if (total > 0)
             {
                 DrainHomeInventory();
@@ -1900,6 +1910,7 @@ namespace Zjcs.Presentation.Home
             {
                 if (!AdvanceFruitTree(now)) return;
                 session.AdvanceTo(now);
+                RecoverPendingFastForward();
                 rewards?.Refresh();
                 DrainHomeInventory();
                 hud?.RefreshAll();

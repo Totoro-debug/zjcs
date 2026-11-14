@@ -27,7 +27,10 @@
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/FunctionsDisabledData.cs": "efa8ce7c1cdc4aed8b654af491367ea5557941310bbe03e0ad90c0f551bd94ad",
     ".tools/source-packages/current/884_156692/official-code/client-source/HangUpUIUtils.cs": "7f5f6d3e278cbbc75880f7951fa8b1ef729949fdf5b2268134d1a6f50328805a",
     "assets/reference/home-fast-hangup-native-source-manifest.json": "c0e3a3e2372e0def550bd7f010c2658cff6742529f611f3a7d4c8fa1db9ca727",
-    "assets/reference/home-auto-increase-source-manifest.json": "84d05d666d9ef0ffb6201383fdf450def881911948e61727e3960b8388336ccb"
+    "assets/reference/home-auto-increase-source-manifest.json": "84d05d666d9ef0ffb6201383fdf450def881911948e61727e3960b8388336ccb",
+    ".tools/source-packages/current/884_156692/official-code/common-source/PlayerServiceProxyImpl.cs": "26c71d56216808e390366b48643e74dd0f8572bd322afe3c865f45b9ad6038a5",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TreatmentHangUpRewardHandler.cs": "037e86b566a1c7f38aaa4770e46d9b2b6d4001b3494ca9c271295553f31562c3",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AutoIncreaseItemOutputAdditionUtils.cs": "2d771119e400bf6cc2ff0451f5cbab2384ba5b5aa3affdfa275721cd3d1ae76e"
   },
   "outputs": {
     "unity/Assets/Game/Runtime/Official/HomeIncomeRules/PropType.cs": "1813ad74c60ad245324a147c827a9da3b7ed6c751e7397ce56c5b4b40e090ace",
@@ -52,8 +55,8 @@
   "ordinary_settlement_adapter": "User-confirmed ordinary claims follow the original client unsettled preview, independently of hourly/fast output argument order. Original fractional remainder is persisted when finite; pending local time and its subsecond checkpoint commit atomically with the claim. Failed grants retain the previous time, reward selection state and receipt.",
   "native_bed_adapter": "Complete selected FurnitureBedDialog prefab/controller, original output foldouts, quick-receive condition, property chunks and inventory response phases are bound to the actual local home/profile. No remote disable keys are installed, matching original empty-key HasKey=false. The original blessing-rule window uses selected rule_tip rows, actual blessing level, eleven original pooled rows and real home limits; its pointer, scrolling, highlight and mask-close behavior are covered. Secondary acceleration and activity-output details are not covered by this production-bed validation.",
   "validation_inputs": {
-    "scripts/prepare_home_income_formula_validation.py": "ea4706b933db7fc33ac32f94f13c7cf06df97b3b9e1c0a13bb4e4a128510a290",
-    "scripts/fixtures/home_income_formula_validation.cs": "1d6544ee925b7618a8d68d4ac671f9a13f1f0029f72ca1cd37720912f12a6032",
+    "scripts/prepare_home_income_formula_validation.py": "3a5087fcdc6c1e542e8090e820f75ebfd5acc2ad9fce50b720df56f27f28ada7",
+    "scripts/fixtures/home_income_formula_validation.cs": "520ed218f1df352e0e883bce962a0aaaedaa2bcb1291ed6302f1f332e6208791",
     "scripts/fixtures/home_furniture_host_validation.cs": "853d4192ccff2c093725967fe086164c5ef55b271b952642ba108c69bb7c9bf7"
   },
   "validation_base_commit": "65aabf8dfb0ad1b0b4ff765118a6673ced2f904e",
@@ -145,7 +148,7 @@
     "unity/Assets/Game/Runtime/Official/WorldUI/WorldPopupWindow.cs": "eba6e02e821cab22d7d1150df531a33a99586bff57db89ba6c163ece06f1504f",
     "unity/Assets/Game/Runtime/Offline/Home/OfficialHomeRules.CurrentIncome.cs": "575a67ee0444d5258da0f17bdfa363e159c6e4b9bd4c21aa461e3ca8a17370eb",
     "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncome.cs": "9bf22aa37d6b9fcb4f99ca0a3dbd4c5c44cc7840096138e8dc2c2b4686882792",
-    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "43d4149f253db11bfce8d506b3799f6ccdfff7a47bf7ca1e718e824303021302",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "4075c2961df1de36cb7a21eb4cb8974280f216b96cf7ffccf03a547aedb4d877",
     "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeProgression.cs": "1c16c04a1443bc216cd7b45c55d794c390b3f28ab3518de4acdbf1afde6078b8",
     "unity/Assets/Game/Runtime/Offline/Home/Zjcs.Offline.Home.asmdef": "b0a0c1f86a80aae7cd215ccf11d726e5f9a85c29f51cf2c66f03ace1e1cfc1b5",
     "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineCurrentHomeIncome.cs": "34e0dcab99b941904aae79cb5a5dc69b914b6988ac47e0e516cb32a8302d971d",
@@ -153,7 +156,7 @@
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineItemAutoIncreaseProgress.cs": "dc3af8db6cf429768ba18c77c3eb4a9ef53ad0c9dbf2a1701ab8582ec0b905f0",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineItemAutoIncreaseProgress.cs.meta": "0bf7c8e27cbc374293607564665bc41896a3591cb710811027565eb71e63b634",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineRefreshClock.cs": "bfdb55fdbd99cf5e9d460cf256f587706e7d3dd81e6e3457f8049c1e28b704cf",
-    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "cdd2f29480170e00cfc6b261dc285a5df6b7451ec662ee880cedd031f5123656",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "1a553e34321979ff290c94f8bf5fa2dea1c1c6b1dc85ed874eeb0c8f22c46810",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.BedAwards.cs": "e41cdd752d4f085f66040ff204c4e535c555aea8d099f136d02a82b4f4e41d8d",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.BedAwards.cs.meta": "b8bf9035ac4a0bd836386c454fccbcbcb95cbd87551b34cf287171056aa447ab",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.BedWindow.cs": "12e016746604fb4d7bec1d5c4e133ed21af315947249de4527d4dcdd1da291b4",
@@ -398,11 +401,17 @@
     "unity/Assets/Official/Partners/UI/Input/Audio/Main_Cursor_Back.wav.meta": "bfba9a13f14a913378c0e6b0676b79b4412528eb37daf16c12c51351c9522ec5",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Converted/2d18f5c143cd7b36.asset": "165174c8f2c1cfd663f84abbe4c4d18ac04d4e3748424dd98948a04c5ef983af",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Converted/2d18f5c143cd7b36.asset.meta": "3268007a15fb3039ef5005c3bf762721acd5a46ce0f7628b2de3e99b045a98a1",
-    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeFastForwardOperations.cs": "adb47b7cbd219757f61c4de466f5062f23ac140928180b2697924f3d84c9370b",
-    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeFastForwardOperations.cs.meta": "11f5dc99df7eb60831353e60d2f06aa55decbf35f964ee455d6aefd67966f508"
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeFastForwardOperations.cs": "c000bb6992eb23e1c84dceda8cf4dcab658722230b43c3b0e4ba3fd99015af2a",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeFastForwardOperations.cs.meta": "11f5dc99df7eb60831353e60d2f06aa55decbf35f964ee455d6aefd67966f508",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeFastForwardRequests.cs": "99f7645caa85a36ff5d00547c206d798b09cf9e7a5e83408e91a415bbde5ef8a",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeFastForwardRequests.cs.meta": "f3bb8f651740218831a30a1f108a7c5d5eac49540b112b1a3cecf2e930189a67",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/Zjcs.Offline.HomeUI.asmdef": "eb63f0f1f2a6f7e55b498b3e8e076b11a8c049241f8bbd94dc3f7f05c1438b5a",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.FastForward.cs": "7bf5a98a5f8985ca15790edf3d1469c9c52b9e1ec95f4d2b7078e7c956bd8dc4",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.FastForward.cs.meta": "264e66dd8809bd31abdb51ce3ac3164b700d8d6999aac89def28b4d16f8f786b"
   },
   "income_reward_adapter": "Selected hang_up_reward and reward_rule rows select all 259 reward/cost item definitions and 15 unique original image addresses; original ItemIconManager priority proves the default template for each. The original ignored-award list is retained. Actual cart repair/unlock/claim/drain and its original queue display use a real saved receipt; presentation never writes either save. General indexed equipment instances, detail popups and the production acceleration sequence remain separate.",
-  "fast_reward_adapter": "Free-use settings belong to the configured furniture; all unlocked members of its original HangUpIdList receive acceleration, including cart rows whose own FastHangUpId is -1. Free and paid income batches return immutable projections of the exact committed output deltas and ledger serials. Older pending amounts and sealed transfers are excluded. Checks cover random output, duplicate members, capacity bypass, daily limits, rejected grants, disk reopen and actual bed/cart profile transfers. Extra reward handler request integration, paid cost recovery and production progress/window integration remain pending.",
-  "fast_auto_increase_adapter": "Original auto-increase extra-reward numeric/state branches run against the actual item wrapper. The original update-message timestamp remainder is consumed in the same local profile transaction. Checks cover elapsed/fraction/bonus inputs, natural-cap crossing, overflow and holding limit, activity offset, zero result and absent parameters; a real character stamina receipt is applied once and reopened from disk. The acceleration request owner has not yet attached these extra handlers.",
-  "fast_request_journal_adapter": "A local pending operation snapshots selected definitions, numeric properties, duration, costs, extra-handler inputs and acceptance time before the character transaction. Free usage is reserved with the intent; normal reward completion requires the exact profile receipt. Reopen, detached snapshots, duplicate completion, unpaid cancellation and whole-batch overflow rollback are checked. This is a persistence component; production free/paid request routing and progress integration remain pending."
+  "fast_reward_adapter": "Free-use settings belong to the configured furniture; all unlocked members of its original HangUpIdList receive acceleration, including cart rows whose own FastHangUpId is -1. Free and paid income batches return immutable projections of the exact committed output deltas and ledger serials. Older pending amounts and sealed transfers are excluded. Checks cover random output, duplicate members, capacity bypass, daily limits, rejected grants, disk reopen and actual bed/cart profile transfers. Extra reward handler request integration and cost recovery use the separate production owner; native progress/window integration remains pending.",
+  "fast_auto_increase_adapter": "Original auto-increase extra-reward numeric/state branches run against the actual item wrapper. The original update-message timestamp remainder is consumed in the same local profile transaction. Checks cover elapsed/fraction/bonus inputs, natural-cap crossing, overflow and holding limit, activity offset, zero result and absent parameters; a real character stamina receipt is applied once and reopened from disk. The production acceleration owner now attaches the selected extra handlers.",
+  "fast_request_journal_adapter": "A local pending operation snapshots selected definitions, numeric properties, duration, costs, extra-handler inputs and acceptance time before the character transaction. Free usage is reserved with the intent; normal reward completion requires the exact profile receipt. Reopen, detached snapshots, duplicate completion, unpaid cancellation and whole-batch overflow rollback are checked. Production free/paid routing uses the separate request owner; sleep-progress presentation remains pending.",
+  "fast_request_owner_adapter": "Production free/item requests stage one home intent, commit actual character costs and original extra-handler effects once, then complete ordinary output against its exact character receipt. PlayerServiceProxyImpl.OperPlayerFastHangUpCallback supplies IsFree as hasOutputAddition, loops every configured extra and rewinds bed random reward timers by FastHangUpHours seconds exactly. Actual recovery after the character phase is exercised by reopening home; the native selection and sleep-progress presentation remain pending."
 }

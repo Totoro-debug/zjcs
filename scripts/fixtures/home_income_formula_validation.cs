@@ -183,6 +183,7 @@ public sealed partial class HomeIncomeFormulaHostRunner
         yield return CheckNativeBedCollection();
         yield return CheckIncomeRewardCatalog();
         CheckFastAutoIncrease();
+        yield return CheckActualFastRequests();
         yield return CheckExperienceLedgerRecovery();
         Debug.Log("HOME_INCOME_FORMULA_PASSED: selected Float flags, original float/double arithmetic and unsettled-preview settlement, actual native repair and production bed pointer, bed output foldout, original blessing rule rows/highlight/scroll/mask close, real lost goddess profile, production collection/experience/free acceleration, original XP award queue, all 259 selected income items and 15 images, actual cart repair/unlock/collection and native award queue with disk reopen, committed reward receipts, rejected experience grants retained, acknowledgement recovery, original remainder, idempotency and precise disk reopen. Cart award presentation is a component check; acceleration business calls are direct; acceleration/output-detail windows and complete HUD remain pending.");
     }
@@ -406,8 +407,9 @@ public sealed partial class HomeIncomeFormulaHostRunner
             "extra reward preserves the original no-parameter branch instead of creating a missing record");
         DateTime actualNow = DateTime.UtcNow;
         var prior = home.Profile.Save.Player.Inventory.Single(value => value.ItemId == 57);
-        Require(prior.AutoIncrease != null && prior.Count == 300 && prior.AutoIncrease.IncreaseSpeed == 5,
-            "real character still owns its original initial stamina record");
+        long priorStamina = prior.Count;
+        Require(prior.AutoIncrease != null && prior.Count == 320 && prior.AutoIncrease.IncreaseSpeed == 5,
+            "two production free requests have each applied the original ten-stamina extra exactly once");
         var applied = home.Profile.ApplyInventoryTransaction("fast-extra:stamina", save => {
             var stamina = save.Player.Inventory.Single(value => value.ItemId == 57);
             Require(OfflineItemAutoIncrease.SettleFastForward(stamina, 2.1, false, 0, actualNow),
@@ -420,9 +422,76 @@ public sealed partial class HomeIncomeFormulaHostRunner
             "actual profile suppresses a repeated extra-reward receipt");
         var reopened = OfflineMainlineProgressSession.OpenCharacter(new ProfileSlotCatalog(root), slot);
         var restored = reopened.Save.Player.Inventory.Single(value => value.ItemId == 57);
-        Require(restored.Count == 310 && restored.AutoIncrease.LastUpdateTimeTicks == actualNow.AddSeconds(-360).Ticks
+        Require(restored.Count == priorStamina + 10 && restored.AutoIncrease.LastUpdateTimeTicks == actualNow.AddSeconds(-360).Ticks
             && restored.AutoIncrease.Decimal == 0 && restored.AutoIncrease.BonusSeconds == 0,
             "actual disk reopen retains the extra reward and consumed timestamp remainder exactly once");
+    }
+
+    private IEnumerator CheckActualFastRequests()
+    {
+        var service = new Zjcs.Offline.HomeUI.OfflineHomeFastForwardRequests(home.Rules, home.Session,
+            home.Profile, () => new HomeConditionContext { Level = home.Profile.Save.Player.Level },
+            new Zjcs.Offline.HomeUI.OfflineHomeOutputAddition(home.Session, () => DateTime.UtcNow, _ => false));
+        Require(home.Profile.ApplyInventoryTransaction("fast-request:seed", save => {
+            save.Player.Inventory.RemoveAll(value => value.ItemId == 120);
+            save.Player.Inventory.Add(new OfflineItemStack { ItemId = 120, Count = 5 });
+            save.Player.Health.HpPercentVal = .4f;
+        }).IsApplied, "seed isolated real time crystals and damaged health");
+        long stamina = home.Profile.Save.Player.Inventory.Single(value => value.ItemId == 57).Count;
+        long experience = home.Profile.Save.Player.Experience;
+        var timers = home.Session.Save.RandomRewards.Where(value => value.ItemId > 0)
+            .ToDictionary(value => value.Slot, value => value.NextRefreshUnixSeconds);
+        var flags = HomeIncomePropertyCatalog.CreateFloatPropertyIds();
+        long expectedXp = (long)OfflineHangUpIncome.RewardCount(home.Session.Definitions.Single(value => value.HangUpId == 1).Rule,
+            home.PlayerProperties(), flags, 4);
+        Require(service.PrepareItems(1, new Dictionary<int, long> { { 120, 101 } }, "too-many") == null
+            && service.PrepareItems(1, new Dictionary<int, long> { { 120, 6 } }, "too-expensive") == null,
+            "official count limit and actual crystal stock reject before staging or charging");
+        var operation = service.PrepareItems(1, new Dictionary<int, long> { { 120, 2 } }, "fast-request:recover");
+        Require(operation != null && operation.Hours == 4 && operation.HealToFull
+            && operation.RewindRandomRewards && operation.AutoIncrease.All(value => !value.HasOutputAddition)
+            && operation.AutoIncrease.Select(value => value.ItemId).OrderBy(value => value).SequenceEqual(new[] { 56, 57 }),
+            "actual selected extra rules retain original fruit, stamina and treatment branches");
+        Require(service.CommitPendingProfile(DateTime.UtcNow).IsApplied,
+            "real request commits costs, auto-increase extras and treatment in one character receipt");
+        Require(home.Profile.InventoryCount(120) == 3
+            && home.Profile.Save.Player.Inventory.Single(value => value.ItemId == 57).Count == stamina + 20
+            && home.Profile.Save.Player.Health.HpPercentVal == 1
+            && home.Profile.Save.Player.Inventory.All(value => value.ItemId != 56)
+            && home.Session.PendingFastForwardOperation != null && home.Profile.Save.Player.Experience == experience,
+            "profile phase consumes crystals once, grants stamina and health, preserves absent fruit and defers normal output");
+        Require(service.CommitPendingProfile(DateTime.UtcNow).Status == ProgressionResultStatus.Unchanged
+            && home.Profile.InventoryCount(120) == 3, "repeated profile phase never consumes or grants twice");
+        home.Close(); CloseCapture(); yield return null;
+        Open(); yield return new WaitForSeconds(1);
+        Require(home.Session.PendingFastForwardOperation == null && home.Session.Save.Inventory.Count == 0
+            && home.Profile.InventoryCount(120) == 3
+            && home.Profile.Save.Player.Inventory.Single(value => value.ItemId == 57).Count == stamina + 20
+            && home.Profile.Save.Player.Experience == experience + expectedXp
+            && timers.All(value => home.Session.Save.RandomRewards.Single(slot => slot.Slot == value.Key)
+                .NextRefreshUnixSeconds == value.Value - 4)
+            && home.Profile.Save.Player.AppliedInventoryEventIds.Count(value => value == operation.ProfileReceipt) == 1,
+            "production home reopen recovers already charged request, drains original normal income and preserves extras exactly once");
+        long beforePaid = home.Profile.InventoryCount(120);
+        Require(home.TryFastForwardItems(1, 1) > 0 && home.Profile.InventoryCount(120) == beforePaid - 1
+            && home.Profile.Save.Player.Inventory.Single(value => value.ItemId == 57).Count == stamina + 30
+            && home.Session.PendingFastForwardOperation == null,
+            "production paid entry uses the same recoverable cost and extra reward boundary");
+        var retry = new Zjcs.Offline.HomeUI.OfflineHomeFastForwardRequests(home.Rules, home.Session,
+            home.Profile, () => new HomeConditionContext { Level = home.Profile.Save.Player.Level },
+            new Zjcs.Offline.HomeUI.OfflineHomeOutputAddition(home.Session, () => DateTime.UtcNow, _ => false));
+        Require(retry.PrepareItems(1, new Dictionary<int, long> { { 120, 2 } }, "fast-request:unpaid-cancel") != null,
+            "stage uncharged request before a competing inventory spend");
+        Require(home.Profile.ApplyInventoryTransaction("fast-request:competing-spend", save => {
+            Require(OfflineInventoryOperations.Consume(save.Player, 120, 2, DateTimeOffset.UtcNow.ToUnixTimeSeconds()).IsApplied,
+                "consume remaining isolated crystals through the real inventory operation");
+        }).IsApplied, "competing inventory transaction persists");
+        Require(retry.CompletePending(DateTime.UtcNow) == null && home.Session.PendingFastForwardOperation == null
+            && home.Profile.InventoryCount(120) == 0
+            && !home.Profile.Save.Player.AppliedInventoryEventIds.Contains("fast-request:unpaid-cancel:profile")
+            && home.Profile.Save.Player.Inventory.Single(value => value.ItemId == 57).Count == stamina + 30,
+            "insufficient uncharged request cancels without any extra reward or false character receipt");
+        Capture("home-income-paid-request-recovered.png");
     }
 
     private void CheckFastOperationRecovery(ISet<int> flags)
@@ -436,9 +505,12 @@ public sealed partial class HomeIncomeFormulaHostRunner
         var props = new Dictionary<int, long> { { 1000, 2 } };
         string path = System.IO.Path.Combine(root, "fast-operation.json");
         var session = OfflineHomeIncomeSession.Open(path, new[] { definition }, props, flags, 1700000000);
+        Require(session.Mutate("journal:random-timer", save => save.RandomRewards.Add(
+            new OfflineHomeRandomRewardSlot { Slot = 0, NextRefreshUnixSeconds = 1700001000 })),
+            "seed original random reward refresh timer");
         var operation = session.PrepareFastForwardOperation(1, new[] { 1 }, 2, false,
             new[] { new HomeCostEntry { itemId = 120, count = 1 } },
-            new[] { new OfflineHomeFastForwardAutoIncrease { HangUpId = 101, ItemId = 57 } }, true, "paid-request");
+            new[] { new OfflineHomeFastForwardAutoIncrease { HangUpId = 101, ItemId = 57 } }, true, "paid-request", true);
         Require(operation != null && operation.ProfileReceipt == "paid-request:profile"
             && operation.AcceptedUnixSeconds == 1700000000 && operation.AcceptedSubsecond == 0
             && session.Save.Inventory.Count == 0 && !session.CanFreeFastForward(1),
@@ -458,7 +530,9 @@ public sealed partial class HomeIncomeFormulaHostRunner
         Require(!session.CancelUnpaidFastForwardOperation("paid-request", _ => true), "charged request cannot be cancelled");
         var result = session.CompleteFastForwardOperation("paid-request", value => value == "paid-request:profile");
         Require(result != null && result.TotalCount == 14 && result.Rewards.Single().Count == 14
-            && session.PendingFastForwardOperation == null, "charged request completes using frozen original numeric inputs");
+            && session.PendingFastForwardOperation == null
+            && session.Save.RandomRewards.Single().NextRefreshUnixSeconds == 1700000998,
+            "charged request completes with frozen numeric inputs and original two-second refresh rewind");
         before = JsonUtility.ToJson(session.Save);
         Require(session.CompleteFastForwardOperation("paid-request", _ => true) == null
             && session.PrepareFastForwardOperation(1, new[] { 1 }, 2, false,
@@ -494,13 +568,18 @@ public sealed partial class HomeIncomeFormulaHostRunner
         string zeroPath = System.IO.Path.Combine(root, "fast-extra-only.json");
         definition.Rule.LevelNum = 0;
         session = OfflineHomeIncomeSession.Open(zeroPath, new[] { definition }, props, flags, 1700000000);
-        Require(session.PrepareFastForwardOperation(1, new[] { 1 }, 2, false,
+        Require(session.Mutate("fractional:random-timer", save => save.RandomRewards.Add(
+            new OfflineHomeRandomRewardSlot { Slot = 0, NextRefreshUnixSeconds = 1700001000 })),
+            "seed fractional callback refresh timer");
+        Require(session.PrepareFastForwardOperation(1, new[] { 1 }, 2.5, false,
             new[] { new HomeCostEntry { itemId = 120, count = 1 } },
-            new[] { new OfflineHomeFastForwardAutoIncrease { HangUpId = 101, ItemId = 57 } }, false, "extras-only") != null,
+            new[] { new OfflineHomeFastForwardAutoIncrease { HangUpId = 101, ItemId = 57 } }, false, "extras-only", true) != null,
             "extra-handler request can persist even if there is no ordinary output");
         result = session.CompleteFastForwardOperation("extras-only", _ => true);
         Require(result != null && result.TotalCount == 0 && result.Rewards.Count == 0
-            && session.PendingFastForwardOperation == null, "completed extras-only profile receipt clears intent without a fabricated normal reward");
+            && session.PendingFastForwardOperation == null
+            && session.Save.RandomRewards.Single().NextRefreshUnixSeconds == 1700000997.5,
+            "extras-only receipt clears intent and preserves the fractional original callback rewind without a fabricated normal reward");
     }
 
     private void CheckFastBatchReceipts(ISet<int> flags)

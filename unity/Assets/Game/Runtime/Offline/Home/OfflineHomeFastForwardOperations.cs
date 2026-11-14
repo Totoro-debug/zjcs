@@ -31,7 +31,7 @@ namespace Zjcs.Offline.Home
         public double Hours;
         public long AcceptedUnixSeconds;
         public double AcceptedSubsecond;
-        public bool IsFree, HealToFull;
+        public bool IsFree, HealToFull, RewindRandomRewards;
         public HomeCostEntry[] Costs;
         public OfflineHomeFastForwardAutoIncrease[] AutoIncrease;
         public OfflineHomeIncomeDefinition[] Definitions;
@@ -48,7 +48,8 @@ namespace Zjcs.Offline.Home
 
         public OfflineHomeFastForwardOperation PrepareFastForwardOperation(int fastHangUpId,
             IReadOnlyList<int> hangUpIds, double hours, bool isFree, IReadOnlyList<HomeCostEntry> costs,
-            IReadOnlyList<OfflineHomeFastForwardAutoIncrease> autoIncrease, bool healToFull, string receipt)
+            IReadOnlyList<OfflineHomeFastForwardAutoIncrease> autoIncrease, bool healToFull, string receipt,
+            bool rewindRandomRewards = false)
         {
             if (!string.IsNullOrEmpty(Save.PendingFastForwardJson) || string.IsNullOrWhiteSpace(receipt)
                 || receipt.Length > 152
@@ -68,7 +69,8 @@ namespace Zjcs.Offline.Home
             var operation = new OfflineHomeFastForwardOperation {
                 FastHangUpId = fastHangUpId, Receipt = receipt, Hours = hours, IsFree = isFree,
                 AcceptedUnixSeconds = Save.LastLocalUnixSeconds, AcceptedSubsecond = Save.LastIncomeSubsecond,
-                HealToFull = healToFull, Costs = costs?.ToArray() ?? Array.Empty<HomeCostEntry>(),
+                HealToFull = healToFull, RewindRandomRewards = rewindRandomRewards,
+                Costs = costs?.ToArray() ?? Array.Empty<HomeCostEntry>(),
                 AutoIncrease = autoIncrease?.ToArray() ?? Array.Empty<OfflineHomeFastForwardAutoIncrease>(),
                 Definitions = selected,
                 Properties = properties.Select(value => new OfflineHomeFastForwardProperty {
@@ -104,6 +106,11 @@ namespace Zjcs.Offline.Home
             var rewards = FastForwardRewards(next, operation.Definitions, operation.Hours, receipt,
                 outputProperties, flags, out long total);
             if (rewards == null) return null;
+            // OperPlayerFastHangUpCallback uses AddSeconds(-FastHangUpHours),
+            // without converting hours to seconds. Preserve that original unit.
+            if (operation.RewindRandomRewards)
+                foreach (var slot in next.RandomRewards)
+                    slot.NextRefreshUnixSeconds = Math.Max(0, slot.NextRefreshUnixSeconds - operation.Hours);
             next.PendingFastForwardJson = null;
             AddReceipt(next, receipt);
             return Commit(next) ? new OfflineHomeFastForwardResult(total, rewards) : null;

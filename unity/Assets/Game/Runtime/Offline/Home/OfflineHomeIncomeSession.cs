@@ -116,7 +116,7 @@ namespace Zjcs.Offline.Home
         public int Slot;
         public int ItemId;
         public long Count;
-        public long NextRefreshUnixSeconds;
+        public double NextRefreshUnixSeconds;
     }
 
     [Serializable]
@@ -780,7 +780,7 @@ namespace Zjcs.Offline.Home
                 if (activeOfType >= definition.MaximumCount) continue;
                 OfflineHomeRandomRewardSlot slot = save.RandomRewards.FirstOrDefault(value => value.Slot == definition.Slot);
                 if (slot != null && slot.ItemId > 0) continue;
-                long due = slot?.NextRefreshUnixSeconds ?? nowUnixSeconds;
+                double due = slot?.NextRefreshUnixSeconds ?? nowUnixSeconds;
                 if (due > nowUnixSeconds) continue;
                 OfflineHomeRewardChoice choice = ChooseReward(definition, save);
                 if (choice == null) continue;
@@ -1060,7 +1060,7 @@ namespace Zjcs.Offline.Home
             foreach (OfflineHomeRandomRewardSlot entry in save.RandomRewards)
                 if (entry == null || entry.Slot < 0 || !rewardSlots.Add(entry.Slot) || entry.ItemId < 0
                     || entry.Count < 0 || (entry.ItemId == 0) != (entry.Count == 0)
-                    || entry.NextRefreshUnixSeconds < 0) return false;
+                    || !IsFinite(entry.NextRefreshUnixSeconds) || entry.NextRefreshUnixSeconds < 0) return false;
             var fastHangUpIds = new HashSet<int>();
             foreach (OfflineHomeFastForwardUsage entry in save.FastForwardUsage)
                 if (entry == null || entry.FastHangUpId <= 0 || !fastHangUpIds.Add(entry.FastHangUpId)
