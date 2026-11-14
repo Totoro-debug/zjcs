@@ -3,6 +3,7 @@ $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 Add-Type -Path (@(Get-FightCombatSources) + @(
     (Join-Path $root 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleUnitEndPlayback.cs'),
+    (Join-Path $root 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleUnitSpawnPlayback.cs'),
     (Join-Path $PSScriptRoot 'fixtures/battle_unit_end_harness.cs')))
 $inputs = Join-Path $root 'unity/Assets/Official/Combat'
 $skill = [IO.File]::ReadAllText((Join-Path $inputs 'skill-rules.json'))

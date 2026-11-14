@@ -9,6 +9,7 @@ namespace Zjcs.Presentation.Combat
     {
         private sealed class Pending { public int Id; public float Remaining; }
         private readonly List<Pending> pending = new List<Pending>();
+        private readonly HashSet<int> seen = new HashSet<int>();
         private readonly Action<int> remove;
         private readonly Func<int, bool> present;
 
@@ -34,9 +35,10 @@ namespace Zjcs.Presentation.Combat
             if (events == null) return;
             foreach (var value in events)
             {
-                if (value == null || Retains(value.UnitId) || !present(value.UnitId)) continue;
+                if (value == null || seen.Contains(value.UnitId) || !present(value.UnitId)) continue;
                 if (float.IsNaN(value.Delay) || float.IsInfinity(value.Delay) || value.Delay < 0f)
                     throw new InvalidOperationException("Unit removal time must be finite and nonnegative.");
+                seen.Add(value.UnitId);
                 pending.Add(new Pending { Id = value.UnitId, Remaining = value.Delay });
             }
         }
@@ -59,6 +61,6 @@ namespace Zjcs.Presentation.Combat
             }
         }
 
-        public void Clear() => pending.Clear();
+        public void Clear() { pending.Clear(); seen.Clear(); }
     }
 }

@@ -12,7 +12,7 @@ namespace Zjcs.Presentation.Combat
         private void CreateSummonView(FightBattleHitSelectionSnapshot.SpawnedUnit receipt)
         {
             var state = latestCheckpoint?.Units.Find(value => value != null && value.Id == receipt.UnitId);
-            if (state == null || state.Hp <= 0 || state.Ended) return;
+            if (state == null || state.Hp <= 0 || state.Ended && !UnitEndPlayback.Retains(state.Id)) return;
             UnitView view = GetOrCreate(state, new FightGridPoint(receipt.X, receipt.Y));
             if (view == null) return;
             view.State = state;

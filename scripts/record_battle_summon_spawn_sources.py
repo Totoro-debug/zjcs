@@ -20,6 +20,7 @@ def main():
         'Official/Combat/FightBattleExecutor.cs', 'Offline/Combat/FightBattleHitSelectionSnapshot.cs',
         'Presentation/Combat/OfficialBattleSceneView.cs', 'Presentation/Combat/OfficialBattleSceneView.Summons.cs',
         'Presentation/Combat/OfficialBattleSceneView.UnitEnds.cs', 'Presentation/Combat/OfficialBattleUnitSpawnPlayback.cs',
+        'Presentation/Combat/OfficialBattleUnitEndPlayback.cs',
         'Presentation/Combat/OfficialBattleSkillGraphPlayback.cs', 'Presentation/Combat/OfficialBattleLiveMonsterModelView.cs')]
     original = '.tools/source-packages/current/884_156692/official-code/'
     proof = dict(code_manifest='884_156692', configuration_manifest='854_156383',
@@ -40,6 +41,7 @@ def main():
             'assets/reference/battle-animation/monster-additional-shadows-source-manifest.json')],
         validation=[identity(path) for path in (
             'scripts/test_battle_unit_spawns.ps1', 'scripts/fixtures/battle_unit_spawn_harness.cs',
+            'scripts/test_battle_unit_ends.ps1', 'scripts/fixtures/battle_unit_end_harness.cs',
             'scripts/test_battle_skill_graph_dispatch.ps1', 'scripts/fixtures/battle_skill_graph_dispatch_harness.cs',
             'scripts/prepare_battle_damage_playback_validation.py',
             'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSummonSpawnAcceptance.cs')],
@@ -48,6 +50,9 @@ def main():
         operation='Add presentation-only identity, initial cell and cast-local flight plus original sorted Base scope delay for each successful role summon. '
             'Retain eager settlement, RNG, placement and status order. Delay model/HUD creation on the existing native graph clock. '
             'Restore existing roles without replaying generation. Position the native monster before original birth graph initialization. '
+            'Queue existing explicit entity-removal receipts for pending births as well as visible units; '
+            'dispatch birth before removal at equal times, suppress births after an earlier removal, and deduplicate removed identities. '
+            'A settled Ended flag does not hide a living summon before its recorded removal boundary. '
             'No source prefab, texture, mesh, shader or animation asset is changed.')
     for name, key in (
         ('assets/reference/battle-animation/summon-role-views-source-manifest.json', 'runtime_bindings'),

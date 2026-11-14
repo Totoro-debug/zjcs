@@ -1,3 +1,4 @@
+using System;
 using Zjcs.Combat.Official;
 
 namespace Zjcs.Presentation.Combat
@@ -8,7 +9,8 @@ namespace Zjcs.Presentation.Combat
         private bool unitEndGraphClock;
 
         private OfficialBattleUnitEndPlayback UnitEndPlayback => unitEndPlayback
-            ?? (unitEndPlayback = new OfficialBattleUnitEndPlayback(RemoveEndedUnit, id => Body(id) != null));
+            ?? (unitEndPlayback = new OfficialBattleUnitEndPlayback(RemoveEndedUnit,
+                id => Body(id) != null || UnitSpawns.IsPending(id)));
 
         internal void BindUnitEndClock(OfficialBattleSkillGraphPlayback playback)
         {
@@ -16,6 +18,23 @@ namespace Zjcs.Presentation.Combat
             playback.BindUnitEnds(UnitEndPlayback);
             playback.BindUnitSpawns(UnitSpawns);
             unitEndGraphClock = true;
+        }
+
+        private void AdvanceUnitLifecycles(float elapsed)
+        {
+            while (true)
+            {
+                float next = Math.Min(unitSpawns?.NextDelay ?? float.PositiveInfinity,
+                    unitEndPlayback?.NextDelay ?? float.PositiveInfinity);
+                if (next > elapsed) break;
+                unitSpawns?.AdvanceTimers(next);
+                unitEndPlayback?.AdvanceTimers(next);
+                elapsed -= next;
+                unitSpawns?.DispatchDue();
+                unitEndPlayback?.DispatchDue();
+            }
+            unitSpawns?.AdvanceTimers(elapsed);
+            unitEndPlayback?.AdvanceTimers(elapsed);
         }
 
         private void RemoveEndedUnit(int id)

@@ -519,8 +519,6 @@ namespace Zjcs.Presentation.Combat
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
             latestCheckpoint = checkpoint;
-            UnitEndPlayback.Enqueue(stepEvent?.UnitEndEvents);
-            UnitEndPlayback.DispatchDue();
             if (restoredNativeUnitIds == null)
             {
                 restoredNativeUnitIds = new HashSet<int>();
@@ -529,7 +527,9 @@ namespace Zjcs.Presentation.Combat
                         if (unit != null && IsWaveSpawned(checkpoint, unit.Id)) restoredNativeUnitIds.Add(unit.Id);
             }
             UnitSpawns.Enqueue(stepEvent);
+            UnitEndPlayback.Enqueue(stepEvent?.UnitEndEvents);
             UnitSpawns.DispatchDue();
+            UnitEndPlayback.DispatchDue();
             var present = new HashSet<int>();
             foreach (FightBattleUnitState state in checkpoint.Units)
             {
@@ -796,16 +796,7 @@ namespace Zjcs.Presentation.Combat
             }
             foreach (UnitView view in units.Values) view.Hud?.Tick(deltaTime);
             foreach (OfficialBattleUnitWorldHudView hud in attachedUnitHuds.Values) hud?.Tick(deltaTime);
-            if (!unitEndGraphClock && unitEndPlayback != null)
-            {
-                unitEndPlayback.AdvanceTimers(deltaTime);
-                unitEndPlayback.DispatchDue();
-            }
-            if (!unitEndGraphClock && unitSpawns != null)
-            {
-                unitSpawns.AdvanceTimers(deltaTime);
-                unitSpawns.DispatchDue();
-            }
+            if (!unitEndGraphClock) AdvanceUnitLifecycles(deltaTime);
         }
 
         private void AdvanceMotions(double deltaTime)

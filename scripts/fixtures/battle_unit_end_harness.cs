@@ -13,6 +13,7 @@ public static class BattleUnitEndHarness
         foreach (int item in new[] {10019,10025,10058}) Natural(catalog,items,formula,item,false);
         Natural(catalog,items,formula,10019,true);
         for (int count = 1; count <= 128; count++) Clock(count);
+        foreach (float removal in new[] {0f,.25f,.5f,.75f,1f}) PendingBirth(removal);
     }
 
     private static void Natural(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
@@ -63,6 +64,39 @@ public static class BattleUnitEndHarness
             }
         }
         Check(ends.Count==summons.Length,"Natural original summon expiry did not finish");
+    }
+
+    private static void PendingBirth(float removal)
+    {
+        bool visible=false; int births=0,removals=0;
+        OfficialBattleUnitEndPlayback ends=null;
+        var spawns=new OfficialBattleUnitSpawnPlayback(value=>{
+            if(ends.Retains(value.UnitId)) {visible=true;births++;}
+        },_=>visible);
+        ends=new OfficialBattleUnitEndPlayback(_=>{visible=false;removals++;},
+            id=>visible || spawns.IsPending(id));
+        var step=new FightBattleStepEvent();var cast=new FightBattleSkillCastEvent();
+        cast.HitSelections.Add(new FightBattleHitSelectionSnapshot {SpawnedUnits=
+            new List<FightBattleHitSelectionSnapshot.SpawnedUnit> {
+                new FightBattleHitSelectionSnapshot.SpawnedUnit {UnitId=3,Delay=.5f}}});
+        step.SkillCasts.Add(cast);
+        var receipt=new[]{new FightBattleUnitEndEvent {UnitId=3,Delay=removal}};
+        spawns.Enqueue(step);ends.Enqueue(receipt);
+        float now=0;
+        while(!float.IsPositiveInfinity(Math.Min(spawns.NextDelay,ends.NextDelay)))
+        {
+            float elapsed=Math.Min(spawns.NextDelay,ends.NextDelay);
+            spawns.AdvanceTimers(elapsed);ends.AdvanceTimers(elapsed);now+=elapsed;
+            spawns.DispatchDue();ends.DispatchDue();
+            Check(visible==(now>=.5f && now<removal),"Pending birth/removal order differs");
+            spawns.Enqueue(step);ends.Enqueue(receipt);
+        }
+        Check(births==(removal>=.5f?1:0) && removals==1 && !visible,
+            "Same-step removal was lost or repeated across refresh");
+        // A borrowed transform may still exist after the removal callback.
+        visible=true;ends.Enqueue(receipt);ends.DispatchDue();
+        Check(removals==1,"Repeated ended receipt dispatched twice for a retained transform");
+        spawns.Clear();ends.Clear();
     }
 
     private static void Clock(int subdivisions)

@@ -58,23 +58,28 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
-      "bytes": 83626,
-      "sha256": "22a55e57af2c5f260be214be5538a21a930e482ccd77450a909088ef143416aa"
+      "bytes": 83319,
+      "sha256": "7d1ff1a4d7bd4fe303628074b7e50e0043c4b043493a4b9e581714485c537249"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Summons.cs",
-      "bytes": 1168,
-      "sha256": "e709fec64b80bf7dcbcd574da0345597cf20a0c518d22c979eb7a7465f806674"
+      "bytes": 1206,
+      "sha256": "5e946d87000df448423d1092df2a3d4fc948a93d882a4d5d64c5b2070e2769f9"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.UnitEnds.cs",
-      "bytes": 1138,
-      "sha256": "dff44f644a8ecfb34f03b22d2791d8c70503f8af98f74f027b020a5dd06ae901"
+      "bytes": 1861,
+      "sha256": "196db8996f410d76a2682eccbb8568f08539b8dd6b0e85f5e9fac728e8775cfe"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleUnitSpawnPlayback.cs",
       "bytes": 3727,
       "sha256": "37b142d50fd263648bb0c073756700b96c694f0dc5fc062d47e339548147aa2e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleUnitEndPlayback.cs",
+      "bytes": 2567,
+      "sha256": "561ab3958701e61ca84a386373d8664ed250d2fc0b5327074e8fc08542b0833b"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs",
@@ -96,7 +101,7 @@
     {
       "path": "assets/reference/battle-animation/summon-role-views-source-manifest.json",
       "bytes": 153694,
-      "sha256": "d63056c696ecacc59172f48417f1914560997ef24ab75ef9be4cd8b55e907e8f"
+      "sha256": "fd1850a6624f1afe64d2f1bf450abb02d5e38d14be06b7fa7f55743d68b844d3"
     },
     {
       "path": "assets/reference/battle-animation/native-monster-appearance-source-manifest.json",
@@ -136,6 +141,16 @@
       "sha256": "28325b307298611235cb9a2ade003232a529ce7d8280539d2c9f081d06dfd443"
     },
     {
+      "path": "scripts/test_battle_unit_ends.ps1",
+      "bytes": 1588,
+      "sha256": "a68771e831e1cba7a357213851ce6e33d46622d5f667d1bf75a6bde665a45735"
+    },
+    {
+      "path": "scripts/fixtures/battle_unit_end_harness.cs",
+      "bytes": 7403,
+      "sha256": "5508108c3e52d46959101cbebbde8305736851934af1b4028ff0df7afaaab2b9"
+    },
+    {
       "path": "scripts/test_battle_skill_graph_dispatch.ps1",
       "bytes": 713,
       "sha256": "80018e5893e80beca25528848486812009156b3487f1f0890453f3f56068a576"
@@ -152,15 +167,15 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSummonSpawnAcceptance.cs",
-      "bytes": 12423,
-      "sha256": "0ff162ca5b56442e8e6af3cad13c2f998b9a38ec5e820352a74103f3aa752af9"
+      "bytes": 15474,
+      "sha256": "925b4bc1000b0c8370605b1e752fd84d7ca8514030bfc8ecc566b7edbda05442"
     }
   ],
   "generator": {
     "path": "scripts/record_battle_summon_spawn_sources.py",
-    "bytes": 4701,
-    "sha256": "5f28dee0178de0bc5c4bcbcde1a3d902547739b4023066bb609f8671cf0971d8"
+    "bytes": 5212,
+    "sha256": "49bc7a3824234aabbc500eaffecb7fed91bb30e9c26aecc6d34f5f13be868a75"
   },
   "binding": "Successful SpawnSummons -> owning HitSelectionSnapshot.SpawnedUnits -> shared scene -> native graph clock -> original model/generation graph",
-  "operation": "Add presentation-only identity, initial cell and cast-local flight plus original sorted Base scope delay for each successful role summon. Retain eager settlement, RNG, placement and status order. Delay model/HUD creation on the existing native graph clock. Restore existing roles without replaying generation. Position the native monster before original birth graph initialization. No source prefab, texture, mesh, shader or animation asset is changed."
+  "operation": "Add presentation-only identity, initial cell and cast-local flight plus original sorted Base scope delay for each successful role summon. Retain eager settlement, RNG, placement and status order. Delay model/HUD creation on the existing native graph clock. Restore existing roles without replaying generation. Position the native monster before original birth graph initialization. Queue existing explicit entity-removal receipts for pending births as well as visible units; dispatch birth before removal at equal times, suppress births after an earlier removal, and deduplicate removed identities. A settled Ended flag does not hide a living summon before its recorded removal boundary. No source prefab, texture, mesh, shader or animation asset is changed."
 }

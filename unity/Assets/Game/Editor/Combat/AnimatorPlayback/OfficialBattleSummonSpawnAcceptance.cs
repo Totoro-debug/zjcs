@@ -67,6 +67,9 @@ namespace Zjcs.Editor.Combat
         {
             foreach(int skillId in new[]{10710,10770,11140,12060,13300,13670})
             foreach(bool fallback in skillId>=12060?new[]{false,true}:new[]{false})
+            foreach(bool removed in new[]{false,true})
+            foreach(bool nativeClock in removed?new[]{true,false}:new[]{true})
+            foreach(float removalOffset in removed && skillId==12060 && !fallback?new[]{1.5f,0f,-.001f}:new[]{1.5f})
             {
                 var root=new GameObject("Actual summon scene "+skillId);
                 using var scope=new OfflineBattleNativePlayableScope(root.transform,null);
@@ -100,22 +103,41 @@ namespace Zjcs.Editor.Combat
                 using var scene=new OfficialBattleSceneView(modelCatalog,root.transform,_=>null,mapper,(_,__)=>"idle_01",(_,__)=>{},nativePlayableScope:scope);
                 using var entities=new OfficialBattleSkillEntityPlayback(root.transform,mapper,scope,id=>state.Units.Find(u=>u.Id==id));
                 using var graphs=new OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog.TryLoadDefault(),scope,entities);
-                typeof(OfficialBattleSceneView).GetMethod("BindUnitEndClock",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(scene,new object[]{graphs});
+                if(nativeClock) typeof(OfficialBattleSceneView).GetMethod("BindUnitEndClock",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(scene,new object[]{graphs});
+                void Advance(float elapsed) {scene.Tick(elapsed);if(nativeClock)graphs.Tick(elapsed);graphs.LateTick();}
                 scene.Refresh(state);
                 var step=executor.Step(0,1);
                 var spawns=step.Event.SkillCasts.SelectMany(c=>c.HitSelections.SelectMany(h=>h.SpawnedUnits.Select(s=>new {Cast=c,Spawn=s}))).ToArray();
                 Require(spawns.Length==(skillId==11140?2:1),"Original summon fixture produced no expected roles: "+skillId);
                 if(fallback) Require(spawns.All(s=>s.Spawn.X==5 && s.Spawn.Y==5),"Confirmed caster-cell fallback differs");
+                float due=spawns.Min(s=>s.Cast.Delay+s.Spawn.Delay);
+                if(removed)
+                    foreach(var spawn in spawns)
+                    {
+                        // Controlled settled state: exercise the real scene using
+                        // the original birth receipt and an explicit removal boundary.
+                        state.Units.Find(u=>u.Id==spawn.Spawn.UnitId).Ended=true;
+                        step.Event.UnitEndEvents.Add(new FightBattleUnitEndEvent {UnitId=spawn.Spawn.UnitId,Delay=due+removalOffset});
+                    }
                 string saved=FightBattleCheckpointSerializer.Save(state);
                 scene.Refresh(state,step.Event);
-                float due=spawns.Min(s=>s.Cast.Delay+s.Spawn.Delay);
                 Require(due>0 && spawns.All(s=>!scene.TryGetUnitTransform(s.Spawn.UnitId)),"Summon appeared at eager settlement time");
-                graphs.Tick(due-.001f);scene.Tick(0);
+                Advance(due-.001f);
                 Require(spawns.All(s=>!scene.TryGetUnitTransform(s.Spawn.UnitId)),"Summon appeared before its original scope time");
                 // Check just after birth at the next representable float time;
                 // segmented native clocks can retain a fraction of one ULP.
                 float afterDue=BitConverter.ToSingle(BitConverter.GetBytes(BitConverter.ToInt32(BitConverter.GetBytes(due),0)+1),0);
-                graphs.Tick(afterDue-(due-.001f));
+                Advance(afterDue-(due-.001f));
+                if(removed && removalOffset<=0)
+                {
+                    Require(spawns.All(s=>!scene.TryGetUnitTransform(s.Spawn.UnitId)),"Removal before/at birth left a visible model");
+                    scene.Refresh(state,step.Event);Advance(1);
+                    Require(spawns.All(s=>!scene.TryGetUnitTransform(s.Spawn.UnitId)),"Earlier removal was re-enqueued while birth was pending");
+                    Require(FightBattleCheckpointSerializer.Save(state)==saved,"Boundary presentation changed settlement or save data");
+                    Debug.Log("[Summon spawn] Removal offset="+removalOffset+" native clock="+nativeClock+": no late birth or resurrection.");
+                    scene.Dispose();graphs.Dispose();scope.Dispose();UnityEngine.Object.DestroyImmediate(root);UnityEngine.Object.Destroy(modelCatalog);
+                    continue;
+                }
                 foreach(var spawn in spawns)
                 {
                     var body=scene.TryGetUnitTransform(spawn.Spawn.UnitId);
@@ -126,14 +148,31 @@ namespace Zjcs.Editor.Combat
                 // Step refresh cannot restart a queued or already dispatched birth.
                 scene.Refresh(state,step.Event);
                 int birthFrames=skillId==11140?36:18;
-                for(int frame=0;frame<birthFrames;frame++){scene.Tick(1f/60);graphs.Tick(1f/60);graphs.LateTick();yield return null;}
+                for(int frame=0;frame<birthFrames;frame++){Advance(1f/60);yield return null;}
                 var first=scene.TryGetUnitTransform(spawns[0].Spawn.UnitId).GetComponentInChildren<BattleNativeMonsterRenderer>();
                 Require(first && first.Animation=="generate_01","Original generation graph was replaced by idle");
                 using var capture=new Capture(first.transform.parent.parent,first.GetComponent<MeshRenderer>());
-                capture.Save("summon-"+skillId+(fallback?"-fallback":"")+"-generate.png");
-                for(int frame=0;frame<120;frame++){scene.Tick(1f/60);graphs.Tick(1f/60);graphs.LateTick();yield return null;}
+                string prefix="summon-"+skillId+(fallback?"-fallback":"")+(removed?"-removed":"")+(nativeClock?"":"-scene-clock");
+                capture.Save(prefix+"-generate.png");
+                if(removed)
+                {
+                    float beforeRemoval=1.5f-birthFrames/60f-.01f;
+                    Advance(beforeRemoval);yield return null;
+                    Require(spawns.All(s=>scene.TryGetUnitTransform(s.Spawn.UnitId)),"Settled Ended flag removed a role before its receipt");
+                    scene.Refresh(state,step.Event);
+                    capture.Save(prefix+"-before-removal.png");
+                    Advance(.02f);yield return null;
+                    Require(spawns.All(s=>!scene.TryGetUnitTransform(s.Spawn.UnitId)),"New role survived its recorded removal boundary");
+                    scene.Refresh(state,step.Event);Advance(0);
+                    Require(spawns.All(s=>!scene.TryGetUnitTransform(s.Spawn.UnitId)),"Repeated receipt resurrected a removed role");
+                    Require(FightBattleCheckpointSerializer.Save(state)==saved,"Removal presentation changed settlement or save data");
+                    Debug.Log("[Summon spawn] Actual "+skillId+": controlled same-step final Ended state retained birth and removed on receipt.");
+                    scene.Dispose();graphs.Dispose();scope.Dispose();UnityEngine.Object.DestroyImmediate(root);UnityEngine.Object.Destroy(modelCatalog);
+                    continue;
+                }
+                for(int frame=0;frame<120;frame++){Advance(1f/60);yield return null;}
                 Require(first.Animation=="idle_01","Original generation did not settle to idle");
-                capture.Save("summon-"+skillId+(fallback?"-fallback":"")+"-idle.png");
+                capture.Save(prefix+"-idle.png");
                 Require(FightBattleCheckpointSerializer.Save(state)==saved,"Appearance modified settled combat or save data");
                 Debug.Log("[Summon spawn] Actual "+skillId+": delayed native model, original generation/idle, grid position and repeat refresh passed.");
                 scene.Dispose();graphs.Dispose();scope.Dispose();UnityEngine.Object.DestroyImmediate(root);UnityEngine.Object.Destroy(modelCatalog);
