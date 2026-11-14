@@ -265,6 +265,8 @@ namespace Zjcs.Combat.Official
         public bool UseTargetPositionWithSelection;
         // Capture at trigger time; later stacking must not change an already collected cast.
         public double DamageFactor = 1.0;
+        public bool HasCustomDamage;
+        public long CustomDamage;
         public bool HasCustomCure;
         public long CustomCure;
         // Runtime-only hit creation snapshot; ordinary status invocations use

@@ -27,7 +27,7 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState target, FightBattleSkillDefinition skill,
             FightBattleHitDefinition hit, IReadOnlyList<FightBattleUnitState> units,
             FightOfficialCombatCatalog catalog, FightRandomStream random,
-            FightBattleDamageEvent damageEvent = null)
+            FightBattleDamageEvent damageEvent = null, FightDamageFormula formula = null)
         {
             var result = new List<FightBattleStatusSkillInvocation>();
             if (owner == null || status == null || !status.HasLogicComponent
@@ -40,9 +40,15 @@ namespace Zjcs.Combat.Official
                 && rawTriggers is List<object> triggers)) return result;
 
             RemoveLegacyRuntimeValues(status, triggers);
+            if (status.ClassId == 25021 && eventKind == FightStatusLogicEvent.AfterBeDamage)
+                return ApplyVectorReflection(owner, status, actor, target, skill, hit,
+                    damageEvent, triggers);
             if (status.ClassId == 25017 && eventKind == FightStatusLogicEvent.AfterBeDamage)
                 return ApplySwordCounterattack(owner, status, actor, target, skill, hit,
                     damageEvent, triggers, random);
+            if (status.ClassId == 25035 && eventKind == FightStatusLogicEvent.AfterBeDamage)
+                return ApplyReflectionArmor(owner, status, actor, target, skill, hit,
+                    damageEvent, triggers, formula);
             // User-confirmed offline rule: one Runtime board per event, shared by its flows.
             var runtime = new Dictionary<int, FightBattleLogicBlackboardValue>();
             foreach (object raw in triggers)

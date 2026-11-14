@@ -1,0 +1,94 @@
+{
+  "manifest": "884_156692",
+  "official_code": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleCfgStatusDamageByDamageResultValueAndStore.cs",
+      "sha256": "8a298d8bfa202f2c80139e01aad311b0d7e4944bef492de2444703fe7b43ed62"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleStatusDamageByDamageResultValueAndStore.cs",
+      "sha256": "9aebb19f7e1ef15b1aa8029a427ddcd7b2b424c3d1d014fe7bcfe4d14acbb6c6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleCfgTriggerSkillWithCustomDamageByStatus.cs",
+      "sha256": "49b8f4c37937195056066fc17a543760f327eade25b48bf7bc2630dbf6b37276"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleTriggerSkillWithCustomDamageByStatus.cs",
+      "sha256": "cb443735df8fbeec92b798e15f55252c61dc0d0fb6c345c7b95a4cb6b4ca858f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DamageResultParameter.cs",
+      "sha256": "23830ee94f74e3dc573ab2d70e6ed91f7ce3c6773b613ea6ff1e692bb29f7671"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DamageResultValueType.cs",
+      "sha256": "7a2b9b06d7a21cabbd483348e9d9e475b2da73a8f14081053356052aa56689a8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DamageResultTypeFilter.cs",
+      "sha256": "f93c674d6d54a39b3ada288a8a17bb419eb3bba0e4364d930326279bd792bd2c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DamageResultValueTypeCompareFilter.cs",
+      "sha256": "329203e9ec66e5eee89e1d5f8e784a72b59834ae921aea179d64a3eb5f9834bc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DamageShieldValueGreaterThanZeroFilter.cs",
+      "sha256": "d3fc975c062a5dac7607fd699ab146b9fd5b5f9fde24640d701bd87e2ab35a3a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DamageSkillCanTriggerStatusFilter.cs",
+      "sha256": "b9203694aad5b4f67f489f623fa3ab6c15998e4eaf59575b6adb55e08004b84a"
+    }
+  ],
+  "runtime_inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    }
+  ],
+  "formula_proof": {
+    "path": "assets/reference/battle-rules/status-damage-source-manifest.json",
+    "sha256": "93b2d95cd5f2ecc772d8f7654cea6b90e996e32b76ffe6467fc50e1373b59c81"
+  },
+  "adapter": {
+    "path": "unity/Assets/Game/Runtime/Offline/Combat/FightStatusLogicRuntime.ReflectionArmor.cs",
+    "sha256": "e484297d22814f525605c8d152d0b42b39d3888f1fccca28bc741976e65b5a16",
+    "text_hash": "CRLF normalized to LF"
+  },
+  "generator": {
+    "path": "scripts/prepare_battle_reflection_armor_sources.py",
+    "sha256": "4cf5cf1ada5e2935dbc4586ed500e283cfb9279b8ead9e9a673d1112b90a866a",
+    "text_hash": "CRLF normalized to LF"
+  },
+  "validation": [
+    {
+      "path": "scripts/test_battle_reflection_armor.ps1",
+      "sha256": "ff357d49ccbe2a24aea3f1209ee9f949cd83775f5b82dd8886749211ee211823",
+      "text_hash": "CRLF normalized to LF"
+    },
+    {
+      "path": "scripts/fixtures/battle_reflection_armor_harness.cs",
+      "sha256": "25b1485520099367879ca08466c8673eea8a5a8158ff60815f9d845a23b03c21",
+      "text_hash": "CRLF normalized to LF"
+    }
+  ],
+  "native_entity": {
+    "path": "assets/reference/battle-animation/additional-status-assets-source-manifest.json",
+    "sha256": "bf98c6e57fa3f76bf7a29786e6f488cb6f1cd47cd0742a9018690519136ba3ec"
+  },
+  "reaction_graph_proof": {
+    "path": "assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json",
+    "sha256": "9e19958ac436c87a774a947016954bb93fd870d3c86200104f8baff94558cfeb"
+  },
+  "operation": "Confirmed offline 25035 graph adapter. Successful damage result, actual shield absorption, living holder and original skill trigger permission gate each occurrence. Read original ShieldAddFinalDamageValue (signed pre-HP-clamp DamageValue minus positive ShieldValue), original status properties and StatusDamage formula; convert its negative HP delta to the normal damage formula custom-base magnitude. Holder casts 11480 at attacker with status cultivation, blessing, ancestry and occurrence delay; no persistent runtime board or random draw."
+}

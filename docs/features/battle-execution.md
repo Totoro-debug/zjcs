@@ -82,7 +82,7 @@
 
 人物持续状态由 `OfficialBattleStatusPlayback` 保留当前状态快照并播放原状态实体。原 `MyFightStatus.OnEnd` 先停止状态图、解除状态通知和状态代理注册；原 `MyAction.OnRemove` 随后停止主图及循环图，并按原配置处理结束图。角色模型替换或死亡模型实际释放后，宿主沿该顺序释放旧表现；每个动作的查找仍绑定原 `MyEntity`，结束图不会因相同角色 ID 的新模型出现而改用新模型。模型缺席时保存最新层数、禁用标志及盾值／绝对减伤计数，更新合入等待快照，结束会移除等待项；已错过的瞬时 Invoke 维持原有不补播行为。首次延迟装载保留原新状态标志，已有状态在重建模型上沿 `OnStart(false)` 恢复；稳定模型不重复创建或注册。表现读取战斗检查点，来源与显式加载绑定见[状态与模型生命周期](../../assets/reference/battle-animation/status-model-lifecycle-source-manifest.json)。
 
-共享 `FightDamageFormula.CalculateStatusDamage` 复用所选官方 `BattleFormulaHandler.StatusDamage`：先取输入结果绝对值，再乘状态百分比属性并加固定属性，仅正数上限参与裁剪，结果下限为零，向零截断后取负数；零上限不限制，属性类型沿原浮点属性表转换。该纯公式不选择伤害结果、不直接修改生命，也不代发状态通知。原 25035 逻辑图引用此公式和 11480 子技能，缺失服务端处理体的单机触发方案已由用户确认，决策见[骑士路线](skills-knight.md#rank-3)，执行接线尚待完成；不能把普通技能命中自动改作 `FightStatusDamageModification`。原码、配置及换行规范化后的实现／验证哈希见[状态伤害公式来源](../../assets/reference/battle-rules/status-damage-source-manifest.json)。
+共享 `FightDamageFormula.CalculateStatusDamage` 复用所选官方 `BattleFormulaHandler.StatusDamage`：先取输入结果绝对值，再乘状态百分比属性并加固定属性，仅正数上限参与裁剪，结果下限为零，向零截断后取负数；零上限不限制，属性类型沿原浮点属性表转换。该纯公式不选择伤害结果、不直接修改生命，也不代发状态通知。原 25035 逻辑图引用此公式和 11480 子技能，缺失服务端处理体的单机触发方案已由用户确认，决策见[骑士路线](skills-knight.md#rank-3)，受击接线已通过规则专项，原生验证及发布范围由该页维护；不能把普通技能命中自动改作 `FightStatusDamageModification`。原码、配置及换行规范化后的实现／验证哈希见[状态伤害公式来源](../../assets/reference/battle-rules/status-damage-source-manifest.json)。
 
 - `OfficialBattleRuntimeController` 连接战斗会话、准备界面、场景宿主与结算回调；`FightBattleCheckpoint` 保存可恢复的本地战斗状态。
 - 回合步骤、格网与单位、受控站位、技能装配、目标选择、命中及部分伤害／HP／护盾／状态规则已有共享实现。各模块仍按官方配置和已迁移的客户端代码执行，不代表所有技能及组件覆盖完整。
@@ -380,7 +380,7 @@
 
 - 持续状态与模型生命周期专项 `Zjcs.Editor.Combat.OfficialBattleStatusModelAcceptance.Run` 通过原 10712／24010／24170 的 12 组受控快照用例：模型替换、已销毁模型、首次延迟装载、等待期间的更新／结束、最新层数与禁用标志、旧动作的结束拥有者、新状态标志及重复派发不重复注册；三种实际状态 prefab 的序列化脚本已在运行时确认无缺失。旧宿主在拥有者替换断言复现旧引用，当前宿主全部通过。另通过共享 `OfficialBattleSceneView` 的真实 3204 模型死亡、释放和复活，两个既有状态在新模型上按恢复标志重建；13 组流程的完整检查点均保持不变。主工程 Unity 编译与 `ProjectTools.Validate`、静态元数据检查（151,980 GUID）、原护盾结果及技能图／状态通知调度回归通过。内置屏静音原生 Play Mode 最终复跑以 0 正常退出，三张实际画面已查看，存活与复活画面的 PNG 字节一致；原目录预加载仍有三条既有缺失脚本警告。此处使用受控状态与生命回执，未覆盖全部状态、召唤出生状态、创建者／主人的模型替换、模型缺席期间的瞬时通知或完整人物／HUD 交互；未构建或发布本批 Windows Player。
 
-- 原状态伤害公式专项 `test_battle_status_damage.ps1` 编译所选 `BattleFormulaHandler.StatusDamage` 原方法，与迁移方法完成 480 组逐项对照：正负及零输入、百分比和固定属性、负数／零／正数上限、非整数截断、负结果下限及大输入；另核对缺失属性与原绝对值溢出。输入来自原属性类型表；未用近似公式作期望值。主工程 Unity 导入／编译、`ProjectTools.Validate` 以 0 正常退出，静态元数据检查通过（151,993 GUID）。本项仅恢复纯公式，未接入 25035 的服务端逻辑替代，不代表反射装甲战斗／表现完成；没有新增 Play Mode 场景或 Windows Player 发布。
+- 原状态伤害公式专项 `test_battle_status_damage.ps1` 编译所选 `BattleFormulaHandler.StatusDamage` 原方法，与迁移方法完成 480 组逐项对照：正负及零输入、百分比和固定属性、负数／零／正数上限、非整数截断、负结果下限及大输入；另核对缺失属性与原绝对值溢出。输入来自原属性类型表；未用近似公式作期望值。主工程 Unity 导入／编译、`ProjectTools.Validate` 以 0 正常退出，静态元数据检查通过（151,993 GUID）。本项对照仅覆盖纯公式；25035 的实际接线、原生验证与发布范围见[骑士路线](skills-knight.md#rank-3)。
 
 ## 代码与来源入口
 

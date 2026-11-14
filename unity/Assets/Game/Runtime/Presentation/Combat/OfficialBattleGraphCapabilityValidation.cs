@@ -53,6 +53,8 @@ namespace Zjcs.Presentation.Combat
 
         public static OfficialBattleGraphCapabilityValidation Configure(FightBattleCheckpoint checkpoint)
         {
+            if (Environment.GetEnvironmentVariable("ZJCS_REFLECTION_ARMOR") == "1")
+                return ConfigureReflectionArmor(checkpoint);
             if (Environment.GetEnvironmentVariable("ZJCS_SWORD_COUNTERATTACK") == "1")
                 return ConfigureSwordCounterattack(checkpoint);
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_FIRST_PROMOTION_SKILL")))
@@ -178,6 +180,7 @@ namespace Zjcs.Presentation.Combat
             if (ValidateForcedMovement)
                 forcedTargetRotation = controller.TryGetUnitTransform(forcedTargetId).localRotation;
             entities.CastStarted += cast => {
+                ObserveReflectionArmorCast(cast, controller);
                 ObserveNativeHitCustomCure(cast);
                 ObserveNativeShieldExpiry(cast);
                 ObserveFatalRevivalCast(cast);
@@ -220,6 +223,7 @@ namespace Zjcs.Presentation.Combat
 
         public void ObserveStep(OfficialBattleRuntimeController controller)
         {
+            if (ObserveReflectionArmorStep(controller)) return;
             if (ObserveSwordCounterattackStep(controller)) return;
             ObserveTerrainScopeStep(controller);
             ObserveShieldExpiryStep(controller);
@@ -351,6 +355,7 @@ namespace Zjcs.Presentation.Combat
         public void ObserveFrame(OfficialBattleRuntimeController controller)
         {
             CaptureName = null;
+            if (ObserveReflectionArmorFrame(controller)) return;
             ObserveArcShieldSoundFrame(controller);
             if (ObserveSwordCounterattackFrame(controller)) return;
             ObserveChainedHitViews(controller);
@@ -505,6 +510,7 @@ namespace Zjcs.Presentation.Combat
             VerifyChainedHitDiagnostic();
             VerifyArcShieldDiagnostic();
             VerifySwordCounterattack();
+            VerifyReflectionArmor();
             if (firstPromotionItemId != 0) Require(firstPromotionFrameCount == FirstPromotionFrameTimes.Length,
                 "The original skill's early presentation frames were not captured.");
             if (ValidateApproach) Require(ordinaryStarted && ordinaryRemoved && ordinaryCaptured,

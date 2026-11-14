@@ -123,6 +123,7 @@ namespace Zjcs.Presentation.Home
             string slot=slots.CreateSlot();
             var assets=OfficialCharacterAssetCatalog.LoadDefault();
             var save=new OfflineMainlineSave();
+            OfflineItemAutoIncrease.InitializeNewCharacter(save.Player, DateTime.UtcNow);
             save.Player.CharacterCreated=true;save.Player.CharacterName="召唤验证";
             save.Player.Level=40;save.Player.Rank=1;
             save.Player.SubRank=assets.Load().LevelLimits.Where(value=>value.PlayerLevel>=40

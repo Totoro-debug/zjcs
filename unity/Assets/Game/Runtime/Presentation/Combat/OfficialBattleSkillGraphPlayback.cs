@@ -152,7 +152,8 @@ namespace Zjcs.Presentation.Combat
                 if (target) entityViews.EnsureUnit(id, target);
                 return target;
             }
-            statusViews = new OfficialBattleStatusPlayback(executor, root, scope, StatusBody, hasStatusIcon, "Combat/first-promotion-statuses");
+            statusViews = new OfficialBattleStatusPlayback(executor, root, scope, StatusBody, hasStatusIcon,
+                "Combat/first-promotion-statuses", "Combat/additional-statuses");
             statusViews.Restore();
         }
 

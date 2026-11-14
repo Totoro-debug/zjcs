@@ -281,7 +281,8 @@ namespace Zjcs.Editor.Skills
             if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") == "1")
             {
                 string resultPath = Path.Combine(ValidationDirectory, "result.json");
-                if (Environment.GetEnvironmentVariable("ZJCS_ACTIVE_LOADOUT_ACCEPTANCE") == "1")
+                if (Environment.GetEnvironmentVariable("ZJCS_ACTIVE_LOADOUT_ACCEPTANCE") == "1"
+                    || Environment.GetEnvironmentVariable("ZJCS_REFLECTION_ARMOR") == "1")
                     Zjcs.Presentation.Home.SkillSummonPlayerValidation.StartDiagnostic(ValidationDirectory, false);
                 else
                     Zjcs.Presentation.Character.SkillPlayerValidation.StartPassivePropertyDiagnostic(ValidationDirectory);

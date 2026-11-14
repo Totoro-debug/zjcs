@@ -1128,7 +1128,7 @@ namespace Zjcs.Combat.Official
                             if (logicStatus != null && target.Statuses.Contains(logicStatus))
                                 configuredComponentInvocations.AddRange(FightStatusLogicRuntime.Apply(target,
                                     logicStatus, FightStatusLogicEvent.AfterBeDamage, actor, target,
-                                    skill, hit, units, statusCatalog, random, damage));
+                                    skill, hit, units, statusCatalog, random, damage, formula));
                     RebuildBattleProperties();
                     float endedDuration = 0f, endedActionDuration = -1f;
                     ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
@@ -2057,6 +2057,11 @@ namespace Zjcs.Combat.Official
                     continue;
                 }
                 skill.StatusOrigin = invocation.Trigger.Origin?.Copy();
+                if (invocation.HasCustomDamage)
+                {
+                    skill.HasCustomDamage = true;
+                    skill.CustomDamage = invocation.CustomDamage;
+                }
                 skill.HasCustomCure = invocation.HasCustomCure;
                 skill.CustomCure = invocation.CustomCure;
                 if (invocation.HitOrigin.HasValue)
