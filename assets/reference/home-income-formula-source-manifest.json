@@ -26,7 +26,8 @@
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ServerInfoManager.cs": "9f55bb289e62ddacc5ea679166f14257c09d0a60792d891c5c666cc6ae564b81",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/FunctionsDisabledData.cs": "efa8ce7c1cdc4aed8b654af491367ea5557941310bbe03e0ad90c0f551bd94ad",
     ".tools/source-packages/current/884_156692/official-code/client-source/HangUpUIUtils.cs": "7f5f6d3e278cbbc75880f7951fa8b1ef729949fdf5b2268134d1a6f50328805a",
-    "assets/reference/home-fast-hangup-native-source-manifest.json": "c0e3a3e2372e0def550bd7f010c2658cff6742529f611f3a7d4c8fa1db9ca727"
+    "assets/reference/home-fast-hangup-native-source-manifest.json": "c0e3a3e2372e0def550bd7f010c2658cff6742529f611f3a7d4c8fa1db9ca727",
+    "assets/reference/home-auto-increase-source-manifest.json": "84d05d666d9ef0ffb6201383fdf450def881911948e61727e3960b8388336ccb"
   },
   "outputs": {
     "unity/Assets/Game/Runtime/Official/HomeIncomeRules/PropType.cs": "1813ad74c60ad245324a147c827a9da3b7ed6c751e7397ce56c5b4b40e090ace",
@@ -51,8 +52,8 @@
   "ordinary_settlement_adapter": "User-confirmed ordinary claims follow the original client unsettled preview, independently of hourly/fast output argument order. Original fractional remainder is persisted when finite; pending local time and its subsecond checkpoint commit atomically with the claim. Failed grants retain the previous time, reward selection state and receipt.",
   "native_bed_adapter": "Complete selected FurnitureBedDialog prefab/controller, original output foldouts, quick-receive condition, property chunks and inventory response phases are bound to the actual local home/profile. No remote disable keys are installed, matching original empty-key HasKey=false. The original blessing-rule window uses selected rule_tip rows, actual blessing level, eleven original pooled rows and real home limits; its pointer, scrolling, highlight and mask-close behavior are covered. Secondary acceleration and activity-output details are not covered by this production-bed validation.",
   "validation_inputs": {
-    "scripts/prepare_home_income_formula_validation.py": "c40a09b5fd71b44c094b18511f48382bdf9c409194759c1525c61cbd4b8823c2",
-    "scripts/fixtures/home_income_formula_validation.cs": "2dc7397508d2f8450e6bb0fb89fa13161eee952f66a0d3a49744d071ea125e4e",
+    "scripts/prepare_home_income_formula_validation.py": "4aad663be516753e2840a8d759be566a867b9657f6779b9e2226e42217cb91e8",
+    "scripts/fixtures/home_income_formula_validation.cs": "7ce8267a3c35ec742c88b5d23e9ff990ebc0ca557329f46c1704c9653f2d9d31",
     "scripts/fixtures/home_furniture_host_validation.cs": "853d4192ccff2c093725967fe086164c5ef55b271b952642ba108c69bb7c9bf7"
   },
   "validation_base_commit": "65aabf8dfb0ad1b0b4ff765118a6673ced2f904e",
@@ -62,6 +63,31 @@
     "unity/Assets/Game/Resources/Home/OfficialHomeHangUpWindowAssetCatalog.asset": "76af54d162a5f8b8e1b40c68b5a0b0f2e4cac91054b6c4a44de9f0ced7bb6530",
     "unity/Assets/Game/Resources/Home/home-award-queue-data.json": "71379ec317a9e7d216bc5d92d17acb9d6e00cb01f755d450e2df56f2c16bda73",
     "unity/Assets/Game/Resources/Home/home-award-queue-data.json.meta": "0710a05ce3950528aadda13489b49ad5eaf98cd6193524cf31d0225e26c8b1c9",
+    "unity/Assets/Game/Resources/Home/item-auto-increase.json": "8d296c73a1d7284e43b4d15bbebbd6b90f6f844d87c7807a58db3c40409bb1c0",
+    "unity/Assets/Game/Resources/Home/item-auto-increase.json.meta": "705e960123981acc7e2ab1505fe0284fbbe6819f097ff835e3db5c07b30e51d1",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease.meta": "8aef44f0842ad11726a07c31daa8778f465c279e11d6f39e8c6e8f03a88b1ce2",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/AutoIncreaseItemHangUpRewardHandler.cs": "7eae56801e0ca924bd3e3582b0f02352f03af7a8ad02dc6653fc4e5362fae591",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/AutoIncreaseItemHangUpRewardHandler.cs.meta": "ab80fe59553a3e29083800aea39f7f1bd26d4279d742694fb82dd226bdc9e6ce",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/AutoIncreaseItemPropUtils.cs": "830987f4a1a7a8c248bb0707c3d3c680691a21c65b2bc584af94da42d49d1768",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/AutoIncreaseItemPropUtils.cs.meta": "0655fd009b63064661d57a747c4b6f42207f2eb0c6b41a4e20c1ff25c2a34f84",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/AutoIncreaseItemUtils.cs": "2240d34bfb7f1aa4210bdd6a9dd5510409154609c1a5eb1cdb6708959988f0a4",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/AutoIncreaseItemUtils.cs.meta": "38929ddd9fdfe4ebaa131a29ec1f2b68c383c8dc48d80c6eb36a7746f345678b",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/Formula.cs": "b099be2ccc89f756f605fa08841025ca1973a854cefac65d43f23b6b8185b92e",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/Formula.cs.meta": "c5c97c018f7474ec2ed8b9c3ad63c74576d00cb223eb467a8d2b61c869f0e596",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/HomeAutoIncreaseClock.cs": "b0ce2a160258719b657a49f09fce8b0beb961da9ec2ef06b315aa65755a566e8",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/HomeAutoIncreaseClock.cs.meta": "2c2b6be501053af52e2f83e98fc863c5d9c6b9fc3e6e3eb0ac4b2a12000cbc56",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/HomeAutoIncreaseItem.cs": "106cc361cc299a5270f9ef285fb11f39254ee38d8c09ee94443e14eedb9eb990",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/HomeAutoIncreaseItem.cs.meta": "73be9cd3227ed439065bdb13a69516611ff8d108206d843172fbfce818f9fef2",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/ItemParamAutoIncrease.cs": "e6f791588f08769153a1d87b2a02ca44f83f6acfd9714c376284011aa05763a9",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/ItemParamAutoIncrease.cs.meta": "19074fa14fbbeac3b2b0427b4e4aa652a9c8019654d2d521bb9d3173d556b9b3",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/MathUtils.cs": "42c5efc4833f2200c5365e058e1fe70c179156bf740fdbb89dfe65490aa57e91",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/MathUtils.cs.meta": "769c7b56dd3858f0db1c333aaf2960d473e576e9368199e113abf5c32fed8795",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/SegmentedIncreaseData.cs": "1c383d900d59de9bf2661ae7e97b44f07edbc9a4e183c255d27012303314887d",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/SegmentedIncreaseData.cs.meta": "47e2f396ed0a82402648532311bdb4b12ad615e28ff3ee97c9afa4e3baa8b2d2",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/TimeUtils.cs": "b2613cd56c381438bd0b624c09084329c000c48e0735074a560da967f2906bd7",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/TimeUtils.cs.meta": "aa292d0377ada21d6b646ab789ac7cf2c31f381f15b6238f4825c78f556705af",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/Zjcs.Official.HomeAutoIncrease.asmdef": "7af8d31547fbe85954a97c9a0396fa17e1cf9c22234d7a048d4b8312ce15ac7c",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/Zjcs.Official.HomeAutoIncrease.asmdef.meta": "415a73133af0c181e5b4ecc000769f6259a920c827f13617d0d5a25ad8a7a6ae",
     "unity/Assets/Game/Runtime/Official/HomeAwardUI/AddItemRewardType.cs": "83620b44835b0574f35e4f9e109c00aed129c57f9a339cc747c2f021ff2cc0ee",
     "unity/Assets/Game/Runtime/Official/HomeAwardUI/AddItemRewardType.cs.meta": "03cae3b4307e56e01c0effb7d188d5341c9838fa8f4ce293a913cb87212155d3",
     "unity/Assets/Game/Runtime/Official/HomeAwardUI/AnimationAutoNext.cs": "65a3a872bd8d84699f9ff694109b1f1bbdc913b098e7582627371dba660cb4f8",
@@ -124,6 +150,8 @@
     "unity/Assets/Game/Runtime/Offline/Home/Zjcs.Offline.Home.asmdef": "b0a0c1f86a80aae7cd215ccf11d726e5f9a85c29f51cf2c66f03ace1e1cfc1b5",
     "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineCurrentHomeIncome.cs": "34e0dcab99b941904aae79cb5a5dc69b914b6988ac47e0e516cb32a8302d971d",
     "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeFurnitureOutput.cs": "594e02c3145c42f4c04a22e8818795f7e43699dd06a7bec35f3d72ce139fdddf",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineItemAutoIncreaseProgress.cs": "dc3af8db6cf429768ba18c77c3eb4a9ef53ad0c9dbf2a1701ab8582ec0b905f0",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineItemAutoIncreaseProgress.cs.meta": "0bf7c8e27cbc374293607564665bc41896a3591cb710811027565eb71e63b634",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineRefreshClock.cs": "bfdb55fdbd99cf5e9d460cf256f587706e7d3dd81e6e3457f8049c1e28b704cf",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "cdd2f29480170e00cfc6b261dc285a5df6b7451ec662ee880cedd031f5123656",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.BedAwards.cs": "e41cdd752d4f085f66040ff204c4e535c555aea8d099f136d02a82b4f4e41d8d",
@@ -372,5 +400,6 @@
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Converted/2d18f5c143cd7b36.asset.meta": "3268007a15fb3039ef5005c3bf762721acd5a46ce0f7628b2de3e99b045a98a1"
   },
   "income_reward_adapter": "Selected hang_up_reward and reward_rule rows select all 259 reward/cost item definitions and 15 unique original image addresses; original ItemIconManager priority proves the default template for each. The original ignored-award list is retained. Actual cart repair/unlock/claim/drain and its original queue display use a real saved receipt; presentation never writes either save. General indexed equipment instances, detail popups and the production acceleration sequence remain separate.",
-  "fast_reward_adapter": "Free-use settings belong to the configured furniture; all unlocked members of its original HangUpIdList receive acceleration, including cart rows whose own FastHangUpId is -1. Free and paid income batches return immutable projections of the exact committed output deltas and ledger serials. Older pending amounts and sealed transfers are excluded. Checks cover random output, duplicate members, capacity bypass, daily limits, rejected grants, disk reopen and actual bed/cart profile transfers. Extra reward handlers, paid cost recovery and production progress/window integration remain pending."
+  "fast_reward_adapter": "Free-use settings belong to the configured furniture; all unlocked members of its original HangUpIdList receive acceleration, including cart rows whose own FastHangUpId is -1. Free and paid income batches return immutable projections of the exact committed output deltas and ledger serials. Older pending amounts and sealed transfers are excluded. Checks cover random output, duplicate members, capacity bypass, daily limits, rejected grants, disk reopen and actual bed/cart profile transfers. Extra reward handler request integration, paid cost recovery and production progress/window integration remain pending.",
+  "fast_auto_increase_adapter": "Original auto-increase extra-reward numeric/state branches run against the actual item wrapper. The original update-message timestamp remainder is consumed in the same local profile transaction. Checks cover elapsed/fraction/bonus inputs, natural-cap crossing, overflow and holding limit, activity offset, zero result and absent parameters; a real character stamina receipt is applied once and reopened from disk. The acceleration request owner has not yet attached these extra handlers."
 }

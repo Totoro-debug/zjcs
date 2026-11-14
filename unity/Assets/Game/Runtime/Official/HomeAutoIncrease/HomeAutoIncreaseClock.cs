@@ -12,6 +12,10 @@ public sealed class HomeAutoIncreaseClock
 	{
 		return Math.Max(0.0, (GetDateTime() - startTime).TotalHours);
 	}
+	public double CalcElapsedSecond(DateTime startTime)
+	{
+		return Math.Max(0.0, (GetDateTime() - startTime).TotalSeconds);
+	}
 }
 
 }

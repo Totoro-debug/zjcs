@@ -86,7 +86,15 @@ def prepare():
         'return immutable projections of the exact committed output deltas and ledger serials. Older pending '
         'amounts and sealed transfers are excluded. Checks cover random output, duplicate members, capacity '
         'bypass, daily limits, rejected grants, disk reopen and actual bed/cart profile transfers. Extra reward '
-        'handlers, paid cost recovery and production progress/window integration remain pending.')
+        'handler request integration, paid cost recovery and production progress/window integration remain pending.')
+    source = 'assets/reference/home-auto-increase-source-manifest.json'
+    receipt['inputs'][source] = hashlib.sha256((ROOT / source).read_bytes()).hexdigest()
+    receipt['fast_auto_increase_adapter'] = (
+        'Original auto-increase extra-reward numeric/state branches run against the actual item wrapper. '
+        'The original update-message timestamp remainder is consumed in the same local profile transaction. '
+        'Checks cover elapsed/fraction/bonus inputs, natural-cap crossing, overflow and holding limit, activity '
+        'offset, zero result and absent parameters; a real character stamina receipt is applied once and '
+        'reopened from disk. The acceleration request owner has not yet attached these extra handlers.')
     receipt['validation_inputs'] = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in (
         'scripts/prepare_home_income_formula_validation.py', 'scripts/fixtures/home_income_formula_validation.cs',
         'scripts/fixtures/home_furniture_host_validation.cs')}

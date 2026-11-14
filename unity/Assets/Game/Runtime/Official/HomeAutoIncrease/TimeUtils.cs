@@ -9,6 +9,10 @@ internal static class TimeUtils
 	{
 		return sec / 3600.0;
 	}
+	public static double HourToSecond(double hour)
+	{
+		return hour * 3600.0;
+	}
 }
 
 }

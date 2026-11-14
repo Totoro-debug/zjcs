@@ -84,6 +84,32 @@ namespace Zjcs.Offline.Progression
             if (stack.AutoIncrease == null) { stack.Count = count; return; }
             var item = Bind(stack, now);
             item.SetCount(count);
+            Store(stack, item);
+        }
+
+        // Call inside the owning profile transaction. Reward/effect selection is
+        // the caller's boundary; absent original auto-increase records stay absent.
+        public static bool SettleFastForward(OfflineItemStack stack, double hours,
+            bool hasOutputAddition, int outputAdditionPropValue, DateTime now)
+        {
+            if (double.IsNaN(hours) || double.IsInfinity(hours) || hours < 0)
+                throw new ArgumentOutOfRangeException(nameof(hours));
+            if (stack?.AutoIncrease == null) return false;
+            var item = Bind(stack, now);
+            double remainder = 0;
+            AutoIncreaseItemHangUpRewardHandler.SettleHangUpReward(item, hours,
+                hasOutputAddition, outputAdditionPropValue, value => remainder = value);
+            // Original MsgPlayerHangUpDataUpdate consumes the server's pending
+            // item-time entry by moving LastUpdateTime back, then clearing it.
+            // Both steps belong to this same offline profile commit.
+            if (remainder > 0)
+                item.Parameter.LastUpdateTime = item.Parameter.LastUpdateTime.AddSeconds(-remainder);
+            Store(stack, item);
+            return true;
+        }
+
+        private static void Store(OfflineItemStack stack, HomeAutoIncreaseItem item)
+        {
             stack.Count = item.StoredCount;
             var source = item.Parameter;
             var target = stack.AutoIncrease;

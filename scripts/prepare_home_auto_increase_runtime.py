@@ -72,8 +72,10 @@ def build():
     math = method(read('MathUtils'), 'public static long Clamp(long val, long min, long max)')
     emit('MathUtils', 'internal static class MathUtils\n{\n'+math+'}\n')
     time = method(read('TimeUtils'), 'public static double SecondToHour(double sec)')
+    time += method(read('TimeUtils'), 'public static double HourToSecond(double hour)')
     emit('TimeUtils', 'internal static class TimeUtils\n{\n'+time+'}\n')
     elapsed = method(read('TimeManager'), 'public double CalcElapsedHour(DateTime startTime)')
+    elapsed += method(read('TimeManager'), 'public double CalcElapsedSecond(DateTime startTime)')
     emit('HomeAutoIncreaseClock', 'public sealed class HomeAutoIncreaseClock\n{\n'
          +'    private readonly Func<DateTime> now;\n'
          +'    public HomeAutoIncreaseClock(Func<DateTime> now) { this.now = now ?? throw new ArgumentNullException(nameof(now)); }\n'
@@ -109,6 +111,27 @@ def build():
         Clock = new HomeAutoIncreaseClock(now);
     }
 '''+body+'}\n')
+    emit('AutoIncreaseItemPropUtils', read('AutoIncreaseItemPropUtils').split('namespace Common;')[1].strip())
+    emit('Formula', 'internal static class Formula\n{\n'
+         +method(read('Formula'), 'public static float Int2Float(int val)')+'}\n')
+    body = method(read('AutoIncreaseItemHangUpRewardHandler'),
+        'public void SettleHangUpReward(Player player, HangUpInfo hangUpInfo, double hangUpHour, double scaledNum, bool hasOutputAddition)')
+    # The caller resolves the original reward/effect and binds that actual item.
+    # Keep the complete numeric/state-changing body after that lookup boundary.
+    body = ('public static void SettleHangUpReward(HomeAutoIncreaseItem itemById, double hangUpHour, '
+        'bool hasOutputAddition, int outputAdditionPropValue, Action<double> recordRemainder)\n\t{'
+        +body[body.index('\n\t\tPlayerItemParamAutoIncreaseWrap'):])
+    body = body.replace('PlayerItemParamAutoIncreaseWrap', 'ItemParamAutoIncrease')
+    body = body.replace('itemById?.GetItemParamAutoIncrease()', 'itemById?.Parameter')
+    body = body.replace('CalcOffsetOutputAdditionHours(player, itemById.Info.ClassId, hangUpHour)',
+        'AutoIncreaseItemPropUtils.CalcOffsetOutputAdditionTimeDuration(outputAdditionPropValue, hangUpHour)')
+    body = body.replace('itemById.ActualCountWithoutAutoIncrease', 'itemById.StoredCount')
+    body = body.replace('TimeManager.Instance', 'itemById.Clock')
+    body = body.replace('player.HangUpData.AutoIncreaseItemTimeDict[itemById.Id] = num10;', 'recordRemainder(num10);')
+    assert not any(token in body for token in ('player.', 'TimeManager', 'PlayerItem', 'Parsers'))
+    emit('AutoIncreaseItemHangUpRewardHandler', 'public static class AutoIncreaseItemHangUpRewardHandler\n{\n'+body+'}\n')
+    message = CODE/'common-source/MsgPlayerHangUpDataUpdate.cs'
+    inputs[message.relative_to(ROOT).as_posix()] = sha(message)
     for name in ('PlayerItemParamAutoIncreaseWrap','ItemEffectAutoIncrease','PlayerItemManagerExt','PlayerAutoIncreateItemPropManager'):
         read(name)
     apk = Apk(reuse_current_cache=True)
@@ -146,7 +169,10 @@ def build():
         adaptations=['Original parameter fields without transport wrapper; offline persistence encodes DateTime as ticks.',
             'Original selected PlayerItemDataWrap count/get/set/speed/max methods, original segmented helper and time conversions.',
             'Clock, item-count limit, segmented provider and diagnostic logging are explicit service boundaries.',
-            'Item locks are excluded from this stack projection; home currency 1/2/57 has no offline lock records.'])
+            'Item locks are excluded from this stack projection; home currency 1/2/57 has no offline lock records.',
+            'AutoIncreaseItemHangUpRewardHandler retains its complete numeric/state body after selected reward/effect lookup; '
+            'the caller supplies the bound actual item, output-addition property and deferred-remainder notification.',
+            'MsgPlayerHangUpDataUpdate remainder consumption is applied in the same local profile transaction.'])
     (ROOT/'assets/reference/home-auto-increase-source-manifest.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
     print(json.dumps(config),flush=True)
 

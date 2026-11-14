@@ -1,6 +1,6 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "f2b04eee400cc6bf7c96ff716a88273206dee729df4bc2176d68b27e21d5b21d",
+  "generator_sha256": "62a090f54012268b27c12ac64d29d3b6f550e95909fe168de0b4da577c20b7ec",
   "inputs": {
     "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
     "scripts/official_tables.py": "77762a9b2aba2d92a6ad3ebd8ce5f7d0bb42a6b4cfc872ae7094c1d10b1e0473",
@@ -13,6 +13,10 @@
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/TimeUtils.cs": "f00bb313e48acf2af929cb579bff803dae3e857c496ab9f34c950734d2c44bbc",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/TimeManager.cs": "d3da79879de9847353415d3ff1c8c304af144d2829d5636951d905249b25fa85",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerItemDataWrap.cs": "cb377aac1d7443c4096d9e56c6e09c9fff186ac63b88df6a57126e1bb08fc186",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AutoIncreaseItemPropUtils.cs": "5de98e4f912e5bf1e8ed49672631ddf55f0a056498c78ff5c5e9eeb632a24e27",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Formula.cs": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AutoIncreaseItemHangUpRewardHandler.cs": "5d6337215b708148f00b5be461f3eae63c6506f79ef8f2e0bd95c4dc03589f42",
+    ".tools/source-packages/current/884_156692/official-code/common-source/MsgPlayerHangUpDataUpdate.cs": "801a661bba73f39ee9f96202f47d78d4ecb01a4c83a5753de8d8e62e0f184350",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerItemParamAutoIncreaseWrap.cs": "0676a39057dc579634ba3f0ffadcfd2c66f69861946e3a3292d33fccee48c844",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemEffectAutoIncrease.cs": "a13e64a337dac83fd309fc312f58adba1a0f955fc043e97f13b611c661557a8c",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerItemManagerExt.cs": "1ebcf8aeaee499afc7700ead7791c0156d24624cc0e9cf9d3ebac37a4c506356",
@@ -181,12 +185,18 @@
     "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/AutoIncreaseItemUtils.cs.meta": "38929ddd9fdfe4ebaa131a29ec1f2b68c383c8dc48d80c6eb36a7746f345678b",
     "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/MathUtils.cs": "42c5efc4833f2200c5365e058e1fe70c179156bf740fdbb89dfe65490aa57e91",
     "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/MathUtils.cs.meta": "769c7b56dd3858f0db1c333aaf2960d473e576e9368199e113abf5c32fed8795",
-    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/TimeUtils.cs": "9fb23ccc8fe9469c2112b17475bdba9c2eaf95a33a49bc976389ef5e2852424f",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/TimeUtils.cs": "b2613cd56c381438bd0b624c09084329c000c48e0735074a560da967f2906bd7",
     "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/TimeUtils.cs.meta": "aa292d0377ada21d6b646ab789ac7cf2c31f381f15b6238f4825c78f556705af",
-    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/HomeAutoIncreaseClock.cs": "80224f22ae36daacb2063a3247a5331953d058b20817451e594ddbd63bb0a6aa",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/HomeAutoIncreaseClock.cs": "b0ce2a160258719b657a49f09fce8b0beb961da9ec2ef06b315aa65755a566e8",
     "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/HomeAutoIncreaseClock.cs.meta": "2c2b6be501053af52e2f83e98fc863c5d9c6b9fc3e6e3eb0ac4b2a12000cbc56",
     "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/HomeAutoIncreaseItem.cs": "106cc361cc299a5270f9ef285fb11f39254ee38d8c09ee94443e14eedb9eb990",
     "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/HomeAutoIncreaseItem.cs.meta": "73be9cd3227ed439065bdb13a69516611ff8d108206d843172fbfce818f9fef2",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/AutoIncreaseItemPropUtils.cs": "830987f4a1a7a8c248bb0707c3d3c680691a21c65b2bc584af94da42d49d1768",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/AutoIncreaseItemPropUtils.cs.meta": "0655fd009b63064661d57a747c4b6f42207f2eb0c6b41a4e20c1ff25c2a34f84",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/Formula.cs": "b099be2ccc89f756f605fa08841025ca1973a854cefac65d43f23b6b8185b92e",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/Formula.cs.meta": "c5c97c018f7474ec2ed8b9c3ad63c74576d00cb223eb467a8d2b61c869f0e596",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/AutoIncreaseItemHangUpRewardHandler.cs": "7eae56801e0ca924bd3e3582b0f02352f03af7a8ad02dc6653fc4e5362fae591",
+    "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/AutoIncreaseItemHangUpRewardHandler.cs.meta": "ab80fe59553a3e29083800aea39f7f1bd26d4279d742694fb82dd226bdc9e6ce",
     "unity/Assets/Game/Resources/Home/item-auto-increase.json": "8d296c73a1d7284e43b4d15bbebbd6b90f6f844d87c7807a58db3c40409bb1c0",
     "unity/Assets/Game/Resources/Home/item-auto-increase.json.meta": "705e960123981acc7e2ab1505fe0284fbbe6819f097ff835e3db5c07b30e51d1",
     "unity/Assets/Game/Runtime/Official/HomeAutoIncrease/Zjcs.Official.HomeAutoIncrease.asmdef": "7af8d31547fbe85954a97c9a0396fa17e1cf9c22234d7a048d4b8312ce15ac7c",
@@ -260,6 +270,8 @@
     "Original parameter fields without transport wrapper; offline persistence encodes DateTime as ticks.",
     "Original selected PlayerItemDataWrap count/get/set/speed/max methods, original segmented helper and time conversions.",
     "Clock, item-count limit, segmented provider and diagnostic logging are explicit service boundaries.",
-    "Item locks are excluded from this stack projection; home currency 1/2/57 has no offline lock records."
+    "Item locks are excluded from this stack projection; home currency 1/2/57 has no offline lock records.",
+    "AutoIncreaseItemHangUpRewardHandler retains its complete numeric/state body after selected reward/effect lookup; the caller supplies the bound actual item, output-addition property and deferred-remainder notification.",
+    "MsgPlayerHangUpDataUpdate remainder consumption is applied in the same local profile transaction."
   ]
 }

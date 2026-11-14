@@ -428,7 +428,11 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 加速批次现在按所选 `FastHangUpInfo.HangUpIdList` 结算全部已解锁普通项；床铺提供免费时长、功能条件和次数，小推车自身 `FastHangUpId=-1` 不再导致它被排除。该成员顺序与原选择窗口及 `HangUpUtils.GetFastHangUpRewardItems` 一致。`ApplyFreeFastForwardGroupRewards`／`ApplyFastForwardBatchRewards` 返回只读的本次实际产物、数量、挂机 ID、账本流水号及回执；旧数量接口消费同一次事务。随机物品沿本次选择结果，旧待发数量与已开始转移的流水不进入本次回执，写入成功后才返回结果，供原演出结束后的奖励消费使用。
 
-有图形、静音 Play Mode 已通过真实等级 15 小推车档案的床铺免费加速：经验与本次随机推车产物均进入实际角色档案，只消耗一次免费次数。独立批次检查覆盖重复成员、锁定项、没有独立加速 ID 的推车、容量为零时仍直接发奖、旧账本／已封存转移、免费时长拒绝、次数耗尽、随机奖励溢出拒绝及磁盘重开后的幂等回执。床铺指针、赐福说明滚动、实际小推车奖励图像和领取恢复回归通过，已查看实际运行画面。静态检查通过（151610 个 GUID）；Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 退出码为 0，保留前述战斗 Edit Mode 诊断。此处仍直接调用加速业务；额外奖励处理器、付费扣费恢复及正式按钮到睡眠演出的组合尚未完成。
+有图形、静音 Play Mode 已通过真实等级 15 小推车档案的床铺免费加速：经验与本次随机推车产物均进入实际角色档案，只消耗一次免费次数。独立批次检查覆盖重复成员、锁定项、没有独立加速 ID 的推车、容量为零时仍直接发奖、旧账本／已封存转移、免费时长拒绝、次数耗尽、随机奖励溢出拒绝及磁盘重开后的幂等回执。床铺指针、赐福说明滚动、实际小推车奖励图像和领取恢复回归通过，已查看实际运行画面。静态检查通过（151610 个 GUID）；Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 退出码为 0，保留前述战斗 Edit Mode 诊断。此处仍直接调用加速业务；额外奖励处理器的正式请求接线、付费扣费恢复及正式按钮到睡眠演出的组合尚未完成。
+
+自增物品的加速数值与状态体已从所选 `AutoIncreaseItemHangUpRewardHandler.SettleHangUpReward` 迁入 `Runtime/Official/HomeAutoIncrease/`，复用原物品数量包装、时间换算和 `AutoIncreaseItemPropUtils` 的活动时长抵消。保留自然上限前的小数／额外秒数、达到上限后按剩余时长继续发放，以及原 `SetCount` 的持有上限。`OfflineItemAutoIncrease.SettleFastForward` 在调用方的角色库存事务中绑定真实记录；奖励／效果查找由调用方提供，没有自增参数时保持原返回分支，不创建新记录。原 `MsgPlayerHangUpDataUpdate` 将尾数秒数从更新时间扣除并清空待消费记录；离线适配在同一角色提交中完成该消费，保留原执行顺序。
+
+实际有图形、静音 Play Mode 已覆盖自然上限前的已有小数／累计时长／额外秒数、跨越自然上限、300 以上产出、1200 持有上限、活动加成已计入／未计入、零产出保留时长和没有自增参数的分支。真实创角体力记录经角色库存事务加速 2.1 小时后，保存数量 310 与原余量 360 秒对应的更新时间；重复回执不执行事务，磁盘重开精确保留结果。该段验证原规则及真实存档适配，正式加速请求仍待调用这些额外处理器；床铺原生指针、赐福说明和推车领取／加速回归通过，已查看实际运行画面。静态检查通过（151613 个 GUID）；Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 退出码为 0，仍有前述战斗 Edit Mode 诊断。
 
 ## 自定义实现
 

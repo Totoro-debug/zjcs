@@ -181,6 +181,7 @@ public sealed partial class HomeIncomeFormulaHostRunner
         }
         yield return CheckNativeBedCollection();
         yield return CheckIncomeRewardCatalog();
+        CheckFastAutoIncrease();
         yield return CheckExperienceLedgerRecovery();
         Debug.Log("HOME_INCOME_FORMULA_PASSED: selected Float flags, original float/double arithmetic and unsettled-preview settlement, actual native repair and production bed pointer, bed output foldout, original blessing rule rows/highlight/scroll/mask close, real lost goddess profile, production collection/experience/free acceleration, original XP award queue, all 259 selected income items and 15 images, actual cart repair/unlock/collection and native award queue with disk reopen, committed reward receipts, rejected experience grants retained, acknowledgement recovery, original remainder, idempotency and precise disk reopen. Cart award presentation is a component check; acceleration business calls are direct; acceleration/output-detail windows and complete HUD remain pending.");
     }
@@ -359,6 +360,68 @@ public sealed partial class HomeIncomeFormulaHostRunner
             && possibleItems.Sum(id => home.Profile.InventoryCount(id) - beforeFastItems[id]) == cartFastCount
             && home.Session.Save.Inventory.Count == 0 && home.TryFastForward(1) == 0,
             "actual bed and random cart acceleration reach the profile exactly once under one free use");
+    }
+
+    private void CheckFastAutoIncrease()
+    {
+        var now = new DateTime(2026, 11, 14, 1, 0, 0, DateTimeKind.Utc);
+        OfflineItemStack Stack(long count, double speed = 5, double fraction = 0,
+            double elapsedHours = 0, double bonusSeconds = 0) => new OfflineItemStack {
+                ItemId = 57, Count = count, AutoIncrease = new OfflineItemAutoIncreaseProgress {
+                    IncreaseSpeed = speed, MaxCount = 300, ItemCountLimit = 1200, Decimal = fraction,
+                    LastUpdateTimeTicks = now.AddHours(-elapsedHours).Ticks, BonusSeconds = bonusSeconds }
+            };
+        var below = Stack(100, fraction: .25, elapsedHours: .5, bonusSeconds: 1800);
+        Require(OfflineItemAutoIncrease.SettleFastForward(below, 2, false, 0, now)
+            && below.Count == 115 && below.AutoIncrease.Decimal == 0
+            && Math.Abs(below.AutoIncrease.BonusSeconds - 180) < .000001
+            && below.AutoIncrease.LastUpdateTimeTicks == now.Ticks,
+            "original extra reward combines elapsed time, prior fraction and bonus seconds below the natural cap");
+        var near = Stack(299, fraction: .5, elapsedHours: 1);
+        Require(OfflineItemAutoIncrease.SettleFastForward(near, .1, false, 0, now)
+            && near.Count == 305 && near.AutoIncrease.Decimal == 0 && near.AutoIncrease.BonusSeconds == 0,
+            "original extra reward reaches the natural cap before awarding overflow with the remaining duration");
+        var full = Stack(300);
+        Require(OfflineItemAutoIncrease.SettleFastForward(full, 2.1, false, 0, now)
+            && full.Count == 310 && full.AutoIncrease.LastUpdateTimeTicks == now.AddSeconds(-360).Ticks
+            && full.AutoIncrease.Decimal == 0 && full.AutoIncrease.BonusSeconds == 0,
+            "original post-cap fractional time is consumed by the update notification as a timestamp offset");
+        var limit = Stack(300);
+        Require(OfflineItemAutoIncrease.SettleFastForward(limit, 1000, false, 0, now) && limit.Count == 1200,
+            "fast extras can exceed the natural cap while retaining the original item holding limit");
+        var activity = Stack(100, speed: 10);
+        var includedActivity = Stack(100, speed: 10);
+        Require(OfflineItemAutoIncrease.SettleFastForward(activity, 2, false, 10000, now)
+            && OfflineItemAutoIncrease.SettleFastForward(includedActivity, 2, true, 10000, now)
+            && activity.Count == 110 && includedActivity.Count == 120,
+            "original activity offset divides duration only when the request excludes output addition");
+        var stopped = Stack(0, speed: 0);
+        Require(OfflineItemAutoIncrease.SettleFastForward(stopped, .25, false, 0, now)
+            && stopped.Count == 0 && stopped.AutoIncrease.BonusSeconds == 900,
+            "original nonpositive-result branch retains the added duration without inventing an item grant");
+        var absent = new OfflineItemStack { ItemId = 56, Count = 7 };
+        Require(!OfflineItemAutoIncrease.SettleFastForward(absent, 2, false, 0, now)
+            && absent.Count == 7 && absent.AutoIncrease == null,
+            "extra reward preserves the original no-parameter branch instead of creating a missing record");
+        DateTime actualNow = DateTime.UtcNow;
+        var prior = home.Profile.Save.Player.Inventory.Single(value => value.ItemId == 57);
+        Require(prior.AutoIncrease != null && prior.Count == 300 && prior.AutoIncrease.IncreaseSpeed == 5,
+            "real character still owns its original initial stamina record");
+        var applied = home.Profile.ApplyInventoryTransaction("fast-extra:stamina", save => {
+            var stamina = save.Player.Inventory.Single(value => value.ItemId == 57);
+            Require(OfflineItemAutoIncrease.SettleFastForward(stamina, 2.1, false, 0, actualNow),
+                "actual saved stamina accepts the original extra reward handler");
+        });
+        Require(applied.IsApplied, "extra reward commits through the real profile inventory transaction");
+        var repeated = home.Profile.ApplyInventoryTransaction("fast-extra:stamina", _ =>
+            throw new InvalidOperationException("A repeated extra-reward transaction must not execute again."));
+        Require(repeated.Status == ProgressionResultStatus.Unchanged || repeated.Status == ProgressionResultStatus.Ready,
+            "actual profile suppresses a repeated extra-reward receipt");
+        var reopened = OfflineMainlineProgressSession.OpenCharacter(new ProfileSlotCatalog(root), slot);
+        var restored = reopened.Save.Player.Inventory.Single(value => value.ItemId == 57);
+        Require(restored.Count == 310 && restored.AutoIncrease.LastUpdateTimeTicks == actualNow.AddSeconds(-360).Ticks
+            && restored.AutoIncrease.Decimal == 0 && restored.AutoIncrease.BonusSeconds == 0,
+            "actual disk reopen retains the extra reward and consumed timestamp remainder exactly once");
     }
 
     private void CheckFastBatchReceipts(ISet<int> flags)
