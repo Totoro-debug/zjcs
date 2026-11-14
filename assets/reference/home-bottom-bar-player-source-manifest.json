@@ -1,0 +1,29 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    ".tools/source-packages/current/884_156692/official-code/client-source/PublicBottomBar.cs": "f95efdc77b1f03403304d82f628d6d6048366b9324aad39b9deb65ca2a3bf90d",
+    ".tools/source-packages/current/884_156692/official-code/client-source/PublicBottomBarCharacterBtn.cs": "fca1ea8e6e207a714abfb20f1c81a0237fe736ad5519095f02abc0bf8a0db362",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerBlessLevelUtils.cs": "9ae5969c964e806f3631cc0e419feb05ed2befd92e73d95770b0ccabfae6a2c3",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/SystemLevelLimitInfoParser.cs": "cf54b913ea1b37a9de4496c191be1cd080c1bb7dfa88b02b05e6de8172d89f1c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerSubRankInfoParser.cs": "56b26240ab9f8430de29e7a185106a9fcf69bffae9bd8efdb51e748589adaa3d",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Sex.cs": "721cc2dac07d1f838cbb2cd9d3553d5f5d971245d9ad56ddc4afae00892ae893",
+    "assets/reference/home-rules-current-source-manifest.json": "1447e98299890d76dc78883ccf3ec59b5b6fc093bc9196fa84ad4a3db5f5582c",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/FontAssetFontService.cs": "85f384ae7999710eadb47cc78491409254a922a0e5bfe04b174ae6e727bc8067",
+    "unity/Assets/Game/Runtime/Offline/HomeHudUI/OfflineHomeHudAssets.cs": "95f9864840b166478494b906febd880e60222d27d4a4861718f5876aed600e48",
+    "unity/Assets/Official/Home/home-rules-current.json": "493eb0be246a11e26f84069ed999021d867f4706d5b9934a33745ec5dc387d03",
+    "scripts/prepare_home_bottom_bar_player_validation.py": "c0a8345e0259b2b6b906ed53905ee1535e87e7fb2ee1dec76c668acd1b832e32",
+    "scripts/fixtures/home_bottom_bar_native_validation.cs": "7a3af4e0bedf0019b906337e091f813c34296a7aefe6108e22d560540dc7fc53",
+    "scripts/fixtures/home_bottom_bar_player_validation.cs": "631783606518cd1de0f523435e30c57b64e6d229c2680c74a00c5654636fa044"
+  },
+  "runtime": {
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeBottomBarPlayer.cs": "edb1ed6614dc48d16ac494dd5eea6e1b916021410f66969c14ba27b9823bfef7",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeBottomBarPlayer.cs.meta": "69544bdbd7165b867a17fa893a77978053c8f53cc9f07367b2f52a9851bc7c5e"
+  },
+  "original_methods": [
+    "PlayerBlessLevelUtils.CheckSubRankUpgradeShow",
+    "SystemLevelLimitInfoParser.SetPlayerMaxLevelLimit",
+    "SystemLevelLimitInfoParser.GetPlayerBaseLevelLimit"
+  ],
+  "offline_policy": "Remove only the confirmed PlanesInfo.PlanesRank gate; retain the next configured sub-rank, current personal level and strictly increasing base-level cap. No promotion cost check belongs to this original display predicate.",
+  "scope": "Real local player queries and explicit owner notifications in the native bottom-bar fixture. Full entry/tip services and production HomeFeatureRuntime integration remain pending."
+}
