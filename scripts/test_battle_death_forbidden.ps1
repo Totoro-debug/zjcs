@@ -1,7 +1,9 @@
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'combat_sources.ps1')
 $root = Split-Path -Parent $PSScriptRoot
-Add-Type -Path @((Get-FightCombatSources) + (Join-Path $PSScriptRoot 'fixtures/battle_death_forbidden_harness.cs'))
+Add-Type -Path @((Get-FightCombatSources) +
+    (Join-Path $root 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleUnitLifePlayback.cs') +
+    (Join-Path $PSScriptRoot 'fixtures/battle_death_forbidden_harness.cs'))
 function Read-DeathRule($name) { [IO.File]::ReadAllText((Join-Path $root "unity/Assets/Official/Combat/$name.json")) }
 function Hash-DeathRule($text) { [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($text))).ToLowerInvariant() }
 $skills = Read-DeathRule 'skill-rules'; $battle = Read-DeathRule 'battle-rules'; $rules = Read-DeathRule 'rules'

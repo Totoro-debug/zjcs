@@ -52,6 +52,8 @@ public static class BattleUnitSpawnHarness
                 {
                     var state=cp.Units.Single(unit=>unit.Id==spawn.UnitId);
                     Check(ids.Add(state.Id) && state.X==spawn.X && state.Y==spawn.Y,"Spawn receipt lost identity/initial position");
+                    Check(spawn.HasInitialHealth && spawn.InitialHp==state.Hp && spawn.InitialMaxHp==state.MaxHp,
+                        "Spawn did not retain its initial health before later hits");
                     var definition=FightBattleHitCollector.CollectAll(skill).First(value=>value.EntityId==hit.HitEntityId);
                     Check(Math.Abs(spawn.Delay-hit.EffectDelays[spawn.EffectCenterIndex]
                         -definition.ScopeEntries[spawn.ScopeIndex].Delay)<.00001f,"Spawn did not retain its original scope and flight time");
@@ -63,20 +65,24 @@ public static class BattleUnitSpawnHarness
             +string.Join(",",cp.Units.Select(u=>u.Id+":"+u.Hp+":"+u.X+":"+u.Y)));
         var saved=FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(cp));
         var restored=saved.Receipts.Last().Event.SkillCasts.SelectMany(c=>c.HitSelections).SelectMany(h=>h.SpawnedUnits).ToArray();
-        Check(restored.Length==ids.Count && restored.All(value=>ids.Contains(value.UnitId)),"Checkpoint lost summon appearance receipts");
+        Check(restored.Length==ids.Count && restored.All(value=>ids.Contains(value.UnitId) && value.HasInitialHealth
+            && value.InitialHp>0 && value.InitialMaxHp>0),"Checkpoint lost summon appearance receipts");
         Console.WriteLine("Summon receipt "+skillId+" modified="+modified+" count="+ids.Count);
     }
     private static void Clock()
     {
-        var first=new FightBattleHitSelectionSnapshot.SpawnedUnit {UnitId=3,X=5,Y=6,Delay=.5f};
+        var first=new FightBattleHitSelectionSnapshot.SpawnedUnit {UnitId=3,X=5,Y=6,Delay=.5f,
+            HasInitialHealth=true,InitialHp=90,InitialMaxHp=100};
         var cast=new FightBattleSkillCastEvent {Delay=.25f};
         cast.HitSelections.Add(new FightBattleHitSelectionSnapshot {SpawnedUnits=new List<FightBattleHitSelectionSnapshot.SpawnedUnit> {
             first,new FightBattleHitSelectionSnapshot.SpawnedUnit {UnitId=4,Delay=.25f},
             new FightBattleHitSelectionSnapshot.SpawnedUnit {UnitId=5,Delay=.5f}}});
         var step=new FightBattleStepEvent {SkillCasts=new List<FightBattleSkillCastEvent> {cast}};
         var order=new List<int>();var visible=new HashSet<int>();
-        var clock=new OfficialBattleUnitSpawnPlayback(value=>{order.Add(value.UnitId);visible.Add(value.UnitId);Check(value.UnitId!=3 || value.X==5,"Queued position was mutated");},id=>visible.Contains(id));
-        clock.Enqueue(step); first.X=999;cast.Delay=999;
+        var clock=new OfficialBattleUnitSpawnPlayback(value=>{order.Add(value.UnitId);visible.Add(value.UnitId);
+            Check(value.UnitId!=3 || value.X==5 && value.HasInitialHealth && value.InitialHp==90 && value.InitialMaxHp==100,
+                "Queued position or initial health was mutated");},id=>visible.Contains(id));
+        clock.Enqueue(step); first.X=999;first.InitialHp=999;cast.Delay=999;
         clock.AdvanceTimers(.5f);clock.DispatchDue();
         Check(order.SequenceEqual(new[]{4}) && clock.IsPending(3),"Out-of-order summon appeared too soon");
         clock.Enqueue(step);

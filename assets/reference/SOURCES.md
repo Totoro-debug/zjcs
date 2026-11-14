@@ -950,7 +950,7 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 - 公共战斗自定义目标命中代码与配置凭据：[custom-targets-source-manifest.json](battle-rules/custom-targets-source-manifest.json)，记录所选官方输入、迁移入口及处理方式。
 
-公共战斗角色召唤出现时序的官方共享／客户端输入、现有原生模型与生命周期资产凭据、迁移及验证入口 SHA256 见[召唤出现时序来源](battle-animation/summon-spawn-source-manifest.json)，生成器为 `scripts/record_battle_summon_spawn_sources.py`；未改写原 prefab、贴图、网格、shader 或动画载荷。实现及验证边界仅在[公共战斗页](../../docs/features/battle-execution.md)维护。
+公共战斗角色召唤出现与死亡确认时序的官方共享／客户端输入、现有原生模型与生命周期资产凭据、迁移及验证入口 SHA256 见[召唤出现时序来源](battle-animation/summon-spawn-source-manifest.json)，生成器为 `scripts/record_battle_summon_spawn_sources.py`；未改写原 prefab、贴图、网格、shader 或动画载荷。实现及验证边界仅在[公共战斗页](../../docs/features/battle-execution.md)维护。
 
 自定义召唤 3190／3932／3935 使用所选 `884_156692` 的官方战斗 prefab、完整骨骼／网格／动画、原控制器、材质、Low 贴图加载器及有序角色视图。`scripts/prepare_battle_custom_summon_models.py` 复用既有完整提取器和 Windows 原生安装器，并逐项校验原有模型输出；原 Animator 状态、根 AnimationController、挂点与额外阴影分别由既有 `prepare_battle_monster_animator_bindings.py`、`prepare_battle_monster_animation_controllers.py` 和 `prepare_battle_monster_attachments.py` 恢复。新模型和全目录的输入／输出、转换及模板哈希归入[完整模型来源](battle-animation/live-monsters-source-manifest.json)，外观及生命周期仍由上述共用来源清单记录。未生成完整素材快照；单机选格决策、实际接入与验证范围仅在[公共战斗页](../../docs/features/battle-execution.md)维护。
 

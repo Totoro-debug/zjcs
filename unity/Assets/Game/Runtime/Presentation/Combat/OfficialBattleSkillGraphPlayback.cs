@@ -48,6 +48,7 @@ namespace Zjcs.Presentation.Combat
         private Func<int, bool> hasStatusIcon;
         private OfficialBattleUnitEndPlayback unitEnds;
         private OfficialBattleUnitSpawnPlayback unitSpawns;
+        private OfficialBattleUnitLifePlayback unitLife;
         private Action<GameObject> bindPlayerClones;
         private readonly Zjcs.Offline.ProfessionUI.EmbeddedMonsterMecanimResources embeddedMecanim;
         private bool disposed;
@@ -129,6 +130,12 @@ namespace Zjcs.Presentation.Combat
         {
             if (unitSpawns != null) throw new InvalidOperationException("Summon appearance playback is already bound.");
             unitSpawns = value ?? throw new ArgumentNullException(nameof(value));
+        }
+
+        internal void BindUnitLife(OfficialBattleUnitLifePlayback value)
+        {
+            if (unitLife != null) throw new InvalidOperationException("Unit life playback is already bound.");
+            unitLife = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         public void BindAirCombo(FightBattleExecutor executor, Transform root, Func<int, Transform> body)
@@ -352,7 +359,7 @@ namespace Zjcs.Presentation.Combat
                 float nextStatusAction = pendingStatusActions.Count == 0 ? float.PositiveInfinity : pendingStatusActions[0].Remaining;
                 float elapsed = Mathf.Min(nextCast, nextGrid, nextMove, nextStatusAction,
                     unitEnds?.NextDelay ?? float.PositiveInfinity, statusViews?.NextDelay ?? float.PositiveInfinity,
-                    unitSpawns?.NextDelay ?? float.PositiveInfinity);
+                    unitSpawns?.NextDelay ?? float.PositiveInfinity, unitLife?.NextDelay ?? float.PositiveInfinity);
                 if (elapsed > remaining) break;
                 if (elapsed > 0f) entityViews.Tick(elapsed);
                 remaining -= elapsed;
@@ -363,7 +370,9 @@ namespace Zjcs.Presentation.Combat
                 statusViews?.AdvanceTimers(elapsed);
                 unitEnds?.AdvanceTimers(elapsed);
                 unitSpawns?.AdvanceTimers(elapsed);
+                unitLife?.AdvanceTimers(elapsed);
                 unitSpawns?.DispatchDue();
+                unitLife?.DispatchDue();
                 // Native action-end notifications above precede StatusEnd entity removal.
                 unitEnds?.DispatchDue();
                 gridViews?.DispatchDue();
@@ -388,6 +397,7 @@ namespace Zjcs.Presentation.Combat
             statusViews?.AdvanceTimers(remaining);
             unitEnds?.AdvanceTimers(remaining);
             unitSpawns?.AdvanceTimers(remaining);
+            unitLife?.AdvanceTimers(remaining);
             entityViews.Tick(remaining);
         }
 
@@ -425,6 +435,8 @@ namespace Zjcs.Presentation.Combat
             unitEnds = null;
             unitSpawns?.Clear();
             unitSpawns = null;
+            unitLife?.Clear();
+            unitLife = null;
             nativeStatusActions.Clear();
             nativeDisperseIndices.Clear();
             statusViews?.Dispose();

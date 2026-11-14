@@ -485,7 +485,13 @@ namespace Zjcs.Combat.Official
                 ref statusEndDelay, ref stepDuration, ref stepActionDuration);
 
             SpawnNextWaveIfCleared();
-            RefreshTurnUnits();
+            float? previousUnitLifeTime = unitLifeTimeOverride;
+            try
+            {
+                unitLifeTimeOverride = Math.Max(0f, stepActionDuration);
+                RefreshTurnUnits();
+            }
+            finally { unitLifeTimeOverride = previousUnitLifeTime; }
             int globalRoundAfter = turns.GlobalRound();
             if (globalRoundAfter != lastGlobalRound)
             {
@@ -1269,6 +1275,7 @@ namespace Zjcs.Combat.Official
                 summon.RoundStartClockResolver = RoundStartClockRound;
                 foreach (var status in summon.Statuses) InitializeRoundStartDelay(status);
                 checkpoint.Units.Add(summon);
+                RegisterUnitLife(summon);
                 checkpoint.Statistics.Unit(summon.Id);
                 turns.RegisterUnit(summon.Turn, hit.SummonImmediateRound);
                 if (currentStepSpawnedUnitIds != null)
@@ -1279,6 +1286,7 @@ namespace Zjcs.Combat.Official
                     receipt.SpawnedUnits.Add(new FightBattleHitSelectionSnapshot.SpawnedUnit {
                         UnitId = summon.Id, EffectCenterIndex = centerIndex, ScopeIndex = scopeIndex,
                         X = position.X, Y = position.Y,
+                        HasInitialHealth = true, InitialHp = summon.Hp, InitialMaxHp = summon.MaxHp,
                         Delay = receipt.EffectDelays[centerIndex]
                             + (hit.ScopeEntries != null && scopeIndex < hit.ScopeEntries.Count
                                 ? hit.ScopeEntries[scopeIndex].Delay : 0f)

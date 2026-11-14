@@ -8,6 +8,11 @@
       "sha256": "23e8602ce8140c5cacc537b135224cc4882477aa25cf660bb7780edc16b0e862"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightRoleCharacterComponent.cs",
+      "bytes": 3708,
+      "sha256": "6e4e17d6993ea3b18a9350ab79ec4d1252c5cb26dbf8e50222ebde6b7e39b473"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/HitScopCfg.cs",
       "bytes": 1164,
       "sha256": "86a386d620ab98e0ef53f5fc85a8419fee71edb69f843524cead081a65bc0191"
@@ -48,33 +53,53 @@
   "migration": [
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
-      "bytes": 165498,
-      "sha256": "16ea6bc03c27e2a83a2a2d4d04bf6f079728d45016f63c45c1ae15232410b354"
+      "bytes": 165895,
+      "sha256": "f99affc1e5d6fbec7fd01dc7da62cb24b4452ee586712099cd4c8fd29d2c1f19"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleHitSelectionSnapshot.cs",
-      "bytes": 4379,
-      "sha256": "91982c4588155c9f5d3cb71975da7a4c6385aee5c816dc1a4001af8cbc344d38"
+      "bytes": 4470,
+      "sha256": "6c2bca51746e61eaaff9f9b331bbdb82822a7c57489be74dcebfd6af53625bfd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
+      "bytes": 98987,
+      "sha256": "82942803ac29e678aeb023afe71a269f74492abff96cfc5abaec814eced80140"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.UnitLifeEvents.cs",
+      "bytes": 2885,
+      "sha256": "e60780a8ba7a09b1a7949c9e89dd9758751b93f75096f199d320f983d6748759"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.DeathForbidden.cs",
+      "bytes": 1983,
+      "sha256": "c265410c010a01e1fb659fe8d2d5a4da3d8736d8a42f85fca1f43b9e59086ce5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.StatusStartup.cs",
+      "bytes": 10898,
+      "sha256": "6c0ed6107d11e68380b490b160611092d593c49d65f01e000b283642d75c0e93"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
-      "bytes": 83319,
-      "sha256": "7d1ff1a4d7bd4fe303628074b7e50e0043c4b043493a4b9e581714485c537249"
+      "bytes": 83609,
+      "sha256": "0fdcaf4c283b09714e2a3cba9354dc262cbb2d97b59bc6147a9c94d6e29052f1"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Summons.cs",
-      "bytes": 1206,
-      "sha256": "5e946d87000df448423d1092df2a3d4fc948a93d882a4d5d64c5b2070e2769f9"
+      "bytes": 1259,
+      "sha256": "dd84d58d370d93b571a2df02e7a6c174626bd0e8fb9062b8df23b6c7fa484c57"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.UnitEnds.cs",
-      "bytes": 1861,
-      "sha256": "196db8996f410d76a2682eccbb8568f08539b8dd6b0e85f5e9fac728e8775cfe"
+      "bytes": 4103,
+      "sha256": "1e5f1712e8a5a3e780751f317c0bacfac2651a5e3769515ef76a0d145aa06d87"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleUnitSpawnPlayback.cs",
-      "bytes": 3727,
-      "sha256": "37b142d50fd263648bb0c073756700b96c694f0dc5fc062d47e339548147aa2e"
+      "bytes": 3868,
+      "sha256": "7914f85100e8a4d0b382dde2a40a1f05c14e6b1bb75e43b438d1bf53d3b31ae9"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleUnitEndPlayback.cs",
@@ -82,9 +107,14 @@
       "sha256": "561ab3958701e61ca84a386373d8664ed250d2fc0b5327074e8fc08542b0833b"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleUnitLifePlayback.cs",
+      "bytes": 3609,
+      "sha256": "38653ecb37e5f250ca10be9593f6c22aff06e2734ddae4b8bb5e994d863393ae"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs",
-      "bytes": 24413,
-      "sha256": "62557c8331fdc9d89b232f79dcaa260fceb8e399bf104ca87b931559596b21cd"
+      "bytes": 25001,
+      "sha256": "801ac523e9afdd8c9b474c68754da9c32cae6581bdc275fa65dc9e9d6fc2e316"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveMonsterModelView.cs",
@@ -101,7 +131,7 @@
     {
       "path": "assets/reference/battle-animation/summon-role-views-source-manifest.json",
       "bytes": 153694,
-      "sha256": "fd1850a6624f1afe64d2f1bf450abb02d5e38d14be06b7fa7f55743d68b844d3"
+      "sha256": "0b19becdf442a66a7254553ae5fedd509bdccc580d5958a565ec5f665e080497"
     },
     {
       "path": "assets/reference/battle-animation/native-monster-appearance-source-manifest.json",
@@ -137,8 +167,8 @@
     },
     {
       "path": "scripts/fixtures/battle_unit_spawn_harness.cs",
-      "bytes": 5901,
-      "sha256": "28325b307298611235cb9a2ade003232a529ce7d8280539d2c9f081d06dfd443"
+      "bytes": 6393,
+      "sha256": "191817e181c32a218619b03eb7a980812fa8d70ed85c28b36d20c378bee0cc96"
     },
     {
       "path": "scripts/test_battle_unit_ends.ps1",
@@ -151,14 +181,24 @@
       "sha256": "5508108c3e52d46959101cbebbde8305736851934af1b4028ff0df7afaaab2b9"
     },
     {
+      "path": "scripts/test_battle_death_forbidden.ps1",
+      "bytes": 1414,
+      "sha256": "4fad3003afbf2d27f06a31644bc718a8e4625f0580279b7fa4928947d3e2352f"
+    },
+    {
+      "path": "scripts/fixtures/battle_death_forbidden_harness.cs",
+      "bytes": 10946,
+      "sha256": "45588d75d1eaa2a7fc3beef71feba5b8d35d439e8727b5505c120f32d92e19f0"
+    },
+    {
       "path": "scripts/test_battle_skill_graph_dispatch.ps1",
-      "bytes": 713,
-      "sha256": "80018e5893e80beca25528848486812009156b3487f1f0890453f3f56068a576"
+      "bytes": 775,
+      "sha256": "a65939f74bd478cf37c8aa38a6a661e83ee79fb031bbc031f908a1ba97aad87e"
     },
     {
       "path": "scripts/fixtures/battle_skill_graph_dispatch_harness.cs",
-      "bytes": 34277,
-      "sha256": "78e95fbe9f6f8cc28e5d9958b589913bf85966d4709fdda9043725bcee8f9a9a"
+      "bytes": 36421,
+      "sha256": "54c8bfc51da154f4e1db0257df79e80a3921e802dee0f576111b7c3de257b2b8"
     },
     {
       "path": "scripts/prepare_battle_damage_playback_validation.py",
@@ -167,15 +207,15 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSummonSpawnAcceptance.cs",
-      "bytes": 15474,
-      "sha256": "925b4bc1000b0c8370605b1e752fd84d7ca8514030bfc8ecc566b7edbda05442"
+      "bytes": 19755,
+      "sha256": "cfd6336bfb7446ce887148b3856073582642ca5a7afd7a3c077d663f5e183f1a"
     }
   ],
   "generator": {
     "path": "scripts/record_battle_summon_spawn_sources.py",
-    "bytes": 5212,
-    "sha256": "49bc7a3824234aabbc500eaffecb7fed91bb30e9c26aecc6d34f5f13be868a75"
+    "bytes": 6170,
+    "sha256": "776b19432cfeb2a3bdeaf318090aec398e405d115559d1c3e11ec79e1ee63a0c"
   },
   "binding": "Successful SpawnSummons -> owning HitSelectionSnapshot.SpawnedUnits -> shared scene -> native graph clock -> original model/generation graph",
-  "operation": "Add presentation-only identity, initial cell and cast-local flight plus original sorted Base scope delay for each successful role summon. Retain eager settlement, RNG, placement and status order. Delay model/HUD creation on the existing native graph clock. Restore existing roles without replaying generation. Position the native monster before original birth graph initialization. Queue existing explicit entity-removal receipts for pending births as well as visible units; dispatch birth before removal at equal times, suppress births after an earlier removal, and deduplicate removed identities. A settled Ended flag does not hide a living summon before its recorded removal boundary. No source prefab, texture, mesh, shader or animation asset is changed."
+  "operation": "Add presentation-only identity, initial cell and cast-local flight plus original sorted Base scope delay for each successful role summon. Retain eager settlement, RNG, placement and status order. Delay model/HUD creation on the existing native graph clock. Restore existing roles without replaying generation. Position the native monster before original birth graph initialization. Queue existing explicit entity-removal receipts for pending births as well as visible units; dispatch birth before removal at equal times, suppress births after an earlier removal, and deduplicate removed identities. A settled Ended flag does not hide a living summon before its recorded removal boundary. Record initial summon health and confirmed Die transitions after HP-trigger and immediate-revival responses, retaining the owning cast offset exactly once. Project only the display health until death/revival boundaries; do not infer Die from raw damage AfterHp. Birth precedes Die and explicit removal at equal times. Explicit removal cancels future life events; confirmed revival stops death and suppresses a second generation graph. No source prefab, texture, mesh, shader or animation asset is changed."
 }

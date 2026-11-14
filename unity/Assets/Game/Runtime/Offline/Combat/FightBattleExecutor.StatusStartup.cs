@@ -38,6 +38,7 @@ namespace Zjcs.Combat.Official
                 BeginGridViewEvents();
                 BeginStatusViewEvents();
                 BeginUnitEndEvents();
+                BeginUnitLifeEvents();
                 BeginStatusSecondsHits();
                 CleanupGridItems();
                 var result = StepCore(sequence, counter);
@@ -45,6 +46,7 @@ namespace Zjcs.Combat.Official
                 {
                     CompleteStatusViewEvents(result.Event);
                     CompleteUnitEndEvents(result.Event);
+                    CompleteUnitLifeEvents(result.Event);
                     CompleteStatusSecondsHits();
                 }
                 return result;
@@ -54,6 +56,7 @@ namespace Zjcs.Combat.Official
                 ClearGridViewEvents();
                 ClearStatusViewEvents();
                 unitEndEvents = null;
+                ClearUnitLifeEvents();
                 ClearStatusSecondsHits();
                 // Include units summoned during this step. No delegate or executor is retained
                 // by the checkpoint, including when a configuration fails during a nested cast.

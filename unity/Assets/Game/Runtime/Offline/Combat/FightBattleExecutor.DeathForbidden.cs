@@ -13,6 +13,7 @@ namespace Zjcs.Combat.Official
             if (owner == null) return false;
             bool changed = false;
             bool dead = owner.Hp <= 0;
+            RecordUnitLife(owner, dead);
             if (dead) confirmedDeadUnits.Add(owner.Id);
             else confirmedDeadUnits.Remove(owner.Id);
             // The original agent snapshots its statuses before changing forbidden bits.

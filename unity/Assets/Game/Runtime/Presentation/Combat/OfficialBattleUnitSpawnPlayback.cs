@@ -48,7 +48,8 @@ namespace Zjcs.Presentation.Combat
                         var copy = new FightBattleHitSelectionSnapshot.SpawnedUnit {
                             UnitId = receipt.UnitId, X = receipt.X, Y = receipt.Y,
                             EffectCenterIndex = receipt.EffectCenterIndex, ScopeIndex = receipt.ScopeIndex,
-                            Delay = receipt.Delay
+                            Delay = receipt.Delay, HasInitialHealth = receipt.HasInitialHealth,
+                            InitialHp = receipt.InitialHp, InitialMaxHp = receipt.InitialMaxHp
                         };
                         var value = new Pending { Receipt = copy, Remaining = Math.Max(0f, delay) };
                         int index = pending.FindIndex(other => other.Remaining > value.Remaining);

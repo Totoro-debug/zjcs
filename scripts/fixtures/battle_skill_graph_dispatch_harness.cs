@@ -29,14 +29,15 @@ namespace UnityEngine
 namespace Zjcs.Combat.Official
 {
     public class FightBattleExecutor {}
-    public class FightBattleUnitState { public int Id, Direction, CharacterType; public long Hp; }
+    public class FightBattleUnitState { public int Id, Direction, CharacterType; public long Hp,MaxHp;
+        public FightBattleUnitState WithPresentationHealth(long hp,long maxHp) {var copy=(FightBattleUnitState)MemberwiseClone();copy.Hp=hp;copy.MaxHp=maxHp;return copy;} }
     public class GridItem { public int Id; public bool HasRuntime; public FightBattleUnitState Runtime; }
-    public class FightBattleCheckpoint { public List<FightBattleUnitState> Units = new List<FightBattleUnitState>(); public List<GridItem> GridItems = new List<GridItem>(); }
+    public class FightBattleCheckpoint { public int Sequence,Counter; public List<FightBattleUnitState> Units = new List<FightBattleUnitState>(); public List<GridItem> GridItems = new List<GridItem>(); }
     public class FightBattleSkillCastPresentation { public int FacingIndex, TargetId; }
     public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId, Slot; public bool IsPetSupport, HasSkillCostHp; public long SkillCostBeforeHp, SkillCostAfterHp; public float Delay; public FightBattleSkillCastPresentation Presentation; public List<int> TargetIds = new List<int>(), DamageEventIds = new List<int>(); public List<FightBattleHitSelectionSnapshot> HitSelections = new List<FightBattleHitSelectionSnapshot>(); }
     public class FightBattleHitSelectionSnapshot
     {
-        public sealed class SpawnedUnit { public int UnitId, EffectCenterIndex, ScopeIndex, X, Y; public float Delay; }
+        public sealed class SpawnedUnit { public int UnitId, EffectCenterIndex, ScopeIndex, X, Y; public float Delay; public bool HasInitialHealth; public long InitialHp,InitialMaxHp; }
         public List<SpawnedUnit> SpawnedUnits = new List<SpawnedUnit>();
     }
     public class FightGridPoint { public int X,Y; }
@@ -53,8 +54,9 @@ namespace Zjcs.Combat.Official
     }
     public class FightBattleDamageEvent { public int DamageId, TargetId, SourceId, SkillEntityId, DamageEntityId; public bool IsSkillCost, IsCure, HasDisperseNotification; public int DisperseNotificationIndex; public float Delay; public long BeforeHp, AfterHp; }
     public class FightBattleUnitEndEvent { public int UnitId, StatusId; public float Delay; }
+    public class FightBattleUnitLifeEvent { public int UnitId; public bool IsDead; public long BeforeHp,BeforeMaxHp,Hp,MaxHp; public float Delay; }
     public class FightBattleStatusCustomActionEvent { public int UnitId, Action, SourceDamageId, SourceDamageTargetId; }
-    public class FightBattleStepEvent { public List<int> DispersedUnitIds = new List<int>(); public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>(); public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>(); public List<FightBattleStatusCustomActionEvent> StatusCustomActions = new List<FightBattleStatusCustomActionEvent>(); }
+    public class FightBattleStepEvent { public bool HasUnitLifeEvents; public List<FightBattleUnitLifeEvent> UnitLifeEvents = new List<FightBattleUnitLifeEvent>(); public List<int> DispersedUnitIds = new List<int>(); public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>(); public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>(); public List<FightBattleStatusCustomActionEvent> StatusCustomActions = new List<FightBattleStatusCustomActionEvent>(); }
 }
 namespace Zjcs.Official.StoryPlayableManager
 {
@@ -300,6 +302,25 @@ public static class BattleSkillGraphDispatchHarness
             Require(empty.EntitiesStarted.Count == 1, "Empty graph cast was duplicated");
         }
         actor.Direction = 2;
+        var lifeScope = new OfflineBattleNativePlayableScope();
+        using (var lifeQueue = new OfficialBattleSkillGraphPlayback(catalog, lifeScope, new OfficialBattleSkillEntityPlayback(lifeScope)))
+        {
+            var lifecycle = new List<string>();
+            var lifeStep = new FightBattleStepEvent { HasUnitLifeEvents = true };
+            var birth = Cast(20, .25f);
+            birth.HitSelections.Add(new FightBattleHitSelectionSnapshot { SpawnedUnits = new List<FightBattleHitSelectionSnapshot.SpawnedUnit> {
+                new FightBattleHitSelectionSnapshot.SpawnedUnit { UnitId = 60, Delay = .25f } } });
+            lifeStep.SkillCasts.Add(birth);
+            lifeStep.UnitLifeEvents.Add(new FightBattleUnitLifeEvent { UnitId = 60, IsDead = true, Delay = .5f });
+            var lives = new OfficialBattleUnitLifePlayback(_ => { Require(lifeScope.Clock == .5f, "Death missed the native boundary"); lifecycle.Add("die"); });
+            var births = new OfficialBattleUnitSpawnPlayback(_ => lifecycle.Add("birth"), _ => false);
+            var ends = new OfficialBattleUnitEndPlayback(_ => lifecycle.Add("end"), _ => true);
+            lifeQueue.BindUnitSpawns(births); lifeQueue.BindUnitLife(lives); lifeQueue.BindUnitEnds(ends);
+            births.Enqueue(lifeStep); lives.Enqueue(new FightBattleCheckpoint(), lifeStep);
+            ends.Enqueue(new[] { new FightBattleUnitEndEvent { UnitId = 60, Delay = .5f } });
+            lifeQueue.Tick(1);
+            Require(lifecycle.SequenceEqual(new[]{"birth","die","end"}), "Same-time birth/Die/removal order differs");
+        }
         var spawnScope = new OfflineBattleNativePlayableScope();
         using (var spawnQueue = new OfficialBattleSkillGraphPlayback(catalog, spawnScope, new OfficialBattleSkillEntityPlayback(spawnScope)))
         {

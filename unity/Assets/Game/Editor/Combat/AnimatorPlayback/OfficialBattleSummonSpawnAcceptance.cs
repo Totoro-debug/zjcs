@@ -68,7 +68,8 @@ namespace Zjcs.Editor.Combat
             foreach(int skillId in new[]{10710,10770,11140,12060,13300,13670})
             foreach(bool fallback in skillId>=12060?new[]{false,true}:new[]{false})
             foreach(bool removed in new[]{false,true})
-            foreach(bool nativeClock in removed?new[]{true,false}:new[]{true})
+            foreach(int lifeMode in removed?new[]{0}:fallback?new[]{0,1,2}:new[]{0,1,2,3})
+            foreach(bool nativeClock in removed || lifeMode>0 && skillId==12060 && !fallback?new[]{true,false}:new[]{true})
             foreach(float removalOffset in removed && skillId==12060 && !fallback?new[]{1.5f,0f,-.001f}:new[]{1.5f})
             {
                 var root=new GameObject("Actual summon scene "+skillId);
@@ -111,6 +112,7 @@ namespace Zjcs.Editor.Combat
                 Require(spawns.Length==(skillId==11140?2:1),"Original summon fixture produced no expected roles: "+skillId);
                 if(fallback) Require(spawns.All(s=>s.Spawn.X==5 && s.Spawn.Y==5),"Confirmed caster-cell fallback differs");
                 float due=spawns.Min(s=>s.Cast.Delay+s.Spawn.Delay);
+                float lifeDeathAge=(skillId==11140?36:18)/60f+.02f;
                 if(removed)
                     foreach(var spawn in spawns)
                     {
@@ -118,6 +120,17 @@ namespace Zjcs.Editor.Combat
                         // the original birth receipt and an explicit removal boundary.
                         state.Units.Find(u=>u.Id==spawn.Spawn.UnitId).Ended=true;
                         step.Event.UnitEndEvents.Add(new FightBattleUnitEndEvent {UnitId=spawn.Spawn.UnitId,Delay=due+removalOffset});
+                    }
+                if(lifeMode>0)
+                    foreach(var spawn in spawns)
+                    {
+                        var unit=state.Units.Find(u=>u.Id==spawn.Spawn.UnitId);
+                        long hp=unit.Hp;
+                        unit.Hp=lifeMode==1?0:1;
+                        step.Event.UnitLifeEvents.Add(new FightBattleUnitLifeEvent {UnitId=unit.Id,IsDead=true,
+                            BeforeHp=hp,BeforeMaxHp=unit.MaxHp,Hp=0,MaxHp=unit.MaxHp,Delay=due+lifeDeathAge});
+                        if(lifeMode>=2) step.Event.UnitLifeEvents.Add(new FightBattleUnitLifeEvent {UnitId=unit.Id,
+                            BeforeHp=0,BeforeMaxHp=unit.MaxHp,Hp=1,MaxHp=unit.MaxHp,Delay=due+lifeDeathAge+(lifeMode==3?1.25f:.75f)});
                     }
                 string saved=FightBattleCheckpointSerializer.Save(state);
                 scene.Refresh(state,step.Event);
@@ -152,8 +165,51 @@ namespace Zjcs.Editor.Combat
                 var first=scene.TryGetUnitTransform(spawns[0].Spawn.UnitId).GetComponentInChildren<BattleNativeMonsterRenderer>();
                 Require(first && first.Animation=="generate_01","Original generation graph was replaced by idle");
                 using var capture=new Capture(first.transform.parent.parent,first.GetComponent<MeshRenderer>());
-                string prefix="summon-"+skillId+(fallback?"-fallback":"")+(removed?"-removed":"")+(nativeClock?"":"-scene-clock");
+                string prefix="summon-"+skillId+(fallback?"-fallback":"")+(removed?"-removed":"")
+                    +(lifeMode==1?"-dead":lifeMode==2?"-revived":lifeMode==3?"-recreated":"")+(nativeClock?"":"-scene-clock");
                 capture.Save(prefix+"-generate.png");
+                if(lifeMode>0)
+                {
+                    Advance(.01f);yield return null;
+                    scene.Refresh(state,step.Event);
+                    Require(spawns.All(s=>scene.TryGetUnitTransform(s.Spawn.UnitId)),"Final HP removed a newborn before its lethal hit");
+                    Require(first.Animation=="generate_01","Death fixture did not overlap the original generation animation");
+                    Advance(.02f);yield return null;
+                    Require(first.Animation=="die_01","Confirmed lethal hit did not trigger the original death graph");
+                    capture.Save(prefix+"-die.png");
+                    scene.Refresh(state,step.Event);
+                    if(lifeMode>=2)
+                    {
+                        if(lifeMode==3)
+                        {
+                            Advance(.99f);Advance(.02f);yield return null;
+                            Require(spawns.All(s=>!scene.TryGetUnitTransform(s.Spawn.UnitId)),"Death model survived its original one-second destroy delay");
+                            scene.Refresh(state,step.Event);
+                            Require(spawns.All(s=>!scene.TryGetUnitTransform(s.Spawn.UnitId)),"Final positive HP recreated a corpse before revival");
+                            Advance(.25f);
+                        }
+                        else Advance(.75f);
+                        yield return null;
+                        scene.Refresh(state,step.Event);
+                        var revived=scene.TryGetUnitTransform(spawns[0].Spawn.UnitId).GetComponentInChildren<BattleNativeMonsterRenderer>();
+                        Require(revived && revived.Animation=="idle_01","Confirmed revival did not stop the death graph");
+                        if(lifeMode==3) Require(!ReferenceEquals(first,revived),"Late revival reused a released native model");
+                        Require(spawns.All(s=>scene.TryGetUnitTransform(s.Spawn.UnitId)
+                            && scene.TryGetUnitTransform(s.Spawn.UnitId).GetComponentInChildren<BattleNativeMonsterRenderer>().Animation=="idle_01"),
+                            "A revived model replayed generation or retained death");
+                        using var revivedCapture=new Capture(revived.transform.parent.parent,revived.GetComponent<MeshRenderer>());
+                        revivedCapture.Save(prefix+"-idle.png");
+                    }
+                    else
+                    {
+                        Advance(10f);yield return null;
+                        Require(spawns.All(s=>!scene.TryGetUnitTransform(s.Spawn.UnitId)),"Original death destruction delay left a corpse model");
+                    }
+                    Require(FightBattleCheckpointSerializer.Save(state)==saved,"Life projection changed settlement or saved receipts");
+                    Debug.Log("[Summon spawn] Actual "+skillId+": confirmed lifeMode="+lifeMode+" nativeClock="+nativeClock+"; original birth/death/revival and immutable checkpoint passed.");
+                    scene.Dispose();graphs.Dispose();scope.Dispose();UnityEngine.Object.DestroyImmediate(root);UnityEngine.Object.Destroy(modelCatalog);
+                    continue;
+                }
                 if(removed)
                 {
                     float beforeRemoval=1.5f-birthFrames/60f-.01f;

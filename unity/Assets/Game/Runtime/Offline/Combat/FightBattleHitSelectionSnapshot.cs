@@ -22,6 +22,8 @@ namespace Zjcs.Combat.Official
             public int UnitId, EffectCenterIndex, ScopeIndex, X, Y;
             // Local to this cast, including flight and the original Base scope delay.
             public float Delay;
+            public bool HasInitialHealth;
+            public long InitialHp, InitialMaxHp;
         }
 
         // Identity is local to the enclosing cast; class ID alone is not an occurrence identity.

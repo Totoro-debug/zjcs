@@ -528,11 +528,14 @@ namespace Zjcs.Presentation.Combat
             }
             UnitSpawns.Enqueue(stepEvent);
             UnitEndPlayback.Enqueue(stepEvent?.UnitEndEvents);
+            UnitLifePlayback.Enqueue(checkpoint, stepEvent);
             UnitSpawns.DispatchDue();
+            UnitLifePlayback.DispatchDue();
             UnitEndPlayback.DispatchDue();
             var present = new HashSet<int>();
-            foreach (FightBattleUnitState state in checkpoint.Units)
+            foreach (FightBattleUnitState settledState in checkpoint.Units)
             {
+                FightBattleUnitState state = UnitLifePlayback.Project(settledState);
                 if (state != null && UnitSpawns.IsPending(state.Id)) continue;
                 if (state == null || state.Ended && state.Hp > 0 && !UnitEndPlayback.Retains(state.Id)
                     || !IsWaveSpawned(checkpoint, state.Id)) continue;
@@ -1360,6 +1363,7 @@ namespace Zjcs.Presentation.Combat
         {
             unitEndPlayback?.Clear();
             unitSpawns?.Clear();
+            unitLifePlayback?.Clear();
             sourceDeathListeners.Clear();
             notifiedSourceDeaths.Clear();
             ReleasePetFollowers();
@@ -1455,6 +1459,7 @@ namespace Zjcs.Presentation.Combat
                 PlayAnimation(liveView, "idle_01", true);
                 liveView.Hud = OfficialBattleUnitWorldHudView.Create(hudCatalog, state, liveMonster.Transform);
                 units.Add(state.Id, liveView);
+                restoredNativeUnitIds?.Add(state.Id);
                 return liveView;
             }
             if (nativeModelLibrary != null)

@@ -18,14 +18,18 @@ def main():
     runtime = 'unity/Assets/Game/Runtime/'
     changed = [runtime + path for path in (
         'Official/Combat/FightBattleExecutor.cs', 'Offline/Combat/FightBattleHitSelectionSnapshot.cs',
+        'Official/Combat/FightBattleState.cs', 'Offline/Combat/FightBattleExecutor.UnitLifeEvents.cs',
+        'Offline/Combat/FightBattleExecutor.DeathForbidden.cs', 'Offline/Combat/FightBattleExecutor.StatusStartup.cs',
         'Presentation/Combat/OfficialBattleSceneView.cs', 'Presentation/Combat/OfficialBattleSceneView.Summons.cs',
         'Presentation/Combat/OfficialBattleSceneView.UnitEnds.cs', 'Presentation/Combat/OfficialBattleUnitSpawnPlayback.cs',
         'Presentation/Combat/OfficialBattleUnitEndPlayback.cs',
+        'Presentation/Combat/OfficialBattleUnitLifePlayback.cs',
         'Presentation/Combat/OfficialBattleSkillGraphPlayback.cs', 'Presentation/Combat/OfficialBattleLiveMonsterModelView.cs')]
     original = '.tools/source-packages/current/884_156692/official-code/'
     proof = dict(code_manifest='884_156692', configuration_manifest='854_156383',
         original=[identity(original + path) for path in (
             'common-source/Common/FightHitSummonComponentInfo.cs',
+            'common-source/Common/FightRoleCharacterComponent.cs',
             'common-source/Common/HitScopCfg.cs', 'client-source/MyFightHitBase.cs',
             'client-source/ECFightRoleCharacterView.cs')],
         configuration=[identity('unity/Assets/Official/Combat/' + path) for path in (
@@ -42,6 +46,7 @@ def main():
         validation=[identity(path) for path in (
             'scripts/test_battle_unit_spawns.ps1', 'scripts/fixtures/battle_unit_spawn_harness.cs',
             'scripts/test_battle_unit_ends.ps1', 'scripts/fixtures/battle_unit_end_harness.cs',
+            'scripts/test_battle_death_forbidden.ps1', 'scripts/fixtures/battle_death_forbidden_harness.cs',
             'scripts/test_battle_skill_graph_dispatch.ps1', 'scripts/fixtures/battle_skill_graph_dispatch_harness.cs',
             'scripts/prepare_battle_damage_playback_validation.py',
             'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSummonSpawnAcceptance.cs')],
@@ -53,6 +58,10 @@ def main():
             'Queue existing explicit entity-removal receipts for pending births as well as visible units; '
             'dispatch birth before removal at equal times, suppress births after an earlier removal, and deduplicate removed identities. '
             'A settled Ended flag does not hide a living summon before its recorded removal boundary. '
+            'Record initial summon health and confirmed Die transitions after HP-trigger and immediate-revival responses, '
+            'retaining the owning cast offset exactly once. Project only the display health until death/revival boundaries; '
+            'do not infer Die from raw damage AfterHp. Birth precedes Die and explicit removal at equal times. '
+            'Explicit removal cancels future life events; confirmed revival stops death and suppresses a second generation graph. '
             'No source prefab, texture, mesh, shader or animation asset is changed.')
     for name, key in (
         ('assets/reference/battle-animation/summon-role-views-source-manifest.json', 'runtime_bindings'),

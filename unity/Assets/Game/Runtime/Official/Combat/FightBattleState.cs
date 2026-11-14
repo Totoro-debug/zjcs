@@ -115,6 +115,16 @@ namespace Zjcs.Combat.Official
                     ? dx < 0 ? 1 : 3 : dy > 0 ? 2 : 0;
             return probe;
         }
+
+        // A presentation projection shares read-only combat inputs. It never
+        // settles gameplay or changes the executor's checkpoint object.
+        public FightBattleUnitState WithPresentationHealth(long hp, long maxHp)
+        {
+            var copy = (FightBattleUnitState)MemberwiseClone();
+            copy.Hp = hp;
+            copy.MaxHp = maxHp;
+            return copy;
+        }
     }
 
     [Serializable]
@@ -1852,6 +1862,9 @@ namespace Zjcs.Combat.Official
         public List<FightBattleStatusViewEvent> StatusViewEvents = new List<FightBattleStatusViewEvent>();
         // Actual StatusEnd/RemoveApplyEntity time, independent of lingering skill effects.
         public List<FightBattleUnitEndEvent> UnitEndEvents = new List<FightBattleUnitEndEvent>();
+        // False in legacy receipts: do not infer missing transitions from raw damage HP.
+        public bool HasUnitLifeEvents;
+        public List<FightBattleUnitLifeEvent> UnitLifeEvents = new List<FightBattleUnitLifeEvent>();
         public List<FightBattleBodyAnimatorTriggerEvent> BodyAnimatorTriggers =
             new List<FightBattleBodyAnimatorTriggerEvent>();
         public List<FightBattleStatusCustomActionEvent> StatusCustomActions =
@@ -1866,6 +1879,15 @@ namespace Zjcs.Combat.Official
     {
         public int UnitId;
         public int StatusId;
+        public float Delay;
+    }
+
+    [Serializable]
+    public sealed class FightBattleUnitLifeEvent
+    {
+        public int UnitId;
+        public bool IsDead;
+        public long BeforeHp, BeforeMaxHp, Hp, MaxHp;
         public float Delay;
     }
 
