@@ -1,7 +1,8 @@
 param(
     [Parameter(Mandatory)][string]$Player,
     [Parameter(Mandatory)][string]$Workspace,
-    [int[]]$SkillIds=@(10500,10501,10505,10507,10510,10514,10516,10520,10521,10522,10524,10535,10550,10554,10555,10559,10583,10588)
+    [int[]]$SkillIds=@(10500,10501,10505,10507,10510,10514,10516,10520,10521,10522,10524,10535,10550,10554,10555,10559,10583,10588),
+    [ValidateSet(0,1,2,6,10,11,15)][int]$Profession=0
 )
 $ErrorActionPreference='Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -24,11 +25,24 @@ try {
         $owner=@($professions|Where-Object {$skill -in @($_.Skills)+@($_.FightUsedSkills)})
         $row=@($rules.skill|Where-Object ClassId -eq $skill)
         if($owner.Count -eq 0 -or $row.Count -ne 1 -or $row[0].PassivePropFactors.PSObject.Properties.Count -eq 0){throw "Secret is outside the original property scope: $skill"}
+        $selectedProfession=[int]$owner[0].Profession
+        if($Profession -gt 0){
+            $candidate=$Profession
+            $available=$false
+            while($candidate -gt 0){
+                $professionRow=@($rules.profession_base|Where-Object Profession -eq $candidate)
+                if($professionRow.Count -ne 1){throw "Missing original profession row: $candidate"}
+                if($skill -in @($professionRow[0].Skills)+@($professionRow[0].FightUsedSkills)){$available=$true; break}
+                $candidate=[int]$professionRow[0].PrePro
+            }
+            if(-not $available){throw "Secret $skill is unavailable for original profession $Profession"}
+            $selectedProfession=$Profession
+        }
         $run=Join-Path $workspacePath ("passive-$skill-"+[guid]::NewGuid().ToString('N'))
         New-Item -ItemType Directory -Path $run|Out-Null
         $env:ZJCS_VALIDATION_DIR=$run
         $env:ZJCS_SKILLS_PASSIVE_ITEM=[string]$skill
-        $env:ZJCS_SKILLS_PASSIVE_PROFESSION=[string]$owner[0].Profession
+        $env:ZJCS_SKILLS_PASSIVE_PROFESSION=[string]$selectedProfession
         $process=Start-UnityOnInternalDisplay -Editor $executable -ArgumentList @(
             '-screen-fullscreen','0','-screen-width','675','-screen-height','1463',
             '-logFile',('"'+(Join-Path $run 'player.log')+'"'),'--zjcs-validate-skills',('"'+$run+'"'))

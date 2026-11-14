@@ -49,14 +49,7 @@ namespace Zjcs.Presentation.Combat
             }
             if (requireActiveSkill && active.Count == 0)
                 throw new InvalidOperationException("Official player has no equipped or initial active skill.");
-            var passive = OfflineSkillProgression.EquippedPassiveSkills(player.Skills)
-                .Select((value, slot) => new FightOfficialPassiveSkillBinding
-                {
-                    ItemId = value, Rank = Math.Max(1, OfflineSkillProgression.OwnedRank(player.Skills, value)),
-                    Level = Math.Max(1, progression.SkillProgression.SlotLevel(player.Skills, 101, slot,
-                        progression.SkillContext().CurrentSeasonId)),
-                    SubRank = player.SubRank
-                }).Where(value => value.ItemId > 0).ToList();
+            var passive = OfficialBattlePassivePropertyAssembler.CollectEquippedPlayerPassives(items, player, progression);
             passive.AddRange(OfficialEquipmentBattlePassives.Collect(progression, player, unit.SubRank));
             OfficialBattleSkillAssembler.AssembleUnit(combat, items, unit, properties, active, passive,
                 preserveZeroProperties);

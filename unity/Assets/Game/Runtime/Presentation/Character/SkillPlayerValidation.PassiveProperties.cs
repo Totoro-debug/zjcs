@@ -161,8 +161,35 @@ namespace Zjcs.Presentation.Character
                 .Chunks[CharacterPropHandleType.Skill];
             Require(registered.Count == expected.Count && expected.All(pair => registered.TryGetValue(pair.Key, out long value) && value == pair.Value),
                 "The registered character property pipeline omitted the equipped secret.");
+            VerifyPassiveLoadoutSelection(combat, items, progression, player, itemId, rank, level, true);
+            VerifyPassiveLoadoutSelection(combat, items, progression, withoutOwned, itemId, rank, level, false);
+            var foreign = JsonUtility.FromJson<OfflinePlayerProgress>(JsonUtility.ToJson(player));
+            foreign.Wardrobe.Profession = new[] { 1, 10, 2, 6, 11, 15 }.First(id =>
+                !progression.SkillDefinition(itemId).AvailableProfessions.Contains(id));
+            VerifyPassiveLoadoutSelection(combat, items, progression, foreign, itemId, rank, level, false);
+            Debug.Log("[Passive loadout flow] item=" + itemId + " level=" + level
+                + " valid/unowned/foreign property and initial status selection passed.");
             File.WriteAllText(Path.Combine(output, "passive-properties-level-" + level + ".json"),
                 "{" + string.Join(",", actual.OrderBy(pair => pair.Key).Select(pair => "\"" + pair.Key + "\":" + pair.Value)) + "}");
+        }
+
+        private static void VerifyPassiveLoadoutSelection(FightOfficialCombatCatalog combat, FightOfficialSkillItemCatalog items,
+            OfflineCharacterProgressionService progression, OfflinePlayerProgress player, int itemId, int rank, int level, bool available)
+        {
+            var item = items.Required(itemId);
+            var props = new Dictionary<int, long>();
+            OfficialBattlePassivePropertyAssembler.ApplyEquippedPlayerPassives(combat, items, props, player, progression);
+            if (!available) Require(props.Count == 0, "An unowned or foreign secret contributes battle properties.");
+            var unit = new FightBattleUnitState { Id = 1, CharacterType = 1, Level = player.Level,
+                SubRank = player.SubRank, Profession = player.Wardrobe.Profession };
+            OfficialBattlePlayerLoadoutAssembler.Assemble(combat, items, unit, player, progression);
+            var expected = available ? item.PassiveStatusIds.Where(id => id > 0).OrderBy(id => id).ToArray() : Array.Empty<int>();
+            Require(unit.Statuses.Select(value => value.ClassId).OrderBy(id => id).SequenceEqual(expected),
+                "The saved secret's initial battle status selection differs.");
+            foreach (var status in unit.Statuses)
+                Require(status.ApplyingSkillItemId == itemId && status.RootSkillId == item.EntityId
+                    && status.SourceSkillRank == rank && status.SourceSkillLevel == level && status.SourceSubRank == player.SubRank,
+                    "The saved secret's initial status lost its cultivation/source.");
         }
     }
 }

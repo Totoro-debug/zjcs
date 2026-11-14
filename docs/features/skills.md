@@ -27,13 +27,15 @@
 
 人物秘法属性接线已修复：`OfficialCharacterAssetCatalog` 显式绑定现有 Combat 的技能／战斗／技能物品配置及各自来源清单，`OfficialCharacterCatalog.WithSkillPropertyRules` 为人物属性源复用战斗目录的原被动成长计算；按选中方案、已拥有品阶、职业适用性、槽位有效等级和人物位阶贡献属性。该绑定修复人物目录缺少技能成长表时静默跳过秘法的问题，原 `SkillPropChunck` 调用依据及输入／绑定哈希见[绑定凭据](../../assets/reference/battle-rules/skill-passive-property-bindings.json)。人物技能属性块保留原详情贡献，战斗入口从排除该块的 `OutOfFightBattleProps` 开始再加入一次；验证器以实际人物属性作基底核对，防止漏算或重复叠加。
 
-`SkillPassivePropertyValidation` 已通过七套方案／四槽、成长与祝福的 1,512 组对照和 54 项排除检查，人物经验、基础属性、外观互斥、期限延长与属性流水线回归及 `ProjectTools.Validate` 通过。`scripts/test_first_promotion_passive_player.ps1` 对本次范围内 18 项有属性贡献的秘法逐项预置隔离存档中的原职业与已拥有秘法，再使用原人物技能页模拟输入装配、培养、磁盘保存与同进程重载，核对人物已注册的技能属性块、实际基础属性、战斗装配器、技能战力贡献及原 HUD；总战力增量与技能战力增量一致，54 次培养前后／重载结果检查均通过。隔离 Windows 构建与全部 18 项最新 Player 流程均以退出码 0 结束，72 张实际运行画面已查看，原详情、槽位、培养和重载状态通过；10500 的 Play Mode 流程通过，四张实际画面已查看。后台 Play Mode 使用既有 Game 视图与 `PlayUnfocused`，显式初始化显示缓冲尺寸，使 Canvas 与 675×1463 渲染面一致；该验证适配不请求窗口焦点。静态检查通过。上述检查不代表完整技能获得、被动触发、实际战斗效果、跨进程冷恢复、全部原生演出或正式发布已完成。
+`SkillPassivePropertyValidation` 已通过七套方案／四槽、成长与祝福的 1,512 组对照和 54 项排除检查，人物经验、基础属性、外观互斥、期限延长与属性流水线回归及 `ProjectTools.Validate` 通过。`scripts/test_first_promotion_passive_player.ps1` 对本次范围内 18 项有属性贡献的秘法逐项预置隔离存档中的原职业与已拥有秘法，再使用原人物技能页模拟输入装配、培养、磁盘保存与同进程重载，核对人物已注册的技能属性块、实际基础属性、战斗装配器、技能战力贡献及原 HUD；总战力增量与技能战力增量一致，54 次培养前后／重载结果检查均通过。隔离 Windows 构建与 18 项 Player 流程均以退出码 0 结束，72 张实际运行画面已查看，原详情、槽位、培养和重载状态通过；10500 的 Play Mode 流程通过，四张实际画面已查看。后台 Play Mode 使用既有 Game 视图与 `PlayUnfocused`，显式初始化显示缓冲尺寸，使 Canvas 与 675×1463 渲染面一致；该验证适配不请求窗口焦点。静态检查通过。上述检查不代表完整技能获得、被动触发、实际战斗效果、跨进程冷恢复、全部原生演出或正式发布已完成。
 
 人物技能战力接线已修复：人物目录不再因未收录完整 `skill` 表而跳过已有技能定义和物品。原 `SkillPropChunck.CalcombatRatingSkill` 按当前职业可用的全部已拥有战技／秘法计分，不限于已装配的方案；按品阶分配有效槽级，品阶分与等级分各自排序，超出原槽数的部分按原 10% 系数贡献。等级分按技能有效等级计分，人物参考属性保留原 `CalcPlayerRefBaseProp` 的战斗属性筛选及基础倍率处理，再按 `CalcSkillLevelCombatRating` 处理一次，维持原调用顺序、浮点数运算和整数截断。原函数及既有人物配置的独立版本、输入哈希与参照适配边界见[战力来源](../../assets/reference/battle-rules/skill-combat-rating-source-manifest.json)；既有历史配置不替换版本、不修改载荷哈希。
 
 `scripts/test_skill_combat_rating.ps1` 在标记的隔离 Unity 工程中生成并直接执行 15 个原公式／职业筛选函数，当前目标的 104 项技能在六职业、人物等级／位阶、品阶、非均匀槽级、当前与其他祝福记录、混合持有、七套方案及两种参考属性路径下，34,830 组原输入对照通过，其中 11,664 组单技能结果为正。另用可恢复的隔离配置变更核对非零基础倍率、等级评分组与可选等级系数的四项分支，不改正式配置。`ProjectTools.Validate`、隔离 Unity 编译、人物成长回归、Windows 脚本增量构建及最新共享工程静态检查通过。上述原界面验证中，10500 的人物技能战力由 2,994 变为 3,000，总战力同步增加 6，原 HUD 按官方紧凑格式显示。完整技能功能仍未完成。
 
 ## 原始官方实现
+
+秘法进入战斗的选择依据为原 `PlayerSkillDataExt.GetValidSkillItems` 与 `PlayerSnapshotData.TryGetValidSkillItems／CheckSkillProfession`：先解析选中方案中实际持有的物品，再沿 `profession_base.PrePro` 校验当前职业；未转职时按 `ProfessionUtils.GetSafeProfession` 使用当前武器，无武器时使用初始武器。原 `FightUtilsHandler.IsSkillDisabled` 查询服务器临时 `UseSkillItem` 维护开关。原代码与既有载荷身份见[秘法装配来源](../../assets/reference/battle-rules/skill-passive-loadout-source-manifest.json)，复查入口为 `scripts/prepare_skill_passive_loadout_sources.py`。
 
 官方技能页按职业、前置链、品质、元素、标签、范围、安装槽、附加属性和升级／突破配置刷新；详情与模型预览使用原控件、数值计算及显示规则。
 
@@ -78,6 +80,12 @@
 依据：`assets/reference/skill-ui/unity-icon-source-manifest.json`、`assets/reference/skill-quality-text/source-manifest.json`。
 
 ## 完整还原部分
+
+战斗秘法装配共用 `OfficialBattlePassivePropertyAssembler.CollectEquippedPlayerPassives`：属性入口与 `OfficialBattlePlayerLoadoutAssembler` 的初始状态图同时排除未持有、零品阶、非秘法和职业不符项，保留原槽位、当前赛季祝福、品阶与人物位阶；未转职时遵循上述原武器回退。装备／套装被动继续由其原独立来源装配。
+
+`scripts/test_skill_passive_loadout.ps1` 使用原职业表的独立 `PrePro` 遍历核对 46 项秘法：六职业、七方案、四槽分布、非均匀槽级、当前／其他赛季祝福及初始／当前武器回退的 2,162 组属性与初始状态对照通过，其中 686 组为有效职业方案；另有 139 项未持有、零品阶、错放战技与非当前方案排除检查。实际生产装配器创建的 390 个初始状态均保留物品、根实体、品阶、有效槽级、位阶及持有者来源。隔离 Unity 编译与 `ProjectTools.Validate`、共享工程静态检查通过。该测试核对初始状态挂载，不替代实际触发及完整演出验证。
+
+最新 Windows 脚本增量构建通过；骑士 `10516` 的 Play Mode，以及战士 `10500`、法师 `10554`、骑士 `10516`、斗士 `10588`、贤者 `10514`、术士继承 `10554` 的六项 Player 流程均以退出码 0 完成。各流程分别预置对应职业的隔离存档后，通过原人物技能界面的模拟点击完成装配、培养与磁盘保存／同进程重载；各阶段同时核对有效、未持有、职业不符三组属性与初始状态装配。共 28 张实际运行画面已查看，均为 675×1463 渲染面。此项验证未操作转职界面，也不代表六职业全部技能触发、完整战斗演出或正式发布已完成。
 
 ### 通用四向施法模块
 

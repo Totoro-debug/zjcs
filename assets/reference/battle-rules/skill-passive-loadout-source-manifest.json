@@ -1,0 +1,69 @@
+{
+  "manifest": "884_156692",
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll",
+    "bytes": 16813568,
+    "sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
+  },
+  "official_code_receipt": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "bytes": 6939,
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "official_inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightUtils.cs",
+      "bytes": 2403,
+      "sha256": "f1d400e36ee07dfda609d80e5a959779d117bc1076dc3e3d7dba16755a563ce6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightUtilsHandler.cs",
+      "bytes": 2956,
+      "sha256": "6cff15412b844d47ecb14f7201a7b164af4932be9b7ceef8ee938957ebf84a8f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerSkillDataExt.cs",
+      "bytes": 32488,
+      "sha256": "48076550e5af36176b8afce908b5c8d379b7036b3c3c34a9bc5f2c0095fae28c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerSnapshotData.cs",
+      "bytes": 42296,
+      "sha256": "5bf30f444f3dbd5d455eac31d3a2477c9f5f7d1ec918bd1289073e5890521b71"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ProfessionBaseInfoParser.cs",
+      "bytes": 21469,
+      "sha256": "801c076f2df4bce5ad6db9e9647066af7dc111438bdbc80ec556465381225e10"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ProfessionUtils.cs",
+      "bytes": 1516,
+      "sha256": "af6c4a0271192be6ca40abeaf75771aa44d511dfe68c39c4e25e8e678cf0ccde"
+    }
+  ],
+  "methods": [
+    "PlayerSkillDataExt.GetValidSkillItems",
+    "PlayerSnapshotData.TryGetValidSkillItems",
+    "PlayerSnapshotData.CheckSkillProfession",
+    "ProfessionBaseInfoParser.IsSkillAvailableForProfession",
+    "ProfessionBaseInfoParser.IsSkillAvailableForSingleProfession",
+    "ProfessionUtils.GetSafeProfession",
+    "FightUtilsHandler.IsSkillDisabled"
+  ],
+  "existing_inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "bytes": 37209479,
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+    },
+    {
+      "path": "unity/Assets/Official/Skills/skill-runtime-rules.json",
+      "bytes": 1065888,
+      "sha256": "1ece75e11e618c4a3fef61bb490ed2a3f101f3560649c3384f37eafac8183aba"
+    }
+  ],
+  "input_versions": "Official selection code 884_156692; existing payloads retain their recorded provenance.",
+  "scope": "46 passive items directly listed by professions 1,10,2,6,11,15; original PrePro inheritance and weapon fallback.",
+  "boundary": "Player ownership replaces original equipped item-reference lookup. Live UseSkillItem maintenance disabling is a server operational switch, not a new local skill condition. No server list or network request is introduced."
+}
