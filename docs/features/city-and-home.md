@@ -323,7 +323,11 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `HomeExperienceRewardHandler` 来自同版 `PlayerExpRewardHandler`：为原程序集补齐 APK 已提取的 UniTask 等依赖后重新反编译，五个完整异步方法只替换服务／委托类型，跨帧等待、并行经验动画的倒序推进、取消令牌、升级阻塞与演出顺序保持原码，使用工程已有 UniTask。玩家事件、`ConsoleDataManager`、战力提示阻塞和 `LevelUpNotifyTip` 通过类型端口提供；默认升级通知保留原 2.2 秒等待，最后注册的升级演出覆盖默认演出。原双参数 `SafeAction` 单独迁入，保留监听去重和调用期间的监听快照，异常交给 Unity 日志。
 
-`HomeExperienceRewardsValidation.Run` 已在隔离完整工程 Play Mode 使用原生经验环子树，验证原处理器的并行播放顺序、监听去重、升级门槛等待、连续获奖取消与重播、无窗口时保留未演示经验、窗口重开补播、玩家更新取消、默认通知端点的上一级参数／2.2 秒等待和销毁退订。两张实际经验环运行截图已查看，保持原图与尺寸；该验证不包含头像摄影棚、领取按钮或升级通知窗口。静态元数据检查通过，完整工程隔离副本通过导入、C# 编译和 `Zjcs.Editor.ProjectTools.Validate`，按进程禁用无关 Burst 编译。原处理器夹具的玩家、经验表、通知与战力阻塞使用受控端点；真实存档接线见下文，原升级通知 prefab、床铺领取及 Windows Player 仍未接入验证。
+`HomeExperienceRewardsValidation.Run` 已在隔离完整工程 Play Mode 使用原生经验环子树，验证原处理器的并行播放顺序、监听去重、升级门槛等待、连续获奖取消与重播、无窗口时保留未演示经验、窗口重开补播、玩家更新取消、默认通知端点的上一级参数／2.2 秒等待和销毁退订。两张实际经验环运行截图已查看，保持原图与尺寸；该验证不包含头像摄影棚、领取按钮或升级通知窗口。静态元数据检查通过，完整工程隔离副本通过导入、C# 编译和 `Zjcs.Editor.ProjectTools.Validate`，按进程禁用无关 Burst 编译。原处理器夹具的玩家、经验表、通知与战力阻塞使用受控端点；真实存档接线见下文，床铺领取、升级通知与原奖励队列的组合及 Windows Player 仍未接入验证。
+
+所选版本 `LevelUpNotifyTip` 已迁入 `Runtime/Official/HomeLevelUpUI/`，完整 428 对象 prefab、原 2.2 秒入场动画、属性行、徽章、粒子、字体、材质、渐变及升级声音位于 `Assets/Official/Home/UI/LevelUp/`。控制器保留初始化／重初始化、先算升级前再算升级后、相同属性隐藏、不同属性加载原图标和数值、窗口入场完成后关闭及停用释放的原顺序。玩家等级、`CalcCharacterBattleProps`、属性表、资源和窗口所有者通过明确端口提供；尚未装配正式经验链中的真实公式与窗口所有者，不能据此视为正式 HUD 或领取升级演出完成。官方输入、原生对象和转换凭据见[升级通知来源](../../assets/reference/home-level-up-native-source-manifest.json)。
+
+`HomeLevelUpNativeValidation.Run` 已在隔离工程有图形、静音 Play Mode 验证完整原通知的等级相同不弹出、前后计算顺序、四行属性中的相同值隐藏、原图标及数值、重新初始化、原入场完成自动关闭，以及全部图片句柄和声音对象释放。字体沿原 `FontAssetFontService` 接入官方源字体，保留 prefab 原字体与材质；标题及属性文字均解析为官方中文。已查看两张 608×1080 实际运行截图；夹具的玩家等级、属性计算和窗口所有者为受控输入。静态检查通过（152072 个 GUID），工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 退出码为 0，工程校验另有既有 `AppearanceRendererLite` 的 Edit Mode Destroy 诊断；通知 Play Mode 无错误并正常退出。未覆盖真实领取到升级通知的组合、正式 HUD、Windows Player 或发布。
 
 `scripts/prepare_home_experience_rules.py` 从所选 884 APK 的主 Luban 包及星命 Luban 包恢复 `level_exp`（5 组）、`level_bless`（930 条）、`system_level_limit`（1124 条）、`astrological_season_config`（7 条），并提取经验物品 50 与首个赐福位阶配置。`Official/HomeExperienceRules` 迁入原 `LevelExpParser`、`LevelBlessInfoParser`、玩家等级限制聚合、Rank→Season 查询、`PlayerBlessLevelUtils` 的查询分支、`PlayerExpUtils.IsMaxLevelByRankLimit` 及 `Player.TryRefreshLevel`；保留二分查找、缺失表／越界哨兵、前一小阶下限、当前上限和赐福等级叠加，不借用早期成长目录。无赐福记录时不生成记录；经验储存不额外要求存在赛季记录，仍读取原功能 173、当前记录／世界位阶和相邻小阶上限。
 
