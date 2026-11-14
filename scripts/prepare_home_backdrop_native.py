@@ -1,4 +1,4 @@
-"""Recover the original default Back_Ground hierarchy, particles and native day clip."""
+"""Recover the selected original sky, cloud and mountain clip-bound hierarchies."""
 import argparse
 import hashlib
 import json
@@ -18,15 +18,52 @@ NATIVE = 'Prefabs/Home/Dynamic/Theme/Background/Background.prefab'
 
 
 class HomeBackdropBinding(HomeEnvironmentBinding):
+    def __init__(self,work):
+        self.native_script_bindings = {}
+        super().__init__(work)
+
+    def learn(self,source,native,owner):
+        # AnimationClip script pointers can address several MonoScripts inside
+        # one native assembly GUID. Their local file IDs remain part of identity.
+        if isinstance(source,dict) and source.get('m_PathID') and 'm_FileID' in source \
+            and isinstance(native,dict) and native.get('guid'):
+            obj = pointer(source,owner)
+            if obj.type.name == 'MonoScript':
+                script = obj.read()
+                name = '.'.join(filter(None,(script.m_Namespace,script.m_ClassName)))
+                expected = script_id(script.m_Namespace,script.m_ClassName)
+                if native['fileID'] not in (11500000,expected) or name not in self.scripts:
+                    raise ValueError('Bind original animated script explicitly: '+name+' / '+repr(native))
+                key = (native['guid'],native['fileID'])
+                mapped = self.scripts[name]
+                if key in self.native_script_bindings and self.native_script_bindings[key] != mapped:
+                    raise ValueError('Conflicting original script subasset identity: '+repr(key))
+                self.native_script_bindings[key] = mapped
+                self.proof[identity(obj)] = dict(source=self.recovery.apk.provenance(obj),
+                    original_sha256=sha(obj.get_raw_data()),type='MonoScript',original_name=name,
+                    native_pointer=native,runtime_pointer=mapped)
+                return
+        return super().learn(source,native,owner)
+
+    def replace(self,value):
+        if isinstance(value,dict) and value.get('guid') and value.get('fileID'):
+            mapped = self.native_script_bindings.get((value['guid'],value['fileID']))
+            if mapped is not None: return mapped
+        return super().replace(value)
+
     def register_scripts(self):
         super().register_scripts()
-        path = ROOT/'unity/Assets/Game/Runtime/Official/World/NativeEnvironment/CullingGroupWrapper.cs'
-        ref = dict(fileID=11500000,guid=guid(Path(str(path)+'.meta')),type=3)
-        self.scripts['CullingGroupWrapper'] = ref
-        self.class_ids[script_id('','CullingGroupWrapper')] = ref
-        self.script_guids.add(ref['guid'])
-        self.script_sources['CullingGroupWrapper'] = dict(path=path.relative_to(ROOT).as_posix(),pointer=ref,
-            sha256=sha(path.read_bytes()),meta_sha256=sha(Path(str(path)+'.meta').read_bytes()))
+        for name, relative in (
+            ('CullingGroupWrapper','Official/World/NativeEnvironment/CullingGroupWrapper.cs'),
+            ('CustomRenderer','Official/HomeSceneUiControls/CustomRenderer.cs'),
+            ('SpriteRendererGroup','Official/HomeSceneUiControls/SpriteRendererGroup.cs')):
+            path = ROOT/'unity/Assets/Game/Runtime'/relative
+            ref = dict(fileID=11500000,guid=guid(Path(str(path)+'.meta')),type=3)
+            self.scripts[name] = ref
+            self.class_ids[script_id('',name)] = ref
+            self.script_guids.add(ref['guid'])
+            self.script_sources[name] = dict(path=path.relative_to(ROOT).as_posix(),pointer=ref,
+                sha256=sha(path.read_bytes()),meta_sha256=sha(Path(str(path)+'.meta').read_bytes()))
 
     def build(self):
         root, = [o for o in self.recovery.apk.objects(BUNDLE) if o.type.name == 'GameObject'
@@ -36,44 +73,58 @@ class HomeBackdropBinding(HomeEnvironmentBinding):
         script = binder.read(check_read=False).m_Script.read()
         if script.m_ClassName != 'HomePlayableClipBind': raise ValueError('Restore original background binder')
         source_rows = self.recovery.fields(binder)['ClipDatas']
-        selected, = [row for row in source_rows if pointer(row['Animator'],binder).read().m_GameObject.read().m_Name == 'Back_Ground']
-        animator = pointer(selected['Animator'],binder)
-        source_root = animator.read().m_GameObject.deref()
-        clip = pointer(selected['Clip'],binder)
         native_path = self.native/NATIVE
         native_docs = documents(native_path.read_text('utf8'))
-        native_root, = [key for key,value in native_docs.items() if value.get('GameObject',{}).get('m_Name') == 'Back_Ground']
-        native_transform, = [value['Transform'] for value in native_docs.values()
-            if value.get('Transform',{}).get('m_GameObject',{}).get('fileID') == native_root]
-        parent = native_docs[native_transform['m_Father']['fileID']]['Transform']
-        if parent['m_Father']['fileID'] != 0 or parent['m_LocalPosition'] != dict(x=0,y=0,z=0) \
-            or parent['m_LocalRotation'] != dict(x=0,y=0,z=0,w=1) or parent['m_LocalScale'] != dict(x=1,y=1,z=1):
-            raise ValueError('Preserve nonidentity original background ancestor before detaching the subtree')
-        self.recovery.recover('Back_Ground',self.work/'home-backdrop-native',bundle=BUNDLE,
-            native_relative=NATIVE,source_root=source_root,native_root_id=native_root)
+        selections = []
+        for name in ('Back_Ground','Back_Cloud','Back_Mountain'):
+            selected, = [row for row in source_rows
+                if pointer(row['Animator'],binder).read().m_GameObject.read().m_Name == name]
+            animator = pointer(selected['Animator'],binder)
+            source_root = animator.read().m_GameObject.deref()
+            clip = pointer(selected['Clip'],binder)
+            native_root, = [key for key,value in native_docs.items() if value.get('GameObject',{}).get('m_Name') == name]
+            native_transform, = [value['Transform'] for value in native_docs.values()
+                if value.get('Transform',{}).get('m_GameObject',{}).get('fileID') == native_root]
+            parent = native_docs[native_transform['m_Father']['fileID']]['Transform']
+            if parent['m_Father']['fileID'] != 0 or parent['m_LocalPosition'] != dict(x=0,y=0,z=0) \
+                or parent['m_LocalRotation'] != dict(x=0,y=0,z=0,w=1) or parent['m_LocalScale'] != dict(x=1,y=1,z=1):
+                raise ValueError('Preserve nonidentity original background ancestor before detaching the subtree')
+            self.recovery.recover(name,self.work/'home-backdrop-native',bundle=BUNDLE,
+                native_relative=NATIVE,source_root=source_root,native_root_id=native_root)
+            selections.append((name,source_rows.index(selected),animator,source_root,clip,parent))
         self.recovery.finalize()
-        panel = self.recovery.outputs[0][2]
         native_binder, = [v['MonoBehaviour'] for v in native_docs.values() if 'ClipDatas' in v.get('MonoBehaviour',{})]
         self.learn(self.recovery.fields(binder),native_binder,binder)
-        original_index = source_rows.index(selected)
-        native_clip_ref = native_binder['ClipDatas'][original_index]['Clip']
-        self.objects[native_clip_ref['guid']] = clip
-        clip_ref = self.load(native_clip_ref['guid'])
-        for key, ref in panel['external'].items(): self.objects[ref['guid']] = self.original(key)
-        for key,file_id in panel['objectMap'].items():
-            owner = self.original(key)
-            self.learn(self.recovery.fields(owner),next(iter(panel['documents'][file_id].values())),owner)
-        for script in panel['scripts']:
-            full = '.'.join(filter(None,(script['namespace'],script['type'])))
-            if full not in ('CameraFollower','CullingGroupWrapper'):
-                raise ValueError('Restore additional original backdrop component: '+full)
-            fields = panel['documents'][script['nativeFileID']]['MonoBehaviour']
-            fields['m_Script'] = self.scripts[full]
-            if full == 'CullingGroupWrapper' and fields['SkeletonAnimations']:
-                raise ValueError('Bind original skeleton culling before using this backdrop')
-        resolved = self.replace(panel['documents'])
-        target_guid = hashlib.md5(b'zjcs:home-native-backdrop:Back_Ground').hexdigest()
-        self.queue.append((Path('BackGround.prefab'),target_guid,resolved))
+        entries = []
+        selection_proof = {}
+        for selection, recovered in zip(selections,self.recovery.outputs,strict=True):
+            name, original_index, animator, source_root, clip, parent = selection
+            panel = recovered[2]
+            native_clip_ref = native_binder['ClipDatas'][original_index]['Clip']
+            self.objects[native_clip_ref['guid']] = clip
+            clip_ref = self.load(native_clip_ref['guid'])
+            for key, ref in panel['external'].items(): self.objects[ref['guid']] = self.original(key)
+            for key,file_id in panel['objectMap'].items():
+                owner = self.original(key)
+                self.learn(self.recovery.fields(owner),next(iter(panel['documents'][file_id].values())),owner)
+            for script in panel['scripts']:
+                full = '.'.join(filter(None,(script['namespace'],script['type'])))
+                if full not in ('CameraFollower','CullingGroupWrapper','CustomRenderer','SpriteRendererGroup',
+                    'UnityEngine.Rendering.Universal.Light2D'):
+                    raise ValueError('Restore additional original backdrop component: '+full)
+                fields = panel['documents'][script['nativeFileID']]['MonoBehaviour']
+                fields['m_Script'] = self.scripts[full]
+                if full == 'CullingGroupWrapper' and fields['SkeletonAnimations']:
+                    raise ValueError('Bind original skeleton culling before using this backdrop')
+            resolved = self.replace(panel['documents'])
+            target_guid = hashlib.md5(('zjcs:home-native-backdrop:'+name).encode()).hexdigest()
+            self.queue.append((Path(name.replace('_','')+'.prefab'),target_guid,resolved))
+            entries.append(dict(Name=name,Root=dict(fileID=panel['root'],guid=target_guid,type=3),Clip=clip_ref))
+            selection_proof[name] = dict(original_binder=identity(binder),original_clip_row=original_index,
+                original_clip=identity(clip),original_animator=identity(animator),source_root=identity(source_root),
+                detached_native_parent=parent)
+            for obj in (source_root,animator,clip):
+                self.proof.setdefault(identity(obj),{}).update(source=self.recovery.apk.provenance(obj),original_sha256=sha(obj.get_raw_data()))
         for _,_,data in self.queue:
             if isinstance(data,dict):
                 replaced = self.replace(data);data.clear();data.update(replaced)
@@ -82,17 +133,15 @@ class HomeBackdropBinding(HomeEnvironmentBinding):
         for path in (native_path,Path(str(native_path)+'.meta'),Path(__file__),ROOT/'scripts/home_native_assets.py',
             ROOT/'scripts/prepare_home_environment_native.py',source/'HomePlayable/HomePlayableClipBind.cs',
             source/'HomePlayable/HomePlayableClipData.cs',source/'HomePlayable/TimelinePlayable.cs',
-            source/'CullingGroupWrapper.cs',source/'HomeEntityManagerMono.cs'):
+            source/'CullingGroupWrapper.cs',source/'HomeEntityManagerMono.cs',source/'CustomRenderer.cs',
+            source/'SpriteRendererGroup.cs',ROOT/'scripts/prepare_home_scene_render_controls.py'):
             self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
-        for obj in (root,binder,source_root,animator,clip):
+        for obj in (root,binder):
             self.proof.setdefault(identity(obj),{}).update(source=self.recovery.apk.provenance(obj),original_sha256=sha(obj.get_raw_data()))
         receipt = dict(manifest=self.recovery.apk.version,inputs=self.inputs,objects=self.proof,outputs=outputs,
-            root=dict(fileID=panel['root'],guid=target_guid,type=3),clip=clip_ref,
+            root=entries[0]['Root'],clip=entries[0]['Clip'],additional=entries[1:],
             scripts=self.script_sources,recovery=self.recovery.proof,
-            selection=dict(original_binder=identity(binder),original_clip_row=original_index,
-                original_clip=identity(clip),original_animator=identity(animator),source_root=identity(source_root),
-                detached_native_parent=parent),
-            stage='Complete Back_Ground subtree and native clip staged; runtime installation, native scene sorting and graphical validation pending')
+            selection=selection_proof)
         path = self.work/'home-backdrop-native-source-manifest.json'
         path.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
         print('Staged original native backdrop',len(outputs),'files',flush=True)
@@ -110,7 +159,8 @@ def install(work):
     data = dict(MonoBehaviour=dict(m_ObjectHideFlags=0,m_CorrespondingSourceObject=dict(fileID=0),
         m_PrefabInstance=dict(fileID=0),m_PrefabAsset=dict(fileID=0),m_GameObject=dict(fileID=0),m_Enabled=1,
         m_EditorHideFlags=0,m_Script=dict(fileID=11500000,guid=guid(Path(str(script)+'.meta')),type=3),
-        m_Name='HomeNativeBackdropAssets',m_EditorClassIdentifier='',Root=receipt['root'],Clip=receipt['clip']))
+        m_Name='HomeNativeBackdropAssets',m_EditorClassIdentifier='',Root=receipt['root'],Clip=receipt['clip'],
+        Additional=receipt['additional']))
     catalog = ROOT/'unity/Assets/Game/Resources/Home/HomeNativeBackdropAssets.asset'
     catalog.write_text('%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!114 &11400000\n'
         +yaml.dump(data,Dumper=Dumper,sort_keys=False),'utf8',newline='\n')
@@ -120,9 +170,11 @@ def install(work):
     receipt['runtime_bindings'] = {path.relative_to(ROOT).as_posix():sha(path.read_bytes()) for path in (
         script,ROOT/'scripts/fixtures/home_native_backdrop_validation.cs',
         ROOT/'scripts/prepare_home_income_formula_validation.py',
-        ROOT/'unity/Assets/Game/Resources/Home/HomeNativeEnvironmentAssets.asset')}
+        ROOT/'unity/Assets/Game/Resources/Home/HomeNativeEnvironmentAssets.asset',
+        ROOT/'unity/Assets/Game/Runtime/Official/HomeSceneUiControls/CustomRenderer.cs',
+        ROOT/'unity/Assets/Game/Runtime/Official/HomeSceneUiControls/SpriteRendererGroup.cs')}
     receipt.pop('stage',None)
-    receipt['scope'] = 'Original Back_Ground subtree and clip resource closure. Production scene sorting, cloud/mountain/bird roots and theme changes remain pending.'
+    receipt['scope'] = 'Original Back_Ground, Back_Cloud and Back_Mountain subtree/clip resource closures. Production scene sorting, bird root and theme changes remain pending.'
     (ROOT/'assets/reference/home-backdrop-native-source-manifest.json').write_text(
         json.dumps(receipt,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
     print('Installed original native backdrop',len(installed),'files',flush=True)
