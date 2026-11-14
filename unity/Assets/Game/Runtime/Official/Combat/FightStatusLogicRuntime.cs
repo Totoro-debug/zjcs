@@ -27,7 +27,8 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState target, FightBattleSkillDefinition skill,
             FightBattleHitDefinition hit, IReadOnlyList<FightBattleUnitState> units,
             FightOfficialCombatCatalog catalog, FightRandomStream random,
-            FightBattleDamageEvent damageEvent = null, FightDamageFormula formula = null)
+            FightBattleDamageEvent damageEvent = null, FightDamageFormula formula = null,
+            System.Func<int> nextStatusInstanceId = null)
         {
             var result = new List<FightBattleStatusSkillInvocation>();
             if (owner == null || status == null || !status.HasLogicComponent
@@ -72,7 +73,7 @@ namespace Zjcs.Combat.Official
                 {
                     if (!(rawHandle is Dictionary<string, object> handle)) continue;
                     if (!ApplyHandle(handle, owner, status, actor, target, skill, hit, units,
-                        catalog, random, result, runtime))
+                        catalog, random, result, runtime, nextStatusInstanceId))
                     {
                         status.LogicRulesSupported = false;
                         // A later handle may depend on the missing handle's blackboard outputs.
@@ -230,7 +231,8 @@ namespace Zjcs.Combat.Official
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
             IReadOnlyList<FightBattleUnitState> units, FightOfficialCombatCatalog catalog,
             FightRandomStream random, List<FightBattleStatusSkillInvocation> output,
-            Dictionary<int, FightBattleLogicBlackboardValue> runtime)
+            Dictionary<int, FightBattleLogicBlackboardValue> runtime,
+            System.Func<int> nextStatusInstanceId)
         {
             string type = StringField(handle, "_type");
             if (type == "FightHandleCfgCounterAdd")
@@ -306,8 +308,11 @@ namespace Zjcs.Combat.Official
                     Dictionary<string, object> cfg = raw as Dictionary<string, object>;
                     int statusId = Int(cfg, "StatusId");
                     if (statusId <= 0 || !Roll(random, Float(cfg, "BasePercent", 1f))) continue;
+                    int instanceId = nextStatusInstanceId == null
+                        ? NextFallbackStatusInstanceId(units) : nextStatusInstanceId();
                     var applied = catalog.CreateStatus(statusId, destination.Id, status.CreatorId,
-                        rootSkillId: status.RootSkillId, applyingSkillItemId: status.ApplyingSkillItemId,
+                        instanceId: instanceId, rootSkillId: status.RootSkillId,
+                        applyingSkillItemId: status.ApplyingSkillItemId,
                         sourceSkillRank: status.SourceSkillRank, sourceSkillLevel: status.SourceSkillLevel,
                         sourceSubRank: status.SourceSubRank, sourceProperties: status.SourceProperties,
                         replacementProperties: status.ReplacementProperties,
@@ -348,6 +353,20 @@ namespace Zjcs.Combat.Official
                 return AbsorbStatusStacks(handle, owner, status, actor, target, skill, hit,
                     units, random, runtime);
             return false;
+        }
+
+        private static int NextFallbackStatusInstanceId(IReadOnlyList<FightBattleUnitState> units)
+        {
+            int maximum = 0;
+            if (units != null)
+                foreach (FightBattleUnitState unit in units)
+                    if (unit?.Statuses != null)
+                        foreach (FightBattleStatusState status in unit.Statuses)
+                            if (status != null && status.InstanceId > maximum)
+                                maximum = status.InstanceId;
+            if (maximum == int.MaxValue)
+                throw new System.InvalidOperationException("Status instance id space is exhausted.");
+            return maximum + 1;
         }
 
         private sealed class StatusIteration

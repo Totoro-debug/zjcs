@@ -512,11 +512,19 @@ public static class BattleStatusLogicHarness
         Check(valid.Count == 1 && valid[0].SourceUnitId == owner.Id && valid[0].TargetUnitId == owner.Id,
             "Explicit MainEntity skill ports no longer resolve to their owner.");
         RunFlow(main, owner, catalog, "null", apply.Replace("SOURCE", "1").Replace("TARGET", "1") + tail);
-        Check(owner.Statuses.Any(value => value.ClassId == 24823), "Explicit MainEntity status ports failed.");
+        var appliedStatus = owner.Statuses.SingleOrDefault(value => value.ClassId == 24823);
+        Check(appliedStatus != null && appliedStatus.InstanceId > 0,
+            "Explicit MainEntity status ports failed to allocate a stable instance id.");
+        RunFlow(main, owner, catalog, "null", apply.Replace("24823", "24824")
+            .Replace("SOURCE", "1").Replace("TARGET", "1") + tail);
+        var secondAppliedStatus = owner.Statuses.SingleOrDefault(value => value.ClassId == 24824);
+        Check(secondAppliedStatus != null && secondAppliedStatus.InstanceId > 0
+            && secondAppliedStatus.InstanceId != appliedStatus.InstanceId,
+            "Sequential logic status applications reused an instance id.");
         RunFlow(main, owner, catalog, "null", remove.Replace("TARGET", "1")
             .Replace("FILTER", StatusFilter(24823)) + tail);
-        Check(main.LogicRulesSupported && owner.Statuses.Count == 2 && owner.Statuses.Contains(victim)
-            && main.LogicBlackboard.Single(value => value.KeyId == 9901).LongValue == 3,
+        Check(main.LogicRulesSupported && owner.Statuses.Count == 3 && owner.Statuses.Contains(victim)
+            && main.LogicBlackboard.Single(value => value.KeyId == 9901).LongValue == 4,
             "Supported filtered removal changed other states or interrupted the dependent flow.");
         // The first end callback changes a value read by the next candidate's filter.
         owner.Statuses.Remove(main);
