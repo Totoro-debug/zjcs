@@ -977,3 +977,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 新角色初心者位阶初始化来源：所选 `884_156692` 的 `Common.SubRank`／`Common.Rank` 枚举、`SystemLevelLimitInfoParser` 与经验配置定义有效初心者数值及等级上限；新档初始位阶 1 由用户确认，服务器创建初值不作官方来源声称。输入、创建代码与验证夹具哈希见 [家园真实经验接线来源](home-experience-profile-source-manifest.json)。重新运行原经验规则提取器后，生成代码与配置的输出哈希全部保持一致。
 
 公共战斗持续状态的官方 `MyFightStatus`／`MyAction` 生命周期、既有状态与 3204 模型资源凭据，以及模型重建接线 SHA-256 见[状态与模型生命周期来源](battle-animation/status-model-lifecycle-source-manifest.json)，生成入口为 `scripts/record_battle_status_model_sources.py`。本项复用既有原生资产，未改写美术载荷；实现及验证范围见[公共战斗页](../../docs/features/battle-execution.md)。
+
+公共战斗原状态伤害公式的 884 共享代码与原逻辑处理器配置、运行属性表、提取程序及实现／验证身份见[状态伤害公式来源](battle-rules/status-damage-source-manifest.json)，生成入口为 `scripts/prepare_battle_status_damage_sources.py`。原始输入使用原字节哈希；新增代码与验证使用明确标记的 CRLF → LF 文本哈希。此项不转换或替换美术载荷；当前实现和验证范围见[公共战斗](../../docs/features/battle-execution.md)。

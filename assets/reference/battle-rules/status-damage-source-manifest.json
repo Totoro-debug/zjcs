@@ -1,0 +1,77 @@
+{
+  "manifest": "884_156692",
+  "official_code": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormulaHandler.cs",
+      "sha256": "ce40db54d87030ded0a9f8a6dc95db5a3a4e46ae02bf76a9d273fe092a703d12"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormula.cs",
+      "sha256": "c3cc659319bed428ebac076b027832d9010a7589d824756fa4d10e0e7e713273"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PropType.cs",
+      "sha256": "265a81dbeab87b90e3a1c1423884610ed43ea9b535e488e20de0e0c41f9831b0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameCharacterType.cs",
+      "sha256": "dbd0806e477af1da85def813248f80d02bd16bdc34b4ab15bfc2142cdeebd9d6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleCfgStatusDamageByDamageResultValueAndStore.cs",
+      "sha256": "8a298d8bfa202f2c80139e01aad311b0d7e4944bef492de2444703fe7b43ed62"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHandleStatusDamageByDamageResultValueAndStore.cs",
+      "sha256": "9aebb19f7e1ef15b1aa8029a427ddcd7b2b424c3d1d014fe7bcfe4d14acbb6c6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DamageResultParameter.cs",
+      "sha256": "23830ee94f74e3dc573ab2d70e6ed91f7ce3c6773b613ea6ff1e692bb29f7671"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DamageResultValueType.cs",
+      "sha256": "7a2b9b06d7a21cabbd483348e9d9e475b2da73a8f14081053356052aa56689a8"
+    }
+  ],
+  "runtime_inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    }
+  ],
+  "generators": [
+    {
+      "path": "scripts/prepare_battle_suck_hp_sources.py",
+      "sha256": "b859e2ce4ea4f23ac44fd6f02ed0388a3ffe55014615fc17c78347b24c9936e3",
+      "text_hash": "CRLF normalized to LF"
+    },
+    {
+      "path": "scripts/prepare_battle_status_damage_sources.py",
+      "sha256": "b24ec546b7f57b65bb074e9e6939eceb08ca818383b360e1540d77f0dc8543af",
+      "text_hash": "CRLF normalized to LF"
+    }
+  ],
+  "extracted_methods": [
+    "BattleFormulaHandler.StatusDamage"
+  ],
+  "migration": {
+    "path": "unity/Assets/Game/Runtime/Official/Combat/FightDamageFormula.StatusDamage.cs",
+    "sha256": "7dff919c9b595391a78b962b7ab27fd355b8af5da5676d11f19b5fe63db908a5",
+    "text_hash": "CRLF normalized to LF"
+  },
+  "validation": {
+    "path": "scripts/test_battle_status_damage.ps1",
+    "sha256": "915b42e5c290b6423c0a938e9f95a8c35d1f3f6ffa382268061035c456742003",
+    "text_hash": "CRLF normalized to LF"
+  },
+  "operation": "Preserve original absolute input, typed property conversion, positive-only cap, zero floor, truncation and negative output. This formula does not select a result, apply HP, dispatch status notifications or infer missing server handle behavior."
+}
