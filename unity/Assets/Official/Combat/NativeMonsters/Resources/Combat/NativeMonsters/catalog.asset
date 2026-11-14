@@ -25,6 +25,8 @@ MonoBehaviour:
     Asset: {fileID: 4900000, guid: fce99440bd4a5336a873812ea1f8a4fc, type: 3}
   - File: 3183/model.bytes
     Asset: {fileID: 4900000, guid: b1361a51d8595bf3917ec5ed383db21f, type: 3}
+  - File: 3190/model.bytes
+    Asset: {fileID: 4900000, guid: 60ed9264966152fba1c163055e400d4a, type: 3}
   - File: 3198/model.bytes
     Asset: {fileID: 4900000, guid: 14540e24744050e6b953bedb09cda9e8, type: 3}
   - File: 3204/model.bytes
@@ -71,6 +73,10 @@ MonoBehaviour:
     Asset: {fileID: 4900000, guid: ac52a9ae90e75b1ab5ba3a0e72fce925, type: 3}
   - File: 3925/model.bytes
     Asset: {fileID: 4900000, guid: adf629dbc81b5e4fbedef6d931f16399, type: 3}
+  - File: 3932/model.bytes
+    Asset: {fileID: 4900000, guid: 969eac43a95355958375047d33a0aa57, type: 3}
+  - File: 3935/model.bytes
+    Asset: {fileID: 4900000, guid: e683b8c7fa7956b3bd698837db56b6bc, type: 3}
   - File: 3948/model.bytes
     Asset: {fileID: 4900000, guid: b42ffdc10b175e32ad5bbdb2ad1c8fbb, type: 3}
   - File: 3949/model.bytes
@@ -1469,6 +1475,26 @@ MonoBehaviour:
     Asset: {fileID: 7400000, guid: 2e64d623b94e5679d9eaf5220c426774, type: 2}
   - File: animators/AppearanceAssets/Summons/summons_3183/stun_01.anim
     Asset: {fileID: 7400000, guid: e036a3615d5bd9ea4470ff209d09c6b8, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3190/block_01.anim
+    Asset: {fileID: 7400000, guid: 72e97c7e27a3d281a27236a36c67bfd4, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3190/die_01.anim
+    Asset: {fileID: 7400000, guid: 6760278796dbd9ad812f5999605161ee, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3190/floating_01.anim
+    Asset: {fileID: 7400000, guid: f95b4bc4ce041cc473c462924e335783, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3190/generate_01.anim
+    Asset: {fileID: 7400000, guid: 650aa63f345a1103e206bbaa5b3a1cc9, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3190/hit_01.anim
+    Asset: {fileID: 7400000, guid: 1c159c1a2cb401efdb2e72c692563fa7, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3190/hit_02.anim
+    Asset: {fileID: 7400000, guid: 61cf033e421cf238eed1edb15fbeebb2, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3190/idle_01.anim
+    Asset: {fileID: 7400000, guid: 904e4dfe007bc970c18f82a1f1590161, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3190/skill_01.anim
+    Asset: {fileID: 7400000, guid: a1b8bcdf6bbe29d4ebdc88a489c22b8f, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3190/stun_01.anim
+    Asset: {fileID: 7400000, guid: b5a618f24615d4b8d3a792c8adbe8c6c, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3190/summons_3190_Controller.controller
+    Asset: {fileID: 9100000, guid: 501db069d5fd29c6a0ef2ec3fa0b020f, type: 2}
   - File: animators/AppearanceAssets/Summons/summons_3198/block_01.anim
     Asset: {fileID: 7400000, guid: 730814e99bf718241f1aa5146a7f2a0d, type: 2}
   - File: animators/AppearanceAssets/Summons/summons_3198/die_01.anim
@@ -1521,6 +1547,58 @@ MonoBehaviour:
     Asset: {fileID: 7400000, guid: f0e83b2aee7932e344108f3a813de756, type: 2}
   - File: animators/AppearanceAssets/Summons/summons_3917/summons_3917_Controller.controller
     Asset: {fileID: 9100000, guid: 3834b904f4900920e09962ba7a7ca2f0, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3932/block_01.anim
+    Asset: {fileID: 7400000, guid: 13d334d074ccf9e6c0e63fa2e496ff04, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3932/die_01.anim
+    Asset: {fileID: 7400000, guid: 30fe4dce3d41176d06208e7dca267dd6, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3932/floating_01.anim
+    Asset: {fileID: 7400000, guid: 47e28ca614723e63fcc6da5ef0548bf8, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3932/generate_01.anim
+    Asset: {fileID: 7400000, guid: 79cf4dc8027ff64aea312986eaf6649a, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3932/hit_01.anim
+    Asset: {fileID: 7400000, guid: cc5839381b3f0990e63c9b7502beaa0a, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3932/hit_02.anim
+    Asset: {fileID: 7400000, guid: 8d6d0d7c8445c25f8e61d5065b8c284a, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3932/idle_01.anim
+    Asset: {fileID: 7400000, guid: fd809d6830e5f4770ae9c2f684901fe6, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3932/run_01.anim
+    Asset: {fileID: 7400000, guid: 050b42ff8f882defc6e9e5da72147513, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3932/skill_01.anim
+    Asset: {fileID: 7400000, guid: 9cfa8dec5750ed75f18f245d31df0c9c, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3932/skill_02.anim
+    Asset: {fileID: 7400000, guid: 5a7bfcf61a40547ea7ee0a6051be68f2, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3932/skill_03.anim
+    Asset: {fileID: 7400000, guid: 87d675fb95fce6fa60a0919810b45632, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3932/stun_01.anim
+    Asset: {fileID: 7400000, guid: 411d1cb7ffacfeb0ac775d6c5b2de831, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3932/summons_3932_Controller.controller
+    Asset: {fileID: 9100000, guid: cbb06ef94737538adbfae6865d11079e, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3935/block_01.anim
+    Asset: {fileID: 7400000, guid: a560d68861871d460579aa487245fb21, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3935/die_01.anim
+    Asset: {fileID: 7400000, guid: ce99a5f037c365462192012e556bb4f9, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3935/floating_01.anim
+    Asset: {fileID: 7400000, guid: 483d591b14a3bbf12b2a9af3e7e1afa5, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3935/generate_01.anim
+    Asset: {fileID: 7400000, guid: d906a976f01f60b1946968d706281d52, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3935/hit_01.anim
+    Asset: {fileID: 7400000, guid: a7f628e8f4b637d12bed6c29e106caee, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3935/hit_02.anim
+    Asset: {fileID: 7400000, guid: b2118aeda622a875ebc1c51f62cfb030, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3935/idle_01.anim
+    Asset: {fileID: 7400000, guid: 22aa7f31e5b64acba8691b5501a69302, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3935/run_01.anim
+    Asset: {fileID: 7400000, guid: 172e441c01ddd09732559f86abdc7e12, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3935/skill_01.anim
+    Asset: {fileID: 7400000, guid: f0d0ddbe973f00410698cb91bf374e78, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3935/skill_02.anim
+    Asset: {fileID: 7400000, guid: de5c1fe700b97b3ee5caa0ae3da7c132, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3935/skill_03.anim
+    Asset: {fileID: 7400000, guid: 8b08263edf04c14bf4a54f58e26b802e, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3935/stun_01.anim
+    Asset: {fileID: 7400000, guid: db8a265d67b5eaee0a641a38b2878154, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3935/summons_3935_Controller.controller
+    Asset: {fileID: 9100000, guid: 56a8fb9f0d9ae91a2c23701f9cfd3ebe, type: 2}
   - File: textures/028b262edfbfcb08422b9de8d4c4fe7202b81cff5fead1aa9e6e5671fe71071d.asset
     Asset: {fileID: 2800000, guid: bd01758284f15aa8b1bfa74b3b158937, type: 2}
   - File: textures/04163a1ed799be1e7951f9168b9c903857426b64f3d2e7b6a4629f727c9993f8.asset
@@ -1573,6 +1651,8 @@ MonoBehaviour:
     Asset: {fileID: 2800000, guid: b424168eda3a5dd88041199db42e0235, type: 2}
   - File: textures/43e932c13cdf916362c881c4f60f149e99c533401686e5ef24102470a9ada05b.asset
     Asset: {fileID: 2800000, guid: b671ab822e3c5319a72601ba9fb0e12e, type: 2}
+  - File: textures/47d44cb418c9b8b15b931c893e649144675bbe58707e9c9c41534c501e64cba5.asset
+    Asset: {fileID: 2800000, guid: 55df755351ff549d92d9f40e9f9ca1df, type: 2}
   - File: textures/5286e3691f74b3af2189dfb8c1f0cb7c4a66e3010316fde4502baf25c2306ebb.asset
     Asset: {fileID: 2800000, guid: f3c9c885945652a0aa35013806ba8038, type: 2}
   - File: textures/5615e70fa22897a0fc327dccea7d8d377eef1f2ef2c9febe20327ccc1eebde77.asset
@@ -1605,6 +1685,8 @@ MonoBehaviour:
     Asset: {fileID: 2800000, guid: 2e882ed827d055b693cb66ea7ae596bb, type: 2}
   - File: textures/8aa2f0696056926ecb5d23454ed8ee17e5b0e528ba2776698a53b23a87b0518d.asset
     Asset: {fileID: 2800000, guid: 4b0dc52367835ca0a6cb26d78fc2b431, type: 2}
+  - File: textures/8d51d6bc525e7acfa2aa77a09a42172bb20b3d0d1aa6a577f0134f20d30806a9.asset
+    Asset: {fileID: 2800000, guid: 1133359b43585dcbbae8c31a135d9065, type: 2}
   - File: textures/907e0fcdedefaf4509d300a4e789a515f22dec024953a4a86deea49a90b7f8fe.asset
     Asset: {fileID: 2800000, guid: 349bb92d4a5f507a916dbff8e459fc11, type: 2}
   - File: textures/942510b42b33d6fd9de47f580c0e46c554a119d7c6f5f6ec94deade08625e213.asset
@@ -1623,6 +1705,8 @@ MonoBehaviour:
     Asset: {fileID: 2800000, guid: f903e7e5a9aa5ccbaaa0ea3262a5c5a3, type: 2}
   - File: textures/aa00028fff3ec40804d6d19c6e4e417ec67abe54d51f5d578f50b159635c782b.asset
     Asset: {fileID: 2800000, guid: 1d74fe1fe7de547fb9acb908979c30cd, type: 2}
+  - File: textures/ab77914afd4b61347b3e1105d4979de5e7446cfbc1c827cffe2021cfd8b45e1b.asset
+    Asset: {fileID: 2800000, guid: d46368895d9651df8b54e346a8e5648e, type: 2}
   - File: textures/ad9f09e7b31b57918ac7d2018ec175f4618635699df0c62eca6cd22c658e8cae.asset
     Asset: {fileID: 2800000, guid: 3b6c723fdacf54109e3fbc142897afdd, type: 2}
   - File: textures/adb644fec6261ef97fe5696e7e562b0d666d5bf0ea8dc6391a525cb6bcf74a77.asset

@@ -101,6 +101,12 @@ def prepare_native_assets(project, work, selected, custom_targets=False, summon_
         for folder in ('NativeMonsters', 'NativeMonsterAppearance', 'SummonRoleViews', 'SceneCharacterAppearance'):
             source = ROOT / 'unity/Assets/Official/Combat' / folder
             shutil.copytree(source, project / source.relative_to(ROOT / 'unity'), dirs_exist_ok=True)
+            # Index the copied working assets too; new converted animations have
+            # no cached Git entry until the caller stages them.
+            for meta in source.rglob('*.meta'):
+                match = GUID.search(meta.read_bytes())
+                if match and Path(str(meta)[:-5]).is_file():
+                    index[match[1]] = Path(str(meta)[:-5])
             pending.extend(path for path in source.rglob('*') if path.is_file() and path.suffix in ('.asset', '.mat', '.prefab'))
     # The actual skill host initializes this original embedded renderer adapter
     # even when a receipt fixture has no visible character meshes.

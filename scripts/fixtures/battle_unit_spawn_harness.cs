@@ -56,7 +56,7 @@ public static class BattleUnitSpawnHarness
                     Check(Math.Abs(spawn.Delay-hit.EffectDelays[spawn.EffectCenterIndex]
                         -definition.ScopeEntries[spawn.ScopeIndex].Delay)<.00001f,"Spawn did not retain its original scope and flight time");
                 }
-        Check((skillId==12060 || skillId==13300 || skillId==13670 || ids.Count>0)
+        Check((ids.Count>0)
             && ids.SetEquals(step.Event.SpawnedUnitIds),"Failed placements or missing summons entered the appearance receipts: "
             +skillId+", recorded="+ids.Count+", spawned="+step.Event.SpawnedUnitIds.Count+", targets="
             +string.Join(",",step.Event.SkillCasts.SelectMany(c=>c.TargetIds))+", units="

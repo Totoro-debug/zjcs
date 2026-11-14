@@ -14,12 +14,14 @@ from official_apk import Apk
 from official_unity_schema import ScriptSchemas
 from prepare_battle_scene_appearance_runtime import identity, meta, write_changed
 from prepare_battle_status_orbit_assets import build
+from prepare_battle_movement_effects import CACHE, EXPORTED
 from prepare_battle_movement_effects import SCRIPTS
 from verify_battle_skill_graph_rules import verify_selected_components
 
 BASE = ROOT / 'unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews'
 DATA = BASE / 'role-views.json'
 RECEIPT = ROOT / 'assets/reference/battle-animation/summon-role-views-source-manifest.json'
+ENTITIES = (3181, 3182, 3183, 3190, 3932, 3935)
 
 
 def main():
@@ -30,11 +32,12 @@ def main():
     schemas = ScriptSchemas(code_root=code)
     entities = json.loads((ROOT / 'unity/Assets/Official/Combat/battle-rules.json').read_bytes())['entities']
     character_components = {str(entity): {'FightRoleCharacterComponent': entities[str(entity)]['FightRoleCharacterComponent']}
-                            for entity in (3181, 3182, 3183)}
+                            for entity in ENTITIES}
     selected_character_components = verify_selected_components(character_components)
     rows, sources, roots, originals = [], [], {}, {}
+    native_outputs = json.loads((CACHE / 'native-export-all-source-manifest.json').read_bytes())['outputs']
     try:
-        for entity_id in (3181, 3182, 3183):
+        for entity_id in ENTITIES:
             bundle = f'defaultpackage_assets_prefabs_ecentity_fight_fightmonster_{entity_id}.bundle'
             found = []
             for obj in apk.objects(bundle):
@@ -47,9 +50,11 @@ def main():
                     if not view or view['type']['class'] != 'ECFightRoleCharacterView':
                         continue
                     data = view['data']
-                    if data['mDelayVisibilityParts'] or data['mGenerateDelayTime'] != 0 or data['mGeneratePlayableNeedDelay']:
+                    if data['mDelayVisibilityParts']:
                         raise ValueError('Bind original delayed visibility before opening this role')
-                    row = dict(entityId=entity_id, tryOnStart=bool(data['mTryDiePlayableOnStart']))
+                    row = dict(entityId=entity_id, tryOnStart=bool(data['mTryDiePlayableOnStart']),
+                        mGenerateDelayTime=data['mGenerateDelayTime'],
+                        mGeneratePlayableNeedDelay=bool(data['mGeneratePlayableNeedDelay']))
                     character = character_components[str(entity_id)]['FightRoleCharacterComponent']
                     row.update(DestroyOnDie=character['DestroyOnDie'], DestroyDelayTime=character['DestroyDelayTime'])
                     for field in ('mDiePlayable', 'mDieOnStartPlayable', 'mGeneratePlayable'):
@@ -59,11 +64,18 @@ def main():
                             continue
                         target = PPtr(assetsfile=obj.assets_file, **value).deref()
                         name = target.read().m_Name
-                        expected = 'playable_die_1' if field == 'mDiePlayable' else f'playable_{entity_id}_generate'
+                        generate_id = 3181 if entity_id in (3190, 3932) else entity_id
+                        expected = 'playable_die_1' if field == 'mDiePlayable' else f'playable_{generate_id}_generate'
                         if field == 'mDieOnStartPlayable' or name != expected:
                             raise ValueError('Unexpected original summon lifecycle graph: ' + name)
                         path = ('Prefabs/Playables/' if field == 'mDiePlayable' else
                                 'Prefabs/Playables/EC/Battle/Monster/') + name + '.prefab'
+                        if not (EXPORTED / path).is_file():
+                            matches = [item['path'].removeprefix('ExportedProject/Assets/')
+                                for item in native_outputs if item['path'].endswith('/' + name + '.prefab')]
+                            if len(matches) != 1:
+                                raise ValueError('Bind one verified original lifecycle export: ' + name)
+                            path = matches[0]
                         original = dict(source=apk.provenance(target),
                             object_sha256=hashlib.sha256(target.get_raw_data()).hexdigest())
                         if name in originals and originals[name] != original:
@@ -86,7 +98,7 @@ def main():
                 205640859: ('StoryAnimation', 'MyPlayableAnimator'),
                 1574993081: ('BattleMaterialPlayables', 'MyPlayableMaterialProperty')},
         runtime_receipts=('scene-player-animator-source-manifest.json',), generator=Path(__file__),
-        limits=['Exact 3181/3182/3183 ordered ECFightRoleCharacterView bindings and graph assets. '
+        limits=['Exact 3181/3182/3183/3190/3932/3935 ordered ECFightRoleCharacterView bindings and graph assets. '
                 'Other EC views, action invisibility status 24008 and other summon models are outside this extraction.'])
     write_changed(DATA, json.dumps(dict(schema=2, manifest=apk.version, roles=rows), ensure_ascii=False, indent=2) + '\n')
     meta(DATA)

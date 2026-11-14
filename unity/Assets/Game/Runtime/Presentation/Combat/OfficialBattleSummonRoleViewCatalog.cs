@@ -13,7 +13,8 @@ namespace Zjcs.Presentation.Combat
             public int entityId;
             public string mGeneratePlayable, mDiePlayable, mDieOnStartPlayable;
             public bool tryOnStart, DestroyOnDie;
-            public float DestroyDelayTime;
+            public float DestroyDelayTime, mGenerateDelayTime;
+            public bool mGeneratePlayableNeedDelay;
         }
         private static Dictionary<int, Role> roles;
 
@@ -35,7 +36,8 @@ namespace Zjcs.Presentation.Combat
             if (role == null) return null;
             return new OfficialBattleCharacterGenerationPlayback.Binding
             {
-                Generate = Load(role.mGeneratePlayable)
+                Generate = Load(role.mGeneratePlayable), DelayTime = role.mGenerateDelayTime,
+                NeedsDelay = role.mGeneratePlayableNeedDelay
             };
         }
         internal static OfficialBattleCharacterDeathCatalog.Binding FindDeath(int entityId)

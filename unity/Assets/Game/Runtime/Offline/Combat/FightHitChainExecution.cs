@@ -19,6 +19,7 @@ namespace Zjcs.Combat.Official
             internal History History;
             internal FightBattleUnitState CustomTarget;
             internal FightGridPoint CustomCell;
+            internal bool SummonOnSourceFallback;
             internal int PreviousTargetId, PickedTargetId, Order;
         }
 

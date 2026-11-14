@@ -65,7 +65,8 @@ namespace Zjcs.Editor.Combat
         [Serializable] private sealed class Result {public bool passed;public string error;}
         private static IEnumerator Check()
         {
-            foreach(int skillId in new[]{10710,10770,11140})
+            foreach(int skillId in new[]{10710,10770,11140,12060,13300,13670})
+            foreach(bool fallback in skillId>=12060?new[]{false,true}:new[]{false})
             {
                 var root=new GameObject("Actual summon scene "+skillId);
                 using var scope=new OfflineBattleNativePlayableScope(root.transform,null);
@@ -83,6 +84,15 @@ namespace Zjcs.Editor.Combat
                 var skill=catalog.CreateSkill(skillId,0,0,5,20,1,null);
                 state.Units[0].Skills.Add(skill);state.Units[0].SkillState.Slots.Add(new FightSkillSlotState {Slot=0,LimitedTimes=-1});
                 var wave=new FightBattleWaveState();wave.UnitIds.Add(2);state.Waves.Add(wave);
+                if(skillId==12060)
+                {
+                    state.Units[1].Side=1;
+                    var enemy=new FightBattleUnitState {Id=3,Side=2,CharacterType=2,X=14,Y=14,Hp=1000000,MaxHp=1000000};
+                    enemy.Turn.Id=3;enemy.Turn.Hp=enemy.Hp;enemy.Turn.Speed=1;state.Units.Add(enemy);wave.UnitIds.Add(3);
+                }
+                if(fallback)
+                    for(int x=0;x<16;x++) for(int y=0;y<16;y++)
+                        if(x!=5 || y!=5) state.Grid.BlockedPositions.Add(new FightGridPoint(x,y));
                 var rules=OfficialCombatAssetCatalog.LoadDefault().LoadSkillItems();
                 var executor=FightBattleExecutor.Begin(state,OfficialCombatAssetCatalog.LoadDefault().LoadDamageFormula(),new FightDamageSettlement(),catalog,rules);
                 var mapper=new OfficialBattleGridMapper(root.transform,state.Grid);
@@ -95,18 +105,23 @@ namespace Zjcs.Editor.Combat
                 var step=executor.Step(0,1);
                 var spawns=step.Event.SkillCasts.SelectMany(c=>c.HitSelections.SelectMany(h=>h.SpawnedUnits.Select(s=>new {Cast=c,Spawn=s}))).ToArray();
                 Require(spawns.Length==(skillId==11140?2:1),"Original summon fixture produced no expected roles: "+skillId);
+                if(fallback) Require(spawns.All(s=>s.Spawn.X==5 && s.Spawn.Y==5),"Confirmed caster-cell fallback differs");
                 string saved=FightBattleCheckpointSerializer.Save(state);
                 scene.Refresh(state,step.Event);
                 float due=spawns.Min(s=>s.Cast.Delay+s.Spawn.Delay);
                 Require(due>0 && spawns.All(s=>!scene.TryGetUnitTransform(s.Spawn.UnitId)),"Summon appeared at eager settlement time");
                 graphs.Tick(due-.001f);scene.Tick(0);
                 Require(spawns.All(s=>!scene.TryGetUnitTransform(s.Spawn.UnitId)),"Summon appeared before its original scope time");
-                graphs.Tick(.001f);
+                // Check just after birth at the next representable float time;
+                // segmented native clocks can retain a fraction of one ULP.
+                float afterDue=BitConverter.ToSingle(BitConverter.GetBytes(BitConverter.ToInt32(BitConverter.GetBytes(due),0)+1),0);
+                graphs.Tick(afterDue-(due-.001f));
                 foreach(var spawn in spawns)
                 {
                     var body=scene.TryGetUnitTransform(spawn.Spawn.UnitId);
                     Require(body && Vector3.Distance(body.position,mapper.GridToWorld(new FightGridPoint(spawn.Spawn.X,spawn.Spawn.Y)))<.0001f,
-                        "Summon did not appear at its captured original grid cell");
+                        "Summon did not appear at its captured original grid cell: "+skillId+" due="+due.ToString("R")
+                        +" actual="+(body?body.position.ToString("R"):"pending"));
                 }
                 // Step refresh cannot restart a queued or already dispatched birth.
                 scene.Refresh(state,step.Event);
@@ -115,10 +130,10 @@ namespace Zjcs.Editor.Combat
                 var first=scene.TryGetUnitTransform(spawns[0].Spawn.UnitId).GetComponentInChildren<BattleNativeMonsterRenderer>();
                 Require(first && first.Animation=="generate_01","Original generation graph was replaced by idle");
                 using var capture=new Capture(first.transform.parent.parent,first.GetComponent<MeshRenderer>());
-                capture.Save("summon-"+skillId+"-generate.png");
+                capture.Save("summon-"+skillId+(fallback?"-fallback":"")+"-generate.png");
                 for(int frame=0;frame<120;frame++){scene.Tick(1f/60);graphs.Tick(1f/60);graphs.LateTick();yield return null;}
                 Require(first.Animation=="idle_01","Original generation did not settle to idle");
-                capture.Save("summon-"+skillId+"-idle.png");
+                capture.Save("summon-"+skillId+(fallback?"-fallback":"")+"-idle.png");
                 Require(FightBattleCheckpointSerializer.Save(state)==saved,"Appearance modified settled combat or save data");
                 Debug.Log("[Summon spawn] Actual "+skillId+": delayed native model, original generation/idle, grid position and repeat refresh passed.");
                 scene.Dispose();graphs.Dispose();scope.Dispose();UnityEngine.Object.DestroyImmediate(root);UnityEngine.Object.Destroy(modelCatalog);

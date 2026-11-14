@@ -20,6 +20,7 @@ namespace Zjcs.Combat.Official
         public FightBattleSkillCastPresentation Cast;
         public FightBattleGrid Grid;
         public FightRandomStream Random;
+        internal Func<FightBattleHitDefinition, FightGridPoint, int, bool> CanPlaceSummon;
     }
 
     public sealed class FightHitTargetSelection

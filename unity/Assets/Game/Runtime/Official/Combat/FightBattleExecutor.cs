@@ -888,7 +888,8 @@ namespace Zjcs.Combat.Official
                         Source = actor, TargetingSource = targetingSource, Units = units,
                         Skill = skill, Hit = hit, Targets = targets,
                         Primary = targetPosition ?? (targets.Count > 0 ? targets[0] : null),
-                        Cast = castHit, Grid = checkpoint.Grid, Random = random
+                        Cast = castHit, Grid = checkpoint.Grid, Random = random,
+                        CanPlaceSummon = (child, cell, ignored) => CanPlaceCustomSummon(actor, child, cell, ignored)
                     }, hitFlight);
                     if (selection == null) continue;
                     hitSelection = selection;
@@ -918,7 +919,7 @@ namespace Zjcs.Combat.Official
                     }
                     SpawnSummons(actor, skill, hit,
                         hasRandomTargetContext || hit.PreviousCustomHit != null ? hitTargets : targets,
-                        hitSelection, castHit, hitReceipt);
+                        hitSelection, castHit, hitReceipt, hitStep.SummonOnSourceFallback);
                     continue;
                 }
                 decimal hitRemovedHp = 0m;
@@ -1216,7 +1217,7 @@ namespace Zjcs.Combat.Official
         private void SpawnSummons(FightBattleUnitState actor, FightBattleSkillDefinition skill,
             FightBattleHitDefinition hit, List<FightBattleUnitState> targets,
             FightHitTargetSelection selection, FightBattleSkillCastPresentation cast,
-            FightBattleHitSelectionSnapshot receipt)
+            FightBattleHitSelectionSnapshot receipt, bool onSourceFallback = false)
         {
             if (statusCatalog == null || skillItems == null)
                 throw new InvalidOperationException("Official combat and skill item catalogs are required to spawn monsters.");
@@ -1253,7 +1254,7 @@ namespace Zjcs.Combat.Official
                     : hit.SummonConfigType == "FightHitSummonPetCfg"
                         ? CreatePetSummon(actor, skill, pool, hit, position, reference)
                         : CreateSummonedUnit(actor, skill, pool, hit, level, position, reference);
-                if (!CanPlaceSummon(summon)) continue;
+                if (!CanPlaceSummon(summon, onSourceFallback ? actor.Id : 0)) continue;
 
                 units.Add(summon);
                 unitById.Add(summon.Id, summon);
@@ -1445,12 +1446,20 @@ namespace Zjcs.Combat.Official
             }
         }
 
-        private bool CanPlaceSummon(FightBattleUnitState summon)
+        private bool CanPlaceCustomSummon(FightBattleUnitState source, FightBattleHitDefinition hit, FightGridPoint position, int ignoredUnitId)
+        {
+            if (hit.SummonPools == null || hit.SummonPools.Count != 1)
+                throw new InvalidOperationException("Custom summon placement requires its original single pool.");
+            return CanPlaceSummon(new FightBattleUnitState { X = position.X, Y = position.Y,
+                MoveMask = source.MoveMask, BodyOffsets = statusCatalog.MonsterBodyOffsets(hit.SummonPools[0].MonsterId) }, ignoredUnitId);
+        }
+
+        private bool CanPlaceSummon(FightBattleUnitState summon, int ignoredUnitId = 0)
         {
             var occupied = new HashSet<FightGridPoint>();
             foreach (FightBattleUnitState unit in units)
             {
-                if (unit == null || unit.Hp <= 0 || unit.Ended) continue;
+                if (unit == null || unit.Hp <= 0 || unit.Ended || unit.Id == ignoredUnitId) continue;
                 occupied.Add(new FightGridPoint(unit.X, unit.Y));
                 if (unit.BodyOffsets != null)
                     foreach (FightGridPoint offset in unit.BodyOffsets)

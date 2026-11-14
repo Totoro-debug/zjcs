@@ -82,6 +82,26 @@
         "bundle_size": 851,
         "bundle_sha256": "2cdb344f43f64514f041bc9eaf4e8987ed14c5cc950f0b5c429abe3190d8036d"
       }
+    },
+    {
+      "id": "playable_3935_generate",
+      "shared_dependency_bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+      "native_export_meta": {
+        "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/GameObject/playable_3935_generate.prefab.meta",
+        "sha256": "2b0ad075b2705c20e2843cb422d2f287bda5b661ddf8749f1f9300f5d0a43072"
+      },
+      "original_game_object_name": "playable_3935_generate",
+      "original_game_object_sha256": "df984d78b823436d0fc6e0319db9d5a80db672273134e2fbbfc46d16ead7be09",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-528386962000020222",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      }
     }
   ],
   "native_export_receipt": {
@@ -232,6 +252,14 @@
     {
       "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Effect/textures/Fx_Yan_167.png.meta",
       "sha256": "25fb4aabeb8f78f7700811be267ba865d5f252ab1a6c246f4c758f6f1b1c8c20"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/GameObject/playable_3935_generate.prefab",
+      "sha256": "de6217132b2a0d217ab45d958d7da13d7d1c736b6187953bcf08c8b6a2e19272"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/GameObject/playable_3935_generate.prefab.meta",
+      "sha256": "2b0ad075b2705c20e2843cb422d2f287bda5b661ddf8749f1f9300f5d0a43072"
     },
     {
       "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Playables/EC/Battle/Monster/playable_3181_generate.prefab",
@@ -1957,7 +1985,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_summon_role_views.py",
-    "sha256": "49fa3b7fbaaffd2c5b6e6de5725a214409f9f0e9a172d5d3c897914bae71edbf"
+    "sha256": "540cda6146b28e9e1acc0eeff7f85a93a5102eaf298fc0f4849394c44ae42e0a"
   },
   "graph_asset_adapter": {
     "path": "scripts/prepare_battle_status_orbit_assets.py",
@@ -2133,6 +2161,18 @@
       "sha256": "23c986da398c501f898a8d337d811803247949ed3c546a8a9cb1820e685bd829"
     },
     {
+      "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/Graphs/GameObject/playable_3935_generate.prefab",
+      "sha256": "5360e82ff56f1cfc8f93541a3ba299672578e64fd5e0735ec85cd450ba828a73"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/Graphs/GameObject/playable_3935_generate.prefab.meta",
+      "sha256": "583358c13ecc4eb6bf567f22f9a2f6de0c280bd0aee7f69afac33fb408056d65"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/Graphs/GameObject.meta",
+      "sha256": "f06c3b0dd4d5e30a496b8f925994a2da1eb639b23d241892b9f7a38b126ff922"
+    },
+    {
       "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/Graphs/Prefabs/Playables/EC/Battle/Monster/playable_3181_generate.prefab",
       "sha256": "b0ff510949f04dd6e656f01db32b0ad404fc8203644a43985242a6000961d599"
     },
@@ -2186,7 +2226,7 @@
     },
     {
       "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/graphs.json",
-      "sha256": "587f89fec9c815c716fe37a38039023dc472ce4393a5d88bac12da91fac8c55e"
+      "sha256": "f4f73a59e510c622aa47131da0758c89da59774ed68599b409cd564211fef9e3"
     },
     {
       "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/graphs.json.meta",
@@ -2210,7 +2250,7 @@
     },
     {
       "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/role-views.json",
-      "sha256": "a9d8455fcf286013d3a327d50ea49207223aa748c96b73e2d6774f0fe41ffd02"
+      "sha256": "f892ef922f9c8ec1a5e0203ef44d069a9cdf0c798a26da7efc50bdedc6aef928"
     },
     {
       "path": "unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews/role-views.json.meta",
@@ -2219,7 +2259,7 @@
   ],
   "operation": "Full original graphs: no components, sequence leaves or local objects removed. Preserve native local fileIDs, transforms, particles, orbit configuration and dependencies. Remap migrated application scripts/GUIDs, decode all original texture mips through hash-matched conversion cache and use verified full Windows shaders.",
   "limits": [
-    "Exact 3181/3182/3183 ordered ECFightRoleCharacterView bindings and graph assets. Other EC views, action invisibility status 24008 and other summon models are outside this extraction."
+    "Exact 3181/3182/3183/3190/3932/3935 ordered ECFightRoleCharacterView bindings and graph assets. Other EC views, action invisibility status 24008 and other summon models are outside this extraction."
   ],
   "shader_program_domains": [
     {
@@ -2934,6 +2974,708 @@
           "mDelayVisibilityParts": []
         }
       }
+    },
+    {
+      "entityId": 3190,
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-6141323837900544490",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "12f158bc68da2f849c4847387241bb8193dcf76d5853a787f39a8d4126c2ca12",
+      "driver_fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 8631987425865934358
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 2491674463829926342
+        },
+        "m_Name": "",
+        "mECViews": [
+          {
+            "rid": 3986547892861534292
+          },
+          {
+            "rid": 3986547898241515539
+          },
+          {
+            "rid": 3986547898241515765
+          },
+          {
+            "rid": 3986547898241515766
+          },
+          {
+            "rid": 3986547898241515838
+          },
+          {
+            "rid": 3986547898241516203
+          },
+          {
+            "rid": 3986547898241516204
+          }
+        ],
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": 3986547892861534292,
+              "type": {
+                "class": "ECFightRoleCharacterView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mSpriteList": {
+                  "m_FileID": 0,
+                  "m_PathID": -2279089798922721770
+                },
+                "mPlayerHUD": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mPlayerAppearance": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mDieOnStartPlayable": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mDiePlayable": {
+                  "m_FileID": 3,
+                  "m_PathID": -7962210796830536476
+                },
+                "mTryDiePlayableOnStart": 1,
+                "mGeneratePlayable": {
+                  "m_FileID": 4,
+                  "m_PathID": -8406336913279800363
+                },
+                "mGenerateDelayTime": 0.0,
+                "mGeneratePlayableNeedDelay": 0,
+                "mDelayVisibilityParts": []
+              }
+            },
+            {
+              "rid": 3986547898241515539,
+              "type": {
+                "class": "ECFightRoleHpView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mHpSlider": {
+                  "m_FileID": 0,
+                  "m_PathID": 3414421914690037270
+                }
+              }
+            },
+            {
+              "rid": 3986547898241515765,
+              "type": {
+                "class": "ECFightRoleResilienceView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mResilienceObject": {
+                  "m_FileID": 0,
+                  "m_PathID": -7759279846948624874
+                },
+                "mResilienceRender": {
+                  "m_FileID": 0,
+                  "m_PathID": 2219677923812681238
+                }
+              }
+            },
+            {
+              "rid": 3986547898241515766,
+              "type": {
+                "class": "ECFightRoleStatusDisplayView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mStatusItem": {
+                  "m_FileID": 5,
+                  "m_PathID": 5426047660340627646
+                },
+                "mStatusItemSlot": {
+                  "m_FileID": 0,
+                  "m_PathID": -121555654763502058
+                },
+                "mMaxCountOfRow": 5,
+                "mMaxRowCount": 1
+              }
+            },
+            {
+              "rid": 3986547898241515838,
+              "type": {
+                "class": "ECActionAgentPlayableView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mActionTypePlayables": [
+                  {
+                    "ActionType": 57,
+                    "Playable": {
+                      "m_FileID": 6,
+                      "m_PathID": 985586064989836473
+                    },
+                    "StopOnActionEnd": 1,
+                    "EndPlayable": {
+                      "m_FileID": 0,
+                      "m_PathID": 0
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "rid": 3986547898241516203,
+              "type": {
+                "class": "ECFightRoundGMDisplayView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mGMRoundSlot": {
+                  "m_FileID": 0,
+                  "m_PathID": -2173561127102405098
+                }
+              }
+            },
+            {
+              "rid": 3986547898241516204,
+              "type": {
+                "class": "ECFightDebugClickView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mClickObj": {
+                  "m_FileID": 0,
+                  "m_PathID": 6866847780596393494
+                }
+              }
+            }
+          ]
+        }
+      },
+      "ordered_character_view": {
+        "rid": 3986547892861534292,
+        "type": {
+          "class": "ECFightRoleCharacterView",
+          "ns": "",
+          "asm": "Assembly-CSharp"
+        },
+        "data": {
+          "mSpriteList": {
+            "m_FileID": 0,
+            "m_PathID": -2279089798922721770
+          },
+          "mPlayerHUD": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mPlayerAppearance": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mDieOnStartPlayable": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mDiePlayable": {
+            "m_FileID": 3,
+            "m_PathID": -7962210796830536476
+          },
+          "mTryDiePlayableOnStart": 1,
+          "mGeneratePlayable": {
+            "m_FileID": 4,
+            "m_PathID": -8406336913279800363
+          },
+          "mGenerateDelayTime": 0.0,
+          "mGeneratePlayableNeedDelay": 0,
+          "mDelayVisibilityParts": []
+        }
+      }
+    },
+    {
+      "entityId": 3932,
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-613391823941316624",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "c2c7ad17e105e354e0264289da403543e8040c72fd8fce2a21480d8b48247183",
+      "driver_fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -5493019120856051728
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 2491674463829926342
+        },
+        "m_Name": "",
+        "mECViews": [
+          {
+            "rid": 3986547892861534292
+          },
+          {
+            "rid": 3986547898241515539
+          },
+          {
+            "rid": 3986547898241515765
+          },
+          {
+            "rid": 3986547898241515766
+          },
+          {
+            "rid": 3986547898241515838
+          },
+          {
+            "rid": 3986547898241516203
+          },
+          {
+            "rid": 3986547898241516204
+          }
+        ],
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": 3986547892861534292,
+              "type": {
+                "class": "ECFightRoleCharacterView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mSpriteList": {
+                  "m_FileID": 0,
+                  "m_PathID": 6353428536085532656
+                },
+                "mPlayerHUD": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mPlayerAppearance": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mDieOnStartPlayable": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mDiePlayable": {
+                  "m_FileID": 5,
+                  "m_PathID": -7962210796830536476
+                },
+                "mTryDiePlayableOnStart": 1,
+                "mGeneratePlayable": {
+                  "m_FileID": 6,
+                  "m_PathID": -8406336913279800363
+                },
+                "mGenerateDelayTime": 0.009999999776482582,
+                "mGeneratePlayableNeedDelay": 0,
+                "mDelayVisibilityParts": []
+              }
+            },
+            {
+              "rid": 3986547898241515539,
+              "type": {
+                "class": "ECFightRoleHpView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mHpSlider": {
+                  "m_FileID": 0,
+                  "m_PathID": -3255260946950107152
+                }
+              }
+            },
+            {
+              "rid": 3986547898241515765,
+              "type": {
+                "class": "ECFightRoleResilienceView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mResilienceObject": {
+                  "m_FileID": 0,
+                  "m_PathID": -5450467902625001488
+                },
+                "mResilienceRender": {
+                  "m_FileID": 0,
+                  "m_PathID": 8667477713153642480
+                }
+              }
+            },
+            {
+              "rid": 3986547898241515766,
+              "type": {
+                "class": "ECFightRoleStatusDisplayView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mStatusItem": {
+                  "m_FileID": 7,
+                  "m_PathID": 5426047660340627646
+                },
+                "mStatusItemSlot": {
+                  "m_FileID": 0,
+                  "m_PathID": 7657317804393385968
+                },
+                "mMaxCountOfRow": 5,
+                "mMaxRowCount": 1
+              }
+            },
+            {
+              "rid": 3986547898241515838,
+              "type": {
+                "class": "ECActionAgentPlayableView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mActionTypePlayables": [
+                  {
+                    "ActionType": 57,
+                    "Playable": {
+                      "m_FileID": 8,
+                      "m_PathID": 985586064989836473
+                    },
+                    "StopOnActionEnd": 1,
+                    "EndPlayable": {
+                      "m_FileID": 0,
+                      "m_PathID": 0
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "rid": 3986547898241516203,
+              "type": {
+                "class": "ECFightRoundGMDisplayView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mGMRoundSlot": {
+                  "m_FileID": 0,
+                  "m_PathID": 2654855632957296624
+                }
+              }
+            },
+            {
+              "rid": 3986547898241516204,
+              "type": {
+                "class": "ECFightDebugClickView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mClickObj": {
+                  "m_FileID": 0,
+                  "m_PathID": -2586975881188913168
+                }
+              }
+            }
+          ]
+        }
+      },
+      "ordered_character_view": {
+        "rid": 3986547892861534292,
+        "type": {
+          "class": "ECFightRoleCharacterView",
+          "ns": "",
+          "asm": "Assembly-CSharp"
+        },
+        "data": {
+          "mSpriteList": {
+            "m_FileID": 0,
+            "m_PathID": 6353428536085532656
+          },
+          "mPlayerHUD": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mPlayerAppearance": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mDieOnStartPlayable": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mDiePlayable": {
+            "m_FileID": 5,
+            "m_PathID": -7962210796830536476
+          },
+          "mTryDiePlayableOnStart": 1,
+          "mGeneratePlayable": {
+            "m_FileID": 6,
+            "m_PathID": -8406336913279800363
+          },
+          "mGenerateDelayTime": 0.009999999776482582,
+          "mGeneratePlayableNeedDelay": 0,
+          "mDelayVisibilityParts": []
+        }
+      }
+    },
+    {
+      "entityId": 3935,
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "4726784829118884401",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "9576a388770245f8c58dea2c869b02e1531bd63f553d52af42b2b560482fae69",
+      "driver_fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -8404713200948860367
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 2491674463829926342
+        },
+        "m_Name": "",
+        "mECViews": [
+          {
+            "rid": 3986547892861534292
+          },
+          {
+            "rid": 3986547898241515539
+          },
+          {
+            "rid": 3986547898241515765
+          },
+          {
+            "rid": 3986547898241515766
+          },
+          {
+            "rid": 3986547898241515838
+          },
+          {
+            "rid": 3986547898241516203
+          },
+          {
+            "rid": 3986547898241516204
+          }
+        ],
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": 3986547892861534292,
+              "type": {
+                "class": "ECFightRoleCharacterView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mSpriteList": {
+                  "m_FileID": 0,
+                  "m_PathID": -5830621815770895823
+                },
+                "mPlayerHUD": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mPlayerAppearance": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mDieOnStartPlayable": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mDiePlayable": {
+                  "m_FileID": 2,
+                  "m_PathID": -7962210796830536476
+                },
+                "mTryDiePlayableOnStart": 1,
+                "mGeneratePlayable": {
+                  "m_FileID": 0,
+                  "m_PathID": -528386962000020222
+                },
+                "mGenerateDelayTime": 0.009999999776482582,
+                "mGeneratePlayableNeedDelay": 0,
+                "mDelayVisibilityParts": []
+              }
+            },
+            {
+              "rid": 3986547898241515539,
+              "type": {
+                "class": "ECFightRoleHpView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mHpSlider": {
+                  "m_FileID": 0,
+                  "m_PathID": 3476348764340234801
+                }
+              }
+            },
+            {
+              "rid": 3986547898241515765,
+              "type": {
+                "class": "ECFightRoleResilienceView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mResilienceObject": {
+                  "m_FileID": 0,
+                  "m_PathID": 239751109565622833
+                },
+                "mResilienceRender": {
+                  "m_FileID": 0,
+                  "m_PathID": -8406724954998232527
+                }
+              }
+            },
+            {
+              "rid": 3986547898241515766,
+              "type": {
+                "class": "ECFightRoleStatusDisplayView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mStatusItem": {
+                  "m_FileID": 8,
+                  "m_PathID": 5426047660340627646
+                },
+                "mStatusItemSlot": {
+                  "m_FileID": 0,
+                  "m_PathID": 1035567591790094897
+                },
+                "mMaxCountOfRow": 5,
+                "mMaxRowCount": 1
+              }
+            },
+            {
+              "rid": 3986547898241515838,
+              "type": {
+                "class": "ECActionAgentPlayableView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mActionTypePlayables": [
+                  {
+                    "ActionType": 57,
+                    "Playable": {
+                      "m_FileID": 1,
+                      "m_PathID": 985586064989836473
+                    },
+                    "StopOnActionEnd": 1,
+                    "EndPlayable": {
+                      "m_FileID": 0,
+                      "m_PathID": 0
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "rid": 3986547898241516203,
+              "type": {
+                "class": "ECFightRoundGMDisplayView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mGMRoundSlot": {
+                  "m_FileID": 0,
+                  "m_PathID": 2163426184845535793
+                }
+              }
+            },
+            {
+              "rid": 3986547898241516204,
+              "type": {
+                "class": "ECFightDebugClickView",
+                "ns": "",
+                "asm": "Assembly-CSharp"
+              },
+              "data": {
+                "mClickObj": {
+                  "m_FileID": 0,
+                  "m_PathID": -2837399244794746319
+                }
+              }
+            }
+          ]
+        }
+      },
+      "ordered_character_view": {
+        "rid": 3986547892861534292,
+        "type": {
+          "class": "ECFightRoleCharacterView",
+          "ns": "",
+          "asm": "Assembly-CSharp"
+        },
+        "data": {
+          "mSpriteList": {
+            "m_FileID": 0,
+            "m_PathID": -5830621815770895823
+          },
+          "mPlayerHUD": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mPlayerAppearance": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mDieOnStartPlayable": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "mDiePlayable": {
+            "m_FileID": 2,
+            "m_PathID": -7962210796830536476
+          },
+          "mTryDiePlayableOnStart": 1,
+          "mGeneratePlayable": {
+            "m_FileID": 0,
+            "m_PathID": -528386962000020222
+          },
+          "mGenerateDelayTime": 0.009999999776482582,
+          "mGeneratePlayableNeedDelay": 0,
+          "mDelayVisibilityParts": []
+        }
+      }
     }
   ],
   "decoder": {
@@ -2959,7 +3701,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSummonRoleViewCatalog.cs",
-      "sha256": "71b5842a8f2b520e0fcabb9b2aeda8bf97c42960be9511e76bfcacd4f5dcc0b4"
+      "sha256": "efc8cd1d24d27f7446be3f9d9a71ce9bd97ce7dcbcf6c6450435f305fcfb0caa"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveMonsterModelView.cs",
@@ -3039,6 +3781,71 @@
                 "CanStand": false
               }
             }
+          },
+          "3190": {
+            "parent": 0,
+            "components": {
+              "FightRoleCharacterComponent": {
+                "DestroyOnDie": true,
+                "DestroyDelayTime": 1.0,
+                "CharacterType": 0,
+                "MoveSkillId": 19810,
+                "FixSpeedMoveSkillId": 19810,
+                "BackMoveSkillId": 0,
+                "CanAirCombo": true,
+                "CanStand": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "path": "Assets/Config/EC/FightMonster_part20.g.bytes",
+        "source": {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+          "path_id": "-1617930505986198901",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+          "raw_size": 6876458,
+          "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+        },
+        "object_sha256": "13c3c8589432c4aff58fa9bcd7155834518ecba5411ed73f632b3ed323e6218a",
+        "payload_sha256": "8923b6c4957bcb9fdfd50d1704079fa64777480ca0182250f13c396069adad5c",
+        "legacy_prefix": false,
+        "entities": {
+          "3932": {
+            "parent": 0,
+            "components": {
+              "FightRoleCharacterComponent": {
+                "DestroyOnDie": true,
+                "DestroyDelayTime": 1.0,
+                "CharacterType": 0,
+                "MoveSkillId": 19810,
+                "FixSpeedMoveSkillId": 19810,
+                "BackMoveSkillId": 0,
+                "CanAirCombo": true,
+                "CanStand": false
+              }
+            }
+          },
+          "3935": {
+            "parent": 0,
+            "components": {
+              "FightRoleCharacterComponent": {
+                "DestroyOnDie": true,
+                "DestroyDelayTime": 1.0,
+                "CharacterType": 0,
+                "MoveSkillId": 19810,
+                "FixSpeedMoveSkillId": 19810,
+                "BackMoveSkillId": 0,
+                "CanAirCombo": true,
+                "CanStand": false
+              }
+            }
           }
         }
       }
@@ -3087,7 +3894,7 @@
   "validation_inputs": [
     {
       "path": "unity/Assets/Game/Editor/OfficialSparseShaderVariants.cs",
-      "sha256": "c19a9deeea95d4d918b1ec9c60774bb91b6846f38812011149291cf392b28cfb"
+      "sha256": "a4f1f114c18d11351af526f2173a15a8de6509a7db5700986e7def9295f20c3a"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSummonGenerationValidation.cs",
@@ -3095,15 +3902,15 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef",
-      "sha256": "be692c4f49c350feac21b44cb60f812957c5c41ed138b78bec571547149bc868"
+      "sha256": "16f483f124ddbc8ce8d51098c54859f628ee19d94cba7fb36da220bca2d22ca7"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.FirstPromotion.cs",
-      "sha256": "8338d9e159767545662b7ed697cbf258fa5ace794d356b4b5dc287beda7922d3"
+      "sha256": "ca8fc49caaaf50d59b4187ca5040c5025f7fabbe4e5f957d0c2ad8ad6ead7b15"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.cs",
-      "sha256": "47d7c35dcfd9cf52494e0207ea171a0b3a87cecda9afe5f41a4aed9995ae8e9b"
+      "sha256": "d49aca1de8bbd86199c804b39e334fcd3b57a139e2d52a4d1306e793558fe554"
     }
   ]
 }

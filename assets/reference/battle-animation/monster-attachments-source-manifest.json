@@ -2,7 +2,7 @@
   "manifest": "884_156692",
   "selection": {
     "path": "unity/Assets/Official/Combat/NativeMonsters/inventory.json",
-    "sha256": "777266e2b00b2664aaca7ee4872bb3ad17390bf023c6d612ec695567eb3827a9"
+    "sha256": "6c8e1e35c3a33ebabd8362467f547d94edc9483b51e01be15871c3b4925e68d6"
   },
   "objects": [
     {
@@ -2608,6 +2608,874 @@
         "bundle_sha256": "ceee4af20daeba369b52fdf4dc6621d26d653f624576f831e0ea957fec4d273f"
       },
       "object_sha256": "ea37fdbdc8c5d4ab5a03c8da94020f728a315839c10b96a740bb1923f0aef36c"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "546417266444183062",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "406cde83c457a6644b617133a99652e7a275949bca5f289c3027aa5caa472a4b"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "2497227871864137238",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "f16572612f28bff46f8185d793d7164cdab29f0eb8aaf80f4f4f992ea76cf9d5"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "1100056936823432726",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "394245f9e4adf4720c87b1527a8baece9a345dab9779cb21cb67475c5ff4db53",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 2497227871864137238
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1992464269187059580
+        },
+        "m_Name": "",
+        "myBoneNameList": [
+          "",
+          "3190",
+          "Bg",
+          "body",
+          "body_bottom",
+          "Centent",
+          "click",
+          "Collider",
+          "Content",
+          "effect",
+          "FightRoleResilience",
+          "FillPointEffectSlot",
+          "HpAddBar",
+          "HpBar",
+          "HpBarGame",
+          "HpSubBar",
+          "MonsterModel_3190",
+          "OutLineEffectSlot",
+          "ResilienceSlider",
+          "Shadow",
+          "ShadowBoneFollower",
+          "ShieldAddBar",
+          "Slot",
+          "StatusContent",
+          "ui"
+        ],
+        "myBoneList": [
+          {
+            "m_FileID": 0,
+            "m_PathID": 546417266444183062
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 546417266444183062
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 776529892706264598
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -6011263085138434538
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 5979266443673511446
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -7735056053191334378
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -4081592822093339114
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 2504557565208536598
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -3184912209397242346
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -1273278261368412650
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 1788103500508997142
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 448941401436956182
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 8282950100243555862
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 7521211967501805078
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -5516725028260436458
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 4652512052899259926
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 5383374083519850006
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 1201507406405412374
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -8517607868130482666
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 4840345918372226582
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 1789609847832684054
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -121555654763502058
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 3378766864631047702
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -2173561127102405098
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "671724253884098070",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "5d7ab5c899e7cc904a4db37dd86b3d85ba1a85cbc6eea30fe9683fcbec2cef63"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "8631987425865934358",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "7de801046372957651f08800d81ab5aaf745630663382613ac4b65b643ccd9bc"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-6011263085138434538",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "fd62fa6192589b028fefa298efeb6894bc070e4f011048bfd7669c7c44feafd0"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-7370936324549925354",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "b58b99faa02e6df197dc5ffdecfd3da03f05f7a2118017d952cb4dcf4531a449"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "5979266443673511446",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "eeb4ea041d883220c11d2936ee8988267fde19cee0ab685614c9f3a787697796"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-1281490927778748906",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "02260b449a399f35de67d7b318ee46888cad346d6e15d245dda2f3497e9b3093"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "4652512052899259926",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "7d1520416a95c014069396dc6652e50dac38687c3f17ec712341594afc18ac5c"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "8688470931385067030",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "41888fd03ebf7c1d18544654abbd997cae22346233a63329d590e3a3c7de579d"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-4155446514387737066",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "104a8dc6ccc99ac3ba929e665601e65e7554ff8e98b86dd64257ef38fcdb41b0"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_summons_summons_3190.bundle",
+        "bundle_hash": "fe16f1d6f5dccc1951a3bec140d5d584",
+        "path_id": "5830548715011139479",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/fe16f1d6f5dccc1951a3bec140d5d584.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 76817,
+        "bundle_sha256": "dd5d15bce098d23e4a0b4677402e0671baf60c759dd03000b083db19bafa783c"
+      },
+      "object_sha256": "cb201ee076ee504c544063fb29459f32c2aab9ae7d5e16ce48743761cf189f21"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-2173561127102405098",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "0fa3d8735b9e894bb34bde7f3d509cb5bb6b1276de223642937b11f2dba046fd"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-2943292373733235178",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "efa2e27ad9f430b02ffc387e7ca44a542be66d331bd4d0e975336790cea43526"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "7521211967501805078",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "2a7a43ee645cd84b2e2702b48f6bc4fbef4f3507a15912c4de6590de83e4bc87"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "4822404651400865302",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "c80653cf7ef7e6497100ff4e31eeb0b95568572335d7ef1a700c947983177f83"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "2504557565208536598",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "d1184bbac72949b7d8544099a0af2b079e9634ba6bd1824b299d4281df2517d9"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-2841603117209770474",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "e12f03b06c48cfc2d1975a86a3a3d1f70582cf5c939d88f7e912d83f9395df25"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "3498283793511458326",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "8a5b59980a5a37e7e38827925ff23488ea909df918437803fbdc24c90bef7c92"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-3362069439143893482",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "bdd25028aafe1154d3fae66c5cdecef258bf5a6f084e52a9b1d72afed5c39ecc"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "1789609847832684054",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "52754a5177f7ff9d5222142bf8e301e9cb1093737d548e620e962be112b15005"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-725332029834484202",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "ba84db8bbb17704986630d0946d514d997e7a14d84ee7ed821759a8b7394f653"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "8282950100243555862",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "39e5a8b7270eb5e136446263876e39da39bbd5dbcdfbd26be506b899161f56fe"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-3274936996007467498",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "396c77c5b1d81770cd21dce7ab32df9dcd1d933ad3bc4fd47dcde7940b368e7a"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "448941401436956182",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "25e4d788949f7f3adb13da5b479983b91fefad38ed0d35c8ae4f1f439bcc4ccb"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-5166421383892589034",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "c0de774faae25716aaff9999ca971ad59663b2fb7baafe22266f89bf75d76523"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-5516725028260436458",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "50e3d0656bcef4b785a232934c5b555f948912e85c1cc89e0abaedfd23abad2a"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "4739321087602894358",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "5b3edab4248005adab5b4f8d145c0613af8af6a6bf9b0558364f0e375412360a"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "1788103500508997142",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "1578be74110f4b1c0d698832ecbdd7c837d242d144704507c66202a9b8d1e6e2"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-7599805098119420394",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "5328b435ae38f1652dd9d491af5d5c1012ae998bd8e867b98e631d3d5445eeb7"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "5383374083519850006",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "67c9c79a4748cf9c794345d90b4483f8a4b89ffcd843f0dd4a8676dc37713141"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-3067990376077875690",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "5ef5302e57ed75f6087e46e235717efde858503fd4139b52a7312d4efa0da8c3"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "3378766864631047702",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "3ef05a57cbcc65580647c784d995ae071a26183f45244b62a26448d87ba71b2b"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-6204483028376050154",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "255e828e72fd8c1edbe7d9ff7983ba372ce9cd234129c22d76c46730c6c6e18b"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-121555654763502058",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "a48bf09b15d1153fe732cf0cb40236c898de2b898e4c0bfcd1c404e7cecdb728"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "4028480743213147670",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "99a8c6ff9b8a9216a03688a4371a7bc12375275d87774c167738bda7388d3ccb"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-1273278261368412650",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "34a6ee27b67c2889397786db3eff489c4abff0d83ab61858eef8d864275c084c"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-7759279846948624874",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "072c1377780a42942bb7bb26b4119a4b3ec425c4d7fd67cffa4c8e37b5ee6ae7"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-7735056053191334378",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "483a9b7c547df3f4f2358c6d56bad8b0133b6055ce38bf6596da8445652cdf2d"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-5889543451649858026",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "2c3019901e8afbcb4c0c7dd489d26b79013b5b9885e75437bc4c708bf9330306"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "776529892706264598",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "e75ecca10443c153256de6ea2dc88d0ef859afc393bec793dbddc405e2971ed1"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "241361520769541654",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "381513b6d0b6fd842b2732fc283d8c49368998fdd545fb93375543383bfea53f"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "1201507406405412374",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "5dee782c3dd9dd663ccee97f2dfebe39b48a539e89bd0c53628588a7e8e70faa"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "5077905237151753750",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "b44fb24f359da5826a0d6895ab08d866e455d244d823091c570120c03642a5c6"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-3184912209397242346",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "fa1175311e39f4861328e57f1b88f6590a3389a9468b165b1b2549e8d59da623"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-8327631533520935402",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "3a72e16acf942f6019f34ba4ef88c18c84fdd856b37ee5d551f27d222d05a86b"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-4081592822093339114",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "ee21e2bff16f4feb0c868d13968ed4b3fde676dceee673c5250de422e9aba8e4"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "6866847780596393494",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "604dcfdaaa627e89135d3b47eb050b3518f4a1253aa48826ea8a63f4d0f20c5d"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "4840345918372226582",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "44746a7b1ea42dc48546071ae346bc92e8642b4af5988be58242e223e25907e8"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-3362009446822271466",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "8038ae58c861f2c936e7006abff26db6765885640a99f2d063c59811e7e04a42"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-518260751798917610",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "096d4c60d41a0da88a336e5f1c6debda7e9c5fba0542e1c4a2add4f1e94bcddd",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -3362009446822271466
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8665825331570267470
+        },
+        "m_Name": "",
+        "skeletonRenderer": {
+          "m_FileID": 0,
+          "m_PathID": -4155446514387737066
+        },
+        "boneName": "shadow",
+        "followXYPosition": 1,
+        "followZPosition": 0,
+        "followBoneRotation": 0,
+        "followSkeletonFlip": 0,
+        "followLocalScale": 1,
+        "followParentWorldScale": 0,
+        "maintainedAxisOrientation": 1,
+        "initializeOnAwake": 1
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-8517607868130482666",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "b227e447170b9bbcf05db28d12aae926d89ffb02cb7379b573998d5ec781dd79"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3190.bundle",
+        "bundle_hash": "17259f0211afddfe7f71d995d94914fd",
+        "path_id": "-6139739331555449322",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/17259f0211afddfe7f71d995d94914fd.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 12080,
+        "bundle_sha256": "2a237ec5c2eb9de94d9b16819c030980729e1d8e7d9a29a67e2823af179f14f3"
+      },
+      "object_sha256": "baaf94c60762761e547f7439532bd7e93eb625b3a8ecd25ee98cafade7be29ff"
     },
     {
       "source": {
@@ -28676,6 +29544,1732 @@
     },
     {
       "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "8395182335630725104",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "146b91a3c36eb521a40269a5ac188144e812266e6de194686210112c1a85eb05"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "4274423040495210480",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "e4aa172200137463623e346ac55261dab8755998d87141b527250f4bc0d275f2"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-3925220664409305104",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "3cce5ef641edbe0dddf0fbc889d6b3060f858cd103d31152ae02518e0ef1801f",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4274423040495210480
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1992464269187059580
+        },
+        "m_Name": "",
+        "myBoneNameList": [
+          "",
+          "3932",
+          "Bg",
+          "body",
+          "body_bottom",
+          "Centent",
+          "click",
+          "Content",
+          "effect",
+          "FightRoleResilience",
+          "FillPointEffectSlot",
+          "HpAddBar",
+          "HpBar",
+          "HpBarGame",
+          "HpSubBar",
+          "MonsterModel_3932",
+          "OutLineEffectSlot",
+          "ResilienceSlider",
+          "Shadow",
+          "ShadowBoneFollower",
+          "ShieldAddBar",
+          "Slot",
+          "StatusContent",
+          "ui"
+        ],
+        "myBoneList": [
+          {
+            "m_FileID": 0,
+            "m_PathID": 8395182335630725104
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 8395182335630725104
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -5442442467419074576
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 7349412079381532656
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 1623294286291226608
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -4829914738210418704
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -1559345660815126544
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 5068389402147966960
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 3695854766729678832
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -4455542644746661904
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -905769807383277584
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -2923088121035272208
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -2451683979734790160
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 4472722297438556144
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 8815315475705450480
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -7643317428015968272
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 8191421923658846192
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -7752605569560457232
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 904929729074909168
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -1892933604867616784
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -851736364162920464
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 7657317804393385968
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -5087608817396658192
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 2654855632957296624
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-4052196856036831248",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "06da0098e3240c9ac8c65f64e0647921e460c703a160c61743f6e9e82b10c6fc"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-5493019120856051728",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "c3db7f80c66c9f88953aa2a7734974387dcad32dd192b07cdd2f43e4ccb82ecc"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "7349412079381532656",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "7f19d9f42e61d9af9c2ff008c9fbd68c40ab316930993263a8a8c2960092ea91"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-4134364449993371664",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "5458995811ae6f5468e9541238e0b4c550d9bd7aa6dc55791277d896bcfccdbd"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "1623294286291226608",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "b099c23ca33ae4521820a12e4242c07dc04acbbc01a16c3f0c2dd91ab9fb35a1"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-2559756978151403536",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "99471d8b73e99e9c46e2949736f38d5bbd9bc3b06f3a434e450df0acbab7023c"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-7643317428015968272",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "e50dd310fb03d6ff7f6967e205d4a06daf9c76d4535dbdd44c0ba7e06ae50686"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "6602976031532339184",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "d17dc8322ee5bec0e6d813f2f1af69bf16bfd3bb613df6a23166d4dbad4e204e"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-7696083724766588944",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "881524a857db967a852ac2bc970a81d88c8c1c8f34beedc47b1e89343e8bcb97"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_summons_summons_3932.bundle",
+        "bundle_hash": "fc912de7f6186efe836ab4467c0bec63",
+        "path_id": "6860766081692210912",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/fc912de7f6186efe836ab4467c0bec63.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 79473,
+        "bundle_sha256": "1a4f72aed05045b5fecb6c4e084660dcba7943d4b2145bf19a59acdacbf0a5ef"
+      },
+      "object_sha256": "572cea12c679539e7e079eb30715227c6470d80ca488f634f5f9346c9eeb8d06"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "2654855632957296624",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "0617bab0be0ffd6fb31cfebec68ffa0e7d2b068cef9c3fd56d144e56c2a32f56"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "7275891192955359216",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "c3b25d9d0464e8e100cb771d4bd42c87b12cb6c093c9860d060b59511239a91b"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "4472722297438556144",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "fb22150049b5398fcadb3f8ea8ff04b64f1f2caea71545671a59be07fccad43d"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-823269690585886736",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "9e4fa132185399844e42a26f0294d56128078367a6beb41b1b04004045514925"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "5068389402147966960",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "a23df5e62c3c2ea08f4068e8ad28a31080b601b51ad7b6a23deff523c09376c7"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "1322288326511185904",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "2e932b2da52cc7df2f552de6c7b1ddbf67159ac6afa19c1d1cc348bb97d35cd4"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "5447013836799496176",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "1254e58dc3402d91d4fc6fdc5531f0f86e8a0cf85a6c22886de2bcff33b22ef8"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "8567775654585913328",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "40293a67b26b35fe9d735f746c87cbb90f1ef62a5e0aed0dd1cfa60c9564d165"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-851736364162920464",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "3d80d3d938dbd61e15cdbc35f37eaddc33342b0bbb38c6b11997080f4dab8b8b"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-9088253098871861264",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "b9333f2a9e0dd104daff424b0ba9e753aad7bec3f361fbc831e5f7eb4343f66f"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-2451683979734790160",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "c7062367f9a0234299d0c2fe9a499d96f2f59fc94ec7f6e3ea46c0f883d35a4f"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "8989689072720105456",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "426caa06c2454c40fac54491e5dd36690fb8944cc921179e31b6825f42a11021"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-2923088121035272208",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "3beabdf1aba15979495a8ce92f3fb863f577d0cbfad7538b963b98996d5b3640"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-9151939745408921616",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "8d9d7e7c0c1ac15983179559f77255946123a6266b40ed3b92b333db4ac3413e"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "8815315475705450480",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "12861a6411cc9e9ce4bd651285ea669527707169e2ee78b93e88d9e46206fb49"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "1215057442774274032",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "5648b61295dceff89db685c217adf42b31c68292cffeb7c8f80a0f0683cbba25"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-905769807383277584",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "a592f95d524b31799108a9205b00984ab85ce827889b0e20e7ec14d783d5fc7e"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-8014953458056278032",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "417fe62034174e74deb215a7d26d718ad265de4a8351c73c44ea13ae761bedde"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "8191421923658846192",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "faa4204ce2edf74011c49d16671b731022c35c60a784f1f102edbcf51ddc768d"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "8155859424834113520",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "76223fdda768f81d3b374051b5072bc540755de93f5dd8ebb2fcc9ca7eb282c1"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-5087608817396658192",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "c7e3b1525d81d19096601a20e2141ae748530a275fe1b9d57de3f26d2cdb7a6b"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-8640559239999893520",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "e8b9139dc04a4e26c781a0eabd00cb6b79eddb58275a6062f4f64207369c5118"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "7657317804393385968",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "87aca512f5469f6677cad023352cb9893ceb51b1b22487f2ca2e401a186a029c"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-8056990254202007568",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "5c611e85c5835ace384f74246f23b92fce7b50fc6c0c237235b6dc55267a409f"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-4455542644746661904",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "b7794b528532c7a3639aa90bef89e04b36dc01b54f0d9a594a24b2cae65dd7e3"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-5450467902625001488",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "b9fd807be2a55c48e512cf0ae1a7e7e805af77de761b1c57a7748a2cccac80c7"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-4829914738210418704",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "cde4a969bad931c48ef8692e35df2482227be41b6bfbc799702ca502178b0b55"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "2036520572940013552",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "77a82d138c997d2fc99f7d2d776dbab0ad4c3d2f52f768b421dc00940f2c86ae"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-5442442467419074576",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "1a6818bace2df513f38a702747ad9ea411297d89ee5b8d1a96b4c915a3b95e3e"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "8733070796649484272",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "9c0d6e7acc4dee64b5c38a95a0875caca7cb0bc97d36838ec9d620b55ca4c7cd"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-7752605569560457232",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "07a80c205cbde33d9fd05d76be01eb01f380fa1028943beb42d0ee81677382f3"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "1595531827189862384",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "99c4a3ca0538067807c6f9a4b24c25574b46e6fdab4f1a19b4e8a464228dc2d3"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "3695854766729678832",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "496e1bebd351a6e208094c64b4116cb3d4ff378915c8756ca94d98e6633b9052"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-7684842454872141840",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "eb3069f8ac9d5de8eedbcca5e561082bdaccb6812091f7185ecacaf31dd39bd8"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-1559345660815126544",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "38f33c8f538eb7ab170270c8f859df852f1ef366572cc661b369812f6f692c0f"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-2586975881188913168",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "02ac4a7c35184abce87bc4a2b397934b1e9c684bfa2d90db458b63f9ad4d23de"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-1892933604867616784",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "4809f56c7591862d8b62c5b473d9cf894c861bf077bbd8ef156d43bbad060669"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "-947958363984801808",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "662369840d67b05b675620a4ab110884c3664b28528e939def6fd1a3d8d04c86"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "1201892240796766192",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "4d4eaf4326721570ab0fde39977f7788d01e263899f36b8e6288468d67085fdb",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -947958363984801808
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8665825331570267470
+        },
+        "m_Name": "",
+        "skeletonRenderer": {
+          "m_FileID": 0,
+          "m_PathID": -7696083724766588944
+        },
+        "boneName": "shadow",
+        "followXYPosition": 1,
+        "followZPosition": 0,
+        "followBoneRotation": 0,
+        "followSkeletonFlip": 0,
+        "followLocalScale": 1,
+        "followParentWorldScale": 0,
+        "maintainedAxisOrientation": 1,
+        "initializeOnAwake": 1
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "904929729074909168",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "ade53f302e43043d1104d2f86f4cb075dcf547f177badcda41f86b7f313c29d9"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3932.bundle",
+        "bundle_hash": "a72bb2f8e28a52479a202cf842ea8bb3",
+        "path_id": "5892626382834585584",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a72bb2f8e28a52479a202cf842ea8bb3.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 13873,
+        "bundle_sha256": "720e573c15c94cd478af49294278b3c33fb4d4fc92f1afa6e37bade52594dcff"
+      },
+      "object_sha256": "232b314cb390ccd1231935795bad88ecd40eaa7d38f1dde964252103548f7850"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "3579931038724991537",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "2c3d87cf9fb65196a607973eaf66b0ef22b3b8a11e620762c298c6ff785703c5"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-6965288400205239759",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "fea6caab032150b05dd7dba7660e6b8efb7bb77cfaed395e0cbb5f9bad4f8358"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "7601901218191452721",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "eea5e6c41bcada25c1b22076ded5f7ff01d11f12f97331ad27be5b10f673100d",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -6965288400205239759
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1992464269187059580
+        },
+        "m_Name": "",
+        "myBoneNameList": [
+          "",
+          "3935",
+          "Bg",
+          "body",
+          "body_bottom",
+          "Centent",
+          "click",
+          "Content",
+          "effect",
+          "FightRoleResilience",
+          "FillPointEffectSlot",
+          "HpAddBar",
+          "HpBar",
+          "HpBarGame",
+          "HpSubBar",
+          "MonsterModel_3935",
+          "OutLineEffectSlot",
+          "ResilienceSlider",
+          "Shadow",
+          "ShadowBoneFollower",
+          "ShieldAddBar",
+          "Slot",
+          "StatusContent",
+          "ui"
+        ],
+        "myBoneList": [
+          {
+            "m_FileID": 0,
+            "m_PathID": 3579931038724991537
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 3579931038724991537
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 8156848414112229937
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 793822374806235697
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -6976170661496870351
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -3795459562833892815
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -2796137730905593295
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -5842110789457860047
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -817190808155772367
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -2648652495043810767
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -3643830869449102799
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -8229546217985856975
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -5440554510911264207
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 4699115827762571825
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -5131826373072901583
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 2522392572226447921
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -1174721567421617615
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -5616506837625263567
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 7098764466705803825
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 444606095766202929
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -1431405287501911503
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 1035567591790094897
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -6093100596175361487
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 2163426184845535793
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "8212487589221313073",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "713dd7551f577a1b765fcc87db51322173bc686b0a6165bb04941eaa9ffff888"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-8404713200948860367",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "c4f201a8b9d2f3a303a7d2229b7b0e743ca54b33ca0bd0c7a3d313d1fc25f76d"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "793822374806235697",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "b50e57d180b40d6d23fce6b156be0291aed16abb0c0e33aaa5e9d2d621e054f6"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "8846926122670303793",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "6fd9fdfd16d83a0ff4bf72dd44f38402d745eafae7d108358515908ee7253cd2"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-6976170661496870351",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "acd988b025a2aaadfb5c60517c925e84000998d3fa870414c64ad6bb7988ee95"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-5268537998653445583",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "1fef5b9c8ebf9d5a17c799a95d5f8c69978483fd27c950088cc2c98802f48a3c"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "2522392572226447921",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "84496c61ed9e9c498ebc6d20e97a5d8ae44c182ad7ae0001f21a1ae37a41bd8c"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-2096398195692918223",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "059dc42b88e5c4391320a0014c43a02e598e5ff5c9152b14c80ed188f7ad5606"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "3438525873657424433",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "efe3d04549db1814f19f6f0aaf37b0a660d110c0b6df9ddd00d9a425589b8ddd"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_summons_summons_3935.bundle",
+        "bundle_hash": "705528fa9bed85e49c17a7039aa521f5",
+        "path_id": "2456851014272114230",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/705528fa9bed85e49c17a7039aa521f5.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 61982,
+        "bundle_sha256": "e15d39a8342eeca42a77e78b472037f80d2cbd2bccaca478bd11f4aca19ec356"
+      },
+      "object_sha256": "c1a844789b0b30e27fb89c85e03439bae85e9d5329f71fde2b961519eb799010"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "2163426184845535793",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "d3ec60ca36a9e7eee07bf350a92763ab722a68885cf452568c9b996721ea5df3"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "1639290035064220209",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "84c90bd956c9af9b354b3bd494b5768269bebe530d9f81343c4142e1aedebc4d"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "4699115827762571825",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "11e9bfea6caae84673d97582731a0d8bf6c2a8897d54cc71f3bdc527350db0b4"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "5356852460888599089",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "bce6f4f73c312e84e195c21ca9eb47c3bd691ffb5f6a53f7d83ebe10fb29068b"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-5842110789457860047",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "cbffecf9beb36cb43f9a48115303495e08a13d7d858bc52f3f29c193b699f469"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "4090303736588216881",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "8b7338cee26ffb044c071e9a3f6952b1db484ed56d95e2839fdde928fbffabba"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "3884552789844109873",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "82a39a57c12570c672fc25051c8b18bbc8a358192e95acae03e32782a7eee7bf"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "510186583226264113",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "16309c0e5dd078fee4fae20ea20340341c306d0df1b08d67748c8cfda1a8f3c8"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-1431405287501911503",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "0425dc8be9090ad0d6f9e792e41b51a07859c4f09ad3e3fb2ae02987e8cf31ff"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "6121321186413783601",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "033a9c49923a83b437cfd36910a31372e86fc6db6c9ca1c852ef7f6ed6454fb0"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-5440554510911264207",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "ecdf8fb36ea144907b15bfa21718ba310502071d97461d86cc0ae93e267014f4"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-8720512496745240015",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "95f1913d235d7179dc2e1cc20ca8206e0438a02861dd39f44208c19db224bbcf"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-8229546217985856975",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "a09fe3b69991a0bb2ffadacd2a35b2cf3219e59a0475e88c7e6c459c71e029c9"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "8343423914531498545",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "929f0a527eb1f19f875bf8e3de2be394c0493958ee364e73d931fb5a1a94f0d7"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-5131826373072901583",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "91bb825bb633cf9fc93e9d91077d40eee2ffbac5580500981c69c688a4c0ffc7"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "1333624636991875633",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "0cba221600f66788c8274ea7738df57fe121438715ab765d5a4f0372de4f1156"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-3643830869449102799",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "1580baf1bff7b035044bd4e5f2fb118f54be579ad86c91d668429fe208d01ff1"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "6237033944217889329",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "0fb8032cc138f637a0e54d787eae2fc448322abe4ca49a302b9c4d503f07113e"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-1174721567421617615",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "a003f651baba7453311fdcf5d0760aa77660c33001a7edeaa6d470e7f76b46b5"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "896358779848174129",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "8f69e42771e07e3e05c7321c992251f0e1c57d69a738693ec9061a93c0102b03"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-6093100596175361487",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "6929bccf7f46b83076614e032daff00aa8c0573458dd3522d28aaf527b223876"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "1996424132059212337",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "39a2ffbad635ae37259c1f9de7ac0a76431478c1bfe361f66f2c32f158258fec"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "1035567591790094897",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "80e1ac150d7d20d6b236e3180608fcf48fe7be22a54534322b9d4fc82debe085"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "5840537618319092273",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "1c5ab57a742e4018cb36d992209b30a95e0680cf93d0e831ba1431dfa52408cf"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-2648652495043810767",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "625135231ffb4857d948a2162a53e47db52261363d55db476cb9eb9af88b33a0"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "239751109565622833",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "c9773a69d2fad8f47acd9f4784d6fa53d863fb12da13fa107064bde352aa6d54"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-3795459562833892815",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "d4148ecc8627d96fcbcd693926447f196f76d482070f5db4770b194fa8fe24ef"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-2029312082881795535",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "1e56bc37d7ee4850cf6d8909c27c9c0727d90d4e8e0df1014a02660df8089505"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "8156848414112229937",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "f5ba22965b23b533c98512f8df01f94da326e4c9538f2359064a33ba250263b6"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "1717086265650719281",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "fbdfed6a76a75b62106cf59adbc70505057a01928f7ff210f1121326426f32ac"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-5616506837625263567",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "59106891afd3298006ab56f2bb02afa82a733c88f1cb5dd39965255b86d682cf"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "136606309163608625",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "7a02daa0fc8b125d06e866d87baf2d3edab376bff9058005a58c19274749867a"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-817190808155772367",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "206fa29baada15114053b5ff72b5ce67f2981c68a8bd5ae4cf74f5db2f986804"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-2130826825045628367",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "6e6816361a4c1ac91840eae379c181686a72be796d61c3e6b45fa2666c17019a"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-2796137730905593295",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "39cdb3b725de4a2508b8fa2837e2247863a73b94696318e6bda38743e250aee7"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-2837399244794746319",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "fc8c080bcaecd2207d401a7ba178c4f827d104e48782649aee8e3b095657dfde"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "444606095766202929",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "fc72f369389d6d658592a93c79cf58ca636cf6e448a8e6c5cb5d043468f901e2"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-2300092967436015055",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "f1448d9f1facceddbd58243607e047f0ec28eadfd88157f82438464d882de4ca"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-8186634664882525647",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "db74346ba055169cd0ca5c81c26d0cb309b49189a8ccc384e3f21749fcdcaefa",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2300092967436015055
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8665825331570267470
+        },
+        "m_Name": "",
+        "skeletonRenderer": {
+          "m_FileID": 0,
+          "m_PathID": 3438525873657424433
+        },
+        "boneName": "shadow",
+        "followXYPosition": 1,
+        "followZPosition": 0,
+        "followBoneRotation": 0,
+        "followSkeletonFlip": 0,
+        "followLocalScale": 1,
+        "followParentWorldScale": 0,
+        "maintainedAxisOrientation": 1,
+        "initializeOnAwake": 1
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "7098764466705803825",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "afefe426c198f81639852e7ce822b5ecbf8eaf95cda58334a342104534ed1835"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3935.bundle",
+        "bundle_hash": "b08028c49ad38f0facc9eba28938c9de",
+        "path_id": "-3841837773498602959",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b08028c49ad38f0facc9eba28938c9de.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 16250,
+        "bundle_sha256": "5b22ee322a5dc23ca31a4a3699834bed207f9ab4d581add691603c7dcd7fb223"
+      },
+      "object_sha256": "b84e2104c9ea22d1c75aaa96c00fec8949dac068819b500bf18e6a7b2b586ff5"
+    },
+    {
+      "source": {
         "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3948.bundle",
         "bundle_hash": "659efc365071c5ec7fc036f22ad3af3d",
         "path_id": "8961400132100861244",
@@ -52827,7 +55421,7 @@
   },
   "output": {
     "path": "unity/Assets/Official/Combat/NativeMonsters/Resources/Combat/NativeMonsters/attachments.json",
-    "sha256": "296f03d2fd2efd16dcce0c7a5b9e9884043766bb768e72b2b79cb84af3683d1d"
+    "sha256": "3a0127dac118d0bd713b38baa11dec190bc2900ee1f0d92c3a71af19c32e3208"
   },
   "generator": {
     "path": "scripts/prepare_partner_native_battle_attachments.py",
@@ -52856,7 +55450,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveMonsterModelView.cs",
-      "sha256": "772c8fd08a72d746bffff69961e27ffbb73e67c0ebebef5d913c1ee92258c906"
+      "sha256": "f5d44b458f2bb2709200d45532c4d58b85e33ac1982f5b95323e957ce19e9066"
     }
   ]
 }

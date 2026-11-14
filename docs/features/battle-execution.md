@@ -147,7 +147,9 @@
 
 原伤害图使用的角色材质接口已为 33 个已安装配置恢复：`OfficialBattleActorMaterialBinding` 仅按同版原 prefab 的根节点、启用状态和完整引用路径添加原 `MeshMaterialProperty`；已有组件保持原绑定，所属单位租约在图停止后释放新增组件。现存原 `AppearanceRenderer／Lite` 继续负责原独立材质集合；尚未装载该外观组件的原生骨骼后端使用其现有每角色材质实例和原 `MeshRenderer` 引用，不生成新 shader 或材质。配置输入及绑定见[角色材质来源](../../assets/reference/battle-animation/actor-material-bindings-source-manifest.json)。另外 36 个已安装幻兽配置已接入下述完整外观材质集合，保留原 `MeshRenderer` 空引用。
 
-`OfficialBattleMonsterAppearance` 统一装配 68 个已安装怪物、幻兽及召唤物的原 `AppearanceRendererLite`、根 `MeshMaterialProperty` 和材质引用；`BattleNativeMonsterAppearanceCatalog` 保存原 renderer 路径、引用是否为空、精度及网格副本引用顺序。67 个原 Low 配置保留图集／占位材质及原贴图加载器；3803 保留原 `LevelOfResolution.None`：原 AppearanceConfig 无其路径、所选完整资源清单无对应加载器，沿原客户端空加载器分支保留八份材质的原纹理与三类 shader，仅为三张骨骼图集页创建独立材质。四个原 `CustomRenderExistingMesh` 复用正式 prefab 的迁移代码和原启用字段，将原材质到独立材质的映射转接到各自描边／隐藏替换材质，不克隆五份替换材质。`OfficialBattleLiveMonsterModelView` 与既有幻兽跟随视图共用该入口，退出时先释放材质属性及外观，再释放加载器路由。保留幻兽原空 renderer；未修改原 shader 能力：普通骨骼 shader 支持受伤变色、不含 `_DitherAlpha`，3803 的混合 shader 由原属性收集器拒绝不共同支持的变色字段。输入、对象指针、ASTC mip 转换、显式 `Combat/NativeMonsterAppearance/catalog` 绑定及输出哈希见[原生角色外观来源](../../assets/reference/battle-animation/native-monster-appearance-source-manifest.json)。该接线不代表全部角色状态表现或 Windows Player 验证完成。
+3190「狂热图腾」、3932「灵铠」、3935「汐卫」的完整原生模型已加入 `Combat/NativeMonsters/catalog`，保留原骨骼、网格、动画、控制器、贴图与外观加载；通过既有成功召唤回执和统一原生图时钟创建，未另建简化模型。原有序 `ECFightRoleCharacterView` 显示 3190／3932 共用 `playable_3181_generate`，3935 绑定独立 `playable_3935_generate`，共用原死亡图；3932／3935 的约 0.01 秒生成延迟及原“不延迟播放图”字段均保留，原延迟可见对象列表为空。六类召唤角色视图、四份出生图和共用死亡图沿 `Combat/SummonRoleViews/role-views` 显式加载，来源见[角色生命周期](../../assets/reference/battle-animation/summon-role-views-source-manifest.json)。
+
+`OfficialBattleMonsterAppearance` 统一装配 71 个已安装怪物、幻兽及召唤物的原 `AppearanceRendererLite`、根 `MeshMaterialProperty` 和材质引用；`BattleNativeMonsterAppearanceCatalog` 保存原 renderer 路径、引用是否为空、精度及网格副本引用顺序。70 个原 Low 配置保留图集／占位材质及原贴图加载器；3803 保留原 `LevelOfResolution.None`：原 AppearanceConfig 无其路径、所选完整资源清单无对应加载器，沿原客户端空加载器分支保留八份材质的原纹理与三类 shader，仅为三张骨骼图集页创建独立材质。四个原 `CustomRenderExistingMesh` 复用正式 prefab 的迁移代码和原启用字段，将原材质到独立材质的映射转接到各自描边／隐藏替换材质，不克隆五份替换材质。`OfficialBattleLiveMonsterModelView` 与既有幻兽跟随视图共用该入口，退出时先释放材质属性及外观，再释放加载器路由。保留幻兽原空 renderer；未修改原 shader 能力：普通骨骼 shader 支持受伤变色、不含 `_DitherAlpha`，3803 的混合 shader 由原属性收集器拒绝不共同支持的变色字段。输入、对象指针、ASTC mip 转换、显式 `Combat/NativeMonsterAppearance/catalog` 绑定及输出哈希见[原生角色外观来源](../../assets/reference/battle-animation/native-monster-appearance-source-manifest.json)。该接线不代表全部角色状态表现或 Windows Player 验证完成。
 
 `PartnerNativeBattleActor` 沿既有模型、Animator、附件和阴影入口接入原同伴外观：34 份原实体配置中的 35 个 `AppearanceRendererLite` 及 34 个根 `MeshMaterialProperty` 保留完整引用、Low 精度、启用字段、空 MeshRenderer 和空网格副本列表。11005 的根收集器仅引用主身体，第二身体保留独立外观。`PartnerNativeBattleAppearance` 在模块内部管理同一角色的原 `AppearanceAssetManager`、按需贴图路由和销毁顺序，调用方仍使用现有 actor 接口；网格绘制通知驱动原加载器，原 atlas／占位材质切换到已核验的 Low 页。地址计算使用原 `AppearanceAddressUtils` 所读取的骨骼数据名称，完整 SkeletonDataAsset 名称仍供原附件绑定使用。既有直接使用骨骼网格的技能后端保留自身材质生命周期。原对象、原代码、ASTC mip 转换、359 项资源输出和显式 `Combat/NativePartnerAppearance/catalog` 绑定见[同伴原生外观来源](../../assets/reference/battle-animation/native-partner-appearance-source-manifest.json)。11015～11022 仍保持既有正式战斗排除，其原 Low 目标只有 24×24，不能据此声称这八名同伴已完整恢复。原 Animator 生成器另核验并保留目录中既有的 10607 额外控制器及其原片段闭包，避免重建 34 名战斗同伴时删除该绑定。
 
@@ -187,7 +189,7 @@
 
 自定义目标命中 `12063／13303／13673` 的客户端视图、原 Scope 与 HitList 来自官方配置；原 `MyFightHitCustomTarget` 直接继承基础命中视图，`SelfTargetPosResolver` 共享类只有空代理，缺少服务器范围展开。来源见[自定义命中来源](../../assets/reference/battle-rules/custom-targets-source-manifest.json)。
 
-用户确认这三项采用本地范围展开：以父命中实际落点为原点，沿原 Scope 顺序及格网方向／翻转逐身体格检查合法目标；每个命中格分别创建原 HitList 的各次引用，保留重复 ID、原边延迟及逐格延迟。父节点不结算伤害、不消耗随机抽取；子命中的实际落点进入回执，由原命中实体播放。三个原子命中均为怪物召唤，继续使用原召唤放置与合法性检查；没有合法身体格时不创建子命中。施法遍历引用仅存在于内存，检查点继续保存结果回执。代码入口为 `FightBattleHitCollector`、`FightHitChainExecution.CustomTargets` 与既有结算／播放路径。此项不表示自定义命中 AI 评分、召唤模型入场或任意嵌套包装组合已全部完成。
+用户确认这三项按技能描述单机选格：狂热图腾在施法者自身 4 格内靠近既有 AI 选出的友方目标，灵铠与汐卫靠近敌方目标；在原 Scope 中先排除角色身体占用、地图／地形及召唤身体不合法的格子，以距目标身体格的曼哈顿距离、距施法者身体格距离、原 Scope 顺序依次排序，只创建 1 次原召唤子命中。仅当原范围没有合法格时，尝试施法者所在格，且仅忽略施法者本身的占用；其他占用、地图合法性、原概率与数量上限仍检查，回退格也不合法则不召唤。父节点不结算伤害、不抽取随机数，原方向／翻转、选中范围项及 HitList 边延迟保留；回退格没有原范围项，不追加逐格延迟。该排序与同格回退为用户确认的单机规则，不能视为已恢复的服务端实现。施法遍历引用只存在内存，检查点保存实际结果回执。代码入口为 `FightBattleHitCollector`、`FightHitChainExecution.CustomTargets` 与既有结算／播放路径。
 
 
 
@@ -235,7 +237,7 @@
 
 ## 尚未实现
 
-- 3190／3932／3935 经用户看过官方模型后确认均禁止与角色同格。原 `item_10080_func_desc` 说明在自身 4 格范围内靠近友方目标放置 1 个图腾；`item_10167_func_desc`／`item_10189_func_desc` 说明在自身 4 格范围内靠近敌方放置 1 只召唤物。当前“按父范围内身体格创建子命中”的单机方案不符合这些空格落点要求，仍待修正；`SelfTargetPosResolver` 在 APK 共享代码仅有类型标记，服务端候选空格排序缺失，不能通过放宽同格检查绕过。描述载荷为 `Assets/Official/Skills/fidelity-texts.json`。
+- 3190／3932／3935 的选格遵循上方已确认单机方案及原技能描述 `item_10080_func_desc`／`item_10167_func_desc`／`item_10189_func_desc`（`Assets/Official/Skills/fidelity-texts.json`）；三类原生模型、外观和出生图已接入，完整战斗 HUD、死亡／出生重叠及全部召唤状态演出仍未完整验证。
 
 - 原管理器已接管完整直接伤害回执、实际技能重放、已知扣血通知及已记录的状态自定义动作；已关联命中的成功驱散由原伤害创建回调通知；状态结算仍沿旧步骤驱动；非命中直接施加的冷却变化等无明确关联的状态动作仍缺逐次发生时刻，须继续补齐共享通知与时序。未接管或旧检查点缺证据的结果仍保留原有兼容路径；全部飘字与特殊派生结果尚未迁移完成。
 
@@ -253,9 +255,9 @@
 
 ## 当前验证范围
 
-- 角色召唤出现时序通过 `test_battle_unit_spawns.ps1`：九条原技能及逐格／飞行延迟受控变体共 18 组，检查实际成功放置的实体身份、原范围下标、初始格位、时序及存档往返；12060／13300／13670 在当前占用检查下未成功召唤，不以零回执证明完整技能完成。图时钟回归覆盖长帧、同刻多只召唤、重复刷新、恢复抑制及待出生召唤的初始子技能；460 条公式／战斗核心与召唤放置回归通过。主工程 Unity 2022.3.57f1c2 编译及 `ProjectTools.Validate` 通过并以 0 退出，静态元数据检查通过（151,626 GUID）。隔离工程内置屏静音 Play Mode 以三条原技能的真实执行回执驱动公共场景和原生图时钟，3181／3182／3183 均通过到期前不可见、到期落格、原出生图转待机、重复刷新及显示不改写结算存档断言；六张出生／待机实际画面已查看。3183 出生前段按原 attachment 时间尚无完整模型，0.6 秒画面已核对。首次隔离导入缺少 URP 引用、模型测试目录及原 AppearanceConfig，已补齐测试依赖后重跑；最终断言通过，编辑器写出结果后停在原生退出阶段，本会话停止该进程，不计为正常退出。此专项没有完整人物／HUD 或模拟输入，不代表完整技能流程；未构建或发布 Windows Player，公共战斗仍未完成。
+- 角色召唤出现时序通过 `test_battle_unit_spawns.ps1` 的九条原技能及受控逐格／飞行延迟变体共 18 组，检查实际实体身份、范围下标、初始格位、时间与存档往返；三条自定义召唤均恰好生成 1 只。460 条公式／战斗核心、原召唤放置及数量／概率回归通过；独立暂存源码也通过自定义目标专项。主工程 Unity 2022.3.57f1c2 导入／编译与 `ProjectTools.Validate` 以 0 正常退出，静态元数据检查通过（151,697 GUID）。隔离内置屏静音 Play Mode 使用六条原技能及三条自定义技能的同格回退共九组真实执行回执驱动公共场景／原生图时钟，3181／3182／3183／3190／3932／3935 均通过到期前不可见、到期后一个 float 可表达间隔内正确落格、原出生图转待机、重复刷新和显示不改写结算存档断言；18 张实际出生／待机画面已查看，原挂点与骨骼跟随阴影保留。汐卫的分段时钟有约 2e-9 秒余量，测试按下一个可表示的 float 时刻检查，不改原延迟／动画或放宽结算断言。编辑器写出通过结果后停在原生退出阶段，本会话停止该进程，不计为正常退出；主工程正常退出与该情况分别记录。夹具未挂完整玩家／HUD，也没有模拟鼠标流程，不表示完整技能交互或 Windows Player 已验证；本小模块未构建／发布，公共战斗仍未完成。
 
-- 自定义目标命中专项 `test_battle_custom_targets.ps1` 通过 48 组原父命中、四方向、翻转与重复引用组合，并逐组检查空范围不生成子命中；覆盖多身体格、重复身体声明、死亡与范围外排除、原边延迟及三条真实技能的回执／存档确定性继续执行。独立暂存源码也通过相同规则专项；静态元数据检查通过（151,623 GUID）；460 条公式／战斗核心、连锁、随机父命中、召唤位置与选择快照回归通过。隔离 Unity 2022.3.57f1c2 工程完成编译，内置屏静音 Play Mode 的三条原技能新回执／清空 EffectDelays 的旧回执共六组断言通过：父／子原实体、实际施法身份、原范围与落点、释放及播放不改写结算检查点；六张实际运行截图已查看。六份原父／子 prefab 的 Playable 字段均为空，12060／13300 画面中的效果属于原技能图，13670 的受控画面保留背景；没有添加替代效果。夹具只有空角色锚点，保留原骨骼／Animator 诊断，不代表召唤角色模型、地块视图或完整技能演出验证。编辑器写出通过结果后停在原生退出阶段，本会话停止该进程，不计为正常退出。首次画面检查误将 13670 原空表现作为失败，已按原字段修正夹具并完整重跑；嵌套协程异常现在由同一测试退出处理捕获。主工程两次导入／ProjectTools.Validate 尝试先后被其他会话修改中的 HomeHudView.BedWindow.cs 的 UIBase 引用和 SkillPassivePropertyValidation.cs 的 Character 引用编译错误阻断，均未进入 Validate；本项未构建或发布 Windows Player，公共战斗仍未完成。
+- 自定义目标专项 `test_battle_custom_targets.ps1` 通过三条原技能、四方向／翻转及普通空格／同格回退／回退也非法共 72 组组合；另经完整执行器检查三条真实技能各四种地图／占用条件（含回退格被第三方占用）的实际数量、合法占用、落点回执和存档确定性继续执行。旧的“逐身体格创建子命中”方案已按技能描述及用户最终决定替换。
 
 - 正式随机父命中 10920→10921、68480→68481 已通过真实执行器回执的隔离内置屏静音 Play Mode：新回执与清空 EffectDelays 的旧回执共四组，检查原图、原范围、冻结锚点、独立施法身份、回收及播放前后检查点逐字节不变。固定／弹道／连锁受控图、触发技能重复引用和四类召唤回执继续通过；十九张实际运行画面已查看，包含父命中短生命周期结束后的持续图。等待前一召唤技能的原图自然结束后再录制随机场景，避免画面残留混入；夹具使用空角色锚点，保留原骨骼／Animator 不存在的诊断，不代表正式人物动画、全部技能或 Windows Player 已验证。Unity 编译、ProjectTools.Validate、静态元数据检查及完整 Play Mode 均以 0 退出；Windows 全量资源构建尚未完成，本批未发布，公共战斗仍未完成。
 

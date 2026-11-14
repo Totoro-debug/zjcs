@@ -1,4 +1,4 @@
-"""Record original custom-hit inputs and the confirmed offline cell expansion."""
+"""Record original custom-hit inputs and the confirmed offline summon placement."""
 import hashlib
 import json
 import subprocess
@@ -22,21 +22,26 @@ def main():
             'common-source/Common/SelfTargetPosResolver.cs',
             'client-source/MyFightHitCustomTarget.cs')],
         inputs=[identity('unity/Assets/Official/Combat/' + name) for name in (
-            'skill-rules.json', 'skill-rules-source-manifest.json')],
+            'skill-rules.json', 'skill-rules-source-manifest.json')]
+            + [identity('unity/Assets/Official/Skills/fidelity-texts.json')],
         migration=[identity(runtime + name) for name in (
             'Official/Combat/FightBattleHitCollector.cs', 'Official/Combat/FightBattleState.cs',
             'Official/Combat/FightOfficialCombatCatalog.cs', 'Official/Combat/FightBattleExecutor.cs',
-            'Offline/Combat/FightHitChainExecution.cs', 'Offline/Combat/FightHitChainExecution.CustomTargets.cs')],
+            'Offline/Combat/FightHitChainExecution.cs', 'Offline/Combat/FightHitChainExecution.CustomTargets.cs',
+            'Offline/Combat/FightHitTargetSelectors.cs')],
         validation=[identity(name) for name in (
             'scripts/test_battle_custom_targets.ps1', 'scripts/fixtures/battle_custom_targets_harness.cs',
             'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleHitPlaybackAcceptance.CustomTargets.cs')],
         generator=identity('scripts/record_battle_custom_target_sources.py'),
         bindings=dict(execution='FightBattleHitCollector -> FightHitChainExecution.SelectCustom -> existing settlement',
             presentation='FightBattleHitSelectionSnapshot -> OfficialBattleHitReceiptPlayback -> original custom/summon views'),
-        operation='User-confirmed offline SelfTargetPosResolver: scan the original Scope around the actual parent hit cell in original order; '
-            'for each eligible occupied body cell create each original HitList child with its edge and scope delays. '
-            'Preserve original orientation and flip. Parent performs no damage or random draw. '
-            'No new artwork or prefab changes. Only the three installed original custom parents are validated.')
+        operation='User-confirmed offline SelfTargetPosResolver for 12063/13303/13673: use the existing AI-selected target; '
+            'choose a legal unoccupied cell in the original caster-relative scope by nearest target body, then caster body, '
+            'then original Scope order (Manhattan distance). Only if none is legal, try the caster cell ignoring only caster occupancy. '
+            'Map validity, other occupants, original pool limits and probability remain enforced. Create one original HitList occurrence '
+            'with original edge/scope delays, orientation and flip; parent performs no damage or random draw. '
+            'Official descriptions item_10080/item_10167/item_10189 establish caster range four and one summon near ally/enemy; '
+            'server ordering and the last-resort overlap are confirmed offline decisions, not recovered official logic.')
     # These pre-existing proofs also name the shared traversal and fixture. Refresh
     # only those local code credentials; official inputs and asset outputs stay fixed.
     for receipt, key, changed in (

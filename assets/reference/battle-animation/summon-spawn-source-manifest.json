@@ -48,8 +48,8 @@
   "migration": [
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
-      "bytes": 164648,
-      "sha256": "382c677b922fd44c40249cc036ad9ab19d2cce68f1037927ba5dadaebb1ac997"
+      "bytes": 165498,
+      "sha256": "16ea6bc03c27e2a83a2a2d4d04bf6f079728d45016f63c45c1ae15232410b354"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleHitSelectionSnapshot.cs",
@@ -90,13 +90,38 @@
   "assets": [
     {
       "path": "assets/reference/battle-animation/live-monsters-source-manifest.json",
-      "bytes": 2340007,
-      "sha256": "5153fcdd0c6bc0451f7701b8e946f9a7cd9879ab337fa21417ee5c4ca480a4c2"
+      "bytes": 2439709,
+      "sha256": "29d2353119960a2e8e0f6dbeee222274a6347e960197fe337d368489aadccc20"
     },
     {
       "path": "assets/reference/battle-animation/summon-role-views-source-manifest.json",
-      "bytes": 128182,
-      "sha256": "4dc02bc471a03768d5369b9218c6a9851ed0e6bf7c473bddeebe21733eb5c7e8"
+      "bytes": 153694,
+      "sha256": "d63056c696ecacc59172f48417f1914560997ef24ab75ef9be4cd8b55e907e8f"
+    },
+    {
+      "path": "assets/reference/battle-animation/native-monster-appearance-source-manifest.json",
+      "bytes": 1770915,
+      "sha256": "369b2e22763d8c40339a470d1ba24ed555a64a3d0a936805d9d886dc0efcbdf5"
+    },
+    {
+      "path": "assets/reference/battle-animation/monster-animator-bindings-source-manifest.json",
+      "bytes": 239490,
+      "sha256": "5bf61d6c569b95aa1724686b22501b3a290b458c74619285c866f0751e72b767"
+    },
+    {
+      "path": "assets/reference/battle-animation/monster-animation-controllers-source-manifest.json",
+      "bytes": 138854,
+      "sha256": "ebc4088ebf898beb676ee075503cf21e9013fc7dfbc7184097596e73d03d3c2c"
+    },
+    {
+      "path": "assets/reference/battle-animation/monster-attachments-source-manifest.json",
+      "bytes": 2446032,
+      "sha256": "0e2ce79b8e39a888ff0bf71e2d705d09103da20bab4bf7abdb7a2b5f0221bcea"
+    },
+    {
+      "path": "assets/reference/battle-animation/monster-additional-shadows-source-manifest.json",
+      "bytes": 61252,
+      "sha256": "732253e37a208f72c401255ac4e37df60148cec7fdfb2707d32e15621602f608"
     }
   ],
   "validation": [
@@ -107,8 +132,8 @@
     },
     {
       "path": "scripts/fixtures/battle_unit_spawn_harness.cs",
-      "bytes": 5955,
-      "sha256": "b0dacef7c22acb459ae9c94e088deb136868a01119fdc34c12a085eb79d288a9"
+      "bytes": 5901,
+      "sha256": "28325b307298611235cb9a2ade003232a529ce7d8280539d2c9f081d06dfd443"
     },
     {
       "path": "scripts/test_battle_skill_graph_dispatch.ps1",
@@ -122,19 +147,19 @@
     },
     {
       "path": "scripts/prepare_battle_damage_playback_validation.py",
-      "bytes": 10289,
-      "sha256": "1c78b56c889a442f2d40f9441ec62350aef39f0839da7990161996373e211ad2"
+      "bytes": 10657,
+      "sha256": "9f3439565144d495665d80ea02a0f23aaf1d1ead1c5bc6bd41eea6b4a36dcc41"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSummonSpawnAcceptance.cs",
-      "bytes": 11174,
-      "sha256": "55e4986db76a18511f71db822d974b07512ea5efe2b76aa2a151bfc6c8146b68"
+      "bytes": 12423,
+      "sha256": "0ff162ca5b56442e8e6af3cad13c2f998b9a38ec5e820352a74103f3aa752af9"
     }
   ],
   "generator": {
     "path": "scripts/record_battle_summon_spawn_sources.py",
-    "bytes": 4222,
-    "sha256": "298f50be44f8aa753e193bc86a29d489cf8419a6e87c4193a0b3f875be7d476d"
+    "bytes": 4701,
+    "sha256": "5f28dee0178de0bc5c4bcbcde1a3d902547739b4023066bb609f8671cf0971d8"
   },
   "binding": "Successful SpawnSummons -> owning HitSelectionSnapshot.SpawnedUnits -> shared scene -> native graph clock -> original model/generation graph",
   "operation": "Add presentation-only identity, initial cell and cast-local flight plus original sorted Base scope delay for each successful role summon. Retain eager settlement, RNG, placement and status order. Delay model/HUD creation on the existing native graph clock. Restore existing roles without replaying generation. Position the native monster before original birth graph initialization. No source prefab, texture, mesh, shader or animation asset is changed."

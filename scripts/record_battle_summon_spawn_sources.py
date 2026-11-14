@@ -32,7 +32,12 @@ def main():
         migration=[identity(path) for path in changed],
         assets=[identity(path) for path in (
             'assets/reference/battle-animation/live-monsters-source-manifest.json',
-            'assets/reference/battle-animation/summon-role-views-source-manifest.json')],
+            'assets/reference/battle-animation/summon-role-views-source-manifest.json',
+            'assets/reference/battle-animation/native-monster-appearance-source-manifest.json',
+            'assets/reference/battle-animation/monster-animator-bindings-source-manifest.json',
+            'assets/reference/battle-animation/monster-animation-controllers-source-manifest.json',
+            'assets/reference/battle-animation/monster-attachments-source-manifest.json',
+            'assets/reference/battle-animation/monster-additional-shadows-source-manifest.json')],
         validation=[identity(path) for path in (
             'scripts/test_battle_unit_spawns.ps1', 'scripts/fixtures/battle_unit_spawn_harness.cs',
             'scripts/test_battle_skill_graph_dispatch.ps1', 'scripts/fixtures/battle_skill_graph_dispatch_harness.cs',
