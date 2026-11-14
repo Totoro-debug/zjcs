@@ -11,6 +11,7 @@ public sealed partial class HomeIncomeFormulaHostRunner
 {
     IEnumerator CheckNaturalTimeUnlock()
     {
+        CheckNativeEnvironmentGraph();
         Require(home.Profile.Save.Player.Level == 3 && home.Profile.StoryCount("FirstBattle") == 0
             && ActualEnvironment.Hour == 12 && ActualEnvironment.Minute == 0,
             "actual low-level home uses the original fixed noon before natural-time unlock");
@@ -42,6 +43,48 @@ public sealed partial class HomeIncomeFormulaHostRunner
             "restore isolated fixture story");
         home.Close(); CloseCapture(); yield return null; Open(); yield return new WaitForSeconds(1);
         Debug.Log("HOME_NATURAL_TIME_UNLOCK_PASSED: actual noon, selected level and story branches, notifications and reopen.");
+    }
+
+    void CheckNativeEnvironmentGraph()
+    {
+        var assets = Resources.Load<HomeNativeEnvironmentAssets>("Home/HomeNativeEnvironmentAssets");
+        Require(assets != null && assets.DayClip != null && assets.NightClip != null && assets.Moons.Length == 15,
+            "selected original native day/night clips and all fifteen moon triplets are bound");
+        var type = typeof(HomeEnvironmentView);
+        object sky = type.GetField("nativeSky", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(ActualEnvironment);
+        var flags = BindingFlags.Instance | BindingFlags.NonPublic;
+        var day = (GameObject)sky.GetType().GetField("day", flags).GetValue(sky);
+        var night = (GameObject)sky.GetType().GetField("night", flags).GetValue(sky);
+        Component sunlight = Array.Find(day.transform.Find("Sun_Light/Sun_Glaobal_Light").GetComponents<Component>(),
+            component => component != null && component.GetType().FullName == "UnityEngine.Rendering.Universal.Light2D");
+        Component moonlight = Array.Find(night.transform.Find("MoonLight/GlobalLight").GetComponents<Component>(),
+            component => component != null && component.GetType().FullName == "UnityEngine.Rendering.Universal.Light2D");
+        Require(sunlight != null && moonlight != null
+            && Convert.ToInt32(sunlight.GetType().GetField("m_LightType",flags).GetValue(sunlight)) == 3
+            && Convert.ToInt32(moonlight.GetType().GetField("m_LightType",flags).GetValue(moonlight)) == 4,
+            "original daytime point and nighttime global light types survive native recovery; day="
+                + (sunlight == null ? "missing" : sunlight.GetType().GetField("m_LightType",flags).GetValue(sunlight).ToString())
+                + "; night=" + (moonlight == null ? "missing" : moonlight.GetType().GetField("m_LightType",flags).GetValue(moonlight).ToString())
+                + "; night components=" + string.Join(",",Array.ConvertAll(night.transform.Find("MoonLight/GlobalLight").GetComponents<Component>(),c=>c == null ? "missing script" : c.GetType().FullName)));
+        var layers = (int[])sunlight.GetType().GetField("m_ApplyToSortingLayers",flags).GetValue(sunlight);
+        Require(layers.Length == 14 && Array.IndexOf(layers,1037039787) >= 0,
+            "original home light targets retain all fourteen authored sorting layers");
+        var apply = sky.GetType().GetMethod("Apply");
+        var moon = night.transform.Find("Moon/Scale/Moon").GetComponent<SpriteRenderer>();
+        var sun = day.transform.Find("Sun/Scale/Sun_Sprite").GetComponent<SpriteRenderer>();
+        apply.Invoke(sky,new object[] { .5f, 1 });
+        Vector3 sunDay = sun.transform.position;
+        Color lightDay = (Color)sunlight.GetType().GetProperty("color").GetValue(sunlight);
+        Capture("home-native-environment-noon.png");
+        apply.Invoke(sky,new object[] { .875f, 15 });
+        Color lightNight = (Color)sunlight.GetType().GetProperty("color").GetValue(sunlight);
+        Require(sun.transform.position != sunDay && lightDay != lightNight,
+            "original native animation graph changes sun position and full Light2D colour bindings");
+        Require(moon.sprite == assets.Moons[14].Moon,
+            "original moon phase chooses the selected native sprite instead of a replacement quad");
+        Capture("home-native-environment-night.png");
+        ActualEnvironment.Tick(.00001f);
+        Debug.Log("HOME_NATIVE_ENVIRONMENT_GRAPH_PASSED: original day/night hierarchy, native curves, six lights, original target layers and fifteen moon phases. Full scene material migration remains pending.");
     }
 
     sealed class NaturalTimeGate : IHomeNaturalTimeLimit

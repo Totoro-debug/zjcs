@@ -122,8 +122,10 @@ class PartnerNativeRecovery:
                 raise ValueError('Original subtree root does not belong to the selected bundle')
         relative = Path('Prefabs/UI/Npc') / (name + '.prefab') if native_relative is None else Path(native_relative)
         path = self.native / relative
-        if path.suffix != '.prefab' or not path.resolve().is_relative_to(self.native.resolve()):
-            raise ValueError('Recover a prefab within the selected native source directory')
+        if path.suffix not in ('.prefab', '.unity') or not path.resolve().is_relative_to(self.native.resolve()):
+            raise ValueError('Recover a prefab or scene subtree within the selected native source directory')
+        if path.suffix == '.unity' and source_root is None:
+            raise ValueError('Scene recovery requires an explicit original/native subtree root')
         if bundle != BUNDLE and bundle not in self.proof.setdefault('additional_bundles', []):
             self.proof['additional_bundles'].append(bundle)
         text = path.read_text('utf8')

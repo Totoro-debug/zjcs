@@ -160,7 +160,7 @@ namespace Zjcs.Presentation.Home
         private readonly HomeMeteorRuntimePayload meteorRuntime;
         private readonly HomeMoonVariant[] moonVariants;
         private readonly HomeMoonVisualData moonVisuals;
-        private readonly HomeSkyTimelineView daySky;
+        private readonly HomeNativeEnvironmentView nativeSky;
         private readonly HomeEnvironmentTimeState timeState;
         private readonly HomeMeteorSchedule meteorSchedule;
         private double daySeconds;
@@ -212,7 +212,7 @@ namespace Zjcs.Presentation.Home
             moonVisuals = JsonUtility.FromJson<HomeMoonVisualData>(File.ReadAllText(moonPath));
             if (moonVisuals == null || moonVisuals.layers == null || moonVisuals.tracks == null)
                 throw new InvalidDataException("The official home moon visual payload is incomplete.");
-            daySky = HomeSkyTimelineView.CreateIfSupported(this.scene);
+            nativeSky = new HomeNativeEnvironmentView(this.scene);
             Apply(true);
         }
 
@@ -258,15 +258,13 @@ namespace Zjcs.Presentation.Home
                 appliedMoon = moon;
                 MoonPhase = moon;
             }
-            scene.SetMoonVisual(moonVisuals, MoonPhase,
-                (float)(daySeconds / SecondsPerDay * moonVisuals.duration));
-            daySky?.Apply((float)(daySeconds / SecondsPerDay));
+            nativeSky.Apply((float)(daySeconds / SecondsPerDay), MoonPhase);
         }
 
         public void Dispose()
         {
             timeState.Dispose();
-            daySky?.Dispose();
+            nativeSky?.Dispose();
         }
 
         private int LightTimeIndexAt(double seconds)
