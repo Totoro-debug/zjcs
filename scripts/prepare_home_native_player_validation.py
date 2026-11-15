@@ -13,14 +13,15 @@ def write_receipt():
     sources = ['home-player-panel-native', 'home-player-info-native', 'home-player-health-profile',
         'home-player-status', 'home-avatar-portraits', 'home-avatar-native', 'home-experience-profile',
         'home-experience-growth', 'home-experience-environment', 'home-experience-rewards',
-        'home-level-up-windows', 'home-level-up-properties', 'home-no-bless-rules', 'home-resonance-profile']
+        'home-level-up-windows', 'home-level-up-properties', 'home-no-bless-rules', 'home-resonance-profile',
+        'home-hud-native']
     inputs = ['assets/reference/' + name + '-source-manifest.json' for name in sources]
     bindings = ['scripts/prepare_home_native_player_validation.py', 'scripts/fixtures/home_native_player_validation.cs',
         'scripts/fixtures/home_furniture_host_validation.cs', 'scripts/fixtures/home_income_formula_validation.cs',
         'unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionSoundHost.cs']
     bindings += ['unity/Assets/Game/Runtime/Presentation/Home/' + name for name in [
         'HomeHudView.NativePlayer.cs', 'HomeHudView.NativePlayer.cs.meta', 'HomeHudView.cs',
-        'HomeFeatureRuntime.cs', 'HomeAcceptanceDriver.cs', 'Zjcs.Presentation.Home.asmdef']]
+        'HomeFeatureRuntime.cs', 'HomeAcceptanceDriver.cs', 'HomeHudView.Tasks.cs', 'Zjcs.Presentation.Home.asmdef']]
     editor = ROOT / 'unity/Assets/Game/Validation/HomeNativePlayer'
     if editor.is_dir():
         bindings += [path.relative_to(ROOT).as_posix() for path in sorted(editor.iterdir()) if path.is_file()]

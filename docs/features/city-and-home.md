@@ -543,7 +543,13 @@ Unity 2022.3.57f1c2 静音有图形 Play Mode 完整收益回归退出码为 0�
 
 共享语言服务补入原玩家面板文本。新增声音宿主只承担面板与升级事件，其他事件转发给先前宿主；关闭时按作用域顺序释放并恢复先前宿主。家园生命计算使用当前家园作用域的空地图／游戏集合，战斗展示期间暂停此宿主，不用已探索地图数量推断正在战斗。
 
-来源与显式绑定见[正式玩家面板接线凭据](../../assets/reference/home-native-player-host-source-manifest.json)，验证入口为 `prepare_home_native_player_validation.py` 与 `HomeNativePlayerValidation.Run`。主工程静音、有图形 Play Mode 已通过：正式入口保留全部 22 个原节点，真实头像摄影棚生成纹理；原头像按钮经 UI 射线首命中及模拟指针打开人物页，返回后恢复公共面板；实际成长事务将隔离角色从 3 级升到 4 级，原经验处理器推进经验环并创建真实升级通知，关闭／重开保留等级及原组件显示。最终退出码 0，未再出现释放后的事件解绑异常。验证直接采集 608×1080 Game View，保持正式 ScreenSpaceOverlay 模式、排序及缩放；已查看首开、经验处理后、升级数字及磁盘重开画面。完整升级特效／属性增量条目、赐福分支在正式 UI 的组合、正式床铺领取到经验动画的组合仍待核对。状态详情、赐福说明弹窗及动态状态图标目录仍待接入；完整 HUD 和 Windows Player 发布均未完成。最终修正后的主工程导入／编译及 `ProjectTools.Validate` 退出码 0，保留既有战斗 Edit Mode 释放诊断；静态元数据检查通过（152155 GUID）。永久验证入口在 `Assets/Game/Validation/HomeNativePlayer/`，代码仅在 Editor 宏内编译，运行输出及存档使用显式指定的隔离会话目录。
+来源与显式绑定见[正式玩家面板接线凭据](../../assets/reference/home-native-player-host-source-manifest.json)，验证入口为 `prepare_home_native_player_validation.py` 与 `HomeNativePlayerValidation.Run`，永久入口在 `Assets/Game/Validation/HomeNativePlayer/`，代码仅在 Editor 宏内编译，运行输出及存档使用显式指定的隔离会话目录。主工程静音、有图形 Play Mode 已通过：正式入口保留全部 22 个原节点，真实头像摄影棚生成纹理；原头像按钮经 UI 射线首命中及模拟指针打开人物页，返回后恢复公共面板；实际成长事务将隔离角色从 3 级升到 4 级，原经验处理器推进经验环并创建真实升级通知，关闭／重开保留等级及原组件显示。
+
+升级通知沿原 `LevelUpNotifyTip_Show` 的 2.2 秒动画显示与关闭。验证从实际通知出现时计时，核对横幅、标题、四项属性行错峰淡入、实际粒子播放和窗口释放；已查看入场、横幅展开、属性显示与停留阶段的 608×1080 Game View，保持正式 ScreenSpaceOverlay 模式、排序及缩放。攻击／防御由 96 到 106、生命由 481 到 534、速度由 76 到 85，来自真实角色与原属性公式。家园任务刷新误触发导航的修复及指针验证见[主线任务](tasks.md)。
+
+正式入口也沿所选原生 HUD 已确认的离线范围停用 `TeamMiniPanel`、`ApplyConfirmBtn`、`ChatMiniPanel` 和 `FunctionEntryChatQuick`；规则依据见[离线开放范围](offline-access.md)。聊天小窗及其透明按钮不再覆盖任务输入。
+
+赐福分支在正式 UI 的组合、正式床铺领取到经验动画的组合仍待核对。状态详情、赐福说明弹窗及动态状态图标目录仍待接入；完整 HUD 和 Windows Player 发布均未完成。主工程静音 Play Mode 退出码 0，无异常日志；导入／编译及 `ProjectTools.Validate` 已通过，保留既有战斗 Edit Mode 释放诊断；静态元数据检查通过（152156 GUID）。
 
 ## 自定义实现
 
@@ -560,7 +566,7 @@ Unity 2022.3.57f1c2 静音有图形 Play Mode 完整收益回归退出码为 0�
 
 新角色初始体力确定为 300 点。初始发放数量在现有客户端及共享配置中未取得，由用户明确选择自然恢复上限作为单机初始值；该数量不标为官方服务器规则。恢复速度、自然上限、持有上限及数量更新顺序仍来自官方实现。
 
-新角色按用户确认从官方初心者位阶 `SubRank=1` 开始，对应创建事务与不迁移旧档的范围见[创角](character-creation.md)。原经验查询因此可直接读取所选位阶的 10 级基础上限；无需由验证夹具补写位阶后才能使用。此初始化调整不代表正式家园的经验环或完整玩家面板已接线。
+新角色按用户确认从官方初心者位阶 `SubRank=1` 开始，对应创建事务与不迁移旧档的范围见[创角](character-creation.md)。原经验查询因此可直接读取所选位阶的 10 级基础上限；无需由验证夹具补写位阶后才能使用。正式经验环与公共玩家面板的接线及验证范围见上文。
 
 `HomeExperienceProfileValidation.Run` 已在隔离完整工程静音、有图形 Play Mode 通过新建角色的真实创建事务、初心者位阶落盘／重开、原查询的 1 级与 10 级上限，以及原经验奖励队列的普通增长、储存、赐福、隐藏补播、取消与释放回归；已查看四张 608×1080 经验环运行截图。此夹具的赛季、功能限制、属性与升级通知仍由明确的受控端点提供。静态检查通过（151980 个 GUID），Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 退出码均为 0；工程校验保留既有战斗 Edit Mode 的 Destroy 诊断。未构建或发布 Windows Player。
 

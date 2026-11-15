@@ -144,6 +144,10 @@ namespace Zjcs.Presentation.Home
             // Official fade/screenshot guider nodes start hidden; their white mask must not cover the scene.
             homeRenderer.SetActiveByName("Guider", false);
             homeRenderer.SetActiveByName("HomeFadeProxy", false);
+            // Apply the same confirmed offline exclusions as the selected native
+            // HomeHud prefab. Hidden chat hit areas must not intercept task input.
+            foreach (string closed in new[] { "TeamMiniPanel", "ApplyConfirmBtn", "ChatMiniPanel", "FunctionEntryChatQuick" })
+                homeRenderer.SetActiveByName(closed, false);
             // FunctionEntrys.controller starts in FunctionEntrysUI_Folded.
             // Its time-zero pose hides the overlapping expanded entry button.
             if (!homeRenderer.PlayAnimation("FunctionEntrysUI_Folded", loop: false))

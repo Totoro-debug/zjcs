@@ -70,7 +70,7 @@ namespace Zjcs.Presentation.Home
             slot.gameObject.SetActive(true);
             pinnedTaskRenderer = Renderer();
             pinnedTaskRow = pinnedTaskRenderer.Create("task_progress", slot,
-                (path, node) => OnTaskRowButton(path, task));
+                (path, node) => BindHudButton(path, node, (clickedPath, clickedNode) => OnTaskRowButton(clickedPath, task)));
             if (task == null)
                 RenderTaskPlaceholder(pinnedTaskRenderer, current);
             else
@@ -177,7 +177,7 @@ namespace Zjcs.Presentation.Home
             if (rows == null) return;
             HomeUiRenderer rowRenderer = Renderer();
             taskPanelRow = rowRenderer.Create("task_progress", rows,
-                (path, node) => OnTaskRowButton(path, currentTask));
+                (path, node) => BindHudButton(path, node, (clickedPath, clickedNode) => OnTaskRowButton(clickedPath, currentTask)));
             RenderTaskRow(rowRenderer, currentTask, readyToClaim);
         }
 
