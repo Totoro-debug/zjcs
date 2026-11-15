@@ -134,7 +134,9 @@ def main():
         'OfficialBattleSceneTimelineView.cs','OfficialBattleSceneTimelineView.cs.meta'):
         p=ROOT/'unity/Assets/Game/Runtime/Presentation/Combat'/name
         outputs[p.relative_to(ROOT).as_posix()]=sha(p)
-    inputs = {p.relative_to(ROOT).as_posix():sha(p) for p in (*sources,interface,SOURCE/'common-source/Common/RoundRuntimeData.cs',SOURCE/'common-source/Common/MonsterIconType.cs',SOURCE/'common-source/Common/LanguageUtils.cs')}
+    inputs = {p.relative_to(ROOT).as_posix():sha(p) for p in (*sources,interface,
+        *(SOURCE/'common-source/Common'/name for name in ('RoundRuntimeData.cs','MonsterIconType.cs','LanguageUtils.cs',
+            'FightRoleCharacterGuardComponent.cs','GuardType.cs','ArenaGuardInfo.cs')))}
     receipt = ROOT/'assets/reference/battle-hud/round-card-runtime-source-manifest.json'
     receipt.write_text(json.dumps(dict(manifest='884_156692',inputs=inputs,outputs=outputs,generator_sha256=sha(Path(__file__)),
         adaptations=['Entity component/config/player queries are supplied at IBattleRoundCardBindings; original branch priority retained.',
@@ -142,7 +144,7 @@ def main():
             'Resolved guard appearances replace online guard parser/wrapper queries; the three supported guard kinds are retained.',
             'Reusable local player request and mimic subscription replace client managers; original waiting/reset/disposal order retained.',
             'Existing portrait enums, circle renderer and Unity logging adapters; original serialized fields, animation and death/pool order retained.'],
-        scope='Both original round card classes and interface; explicit local projection of existing completed photographs, NPC/monster/pet icons and faction images. Native asset/config binding is recorded separately. Guard/mimic entity projection remains pending; the original round manager has a separate source receipt.'),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        scope='Both original round card classes and interface; explicit local projection of existing completed photographs, NPC/monster/pet icons and faction images. Mode-owned guard kind/sex/profession enters the original temporary-appearance branch; arena supplies its existing guard facts. Native asset/config binding is recorded separately. Mimic and complete monster/pet icon entity projection remain pending; the original round manager has a separate source receipt.'),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print('Ported both original round cards and interface.')
 
 

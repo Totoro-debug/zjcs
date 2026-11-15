@@ -75,6 +75,10 @@ namespace Zjcs.Editor
                             Require(Time.realtimeSinceStartup < deadline, "Arena did not begin a real action presentation.");
                             yield return null;
                         }
+                        Require(controller.HasBattleEnvironment, "Arena guard verification lost the original battle environment.");
+                        VerifyTimelineProjection();
+                        VerifyCharacterPortraits(controller.Checkpoint);
+                        yield return Capture(output, "arena-battle-guard");
                         yield return ClickBattleLeave(); yield return new WaitForSecondsRealtime(1);
                         var confirm = Active<WorldConfirmDialog>().Single();
                         yield return Combat.BattleGameViewInput.Click(confirm.CancelBtn);

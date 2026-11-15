@@ -1064,7 +1064,8 @@ namespace Zjcs.Combat.Official
                     }
                     if (statusOnly)
                     {
-                        ExecuteStatusOnlyHit(actor, target, skill, hit, resolved, damage,
+                        ExecuteStatusOnlyHit(actor, target, targetPosition ?? (targets.Count > 0 ? targets[0] : null),
+                            skill, hit, resolved, damage,
                             skillCostHp, casts, damageEvents, movements, ref lastDelay,
                             ref statusTriggerDuration, ref statusTriggerActionDuration, hitOrigin, castHit);
                         continue;
@@ -1114,7 +1115,8 @@ namespace Zjcs.Combat.Official
                         damageEvents, movements, ref lastDelay);
                     ApplyHitDisperse(actor, target, hit, random, damage);
                     int hitMovementStart = movements.Count;
-                    ApplyHitMove(actor, target, skill, hit, movements);
+                    ApplyHitMove(actor, target, targetPosition ?? (targets.Count > 0 ? targets[0] : null),
+                        skill, hit, castHit, movements);
                     bool hitDisplacedTarget = false;
                     for (int movementIndex = hitMovementStart; movementIndex < movements.Count; movementIndex++)
                         hitDisplacedTarget |= movements[movementIndex].UnitId == target.Id
@@ -1739,9 +1741,16 @@ namespace Zjcs.Combat.Official
                 maxStep + 1, 0, true, actor.BodyOffsets, occupied);
             if (path == null || path.Count <= 1) return false;
             int steps = Math.Min(maxStep, path.Count - 1);
+            return ApplyMovementPath(actor, path, steps, movements);
+        }
+
+        private bool ApplyMovementPath(FightBattleUnitState actor, IReadOnlyList<FightGridPoint> path,
+            int steps, List<FightBattleMovementEvent> movements)
+        {
+            if (path == null || path.Count < 2 || steps <= 0) return false;
             var movement = new FightBattleMovementEvent { UnitId = actor.Id,
                                 HasDirection = true, Direction = actor.Direction };
-            movement.Path.Add(start);
+            movement.Path.Add(path[0]);
             for (int i = 1; i <= steps; i++)
             {
                 FightGridPoint previous = path[i - 1];
@@ -2258,32 +2267,58 @@ namespace Zjcs.Combat.Official
         /// <summary>
         /// Official <c>FightDamageComponent.MoveCfg</c>: pushes or pulls the damaged unit along the
         /// source-to-target vector by the configured distance, falling back to shorter distances
-        /// when the destination is blocked. The default (-1) means no displacement.
+        /// when the destination is blocked. Confirmed Distance=-1 pulls use a separate landing rule.
         /// </summary>
-        private void ApplyHitMove(FightBattleUnitState actor, FightBattleUnitState target,
-            FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
+        private void ApplyHitMove(FightBattleUnitState actor, FightBattleUnitState target, FightBattleUnitState skillTarget,
+            FightBattleSkillDefinition skill, FightBattleHitDefinition hit, FightBattleSkillCastPresentation cast,
             List<FightBattleMovementEvent> movements)
         {
             FightBattleSkillMove move = hit == null ? null : hit.HitMove;
+            IFightHitMovementRule movementRule = FightHitMovementRules.For(hit);
             if (move == null || !MoveConditionsSatisfied(move, actor, target)
-                || move.Distance <= 0 || movements == null
+                || (move.Distance <= 0 && movementRule == null) || movements == null
                 || target.Hp <= 0) return;
             if (statusCatalog != null && !statusCatalog.CanStartEntityAction(target,
                 move.MoveBehaviourId)) return;
             if (!MoveChanceSucceeded(move, actor, target)) return;
+            if (movementRule != null)
+            {
+                IReadOnlyList<FightGridPoint> path = movementRule.Plan(new FightHitMovementContext {
+                    Source = actor, Target = target, SkillTarget = skillTarget, Hit = hit, Grid = checkpoint.Grid,
+                    Occupied = OccupiedPositions(target.Id)
+                });
+                int movementIndex = movements.Count;
+                if (path != null && ApplyMovementPath(target, path, path.Count - 1, movements))
+                    ApplyMovementAction(movements, movementIndex, move, skill);
+                return;
+            }
             if (move.Direction == 2)
             {
+                if (FightHitMovementRules.UsesConfirmedSideMove(hit))
+                {
+                    ApplyConfirmedHitSideMove(target, actor, skillTarget, move, movements, skill);
+                    return;
+                }
                 ApplyPathSideMove(target, actor, target, move, movements, skill);
                 return;
             }
             if (move.Direction != 0 && move.Direction != 1) return;
-            int stepX = Math.Sign(target.X - actor.X);
-            int stepY = Math.Sign(target.Y - actor.Y);
-            if (move.TowardsTargetPos) { stepX = -stepX; stepY = -stepY; }
-            if (move.CancelDiagonally && stepX != 0 && stepY != 0)
+            int stepX = 0, stepY = 0;
+            bool facingPush = FightHitMovementRules.UsesFacingPush(hit);
+            if (facingPush && (cast == null || !FightHitMovementRules.TryGetFacingPush(hit, cast.FacingIndex, out stepX, out stepY)))
+                return;
+            if (!facingPush)
             {
-                if (Math.Abs(target.X - actor.X) >= Math.Abs(target.Y - actor.Y)) stepY = 0;
-                else stepX = 0;
+                FightBattleUnitState reference = FightHitMovementRules.UsesSkillTarget(hit) ? skillTarget : actor;
+                if (reference == null) return;
+                stepX = Math.Sign(target.X - reference.X);
+                stepY = Math.Sign(target.Y - reference.Y);
+                if (move.TowardsTargetPos) { stepX = -stepX; stepY = -stepY; }
+                if (move.CancelDiagonally && stepX != 0 && stepY != 0)
+                {
+                    if (Math.Abs(target.X - reference.X) >= Math.Abs(target.Y - reference.Y)) stepY = 0;
+                    else stepX = 0;
+                }
             }
             if (stepX == 0 && stepY == 0) return;
             for (int distance = move.Distance; distance > 0; distance--)
@@ -2294,6 +2329,59 @@ namespace Zjcs.Combat.Official
                 if (!TryMoveUnit(target, desired, distance, movements)) continue;
                 ApplyMovementAction(movements, movementIndex, move, skill);
                 break;
+            }
+        }
+
+        private void ApplyConfirmedHitSideMove(FightBattleUnitState mover, FightBattleUnitState source,
+            FightBattleUnitState skillTarget, FightBattleSkillMove move,
+            List<FightBattleMovementEvent> movements, FightBattleSkillDefinition skill)
+        {
+            if (mover == null || source == null || skillTarget == null || checkpoint.Grid == null) return;
+            int dx = skillTarget.X - source.X, dy = skillTarget.Y - source.Y;
+            if (dx == 0 && dy == 0) return;
+            bool horizontal = Math.Abs(dx) >= Math.Abs(dy);
+            int sideX = horizontal ? 0 : 1, sideY = horizontal ? 1 : 0;
+            long side = FightHitMovementRules.SideOfLine(source, skillTarget, mover.X, mover.Y);
+            long positiveEffect = horizontal ? dx : -dy;
+            int first = side == 0 ? 1 : Math.Sign(side) * Math.Sign(positiveEffect)
+                * (move.TowardsTargetPos ? 1 : -1);
+            var start = new FightGridPoint(mover.X, mover.Y);
+            var occupied = OccupiedPositions(mover.Id);
+            var body = new List<FightGridPoint> { new FightGridPoint(0, 0) };
+            if (mover.BodyOffsets != null)
+                foreach (var offset in mover.BodyOffsets)
+                    if (!body.Contains(offset)) body.Add(offset);
+            int attempts = side == 0 ? 2 : 1;
+            for (int choice = 0; choice < attempts; choice++)
+            {
+                int sign = choice == 0 ? first : -first;
+                for (int distance = move.Distance; distance > 0; distance--)
+                {
+                    var desired = new FightGridPoint(start.X + sideX * sign * distance,
+                        start.Y + sideY * sign * distance);
+                    long after = FightHitMovementRules.SideOfLine(source, skillTarget, desired.X, desired.Y);
+                    if (side != 0 && (move.TowardsTargetPos
+                        ? Math.Abs(after) <= Math.Abs(side) : Math.Abs(after) > Math.Abs(side))) continue;
+                    if (side == 0 && after == 0) continue;
+                    var path = checkpoint.Grid.FindPath(start, desired, mover.MoveMask,
+                        distance + 1, 0, true, body, occupied);
+                    if (path == null || path.Count <= 1) continue;
+                    int steps = Math.Min(distance, path.Count - 1);
+                    if (!path[steps].Equals(desired)) continue;
+                    bool canStand = true;
+                    for (int i = 1; i <= steps && canStand; i++)
+                        foreach (var offset in body)
+                            if (!checkpoint.Grid.CanStand(path[i] + offset, mover.MoveMask, occupied))
+                            {
+                                canStand = false;
+                                break;
+                            }
+                    if (!canStand) continue;
+                    int movementIndex = movements.Count;
+                    if (ApplyMovementPath(mover, path, steps, movements))
+                        ApplyMovementAction(movements, movementIndex, move, skill);
+                    return;
+                }
             }
         }
 

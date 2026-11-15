@@ -79,6 +79,7 @@ namespace Zjcs.Editor.BattleRound
             }
             if (started || !EditorApplication.isPlaying || EditorApplication.isCompiling) return;
             started = true;
+            AudioListener.volume = 0f;
             Application.logMessageReceived += Observe;
             new GameObject("Native round scene verification runner").AddComponent<Runner>().StartCoroutine(Verify());
         }
@@ -144,7 +145,7 @@ namespace Zjcs.Editor.BattleRound
    GameRoundScene scene = null;
    IDisposable renderPipelineScope = null;
    Texture2D maleHead = null, femaleHead = null;
-   Sprite playerPortrait = null;
+   Sprite playerPortrait = null, guardPortrait = null;
    IGridDynamicAtlas portraitAtlas = null;
    try
    {
@@ -199,6 +200,7 @@ namespace Zjcs.Editor.BattleRound
     Require(removedTexture==null && removedSprite==null && disposedTexture==null && disposedSprite==null
      && maleHead!=null && femaleHead!=null,"Fallback atlas leaked owned assets or destroyed caller textures.");
     playerPortrait=Sprite.Create(maleHead,new Rect(0,0,100,120),new Vector2(.5f,.5f),100);
+    guardPortrait=Sprite.Create(femaleHead,new Rect(0,0,100,120),new Vector2(.5f,.5f),100);
     var cameraObject = new GameObject("Battle camera", typeof(Camera));
     cameraObject.transform.SetParent(root.transform, false);
     cameraObject.transform.position = new Vector3(0, 0, -30);
@@ -215,7 +217,9 @@ namespace Zjcs.Editor.BattleRound
     var events=eventsObject.GetComponent<EventSystem>();
     var hudCatalog=OfficialBattleHudCatalog.LoadDefault();
     Require(hudCatalog.Font.material.shader.isSupported,"Original HUD font shader is unsupported.");
-    var hud=new OfficialBattleHudView(hudCatalog);
+    var guardKinds=new[]{BattleRoundGuardKind.Arena,BattleRoundGuardKind.LegionFight,BattleRoundGuardKind.MultiGroupRivalry};
+    var hud=new OfficialBattleHudView(hudCatalog,unit=>unit.Id>=4 && unit.Id<=6
+     ?new OfficialBattleRoundGuardAppearance{Kind=guardKinds[unit.Id-4],Sex=Zjcs.Official.ProfessionUI.Sex.Female,Profession=101}:null);
     GameObject hudRoot=hud.Mount(canvasObject.transform,camera);
     scene=UnityEngine.Object.FindObjectOfType<GameRoundScene>();
     Require(scene!=null && scene.IconRoot.name=="Slot" && scene.Line.name=="Linear", "Original scene component references were lost.");
@@ -341,8 +345,44 @@ namespace Zjcs.Editor.BattleRound
     restored.Units[1].Hp=0;hud.RefreshTimeline(restored,portrait,null,true);yield return new WaitForSeconds(.8f);
     Require(scene.IconRoot.Find("GameRoundCharacterItem_2")==null,"Dead actor card was retained.");
     capture("round-scene-after-death");yield return null;
-    scene.SetVisible(false);
+    for(int id=4;id<=6;id++)
+    {
+     var guard=new FightBattleUnitState{Id=id,CharacterType=1,Side=2,Hp=1,MaxHp=1,Profession=101};
+     guard.Turn.Id=id;guard.Turn.Hp=1;guard.Turn.Speed=100;guard.Turn.IntervalTicks=10000;
+     restored.Units.Add(guard);restored.Timeline.Entries.Add(new FightTurnEntry{Id=id,Next=25000+id*2500});
+    }
+    Func<FightBattleUnitState,Sprite> withGuards=unit=>unit.Id>=4 && unit.Id<=6?guardPortrait:portrait(unit);
+    hud.RefreshTimeline(restored,withGuards,null,true);yield return new WaitForSeconds(.4f);
     var view=scene.GetComponent<OfficialBattleSceneTimelineView>();
+    void CheckGuard(GameRoundPlayerPortrait portraitView, bool mainPlayerEffect, int id)
+    {
+     var role=view.GetRole(id);
+     Require(role.HasGuard && role.GuardKind==guardKinds[id-4] && !role.PlayerId.HasValue
+      && role.GuardAppearance.Sex==Zjcs.Official.ProfessionUI.Sex.Female && !mainPlayerEffect,
+      "Guard facts fell through to the ordinary player branch: "+id);
+     var head=portraitView.GetComponentsInChildren<HeadCharacterPortrait>(false).Single();
+     var request=head.Requestor;
+     Require(!request.NeedPersist() && request.GetRequestId()==Zjcs.Official.ProfessionUI.ProfessionPortraitRequestKey.GetLongHashCode(guardPortrait.GetHashCode(),1)
+      && request.GetSex()==1 && request.GetProfession()==101 && ReferenceEquals(request.GetAppearanceData(),guardPortrait),
+      "Original temporary guard request lost its key, sex, profession, photograph or persistence flag: "+id);
+    }
+    foreach(int id in new[]{4,5,6})
+    {
+     var card=scene.IconRoot.Find("GameRoundCharacterItem_"+id).GetComponent<GameRoundCharacterItemScene>();
+     CheckGuard(card.PlayerPortrait,card.MainPlayerEffect.activeSelf,id);
+     var image=card.PlayerPortrait.GetComponentsInChildren<WorldCircleSpriteRenderer>(false)
+      .Single(r=>r.Sprite!=null && r.Sprite.texture.width==100 && r.Sprite.texture.height==120);
+     Require(image.Sprite.texture.GetPixels32().SequenceEqual(femaleHead.GetPixels32()),"Guard photograph differs from original female capture.");
+    }
+    capture("round-scene-guards");yield return null;
+    hud.RefreshTimeline(JsonUtility.FromJson<FightBattleCheckpoint>(JsonUtility.ToJson(restored)),withGuards,null,false);
+    yield return new WaitForSeconds(.4f);
+    foreach(int id in new[]{4,5,6})
+    {
+     var card=scene.IconRoot.Find("GameRoundCharacterItem_"+id).GetComponent<GameRoundCharacterItemScene>();
+     CheckGuard(card.PlayerPortrait,card.MainPlayerEffect.activeSelf,id);
+    }
+    scene.SetVisible(false);
     var inactive=new GameObject("UGUI card injection");inactive.SetActive(false);inactive.transform.SetParent(root.transform,false);
     var uiConfig=UnityEngine.Object.Instantiate(portraitResources.Configuration);
     uiConfig.EnablePlayerPortraitETC2_Scene=false;
@@ -352,6 +392,7 @@ namespace Zjcs.Editor.BattleRound
     try
     {
      foreach(bool etc2 in new[]{true,false})
+     foreach(int portraitId in new[]{1,4,5,6})
      {
       uiConfig.EnablePlayerPortraitETC2=etc2;
       var cardRoot=UnityEngine.Object.Instantiate(roundUI.IconPrefab,inactive.transform,false);
@@ -359,8 +400,8 @@ namespace Zjcs.Editor.BattleRound
       foreach(var head in cardRoot.GetComponentsInChildren<HeadCharacterPortraitETC2>(true))head.BindAtlas(uiAtlas);
       foreach(var handler in cardRoot.GetComponentsInChildren<GameRoundPortraitETC2Handler>(true))handler.BindAtlas(uiAtlas);
       cardRoot.transform.SetParent(roundUI.IconSlot,false);cardRoot.SetActive(true);
-      var card=cardRoot.GetComponent<GameRoundCharacterItem>();view.PrepareCard(card,1);
-      card.Init(new BattleRoundData{EntityId=1,Interval=10000},true,view.GetRole(1));card.SetActing();
+      var card=cardRoot.GetComponent<GameRoundCharacterItem>();view.PrepareCard(card,portraitId);
+      card.Init(new BattleRoundData{EntityId=portraitId,Interval=10000},true,view.GetRole(portraitId));card.SetActing();
       yield return new WaitForSeconds(.3f);
       var images=cardRoot.GetComponentsInChildren<RawImage>(false);
       Require(images.Any(image=>image.texture!=null && image.texture.width==100 && image.texture.height==120),
@@ -368,9 +409,10 @@ namespace Zjcs.Editor.BattleRound
       Require(images.Any(image=>image.uvRect==new Rect(0,0,1,1)
        && image.rectTransform.rect.size==new Vector2(100,120)),
        "Original full UV rectangle/native head dimensions failed to deserialize.");
-      Require(card.MainPlayerEffect.activeSelf && card.IsCurrent && card.RoundRuntimeData!=null,
+      Require(card.MainPlayerEffect.activeSelf==(portraitId==1) && card.IsCurrent && card.RoundRuntimeData!=null,
        "Original UGUI card data/main-player effect missing.");
-      capture(etc2?"round-card-ugui-atlas":"round-card-ugui-normal");yield return null;
+      if(portraitId!=1)CheckGuard(card.PlayerPortrait,card.MainPlayerEffect.activeSelf,portraitId);
+      if(portraitId==1 || portraitId==4)capture((etc2?"round-card-ugui-atlas":"round-card-ugui-normal")+(portraitId==1?"":"-guard"));yield return null;
       cardRoot.SetActive(false);UnityEngine.Object.Destroy(cardRoot);yield return null;
      }
     }
@@ -383,7 +425,7 @@ namespace Zjcs.Editor.BattleRound
     Debug.Log("Native portrait atlas passed: actual Windows fallback selection, original male/female capture pixels, UV/scale, cache identity, removal/disposal ownership, public timeline reuse and scene lifetime.");
     Debug.Log("Native round scene passed: original references/materials/card sorting, public HUD, actor order/restore/death, camera/canvas/animated-anchor projection, hide/show, original empty alpha references, simulated speed pointer, empty queue and lifetime.");
    }
-   finally {portraitAtlas?.Dispose();UnityEngine.Object.Destroy(root);if(scene!=null)UnityEngine.Object.Destroy(scene.gameObject);UnityEngine.Object.Destroy(playerPortrait);UnityEngine.Object.Destroy(maleHead);UnityEngine.Object.Destroy(femaleHead);renderPipelineScope?.Dispose();}
+   finally {portraitAtlas?.Dispose();UnityEngine.Object.Destroy(root);if(scene!=null)UnityEngine.Object.Destroy(scene.gameObject);UnityEngine.Object.Destroy(playerPortrait);UnityEngine.Object.Destroy(guardPortrait);UnityEngine.Object.Destroy(maleHead);UnityEngine.Object.Destroy(femaleHead);renderPipelineScope?.Dispose();}
    yield return null;
   }
         private sealed class Runner : MonoBehaviour { }

@@ -228,10 +228,14 @@ $speedMove = Invoke-GraphMove 13550 13553 1
 Assert-Move ($speedMove.Event.Movements.Count -eq 1 -and
     $speedMove.Event.Movements[0].MoveSpeed -eq 2.5 -and
     [Math]::Abs($speedMove.Event.Duration - 0.4) -lt 0.000001) 'Official speed-based knockback reverted to default movement pacing'
+$timedSkill = New-MoveSkill 3 2 $false $false 0
+$timedSkill.Hits[0].HitMove.MoveDuration = 0.32
+$timedMove = Invoke-MoveBattle $timedSkill (New-Unit 1 1 0 0 1000) (New-Unit 2 2 3 0 5000)
+Assert-Move ($timedMove.Event.Movements.Count -eq 1 -and
+    [Math]::Abs($timedMove.Event.Movements[0].MoveDuration - 0.32) -lt 0.000001 -and
+    [Math]::Abs($timedMove.Event.Duration - 0.64) -lt 0.000001) 'Per-segment hit movement duration was lost'
 $fixedMove = Invoke-GraphMove 64360 64363 3
-Assert-Move ($fixedMove.Event.Movements.Count -eq 1 -and
-    [Math]::Abs($fixedMove.Event.Movements[0].MoveDuration - 0.32) -lt 0.000001 -and
-    [Math]::Abs($fixedMove.Event.Duration - 0.64) -lt 0.000001) 'Official per-segment drag duration was lost'
+Assert-Move ($fixedMove.Event.Movements.Count -eq 0) 'Target-relative displacement moved the selected target toward itself'
 $graphCondition = Invoke-GraphMove 13550 13553 1 1
 Assert-Move ($graphCondition.Event.Movements.Count -eq 1) 'Graph move condition failed at the distance boundary'
 $graphConditionBlocked = Invoke-GraphMove 13550 13553 2 1
@@ -239,4 +243,4 @@ Assert-Move ($graphConditionBlocked.Event.Movements.Count -eq 0) 'Graph move con
 $graphRestored = Invoke-GraphMove 13550 13553 1 1 $true
 Assert-Move ([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($graphRestored.Checkpoint) -eq
     [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($graphCondition.Checkpoint)) 'Restoring the graph changed movement timing or conditions'
-Write-Output 'Battle graph displacement checks passed: original 13553 speed, 64363 segment duration, independent condition copies, distance boundary and deterministic restore.'
+Write-Output 'Battle graph displacement checks passed: original 13553 speed, target-relative 64363, independent condition copies, distance boundary and deterministic restore.'

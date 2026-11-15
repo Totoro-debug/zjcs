@@ -149,6 +149,9 @@ namespace Zjcs.Presentation.Home
                     () => host.Profile.Save.Player, id => host.DailyDungeonProgression.Catalog.ItemType(id)),
                 EnvironmentGameId = scene.gameId,
                 HudParent = host.Hud.CanvasTransform,
+                TimelineGuardAppearance = unit => unit.Id == 2
+                    ? OfficialBattleRoundGuardAppearance.Arena(
+                        (Zjcs.Official.ProfessionUI.Sex)host.Arena.ActiveGuardSex, guard.profession) : null,
                 TimelinePortrait = OfficialBattleCharacterPortraits.ForProfile(battleRoot.gameObject,
                     host.DailyDungeonProgression, host.ActiveProfileSlotId, host.SavesRoot,
                     (unit, excludes) => unit.Id == 2

@@ -8,7 +8,7 @@ namespace Zjcs.Combat.Official
         // Confirmed offline None result: execute authored hit effects, without
         // entering damage/cure listeners, HP settlement or their hit counters.
         // The normal lifecycle records each accepted status application once.
-        private void ExecuteStatusOnlyHit(FightBattleUnitState actor, FightBattleUnitState target,
+        private void ExecuteStatusOnlyHit(FightBattleUnitState actor, FightBattleUnitState target, FightBattleUnitState skillTarget,
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
             FightBattleHitResult resolved, FightBattleDamageEvent damage, long skillCostHp,
             List<FightBattleSkillCastEvent> casts, List<FightBattleDamageEvent> damages,
@@ -23,7 +23,7 @@ namespace Zjcs.Combat.Official
             CollectHitTriggerSkill(actor, target, skill, hit, invocations, hitOrigin, hitCast, damage.Delay);
             ApplyMissingStatusComponentsOnHit(actor, target, skill, hit, resolved, 0, invocations);
             ApplyHitDisperse(actor, target, hit, random, damage);
-            ApplyHitMove(actor, target, skill, hit, movements);
+            ApplyHitMove(actor, target, skillTarget, skill, hit, hitCast, movements);
             RebuildBattleProperties();
             if (invocations.Count > 0)
             {

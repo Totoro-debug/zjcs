@@ -3,9 +3,21 @@ using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.Progression;
 using Zjcs.Official.ProfessionUI;
+using Zjcs.Official.BattleRoundUI;
 
 namespace Zjcs.Presentation.Combat
 {
+    // Mode-owned guard facts; the common HUD supplies its completed photograph
+    // to the original card's temporary-appearance request.
+    public sealed class OfficialBattleRoundGuardAppearance
+    {
+        public BattleRoundGuardKind Kind;
+        public Sex Sex;
+        public int Profession;
+        public static OfficialBattleRoundGuardAppearance Arena(Sex sex, int profession) =>
+            new OfficialBattleRoundGuardAppearance { Kind = BattleRoundGuardKind.Arena, Sex = sex, Profession = profession };
+    }
+
     public interface IOfficialBattleCharacterSexSource
     {
         string Sex { get; }
@@ -36,6 +48,7 @@ namespace Zjcs.Presentation.Combat
         public Func<int, Sprite> SkillIcon;
         // Partial override: null results use the shared official monster/fallback catalog.
         public Func<FightBattleUnitState, Sprite> TimelinePortrait;
+        public Func<FightBattleUnitState, OfficialBattleRoundGuardAppearance> TimelineGuardAppearance;
         public Func<FightBattleUnitState, string> ModelKey;
         public Func<FightBattleUnitState, FightBattleStepEvent, string> AnimationForEvent;
         public OfficialCombatAssetCatalog CombatAssets;

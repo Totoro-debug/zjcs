@@ -198,7 +198,8 @@ namespace Zjcs.Presentation.Combat
                 ? resolvedCombatAssets.RestoreBattle(checkpoint)
                 : resolvedCombatAssets.BeginBattle(checkpoint);
             var fightTheme = OfflineBattleThemeSelection.Resolve(checkpoint.StageType, request.FightThemeId);
-            var nextHud = new OfficialBattleHudView(resolvedHudCatalog, fightTheme?.UIPrefabPath);
+            var nextHud = new OfficialBattleHudView(resolvedHudCatalog, request.TimelineGuardAppearance,
+                fightTheme?.UIPrefabPath);
             OfficialBattleNativeAnimationLibrary nextNativeModels = null;
             OfficialBattleSkillGraphPlayback nextSkillGraphPlayback = null;
             OfficialBattleEnvironmentView nextEnvironment = null;

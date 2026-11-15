@@ -849,6 +849,8 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 复活秘法输入来源：按 APK 优先解码并逐字段核对所选 884 的 10531、25014、11470／11490 及命中、伤害、复活和保护状态依赖；原 `FightStatusRoleDieComponent`／Info、`FightStatusBackToLifeComponent`、`FightHitFixedComponent` 与两个客户端处理器的输入身份和生成器哈希见[来源凭据](battle-rules/passive-revival-source-manifest.json)，由 `scripts/prepare_battle_passive_revival_sources.py` 生成。清单显式记录历史载荷与所选版本的空默认字段及 24083 字段差异；当前实现、单机规则和验证范围只在[技能页](../../docs/features/skills.md)维护。
 
+行动条守卫外观接线另核对所选 884 共享程序集反编译的 `FightRoleCharacterGuardComponent`、`GuardType` 与 `ArenaGuardInfo`；输入哈希并入 `battle-hud/round-card-runtime-source-manifest.json`，沿用同版两类原头像卡片及既有取景资源，没有新增或改绘 UI 资产。
+
 六职业技能与依赖输入来源：`scripts/verify_first_promotion_skill_sources.py --write-source-manifest` 按所选 884 APK 优先解码，逐字段核对 104 项技能运行行及从显式实体引用追踪的 383 个 EC 实体；保留 APK／bundle／对象、原始载荷、formatter、表字段投影及运行输入哈希。空默认字段、11552 的原驱散排除名单、24083 的所选字段差异和 `DamageDisperseStatusCfg`／`GameCharacterType` 原码、适配输出身份见[六职业技能来源](battle-rules/first-promotion-source-manifest.json)；不改写历史配置或哈希，没有新增美术载荷。实现和实际验证范围仅在[技能页](../../docs/features/skills.md)维护。
 
 连锁命中输入来源：所选 `884_156692` 的原 `FightHitChainedComponent`／`Info`、基类配置及 `MyFightHitChained` 反编译代码，与保留历史身份的 `854_156383` 战斗／技能运行载荷分别记录；原程序集、代码、配置、迁移入口和工具哈希见[连锁命中来源](battle-rules/chained-hits-source-manifest.json)。继续使用既有原命中 prefab 与连锁图，没有新增或替换美术载荷；服务器下一跳选敌缺口及用户确认的单机规则见[术士技能](../../docs/features/skills-warlock.md#rank-2)。

@@ -78,13 +78,17 @@ namespace Zjcs.Presentation.Combat
         private string roundTextFormat;
         private int? lastShownRound;
         private OfficialBattleSceneTimelineView sceneTimeline;
+        private readonly Func<FightBattleUnitState, OfficialBattleRoundGuardAppearance> timelineGuardAppearance;
 
         public event Action<string> ControlClicked;
         public event Action SpeedCycled;
 
-        public OfficialBattleHudView(OfficialBattleHudCatalog catalog, string themeNpcPrefabPath = null)
+        public OfficialBattleHudView(OfficialBattleHudCatalog catalog,
+            Func<FightBattleUnitState, OfficialBattleRoundGuardAppearance> guardAppearance = null,
+            string themeNpcPrefabPath = null)
         {
             this.themeNpcPrefabPath = themeNpcPrefabPath;
+            timelineGuardAppearance = guardAppearance;
             OfficialBattleHudCatalog resolved = catalog ?? OfficialBattleHudCatalog.LoadDefault();
             resolvedCatalog = resolved;
             renderer = new OfficialBattleHudRenderer(resolved);
@@ -566,7 +570,8 @@ namespace Zjcs.Presentation.Combat
             if (root == null || sceneTimeline == null)
                 throw new InvalidOperationException("Mount the official battle HUD before refreshing the timeline.");
             sceneTimeline.Refresh(checkpoint, portraitIcon, unit => factionIcon?.Invoke(unit)
-                ?? resolvedCatalog.FindSprite(unit.Side == 1 ? FactionPlayerIcon : FactionEnemyIcon), animate, stepEvent);
+                ?? resolvedCatalog.FindSprite(unit.Side == 1 ? FactionPlayerIcon : FactionEnemyIcon), animate, stepEvent,
+                timelineGuardAppearance);
         }
 
         public void Tick(float deltaTime)

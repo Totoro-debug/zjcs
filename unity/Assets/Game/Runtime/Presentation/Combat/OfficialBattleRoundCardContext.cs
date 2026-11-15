@@ -23,7 +23,7 @@ namespace Zjcs.Presentation.Combat
             .LoadDefault().AppearanceConfig.MimicsMonsterColor;
 
         public OfficialBattleRoundCardContext(FightBattleUnitState unit, Sprite portrait, Sprite faction,
-            BattleRoundPortraitAssets assets)
+            BattleRoundPortraitAssets assets, OfficialBattleRoundGuardAppearance guard = null)
         {
             icon = portrait != null ? portrait : throw new InvalidOperationException("Missing original round portrait: " + unit.Id);
             resources = assets;
@@ -41,8 +41,17 @@ namespace Zjcs.Presentation.Combat
             MainPlayer = unit.Id == 1 ? player : new BattleRoundPlayer { Id = 1 };
             Role = new BattleRoundRole { MonsterId = unit.MonsterId };
             if (unit.NpcClassId > 0) Role.NpcClassId = unit.NpcClassId;
-            else if (unit.Id == 1 || unit.CharacterType == 1) Role.PlayerId = unit.Id;
+            else if (guard == null && (unit.Id == 1 || unit.CharacterType == 1)) Role.PlayerId = unit.Id;
             else if (unit.CharacterType == 7) Role.PetEntityClassId = unit.MonsterId;
+            if (guard != null)
+            {
+                Role.HasGuard = true;
+                Role.GuardKind = guard.Kind;
+                Role.GuardAppearance = new BattleRoundPlayer
+                {
+                    Sex = guard.Sex, Profession = guard.Profession, AppearanceData = portrait
+                };
+            }
         }
         public GameEffectData GetFaction(BattleRoundRole role) => effect;
         public bool TryGetNpcIcon(int id, out string path) { path = icon.name; return Role.NpcClassId == id; }

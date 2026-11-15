@@ -94,7 +94,8 @@ namespace Zjcs.Presentation.Combat
         }
 
         public void Refresh(FightBattleCheckpoint checkpoint, Func<FightBattleUnitState, Sprite> portrait,
-            Func<FightBattleUnitState, Sprite> faction, bool animate, FightBattleStepEvent step)
+            Func<FightBattleUnitState, Sprite> faction, bool animate, FightBattleStepEvent step,
+            Func<FightBattleUnitState, OfficialBattleRoundGuardAppearance> guardAppearance = null)
         {
             var all = checkpoint.Units.Where(unit => unit != null).ToDictionary(unit => unit.Id);
             var roundIds = new HashSet<int>(checkpoint.Timeline?.Entries?.Where(entry => entry != null)
@@ -110,7 +111,8 @@ namespace Zjcs.Presentation.Combat
                 var summon = Resources.Load<OfficialSummonSkeletonData>("Combat/Summons/" + unit.MonsterId + "-data");
                 contexts.Add(unit.Id, new OfficialBattleRoundCardContext(unit,
                     unit.NpcClassId > 0 ? OfficialBattleNpcPortraitCatalog.Load().Find(unit.NpcClassId)
-                    : summon != null ? summon.Portrait : portrait(unit), faction?.Invoke(unit), portraitAssets));
+                    : summon != null ? summon.Portrait : portrait(unit), faction?.Invoke(unit), portraitAssets,
+                    guardAppearance?.Invoke(unit)));
                 addedEntities.Add(unit.Id);
             }
             var entries = checkpoint.Timeline?.Entries?.Where(entry => entry != null && all.TryGetValue(entry.Id, out var unit)

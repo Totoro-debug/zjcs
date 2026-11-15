@@ -6,7 +6,10 @@
     ".tools/source-packages/current/884_156692/official-code/client-source/IGameRoundCharacterItem.cs": "9d4d578ad3730d117dd0dbfcf6b3fb77725caaa9c9bb4941d1511a450ee0f432",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/RoundRuntimeData.cs": "9e7e1833e64dfa2ff5241abe2f1f482462df7e64ec24a780e54d4cd3880d90fc",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/MonsterIconType.cs": "4f3a2925944507f860c64418efe3f11fed98260f758dd79483871b104aa3cf93",
-    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LanguageUtils.cs": "ddc94bb5dd46f8c71b6d58ab0f03e2048cde72911de11e343304ce73e4b9a61c"
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LanguageUtils.cs": "ddc94bb5dd46f8c71b6d58ab0f03e2048cde72911de11e343304ce73e4b9a61c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightRoleCharacterGuardComponent.cs": "6bb10e8a1b91b337a6f60bc1d726c1ddb7b9c8d24aea4de1392309c77a238970",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/GuardType.cs": "40370233c75324c3bbd41ea9ffbda6ca4c18bf82d6b2d09c478fb3ea4360fb6f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ArenaGuardInfo.cs": "788133fe6e1c5b0a1cbda5d53628850ba1029790ccdb1598df341de2a23f1782"
   },
   "outputs": {
     "unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundCharacterItemScene.cs": "346cb0ca4a3001671afe2a4a774f80e881c1e19468bbb661bf271727c64570f0",
@@ -19,12 +22,12 @@
     "unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundCardBindings.cs.meta": "ae6f8afb5695ffee4a6d2aefa7229fdb2bedf80b55096085a6ef346a1259c5e3",
     "unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundPortraitAssets.cs": "912f896e3843010e7172a4bc8a5c7b9760d8e204347d58a6aa93c19d0e1feacb",
     "unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundPortraitAssets.cs.meta": "8517910d593ffffa08ffff76a4876cebb68ce7d027c376ff37390d98342d07f8",
-    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRoundCardContext.cs": "114acf8f4ccd32b13239253d3db88a89b63ed4706d282623cd3dc379603844da",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRoundCardContext.cs": "aecb58ff3e1b0c50410355856fb122fa5d8a5d60758a066857f2721309c4f898",
     "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRoundCardContext.cs.meta": "8cc3734c6a77bf834d0daafd5cf09bbd237add544d127ba8cd137957c5e5731a",
-    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneTimelineView.cs": "9a57f1a2d0c4d3fce271f71299e8821ada2858355dab874903c60530e3764830",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneTimelineView.cs": "97cb204e86ce7aedd01d9c239c6c3383ea6eead019e48485c9cedfd158111e28",
     "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneTimelineView.cs.meta": "91fb0009a627f5baed3edabc7ab245d06b877a5bae100ee607ceebf1f8416fd5"
   },
-  "generator_sha256": "15bb6187c651cfc115aab49a5d9c8d78b1236d0fec9ac2aeee3f7a76a2a0fa24",
+  "generator_sha256": "4cf24a2b71e11195a5bca1c3578ad3958370f03c2c1b8bc2063c560a116eac8b",
   "adaptations": [
     "Entity component/config/player queries are supplied at IBattleRoundCardBindings; original branch priority retained.",
     "RoundRuntimeData is opaque to this view and retained as object; its rules remain in the battle timeline.",
@@ -32,5 +35,5 @@
     "Reusable local player request and mimic subscription replace client managers; original waiting/reset/disposal order retained.",
     "Existing portrait enums, circle renderer and Unity logging adapters; original serialized fields, animation and death/pool order retained."
   ],
-  "scope": "Both original round card classes and interface; explicit local projection of existing completed photographs, NPC/monster/pet icons and faction images. Native asset/config binding is recorded separately. Guard/mimic entity projection remains pending; the original round manager has a separate source receipt."
+  "scope": "Both original round card classes and interface; explicit local projection of existing completed photographs, NPC/monster/pet icons and faction images. Mode-owned guard kind/sex/profession enters the original temporary-appearance branch; arena supplies its existing guard facts. Native asset/config binding is recorded separately. Mimic and complete monster/pet icon entity projection remain pending; the original round manager has a separate source receipt."
 }

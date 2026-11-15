@@ -17,7 +17,6 @@ namespace Zjcs.Presentation.Combat
             public float Remaining;
         }
 
-
         private sealed class ScheduledStatusAction
         {
             public FightBattleStatusCustomActionEvent Action;
@@ -435,14 +434,14 @@ namespace Zjcs.Presentation.Combat
             pending.Clear();
             pendingMoves.Clear();
             pendingStatusActions.Clear();
+            nativeStatusActions.Clear();
+            nativeDisperseIndices.Clear();
             unitEnds?.Clear();
             unitEnds = null;
             unitSpawns?.Clear();
             unitSpawns = null;
             unitLife?.Clear();
             unitLife = null;
-            nativeStatusActions.Clear();
-            nativeDisperseIndices.Clear();
             statusViews?.Dispose();
             statusViews = null;
             airComboViews?.Dispose();

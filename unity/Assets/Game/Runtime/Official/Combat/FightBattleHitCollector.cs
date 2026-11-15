@@ -202,6 +202,9 @@ namespace Zjcs.Combat.Official
                         BasePercent = entity.HitMove.BasePercent,
                         AffectedByProp = entity.HitMove.AffectedByProp,
                         CancelDiagonally = entity.HitMove.CancelDiagonally,
+                        AiMustMoveTo = entity.HitMove.AiMustMoveTo,
+                        AIIgnore = entity.HitMove.AIIgnore,
+                        CanExpandOffset = entity.HitMove.CanExpandOffset,
                         HasConditions = entity.HitMove.HasConditions,
                         Conditions = CopyMoveConditions(entity.HitMove.Conditions)
                     }

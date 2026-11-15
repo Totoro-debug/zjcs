@@ -51,22 +51,9 @@ namespace Zjcs.Editor.BattleRoundUI
 
         private static void ConfigureBackgroundView()
         {
-            var editor = typeof(EditorWindow).Assembly;
-            var sizesType = editor.GetType("UnityEditor.GameViewSizes");
-            object sizes = typeof(ScriptableSingleton<>).MakeGenericType(sizesType)
-                .GetProperty("instance").GetValue(null);
-            object group = sizesType.GetMethod("GetGroup").Invoke(sizes,
-                new[] { Enum.Parse(editor.GetType("UnityEditor.GameViewSizeGroupType"), "Standalone") });
-            var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-            object size = Activator.CreateInstance(editor.GetType("UnityEditor.GameViewSize"), flags,
-                null, new object[] { Enum.ToObject(editor.GetType("UnityEditor.GameViewSizeType"), 1),
-                    450, 975, "Shared texture background validation" }, null);
-            group.GetType().GetMethod("AddCustomSize").Invoke(group, new[] { size });
-            var viewType = editor.GetType("UnityEditor.GameView");
-            var view = EditorWindow.GetWindow(viewType, false, "Game", false);
-            viewType.GetProperty("selectedSizeIndex", flags).SetValue(view,
-                (int)group.GetType().GetMethod("GetTotalCount").Invoke(group, null) - 1);
-            view.Repaint();
+            Type.GetType("Zjcs.Editor.OfficialBattlePublicMovementAcceptance, Zjcs.Editor.BattleMovementEffects", true)
+                .GetMethod("ConfigureBackgroundGameView", BindingFlags.NonPublic | BindingFlags.Static)
+                .Invoke(null, null);
         }
 
         [InitializeOnLoadMethod] private static void Hook()
