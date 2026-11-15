@@ -64,6 +64,7 @@ namespace Zjcs.Editor.CharacterCreation
             SessionState.SetBool(ActiveKey, true);
             started = false;
             HookEditorEvents();
+            Application.runInBackground = true;
             EditorApplication.isPlaying = true;
         }
 
@@ -218,6 +219,11 @@ namespace Zjcs.Editor.CharacterCreation
                 + "; labels=" + string.Join("|", startScreen == null ? Array.Empty<string>()
                     : startScreen.GetComponentsInChildren<TMP_Text>(true).Select(value => value.text).ToArray()));
             yield return Capture(controller, "initial-save-selection");
+            if (Environment.GetEnvironmentVariable("ZJCS_CREATION_NAME_INPUT_ONLY") == "1")
+            {
+                yield return VerifyNameInputOnly(controller);
+                yield break;
+            }
             ClickLastButtonByLabel(Screen(controller), "新建存档");
             yield return WaitForPage(controller, "body");
             Require(Panel(controller) != null, "Creation panel initialization failed: " + CurrentStatus(controller));
@@ -414,11 +420,23 @@ namespace Zjcs.Editor.CharacterCreation
             ClickOfficial(controller, "NextBtn");
             yield return WaitForPage(controller, "name");
             yield return WaitForTransition(controller);
-            yield return Capture(controller, "female-name");
             string savedHair = ActiveAppearance(controller).hairstyle_id;
             string savedHairColor = ActiveAppearance(controller).hair_color;
             TMP_InputField name = Deep(Panel(controller).transform, "NameInput").GetComponent<TMP_InputField>();
             Require(name != null, "Official character name input was not imported.");
+            yield return WaitUntil(() => name.isFocused, "The character name input did not activate after the name page opened.");
+            yield return Capture(controller, "female-name");
+            Require(EventSystem.current != null && EventSystem.current.isActiveAndEnabled
+                && EventSystem.current.currentInputModule != null
+                && EventSystem.current.currentInputModule.isActiveAndEnabled,
+                "Character creation has no active UI input module.");
+            Require(EventSystem.current.currentSelectedGameObject == name.gameObject && name.isFocused,
+                "Opening the name page did not focus the character name input.");
+            name.ProcessEvent(new Event { type = EventType.KeyDown, character = '测' });
+            Require(name.text == "测", "A simulated keyboard character was not accepted by the name input.");
+            object nameDraft = Field(controller, "draft").GetValue(controller);
+            Require((string)Field(nameDraft, "name").GetValue(nameDraft) == "测",
+                "Keyboard input did not update the saved character draft.");
             name.text = "测试法师";
             yield return new WaitForSecondsRealtime(0.4f);
 
@@ -743,6 +761,69 @@ namespace Zjcs.Editor.CharacterCreation
                 RenderTexture.active = previous;
                 Debug.Log("Creation snapshot: " + path + "; visible preview pixels=" + visible);
             }
+        }
+
+        private static IEnumerator VerifyNameInputOnly(CharacterCreationFlowController controller)
+        {
+            ClickLastButtonByLabel(Screen(controller), "新建存档");
+            yield return null;
+            if (Screen(controller) != null && Screen(controller).name == "Screen_选择存档")
+                ClickLastButtonByLabel(Screen(controller), "新建存档");
+            yield return WaitForPage(controller, "body");
+            Require(Panel(controller) != null, "Creation panel initialization failed: " + CurrentStatus(controller));
+            yield return WaitForTransition(controller);
+            ClickOfficial(controller, "NextBtn");
+            yield return WaitForPage(controller, "appearance");
+            yield return WaitForTransition(controller);
+            ClickOfficial(controller, "NextBtn");
+            yield return WaitForPage(controller, "name");
+            yield return WaitForTransition(controller);
+
+            TMP_InputField name = Deep(Panel(controller).transform, "NameInput").GetComponent<TMP_InputField>();
+            Require(name != null, "The official character name input was not imported.");
+            string canvasGroups = string.Join(" | ", name.GetComponentsInParent<CanvasGroup>(true).Select(group =>
+                group.name + ":enabled=" + group.enabled + ":interactable=" + group.interactable
+                + ":blocksRaycasts=" + group.blocksRaycasts));
+            Debug.Log("Name input readiness: interactable=" + name.IsInteractable()
+                + ":fieldInteractable=" + name.interactable + ":readOnly=" + name.readOnly
+                + ":textComponent=" + (name.textComponent != null)
+                + ":font=" + (name.textComponent == null || name.textComponent.font == null
+                    ? "<null>" : name.textComponent.font.name)
+                + ":canvasGroups=" + canvasGroups);
+            EventSystem eventSystem = EventSystem.current;
+            BaseInputModule inputModule = eventSystem == null ? null : eventSystem.currentInputModule;
+            GameObject selected = eventSystem == null ? null : eventSystem.currentSelectedGameObject;
+            string systems = string.Join(" | ", UnityEngine.Object.FindObjectsOfType<EventSystem>(true).Select(system =>
+                system.name + ":enabled=" + system.isActiveAndEnabled + ":module="
+                + (system.currentInputModule == null ? "<null>" : system.currentInputModule.GetType().Name)
+                + ":moduleEnabled=" + (system.currentInputModule != null && system.currentInputModule.isActiveAndEnabled)));
+            Debug.Log("Name input focus state before assertion: current=" + (eventSystem == null ? "<null>" : eventSystem.name)
+                + ":enabled=" + (eventSystem != null && eventSystem.isActiveAndEnabled)
+                + ":module=" + (inputModule == null ? "<null>" : inputModule.GetType().Name)
+                + ":moduleEnabled=" + (inputModule != null && inputModule.isActiveAndEnabled)
+                + ":selected=" + (selected == null ? "<null>" : selected.name)
+                + ":fieldActive=" + name.isActiveAndEnabled + ":focused=" + name.isFocused
+                + ":systems=" + systems);
+            yield return WaitUntil(() => name.isFocused, "The name input did not activate after the page opened.");
+            selected = eventSystem == null ? null : eventSystem.currentSelectedGameObject;
+            Require(eventSystem != null && eventSystem.isActiveAndEnabled
+                && inputModule != null && inputModule.isActiveAndEnabled
+                && selected == name.gameObject && name.isFocused,
+                "The name page did not focus the input with an active UI input module.");
+            yield return Capture(controller, "name-input-focused");
+            name.ProcessEvent(new Event { type = EventType.KeyDown, character = '测' });
+            Require(name.text == "测", "A simulated keyboard character was not accepted by the name input.");
+            CharacterCreationDraft draft = (CharacterCreationDraft)Field(controller, "draft").GetValue(controller);
+            Require(draft.name == "测", "Keyboard input did not update the character draft.");
+            name.ForceLabelUpdate();
+            yield return null;
+            Debug.Log("Name input rendered text: value=" + name.text + ":label=" + name.textComponent.text
+                + ":placeholder=" + (name.placeholder == null ? "<null>" : name.placeholder.enabled.ToString()));
+            Require(name.textComponent.text.Contains("测") && (name.placeholder == null || !name.placeholder.enabled),
+                "The entered name did not replace the visible placeholder text.");
+            yield return Capture(controller, "name-input-entered");
+            Debug.Log("NAME_INPUT_PASSED: focused official field accepted simulated Chinese text and updated the draft.");
+            Finish(true, null);
         }
 
         private static IEnumerator AdvanceToWeapon(CharacterCreationFlowController controller)

@@ -144,9 +144,18 @@ namespace Zjcs.Presentation.CharacterCreation
 
         private void EnsureEventSystem()
         {
-            if (FindObjectOfType<EventSystem>() != null) return;
-            var eventSystem = new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
-            DontDestroyOnLoad(eventSystem);
+            EventSystem eventSystem = FindObjectOfType<EventSystem>();
+            if (eventSystem == null)
+            {
+                var eventSystemObject = new GameObject("EventSystem", typeof(EventSystem));
+                DontDestroyOnLoad(eventSystemObject);
+                eventSystem = eventSystemObject.GetComponent<EventSystem>();
+            }
+            if (!eventSystem.enabled) eventSystem.enabled = true;
+            BaseInputModule inputModule = eventSystem.GetComponent<BaseInputModule>();
+            if (inputModule == null)
+                inputModule = eventSystem.gameObject.AddComponent<StandaloneInputModule>();
+            if (!inputModule.enabled) inputModule.enabled = true;
         }
 
         private void CreateCanvas()
@@ -318,7 +327,10 @@ namespace Zjcs.Presentation.CharacterCreation
                 performancePlayer.PlayRoot(draft.body_type == "female" ? "Shape_Female" : "Shape");
             }
             else
+            {
                 performancePlayer.ApplyInitialPageState(draft.body_type, draft.page);
+                if (draft.page == "name") StartCoroutine(FocusNameInputAfterTransition());
+            }
         }
 
         private void BindOfficialButtons()
@@ -515,6 +527,25 @@ namespace Zjcs.Presentation.CharacterCreation
             Transform limit = FindDeep(setNameContent, "WordLimit");
             nameCounter = FindText(limit);
             UpdateNameCounter();
+        }
+
+        private IEnumerator FocusNameInputAfterTransition()
+        {
+            while (draft != null && draft.page == "name"
+                && (performancePlayer != null && performancePlayer.IsTransitionPlaying
+                    || setNameContent == null || !setNameContent.gameObject.activeInHierarchy))
+                yield return null;
+
+            if (draft == null || draft.page != "name" || setNameContent == null
+                || !setNameContent.gameObject.activeInHierarchy) yield break;
+
+            yield return null;
+            TMP_InputField input = RequireNode(setNameContent, "NameInput").GetComponent<TMP_InputField>();
+            if (input == null || !input.isActiveAndEnabled || !input.IsInteractable()) yield break;
+
+            EnsureEventSystem();
+            input.Select();
+            input.ActivateInputField();
         }
 
         private void RenderAppearanceOptions(CharacterAppearanceDraft appearance, string field, Transform viewRoot)
@@ -1186,6 +1217,7 @@ namespace Zjcs.Presentation.CharacterCreation
             RefreshNativePreviews();
             RenderDraftPage(false);
             performancePlayer.PlayRoot(animation);
+            if (draft.page == "name") StartCoroutine(FocusNameInputAfterTransition());
         }
 
         private void PreviousPage()
