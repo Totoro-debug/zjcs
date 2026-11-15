@@ -18,6 +18,8 @@
 
 后续迁移以 `official-source.json` 当前选择的 `884_156692` 为输入，真实客户端及共享反编译代码位于 `.tools/source-packages/current/884_156692/official-code/`，来源凭据见[客户端代码清单](../../assets/reference/official-client-code/source-manifest.json)。下文的 `871_156598` 是既有家园转换基线，不能据此宣称已经迁移当前版本；既有运行载荷及原生 prefab 保留，待逐项恢复真实脚本、序列化绑定和运行验证。
 
+当前正式家园仍读取的 `StreamingAssets/Home/ui.json` 与 `scene.json` 本身标记为 `854_156383`；任务追踪的历史 `LeftBotGo` 和槽位来自该载荷。所选 884 的完整原生任务面板已独立恢复，但其父层及实际任务服务尚未替换正式 HUD，不能将旧版坐标或旧控件树视为所选版本的视觉验收依据。
+
 官方基线为固定版本 `871_156598` 的客户端、共享代码、配置与 prefab。官方脚本来自 `.tools/source-packages/official-code/client-source/` 和 `common-source/Common/`；`assets/official/ui.json` 保存主城、顶部栏、底栏、头像与功能菜单的控件树，`assets/official/home.json` 保存场景层级、设施位置、相机及点击区域。原始联网功能保留在功能目录中，其单机处理单独注明；官方资源或脚本可取得，不代表已在 Unity 中恢复运行。
 
 | 范围 | 原始官方功能与关键调用关系 | 当前实现与剩余工作 |
