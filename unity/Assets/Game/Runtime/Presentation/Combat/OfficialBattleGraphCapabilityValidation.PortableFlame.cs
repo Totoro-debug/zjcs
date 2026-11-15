@@ -46,7 +46,7 @@ namespace Zjcs.Presentation.Combat
             // They keep their original native models and have no equipped active skills.
             var offsets = new[] { new FightGridPoint(1, 0), new FightGridPoint(-1, 0),
                 new FightGridPoint(0, -1), new FightGridPoint(1, -1) };
-            if (ValidatePortableFlameMovement)
+            if (ValidatePortableFlameMovement || ValidatePortableFlameEnemyEntry)
             {
                 Require(firstPromotionFacingIndex == 2 && !PortableFlameColdRequested,
                     "The independent moving fire-ring diagnostic faces up without a cold-host handoff.");
@@ -137,6 +137,7 @@ namespace Zjcs.Presentation.Combat
                 && flameHolders.Keys.Count(id => flameCandidateIds.Contains(id)) == 3,
                 "Original 10061 must give itself and exactly three of four friendly models one ring each.");
             ObservePortableFlameMovementStep(checkpoint);
+            ObservePortableFlameEnemyEntryStep(checkpoint);
         }
 
         private bool ObservePortableFlameFrame(OfficialBattleRuntimeController controller)
@@ -194,6 +195,7 @@ namespace Zjcs.Presentation.Combat
                 flameRestoreFrame = true; CaptureName = "portable-flame-restored"; return true;
             }
             if (ObservePortableFlameMovementFrame(controller)) return true;
+            if (ObservePortableFlameEnemyEntryFrame(controller)) return true;
             var player = controller.Checkpoint.Units.Single(value => value.Id == 1);
             if (!flameSecondRoundFrame && player.SkillState.Round == 2 && renderedOwners.Contains(1))
             {
@@ -219,6 +221,7 @@ namespace Zjcs.Presentation.Combat
             if (ValidatePortableFlameReplacement) { VerifyPortableFlameReplacement(); return; }
             Require(flameComplete, "Original friendly fire-ring lifecycle did not finish.");
             VerifyPortableFlameMovement();
+            VerifyPortableFlameEnemyEntry();
             Require(!PortableFlameColdRequested || flameColdSceneComplete,
                 "Original friendly fire-ring host restoration did not finish.");
             // A new native sound host may reuse old playing IDs. Completion was

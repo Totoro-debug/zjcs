@@ -176,6 +176,7 @@ namespace Zjcs.Presentation.Combat
             var entities = (OfficialBattleSkillEntityPlayback)typeof(OfficialBattleSkillGraphPlayback)
                 .GetField("entityViews", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(graph);
             entityViews = entities;
+            BindPortableFlameEnemyEntry(controller);
             BindPortableFlameReplacementPresentation(controller);
             BindAirComboDiagnostic(controller);
             if (ValidateForcedMovement)
