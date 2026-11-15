@@ -24,7 +24,12 @@ namespace Zjcs.Presentation.Character
                 if (stack == null) save.Player.Inventory.Add(new OfflineItemStack { ItemId = id, Count = count });
                 else stack.Count += count;
             }
-            Give(12061, 1); // An available active fragment below its merge requirement.
+            var active = assets.LoadSkillRules().Skills.Where(value => value.ItemType == 100
+                && value.AvailableProfessions.Contains(save.Player.Wardrobe.Profession))
+                .OrderBy(value => value.ClassId).First();
+            Require(assets.Load().SkillMergePiece(active.ClassId) > 1,
+                "The original active fragment fixture must remain below its merge requirement.");
+            Give(active.PieceItemId, 1);
             Give(definition.PieceItemId, assets.Load().SkillMergePiece(definition.ClassId));
             foreach (var cost in definition.RankCosts.Single(value => value.CurrentRank == rank).Items)
                 Give(cost.ItemId, cost.Count);
@@ -66,7 +71,9 @@ namespace Zjcs.Presentation.Character
 
         private IEnumerator AcquirePassiveFromPieces(OfflineCharacterProgressionService progression, int itemId, int rank)
         {
-            Require(progression.Player.Wardrobe.Profession == 6, "The mixed fragment fixture requires Fighter availability.");
+            int activePiece = progression.Player.Inventory.Single(value => value.Count == 1
+                && progression.Catalog.ItemType(value.ItemId) == 111).ItemId;
+            int activeSkill = progression.SkillRules.Skills.Single(value => value.PieceItemId == activePiece).ClassId;
             Require(progression.Catalog.ItemType(progression.SkillDefinition(itemId).PieceItemId) == 112,
                 "The selected official secret fragment type must survive historical catalog adaptation.");
             Require(OfflineSkillProgression.OwnedRank(progression.Player.Skills, itemId) == 0,
@@ -81,7 +88,7 @@ namespace Zjcs.Presentation.Character
             yield return new WaitForSecondsRealtime(.6f);
             var insufficient = PiecePopup();
             var slider = insufficient.GetComponentsInChildren<Slider>().Single();
-            Require(slider.value == 1 && slider.maxValue == progression.SkillMergePiece(10061)
+            Require(slider.value == 1 && slider.maxValue == progression.SkillMergePiece(activeSkill)
                 && !insufficient.GetComponentsInChildren<Button>().Any(value => value.name == "CommonBtn_12_Merge"),
                 "Insufficient fragments must preserve the actual partial progress and hide the merge operation.");
             yield return new WaitForEndOfFrame(); Capture("passive-piece-insufficient");

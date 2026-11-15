@@ -48,7 +48,6 @@ try {
             if(-not $available){throw "Secret $skill is unavailable for original profession $Profession"}
             $selectedProfession=$Profession
         }
-        if($AcquireFromPieces -and $selectedProfession -ne 6){throw 'The mixed active/passive fragment fixture requires Fighter.'}
         $prefix=if($AcquireFromPieces){'passive-pieces'}else{'passive'}
         $run=Join-Path $workspacePath ("$prefix-$skill-$($PSCmdlet.ParameterSetName)-"+[guid]::NewGuid().ToString('N'))
         New-Item -ItemType Directory -Path $run|Out-Null
