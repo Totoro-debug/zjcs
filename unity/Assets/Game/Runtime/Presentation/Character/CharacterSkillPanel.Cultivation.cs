@@ -361,7 +361,7 @@ namespace Zjcs.Presentation.Character
 
         private void BuildOriginalCultivationMaterial(RectTransform parent, OfflineSkillItemCount cost)
         {
-            bool piece = progression.Catalog.ItemType(cost.ItemId) == PieceItemType;
+            bool piece = IsSkillPieceItem(cost.ItemId);
             var template = AuxObject(skillUiTemplates[piece ? "item_skill_piece" : "item"]);
             var itemNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
             var itemButtons = new Dictionary<string, Button>(StringComparer.Ordinal);

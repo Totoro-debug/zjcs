@@ -521,6 +521,11 @@ namespace Zjcs.Offline.Progression
             OfflineItemStack stack = Player.Inventory.FirstOrDefault(value => value.ItemId == definition.PieceItemId);
             if (pieces <= 0 || stack == null || stack.Count < pieces)
                 return Invalid("Not enough skill pieces.");
+            Dictionary<string, object> item = catalog.FindItem(skillId);
+            int quality = item == null ? 0 : Integer(item, "Quality");
+            int initialRank = SkillRules.RankDisplays.Where(value => value.Quality == quality)
+                .Select(value => value.Rank).DefaultIfEmpty(0).Min();
+            if (initialRank <= 0) return Invalid("The original skill quality has no initial rank.");
             return session.ApplyCharacterMutation(player =>
             {
                 OfflineItemStack target = player.Inventory
@@ -531,7 +536,7 @@ namespace Zjcs.Offline.Progression
                 OfflineItemStack skill = player.Inventory.FirstOrDefault(value => value.ItemId == skillId);
                 if (skill == null) player.Inventory.Add(new OfflineItemStack { ItemId = skillId, Count = 1 });
                 else skill.Count += 1;
-                player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = skillId, Rank = 1 });
+                player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = skillId, Rank = initialRank });
             }, "skill-merge-" + skillId.ToString(CultureInfo.InvariantCulture) + "-"
                 + Guid.NewGuid().ToString("N"));
         }

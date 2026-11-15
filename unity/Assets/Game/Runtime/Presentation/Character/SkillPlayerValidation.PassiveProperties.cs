@@ -27,6 +27,7 @@ namespace Zjcs.Presentation.Character
             var skillRules = assets.LoadSkillRules();
             var definition = skillRules.Skills.Single(value => value.ClassId == itemId);
             Require(definition.ItemType == 101, "Passive fixture must use an original secret item.");
+            bool fromPieces = Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_PIECES") == "1";
             int rank = definition.RankCosts.Select(value => value.CurrentRank).DefaultIfEmpty(definition.MaximumRank).Min();
             var slots = new ProfileSlotCatalog(saveRoot);
             string slot = slots.CreateSlot();
@@ -39,7 +40,8 @@ namespace Zjcs.Presentation.Character
             save.Player.MaxProfessionRank = 2;
             save.Player.Wardrobe.Profession = profession;
             save.Player.Experience = assets.Load().CumulativeLevelExperience[50];
-            save.Player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = itemId, Rank = rank });
+            if (fromPieces) SupplyPassivePieceFixture(save, assets, definition, rank);
+            else save.Player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = itemId, Rank = rank });
             foreach (var cost in skillRules.SlotLevelCosts.Single(value => value.Level == 2).Items)
                 save.Player.Inventory.Add(new OfflineItemStack { ItemId = cost.ItemId, Count = cost.Count });
             File.WriteAllText(slots.GetProgressPath(slot), JsonUtility.ToJson(save, true));
@@ -60,6 +62,7 @@ namespace Zjcs.Presentation.Character
                 "The passive property canvas does not cover the game render surface.");
             Click(ButtonNamed("CharacterPanelSkillBtn"));
             yield return new WaitForSecondsRealtime(.8f);
+            if (fromPieces) yield return AcquirePassiveFromPieces(progression, itemId, rank);
             Click(ButtonContaining("PassiveSkillTab"));
             yield return new WaitForSecondsRealtime(.5f);
             Require(progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan].PassiveSkills.All(id => id == 0), "Fresh fixture has equipped secrets.");
@@ -84,6 +87,12 @@ namespace Zjcs.Presentation.Character
             yield return new WaitForSecondsRealtime(.7f);
             VerifyPassivePropertyFlow(progression, slots, slot, itemId, rank, 2);
             yield return new WaitForEndOfFrame(); Capture("passive-cultivated");
+            if (fromPieces)
+            {
+                yield return RankPassiveFromPieceMaterial(progression, itemId, rank);
+                rank++;
+                VerifyPassivePropertyFlow(progression, slots, slot, itemId, rank, 2);
+            }
             Require(panel.HandleEscape(), "Original cultivation window did not close.");
             yield return null;
             runtime.ReloadProfile();

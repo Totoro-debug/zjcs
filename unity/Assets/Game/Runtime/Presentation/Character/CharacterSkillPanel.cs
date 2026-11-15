@@ -31,6 +31,7 @@ namespace Zjcs.Presentation.Character
         private const int ActiveSkillItemType = 100;
         private const int PassiveSkillItemType = 101;
         private const int PieceItemType = 111;
+        private const int PassivePieceItemType = 112;
 
         private OfficialCharacterAssetCatalog assets;
         private OfflineCharacterProgressionService progression;
@@ -831,7 +832,7 @@ namespace Zjcs.Presentation.Character
             OfflineSkillPlayerContext context = progression.SkillContext();
             var pieces = progression.Player.Inventory
                 .Where(value => value != null && value.Count > 0
-                    && progression.Catalog.ItemType(value.ItemId) == PieceItemType
+                    && IsSkillPieceItem(value.ItemId)
                     && ((showAll != null && showAll.isOn) || IsPieceAvailable(value.ItemId, context)))
                 .OrderByDescending(value => Quality(value.ItemId)).ThenByDescending(value => value.Count)
                 .ThenBy(value => value.ItemId).ToList();
@@ -882,6 +883,14 @@ namespace Zjcs.Presentation.Character
             return definition != null && OfflineSkillProgression.IsAvailableFor(definition, context);
         }
 
+        // GameSettings.SkillPieceTypes includes ActiveSkillPiece and PassiveSkillPiece.
+        // PieceItemType remains the shared fragment tab's routing key.
+        private bool IsSkillPieceItem(int itemId)
+        {
+            int type = progression.Catalog.ItemType(itemId);
+            return type == PieceItemType || type == PassivePieceItemType;
+        }
+
         private bool CanPromoteSkill(int skillId)
         {
             OfflineSkillDefinition definition = progression.SkillDefinition(skillId);
@@ -909,7 +918,7 @@ namespace Zjcs.Presentation.Character
             var iconNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
             var iconButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
             RectTransform root = factory.Build(CharacterPanelNodeFactory.ReadRoot(itemId == 0 ? emptyItemTemplate
-                : progression.Catalog.ItemType(itemId) == PieceItemType
+                : IsSkillPieceItem(itemId)
                     ? CharacterModelPackage.AsObject(skillUiTemplates["item_skill_piece"], "official skill piece icon") : itemTemplate), parent,
                 iconNodes, iconButtons);
             root.gameObject.name = name;

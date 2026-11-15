@@ -269,6 +269,7 @@ namespace Zjcs.Offline.Progression
         {
             this.tables = tables;
             this.items = items;
+            NormalizeOfficialSkillPieceTypes(this.items);
             this.skins = skins;
             this.appearances = appearances;
             this.allowed = allowed;
@@ -679,6 +680,7 @@ namespace Zjcs.Offline.Progression
             if (derivedSkillPieces.TryGetValue(id, out item)) return item;
             int skillId = SkillPieceSkill(id);
             if (skillId <= 0 || !items.TryGetValue(skillId, out Dictionary<string, object> skill)) return null;
+            int selectedPieceType = SelectedOfficialSkillPieceType(id);
 
             item = new Dictionary<string, object>(skill, StringComparer.Ordinal)
             {
@@ -687,7 +689,7 @@ namespace Zjcs.Offline.Progression
                 ["RawIcon"] = skill["RawIcon"],
                 ["ShowPieceIcon"] = true,
                 ["IconEffect"] = string.Empty,
-                ["ItemType"] = 111,
+                ["ItemType"] = selectedPieceType == 0 ? 111 : selectedPieceType,
                 ["Rank"] = -1,
                 ["Quality"] = 1,
                 ["ElementType"] = 0,
