@@ -271,6 +271,8 @@ namespace Zjcs.Presentation.CharacterCreation
         {
             ClearScreen();
             canvas.GetComponent<CanvasScaler>().referenceResolution = new Vector2(1080, 1920);
+            // The original six-column palette occupies the full 1080-unit width.
+            canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 0;
             officialPanel = Instantiate(assets.CreatePlayerPanelPrefab, canvas.transform, false);
             officialPanel.name = "OfficialCreatePlayerPanel";
             ApplyOfficialFont(officialPanel);
@@ -293,10 +295,12 @@ namespace Zjcs.Presentation.CharacterCreation
             optionItems.Clear();
             dyeItems.Clear();
             RenderDraftPage();
-            performancePlayer.PlaySelection(draft.body_type == "female" ? "SelFemale" : "SelMale");
-            performancePlayer.PlaySelectedGlow(draft.body_type);
             if (draft.page == "body")
+            {
+                performancePlayer.PlaySelection(draft.body_type == "female" ? "SelFemale" : "SelMale");
+                performancePlayer.PlaySelectedGlow(draft.body_type);
                 performancePlayer.PlayRoot(draft.body_type == "female" ? "Shape_Female" : "Shape");
+            }
             else
                 performancePlayer.ApplyInitialPageState(draft.body_type, draft.page);
         }
@@ -439,72 +443,26 @@ namespace Zjcs.Presentation.CharacterCreation
         private void RenderAppearanceGroups(Transform groupRoot, int sex, int selectedGroupId)
         {
             if (groupRoot == null) throw new InvalidOperationException("Official appearance group container is missing.");
-            RectTransform rootRect = groupRoot as RectTransform;
-            if (rootRect == null) throw new InvalidOperationException("Official appearance group container has no RectTransform.");
-            rootRect.anchorMin = Vector2.zero;
-            rootRect.anchorMax = Vector2.one;
-            rootRect.offsetMin = new Vector2(8, 4);
-            rootRect.offsetMax = new Vector2(-8, -28);
+            // Retain the official horizontal layout, .715 scale and 208-unit item.
             ClearChildren(groupRoot);
-
-            IReadOnlyList<CharacterCreationAppearanceGroupInfo> groups = assets.GetAppearanceGroups(sex);
-            int visibleIndex = 0;
-            foreach (CharacterCreationAppearanceGroupInfo group in groups)
+            foreach (CharacterCreationAppearanceGroupInfo group in assets.GetAppearanceGroups(sex))
             {
                 if (group.condition_id != 0) continue;
-                Sprite sprite = assets.FindAppearanceGroupIcon(group.group_id, sex);
-                if (sprite == null) throw new InvalidOperationException("Official appearance group icon is missing: " + group.group_id);
-
-                const int columns = 6;
-                const float cell = 52f;
-                const float gap = 8f;
-                int row = visibleIndex / columns;
-                int column = visibleIndex % columns;
-                var item = new GameObject("AppearanceGroup_" + group.group_id,
-                    typeof(RectTransform), typeof(Image), typeof(Button));
-                item.transform.SetParent(groupRoot, false);
-                RectTransform rect = item.GetComponent<RectTransform>();
-                rect.anchorMin = new Vector2(0, 1);
-                rect.anchorMax = new Vector2(0, 1);
-                rect.pivot = new Vector2(0, 1);
-                rect.sizeDelta = new Vector2(cell, cell);
-                rect.anchoredPosition = new Vector2(column * (cell + gap), -row * (cell + gap));
-
-                Image image = item.GetComponent<Image>();
-                image.sprite = sprite;
-                image.preserveAspect = true;
-                image.raycastTarget = true;
+                GameObject prefab = Resources.Load<GameObject>("CharacterCreation/Trial/Item" + group.item_id);
+                if (prefab == null) throw new InvalidOperationException("Official trial item prefab is missing: " + group.item_id);
+                Transform item = Instantiate(prefab, groupRoot, false).transform;
+                item.name = "AppearanceGroup_" + group.group_id;
+                Image icon = item.Find("Content/mask/icon").GetComponent<Image>();
+                icon.sprite = assets.FindAppearanceGroupIcon(group.group_id, sex);
+                Transform selected = item.Find("Content/QualityImg/SelAnimGo");
+                selected.gameObject.SetActive(group.group_id == selectedGroupId);
+                // ItemIconAppendAppearance.SetSelectedObjActive uses this original ring.
                 Button button = item.GetComponent<Button>();
-                button.targetGraphic = image;
-                ColorBlock colors = button.colors;
-                colors.highlightedColor = Color.Lerp(Color.white, new Color32(241, 213, 153, 255), 0.42f);
-                colors.pressedColor = Color.Lerp(Color.white, new Color32(194, 146, 67, 255), 0.45f);
-                button.colors = colors;
-                button.interactable = group.group_id != selectedGroupId;
+                button.targetGraphic = item.Find("Content/QualityImg").GetComponent<Image>();
+                button.targetGraphic.raycastTarget = true;
+                button.transition = Selectable.Transition.None;
                 int groupId = group.group_id;
                 button.onClick.AddListener(() => SelectAppearanceGroup(sex, groupId));
-
-                var outline = new GameObject("Selected", typeof(RectTransform), typeof(Image));
-                outline.transform.SetParent(item.transform, false);
-                RectTransform outlineRect = outline.GetComponent<RectTransform>();
-                Place(outlineRect, Vector2.zero, Vector2.one);
-                outlineRect.offsetMin = new Vector2(-3, -3);
-                outlineRect.offsetMax = new Vector2(3, 3);
-                Image outlineImage = outline.GetComponent<Image>();
-                outlineImage.color = new Color32(235, 187, 93, 210);
-                outlineImage.raycastTarget = false;
-                var inset = new GameObject("Icon", typeof(RectTransform), typeof(Image));
-                inset.transform.SetParent(outline.transform, false);
-                RectTransform insetRect = inset.GetComponent<RectTransform>();
-                Place(insetRect, Vector2.zero, Vector2.one);
-                insetRect.offsetMin = new Vector2(3, 3);
-                insetRect.offsetMax = new Vector2(-3, -3);
-                Image insetImage = inset.GetComponent<Image>();
-                insetImage.sprite = sprite;
-                insetImage.preserveAspect = true;
-                insetImage.raycastTarget = false;
-                outline.SetActive(group.group_id == selectedGroupId);
-                visibleIndex++;
             }
         }
 

@@ -1,0 +1,2290 @@
+{
+  "manifest": "884_156692",
+  "nodes": [
+    {
+      "name": "ItemIconAppendAppearance",
+      "path": "/ItemIconAppendAppearance",
+      "active": true,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.0,
+        0.0
+      ],
+      "size_delta": [
+        208.0,
+        208.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": 0.0,
+      "scripts": [
+        "Button",
+        "UIClickSound",
+        "ItemIconAppendAppearance"
+      ],
+      "button": true,
+      "has_image": false,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": [
+        1
+      ]
+    },
+    {
+      "name": "Content",
+      "path": "/ItemIconAppendAppearance/Content",
+      "active": true,
+      "anchor_min": [
+        0.0,
+        0.0
+      ],
+      "anchor_max": [
+        1.0,
+        1.0
+      ],
+      "anchored_position": [
+        0.0,
+        0.0
+      ],
+      "size_delta": [
+        0.0,
+        0.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": 0.0,
+      "scripts": [],
+      "has_image": false,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": [
+        2,
+        3,
+        9,
+        12,
+        13,
+        14,
+        18,
+        20,
+        21
+      ]
+    },
+    {
+      "name": "BgContent",
+      "path": "/ItemIconAppendAppearance/Content/BgContent",
+      "active": true,
+      "anchor_min": [
+        0.0,
+        0.0
+      ],
+      "anchor_max": [
+        1.0,
+        1.0
+      ],
+      "anchored_position": [
+        0.0,
+        0.0
+      ],
+      "size_delta": [
+        0.0,
+        0.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": 0.0,
+      "scripts": [],
+      "has_image": false,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": []
+    },
+    {
+      "name": "QualityImg",
+      "path": "/ItemIconAppendAppearance/Content/QualityImg",
+      "active": true,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.0,
+        0.0
+      ],
+      "size_delta": [
+        184.0,
+        184.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": -0.0,
+      "scripts": [
+        "Image"
+      ],
+      "image": {
+        "sprite": {
+          "file": "res://assets/official/sprites/ImgQuality_Blue-d7af3c8915.png",
+          "name": "ImgQuality_Blue",
+          "width": 184,
+          "height": 184,
+          "border": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ppu": 100.0,
+          "pivot": [
+            92.0,
+            92.0
+          ]
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "type": 0,
+        "preserve_aspect": false,
+        "graphic_flags": true,
+        "raycast_target": true,
+        "maskable": true
+      },
+      "has_image": true,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": [
+        4
+      ]
+    },
+    {
+      "name": "SelAnimGo",
+      "path": "/ItemIconAppendAppearance/Content/QualityImg/SelAnimGo",
+      "active": false,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.30000001192092896,
+        1.5
+      ],
+      "size_delta": [
+        220.25999450683594,
+        220.25999450683594
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.1502000093460083,
+        1.1502000093460083,
+        1.1502000093460083
+      ],
+      "rotation": -0.0,
+      "scripts": [],
+      "default_animation": "SelAnimGo_Loop",
+      "animation_play_automatically": true,
+      "animations": [
+        {
+          "name": "SelAnimGo_Loop",
+          "owner": "/ItemIconAppendAppearance/Content/QualityImg/SelAnimGo",
+          "source": {
+            "bundle": "defaultpackage_share_7f614c936be2397ff76a47ef9214ef0d.bundle",
+            "bundle_hash": "b26a1caf33c2e92cdb82ef54ef4e523b",
+            "path_id": "6454616307450028461",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/b26a1caf33c2e92cdb82ef54ef4e523b.bundle",
+            "raw_size": 955,
+            "raw_sha256": "46be48cf3a660aaaa7dc17954ba5c03aa41b8db7d09d68bffa8ee952969bbffb"
+          },
+          "tracks": [
+            {
+              "path": "/ItemIconAppendAppearance/Content/QualityImg/SelAnimGo/SelectedImg/Img",
+              "property": "m_SizeDelta.y",
+              "keys": [
+                {
+                  "time": 0.0,
+                  "value": 252.98744201660156,
+                  "in_tangent": 29.588891983032227,
+                  "out_tangent": 29.588891983032227
+                },
+                {
+                  "time": 0.5,
+                  "value": 232.3392791748047,
+                  "in_tangent": -8.117011070251465,
+                  "out_tangent": -8.117011070251465
+                },
+                {
+                  "time": 1.0,
+                  "value": 252.98744201660156,
+                  "in_tangent": 13.696187019348145,
+                  "out_tangent": 13.696187019348145
+                }
+              ]
+            },
+            {
+              "path": "/ItemIconAppendAppearance/Content/QualityImg/SelAnimGo/ItemReplaceEffect/Img2",
+              "property": "m_SizeDelta.x",
+              "keys": [
+                {
+                  "time": 0.0,
+                  "value": 185.0098419189453,
+                  "in_tangent": -38.992218017578125,
+                  "out_tangent": -38.992218017578125
+                },
+                {
+                  "time": 0.5,
+                  "value": 192.0098419189453,
+                  "in_tangent": 61.12309646606445,
+                  "out_tangent": 61.12309646606445
+                },
+                {
+                  "time": 1.0,
+                  "value": 185.0098419189453,
+                  "in_tangent": -38.992218017578125,
+                  "out_tangent": -38.992218017578125
+                }
+              ]
+            },
+            {
+              "path": "/ItemIconAppendAppearance/Content/QualityImg/SelAnimGo/ItemReplaceEffect/Img2",
+              "property": "m_SizeDelta.y",
+              "keys": [
+                {
+                  "time": 0.0,
+                  "value": 185.0098419189453,
+                  "in_tangent": -39.50019073486328,
+                  "out_tangent": -39.50019073486328
+                },
+                {
+                  "time": 0.5,
+                  "value": 192.0098419189453,
+                  "in_tangent": 59.79774856567383,
+                  "out_tangent": 59.79774856567383
+                },
+                {
+                  "time": 1.0,
+                  "value": 185.0098419189453,
+                  "in_tangent": -39.50019073486328,
+                  "out_tangent": -39.50019073486328
+                }
+              ]
+            },
+            {
+              "path": "/ItemIconAppendAppearance/Content/QualityImg/SelAnimGo/ItemReplaceEffect/Img2",
+              "property": "m_Color.a",
+              "keys": [
+                {
+                  "time": 0.0,
+                  "value": 1.0,
+                  "in_tangent": -1.0,
+                  "out_tangent": -1.0
+                },
+                {
+                  "time": 0.5,
+                  "value": 0.5,
+                  "in_tangent": 0.0,
+                  "out_tangent": 0.0
+                },
+                {
+                  "time": 1.0,
+                  "value": 1.0,
+                  "in_tangent": 1.0,
+                  "out_tangent": 1.0
+                }
+              ]
+            },
+            {
+              "path": "/ItemIconAppendAppearance/Content/QualityImg/SelAnimGo/SelectedImg/Img",
+              "property": "m_Color.a",
+              "keys": [
+                {
+                  "time": 0.0,
+                  "value": 0.7327122092247009,
+                  "in_tangent": 0.0,
+                  "out_tangent": 0.0
+                },
+                {
+                  "time": 0.5,
+                  "value": 1.0002045631408691,
+                  "in_tangent": 0.0,
+                  "out_tangent": 0.0
+                },
+                {
+                  "time": 1.0,
+                  "value": 0.7327122092247009,
+                  "in_tangent": 0.0,
+                  "out_tangent": 0.0
+                }
+              ]
+            }
+          ],
+          "duration": 1.0,
+          "loop": true,
+          "unconverted_bindings": []
+        }
+      ],
+      "has_image": false,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": [
+        5,
+        7
+      ]
+    },
+    {
+      "name": "SelectedImg",
+      "path": "/ItemIconAppendAppearance/Content/QualityImg/SelAnimGo/SelectedImg",
+      "active": false,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.0,
+        2.4437904357910156e-05
+      ],
+      "size_delta": [
+        220.25999450683594,
+        220.25999450683594
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": 90.0,
+      "scripts": [],
+      "has_image": false,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": [
+        6
+      ]
+    },
+    {
+      "name": "Img",
+      "path": "/ItemIconAppendAppearance/Content/QualityImg/SelAnimGo/SelectedImg/Img",
+      "active": true,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.0,
+        0.0
+      ],
+      "size_delta": [
+        40.0,
+        220.25999450683594
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": 0.0,
+      "scripts": [
+        "Image"
+      ],
+      "image": {
+        "sprite": {
+          "file": "res://assets/official/sprites/ImgArrow_2-223d0782c6.png",
+          "name": "ImgArrow_2",
+          "width": 40,
+          "height": 59,
+          "border": [
+            0.0,
+            29.0,
+            0.0,
+            29.0
+          ],
+          "ppu": 100.0,
+          "pivot": [
+            20.0,
+            29.5
+          ]
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "type": 1,
+        "preserve_aspect": false,
+        "graphic_flags": true,
+        "raycast_target": false,
+        "maskable": true
+      },
+      "has_image": true,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": []
+    },
+    {
+      "name": "ItemReplaceEffect",
+      "path": "/ItemIconAppendAppearance/Content/QualityImg/SelAnimGo/ItemReplaceEffect",
+      "active": true,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.0,
+        2.4437904357910156e-05
+      ],
+      "size_delta": [
+        200.0,
+        200.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        0.949999988079071,
+        0.949999988079071,
+        1.0
+      ],
+      "rotation": -0.0,
+      "scripts": [],
+      "has_image": false,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": [
+        8
+      ]
+    },
+    {
+      "name": "Img2",
+      "path": "/ItemIconAppendAppearance/Content/QualityImg/SelAnimGo/ItemReplaceEffect/Img2",
+      "active": true,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.0,
+        0.0
+      ],
+      "size_delta": [
+        170.0,
+        170.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.100000023841858,
+        1.100000023841858,
+        1.100000023841858
+      ],
+      "rotation": -0.0,
+      "scripts": [
+        "Image"
+      ],
+      "image": {
+        "sprite": {
+          "file": "res://assets/official/sprites/ImgItemSelect-de48b6abe9.png",
+          "name": "ImgItemSelect",
+          "width": 200,
+          "height": 200,
+          "border": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ppu": 100.0,
+          "pivot": [
+            100.0,
+            100.0
+          ]
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "type": 0,
+        "preserve_aspect": false,
+        "graphic_flags": true,
+        "raycast_target": false,
+        "maskable": true
+      },
+      "has_image": true,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": []
+    },
+    {
+      "name": "mask",
+      "path": "/ItemIconAppendAppearance/Content/mask",
+      "active": true,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.0,
+        1.7000000476837158
+      ],
+      "size_delta": [
+        154.7935028076172,
+        154.7935028076172
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": -0.0,
+      "scripts": [
+        "Image",
+        "Mask"
+      ],
+      "image": {
+        "sprite": {
+          "file": "res://assets/official/sprites/ImgMask-4b8fcf1e08.png",
+          "name": "ImgMask",
+          "width": 143,
+          "height": 143,
+          "border": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ppu": 100.0,
+          "pivot": [
+            71.5,
+            71.5
+          ]
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          0.10980392247438431
+        ],
+        "type": 0,
+        "preserve_aspect": false,
+        "graphic_flags": true,
+        "raycast_target": false,
+        "maskable": true
+      },
+      "mask": true,
+      "has_image": true,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": [
+        10,
+        11
+      ]
+    },
+    {
+      "name": "icon",
+      "path": "/ItemIconAppendAppearance/Content/mask/icon",
+      "active": true,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.0,
+        0.0
+      ],
+      "size_delta": [
+        252.0,
+        252.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        0.699999988079071,
+        0.699999988079071,
+        0.699999988079071
+      ],
+      "rotation": -0.0,
+      "scripts": [
+        "Image"
+      ],
+      "image": {
+        "sprite": {
+          "file": "res://assets/official/sprites/C_none-d73d644cfd.png",
+          "name": "C_none",
+          "width": 16,
+          "height": 16,
+          "border": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ppu": 100.0,
+          "pivot": [
+            8.0,
+            8.0
+          ]
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "type": 0,
+        "preserve_aspect": false,
+        "graphic_flags": true,
+        "raycast_target": true,
+        "maskable": true
+      },
+      "has_image": true,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": []
+    },
+    {
+      "name": "FakeIcon",
+      "path": "/ItemIconAppendAppearance/Content/mask/FakeIcon",
+      "active": false,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.0,
+        0.0
+      ],
+      "size_delta": [
+        168.0,
+        168.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        0.550000011920929,
+        0.550000011920929,
+        1.0
+      ],
+      "rotation": -0.0,
+      "scripts": [
+        "MultiLanguageText",
+        "TextMeshProUGUI",
+        "TMPEffect"
+      ],
+      "text": {
+        "value": "六个字的名字",
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font_size": 64.0,
+        "horizontal": 2,
+        "vertical": 512,
+        "word_wrap": true,
+        "overflow": 3,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "has_image": false,
+      "has_text": true,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": []
+    },
+    {
+      "name": "Shadow",
+      "path": "/ItemIconAppendAppearance/Content/Shadow",
+      "active": true,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.0,
+        1.2000000476837158
+      ],
+      "size_delta": [
+        158.0,
+        158.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": 0.0,
+      "scripts": [
+        "Image"
+      ],
+      "image": {
+        "sprite": {
+          "file": "res://assets/official/sprites/ImgQuality_Shadow-2db8da22eb.png",
+          "name": "ImgQuality_Shadow",
+          "width": 158,
+          "height": 158,
+          "border": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ppu": 100.0,
+          "pivot": [
+            79.0,
+            79.0
+          ]
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "type": 0,
+        "preserve_aspect": false,
+        "graphic_flags": true,
+        "raycast_target": false,
+        "maskable": true
+      },
+      "has_image": true,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": []
+    },
+    {
+      "name": "ItemIconAttachment",
+      "path": "/ItemIconAppendAppearance/Content/ItemIconAttachment",
+      "active": true,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.0,
+        0.0
+      ],
+      "size_delta": [
+        208.0,
+        208.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": 0.0,
+      "scripts": [
+        "ItemIconAttachment"
+      ],
+      "has_image": false,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": []
+    },
+    {
+      "name": "SexLimit",
+      "path": "/ItemIconAppendAppearance/Content/SexLimit",
+      "active": false,
+      "anchor_min": [
+        0.0,
+        0.0
+      ],
+      "anchor_max": [
+        1.0,
+        1.0
+      ],
+      "anchored_position": [
+        0.0,
+        0.0
+      ],
+      "size_delta": [
+        0.0,
+        0.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": -0.0,
+      "scripts": [],
+      "has_image": false,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": [
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "name": "Mask",
+      "path": "/ItemIconAppendAppearance/Content/SexLimit/Mask",
+      "active": true,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.0,
+        1.0
+      ],
+      "size_delta": [
+        180.0,
+        180.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": -0.0,
+      "scripts": [
+        "Image"
+      ],
+      "image": {
+        "sprite": {
+          "file": "res://assets/official/sprites/ImgQuality_Mask-95a3f1f08a.png",
+          "name": "ImgQuality_Mask",
+          "width": 160,
+          "height": 160,
+          "border": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ppu": 100.0,
+          "pivot": [
+            80.0,
+            80.0
+          ]
+        },
+        "color": [
+          0.13333334028720856,
+          0.13333334028720856,
+          0.13333334028720856,
+          0.9019607901573181
+        ],
+        "type": 0,
+        "preserve_aspect": false,
+        "graphic_flags": true,
+        "raycast_target": false,
+        "maskable": true
+      },
+      "has_image": true,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": []
+    },
+    {
+      "name": "Bg",
+      "path": "/ItemIconAppendAppearance/Content/SexLimit/Bg",
+      "active": true,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.0,
+        -0.8999999761581421
+      ],
+      "size_delta": [
+        133.85000610351562,
+        44.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.3447999954223633,
+        1.3447999954223633,
+        1.3447999954223633
+      ],
+      "rotation": -0.0,
+      "scripts": [
+        "Image"
+      ],
+      "image": {
+        "sprite": {
+          "file": "res://assets/official/sprites/ImgItemTipBg-ac615f7615.png",
+          "name": "ImgItemTipBg",
+          "width": 16,
+          "height": 44,
+          "border": [
+            7.0,
+            0.0,
+            7.0,
+            0.0
+          ],
+          "ppu": 100.0,
+          "pivot": [
+            8.0,
+            22.0
+          ]
+        },
+        "color": [
+          0.13333334028720856,
+          0.13333334028720856,
+          0.13333334028720856,
+          1.0
+        ],
+        "type": 1,
+        "preserve_aspect": false,
+        "graphic_flags": true,
+        "raycast_target": false,
+        "maskable": true
+      },
+      "has_image": true,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": []
+    },
+    {
+      "name": "Text",
+      "path": "/ItemIconAppendAppearance/Content/SexLimit/Text",
+      "active": true,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.0,
+        -0.9000099897384644
+      ],
+      "size_delta": [
+        164.19839477539062,
+        53.59619903564453
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": -0.0,
+      "scripts": [
+        "MultiLanguageText",
+        "TextMeshProUGUI"
+      ],
+      "text": {
+        "value": "体型不符",
+        "color": [
+          0.8549020290374756,
+          0.3176470696926117,
+          0.3137255012989044,
+          1.0
+        ],
+        "font_size": 34.0,
+        "horizontal": 2,
+        "vertical": 512,
+        "word_wrap": true,
+        "overflow": 0,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "has_image": false,
+      "has_text": true,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": []
+    },
+    {
+      "name": "BgCountText",
+      "path": "/ItemIconAppendAppearance/Content/BgCountText",
+      "active": false,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        76.4000015258789,
+        -72.34859466552734
+      ],
+      "size_delta": [
+        0.0,
+        44.61000061035156
+      ],
+      "pivot": [
+        1.0,
+        0.0
+      ],
+      "scale": [
+        0.8999999761581421,
+        0.8999999761581421,
+        0.8999999761581421
+      ],
+      "rotation": 0.0,
+      "scripts": [
+        "Image",
+        "HorizontalLayoutGroup",
+        "ContentSizeFitter"
+      ],
+      "image": {
+        "sprite": {
+          "file": "res://assets/official/sprites/ImgItemIcon_NumBg-3e82a7afe1.png",
+          "name": "ImgItemIcon_NumBg",
+          "width": 24,
+          "height": 35,
+          "border": [
+            14.0,
+            17.0,
+            10.0,
+            18.0
+          ],
+          "ppu": 100.0,
+          "pivot": [
+            12.0,
+            17.5
+          ]
+        },
+        "color": [
+          0.13333334028720856,
+          0.13333334028720856,
+          0.13333334028720856,
+          0.8509804010391235
+        ],
+        "type": 1,
+        "preserve_aspect": false,
+        "graphic_flags": true,
+        "raycast_target": false,
+        "maskable": true
+      },
+      "layout": {
+        "axis": 0,
+        "padding": [
+          10,
+          10,
+          0,
+          0
+        ],
+        "alignment": 2,
+        "spacing": 0.0,
+        "expand": [
+          false,
+          false
+        ],
+        "control": [
+          true,
+          true
+        ],
+        "child_scale": [
+          true,
+          true
+        ],
+        "reverse": false
+      },
+      "size_fitter": [
+        2,
+        2
+      ],
+      "has_image": true,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": true,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": true,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": [
+        19
+      ]
+    },
+    {
+      "name": "CountText",
+      "path": "/ItemIconAppendAppearance/Content/BgCountText/CountText",
+      "active": true,
+      "anchor_min": [
+        0.0,
+        0.0
+      ],
+      "anchor_max": [
+        0.0,
+        0.0
+      ],
+      "anchored_position": [
+        0.0,
+        0.0
+      ],
+      "size_delta": [
+        0.0,
+        44.61000061035156
+      ],
+      "pivot": [
+        1.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": -0.0,
+      "scripts": [
+        "MultiLanguageText",
+        "TextMeshProUGUI"
+      ],
+      "text": {
+        "value": "{0}",
+        "color": [
+          0.8862745761871338,
+          0.8862745761871338,
+          0.8862745761871338,
+          1.0
+        ],
+        "font_size": 36.0,
+        "horizontal": 4,
+        "vertical": 512,
+        "word_wrap": false,
+        "overflow": 0,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "has_image": false,
+      "has_text": true,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": []
+    },
+    {
+      "name": "BottomText",
+      "path": "/ItemIconAppendAppearance/Content/BottomText",
+      "active": false,
+      "anchor_min": [
+        0.5,
+        0.0
+      ],
+      "anchor_max": [
+        0.5,
+        0.0
+      ],
+      "anchored_position": [
+        0.0,
+        12.100000381469727
+      ],
+      "size_delta": [
+        180.0,
+        62.0
+      ],
+      "pivot": [
+        0.5,
+        1.0
+      ],
+      "scale": [
+        1.100000023841858,
+        1.100000023841858,
+        1.100000023841858
+      ],
+      "rotation": -0.0,
+      "scripts": [
+        "MultiLanguageText",
+        "TextMeshProUGUI",
+        "TMPEffect"
+      ],
+      "text": {
+        "value": "{0}",
+        "color": [
+          0.30980393290519714,
+          0.30980393290519714,
+          0.30980393290519714,
+          1.0
+        ],
+        "font_size": 30.0,
+        "horizontal": 2,
+        "vertical": 256,
+        "word_wrap": true,
+        "overflow": 0,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "has_image": false,
+      "has_text": true,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": []
+    },
+    {
+      "name": "Progress",
+      "path": "/ItemIconAppendAppearance/Content/Progress",
+      "active": false,
+      "anchor_min": [
+        0.5,
+        0.0
+      ],
+      "anchor_max": [
+        0.5,
+        0.0
+      ],
+      "anchored_position": [
+        0.0,
+        28.100000381469727
+      ],
+      "size_delta": [
+        158.0,
+        59.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": 0.0,
+      "scripts": [
+        "ItemProgress"
+      ],
+      "has_image": false,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": [
+        22
+      ]
+    },
+    {
+      "name": "BgCountText",
+      "path": "/ItemIconAppendAppearance/Content/Progress/BgCountText",
+      "active": true,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.0,
+        -0.8277999758720398
+      ],
+      "size_delta": [
+        130.0,
+        45.38639831542969
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        0.8999999761581421,
+        0.8999999761581421,
+        0.8999999761581421
+      ],
+      "rotation": -0.0,
+      "scripts": [
+        "Image",
+        "HorizontalLayoutGroup",
+        "ContentSizeFitter",
+        "LayoutElement"
+      ],
+      "image": {
+        "sprite": {
+          "file": "res://assets/official/sprites/ImgBg_CountText-31498f0e88.png",
+          "name": "ImgBg_CountText",
+          "width": 55,
+          "height": 39,
+          "border": [
+            26.0,
+            18.0,
+            26.0,
+            18.0
+          ],
+          "ppu": 100.0,
+          "pivot": [
+            27.5,
+            19.5
+          ]
+        },
+        "color": [
+          0.13333334028720856,
+          0.13333334028720856,
+          0.13333334028720856,
+          0.9647058844566345
+        ],
+        "type": 1,
+        "preserve_aspect": false,
+        "graphic_flags": true,
+        "raycast_target": false,
+        "maskable": true
+      },
+      "layout": {
+        "axis": 0,
+        "padding": [
+          10,
+          10,
+          0,
+          0
+        ],
+        "alignment": 4,
+        "spacing": 0.0,
+        "expand": [
+          false,
+          false
+        ],
+        "control": [
+          true,
+          false
+        ],
+        "child_scale": [
+          false,
+          false
+        ],
+        "reverse": false
+      },
+      "size_fitter": [
+        2,
+        0
+      ],
+      "layout_element": {
+        "ignore": false,
+        "min": [
+          130.0,
+          -1.0
+        ],
+        "preferred": [
+          -1.0,
+          -1.0
+        ],
+        "flexible": [
+          -1.0,
+          -1.0
+        ]
+      },
+      "has_image": true,
+      "has_text": false,
+      "has_layout_element": true,
+      "has_layout": true,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": true,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": [
+        23,
+        25,
+        26,
+        27
+      ]
+    },
+    {
+      "name": "ItemDebris",
+      "path": "/ItemIconAppendAppearance/Content/Progress/BgCountText/ItemDebris",
+      "active": false,
+      "anchor_min": [
+        0.0,
+        0.0
+      ],
+      "anchor_max": [
+        0.0,
+        0.0
+      ],
+      "anchored_position": [
+        0.0,
+        0.0
+      ],
+      "size_delta": [
+        0.0,
+        39.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": 0.0,
+      "scripts": [
+        "LayoutElement"
+      ],
+      "layout_element": {
+        "ignore": false,
+        "min": [
+          35.0,
+          -1.0
+        ],
+        "preferred": [
+          -1.0,
+          -1.0
+        ],
+        "flexible": [
+          -1.0,
+          -1.0
+        ]
+      },
+      "has_image": false,
+      "has_text": false,
+      "has_layout_element": true,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": [
+        24
+      ]
+    },
+    {
+      "name": "Image",
+      "path": "/ItemIconAppendAppearance/Content/Progress/BgCountText/ItemDebris/Image",
+      "active": true,
+      "anchor_min": [
+        0.5,
+        0.5
+      ],
+      "anchor_max": [
+        0.5,
+        0.5
+      ],
+      "anchored_position": [
+        0.0,
+        1.2699999809265137
+      ],
+      "size_delta": [
+        25.0,
+        25.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": -0.0,
+      "scripts": [
+        "Image"
+      ],
+      "image": {
+        "sprite": {
+          "file": "res://assets/official/sprites/ItemPiece2-94d2a86906.png",
+          "name": "ItemPiece2",
+          "width": 25,
+          "height": 25,
+          "border": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ppu": 100.0,
+          "pivot": [
+            12.5,
+            12.5
+          ]
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "type": 0,
+        "preserve_aspect": false,
+        "graphic_flags": true,
+        "raycast_target": false,
+        "maskable": true
+      },
+      "has_image": true,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": []
+    },
+    {
+      "name": "LeftTxt",
+      "path": "/ItemIconAppendAppearance/Content/Progress/BgCountText/LeftTxt",
+      "active": true,
+      "anchor_min": [
+        0.0,
+        1.0
+      ],
+      "anchor_max": [
+        0.0,
+        1.0
+      ],
+      "anchored_position": [
+        46.474998474121094,
+        -43.23320007324219
+      ],
+      "size_delta": [
+        30.149999618530273,
+        41.08000183105469
+      ],
+      "pivot": [
+        1.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": -0.0,
+      "scripts": [
+        "MultiLanguageText",
+        "TextMeshProUGUI"
+      ],
+      "text": {
+        "value": "12",
+        "color": [
+          0.7960785031318665,
+          0.8117647767066956,
+          0.3803921937942505,
+          1.0
+        ],
+        "font_size": 32.0,
+        "horizontal": 4,
+        "vertical": 512,
+        "word_wrap": false,
+        "overflow": 0,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "has_image": false,
+      "has_text": true,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": []
+    },
+    {
+      "name": "Sign",
+      "path": "/ItemIconAppendAppearance/Content/Progress/BgCountText/Sign",
+      "active": true,
+      "anchor_min": [
+        0.0,
+        1.0
+      ],
+      "anchor_max": [
+        0.0,
+        1.0
+      ],
+      "anchored_position": [
+        58.654998779296875,
+        -43.23320007324219
+      ],
+      "size_delta": [
+        12.180000305175781,
+        41.08000183105469
+      ],
+      "pivot": [
+        1.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": -0.0,
+      "scripts": [
+        "MultiLanguageText",
+        "TextMeshProUGUI"
+      ],
+      "text": {
+        "value": "/",
+        "color": [
+          0.8862745761871338,
+          0.8862745761871338,
+          0.8862745761871338,
+          1.0
+        ],
+        "font_size": 30.0,
+        "horizontal": 4,
+        "vertical": 512,
+        "word_wrap": false,
+        "overflow": 0,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "has_image": false,
+      "has_text": true,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": []
+    },
+    {
+      "name": "RightTxt",
+      "path": "/ItemIconAppendAppearance/Content/Progress/BgCountText/RightTxt",
+      "active": true,
+      "anchor_min": [
+        0.0,
+        1.0
+      ],
+      "anchor_max": [
+        0.0,
+        1.0
+      ],
+      "anchored_position": [
+        113.67500305175781,
+        -43.23320007324219
+      ],
+      "size_delta": [
+        55.02000045776367,
+        41.08000183105469
+      ],
+      "pivot": [
+        1.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation": -0.0,
+      "scripts": [
+        "MultiLanguageText",
+        "TextMeshProUGUI"
+      ],
+      "text": {
+        "value": "365",
+        "color": [
+          0.8862745761871338,
+          0.8862745761871338,
+          0.8862745761871338,
+          1.0
+        ],
+        "font_size": 32.0,
+        "horizontal": 4,
+        "vertical": 512,
+        "word_wrap": false,
+        "overflow": 0,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "has_image": false,
+      "has_text": true,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "show_mask_graphic": false,
+      "child_ids": []
+    }
+  ],
+  "creation_root": 0,
+  "sprites": [
+    {
+      "key": "res://assets/official/sprites/ImgQuality_Blue-d7af3c8915.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/ImgQuality_Blue-d7af3c8915.png",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "key": "res://assets/official/sprites/ImgArrow_2-223d0782c6.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/ImgArrow_2-223d0782c6.png",
+      "border": [
+        0.0,
+        29.0,
+        0.0,
+        29.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "key": "res://assets/official/sprites/ImgItemSelect-de48b6abe9.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/ImgItemSelect-de48b6abe9.png",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "key": "res://assets/official/sprites/ImgMask-4b8fcf1e08.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/ImgMask-4b8fcf1e08.png",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "key": "res://assets/official/sprites/C_none-d73d644cfd.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/C_none-d73d644cfd.png",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "key": "res://assets/official/sprites/ImgQuality_Shadow-2db8da22eb.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/ImgQuality_Shadow-2db8da22eb.png",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "key": "res://assets/official/sprites/ImgQuality_Mask-95a3f1f08a.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/ImgQuality_Mask-95a3f1f08a.png",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "key": "res://assets/official/sprites/ImgItemTipBg-ac615f7615.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/ImgItemTipBg-ac615f7615.png",
+      "border": [
+        7.0,
+        0.0,
+        7.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "key": "res://assets/official/sprites/ImgItemIcon_NumBg-3e82a7afe1.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/ImgItemIcon_NumBg-3e82a7afe1.png",
+      "border": [
+        14.0,
+        17.0,
+        10.0,
+        18.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "key": "res://assets/official/sprites/ImgBg_CountText-31498f0e88.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/ImgBg_CountText-31498f0e88.png",
+      "border": [
+        26.0,
+        18.0,
+        26.0,
+        18.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "key": "res://assets/official/sprites/ItemPiece2-94d2a86906.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/ItemPiece2-94d2a86906.png",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "key": "res://assets/official/sprites/ImgQuality_White-9f7417c1ae.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/ImgQuality_White-9f7417c1ae.png",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "key": "res://assets/official/sprites/ImgQuality_Purple-7d444d87c0.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/ImgQuality_Purple-7d444d87c0.png",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "key": "res://assets/official/sprites/ImgQuality_Orange-062c6607e3.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/ImgQuality_Orange-062c6607e3.png",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "key": "res://assets/official/sprites/ImgQuality_Gold-b466cfbe99.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/ImgQuality_Gold-b466cfbe99.png",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "key": "res://assets/official/sprites/ImgQuality_Red-fe7cc9d49b.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/ImgQuality_Red-fe7cc9d49b.png",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "key": "res://assets/official/sprites/ImgQuality_Multicolour-48c880f195.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/sprites/ImgQuality_Multicolour-48c880f195.png",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    }
+  ],
+  "quality_keys": [
+    "res://assets/official/sprites/ImgQuality_White-9f7417c1ae.png",
+    "res://assets/official/sprites/ImgQuality_White-9f7417c1ae.png",
+    "res://assets/official/sprites/ImgQuality_Blue-d7af3c8915.png",
+    "res://assets/official/sprites/ImgQuality_Purple-7d444d87c0.png",
+    "res://assets/official/sprites/ImgQuality_Orange-062c6607e3.png",
+    "res://assets/official/sprites/ImgQuality_Gold-b466cfbe99.png",
+    "res://assets/official/sprites/ImgQuality_Red-fe7cc9d49b.png",
+    "res://assets/official/sprites/ImgQuality_Multicolour-48c880f195.png"
+  ],
+  "trial_items": [
+    {
+      "id": 35506,
+      "quality": 1
+    },
+    {
+      "id": 35556,
+      "quality": 1
+    },
+    {
+      "id": 35599,
+      "quality": 1
+    },
+    {
+      "id": 35600,
+      "quality": 1
+    },
+    {
+      "id": 35891,
+      "quality": 4
+    },
+    {
+      "id": 35893,
+      "quality": 4
+    },
+    {
+      "id": 36001,
+      "quality": 5
+    },
+    {
+      "id": 36008,
+      "quality": 4
+    },
+    {
+      "id": 36101,
+      "quality": 5
+    },
+    {
+      "id": 36108,
+      "quality": 4
+    },
+    {
+      "id": 39815,
+      "quality": 4
+    },
+    {
+      "id": 39816,
+      "quality": 4
+    }
+  ]
+}

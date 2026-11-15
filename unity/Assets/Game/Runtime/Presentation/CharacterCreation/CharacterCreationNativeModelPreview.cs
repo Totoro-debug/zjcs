@@ -26,21 +26,25 @@ namespace Zjcs.Presentation.CharacterCreation
             var imageObject = new GameObject("NativeCharacterPreview", typeof(RectTransform), typeof(RawImage));
             imageObject.transform.SetParent(viewport, false);
             RectTransform imageRect = imageObject.GetComponent<RectTransform>();
-            imageRect.anchorMin = Vector2.zero;
-            imageRect.anchorMax = Vector2.one;
-            imageRect.offsetMin = Vector2.zero;
-            imageRect.offsetMax = Vector2.zero;
+            // SkeletonGraphic draws in the original skeleton's pixel coordinates;
+            // its RectTransform is not a box to fit the character into.
+            imageRect.anchorMin = viewport.pivot;
+            imageRect.anchorMax = viewport.pivot;
+            imageRect.pivot = new Vector2(.5f, 0);
+            imageRect.anchoredPosition = Vector2.zero;
+            imageRect.sizeDelta = new Vector2(512, 768);
             image = imageObject.GetComponent<RawImage>();
             image.raycastTarget = false;
-            AspectRatioFitter aspect = imageObject.AddComponent<AspectRatioFitter>();
-            aspect.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
-            aspect.aspectRatio = 2f / 3f;
 
             worldRoot = new GameObject("NativeCharacterPreviewWorld_" + label);
             worldRoot.transform.SetParent(owner, false);
             worldRoot.transform.localPosition = new Vector3(layer * 4, 0, 0);
             modelRoot = new GameObject(label + "NativeModel");
             modelRoot.transform.SetParent(worldRoot.transform, false);
+            // Legacy sampled frames encode (160+x, 388-y) * 2. Undo that
+            // export transform before applying SkeletonGraphic pixel units.
+            modelRoot.transform.localScale = Vector3.one * .5f;
+            modelRoot.transform.localPosition = new Vector3(-1.6f, 3.88f, 0);
             modelRoot.name = label + "NativeModel";
             SetLayerRecursively(modelRoot, layer);
 
@@ -69,7 +73,7 @@ namespace Zjcs.Presentation.CharacterCreation
             camera.allowHDR = false;
             camera.allowMSAA = false;
             camera.depth = -10;
-            FitCamera(camera, modelRoot);
+            FitCamera(camera, worldRoot);
             SetVisible(false);
             ApplySkins(Array.Empty<string>());
         }
@@ -82,7 +86,7 @@ namespace Zjcs.Presentation.CharacterCreation
         public void ApplySkins(IEnumerable<string> skinNames)
         {
             framePlayer.ApplySkins(skinNames ?? Array.Empty<string>());
-            FitCamera(camera, modelRoot);
+            FitCamera(camera, worldRoot);
         }
 
         public void ApplyDyeChannels(IReadOnlyDictionary<int, Vector4[]> changesBySkinType)
@@ -94,7 +98,7 @@ namespace Zjcs.Presentation.CharacterCreation
         {
             if (string.IsNullOrEmpty(animationName)) return;
             framePlayer.Play(animationName);
-            FitCamera(camera, modelRoot);
+            FitCamera(camera, worldRoot);
         }
 
         public void Dispose()
@@ -112,22 +116,10 @@ namespace Zjcs.Presentation.CharacterCreation
 
         private static void FitCamera(Camera previewCamera, GameObject root)
         {
-            Renderer[] renderers = root.GetComponentsInChildren<Renderer>(false);
-            bool hasBounds = false;
-            Bounds bounds = new Bounds(root.transform.position, Vector3.zero);
-            foreach (Renderer renderer in renderers)
-            {
-                if (!hasBounds)
-                {
-                    bounds = renderer.bounds;
-                    hasBounds = true;
-                }
-                else bounds.Encapsulate(renderer.bounds);
-            }
-            if (!hasBounds) bounds = new Bounds(root.transform.position, new Vector3(2, 4, 0.1f));
-            previewCamera.orthographicSize = Mathf.Max(bounds.extents.y, bounds.extents.x / previewCamera.aspect) * 1.08f;
-            previewCamera.transform.position = new Vector3(bounds.center.x, bounds.center.y,
-                bounds.center.z - Mathf.Max(bounds.extents.z + 10, 20));
+            // MeshFramePlayer converts source pixels to metres at .01. Keep a
+            // fixed projection so changing hair/outfits cannot resize the body.
+            previewCamera.orthographicSize = 768 * .01f / 2;
+            previewCamera.transform.position = root.transform.position + new Vector3(0, 3.84f, -20);
         }
 
         private static void SetLayerRecursively(GameObject target, int layer)

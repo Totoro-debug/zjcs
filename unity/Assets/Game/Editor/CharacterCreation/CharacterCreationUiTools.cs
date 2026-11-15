@@ -14,12 +14,14 @@ namespace Zjcs.Editor.CharacterCreation
     public static class CharacterCreationUiTools
     {
         internal const string Root = "Assets/Official/CharacterCreation/RuntimeUI";
-        [Serializable] private sealed class Data { public string manifest; public string[] page_titles; public Node[] nodes; public int creation_root, diy_root, confirm_root; public SpriteInfo[] sprites; }
+        [Serializable] private sealed class Data { public string manifest; public string[] page_titles; public Node[] nodes; public int creation_root, diy_root, confirm_root; public SpriteInfo[] sprites; public string[] quality_keys; public TrialItem[] trial_items; }
+        [Serializable] private sealed class TrialItem { public int id, quality; }
         public static string[] PageTitles { get; private set; }
         [Serializable] private sealed class SpriteInfo { public string key, path; public float[] border; public float ppu; }
         [Serializable] private sealed class Node
         {
-            public string name; public bool active = true; public string[] scripts;
+            public string name, path; public bool active = true; public string[] scripts;
+            public NativeAnimation[] animations;
             public float[] anchor_min, anchor_max, anchored_position, size_delta, pivot, scale, safe_area;
             public bool has_image, has_text, has_layout_element, has_layout, has_grid, has_aspect_fitter, has_size_fitter, has_scroll, has_safe_area;
             public float rotation; public float alpha = 1; public bool has_canvas_group, button, toggle, mask, rectmask2d, show_mask_graphic;
@@ -35,11 +37,80 @@ namespace Zjcs.Editor.CharacterCreation
         [Serializable] private sealed class GridInfo { public int[] padding; public int alignment, corner, axis, constraint, count; public float[] cell, spacing; }
         [Serializable] private sealed class AspectInfo { public int mode; public float ratio; }
         [Serializable] private sealed class ScrollInfo { public bool horizontal, vertical; public float sensitivity; }
+        [Serializable] private sealed class NativeAnimation { public string name, owner; public bool loop; public NativeTrack[] tracks; }
+        [Serializable] private sealed class NativeTrack { public string path, property; public NativeKey[] keys; }
+        [Serializable] private sealed class NativeKey { public float time, value, in_tangent, out_tangent; }
         [Serializable] private sealed class FileRecord { public string path, sha256; }
         [Serializable] private sealed class Receipt { public string manifest, operation; public FileRecord[] inputs, outputs; }
 
         private static readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>(StringComparer.Ordinal);
         private static TMP_FontAsset font;
+
+        public static void RestoreTrialIcons()
+        {
+            const string source = "Assets/Official/CharacterCreation/TrialUI/trial-ui.json";
+            Data data = JsonUtility.FromJson<Data>(File.ReadAllText(source));
+            font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/Game/Resources/Combat/FZY4K-Dynamic.asset");
+            sprites.Clear();
+            foreach (SpriteInfo entry in data.sprites)
+            {
+                var importer = (TextureImporter)AssetImporter.GetAtPath(entry.path);
+                importer.textureType = TextureImporterType.Sprite;
+                importer.textureShape = TextureImporterShape.Texture2D;
+                importer.spriteImportMode = SpriteImportMode.Single;
+                importer.spriteBorder = new Vector4(V(entry.border,0),V(entry.border,1),V(entry.border,2),V(entry.border,3));
+                importer.spritePixelsPerUnit = entry.ppu;
+                importer.mipmapEnabled = false;
+                importer.alphaIsTransparency = true;
+                importer.SaveAndReimport();
+                Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(entry.path);
+                if (sprite == null) throw new InvalidOperationException("Trial UI sprite did not import: " + entry.path);
+                sprites.Add(entry.key, sprite);
+            }
+            foreach (Node n in data.nodes) n.children = Array.ConvertAll(n.child_ids, id => data.nodes[id]);
+            string destination = "Assets/Game/Resources/CharacterCreation/Trial";
+            Directory.CreateDirectory(destination);
+            var clips = new Dictionary<string, AnimationClip>();
+            foreach (Node node in data.nodes)
+            foreach (NativeAnimation sourceAnimation in node.animations ?? Array.Empty<NativeAnimation>())
+            {
+                var clip = new AnimationClip { name = sourceAnimation.name, legacy = true,
+                    wrapMode = sourceAnimation.loop ? WrapMode.Loop : WrapMode.Once };
+                foreach (NativeTrack track in sourceAnimation.tracks)
+                {
+                    var curve = new AnimationCurve(Array.ConvertAll(track.keys,
+                        key => new Keyframe(key.time,key.value,key.in_tangent,key.out_tangent)));
+                    clip.SetCurve(track.path.Substring(sourceAnimation.owner.Length+1),
+                        track.property.StartsWith("m_Color") ? typeof(Image) : typeof(RectTransform),track.property,curve);
+                }
+                string clipPath = destination + "/" + clip.name + ".anim";
+                AnimationClip existing = AssetDatabase.LoadAssetAtPath<AnimationClip>(clipPath);
+                if (existing == null) AssetDatabase.CreateAsset(clip,clipPath);
+                else { EditorUtility.CopySerialized(clip,existing); UnityEngine.Object.DestroyImmediate(clip); clip=existing; }
+                clips.Add(sourceAnimation.name,clip);
+            }
+            foreach (TrialItem item in data.trial_items)
+            {
+                GameObject go = Build(data.nodes[data.creation_root], null);
+                try
+                {
+                    foreach (Node node in data.nodes)
+                    foreach (NativeAnimation sourceAnimation in node.animations ?? Array.Empty<NativeAnimation>())
+                    {
+                        Transform owner = go.transform.Find(sourceAnimation.owner.Substring(data.nodes[data.creation_root].path.Length+1));
+                        Animation animation = owner.GetComponent<Animation>();
+                        if (animation == null) animation = owner.gameObject.AddComponent<Animation>();
+                        animation.AddClip(clips[sourceAnimation.name],sourceAnimation.name);
+                        animation.clip = clips[sourceAnimation.name];
+                        animation.playAutomatically = true;
+                    }
+                    go.transform.Find("Content/QualityImg").GetComponent<Image>().sprite = sprites[data.quality_keys[item.quality]];
+                    PrefabUtility.SaveAsPrefabAsset(go, destination + "/Item" + item.id + ".prefab");
+                }
+                finally { UnityEngine.Object.DestroyImmediate(go); }
+            }
+            AssetDatabase.SaveAssets();
+        }
 
         [MenuItem("Zjcs/Character Creation/Restore Official UI Components")]
         public static void Restore()

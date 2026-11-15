@@ -38,6 +38,10 @@
 
 ## 完整还原部分
 
+装扮页的原生骨骼预览按原始像素坐标投影，保留官方模型节点原点、父级缩放和过场曲线；不再按节点矩形自动适配身体大小，换装不会重新缩放角色。试穿栏恢复官方 `IconGroup` 水平布局和 `ItemIconAppendAppearance` 的 208 单位层级、圆形遮罩、品质底图、阴影与选中环，沿用原 `SelAnimGo_Loop` 尺寸／透明度循环；条目绑定仍使用已有组图、条件和草稿选择。恢复到装扮页时仅采样对应页面过场，不并行播放体型页选择动画，避免海报与选中描边重新叠入场景。新增条目模板独立取自当前 APK／资源版本 `884_156692`，不覆盖历史创角布局的版本记录；输入、转换与输出见[试穿模板来源](../../assets/reference/character-creation/trial-ui-source-manifest.json)。
+
+本段三项显示修复已通过静态元数据检查、Unity `2022.3.57f1c2` 导入／编译、`ProjectTools.Validate` 与 Play Mode；新构建 Windows Player 在 `450×938`、`450×800` 下通过男女试穿按钮和最右侧肤色按钮的模拟指针点击、圆形遮罩／选中动画、边界与草稿保存检查，冷启动恢复试穿和肤色已核对实际截图。正式路径 `D:/Desktop/ZjcsGame/Zjcs.exe` 已重新启动并通过同一流程，桌面快捷方式指向该文件，已有用户存档哈希保持一致。验证使用隔离存档、静音与内置屏不激活启动；本段仅覆盖角色比例、试穿图标和选项越界修复，完整创角其余缺项仍见下文。
+
 体型页中央海报恢复原人物纹理的完整透明边距，男性 `754×1485`、女性 `879×1486`，与各自 `SelGlow` 同尺寸。之前的 Sprite 裁剪图分别只有 `676×1446` 与 `804×1447`，在原 AspectRatioFitter 矩形中被拉伸，导致人物和黄色选中描边错位。现在直接解码 APK 独立 Texture2D 的完整像素，保持原 RectTransform、宽高比、GUID、动画和描边资源；来源跨版本像素核对及显式绑定见[海报纹理凭据](../../assets/reference/character-creation/poster-textures-source-manifest.json)。静态检查通过（152110 个 GUID），Unity 导入／编译及 `ProjectTools.Validate` 通过；Play Mode 与新构建 Windows Player 已通过男女反复模拟指针切换、海报／描边原尺寸、图标可见性及草稿保存检查，已查看男女两种状态的实际截图。正式发布路径 `D:/Desktop/ZjcsGame/Zjcs.exe` 已完成冷启动恢复女性草稿检查，并已查看恢复后海报与描边对齐的实际截图；验证只覆盖本段修复。
 
 体型页的男女按钮按官方 `CreatePlayerSelectSexContent.ChangeSex → SexStateSwitcher.SetState` 及已提取 prefab 的 `StateGameObjectConfig` 成对切换：男性选中时显示 `MaleBtn/Sel` 与 `FemaleBtn/Nor`，女性选中时显示 `FemaleBtn/Sel` 与 `MaleBtn/Nor`。`CharacterCreationFlowController.RenderBodyPage` 显式设置这四个原节点，保留原头像、布局和选中阴影，避免女性选中后男性普通头像仍被 prefab 初始隐藏状态关闭。验证覆盖静态元数据检查（152107 个 GUID）、Unity 导入／编译、`ProjectTools.Validate`、Play Mode 和新构建 Windows Player 的男女反复模拟指针点击、原头像可见状态及草稿保存；Play Mode 及正式发布路径 Windows Player 的冷启动恢复女性草稿也已通过，并已查看男女状态及恢复后的实际截图。完整创角的其余缺项仍见本页“尚未实现”。
@@ -119,6 +123,8 @@ Boss 3803 使用官方节点、网格、描边、粒子、模板遮罩与星空�
 
 
 ## 自定义实现
+
+Windows 画布缩放适配：画布在不同窗口比例下以官方 1080 单位宽度等比缩放，保留肤色板六列、128 单位圆点与原间距，避免最右列越界。
 
 存档槽、创角草稿和正式角色资料由 [CharacterCreationFlowController](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs)、[CharacterCreationOfflineService](../../unity/Assets/Game/Runtime/Offline/CharacterCreation/CharacterCreationOfflineService.cs)、[CharacterCreationDraftStore](../../unity/Assets/Game/Runtime/Offline/CharacterCreation/CharacterCreationDraft.cs) 与 [ProfileSlotCatalog](../../unity/Assets/Game/Runtime/Offline/State/ProfileSlotCatalog.cs) 接入本地 JSON 保存。各槽独立保存草稿；提交角色时写入选中槽，草稿损坏可保留原文件副本后重新开始，不覆盖正式角色数据。写入失败会阻止页面切换并显示提示。
 

@@ -1031,3 +1031,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 家园成长接线来源：`scripts/prepare_home_experience_growth_validation.py` 登记所选原 `Player.TryRefreshLevel`／`PlayerBlessLevelUtils` 查询、同版经验配置及本地成长事务接线；输入与代码 SHA-256 见[成长接线清单](home-experience-growth-source-manifest.json)。无新增美术载荷；单机差异与当前验证范围在[家园页](../../docs/features/city-and-home.md)维护。
 
 家园共鸣记录来源：原 `PlayerData` 已激活字段与 `EquipResonanceInfoParser`、装备及家园各自所选配置、共享属性源和存档接线的 SHA-256 见[共鸣记录清单](home-resonance-profile-source-manifest.json)。未转换美术载荷；实现与验证范围在[装备页](../../docs/features/equipment.md)维护。
+
+创角试穿条目原始 prefab 与 `ItemIconConfig`：固定输入及 PNG／布局输出哈希见 [试穿模板清单](character-creation/trial-ui-source-manifest.json)，由 `scripts/prepare_creation_trial_ui.py` 从当前 APK 提取，Unity 原生绑定由 `CharacterCreationUiTools.RestoreTrialIcons` 生成。
