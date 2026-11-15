@@ -49,7 +49,7 @@ public static partial class HomeNativePlayerValidation
     public static void Finish(Exception error)
     {
         SessionState.SetBool(Active, false);
-        if (error == null) Debug.Log("HOME_NATIVE_PLAYER_PASSED: formal home native player panel, portrait pointer, XP animation, notification and saved restoration.");
+        if (error == null) Debug.Log("HOME_NATIVE_PLAYER_PASSED: formal home native player panel, portrait pointer, original bed repair and collection, XP animation, notification and saved restoration.");
         else Debug.LogException(error);
         EditorApplication.Exit(error == null ? 0 : 1);
     }

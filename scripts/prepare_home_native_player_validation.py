@@ -14,14 +14,19 @@ def write_receipt():
         'home-player-status', 'home-avatar-portraits', 'home-avatar-native', 'home-experience-profile',
         'home-experience-growth', 'home-experience-environment', 'home-experience-rewards',
         'home-level-up-windows', 'home-level-up-properties', 'home-no-bless-rules', 'home-resonance-profile',
-        'home-hud-native']
+        'home-hud-native', 'home-repair-native', 'home-furniture-runtime', 'home-hangup-windows-runtime',
+        'home-hangup-host', 'home-income-formula', 'home-award-queue-runtime']
     inputs = ['assets/reference/' + name + '-source-manifest.json' for name in sources]
+    inputs += ['.tools/source-packages/official-code/framework-firstpass-source/Framework.UI/WindowContainer.cs',
+        '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/Framework.UI/WindowContainer.cs']
     bindings = ['scripts/prepare_home_native_player_validation.py', 'scripts/fixtures/home_native_player_validation.cs',
         'scripts/fixtures/home_furniture_host_validation.cs', 'scripts/fixtures/home_income_formula_validation.cs',
         'unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionSoundHost.cs']
     bindings += ['unity/Assets/Game/Runtime/Presentation/Home/' + name for name in [
         'HomeHudView.NativePlayer.cs', 'HomeHudView.NativePlayer.cs.meta', 'HomeHudView.cs',
-        'HomeFeatureRuntime.cs', 'HomeAcceptanceDriver.cs', 'HomeHudView.Tasks.cs', 'Zjcs.Presentation.Home.asmdef']]
+        'HomeFeatureRuntime.cs', 'HomeAcceptanceDriver.cs', 'HomeHudView.Tasks.cs', 'HomeHudView.BedWindow.cs',
+        'HomeHudView.BedAwards.cs', 'OfflineHomeBedServices.cs', 'OfflineHomeBedAwards.cs',
+        'OfflineHomeWindowOrder.cs', 'OfflineHomeWindowOrder.cs.meta', 'Zjcs.Presentation.Home.asmdef']]
     editor = ROOT / 'unity/Assets/Game/Validation/HomeNativePlayer'
     if editor.is_dir():
         bindings += [path.relative_to(ROOT).as_posix() for path in sorted(editor.iterdir()) if path.is_file()]
@@ -30,7 +35,7 @@ def write_receipt():
     digest = lambda name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
     result = dict(manifest='884_156692', inputs={name: digest(name) for name in inputs},
         runtime_bindings={name: digest(name) for name in bindings},
-        loading='Formal HomeHudView.Build -> original MainCanvas Public/Anim -> complete PublicPlayerInfo prefab; local profile, portrait studio, original XP reward handler and level-up windows.')
+        loading='Formal HomeHudView.Build -> original MainCanvas Public/Anim -> complete PublicPlayerInfo prefab; original scene bed repair/collection and award queue -> saved progression -> XP reward handler and level-up windows; shared popup order retains the original top-window + 10 interval.')
     (ROOT / 'assets/reference/home-native-player-host-source-manifest.json').write_text(
         json.dumps(result, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
 
@@ -61,7 +66,7 @@ def prepare(root_project=False):
     source = source.replace('    private RenderTexture target;\n', '').replace('        CloseCapture();\n', '')
     source = source.replace('HOME_FURNITURE_HOST_PASSED', 'HOME_NATIVE_PLAYER_PASSED')
     source = source.replace('actual home entry, simulated scene and native repair input, four-state binding and saved restoration.',
-        'formal home native player panel, portrait pointer, XP animation, notification and saved restoration.')
+        'formal home native player panel, portrait pointer, original bed repair and collection, XP animation, notification and saved restoration.')
     (folder / 'HomeNativePlayerRunner.cs').write_text('#if UNITY_EDITOR\n' + source + '\n#endif\n', 'utf8', newline='\n')
     config = (ROOT / 'scripts/fixtures/home_income_formula_validation.cs').read_text('utf8').split('public sealed partial class HomeIncomeFormulaHostRunner')[0]
     config = config[config.index('public static partial class HomeIncomeFormulaValidation'):]

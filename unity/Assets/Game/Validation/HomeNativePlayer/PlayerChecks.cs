@@ -15,6 +15,8 @@ using Zjcs.Official.HomeHudUI;
 public sealed partial class HomeNativePlayerRunner
 {
     int taskNavigationRequests;
+    long collectedExperience;
+    Zjcs.Official.HomeHangUpWindowsUI.FurnitureBedDialog collectedBed;
     T HudField<T>(string name) => (T)typeof(Zjcs.Presentation.Home.HomeHudView)
         .GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(home.Hud);
     IEnumerator CheckFormalPlayer()
@@ -49,11 +51,15 @@ public sealed partial class HomeNativePlayerRunner
         var before = home.Profile.Save.Player.Level;
         var tables = Zjcs.Offline.HomeExperienceUI.OfflineHomeExperienceConfiguration.LoadDefault().CreateTables();
         long award = tables.LevelExpParser.GetExp(1, before + 1) - home.Profile.Save.Player.Experience;
-        Require(award > 0 && home.DailyDungeonProgression.AwardExperience(award, "native-player-xp").IsApplied, "Actual saved progression commits next-level XP");
-        home.Hud.RefreshAll();
-        yield return new WaitForSeconds(.25f);
+        Require(award > 0, "Bed collection can advance the real saved player to the next level");
+        yield return CollectBedExperience(award, tables.LevelExpParser.GetExp(1, before + 2));
         yield return CaptureFrame("home-native-player-xp-animation.png");
         yield return CheckLevelNotification();
+        Require(collectedBed && collectedBed.isActiveAndEnabled, "Original regular collection retains the bed through the level-up notification");
+        ClickOutside(collectedBed.gameObject);
+        float closeDeadline = Time.time + 5;
+        while (collectedBed && Time.time < closeDeadline) yield return null;
+        Require(!collectedBed, "Original outside-mask pointer completes the bed hide animation and releases its window");
         Require(panel.Experience.Level == before + 1, "Original XP animation reaches committed level");
         home.Hud.RefreshTasks(); home.Hud.RefreshTasks();
         Require(taskNavigationRequests == 0, "Avatar return, XP and repeated task refresh do not activate task actions");
@@ -67,8 +73,97 @@ public sealed partial class HomeNativePlayerRunner
         Open(); yield return new WaitForSeconds(2);
         panel = HudField<OfflineHomePlayerPanel>("nativePlayerPanel");
         Require(home.Profile.Save.Player.Level == before + 1 && panel.Experience.Level == before + 1, "Actual home reopen restores saved level and original XP ring");
+        Require(home.Profile.Save.Player.Experience == collectedExperience && home.Session.Save.Inventory.Count == 0,
+            "Reopening restores the bed XP exactly once and retains no owed reward");
         Require(taskNavigationRequests == 1, "Reopening home does not repeat task navigation");
         yield return CaptureFrame("home-native-player-reopened.png");
+    }
+
+    IEnumerator CollectBedExperience(long award, long followingLevelExperience)
+    {
+        Require(!home.Session.OwnsFurniture(0), "Isolated new character starts with the original unrepaired bed");
+        SceneClick(0);
+        yield return new WaitForSeconds(.8f);
+        var repair = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeUI.FurnitureRepairDialog>();
+        Require(repair, "Scene pointer opens the original bed repair dialog");
+        Click(repair.RepairBtn);
+        yield return new WaitForSeconds(.8f);
+        var repaired = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeUI.FurnitureRepairedNotifyDialog>();
+        Require(home.Session.OwnsFurniture(0) && repaired, "Original repair button commits bed ownership and opens the repaired notification");
+        yield return WaitForPopupShow(repaired.gameObject);
+        yield return CaptureFrame("home-native-player-bed-repaired.png");
+        Click(repaired.GetComponentsInChildren<Zjcs.Official.ProfessionUI.CloseWindowBtn>()
+            .First(value => value.myButton.isActiveAndEnabled).myButton);
+        yield return new WaitForSeconds(.6f);
+        SceneClick(0);
+        yield return new WaitForSeconds(.8f);
+        var bed = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeHangUpWindowsUI.FurnitureBedDialog>();
+        Require(bed, "Repaired scene bed opens the complete original income dialog");
+        collectedBed = bed;
+        yield return WaitForPopupShow(bed.gameObject);
+        // Only this isolated test save receives a prepared settled balance. Collection,
+        // reward presentation, progression and persistence use the production path.
+        Require(home.Session.Mutate("native-player-earned-bed-xp", save => {
+            var income = save.Income.Single(value => value.HangUpId == 1);
+            income.StoredSeconds = 0; income.SettledCount = award;
+            var now = DateTimeOffset.UtcNow;
+            save.LastLocalUnixSeconds = now.ToUnixTimeSeconds();
+            save.LastIncomeSubsecond = (now.UtcDateTime.Ticks % TimeSpan.TicksPerSecond) / (double)TimeSpan.TicksPerSecond;
+        }), "Prepare already earned bed XP in the isolated home ledger");
+        long before = home.Profile.Save.Player.Experience;
+        Click(bed.GetHangUpRewardBtn);
+        collectedExperience = home.Profile.Save.Player.Experience;
+        Require(collectedExperience >= before + award && collectedExperience < followingLevelExperience,
+            "Original bed collect pointer commits the real level 3 to 4 experience reward");
+        Require(home.Session.Save.Inventory.Count == 0 && home.Session.Save.Income.Single(value => value.HangUpId == 1).SettledCount == 0,
+            "Bed collection acknowledges the durable reward and consumes its settled balance");
+        home.DrainHomeInventory();
+        Require(home.Profile.Save.Player.Experience == collectedExperience, "Repeating pending reward recovery cannot grant the bed XP twice");
+        var awards = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeAwardUI.AwardListPanel>();
+        Require(awards && awards.GetComponent<Canvas>().overrideSorting
+            && awards.GetComponent<Canvas>().sortingOrder > bed.GetComponent<Canvas>().sortingOrder,
+            "Original bed collection opens its real reward queue above the bed");
+        yield return new WaitForSeconds(.4f);
+        Require(UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeAwardUI.AwardListPanelItem>(),
+            "Original reward queue instantiates the bed's actual award item");
+        yield return CaptureFrame("home-native-player-bed-collected.png");
+    }
+
+    void ClickOutside(GameObject root)
+    {
+        var popup = root.GetComponent<Zjcs.Official.WorldUI.WorldPopupWindow>();
+        var mask = UnityEngine.Object.FindObjectsOfType<Zjcs.Official.WorldUI.WorldWindowMask>()
+            .Single(value => value.AttachWindow == popup);
+        var pointer = new PointerEventData(EventSystem.current) {
+            position = new Vector2(8, Screen.height - 8), button = PointerEventData.InputButton.Left };
+        var hits = new List<RaycastResult>(); EventSystem.current.RaycastAll(pointer, hits);
+        Require(hits.Count > 0 && ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject) == mask.Button.gameObject,
+            "Outside pointer first hits this popup's original attached mask");
+        ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerDownHandler);
+        ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerUpHandler);
+        ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerClickHandler);
+    }
+
+    IEnumerator WaitForPopupShow(GameObject root)
+    {
+        var popup = root.GetComponent<Zjcs.Official.WorldUI.WorldPopupWindow>();
+        float deadline = Time.time + 5;
+        while (popup && popup.State != Zjcs.Official.WorldUI.WorldPopupWindow.EState.Show && Time.time < deadline)
+            yield return null;
+        Require(popup && popup.State == Zjcs.Official.WorldUI.WorldPopupWindow.EState.Show,
+            "Original popup completes its show animation before pointer input");
+    }
+
+    void SceneClick(int type)
+    {
+        Require(home.Scene.TryGetFurnitureClickBounds(type, out Rect bounds), "Furniture has its original scene click bounds");
+        Vector2 point = home.Scene.Camera.WorldToScreenPoint(bounds.center);
+        var pointer = new PointerEventData(EventSystem.current) { position = point };
+        var hits = new List<RaycastResult>(); EventSystem.current.RaycastAll(pointer, hits);
+        Require(hits.Count == 0, "Furniture scene pointer is not obscured by UI: " + string.Join(",", hits.Select(value => value.gameObject.name)));
+        var input = typeof(Zjcs.Presentation.Home.HomeFeatureRuntime).GetField("input", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(home);
+        foreach (string method in new[] { "PointerDown", "PointerUp" })
+            input.GetType().GetMethod(method, BindingFlags.Instance | BindingFlags.NonPublic).Invoke(input, new object[] { point, false });
     }
 
     IEnumerator CheckLevelNotification()
@@ -81,6 +176,10 @@ public sealed partial class HomeNativePlayerRunner
             if (!tip) yield return null;
         }
         Require(tip, "Original reward handler opens the real level-up notification after the XP ring");
+        var notifyCanvas = tip.GetComponent<Canvas>();
+        var bedCanvas = collectedBed.GetComponent<Canvas>();
+        Require(notifyCanvas.sortingOrder > bedCanvas.sortingOrder,
+            "Original level-up notification renders above the still-open original bed");
         var popup = tip.GetComponent<Zjcs.Official.WorldUI.WorldPopupWindow>();
         Require(popup.mShowClip && Mathf.Abs(popup.mShowClip.length - 2.2f) < .001f,
             "Complete original 2.2 second notification clip is bound");

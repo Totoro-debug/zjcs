@@ -190,7 +190,13 @@ namespace Zjcs.Presentation.Home
         public IHomeAwardPopupOperation Popup(IWindowOperator owner, Action<AwardListPanel> initialized,
             bool instant, bool local, bool autoAdjustByWindowContext)
         {
-            panel.gameObject.SetActive(true); initialized(panel); return new Done();
+            panel.gameObject.SetActive(true);
+            initialized(panel);
+            var popup = panel.GetComponent<WorldPopupWindow>();
+            panel.transform.SetAsLastSibling();
+            OfflineHomeWindowOrder.Show(canvas, popup);
+            popup.Resume(); popup.Show();
+            return new Done();
         }
         public ItemInfo GetItemInfo(int id) => incomeItems.TryGetValue(id, out var item) ? item
             : throw new ArgumentOutOfRangeException(nameof(id), "Bind the selected original reward catalog before displaying another item.");

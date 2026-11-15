@@ -74,7 +74,9 @@ namespace Zjcs.Presentation.Home
                 nativePlayerSound.Bind(nativePlayerAudio);
                 nativeLevelUpWindows = new OfflineHomeLevelUpWindows(new OfflineHomeLevelUpWindowBindings {
                     Canvas = canvas, Properties = ProfessionPropertyBindings.Current,
-                    SoundHost = nativePlayerSound, PostSound = PostPartnerPromptSound
+                    SoundHost = nativePlayerSound, PostSound = PostPartnerPromptSound,
+                    Showing = popup => OfflineHomeWindowOrder.Show(canvas, popup),
+                    Closed = _ => { } // The next show reads the remaining active popup roots.
                 }, nativeLevelUpProperties, () => nativeExperiencePlayer.Level, levelAssets);
                 nativeExperience = new OfflineHomeExperienceServices(nativeExperiencePlayer,
                     new OfflineHomeExperienceStore(nativeExperiencePlayer), null,
