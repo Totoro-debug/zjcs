@@ -27,7 +27,8 @@ def main():
     path = ROOT / 'unity/Assets/Official/StoryUI/Resources/Story/TransparentDialogueBackground.png'
     path.parent.mkdir(parents=True, exist_ok=True)
     image.save(path, format='PNG')
-    meta = (ROOT / 'unity/Assets/Official/World/Map/14/UI/Sprites/ImgBg_Talk-6b92d03dd9.png.meta').read_text(encoding='utf8')
+    meta_source = ROOT / 'unity/Assets/Official/World/Map/14/UI/Sprites/ImgBg_Talk-6b92d03dd9.png.meta'
+    meta = meta_source.read_text(encoding='utf8')
     meta = meta.replace('50286dc1f38e8e447a6828c1ed40ede8', '8970a3cebc0e41d2bf48cc99db5ca111')
     Path(str(path) + '.meta').write_text(meta, encoding='utf8')
     for folder in (path.parent, path.parent.parent):
@@ -38,6 +39,8 @@ def main():
     receipt = dict(manifest=apk.version, source=apk.provenance(obj),
         raw_sha256=hashlib.sha256(obj.get_raw_data()).hexdigest(),
         decoded_sha256=hashlib.sha256(source.getvalue()).hexdigest(),
+        meta_input=dict(path=meta_source.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(meta_source.read_bytes()).hexdigest()),
+        converter_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         operation='User-requested removal of baked dark shadow: alpha=0 only where max(R,G,B)<64; all other RGBA pixels unchanged; original size, pivot, border and PPU retained',
         removed_pixels=removed,
         binding='OfficialWorldUiRenderer -> DialogueBackgroundAppearance.Apply -> Resources/Story/TransparentDialogueBackground',
