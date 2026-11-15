@@ -1036,3 +1036,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 家园共鸣记录来源：原 `PlayerData` 已激活字段与 `EquipResonanceInfoParser`、装备及家园各自所选配置、共享属性源和存档接线的 SHA-256 见[共鸣记录清单](home-resonance-profile-source-manifest.json)。未转换美术载荷；实现与验证范围在[装备页](../../docs/features/equipment.md)维护。
 
 创角试穿条目原始 prefab 与 `ItemIconConfig`：固定输入及 PNG／布局输出哈希见 [试穿模板清单](character-creation/trial-ui-source-manifest.json)，由 `scripts/prepare_creation_trial_ui.py` 从当前 APK 提取，Unity 原生绑定由 `CharacterCreationUiTools.RestoreTrialIcons` 生成。
+
+创角发型与标题绑定：`scripts/inspect_creation_appearance_bindings.py` 从当前 APK 提取 `TypeSelectItem`、`UIToggleObject` 与 `TMPEffect` 的原字段、指针目标及对象 SHA-256；输入凭据见[外观绑定清单](character-creation/appearance-bindings-source-manifest.json)。未新增美术载荷，功能与验证范围见[创角页](../../docs/features/character-creation.md)。

@@ -38,6 +38,8 @@
 
 ## 完整还原部分
 
+创角发型条目按官方 `TypeSelectItem.Icon → Background` 绑定每个配置的 `SkinName` 缩略图，避免误写遮罩节点后仍显示模板默认发型；`UIToggleObject` 仅激活原 `Checkmark` 方形选中框，`Background/Select` 圆框保持隐藏。标题复用已迁移的原 `TMPEffect` 及 `Hidden/JSZX/TextMeshPro` 的 Windows shader（显式复用 `SaveSelection/Materials/25`，独立字体实例保留字面与深色外描边），恢复 `SelectSexTitle` 的深色描边：宽度 3、RGBA `(34,34,34,230)`，保留原字体、布局和字号。当前 APK `881_156673`／资源版本 `884_156692` 中的组件指针、字段、对象哈希和来源见[外观绑定凭据](../../assets/reference/character-creation/appearance-bindings-source-manifest.json)，通过 `scripts/inspect_creation_appearance_bindings.py` 重取；既有发型贴图与历史布局载荷保持各自来源记录。本段修复已通过静态元数据检查、Unity 导入／编译、`ProjectTools.Validate` 和 Play Mode；男女发型配置图逐项核对、模拟指针选发型、单一方框及草稿保存通过，并已查看实际截图。Windows Player 尚待验证与发布。
+
 装扮页的原生骨骼预览按原始像素坐标投影，保留官方模型节点原点、父级缩放和过场曲线；不再按节点矩形自动适配身体大小，换装不会重新缩放角色。试穿栏恢复官方 `IconGroup` 水平布局和 `ItemIconAppendAppearance` 的 208 单位层级、圆形遮罩、品质底图、阴影与选中环，沿用原 `SelAnimGo_Loop` 尺寸／透明度循环；条目绑定仍使用已有组图、条件和草稿选择。恢复到装扮页时仅采样对应页面过场，不并行播放体型页选择动画，避免海报与选中描边重新叠入场景。新增条目模板独立取自当前 APK／资源版本 `884_156692`，不覆盖历史创角布局的版本记录；输入、转换与输出见[试穿模板来源](../../assets/reference/character-creation/trial-ui-source-manifest.json)。
 
 本段三项显示修复已通过静态元数据检查、Unity `2022.3.57f1c2` 导入／编译、`ProjectTools.Validate` 与 Play Mode；新构建 Windows Player 在 `450×938`、`450×800` 下通过男女试穿按钮和最右侧肤色按钮的模拟指针点击、圆形遮罩／选中动画、边界与草稿保存检查，冷启动恢复试穿和肤色已核对实际截图。正式路径 `D:/Desktop/ZjcsGame/Zjcs.exe` 已重新启动并通过同一流程，桌面快捷方式指向该文件，已有用户存档哈希保持一致。验证使用隔离存档、静音与内置屏不激活启动；本段仅覆盖角色比例、试穿图标和选项越界修复，完整创角其余缺项仍见下文。

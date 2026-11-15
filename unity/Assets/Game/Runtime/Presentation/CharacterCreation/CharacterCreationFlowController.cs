@@ -29,6 +29,7 @@ namespace Zjcs.Presentation.CharacterCreation
         private CharacterCreationPerformancePlayer performancePlayer;
         private CharacterCreationPerformanceAssets performanceAssets;
         private TMP_FontAsset font;
+        private Zjcs.Offline.ProfessionUI.OfflineUiFontInstance titleFont;
         private AudioSource uiAudio;
         private Canvas canvas;
         private GameObject screen;
@@ -138,6 +139,7 @@ namespace Zjcs.Presentation.CharacterCreation
         private void OnDestroy()
         {
             DisposeFirstStoryHome();
+            titleFont?.Dispose();
         }
 
         private void EnsureEventSystem()
@@ -276,6 +278,20 @@ namespace Zjcs.Presentation.CharacterCreation
             officialPanel = Instantiate(assets.CreatePlayerPanelPrefab, canvas.transform, false);
             officialPanel.name = "OfficialCreatePlayerPanel";
             ApplyOfficialFont(officialPanel);
+            // Original SelectSexTitle TMPEffect (4178110376775880911), APK 881 / resources 884.
+            if (titleFont == null)
+            {
+                titleFont = new Zjcs.Offline.ProfessionUI.OfflineUiFontInstance(font);
+                // Reuse the recovered official UI text shader, whose outline preserves the face.
+                titleFont.Font.material.shader = Resources.Load<Material>("SaveSelection/Materials/25").shader;
+            }
+            var title = FindDeep(officialPanel.transform, "SelectSexTitle").GetComponent<TMP_Text>();
+            title.font = titleFont.Font;
+            var titleEffect = title.gameObject.AddComponent<TMPEffect>();
+            titleEffect.outline = true;
+            titleEffect.outlineColor = new Color32(34, 34, 34, 230);
+            titleEffect.outlineWidth = 3f;
+            titleEffect.SetupEffect(true);
             screen = officialPanel;
             RectTransform panelRect = officialPanel.GetComponent<RectTransform>();
             if (panelRect != null) Place(panelRect, Vector2.zero, Vector2.one);
@@ -522,14 +538,16 @@ namespace Zjcs.Presentation.CharacterCreation
                     Transform item = Instantiate(template.gameObject, content, false).transform;
                     item.name = templateName + "_" + option.Id;
                     item.gameObject.SetActive(true);
-                    Image icon = FindDeep(item, "Icon")?.GetComponent<Image>();
+                    // TypeSelectItem.Icon points to Background for hair, not its sibling mask.
+                    Image icon = field == "hairstyle_id" ? item.Find("Background").GetComponent<Image>()
+                        : FindDeep(item, "Icon")?.GetComponent<Image>();
                     if (icon == null)
                         icon = item.GetComponentsInChildren<Image>(true).FirstOrDefault(image =>
                             image.name != "Select" && image.name != "Selected" && image.name != "Background");
                     if (icon != null)
                     {
                         icon.sprite = assets.FindSkinIcon(option.SkinName);
-                        icon.preserveAspect = true;
+                        icon.preserveAspect = field != "hairstyle_id";
                     }
                     BindOptionItem(item, option, appearance, field);
                     optionItems.Add(option.Id, item);
@@ -1061,6 +1079,13 @@ namespace Zjcs.Presentation.CharacterCreation
             if (item == null) return;
             Toggle toggle = item.GetComponentInChildren<Toggle>(true);
             if (toggle != null) toggle.SetIsOnWithoutNotify(selected);
+            if (item.name.StartsWith("HairTypeItem_", StringComparison.Ordinal))
+            {
+                // UIToggleObject activates Checkmark only; Background/Select stays hidden.
+                item.Find("Checkmark").gameObject.SetActive(selected);
+                item.Find("Background/Select").gameObject.SetActive(false);
+                return;
+            }
             foreach (string name in new[] { "Checkmark", "Select", "Sel", "Selected" })
             {
                 Transform marker = FindDeep(item, name);

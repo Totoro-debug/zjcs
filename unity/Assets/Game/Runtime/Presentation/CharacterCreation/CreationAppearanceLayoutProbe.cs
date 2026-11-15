@@ -41,7 +41,8 @@ namespace Zjcs.Presentation.CharacterCreation
             string slot = File.Exists(Path.Combine(output,"slot.txt")) ? File.ReadAllText(Path.Combine(output,"slot.txt")) : service.CreateSlot();
             File.WriteAllText(Path.Combine(output,"slot.txt"),slot);
             CharacterCreationDraft draft = service.OpenDraft(slot);
-            draft.page = "appearance"; draft.tab = "整体"; draft.field = "skin_color";
+            draft.page = "appearance";
+            if (!File.Exists(Path.Combine(output,"result.txt"))) { draft.tab = "整体"; draft.field = "skin_color"; }
             Set(controller,"service",service); Set(controller,"slotId",slot); Set(controller,"draft",draft);
             Invoke(controller,"ShowCreation");
             yield return new WaitForSecondsRealtime(2);
@@ -67,6 +68,42 @@ namespace Zjcs.Presentation.CharacterCreation
                     Click(group);
                 }
                 catch(Exception e) { Finish(false,e); yield break; }
+                try
+                {
+                    var hairTab = FindObjectsOfType<TMPro.TMP_Text>().First(t => t.text == "头发");
+                    Click(ExecuteEvents.GetEventHandler<IPointerClickHandler>(hairTab.gameObject));
+                }
+                catch(Exception e) { Finish(false,e); yield break; }
+                yield return new WaitForSecondsRealtime(.5f);
+                yield return new WaitForEndOfFrame();
+                try
+                {
+                    var items = FindObjectsOfType<Toggle>().Where(t => t.name.StartsWith("HairTypeItem_")).OrderBy(t=>t.transform.GetSiblingIndex()).ToArray();
+                    Require(items.Length >= 15,"Hair options missing");
+                    var catalog = CharacterCreationAssetCatalog.LoadDefault();
+                    var options = catalog.GetAppearanceOptions(body,"hairstyle_id");
+                    Require(items.Select(t=>t.transform.Find("Background").GetComponent<Image>().sprite).Distinct().Count()==items.Length,"Hair previews repeat");
+                    foreach(var item in items)
+                    {
+                        var option = options.First(o=>item.name=="HairTypeItem_"+o.Id);
+                        Require(item.transform.Find("Background").GetComponent<Image>().sprite==catalog.FindSkinIcon(option.SkinName),"Wrong official hair sprite");
+                        Require(!item.transform.Find("Background/Select").gameObject.activeSelf,"Unexpected circular selection");
+                    }
+                    var title = FindObjectsOfType<TMPro.TMP_Text>().First(t=>t.name=="SelectSexTitle");
+                    var effect = title.GetComponent<TMPro.TMPEffect>();
+                    Require(effect != null && effect.outline && effect.outlineWidth==3f,"Original title outline missing");
+                    Click(items[1].gameObject);
+                    Require(items[1].isOn && items[1].transform.Find("Checkmark").gameObject.activeSelf,"Hair pointer selection failed");
+                    Require(items.Count(t=>t.transform.Find("Checkmark").gameObject.activeSelf)==1,"Multiple hair selections");
+                    Invoke(controller,"PersistDraft");
+                    var saved = service.OpenDraft(slot);
+                    Require((body=="male"?saved.bodies.male:saved.bodies.female).hairstyle_id == (body=="male"?draft.bodies.male:draft.bodies.female).hairstyle_id,"Hair draft did not persist");
+                    Canvas.ForceUpdateCanvases();
+                    Capture(body+"-hair");
+                    var wholeTab = FindObjectsOfType<TMPro.TMP_Text>().First(t => t.text == "整体");
+                    Click(ExecuteEvents.GetEventHandler<IPointerClickHandler>(wholeTab.gameObject));
+                }
+                catch(Exception e) { Finish(false,e); yield break; }
                 yield return new WaitForSecondsRealtime(.6f);
                 yield return new WaitForEndOfFrame();
                 try
@@ -82,6 +119,8 @@ namespace Zjcs.Presentation.CharacterCreation
                 }
                 catch(Exception e) { Finish(false,e); yield break; }
             }
+            draft.tab = "头发"; draft.field = "hairstyle_id";
+            Invoke(controller,"PersistDraft");
             Finish(true,null);
         }
         private static void ValidateBounds()
