@@ -38,6 +38,8 @@
 
 ## 完整还原部分
 
+体型页的男女按钮按官方 `CreatePlayerSelectSexContent.ChangeSex → SexStateSwitcher.SetState` 及已提取 prefab 的 `StateGameObjectConfig` 成对切换：男性选中时显示 `MaleBtn/Sel` 与 `FemaleBtn/Nor`，女性选中时显示 `FemaleBtn/Sel` 与 `MaleBtn/Nor`。`CharacterCreationFlowController.RenderBodyPage` 显式设置这四个原节点，保留原头像、布局和选中阴影，避免女性选中后男性普通头像仍被 prefab 初始隐藏状态关闭。验证覆盖静态元数据检查（152107 个 GUID）、Unity 导入／编译、`ProjectTools.Validate`、Play Mode 和新构建 Windows Player 的男女反复模拟指针点击、原头像可见状态及草稿保存；Play Mode 及正式发布路径 Windows Player 的冷启动恢复女性草稿也已通过，并已查看男女状态及恢复后的实际截图。完整创角的其余缺项仍见本页“尚未实现”。
+
 存档选择的原四级模糊处理在完成与异常退出时恢复进入前的活动 RenderTexture，避免 Windows 后续截屏读取缩小后的模糊纹理；
 
 共享原生模型工厂保留男女骨骼与图集附件的局部坐标、权重、裁剪、排序和染色绑定；创角网格与人物模型共同使用该工厂。完整 Animator、原生动作混合／物理及家园动作仍有缺项，来源见[原生几何清单](../../assets/reference/character-creation/native-geometry-source-manifest.json)。

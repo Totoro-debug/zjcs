@@ -380,8 +380,16 @@ namespace Zjcs.Presentation.CharacterCreation
 
         private void RenderBodyPage()
         {
-            SetOfficialSelected(FindDeep(selectSexContent, "MaleBtn"), draft.body_type == "male");
-            SetOfficialSelected(FindDeep(selectSexContent, "FemaleBtn"), draft.body_type == "female");
+            // CreatePlayerSelectSexContent.SexStateSwitcher switches both Nor and Sel.
+            // Toggling Sel alone leaves the prefab's initially hidden male Nor hidden.
+            SetBodyButtonState(RequireNode(selectSexContent, "MaleBtn"), draft.body_type == "male");
+            SetBodyButtonState(RequireNode(selectSexContent, "FemaleBtn"), draft.body_type == "female");
+        }
+
+        private static void SetBodyButtonState(Transform button, bool selected)
+        {
+            RequireNode(button, "Nor").gameObject.SetActive(!selected);
+            RequireNode(button, "Sel").gameObject.SetActive(selected);
         }
 
         private void RenderAppearancePage()

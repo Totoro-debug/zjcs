@@ -115,6 +115,14 @@ namespace Zjcs.Presentation.CharacterCreation
                 Click(view.Panel.RoleItemSlot.GetChild(0).gameObject);
                 yield return null;
                 Require(GameObject.Find("OfficialCreatePlayerPanel") != null, "Cold restart did not resume the saved draft.");
+                yield return new WaitForSecondsRealtime(2f);
+                Transform buttons = GameObject.Find("OfficialCreatePlayerPanel").transform
+                    .Find("Content/BottomContent/SelectSexContent/SexGo");
+                Require(buttons.Find("MaleBtn/Nor").gameObject.activeInHierarchy
+                    && buttons.Find("FemaleBtn/Sel").gameObject.activeInHierarchy
+                    && !buttons.Find("MaleBtn/Sel").gameObject.activeInHierarchy
+                    && !buttons.Find("FemaleBtn/Nor").gameObject.activeInHierarchy,
+                    "Cold restart did not restore both body icons for the saved female draft.");
                 yield return new WaitForEndOfFrame(); Capture("restart-resumed");
                 File.WriteAllText(Path.Combine(output, "restart-result.json"), "{\"passed\":true,\"draftRecovered\":true}");
                 Complete(true);
@@ -181,9 +189,39 @@ namespace Zjcs.Presentation.CharacterCreation
             Require(new ProfileSlotCatalog(ProfileRoot).GetSlotIds().Count == count + 1 && GameObject.Find("OfficialCreatePlayerPanel") != null,
                 "New profile button did not create an independent draft and enter creation.");
             yield return new WaitForEndOfFrame(); Capture("created");
+            yield return VerifyBodyButtons();
             Debug.Log("Save selection validation passed: native UI, portraits, tabs, simulated scroll/click, no browse writes, continue, corrupt profile preservation and creation.");
                 File.WriteAllText(Path.Combine(output, "result.json"), "{\"passed\":true,\"simulatedInput\":true}");
             Complete(true);
+        }
+
+        private IEnumerator VerifyBodyButtons()
+        {
+            Transform panel = GameObject.Find("OfficialCreatePlayerPanel").transform;
+            Transform buttons = panel.Find("Content/BottomContent/SelectSexContent/SexGo");
+            var draftService = CharacterCreationOfflineService.OpenDefault(ProfileRoot);
+            // Let the official entrance transition finish before sending pointer events.
+            yield return new WaitForSecondsRealtime(2f);
+            foreach (bool female in new[] { false, true, false, true })
+            {
+                Click(buttons.Find(female ? "FemaleBtn" : "MaleBtn").gameObject);
+                yield return new WaitForSecondsRealtime(.6f);
+                foreach (string name in new[] { "MaleBtn", "FemaleBtn" })
+                {
+                    Transform button = buttons.Find(name);
+                    bool selected = (name == "FemaleBtn") == female;
+                    Require(button.Find("Nor").gameObject.activeInHierarchy == !selected
+                        && button.Find("Sel").gameObject.activeInHierarchy == selected,
+                        "Body icon normal/selected state is incorrect: " + name);
+                    Image icon = button.Find(selected ? "Sel" : "Nor").GetComponent<Image>();
+                    Require(icon != null && icon.sprite != null && icon.color.a > 0,
+                        "Body icon has no visible original sprite: " + name);
+                }
+                Require(draftService.OpenDraft("slot-16").body_type == (female ? "female" : "male"),
+                    "Body selection was not saved after the simulated click.");
+                yield return new WaitForEndOfFrame(); Capture(female ? "body-female" : "body-male");
+            }
+            Debug.Log("BODY_BUTTONS_PASSED: repeated male/female pointer clicks, both original icons and saved draft.");
         }
 
         private static GameObject FindButton(string text, bool required = true)

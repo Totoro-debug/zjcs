@@ -200,7 +200,7 @@ namespace Zjcs.Editor.Startup
             group.GetType().GetMethod("AddCustomSize").Invoke(group, new[] { size });
             int index = (int)group.GetType().GetMethod("GetTotalCount").Invoke(group, null) - 1;
             Type viewType = editor.GetType("UnityEditor.GameView");
-            EditorWindow view = EditorWindow.GetWindow(viewType);
+            EditorWindow view = EditorWindow.GetWindow(viewType, false, null, false);
             viewType.GetProperty("selectedSizeIndex", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).SetValue(view, index);
         }
     }

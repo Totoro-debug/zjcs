@@ -22,6 +22,34 @@ namespace Zjcs.Editor.Startup
             Hook();
             EditorApplication.isPlaying = true;
         }
+        public static void RunBodyIcons()
+        {
+            ProjectTools.Validate();
+            SessionState.SetBool(Key + ".buildBodyIcons", true);
+            SessionState.SetBool(Key, true);
+            SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 180f);
+            typeof(StartupPlayModeValidation).GetMethod("ConfigureView", BindingFlags.Static | BindingFlags.NonPublic)
+                .Invoke(null, new object[] { 450, 800 });
+            EditorSceneManager.OpenScene("Assets/Game/Scenes/Bootstrap.unity");
+            Hook();
+            EditorApplication.isPlaying = true;
+        }
+        public static void BuildBodyIconsPlayer()
+        {
+            ProjectTools.Validate();
+            string root = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+            if (string.IsNullOrWhiteSpace(root)) throw new InvalidOperationException("Set ZJCS_VALIDATION_DIR.");
+            string destination = System.IO.Path.Combine(root, "Player", "Zjcs.exe");
+            var report = UnityEditor.BuildPipeline.BuildPlayer(new UnityEditor.BuildPlayerOptions
+            {
+                scenes = new[] { "Assets/Game/Scenes/Bootstrap.unity" },
+                locationPathName = destination,
+                target = BuildTarget.StandaloneWindows64,
+                options = BuildOptions.None
+            });
+            if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded)
+                throw new InvalidOperationException("Body icon validation Player build failed.");
+        }
         [InitializeOnLoadMethod] private static void Restore() { if (SessionState.GetBool(Key, false)) Hook(); }
         private static void Hook()
         {
@@ -40,6 +68,11 @@ namespace Zjcs.Editor.Startup
         {
             if (state != PlayModeStateChange.EnteredEditMode || !SessionState.GetBool(Key, false)) return;
             SessionState.SetBool(Key, false);
+            if (SessionState.GetBool(Key + ".passed", false) && SessionState.GetBool(Key + ".buildBodyIcons", false))
+            {
+                SessionState.SetBool(Key + ".buildBodyIcons", false);
+                BuildBodyIconsPlayer();
+            }
             EditorApplication.Exit(SessionState.GetBool(Key + ".passed", false) ? 0 : 1);
         }
     }
