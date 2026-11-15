@@ -109,6 +109,9 @@ try {
         if ($item -eq 10053 -and -not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Sunset sword] Original 11250/11251/10022 five timed hits passed;')) {
             throw "Original 10053 five-hit assertions did not complete: $run"
         }
+        if ($item -eq 10061 -and -not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Portable flame] Original 11200/24210 creator and 10860 proximity damage passed.')) {
+            throw "Original 10061 proximity/creator assertions did not complete: $run"
+        }
         foreach ($phase in 1..4) {
             if (-not (Test-Path -LiteralPath (Join-Path $run "first-promotion-$item-phase-$phase.png"))) {
                 throw "Original presentation phase $phase was not captured: $run"

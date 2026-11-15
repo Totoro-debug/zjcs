@@ -115,6 +115,10 @@ namespace Zjcs.Combat.Official
                 var units = context.Units; var skill = context.Skill; var hit = context.Hit;
                 var targets = context.Targets; var targetPosition = context.Primary;
                 var hitCast = context.Cast; var random = context.Random;
+                // Confirmed 10061 rule: its three authored 11202 child references
+                // share three friendly recipients, with one recipient per 11201.
+                int randomCount = skill?.EntityId == 11200 && hit.EntityId == 11201
+                    ? 1 : hit.RandomCount;
                 List<FightBattleUnitState> hitTargets;
                 IReadOnlyList<FightHitOccurrence> plannedHits = null;
                 if (!randomTargetGroups.TryGetValue(hit.RandomTargetGroupId,
@@ -135,7 +139,7 @@ namespace Zjcs.Combat.Official
                     List<FightBattleRandomScopeSelection> selections =
                         FightBattleTargeting.SelectRandomScopePositions(targetingSource, units, skill,
                             scopeAnchor, hit.RandomTargetScope, context.Grid,
-                            hit.RandomCount, random, hit.RandomTargetAllowEmptyScope,
+                            randomCount, random, hit.RandomTargetAllowEmptyScope,
                             hit.RandomTargetNotAllowHitEmpty, hit.RandomTargetNotSameTarget,
                             groupState.TargetIds, hit.RandomTargetNotSameEmptyScope,
                             groupState.EmptyPositions, hit.RandomTargetNotSameGrid,
@@ -171,7 +175,7 @@ namespace Zjcs.Combat.Official
                                 || !groupState.TargetIds.Contains(candidate.Id)))
                             randomCandidates.Add(candidate);
                     selectedTargets = FightBattleTargeting.SelectRandomHitTargets(
-                        randomCandidates, hit.RandomCount, random,
+                        randomCandidates, randomCount, random,
                         hit.RandomTargetNotSameTarget ? groupState.TargetIds : null);
                     foreach (FightBattleUnitState selectedTarget in selectedTargets)
                     {

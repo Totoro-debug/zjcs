@@ -242,7 +242,7 @@ namespace Zjcs.Presentation.Combat
                     if (prop.Id == catalog.PropertyType("Speed")) prop.Value = speed;
                     // Isolate the authored facing of the adjacent-target probes. Ordinary landing AI
                     // may otherwise relocate around this already adjacent target.
-                    if ((itemId == 10042 || itemId == 10053) && unit == player
+                    if ((itemId == 10042 || itemId == 10053 || itemId == 10061) && unit == player
                         && (prop.Id == catalog.PropertyType("MoveDist")
                             || prop.Id == catalog.PropertyType("FixedMoveDist"))) prop.Value = 0;
                 }
@@ -368,6 +368,20 @@ namespace Zjcs.Presentation.Combat
                         && Math.Abs(hits[i].Delay - cast.Delay - delays[i]) < .0001f,
                         "Original 11250 damage identity, original timing or settlement differs: " + i);
                 Debug.Log("[Sunset sword] Original 11250/11251/10022 five timed hits passed; isolated ordinary movement=0.");
+            }
+            if (firstPromotionItemId == 10061)
+            {
+                var ring = player.Statuses.Single(value => value.ClassId == 24210);
+                var child = step.SkillCasts.Single(value => value.SkillEntityId == 10860);
+                var damage = step.DamageEvents.Single(value => value.SkillEntityId == 10860);
+                Require(ring.CreatorId == player.Id && ring.ApplyingSkillItemId == 10061
+                    && ring.SourceSkillRank == 2 && ring.SourceSkillLevel == 20
+                    && child.ActorId == player.Id && child.Slot < 0
+                    && damage.SourceId == player.Id && damage.TargetId != player.Id
+                    && damage.HitEntityId == 10861 && damage.DamageEntityId == 10862
+                    && damage.Damage < 0 && damage.BeforeHp > damage.AfterHp,
+                    "Original 24210 proximity skill must use its creator and original 10860 damage.");
+                Debug.Log("[Portable flame] Original 11200/24210 creator and 10860 proximity damage passed.");
             }
             if (firstPromotionItemId == 10042)
             {

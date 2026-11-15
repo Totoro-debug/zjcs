@@ -995,7 +995,10 @@ namespace Zjcs.Combat.Official
                         {
                             if (trigger == null || trigger.EntityId <= 0
                                 || !Roll(trigger.BasePercent, random)) continue;
-                            int sourceId = trigger.Source == 3 ? candidate.Id : source.Id;
+                            // Original 24210 explicitly uses StatusTriggerTarget.Creator (3).
+                            // The nearby unit is TriggerTarget, including when an ally holds the ring.
+                            int sourceId = status.ClassId == 24210 && trigger.Source == 3
+                                ? status.CreatorId : trigger.Source == 3 ? candidate.Id : source.Id;
                             int targetId = trigger.Target == 2 ? source.Id : candidate.Id;
                             result.Add(new FightBattleStatusSkillInvocation
                             {
