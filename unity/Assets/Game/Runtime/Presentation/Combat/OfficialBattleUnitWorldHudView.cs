@@ -11,6 +11,7 @@ namespace Zjcs.Presentation.Combat
     public sealed class OfficialBattleUnitWorldHudView : IDisposable
     {
         private const float HudPixelsPerWorldUnit = 100f;
+        private const int UnitHudSortingBase = 22000;
 
         private sealed class BarGraphic
         {
@@ -97,7 +98,11 @@ namespace Zjcs.Presentation.Combat
             canvas = root.GetComponent<Canvas>();
             canvas.renderMode = RenderMode.WorldSpace;
             canvas.overrideSorting = true;
-            canvas.sortingOrder = 1000;
+            // The scene adapter flattens official sorting layers into orders.
+            // World-space Canvas does not inherit a MeshRenderer SortingGroup:
+            // give the background and fills the same foreground band as the
+            // original player bars, preserving the per-part order within it.
+            canvas.sortingOrder = UnitHudSortingBase - 5;
             canvas.worldCamera = Camera.main;
             RectTransform canvasRect = (RectTransform)root.transform;
             canvasRect.sizeDelta = new Vector2(100f, 100f);
@@ -223,7 +228,8 @@ namespace Zjcs.Presentation.Combat
                     {
                         Canvas barCanvas = go.AddComponent<Canvas>();
                         barCanvas.overrideSorting = true;
-                        barCanvas.sortingOrder = bar.Order;
+                        barCanvas.sortingOrder = Math.Max(bar.Order,
+                            UnitHudSortingBase + bar.sortingOrder);
                         break;
                     }
             RectTransform rect = (RectTransform)go.transform;
