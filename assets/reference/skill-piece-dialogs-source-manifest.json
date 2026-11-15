@@ -1,0 +1,1375 @@
+{
+  "schema": 1,
+  "official_code_version": "884_156692",
+  "supplement_version": "884_156692",
+  "legacy_ui_provenance": "unity/Assets/Official/Skills/source-manifest.json",
+  "operation": "Recover omitted original component bindings; preserve existing layout, art and historical UI identity.",
+  "code": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/SkillPieceDetailDialog.cs",
+      "sha256": "346c657a7942db82a09d81fd474000f90a5ffd6c66d440353d9196709ed315a6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/SkillMergeConfirmDialog.cs",
+      "sha256": "ceac7aba244fd92376728886b1179e91f4fcd5f75c93e4e2f710183fd64216f2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ItemDetailDialog.cs",
+      "sha256": "7ec08828e17e623540b0e5b5a8d44bf7309cb4674d12b48863940ca360028ab2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ItemIcon.cs",
+      "sha256": "b2bd1ddd43a412dce54808821e5895953a0b693708ad82d6ee4a3a74020901f2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ItemIconSkillPiece.cs",
+      "sha256": "a5403cbb52eab08b2a14b3bd02aaaa79aaf8d7dd2aa636255de7fa6d9ea110fa"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ItemSourceGo.cs",
+      "sha256": "6cb8699cdbbf85206b1be2b629f1948a5bf2473dc1129c7f0a875432820881b3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ItemDetailDialogAddition.cs",
+      "sha256": "28296450de8a5c1a71f3aa22056362587065530639c1e7c9f8abbc346f390fac"
+    }
+  ],
+  "inputs": [
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-1712759855132334",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "53902d5e26f610dc73fe75b1ddafd5ef09dd3413772ebbf63bbee866e41260c3",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog",
+      "class": "ItemDetailDialogAddition"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-4579419789137817262",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "634826de3c45b9fe884fd5c6646860ec74cc94069ff90ca076c040128ce7d6b6",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/BgImg/BgTitle/TitleText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "6885182131803836754",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "ebe711f7a980d4cd5b58a2b9d9c70850091653ae8fea6afe3df6b9a52bd736d8",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/TopGo/NameGo/NameText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "5474479274336964946",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "3668d112e4a8299ed02b9066cb880b3afa77e286e24ec84d75b1b53746a11310",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/TopGo/NameGo/CommonBtn_OutputAdditionDetail/Content/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-2975211744211644078",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "62aed6d0b8d370070506b9d3fdfb1775ea020833e58ba29b9a5d25e1c9dbad71",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/TopGo/TypeText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-4807063142534164142",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "b959b19b26a5eca0b08022bcc548832701d36d1a4cfe88a7edd7dfd7069d8e44",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/TopGo/QualityText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-6869079821994110638",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "e17b0c91c2b3b0036ff2bf3e22ec73d811f7c7ac7c597e43e013fea9992f46ce",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/TopGo/IconSlotPiece/PieceIcon/Mask/FakeIcon",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "111150270278390098",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "d51d5e0e477c84f4c3df30a095bf360d8bb8c3a90250eabc1b09870b4a162d9e",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/TopGo/PieceInfoGo/CountText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "5439198275608695122",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "0579b07cba7b6d0a254a8704fe6d4f36aecf992e00e9051f85c2e6aba0a80c6b",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/TopGo/ItemRemainTimeContent/RemainTimeContentSub/RemainTimeText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "6875247915127591250",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "96564d2e12a8ecf6e5ac38366108f7e69deea8af7deb0b9a25947eba4f5e90fb",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/DetailContent/FuncDetailText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "7713178039974220114",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "158ae06714f10d0ced47f3d679bd004f2f5d5a7609dfc8df82d3978768e11890",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/DetailContent/DetailText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "3157847038533554514",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "2f189461b642895dc4da3fc9cc72f162885cc2ef359a62019e6a4106118fec8c",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/Slot/MergeDetailDialogGridLayout/TitleText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-6831089666051288750",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "0bec69669b1b09e31cbd84a3b7598f8b2e7656cfa9c828f4b0ffe9f4fcbd1ff8",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/Slot/MergeDetailDialogGridLayout/Bg/Slider4/text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-6827636809849122478",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "c67d130fc2dc60352ee995b53a4a6e6638a26aa33fa9fb88134e87d3a5ea0b87",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/Slot/RankUplDialogGridLayout/TitleText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-3845692149843832494",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "f29a32563f1d91103ff300ecb3351341597292022b1077f98e95ed81ee989ffa",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/Slot/RankUplDialogGridLayout/Bg/Slider4/text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-8939524133327351470",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "8cc72c9749408fc674b538fbed3d13e12a8c0ec11710154af329c698eeac83fa",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/Slot/SkillEffectDialogGridLayout/TitleText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "2090955137027199314",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "27e2d705a3109169cf78ab6e94e20d1445f8d137b0d408b65726696f312ddedf",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/Slot/SkillEffectDialogGridLayout/Bg/SkillEffectDescText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "4770709998592381266",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "910369bc1f8249ebf879da93e8c8a4356b45d84f21d159041a1c59d7d0150fb1",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/ItemDetailDialogUseResult/GameObject/TitleText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-1688265973056614062",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "8805e80b51098d21a304effd3d30c3c513a6f191d36249c792bcdb6579448bd3",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/ItemDetailDialogGridLayout/TitleText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "7185855034479661394",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "6d5b6bb34161e22b47f542215e0e09a9754954722312f8725c2341db5c91007a",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/ItemDetailDialogGridLayout/ItemSourceGo",
+      "class": "ItemSourceGo"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-4713569202824031918",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "f218e61729ccfd21c27d60bf42b730e96be8dbf6889397b9b796dc034cebc0d1",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ButtonsGo/CommonBtn_11/Content/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "6622010299092291922",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "21c10f74bec48ccd7924fa3d675c0e55c662e047846c51db6a5cdccb6cd39f2d",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ButtonsGo/CommonBtn_11/Content/NewMark/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "7352394821824401746",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "33714f59d194352a01bd60be30970466946f05057578460ef7294aca6119456d",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ButtonsGo/CommonBtn_11/Content/BlueDot3/count",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-3060803599593254574",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "881b3bf83fe939b3cb65a4b85385ff7ff89de7bd3a1c4fefa2938bb96faf0ab6",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ButtonsGo/DecomposeBtn/Content/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-7630477836458733230",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "ee50466613be4c6a69d3618168bfaa74978b48107e342450fff1e48788533b78",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ButtonsGo/DecomposeBtn/Content/NewMark/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-5416736864189165230",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "c9039d68cf31673330524bd218f9c291e944efcbf3b37b95766735247f392b17",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ButtonsGo/DecomposeBtn/Content/BlueDot3/count",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "235920807784206674",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "0ce67066c1581af6f7be5fd0a189617745583386feddf36b611e5ce508ad537a",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/DialogButtonGroup/ButtonsGo/CommonBtn_13_Max/Content/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "3063857333268959570",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "0f036a504c77cc260cdfe7bc7bef9b45ddc874028c3afdbfe0ff7abfac542d2f",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/DialogButtonGroup/ButtonsGo/CommonBtn_12_Merge/Content/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "2794673357996740946",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "b20939cd9b4bcec5dedf0fe0e821358a8365a7c4a8e108ea57309596eee0491d",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/DialogButtonGroup/ButtonsGo/CommonBtn_12_Merge/Content/NewMark/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "1976905472386322770",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "c196fd2be211bc54298f8466f03a884bf0d75eeeff89cc83126c9e805eb395ca",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/DialogButtonGroup/ButtonsGo/CommonBtn_12_Merge/Content/BlueDot3/count",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-4044833364717230",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "dbe847403ea945cd19ba908e7f16aafd0c6d59403788e8170a6add22fec5947a",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/DialogButtonGroup/ButtonsGo/CommonBtn_12_RankUp/Content/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "5216431742599352658",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "e18e566cb3d3adde586663fe5ea88083df53bfeeb9c79d6718996f68c2bbdae7",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/DialogButtonGroup/ButtonsGo/CommonBtn_12_RankUp/Content/NewMark/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "7058202235060932946",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "2a9a60d9a186704ac789e3603d4ecd2503055f598e51ddeab1d3e2d2f79eafca",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/DialogButtonGroup/ButtonsGo/CommonBtn_12_RankUp/Content/BlueDot3/count",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-6914618106752347822",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "28a824d75c85dfb3149c5a6f463378c3574c925d8341c680a3c2b8c0d25112cf",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/FixedCountBtnGroup1/FixAddBtn/Text (TMP)",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-6940223781664403118",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "4296750f9f4835667d94ab6cd85e4eaeff7b14466483447724dd140b428f6482",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/FixedCountBtnGroup1/FixReduceBtn/Text (TMP)",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-268651431580282542",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "95e46e5d0af09ecd441ff6de722657c73afee35c33121ddbff8ffe0d29a1d8c5",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/FixedCountBtnGroup2/FixAddBtn/Text (TMP)",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "351493861996810578",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "e3846f83e456e355c5234f6b07a01d10a7d52a3999962c2f04925a74c85e4ad6",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/FixedCountBtnGroup2/FixReduceBtn/Text (TMP)",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "8582752005242409298",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "b169b3d468e2e5fe0ce91b6c8f0f29c4c47ece84380609da3246b805b9ee6ba8",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/FixedCountBtnGroup3/FixAddBtn/Text (TMP)",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-569674906754952878",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "28f9e9cb50698a20f943234920932c89646f31bbe94f557acae283503ce1fdfc",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/FixedCountBtnGroup3/FixReduceBtn/Text (TMP)",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-9171420998260895406",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "3c2a9862d25e489660004f25bc3d84efa7fd9528b4d08e81b866bc64c85f3a35",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/CustomCountInput/Text Area/Placeholder",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-9154129659251797678",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "8b13162a7ca647fc1c1eb71714276de929354edc68f5c711d6d8a95c5d668716",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/CustomCountInput/Text Area/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "5689611196017594706",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "f7a2a00266c0d286951c250d93c7ffd5e428a25893dbbb3555ff5a0197ca376f",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/CustomAddBtn/Text (TMP)",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "4851550280181600594",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "fed859790fae007651a2d41a1ef794f0dddef76f4b90b1ca53b163f54cda300d",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/AllowNavigateToggle/GmToggle/Label",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "d2ad7746fbe14692558d3d871e398734",
+      "path_id": "-4859785107503853230",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d2ad7746fbe14692558d3d871e398734.bundle",
+      "raw_size": 1767880,
+      "raw_sha256": "488ab8cb20de9bdcd8a6eead103b6fd246565b302af5b176bd1db4ea319e4818",
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/CopyIdBtn/Text (TMP)",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "-2678622652399268629",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "0354b3423d1bf9adf44b0cb48c92baae9bae11a42945625943edae67b91b1d7e",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/BgImg/BgTitle/TitleText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "8071679567358807275",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "8e1a3261047cd25625e4e8e5f02de1646d766f2290fc48ea6fee2b59c41855ac",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkillPiece/Content/mask/FakeIcon",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "-6359298126475146005",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "5fbd651fa1b3e2dd0322542e00c4dbc5b565dc91fede3e6b854395a703825649",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkillPiece/Content/BottomText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "-2481028665365541653",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "a0fa303270fb9548c8a237846fe7a141d9048cf6f188f427d3ccdef79cc399b0",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkillPiece/Content/Progress",
+      "class": "ItemProgress"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "8628877438121037035",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "724de7febba4efac6a3d7a86dd5e4d6febb92aa80db483aff173094671c9de97",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkillPiece/Content/Progress/BgCountText/LeftTxt",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "3121814317606587627",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "8b4b444326d91e41dfb62d5f63b4015df8d6ebebe7d94968fa13c1db9c8fc311",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkillPiece/Content/Progress/BgCountText/Sign",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "-4620718743017403157",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "12ebe4f452cdcb2447851b81c955fef6f9e5b8748fc4cf6d8c5937370e906bef",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkillPiece/Content/Progress/BgCountText/RightTxt",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "-3763802863043851029",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "b6786d41a4d90dcd6bebaf5435ce80e0cd69d46ae749bbb01412a141ded675ae",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkillPiece/Content/BgCountText /CountText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "-8912278194149503765",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "a66b03d728c76b0aa447fb82e992b65c8bc2e8c14a8136314f787b97834e333a",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/mask/FakeIcon",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "1196500360545127659",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "bba39d4ac0904cce2d14d103525b51d0f48470293cecae2056e3b8acf261ba0c",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/BgCountText/CountText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "-9095668136196223765",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "e35b1f7ca6590de8bdf5b43e5b47fc0c822f5b10191621ff9328ff9a95ea0760",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/BottomText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "-4145741281114108693",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "8e29ff1afb7dc47a1c08e1471f39e76b252bf1eeac3e75729255af9829733af8",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/Progress",
+      "class": "ItemProgress"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "864259543194946795",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "551b0ec6c7e3d57f5e20ad1c08c796f9e2660f29331f0255e9c610cfbf3f11c1",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/Progress/BgCountText/LeftTxt",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "488845864478199019",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "7913c4a258c8e84fc42b3a162da8ddb6120279ce4e5a127e110931c409bed056",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/Progress/BgCountText/Sign",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "-1164000591201088277",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "4f4af439927b00c0c3232d424b5598fcea59fbf3c683eb2b5c284b19a02b086a",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/Progress/BgCountText/RightTxt",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "-6160246776193266453",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "35ad35d8774811e340262eb846f23e47e6b6d812c5b1281be65ef5a4714f82ca",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/SkillStarInfo/StarNum/Star/Count",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "1339351312321039595",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "33bab04ff4f32e823e00870118db583aefb08f167d61f402f34a8f739373ca6c",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/DebugRankText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "8556829496450895083",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "fcd6dcb92d843e290712c3987e799ba88f961a83950d5e8eed4ca37e6ac940ff",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/DialogButtonGroup/ButtonsGo/CancelBtn/Content/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "-5208177941189931797",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "202eccd0ad80e722401f64aeff4e0f9d5dff53f3ead02ada780ab70a0ceb77ba",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/DialogButtonGroup/ButtonsGo/CancelBtn/Content/NewMark/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "3010447484767194347",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "48850685ec99c9bfad42c14c9de59674556ab8485a3e3c7a4ec3177e09c4a1cd",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/DialogButtonGroup/ButtonsGo/CancelBtn/Content/BlueDot3/count",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "2754768565455244523",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "e1d6afffd1442e640f55b223be9617a32d76b955cec29ca5e576ddc4e80d02e2",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/DialogButtonGroup/ButtonsGo/MergeBtn/Content/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "-7686099190926390037",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "80d462ca65ec3fc6b24e0d902a2181bf0b1a12ec19ad53c60a8b067aacd4a6e3",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/DialogButtonGroup/ButtonsGo/MergeBtn/Content/NewMark/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_skill.bundle",
+      "bundle_hash": "6692fef53470f32f427b0a58082551da",
+      "path_id": "8164974260125519083",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/6692fef53470f32f427b0a58082551da.bundle",
+      "raw_size": 928617,
+      "raw_sha256": "59fdaa62c3b1a20a440dd6953a1b7cc5aad4a1b38bffb0ed15a7675e153e8fc0",
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/DialogButtonGroup/ButtonsGo/MergeBtn/Content/BlueDot3/count",
+      "class": "MultiLanguageText"
+    }
+  ],
+  "added_bindings": [
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog",
+      "class": "ItemDetailDialogAddition"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/BgImg/BgTitle/TitleText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/TopGo/NameGo/NameText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/TopGo/NameGo/CommonBtn_OutputAdditionDetail/Content/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/TopGo/TypeText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/TopGo/QualityText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/TopGo/IconSlotPiece/PieceIcon/Mask/FakeIcon",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/TopGo/PieceInfoGo/CountText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/TopGo/ItemRemainTimeContent/RemainTimeContentSub/RemainTimeText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/DetailContent/FuncDetailText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/DetailContent/DetailText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/Slot/MergeDetailDialogGridLayout/TitleText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/Slot/MergeDetailDialogGridLayout/Bg/Slider4/text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/Slot/RankUplDialogGridLayout/TitleText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/Slot/RankUplDialogGridLayout/Bg/Slider4/text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/Slot/SkillEffectDialogGridLayout/TitleText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/Slot/SkillEffectDialogGridLayout/Bg/SkillEffectDescText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/ItemDetailDialogUseResult/GameObject/TitleText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/ItemDetailDialogGridLayout/TitleText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/ItemDetailDialogGridLayout/ItemSourceGo",
+      "class": "ItemSourceGo"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ButtonsGo/CommonBtn_11/Content/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ButtonsGo/CommonBtn_11/Content/NewMark/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ButtonsGo/CommonBtn_11/Content/BlueDot3/count",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ButtonsGo/DecomposeBtn/Content/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ButtonsGo/DecomposeBtn/Content/NewMark/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/ButtonsGo/DecomposeBtn/Content/BlueDot3/count",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/DialogButtonGroup/ButtonsGo/CommonBtn_13_Max/Content/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/DialogButtonGroup/ButtonsGo/CommonBtn_12_Merge/Content/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/DialogButtonGroup/ButtonsGo/CommonBtn_12_Merge/Content/NewMark/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/DialogButtonGroup/ButtonsGo/CommonBtn_12_Merge/Content/BlueDot3/count",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/DialogButtonGroup/ButtonsGo/CommonBtn_12_RankUp/Content/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/DialogButtonGroup/ButtonsGo/CommonBtn_12_RankUp/Content/NewMark/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/Content/MiddleGo/DialogButtonGroup/ButtonsGo/CommonBtn_12_RankUp/Content/BlueDot3/count",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/FixedCountBtnGroup1/FixAddBtn/Text (TMP)",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/FixedCountBtnGroup1/FixReduceBtn/Text (TMP)",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/FixedCountBtnGroup2/FixAddBtn/Text (TMP)",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/FixedCountBtnGroup2/FixReduceBtn/Text (TMP)",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/FixedCountBtnGroup3/FixAddBtn/Text (TMP)",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/FixedCountBtnGroup3/FixReduceBtn/Text (TMP)",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/CustomCountInput/Text Area/Placeholder",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/CustomCountInput/Text Area/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/CustomAddBtn/Text (TMP)",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/AllowNavigateToggle/GmToggle/Label",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_piece_detail",
+      "path": "/SkillPieceDetailDialog/BgDialog1/ItemDetailGmTool/GMContent/CopyIdBtn/Text (TMP)",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/BgImg/BgTitle/TitleText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkillPiece/Content/mask/FakeIcon",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkillPiece/Content/BottomText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkillPiece/Content/Progress/BgCountText/LeftTxt",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkillPiece/Content/Progress/BgCountText/Sign",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkillPiece/Content/Progress/BgCountText/RightTxt",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkillPiece/Content/BgCountText /CountText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/mask/FakeIcon",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/BgCountText/CountText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/BottomText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/Progress/BgCountText/LeftTxt",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/Progress/BgCountText/Sign",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/Progress/BgCountText/RightTxt",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/SkillStarInfo/StarNum/Star/Count",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/PieceList/ItemIconSkill/Content/DebugRankText",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/DialogButtonGroup/ButtonsGo/CancelBtn/Content/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/DialogButtonGroup/ButtonsGo/CancelBtn/Content/NewMark/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/DialogButtonGroup/ButtonsGo/CancelBtn/Content/BlueDot3/count",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/DialogButtonGroup/ButtonsGo/MergeBtn/Content/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/DialogButtonGroup/ButtonsGo/MergeBtn/Content/NewMark/Text",
+      "class": "MultiLanguageText"
+    },
+    {
+      "template": "skill_merge_confirm",
+      "path": "/SkillMergeConfirmDialog/BgDialog1/Content/DialogButtonGroup/ButtonsGo/MergeBtn/Content/BlueDot3/count",
+      "class": "MultiLanguageText"
+    }
+  ],
+  "input_sha256": "365560c582ccfc8e68f195a7bb2faa82d6f8566fd5a8dc79d35fa74efb7a767c",
+  "output_sha256": "0c75afa44258bb17197876e5aefc0f66bacd142b43ba32e7f6aebba8d5b4f17d",
+  "output": "unity/Assets/Official/Skills/skill-ui.json",
+  "runtime_entry": "CharacterSkillPanel.Pieces.cs; existing serialized icon nodes and original state/format fields"
+}

@@ -221,6 +221,12 @@ namespace Zjcs.Presentation.Character
             }
             if (mergeDialog != null)
             {
+                // ItemIcon.PopupInfoDialog leaves the merge confirmation below
+                // its newly opened detail; dismiss the visible top window first.
+                if (pieceDialog != null && pieceDialog.transform.GetSiblingIndex() > mergeDialog.transform.GetSiblingIndex())
+                { ClosePieceDetail(); return true; }
+                if (detailDialog != null && detailDialog.transform.GetSiblingIndex() > mergeDialog.transform.GetSiblingIndex())
+                { CloseSkillDetail(); return true; }
                 CloseMergeConfirm();
                 return true;
             }
@@ -1917,38 +1923,7 @@ namespace Zjcs.Presentation.Character
             if (definition == null) return;
             ClosePieceDetail();
             pieceDialog = BuildOfficialDialog("skill_piece_detail", out var dialogNodes, out var dialogButtons);
-            int rank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId);
-            long count = progression.Player.Inventory.Where(value => value != null
-                && value.ItemId == definition.PieceItemId).Sum(value => value.Count);
-            SetTextValue(DialogNode(dialogNodes, "NameText")?.GetComponent<TMP_Text>(), ItemName(definition.PieceItemId));
-            SetTextValue(DialogNode(dialogNodes, "CountText")?.GetComponent<TMP_Text>(),
-                count.ToString("N0", CultureInfo.InvariantCulture));
-            SetTextValue(DialogNode(dialogNodes, "TitleText")?.GetComponent<TMP_Text>(), ItemName(definition.PieceItemId));
-            Transform icon = DialogNode(dialogNodes, "Piece") ?? DialogNode(dialogNodes, "PieceIcon");
-            Image iconImage = icon == null ? null : icon.GetComponent<Image>();
-            string iconUri = progression.Catalog.ItemIconUri(definition.PieceItemId);
-            if (iconImage != null) iconImage.sprite = assets.FindSprite(iconUri);
-
-            bool owned = rank > 0;
-            OfflineSkillRankCost nextCost = definition.RankCosts?.FirstOrDefault(value => value.CurrentRank == rank);
-            bool canRank = owned && nextCost != null && nextCost.Items.All(item => item != null
-                && progression.Player.Inventory.Where(value => value != null && value.ItemId == item.ItemId)
-                    .Sum(value => value.Count) >= item.Count);
-            int mergeCount = progression.SkillMergePiece(skillId);
-            bool canMerge = !owned && mergeCount > 0;
-            SetDialogNodeActive(dialogNodes, "CommonBtn_12_RankUp", canRank);
-            SetDialogNodeActive(dialogNodes, "CommonBtn_12_Merge", canMerge);
-            SetDialogNodeActive(dialogNodes, "CommonBtn_13_Max", owned && nextCost == null);
-            SetDialogNodeActive(dialogNodes, "DecomposeBtn", false);
-            SetDialogNodeActive(dialogNodes, "CommonBtn_11", false);
-            SetDialogNodeActive(dialogNodes, "RankUplDialogGridLayout", owned);
-            SetDialogNodeActive(dialogNodes, "MergeDetailDialogGridLayout", !owned);
-            Slider rankSlider = DialogNode(dialogNodes, "RankUplDialogGridLayout")?.GetComponentInChildren<Slider>(true);
-            Slider mergeSlider = DialogNode(dialogNodes, "MergeDetailDialogGridLayout")?.GetComponentInChildren<Slider>(true);
-            ConfigureProgressSlider(rankSlider, count, nextCost?.Items?.FirstOrDefault(value => value.ItemId == definition.PieceItemId)?.Count ?? 0);
-            ConfigureProgressSlider(mergeSlider, count, mergeCount);
-            DialogButton(dialogButtons, "CommonBtn_12_RankUp")?.onClick.AddListener(() => OpenPromote(skillId));
-            DialogButton(dialogButtons, "CommonBtn_12_Merge")?.onClick.AddListener(() => OpenMergeConfirm(skillId));
+            BindOriginalPieceDetail(skillId, dialogNodes, dialogButtons);
         }
 
         private static void ConfigureProgressSlider(Slider slider, long current, long required)
@@ -1966,12 +1941,7 @@ namespace Zjcs.Presentation.Character
             if (mergeDialog != null) Destroy(mergeDialog);
             mergeDialog = BuildOfficialDialog("skill_merge_confirm", out var dialogNodes, out var dialogButtons);
             SetTextValue(DialogNode(dialogNodes, "TitleText")?.GetComponent<TMP_Text>(), "合成技能");
-            Transform pieceIcon = DialogNode(dialogNodes, "ItemIconSkillPiece");
-            Transform skillIcon = DialogNode(dialogNodes, "ItemIconSkill");
-            if (pieceIcon != null) BuildSkillIcon(definition.PieceItemId, pieceIcon, "PieceIcon");
-            if (skillIcon != null) BuildSkillIcon(skillId, skillIcon, "SkillIcon");
-            SetTextValue(DialogNode(dialogNodes, "CountText")?.GetComponent<TMP_Text>(),
-                progression.SkillMergePiece(skillId).ToString(CultureInfo.InvariantCulture));
+            BindOriginalMergeIcons(skillId, dialogNodes);
             DialogButton(dialogButtons, "CancelBtn")?.onClick.AddListener(CloseMergeConfirm);
             Button mergeButton = DialogButton(dialogButtons, "MergeBtn");
             long ownedPieces = progression.Player.Inventory.Where(value => value != null

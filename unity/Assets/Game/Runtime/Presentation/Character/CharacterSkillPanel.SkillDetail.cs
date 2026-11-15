@@ -124,14 +124,15 @@ namespace Zjcs.Presentation.Character
             }
         }
 
-        private void BindOriginalDetailTags(int skillId, Dictionary<string, object> root, Dictionary<string, RectTransform> dialogNodes)
+        private void BindOriginalDetailTags(int skillId, Dictionary<string, object> root, Dictionary<string, RectTransform> dialogNodes,
+            string component = "SkillDetailDialog", string field = "SkillTagGridLayout")
         {
             var data = CharacterModelPackage.AsObject(skillUiTemplates["detail_data"], "original skill detail data");
             var skills = CharacterModelPackage.AsObject(data["skills"], "original skill tags");
             var skill = CharacterModelPackage.AsObject(skills[skillId.ToString(CultureInfo.InvariantCulture)], "skill tags");
             var tags = (List<object>)skill["tags"];
-            var binding = FindOriginalComponent(root, "SkillDetailDialog");
-            dialogNodes[Convert.ToString(binding["SkillTagGridLayout"])].gameObject.SetActive(tags.Count != 0);
+            var binding = FindOriginalComponent(root, component);
+            dialogNodes[Convert.ToString(binding[field])].gameObject.SetActive(tags.Count != 0);
             var slotBinding = FindOriginalComponent(root, "SkillTagGo");
             RectTransform slot = dialogNodes[Convert.ToString(slotBinding["SkillTagSlot"])];
             foreach (Transform child in slot)
@@ -224,14 +225,15 @@ namespace Zjcs.Presentation.Character
             return new Color(Convert.ToSingle(value["r"]), Convert.ToSingle(value["g"]), Convert.ToSingle(value["b"]), Convert.ToSingle(value["a"]));
         }
 
-        private void BindOriginalDetailProfession(int skillId, Dictionary<string, object> root, Dictionary<string, RectTransform> dialogNodes)
+        private void BindOriginalDetailProfession(int skillId, Dictionary<string, object> root, Dictionary<string, RectTransform> dialogNodes,
+            string component = "SkillDetailDialog", string field = "ItemDetailDialogProfessionIcon")
         {
             var data = CharacterModelPackage.AsObject(skillUiTemplates["detail_data"], "original profession data");
             string key = skillId.ToString(CultureInfo.InvariantCulture);
             var skills = CharacterModelPackage.AsObject(data["skills"], "original skill users");
             var skill = CharacterModelPackage.AsObject(skills[key], "original skill user");
-            var skillBinding = FindOriginalComponent(root, "SkillDetailDialog");
-            RectTransform container = dialogNodes[Convert.ToString(skillBinding["ItemDetailDialogProfessionIcon"])];
+            var skillBinding = FindOriginalComponent(root, component);
+            RectTransform container = dialogNodes[Convert.ToString(skillBinding[field])];
             bool player = Convert.ToInt32(skill["user_type"]) == 1;
             container.gameObject.SetActive(player);
             if (!player) return;

@@ -1626,8 +1626,8 @@
     },
     {
       "path": "Assets/Official/Skills/skill-ui.json",
-      "bytes": 7497287,
-      "sha256": "365560c582ccfc8e68f195a7bb2faa82d6f8566fd5a8dc79d35fa74efb7a767c"
+      "bytes": 7500369,
+      "sha256": "0c75afa44258bb17197876e5aefc0f66bacd142b43ba32e7f6aebba8d5b4f17d"
     },
     {
       "bytes": 36369,
@@ -1735,5 +1735,11 @@
       "bytes": 14575,
       "sha256": "d9d8cada1bdd02b7569bcba9ac75a7310344101db622af85aff95cd4f8958674"
     }
+  },
+  "piece_dialog_binding_conversion": {
+    "source": "assets/reference/skill-piece-dialogs-source-manifest.json",
+    "input_sha256": "365560c582ccfc8e68f195a7bb2faa82d6f8566fd5a8dc79d35fa74efb7a767c",
+    "output_sha256": "0c75afa44258bb17197876e5aefc0f66bacd142b43ba32e7f6aebba8d5b4f17d",
+    "operation": "Add verified original serialized fields only; no art/layout changes."
   }
 }

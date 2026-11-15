@@ -58,7 +58,7 @@ namespace Zjcs.Offline.Progression
         public TextAsset SourceManifest => sourceManifest;
         public TextAsset SkillRules => skillRules;
         public TextAsset SkillRecommendations => skillRecommendations;
-        public TextAsset SkillUiLayouts => skillUiLayouts;
+        public TextAsset SkillUiLayouts => Zjcs.Offline.SkillAssets.OfficialSkillUiData.Resolve(skillUiLayouts);
         public GameObject ConfirmDialogPrefab => confirmDialogPrefab;
         public AnimationClip SkillSlotLevelUpAnimation => skillSlotLevelUpAnimation;
         public AudioClip SkillSlotLevelUpSound => skillSlotLevelUpSound;

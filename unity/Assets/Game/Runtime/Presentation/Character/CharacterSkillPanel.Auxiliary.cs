@@ -73,7 +73,8 @@ namespace Zjcs.Presentation.Character
             else if (node.TryGetComponent(out Text text)) text.text = value;
         }
 
-        private void BindOriginalDetailSources(int skillId, Dictionary<string, object> root, Dictionary<string, RectTransform> detailNodes)
+        private void BindOriginalDetailSources(int skillId, Dictionary<string, object> root, Dictionary<string, RectTransform> detailNodes,
+            Action close = null)
         {
             // ItemSourceDataGachaAgent adds Gacha for every SkillTypes/SkillPieceTypes item.
             // The pinned ItemSourceInfo table contains no extra entries for player skills.
@@ -90,7 +91,7 @@ namespace Zjcs.Presentation.Character
             SetOfficialState("skill_source_item", "ItemSourceItem", "mStateSwitcher", 1, rowNodes);
             foreach (object path in (List<object>)rowBinding["SwitchToBtns"])
                 rowNodes[Convert.ToString(path)].GetComponent<Button>().onClick.AddListener(() => {
-                    CloseSkillDetail();
+                    (close ?? CloseSkillDetail)();
                     NavigationRequested?.Invoke("skill-gacha");
                 });
         }

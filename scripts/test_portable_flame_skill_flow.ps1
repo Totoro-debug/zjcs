@@ -56,12 +56,18 @@ try {
     }
     $result = Get-Content -LiteralPath (Join-Path $run 'result.json') -Raw | ConvertFrom-Json
     if ($process.ExitCode -ne 0 -or -not $result.passed) { throw "Skill-page flow failed: $($result.error) ($run)" }
+    $identity = Get-Content -LiteralPath (Join-Path $repository 'unity/Assets/Game/Runtime/Offline/SkillAssets/OfficialSkillUiData.Identity.cs') -Raw
+    if ($identity -notmatch 'LayoutSha256 = "([0-9a-f]{64})"') { throw 'The compiled skill UI identity is absent.' }
+    $expectedUi = $Matches[1]
+    if (-not (Select-String -LiteralPath $log -Pattern ('\[Skill UI data\] Verified (embedded TextAsset|native Windows pack): ' + $expectedUi))) {
+        throw "The runtime skill UI did not verify its current payload identity: $run"
+    }
     foreach ($text in @(
         '[Portable flame UI] Fragment acquisition, original slot input, level/rank cultivation and disk reload passed.',
         '[Portable flame UI] Saved Fighter 10061 assembled with rank=2 level=2, caster-owned status/damage, original result and return passed.')) {
         if (-not (Select-String -LiteralPath $log -SimpleMatch $text)) { throw "Missing skill-page assertion: $text" }
     }
-    foreach ($phase in @('character','pieces','merge-confirm','acquired-detail','equipped','level-up','rank-up','reloaded',
+    foreach ($phase in @('character','pieces','merge-confirm','merge-skill-detail','merge-piece-detail','acquired-detail','equipped','level-up','rank-up','reloaded',
         'settings','preparation','battle','result','return')) {
         if (-not (Test-Path -LiteralPath (Join-Path $run "portable-flame-ui-$phase.png"))) {
             throw "Missing skill-page runtime frame: $phase ($run)"

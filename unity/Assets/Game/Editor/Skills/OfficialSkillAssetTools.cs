@@ -37,6 +37,7 @@ namespace Zjcs.Editor.Skills
                 PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
                 string destination = Path.Combine(root, "Player", "Zjcs.exe");
                 Directory.CreateDirectory(Path.GetDirectoryName(destination));
+                string uiPack = OfficialSkillUiPackBuild.Prepare(root);
                 OfficialSkillRuntimeShaderBuild.Prepare();
                 BuildOptions buildOptions = Environment.GetEnvironmentVariable("ZJCS_CLEAN_BUILD_CACHE") == "1"
                     ? BuildOptions.CleanBuildCache : BuildOptions.None;
@@ -55,6 +56,7 @@ namespace Zjcs.Editor.Skills
                 if (report == null || report.summary.result != BuildResult.Succeeded
                     || report.summary.totalErrors != 0 || loggedErrors != 0)
                     throw new BuildFailedException("Skills Windows Player build failed. " + firstError);
+                OfficialSkillUiPackBuild.Deliver(uiPack, destination);
                 // Burst names its auxiliary output after the Chinese product name.
                 // Keep the distribution ASCII without changing the saved-game identity.
                 string debugDirectory = Path.Combine(root, "Player", PlayerSettings.productName + "_BurstDebugInformation_DoNotShip");

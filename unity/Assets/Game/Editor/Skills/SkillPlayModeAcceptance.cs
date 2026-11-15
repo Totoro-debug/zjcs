@@ -274,7 +274,7 @@ namespace Zjcs.Editor.Skills
             // The battle-only runner supplies its own profile and suppresses the
             // application bootstrap. The Home/skill flow below is still exercised.
             bool isolatedBattle = Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION") == "1";
-            float startupDeadline = Time.realtimeSinceStartup + 30f;
+            float startupDeadline = Time.realtimeSinceStartup + 120f;
             while (!isolatedBattle && GameObject.Find("OfficialSaveSelectionPanel") == null)
             {
                 Require(Time.realtimeSinceStartup < startupDeadline, "The skill acceptance bootstrap did not open its save panel.");

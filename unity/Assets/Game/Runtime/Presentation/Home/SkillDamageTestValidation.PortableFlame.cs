@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zjcs.Combat.Official;
@@ -68,10 +69,50 @@ namespace Zjcs.Presentation.Home
             yield return new WaitForSecondsRealtime(.4f);
             click(FlameFlowButton(value => value.name.StartsWith("CharacterPanelSkillDetailPanelSkillPieceItem", StringComparison.Ordinal)));
             yield return new WaitForSecondsRealtime(.4f);
+            var pieceDialog = FindObjectsOfType<Transform>().Single(value => value.name == "skill_piece_detail");
             yield return CaptureFlameFlow(output, "pieces");
+            var pieceTexts = pieceDialog.GetComponentsInChildren<TMP_Text>();
+            Require(pieceTexts.Any(value => value.name == "TypeText" && value.text == "战技碎片")
+                && pieceTexts.Any(value => value.name == "QualityText" && value.text == "普通")
+                && pieceTexts.Any(value => value.name == "SkillEffectDescText" && value.text.Contains("烈焰"))
+                && !pieceTexts.Any(value => value.text.Contains("{0}") || value.name == "DetailText" || value.name == "FuncDetailText"),
+                "The fragment detail still displays prefab placeholders or incorrect item metadata.");
+            var mergeSlider = pieceDialog.GetComponentsInChildren<Slider>().Single();
+            long suppliedPieces = progression.Player.Inventory.Where(value => value.ItemId == definition.PieceItemId).Sum(value => value.Count);
+            Require(mergeSlider.maxValue == mergeCount && mergeSlider.value == mergeCount
+                && pieceTexts.Any(value => value.name == "text" && value.text.Contains(suppliedPieces.ToString())
+                    && value.text.Contains("/" + mergeCount)), "The native fragment progress did not bind owned and required counts.");
             click(FlameFlowButton(value => value.name == "CommonBtn_12_Merge"));
             yield return new WaitForSecondsRealtime(.4f);
+            var mergeDialog = FindObjectsOfType<Transform>().Single(value => value.name == "skill_merge_confirm");
             yield return CaptureFlameFlow(output, "merge-confirm");
+            Require(mergeDialog.GetComponentsInChildren<Image>().Count(value => value.name == "icon") == 2
+                && mergeDialog.GetComponentsInChildren<TMP_Text>().Count(value => value.name == "BottomText" && value.text.StartsWith("火焰随身")) == 2
+                && mergeDialog.GetComponentsInChildren<TMP_Text>().Any(value => value.name == "LeftTxt" && value.text == suppliedPieces.ToString())
+                && mergeDialog.GetComponentsInChildren<TMP_Text>().Any(value => value.name == "RightTxt" && value.text == mergeCount.ToString())
+                && !mergeDialog.GetComponentsInChildren<TMP_Text>().Any(value => value.text.Contains("{0}")),
+                "The native merge icons contain duplicate children, placeholder names or incorrect material counts.");
+            foreach (string iconName in new[] { "ItemIconSkill", "ItemIconSkillPiece" })
+            {
+                click(mergeDialog.GetComponentsInChildren<Button>().Single(value => value.name == iconName));
+                yield return new WaitForSecondsRealtime(.4f);
+                string dialogName = iconName == "ItemIconSkill" ? "skill_panel_detail" : "skill_piece_detail";
+                var popup = FindObjectsOfType<Transform>().Single(value => value.name == dialogName);
+                yield return CaptureFlameFlow(output, iconName == "ItemIconSkill" ? "merge-skill-detail" : "merge-piece-detail");
+                // Skill detail closes through the original popup mask; piece detail has its own button.
+                var close = popup.GetComponentsInChildren<Button>().SingleOrDefault(value => value.name == "CloseBtn");
+                if (close == null)
+                {
+                    yield return new WaitForSecondsRealtime(.6f);
+                    close = FindObjectsOfType<Button>().Where(value => value.name == "Mask"
+                        || value.name == "BlurMask" || value.name == "invisableMask")
+                        .OrderByDescending(value => value.GetComponent<Canvas>().sortingOrder).First();
+                }
+                click(close);
+                yield return new WaitForSecondsRealtime(.3f);
+                Require(mergeDialog && mergeDialog.gameObject.activeInHierarchy,
+                    "The original icon detail closed its parent merge confirmation.");
+            }
             click(FlameFlowButton(value => value.name == "MergeBtn"));
             yield return new WaitForSecondsRealtime(.5f);
             Require(OfflineSkillProgression.OwnedRank(progression.Player.Skills, 10061) == 1

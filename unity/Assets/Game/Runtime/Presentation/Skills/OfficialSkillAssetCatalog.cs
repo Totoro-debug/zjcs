@@ -36,9 +36,9 @@ namespace Zjcs.Presentation.Skills
         public TextAsset SkillRules => skillRules;
         public TextAsset RuntimeRules => runtimeRules;
         public TextAsset CultivationRules => cultivationRules;
-        public TextAsset UiLayouts => uiLayouts;
+        public TextAsset UiLayouts => Zjcs.Offline.SkillAssets.OfficialSkillUiData.Resolve(uiLayouts);
         public TextAsset FidelityTexts => fidelityTexts;
-        public TextAsset SourceManifest => sourceManifest;
+        public TextAsset SourceManifest => Zjcs.Offline.SkillAssets.OfficialSkillUiData.ResolveManifest(sourceManifest, uiLayouts);
         public TextAsset QualityGradient => qualityGradient;
         public TextAsset PetSkillUiLayouts => petSkillUiLayouts;
         public TextAsset PetSkillUiSourceManifest => petSkillUiSourceManifest;
