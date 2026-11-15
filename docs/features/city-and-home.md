@@ -321,6 +321,10 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `HomeAvatarNativeValidation.Run` 已在隔离完整工程 Play Mode 通过真实角色槽／外观、头部透明像素、实际 100×120 尺寸、原 UV 与有限裁剪网格、内部指针射线及头像点击回调；另用受控经验表和奖励端点验证普通经验动画、储存上限、赐福分支以及关闭／重开后的五类订阅和奖励回调释放。三张实际运行图已查看，原生头像和经验环在实际 640×480 渲染尺寸中正确显示；测试保持静音。静态元数据检查通过（146111 个 GUID），完整工程隔离副本通过导入、C# 编译和 `Zjcs.Editor.ProjectTools.Validate`；此次按进程禁用无关 Burst 编译，不代表 Windows 构建通过。该头像夹具使用受控经验端点；真实存档与原奖励队列的独立接线见下文，床铺领取、正式家园 HUD、竖屏 Windows Player 与全场景画面仍未由此验证。
 
+`Offline/HomeAvatarUI/OfflineHomeAvatarPortraits` 为正式家园准备独立摄影棚资源所有者，直接复用原 `OfflineProfessionPortraitSession`、材质管理器、独立武器部件池、身体／武器纹理注册路由和完整玩家特效目录。读取当前角色身份、职业、穿戴及染色；外观变化由所有者明确刷新，摄影棚与缓存按帧推进。界面先解除头像引用，再释放摄影棚、部件、材质与纹理；该所有者不替换其他场景的全局纹理服务，不改写存档。来源、复用依赖及入口见[家园头像摄影棚清单](../../assets/reference/home-avatar-portraits-source-manifest.json)。该资源所有者尚未装配进正式 HUD。
+
+`HomeAvatarPortraitOwnerValidation.Run` 已在主工程图形 Play Mode 使用隔离新角色档验证该生产资源所有者：原摄影棚生成 100×120 透明头部纹理、完整 UV 与胶囊网格顶点有限，真实持久角色 ID 到达原控件；内部射线及模拟指针打开角色入口，普通／储存上限／赐福三种经验环动画和停用／重开／销毁退订通过。重载角色档并刷新外观后，角色数据保持一致；两张 608×1080 运行截图及头部纹理已实际查看。验证静音，不使用真实鼠键；显式释放测试画布与 RenderTexture 后退出 Play Mode，等待编辑器空闲再退出，重跑正常结束。静态元数据、Unity 导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 通过。该验证的经验端点仍受控，不包含正式 HUD、床铺领取、奖励队列及 Windows Player；完整特效目录已绑定，但本次角色未穿戴特效，不代表全部外观变体已逐项验收。
+
 `HomeExperienceRewardHandler` 来自同版 `PlayerExpRewardHandler`：为原程序集补齐 APK 已提取的 UniTask 等依赖后重新反编译，五个完整异步方法只替换服务／委托类型，跨帧等待、并行经验动画的倒序推进、取消令牌、升级阻塞与演出顺序保持原码，使用工程已有 UniTask。玩家事件、`ConsoleDataManager`、战力提示阻塞和 `LevelUpNotifyTip` 通过类型端口提供；默认升级通知保留原 2.2 秒等待，最后注册的升级演出覆盖默认演出。原双参数 `SafeAction` 单独迁入，保留监听去重和调用期间的监听快照，异常交给 Unity 日志。
 
 `HomeExperienceRewardsValidation.Run` 已在隔离完整工程 Play Mode 使用原生经验环子树，验证原处理器的并行播放顺序、监听去重、升级门槛等待、连续获奖取消与重播、无窗口时保留未演示经验、窗口重开补播、玩家更新取消、默认通知端点的上一级参数／2.2 秒等待和销毁退订。两张实际经验环运行截图已查看，保持原图与尺寸；该验证不包含头像摄影棚、领取按钮或升级通知窗口。静态元数据检查通过，完整工程隔离副本通过导入、C# 编译和 `Zjcs.Editor.ProjectTools.Validate`，按进程禁用无关 Burst 编译。原处理器夹具的玩家、经验表、通知与战力阻塞使用受控端点；真实存档接线见下文，床铺领取、升级通知与原奖励队列的组合及 Windows Player 仍未接入验证。
