@@ -427,9 +427,12 @@ namespace Zjcs.Combat.Official
                     && (ignoreFaction || sameSide);
                 case 9: return (unit.CharacterType == 1 || unit.CharacterType == 4)
                     && (ignoreFaction || sameSide);
+                case 10: return unit.Id != actor.Id
+                    && (unit.CharacterType == 1 || unit.CharacterType == 4)
+                    && (ignoreFaction || sameSide);
                 case 4: return true;
                 case 6: return unit.Id == actor.MasterId;
-                case 7: return unit.MasterId == actor.Id;
+                case 7: return unit.CharacterType == 3 && unit.MasterId == actor.Id;
                 default: return false;
             }
         }

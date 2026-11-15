@@ -1017,3 +1017,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 家园无赐福属性来源：所选 884_156692 的 NoBlessPlayerInfoProvider、SystemLevelLimitInfoParser、EquipResonanceInfoParser 及古遗物／幻兽 Luban 配置；scripts/prepare_home_no_bless_rules.py 提取原始等级、共鸣、古遗物、幻兽和属性曲线，运行时由 OfflineHomeNoBlessConfiguration 显式加载。原始输入、输出与 SHA256 见 [home-no-bless-rules-source-manifest.json](home-no-bless-rules-source-manifest.json)。实现、单机差异及验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
 
 反射装甲 25035 原逻辑图、伤害结果定义、缺失服务端处理器与适配／验证身份见[反射装甲规则来源](battle-rules/reflection-armor-source-manifest.json)。原完整 25035 prefab 复用所选 884 的既有 APK 核对与原生导出缓存，输入、四项脚本重绑定及输出哈希见[补充状态实体来源](battle-animation/additional-status-assets-source-manifest.json)；原 11480／11481／11482 资产与声音复用[原生技能图来源](battle-animation/skill-native-graph-assets-source-manifest.json)。新增状态资产尚未生成素材快照；实现、单机确认与验证范围仅在[骑士页](../../docs/features/skills-knight.md#rank-3)维护。
+
+公共战斗目标关系的官方 `GameUtilsHandler.CheckTargetType`、`HitTargetType`、`GameCharacterType`、既有技能配置及本地绑定／验证哈希见[目标关系来源](battle-rules/target-types-source-manifest.json)，生成器为 `scripts/record_battle_target_types_sources.py`；未新增或改写美术载荷，实现与验证范围仅在[公共战斗页](../../docs/features/battle-execution.md)维护。

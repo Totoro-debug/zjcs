@@ -1,0 +1,48 @@
+{
+  "code_manifest": "884_156692",
+  "original": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameUtilsHandler.cs",
+      "sha256_lf": "08b16c6e14b3fa2de5a81845d8aa47678a37e2bb34c96538bd265b3c73921843"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/HitTargetType.cs",
+      "sha256_lf": "e6ae8ea64ca50e964bdd69aebdf98844219b0123ccf50c45b8a4a961051ae77b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GameCharacterType.cs",
+      "sha256_lf": "70fe404fde5591b2ae115b727d50f95598a9163f0a4470e1234714341088ac89"
+    }
+  ],
+  "configuration": [
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "sha256_lf": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules-source-manifest.json",
+      "sha256_lf": "e88d754e06c0b334ba1c2d94ae42dfbf3d2007b8f44ff7b7526dabbc983f4017"
+    }
+  ],
+  "migration": {
+    "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleTargeting.cs",
+    "sha256_lf": "9ed5d98b08614896b0ad1b7f19d947a4a1cceb68e625c973160dd87a2cef504a"
+  },
+  "validation": [
+    {
+      "path": "scripts/fixtures/battle_target_types_harness.cs",
+      "sha256_lf": "ac46d2b7e0b32fd691314cd67a48829e30b5b4cf9429116943f6c9ad97509d0e"
+    },
+    {
+      "path": "scripts/test_battle_target_types.ps1",
+      "sha256_lf": "502aa45461178273d05ea54fb62a9b01500ac55431eedf1db17973bc4dcb17fa"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_battle_target_types_sources.py",
+    "sha256_lf": "4cfe556e8307f283f47f4b0d673ebde65c7e58f6bb3e5d66a003d825e985f050"
+  },
+  "binding": "GameUtilsHandler.CheckTargetType -> FightBattleTargeting.MatchesTargetType -> Select / SelectInSkillRange / IsEligibleSkillTarget / SelectScopeTargets",
+  "operation": "Port the official MySummon character-type guard and FriendPlayerAndNpcNotMe branch into the existing relation filter. Keep the existing offline confusion, lifecycle, range, AI ranking and explicit point-target None handling. No skill configuration or presentation assets changed.",
+  "hash_normalization": "UTF-8 source bytes with CRLF replaced by LF"
+}

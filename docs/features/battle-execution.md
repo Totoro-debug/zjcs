@@ -20,6 +20,8 @@
 
 官方 63110 技能图的 `Eff_Monster_3511_Skill02_3` 同时被 Animator 控制器和三个自动播放的 `Animation` 对象引用，原包的片段 `m_Legacy` 为 false。Windows 适配为这三个 `Animation` 引用生成仅将 `m_Legacy` 设为 true 的副本，保留全部原曲线、事件及其他字段；Animator 仍引用原非 Legacy 片段。来源与确定性转换见[动画双用途绑定](../../assets/reference/battle-animation/legacy-animation-bindings-source-manifest.json)；该适配不代表该技能整套表现已验证。
 
+公共目标关系沿官方 `GameUtilsHandler.CheckTargetType`、`HitTargetType` 与 `GameCharacterType` 处理：`MySummon` 同时检查 Summon 类型（3）和主人 ID，不把同主人宠物、宠物实体、场景物体或替身当作召唤物，也不额外限定阵营；`FriendPlayerAndNpcNotMe` 检查同阵营、不同 ID 和 Player／Npc 类型。共用筛选供选敌、范围筛选、显式目标校验及范围命中使用，既有隐身、生命周期、混乱及点目标 None 特例仍由各入口处理。本项未新增 AI 排序规则。输入、绑定及验证哈希见[目标关系来源](../../assets/reference/battle-rules/target-types-source-manifest.json)。
+
 所选版本共享代码 `Common/GridGroundComponent.EnterPosSub` 将同一实体登记到 `GridTransformComponentInfo.BodyRangeInfos` 的各个身体格，`GetPosEntitys` 按格返回实体集合。客户端 `MyFightAI` 只有空代理，未包含服务端选敌和接近决策；下方身体格选敌规则属于用户确认的单机实现。
 
 `MyFightHitBase.PlayScopePlayable` 通过命中实体的 `GridTransform.LocalToWorldPos(scope.Pos)` 放置各命中格。原 `GridTransformComponent.CalcLocalToWorldDir` 保留 `RealCenter`，先做 X 翻转，再调用 `MyMath.Rotate`，最后用 `Math.Round` 转回整数格；`Common.Direction` 为 Up=0、Down=1、Left=2、Right=3，与本地 AI 的四向索引不同。`FightGridTransformMath` 已移植这段计算，来源及哈希见[格网变换清单](../../assets/reference/battle-rules/grid-transform-source-manifest.json)。命中实体创建时的方向／翻转赋值是服务端缺口，单机处理见下方用户确认规则。
@@ -268,6 +270,8 @@
 - 活动挑战、私有副本和裂隙的退出事务尚未完整接通；已接线玩法仍须分别完成奖励页面及整体验证，公共按钮可用不代表所有玩法完成。
 
 ## 当前验证范围
+
+- 公共目标关系专项 `test_battle_target_types.ps1` 覆盖全部 11 类官方关系在选敌、范围筛选、显式校验和范围命中入口的成员资格，另核对原 12980 的 MySummon、未知值拒绝、死亡及未入场排除；既有隐身与范围选敌专项回归通过。主工程 Unity 2022.3.57f1c2 导入／编译、`ProjectTools.Validate` 以 0 退出，静态元数据检查通过（152,100 GUID）。本项未新增 Play Mode／Windows Player 验证；当前技能配置未使用类型 10，不据此宣称对应技能或全部 AI 优先级完成，未更新正式发布版本。
 
 - 角色召唤生命周期通过死亡确认、出生及移除专项：真实致死命中、同次命中即时复活不误发死亡、后续原 BackToLife、状态原因与层数保留、回执重放及保存恢复；移除新增表现字段后，八份完整序列化检查点与修改前一致。死亡／复活和移除时钟各通过 128 种分段，九条原召唤技能的 18 组实际出生回执保留初始生命、格位、范围及延迟；460 条公式／核心回归通过。独立暂存的 154 份源码／夹具也通过核心接线与图调度，35 项索引来源绑定哈希一致。主工程两轮 Unity 导入／编译、`ProjectTools.Validate` 均以 0 正常退出，静态元数据检查通过（151,719 GUID）。隔离内置屏静音 Play Mode 首轮 51 组通过并以 0 正常退出；补充模型释放后复活后共 58 组断言通过，覆盖六类原角色、三类自定义召唤同格回退、原生图／场景时钟、提前／同刻移除、出生动画期间致死、销毁前复活和按原一秒死亡延迟释放后重建不重播出生图。125 张实际出生／死亡／待机／移除前画面均已查看，模型、材质及阴影正常，表现前后检查点逐字节不变。补充轮写出通过结果后停在原生退出阶段，已停止本会话进程，不计为正常退出。原出生回执来自真实执行器；同次最终 Ended／生命及转换时刻由夹具显式控制，不据此宣称新增服务端规则。完整 HUD、模拟鼠标交互、全部角色／状态及 Windows Player 尚未覆盖，本小模块未构建／发布。
 
