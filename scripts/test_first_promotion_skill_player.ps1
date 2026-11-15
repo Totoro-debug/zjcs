@@ -13,7 +13,8 @@ param(
     [switch]$MoveScopeColdScene,
     [switch]$HitScopeColdScene,
     [switch]$PortableFlameLife,
-    [switch]$SunsetSwordSound
+    [switch]$SunsetSwordSound,
+    [switch]$PortableFlameColdScene
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -36,6 +37,7 @@ if (@($AirCombo,$ActionInvisible,$SummonLife,$DarkStatus,$MoveScopeColdScene,$Hi
 if ($AllStatusViews -and -not $DarkStatus) { throw 'All original status views require the isolated dark-status host.' }
 if ($ColdStatusScene -and (-not $DarkStatus -or $AllStatusViews)) { throw 'Cold status scene requires the isolated dark-status lifecycle without the all-view probe.' }
 if ($ColdSummonScene -and (-not $SummonLife -or $ColdStatusScene)) { throw 'Cold summon scene requires the original summon lifespan diagnostic.' }
+if ($PortableFlameColdScene -and -not $PortableFlameLife) { throw 'Cold fire-ring hosts require the isolated friendly fire-ring lifecycle.' }
 if ($ItemIds.Count -eq 0) { $ItemIds = if ($SunsetSwordSound) { @(10053) } elseif ($PortableFlameLife) { @(10061) } elseif ($AirCombo) { @(10006,10009,10052) } elseif ($ActionInvisible) { @(10025,10058) } elseif ($SummonLife) { @(10019,10025,10058) } elseif ($MoveScopeColdScene) { @(10029,10055) } elseif ($HitScopeColdScene) { @(10072) } elseif ($DarkStatus) { @(10029) } else { $active } }
 foreach ($item in $ItemIds) { if ($item -notin $active) { throw "Not an original active skill in scope: $item" } }
 if ($AirCombo -and @($ItemIds | Where-Object { $_ -notin @(10006,10009,10052) }).Count -gt 0) {
@@ -85,6 +87,7 @@ $settings = @{
     ZJCS_STATUS_HIT_SCOPE_ACCEPTANCE = $(if ($HitScopeColdScene) { '1' } else { [Environment]::GetEnvironmentVariable('ZJCS_STATUS_HIT_SCOPE_ACCEPTANCE', 'Process') })
     ZJCS_HIT_SCOPE_COLD_SCENE = $(if ($HitScopeColdScene) { '1' } else { $null })
     ZJCS_PORTABLE_FLAME_LIFECYCLE = $(if ($PortableFlameLife) { '1' } else { $null })
+    ZJCS_PORTABLE_FLAME_COLD_SCENE = $(if ($PortableFlameColdScene) { '1' } else { $null })
     ZJCS_SUNSET_SWORD_SOUND = $(if ($SunsetSwordSound) { '1' } else { $null })
     ZJCS_STATUS_PROCESS_PHASE = $null
     ZJCS_STATUS_PROCESS_HANDOFF = $null
@@ -97,7 +100,7 @@ try {
         [Environment]::SetEnvironmentVariable($key, $settings[$key], 'Process')
     }
     foreach ($item in $ItemIds) { foreach ($direction in $Directions) {
-        $prefix = if ($SunsetSwordSound) { "sunset-sword-sound-$direction-" } elseif ($PortableFlameLife) { "portable-flame-life-$direction-" } else { "native-$item-$direction-" }
+        $prefix = if ($PortableFlameColdScene) { "portable-flame-cold-$direction-" } elseif ($SunsetSwordSound) { "sunset-sword-sound-$direction-" } elseif ($PortableFlameLife) { "portable-flame-life-$direction-" } else { "native-$item-$direction-" }
         $run = Join-Path $workspacePath ($prefix + [guid]::NewGuid().ToString('N'))
         New-Item -ItemType Directory -Path $run | Out-Null
         $env:ZJCS_FIRST_PROMOTION_SKILL = [string]$item
@@ -139,6 +142,19 @@ try {
         }
         if ($SunsetSwordSound -and -not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Sunset sword sound] Original three native events, authored order/times and completion passed.')) {
             throw "Original Skill_10053 native sound assertions did not complete: $run"
+        }
+        if ($PortableFlameColdScene) {
+            if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Portable flame cold scene] Destroyed home/battle hosts, ordinary weekly disk checkpoint, four new original bodies/statuses, identical state and no cast-sound replay passed.')) {
+                throw "Original friendly fire-ring host restoration assertions did not complete: $run"
+            }
+            $before = Get-FileHash -LiteralPath (Join-Path $run 'portable-flame-cold-before.json') -Algorithm SHA256
+            $after = Get-FileHash -LiteralPath (Join-Path $run 'portable-flame-cold-after.json') -Algorithm SHA256
+            if ($before.Hash -cne $after.Hash) { throw "Friendly fire-ring host restoration changed the checkpoint: $run" }
+            foreach ($frame in @('before','after')) {
+                if (-not (Test-Path -LiteralPath (Join-Path $run "portable-flame-$frame-cold-scene.png"))) {
+                    throw "Original friendly fire-ring host restoration frame $frame is missing: $run"
+                }
+            }
         }
         foreach ($phase in 1..4) {
             if (-not (Test-Path -LiteralPath (Join-Path $run "first-promotion-$item-phase-$phase.png"))) {

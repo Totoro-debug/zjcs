@@ -122,6 +122,11 @@ namespace Zjcs.Presentation.Home
                 yield return SkillArcShieldProcessValidation.Resume(output, CaptureGridFrame, ClickGridControl);
                 yield break;
             }
+            if (SkillPortableFlameRestoreValidation.ResumeRequested)
+            {
+                yield return SkillPortableFlameRestoreValidation.Resume(output, CaptureGridFrame, ClickGridControl);
+                yield break;
+            }
             string saveRoot=Path.Combine(output,"save-"+Guid.NewGuid().ToString("N"));
             var slots=new ProfileSlotCatalog(saveRoot);
             string slot=slots.CreateSlot();
@@ -317,6 +322,23 @@ namespace Zjcs.Presentation.Home
                         yield break;
                     }
                     yield return SkillArcShieldColdSceneValidation.Rebuild(home, runner, slot, saveRoot, output,
+                        graphCapabilityProbe, value => settled = value, (nextHome, nextRunner) => {
+                            home = nextHome; runner = nextRunner; controller = nextRunner.Controller;
+                        }, CaptureGridFrame);
+                    continue;
+                }
+                if (graphCapabilityProbe != null && graphCapabilityProbe.ReadyForPortableFlameColdScene(controller))
+                {
+                    runner.enabled = false;
+                    if (graphCapabilityProbe.CaptureName != null)
+                        yield return CaptureGridFrame(graphCapabilityProbe.CaptureName);
+                    if (SkillPortableFlameRestoreValidation.PrepareRequested)
+                    {
+                        yield return SkillPortableFlameRestoreValidation.Prepare(runner, saveRoot, slot, output,
+                            graphCapabilityProbe, CaptureGridFrame);
+                        yield break;
+                    }
+                    yield return SkillPortableFlameRestoreValidation.Rebuild(home, runner, slot, saveRoot, output,
                         graphCapabilityProbe, value => settled = value, (nextHome, nextRunner) => {
                             home = nextHome; runner = nextRunner; controller = nextRunner.Controller;
                         }, CaptureGridFrame);

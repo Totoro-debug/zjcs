@@ -83,6 +83,8 @@ namespace Zjcs.Presentation.Combat
                 Require(body && (sound.mySource == body.gameObject || sound.myTarget == body.gameObject),
                     "Original Skill_10061 sound lost its casting character.");
                 uint playing = sound.SoundEvent.PlayingId;
+                Require(!flameColdSceneComplete || ArcNativeSoundEvent(playing) != PortableFlameSoundEventId,
+                    "Restoring fire rings replayed the original casting sound.");
                 if (ArcNativeSoundEvent(playing) == PortableFlameSoundEventId && flameSoundPlayingIds.Add(playing))
                     Debug.Log("[Portable flame sound] Original Skill_10061 event=" + PortableFlameSoundEventId
                         + " playing=" + playing + " is live in the native engine.");
@@ -197,7 +199,12 @@ namespace Zjcs.Presentation.Combat
         {
             if (!ValidatePortableFlameLife) return;
             Require(flameComplete, "Original friendly fire-ring lifecycle did not finish.");
-            Require(flameSoundPlayingIds.Count == 1 && flameSoundPlayingIds.All(id => ArcNativeSoundEvent(id) == 0),
+            Require(!PortableFlameColdRequested || flameColdSceneComplete,
+                "Original friendly fire-ring host restoration did not finish.");
+            // A new native sound host may reuse old playing IDs. Completion was
+            // verified before teardown; restored statuses must not post the cast again.
+            Require(flameSoundPlayingIds.Count == 1 && (flameSoundEndedBeforeColdScene
+                || flameSoundPlayingIds.All(id => ArcNativeSoundEvent(id) == 0)),
                 "Original Skill_10061 sound did not play once and finish through the native engine.");
             Debug.Log("[Portable flame sound] Original Skill_10061 native playback and completion passed.");
         }
