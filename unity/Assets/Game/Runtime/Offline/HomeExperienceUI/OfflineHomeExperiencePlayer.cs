@@ -67,24 +67,8 @@ namespace Zjcs.Offline.HomeExperienceUI
 
         private HomeExperiencePlayer Capture()
         {
-            var saved = profile.Save.Player;
             var state = environment() ?? throw new InvalidOperationException("The owning scene must bind real home experience environment data.");
-            var player = new HomeExperiencePlayer(Tables)
-            {
-                SubRank = (SubRank)saved.SubRank, BaseLevel = saved.SeasonBaseLevel, Level = saved.Level,
-                Experience = saved.Experience, ServerRecordSeason = state.ServerRecordSeason, PlanesRank = state.PlanesRank,
-                CurrentRecordData = state.CurrentRecordData == null ? null : new HomeExperienceSeasonRecord
-                    { Season = state.CurrentRecordData.Season, RecordRank = state.CurrentRecordData.RecordRank },
-                PlayerExpLimitFunctionLimited = state.PlayerExpLimitFunctionLimited,
-                PlayerLevelLimitProperty = state.PlayerLevelLimitProperty
-            };
-            // The local SeasonRank is a plane-rank key, not a season ID.
-            // Resolve it through the selected official Rank -> Season parser.
-            int season = Tables.AstrologicalSeasonConfigParser.GetSeasonByRank((Rank)saved.SeasonRank);
-            if (saved.HasActiveSeasonRecord && season > 0)
-                player.BlessRecords.Add(season, new HomeExperienceBlessRecord { PlayerBlessExp = saved.BlessingExperience });
-            player.TryRefreshLevel();
-            return player;
+            return OfflineHomeExperienceProjection.Capture(profile.Save.Player, Tables, state);
         }
 
         public void SynchronizeCommittedPlayer()

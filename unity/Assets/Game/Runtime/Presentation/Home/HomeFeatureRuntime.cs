@@ -1010,7 +1010,8 @@ namespace Zjcs.Presentation.Home
             OfflineHomeNoBlessConfiguration homeProperties = OfflineHomeNoBlessConfiguration.LoadDefault();
             characterCatalog = homeProperties.CreatePropertyCatalog(characterCatalog);
             progression = OfflineCharacterProgressionService.Create(profile, new CharacterProgressionInputs(
-                characterCatalog, OfficialEquipmentAssetCatalog.LoadDefault().Load(), characterAssets.LoadSkillRules()));
+                characterCatalog, OfficialEquipmentAssetCatalog.LoadDefault().Load(), characterAssets.LoadSkillRules(),
+                experienceState: CaptureHomeExperienceState));
             equipmentPropertiesLoaded = true;
         }
 

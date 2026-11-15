@@ -351,6 +351,10 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `HomeExperienceEnvironmentValidation.Run` 在 Unity Editor 批处理使用隔离新角色档验证：初心者保留原无赛季 `-1` 哨兵；银阶最高小阶和实际活动记录满足原赐福条件；世界阶段独立变为金阶并重载后关闭赐福，但个人银阶与赛季 1 不变。删除活动记录后不补造记录，储存经验按原世界阶段回退分支判定；功能 173 与非战斗等级上限属性端口、重复读取不改写存档通过。静态元数据检查（152107 个 GUID）、Unity 导入／C# 编译和 `Zjcs.Editor.ProjectTools.Validate` 通过；工程校验保留既有外观 Edit Mode Destroy 诊断。此项未执行图形 Play Mode、正式家园领奖、世界阶段操作界面或 Windows Player，不代替这些流程验证。
 
+正式家园的成长服务经 `CharacterProgressionInputs.ExperienceState` 接入同一原查询：`OfflineHomeExperienceProjection` 接收事务候选角色，沿原 `TryRefreshLevel`、`IsBlessLevelOpen`、`ShowPlayerStoreExpLimit` 和下一小阶上限计算基础／显示等级、赐福资格和储存边界。属性端口使用该候选角色及完整装备／技能属性流水线；不在奖励事务内回读尚未提交的旧角色，不把实际赛季记录键覆盖成个人当前位阶。普通经验和赐福经验发放后再次按原查询刷新，重载也使用相同派生计算；世界位阶变化关闭赐福资格时，原 `UpdateShowLevel` 仍保留已取得赐福等级。既有本地奖励分配、回执幂等、检查溢出和存档失败回滚仍由成长事务负责，并非 APK 未提供的服务器奖励分配方法体还原。其他页面的经验消费者及正式 HUD 奖励演出尚待统一。代码、输入版本与哈希见[成长接线清单](../../assets/reference/home-experience-growth-source-manifest.json)。
+
+`HomeExperienceGrowthValidation.Run` 在独立 Unity 工程批处理和静音 Play Mode 通过真实角色槽／成长事务：低于本地世界阶段时不发赐福经验；满足原条件后按原阈值升级；世界阶段变化后保留已取得赐福等级；原下一小阶储存上限、功能 173／等级上限属性端口、重复回执、溢出回滚及磁盘重开一致。Play Mode 正常退出码为 0。本项使用实际规则配置与存档事务，功能／属性输入受控；不包含正式床铺按钮、模拟指针、画面或升级通知组合。静态元数据检查通过（152109 个 GUID）；三个受影响正式程序集使用主工程 Roslyn 响应文件和依赖在本会话目录后台编译通过。主工程锁释放后已完成正式 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate`，退出码为 0；仍有既有战斗 Edit Mode 材质销毁诊断。未构建或发布 Windows Player。
+
 `scripts/prepare_home_player_health_profile.py` 从所选 884 APK 主 Luban 包恢复 110 项料理的 ID／类型、物品类型及 `PlayerHpRedDotThreshold=0.5`。`Official/HomePlayerHealthRules` 直接迁入 `Player.HasCureItem`，按原 `CookingInfoParser.PostParse` 将料理分组；查询任意恢复料理的实际背包数量，不额外要求学会配方、达到料理等级或能制作最佳恢复料理。原 `PlayerHpRedPoint` 继续使用血量严格低于阈值且持有恢复料理的判断。原公共玩家面板 prefab 的 `myRedDotObj` 为 null；此处迁移判定及事件并保留该空引用，不据此给头像额外添加红点。
 
 `Offline/HomePlayerHealthUI` 将实际角色身份、名字、背包及已有 `OfflinePlayerHealth` 接到原公共玩家面板，经验复用上述同版存档投影；不重写血量恢复公式或重复保存血量。事务后由所有者同步，保留 HP 写盘成功后的通知及名字／料理增减去重；释放适配器时解除 HP、经验与外层状态监听。战力／无赐福战力、活动地图集合、状态记录与赐福重置事件由明确的所有者端口提供；不以存档地图 ID 冒充活动地图。无赐福计算已接入原 `NoBlessPlayerInfoProvider` 的等级、装备、技能、幻兽、古遗物与手动激活共鸣分块；世界位阶和已激活共鸣等级仍由正式家园所有者显式提供，不从个人位阶或装备自动推导。状态记录的本地所有者见下文，仍需装配进正式家园宿主。
@@ -566,7 +570,7 @@ Unity 2022.3.57f1c2 静音有图形 Play Mode 完整收益回归退出码为 0�
 
 ### 本地世界位阶与赐福
 
-用户确认保留原赐福规则、世界位阶保持本地，并授权选择本地表示。采用独立世界阶段：既有内容分档字段 `TreasurePlaneRank` 作为统一读取来源，与个人 Rank／SubRank、赛季编号分别处理。保留原 `IsBlessLevelOpen` 的实际赛季赐福记录、个人到达世界最高小阶、赐福等级表及满个人等级条件；不把“取消服务器开放锁”扩展成按个人当前位阶自动开启赐福。世界阶段不随个人突破自动推进，手动推进入口及完整经验领奖事务仍待接通。
+用户确认保留原赐福规则、世界位阶保持本地，并授权选择本地表示。采用独立世界阶段：既有内容分档字段 `TreasurePlaneRank` 作为统一读取来源，与个人 Rank／SubRank、赛季编号分别处理。保留原 `IsBlessLevelOpen` 的实际赛季赐福记录、个人到达世界最高小阶、赐福等级表及满个人等级条件；不把“取消服务器开放锁”扩展成按个人当前位阶自动开启赐福。世界阶段不随个人突破自动推进；正式家园成长事务已接上述判定，手动推进入口、其他页面的统一及完整经验领奖表现仍待接通。
 
 ### 已确认的本地接线与边界
 

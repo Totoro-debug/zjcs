@@ -26,13 +26,16 @@ namespace Zjcs.Offline.Progression
         private readonly OfflinePetPropSource petPropertySource;
         private OfflinePlayerProgress derivedPlayer;
         private readonly Func<DateTime> npcClock;
+        private readonly Func<OfflinePlayerProgress, CharacterPropCalculator, CharacterExperienceState> experienceState;
 
         public OfflineCharacterProgressionService(OfflineMainlineProgressSession session,
-            OfficialCharacterCatalog catalog, Func<DateTime> npcClock = null, bool refreshDerivedProgress = true)
+            OfficialCharacterCatalog catalog, Func<DateTime> npcClock = null, bool refreshDerivedProgress = true,
+            Func<OfflinePlayerProgress, CharacterPropCalculator, CharacterExperienceState> experienceState = null)
         {
             this.session = session ?? throw new ArgumentNullException(nameof(session));
             this.catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
             this.npcClock = npcClock ?? (() => DateTime.UtcNow);
+            this.experienceState = experienceState;
             propertyCalculator = new CharacterPropCalculator(catalog);
             foreach (int handleType in ConfiguredPropertyHandles)
                 propertyCalculator.AddSource(new OfflineCharacterConfiguredPropSource(catalog, handleType));
@@ -872,6 +875,20 @@ namespace Zjcs.Offline.Progression
             return session.ApplyCharacterMutation(player =>
             {
                 RefreshDerivedProgress(player);
+                if (experienceState != null)
+                {
+                    var state = experienceState(player, propertyCalculator);
+                    if (state.IsBlessing)
+                        player.BlessingExperience = checked(player.BlessingExperience + amount);
+                    else
+                    {
+                        long accepted = state.IsStoredExperience
+                            ? Math.Min(amount, Math.Max(0, state.StoredExperienceLimit - player.Experience)) : amount;
+                        player.Experience = checked(player.Experience + accepted);
+                    }
+                    RefreshDerivedProgress(player);
+                    return;
+                }
                 CharacterExperienceSnapshot current = Snapshot(player);
                 long remainder = amount;
                 if (current.IsBlessing)
@@ -2035,10 +2052,19 @@ namespace Zjcs.Offline.Progression
             int seasonId = CurrentSeasonId(player);
             // SeasonRank indexes level_bless and rank limits; Season is the
             // distinct astrological ID used by property records (rank 4 -> season 1).
-            player.SeasonRank = seasonId > 0 ? player.Rank : 0;
-            CharacterExperienceSnapshot snapshot = Snapshot(player);
-            player.Level = snapshot.Level;
-            player.SeasonBaseLevel = OfflineCharacterExperience.BaseLevelLimit(player.SubRank, catalog.LevelLimits);
+            if (experienceState != null)
+            {
+                var state = experienceState(player, propertyCalculator);
+                player.Level = state.Level;
+                player.SeasonBaseLevel = state.BaseLevel;
+            }
+            else
+            {
+                player.SeasonRank = seasonId > 0 ? player.Rank : 0;
+                CharacterExperienceSnapshot snapshot = Snapshot(player);
+                player.Level = snapshot.Level;
+                player.SeasonBaseLevel = OfflineCharacterExperience.BaseLevelLimit(player.SubRank, catalog.LevelLimits);
+            }
             if (player.CharacterProperties == null)
                 player.CharacterProperties = new OfflineCharacterPropertyProgress();
             OfflineCharacterPropertyProgress.Normalize(player.CharacterProperties);

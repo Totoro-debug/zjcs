@@ -12,13 +12,16 @@ namespace Zjcs.Offline.Progression
         public OfflineSkillRules Skills { get; }
         public IEnumerable<OfficialSkillRecommendation> Recommendations { get; }
         public Func<DateTime> NpcClock { get; }
+        public Func<OfflinePlayerProgress, CharacterPropCalculator, CharacterExperienceState> ExperienceState { get; }
 
         public CharacterProgressionInputs(OfficialCharacterCatalog character, OfficialEquipmentCatalog equipment,
             OfflineSkillRules skills, IEnumerable<OfficialSkillRecommendation> recommendations = null,
-            Func<DateTime> npcClock = null)
+            Func<DateTime> npcClock = null,
+            Func<OfflinePlayerProgress, CharacterPropCalculator, CharacterExperienceState> experienceState = null)
         {
             Character = character; Equipment = equipment; Skills = skills;
             Recommendations = recommendations; NpcClock = npcClock;
+            ExperienceState = experienceState;
         }
     }
 
@@ -43,11 +46,18 @@ namespace Zjcs.Offline.Progression
             string stage = "property pipeline";
             try
             {
-                var instance = new OfflineCharacterProgressionService(profile, inputs.Character, inputs.NpcClock);
+                var instance = new OfflineCharacterProgressionService(profile, inputs.Character, inputs.NpcClock,
+                    refreshDerivedProgress: inputs.ExperienceState == null,
+                    experienceState: inputs.ExperienceState);
                 stage = "equipment and gem configuration";
                 instance.AttachEquipmentCatalog(inputs.Equipment);
                 stage = "skill configuration";
                 instance.AttachSkillRules(inputs.Skills, inputs.Recommendations);
+                if (inputs.ExperienceState != null)
+                {
+                    stage = "experience rules";
+                    instance.RefreshDerivedProgress(profile.Save.Player);
+                }
                 return instance;
             }
             catch (Exception error) { throw new CharacterProgressionInitializationException(stage, error); }
