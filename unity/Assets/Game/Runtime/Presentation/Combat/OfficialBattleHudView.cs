@@ -118,7 +118,12 @@ namespace Zjcs.Presentation.Combat
                     button.onClick.AddListener(() => SpeedCycled?.Invoke());
             });
             speedRoot.name = "FightMainPanelSpeedUI";
-            bossRoot = bossRenderer.Create("boss", root.transform);
+            // FightMainPanel's boss module slot: the original vertical layout owns
+            // the boss bar's position below the fixed round/timeline content.
+            GameObject bossParent = renderer.Find("/FightMainPanel/Content/Top/DynamicContent/TopContent");
+            if (bossParent == null)
+                throw new InvalidOperationException("Official boss HUD parent is missing.");
+            bossRoot = bossRenderer.Create("boss", bossParent.transform);
             bossRoot.SetActive(false);
             return root;
         }
