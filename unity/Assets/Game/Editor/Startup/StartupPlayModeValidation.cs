@@ -61,7 +61,7 @@ namespace Zjcs.Editor.Startup
         {
             if (state != PlayModeStateChange.EnteredEditMode || !SessionState.GetBool(Key, false)) return;
             PlayerSettings.companyName = SessionState.GetString(Key + "Company", "LocalOffline");
-            PlayerSettings.productName = SessionState.GetString(Key + "Product", "杖剑传说");
+            PlayerSettings.productName = SessionState.GetString(Key + "Product", "Zjcs");
             string storage = SessionState.GetString(Key + "Storage", "");
             if (SessionState.GetInt(Key + "Pass", -1) == 2 && storage.Contains("ZjcsStartupValidation") && Directory.Exists(storage)) Directory.Delete(storage, true);
             SessionState.SetBool(Key, false);

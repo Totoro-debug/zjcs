@@ -156,7 +156,7 @@ namespace Zjcs.Editor
                 string workspace = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
                 if (string.IsNullOrWhiteSpace(workspace))
                     throw new ArgumentException("Set ZJCS_VALIDATION_DIR or pass -mainline-player-output.");
-                destination = Path.Combine(Path.GetFullPath(workspace), "player", "杖剑传说.exe");
+                destination = Path.Combine(Path.GetFullPath(workspace), "player", "Zjcs.exe");
             }
             Directory.CreateDirectory(Path.GetDirectoryName(destination));
             ScriptingImplementation previous = PlayerSettings.GetScriptingBackend(NamedBuildTarget.Standalone);

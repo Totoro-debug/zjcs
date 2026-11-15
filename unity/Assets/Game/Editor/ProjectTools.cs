@@ -38,7 +38,7 @@ namespace Zjcs.Editor
         {
             RequireEditorVersion();
             PlayerSettings.companyName = "LocalOffline";
-            PlayerSettings.productName = "杖剑传说";
+            PlayerSettings.productName = "Zjcs";
             PlayerSettings.defaultScreenWidth = 450;
             PlayerSettings.defaultScreenHeight = 800;
             PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
@@ -160,7 +160,7 @@ namespace Zjcs.Editor
                 throw new BuildFailedException("The game build must include the runtime Bootstrap scene.");
 
             PlayerSettings.companyName = "LocalOffline";
-            PlayerSettings.productName = "杖剑传说";
+            PlayerSettings.productName = "Zjcs";
             PlayerSettings.defaultScreenWidth = 450;
             PlayerSettings.defaultScreenHeight = 800;
             PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
@@ -185,15 +185,12 @@ namespace Zjcs.Editor
 
         private static void RequireAsciiBuildPath(string path)
         {
-            if (Path.GetFullPath(path).Any(character => character > 127))
-                throw new BuildFailedException("Windows build paths must use ASCII: " + path);
+            WindowsBuildNamingPolicy.RequireAsciiBuildPath(path);
         }
 
         private static void ValidateWindowsBuildPaths(string destination)
         {
-            foreach (string path in Directory.EnumerateFileSystemEntries(
-                Path.GetDirectoryName(destination), "*", SearchOption.AllDirectories))
-                RequireAsciiBuildPath(path);
+            WindowsBuildNamingPolicy.ValidateWindowsBuildPaths(destination);
         }
 
         private static void RequireEditorVersion()

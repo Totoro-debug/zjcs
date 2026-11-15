@@ -27,9 +27,11 @@ Windows 使用本地启动和可缩放竖屏窗口；游戏资源、规则与存
 
 ### Windows 构建路径
 
-正式交付目录为 `D:/Desktop/ZjcsGame/`，入口为 `Zjcs.exe`，Unity 数据目录为 `Zjcs_Data`；空框架构建同样使用 `Zjcs.exe`。采用独立的 `ZjcsGame` 目录，避免 Windows 不区分大小写导致与源码目录 `zjcs` 冲突。`ProjectTools` 在构建前检查完整输出路径，构建后递归检查交付文件及目录，遇到非 ASCII 路径即报错；游戏产品显示名保留中文。
+正式交付目录为 `D:/Desktop/ZjcsGame/`，入口为 `Zjcs.exe`，Unity 数据目录为 `Zjcs_Data`；空框架构建同样使用 `Zjcs.exe`。采用独立的 `ZjcsGame` 目录，避免 Windows 不区分大小写导致与源码目录 `zjcs` 冲突。工程产品名、初始化与正式构建均使用 `Zjcs`，防止 Burst 按中文产品名生成调试目录。`WindowsBuildNamingPolicy` 在所有 Windows BuildPipeline 入口（包括菜单及验证构建）执行前统一产品名并检查完整输出路径和已有目录；`WindowsBuildPathValidation` 在构建后递归检查文件及目录，遇到非 ASCII 路径即报错。主线与地图验证构建默认入口也统一为 `Zjcs.exe`；游戏内中文内容保留。旧版调试目录只改为 ASCII 名称，不删除既有文件或存档。
 
-现有发布包已整体迁移并更新桌面快捷方式，7,022 个文件迁移前后的 SHA-256 一致，交付目录递归检查无非 ASCII 路径。本次复用已有发布包，没有用包含其他会话未提交修改的工作区重新覆盖游戏。静态元数据检查通过（152,901 个 GUID）。英文入口已在内置屏静音运行，使用隔离存档和模拟输入打开技能页、详情及装配，两次运行共 20 张实际截图已查看；完整技能检查两次均超过夹具的 180 秒期限，未跑完，不能计为完整回归通过。共享工程导入／编译被 `OfflineBattleThemeNpcView.cs:67` 缺少 `Zjcs.Official.PartnerDetailUI` 程序集引用阻塞，`ProjectTools.Validate` 未执行完成；该错误位于其他会话正在修改的战斗主题模块。
+当前发布目录已将遗留中文 Burst 调试目录改为 `LegacyChinese_BurstDebugInformation_DoNotShip`，递归检查不存在非 ASCII 路径；入口和游戏载荷沿用现有发布包，未使用含其他会话未提交修改的工作区覆盖游戏。
+
+构建命名验证已通过：Unity `2022.3.57f1c2` 在隔离最小工程中加载本项目实际命名回调和 Burst `1.8.18`，以旧中文产品名执行真实 Windows BuildPipeline，成功生成 `Zjcs.exe`、`Zjcs_Data` 和 `Zjcs_BurstDebugInformation_DoNotShip`，全部输出路径为 ASCII；中文目标路径和目录内遗留中文项均会被拒绝。此构建仅验证工具链，不是游戏发布包。正式工程导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 均以 0 退出；静态元数据检查通过（152,100 个 GUID）。本次仅修改构建命名，未执行游戏交互或 Play Mode 回归。
 
 ### 隔离验证工程装配
 
@@ -54,4 +56,4 @@ Windows 使用本地启动和可缩放竖屏窗口；游戏资源、规则与存
 
 ## 代码与资源入口
 
-[ProjectTools.cs](../../unity/Assets/Game/Editor/ProjectTools.cs) · [unity-tools.json](../../unity-tools.json) · [unity.ps1](../../scripts/unity.ps1)。共用验证、窗口定位及发布操作见[素材管理](../asset-management.md)。
+[ProjectTools.cs](../../unity/Assets/Game/Editor/ProjectTools.cs) · [WindowsBuildNamingPolicy.cs](../../unity/Assets/Game/Editor/WindowsBuildNamingPolicy.cs) · [unity-tools.json](../../unity-tools.json) · [unity.ps1](../../scripts/unity.ps1)。共用验证、窗口定位及发布操作见[素材管理](../asset-management.md)。

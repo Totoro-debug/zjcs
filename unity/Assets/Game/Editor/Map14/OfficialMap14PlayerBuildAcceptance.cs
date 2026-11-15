@@ -22,7 +22,7 @@ namespace Zjcs.Editor.Map14
             ScriptingImplementation originalBackend = PlayerSettings.GetScriptingBackend(standalone);
             string originalCompanyName = PlayerSettings.companyName;
             string originalProductName = PlayerSettings.productName;
-            string destination = Path.Combine(validation, "Player", "杖剑传说.exe");
+            string destination = Path.Combine(validation, "Player", "Zjcs.exe");
             Directory.CreateDirectory(Path.GetDirectoryName(destination));
 
             try
