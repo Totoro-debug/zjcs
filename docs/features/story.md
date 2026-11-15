@@ -47,7 +47,7 @@
 
 `scripts/prepare_dialogue_transparent_background.py` 只将原图 RGB 最大值小于 64 的深灰像素 Alpha 清零，其余 RGBA 像素逐一保持一致，保留 1080×172、原 pivot、PPU 与顶部 166 像素平铺边界。`DialogueBackgroundAppearance.Apply` 在公共加载路径对普通对白及选项对白显式绑定派生 Sprite，覆盖原生 Map11–14 和旧 Map10 路径。输入输出哈希与绑定见[透明背景凭据](../../assets/reference/official-map/dialogue-transparent-background-source-manifest.json)。
 
-像素核对通过：120,084 个有透明度的阴影像素清零，其余 48,668 个弧线／底色像素保持原样。`DialogueBackgroundAcceptance.Run` 在后台静音 Play Mode 渲染 Map11–14 的 8 个原生对白背景，验证原 Sprite 尺寸与边界及下一句按钮的模拟指针事件；8 张截图均已查看，上沿直接透出测试背景。此项隔离了文字、立绘和遮罩，不代表完整对白流程的遮挡、地图场景和存档恢复验证。静态检查通过（152,166 GUID），Unity 导入／编译与 `ProjectTools.Validate` 通过。相同检查通过 `-dialogueBackgroundValidation` 开关供 Windows Player 使用；该开关在场景启动前静音并隔离正常存档入口。Windows 发布尚待完成。
+像素核对通过：120,084 个有透明度的阴影像素清零，其余 48,668 个弧线／底色像素保持原样。`DialogueBackgroundAcceptance.Run` 在后台静音 Play Mode 渲染 Map11–14 的 8 个原生对白背景，验证原 Sprite 尺寸与边界及下一句按钮的模拟指针事件；8 张截图均已查看，上沿直接透出测试背景。此项隔离了文字、立绘和遮罩，不代表完整对白流程的遮挡、地图场景和存档恢复验证。静态检查通过（152,164 GUID），Unity 导入／编译与 `ProjectTools.Validate` 通过。相同检查通过 `-dialogueBackgroundValidation` 开关供 Windows Player 使用；该开关在场景启动前静音并隔离正常存档入口。隔离 Windows 构建在复制 `resources.assets.resS` 时因磁盘空间不足失败，Player 验证及发布尚未完成；释放足够空间后须重新构建、运行并验证。
 
 公共模块、节点续播去重和失效保护为离线适配。遮罩的资源加载、UI 相机与窗口服务通过显式宿主提供；原全局窗口管理器和 bloom 合成尚未完整迁入。同步节点保护沿用迁移前的 256 次限制；没有新设奖励、解锁条件、圣兽结果或副本规则。
 
