@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成
+状态：未完成。14 类设施均有状态或入口，不能据此认定建筑玩法、表现和验收已完成；逐项缺口见下表及“尚未实现”。
 
 ## 功能简介
 
@@ -100,66 +100,7 @@
 
 `.tools/` 保留官方缓存和提取依赖，游戏运行不加载 DLL，不使用 Python / Node / vgmstream。
 
-**尚未完整还原全部功能。
-
-追加提取：原始 `ShopActivityEntryPanel`（含直购、两款月卡）、`PayDirectPayItem`、`ActivityEntryPanel`、`ActivityCommonEntry`、祈愿职业选择、积分奖励及商品详情等 13 个 prefab；`direct_pay`、`periodic_card_pay`、`money_cost`、每日 / 每周礼包、签到奖励及活动入口共 8 张配置表。新增图标仍按原始 RawIcon 定位；`prepare_optional_interfaces.py` 从 `image_ui_chestgacha_chestelementgacha_atlas` 和 `image_ui_treasure` 提取原始 Sprite。当前共 1,317 项运行时资源、1,052 项图标映射、69 个 prefab、75 张完整配置表。每项身份和输出哈希均记录于来源清单，动态图片进入显式加载清单。
-
-完整 `defaultpackage_assets_prefabs_ui_chestgacha.bundle` 及 `image_ui_chestgacha_chestgachabg_*` 背景仍未打包，不能称为已取得完整原界面。家园食材 `item_8051` 至 `item_8057` 分别位于未打包的 `image_itemicon_materials_map12/13/14/17/19/21/23_noatlas.bundle`，保留文字、价格和原始解锁锁头；没有替代图片。两类缺项分别记录于 source-manifest.json 的 `chest_gacha_interface` 和 `shop_ingredient_icons`。活动内容采用本地入口与七日签到布局，月卡目前只实现立即 / 每日奖励及有效期，未宣称额外属性特权生效。
-
-`prepare_bed_ui.py` 从固定 APK 的 `prefabs_ui_furniture.bundle` 转换 `BlessingLevelRuleDialog` 及其内嵌 `RuleFormDataItem`，复用六项原始 Sprite 来源记录，未绘制替代图片。运行时恢复 `BlessingRuleBtn` 的规则弹窗、`FurnitureBedDialog` 两组独立折叠项，并按 `BlessingLevelRuleItem` 读取当前赐福等级附近 11 级的原始基准产量和小推车上限。
-
-床铺圆环按 `FurnitureBedDialog.HangUpTimer` 的累计量 / 容量比例绑定，使用本地同一产量预览的储存上限，打开和累计时刷新、领取后更新，清除空储存的可领取提示。文本更新后重排，避免累计数量变长而裁掉数字。保留原图、原填充方向及颜色。
-
-本地存档只保存汇总产量属性，加成展开项以实际参与计算的比例、固定经验和最终比例显示，不伪造月卡或古遗物等来源分项。规则说明文字、表头换行及 1100 高的滚动区域为桌面适配；弹窗、预览行与素材来源仍为固定 APK。
-
-`prepare_home_ui.py` 从固定 APK 及匹配清单的 CDN 依赖转换原床铺、推车详情／升级／规则、装潢 prefab 与原 ItemIconManager／ItemAwardIconManager 配置，运行数据为 `assets/official/home-completion/ui.json`。40 个原窗口／引用模板、118 个资源的真实 bundle、对象、输入与输出 SHA256、原布局字段及语言来源统一保存在 `assets/reference/home-completion/source-manifest.json`。动态推车背景、升级图标、装备概率预览图标按原 LanguageUtils 路径／原 ItemInfo.RawIcon 取图；复用共同素材仅在 PNG 字节完全一致时进行，无重绘或替代。组件绑定、原 RectTransform、LayoutElementClamper、状态配置与原奖励图标池均保留。
-
-`scripts/prepare_home_scene.py` 从固定 871_156598 APK／校验原 CDN 读取 12 类默认设施，转换全部原状态分支、原碰撞、Spine、粒子与世界文字至 `assets/official/home-completion/scene.json`；来源对象、原始组件 SHA256、语言输入及资源／目录输出哈希见 `home-completion/scene-source-manifest.json`。未绘制替代图片。`prepare_home_ui.py` 另按原引用补入 FurnitureRepairDialog、FurnitureRepairedNotifyDialog、原 FurnitureIconWidget、PlayerPropItem 与 PopupWindow 入场／循环绑定，仍登记在 `home-completion/source-manifest.json`。运行加载绑定来自两份来源清单；独立导入复用一致的共享贴图。
-
-prepare_home_ui.py 继续从固定 871_156598 转换 AwardListPanel、其序列化 normal-path GUID fe14ea0fc3099824683283c4671a9e49 指向的 AwardListPanelItem、原 AnimationClip 事件和 UI ParticleSystem 材质／纹理。UIParticle 的 14 个原 AOT 字段次序及 payload 全量读取由 prepare_map_ui_particles 校验；home_particle_schema.py 的独立 Coffee 类型只解析对象引用，粒子本体仍读取原字节，没有生成替代效果。home_ui_audio.py 沿原 Main_Get_2 Event 3442720740 的 Play／Sound／DIDX 媒体，使用 vgmstream 与 libsndfile 转为本地 Vorbis。源对象、包凭据、原始／输出 SHA256 见 home-completion/source-manifest.json，运行资源在 assets/official/home-completion/。
-
-prepare_home_decoration.py 从固定 871_156598 的 64 行 furniture_skin、19 行 home_theme_skin 和 48 行 home_skin_weather_override_prefab，按原 LanguageUtils 路径定位 131 个实际 prefab 变体；原 HomeEntityManagerMono／HomeSlotEntityData 提供主题及家具槽位，原 HomeEntityCreateData 提供位置偏移。保留全部状态分支、CustomRenderer 云层、原果树果实附件及昼夜动画，骨骼沿既有 Spine 转换工具生成原网格。输入对象、APK／CDN 凭据、916 个资源和输出 SHA256 见 home-decor/source-manifest.json，实际资源在 assets/official/home-decor/。材质属性动画的哈希字段按原材质字段及 AssetRipper CustomCurveResolver 的 Unity 格式解析，没有自拟游戏规则或美术。`prepare_unity_home_skins.py` 从这些转换结果生成固定版运行目录 `unity/Assets/StreamingAssets/Home/home-skins.json`，并按实际引用复制 628 张官方贴图；运行输出和逐张贴图 SHA256 写入家园 `source-manifest.json`。
-
-prepare_home_ui.py 同时补充原 HomeViewController／Slider 控件、HomeSkinItem／ItemIconHomeSkin 字段，沿 ItemIconAttachmentConfig 的 WearingHomeSkin=31 GUID 提取原已装备附件，从原 image_itemicon_home 提取对应皮肤图标；来源继续登记于 home-completion/source-manifest.json。来源登记与尚未迁移的灯光／材质表现范围分别记录，不能将已提取视为已完整还原。
-
-
-
-
-prepare_home_tips.py 遍历 131 个原装潢 prefab 变体中的 TipDotNodeLinker，沿原 PPtr、有序 Childs 端口和嵌套动态选择器取得当前294个实际提示节点，保存条件字段、原优先级和状态覆盖规则。运行时由 official_home_tips／official_fruit_tips／official_home_tip_queries 接入真实系统查询；活动与星神仅在存在对应实际玩家记录时可产生子项，不生成虚构实例。
-
-ItemNewMarkManager 的零到正事件及登录清空、HomeSkinItem 离开列表清标记、HomeSkinMainTabItem／HomeSkinSubTabItem 分类聚合和 AppearanceDataEx 排除默认皮肤均按固定 871_156598 迁移。真实源码 SHA256 保存在 home-completion/source-manifest.json 的 mark_sources，由 prepare_home_ui.py 维护；继续使用原 NewMarkStateSwitcher、原文字和布局，没有新增替代图案。
-
-prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetailDialog 提取完整布局和 mTryBtn／mFashionTxt／mIsShowFashion，按原 FashionExpUtil 和三类皮肤解析器取得 fashion_exp_group 的真实品质经验。home-completion/source-manifest.json 的 detail_sources、fashion_table、panels、inputs 与 resources 登记原版本代码、配置、对象和输出哈希。没有改用普通物品详情或自制预览按钮。
-
-`assets/official/home-tutorial/` 由 `python scripts/prepare_home_tutorial.py` 生成；来源固定 `871_156598` 的 `prefabs_ui_story/OptionTalkDialog`、`TalkDialog`、`prefabs_ui_portrait/Npc_Portrait_8402` 与 `Npc_Portrait_8411`，及其实际GUID引用主图／表情。26个输出含25张原PNG和一份原层级／字段／动画数据；保留真实SetNativeSize、表情差异偏移、左右翻转与动画事件，无自绘或截图代替。源bundle、对象和输入／输出哈希、语言及调用代码登记于 `home-tutorial/source-manifest.json`。运行时家园教学使用原Common代理对应的OptionTalkDialogPanel，并复用 `map-audio.json` 已登记的原中文语音。独立导入：`python scripts/import_official_subset.py assets/reference/home-tutorial/source-manifest.json`。
-
-家园对话平铺背景：原 OptionTalkDialog 的 BgImg／BgImg2 与选项按压背景为 Image.Type.Tiled，APK 的 FillCenter 与 PixelsPerUnitMultiplier（该批为1）由 prepare_official_city.py 读取，原 Sprite 边框及尺寸保留。 按 Unity 官方 uGUI Image.GenerateTiledSprite／GetAdjustedBorders 迁移平铺、边框缩小、末块UV裁切和65000顶点限制，反转PNG纵轴并保留原Sprite裁切范围；未绘制新图。框架源为 https://raw.githubusercontent.com/Unity-Technologies/uGUI/main/com.unity.ugui/Runtime/UGUI/UI/Core/Image.cs ，取得内容SHA256为74a8d2f63d1ea3783d34f2ba9d778191cc9b27bea5cfa0670d69f1defd9e29dd，缓存于 .tools/source-packages/official-code/ugui-reference/（Image.cs与source.json）。这是Unity官方UI框架来源，与游戏客户端来源分别登记；对话原图及实际输入／输出哈希见home-tutorial/source-manifest.json。重建需恢复该框架来源缓存；已转换对话记录Image原字段，其他尚无tiling字段的旧转换不作参数推定。
-
-`home-environment/source-manifest.json` 登记主场景 HomeEnvironmentManagerMono.HomeMoon 的三个 SpriteRenderer、HomePlayable 的 Night 绑定及 Night_Common 中9条月亮曲线。原 `image_home_dynamic_moon` 分包解码配置会选择的1至15与17号月亮／描边／光晕，共48张PNG；连同 moon.json 共49项输出逐项登记SHA256，保留原Sprite尺寸、裁切、轴心、PPU、世界层级及排序。规则来源为 HomeMoon、HomeEnvironmentManage、HomeTimeDriver、HomePlayable/TimelinePlayable 和原 HomeEnvironmentConfig／HomeSkinConfig：自然日30天一轮、每相2天、08:00刷新、天气4902选择17号；阶段显示小时不改变自然日。转换命令 `python scripts/prepare_home_environment.py`，导入使用 `python scripts/import_official_subset.py assets/reference/home-environment/source-manifest.json`。原3个材质均为 Sprite-Unlit-Default；场景照明、云网格和积雪材质的实际迁移见后续相应来源段落。
-
-`home-environment/solar-timeline-source-manifest.json` 登记固定 APK 主场景 `HomeTimeline`（Timeline path ID 188）及 Day 绑定的 `Day_Common`（AnimationClip path ID 181）。`python scripts/extract_home_sky_timeline.py` 按原 Mecanim 绑定解出20条曲线、21个节点、9个SpriteRenderer、5个Light2D和两种原材质，恢复 Sprite 裁切偏移与逻辑尺寸，所有输入／输出记录 SHA256；`python scripts/prepare_unity_home_environment.py` 校验后复制 JSON 与 PNG 至 Unity `StreamingAssets/Home/environment-visuals/`。曲线包括太阳位置／缩放／显隐、Sprite透明度、Light2D颜色／强度／阴影强度，保留原 Hermite 切线。原材质 shader 为 URP `Sprite-Lit-ColorShift` 和 `Sprite-Lit-Default`。当前家园入口已通过 `OfficialBattleRenderPipelineAssets.Enter` 启用工程原 URP 2D 管线；该历史太阳／月亮投影现由下文所选版本的完整原生子层级与 AnimationClip 替代；历史背景及其受光、排序和最终画面仍待迁移。
-
-`home-environment/sky-source-manifest.json` 从固定版背景prefab的真实Material引用提取唯一 Sprite-Lit-ColorBlend 的GLES程序、8种背景材质及对象／分包／原始字节哈希，重建使用 `python scripts/prepare_home_sky.py`。全部实际材质 `_UseMask=0`；ShapeLight纹理及场景照明绑定尚待迁移，运行时仍未启用该输入，不能据此称环境光已还原。
-
-`python scripts/prepare_home_npc.py` 从原主场景 NpcBehaviour 的 HomeActionBehaviourCatalog 转换全部9个动作图及2个原传送Playable；原节点顺序、坐标、朝向、等待、显隐、HomeMid02/10排序、21个粒子发射器参数均保留。HomeNpcModel_8402 使用原0.4管理缩放、0.72子节点缩放、body_8402皮肤与原分离动画 npc_8402/idle_01，通过官方Spine原生扩展持续计算；复用已校验的原版 map_9 分包NPC图集。20项新输出含16张PNG、原粒子网格、Spine二进制／atlas及运行数据；输入、图集复用、真实原MeshRenderer材质／shader与输出哈希登记 `home-npc/source-manifest.json`。MyPlayableCenter／Sequence／Manager 的原程序集反编译代码说明传送使用普通帧时间；NPC Animator 使用 HomeTimeDriver 的 PlayableDeltaTime；行为图Wait使用自然家园时间。原SkeletonEffect-2D编译程序和场景光绑定见“家园灯光与材质迁移”。提取器按原pass的m_BlobIndex区分可执行程序与参数块，不再误读参数块为GLSL。
-
-`python scripts/prepare_home_clouds.py` 从固定版 Background／Background1stAnniversary 及其雪／永夜prefab提取实际挂载的39个CustomRenderer。保留原Sprite.vertices／triangles、轴心、PPU、裁切UV、层级矩阵与颜色／HSL；复用原PNG，不新增图。运行数据为 `home-environment/clouds.json`，来源清单 `home-environment/cloud-source-manifest.json` 登记实际Sprite／Texture／材质、程序集代码、两份原CR-Lit-ColorShift GLES程序及输入／输出哈希。39个云网格的实际昼夜曲线接入shader。固定版这些实体及主场景未挂载HomeCloud，不根据同名未使用类添加遮罩或Shrink规则。场景光纹理及实际挂载的其他特效云材质见“家园灯光与材质迁移”。
-
-`python scripts/prepare_home_snow.py` 读取固定版雪景实际挂载的1575个SpriteRenderer，保留紧密网格、原三角形、Sprite／SpriteAtlas的uvTransform、翻转及原矩阵；复用原数据中的层级、颜色和状态。52份独立原材质、64张完整原Texture2D及原HomeObjectSnow的两份GLES程序登记于 `home-snow/source-manifest.json`，运行数据为 `home-snow/snow.json`。保留原透明扩展、双雪色、细节平铺、Param和LightAtten分支。HomeWeatherSnow按原OnEnable满雪、OnChangeCreate两秒自然家园时间渐积雪及三组原粒子maxParticles曲线接入；无新增绘图或自定渐变。场景光纹理接入见“家园灯光与材质迁移”。
-
-`python scripts/register_home_assets.py` 仅按17份既有独立来源清单核对固定871_156598资源及转换输出后补齐总清单；PNG等验证原bundle清单MD5，音频额外核对APK内Wwise包MD5／SHA256及原media片段SHA256。已有资源或数据哈希冲突直接报错，不覆盖旧期望哈希。云／积雪shader与转换记录同步核对，`--check`只读检查登记及完整加载绑定；保留各模块完整来源凭据。月相／NPC／教学89张图的加载绑定恢复为按需加载，使用方式与其他官方资源一致。
-
-`prepare_home_mail.py` 直接迁移固定版本 `prefabs_ui_mail` 的8个原窗口／条目／分页／信纸预制体，保留布局、原贴图、状态切换、正文、附件和动画绑定。猫头鹰使用原 `HomeMailDefault.NoMailAnim/HaveMailAnim` 两套骨骼动画；原输入对象、UI 布局、语言、代码与输出哈希见 `assets/reference/home-mail/source-manifest.json`。邮箱规则按 `PlayerMail`、`MailUtils`、`MailDialog` 与 `MailContentUiGiveItems` 接入本地存档，不生成运营或社交邮件。
-
-`prepare_home_materials.py` 从固定 `871_156598` APK／匹配 CDN 的实际家园主题、设施和主场景 Sky 读取 Light2D、ShadowCaster2D、HomeLightController、HomeMutexLightLayer、HomeMutex、HomeBloom、RenderExistingMesh，以及 Day_Common／Night_Common。保留原对象矩阵、逐排序层配置、灯光形状／cookie、FalloffLookupTexture、遮挡轮廓、颜色／强度／阴影曲线和灯光时段覆盖。包含原 Sprite-Lit 系列、Sprite-Bulb、Skeleton-Lit-Atten、Skeleton Lit、SkeletonEffect-2D、Spine-Bloom、HomeSpineOnlySnow、Tree-Bulb，云和物体积雪继续使用原独立端口并接入同层光照纹理。25个原 RenderExistingMesh 的引用及材质替换用于积雪／光晕覆盖网格，不自绘替代。
-
-严格字段读取、原字节与输出 SHA256、24种实际着色程序、诺诺原材质、原生 `Spine.Extension.RenderExistingMesh.UpdateMaterials` 0x10967160 的 metadata 对应记录见 `home-materials/source-manifest.json`。辅助核对使用 Unity 官方 Graphics 仓库 2022.3/staging 的 URP Runtime/2D 六份源码，真实下载 URL 与各自 SHA256 在该清单的 urp_sources 中单独登记，不冒充固定客户端源码。
-
-`prepare_home_player.py` 从固定主场景 HomeEnvironmentManagerMono 的实际引用取得 StoryWakeUp／Training 两张行为图、男女角色原分离动画 home/wakeUp_01／100/training_01、角色变换、HomePlayerSpineLightAtten、HomeRenderRuleAsset、主题锚点及 HomeMeteor 的时段／概率／间隔和原粒子模板。角色沿当前真实外观、职业与染色组装。运行素材为 `assets/official/home-player/`，输入输出、图集、生成脚本和原版本信息见 `home-player/source-manifest.json`。
-
-流星主体来自原版871_156598；其一个原版缺包依赖使用经独立校验、同 CAB 的864_156496官方同名包，实际对象、包哈希及来源 URL 在 counterpart_dependencies 中登记。新版资源未混入原缓存，不新增自绘。教学只调用原实际挂载的行为图，不推测未挂载的自主动作。
-
-／ 复用固定 `871_156598` 已完整转换的 `adventure.json` 中 RepaireFurniture2、GoHomeUnlockHeap、RepaireBed、BedSpeedUp、RepaireBaGuaLu、FirstMergeItem 六张图、原故事表和对白；原输入沿 `official-map/story-source-manifest.json` 追溯。原 OptionTalkDialog／TalkDialog 及立绘复用 `home-tutorial/source-manifest.json`，修复／成功通知和遮罩复用既有原控件，未新增替代素材。诺诺九张强制行为图、真实动作及原主场景 NpcBehaviour.DecisionGraph 空引用沿 `home-npc/source-manifest.json`；教学角色的两张实际动作图沿 `home-player/source-manifest.json`，没有添加未挂载的自主行为。
+尚未完整还原全部功能。历史 `871_156598` 的场景、家具、界面、教学、环境及奖励资源已提取或转换；所选 `884_156692` 的正式接线须分别核对，输入、版本、转换及哈希见[来源总表](../../assets/reference/SOURCES.md)和各资源清单。宝箱扭蛋的完整原界面及部分商店商品图标仍需核对并接入，不能以历史转换结果认定该功能已完成。
 
 ## 完整还原部分
 
@@ -434,7 +375,6 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 - 入口与发奖：[`CharacterCreationFlowController`](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs) 的完成界面新增「进入家园」，调用 `HomeFeatureRuntime.Begin`；[`HomeFeatureRuntime`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs) 打开角色存档与家园存档、每 5 秒按本地时间推进产出、把领取物写入角色背包（经验道具 50 交给 `AwardExperience`），交易失败不改内存状态。`BuildHomePlayer` 创建 [`HomePlayerActorView`](../../unity/Assets/Game/Runtime/Presentation/Home/HomePlayerActorView.cs)，用存档的真实穿戴／染色和 `player-runtime.json` 还原官方 `player_init` 主角待机；坐标、缩放、排序层／顺序与 `home/idle_01` 由固定版 `home-player/player.json`、`home-npc/npc.json` 生成，网格帧复用经哈希校验的原生帧包。
 - 环境：[`HomeEnvironmentView`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeEnvironmentView.cs) 读取官方 `HomeEnvironmentConfig`（`HomeTimeScale=30`、`DayStageList`、`HomeLightTimeConfigs`、`EffectLightOn/Off`、`MoonConfig`、`MeteorConfig`），以角色档案 `CreatedAtUnixSeconds` 为离线家园时间原点，按配置日长与官方倍率累计游戏日；旧档缺少创建时间时从首次进入时刻起算。灯组按各自配置时刻更新 `DoorLight/LobbyLight/BedRoomLight/StudyLight/DeskLight/DanluLight/DiningTableLight`，`Night_Common` 的 9 条动画轨道驱动 48 张月相贴图。[`HomeMeteorView`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeMeteorView.cs) 由 [`HomeFeatureRuntime`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs) 订阅官方流星事件，按固定版 `MeteorPlayable` 的粒子变换、发射／生命周期／速度／颜色／拖尾模块和两套材质实例化 Unity 原生 `ParticleSystem`；材质贴图按来源哈希从本地加载，Windows 使用项目内 `Zjcs/Map10/Official Effect` shader 并应用原材质属性。原规则为进入 20:00–06:00 窗口后等待 600 个家园秒，概率失败时逐帧重试，成功播放后再排下一次；864_156496 的同名材质仅作为单独记录的缺失依赖输入，不改写成原版 871 资源。[`extract_home_sky_timeline.py`](../../scripts/extract_home_sky_timeline.py) 从固定 APK 解码 `HomeTimeline`（Timeline path ID 188，`Day_Common` AnimationClip path ID 181），恢复原有关键帧、节点层级、Sprite trim、材质和相机跟随参数；[`HomeSkyTimelineView`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeSkyTimelineView.cs) 按本地家园日进度评估全部曲线。该表现要求 URP 2D Light2D 和 `Sprite-Lit-*` shader；当前家园入口已启用工程原 URP 2D，但这组历史转换图层的光照、shader 绑定及流星画面尚未完成 Play Mode 验证。
 - 随机奖励：[`HomeRewardView`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeRewardView.cs) 读取官方 29 个槽位坐标、18 个落叶 prefab 与 3 组动物骨骼首帧网格，按类型实例化落叶 sprite 或动物静态姿态，点击走 `CollectRandomReward` 本地事务并刷新；动物动画帧（Spine）尚未播放。
-- 当前限制：床铺等级按官方 `UseBlessingLevel` 取角色实际女神状态计算的赐福等级；普通女神与遗失女神的属性来源由人物共享计算装配，正式床铺原生窗口仍待接线。随机奖励已实例化槽位与点击，动物仅首帧静态姿态；尚待 Play Mode 验证；书桌／古遗物收藏、餐桌／伙伴交流、星命的本地赛季历史与货架、家园 NPC 骨骼与动作、动态云雪仍待完成。天空／太阳关键帧已从原版提取并接运行时代码；当前家园入口已启用工程原 URP 2D Renderer，天空／太阳的实际光照和最终画面仍需验证。流星原生运行时已接但未做 Play Mode 画面验收。固定奖励教学节点按官方 `FixedRewardInfo` ID 7 读取罗拉 ×350、水 ×10、青禾 ×5，并原子写入角色背包；该奖励已接领取回执和官方奖励窗口，输入／输出哈希见[来源总表](../../assets/reference/SOURCES.md)。
 
 人物页底栏经 `CharacterFeatureRuntime.OpenProfile(slotId, savesRoot)` 打开本地人物档案。
 
@@ -555,50 +495,12 @@ Unity 2022.3.57f1c2 静音有图形 Play Mode 完整收益回归退出码为 0�
 
 ## 自定义实现
 
-### 全模块刷新时刻
-
-用户指定原早上 08:00 的日／周刷新统一提前至 06:00。离线适配共用 `Runtime/Offline/Progression/OfflineRefreshClock.cs`，覆盖商城礼包／周期卡、商店周库存与注册日、速购、伙伴通话／旅行／羁绊、世界探索、幻兽每日计数及周商店、每日挑战与周挑战。已有助战 06:00 方案保持一致；本地时间模块继续按机器本地时间计算；家园金币速购的日／周次数已明确采用电脑本地时区，伙伴通话沿用已确认 UTC+8。原始配置与固定日期活动开放表保留来源值。界面规则文字和刷新倒计时使用对应的新时刻。
-
-日期型存档标识保持原日／周语义；每日挑战的旧 08:00 逻辑日边界映射到同日 06:00。周挑战及商店保留已有周标识与领奖回执，只提前当前周的选择边界，避免升级时清空进度或重领。幻兽每日计数先按当前时刻减 6 小时再取日期，修复原先先取日期导致全天日键相同的问题。验证入口为 `Zjcs.Editor.RefreshClockAcceptance.Run`（整工程）与 `RunRules`（隔离规则）。已通过静态检查（152102 GUID）及 Unity 2022.3.57f1c2 隔离导入／编译，规则在 Edit Mode 和静音 Play Mode 均通过：05:59:59／06:00／08:00、幻兽日／周计数、旅行、商城日键、商店周键、每日挑战旧计数保留、周挑战旧期身份、跨期检查点与奖励幂等。该验证不代表各模块界面模拟点击或 Windows Player 已复测。整工程导入／编译因其他未提交伙伴动画验证文件 `OfficialBattleAnimatorPlaybackAcceptance.PartnerMaterials.cs` 中 `OfficialEquipmentJson` 名称未解析而中断，因此 `ProjectTools.Validate`、整工程流程和本次可执行版本发布未完成。现有 `test_home_shop_runtime.py` 的 8 项通过，另 6 项因其旧来源路径 `assets/official/rules.json` 不存在而未执行成功。
-
-
-耀星兑换沿用[商城](commerce.md)已确定的本地兑换方式，将原 RPC 改为共享角色背包事务；本项使用所选 884 的数量范围、兑换倍率及窗口顺序，防重回执与原子存档为离线适配，不标作已取得的服务器源码。
-
-本次迁移按全新游戏制作；除上述刷新时刻变更的边界兼容外，不增加旧单机存档的升级兼容逻辑。体力等新建状态遵循官方初始化与更新顺序；原存档缺字段时如何补值不再作为本次迁移前置决策。
-
-新角色初始体力确定为 300 点。初始发放数量在现有客户端及共享配置中未取得，由用户明确选择自然恢复上限作为单机初始值；该数量不标为官方服务器规则。恢复速度、自然上限、持有上限及数量更新顺序仍来自官方实现。
-
-新角色按用户确认从官方初心者位阶 `SubRank=1` 开始，对应创建事务与不迁移旧档的范围见[创角](character-creation.md)。原经验查询因此可直接读取所选位阶的 10 级基础上限；无需由验证夹具补写位阶后才能使用。正式经验环与公共玩家面板的接线及验证范围见上文。
-
-`HomeExperienceProfileValidation.Run` 已在隔离完整工程静音、有图形 Play Mode 通过新建角色的真实创建事务、初心者位阶落盘／重开、原查询的 1 级与 10 级上限，以及原经验奖励队列的普通增长、储存、赐福、隐藏补播、取消与释放回归；已查看四张 608×1080 经验环运行截图。此夹具的赛季、功能限制、属性与升级通知仍由明确的受控端点提供。静态检查通过（151980 个 GUID），Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 退出码均为 0；工程校验保留既有战斗 Edit Mode 的 Destroy 诊断。未构建或发布 Windows Player。
-
-离线与运行期间按本地时间累计产出，负时间差按零，时间检查点只前进。所有领取、升级、费用、随机结果和教学进度使用同一本地事务，失败回滚。
-
-家园环境的离线日历以角色档案创建时间为固定起点，使用官方时间倍率持续推进日内时刻与月相天数，避免重启后按公历日期跳相；旧档无创建时间时首次打开写入的角色槽时间作为起点。`OfflineMainlineProgressSession.OpenCharacter` 同步读取并持久化角色槽创建时间，保证主城与家园共用同一起点。
-
-用户确认时间结晶道具加速后的床铺经验和小推车产物留在各自设施内，允许超过设施容量，全部保留至手动领取后才进入背包或角色成长。先沿普通领取的原预览规则结算设施已有产物及余数，再将按原加速公式得到的新增数量加入该设施已结算存量；道具加速不创建普通产物入包账本，也不在睡眠结束或重开时自动领取。免费加速沿既有已确认发放规则。本地存储适配不标作服务端源码还原。旧自创补给、材料兑换已停用，仅保留兼容记录。
-
-普通挂机领取采用用户确认的客户端未结算预览结果，显示与领取共用所选 `HangUpUtils.GetUnsettledRewardCount` 的参数顺序、截断及小数余量秒数；每小时产量和加速仍保留各自原调用顺序。该客户端方法将家具等级倍率与累计小时数传给 `CalcRewardCount` 的位置，与每小时／加速路径不同；已核对所选程序集 IL。例如基础产量 50、等级倍率 2、固定加成 10、累计半小时，普通预览及领取为 70，每小时路径按半小时计算为 55。领取后保存原方法返回的小数余量秒数，不用领取数除以每小时产量回推。零产量可能产生非有限余量，本地存档拒绝写入非有限数值并保留原有累计时间。APK 未包含服务器普通领取算法，本项是用户确认的单机规则，不标作服务器源码还原。
-
-限时活动产出加成：用户确认新档初始没有活动加成记录，保留官方界面、记录筛选和计算，后续由已迁移活动生成记录；不预设固定活动或永久活动倍率。女神、月卡等已有明确来源的常驻属性加成继续沿原属性来源计算。官方证据为所选 `OutputAdditionUtils.GetCurrOutputGroupPropList`／`GetOutputAdditionPropValue` 读取 `player.mAllOutputAdditionDict`，以及床铺 `HangUpTimer` 调用额外产量／容量计算；现有客户端与共享实现尚未提供单机初始活动记录或开启调度。活动开启调度、正式床铺加成界面、按活动区间分段结算及全部收益消费者的接线仍未完成。
-
-动物／落叶生成的服务端方法体未取得：检索客户端 `HomeRandomReward`、公共数据 `PlayerHomeRandomRewardDataExt`、奖励通知及 RPC 代理，仅能确认刷新区间、容量、槽位、奖励配置和领取后的同步。用户确认本地方案：两类分别按原8～9小时／16～18小时随机区间，每周期在合法空槽生成1个原表奖励，离线补刷至9／6个上限；满额时不积攒刷新欠账，领取后继续下一周期。奖励、计时、随机状态和领取使用原本地存档事务，失败回滚。
-
-邮箱由实际本地系统提供邮件记录，初始收件箱为空。原远程运营、全服推送和玩家来信没有离线投递源，不自动生成邮件、附件或活动奖励；原 RPC 的读／领／删请求改为同一本地存档事务。
-
-真人组队、聊天、好友、真人赛事、魔物战争、交易所／拍卖等按[离线开放范围](offline-access.md)关闭；已接入口显示关闭提示，飞艇设施拦截点击。公会仍只保留单人范围，主城公会页尚未接线。账号、推送、网络预下载移除、Windows 等比竖屏与本地拍照按[设置与存档](settings-and-save.md)执行。暂不开放的联动及关联伙伴继续遵守离线范围页，不通过主城活动、餐桌或快捷入口重新开放。
-
-### 本地世界位阶与赐福
-
-用户确认保留原赐福规则、世界位阶保持本地，并授权选择本地表示。采用独立世界阶段：既有内容分档字段 `TreasurePlaneRank` 作为统一读取来源，与个人 Rank／SubRank、赛季编号分别处理。保留原 `IsBlessLevelOpen` 的实际赛季赐福记录、个人到达世界最高小阶、赐福等级表及满个人等级条件；不把“取消服务器开放锁”扩展成按个人当前位阶自动开启赐福。世界阶段不随个人突破自动推进；正式家园成长事务已接上述判定，手动推进入口、其他页面的统一及完整经验领奖表现仍待接通。
-
-### 已确认的本地接线与边界
-
-三份 DLL 与 [上游 LICENSE](https://github.com/EsotericSoftware/spine-runtimes/blob/4.2/LICENSE) 原样保留在 assets/official/spine-runtime/，逐项哈希、上游代码参考 URL 与客户端代码哈希在上述来源清单中。该运行库来自 Spine 官方，并非游戏 APK；游戏美术、骨骼、动画及控制配置来自固定原版。用户已明确授权这一运行时扩展例外。
-
-`scripts/prepare_home_random_rewards.py` 从固定 `871_156598` APK／匹配 CDN 读取 `Ground` 等8套地面上的 `HomeRandomReward`、11个动物／落叶预制体、`HomeSkinConfig` 与女神／售货机的 `HomeRandomRewardSlotData`。18套落叶图使用原 prefab／精灵。`home_random_reward_type`、`home_random_reward_group`、`home_random_reward_slot` 依原 C# 构造器解码，运行目录为 `assets/official/home-random-rewards/`，逐输入、输出及脚本 SHA256 见 `assets/reference/home-random-rewards/source-manifest.json`。刷新数量及离线补刷采用用户确认的本地方案，规则区别在家园功能文档维护。
-
-`prepare_weekly_merchant.py` 从固定 APK／匹配原版本 CDN 提取 `HomeNpcManagerConfig`、`npc_home_position`、主场景第0号生成点、`HomeNpcModel_8416`、`NpcModel_UI_8416` 和 `Npc_Portrait_8416`。保留原 ModelSlot 0.4 倍缩放、碰撞框、红点全局缩放、原骨骼／图集／body_8416 皮肤和 `npc_8416/idle_01` 动画，输出至 `assets/official/weekly-merchant/`。复用原 `DemonInavdeNpc` 四句剧情、8402／8416 立绘表情及 `activity_2_18`～`activity_2_21` 已转换语音。输入对象、资源及输出哈希登记于 `weekly-merchant/source-manifest.json`；商店从结算开始开放24小时为用户确认的单机调度，出场位置、首次对话和窗口内容来自原客户端。同一来源清单另登记原 `ItemIconAttachmentConfig` 类型7的 `ProbabilityTip` 预览标签，保留原 prefab 与 `ImgProbability` 贴图。
+- 用户确认原 08:00 的日／周刷新提前至 06:00，保留已有周期标识及领奖回执；本地时区与伙伴通话的 UTC+8 边界分别沿用各所属页。刷新规则的隔离验证已通过，完整工程和 Windows Player 尚未在该项变更后完成验证。
+- 新档初始体力为用户确认的 300，初心者位阶及新档范围见[创角](character-creation.md)。耀星兑换使用本地背包事务，详见[商城](commerce.md)。
+- 离线收益按本地时间累计，负时间差归零，领取等事务失败回滚。普通领取采用用户确认的客户端未结算预览结果；时间结晶加速的普通产物留在设施内，可超容量，须手动领取。限时活动加成新档为空，由实际活动产生记录。
+- 动物／落叶按用户确认的本地方案分别以 8～9／16～18 小时刷新，每周期在合法空槽生成一个原表奖励，离线补刷至 9／6 个上限，满额不积攒欠账。邮箱初始为空，由实际本地系统投递，不虚构远程邮件。
+- 世界位阶独立保存在 `TreasurePlaneRank`，保留原赐福条件，不随个人突破自动推进；手动推进入口及其他页面的统一仍待完成。
+- 真人社交、交易等按[离线开放范围](offline-access.md)处理；公会保留单人范围。家园时间以角色创建时间为起点，使用官方时间倍率。Spine 动画采用用户确认的[原生动画迁移方案](../asset-management.md#spine-角色动画迁移决策)。
 
 ## 尚未实现
 - 家园入口的黑色粒子遮挡已修复；技能试伤场景的主角缺失及其他渲染异常仍需单独复测，相关页面接线不代表主城画面完整。
