@@ -256,6 +256,8 @@ namespace Zjcs.Combat.Official
         public int TargetUnitId;
         public int TargetPositionUnitId;
         public float Delay;
+        // Runtime scheduling hint for the user-confirmed 24210 movement boundary.
+        internal bool WaitForMovementEnd;
         public bool AllowDeadSource;
         public bool AllowDeadTarget;
         public bool Sequential;

@@ -2152,6 +2152,7 @@ namespace Zjcs.Combat.Official
                 FightStatusTriggerRuntime.CollectMoveNearSkills(roundActor, StatusOwners(), eventKind,
                     movement, random);
             if (invocations.Count == 0) return;
+            DelayPortableFlameUntilMovementEnd(invocations, movement, movements);
             float triggerDelay = 0f;
             ExecuteConfiguredStatusSkills(invocations, casts, damageEvents, movements,
                 ref triggerDelay, out float triggerDuration, out float triggerActionDuration);

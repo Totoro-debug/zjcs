@@ -14,7 +14,8 @@ param(
     [switch]$HitScopeColdScene,
     [switch]$PortableFlameLife,
     [switch]$SunsetSwordSound,
-    [switch]$PortableFlameColdScene
+    [switch]$PortableFlameColdScene,
+    [switch]$PortableFlameMovement
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -38,6 +39,7 @@ if ($AllStatusViews -and -not $DarkStatus) { throw 'All original status views re
 if ($ColdStatusScene -and (-not $DarkStatus -or $AllStatusViews)) { throw 'Cold status scene requires the isolated dark-status lifecycle without the all-view probe.' }
 if ($ColdSummonScene -and (-not $SummonLife -or $ColdStatusScene)) { throw 'Cold summon scene requires the original summon lifespan diagnostic.' }
 if ($PortableFlameColdScene -and -not $PortableFlameLife) { throw 'Cold fire-ring hosts require the isolated friendly fire-ring lifecycle.' }
+if ($PortableFlameMovement -and (-not $PortableFlameLife -or $PortableFlameColdScene)) { throw 'Moving fire rings require the isolated lifecycle without a cold-host handoff.' }
 if ($ItemIds.Count -eq 0) { $ItemIds = if ($SunsetSwordSound) { @(10053) } elseif ($PortableFlameLife) { @(10061) } elseif ($AirCombo) { @(10006,10009,10052) } elseif ($ActionInvisible) { @(10025,10058) } elseif ($SummonLife) { @(10019,10025,10058) } elseif ($MoveScopeColdScene) { @(10029,10055) } elseif ($HitScopeColdScene) { @(10072) } elseif ($DarkStatus) { @(10029) } else { $active } }
 foreach ($item in $ItemIds) { if ($item -notin $active) { throw "Not an original active skill in scope: $item" } }
 if ($AirCombo -and @($ItemIds | Where-Object { $_ -notin @(10006,10009,10052) }).Count -gt 0) {
@@ -88,6 +90,7 @@ $settings = @{
     ZJCS_HIT_SCOPE_COLD_SCENE = $(if ($HitScopeColdScene) { '1' } else { $null })
     ZJCS_PORTABLE_FLAME_LIFECYCLE = $(if ($PortableFlameLife) { '1' } else { $null })
     ZJCS_PORTABLE_FLAME_COLD_SCENE = $(if ($PortableFlameColdScene) { '1' } else { $null })
+    ZJCS_PORTABLE_FLAME_MOVEMENT = $(if ($PortableFlameMovement) { '1' } else { $null })
     ZJCS_SUNSET_SWORD_SOUND = $(if ($SunsetSwordSound) { '1' } else { $null })
     ZJCS_STATUS_PROCESS_PHASE = $null
     ZJCS_STATUS_PROCESS_HANDOFF = $null
@@ -100,7 +103,7 @@ try {
         [Environment]::SetEnvironmentVariable($key, $settings[$key], 'Process')
     }
     foreach ($item in $ItemIds) { foreach ($direction in $Directions) {
-        $prefix = if ($PortableFlameColdScene) { "portable-flame-cold-$direction-" } elseif ($SunsetSwordSound) { "sunset-sword-sound-$direction-" } elseif ($PortableFlameLife) { "portable-flame-life-$direction-" } else { "native-$item-$direction-" }
+        $prefix = if ($PortableFlameMovement) { "portable-flame-movement-$direction-" } elseif ($PortableFlameColdScene) { "portable-flame-cold-$direction-" } elseif ($SunsetSwordSound) { "sunset-sword-sound-$direction-" } elseif ($PortableFlameLife) { "portable-flame-life-$direction-" } else { "native-$item-$direction-" }
         $run = Join-Path $workspacePath ($prefix + [guid]::NewGuid().ToString('N'))
         New-Item -ItemType Directory -Path $run | Out-Null
         $env:ZJCS_FIRST_PROMOTION_SKILL = [string]$item
@@ -153,6 +156,20 @@ try {
             foreach ($frame in @('before','after')) {
                 if (-not (Test-Path -LiteralPath (Join-Path $run "portable-flame-$frame-cold-scene.png"))) {
                     throw "Original friendly fire-ring host restoration frame $frame is missing: $run"
+                }
+            }
+        }
+        if ($PortableFlameMovement) {
+            foreach ($message in @('[Portable flame movement] Original ordinary path and single creator-owned 10860/10861/10862 damage passed;',
+                '[Portable flame movement] Original 15300/15301 body interpolation, same live 24210 attachment and visible arrival passed.',
+                '[Portable flame movement] Native proximity child began after the holder reached the original landing cell.')) {
+                if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch $message)) {
+                    throw "Original moving fire-ring assertions did not complete: $message ($run)"
+                }
+            }
+            foreach ($frame in @('before','during','after')) {
+                if (-not (Test-Path -LiteralPath (Join-Path $run "portable-flame-$frame-move.png"))) {
+                    throw "Original moving fire-ring frame is missing: $frame ($run)"
                 }
             }
         }

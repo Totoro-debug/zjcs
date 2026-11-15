@@ -192,6 +192,7 @@ namespace Zjcs.Combat.Official
             if (unit.StatusApplicationRejected?.Invoke(template) == true) return null;
             if (unit.Statuses == null) unit.Statuses = new List<FightBattleStatusState>();
             var origin = FightBattleStatusOrigin.Resolve(template);
+            FightPortableFlameRules.ReplaceDifferentSource(unit, template, origin);
             FightBattleStatusState existing = FindMatchingStatus(unit, template, origin);
             if (existing != null)
             {

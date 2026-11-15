@@ -45,6 +45,17 @@ namespace Zjcs.Presentation.Combat
             // They keep their original native models and have no equipped active skills.
             var offsets = new[] { new FightGridPoint(1, 0), new FightGridPoint(-1, 0),
                 new FightGridPoint(0, -1), new FightGridPoint(1, -1) };
+            if (ValidatePortableFlameMovement)
+            {
+                Require(firstPromotionFacingIndex == 2 && !PortableFlameColdRequested,
+                    "The independent moving fire-ring diagnostic faces up without a cold-host handoff.");
+                // Leave one legal cardinal approach cell between caster and target.
+                // Every friendly candidate is adjacent to the enemy, so the original
+                // cast still proves the distant creator's ally-held damage source.
+                enemy.X = player.X; enemy.Y = player.Y + 2;
+                offsets = new[] { new FightGridPoint(-1, 1), new FightGridPoint(1, 1),
+                    new FightGridPoint(-1, 2), new FightGridPoint(1, 2) };
+            }
             var ids = new List<int>();
             foreach (var offset in offsets)
             {
@@ -121,6 +132,7 @@ namespace Zjcs.Presentation.Combat
             Require(flameHolders.Count == 4 && flameHolders.ContainsKey(1)
                 && flameHolders.Keys.Count(id => flameCandidateIds.Contains(id)) == 3,
                 "Original 10061 must give itself and exactly three of four friendly models one ring each.");
+            ObservePortableFlameMovementStep(checkpoint);
         }
 
         private bool ObservePortableFlameFrame(OfficialBattleRuntimeController controller)
@@ -176,6 +188,7 @@ namespace Zjcs.Presentation.Combat
             {
                 flameRestoreFrame = true; CaptureName = "portable-flame-restored"; return true;
             }
+            if (ObservePortableFlameMovementFrame(controller)) return true;
             var player = controller.Checkpoint.Units.Single(value => value.Id == 1);
             if (!flameSecondRoundFrame && player.SkillState.Round == 2 && renderedOwners.Contains(1))
             {
@@ -199,6 +212,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (!ValidatePortableFlameLife) return;
             Require(flameComplete, "Original friendly fire-ring lifecycle did not finish.");
+            VerifyPortableFlameMovement();
             Require(!PortableFlameColdRequested || flameColdSceneComplete,
                 "Original friendly fire-ring host restoration did not finish.");
             // A new native sound host may reuse old playing IDs. Completion was

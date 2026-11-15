@@ -1006,6 +1006,8 @@ namespace Zjcs.Combat.Official
                                 SourceUnitId = sourceId,
                                 TargetUnitId = targetId,
                                 TargetPositionUnitId = candidate.Id,
+                                WaitForMovementEnd = status.ClassId == 24210 && movement != null
+                                    && !status.MoveNearSkillTriggerImmediately,
                                 Delay = status.MoveNearSkillTriggerImmediately
                                     ? 0f : Math.Max(0f, status.MoveNearSkillTriggerDelayTime)
                             });
