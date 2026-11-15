@@ -1087,6 +1087,8 @@ namespace Zjcs.Combat.Official
                     if (resolved.TriggeredStatusSkillInvocations.Count == 0)
                         triggerSkills.AddRange(resolved.TriggeredStatusSkills);
                     long actualHpLoss = Math.Max(0L, beforeHp - target.Hp);
+                    ExecuteIndomitableRecovery(target, resolved, casts, damageEvents, movements,
+                        hitDelay, ref lastDelay, ref statusTriggerDuration, ref statusTriggerActionDuration);
                     FightBattlePetEnergyRuntime.RecordOwnerDamage(units, target.Id, actualHpLoss);
                     CollectUnflinchingActions(target, actualHpLoss, skill, damage.DamageId);
                     FightStatusTriggerRuntime.ApplyAccumulatedDamage(target,

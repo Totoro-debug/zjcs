@@ -5,9 +5,7 @@ using System.Linq;
 namespace Zjcs.Combat.Official
 {
     /// <summary>
-    /// Official <c>FightStatusHpDecreaseUnitComponent</c>: while the owner HP ratio stays at or below
-    /// <c>UnitHpPer</c>, the configured statuses are applied again, up to <c>MaxCount</c> times. Only
-    /// the status list is executed; the component's trigger skills are not part of this pass.
+    /// Status trigger execution using original component configuration and confirmed offline rules.
     /// </summary>
     public static partial class FightStatusTriggerRuntime
     {
@@ -1287,6 +1285,11 @@ namespace Zjcs.Combat.Official
                     FightBattleStatusState status = initialStatuses[i];
                     if (status == null || !owner.Statuses.Contains(status)
                         || startingStatus != null && !ReferenceEquals(status, startingStatus)) continue;
+                    if (IsCurrentHpStackSource(status))
+                    {
+                        if (owner == unit) applied += RecalculateCurrentHpStacks(unit, status, catalog, atStart, random);
+                        continue;
+                    }
                     if (!FightSkillTriggerPolicy.AllowsStatus(sourceSkill, status)) continue;
                     if (owner == unit && status.HpTriggerPer > 0f)
                     {
@@ -1494,7 +1497,7 @@ namespace Zjcs.Combat.Official
             IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
             List<FightBattleStatusSkillInvocation> configuredTriggerSkills)
         {
-            if (status == null || !status.HasHpLimit || (atStart && status.HpLimitMaxCount == 0)
+            if (status == null || status.ClassId == 25013 || !status.HasHpLimit || (atStart && status.HpLimitMaxCount == 0)
                 || status.HpLimitListenerType == 0 && status.OwnerId > 0
                     && status.OwnerId != unit.Id
                 || unit.Hp > status.HpLimitLowerLimit

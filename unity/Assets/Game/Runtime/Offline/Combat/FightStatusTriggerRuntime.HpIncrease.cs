@@ -23,7 +23,7 @@ namespace Zjcs.Combat.Official
             {
                 var owner=listener.Key;var source=listener.Value;
                 var component=source?.Components?.HpIncreaseUnit;
-                if (component == null || owner.Ended || source.ForbiddenType != 0
+                if (component == null || IsCurrentHpStackSource(source) || owner.Ended || source.ForbiddenType != 0
                     || !owner.Statuses.Contains(source) || !FightSkillTriggerPolicy.AllowsStatus(sourceSkill,source)
                     || FightStatusLifecycle.ResolveTargetUnitId(source,component.TargetType,units) != changed.Id
                     || changed.Hp <= 0 && !component.TriggerWhenHpLessThan0

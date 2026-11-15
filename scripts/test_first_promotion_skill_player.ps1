@@ -18,7 +18,8 @@ param(
     [switch]$PortableFlameMovement,
     [switch]$PortableFlameReplacement,
     [switch]$PortableFlameAllyMovement,
-    [switch]$PortableFlameEnemyEntry
+    [switch]$PortableFlameEnemyEntry,
+    [switch]$FighterHpSecrets
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -37,7 +38,7 @@ $scope = @($rules.profession_base | Where-Object Profession -in @(1,2,6,10,11,15
 $active = @($rules.item | Where-Object { $_.ClassId -in $scope -and $_.ItemType -eq 100 } |
     Select-Object -ExpandProperty ClassId | Sort-Object)
 if ($scope.Count -ne 104 -or $active.Count -ne 57) { throw 'Review the original six-profession skill scope.' }
-if (@($AirCombo,$ActionInvisible,$SummonLife,$DarkStatus,$MoveScopeColdScene,$HitScopeColdScene,$PortableFlameLife,$SunsetSwordSound | Where-Object { $_ }).Count -gt 1) { throw 'Select one isolated status diagnostic.' }
+if (@($AirCombo,$ActionInvisible,$SummonLife,$DarkStatus,$MoveScopeColdScene,$HitScopeColdScene,$PortableFlameLife,$SunsetSwordSound,$FighterHpSecrets | Where-Object { $_ }).Count -gt 1) { throw 'Select one isolated status diagnostic.' }
 if ($AllStatusViews -and -not $DarkStatus) { throw 'All original status views require the isolated dark-status host.' }
 if ($ColdStatusScene -and (-not $DarkStatus -or $AllStatusViews)) { throw 'Cold status scene requires the isolated dark-status lifecycle without the all-view probe.' }
 if ($ColdSummonScene -and (-not $SummonLife -or $ColdStatusScene)) { throw 'Cold summon scene requires the original summon lifespan diagnostic.' }
@@ -46,7 +47,10 @@ if ($PortableFlameMovement -and (-not $PortableFlameLife -or $PortableFlameColdS
 if ($PortableFlameReplacement -and (-not $PortableFlameLife -or $PortableFlameColdScene -or $PortableFlameMovement)) { throw 'Replacing fire rings require their own two-caster lifecycle.' }
 if ($PortableFlameAllyMovement -and -not $PortableFlameReplacement) { throw 'Ally-held movement requires the original two-caster lifecycle.' }
 if ($PortableFlameEnemyEntry -and (-not $PortableFlameLife -or $PortableFlameMovement -or $PortableFlameReplacement -or $PortableFlameColdScene)) { throw 'Enemy entry requires its own original fire-ring lifecycle.' }
-if ($ItemIds.Count -eq 0) { $ItemIds = if ($SunsetSwordSound) { @(10053) } elseif ($PortableFlameLife) { @(10061) } elseif ($AirCombo) { @(10006,10009,10052) } elseif ($ActionInvisible) { @(10025,10058) } elseif ($SummonLife) { @(10019,10025,10058) } elseif ($MoveScopeColdScene) { @(10029,10055) } elseif ($HitScopeColdScene) { @(10072) } elseif ($DarkStatus) { @(10029) } else { $active } }
+if ($ItemIds.Count -eq 0) { $ItemIds = if ($FighterHpSecrets) { @(10008) } elseif ($SunsetSwordSound) { @(10053) } elseif ($PortableFlameLife) { @(10061) } elseif ($AirCombo) { @(10006,10009,10052) } elseif ($ActionInvisible) { @(10025,10058) } elseif ($SummonLife) { @(10019,10025,10058) } elseif ($MoveScopeColdScene) { @(10029,10055) } elseif ($HitScopeColdScene) { @(10072) } elseif ($DarkStatus) { @(10029) } else { $active } }
+if ($FighterHpSecrets -and @($ItemIds | Where-Object { $_ -ne 10008 }).Count -gt 0) {
+    throw 'The combined HP-secret fixture requires the original warrior profile 10008.'
+}
 foreach ($item in $ItemIds) { if ($item -notin $active) { throw "Not an original active skill in scope: $item" } }
 if ($AirCombo -and @($ItemIds | Where-Object { $_ -notin @(10006,10009,10052) }).Count -gt 0) {
     throw 'The airborne diagnostic requires original 10006/10009/10052.'
@@ -79,6 +83,7 @@ $settings = @{
     ZJCS_SKILLS_VALIDATE_SUMMON_ONLY = '1'
     ZJCS_GRAPH_CAPABILITY_ACCEPTANCE = '10600'
     ZJCS_BATTLE_INPUT_AUTOMATION = '1'
+    ZJCS_FIGHTER_HP_SECRETS = $(if ($FighterHpSecrets) { '1' } else { $null })
     ZJCS_FIRST_PROMOTION_SKILL = ''
     ZJCS_DIRECTIONAL_SKILL_FACING = ''
     ZJCS_VALIDATION_DIR = ''
@@ -230,8 +235,21 @@ try {
             }
         }
         foreach ($phase in 1..4) {
-            if (-not (Test-Path -LiteralPath (Join-Path $run "first-promotion-$item-phase-$phase.png"))) {
+            $frame = if ($FighterHpSecrets) { "fighter-hp-phase-$phase.png" } else { "first-promotion-$item-phase-$phase.png" }
+            if (-not (Test-Path -LiteralPath (Join-Path $run $frame))) {
                 throw "Original presentation phase $phase was not captured: $run"
+            }
+        }
+        if ($FighterHpSecrets) {
+            foreach ($message in @(
+                '[Fighter HP secrets] Current-HP tiers, fatal prevention, original 10990/24082, cultivation and checkpoint passed.',
+                '[Fighter HP secrets] Original recovery view, body animation and four rendered frames passed.')) {
+                if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch $message)) {
+                    throw "Combined HP-secret assertions did not complete: $message ($run)"
+                }
+            }
+            if (-not (Test-Path -LiteralPath (Join-Path $run 'fighter-hp-checkpoint.json'))) {
+                throw "Combined HP-secret checkpoint missing: $run"
             }
         }
         if ($AirCombo) {

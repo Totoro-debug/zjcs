@@ -53,6 +53,8 @@ namespace Zjcs.Presentation.Combat
 
         public static OfficialBattleGraphCapabilityValidation Configure(FightBattleCheckpoint checkpoint)
         {
+            if (Environment.GetEnvironmentVariable("ZJCS_FIGHTER_HP_SECRETS") == "1")
+                return ConfigureFighterHpSecrets(checkpoint);
             if (Environment.GetEnvironmentVariable("ZJCS_REFLECTION_ARMOR") == "1")
                 return ConfigureReflectionArmor(checkpoint);
             if (Environment.GetEnvironmentVariable("ZJCS_SWORD_COUNTERATTACK") == "1")
@@ -206,7 +208,7 @@ namespace Zjcs.Presentation.Combat
                 if (cast.SkillEntityId == 13643) nativeChildren++;
                 if (cast.SkillEntityId != skillId) return;
                 nativeCasts++; castTime = Time.realtimeSinceStartup;
-                if (ValidateSwordCounterattack) swordCounterattackClock = Time.time;
+                if (ValidateSwordCounterattack || ValidateFighterHpSecrets) swordCounterattackClock = Time.time;
                 if (firstPromotionItemId != 0) firstPromotionCastClock = Time.time;
                 var source = controller.TryGetUnitTransform(1);
                 var renderer = source ? source.GetComponentInChildren<ProfessionNativeSceneRenderer>(true) : null;
@@ -225,6 +227,7 @@ namespace Zjcs.Presentation.Combat
 
         public void ObserveStep(OfficialBattleRuntimeController controller)
         {
+            if (ObserveFighterHpSecretsStep(controller)) return;
             if (ObserveReflectionArmorStep(controller)) return;
             if (ObserveSwordCounterattackStep(controller)) return;
             ObserveTerrainScopeStep(controller);
@@ -358,6 +361,7 @@ namespace Zjcs.Presentation.Combat
         public void ObserveFrame(OfficialBattleRuntimeController controller)
         {
             CaptureName = null;
+            if (ObserveFighterHpSecretsFrame(controller)) return;
             if (ObserveReflectionArmorFrame(controller)) return;
             ObserveArcShieldSoundFrame(controller);
             ObservePortableFlameSoundFrame(controller);
@@ -506,6 +510,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (ValidateForcedMovement || ValidateFatalRevival || firstPromotionItemId != 0) Time.captureFramerate = previousCaptureFramerate;
             VerifyFatalRevival();
+            VerifyFighterHpSecrets();
             VerifyHitCustomCureTargets();
             VerifyShieldExpiry();
             VerifyFirstPromotionDeath(checkpoint);

@@ -24,6 +24,7 @@ namespace Zjcs.Combat.Official
         public FightDamageFormulaResult Formula;
         public FightCureFormulaResult Cure;
         public FightDamageEvent Settlement;
+        [NonSerialized] public FightBattleStatusState FatalPrevention;
         public long ShieldDamage;
         public List<FightBattleStatusState> BrokenShields = new List<FightBattleStatusState>();
         public bool IsCure;
@@ -32,7 +33,7 @@ namespace Zjcs.Combat.Official
             new List<FightBattleStatusStateTrigger>();
     }
 
-    public sealed class FightBattleHitExecutor
+    public sealed partial class FightBattleHitExecutor
     {
         private readonly FightDamageFormula formula;
         private readonly FightDamageSettlement settlement;
@@ -138,8 +139,8 @@ namespace Zjcs.Combat.Official
                     direct, out result.ShieldDamage, result.TriggeredStatusSkills, skill,
                     result.TriggeredStatusSkillInvocations, result.BrokenShields);
                 result.Formula = new FightDamageFormulaResult { Damage = absorbed, AbsoluteDamage = absoluteDirect };
-                result.Settlement = damageTest == null ? settlement.Apply(damageId, sourceEntity, targetEntity, absorbed)
-                    : damageTest.Settle(settlement, stageType, damageId, sourceEntity, targetEntity, target, absorbed);
+                result.Settlement = SettleDamage(damageId, sourceEntity, targetEntity, target, skill,
+                    absorbed, stageType, result);
             }
             else
             {
@@ -218,8 +219,8 @@ namespace Zjcs.Combat.Official
                     out result.ShieldDamage, result.TriggeredStatusSkills, skill,
                     result.TriggeredStatusSkillInvocations, result.BrokenShields);
                 result.Formula.Damage = damage;
-                result.Settlement = damageTest == null ? settlement.Apply(damageId, sourceEntity, targetEntity, damage)
-                    : damageTest.Settle(settlement, stageType, damageId, sourceEntity, targetEntity, target, damage);
+                result.Settlement = SettleDamage(damageId, sourceEntity, targetEntity, target, skill,
+                    damage, stageType, result);
             }
 
             target.Hp = targetEntity.Hp;
