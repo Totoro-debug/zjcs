@@ -20,6 +20,11 @@ namespace Zjcs.Offline.HomePlayerHealthUI
         public CharacterPropCalculationInputs Inputs { get; }
 
         public OfflineHomeNoBlessPlayerView(OfflinePlayerProgress player,
+            Rank worldRank, OfflineHomeNoBlessConfiguration rules)
+            : this(player, worldRank, player?.ActivedEquipResonanceLevel
+                ?? throw new ArgumentNullException(nameof(player)), rules) { }
+
+        public OfflineHomeNoBlessPlayerView(OfflinePlayerProgress player,
             Rank worldRank, uint activatedResonanceLevel, OfflineHomeNoBlessConfiguration rules)
         {
             if (player == null) throw new ArgumentNullException(nameof(player));

@@ -12,6 +12,9 @@ Invoke-ZjcsValidation -Name 'skills-equipment-selection-rules' -ScriptBlock {
         (Join-Path $runtime 'Offline/Equipment/OfficialEquipmentCatalog.cs'),
         (Join-Path $runtime 'Offline/Equipment/OfficialEquipmentCatalog.TermReplacement.cs'),
         (Join-Path $runtime 'Offline/Equipment/OfflineEquipmentProfile.cs'),
+        (Join-Path $runtime 'Official/HomeExperienceRules/Rank.cs'),
+        (Join-Path $runtime 'Official/HomeNoBlessRules/EquipResonanceInfo.cs'),
+        (Join-Path $runtime 'Official/HomeNoBlessRules/EquipResonanceInfoParser.cs'),
         (Join-Path $runtime 'Offline/Progression/OfflineEquipmentPropSource.cs'),
         (Join-Path $runtime 'Offline/Progression/OfflineEquipmentPropSource.BattleTerms.cs'),
         $reference, (Join-Path $PSScriptRoot 'fixtures/battle_equipment_selection.cs'))

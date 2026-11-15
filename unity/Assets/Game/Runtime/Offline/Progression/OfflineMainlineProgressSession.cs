@@ -76,6 +76,9 @@ namespace Zjcs.Offline.Progression
         public List<OfflineRankUnlockTime> RankUnlockTimes = new List<OfflineRankUnlockTime>();
         public OfflineWardrobeProgress Wardrobe = new OfflineWardrobeProgress();
         public OfflineEquipmentProfile Equipment = new OfflineEquipmentProfile();
+        // Common.PlayerData.Key(72): activation is persisted separately from
+        // the equipment-count condition. Missing records retain the original 0.
+        public uint ActivedEquipResonanceLevel;
         public OfflineSkillProfile Skills = new OfflineSkillProfile();
         public OfflinePetProgress Pets = new OfflinePetProgress();
         public OfflinePlayerHealthProgress Health = new OfflinePlayerHealthProgress();

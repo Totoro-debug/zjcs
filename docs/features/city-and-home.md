@@ -365,6 +365,8 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 原程序集及脚本元数据位于 `Runtime/Official/HomeNoBlessRules/`，正式家园显式引用对应本地属性适配程序集。
 
+家园去赐福投影新增直接读取角色已激活共鸣记录的入口，与普通共鸣共用真实存档字段；不把当前穿戴或强化条件当作激活记录。计算与版本边界见[装备页](equipment.md)，正式玩家面板所有者仍待装配。
+
 `scripts/prepare_home_player_status.py` 从官方 APK 中与所选 `884_156692` 校验一致的 Luban 包恢复全部 163 条状态、11 条作用域和 891 条词条配置。`Official/HomePlayerStatusRules` 直接迁入 `PlayerStatusEffectManager.GainStatusEffect` 及 `PlayerStatusEffectDataWrap` 的新建、重置、剩余／显示次数、失活、战斗占用与释放方法；同版面板枚举在提取时逐字核对。状态 ID 0 是有效官方记录，负的最大次数保持原值。完整配置载荷及代码来源见 [home-player-status-source-manifest.json](../../assets/reference/home-player-status-source-manifest.json)。
 
 `OfflinePlayerProgress.StatusEffects` 保存真实角色身份、状态 ID、来源、已用次数、激活标记、精确获得时间 ticks 与 `DateTimeKind`、单场扣次标记与占用战斗 ID；`OfflineHomePlayerStatuses` 在本地事务成功后安装完整记录集合并通知原面板，重复事件不再次授予，失败与无变化不发更新。UI 读取脱离可变存档对象的原规则投影，生产者回调对象也在提交前脱离，避免保留引用绕过落盘。新档为空；此记录层不补造料理消费、地图／剧情授予、战斗扣次或服务器到期调度，这些调用方仍待所属功能接线。原状态详情窗口、词条图标闭包／文本与作用域条件求值、正式 HUD 装配和 Windows Player 尚未完成。

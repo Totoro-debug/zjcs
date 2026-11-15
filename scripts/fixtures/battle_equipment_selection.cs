@@ -15,8 +15,14 @@ namespace Zjcs.Offline.Progression
     public static class CharacterPropHandleType { public const int Equip = 3, EquipResonance = 4; }
     public sealed class CharacterPropScoreContext
     {
+        public CharacterPropCalculationInputs Inputs;
         public long Common(IReadOnlyDictionary<int, long> values)
         { return values == null ? 0 : values.Sum(value => value.Value * (value.Key % 7 + 1)); }
+    }
+    public sealed class CharacterPropCalculationInputs
+    {
+        public int PlanesRank;
+        public IReadOnlyDictionary<int,long> EquipResonance;
     }
     public static class CharacterPropFormula
     {
@@ -27,6 +33,7 @@ namespace Zjcs.Offline.Progression
     public sealed class OfflinePlayerProgress
     {
         public int Level = 80, SubRank = 4;
+        public uint ActivedEquipResonanceLevel;
         public OfflineEquipmentProfile Equipment = new OfflineEquipmentProfile();
         public OfflineWardrobeProgress Wardrobe = new OfflineWardrobeProgress();
     }

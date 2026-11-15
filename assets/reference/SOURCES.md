@@ -1025,3 +1025,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 公共战斗目标关系的官方 `GameUtilsHandler.CheckTargetType`、`HitTargetType`、`GameCharacterType`、既有技能配置及本地绑定／验证哈希见[目标关系来源](battle-rules/target-types-source-manifest.json)，生成器为 `scripts/record_battle_target_types_sources.py`；未新增或改写美术载荷，实现与验证范围仅在[公共战斗页](../../docs/features/battle-execution.md)维护。
 
 家园成长接线来源：`scripts/prepare_home_experience_growth_validation.py` 登记所选原 `Player.TryRefreshLevel`／`PlayerBlessLevelUtils` 查询、同版经验配置及本地成长事务接线；输入与代码 SHA-256 见[成长接线清单](home-experience-growth-source-manifest.json)。无新增美术载荷；单机差异与当前验证范围在[家园页](../../docs/features/city-and-home.md)维护。
+
+家园共鸣记录来源：原 `PlayerData` 已激活字段与 `EquipResonanceInfoParser`、装备及家园各自所选配置、共享属性源和存档接线的 SHA-256 见[共鸣记录清单](home-resonance-profile-source-manifest.json)。未转换美术载荷；实现与验证范围在[装备页](../../docs/features/equipment.md)维护。

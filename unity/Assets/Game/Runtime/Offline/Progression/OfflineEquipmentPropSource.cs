@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Zjcs.Offline.Equipment;
+using Zjcs.Official.HomeNoBlessRules;
 
 namespace Zjcs.Offline.Progression
 {
@@ -16,11 +17,19 @@ namespace Zjcs.Offline.Progression
 
         private readonly OfficialEquipmentCatalog catalog;
         private readonly Func<int, int> rankOfSubRank;
+        private readonly EquipResonanceInfoParser resonances;
 
         public OfflineEquipmentPropSource(OfficialEquipmentCatalog equipmentCatalog, Func<int, int> rankResolver)
         {
             catalog = equipmentCatalog ?? throw new ArgumentNullException(nameof(equipmentCatalog));
             rankOfSubRank = rankResolver ?? (_ => 1);
+            // Preserve this catalog's selected values; reuse the recovered
+            // original parser without substituting another version's rows.
+            resonances = new EquipResonanceInfoParser(catalog.Rows("equip_resonance").Select(row => new EquipResonanceInfo {
+                Level = Integer(row, "Level"), EquipLevel = Integer(row, "EquipLevel"), EquipCount = Integer(row, "EquipCount"),
+                Effect = ObjectMap(row, "Effect").ToDictionary(pair => int.Parse(pair.Key, CultureInfo.InvariantCulture),
+                    pair => Convert.ToInt64(pair.Value, CultureInfo.InvariantCulture))
+            }));
         }
 
         public int HandleType => CharacterPropHandleType.Equip;
@@ -66,33 +75,13 @@ namespace Zjcs.Offline.Progression
         }
 
         /// <summary>
-        /// Official <c>EquipResonanceInfo</c>: the highest consecutive resonance level whose
-        /// "equipped items at or above this level" count is met; its effect replaces lower levels.
+        /// Original EquipResonanceInfoParser.PostParse / CalcEquipResonanceProps:
+        /// use the durable activated level and accumulate Effect into TotalEffect.
         /// </summary>
         public Dictionary<int, long> ResonanceProps(OfflinePlayerProgress player)
         {
             var result = new Dictionary<int, long>();
-            var levels = new List<int>();
-            foreach (OfflineEquippedSlot slot in player.Equipment.Equipped)
-            {
-                OfflineEquipmentInstance instance = Find(player, slot.InstanceId);
-                if (instance != null) levels.Add(instance.ItemLevel + instance.BlessLevel);
-            }
-            Dictionary<string, object> active = null;
-            foreach (Dictionary<string, object> row in catalog.Rows("equip_resonance")
-                .OrderBy(value => Integer(value, "Level")))
-            {
-                int requiredLevel = Integer(row, "EquipLevel");
-                int requiredCount = Integer(row, "EquipCount");
-                if (requiredCount <= 0 || levels.Count(value => value >= requiredLevel) < requiredCount)
-                    break;
-                active = row;
-            }
-            if (active == null || !(active.TryGetValue("Effect", out object raw)
-                && raw is Dictionary<string, object> effect)) return result;
-            foreach (KeyValuePair<string, object> entry in effect)
-                result[int.Parse(entry.Key, CultureInfo.InvariantCulture)]
-                    = Convert.ToInt64(entry.Value, CultureInfo.InvariantCulture);
+            resonances.CalcEquipResonanceProps(player.ActivedEquipResonanceLevel, result);
             return result;
         }
 
