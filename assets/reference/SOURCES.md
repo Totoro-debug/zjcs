@@ -862,6 +862,8 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 家园头像摄影棚所有权来源：`scripts/prepare_home_avatar_portraits.py` 复用已核验的所选 884 原摄影棚、设置、持久化、头像控件及 Windows 身体／武器／特效资源目录，不新增美术载荷。依赖来源清单、资源所有者与验证入口的输入输出 SHA-256 见[家园头像摄影棚清单](home-avatar-portraits-source-manifest.json)；实现和验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
 
+家园本地经验环境来源：`scripts/prepare_home_experience_environment.py` 登记所选原经验查询、已有本地世界阶段字段、真实角色投影及正式宿主属性／功能端口；无新增或替换美术。输入输出 SHA-256 见[本地经验环境清单](home-experience-environment-source-manifest.json)；本地世界位阶决策、规则与验证范围仅在[家园页](../../docs/features/city-and-home.md#本地世界位阶与赐福)维护。
+
 家园所选版本经验查询由 `scripts/prepare_home_experience_rules.py` 从 884 原共享代码及 APK 的 `defaultpackage_assets_config_luban.bundle`／`defaultpackage_assets_config_luban_astrologicaldestiny.bundle` 提取；原经验、赐福、等级限制、Rank→Season 表的对象凭据、输入输出 SHA-256、解析器及玩家服务适配见[规则来源](home-experience-rules-source-manifest.json)。`scripts/prepare_home_experience_profile.py` 登记真实角色存档投影、原 `ConsoleDataManager.Init`／`MsgPlayerBlessLevelUpdate` 消费顺序、原经验环与奖励处理器组合及夹具哈希，见[存档接线来源](home-experience-profile-source-manifest.json)。未新增替代美术或素材快照；实际实现、端口边界与验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
 
 家园公共玩家面板的血量／恢复料理查询由 `scripts/prepare_home_player_health_profile.py` 迁入所选 884 的 `Player.HasCureItem` 与料理分组边界；料理、物品类型和提示阈值直接解码所选 APK 主 Luban 包，原对象凭据、输入输出 SHA-256、真实存档适配与验证夹具来源见[玩家血量接线来源](home-player-health-profile-source-manifest.json)。复用已有官方面板、头像和字体／音频，不新增替代美术；当前实现与验证边界见[家园页](../../docs/features/city-and-home.md)。
