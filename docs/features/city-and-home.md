@@ -363,6 +363,8 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `scripts/prepare_home_no_bless_rules.py` 从所选 `884_156692` 提取原 `NoBlessPlayerInfoProvider` 所需的 1124 条等级限制、240 级累计共鸣、7 条赛季映射，以及 1396 条古遗物、21 条幻兽和属性曲线。`OfflineHomeNoBlessPlayerView` 在脱离存档的副本上按原装饰器顺序限制等级、装备槽、技能槽和幻兽，并把手动激活的共鸣累计效果传给共享 `CharacterPropCalculator`；超过设施上限的原始值只在副本中截断，原存档不被改写。`HomeFeatureRuntime.EnsureProgression` 现在在正式家园角色计算器创建前挂接同一份已校验的家园属性分表，使挂机、家园战力与后续面板投影共享官方古遗物／套装／幻兽／技能属性输入；世界位阶和已激活共鸣等级仍由面板所有者显式提供，不从个人位阶或装备自动推导。`HomeNoBlessProfileValidation.Run` 已通过真实角色属性目录、赐福门槛、未装配古遗物的 1 级回退、元素共享等级、幻兽曲线与存档不变检查。配置与来源见 [home-no-bless-rules-source-manifest.json](../../assets/reference/home-no-bless-rules-source-manifest.json)。正式玩家面板的真实世界位阶／共鸣所有者及 Windows Player 仍未接通。
 
+原程序集及脚本元数据位于 `Runtime/Official/HomeNoBlessRules/`，正式家园显式引用对应本地属性适配程序集。
+
 `scripts/prepare_home_player_status.py` 从官方 APK 中与所选 `884_156692` 校验一致的 Luban 包恢复全部 163 条状态、11 条作用域和 891 条词条配置。`Official/HomePlayerStatusRules` 直接迁入 `PlayerStatusEffectManager.GainStatusEffect` 及 `PlayerStatusEffectDataWrap` 的新建、重置、剩余／显示次数、失活、战斗占用与释放方法；同版面板枚举在提取时逐字核对。状态 ID 0 是有效官方记录，负的最大次数保持原值。完整配置载荷及代码来源见 [home-player-status-source-manifest.json](../../assets/reference/home-player-status-source-manifest.json)。
 
 `OfflinePlayerProgress.StatusEffects` 保存真实角色身份、状态 ID、来源、已用次数、激活标记、精确获得时间 ticks 与 `DateTimeKind`、单场扣次标记与占用战斗 ID；`OfflineHomePlayerStatuses` 在本地事务成功后安装完整记录集合并通知原面板，重复事件不再次授予，失败与无变化不发更新。UI 读取脱离可变存档对象的原规则投影，生产者回调对象也在提交前脱离，避免保留引用绕过落盘。新档为空；此记录层不补造料理消费、地图／剧情授予、战斗扣次或服务器到期调度，这些调用方仍待所属功能接线。原状态详情窗口、词条图标闭包／文本与作用域条件求值、正式 HUD 装配和 Windows Player 尚未完成。
