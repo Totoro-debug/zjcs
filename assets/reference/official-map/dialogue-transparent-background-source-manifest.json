@@ -1,0 +1,30 @@
+{
+  "manifest": "884_156692",
+  "source": {
+    "bundle": "defaultpackage_assets_image_ui_dialogue.bundle",
+    "bundle_hash": "9a2956525b907e44fbdf9e255fb3c2ad",
+    "path_id": "-515404102175801489",
+    "origin": "apk_zip",
+    "manifest": "884_156692",
+    "apk_manifest": "881_156673",
+    "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+    "apk_entry": "assets/yoo/DefaultPackage/9a2956525b907e44fbdf9e255fb3c2ad.bundle",
+    "raw_size": 74651,
+    "raw_sha256": "42afdfb2bf24409e43eab3f281f3f3e47ff766d9e380e07438223232910c1816"
+  },
+  "raw_sha256": "20c48ea8993e52a95254569c2f3864e75e687c82f37836ba7128abbcd131ac99",
+  "decoded_sha256": "6b92d03dd99161e0ed9a71470e216ad8fdcbdd65ae1ddedfa371359f9bc3defc",
+  "operation": "User-requested removal of baked dark shadow: alpha=0 only where max(R,G,B)<64; all other RGBA pixels unchanged; original size, pivot, border and PPU retained",
+  "removed_pixels": 120084,
+  "binding": "OfficialWorldUiRenderer -> DialogueBackgroundAppearance.Apply -> Resources/Story/TransparentDialogueBackground",
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/StoryUI/Resources/Story/TransparentDialogueBackground.png",
+      "sha256": "779a2a6a52ee621a3537e3fd39aaff638c2c3b96c1ddc8e758bf7d940b638d5d"
+    },
+    {
+      "path": "unity/Assets/Official/StoryUI/Resources/Story/TransparentDialogueBackground.png.meta",
+      "sha256": "92cafa0a78d94286193b71486616e5fd525f76a823ca722f672d1aae560a8d83"
+    }
+  ]
+}

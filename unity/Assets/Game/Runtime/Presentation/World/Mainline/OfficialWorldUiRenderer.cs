@@ -124,6 +124,7 @@ namespace Zjcs.Presentation.World
                     restored.SetActive(false);
                     var fields = Array.Find(nativeData.components, value => value.panel == panel.key
                         && (value.type == "TalkDialog" || value.type == "OptionTalkDialogPanel")).fields;
+                    DialogueBackgroundAppearance.Apply(restored);
                     restored.transform.Find(fields.mBlackBgImg.Substring(panel.key.Length + 2)).GetComponent<Image>().color = fields.mBlackBgColorDarkLess;
                     nativePanels.Add(panel.key, restored);
                     foreach (Transform child in restored.GetComponentsInChildren<Transform>(true))
@@ -133,6 +134,8 @@ namespace Zjcs.Presentation.World
                 var renderer = new OfficialBattleHudRenderer(battleHud, catalog.FindSprite);
                 GameObject panelObject = renderer.CreateSubtree(panel.BuildRoot(), canvasObject.transform, bind);
                 panelObject.name = panel.key;
+                if (panel.key == "TalkDialog" || panel.key == "OptionTalkDialog")
+                    DialogueBackgroundAppearance.Apply(panelObject);
                 if (panel.key != "WorldCanvas") panelObject.SetActive(false);
                 renderers.Add(panel.key, renderer);
             }
