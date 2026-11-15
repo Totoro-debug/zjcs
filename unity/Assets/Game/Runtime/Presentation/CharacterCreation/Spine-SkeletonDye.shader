@@ -86,9 +86,10 @@ Shader "Zjcs/CharacterCreation/OfficialSpineDye" {
 				hsv.z *= 1.0 + hsvChange.z;
 				texColor.rgb = hsvToRgb(hsv);
 
-				#if defined(_STRAIGHT_ALPHA_INPUT)
+				// Native atlas PNGs are decoded to straight RGBA. Convert to
+				// premultiplied output for the original One/OneMinusSrcAlpha blend,
+				// including RGB retained in fully transparent texels.
 				texColor.rgb *= texColor.a;
-				#endif
 				return texColor * i.vertexColor;
 			}
 			ENDCG
