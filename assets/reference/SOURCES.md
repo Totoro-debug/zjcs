@@ -1,5 +1,7 @@
 # 官方来源与提取入口
 
+技能官方描述与特殊词条从所选 `884_156692` 的 `profession_base`、`skill`、`item` 表及已核验的中文语言 rawfile 提取，键规则依据反编译的 `LanguageUtils`、`SkillHyperLinkDataProvider` 与词条／怪物超链接处理器。原始包身份、配置和语言哈希、原代码输入及文档输出哈希见[技能说明来源](skill-documentation-source-manifest.json)，复核入口为 `scripts/prepare_skill_documentation.py`；仅移除显示标记，保留原文及原有高阶技能说明，不在技能文档记录详细实现或测试流水。
+
 对白透明边缘：scripts/prepare_dialogue_transparent_background.py 从所选 884_156692 APK 的 image_ui_dialogue 提取 ImgBg_Talk，保留原始输入并生成透明阴影派生载荷；输入输出 SHA-256、APK／bundle／Sprite 对象及显式绑定见[来源清单](official-map/dialogue-transparent-background-source-manifest.json)。
 
 
