@@ -2952,3 +2952,6 @@ unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHitReceiptPlayback.c
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.ChainedHits.cs* text eol=lf
 unity/Assets/Official/Combat/NativeMonsterAppearance/Textures/*.asset whitespace=-blank-at-eol
 unity/Assets/Official/Combat/NativeMonsters/Resources/Combat/NativeMonsters/Shadows/Prefabs/*.prefab text eol=lf
+
+# Keep the sunset-sword source verifier hash stable on Windows checkouts.
+scripts/prepare_battle_sunset_sword_sources.py text eol=lf

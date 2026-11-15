@@ -645,6 +645,10 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightActionSkill.cs",
       "sha256": "30ae4b88a719ef3eb459550e3174343f33645d0fc24f6686241688ad13f2c21c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyPlayableSound.cs",
+      "sha256": "f58057d9ca971d45618279659b27e0fd508c685065af7b3476a95d566ce788ca"
     }
   ],
   "original_assemblies": [
@@ -685,12 +689,154 @@
     {
       "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/Global/10022.prefab.meta",
       "sha256": "8e2330417f630d8938ff1709831ecb5285f1cc4fee7cd815c03f05d400f2abd5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/15F9A10C-944B-4921-A472-DB6FBE2BE941.asset",
+      "sha256": "5b2efa4c4b25628b7f2fe6102be580b48681de75567906acbe87c13883e8ac9b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/15F9A10C-944B-4921-A472-DB6FBE2BE941.asset.meta",
+      "sha256": "1bc93f270e7f9ae225f50b155aa1de3b42308984b40ac783c614e8a7ecca8405"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/1D7099DD-8FD5-4147-BE1A-ADDD6AB2FC84.asset",
+      "sha256": "8f8a1e03ea43ac616b32baa92bdae22cdb5b379074171c05ba03fe3336f638f1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/1D7099DD-8FD5-4147-BE1A-ADDD6AB2FC84.asset.meta",
+      "sha256": "7936e85fe9f63ef9e310554734eeb92798f9d1647a0b4e4bb8984d01a1c11210"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/34547BB3-29A1-4FA1-A83C-92DEA21CB876.asset",
+      "sha256": "a2998f21c3f19c3ed1a9d5ae3a3554bff90e0ed22d46c4513ee28a5e29dc6be4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/34547BB3-29A1-4FA1-A83C-92DEA21CB876.asset.meta",
+      "sha256": "214e0bea7683f52d8fa05dc5da9470fa40d0ac35ea741e7595ec828ad16cf640"
+    }
+  ],
+  "original_sound_cues": [
+    {
+      "event_id": 3496259616,
+      "name": "Skill_10053_1",
+      "asset_guid": "e10b2695a749df846a2ccec2da76b8a8",
+      "delay": 0.0
+    },
+    {
+      "event_id": 3496259619,
+      "name": "Skill_10053_2",
+      "asset_guid": "a95d8fe55eef9444190c7f381cf2460a",
+      "delay": 0.5
+    },
+    {
+      "event_id": 3496259618,
+      "name": "Skill_10053_3",
+      "asset_guid": "53676e2558584144397fac4e76f3d83e",
+      "delay": 1.25
+    }
+  ],
+  "windows_sound_cues": [
+    {
+      "event_id": 3496259616,
+      "name": "Skill_10053_1",
+      "asset_guid": "cf498c5c79a650ad909c6dea4a8fcf4b",
+      "delay": 0.0
+    },
+    {
+      "event_id": 3496259619,
+      "name": "Skill_10053_2",
+      "asset_guid": "1a405d99062c56e1bf53183d65d14650",
+      "delay": 0.5
+    },
+    {
+      "event_id": 3496259618,
+      "name": "Skill_10053_3",
+      "asset_guid": "9f64c22578045a339db4969b9c5638d6",
+      "delay": 1.25
+    }
+  ],
+  "original_sound_events": [
+    {
+      "id": 3496259619,
+      "name": "Skill_10053_2",
+      "guid": "15F9A10C-944B-4921-A472-DB6FBE2BE941",
+      "source": {
+        "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/15F9A10C-944B-4921-A472-DB6FBE2BE941.asset",
+        "bytes": 514,
+        "sha256": "1f3556c2a760b0b58836f8f49975c2d67829701349f351323e336759c20c7c45"
+      },
+      "banks": [
+        "Battle_SFX_02"
+      ],
+      "actions": [
+        890104160
+      ]
+    },
+    {
+      "id": 3496259618,
+      "name": "Skill_10053_3",
+      "guid": "1D7099DD-8FD5-4147-BE1A-ADDD6AB2FC84",
+      "source": {
+        "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/1D7099DD-8FD5-4147-BE1A-ADDD6AB2FC84.asset",
+        "bytes": 514,
+        "sha256": "8a3ab02e5eb4e10c03f4970c355969f3d3a4dda06ec223c52d2d9b9343a8b602"
+      },
+      "banks": [
+        "Battle_SFX_02"
+      ],
+      "actions": [
+        832199096
+      ]
+    },
+    {
+      "id": 3496259616,
+      "name": "Skill_10053_1",
+      "guid": "34547BB3-29A1-4FA1-A83C-92DEA21CB876",
+      "source": {
+        "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/34547BB3-29A1-4FA1-A83C-92DEA21CB876.asset",
+        "bytes": 514,
+        "sha256": "28bf3764cfd6ffbe88344251609bc3062be00983cc3d41775fb08ae3294f1563"
+      },
+      "banks": [
+        "Battle_SFX_02"
+      ],
+      "actions": [
+        318877126
+      ]
     }
   ],
   "runtime_inputs": [
     {
       "path": "assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json",
       "sha256": "9e19958ac436c87a774a947016954bb93fd870d3c86200104f8baff94558cfeb"
+    },
+    {
+      "path": "assets/reference/battle-animation/native-sound-sources-source-manifest.json",
+      "sha256": "9c095c5e2b16414129e96fea3f2392f65247e395a885d2a22f567d92f265e50b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/15F9A10C-944B-4921-A472-DB6FBE2BE941.asset",
+      "sha256": "1f3556c2a760b0b58836f8f49975c2d67829701349f351323e336759c20c7c45"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/15F9A10C-944B-4921-A472-DB6FBE2BE941.asset.meta",
+      "sha256": "46510b9c5bd6ac8a676c344ccfe8501a25ad7877d5e4526843cc654946c172ef"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/1D7099DD-8FD5-4147-BE1A-ADDD6AB2FC84.asset",
+      "sha256": "8a3ab02e5eb4e10c03f4970c355969f3d3a4dda06ec223c52d2d9b9343a8b602"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/1D7099DD-8FD5-4147-BE1A-ADDD6AB2FC84.asset.meta",
+      "sha256": "13ce29fe6655e78ebb3576a15ff74c7b89108bb82db2922eeda605597bee133d"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/34547BB3-29A1-4FA1-A83C-92DEA21CB876.asset",
+      "sha256": "28bf3764cfd6ffbe88344251609bc3062be00983cc3d41775fb08ae3294f1563"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/34547BB3-29A1-4FA1-A83C-92DEA21CB876.asset.meta",
+      "sha256": "0c7e044bccc496f4dad1a99e6b20e383c655834c5f5fa909ac4727447ea48888"
     },
     {
       "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11250/11250.prefab",
@@ -743,7 +889,7 @@
   ],
   "verifier": {
     "path": "scripts/prepare_battle_sunset_sword_sources.py",
-    "sha256": "1ed1f079e18f8619708e62f3011cda7ffa668a6b93fd28101040ac039a9ca9bc"
+    "sha256": "a85f0bac47ec6141396b14d3192442c4cbae886aa13a88c6a17d8f3d25a3a342"
   },
   "operation": "APK-first verification of original 10053 five-hit area graph and existing Windows native assets. Historical runtime inputs are retained; behavior and validation limits belong to docs/features/skills-fighter.md."
 }

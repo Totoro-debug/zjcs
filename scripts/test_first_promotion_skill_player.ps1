@@ -12,7 +12,8 @@ param(
     [switch]$ColdSummonScene,
     [switch]$MoveScopeColdScene,
     [switch]$HitScopeColdScene,
-    [switch]$PortableFlameLife
+    [switch]$PortableFlameLife,
+    [switch]$SunsetSwordSound
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -31,11 +32,11 @@ $scope = @($rules.profession_base | Where-Object Profession -in @(1,2,6,10,11,15
 $active = @($rules.item | Where-Object { $_.ClassId -in $scope -and $_.ItemType -eq 100 } |
     Select-Object -ExpandProperty ClassId | Sort-Object)
 if ($scope.Count -ne 104 -or $active.Count -ne 57) { throw 'Review the original six-profession skill scope.' }
-if (@($AirCombo,$ActionInvisible,$SummonLife,$DarkStatus,$MoveScopeColdScene,$HitScopeColdScene,$PortableFlameLife | Where-Object { $_ }).Count -gt 1) { throw 'Select one isolated status diagnostic.' }
+if (@($AirCombo,$ActionInvisible,$SummonLife,$DarkStatus,$MoveScopeColdScene,$HitScopeColdScene,$PortableFlameLife,$SunsetSwordSound | Where-Object { $_ }).Count -gt 1) { throw 'Select one isolated status diagnostic.' }
 if ($AllStatusViews -and -not $DarkStatus) { throw 'All original status views require the isolated dark-status host.' }
 if ($ColdStatusScene -and (-not $DarkStatus -or $AllStatusViews)) { throw 'Cold status scene requires the isolated dark-status lifecycle without the all-view probe.' }
 if ($ColdSummonScene -and (-not $SummonLife -or $ColdStatusScene)) { throw 'Cold summon scene requires the original summon lifespan diagnostic.' }
-if ($ItemIds.Count -eq 0) { $ItemIds = if ($PortableFlameLife) { @(10061) } elseif ($AirCombo) { @(10006,10009,10052) } elseif ($ActionInvisible) { @(10025,10058) } elseif ($SummonLife) { @(10019,10025,10058) } elseif ($MoveScopeColdScene) { @(10029,10055) } elseif ($HitScopeColdScene) { @(10072) } elseif ($DarkStatus) { @(10029) } else { $active } }
+if ($ItemIds.Count -eq 0) { $ItemIds = if ($SunsetSwordSound) { @(10053) } elseif ($PortableFlameLife) { @(10061) } elseif ($AirCombo) { @(10006,10009,10052) } elseif ($ActionInvisible) { @(10025,10058) } elseif ($SummonLife) { @(10019,10025,10058) } elseif ($MoveScopeColdScene) { @(10029,10055) } elseif ($HitScopeColdScene) { @(10072) } elseif ($DarkStatus) { @(10029) } else { $active } }
 foreach ($item in $ItemIds) { if ($item -notin $active) { throw "Not an original active skill in scope: $item" } }
 if ($AirCombo -and @($ItemIds | Where-Object { $_ -notin @(10006,10009,10052) }).Count -gt 0) {
     throw 'The airborne diagnostic requires original 10006/10009/10052.'
@@ -60,6 +61,9 @@ if ($PortableFlameLife -and (@($ItemIds | Where-Object { $_ -ne 10061 }).Count -
     @($Directions | Where-Object { $_ -ne 'up' }).Count -gt 0)) {
     throw 'The controlled four-friendly fire-ring lifecycle requires original 10061 facing up.'
 }
+if ($SunsetSwordSound -and @($ItemIds | Where-Object { $_ -ne 10053 }).Count -gt 0) {
+    throw 'The three-event sound diagnostic requires original 10053.'
+}
 $settings = @{
     ZJCS_REPOSITORY_ROOT = $repository
     ZJCS_SKILLS_VALIDATE_SUMMON_ONLY = '1'
@@ -81,6 +85,7 @@ $settings = @{
     ZJCS_STATUS_HIT_SCOPE_ACCEPTANCE = $(if ($HitScopeColdScene) { '1' } else { [Environment]::GetEnvironmentVariable('ZJCS_STATUS_HIT_SCOPE_ACCEPTANCE', 'Process') })
     ZJCS_HIT_SCOPE_COLD_SCENE = $(if ($HitScopeColdScene) { '1' } else { $null })
     ZJCS_PORTABLE_FLAME_LIFECYCLE = $(if ($PortableFlameLife) { '1' } else { $null })
+    ZJCS_SUNSET_SWORD_SOUND = $(if ($SunsetSwordSound) { '1' } else { $null })
     ZJCS_STATUS_PROCESS_PHASE = $null
     ZJCS_STATUS_PROCESS_HANDOFF = $null
     ZJCS_SUMMON_DEATH_ACCEPTANCE = $(if ($ActionInvisible -or $SummonLife) { $null } else { [Environment]::GetEnvironmentVariable('ZJCS_SUMMON_DEATH_ACCEPTANCE', 'Process') })
@@ -92,7 +97,7 @@ try {
         [Environment]::SetEnvironmentVariable($key, $settings[$key], 'Process')
     }
     foreach ($item in $ItemIds) { foreach ($direction in $Directions) {
-        $prefix = if ($PortableFlameLife) { "portable-flame-life-$direction-" } else { "native-$item-$direction-" }
+        $prefix = if ($SunsetSwordSound) { "sunset-sword-sound-$direction-" } elseif ($PortableFlameLife) { "portable-flame-life-$direction-" } else { "native-$item-$direction-" }
         $run = Join-Path $workspacePath ($prefix + [guid]::NewGuid().ToString('N'))
         New-Item -ItemType Directory -Path $run | Out-Null
         $env:ZJCS_FIRST_PROMOTION_SKILL = [string]$item
@@ -131,6 +136,9 @@ try {
                     throw "Original friendly fire-ring lifecycle frame $frame was not captured: $run"
                 }
             }
+        }
+        if ($SunsetSwordSound -and -not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Sunset sword sound] Original three native events, authored order/times and completion passed.')) {
+            throw "Original Skill_10053 native sound assertions did not complete: $run"
         }
         foreach ($phase in 1..4) {
             if (-not (Test-Path -LiteralPath (Join-Path $run "first-promotion-$item-phase-$phase.png"))) {
