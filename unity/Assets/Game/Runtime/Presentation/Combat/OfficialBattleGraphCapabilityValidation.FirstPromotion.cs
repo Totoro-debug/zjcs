@@ -336,6 +336,7 @@ namespace Zjcs.Presentation.Combat
             probe.ConfigureDarkStatusDiagnostic(checkpoint);
             probe.ConfigureChainedHitDiagnostic(checkpoint, enemy, dx, dy);
             probe.ConfigureArcShieldDiagnostic(checkpoint);
+            probe.ConfigurePortableFlameDiagnostic(checkpoint);
             if (itemId == 10053) probe.firstPromotionCaptureAfter = 1.7f;
             // Preserve short authored particle/action phases across cold-loading frames.
             probe.previousCaptureFramerate = Time.captureFramerate;
@@ -372,14 +373,16 @@ namespace Zjcs.Presentation.Combat
             if (firstPromotionItemId == 10061)
             {
                 var ring = player.Statuses.Single(value => value.ClassId == 24210);
-                var child = step.SkillCasts.Single(value => value.SkillEntityId == 10860);
-                var damage = step.DamageEvents.Single(value => value.SkillEntityId == 10860);
+                var children = step.SkillCasts.Where(value => value.SkillEntityId == 10860).ToArray();
+                var hits = step.DamageEvents.Where(value => value.SkillEntityId == 10860).ToArray();
                 Require(ring.CreatorId == player.Id && ring.ApplyingSkillItemId == 10061
                     && ring.SourceSkillRank == 2 && ring.SourceSkillLevel == 20
-                    && child.ActorId == player.Id && child.Slot < 0
-                    && damage.SourceId == player.Id && damage.TargetId != player.Id
-                    && damage.HitEntityId == 10861 && damage.DamageEntityId == 10862
-                    && damage.Damage < 0 && damage.BeforeHp > damage.AfterHp,
+                    && children.Length == hits.Length && children.Length >= 1
+                    && (ValidatePortableFlameLife || children.Length == 1)
+                    && children.All(child => child.ActorId == player.Id && child.Slot < 0)
+                    && hits.All(damage => damage.SourceId == player.Id && damage.TargetId != player.Id
+                        && damage.HitEntityId == 10861 && damage.DamageEntityId == 10862
+                        && damage.Damage < 0 && damage.BeforeHp > damage.AfterHp),
                     "Original 24210 proximity skill must use its creator and original 10860 damage.");
                 Debug.Log("[Portable flame] Original 11200/24210 creator and 10860 proximity damage passed.");
             }

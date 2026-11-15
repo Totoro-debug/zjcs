@@ -233,6 +233,7 @@ namespace Zjcs.Presentation.Combat
             ObserveDarkStatusStep(controller.Checkpoint);
             ObserveChainedHitStep(controller.Checkpoint);
             ObserveArcShieldStep(controller.Checkpoint);
+            ObservePortableFlameStep(controller.Checkpoint);
             if (ValidateApproach && approachClass == 0)
             {
                 var approach = controller.Checkpoint.Receipts.Last().Event.Movements
@@ -357,6 +358,7 @@ namespace Zjcs.Presentation.Combat
             CaptureName = null;
             if (ObserveReflectionArmorFrame(controller)) return;
             ObserveArcShieldSoundFrame(controller);
+            ObservePortableFlameSoundFrame(controller);
             if (ObserveSwordCounterattackFrame(controller)) return;
             ObserveChainedHitViews(controller);
             ObserveFirstPromotionGeneration(controller);
@@ -460,6 +462,7 @@ namespace Zjcs.Presentation.Combat
             if (ObserveShieldExpiryFrame(controller)) return;
             if (ObserveChainedHitFrame()) return;
             if (ObserveArcShieldFrame(controller)) return;
+            if (ObservePortableFlameFrame(controller)) return;
             if (captured && !finisherScheduled)
             {
                 var player = controller.Checkpoint.Units.Single(value => value.Id == 1);
@@ -509,6 +512,7 @@ namespace Zjcs.Presentation.Combat
             VerifyTerrainScopeLifecycle();
             VerifyChainedHitDiagnostic();
             VerifyArcShieldDiagnostic();
+            VerifyPortableFlameDiagnostic();
             VerifySwordCounterattack();
             VerifyReflectionArmor();
             if (firstPromotionItemId != 0) Require(firstPromotionFrameCount == FirstPromotionFrameTimes.Length,
