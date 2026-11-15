@@ -242,7 +242,8 @@ namespace Zjcs.Presentation.Combat
                     if (prop.Id == catalog.PropertyType("Speed")) prop.Value = speed;
                     // Isolate the authored facing of the adjacent-target probes. Ordinary landing AI
                     // may otherwise relocate around this already adjacent target.
-                    if ((itemId == 10042 || itemId == 10053 || itemId == 10061) && unit == player
+                    if ((itemId == 10042 || itemId == 10053 || itemId == 10061
+                            || itemId == 10008 && Environment.GetEnvironmentVariable("ZJCS_THUNDER_MYSTERY_ACCEPTANCE") == "1") && unit == player
                         && (prop.Id == catalog.PropertyType("MoveDist")
                             || prop.Id == catalog.PropertyType("FixedMoveDist"))) prop.Value = 0;
                 }
@@ -250,6 +251,16 @@ namespace Zjcs.Presentation.Combat
                 unit.Turn.Speed = speed;
             }
             // Give the original healing AI a valid wounded target in this fixture.
+            if (Environment.GetEnvironmentVariable("ZJCS_THUNDER_MYSTERY_ACCEPTANCE") == "1")
+            {
+                Require(itemId == 10008, "The lightning diagnostic uses the original 10008 hit.");
+                var passive = catalog.CreateStatus(25000, player.Id, player.Id, 9925000,
+                    25000, 10502, 2, 20, player.SubRank,
+                    catalog.CalculateSkillProps(25000, 2, 20, player.SubRank)
+                        .Select(pair => new FightPropertyValue { Id = pair.Key, Value = pair.Value }).ToList());
+                passive.Components.HitSkill.Rate = 1f; // Isolate the original response from its 30% roll.
+                player.Statuses.Add(passive);
+            }
             if (skill.SkillType == 3) player.Hp = player.Turn.Hp = player.MaxHp / 2;
             if (itemId == 10066)
             {
@@ -348,6 +359,15 @@ namespace Zjcs.Presentation.Combat
         {
             var player = checkpoint.Units.Single(unit => unit.Id == 1);
             var cast = step.SkillCasts.Single(value => value.ActorId == player.Id && value.Slot == 0);
+            if (Environment.GetEnvironmentVariable("ZJCS_THUNDER_MYSTERY_ACCEPTANCE") == "1")
+            {
+                var lightning = step.SkillCasts.Single(value => value.SkillEntityId == 10530);
+                Require(lightning.ActorId == player.Id && lightning.SkillItemId == 10502
+                    && step.DamageEvents.Any(value => value.SkillEntityId == 10530
+                        && value.TargetId != player.Id && value.Damage < 0),
+                    "Original passive lightning source or damage differs.");
+                Debug.Log("[Thunder mystery] Original passive lightning source and damage passed.");
+            }
             Require(cast.SkillItemId == firstPromotionItemId && cast.SkillEntityId == skillId
                 && cast.Presentation != null && cast.Presentation.FacingIndex == firstPromotionFacingIndex
                 && player.SkillState.Slots[0].ReleasedTimes == 1,

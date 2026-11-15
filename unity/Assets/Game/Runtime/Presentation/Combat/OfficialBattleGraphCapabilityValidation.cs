@@ -17,6 +17,9 @@ namespace Zjcs.Presentation.Combat
         private readonly string clipName;
         private bool settled, animated, captured, finisherScheduled;
         private int nativeCasts, nativeChildren;
+        private int thunderNativeCasts;
+        private float thunderNativeClock;
+        private bool thunderCaptured;
         private float castTime;
         private readonly OfficialBattleAfterimageValidation afterimages;
         private OfficialBattleSkillEntityPlayback entityViews;
@@ -206,6 +209,9 @@ namespace Zjcs.Presentation.Combat
                     ordinaryStarted = true;
                 }
                 if (cast.SkillEntityId == 13643) nativeChildren++;
+                if (Environment.GetEnvironmentVariable("ZJCS_THUNDER_MYSTERY_ACCEPTANCE") == "1"
+                    && cast.SkillEntityId == 10530)
+                { thunderNativeCasts++; thunderNativeClock = Time.time; }
                 if (cast.SkillEntityId != skillId) return;
                 nativeCasts++; castTime = Time.realtimeSinceStartup;
                 if (ValidateSwordCounterattack || ValidateFighterHpSecrets) swordCounterattackClock = Time.time;
@@ -369,6 +375,9 @@ namespace Zjcs.Presentation.Combat
             if (ObserveSwordCounterattackFrame(controller)) return;
             ObserveChainedHitViews(controller);
             ObserveFirstPromotionGeneration(controller);
+            if (Environment.GetEnvironmentVariable("ZJCS_THUNDER_MYSTERY_ACCEPTANCE") == "1"
+                && thunderNativeCasts > 0 && !thunderCaptured && Time.time - thunderNativeClock >= .35f)
+            { thunderCaptured = true; CaptureName = "thunder-mystery-native"; return; }
             if (ObserveTerrainScopeWalkingFrame(controller)) return;
             if (CaptureFirstPromotionFrame()) return;
             if (ObserveAirComboDiagnostic(controller)) return;
@@ -508,6 +517,9 @@ namespace Zjcs.Presentation.Combat
 
         public void Verify(FightBattleCheckpoint checkpoint)
         {
+            if (Environment.GetEnvironmentVariable("ZJCS_THUNDER_MYSTERY_ACCEPTANCE") == "1")
+                Require(thunderNativeCasts == 1 && thunderCaptured,
+                    "Original lightning graph or its captured frame is missing.");
             if (ValidateForcedMovement || ValidateFatalRevival || firstPromotionItemId != 0) Time.captureFramerate = previousCaptureFramerate;
             VerifyFatalRevival();
             VerifyFighterHpSecrets();
