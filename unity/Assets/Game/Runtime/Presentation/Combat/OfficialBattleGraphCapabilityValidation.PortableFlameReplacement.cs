@@ -26,6 +26,7 @@ namespace Zjcs.Presentation.Combat
         private void BindPortableFlameReplacementPresentation(OfficialBattleRuntimeController controller)
         {
             if (!ValidatePortableFlameReplacement) return;
+            BindPortableFlameAllyMovement(controller);
             // The fixture cloned the player's appearance unchanged. Bind that same
             // completed original photograph to its second local request identity.
             var field = typeof(OfficialBattleRuntimeController).GetField("timelinePortraitResolver",
@@ -77,6 +78,12 @@ namespace Zjcs.Presentation.Combat
             ally.Id = checkpoint.Units.Max(unit => unit.Id) + 1; ally.Turn.Id = ally.Id;
             ally.Skills.Clear(); ally.SkillState.Slots.Clear();
             ally.X = player.X - 1; ally.Y = player.Y;
+            if (ValidatePortableFlameAllyMovement)
+            {
+                var enemy = checkpoint.Units.Single(unit => unit.Side != player.Side);
+                enemy.X = player.X; enemy.Y = player.Y + 2;
+                ally.X = player.X + 1; ally.Y = player.Y + 1;
+            }
             Require(ally.X >= 0 && checkpoint.Units.All(unit => unit.X != ally.X || unit.Y != ally.Y),
                 "The second original hero requires an unoccupied fixture cell.");
             flameReplacementCaster = ally.Id; checkpoint.Units.Add(ally);
@@ -109,10 +116,13 @@ namespace Zjcs.Presentation.Combat
                         "The replacement ended an unrelated original ring.");
                 flameHolders.Clear(); flameReplacementSettled = true;
                 var hits = step.DamageEvents.Where(value => value.SourceId == flameReplacementCaster && value.SkillEntityId == 10860).ToArray();
-                Require(hits.Length == 2 && hits.All(hit => hit.HitEntityId == 10861 && hit.DamageEntityId == 10862
+                Require(hits.Length == (ValidatePortableFlameAllyMovement ? 1 : 2)
+                    && hits.All(hit => hit.HitEntityId == 10861 && hit.DamageEntityId == 10862
                     && hit.Damage < 0 && hit.BeforeHp - hit.AfterHp == -hit.Damage),
                     "Each replacement must acquire one original child hit from the new caster.");
-                Debug.Log("[Portable flame replacement] Two original old entities ended, new creator/cultivation and two acquisition hits passed.");
+                Debug.Log(ValidatePortableFlameAllyMovement
+                    ? "[Portable flame ally movement] Two original old entities ended and the new caster's one eligible acquisition hit passed."
+                    : "[Portable flame replacement] Two original old entities ended, new creator/cultivation and two acquisition hits passed.");
             }
             foreach (var value in events)
             {
@@ -140,6 +150,7 @@ namespace Zjcs.Presentation.Combat
                 }
             }
             if (flameHolders.Count > 0) Require(flameHolders.Count == 2, "Each hero must own one independent original ring.");
+            ObservePortableFlameAllyMovementStep(checkpoint);
         }
 
         private bool ObservePortableFlameReplacementFrame(OfficialBattleRuntimeController controller)
@@ -158,8 +169,8 @@ namespace Zjcs.Presentation.Combat
             });
             if (!flamePartyFrame && ready)
             { flamePartyFrame = true; CaptureName = "portable-flame-replacement-first"; return true; }
-            if (!captured) return false;
-            if (!flameReplacementArmed && ready && !controller.IsPresentingStep)
+            if (!captured && !ValidatePortableFlameAllyMovement) return false;
+            if (!flameReplacementArmed && ready && (ValidatePortableFlameAllyMovement || !controller.IsPresentingStep))
             {
                 foreach (var holder in flameHolders.Values)
                     flameReplacementOldViews.Add(holder.OwnerId, views.Single(view => view.Context.Owner == controller.TryGetUnitTransform(holder.OwnerId).gameObject));
@@ -174,6 +185,8 @@ namespace Zjcs.Presentation.Combat
                 };
                 flameReplacementArmed = true; CaptureName = "portable-flame-replacement-before"; return true;
             }
+            if (!captured) return false;
+            if (flameReplacementRestoreFrame && ObservePortableFlameAllyMovementFrame(controller)) return true;
             if (!flameReplacementSettled || controller.IsPresentingStep) return true;
             if (!flameReplacementFrame && ready)
             {
@@ -221,6 +234,7 @@ namespace Zjcs.Presentation.Combat
 
         private void VerifyPortableFlameReplacement()
         {
+            VerifyPortableFlameAllyMovement();
             Require(flameComplete && flameReplacementFrame && flameReplacementRestoreFrame && flameReplacementAnimated
                 && flameSoundPlayingIds.Count == 2 && flameSoundPlayingIds.All(id => ArcNativeSoundEvent(id) == 0),
                 "Two-caster replacement or the two original native casting sounds did not finish.");
