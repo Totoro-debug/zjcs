@@ -130,6 +130,11 @@ namespace Zjcs.Presentation.Home
 
         public static IEnumerator Exercise(string slot, string root, string outputDirectory, Action<Selectable> click)
         {
+            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PORTABLE_FLAME_FLOW") == "1")
+            {
+                yield return ExercisePortableFlame(slot, root, outputDirectory, click);
+                yield break;
+            }
             bool defeat = Environment.GetEnvironmentVariable("ZJCS_SKILLS_VALIDATE_DEFEAT") == "1";
             var fixture = OfflineMainlineProgressSession.OpenCharacter(new ProfileSlotCatalog(root), slot);
             Require(fixture.ApplyCharacterMutation(player => {

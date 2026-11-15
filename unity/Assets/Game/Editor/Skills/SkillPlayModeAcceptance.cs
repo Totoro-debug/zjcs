@@ -67,7 +67,8 @@ namespace Zjcs.Editor.Skills
             EditorWindow view = Resources.FindObjectsOfTypeAll(viewType).OfType<EditorWindow>()
                 .OrderByDescending(value => value.titleContent.text == "Battle input validation").FirstOrDefault();
             if (view == null) throw new InvalidOperationException("A background skill validation requires an existing Game view.");
-            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") == "1")
+            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") == "1"
+                || Environment.GetEnvironmentVariable("ZJCS_SKILLS_PORTABLE_FLAME_FLOW") == "1")
             {
                 var behavior = editor.GetType("UnityEditor.PlayModeView", true).GetProperty("enterPlayModeBehavior");
                 behavior.SetValue(view, Enum.Parse(behavior.PropertyType, "PlayUnfocused"));
@@ -130,7 +131,8 @@ namespace Zjcs.Editor.Skills
             OfficialSkillAssetTools.Validate();
             if ((Application.isBatchMode || Environment.GetEnvironmentVariable("ZJCS_SKILLS_AUTORUN") == "1")
                 && Environment.GetEnvironmentVariable("ZJCS_SKILLS_PET_UI_ONLY") != "1"
-                && Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") != "1")
+                && Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") != "1"
+                && Environment.GetEnvironmentVariable("ZJCS_SKILLS_PORTABLE_FLAME_FLOW") != "1")
                 Combat.BattleGameViewInput.Focus();
             ConfigurePortraitGameView(675, 1463);
             string root = Path.Combine(ValidationDirectory, "save-" + Guid.NewGuid().ToString("N"));
@@ -187,7 +189,8 @@ namespace Zjcs.Editor.Skills
             if (started)
                 return;
             ConfigureShaderCompilation();
-            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") == "1")
+            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") == "1"
+                || Environment.GetEnvironmentVariable("ZJCS_SKILLS_PORTABLE_FLAME_FLOW") == "1")
             {
                 // PlayUnfocused does not initialize the display size through GameView.OnFocus.
                 // Update that render buffer directly, without requesting window focus.
