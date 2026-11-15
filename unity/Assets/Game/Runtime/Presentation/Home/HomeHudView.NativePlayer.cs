@@ -114,6 +114,13 @@ namespace Zjcs.Presentation.Home
         private void RefreshNativePlayerPanel()
         {
             if (nativePlayerPanel == null) return;
+            // Battle settlement can refresh inventory while the home health owner is
+            // suspended. Rebind the committed player when the home scope resumes.
+            if (host.IsBattlePresentationActive)
+            {
+                nativePlayerObservedSave = null;
+                return;
+            }
             nativePlayerServices.RefreshProperties();
             nativePlayerStatuses.SynchronizeCommittedPlayer();
             nativePanelPlayer.SynchronizeCommittedPlayer();
