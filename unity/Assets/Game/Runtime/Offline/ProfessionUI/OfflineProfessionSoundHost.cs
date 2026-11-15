@@ -31,6 +31,7 @@ namespace Zjcs.Offline.ProfessionUI
         private bool bound;
 
         public bool IsInitialized => bound;
+        public IProfessionSoundHost FallbackHost { get; set; }
         // No Wwise initialization asset is installed in this local host. The
         // original AkGameObj fallback for a missing settings instance is 1.
         public float DefaultScalingFactor => 1;
@@ -85,7 +86,10 @@ namespace Zjcs.Offline.ProfessionUI
         {
             if (!bound) throw new InvalidOperationException("Profession sound catalog is unbound.");
             if (!events.TryGetValue(eventId, out var entry))
+            {
+                if (FallbackHost != null) return FallbackHost.PostEvent(eventId, emitter);
                 throw new InvalidOperationException("Unmigrated profession source event: " + eventId);
+            }
             voices.RemoveAll(value => !value.Player);
             for (int index = 0; index < (entry.StopTargetIds?.Length ?? 0); index++)
                 foreach (var active in voices)

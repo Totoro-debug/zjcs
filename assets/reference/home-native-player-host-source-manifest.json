@@ -1,0 +1,43 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    "assets/reference/home-player-panel-native-source-manifest.json": "c1dd8274ee9f756803c0cd05be5caf86e95b2ceaeba0d2f5839c45d7c952bd4e",
+    "assets/reference/home-player-info-native-source-manifest.json": "7b2ed9698d4c185b4184a729eb1add652df431220abefd8c72f40aed6db2fc8e",
+    "assets/reference/home-player-health-profile-source-manifest.json": "c02c81095d89294c2f076b601d1325b6194e1b11b458bbe559151e06949bf7ac",
+    "assets/reference/home-player-status-source-manifest.json": "ceff197f584a64b12806a5e0bac113a8a373692d1fcd3332db2890ff951e126c",
+    "assets/reference/home-avatar-portraits-source-manifest.json": "eaf60319b02a84e031124b34780f36befa701c3520e7706708f585e88a508f64",
+    "assets/reference/home-avatar-native-source-manifest.json": "beb8d1d5e354e0d541c1f8f11a53808f51315919b93f92589bd3e9efa3eb6944",
+    "assets/reference/home-experience-profile-source-manifest.json": "cc9800fa6c14ab8bcd0e2b6ef26047610784c03adba425d533c5226906d5270f",
+    "assets/reference/home-experience-growth-source-manifest.json": "9b71957dd7f03167d2934b77b94e018859f2cb78119d3f026133be8105685f4c",
+    "assets/reference/home-experience-environment-source-manifest.json": "7c1c66d1fcc3226590ad30d64c70802e37fcaafb9360137ad392d7b192e0bc05",
+    "assets/reference/home-experience-rewards-source-manifest.json": "c079fc0a9d596a66676f5a90ddeef2c58654c7ae3959172cb9ba69bd53b43cc3",
+    "assets/reference/home-level-up-windows-source-manifest.json": "946f7b34585a697d4147e35b9a73fb6e7ca5e79f0df8ad23ed14632fd06c745f",
+    "assets/reference/home-level-up-properties-source-manifest.json": "082a7d130191292d85a7006b217b87b26f885e9269f24f748862e555fb76bec2",
+    "assets/reference/home-no-bless-rules-source-manifest.json": "65b9082026bd069291259ce8f6f2750881f76ead751740446917b8eba04f2abd",
+    "assets/reference/home-resonance-profile-source-manifest.json": "0f9dcd6c40652dc7695bc9b54a74ae61924dacfb12a95bd78cf343d36442647e"
+  },
+  "runtime_bindings": {
+    "scripts/prepare_home_native_player_validation.py": "ee0ab97b89d2c3545ae0480b389c97f1dab52a2de469a3ebe7ce10d7ca07bb60",
+    "scripts/fixtures/home_native_player_validation.cs": "c2b7eb47502ce59cd2747db2d639e86ed80d6e8207bb5eef019d794ad706c289",
+    "scripts/fixtures/home_furniture_host_validation.cs": "e96d1c236f55a42efe74e9c83403bb57a6b9d780dc4fea357911f0aa1bad33a1",
+    "scripts/fixtures/home_income_formula_validation.cs": "92039871698f02ada44c3697de881051bb115b44bf387a5ab6ee288cd911dac4",
+    "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionSoundHost.cs": "d32ef29a955632bacba16899b985832f06c65f2315bf7e6bb06e918a219bebaa",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.NativePlayer.cs": "92620ce737ee6d4b6a3bee6977ac6d4714a53eafd93c00b86415110aa4f42385",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.NativePlayer.cs.meta": "64db18ee3363a6b6a81dfe6dd4991261ee28c9dcf097f807e227e6c0a77459cb",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs": "eafcdb527d5413edf5556e9a774862382abd79da5a2fd6fc67d5e66e113f2c99",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "ce8ef5fb0fba64687d1d4909594979cf498a65cfaa17029d9b058254691e06b3",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.cs": "7756c5f32855ec11051b24623b5f0a3634b13a4298d48a9487f9c1899a64e42f",
+    "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef": "24e095257bb975f48fa78ca932f9da1c09bdb01eaf475d577163076558517c96",
+    "unity/Assets/Game/Validation/HomeNativePlayer/HomeNativePlayerRunner.cs": "0978aaaa006d179253e2f56ccaee600bd49bda180f3f0b872fcfdf2bb3ef8efc",
+    "unity/Assets/Game/Validation/HomeNativePlayer/HomeNativePlayerRunner.cs.meta": "6d234fff3692191593a99b85ceada1e6468d2c13499e7ee5960b4b36a289a998",
+    "unity/Assets/Game/Validation/HomeNativePlayer/NativeFrame.cs": "dd2520040919748a8c205ff435d7c6ba8df18b9e3fc35def3ac1de7b4a1d7b97",
+    "unity/Assets/Game/Validation/HomeNativePlayer/NativeFrame.cs.meta": "c63c46066d86c42919cf77cf378e09112e5157850b3ee3553caeabf68b0e3a0a",
+    "unity/Assets/Game/Validation/HomeNativePlayer/PlayerChecks.cs": "c2b7eb47502ce59cd2747db2d639e86ed80d6e8207bb5eef019d794ad706c289",
+    "unity/Assets/Game/Validation/HomeNativePlayer/PlayerChecks.cs.meta": "a5b55b6e672f44dc99ee57340651c5a78ee3c3ac5944656a0fd69e6bfa4ccea0",
+    "unity/Assets/Game/Validation/HomeNativePlayer/Zjcs.HomeNativePlayerValidation.asmdef": "292d9dd0ce1bff968199da9643043a89a9ae76a852cc27f50ad590ddcae28c48",
+    "unity/Assets/Game/Validation/HomeNativePlayer/Zjcs.HomeNativePlayerValidation.asmdef.meta": "1e9d9c383bced67ef5443fde994f5d4869bd5f848e2ccaae47da80751d761dc1",
+    "unity/Assets/Game/Validation/HomeNativePlayer.meta": "0ac45bf1c420af8d2951d3f9c8786d5f05e3e64aeb4413a2a0abd7ce8af14780",
+    "unity/Assets/Game/Validation.meta": "2caa639e64d3ca1814460e27cc020c4a0f69e086449d3fb7efd69024837068da"
+  },
+  "loading": "Formal HomeHudView.Build -> original MainCanvas Public/Anim -> complete PublicPlayerInfo prefab; local profile, portrait studio, original XP reward handler and level-up windows."
+}

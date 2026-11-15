@@ -298,14 +298,12 @@ namespace Zjcs.Presentation.Home
                 Assert(!functionsPanel.activeSelf && !runtime.Hud.AnyModalOpen,
                     "HUD construction must not open a menu or modal");
 
-                HomeUiRenderer avatarRenderer = PrivateField<List<HomeUiRenderer>>(runtime.Hud, "owned")
-                    .FirstOrDefault(value => value.Find<Button>("/PublicPlayerIconHome") != null);
-                Assert(avatarRenderer != null, "official player icon button exists");
-                Button avatar = avatarRenderer.Find<Button>("/PublicPlayerIconHome");
-                avatar.onClick.Invoke();
-                Assert(runtime.Hud.CharacterPageOpen, "player icon onClick opens the character page");
-                Assert(runtime.Hud.TryHandleBack() && !runtime.Hud.CharacterPageOpen,
-                    "Escape back closes the character page");
+                var playerPanel = PrivateField<Zjcs.Offline.HomeUI.OfflineHomePlayerPanel>(runtime.Hud, "nativePlayerPanel");
+                Assert(playerPanel != null && playerPanel.Root.activeInHierarchy
+                    && playerPanel.Icon != null && playerPanel.Experience != null,
+                    "complete original public player panel retains its native icon and experience owner");
+                // Pointer dispatch, the portrait studio, XP animation and disk
+                // restoration are exercised by HomeNativePlayerValidation.
 
                 Selectable[] tabs = new[] { "Character", "TravelNote", "Home", "Legion", "Mainland" }
                     .Select(name => bottom.Find<Selectable>("/PublicBottomBar/Content/Group/" + name + "/UnlockObj"))

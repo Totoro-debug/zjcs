@@ -725,7 +725,9 @@ namespace Zjcs.Presentation.Home
             var localization = new OfflinePartnerLocalizationService(partnerDetailAssets.Texts,
                 partnerDetailAssets.Common.GiftTexts, friendshipAssets.PropertyTexts, friendshipAssets.DialogTexts,
                 partnerGiftAssets.GiftTexts, partnerGiftAssets.RelationshipTexts,
-                Zjcs.Official.HomeFastHangUpUI.OfficialHomeFastHangUpAssetCatalog.LoadDefault().texts);
+                Zjcs.Official.HomeFastHangUpUI.OfficialHomeFastHangUpAssetCatalog.LoadDefault().texts,
+                Resources.Load<Zjcs.Official.HomePlayerPanelUI.OfficialHomePlayerPanelAssetCatalog>("Home/OfficialHomePlayerPanelAssetCatalog").localizedTexts,
+                Zjcs.Official.HomePlayerInfoUI.OfficialHomePlayerInfoAssetCatalog.LoadDefault().LocalizedTexts);
             LanguageManager.Initialize(localization);
             var propertyBindings = new OfflineProfessionPropertyBindings(friendshipAssets.PropertyConfiguration,
                 partnerDetailImages, localization, (owner, path, name, description, control) => { },
@@ -1890,6 +1892,7 @@ namespace Zjcs.Presentation.Home
         }
 
         private int activeBattlePresentations;
+        internal bool IsBattlePresentationActive => activeBattlePresentations > 0;
 
         internal void SetBattlePresentationActive(bool active)
         {

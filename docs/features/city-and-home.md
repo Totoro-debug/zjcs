@@ -23,7 +23,7 @@
 | 范围 | 原始官方功能与关键调用关系 | 当前实现与剩余工作 |
 | --- | --- | --- |
 | 主城进入与生命周期 | `MainUIRoot` 管理主面板；`PublicBottomBar.OnTabTypeChanged → MainViewController.SwitchMainView` 切换 UI 和场景；`HomeRoot` 初始化家园作用域服务、激活场景、同步时间与控制音乐 | 已从创角完成页进入 `HomeFeatureRuntime`，打开角色槽和家园存档，退出可返回角色入口；底栏大陆暂转入当前可玩的初始岛地图。主菜单复原、正式主城生命周期与场景音乐仍未完成 |
-| 顶部栏与头像 | `HomeUI` 的 `NewPublicTopBarParent/Slot`、`TopBarHandler`、`TopBarManager`／`TopBarItem` 和 `PublicPlayerIconHome` 展示角色及配置指定货币，随窗口借还顶部栏、响应数量变化并提供点击入口 | 正式入口的顶栏已改为所选 884 完整原生父节点，按原序显示货币 1/2/57，共用真实库存、数量观察器及金币速购／耀星兑换窗口；头像仍使用历史角色名及等级／公会文本并打开人物页。原生头像、真实角色头部渲染、真实存档驱动的经验环，以及公共玩家面板的血量、恢复料理提示判定和名字已分别验证。原生头像的正式 HUD 接线、床铺领取到原生奖励队列的完整流程及家园入退场动画尚未完成 |
+| 顶部栏与头像 | `HomeUI` 的 `NewPublicTopBarParent/Slot`、`TopBarHandler`、`TopBarManager`／`TopBarItem` 和 `PublicPlayerIconHome` 展示角色及配置指定货币，随窗口借还顶部栏、响应数量变化并提供点击入口 | 正式入口的顶栏已改为所选 884 完整原生父节点，按原序显示货币 1/2/57，共用真实库存、数量观察器及金币速购／耀星兑换窗口；原生头像、真实角色头部渲染、存档经验环，以及公共玩家面板的血量、恢复料理提示和名字已有独立验证。正式入口已挂载完整原公共玩家面板并绑定真实角色与经验服务，头像指针、升级及重开已通过主工程 Play Mode；床铺领取与原生经验动画的组合、状态详情窗口及家园入退场动画尚未完成 |
 | 底栏五入口 | `PublicBottomBar.TabType` 包含 `Character`、`TravelNote`、`Home`、`Legion`、`Mainland`；原 `TabGroup`、条件、显隐引用、升级标记和场景代理共同控制切页 | 人物页打开／返回、家园选中和大陆到初始岛已接线；游记、公会入口目前提示对应页面未提供，条件／红点／遮挡未完整恢复。玩法范围分别见[人物](character.md)、[单人公会](guild.md)、[世界地图](world-map.md) |
 | 主城任务与战斗提示 | `PinnedTaskPanel`、`MainTaskFunctionLimit`、`GameEndNotifyUI`、`GameEndUIHandlerInHome`、`FightDemonBattlefieldAutoPushEndNotifyUI` 负责任务追踪、战斗完成通知和返回战斗入口；床铺／推车有 `HomeHangUpDirectionGuider` | 已接主线任务追踪、本地进度、奖励领取及 Map10 目标跳转；Map11 提示未开放，职业／宝箱任务不展示不可用跳转；非主线页签显示离线未开放。床铺／推车原生方向指引已接正式收益与场景镜头，家具奖励状态图形仍缺；战斗结算提示未正式接通，魔物战争按单机范围关闭。任务规则见[主线任务](tasks.md) |
 | 功能菜单 | 所选 884 的 `FunctionEntrysPanel.OnEntryBtnClick` 打开并初始化 `FunctionEntryDialog`，基类保留折叠／展开动画与外部点击处理；原菜单有任务、商城大按钮，以及图鉴、成就、装潢、设置、拍照、录像等入口 | 正式家园已接所选完整原生菜单、真实角色条件与同版配置；HUD 入口按钮本身仍为历史资源树。菜单保留原显示／关闭动画及声音，设置与任务派发到既有本地页面；好友、真人排行、社交及用户中心遵循离线关闭范围。商城活动、界域、战报列表等子页仍待迁移，预下载按本地包无待下载任务处理。图鉴、成就和拍照尚未接对应页面，内部范围见[商城](commerce.md)、[图鉴](codex.md)、[成就](achievements.md)、[设置／拍照／存档](settings-and-save.md) |
@@ -357,15 +357,15 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 `scripts/prepare_home_player_health_profile.py` 从所选 884 APK 主 Luban 包恢复 110 项料理的 ID／类型、物品类型及 `PlayerHpRedDotThreshold=0.5`。`Official/HomePlayerHealthRules` 直接迁入 `Player.HasCureItem`，按原 `CookingInfoParser.PostParse` 将料理分组；查询任意恢复料理的实际背包数量，不额外要求学会配方、达到料理等级或能制作最佳恢复料理。原 `PlayerHpRedPoint` 继续使用血量严格低于阈值且持有恢复料理的判断。原公共玩家面板 prefab 的 `myRedDotObj` 为 null；此处迁移判定及事件并保留该空引用，不据此给头像额外添加红点。
 
-`Offline/HomePlayerHealthUI` 将实际角色身份、名字、背包及已有 `OfflinePlayerHealth` 接到原公共玩家面板，经验复用上述同版存档投影；不重写血量恢复公式或重复保存血量。事务后由所有者同步，保留 HP 写盘成功后的通知及名字／料理增减去重；释放适配器时解除 HP、经验与外层状态监听。战力／无赐福战力、活动地图集合、状态记录与赐福重置事件由明确的所有者端口提供；不以存档地图 ID 冒充活动地图。无赐福计算已接入原 `NoBlessPlayerInfoProvider` 的等级、装备、技能、幻兽、古遗物与手动激活共鸣分块；世界位阶和已激活共鸣等级仍由正式家园所有者显式提供，不从个人位阶或装备自动推导。状态记录的本地所有者见下文，仍需装配进正式家园宿主。
+`Offline/HomePlayerHealthUI` 将实际角色身份、名字、背包及已有 `OfflinePlayerHealth` 接到原公共玩家面板，经验复用上述同版存档投影；不重写血量恢复公式或重复保存血量。事务后由所有者同步，保留 HP 写盘成功后的通知及名字／料理增减去重；释放适配器时解除 HP、经验与外层状态监听。战力／无赐福战力、活动地图集合、状态记录与赐福重置事件由明确的所有者端口提供；不以存档地图 ID 冒充活动地图。无赐福计算已接入原 `NoBlessPlayerInfoProvider` 的等级、装备、技能、幻兽、古遗物与手动激活共鸣分块；世界位阶和已激活共鸣等级仍由正式家园所有者显式提供，不从个人位阶或装备自动推导。状态记录的本地所有者见下文；正式家园装配与当前验证范围见本页正式公共玩家面板接线。
 
 `HomePlayerHealthProfileValidation.Run` 已在隔离完整工程静音、有图形 Play Mode 使用完整原生 22 对象公共玩家面板及真实角色头部渲染，验证全部 110 项料理（8 项恢复、102 项 Buff）的原恢复查询、实际背包增减与去重、恢复提示节点判定、恢复／Buff 料理区别、50% 阈值等号、真实血量写盘与磁盘重开、拒绝无效血量时不发事件、活动地图／使用玩家 HP 的战斗阻止恢复、无地图时原组件轮询恢复、名字事务、真实经验升级／隐藏补播以及销毁退订。原头像按钮通过首个射线命中与进程内模拟指针打开人物所有者，原点击声音在静音状态实际播放；已查看低血量、恢复／改名及隐藏后重开的三张 608×1080 运行截图。战力、地图／战斗集合、空状态记录与窗口所有者是明确标注的受控输入；此次没有验证或实现状态效果的本地生成／消耗／保存。静态元数据检查、Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。状态效果与正式宿主仍未接通；该接线尚未替换正式 `HomeFeatureRuntime` 的历史 HUD，未构建或发布新的 Windows Player。
 
-`scripts/prepare_home_no_bless_rules.py` 从所选 `884_156692` 提取原 `NoBlessPlayerInfoProvider` 所需的 1124 条等级限制、240 级累计共鸣、7 条赛季映射，以及 1396 条古遗物、21 条幻兽和属性曲线。`OfflineHomeNoBlessPlayerView` 在脱离存档的副本上按原装饰器顺序限制等级、装备槽、技能槽和幻兽，并把手动激活的共鸣累计效果传给共享 `CharacterPropCalculator`；超过设施上限的原始值只在副本中截断，原存档不被改写。`HomeFeatureRuntime.EnsureProgression` 现在在正式家园角色计算器创建前挂接同一份已校验的家园属性分表，使挂机、家园战力与后续面板投影共享官方古遗物／套装／幻兽／技能属性输入；世界位阶和已激活共鸣等级仍由面板所有者显式提供，不从个人位阶或装备自动推导。`HomeNoBlessProfileValidation.Run` 已通过真实角色属性目录、赐福门槛、未装配古遗物的 1 级回退、元素共享等级、幻兽曲线与存档不变检查。配置与来源见 [home-no-bless-rules-source-manifest.json](../../assets/reference/home-no-bless-rules-source-manifest.json)。正式玩家面板的真实世界位阶／共鸣所有者及 Windows Player 仍未接通。
+`scripts/prepare_home_no_bless_rules.py` 从所选 `884_156692` 提取原 `NoBlessPlayerInfoProvider` 所需的 1124 条等级限制、240 级累计共鸣、7 条赛季映射，以及 1396 条古遗物、21 条幻兽和属性曲线。`OfflineHomeNoBlessPlayerView` 在脱离存档的副本上按原装饰器顺序限制等级、装备槽、技能槽和幻兽，并把手动激活的共鸣累计效果传给共享 `CharacterPropCalculator`；超过设施上限的原始值只在副本中截断，原存档不被改写。`HomeFeatureRuntime.EnsureProgression` 现在在正式家园角色计算器创建前挂接同一份已校验的家园属性分表，使挂机、家园战力与后续面板投影共享官方古遗物／套装／幻兽／技能属性输入；世界位阶和已激活共鸣等级仍由面板所有者显式提供，不从个人位阶或装备自动推导。`HomeNoBlessProfileValidation.Run` 已通过真实角色属性目录、赐福门槛、未装配古遗物的 1 级回退、元素共享等级、幻兽曲线与存档不变检查。配置与来源见 [home-no-bless-rules-source-manifest.json](../../assets/reference/home-no-bless-rules-source-manifest.json)。正式玩家面板的世界位阶／共鸣所有者已装配，当前验证范围见本页正式公共玩家面板接线；Windows Player 未完成。
 
 原程序集及脚本元数据位于 `Runtime/Official/HomeNoBlessRules/`，正式家园显式引用对应本地属性适配程序集。
 
-家园去赐福投影新增直接读取角色已激活共鸣记录的入口，与普通共鸣共用真实存档字段；不把当前穿戴或强化条件当作激活记录。计算与版本边界见[装备页](equipment.md)，正式玩家面板所有者仍待装配。
+家园去赐福投影新增直接读取角色已激活共鸣记录的入口，与普通共鸣共用真实存档字段；不把当前穿戴或强化条件当作激活记录。计算与版本边界见[装备页](equipment.md)，正式玩家面板装配及当前验证范围见本页正式公共玩家面板接线。
 
 `scripts/prepare_home_player_status.py` 从官方 APK 中与所选 `884_156692` 校验一致的 Luban 包恢复全部 163 条状态、11 条作用域和 891 条词条配置。`Official/HomePlayerStatusRules` 直接迁入 `PlayerStatusEffectManager.GainStatusEffect` 及 `PlayerStatusEffectDataWrap` 的新建、重置、剩余／显示次数、失活、战斗占用与释放方法；同版面板枚举在提取时逐字核对。状态 ID 0 是有效官方记录，负的最大次数保持原值。完整配置载荷及代码来源见 [home-player-status-source-manifest.json](../../assets/reference/home-player-status-source-manifest.json)。
 
@@ -537,6 +537,14 @@ Unity 2022.3.57f1c2 静音有图形 Play Mode 完整收益回归退出码为 0�
 
 静态元数据检查通过（152027 个 GUID），隔离工程导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 退出码均为 0，后者保留既有战斗 Edit Mode 材质释放诊断。原生 2.5 秒计时未改，后台高负载下的首帧稳定性仍需 Windows Player 检查；正式天空／受光组合缺项保留，本修复未作为完整家园功能发布。
 
+### 正式公共玩家面板接线
+
+`HomeHudView.NativePlayer.cs` 在正式入口的原 `MainCanvas/Content/Main/Public/Anim` 下挂载完整所选 `PublicPlayerInfo` prefab，移除旧头像、姓名及等级文本的创建入口。保留原节点、RectTransform、字体与组件；真实角色槽提供姓名、生命、背包与状态记录，原头像摄影棚读取真实角色身份、穿戴和外观缓存。经验环绑定正式成长事务投影、原 `HomeExperienceRewardHandler` 和原升级通知窗口，读取本地独立世界位阶及已激活共鸣；打开人物页时沿原公共面板引用计数隐藏，返回后恢复。
+
+共享语言服务补入原玩家面板文本。新增声音宿主只承担面板与升级事件，其他事件转发给先前宿主；关闭时按作用域顺序释放并恢复先前宿主。家园生命计算使用当前家园作用域的空地图／游戏集合，战斗展示期间暂停此宿主，不用已探索地图数量推断正在战斗。
+
+来源与显式绑定见[正式玩家面板接线凭据](../../assets/reference/home-native-player-host-source-manifest.json)，验证入口为 `prepare_home_native_player_validation.py` 与 `HomeNativePlayerValidation.Run`。主工程静音、有图形 Play Mode 已通过：正式入口保留全部 22 个原节点，真实头像摄影棚生成纹理；原头像按钮经 UI 射线首命中及模拟指针打开人物页，返回后恢复公共面板；实际成长事务将隔离角色从 3 级升到 4 级，原经验处理器推进经验环并创建真实升级通知，关闭／重开保留等级及原组件显示。最终退出码 0，未再出现释放后的事件解绑异常。验证直接采集 608×1080 Game View，保持正式 ScreenSpaceOverlay 模式、排序及缩放；已查看首开、经验处理后、升级数字及磁盘重开画面。完整升级特效／属性增量条目、赐福分支在正式 UI 的组合、正式床铺领取到经验动画的组合仍待核对。状态详情、赐福说明弹窗及动态状态图标目录仍待接入；完整 HUD 和 Windows Player 发布均未完成。最终修正后的主工程导入／编译及 `ProjectTools.Validate` 退出码 0，保留既有战斗 Edit Mode 释放诊断；静态元数据检查通过（152155 GUID）。永久验证入口在 `Assets/Game/Validation/HomeNativePlayer/`，代码仅在 Editor 宏内编译，运行输出及存档使用显式指定的隔离会话目录。
+
 ## 自定义实现
 
 ### 全模块刷新时刻
@@ -590,7 +598,7 @@ Unity 2022.3.57f1c2 静音有图形 Play Mode 完整收益回归退出码为 0�
 
 上方两张表中的未接通项均属于待实现范围。跨模块玩法只维护主城入口与衔接要求，内部规则和进度以所属页为准；关闭项须完成对应入口处理，但不实现原联网业务。已落实部分按上文记录；下列只列仍未实现或未验收的缺项。
 
-- 主流程与 HUD：已接角色进入／退出家园、人物页、顶栏货币、人物页与大陆到初始岛、功能菜单、任务追踪和部分设施入口。原生顶栏和金币速购／耀星兑换已接正式家园；头像／经验环及底栏已有独立验证，仍缺正式 HUD 整体替换、真实经验奖励流程、游记／公会页面、战斗结果提示、活动入口、全量红蓝点、窗口动画／音频及完整模拟输入验收。
+- 主流程与 HUD：已接角色进入／退出家园、人物页、顶栏货币、人物页与大陆到初始岛、功能菜单、任务追踪和部分设施入口。原生顶栏和金币速购／耀星兑换已接正式家园；头像／经验环已接正式入口并通过真实经验事务与存档恢复；底栏已有独立验证，仍缺正式 HUD 整体替换、床铺经验与升级表现的组合、游记／公会页面、战斗结果提示、活动入口、全量红蓝点、窗口动画／音频及完整模拟输入验收。
 - 设施与场景输入：14 类设施状态和官方点击区已装配；床铺、小推车、邮件、宝箱扭蛋、果树、祈愿、储物箱、星命契约、料理和杂货／宝库／馈赠商店已有本地页面入口。书桌／古遗物收藏、餐桌／伙伴交流及料理其他页签未完成；部分设施维修剧情、家具专属对话、维修特效、通知／红点和真实模态遮挡仍缺。星命赛季历史与商店货架由[所属页](astrological.md)说明；飞艇交易点击按离线策略拦截。当前家具表费用均为空，原附加维修物品 ID 保留但不作为前置条件；自动维修范围见[果树](fruit-tree.md)。
 - 收益与存档：`OfflineHomeIncomeSession` 已接角色槽、运行期间累计、完整角色属性、家具等级／容量／费用、升级前结算和真实背包（经验走 `AwardExperience`）；时间结晶原生滑杆／数量选择、睡眠演出及中断释放已接；原生窗口的物品详情弹窗仍缺；环境时间快进与首次资源预热已通过 Editor 回归，但 Windows Player 首帧稳定性和天空／受光绑定仍待验证／修复。其他缺项包括赐福等级真实来源（女神／探索／古遗物／月卡／星命）和小推车随机装备独立实例。
 - 邮箱、随机奖励及回收：邮箱已接官方列表/正文控件及阅读、领取、批量已读/领取/删除；随机奖励已接29槽、刷新与权重、静态动物首帧/落叶点击领取。剩余动物动画、天气/主题槽位覆盖、领奖回收 `HomeAwardRetrieve` 窗口未接。

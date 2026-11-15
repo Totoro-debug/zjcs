@@ -59,8 +59,6 @@ namespace Zjcs.Presentation.Home
         private PartnerGiftPanelView partnerGiftPanel;
         private GameObject partnerFriendshipPanel;
 
-        private TextMeshProUGUI nameLabel;
-        private TextMeshProUGUI levelLabel;
         private TextMeshProUGUI toast;
         private GameObject noticeRoot;
         private int selectedTab;
@@ -108,6 +106,7 @@ namespace Zjcs.Presentation.Home
             BuildTopBar();
             BuildBottomBar();
             BuildFunctions();
+            BuildNativePlayerPanel();
             BuildToast();
             SelectTab(2, false);
         }
@@ -142,7 +141,6 @@ namespace Zjcs.Presentation.Home
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
             BindNativeHomeSafeArea(homePanel);
-            BuildAvatar();
             // Official fade/screenshot guider nodes start hidden; their white mask must not cover the scene.
             homeRenderer.SetActiveByName("Guider", false);
             homeRenderer.SetActiveByName("HomeFadeProxy", false);
@@ -150,17 +148,6 @@ namespace Zjcs.Presentation.Home
             // Its time-zero pose hides the overlapping expanded entry button.
             if (!homeRenderer.PlayAnimation("FunctionEntrysUI_Folded", loop: false))
                 throw new InvalidOperationException("Official function-entry default animation is missing.");
-        }
-
-        private void BuildAvatar()
-        {
-            Transform slot = Find(homePanel.transform, "NewPublicTopBarParent");
-            if (slot == null) return;
-            HomeUiRenderer avatar = Renderer();
-            avatar.Create("player_icon", slot,
-                (path, node) => BindHudButton(path, node, OnAvatarButton));
-            nameLabel = CreateLabel(slot, "HomeName", 26, new Vector2(96, -8), TextAlignmentOptions.Left);
-            levelLabel = CreateLabel(slot, "HomeLevel", 20, new Vector2(96, -42), TextAlignmentOptions.Left);
         }
 
         private TextMeshProUGUI CreateLabel(Transform parent, string name, float size, Vector2 offset,
@@ -305,11 +292,6 @@ namespace Zjcs.Presentation.Home
             if (path.EndsWith("/Upgrade", StringComparison.Ordinal)) { SelectTab(0, true); return; }
             if (path.EndsWith("/Battling", StringComparison.Ordinal)) { Notify("当前没有进行中的战斗"); return; }
             Notify("该入口当前不可用");
-        }
-
-        private void OnAvatarButton(string path, GameObject node)
-        {
-            SelectTab(0, true);
         }
 
         private void OnCurrencyButton(int itemId, string path)
@@ -708,6 +690,7 @@ namespace Zjcs.Presentation.Home
 
         public void Tick()
         {
+            TickNativePlayerPanel();
             nativeCurrencyPeriodic?.Update(Time.time);
             nativeBedServices?.Tick();
             host.SetFantasyTowerBackgroundExecution(AnyModalOpen);
@@ -756,8 +739,7 @@ namespace Zjcs.Presentation.Home
         {
             RefreshCounts();
             RefreshTasks();
-            if (nameLabel != null) nameLabel.text = host.CharacterName;
-            if (levelLabel != null) levelLabel.text = "Lv." + host.Level + "  " + host.GuildName;
+            RefreshNativePlayerPanel();
             if (bedOpen) RefreshBed();
             if (cartOpen) RefreshCart();
         }
@@ -1287,6 +1269,7 @@ namespace Zjcs.Presentation.Home
 
         public void Dispose()
         {
+            ReleaseNativePlayerPanel();
             ReleaseNativeCurrencyBar();
             ReleaseNativeFunctionMenu();
             ReleaseNativeBedWindow();
