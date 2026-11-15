@@ -39,6 +39,7 @@ namespace Zjcs.Presentation.Combat
             if (!ValidatePortableFlameLife) return;
             Require(firstPromotionItemId == 10061 && skillId == 11200,
                 "The fire-ring lifecycle requires original 10061/11200.");
+            if (ValidatePortableFlameReplacement) { ConfigurePortableFlameReplacement(checkpoint); return; }
             var player = checkpoint.Units.Single(value => value.Id == 1);
             var enemy = checkpoint.Units.First(value => value.Side != player.Side);
             // Four controlled friendly original 3331 models compete for three slots.
@@ -91,7 +92,9 @@ namespace Zjcs.Presentation.Combat
             foreach (var sound in UnityEngine.Object.FindObjectsOfType<MyPlayableSound>())
             {
                 if (sound.SoundEvent?.Id != PortableFlameSoundEventId || sound.SoundEvent.PlayingId == 0) continue;
-                Require(body && (sound.mySource == body.gameObject || sound.myTarget == body.gameObject),
+                var second = ValidatePortableFlameReplacement ? controller.TryGetUnitTransform(flameReplacementCaster) : null;
+                Require(body && (sound.mySource == body.gameObject || sound.myTarget == body.gameObject
+                    || second && (sound.mySource == second.gameObject || sound.myTarget == second.gameObject)),
                     "Original Skill_10061 sound lost its casting character.");
                 uint playing = sound.SoundEvent.PlayingId;
                 Require(!flameColdSceneComplete || ArcNativeSoundEvent(playing) != PortableFlameSoundEventId,
@@ -105,6 +108,7 @@ namespace Zjcs.Presentation.Combat
         private void ObservePortableFlameStep(FightBattleCheckpoint checkpoint)
         {
             if (!ValidatePortableFlameLife || flameComplete) return;
+            if (ValidatePortableFlameReplacement) { ObservePortableFlameReplacementStep(checkpoint); return; }
             var step = checkpoint.Receipts.Last().Event;
             foreach (var value in step.StatusViewEvents.Where(value => value.Status.ClassId == 24210))
             {
@@ -137,6 +141,7 @@ namespace Zjcs.Presentation.Combat
 
         private bool ObservePortableFlameFrame(OfficialBattleRuntimeController controller)
         {
+            if (ValidatePortableFlameReplacement) return ObservePortableFlameReplacementFrame(controller);
             if (!ValidatePortableFlameLife || flameComplete || flameHolders.Count == 0) return false;
             Require(Time.realtimeSinceStartup < flameDeadline, "Original friendly fire-ring lifecycle timed out.");
             var views = PortableFlameViews();
@@ -211,6 +216,7 @@ namespace Zjcs.Presentation.Combat
         private void VerifyPortableFlameDiagnostic()
         {
             if (!ValidatePortableFlameLife) return;
+            if (ValidatePortableFlameReplacement) { VerifyPortableFlameReplacement(); return; }
             Require(flameComplete, "Original friendly fire-ring lifecycle did not finish.");
             VerifyPortableFlameMovement();
             Require(!PortableFlameColdRequested || flameColdSceneComplete,

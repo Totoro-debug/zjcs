@@ -15,7 +15,8 @@ param(
     [switch]$PortableFlameLife,
     [switch]$SunsetSwordSound,
     [switch]$PortableFlameColdScene,
-    [switch]$PortableFlameMovement
+    [switch]$PortableFlameMovement,
+    [switch]$PortableFlameReplacement
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -40,6 +41,7 @@ if ($ColdStatusScene -and (-not $DarkStatus -or $AllStatusViews)) { throw 'Cold 
 if ($ColdSummonScene -and (-not $SummonLife -or $ColdStatusScene)) { throw 'Cold summon scene requires the original summon lifespan diagnostic.' }
 if ($PortableFlameColdScene -and -not $PortableFlameLife) { throw 'Cold fire-ring hosts require the isolated friendly fire-ring lifecycle.' }
 if ($PortableFlameMovement -and (-not $PortableFlameLife -or $PortableFlameColdScene)) { throw 'Moving fire rings require the isolated lifecycle without a cold-host handoff.' }
+if ($PortableFlameReplacement -and (-not $PortableFlameLife -or $PortableFlameColdScene -or $PortableFlameMovement)) { throw 'Replacing fire rings require their own two-caster lifecycle.' }
 if ($ItemIds.Count -eq 0) { $ItemIds = if ($SunsetSwordSound) { @(10053) } elseif ($PortableFlameLife) { @(10061) } elseif ($AirCombo) { @(10006,10009,10052) } elseif ($ActionInvisible) { @(10025,10058) } elseif ($SummonLife) { @(10019,10025,10058) } elseif ($MoveScopeColdScene) { @(10029,10055) } elseif ($HitScopeColdScene) { @(10072) } elseif ($DarkStatus) { @(10029) } else { $active } }
 foreach ($item in $ItemIds) { if ($item -notin $active) { throw "Not an original active skill in scope: $item" } }
 if ($AirCombo -and @($ItemIds | Where-Object { $_ -notin @(10006,10009,10052) }).Count -gt 0) {
@@ -90,6 +92,7 @@ $settings = @{
     ZJCS_HIT_SCOPE_COLD_SCENE = $(if ($HitScopeColdScene) { '1' } else { $null })
     ZJCS_PORTABLE_FLAME_LIFECYCLE = $(if ($PortableFlameLife) { '1' } else { $null })
     ZJCS_PORTABLE_FLAME_COLD_SCENE = $(if ($PortableFlameColdScene) { '1' } else { $null })
+    ZJCS_PORTABLE_FLAME_REPLACEMENT = $(if ($PortableFlameReplacement) { '1' } else { $null })
     ZJCS_PORTABLE_FLAME_MOVEMENT = $(if ($PortableFlameMovement) { '1' } else { $null })
     ZJCS_SUNSET_SWORD_SOUND = $(if ($SunsetSwordSound) { '1' } else { $null })
     ZJCS_STATUS_PROCESS_PHASE = $null
@@ -103,7 +106,7 @@ try {
         [Environment]::SetEnvironmentVariable($key, $settings[$key], 'Process')
     }
     foreach ($item in $ItemIds) { foreach ($direction in $Directions) {
-        $prefix = if ($PortableFlameMovement) { "portable-flame-movement-$direction-" } elseif ($PortableFlameColdScene) { "portable-flame-cold-$direction-" } elseif ($SunsetSwordSound) { "sunset-sword-sound-$direction-" } elseif ($PortableFlameLife) { "portable-flame-life-$direction-" } else { "native-$item-$direction-" }
+        $prefix = if ($PortableFlameReplacement) { "portable-flame-replacement-$direction-" } elseif ($PortableFlameMovement) { "portable-flame-movement-$direction-" } elseif ($PortableFlameColdScene) { "portable-flame-cold-$direction-" } elseif ($SunsetSwordSound) { "sunset-sword-sound-$direction-" } elseif ($PortableFlameLife) { "portable-flame-life-$direction-" } else { "native-$item-$direction-" }
         $run = Join-Path $workspacePath ($prefix + [guid]::NewGuid().ToString('N'))
         New-Item -ItemType Directory -Path $run | Out-Null
         $env:ZJCS_FIRST_PROMOTION_SKILL = [string]$item
@@ -130,7 +133,7 @@ try {
         if ($item -eq 10061 -and -not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Portable flame] Original 11200/24210 creator and 10860 proximity damage passed.')) {
             throw "Original 10061 proximity/creator assertions did not complete: $run"
         }
-        if ($PortableFlameLife) {
+        if ($PortableFlameLife -and -not $PortableFlameReplacement) {
             if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Portable flame lifecycle] Four friendly original status views, disk rebind, two personal rounds and retirement passed.')) {
                 throw "Original friendly fire-ring lifecycle assertions did not complete: $run"
             }
@@ -140,6 +143,23 @@ try {
             foreach ($frame in @('party','restored','owner-round-2','ended')) {
                 if (-not (Test-Path -LiteralPath (Join-Path $run "portable-flame-$frame.png"))) {
                     throw "Original friendly fire-ring lifecycle frame $frame was not captured: $run"
+                }
+            }
+        }
+        if ($PortableFlameReplacement) {
+            foreach ($message in @(
+                '[Portable flame replacement] Two original old entities ended, new creator/cultivation and two acquisition hits passed.',
+                '[Portable flame replacement] Old native views retired, second original hero action, unique new views and disk rebind passed.',
+                '[Portable flame replacement] New two-personal-round clocks and complete native retirement passed.',
+                '[Portable flame replacement] Two original caster sounds completed without a restore replay.',
+                '[Portable flame replacement] Original solo result resolved the cloned local appearance.')) {
+                if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch $message)) {
+                    throw "Original fire-ring replacement did not complete: $message ($run)"
+                }
+            }
+            foreach ($frame in @('first','before','after','restored','next-round','ended')) {
+                if (-not (Test-Path -LiteralPath (Join-Path $run "portable-flame-replacement-$frame.png"))) {
+                    throw "Original fire-ring replacement frame is missing: $frame ($run)"
                 }
             }
         }

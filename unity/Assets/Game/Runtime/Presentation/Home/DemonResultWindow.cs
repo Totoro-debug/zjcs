@@ -265,7 +265,20 @@ namespace Zjcs.Presentation.Home
         public BattleResultBoss GetBoss(int id) => id == 4800
             ? new BattleResultBoss { Prefab = assets.Boss, StageNameKey = "stage_4800_name" }
             : throw new ArgumentOutOfRangeException(nameof(id));
-        public IProfessionInfoTarget ResolvePlayer(int id) => id == 1 ? player : throw new ArgumentOutOfRangeException(nameof(id));
+        public IProfessionInfoTarget ResolvePlayer(int id)
+        {
+            if (id == 1) return player;
+            // This controlled two-caster skill fixture copies the local player's
+            // appearance. Keep both original result rows and their recorded damage.
+            if (id == 3 && Environment.GetEnvironmentVariable("ZJCS_PORTABLE_FLAME_REPLACEMENT") == "1"
+                && Environment.GetEnvironmentVariable("ZJCS_PORTABLE_FLAME_LIFECYCLE") == "1"
+                && Environment.GetEnvironmentVariable("ZJCS_FIRST_PROMOTION_SKILL") == "10061")
+            {
+                Debug.Log("[Portable flame replacement] Original solo result resolved the cloned local appearance.");
+                return player;
+            }
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
         public long MainPlayerId => player.TargetId;
         public string PlayerName(IProfessionInfoTarget target) => home.Profile.Save.Player.CharacterName;
         public bool IsTeamMember(long id) => false;
