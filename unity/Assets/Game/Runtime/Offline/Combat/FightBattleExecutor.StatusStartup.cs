@@ -98,7 +98,7 @@ namespace Zjcs.Combat.Official
             {
                 var logicInvocations = FightStatusLogicRuntime.Apply(owner, ended,
                     FightStatusLogicEvent.StatusEnd, owner, owner, null, null, units,
-                    statusCatalog, random);
+                    statusCatalog, random, nextStatusInstanceId: NextStatusInstanceId);
                 if (logicInvocations.Count > 0)
                 {
                     float logicDelay = 0f;
@@ -150,12 +150,12 @@ namespace Zjcs.Combat.Official
             {
                 logicInvocations.AddRange(FightStatusLogicRuntime.Apply(owner, status,
                     FightStatusLogicEvent.StatusSelfInit, owner, owner, null, null, units,
-                    statusCatalog, random));
+                    statusCatalog, random, nextStatusInstanceId: NextStatusInstanceId));
                 status.LogicSelfInitialized = true;
             }
             logicInvocations.AddRange(FightStatusLogicRuntime.Apply(owner, status,
                 FightStatusLogicEvent.StatusStart, owner, owner, null, null, units,
-                statusCatalog, random));
+                statusCatalog, random, nextStatusInstanceId: NextStatusInstanceId));
             if (logicInvocations.Count > 0)
             {
                 float logicDelay = Math.Max(0f, context.StatusStartTime);

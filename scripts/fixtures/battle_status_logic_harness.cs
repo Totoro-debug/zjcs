@@ -65,6 +65,7 @@ public static class BattleStatusLogicHarness
             "Status logic checkpoint could not be restored by the official executor.");
         FilterBoundaries(catalog);
         EntityPortBoundaries(catalog);
+        ExecutorStatusSerial(catalog, items, formula);
         ChangeStatusStacks(catalog);
         OriginalStackStartup(catalog);
         AbsorbStatusStacks(catalog);
@@ -535,6 +536,38 @@ public static class BattleStatusLogicHarness
                 + "\"IsPersistentBlackboard\":true},\"Value\":1}"));
         Check(ends == 1 && !owner.Statuses.Contains(victim) && owner.Statuses.Contains(later),
             "Removal preflight changed the established filtering/end-callback interleaving.");
+    }
+
+    private static void ExecutorStatusSerial(FightOfficialCombatCatalog catalog,
+        FightOfficialSkillItemCatalog items, FightDamageFormula formula)
+    {
+        var owner = Unit(1, 1);
+        var logic = catalog.CreateStatus(24669, 1, 1, 97);
+        logic.LogicDefinitionJson = "{\"Triggers\":[{\"_type\":\"FightOnStatusSelfInitTriggerCfg\","
+            + "\"Flow\":{\"FilterCondition\":null,\"HandleCfgs\":[{\"_type\":\"FightHandleCfgTriggerStatuss\","
+            + "\"SourceEntityKey\":{\"Id\":1},\"TargetEntityKey\":{\"Id\":1},"
+            + "\"TriggerStatusCfgs\":[{\"StatusId\":24823,\"BasePercent\":1}]}]}}]}";
+        owner.Statuses.Add(logic);
+        var checkpoint = new FightBattleCheckpoint {
+            StageId=1001, RandomSeed=31, StatusInstanceSerial=100000,
+            Grid=new FightBattleGrid {Width=20,Height=20}, ResultRules=new FightBattleResultRules()
+        };
+        checkpoint.Units.Add(owner); checkpoint.Units.Add(Unit(2, 2));
+        var runner = FightBattleExecutor.Begin(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+        runner.Step(0, 1);
+        var created = owner.Statuses.Single(value => value.ClassId == 24823);
+        Check(created.InstanceId > 100000 && checkpoint.StatusInstanceSerial >= created.InstanceId,
+            "Executor status logic bypassed the checkpoint serial and reused a retired instance id.");
+        int firstId = created.InstanceId;
+        owner.Statuses.Remove(created);
+        logic.LogicSelfInitialized = false;
+        logic.LogicStartInitialized = false;
+        var restored = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+        runner = FightBattleExecutor.Restore(restored, formula, new FightDamageSettlement(), catalog, items);
+        runner.Step(restored.Sequence, restored.Counter + 1);
+        created = restored.Units[0].Statuses.Single(value => value.ClassId == 24823);
+        Check(created.InstanceId > firstId && restored.StatusInstanceSerial >= created.InstanceId,
+            "Restored executor reused a removed status instance id.");
     }
 
     private static List<FightBattleStatusSkillInvocation> RunFlow(FightBattleStatusState status, FightBattleUnitState owner,

@@ -438,7 +438,7 @@ namespace Zjcs.Combat.Official
                         if (logicStatus != null && logicOwner.Statuses.Contains(logicStatus))
                             roundEndSkills.AddRange(FightStatusLogicRuntime.Apply(logicOwner, logicStatus,
                                 FightStatusLogicEvent.RoundEnd, actor, actor, null, null, units,
-                                statusCatalog, random));
+                                statusCatalog, random, nextStatusInstanceId: NextStatusInstanceId));
                 }
                 if (roundEndSkills.Count > 0)
                 {
@@ -1106,7 +1106,8 @@ namespace Zjcs.Combat.Official
                             configuredComponentInvocations.AddRange(FightStatusLogicRuntime.Apply(logicOwner,
                                 logicStatus, ReferenceEquals(logicOwner, actor)
                                     ? FightStatusLogicEvent.DoDamage : FightStatusLogicEvent.BeDamage,
-                                actor, target, skill, hit, units, statusCatalog, random));
+                                actor, target, skill, hit, units, statusCatalog, random,
+                                nextStatusInstanceId: NextStatusInstanceId));
                         }
                     }
                     ApplyResilienceHit(actor, target, skill, hit, resolved, casts,
@@ -1131,7 +1132,8 @@ namespace Zjcs.Combat.Official
                             if (logicStatus != null && target.Statuses.Contains(logicStatus))
                                 configuredComponentInvocations.AddRange(FightStatusLogicRuntime.Apply(target,
                                     logicStatus, FightStatusLogicEvent.AfterBeDamage, actor, target,
-                                    skill, hit, units, statusCatalog, random, damage, formula));
+                                    skill, hit, units, statusCatalog, random, damage, formula,
+                                    NextStatusInstanceId));
                     RebuildBattleProperties();
                     float endedDuration = 0f, endedActionDuration = -1f;
                     ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
@@ -1208,7 +1210,7 @@ namespace Zjcs.Combat.Official
                     if (logicStatus != null && actor.Statuses.Contains(logicStatus))
                         actionEndSkills.AddRange(FightStatusLogicRuntime.Apply(actor, logicStatus,
                             FightStatusLogicEvent.SkillEnd, actor, actor, skill, null, units,
-                            statusCatalog, random));
+                            statusCatalog, random, nextStatusInstanceId: NextStatusInstanceId));
                 if (actionEndSkills.Count > 0)
                 {
                     ExecuteConfiguredStatusSkills(actionEndSkills, casts, damageEvents,

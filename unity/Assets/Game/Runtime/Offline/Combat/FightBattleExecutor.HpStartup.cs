@@ -135,12 +135,12 @@ namespace Zjcs.Combat.Official
             {
                 invocations.AddRange(FightStatusLogicRuntime.Apply(owner, status,
                     FightStatusLogicEvent.StatusSelfInit, owner, owner, null, null, units,
-                    statusCatalog, random));
+                    statusCatalog, random, nextStatusInstanceId: NextStatusInstanceId));
                 status.LogicSelfInitialized = true;
             }
             invocations.AddRange(FightStatusLogicRuntime.Apply(owner, status,
                 FightStatusLogicEvent.StatusStart, owner, owner, null, null, units,
-                statusCatalog, random));
+                statusCatalog, random, nextStatusInstanceId: NextStatusInstanceId));
             status.LogicStartInitialized = true;
             ExecuteHpStartupSkills(invocations);
         }
