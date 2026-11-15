@@ -1,0 +1,63 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "bundle": "defaultpackage_assets_image_ui_createplayer.bundle",
+  "source": {
+    "origin": "apk_zip",
+    "apk_entry": "assets/yoo/DefaultPackage/54acb3c1f77d970f2d1bf916d8ba8d6b.bundle",
+    "manifest": "884_156692",
+    "apk_manifest": "881_156673",
+    "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+    "raw_size": 1185894,
+    "raw_sha256": "231020bc6c1f399ca72997a099ee4f26c8735afe576795fb7d3bcdafbf7d9ce4"
+  },
+  "generator": "scripts/restore_creation_poster_textures.py",
+  "generator_sha256": "6d18b2bad8788ad284cbb487a75b2cb28de6e929dd03a6faaf46d55058afb41b",
+  "operation": "Decode each original standalone Texture2D at its full Sprite.m_Rect dimensions. Verify the earlier cropped PNG pixels against the same APK Sprite.image before replacement. Preserve the existing PNG paths, GUIDs, prefab references, RectTransforms, aspect ratios and animation curves. No resampling, hand padding or layout adjustment.",
+  "outputs": [
+    {
+      "name": "ImgRole_Male",
+      "sprite_path_id": -875077172619116736,
+      "texture_path_id": -9214016174430290112,
+      "source_cropped_sha256": "195cbe178efba8315b849bc5944df84089cab9632b2c65af1c2104ca53f4f823",
+      "source_cropped_size": [
+        676,
+        1446
+      ],
+      "source_rect": [
+        754.0,
+        1485.0
+      ],
+      "texture_rect_offset": [
+        38.087093353271484,
+        0.0
+      ],
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgRole_Male-f13908db32.png",
+      "sha256": "76416a6cda4a1f16bbe8b2eae0aa77a16d01e53e1618eb201514b395087822aa",
+      "bytes": 635172,
+      "binding": "CreatePlayerPanel/Content/BgGo/RoleContent/MaleGo/ColorImg/RoleImg"
+    },
+    {
+      "name": "ImgRole_Female",
+      "sprite_path_id": 1724044646271766493,
+      "texture_path_id": -5268907059091517475,
+      "source_cropped_sha256": "804d6e87c6288aad3024de23122da112363263baf01405f82cd88dd8d7549900",
+      "source_cropped_size": [
+        804,
+        1447
+      ],
+      "source_rect": [
+        879.0,
+        1486.0
+      ],
+      "texture_rect_offset": [
+        40.07612228393555,
+        0.0
+      ],
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgRole_Female-49e8988709.png",
+      "sha256": "92f501a48599850f898e40e5aa8b509f558ec2eb470bd79edd836e1f3ccc82d8",
+      "bytes": 645478,
+      "binding": "CreatePlayerPanel/Content/BgGo/RoleContent/FemaleGo/ColorImg/RoleImg"
+    }
+  ]
+}

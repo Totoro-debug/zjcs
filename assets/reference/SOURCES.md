@@ -1,5 +1,7 @@
 # 官方来源与提取入口
 
+创角海报纹理：`scripts/restore_creation_poster_textures.py` 从所选 `884_156692` 对应 APK 内的 `defaultpackage_assets_image_ui_createplayer.bundle` 解码男女完整独立 Texture2D，逐像素核对先前 `854_156383` 导出裁剪区域一致后恢复原 Sprite 矩形，保留现有路径／GUID 和 prefab 绑定。APK、bundle、Sprite／Texture 对象、裁剪偏移及输入输出 SHA-256 见[海报纹理凭据](character-creation/poster-textures-source-manifest.json)；两版来源分别保留，不改写历史裁剪输入哈希。实现与验证范围见[创角](../../docs/features/character-creation.md)。
+
 火焰随身 `10061／11200→24210→10860` 由 `scripts/prepare_battle_portable_flame_sources.py` 按所选 `884_156692` APK 核对八个原实体、十二份共享／客户端代码、程序集、十八项原生输入／十八项现有 Windows 输出和原人物动作绑定，输入输出 SHA-256 见[火焰随身来源](battle-rules/portable-flame-source-manifest.json)。两个伤害实体的缺省空驱散排除名单仅作版本对照，历史载荷保持独立；实现、单机名额规则和验证范围仅维护于[斗士技能页](../../docs/features/skills-fighter.md#rank-2)。
 
 夕照剑舞 `10053／11250→11251→10022` 由 `scripts/prepare_battle_sunset_sword_sources.py` 按所选 `884_156692` APK 核对三个实体、八份原共享／客户端代码、程序集、八项原生输入／八项现有 Windows 输出与原人物动作绑定，输入输出 SHA-256 见[夕照剑舞来源](battle-rules/sunset-sword-source-manifest.json)。公共 10022 的缺省空驱散排除名单只投影所选默认值，历史运行载荷保持独立；实现和验证范围仅维护于[斗士技能页](../../docs/features/skills-fighter.md#rank-2)。

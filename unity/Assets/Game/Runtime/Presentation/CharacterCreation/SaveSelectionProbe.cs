@@ -217,6 +217,14 @@ namespace Zjcs.Presentation.CharacterCreation
                     Require(icon != null && icon.sprite != null && icon.color.a > 0,
                         "Body icon has no visible original sprite: " + name);
                 }
+                foreach (string name in new[] { "MaleGo", "FemaleGo" })
+                {
+                    Transform role = panel.Find("Content/BgGo/RoleContent/" + name + "/ColorImg/RoleImg");
+                    Image portrait = role.GetComponent<Image>();
+                    Image glow = role.Find("ShowSwitch/SelGlow").GetComponent<Image>();
+                    Require(portrait.sprite.rect.size == glow.sprite.rect.size,
+                        "Poster lost its original transparent margins relative to the selection outline: " + name);
+                }
                 Require(draftService.OpenDraft("slot-16").body_type == (female ? "female" : "male"),
                     "Body selection was not saved after the simulated click.");
                 yield return new WaitForEndOfFrame(); Capture(female ? "body-female" : "body-male");
