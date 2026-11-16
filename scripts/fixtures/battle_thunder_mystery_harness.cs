@@ -18,7 +18,7 @@ public static class BattleThunderMysteryHarness
     }
     public static string Run(FightOfficialCombatCatalog catalog,FightDamageFormula formula,FightOfficialSkillItemCatalog items)
     {
-        foreach(string mode in new[]{"damage","dodge","blinding","immunity","cure","forbidden"})
+        foreach(string mode in new[]{"damage","dodge","blinding","immunity","cure","applicator-death"})
         {
             var cp=new FightBattleCheckpoint {StageId=1001,MaxRound=5,RandomSeed=91,
                 Grid=new FightBattleGrid {Width=12,Height=12}};
@@ -28,8 +28,12 @@ public static class BattleThunderMysteryHarness
             var passive=catalog.CreateStatus(25000,1,1,1,25000,10502,2,20,5,passiveProps);
             Check(Math.Abs(passive.Components.HitSkill.Rate-.3f)<.0001f,"Original probability changed");
             passive.Components.HitSkill.Rate=1f; // Exercise both outcomes without a probabilistic test.
-            if(mode=="forbidden") passive.ForbiddenType=1;
             actor.Statuses.Add(passive);
+            if(mode=="applicator-death") {
+                Check(!passive.ForbiddenOnApplicatorDie,"Original status unexpectedly suppresses on applicator death");
+                Check(!FightStatusLifecycle.SetForbidden(actor,passive,FightStatusLifecycle.ForbiddenApplicatorDie,true)
+                    && passive.ForbiddenType==0,"Applicator death changed the original passive status");
+            }
             var props=catalog.CalculateSkillProps(11010,2,20,5)
                 .Select(value=>new FightPropertyValue {Id=value.Key,Value=value.Value}).ToList();
             var skill=catalog.CreateSkill(11010,0,10042,2,20,5,props);
@@ -50,8 +54,8 @@ public static class BattleThunderMysteryHarness
             Check(mode!="immunity"||hit.Immunity,"Immunity fixture did not block");
             Check(mode!="cure"||hit.IsCure,"Cure fixture did not heal");
             var children=step.SkillCasts.Where(x=>x.SkillEntityId==10530).ToArray();
-            Check(children.Length==(mode=="damage"?1:0),mode+" produced "+children.Length+" lightning casts");
-            if(mode=="damage") {
+            Check(children.Length==(mode=="damage"||mode=="applicator-death"?1:0),mode+" produced "+children.Length+" lightning casts");
+            if(mode=="damage"||mode=="applicator-death") {
                 Check(children[0].ActorId==1&&children[0].TargetIds.Contains(2)
                     &&children[0].SkillItemId==10502,"Lightning lost its passive source or hit target");
                 Check(step.DamageEvents.Any(x=>x.SkillEntityId==10530&&x.TargetId==2&&x.Damage<0),
@@ -60,6 +64,6 @@ public static class BattleThunderMysteryHarness
             string saved=FightBattleCheckpointSerializer.Save(cp);
             Check(executor.Step(0,1).Replayed&&saved==FightBattleCheckpointSerializer.Save(cp),mode+" replay repeated trigger");
         }
-        return "Thunder mystery passed: damage, dodge, blinding, immunity, cure, forbidden and checkpoint/replay cases.";
+        return "Thunder mystery passed: damage, dodge, blinding, immunity, cure, applicator-death handling and checkpoint/replay cases.";
     }
 }
