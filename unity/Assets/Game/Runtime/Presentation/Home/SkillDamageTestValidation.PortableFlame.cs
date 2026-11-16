@@ -30,6 +30,7 @@ namespace Zjcs.Presentation.Home
             var slots = new ProfileSlotCatalog(root);
             var save = new OfflineMainlineSave();
             var player = save.Player;
+            OfflineItemAutoIncrease.InitializeNewCharacter(player, DateTime.UtcNow);
             player.CharacterCreated = true; player.CharacterName = "烈焰流程验证";
             player.Level = 50; player.Rank = 2; player.SubRank = 5; player.MaxProfessionRank = 2;
             player.Experience = assets.Load().CumulativeLevelExperience[50];
@@ -70,6 +71,38 @@ namespace Zjcs.Presentation.Home
             click(FlameFlowButton(value => value.name.StartsWith("CharacterPanelSkillDetailPanelSkillPieceItem", StringComparison.Ordinal)));
             yield return new WaitForSecondsRealtime(.4f);
             var pieceDialog = FindObjectsOfType<Transform>().Single(value => value.name == "skill_piece_detail");
+            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PIECE_PROGRESS_ONLY") == "1")
+            {
+                Require(panel.HandleEscape(), "Fragment detail did not close.");
+                var stack = progression.Player.Inventory.Single(value => value.ItemId == definition.PieceItemId);
+                foreach (int rank in new[] { 0, 1 })
+                {
+                    progression.Player.Skills.Skills.RemoveAll(value => value.ClassId == definition.ClassId);
+                    if (rank > 0) progression.Player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = definition.ClassId, Rank = rank });
+                    long required = rank == 0 ? mergeCount : definition.RankCosts.Single(value => value.CurrentRank == rank)
+                        .Items.Where(value => value.ItemId == definition.PieceItemId).Sum(value => value.Count);
+                    foreach (long count in new[] { 0L, required / 4, required * 14 / 15, required, required + 10 })
+                    {
+                        stack.Count = count;
+                        click(FlameFlowButton(value => value.name.StartsWith("CharacterPanelSkillDetailPanelSkillPieceItem", StringComparison.Ordinal)));
+                        yield return new WaitForSecondsRealtime(.4f);
+                        pieceDialog = FindObjectsOfType<Transform>().Single(value => value.name == "skill_piece_detail");
+                        var slider = pieceDialog.GetComponentsInChildren<Slider>().Single();
+                        var image = slider.fillRect.GetComponent<Image>();
+                        Require(slider.direction == Slider.Direction.LeftToRight && image.type == Image.Type.Filled
+                            && image.fillMethod == Image.FillMethod.Horizontal && image.fillOrigin == (int)Image.OriginHorizontal.Left
+                            && Mathf.Abs(image.fillAmount - Mathf.Clamp01((float)count / required)) < .0001f,
+                            "Fragment progress must fill horizontally from the left at the owned/required ratio.");
+                        yield return CaptureFlameFlow(output, "progress-" + rank + "-" + count);
+                        Require(panel.HandleEscape(), "Fragment detail did not close after progress check.");
+                    }
+                }
+                Debug.Log("[Fragment progress] Merge and rank-up: empty, partial, near-full, full and overflow passed via pointer input.");
+                File.WriteAllText(Path.Combine(output, "result.json"), JsonUtility.ToJson(new Result { passed = true }, true));
+                Destroy(home.gameObject);
+                yield return null;
+                yield break;
+            }
             yield return CaptureFlameFlow(output, "pieces");
             var pieceTexts = pieceDialog.GetComponentsInChildren<TMP_Text>();
             Require(pieceTexts.Any(value => value.name == "TypeText" && value.text == "战技碎片")

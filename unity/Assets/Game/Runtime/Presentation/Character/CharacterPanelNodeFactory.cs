@@ -108,7 +108,8 @@ namespace Zjcs.Presentation.Character
 
             if (source.image != null)
             {
-                Image image = source.image.mirror_type < 0 ? instance.AddComponent<Image>()
+                Image image = HasScript(source, "SlicedFilledImage") ? instance.AddComponent<Zjcs.Official.WorldUI.SlicedFilledImage>()
+                    : source.image.mirror_type < 0 ? instance.AddComponent<Image>()
                     : instance.AddComponent<Zjcs.Official.WorldUI.MirrorImage>();
                 if (image is Zjcs.Official.WorldUI.MirrorImage mirror)
                 {

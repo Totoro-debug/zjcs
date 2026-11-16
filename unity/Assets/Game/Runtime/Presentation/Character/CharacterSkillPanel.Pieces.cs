@@ -80,6 +80,16 @@ namespace Zjcs.Presentation.Character
                 var sliderFields = FindOriginalComponent(source, "Slider");
                 var slider = sliderNode.GetComponent<Slider>() ?? sliderNode.gameObject.AddComponent<Slider>();
                 slider.fillRect = dialogNodes[Convert.ToString(sliderFields["mFillRect"])];
+                // The recovered prefab stores Image.fill separately from Slider.
+                // Leaving these fields at Unity defaults produces a radial fill.
+                var fillNode = AuxiliaryNodes(root).First(value => Convert.ToString(value["path"]) ==
+                    Convert.ToString(sliderFields["mFillRect"]));
+                var fillFields = AuxObject(AuxObject(fillNode["image"])["fill"]);
+                var fillImage = slider.fillRect.GetComponent<Image>();
+                fillImage.fillMethod = (Image.FillMethod)Convert.ToInt32(fillFields["method"]);
+                fillImage.fillOrigin = Convert.ToInt32(fillFields["origin"]);
+                fillImage.fillClockwise = Convert.ToBoolean(fillFields["clockwise"]);
+                fillImage.fillAmount = Convert.ToSingle(fillFields["amount"], CultureInfo.InvariantCulture);
                 slider.handleRect = sliderFields["mHandleRect"] is string handle ? dialogNodes[handle] : null;
                 slider.direction = (Slider.Direction)Convert.ToInt32(sliderFields["mDirection"]);
                 slider.wholeNumbers = Convert.ToBoolean(sliderFields["mWholeNumbers"]);

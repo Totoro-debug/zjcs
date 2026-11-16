@@ -224,6 +224,7 @@ Unity 已接入固定版本 `871_156598` 人物成长目录、人物概览与属
 - [x] 技能列表已排除当前方案已装项、按品质／ID 排序，并对不满足职业链的技能显示灰色与“（职业不符）”；`IsAvailableFor` 与安装校验共用同一可用性规则。
 - [x] 技能收藏已接：`OfflineSkillProfile.FavoriteSkills` 进入统一存档（旧档 `Normalize` 补空），列表行右上角星标可收藏／取消，收藏项排在列表前部；未拥有技能不能收藏。
 - [x] 碎片页签已列已拥有技能碎片及数量；拥有对应碎片但未获得的技能在列表中标记“（可合成）”，`ShowAll` 关闭时也显示。
+- [x] 碎片详情合成／进阶进度条恢复 `skill-ui.json` 原 prefab 的 `Image.fill` 字段：`method=0`、`origin=0` 与 `Slider.mDirection=0` 对应从左向右水平填充，中央显示持有量／需求量，超过需求显示满格。`CharacterPanelNodeFactory` 按原脚本标记使用已迁移的官方 `SlicedFilledImage` 保持九宫格圆角，`CharacterSkillPanel.Pieces.cs` 恢复填充参数；沿用官方图片与布局，无自定义美术或规则。验证分支 `ZJCS_SKILLS_PIECE_PROGRESS_ONLY=1` 已通过 Play Mode 模拟点击覆盖两种状态的空、部分、接近满格、满格和超量，并检查实际截图。静态检查与 Unity 编译通过；用户确认显示正常，按要求停止进一步验证和构建，本次未完成 Windows Player 验证及发布。
 - [x] 碎片合成已接：详情层对未拥有的技能按官方 `skill_rank` 首阶 `Piece` 数量显示“合成”，首次点击提示再次确认，确认后扣除碎片、发放技能物品并写入已拥有技能。
 - [ ] 新物品标记清除时机及原排序细节仍待补（合成规则见[技能](skills.md)）。
 - [x] 已接批量培养：`FastLevelUpBtn` 调用 `UpgradeAllSlots`、`FastPromotionBtn` 调用 `PromoteAllSkills`，操作前把技能碎片与货币从背包同步到技能档案，成功后扣回背包并刷新槽位；每个技能槽右下角“升级”调用 `UpgradeSlot` 单槽培养；面板底部显示结果状态。
