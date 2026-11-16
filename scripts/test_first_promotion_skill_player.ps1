@@ -134,6 +134,9 @@ try {
         if ($item -eq 10016) {
             & python -B (Join-Path $PSScriptRoot 'verify_lightning_dash_receipt.py') (Join-Path $run 'summon-final.json')
             if ($LASTEXITCODE -ne 0) { throw "Original 10016 dash/hit receipt validation failed: $run" }
+            if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Lightning dash sound] Original cast binding, native playback and completion passed.')) {
+                throw "Original Skill_10016 native sound did not complete: $run"
+            }
         }
         if ($item -eq 10042 -and -not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Breaking brand] Original 11010/11011/11012 damage and 24052 application/source/checkpoint passed;')) {
             throw "Original 10042 damage/mark assertions did not complete: $run"

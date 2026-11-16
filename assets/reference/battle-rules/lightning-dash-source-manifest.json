@@ -692,6 +692,42 @@
       "sha256": "59b73d8d4b6e39603ca8a4451e546920babec7a74282be7f90c1695d9397a056"
     }
   ],
+  "native_sound_inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/1D66C9BB-7396-417B-92A1-B227F0FE848F.asset",
+      "sha256": "8abdd65b02f4218a2b26dd4676d335e1d013e15878416e42c06c7b41ff079bb6"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/1D66C9BB-7396-417B-92A1-B227F0FE848F.asset.meta",
+      "sha256": "87dfef9cec8f99a1c8a23dd1a465ecbcac60065b6a1b6ec1c03aa8e83af57e1f"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise/catalog.json",
+      "sha256": "93bba01ba4a313f7e61ce198d0a33f121570bde3633fc8d0eea40806de15e4c5"
+    }
+  ],
+  "validation_inputs": [
+    {
+      "path": "scripts/test_battle_lightning_dash.ps1",
+      "sha256": "cb1766306b29b88ae9aade11132ded2f5cde2b9fdf6d1537170004ab1f03c628"
+    },
+    {
+      "path": "scripts/test_first_promotion_skill_player.ps1",
+      "sha256": "3da4b59b9779c58de25b4a1d6e4b2fd2d2fc2117ed5e3faf867615f6118ee22a"
+    },
+    {
+      "path": "scripts/verify_lightning_dash_receipt.py",
+      "sha256": "8ea6b70f6132cedc7e34c6d2c1dc2e871234ecd4569278f9502f038a5e2ecd81"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.LightningDash.cs",
+      "sha256": "31a87eb1df06d0e4b63b55c71acf2a98b88d1f8d5a7094b18a2518714481bb86"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.LightningDash.cs.meta",
+      "sha256": "d71dcc96a5c4fb04f84cf8044f6773c7df370faa5d125719c1cad653d5d3dbc1"
+    }
+  ],
   "runtime_inputs": [
     {
       "path": "assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json",
@@ -776,7 +812,7 @@
   ],
   "verifier": {
     "path": "scripts/prepare_battle_lightning_dash_sources.py",
-    "sha256": "d55af545e9c7eccb9d2e05fbc2004e097a75d9d39bab1703feb7443a28094a3a"
+    "sha256": "6caa9fe68d4ae79d91e96aee648c57ea5548d5c6efbff80e708f3a0e5b1c7514"
   },
   "operation": "APK-first exact verification of 10016/10680 point targeting, original 10682 movement and 10681/10026 damage, retaining historical runtime input identity. Server AI point selection/path generation is absent. Implementation decisions and current validation limits belong to docs/features/skills-fighter.md."
 }

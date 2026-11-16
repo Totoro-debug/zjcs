@@ -1,3 +1,4 @@
+param([string]$ReceiptDirectory)
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'combat_sources.ps1')
 Add-Type -Path (Get-FightCombatSources)
@@ -46,6 +47,10 @@ foreach ($direction in @(@(0,1),@(0,-1),@(1,0),@(-1,0))) {
             Check ($moves.Count -eq 0 -and $hits.Count -eq 0 -and $actor.SkillState.Slots[0].ReleasedTimes -eq 0) 'Illegal dash consumed or released its skill'
         }
         $after=[Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($cp)
+        if ($mode -eq 'clear' -and $ReceiptDirectory) {
+            $receiptPath = Join-Path $ReceiptDirectory ("dash-$($direction[0])-$($direction[1]).json")
+            [IO.File]::WriteAllText($receiptPath, $after)
+        }
         $restored=[Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load($before)
         $cold=[Zjcs.Combat.Official.FightBattleExecutor]::Restore($restored,$formula,[Zjcs.Combat.Official.FightDamageSettlement]::new(),$catalog,$items)
         [void]$cold.Step(0,1)

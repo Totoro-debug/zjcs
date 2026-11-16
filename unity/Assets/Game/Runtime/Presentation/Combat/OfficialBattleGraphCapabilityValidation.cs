@@ -382,6 +382,7 @@ namespace Zjcs.Presentation.Combat
             ObserveArcShieldSoundFrame(controller);
             ObservePortableFlameSoundFrame(controller);
             ObserveSunsetSwordSoundFrame(controller);
+            ObserveLightningDashSound(controller);
             if (ObserveSwordCounterattackFrame(controller)) return;
             ObserveChainedHitViews(controller);
             ObserveFirstPromotionGeneration(controller);
@@ -492,6 +493,7 @@ namespace Zjcs.Presentation.Combat
             if (ObserveArcShieldFrame(controller)) return;
             if (ObservePortableFlameFrame(controller)) return;
             if (HoldSunsetSwordSound()) return;
+            if (HoldLightningDashSound()) return;
             if (captured && !finisherScheduled)
             {
                 var player = controller.Checkpoint.Units.Single(value => value.Id == 1);
@@ -551,6 +553,7 @@ namespace Zjcs.Presentation.Combat
             VerifyArcShieldDiagnostic();
             VerifyPortableFlameDiagnostic();
             VerifySunsetSwordSound();
+            VerifyLightningDashSound();
             VerifySwordCounterattack();
             VerifyReflectionArmor();
             if (firstPromotionItemId != 0) Require(firstPromotionFrameCount == FirstPromotionFrameTimes.Length,

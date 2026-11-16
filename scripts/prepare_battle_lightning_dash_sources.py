@@ -52,11 +52,23 @@ def main():
     assert len(inputs) == len(outputs) == 12
     for entry in inputs + outputs:
         assert identity(ROOT / entry['path']) == entry
+    event = ROOT / ('unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/'
+        'SkillGraphs/Wwise/ScriptableObjects/Event/1D66C9BB-7396-417B-92A1-B227F0FE848F.asset')
+    assert 'objectName: Skill_10016\n  id: 3744235477\n' in event.read_text(encoding='utf8')
+    sounds = ROOT / 'unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise/catalog.json'
+    assert dict(id=3744235477, name='Skill_10016') in json.loads(sounds.read_bytes())['events']
     proof = dict(manifest='884_156692', configuration=configuration,
         explicit_empty_dispel_defaults=['10026/DisperseStatus/ExcludeCharacterTypes'],
         original_code=originals,
         original_assemblies=[identity(code / 'managed/decoded/Assembly-CSharp.dll')],
-        native_inputs=inputs, runtime_inputs=[identity(source)] + outputs + [identity(ROOT / path) for path in (
+        native_inputs=inputs, native_sound_inputs=[identity(event), identity(event.with_suffix('.asset.meta')), identity(sounds)],
+        validation_inputs=[identity(ROOT / path) for path in (
+            'scripts/test_battle_lightning_dash.ps1',
+            'scripts/test_first_promotion_skill_player.ps1',
+            'scripts/verify_lightning_dash_receipt.py',
+            'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.LightningDash.cs',
+            'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.LightningDash.cs.meta')],
+        runtime_inputs=[identity(source)] + outputs + [identity(ROOT / path) for path in (
             'unity/Assets/Official/Combat/skill-rules.json',
             'unity/Assets/Official/Combat/battle-rules.json',
             'unity/Assets/Official/Combat/rules.json',
