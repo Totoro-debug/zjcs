@@ -61,15 +61,17 @@ namespace Zjcs.Combat.Official
                         || !FightSkillTriggerPolicy.AllowsStatus(skill, status)) continue;
                     FightBattleStatusHitSkillComponentState hitSkill = status.Components?.HitSkill;
                     if (hitSkill != null && HitSourceMatches(status, hitSkill.HitSourceType, actor)
-                        && (status.ClassId != 25000 || status.ForbiddenType == 0 && resolved != null
+                        && (status.ClassId != 25000 && status.ClassId != 25038 || status.ForbiddenType == 0 && resolved != null
                             && !resolved.Type.Dodge && !resolved.Type.Blinding && !resolved.Type.Immunity)
                         && HitRuleMatches(hitSkill.Rate, hitSkill.Block, hitSkill.Crit,
                             hitSkill.Damage, hitSkill.Cure, hitSkill.IsTrueDamage,
                             hitSkill.HitSkillTypes, hitSkill.HitSkillElementTypes,
                             hitSkill.HitSkillEntityClassIds, hitSkill.TargetActionTypes,
                             skill, hit, resolved, target)
-                        && AdvanceCounter(hitSkill.Rate, hitSkill.ConditionCount, hitSkill.MaxInvokeCount,
-                            ref hitSkill.ConditionProgress, ref hitSkill.InvokeCount, random))
+                        && (status.ClassId == 25038
+                            ? AdvanceWindShadowCounter(hitSkill)
+                            : AdvanceCounter(hitSkill.Rate, hitSkill.ConditionCount, hitSkill.MaxInvokeCount,
+                                ref hitSkill.ConditionProgress, ref hitSkill.InvokeCount, random)))
                     {
                         foreach (FightBattleStatusStateTrigger trigger in hitSkill.SkillTriggers)
                             AppendComponentInvocation(status, trigger, actor, target, invocations,
@@ -166,6 +168,16 @@ namespace Zjcs.Combat.Official
             if (progress < required) return false;
             progress = 0;
             invoked++;
+            return true;
+        }
+
+        private bool AdvanceWindShadowCounter(FightBattleStatusHitSkillComponentState hitSkill)
+        {
+            if (hitSkill.MaxInvokeCount >= 0 && hitSkill.InvokeCount >= hitSkill.MaxInvokeCount) return false;
+            if (++hitSkill.ConditionProgress < Math.Max(1, hitSkill.ConditionCount)) return false;
+            hitSkill.ConditionProgress = 0;
+            if (!RollComponent(hitSkill.Rate)) return false;
+            hitSkill.InvokeCount++;
             return true;
         }
 
