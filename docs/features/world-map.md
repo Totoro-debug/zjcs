@@ -108,6 +108,12 @@ Unity 已建立地图数据模型与 `IWorldMapAssets.Load(int)` 资源接口。
 - 公共剧情运行时复用原节点、状态机、动画和声音入口；各图通过独立目录绑定原资源。剧情执行模块的接口、适配器、验证与缺项统一见[主线剧情公共模块](story.md)。
 - 公共路线、战斗、物品提交及探索记录分别维护在[日常副本](dungeons.md)、[战斗执行](battle-execution.md)、[背包](inventory.md)和[世界探索](world-exploration.md)。
 
+#### 战力达标自动碾压
+
+原客户端 `MapControllerEntityRadarTipFastKill` 通过 `MapUtils.GetGameFastType` 读取实体模板的 `FastForwardType`、当前地区的 `FastStageCombatRating`／`GameFastType`。官方地区配置类型先检查等级与阶位门槛；战力类型在这些门槛后再按原阶位压制和战力阈值决定结果；静态类型直接映射普通快进、快速胜利或快速击杀。`OfficialMainlineFastTypeRules.Resolve` 与 `TryResolveGameFastType` 接入这些分支；Map10–16 共用或地图专属交互目录均从 `official-source.json` 当前所选 `884_156692` 的本地官方代码与配置载荷转换，保留各地区阈值、配置快进类型和静态模板类型。输入、输出和验证入口见[自动碾压来源清单](../../assets/reference/official-map/mainline-fast-kill-source-manifest.json)。
+
+运行时在开始战斗前解析类型。快速胜利／快速击杀接入现有胜利结算，按普通胜利更新地图战斗记录、关卡进度、本地状态和战斗消耗；快速快进仍进入普通战斗。用户确认主线普通怪物无消耗，自动碾压应发放配置的原始正常奖励；现有胜利结算尚未接入该奖励，自动碾压完整结算仍待实现和验证。
+
 地图保存成功后，宿主只提供当前实体展示状态和角色坐标；公共世界状态模块先发布神像／巫师激活与原始地区点数，再调用官方实体状态及地区 `prepare → remove → add → status` 顺序，最后同步角色位置。首次加载沿同一发布顺序恢复保存状态，然后启动原始 Client。
 
 #### 当前验证范围
@@ -138,6 +144,7 @@ Map10／14 白雾专项已通过原白雾节点挂载、实际指针移动揭格
 - 已确认的跨图小地图规则：浏览其他已到访地图时，显示曾探索到的实体及公开地区实体，再按本地最新状态处理隐藏和图标。白雾和女神像公开地区继续使用已有本地记录；原客户端请求与消费代码不提供服务器筛选实现，此项为单机决定。公共原生小地图已增加本地快照筛选与最新状态消费适配，正式存档投影及跨图页签接入仍待完成，公共状态与验证范围见[主线地图公共模块](#主线地图公共模块)。
 - 已确认的公共分线规则：每张地图固定一个本地分线，按原 HUD 的“分线数≤1”条件隐藏按钮，保留地区私有／公开状态与玩法。公共原生小地图 HUD 已绑定本地单分线适配，正式世界地图宿主接线仍待完成，公共状态与验证范围见[主线地图公共模块](#主线地图公共模块)。
 - 服务器与运营日历开放采用[离线政策](offline-access.md)，个人等级、阶位、材料与真实地图目标继续检查。地图活动首次打开目录建立本地起点，内部阶段按原日界及 UnlockHours 推进；身份、回合、机关与领奖回执分别保存，共享地形不合并活动进度。
+- 服务器胜利结算代码未取得。用户确认主线普通怪物没有消耗；自动碾压沿用本地普通胜利状态事务，主线普通怪物的官方阶段奖励为空。带有阶段奖励的特殊战斗仍由原战斗结算流程处理，未把未取得的服务器奖励规则写成本地规则。
 
 ### 主线地图离线适配
 
@@ -162,6 +169,8 @@ Map10／14 白雾专项已通过原白雾节点挂载、实际指针移动揭格
 
 - 公共地图 seam 与状态投影：[IMainlineMapModule.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/IMainlineMapModule.cs)、[OfficialMainlineMapRuntime.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs)。
 - 主线地图档案：[OfficialMainlineMapProfile.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs)。
+- 自动碾压规则与现有战斗结算：[OfficialMainlineMapRuntime.Battle.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Battle.cs)、[OfficialMainlineInteractionCatalog.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineInteractionCatalog.cs)。
+- 地区交互数据转换与来源验证：[prepare_unity_map14_interactions.py](../../scripts/prepare_unity_map14_interactions.py)、[prepare_mainline_interaction_maps.py](../../scripts/prepare_mainline_interaction_maps.py)、[mainline-interaction-maps-source-manifest.json](../../assets/reference/official-map/mainline-interaction-maps-source-manifest.json)。
 - 离线地图规则：[Runtime/Offline/World](../../unity/Assets/Game/Runtime/Offline/World/)。
 - 公共世界状态发布：[MainlineSharedWorldStateModule.cs](../../unity/Assets/Game/Runtime/Offline/World/MainlinePlayerState/MainlineSharedWorldStateModule.cs)、[MainlineSharedPlayerProjection.cs](../../unity/Assets/Game/Runtime/Offline/World/MainlinePlayerState/MainlineSharedPlayerProjection.cs)。
 - 通用地图、资源和来源记录：[地图来源清单](../../assets/reference/official-map/)、[来源总览](../../assets/reference/SOURCES.md)。

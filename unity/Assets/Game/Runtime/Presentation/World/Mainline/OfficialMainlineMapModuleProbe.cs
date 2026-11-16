@@ -53,6 +53,7 @@ namespace Zjcs.Presentation.World
 
         public static void StartVerification(string outputDirectory, Action<bool> onCompleted)
         {
+            AudioListener.volume = 0f;
             Application.runInBackground = true;
             var probe = new GameObject("SharedMainlineModuleProbe").AddComponent<OfficialMainlineMapModuleProbe>();
             DontDestroyOnLoad(probe.gameObject);
@@ -116,7 +117,7 @@ namespace Zjcs.Presentation.World
                     ? "Whale Island verified data binding, Map15 pointer navigation and cold reload, shared statue visit transaction and cold reload passed."
                     : Environment.GetCommandLineArgs().Contains("-verify-roadblocks-only")
                     ? "Map14 original roadblock display, property dialog, partner invitation, one-use completion, opened path and cold save restore passed."
-                    : "Map10/11 shared runtime: region conditions, pointer navigation, HUD, minimap tabs/filter, goddess activation, hero UI/permanent rewards/daily effects, stamina gathering/award animation/respawn, exploration and cold save reload passed.");
+                    : "Map10/11 shared runtime: region conditions, pointer navigation, HUD, minimap tabs/filter, goddess activation, hero UI/permanent rewards/daily effects, stamina gathering/award animation/respawn, exploration, configured fast victory settlement and cold save reload passed.");
             Debug.Log("Shared mainline map modules passed: " + output);
             Complete(true);
         }
@@ -360,6 +361,7 @@ namespace Zjcs.Presentation.World
                         yield return VerifyHeroStatues();
                         yield return VerifyStaminaGathering();
                         yield return VerifyExploration();
+                        yield return VerifyFastVictory();
                     }
                     MapGridPoint position = Position;
                     // Movement and interactions persist through the normal host lifecycle.
@@ -428,6 +430,209 @@ namespace Zjcs.Presentation.World
                 && effects.Last().StatusEffectClassIds.SequenceEqual(new[] { 28500 }),
                 "Daily visit and battle effects survive cold reload");
             Destroy(canvas);
+        }
+
+        private IEnumerator VerifyFastVictory()
+        {
+            const int level = 50;
+            const int subRank = 5;
+            var progress = Progress;
+            var assets = OfficialCharacterAssetCatalog.LoadDefault();
+            var character = assets.Load();
+            int rank = character.RankOfSubRank(subRank);
+            Require(progress.SetPlayerProgress(level, rank, subRank, progress.Save.Player.MaxProfessionRank,
+                progress.Save.Player.GuildName ?? string.Empty,
+                progress.Save.Player.UnlockedMapClassIds).IsApplied,
+                "Isolated fast-victory profile meets the official level and rank gates");
+            yield return Reopen();
+
+            progress = Progress;
+            var equipmentCatalog = Zjcs.Offline.Equipment.OfficialEquipmentAssetCatalog.LoadDefault().Load();
+            int equipmentLevel = equipmentCatalog.Rows("system_level_limit")
+                .Where(value => DataInt(value, "SubRank") == subRank && DataInt(value, "PlayerLevel") == level
+                    && DataInt(value, "PlayerBlessLevel") == 0)
+                .Select(value => DataInt(value, "EquipLevel")).DefaultIfEmpty(0).Max();
+            Require(equipmentLevel > 0, "Current equipment rules provide a level cap for the test profile");
+            ProgressionResult equipmentProfileResult = progress.ApplyCharacterMutationIfChanged(player =>
+            {
+                player.Wardrobe.Profession = 2;
+                ConfigureFastVictoryEquipment(player, equipmentCatalog, rank, equipmentLevel);
+                return true;
+            }, "map11-fast-victory-profile-" + Guid.NewGuid().ToString("N"));
+            Require(equipmentProfileResult.IsApplied,
+                "Isolated fast-victory profile equips current official gear within its level and rank limits: "
+                + equipmentProfileResult.Status + " " + equipmentProfileResult.Message);
+            yield return Reopen();
+
+            progress = Progress;
+            var progression = OfflineCharacterProgressionService.Create(progress,
+                new CharacterProgressionInputs(character,
+                    equipmentCatalog,
+                    assets.LoadSkillRules()));
+            long combatRating = progression.EvaluateProps(DateTimeOffset.UtcNow.ToUnixTimeSeconds()).CombatRating;
+            var catalog = OfficialMainlineInteractionCatalog.Load(11);
+            var fastTemplate = catalog.stageFastTemplates.Single(value => value.EntityClassId == 5003
+                && value.Component == "StageBehStageComponent");
+            var entityView = runtime.GetComponentInChildren<OfficialMap10EntityView>();
+            OfficialMap10EntityInfo stageInfo = null;
+            OfficialMainlineInteractionRegion region = null;
+            foreach (OfficialMainlineInteractionRegion candidate in catalog.regions
+                .Where(value => value.MapClassId == 11 && value.GameFastType == 2
+                    && value.FastStageCombatRating > 0 && value.SubRank <= subRank)
+                .OrderBy(value => value.FastStageCombatRating).ThenBy(value => value.Region))
+            {
+                stageInfo = entityView.EntityInfos.FirstOrDefault(value => value.Active
+                    && value.Region == candidate.Region && value.EntityClassId == fastTemplate.EntityClassId
+                    && value.StageIds != null && value.StageIds.Length > 0
+                    && value.StageBindings.Any(binding => binding.Component == "LoStageBehStageComponent")
+                    && entityView.FindEntityObject(value.PlacementId) != null
+                    && entityView.FindEntityObject(value.PlacementId).activeInHierarchy);
+                if (stageInfo == null) continue;
+                region = candidate;
+                break;
+            }
+            Require(stageInfo != null && region != null,
+                "Current Map11 data contains an unlocked fast-victory stage with a reachable rating gate");
+            int stageId = stageInfo.StageIds.First(value => value > 0);
+            int placementId = stageInfo.PlacementId;
+            long combatThreshold = region.FastStageCombatRating;
+            int rankSuppression = Zjcs.Offline.HomeTaskUI.OfflineHomeTaskMapData.LoadDefault().CalcRankSuppression(
+                (Zjcs.Official.HomeTaskUI.SubRank)subRank, (Zjcs.Official.HomeTaskUI.SubRank)region.SubRank);
+            IReadOnlyDictionary<string, object> settings = progression.EquipmentCatalog.GameSettings;
+            int levelLimit = DataInt(settings, "PrivateWorldFastByDifficultyLevelLimit");
+            int subRankLimit = DataInt(settings, "PrivateWorldFastByDifficultySubRankLimit");
+            Require(combatRating >= combatThreshold,
+                "Current Map11 profile rating " + combatRating + " reaches the region threshold " + combatThreshold);
+            Require(rankSuppression == 0 && level >= levelLimit && subRank >= subRankLimit
+                && fastTemplate.FastForwardType == 7 && region.GameFastType == 2,
+                "Fast victory is reached through the current official combat-rating gate without rank suppression");
+            Require(OfficialMainlineFastTypeRules.Resolve(fastTemplate.FastForwardType, region.GameFastType,
+                    combatThreshold, combatRating, level, subRank, levelLimit, subRankLimit, rankSuppression) == 2
+                && OfficialMainlineFastTypeRules.Resolve(fastTemplate.FastForwardType, region.GameFastType,
+                    combatThreshold, combatThreshold - 1, level, subRank, levelLimit, subRankLimit, rankSuppression) == 0,
+                "Current official power threshold controls fast victory eligibility");
+
+            MapGridPoint target = new MapGridPoint(stageInfo.Grid[0], stageInfo.Grid[1]);
+            var entities = entityView.EntityInfos;
+            MapGridPoint adjacent = new[] { new MapGridPoint(1, 0), new MapGridPoint(-1, 0),
+                new MapGridPoint(0, 1), new MapGridPoint(0, -1) }
+                .Select(offset => target + offset)
+                .First(point => mapSession.Movement.IsFit(point) && !entities.Any(value => value.Active
+                    && value.Grid[0] == point.X && value.Grid[1] == point.Y));
+            yield return At(adjacent);
+            yield return ClickEntity(placementId);
+
+            GameObject dialog = SceneRoot("WorldStageDialog");
+            float dialogDeadline = Time.realtimeSinceStartup + 10f;
+            while ((dialog == null || !dialog.activeInHierarchy) && Time.realtimeSinceStartup < dialogDeadline)
+            {
+                yield return null;
+                dialog = SceneRoot("WorldStageDialog");
+            }
+            Require(dialog != null && dialog.activeInHierarchy,
+                "Simulated map pointer opens the original stage confirmation");
+            yield return WaitForRoadblockPopup(dialog);
+
+            Map10LocalSave before = MapSave;
+            int battleCount = before.battleResults == null ? 0 : before.battleResults.Length;
+            int winsBefore = progress.StageWinCount(stageId);
+            long staminaBefore = progress.InventoryCount(57);
+            long experienceBefore = progress.Save.Player.Experience;
+            long blessingExperienceBefore = progress.Save.Player.BlessingExperience;
+            Dictionary<int, long> inventoryBefore = InventoryCounts(progress.Save.Player);
+            yield return Capture("map-11-fast-victory-ready");
+            Button confirm = dialog.transform.Find(
+                "BgDialog3/Content/DialogContent (1)/UnlockGo/BtnContent/BattleBtn").GetComponent<Button>();
+            yield return Click(confirm);
+
+            float resultDeadline = Time.realtimeSinceStartup + 8f;
+            Map10LocalSave after = MapSave;
+            while ((after.battleResults == null || after.battleResults.Length <= battleCount)
+                && Time.realtimeSinceStartup < resultDeadline)
+            {
+                yield return null;
+                after = MapSave;
+            }
+            Require(after.battleResults != null && after.battleResults.Length == battleCount + 1,
+                "Fast victory settles without starting an ordinary battle");
+            Map10RuntimeBattleResult result = after.battleResults[ battleCount ];
+            progress = Progress;
+            Require(result.placementId == placementId && result.stageId == stageId && result.won
+                && string.IsNullOrEmpty(after.activeBattle) && progress.StageWinCount(stageId) == winsBefore + 1,
+                "Fast victory records the normal won result and advances the saved stage count");
+            Dictionary<int, long> inventoryAfter = InventoryCounts(progress.Save.Player);
+            Require(progress.InventoryCount(57) == staminaBefore
+                && progress.Save.Player.Experience == experienceBefore
+                && progress.Save.Player.BlessingExperience == blessingExperienceBefore
+                && inventoryAfter.Count == inventoryBefore.Count
+                && inventoryBefore.All(pair => inventoryAfter.TryGetValue(pair.Key, out long count) && count == pair.Value),
+                "Non-stamina fast victory adds no item, currency or experience reward");
+            yield return Capture("map-11-fast-victory-result");
+        }
+
+        private static void ConfigureFastVictoryEquipment(OfflinePlayerProgress player,
+            Zjcs.Offline.Equipment.OfficialEquipmentCatalog catalog, int playerRank, int equipmentLevel)
+        {
+            var profile = new Zjcs.Offline.Equipment.OfflineEquipmentProfile();
+            Zjcs.Offline.Progression.OfflineEquipmentOperations.Initialize(profile);
+            int subRank = player.SubRank;
+            int equipmentRank = Math.Min(playerRank, subRank < 2 ? 1 : 2 + (subRank - 2) / 3);
+            foreach (int position in new[] { 10, 11, 12, 13, 14 })
+            {
+                Dictionary<string, object> selected = null;
+                int selectedItemId = 0, selectedQuality = -1, selectedItemRank = -1, selectedLevel = -1;
+                foreach (Dictionary<string, object> equip in catalog.Rows("equip"))
+                {
+                    int itemId = DataInt(equip, "ClassId");
+                    Dictionary<string, object> item = catalog.Find("item", itemId);
+                    if (item == null || catalog.PositionForItem(itemId) != position
+                        || DataInt(item, "LimitRank") > equipmentRank
+                        || !catalog.CanWear(itemId, player.Wardrobe.Profession)) continue;
+                    int itemLevel = DataInt(equip, "Level");
+                    if (itemLevel <= 0) itemLevel = DataInt(equip, "LevelLimit");
+                    if (itemLevel <= 0 || itemLevel > equipmentLevel) continue;
+                    int quality = DataInt(item, "Quality");
+                    int itemRank = DataInt(item, "Rank");
+                    if (quality < selectedQuality || quality == selectedQuality && itemRank < selectedItemRank
+                        || quality == selectedQuality && itemRank == selectedItemRank && itemLevel < selectedLevel) continue;
+                    selected = equip;
+                    selectedItemId = itemId;
+                    selectedQuality = quality;
+                    selectedItemRank = itemRank;
+                    selectedLevel = itemLevel;
+                }
+
+                if (selected == null)
+                    throw new InvalidOperationException("Current equipment has no eligible item for slot " + position);
+                long instanceId = profile.NextInstanceId++;
+                var instance = Zjcs.Offline.Equipment.OfficialEquipmentGenerator.Generate(catalog, selectedItemId,
+                    instanceId, new Zjcs.Offline.Equipment.EquipmentRollContext
+                    {
+                        DropLevel = equipmentLevel,
+                        PlayerLevel = player.Level,
+                        SubRank = player.SubRank,
+                        SourceOperate = 0
+                    }, () => 0.999f);
+                if (instance.ItemLevel > equipmentLevel)
+                    throw new InvalidOperationException("Generated current equipment exceeds the official slot level limit.");
+                profile.Instances.Add(instance);
+                if (!Zjcs.Offline.Progression.OfflineEquipmentOperations.Wear(profile, catalog,
+                    instanceId, player.Wardrobe.Profession))
+                    throw new InvalidOperationException("Current equipment is not wearable by the isolated profession.");
+            }
+            player.Equipment = profile;
+        }
+
+        private static int DataInt(IReadOnlyDictionary<string, object> row, string key)
+        {
+            return row != null && row.TryGetValue(key, out object value) && value != null
+                ? Convert.ToInt32(value) : 0;
+        }
+
+        private static Dictionary<int, long> InventoryCounts(OfflinePlayerProgress player)
+        {
+            return player.Inventory.Where(value => value != null).GroupBy(value => value.ItemId)
+                .ToDictionary(group => group.Key, group => group.Sum(value => value.Count));
         }
 
         private IEnumerator VerifyVisibilityMaps(Transform canvas, ProfileSlotCatalog slots)
@@ -1374,8 +1579,18 @@ namespace Zjcs.Presentation.World
         }
         private IEnumerator ClickEntity(int id)
         {
-            var node = runtime.GetComponentInChildren<OfficialMap10EntityView>().FindEntityObject(id);
-            Require(node != null && node.activeInHierarchy, "Original world entity is visible for pointer input: " + id);
+            var view = runtime.GetComponentInChildren<OfficialMap10EntityView>();
+            GameObject node = null;
+            float deadline = Time.realtimeSinceStartup + 3f;
+            while (Time.realtimeSinceStartup < deadline)
+            {
+                node = view.FindEntityObject(id);
+                if (node != null && node.activeInHierarchy) break;
+                yield return null;
+            }
+            Require(node != null && node.activeInHierarchy,
+                "Original world entity is active after map load for pointer input: " + id
+                + " (registered=" + view.EntityInfos.Any(value => value.PlacementId == id) + ")");
             worldPress = node.GetComponentsInChildren<Collider2D>().First(value => value.enabled).bounds.center;
             yield return new WaitForSecondsRealtime(.7f);
         }

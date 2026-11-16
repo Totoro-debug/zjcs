@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Combat.Official;
+using Zjcs.Offline.HomeTaskUI;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.Skills;
 using Zjcs.Offline.State;
@@ -19,11 +20,44 @@ using Zjcs.Presentation.Commerce;
 using Zjcs.Presentation.OfflineWorld;
 using Zjcs.Official.World;
 using Zjcs.Official.WorldUI;
+using TaskUI = Zjcs.Official.HomeTaskUI;
 
 namespace Zjcs.Presentation.World
 {
+    public static class OfficialMainlineFastTypeRules
+    {
+        public static int Resolve(int mapFastType, int regionGameFastType, long regionCombatRating,
+            long playerCombatRating, int playerLevel, int playerSubRank,
+            int levelLimit, int subRankLimit, int rankSuppression)
+        {
+            if (mapFastType == 1 || mapFastType == 2 || mapFastType == 3) return mapFastType;
+            bool eligible = playerLevel >= levelLimit && playerSubRank >= subRankLimit;
+            switch (mapFastType)
+            {
+                case 4:
+                    return eligible ? regionGameFastType : 0;
+                case 5:
+                    if (!eligible) return 0;
+                    if (rankSuppression > 0) return 2;
+                    return regionCombatRating > 0 && playerCombatRating >= regionCombatRating
+                        ? regionGameFastType : 0;
+                case 6:
+                    return eligible && rankSuppression > 0 ? 2 : 0;
+                case 7:
+                    if (eligible && rankSuppression > 0) return 2;
+                    if (!eligible) return 0;
+                    return regionCombatRating > 0 && playerCombatRating >= regionCombatRating
+                        ? regionGameFastType : 0;
+                default:
+                    return 0;
+            }
+        }
+    }
+
     public sealed partial class OfficialMainlineMapRuntime
     {
+        private OfflineHomeTaskMapData fastStageRankData;
+
         private void ShowStageDialog(Map10RuntimeEntity entity, Action completed)
         {
             int stageId = ResolveEntityStageId(entity);
@@ -61,6 +95,76 @@ namespace Zjcs.Presentation.World
                     && value.StageIds.Length > 0);
             return binding?.StageIds?.FirstOrDefault(value => value > 0)
                 ?? entity.StageIds.FirstOrDefault(value => value > 0);
+        }
+
+        private bool TryResolveGameFastType(Map10RuntimeEntity entity, out int gameFastType)
+        {
+            gameFastType = 0;
+            if (entity == null) return false;
+            string preferred = entity.TypeId == 218
+                ? "LoStageBehBattleSteleStageComponent"
+                : entity.TypeId == 305 ? "LoStageBehStoneCastleStageComponent" : "LoStageBehStageComponent";
+            Map10RuntimeEntityStageBinding binding = entity.StageBindings.FirstOrDefault(value =>
+                value != null && value.Component == preferred && value.StageIds != null && value.StageIds.Length > 0)
+                ?? entity.StageBindings.FirstOrDefault(value => value != null && value.StageIds != null
+                    && value.StageIds.Length > 0);
+            if (binding == null) return false;
+            string templateType = StageFastTemplateComponentType(binding.Component);
+            OfficialMainlineStageFastTemplate stageFast = Interactions.stageFastTemplates.FirstOrDefault(value =>
+                value.EntityClassId == entity.EntityClassId && string.Equals(value.Component, templateType, StringComparison.Ordinal));
+            if (stageFast == null) return false;
+            if (stageFast.FastForwardType >= 0 && stageFast.FastForwardType <= 3)
+            {
+                gameFastType = OfficialMainlineFastTypeRules.Resolve(stageFast.FastForwardType, 0, 0L, 0L,
+                    0, 0, 0, 0, 0);
+                return true;
+            }
+            if (stageFast.FastForwardType < 4 || stageFast.FastForwardType > 7) return false;
+
+            OfficialMainlineInteractionRegion region = Interactions.regions.FirstOrDefault(value =>
+                value.MapClassId == mapClassId && value.Region == entity.Region);
+            IReadOnlyDictionary<string, object> settings = progression.EquipmentCatalog.GameSettings;
+            if (region == null || settings == null
+                || !TryReadFastStageSetting(settings, "PrivateWorldFastByDifficultyLevelLimit", out int levelLimit)
+                || !TryReadFastStageSetting(settings, "PrivateWorldFastByDifficultySubRankLimit", out int subRankLimit))
+                return false;
+
+            int rankSuppression = 0;
+            if (stageFast.FastForwardType == 5 || stageFast.FastForwardType == 6 || stageFast.FastForwardType == 7)
+            {
+                fastStageRankData ??= OfflineHomeTaskMapData.LoadDefault();
+                rankSuppression = fastStageRankData.CalcRankSuppression(
+                    (TaskUI.SubRank)progression.Player.SubRank, (TaskUI.SubRank)region.SubRank);
+            }
+            long combatRating = progression.EvaluateProps(DateTimeOffset.UtcNow.ToUnixTimeSeconds()).CombatRating;
+            gameFastType = OfficialMainlineFastTypeRules.Resolve(stageFast.FastForwardType, region.GameFastType,
+                region.FastStageCombatRating, combatRating, progression.Player.Level, progression.Player.SubRank,
+                levelLimit, subRankLimit, rankSuppression);
+            return true;
+        }
+
+        private static string StageFastTemplateComponentType(string component)
+        {
+            if (component == "LoStageBehBattleSteleStageComponent") return "StageBehStageBattleSteleComponent";
+            if (component == "LoStageBehStoneCastleStageComponent") return "StageBehStageStoneCastleComponent";
+            const string prefix = "LoStageBeh";
+            return !string.IsNullOrEmpty(component) && component.StartsWith(prefix, StringComparison.Ordinal)
+                ? "StageBeh" + component.Substring(prefix.Length) : string.Empty;
+        }
+
+        private static bool TryReadFastStageSetting(IReadOnlyDictionary<string, object> settings, string key, out int value)
+        {
+            value = 0;
+            if (!settings.TryGetValue(key, out object source) || source == null) return false;
+            try
+            {
+                value = Convert.ToInt32(source, CultureInfo.InvariantCulture);
+                return value >= 0;
+            }
+            catch (Exception error) when (error is FormatException || error is InvalidCastException || error is OverflowException)
+            {
+                return false;
+            }
         }
 
         private void StartSelectedStage()
@@ -115,6 +219,13 @@ namespace Zjcs.Presentation.World
             }
             FightBattleCheckpoint resume = completed == null
                 ? TryLoadActiveBattle(stageId, entity.PlacementId) : null;
+            if (resume == null && TryResolveGameFastType(entity, out int gameFastType)
+                && (gameFastType == 2 || gameFastType == 3))
+            {
+                if (TryStartStaminaBattle(entity))
+                    SettleBattleResult(entity, stageId, null, true, completed, false);
+                return;
+            }
             if (resume == null && ShouldOfferMainlineAssist(entity, completed))
             {
                 OpenMainlineBattleAssistPicker(entity, stage, roster, scene, completed);
@@ -143,17 +254,10 @@ namespace Zjcs.Presentation.World
                     throw;
                 }
             }
-            if (entity != null && OfficialMainlineStaminaModule.IsStaminaPoint(entity))
+            if (!TryStartStaminaBattle(entity))
             {
-                long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                ProgressionResult cost = stamina.Stamina.StartBattle(mapClassId, entity.PlacementId, stamina.StaminaCosts(entity), now);
-                if (cost.Status != ProgressionResultStatus.Applied && cost.Status != ProgressionResultStatus.Unchanged)
-                {
-                    if (cost.Status == ProgressionResultStatus.InvalidState) stamina.StaminaCanStart(entity);
-                    CancelMainlineBattleAssist(stage.Id);
-                    return;
-                }
-                hud.RefreshWorldTopBar();
+                CancelMainlineBattleAssist(stage.Id);
+                return;
             }
             if (checkpoint.StageType == 0) checkpoint.StageType = stage.Type;
             FightBattleUnitState mainPlayer = checkpoint.Units.FirstOrDefault(value => value.Id == 1);
@@ -234,6 +338,21 @@ namespace Zjcs.Presentation.World
 
         private Action battleCompletion;
         private Map10RuntimeStage activeBattleStage;
+
+        private bool TryStartStaminaBattle(Map10RuntimeEntity entity)
+        {
+            if (entity == null || !OfficialMainlineStaminaModule.IsStaminaPoint(entity)) return true;
+            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            ProgressionResult cost = stamina.Stamina.StartBattle(mapClassId, entity.PlacementId,
+                stamina.StaminaCosts(entity), now);
+            if (cost.Status != ProgressionResultStatus.Applied && cost.Status != ProgressionResultStatus.Unchanged)
+            {
+                if (cost.Status == ProgressionResultStatus.InvalidState) stamina.StaminaCanStart(entity);
+                return false;
+            }
+            hud.RefreshWorldTopBar();
+            return true;
+        }
 
         public void OnBattleCompleted(FightBattleCheckpoint checkpoint)
         {
@@ -484,7 +603,6 @@ namespace Zjcs.Presentation.World
             if (checkpoint == null || !battleController.CanCompleteBattle) return;
             Map10RuntimeEntity entity = navigation.pendingInteraction;
             Action callback = battleCompletion;
-            bool storyBattle = callback != null;
             FightBattleOutcome outcome = checkpoint.Outcome;
             if (outcome != null && outcome.Invalid)
             {
@@ -498,10 +616,17 @@ namespace Zjcs.Presentation.World
                 invalidCompleted?.Invoke();
                 return;
             }
-            bool won = outcome != null && outcome.Won;
+            SettleBattleResult(entity, checkpoint.StageId, outcome, false, callback, true);
+        }
+
+        private void SettleBattleResult(Map10RuntimeEntity entity, int stageId, FightBattleOutcome outcome,
+            bool forceWin, Action callback, bool finishAssist)
+        {
+            bool storyBattle = callback != null;
+            bool won = forceWin || outcome != null && outcome.Won;
             if (map14StoryStageBattle) map14StoryStageWon = won;
-            if (!SettleMap12MountLiftBattle(entity, checkpoint.StageId, won)) return;
-            if (!SettleMap12SteleBattle(entity, checkpoint.StageId, won)) return;
+            if (!SettleMap12MountLiftBattle(entity, stageId, won)) return;
+            if (!SettleMap12SteleBattle(entity, stageId, won)) return;
             stamina.FinishStaminaBattle(entity, won);
             if (entity != null)
             {
@@ -511,7 +636,7 @@ namespace Zjcs.Presentation.World
                     new Map10RuntimeBattleResult
                     {
                         placementId = entity.PlacementId,
-                        stageId = checkpoint.StageId,
+                        stageId = stageId,
                         reason = outcome == null ? 0 : outcome.Reason,
                         won = won,
                         round = outcome == null ? 0 : outcome.Round,
@@ -524,7 +649,7 @@ namespace Zjcs.Presentation.World
             bool cleared = map14StoryStageBattle ? won : won || (mapClassId == 10 && storyBattle);
             if (cleared && entity != null && !map14StoryStageBattle)
             {
-                string receipt = MapReceiptPrefix + slotId + ":battle:" + entity.PlacementId + ":" + checkpoint.StageId
+                string receipt = MapReceiptPrefix + slotId + ":battle:" + entity.PlacementId + ":" + stageId
                     + ":" + (localSave.battleResults == null ? 0 : localSave.battleResults.Length);
                 if (!localSave.receipts.Contains(receipt))
                 {
@@ -537,22 +662,22 @@ namespace Zjcs.Presentation.World
                 {
                     string winReceipt = FindMap12Stele(entity) != null
                         ? OfficialMap12SteleCatalog.WinReceipt(entity.PlacementId)
-                        : MapReceiptPrefix + slotId + ":stage-win:" + checkpoint.StageId + ":"
+                        : MapReceiptPrefix + slotId + ":stage-win:" + stageId + ":"
                             + localSave.battleResults.Length;
-                    ProgressionResult win = progressionSave.RecordStageWin(checkpoint.StageId, winReceipt);
+                    ProgressionResult win = progressionSave.RecordStageWin(stageId, winReceipt);
                     if (win.Status == ProgressionResultStatus.InvalidState)
                         throw new InvalidOperationException(win.Message);
                     if (mapClassId == 12 && entity.PlacementId == 8101 && entity.ChangeMapClassId == 13)
                     {
                         string activateReceipt = MapReceiptPrefix + slotId + ":map-active:" + entity.PlacementId
-                            + ":" + checkpoint.StageId;
+                            + ":" + stageId;
                         ProgressionResult activated = progressionSave.ApplyMapActivationResult(
                             entity.ChangeMapClassId, won, activateReceipt);
                         if (activated.Status == ProgressionResultStatus.InvalidState)
                             throw new InvalidOperationException(activated.Message);
                     }
                 }
-                bool oneTimeStage = !stages.TryGetValue(checkpoint.StageId, out Map10RuntimeStage stage)
+                bool oneTimeStage = !stages.TryGetValue(stageId, out Map10RuntimeStage stage)
                     || stage.Repeat >= 0 || entity.PeriodicityGroupIds.Length > 0;
                 if (entity.EntityClassId == 6620)
                 {
@@ -562,8 +687,8 @@ namespace Zjcs.Presentation.World
                 }
                 else if (oneTimeStage && !OfficialMainlineStaminaModule.IsStaminaPoint(entity))
                 {
-                    if (!localSave.completedStages.Contains(checkpoint.StageId))
-                        localSave.completedStages = localSave.completedStages.Concat(new[] { checkpoint.StageId }).ToArray();
+                    if (!localSave.completedStages.Contains(stageId))
+                        localSave.completedStages = localSave.completedStages.Concat(new[] { stageId }).ToArray();
                     foreach (int groupId in entity.PeriodicityGroupIds)
                         if (!localSave.completedPeriodicityGroups.Contains(groupId))
                             localSave.completedPeriodicityGroups = localSave.completedPeriodicityGroups.Concat(new[] { groupId }).ToArray();
@@ -571,12 +696,12 @@ namespace Zjcs.Presentation.World
                 }
             }
 
-            FinishMainlineBattleAssist(checkpoint.StageId);
+            if (finishAssist) FinishMainlineBattleAssist(stageId);
             ClearActiveBattle();
             Action completed = DestroyBattleSession();
             SaveLocalProgress();
             if (!cleared) hud.ShowOfficialNotice("战斗失败");
-            completed?.Invoke();
+            (completed ?? callback)?.Invoke();
         }
 
         private void LeaveBattle()

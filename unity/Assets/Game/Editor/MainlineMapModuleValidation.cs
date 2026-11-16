@@ -18,11 +18,13 @@ namespace Zjcs.Editor
         {
             string[] battle = { "854_156383", "854_156383", "854_156383", "854_156383", "871_156598", "854_156383", "884_156692" };
             string[] story = { "854_156383", "854_156383", "854_156383", "871_156598", "871_156598", "871_156598", "884_156692" };
+            string[] interaction = { "884_156692", "884_156692", "884_156692", "884_156692", "884_156692", "884_156692", "884_156692" };
             for (int mapId = 10; mapId <= 16; mapId++)
             {
                 OfficialMainlineMapProfile profile = OfficialMainlineMapProfile.Get(mapId);
                 int index = mapId - 10;
-                if (profile.BattleDataManifest != battle[index] || profile.StoryDataManifest != story[index])
+                if (profile.BattleDataManifest != battle[index] || profile.StoryDataManifest != story[index]
+                    || profile.InteractionManifest != interaction[index])
                     throw new InvalidDataException("Mainline map source manifests differ from the pinned map inputs: " + mapId);
             }
             OfficialMainlineMapProfile whaleIsland = OfficialMainlineMapProfile.Get(16);
@@ -65,7 +67,45 @@ namespace Zjcs.Editor
 
         public static void ValidateWhaleIslandStoryCondition() => OfficialMainlineMapModuleProbe.ValidateWhaleIslandStoryCondition();
 
-        public static void RunInteractionCatalogs() => OfficialMainlineMapModuleProbe.RunInteractionCatalogs();
+        public static void RunInteractionCatalogs()
+        {
+            OfficialMainlineMapModuleProbe.RunInteractionCatalogs();
+            ValidateGameFastTypeRules();
+        }
+
+        private static void ValidateGameFastTypeRules()
+        {
+            CheckFastType(0, 50, 5, 1000, 0, 0);
+            CheckFastType(1, 50, 5, 1000, 0, 1);
+            CheckFastType(2, 50, 5, 1000, 0, 2);
+            CheckFastType(3, 50, 5, 1000, 0, 3);
+            CheckFastType(4, 49, 5, 2000, 0, 0);
+            CheckFastType(4, 50, 5, 0, 0, 3);
+            CheckFastType(4, 50, 5, 0, 0, 1, 1, 1000);
+            CheckFastType(5, 49, 5, 2000, 1, 0);
+            CheckFastType(5, 50, 5, 0, 1, 2);
+            CheckFastType(5, 50, 5, 1000, 0, 3);
+            CheckFastType(5, 50, 5, 999, 0, 0);
+            CheckFastType(5, 50, 5, 11000, 0, 3, 3, 11000);
+            CheckFastType(5, 50, 5, 10999, 0, 0, 3, 11000);
+            CheckFastType(5, 50, 5, 2000, 0, 0, 3, 0);
+            CheckFastType(6, 50, 5, 0, 1, 2);
+            CheckFastType(6, 50, 5, 0, 0, 0);
+            CheckFastType(7, 50, 5, 0, 1, 2);
+            CheckFastType(7, 49, 5, 2000, 1, 0);
+            CheckFastType(7, 50, 5, 1000, 0, 3);
+            CheckFastType(7, 50, 5, 999, 0, 0);
+        }
+
+        private static void CheckFastType(int mode, int level, int subRank, long combatRating,
+            int rankSuppression, int expected, int regionFastType = 3,
+            long regionCombatRating = 1000, int levelLimit = 50, int subRankLimit = 5)
+        {
+            int actual = OfficialMainlineFastTypeRules.Resolve(mode, regionFastType, regionCombatRating,
+                combatRating, level, subRank, levelLimit, subRankLimit, rankSuppression);
+            if (actual != expected)
+                throw new InvalidDataException("Official mainline fast type rule changed: " + mode + "/" + actual);
+        }
 
         public static void RunRoadblocks()
         {

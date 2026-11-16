@@ -1,33 +1,247 @@
 {
   "converter": {
     "path": "scripts/prepare_mainline_interactions.py",
-    "sha256": "2070383662372b04fa98d1e93c35e7d7842713d8682f5cc45336ce8e50603151"
+    "sha256": "0d97590585cb37652f3b9cc2bb5ac19e6cab6e68af9dad3d60329b3576f41187"
   },
   "inputs": {
+    "entityTemplateFormatters": [
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageArrestComponent.cs",
+        "sha256": "6a93d5a7b656d9c31c428573ceed7c016725538a7d996864b679afd8336ab839"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageBattleSteleComponent.cs",
+        "sha256": "3825ca80536acdb3551eaea2e04aab49db282cb2cb8ad9b50a7a4452d2d1bedd"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageCampComponent.cs",
+        "sha256": "0dceb38cde594516f967433163d67c5137da1d4220e1afb2cea3b416b68f5dbf"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageComponent.cs",
+        "sha256": "fc94fdbb29dd0704a260e47cd32b1e896d15fd2b2c3c4644d0e4ab2004b7fb71"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageConsumingRandomEventComponent.cs",
+        "sha256": "d36ae54fc9e8fbfef041da15488b5d6358ff8b4742b09d2a5e1f7b2423004019"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageDailyDungeonComponent.cs",
+        "sha256": "5f214ff38fe3a536508a4947b58614dfa4a5e0b0a9320567cef8fb95cdca2b82"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageDailyDungeonPrivateMapComponent.cs",
+        "sha256": "3d7c6fcd80f295f717754139f34e789fe941110f83896f20f8f23ccbcef81f16"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageNpcAssistBattleComponent.cs",
+        "sha256": "c7e3f2d2a6f760154840f4b116a5c6cfb0b692d73733ac6ec50fae43e7793b3f"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageRuinComponent.cs",
+        "sha256": "f4e53cb9754b44876f365faca2e8f8d1641bea89b779cce3ff33566a9bd5b914"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageStoneCastleComponent.cs",
+        "sha256": "0671ed1f0b9b5df6cd2aa9ba11c77d72c4ab2fd7309adb66419a158182c5cf69"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageTeamComponent.cs",
+        "sha256": "12785acb20b110490adbfb2f9015af8d00965434a5e1af6a1d8c0e62e87b1984"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageTimeLimitComponent.cs",
+        "sha256": "e05f2e3bd8ba018677c61c16123f5e4e013ad93bba809abaff537f18d15f3147"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehTouchComponent.cs",
+        "sha256": "4dd2e20f97232cd124d91d382a527e3d6d0d81fbd00882e20ef67f7658f3f32c"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehVoidFissureComponent.cs",
+        "sha256": "58e2af2a892ff6cd33201b9cccd25882a2c8ca0ea894022368bbdbeb2f43d1bf"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageConPlayerPeriodicityInteractionComponent.cs",
+        "sha256": "1b237a5860c8f6a5f16c7c0a889c705f019f060e1d219859d0230e29f447b75b"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageResultAwardComponent.cs",
+        "sha256": "98d46af6466eb397ef0f0ba36317f14b6e7bce5625d33e6bb646d45c4399a382"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageResultAwardExtraPropComponent.cs",
+        "sha256": "1e0c417701c3b83352f46afbe91eb3bafb72ca34cfb4a9b6a6a768cb2c1b69d3"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageResultAwardStatusEffectComponent.cs",
+        "sha256": "a0d7045e2ff574a803d438904aa8b78a01fc67e6027cbef9bd5cfd7ed84fb718"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageResultModifyHpPercentComponent.cs",
+        "sha256": "d7bfeb7763f3be26c1ab6d04e196ab7f2e9b52b3dc29f67d349289eccd895ec2"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageResultPeriodicityRandomAwardComponent.cs",
+        "sha256": "fbc9be77cc6bcf2b9f609f3c0a6cb036771affdea2f29c61a66b780c71176a13"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/AwardExtraPropFormatter.cs",
+        "sha256": "e0193e382fab0c9c5523c6ae2cbd76a64f0e40c7ea9142fe57b939e172cf31d7"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/AwardExtraPropInfoFormatter.cs",
+        "sha256": "1043e061ba7c39d6596365a15eb4708c7e3a694a2f5d33b8ff9623f1eeb6eafd"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/DailyDungeonDifficultyFormatter.cs",
+        "sha256": "73b911b6fdf13f0170f4cc7ed6d5aab16fad8c8e24af10a02db97d1b2338479d"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/MapStageFastForwardTypeFormatter.cs",
+        "sha256": "ddd45f39ba81ce6091e9734e3b69e9fd5a2f64842429c67545e02e916f759b25"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/OutputAdditionPropTypeFormatter.cs",
+        "sha256": "d43beb23df7dcdb258b0e8c34e2ba7942d49b4108fe90f2bb47e5cf1b7f2a035"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/PropTypeFormatter.cs",
+        "sha256": "139c97ed0ff65c426fd6d7e1bc4a85186275b0c0eb58fafff9f3ece905d946ec"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBattleSteleInfoFormatter.cs",
+        "sha256": "007ab82462424d6caa9aad744e027a9f89283a8dd3590484fdbe4a01b3066dba"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehStageBattleSteleComponentInfoFormatter.cs",
+        "sha256": "4b703b1c6ce1ff33cf8d34f65cc52482442ea003afd604b3e8a518d94180aec2"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehStageComponentInfoFormatter.cs",
+        "sha256": "c9a8c7ed2ffdb8efaa483ab0fe84c5244916b84602d53b987ec3b2d385a0d316"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehStageDailyDungeonComponentInfoFormatter.cs",
+        "sha256": "d2449ce2ab1057e8b3399376f372ca9edac03d1b524d7060d34390d50725e6ca"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehStageDailyDungeonPrivateMapComponentInfoFormatter.cs",
+        "sha256": "a71dc3404eb87d9821193c5dca7873c7d152e33095f72136f5eb86256bf22f83"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehStageRuinComponentInfoFormatter.cs",
+        "sha256": "102026f357ba1ffdea76a9e3d118969301855cdd432f9e3eacc89af05bb3cf6c"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehStageStoneCastleComponentInfoFormatter.cs",
+        "sha256": "481156f2f0f53b8747b35657aa870fc10f22e8c6363c04b83ea60f377071452d"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehStageTeamComponentInfoFormatter.cs",
+        "sha256": "b95137888c16dba7729c054789ea6d33d287040e3e90b30210706555122964dd"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehStageTeamComponentSingleInfoFormatter.cs",
+        "sha256": "7a2aef17499acebd30ab3d8f66de37f0d8b06ce4e6755290f3b5b20e48541ed3"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehTouchComponentInfoFormatter.cs",
+        "sha256": "496f35028f6f6bd6f4bf6272f598fa237c7b8c73923dc70ec9e2d165452a5940"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehVoidFissureComponentInfoFormatter.cs",
+        "sha256": "2ffc266e292acb33393618da4cd05761fa97c590bcce5f9bba48df4707a74e03"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageConPlayerPeriodicityInteractionComponentInfoFormatter.cs",
+        "sha256": "04da91c6470eea11475dcaedf9435ae265f5111ccffadc9e016fa4782a2ea0f8"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageDailyDungeonInfoFormatter.cs",
+        "sha256": "e057f8dd27612ff7e77a6eea7d23cbecbd9bb8c0b85340ccf0f044b4307dcdfe"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageDailyDungeonPrivateMapInfoFormatter.cs",
+        "sha256": "9b6f77ce1fa118e02bc0a997c99bb118c857d39aac28fb7976bb546ae73dc38c"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageResultAwardComponentInfoFormatter.cs",
+        "sha256": "b8c05d7fbfceb5707b12aeef78aa54943b0f44664396f1e1ef245f6a676a266f"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageResultAwardExtraPropComponentInfoFormatter.cs",
+        "sha256": "835f9d4b7a569be1d88233a27dc26fd39048b7a11fc9c17dadacef7350cc2716"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageResultAwardStatusEffectComponentDataFormatter.cs",
+        "sha256": "b2846875b714fe36e4ab22992a477aeb9ee9b33452438b65ea79b080783dceb2"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageResultAwardStatusEffectComponentInfoFormatter.cs",
+        "sha256": "d38943f3d237555aa34a94d5cf9e36d70b23e095f787bc68044b802d64e6ddf0"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageResultModifyHpPercentComponentInfoFormatter.cs",
+        "sha256": "2f94587529c7b1bdd6b80157f57b0bad40938dd887e4ccbdb8f24d2c6c068b1a"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageResultPeriodicityRandomAwardComponentInfoFormatter.cs",
+        "sha256": "ccc5bd4f1e4d990b34d6924bcc592afc7e4199db5792246d79b542a0cbbeb346"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageRuinInfoFormatter.cs",
+        "sha256": "7f73df0ff5c4b5936e1977ddc5786575321d5f5a8c356d1dd7b8b0cd515d64b9"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageSingleAwardInfoFormatter.cs",
+        "sha256": "8d4b3c47d24001b7006f22f4f4327e708618b4fec21285f9ba8115f3af4189f8"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageStageInfoFormatter.cs",
+        "sha256": "01b7b9bacbd8c6e43c075c5df7ec571a65ec9e3de097095d0fc26bbc9f5b31a5"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageStoneCastleInfoFormatter.cs",
+        "sha256": "16030f94761a40460a0f5387afae27d32db5fb251238568aa66c94afce161bec"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageTouchInfoFormatter.cs",
+        "sha256": "75e5da3c1ffb901e22412830604773fde7bda9642767592c83c851355a2dd0f7"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Resolvers/GeneratedStaticGSerializableFormatterResolver.cs",
+        "sha256": "9e0eb448ce32ffcdd2f082db548d27df8211dfdf9ec98be78c9fa85adeb3af08"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Properties/AssemblyInfo.cs",
+        "sha256": "d85ed3684e7117155ebd5d8de5d415c29e4c83f090715776d9f74bf4f4a20785"
+      }
+    ],
     "entity_extend_parameter": {
-      "apk_entry": "assets/yoo/DefaultPackage/71fe29d82df52227b7bfa2a6e52afe14.bundle",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
       "bundle": "defaultpackage_assets_config_luban_map.bundle",
-      "bundle_hash": "71fe29d82df52227b7bfa2a6e52afe14",
-      "manifest": "854_156383",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "manifest": "884_156692",
       "origin": "apk_zip",
       "path_id": "-957009542101312328",
-      "raw_sha256": "f9aa7b11a62eb45142b5e1aa2e84284cddcfd4160d3bd88491db76ca91786f5d",
-      "raw_size": 196724,
-      "sha256": "2809170f354e26bd1aa975138ef2f4d5fd8f2cfcf2519fdb69c069ba62ec888f"
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "raw_size": 197305,
+      "sha256": "b2e99626a80beb4e07669d42f0c738a5620b30683a80757679103694d85e93d4"
     },
     "heroActivationPlayable": {
       "bundle": "defaultpackage_share_cc05b7ce420f0ac799b892c22638bb45.bundle",
       "bundle_hash": "54e12309e268e2b8521474195aea61b0",
       "bundle_sha256": "70452360e0008ac2cd79fdfb4e62894711edbd328426af41d68a453dd538c984",
       "bundle_size": 16954,
-      "manifest": "854_156383",
+      "manifest": "884_156692",
       "name": "player_herostatue_playable_Active1",
       "origin": "official_cdn",
       "path_id": "3446542580744323314",
       "sha256": "76b53e38ff264930a3f49fd865aec92ec3d23ebf09f22e317faab2f32be0cc06",
-      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/54e12309e268e2b8521474195aea61b0.bundle"
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/54e12309e268e2b8521474195aea61b0.bundle"
     },
     "heroLevelProps": {
       "decoder": "LevelPropBinaryReader indexed signed-varint rows",
@@ -35,127 +249,154 @@
       "sha256": "1b8e2cf7029ba8a80750f54aa35658878166d1bfbe2e206317473b43f6af3f1f"
     },
     "level_number": {
-      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
       "bundle": "defaultpackage_assets_config_luban.bundle",
-      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
-      "manifest": "854_156383",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "manifest": "884_156692",
       "origin": "apk_zip",
       "path_id": "-5102505721400995906",
-      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
-      "raw_size": 2075461,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "raw_size": 2142435,
       "sha256": "dcc3a4302e5b2c71049880398a606e801291321e9ecccf72aa391ec99aa6341c"
     },
     "map_area": {
-      "apk_entry": "assets/yoo/DefaultPackage/71fe29d82df52227b7bfa2a6e52afe14.bundle",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
       "bundle": "defaultpackage_assets_config_luban_map.bundle",
-      "bundle_hash": "71fe29d82df52227b7bfa2a6e52afe14",
-      "manifest": "854_156383",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "manifest": "884_156692",
       "origin": "apk_zip",
       "path_id": "-4744098287204192872",
-      "raw_sha256": "f9aa7b11a62eb45142b5e1aa2e84284cddcfd4160d3bd88491db76ca91786f5d",
-      "raw_size": 196724,
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "raw_size": 197305,
       "sha256": "7668f1c00f88a11af5f8146e4a24a8e88840fe9216642628ba1d3d6a785b0548"
     },
     "map_periodicity_random_award_interaction": {
-      "apk_entry": "assets/yoo/DefaultPackage/71fe29d82df52227b7bfa2a6e52afe14.bundle",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
       "bundle": "defaultpackage_assets_config_luban_map.bundle",
-      "bundle_hash": "71fe29d82df52227b7bfa2a6e52afe14",
-      "manifest": "854_156383",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "manifest": "884_156692",
       "origin": "apk_zip",
       "path_id": "-3461417643786305391",
-      "raw_sha256": "f9aa7b11a62eb45142b5e1aa2e84284cddcfd4160d3bd88491db76ca91786f5d",
-      "raw_size": 196724,
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "raw_size": 197305,
       "sha256": "045e4e2b98c2e0c694c1910f1623b05051211e8719c9af65af4ea1f42606188c"
     },
     "map_region": {
-      "apk_entry": "assets/yoo/DefaultPackage/71fe29d82df52227b7bfa2a6e52afe14.bundle",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
       "bundle": "defaultpackage_assets_config_luban_map.bundle",
-      "bundle_hash": "71fe29d82df52227b7bfa2a6e52afe14",
-      "manifest": "854_156383",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "manifest": "884_156692",
       "origin": "apk_zip",
       "path_id": "-475710695530452369",
-      "raw_sha256": "f9aa7b11a62eb45142b5e1aa2e84284cddcfd4160d3bd88491db76ca91786f5d",
-      "raw_size": 196724,
-      "sha256": "1b2ba4d093ba1dbcd63b69b0147fe91feab118f5b5d5748d3247daeff7680ce8"
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "raw_size": 197305,
+      "sha256": "04525b1a307baeed8ed49e4004a855b2e0239176718ac08c912f34f2e0467bfa"
     },
     "previewDialogSettings": {
       "bundle": "defaultpackage_assets_scriptableconfig_modules_mapcommon.bundle",
       "bundle_hash": "3d89e3440676b995cef6b1b9c95817bb",
       "bundle_sha256": "13cdeb94363b8eea5bb6bd8a3c9a8a901821756200de5381856d03d38b93ccc7",
       "bundle_size": 108179,
-      "manifest": "854_156383",
+      "manifest": "884_156692",
       "origin": "official_cdn",
       "path_id": "8812036968276346204",
       "sha256": "a2d773cdb795aee6291561b1b05b6a3f5aefbff2f415e4b93dc99ede9c099de4",
-      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3d89e3440676b995cef6b1b9c95817bb.bundle"
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3d89e3440676b995cef6b1b9c95817bb.bundle"
     },
     "random_reward": {
-      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
       "bundle": "defaultpackage_assets_config_luban.bundle",
-      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
-      "manifest": "854_156383",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "manifest": "884_156692",
       "origin": "apk_zip",
       "path_id": "3530266630744679519",
-      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
-      "raw_size": 2075461,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "raw_size": 2142435,
       "sha256": "2c25816ee2fa3a1490224514e55b6daa3cc19d248e9167fc59024820d502e69a"
     },
     "reward_rule": {
-      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
       "bundle": "defaultpackage_assets_config_luban.bundle",
-      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
-      "manifest": "854_156383",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "manifest": "884_156692",
       "origin": "apk_zip",
       "path_id": "7169546492845704538",
-      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
-      "raw_size": 2075461,
-      "sha256": "5eb7ad8009e635218394748946c5d04d15bdd32c9312d8a5753511ba56c971af"
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "raw_size": 2142435,
+      "sha256": "bb036852e797177f2a845865136dcd30657a2defe8b3899d414b8764ff7eb1ee"
     },
     "stage": {
-      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
       "bundle": "defaultpackage_assets_config_luban.bundle",
-      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
-      "manifest": "854_156383",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "manifest": "884_156692",
       "origin": "apk_zip",
       "path_id": "-1310591482892603796",
-      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
-      "raw_size": 2075461,
-      "sha256": "d56c2ea8bec33594060ddd18f16e6095b3ee5b33f0a3b0f17e6480befe207667"
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "raw_size": 2142435,
+      "sha256": "24eb6aa8e55d897082067b7907d785a8639c088d658811bf8da6f154970339e3"
     },
     "status_effect": {
-      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
       "bundle": "defaultpackage_assets_config_luban.bundle",
-      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
-      "manifest": "854_156383",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "manifest": "884_156692",
       "origin": "apk_zip",
       "path_id": "5894786187494288708",
-      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
-      "raw_size": 2075461,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "raw_size": 2142435,
       "sha256": "3c00aa7ab4206b6f369438e60d1d106839c08d2b4f3d92a62a02908edaa28bda"
     }
   },
-  "manifest": "854_156383",
-  "operation": "Preserve EC result type/index, ordered random weights, native cost items and region levels.",
+  "manifest": "884_156692",
+  "operation": "Preserve current official EC result type/index and static stage FastForwardType values, ordered random weights, native costs, region levels, fast-stage combat thresholds and configured game fast types.",
   "output": {
     "path": "unity/Assets/Game/Resources/World/Mainline/interactions.json",
-    "sha256": "2179d477bd7a86e4fc6c5e32c3e4113859013aaa22bddf1be98def0d99aaad26"
+    "sha256": "01d41e706a5ee3f99ca202d07d685289ef9363a56f8fdb1058a5eace1b8981e1"
   },
+  "runtimeBindings": [
+    {
+      "hashLineEndings": "LF",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineInteractionCatalog.cs",
+      "sha256": "b17d8014142d64e72c82fe74ce81d0874943513f11a5f4a32b6c60ba4a57eebb"
+    },
+    {
+      "hashLineEndings": "LF",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs",
+      "sha256": "e9d64105e8616bc904c88565221cbdacc94813afb550d0c32e33c21f8606ae3b"
+    },
+    {
+      "hashLineEndings": "LF",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Battle.cs",
+      "sha256": "0311fb68ab90a4fa52b40b64e4b450831c0e0f1e4b1de64ea34a0051ebc60b0f"
+    },
+    {
+      "hashLineEndings": "LF",
+      "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineMapStaminaService.cs",
+      "sha256": "786e5247785dbbdb1b43e1b64337c70536d8f52a017a85434f8ad57394102d9a"
+    },
+    {
+      "hashLineEndings": "LF",
+      "path": "unity/Assets/Game/Runtime/Offline/Progression/OfficialHeroStatueProperties.cs",
+      "sha256": "11b415cb55f003c7b6fd6ebc4697853ae718fac2bde38a26dd176c2f28e7864c"
+    }
+  ],
   "schemas": {
     "Assembly-CSharp:WorldStageInteractionPreviewDialogSetting": [
       {
@@ -317,7 +558,1078 @@
     ]
   },
   "templates": {
-    "path": "assets/official/map-entities.json",
-    "sha256": "78f1eeac9a8379128049fdd020223f71e73fdd43ba1a8bf5cdc62abe3735a510"
+    "decoded_sha256": "43fc701cc5167c07e8a1af64d57757f20c1260fcbc906d662332df7010e5268e",
+    "formatters": [
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageArrestComponent.cs",
+        "sha256": "6a93d5a7b656d9c31c428573ceed7c016725538a7d996864b679afd8336ab839"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageBattleSteleComponent.cs",
+        "sha256": "3825ca80536acdb3551eaea2e04aab49db282cb2cb8ad9b50a7a4452d2d1bedd"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageCampComponent.cs",
+        "sha256": "0dceb38cde594516f967433163d67c5137da1d4220e1afb2cea3b416b68f5dbf"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageComponent.cs",
+        "sha256": "fc94fdbb29dd0704a260e47cd32b1e896d15fd2b2c3c4644d0e4ab2004b7fb71"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageConsumingRandomEventComponent.cs",
+        "sha256": "d36ae54fc9e8fbfef041da15488b5d6358ff8b4742b09d2a5e1f7b2423004019"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageDailyDungeonComponent.cs",
+        "sha256": "5f214ff38fe3a536508a4947b58614dfa4a5e0b0a9320567cef8fb95cdca2b82"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageDailyDungeonPrivateMapComponent.cs",
+        "sha256": "3d7c6fcd80f295f717754139f34e789fe941110f83896f20f8f23ccbcef81f16"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageNpcAssistBattleComponent.cs",
+        "sha256": "c7e3f2d2a6f760154840f4b116a5c6cfb0b692d73733ac6ec50fae43e7793b3f"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageRuinComponent.cs",
+        "sha256": "f4e53cb9754b44876f365faca2e8f8d1641bea89b779cce3ff33566a9bd5b914"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageStoneCastleComponent.cs",
+        "sha256": "0671ed1f0b9b5df6cd2aa9ba11c77d72c4ab2fd7309adb66419a158182c5cf69"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageTeamComponent.cs",
+        "sha256": "12785acb20b110490adbfb2f9015af8d00965434a5e1af6a1d8c0e62e87b1984"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehStageTimeLimitComponent.cs",
+        "sha256": "e05f2e3bd8ba018677c61c16123f5e4e013ad93bba809abaff537f18d15f3147"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehTouchComponent.cs",
+        "sha256": "4dd2e20f97232cd124d91d382a527e3d6d0d81fbd00882e20ef67f7658f3f32c"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageBehVoidFissureComponent.cs",
+        "sha256": "58e2af2a892ff6cd33201b9cccd25882a2c8ca0ea894022368bbdbeb2f43d1bf"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageConPlayerPeriodicityInteractionComponent.cs",
+        "sha256": "1b237a5860c8f6a5f16c7c0a889c705f019f060e1d219859d0230e29f447b75b"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageResultAwardComponent.cs",
+        "sha256": "98d46af6466eb397ef0f0ba36317f14b6e7bce5625d33e6bb646d45c4399a382"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageResultAwardExtraPropComponent.cs",
+        "sha256": "1e0c417701c3b83352f46afbe91eb3bafb72ca34cfb4a9b6a6a768cb2c1b69d3"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageResultAwardStatusEffectComponent.cs",
+        "sha256": "a0d7045e2ff574a803d438904aa8b78a01fc67e6027cbef9bd5cfd7ed84fb718"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageResultModifyHpPercentComponent.cs",
+        "sha256": "d7bfeb7763f3be26c1ab6d04e196ab7f2e9b52b3dc29f67d349289eccd895ec2"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageResultPeriodicityRandomAwardComponent.cs",
+        "sha256": "fbc9be77cc6bcf2b9f609f3c0a6cb036771affdea2f29c61a66b780c71176a13"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/AwardExtraPropFormatter.cs",
+        "sha256": "e0193e382fab0c9c5523c6ae2cbd76a64f0e40c7ea9142fe57b939e172cf31d7"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/AwardExtraPropInfoFormatter.cs",
+        "sha256": "1043e061ba7c39d6596365a15eb4708c7e3a694a2f5d33b8ff9623f1eeb6eafd"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/DailyDungeonDifficultyFormatter.cs",
+        "sha256": "73b911b6fdf13f0170f4cc7ed6d5aab16fad8c8e24af10a02db97d1b2338479d"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/MapStageFastForwardTypeFormatter.cs",
+        "sha256": "ddd45f39ba81ce6091e9734e3b69e9fd5a2f64842429c67545e02e916f759b25"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/OutputAdditionPropTypeFormatter.cs",
+        "sha256": "d43beb23df7dcdb258b0e8c34e2ba7942d49b4108fe90f2bb47e5cf1b7f2a035"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/PropTypeFormatter.cs",
+        "sha256": "139c97ed0ff65c426fd6d7e1bc4a85186275b0c0eb58fafff9f3ece905d946ec"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBattleSteleInfoFormatter.cs",
+        "sha256": "007ab82462424d6caa9aad744e027a9f89283a8dd3590484fdbe4a01b3066dba"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehStageBattleSteleComponentInfoFormatter.cs",
+        "sha256": "4b703b1c6ce1ff33cf8d34f65cc52482442ea003afd604b3e8a518d94180aec2"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehStageComponentInfoFormatter.cs",
+        "sha256": "c9a8c7ed2ffdb8efaa483ab0fe84c5244916b84602d53b987ec3b2d385a0d316"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehStageDailyDungeonComponentInfoFormatter.cs",
+        "sha256": "d2449ce2ab1057e8b3399376f372ca9edac03d1b524d7060d34390d50725e6ca"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehStageDailyDungeonPrivateMapComponentInfoFormatter.cs",
+        "sha256": "a71dc3404eb87d9821193c5dca7873c7d152e33095f72136f5eb86256bf22f83"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehStageRuinComponentInfoFormatter.cs",
+        "sha256": "102026f357ba1ffdea76a9e3d118969301855cdd432f9e3eacc89af05bb3cf6c"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehStageStoneCastleComponentInfoFormatter.cs",
+        "sha256": "481156f2f0f53b8747b35657aa870fc10f22e8c6363c04b83ea60f377071452d"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehStageTeamComponentInfoFormatter.cs",
+        "sha256": "b95137888c16dba7729c054789ea6d33d287040e3e90b30210706555122964dd"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehStageTeamComponentSingleInfoFormatter.cs",
+        "sha256": "7a2aef17499acebd30ab3d8f66de37f0d8b06ce4e6755290f3b5b20e48541ed3"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehTouchComponentInfoFormatter.cs",
+        "sha256": "496f35028f6f6bd6f4bf6272f598fa237c7b8c73923dc70ec9e2d165452a5940"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageBehVoidFissureComponentInfoFormatter.cs",
+        "sha256": "2ffc266e292acb33393618da4cd05761fa97c590bcce5f9bba48df4707a74e03"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageConPlayerPeriodicityInteractionComponentInfoFormatter.cs",
+        "sha256": "04da91c6470eea11475dcaedf9435ae265f5111ccffadc9e016fa4782a2ea0f8"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageDailyDungeonInfoFormatter.cs",
+        "sha256": "e057f8dd27612ff7e77a6eea7d23cbecbd9bb8c0b85340ccf0f044b4307dcdfe"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageDailyDungeonPrivateMapInfoFormatter.cs",
+        "sha256": "9b6f77ce1fa118e02bc0a997c99bb118c857d39aac28fb7976bb546ae73dc38c"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageResultAwardComponentInfoFormatter.cs",
+        "sha256": "b8c05d7fbfceb5707b12aeef78aa54943b0f44664396f1e1ef245f6a676a266f"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageResultAwardExtraPropComponentInfoFormatter.cs",
+        "sha256": "835f9d4b7a569be1d88233a27dc26fd39048b7a11fc9c17dadacef7350cc2716"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageResultAwardStatusEffectComponentDataFormatter.cs",
+        "sha256": "b2846875b714fe36e4ab22992a477aeb9ee9b33452438b65ea79b080783dceb2"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageResultAwardStatusEffectComponentInfoFormatter.cs",
+        "sha256": "d38943f3d237555aa34a94d5cf9e36d70b23e095f787bc68044b802d64e6ddf0"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageResultModifyHpPercentComponentInfoFormatter.cs",
+        "sha256": "2f94587529c7b1bdd6b80157f57b0bad40938dd887e4ccbdb8f24d2c6c068b1a"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageResultPeriodicityRandomAwardComponentInfoFormatter.cs",
+        "sha256": "ccc5bd4f1e4d990b34d6924bcc592afc7e4199db5792246d79b542a0cbbeb346"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageRuinInfoFormatter.cs",
+        "sha256": "7f73df0ff5c4b5936e1977ddc5786575321d5f5a8c356d1dd7b8b0cd515d64b9"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageSingleAwardInfoFormatter.cs",
+        "sha256": "8d4b3c47d24001b7006f22f4f4327e708618b4fec21285f9ba8115f3af4189f8"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageStageInfoFormatter.cs",
+        "sha256": "01b7b9bacbd8c6e43c075c5df7ec571a65ec9e3de097095d0fc26bbc9f5b31a5"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageStoneCastleInfoFormatter.cs",
+        "sha256": "16030f94761a40460a0f5387afae27d32db5fb251238568aa66c94afce161bec"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Formatters.Common/StageTouchInfoFormatter.cs",
+        "sha256": "75e5da3c1ffb901e22412830604773fde7bda9642767592c83c851355a2dd0f7"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/MessagePack.Resolvers/GeneratedStaticGSerializableFormatterResolver.cs",
+        "sha256": "9e0eb448ce32ffcdd2f082db548d27df8211dfdf9ec98be78c9fa85adeb3af08"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Properties/AssemblyInfo.cs",
+        "sha256": "d85ed3684e7117155ebd5d8de5d415c29e4c83f090715776d9f74bf4f4a20785"
+      }
+    ],
+    "selected": {
+      "5001": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5002": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5003": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5004": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5005": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5006": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5007": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5008": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5010": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5011": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5012": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5013": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5014": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5015": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5016": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5017": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5021": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5022": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5023": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part1.g.bytes"
+      },
+      "5024": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part2.g.bytes"
+      },
+      "5026": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part2.g.bytes"
+      },
+      "5028": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part2.g.bytes"
+      },
+      "5030": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part2.g.bytes"
+      },
+      "5031": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part2.g.bytes"
+      },
+      "5032": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part2.g.bytes"
+      },
+      "5033": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part2.g.bytes"
+      },
+      "5034": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part2.g.bytes"
+      },
+      "5041": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part2.g.bytes"
+      },
+      "5042": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part2.g.bytes"
+      },
+      "5043": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part2.g.bytes"
+      },
+      "5055": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part2.g.bytes"
+      },
+      "5100": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part2.g.bytes"
+      },
+      "5110": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldMonster_part3.g.bytes"
+      },
+      "6020": {
+        "legacy": true,
+        "path": "Assets/Config/EC/WorldEntry.g.bytes"
+      },
+      "6026": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part1.g.bytes"
+      },
+      "6027": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part1.g.bytes"
+      },
+      "6119": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part3.g.bytes"
+      },
+      "6301": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+      },
+      "6302": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+      },
+      "6303": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+      },
+      "6304": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+      },
+      "6320": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+      },
+      "6321": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+      },
+      "6330": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+      },
+      "6331": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+      },
+      "6340": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+      },
+      "6341": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+      },
+      "6342": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+      },
+      "6350": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+      },
+      "6360": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+      },
+      "6370": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBuilding_part6.g.bytes"
+      },
+      "6570": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldGamePlay_part3.g.bytes"
+      },
+      "6571": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldGamePlay_part3.g.bytes"
+      },
+      "6572": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldGamePlay_part3.g.bytes"
+      },
+      "6573": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldGamePlay_part3.g.bytes"
+      },
+      "6574": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldGamePlay_part3.g.bytes"
+      },
+      "6575": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldGamePlay_part3.g.bytes"
+      },
+      "6650": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldGamePlay_part4.g.bytes"
+      },
+      "6655": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldGamePlay_part4.g.bytes"
+      },
+      "7000": {
+        "legacy": true,
+        "path": "Assets/Config/EC/WorldMonsterParty.g.bytes"
+      },
+      "7001": {
+        "legacy": true,
+        "path": "Assets/Config/EC/WorldMonsterParty.g.bytes"
+      },
+      "7002": {
+        "legacy": true,
+        "path": "Assets/Config/EC/WorldMonsterParty.g.bytes"
+      },
+      "7003": {
+        "legacy": true,
+        "path": "Assets/Config/EC/WorldMonsterParty.g.bytes"
+      },
+      "7011": {
+        "legacy": true,
+        "path": "Assets/Config/EC/WorldMonsterParty.g.bytes"
+      },
+      "7016": {
+        "legacy": false,
+        "path": "Assets/Config/EC/MapHideAndSeek_part1.g.bytes"
+      },
+      "7100": {
+        "legacy": true,
+        "path": "Assets/Config/EC/WorldMonsterParty.g.bytes"
+      },
+      "7101": {
+        "legacy": true,
+        "path": "Assets/Config/EC/WorldMonsterParty.g.bytes"
+      },
+      "8011": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBonus_part1.g.bytes"
+      },
+      "8021": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBonus_part1.g.bytes"
+      },
+      "8026": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBonus_part1.g.bytes"
+      },
+      "8369": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBonus_part8.g.bytes"
+      },
+      "8381": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldBonus_part8.g.bytes"
+      },
+      "8436": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldNPC_part2.g.bytes"
+      },
+      "8448": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldNPC_part3.g.bytes"
+      },
+      "8449": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldNPC_part3.g.bytes"
+      },
+      "8450": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldNPC_part3.g.bytes"
+      },
+      "8600": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldGamePlay_part5.g.bytes"
+      },
+      "8601": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldGamePlay_part5.g.bytes"
+      },
+      "8602": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldGamePlay_part5.g.bytes"
+      },
+      "8603": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldGamePlay_part5.g.bytes"
+      },
+      "8604": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldGamePlay_part5.g.bytes"
+      },
+      "8606": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldGamePlay_part5.g.bytes"
+      },
+      "8607": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldGamePlay_part5.g.bytes"
+      },
+      "8609": {
+        "legacy": false,
+        "path": "Assets/Config/EC/WorldGamePlay_part5.g.bytes"
+      }
+    },
+    "sources": [
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          7016
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "-4725351040224879977",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "8910388ede08c36b790a547b0bc97a5a97bea99008b503e6792af413d401964b"
+      },
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          8011,
+          8021,
+          8026
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "-2943392327713193183",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "1a0bda024209a390eb6961100d04c94dd07d1ba0c117bffab2b6ccea2487cc90"
+      },
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          8369,
+          8381
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "6245420361773387736",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "1915b80d82348313673c5bc2a7cc8d75ec905952552f92d8929eea6797ed37b1"
+      },
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          6026,
+          6027
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "7047277663431825796",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "0aa5f5e357e6f238ce833e91b971b6ff3deb211e6de1844ab0e1740eab72477f"
+      },
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          6119
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "-7418305976549516302",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "ad1c3842031d5011e537a1b56de55164527ad48c04e1c616142008e48e524118"
+      },
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          6301,
+          6302,
+          6303,
+          6304,
+          6320,
+          6321,
+          6330,
+          6331,
+          6340,
+          6341,
+          6342,
+          6350,
+          6360
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "3511498547737333368",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "6fb90a4bb9bbe313a31937172a51a27d57c698710482a5c82c0371727e125a75"
+      },
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          6370
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "-5334638726794891598",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "2528bba63f6875977710279f20b816d1b1bf0cf6d0e91a08d866a6ca2fed0003"
+      },
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          6020
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "-1100936120645172642",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "0a3d91d4661ffb877195cca6db4e261eeb039782e25c6d546e24e37316ffe512"
+      },
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          6570,
+          6571,
+          6572,
+          6573,
+          6574,
+          6575
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "5826680201636334695",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "04027347152e9b4bda096b2040d0506ef85e448d68a4901de45fc8324aa20501"
+      },
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          6650,
+          6655
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "-2175376292073780116",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "083923e922b1b63aa66df7430b0375506331f9150eedad4163c2ec29eaaf2b9e"
+      },
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          8600,
+          8601,
+          8602,
+          8603,
+          8604,
+          8606,
+          8607,
+          8609
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "795485824688205706",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "4609379f7d25dc63c853c2b41ec97f6be53ef7b68b0c09db1d009de22c59efac"
+      },
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          7000,
+          7001,
+          7002,
+          7003,
+          7011,
+          7100,
+          7101
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "-3307124464674058342",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "78c84138355b57cfefee496150bfbf90b0f2df9be18ae9adfc613eecbdaab14a"
+      },
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          5001,
+          5002,
+          5003,
+          5004,
+          5005,
+          5006,
+          5007,
+          5008,
+          5010,
+          5011,
+          5012,
+          5013,
+          5014,
+          5015,
+          5016,
+          5017,
+          5021,
+          5022,
+          5023
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "-5441854967693767294",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "a2346df6ee7a9f7efd0be29b48f73745be008132a4de569868b1006d4e25a26b"
+      },
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          5024,
+          5026,
+          5028,
+          5030,
+          5031,
+          5032,
+          5033,
+          5034,
+          5041,
+          5042,
+          5043,
+          5055,
+          5100
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "5034385222677653451",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "6af918553d78a19e8239c7011b5dbe9f7b02a6185ea526e20c7820e0d0d6aba9"
+      },
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          5110
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "4893050422332425496",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "7a4e93d151f18c668b47a67a2bfc17a32a46d4eba36903eca457e5b5c8f474b3"
+      },
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          8436
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "-4467181836577951756",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "7fec162de9679813a719b483083cb501b1bb41a68386f8f826e3e6e374936b75"
+      },
+      {
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "entityClassIds": [
+          8448,
+          8449,
+          8450
+        ],
+        "manifest": "884_156692",
+        "origin": "apk_zip",
+        "path_id": "-507276851688412472",
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+        "raw_size": 6876458,
+        "sha256": "0d8d71d464992419e0baea44678ad924d5cb80e9ab517e4fca68d61d8e390a00"
+      }
+    ],
+    "stageFastTypesSha256": "b01742d04eb22a305c7a289bdc878e9f1d107c2136f0f7194cfa19c4691f9202",
+    "superseded": [
+      {
+        "discarded": {
+          "legacy": true,
+          "path": "Assets/Config/EC/WorldLock.g.bytes"
+        },
+        "entityClassId": 8601,
+        "selected": {
+          "legacy": false,
+          "path": "Assets/Config/EC/WorldGamePlay_part5.g.bytes"
+        }
+      },
+      {
+        "discarded": {
+          "legacy": true,
+          "path": "Assets/Config/EC/WorldLock.g.bytes"
+        },
+        "entityClassId": 8609,
+        "selected": {
+          "legacy": false,
+          "path": "Assets/Config/EC/WorldGamePlay_part5.g.bytes"
+        }
+      },
+      {
+        "discarded": {
+          "legacy": true,
+          "path": "Assets/Config/EC/WorldSecretArea.g.bytes"
+        },
+        "entityClassId": 6301,
+        "selected": {
+          "legacy": false,
+          "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+        }
+      },
+      {
+        "discarded": {
+          "legacy": true,
+          "path": "Assets/Config/EC/WorldSecretArea.g.bytes"
+        },
+        "entityClassId": 6302,
+        "selected": {
+          "legacy": false,
+          "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+        }
+      },
+      {
+        "discarded": {
+          "legacy": true,
+          "path": "Assets/Config/EC/WorldSecretArea.g.bytes"
+        },
+        "entityClassId": 6303,
+        "selected": {
+          "legacy": false,
+          "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+        }
+      },
+      {
+        "discarded": {
+          "legacy": true,
+          "path": "Assets/Config/EC/WorldSecretArea.g.bytes"
+        },
+        "entityClassId": 6320,
+        "selected": {
+          "legacy": false,
+          "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+        }
+      },
+      {
+        "discarded": {
+          "legacy": true,
+          "path": "Assets/Config/EC/WorldSecretArea.g.bytes"
+        },
+        "entityClassId": 6330,
+        "selected": {
+          "legacy": false,
+          "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+        }
+      },
+      {
+        "discarded": {
+          "legacy": true,
+          "path": "Assets/Config/EC/WorldSecretArea.g.bytes"
+        },
+        "entityClassId": 6340,
+        "selected": {
+          "legacy": false,
+          "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+        }
+      },
+      {
+        "discarded": {
+          "legacy": true,
+          "path": "Assets/Config/EC/WorldSecretArea.g.bytes"
+        },
+        "entityClassId": 6350,
+        "selected": {
+          "legacy": false,
+          "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+        }
+      },
+      {
+        "discarded": {
+          "legacy": true,
+          "path": "Assets/Config/EC/WorldSecretArea.g.bytes"
+        },
+        "entityClassId": 6360,
+        "selected": {
+          "legacy": false,
+          "path": "Assets/Config/EC/WorldBuilding_part5.g.bytes"
+        }
+      },
+      {
+        "discarded": {
+          "legacy": true,
+          "path": "Assets/Config/EC/WorldSecretArea.g.bytes"
+        },
+        "entityClassId": 6370,
+        "selected": {
+          "legacy": false,
+          "path": "Assets/Config/EC/WorldBuilding_part6.g.bytes"
+        }
+      },
+      {
+        "discarded": {
+          "legacy": true,
+          "path": "Assets/Config/EC/WorldTap.g.bytes"
+        },
+        "entityClassId": 8011,
+        "selected": {
+          "legacy": false,
+          "path": "Assets/Config/EC/WorldBonus_part1.g.bytes"
+        }
+      },
+      {
+        "discarded": {
+          "legacy": true,
+          "path": "Assets/Config/EC/WorldTap.g.bytes"
+        },
+        "entityClassId": 8021,
+        "selected": {
+          "legacy": false,
+          "path": "Assets/Config/EC/WorldBonus_part1.g.bytes"
+        }
+      },
+      {
+        "discarded": {
+          "legacy": true,
+          "path": "Assets/Config/EC/WorldTap.g.bytes"
+        },
+        "entityClassId": 8026,
+        "selected": {
+          "legacy": false,
+          "path": "Assets/Config/EC/WorldBonus_part1.g.bytes"
+        }
+      },
+      {
+        "discarded": {
+          "legacy": true,
+          "path": "Assets/Config/EC/WorldTouch.g.bytes"
+        },
+        "entityClassId": 8369,
+        "selected": {
+          "legacy": false,
+          "path": "Assets/Config/EC/WorldBonus_part8.g.bytes"
+        }
+      },
+      {
+        "discarded": {
+          "legacy": true,
+          "path": "Assets/Config/EC/WorldTouch.g.bytes"
+        },
+        "entityClassId": 8381,
+        "selected": {
+          "legacy": false,
+          "path": "Assets/Config/EC/WorldBonus_part8.g.bytes"
+        }
+      }
+    ]
   }
 }
