@@ -180,3 +180,9 @@ python -B scripts/unity_asset_pack.py restore .tools/asset-packs/unity-official-
 每完成功能或地图，完成相关检查与运行验证后构建、真实启动并发布包含该成果的 Player。检查入口、受影响流程、模拟输入、画面和存档，失败修复后重跑；发布是逐项完成条件，不等待全游戏迁移结束。
 
 正式入口为 `D:/Desktop/ZjcsGame/Zjcs.exe`，构建目录、exe 及所有交付子路径使用 ASCII 命名（如 `Zjcs_Data`），桌面快捷方式指向该文件；复用增量缓存，保护用户存档。交付与已提交代码、资源和所属文档一致，明确可验证内容及尚未完成范围。临时构建留在验证目录，空框架构建不算功能交付。
+
+统一使用 `./scripts/release_windows.ps1` 发布指定提交（默认 `HEAD`，可用 `-Commit <sha>`）。`-PrepareOnly` 只同步源码，`-BuildOnly` 只生成待验证 Player；默认成功构建后发布，不自动启动游戏，运行验证仍按上文执行。`-CleanBuildCache` 仅用于 shader 筛选等必须重建数据的变更，日常不设置。不强制 `BuildScriptsOnly`，由 Unity 根据资源、场景、shader 和脚本变化自动选择增量步骤。
+
+首次创建一个带标记的 `output/validation/windows-release-<GUID>/`，由 `output/windows-release.json` 指向；该目录作为持久发布缓存保留，不按一次性验证目录清理。其 `source/` 为仅包含提交内 `unity/` 和 `assets/reference/` 的独立 sparse worktree，后续只切换指定提交、恢复构建修改的已跟踪输入，不复制工作区或其他工程的 Library。`Library`、`Player/` 和技能界面 bundle 缓存始终沿用同一路径。首次仍需完整导入和构建；编辑器、平台或依赖变化也可能使缓存失效。发布文件锁防止并发构建，发现残留 Unity 进程或未跟踪源码时拒绝继续，失败保留缓存供排查。
+
+正式构建统一经 `ProjectTools.BuildWindowsGame`，在打包前绑定运行时渲染管线并保留原 shader／字体，沿用原音频与技能界面包校验；同时检查构建报告及 Error／Exception／Assert。构建成功后 `publish_windows.py` 按内容哈希复制变化文件，不变文件保留时间戳；仅清理上次 `release-files.json` 记录中已失效的运行文件，不镜像删除交付目录，不触碰 `saves/`、用户选择文件或未知文件。运行中的游戏拒绝发布。工具回归入口为 `python -B scripts/test_windows_release.py`，覆盖提交隔离、缓存与时间戳复用、并发锁、差异发布、旧文件移除及存档保留。

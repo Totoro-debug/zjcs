@@ -167,18 +167,47 @@ namespace Zjcs.Editor
             PlayerSettings.resizableWindow = true;
             PlayerSettings.allowFullscreenSwitch = false;
 
-            const string destination = "D:/Desktop/ZjcsGame/Zjcs.exe";
+            string destination = Environment.GetEnvironmentVariable("ZJCS_WINDOWS_RELEASE_EXE");
+            if (string.IsNullOrEmpty(destination)) destination = "D:/Desktop/ZjcsGame/Zjcs.exe";
             RequireAsciiBuildPath(destination);
             Directory.CreateDirectory(Path.GetDirectoryName(destination));
-            BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+            int errors = 0;
+            string firstError = null;
+            Application.LogCallback observe = (message, stack, type) => {
+                if (type != LogType.Error && type != LogType.Exception && type != LogType.Assert) return;
+                errors++;
+                if (firstError == null) firstError = message;
+            };
+            var standalone = UnityEditor.Build.NamedBuildTarget.Standalone;
+            var previousBackend = PlayerSettings.GetScriptingBackend(standalone);
+            BuildReport report;
+            Application.logMessageReceived += observe;
+            try
             {
-                scenes = scenes,
-                locationPathName = destination,
-                target = BuildTarget.StandaloneWindows64,
-                options = BuildOptions.None
-            });
-            if (report == null || report.summary.result != BuildResult.Succeeded)
-                throw new BuildFailedException("Unity Windows game build failed; inspect the Editor log.");
+                PlayerSettings.SetScriptingBackend(standalone, ScriptingImplementation.Mono2x);
+                OfficialSparseShaderVariants.ValidateProgramDomains();
+                Skills.OfficialSkillRuntimeShaderBuild.Prepare();
+                string workspace = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+                string uiPack = string.IsNullOrEmpty(workspace) ? null : Skills.OfficialSkillUiPackBuild.Prepare(workspace);
+                report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+                {
+                    scenes = scenes,
+                    locationPathName = destination,
+                    target = BuildTarget.StandaloneWindows64,
+                    options = Environment.GetEnvironmentVariable("ZJCS_CLEAN_BUILD_CACHE") == "1"
+                        ? BuildOptions.CleanBuildCache : BuildOptions.None
+                });
+                if (uiPack != null && report != null && report.summary.result == BuildResult.Succeeded)
+                    Skills.OfficialSkillUiPackBuild.Deliver(uiPack, destination);
+            }
+            finally
+            {
+                Application.logMessageReceived -= observe;
+                Skills.OfficialSkillRuntimeShaderBuild.Restore();
+                PlayerSettings.SetScriptingBackend(standalone, previousBackend);
+            }
+            if (report == null || report.summary.result != BuildResult.Succeeded || report.summary.totalErrors != 0 || errors != 0)
+                throw new BuildFailedException("Unity Windows game build failed; inspect the Editor log. " + firstError);
             ValidateWindowsBuildPaths(destination);
             Debug.Log("Windows game built to " + destination + " (" + report.summary.totalSize + " bytes).");
         }

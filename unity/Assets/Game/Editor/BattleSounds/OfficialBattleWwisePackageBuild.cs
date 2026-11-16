@@ -39,6 +39,11 @@ namespace Zjcs.Editor
             {
                 string name = output.path.Substring(Prefix.Length);
                 string target = Path.Combine(destination, name);
+                if (File.Exists(target))
+                {
+                    try { Verify(target, output); continue; }
+                    catch (BuildFailedException) { /* Replace only a changed or truncated package. */ }
+                }
                 string temporary = target + "." + Guid.NewGuid().ToString("N") + ".tmp";
                 try
                 {
