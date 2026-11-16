@@ -36,7 +36,7 @@ try {
         $env:ZJCS_STATUS_PROCESS_PHASE = $phase
         $env:ZJCS_STATUS_PROCESS_HANDOFF = Join-Path $run 'prepare/process-handoff.json'
         $process = Start-UnityOnInternalDisplay -Editor $executable -ArgumentList @(
-            '-screen-fullscreen','0','-screen-width','675','-screen-height','1463',
+            '-screen-fullscreen','0','-screen-width','675','-screen-height','1463','-muteAudio',
             '-logFile', ('"' + (Join-Path $path 'player.log') + '"'),
             '--zjcs-validate-skills', ('"' + $path + '"'))
         $process.PriorityClass = 'BelowNormal'
