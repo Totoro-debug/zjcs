@@ -15,6 +15,7 @@ namespace Zjcs.Presentation.World
         public OfficialMainlineEntityParameter[] parameters;
         public OfficialMainlineInteractionRegion[] regions;
         public OfficialMainlineInteractionArea[] areas;
+        public OfficialMainlineStageFastTemplate[] stageFastTemplates;
 
         public static OfficialMainlineInteractionCatalog Load(int selectedMapClassId = 11)
         {
@@ -32,6 +33,12 @@ namespace Zjcs.Presentation.World
                 || result.heroes.Any(hero => hero == null)
                 || !result.heroes.Select(hero => hero.EntityClassId).SequenceEqual(expectedHeroes)
                 || result.parameters == null || result.regions == null || result.areas == null
+                || result.regions.Any(region => region == null || region.FastStageCombatRating < 0
+                    || region.GameFastType < 0 || region.GameFastType > 3)
+                || result.stageFastTemplates == null || result.stageFastTemplates.Length == 0
+                || result.stageFastTemplates.Any(value => value == null || value.EntityClassId <= 0
+                    || string.IsNullOrWhiteSpace(value.Component) || value.FastForwardType < 0 || value.FastForwardType > 7)
+                || result.stageFastTemplates.GroupBy(value => value.EntityClassId + ":" + value.Component).Any(group => group.Count() != 1)
                 || (resource != "World/Mainline/interactions" && (result.mapClassId != selectedMapClassId
                     || result.regions.Length != regionCount || result.regions.Any(region => region == null || region.MapClassId != selectedMapClassId)))
                 || result.heroes.Any(hero => hero.Effects == null || hero.PeriodicAwards == null || hero.PeriodicAwards.Length != 3
@@ -62,6 +69,8 @@ namespace Zjcs.Presentation.World
     [Serializable] internal sealed class OfficialMainlineInteractionRegion
     {
         public int MapClassId, Region, Level, SubRank;
+        public long FastStageCombatRating;
+        public int GameFastType;
         public bool ForbidExplore;
         public int[] DropItems;
     }
@@ -69,5 +78,12 @@ namespace Zjcs.Presentation.World
     {
         public int ClassId, Area;
         public int[] RefreshGroups, RefreshIntervals;
+    }
+
+    [Serializable] internal sealed class OfficialMainlineStageFastTemplate
+    {
+        public int EntityClassId;
+        public string Component;
+        public int FastForwardType;
     }
 }
