@@ -625,6 +625,7 @@ namespace Zjcs.Presentation.World
             bool storyBattle = callback != null;
             bool won = forceWin || outcome != null && outcome.Won;
             if (map14StoryStageBattle) map14StoryStageWon = won;
+            if (won && !storyBattle && !map14StoryStageBattle && !SettleMainlineMonsterVictory(entity, stageId)) return;
             if (!SettleMap12MountLiftBattle(entity, stageId, won)) return;
             if (!SettleMap12SteleBattle(entity, stageId, won)) return;
             stamina.FinishStaminaBattle(entity, won);

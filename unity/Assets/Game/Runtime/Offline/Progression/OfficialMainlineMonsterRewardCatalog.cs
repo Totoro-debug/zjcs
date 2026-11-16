@@ -36,6 +36,7 @@ namespace Zjcs.Offline.Progression
         public MainlineMonsterRewardStage[] stages;
         public MainlineMonsterRewardBinding[] monsterRewards;
         public MainlineMonsterRewardRule[] rewardRules;
+        public OfficialExploreRandomReward[] randomRewards;
         public OfficialExploreConditionRow[] conditions;
         public MaterialGatheringLevelNumber[] levelNumbers;
         public int[] missingRewardRuleIds;
@@ -50,13 +51,16 @@ namespace Zjcs.Offline.Progression
         {
             Data = JsonUtility.FromJson<MainlineMonsterRewardData>(json);
             if (Data?.manifest != "884_156692" || Data.stages == null || Data.monsterRewards == null
-                || Data.rewardRules == null || Data.conditions == null || Data.levelNumbers == null
+                || Data.rewardRules == null || Data.randomRewards == null || Data.conditions == null || Data.levelNumbers == null
                 || Data.missingRewardRuleIds == null)
                 throw new InvalidDataException("Original monster reward inputs are incomplete.");
             if (Data.stages.Select(v => v.Id).Distinct().Count() != Data.stages.Length
                 || Data.monsterRewards.Select(v => (v.GroupId, v.MonsterId)).Distinct().Count() != Data.monsterRewards.Length
                 || Data.rewardRules.Select(v => (v.Id, v.Order)).Distinct().Count() != Data.rewardRules.Length)
                 throw new InvalidDataException("Original monster reward identities are duplicated.");
+            // JsonUtility materializes JSON null as an empty reference object.
+            foreach (var package in Data.randomRewards)
+                if (string.IsNullOrEmpty(package.RandomItemRangeSelector?._type)) package.RandomItemRangeSelector = null;
         }
 
         public static OfficialMainlineMonsterRewardCatalog Load()
@@ -111,7 +115,7 @@ namespace Zjcs.Offline.Progression
 
         private double Scale(int[] ids, int index, int level)
         {
-            if (ids == null || ids.Length <= index) return 1;
+            if (ids == null || ids.Length <= index || ids[index] == 0) return 1;
             var row = Data.levelNumbers.SingleOrDefault(v => v.Id == ids[index]);
             if (row?.Nums == null || row.Nums.Length == 0)
                 throw new InvalidDataException("Original reward multiplier is missing: " + ids[index]);

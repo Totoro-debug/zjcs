@@ -149,10 +149,55 @@ namespace Zjcs.Editor
             SessionState.SetString(Key, Path.GetFullPath(args[index + 1]));
             Hook();
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-            Home.HomeAcceptanceLauncher.ConfigurePortraitGameView(540, 960);
-            EditorWindow gameView = EditorWindow.GetWindow(typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView"));
-            gameView.maximized = true;
+            ConfigureBackgroundGameView();
             EditorApplication.isPlaying = true;
+        }
+
+        private static void ConfigureBackgroundGameView()
+        {
+            const System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Instance
+                | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
+            var editor = typeof(EditorWindow).Assembly;
+            var sizesType = editor.GetType("UnityEditor.GameViewSizes", true);
+            var singleton = typeof(ScriptableSingleton<>).MakeGenericType(sizesType);
+            var sizes = singleton.GetProperty("instance").GetValue(null);
+            var group = sizesType.GetMethod("GetGroup").Invoke(sizes, new[] {
+                Enum.Parse(editor.GetType("UnityEditor.GameViewSizeGroupType", true), "Standalone") });
+            int count = (int)group.GetType().GetMethod("GetTotalCount").Invoke(group, null), selected = -1;
+            for (int i = 0; i < count; i++)
+            {
+                var size = group.GetType().GetMethod("GetGameViewSize").Invoke(group, new object[] { i });
+                if ((int)size.GetType().GetProperty("width").GetValue(size) == 540
+                    && (int)size.GetType().GetProperty("height").GetValue(size) == 960) { selected = i; break; }
+            }
+            if (selected < 0)
+            {
+                var size = Activator.CreateInstance(editor.GetType("UnityEditor.GameViewSize", true), flags,
+                    null, new[] { Enum.ToObject(editor.GetType("UnityEditor.GameViewSizeType", true), 1),
+                        (object)540, 960, "Mainline map verification" }, null);
+                group.GetType().GetMethod("AddCustomSize").Invoke(group, new[] { size });
+                selected = count;
+            }
+            var viewType = editor.GetType("UnityEditor.GameView", true);
+            foreach (EditorWindow old in Resources.FindObjectsOfTypeAll(viewType)) old.Close();
+            var view = (EditorWindow)ScriptableObject.CreateInstance(viewType);
+            var bounds = EditorGUIUtility.GetMainWindowPosition();
+            view.titleContent = new GUIContent("Mainline map verification");
+            view.position = new Rect(bounds.x + 40, bounds.y + 40, 540, 981);
+            var hostType = editor.GetType("UnityEditor.HostView", true);
+            var host = ScriptableObject.CreateInstance(hostType);
+            hostType.GetProperty("actualView", flags).SetValue(host, view);
+            var containerType = editor.GetType("UnityEditor.ContainerWindow", true);
+            var container = ScriptableObject.CreateInstance(containerType);
+            containerType.GetProperty("position", flags).SetValue(container, view.position);
+            containerType.GetProperty("rootView", flags).SetValue(container, host);
+            typeof(EditorWindow).GetMethod("MakeParentsSettingsMatchMe", flags).Invoke(view, null);
+            // The final parameter is setFocus. Never use EditorWindow.Show here.
+            containerType.GetMethod("Show", flags).Invoke(container, new[] {
+                Enum.Parse(editor.GetType("UnityEditor.ShowMode", true), "NormalWindow"),
+                (object)false, true, false });
+            viewType.GetProperty("selectedSizeIndex", flags).SetValue(view, selected);
+            view.Repaint();
         }
 
         [InitializeOnLoadMethod]

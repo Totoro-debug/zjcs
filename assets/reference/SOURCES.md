@@ -1067,4 +1067,6 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 创角发型与标题绑定：`scripts/inspect_creation_appearance_bindings.py` 从当前 APK 提取 `TypeSelectItem`、`UIToggleObject` 与 `TMPEffect` 的原字段、指针目标及对象 SHA-256；输入凭据见[外观绑定清单](character-creation/appearance-bindings-source-manifest.json)。未新增美术载荷，功能与验证范围见[创角页](../../docs/features/character-creation.md)。
 
-主线怪物奖励输入：`scripts/prepare_mainline_monster_rewards.py` 从所选官方版本提取阶段、怪物奖励组、奖励规则、复合条件依赖与等级倍率；输入、解码依据和输出哈希见[怪物奖励来源清单](official-map/mainline-monster-rewards-source-manifest.json)。目录 `Resources/World/Mainline/monster-reward-inputs` 尚未接入战斗结算，未生成完整素材快照。
+主线怪物奖励输入：`scripts/prepare_mainline_monster_rewards.py` 从所选官方版本提取阶段、怪物奖励组、奖励规则、复合条件依赖、等级倍率及 261 个阶段／怪物随机奖励包，并核对共享目录中的 253 个怪物奖励包；输入、解码依据和输出哈希见[怪物奖励来源清单](official-map/mainline-monster-rewards-source-manifest.json)。目录 `Resources/World/Mainline/monster-reward-inputs` 由地图怪物胜利事务加载，未生成完整素材快照。
+
+主线怪物等级绑定：`scripts/prepare_mainline_monster_levels.py` 从所选版本提取地图怪物放置点的等级组件及公开／私有等级类型，输入、反编译依据和输出哈希见[怪物等级来源清单](official-map/mainline-monster-levels-source-manifest.json)。数据通过 `Resources/World/Mainline/monster-levels` 加载，尚未生成完整素材快照。

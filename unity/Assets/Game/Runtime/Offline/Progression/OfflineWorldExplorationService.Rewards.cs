@@ -15,10 +15,11 @@ namespace Zjcs.Offline.Progression
                     if (!Ints(raw, "AwardItemIds").Any(id => PackageItems(id, context, save).Count > 0)) return false;
             return true;
         }
-        public IReadOnlyList<OfflineItemStack> ResolvePackage(int item, int count, OfflineExploreContext context, OfflineMainlineSave save)
+        public IReadOnlyList<OfflineItemStack> ResolvePackage(int item, int count, OfflineExploreContext context, OfflineMainlineSave save,
+            OfficialExploreRandomReward sourcePackage = null)
         {
-            var package = Data.randomRewards.Single(v => v.Id == item);
-            var candidates = PackageItems(item, context, save);
+            var package = sourcePackage ?? Data.randomRewards.Single(v => v.Id == item);
+            var candidates = PackageItems(item, context, save, package);
             if (candidates.Count == 0) throw new InvalidOperationException("Native exploration package has no eligible region items.");
             var result = new Dictionary<int, long>();
             for (int index = 0; index < count; index++)
@@ -30,9 +31,10 @@ namespace Zjcs.Offline.Progression
             }
             return result.Select(v => new OfflineItemStack { ItemId = v.Key, Count = v.Value }).ToArray();
         }
-        private Dictionary<int, int> PackageItems(int item, OfflineExploreContext context, OfflineMainlineSave save)
+        private Dictionary<int, int> PackageItems(int item, OfflineExploreContext context, OfflineMainlineSave save,
+            OfficialExploreRandomReward sourcePackage = null)
         {
-            var package = Data.randomRewards.Single(v => v.Id == item);
+            var package = sourcePackage ?? Data.randomRewards.Single(v => v.Id == item);
             var result = new Dictionary<int, int>();
             if (package.RandomItemRangeSelector == null)
             {

@@ -23,7 +23,7 @@ def build():
     tables = {}
     for name, kind in (("stage", "TbStageInfo"), ("monster_reward", "TbMonsterRewardInfo"),
                        ("reward_rule", "TbRewardRuleInfo"), ("level_number", "TbLevelNumber"),
-                       ("conditions", "TbConditionInfo")):
+                       ("conditions", "TbConditionInfo"), ("random_reward", "TbRandomRewardInfo")):
         obj = apk.asset("config_luban", "/" + name + ".g.bytes")
         raw = obj.read().m_Script.encode("utf8", "surrogateescape")
         inputs[name] = dict(apk.provenance(obj), sha256=hashlib.sha256(raw).hexdigest())
@@ -36,6 +36,18 @@ def build():
     reward_ids.update(rule for row in tables["monster_reward"] for rule in row["RuleIds"])
     rules = [dict(row, HasCondition=row["Condition"] is not None)
              for row in tables["reward_rule"] if row["Id"] in reward_ids]
+    monster_rule_ids = {rule for row in tables["monster_reward"] for rule in row["RuleIds"]}
+    monster_item_ids = {item for row in rules if row["Id"] in monster_rule_ids for item in row["IdList"]}
+    monster_packages = [row for row in tables["random_reward"] if row["Id"] in monster_item_ids]
+    reward_item_ids = {item for row in rules for item in row["IdList"]}
+    packages = [row for row in tables["random_reward"] if row["Id"] in reward_item_ids]
+    if any(row["LevelCountId"] or row["SubRankCountId"] for row in packages):
+        raise ValueError("Monster reward package requires unconverted count multipliers")
+    shared_path = ROOT / "unity/Assets/Game/Resources/World/Mainline/exploration.json"
+    shared = json.loads(shared_path.read_text(encoding="utf8"))
+    shared_packages = {row["Id"]: row for row in shared["randomRewards"]}
+    if any(shared_packages.get(row["Id"]) != row for row in monster_packages):
+        raise ValueError("Shared automatic monster reward packages differ from selected official source")
     conditions_by_id = {row["ClassId"]: row for row in tables["conditions"]}
     condition_ids = set()
     pending = [condition for row in rules if (condition := row.get("Condition"))]
@@ -61,7 +73,8 @@ def build():
         raise ValueError("Original reward level multipliers are incomplete")
     missing = sorted(reward_ids - {row["Id"] for row in rules})
     payload = dict(manifest=apk.version, stages=stages, monsterRewards=tables["monster_reward"],
-                   rewardRules=rules, levelNumbers=levels, conditions=conditions, missingRewardRuleIds=missing)
+                   rewardRules=rules, randomRewards=packages, levelNumbers=levels,
+                   conditions=conditions, missingRewardRuleIds=missing)
     raw = (json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf8")
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     if not OUTPUT.exists() or OUTPUT.read_bytes() != raw:
@@ -72,6 +85,7 @@ def build():
     receipt = dict(format=1, manifest=apk.version,
         operation="Extract stage awards, monster reward group bindings, reward rules and level multipliers; no settlement implementation is implied.",
         officialSource=source_record(ROOT / "official-source.json"), inputs=inputs,
+        sharedRewardPackages=source_record(shared_path),
         officialCode=[source_record(code / path) for path in code_paths],
         constructors=[source_record(path) for name in sorted(constructors.sources)
                       for path in (code / "common-source/Common" / (name + ".cs"),
@@ -79,7 +93,8 @@ def build():
                       if path.is_file()],
         tools=[source_record(Path(__file__))], outputs=[source_record(OUTPUT), source_record(Path(str(OUTPUT) + ".meta"))],
         counts=dict(stages=len(stages), monsterRewards=len(tables["monster_reward"]),
-                    rewardRules=len(rules), levelNumbers=len(levels), conditions=len(conditions)), missingRewardRuleIds=missing)
+                    rewardRules=len(rules), levelNumbers=len(levels), conditions=len(conditions),
+                    sharedMonsterPackages=len(monster_packages), rewardPackages=len(packages)), missingRewardRuleIds=missing)
     write_json(RECEIPT, receipt)
     print(json.dumps(receipt["counts"]))
 

@@ -72,7 +72,25 @@
       "raw_size": 2142435,
       "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
       "sha256": "87610428d6195c06ff55291ae24423cc949df7ac25bfb8953cc3798a1aaa31e5"
+    },
+    "random_reward": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "3530266630744679519",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "sha256": "2c25816ee2fa3a1490224514e55b6daa3cc19d248e9167fc59024820d502e69a"
     }
+  },
+  "sharedRewardPackages": {
+    "path": "unity/Assets/Game/Resources/World/Mainline/exploration.json",
+    "bytes": 1178931,
+    "sha256": "84448ac4269c05f3ab919886dcb2f0c7051deaa2f46c7540c9199094206d2b67"
   },
   "officialCode": [
     {
@@ -308,6 +326,26 @@
       "sha256": "e76e1f4a0eb38aeb4ecdaa0b433c17d45f2cb7509cf673ab8bd385217a3f693e"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemFilterBase.cs",
+      "bytes": 1292,
+      "sha256": "627f33e494dfd55a7df4c20da698bc038a7a3a1756ad98e7be51e40cdc231e89"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemFilterForProfessionSkill.cs",
+      "bytes": 2947,
+      "sha256": "373769b1207a4014234b48aac0241f498f54b8df07f75d8c763c54fbe3b6d60b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemFilterForProfessionUnlockedSkill.cs",
+      "bytes": 1639,
+      "sha256": "927226f14dfa93fc8e817242a50353329c80223eba860fd16c7cf959a2d6043b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemPartInfo.cs",
+      "bytes": 2096,
+      "sha256": "685012dc0b4db06adf6b1b5f4d37e04ac1197b2391763694badfdbf1ae278cea"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/JointStrikeActiveOpenCondition.cs",
       "bytes": 1918,
       "sha256": "256cebac7e24fb0ac131eba72bbc18f9e092af814ff4318adf859bb143076c55"
@@ -503,6 +541,26 @@
       "sha256": "429516e38dba7f7f5aaae990e6df008d083553875fbd63c8c9f8a0286afee545"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RandomItemRangeProfessionSkillSelector.cs",
+      "bytes": 3007,
+      "sha256": "189397e4e1f058b2e32605bfe2bc7bcbdd596e90359462c0c5af6e9b761c202a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RandomItemRangeSelectorBase.cs",
+      "bytes": 940,
+      "sha256": "4e0cf0fd57ebfcac881c520c19915b29a6b8eb4529b66468132292301d394fed"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RandomItemRangeTreasureGachaSelector.cs",
+      "bytes": 4246,
+      "sha256": "5f7244dba61dab5be955e106471d06fcf875258241c5cc2c427ebebdf027966f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RandomRewardInfo.cs",
+      "bytes": 6202,
+      "sha256": "58981a4ba49925b3a85ccc64f5ea21a4a11ed24a4fb054671fa79fc8e2097848"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RecentDaysAccumulatedCostCondition.cs",
       "bytes": 5211,
       "sha256": "6094c8ac4bab561e2cee4a6105c8b936843336c127a60834fe8f2f3614a4a582"
@@ -603,6 +661,11 @@
       "sha256": "56e39983bc5ff253caae753fea697e9a7d74e67594005c12ce170b790867b77f"
     },
     {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbRandomRewardInfo.cs",
+      "bytes": 3143,
+      "sha256": "ad68aba5b250428175ba04129fb8c4ed44ed11c515ae7d45f435d2ecc6837a6f"
+    },
+    {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbRewardRuleInfo.cs",
       "bytes": 3686,
       "sha256": "ba5603824d4c87642cf1f950379df87ebc84d05ca64fbd17bc1467646fe504c1"
@@ -621,15 +684,15 @@
   "tools": [
     {
       "path": "scripts/prepare_mainline_monster_rewards.py",
-      "bytes": 4808,
-      "sha256": "a3bd5502165f915859b486f55e5148002f37658eb737faaae9bf9c802d10dd90"
+      "bytes": 6078,
+      "sha256": "ec58ccd2f9da364939ae471510cc2f7f5c849ca272de80f967ff49660f9def7a"
     }
   ],
   "outputs": [
     {
       "path": "unity/Assets/Game/Resources/World/Mainline/monster-reward-inputs.json",
-      "bytes": 1434311,
-      "sha256": "7d71e0e575e72fcd1a8c98e48532ea58ee5c58ca1e7929325d88d52d4bf8ff89"
+      "bytes": 1532024,
+      "sha256": "b5ad0eba1bf2645850a805798bbbb76478e2b15c5372c531e8dca3fd1e92ba36"
     },
     {
       "path": "unity/Assets/Game/Resources/World/Mainline/monster-reward-inputs.json.meta",
@@ -642,7 +705,9 @@
     "monsterRewards": 477,
     "rewardRules": 959,
     "levelNumbers": 3,
-    "conditions": 31
+    "conditions": 31,
+    "sharedMonsterPackages": 253,
+    "rewardPackages": 261
   },
   "missingRewardRuleIds": [
     400,

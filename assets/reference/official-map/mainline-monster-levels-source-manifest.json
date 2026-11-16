@@ -1,0 +1,265 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "operation": "Extract placed monster LoLevel and public/private level types.",
+  "officialSource": {
+    "path": "official-source.json",
+    "bytes": 2673,
+    "sha256": "a29067dd1363590c8fde67a7d5326fcb5a4632441e8c73ae8b64300aa491a3a6"
+  },
+  "inputs": {
+    "/entity_extend_parameter.g.bytes": {
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "path_id": "-957009542101312328",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "raw_size": 197305,
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "sha256": "b2e99626a80beb4e07669d42f0c738a5620b30683a80757679103694d85e93d4"
+    },
+    "/map_region.g.bytes": {
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "path_id": "-475710695530452369",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "raw_size": 197305,
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "sha256": "04525b1a307baeed8ed49e4004a855b2e0239176718ac08c912f34f2e0467bfa"
+    },
+    "/mapinfowrap_10.g.bytes": {
+      "bundle": "defaultpackage_assets_config_mapinfowrap.bundle",
+      "bundle_hash": "c8ce09fce490d2cbb5fd15fb0d11dbf5",
+      "path_id": "-3123862152476700077",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c8ce09fce490d2cbb5fd15fb0d11dbf5.bundle",
+      "raw_size": 589104,
+      "raw_sha256": "f77b50d314c28ce2b3dbf10e09557b1c23373e2ed4315a653035796c22c86ff1",
+      "sha256": "6a61c10edfad48b0a3ea9173d7be0a5db3313c05b4dd26f315c51f50052cedbe"
+    },
+    "/map_10.g.bytes": {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "7467860483917764359",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "sha256": "cb5cc09489cb899f18b523db4fbd8d8b47f2145fc7147593f6fcb26cfdb7eb14"
+    },
+    "/mapinfowrap_11.g.bytes": {
+      "bundle": "defaultpackage_assets_config_mapinfowrap.bundle",
+      "bundle_hash": "c8ce09fce490d2cbb5fd15fb0d11dbf5",
+      "path_id": "-113029612055151900",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c8ce09fce490d2cbb5fd15fb0d11dbf5.bundle",
+      "raw_size": 589104,
+      "raw_sha256": "f77b50d314c28ce2b3dbf10e09557b1c23373e2ed4315a653035796c22c86ff1",
+      "sha256": "4a0f528c24644e6deeda967f8c5b19f9fc3cc0d1ba9935a5007e537d97aa6a3c"
+    },
+    "/map_11.g.bytes": {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "6637739768313386954",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "sha256": "2c4eb5e1ff1934733ac319f82d39dd20a336898f17c1da7d4b7049b520c3e113"
+    },
+    "/mapinfowrap_12.g.bytes": {
+      "bundle": "defaultpackage_assets_config_mapinfowrap.bundle",
+      "bundle_hash": "c8ce09fce490d2cbb5fd15fb0d11dbf5",
+      "path_id": "6536184600444106648",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c8ce09fce490d2cbb5fd15fb0d11dbf5.bundle",
+      "raw_size": 589104,
+      "raw_sha256": "f77b50d314c28ce2b3dbf10e09557b1c23373e2ed4315a653035796c22c86ff1",
+      "sha256": "7b2b5f8ddb98ae97e8d3dfb4746294423dc6fd7973bd6a117414c800f1cb8312"
+    },
+    "/map_12.g.bytes": {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "6307069124587089687",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "sha256": "e400359c00f12a1c3e96fed4c090977d871fa542ab486ea813a3c5601bd1450e"
+    },
+    "/mapinfowrap_13.g.bytes": {
+      "bundle": "defaultpackage_assets_config_mapinfowrap.bundle",
+      "bundle_hash": "c8ce09fce490d2cbb5fd15fb0d11dbf5",
+      "path_id": "-818819643049384394",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c8ce09fce490d2cbb5fd15fb0d11dbf5.bundle",
+      "raw_size": 589104,
+      "raw_sha256": "f77b50d314c28ce2b3dbf10e09557b1c23373e2ed4315a653035796c22c86ff1",
+      "sha256": "9494ead7d023406f99a2f3b2ccfad7b83b04da081c21664942936a1890cf5e1f"
+    },
+    "/map_13.g.bytes": {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "-1383617849398216621",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "sha256": "4b1a62fa12bb485df81328f446d8b0729ff48d11b52ef29ccabba386f15b1c73"
+    },
+    "/mapinfowrap_14.g.bytes": {
+      "bundle": "defaultpackage_assets_config_mapinfowrap.bundle",
+      "bundle_hash": "c8ce09fce490d2cbb5fd15fb0d11dbf5",
+      "path_id": "-124714658192460972",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c8ce09fce490d2cbb5fd15fb0d11dbf5.bundle",
+      "raw_size": 589104,
+      "raw_sha256": "f77b50d314c28ce2b3dbf10e09557b1c23373e2ed4315a653035796c22c86ff1",
+      "sha256": "f42e9f4d9a6d8f130241bcfb155469fbfb52dec567e2cfc0cae316f3dfab780e"
+    },
+    "/map_14.g.bytes": {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "9179065640072932140",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "sha256": "adc9eacc4569772b5df415d9c7909301fe0fccb9275ee1328a1f54cbec1cb08b"
+    },
+    "/mapinfowrap_16.g.bytes": {
+      "bundle": "defaultpackage_assets_config_mapinfowrap.bundle",
+      "bundle_hash": "c8ce09fce490d2cbb5fd15fb0d11dbf5",
+      "path_id": "1824005875453954824",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c8ce09fce490d2cbb5fd15fb0d11dbf5.bundle",
+      "raw_size": 589104,
+      "raw_sha256": "f77b50d314c28ce2b3dbf10e09557b1c23373e2ed4315a653035796c22c86ff1",
+      "sha256": "afe4f43c6b0eaad0e8808599aceae448d65d0e5e98164f74a6550aa0cf9d0cbe"
+    },
+    "/map_16.g.bytes": {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "path_id": "-2177058968605846566",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+      "raw_size": 6876458,
+      "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "sha256": "fd90934c0e09219139c1ac2212dfec8c38dae645caa3469dd619609c4b31c564"
+    }
+  },
+  "officialCode": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/WorldEntityLevelComponent.cs",
+      "bytes": 2453,
+      "sha256": "24093c29a3a98da73ae69bb8705fe314a5281886868b8b3603b1501513b02775"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LoLevelComponentInfo.cs",
+      "bytes": 374,
+      "sha256": "2c976f84cdd9669a07c04cffa568d627f629f2e070b2c5c44be67dca2e6a0679"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityExtendParameterInfo.cs",
+      "bytes": 7292,
+      "sha256": "574e01256562165a68d4a0c9710db1594890f3841374aef67e07da156da3a49b"
+    }
+  ],
+  "formatters": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LoLevelComponent.cs",
+      "bytes": 210,
+      "sha256": "14a2bf13c974d3d7877036f1b6269e3b6fca89a752226e49acc02511edbd0290"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/LoLevelComponentInfoFormatter.cs",
+      "bytes": 1972,
+      "sha256": "99254a7f84e52659127dd193d073864d606028830b0832238a801788fe98a934"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/SubRankFormatter.cs",
+      "bytes": 544,
+      "sha256": "c525e55ae43961b24f062ba71b5f8bb7b5f9d8d39d8d718bc597cb317e45a2e6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Resolvers/GeneratedStaticGSerializableFormatterResolver.cs",
+      "bytes": 595466,
+      "sha256": "9e0eb448ce32ffcdd2f082db548d27df8211dfdf9ec98be78c9fa85adeb3af08"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Properties/AssemblyInfo.cs",
+      "bytes": 12322,
+      "sha256": "d85ed3684e7117155ebd5d8de5d415c29e4c83f090715776d9f74bf4f4a20785"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_mainline_monster_levels.py",
+      "bytes": 4193,
+      "sha256": "2a6b915088ab85fb4bc3e989389d438612d034024ff46279d938b7e448bd4034"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/monster-levels.json",
+      "bytes": 554585,
+      "sha256": "50740aa882a0d5f169cf728e5d1b678dddaa7ad89f494eb4632cf6983d525dd5"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/monster-levels.json.meta",
+      "bytes": 155,
+      "sha256": "71067b8bc2efdf9a353ceb2aa8954fa40953db3a15cf82d39f8dc27fac4f3bb2"
+    }
+  ],
+  "count": 2955,
+  "missing": [
+    {
+      "MapClassId": 13,
+      "PlacementId": 10903,
+      "EntityClassId": 6153
+    }
+  ]
+}

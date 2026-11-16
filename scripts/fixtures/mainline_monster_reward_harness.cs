@@ -16,6 +16,8 @@ namespace Zjcs.Offline.Progression
 {
     public sealed class OfficialExploreCondition { public string _type; }
     public sealed class OfficialExploreConditionRow { }
+    public sealed class OfficialExploreRandomSelector { public string _type; }
+    public sealed class OfficialExploreRandomReward { public OfficialExploreRandomSelector RandomItemRangeSelector; }
     public sealed class MaterialGatheringLevelNumber { public int Id; public float[] Nums; }
 }
 
@@ -35,6 +37,7 @@ public static class MainlineMonsterRewardHarness
             stages = new[] { new MainlineMonsterRewardStage { Id = 1081, MonsterAwardGroupId = 2, Awards = new[] { 10 } } },
             monsterRewards = new[] { new MainlineMonsterRewardBinding { GroupId = 2, MonsterId = 3401, RuleIds = new[] { 20 } } },
             conditions = Array.Empty<OfficialExploreConditionRow>(), missingRewardRuleIds = Array.Empty<int>(),
+            randomRewards = Array.Empty<OfficialExploreRandomReward>(),
             levelNumbers = new[] { new MaterialGatheringLevelNumber { Id = 6, Nums = new[] { 1f, 1.5f } } },
             rewardRules = new[] {
                 new MainlineMonsterRewardRule { Id = 10, Order = -1, Percent = 1, IdList = new[] { 1 }, WeightList = new[] { 1 }, CountList = new[] { 2f } },

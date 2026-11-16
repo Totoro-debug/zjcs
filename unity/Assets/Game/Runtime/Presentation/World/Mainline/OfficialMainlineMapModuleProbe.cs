@@ -119,6 +119,8 @@ namespace Zjcs.Presentation.World
                     ? "Whale Island verified data binding, Map15 pointer navigation and cold reload, shared statue visit transaction and cold reload passed."
                     : Environment.GetCommandLineArgs().Contains("-verify-roadblocks-only")
                     ? "Map14 original roadblock display, property dialog, partner invitation, one-use completion, opened path and cold save restore passed."
+                    : Environment.GetCommandLineArgs().Contains("-verify-fast-victory-only")
+                    ? "Map11 power threshold, simulated map/battle pointers, configured monster rewards without stamina and cold save restore passed."
                     : "Map10/11 shared runtime: region conditions, pointer navigation, HUD, minimap tabs/filter, goddess activation, hero UI/permanent rewards/daily effects, stamina gathering/award animation/respawn, exploration, configured fast victory settlement and cold save reload passed.");
             Debug.Log("Shared mainline map modules passed: " + output);
             Complete(true);
@@ -331,6 +333,22 @@ namespace Zjcs.Presentation.World
                 Destroy(canvas);
                 yield break;
             }
+            if (Environment.GetCommandLineArgs().Contains("-verify-fast-victory-only"))
+            {
+                Open(11, canvas.transform);
+                yield return new WaitForSecondsRealtime(1);
+                progress = Progress;
+                foreach (int region in new[] { 0, 1, 12 })
+                {
+                    progress.SetMapRegionProgress(11, region, 10000);
+                    progress.RecordGoddessActivated(11, region, "probe-fast-public-" + region);
+                }
+                yield return Reopen();
+                yield return VerifyFastVictory();
+                yield return ExitMap();
+                Destroy(canvas);
+                yield break;
+            }
             bool map15Only = Environment.GetCommandLineArgs().Contains("-verify-map15-only");
             if (!map15Only)
             {
@@ -539,8 +557,6 @@ namespace Zjcs.Presentation.World
             int battleCount = before.battleResults == null ? 0 : before.battleResults.Length;
             int winsBefore = progress.StageWinCount(stageId);
             long staminaBefore = progress.InventoryCount(57);
-            long experienceBefore = progress.Save.Player.Experience;
-            long blessingExperienceBefore = progress.Save.Player.BlessingExperience;
             Dictionary<int, long> inventoryBefore = InventoryCounts(progress.Save.Player);
             yield return Capture("map-11-fast-victory-ready");
             Button confirm = dialog.transform.Find(
@@ -564,12 +580,15 @@ namespace Zjcs.Presentation.World
                 "Fast victory records the normal won result and advances the saved stage count");
             Dictionary<int, long> inventoryAfter = InventoryCounts(progress.Save.Player);
             Require(progress.InventoryCount(57) == staminaBefore
-                && progress.Save.Player.Experience == experienceBefore
-                && progress.Save.Player.BlessingExperience == blessingExperienceBefore
-                && inventoryAfter.Count == inventoryBefore.Count
-                && inventoryBefore.All(pair => inventoryAfter.TryGetValue(pair.Key, out long count) && count == pair.Value),
-                "Non-stamina fast victory adds no item, currency or experience reward");
+                && inventoryAfter.Any(pair => pair.Value > inventoryBefore.GetValueOrDefault(pair.Key)),
+                "Non-stamina fast victory grants configured monster rewards without stamina cost");
             yield return Capture("map-11-fast-victory-result");
+            string rewardSnapshot = JsonUtility.ToJson(progress.Save);
+            yield return Reopen();
+            Require(JsonUtility.ToJson(Progress.Save) == rewardSnapshot
+                && MapSave.battleResults.Length == battleCount + 1,
+                "Fast victory rewards, RNG, receipts and battle result survive cold map reload without duplication");
+            yield return Capture("map-11-fast-victory-cold");
         }
 
         private static void ConfigureFastVictoryEquipment(OfflinePlayerProgress player,
