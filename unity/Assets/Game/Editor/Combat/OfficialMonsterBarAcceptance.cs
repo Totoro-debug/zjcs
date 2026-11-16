@@ -66,7 +66,8 @@ namespace Zjcs.Editor.Combat
                 Require(hud != null, "Original monster bar was not loaded.");
                 // Stress the reported overlap with the actual original mesh.
                 // Only the fixture's body moves; the authored bar geometry stays intact.
-                model.ModelTransform.localPosition += new Vector3(0, -.45f, 0);
+                model.ModelTransform.localPosition += new Vector3(0, -.45f,
+                    Environment.GetEnvironmentVariable("ZJCS_BAR_DEPTH") == "1" ? -1f : 0f);
                 stage = 0; next = EditorApplication.timeSinceStartup + 2;
                 EditorApplication.update += Tick;
             }

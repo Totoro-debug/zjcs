@@ -11,7 +11,8 @@ namespace Zjcs.Presentation.Combat
     public sealed class OfficialBattleUnitWorldHudView : IDisposable
     {
         private const float HudPixelsPerWorldUnit = 100f;
-        private const int UnitHudSortingBase = 22000;
+        private const int UnitHudSortingBase = 32000;
+        private readonly Material barMaterial;
 
         private sealed class BarGraphic
         {
@@ -42,16 +43,6 @@ namespace Zjcs.Presentation.Combat
         private bool disposed;
 
         public Transform Root => root.transform;
-
-        public static OfficialBattleUnitWorldHudView Create(OfficialBattleHudCatalog catalog,
-            BattleUnitBarBinding binding, BattleUnitBarFaction faction, FightBattleUnitState unit,
-            Transform body, Camera camera, int sortingOrder)
-        {
-            var view = new OfficialBattleUnitWorldHudView(catalog, binding, unit, body, faction);
-            view.canvas.worldCamera = camera;
-            view.canvas.sortingOrder = sortingOrder;
-            return view;
-        }
 
         public static OfficialBattleUnitWorldHudView Create(OfficialBattleHudCatalog catalog,
             FightBattleUnitState unit, Transform body)
@@ -86,11 +77,14 @@ namespace Zjcs.Presentation.Combat
         }
 
         private OfficialBattleUnitWorldHudView(OfficialBattleHudCatalog catalog,
-            BattleUnitBarBinding binding, FightBattleUnitState unit, Transform body, BattleUnitBarFaction factionOverride = null)
+            BattleUnitBarBinding binding, FightBattleUnitState unit, Transform body)
         {
             this.catalog = catalog;
             this.binding = binding;
-            faction = factionOverride ?? catalog.UnitBarFaction(unit.Id == 1 || unit.Side == 1);
+            faction = catalog.UnitBarFaction(unit.Id == 1 || unit.Side == 1);
+            var shader = Resources.Load<Shader>("Combat/UnitBar");
+            if (!shader) throw new InvalidOperationException("Shared unit bar shader is missing.");
+            barMaterial = new Material(shader) { name = "Shared battle unit bar" };
 
             root = new GameObject("OfficialBattleUnitHud_" + unit.Id,
                 typeof(RectTransform), typeof(Canvas));
@@ -100,8 +94,8 @@ namespace Zjcs.Presentation.Combat
             canvas.overrideSorting = true;
             // The scene adapter flattens official sorting layers into orders.
             // World-space Canvas does not inherit a MeshRenderer SortingGroup:
-            // give the background and fills the same foreground band as the
-            // original player bars, preserving the per-part order within it.
+            // Use one foreground band above both ordinary and opening models,
+            // preserving the per-part order within it for every battle host.
             canvas.sortingOrder = UnitHudSortingBase - 5;
             canvas.worldCamera = Camera.main;
             RectTransform canvasRect = (RectTransform)root.transform;
@@ -209,6 +203,7 @@ namespace Zjcs.Presentation.Combat
             if (disposed) return;
             disposed = true;
             OfficialBattleSceneBindings.DestroyCreatedObject(root);
+            OfficialBattleSceneBindings.DestroyCreatedObject(barMaterial);
             bars.Clear();
             statusItems.Clear();
             visibleStatuses.Clear();
@@ -228,8 +223,7 @@ namespace Zjcs.Presentation.Combat
                     {
                         Canvas barCanvas = go.AddComponent<Canvas>();
                         barCanvas.overrideSorting = true;
-                        barCanvas.sortingOrder = Math.Max(bar.Order,
-                            UnitHudSortingBase + bar.sortingOrder);
+                        barCanvas.sortingOrder = UnitHudSortingBase + bar.sortingOrder;
                         break;
                     }
             RectTransform rect = (RectTransform)go.transform;
@@ -258,6 +252,7 @@ namespace Zjcs.Presentation.Combat
                 image = go.AddComponent<Image>();
             }
             image.sprite = sprite;
+            image.material = barMaterial;
             // SpriteRenderer.size is expressed in world units; UGUI's sliced
             // borders otherwise retain their pixel size and consume the bar.
             image.pixelsPerUnitMultiplier = HudPixelsPerWorldUnit;

@@ -110,7 +110,7 @@ Unity 2022.3 粒子转换将 `boxThickness`、`placementMode`、UV `animationTyp
 
 Windows Player 的存档入口保留列表按钮原有 86 单位高度，关闭纵向布局组对按钮高度的自动控制，避免无布局首选高度时条目被压为零。续玩点击、完整创角／初始武器／家园和地图全流程仍未验收。
 
-开场战斗的两名剧情 NPC 现在按固定 APK `871_156598` 的 FightNpc 4201／4202、外观组合 8401／8402 恢复身体与 `pWeapon_100_G_001`／`pWeapon_200_G_001` 武器皮肤；重建原控制器别名及录像技能 `MyPlayableOverrideAnimator` 引用的骨骼动画，使用已确认的 Spine 原生迁移方案。`prepare_opening_fighters.py` 提取原贴图、骨骼、蒙皮与动作；`OpeningFighterAssetTools` 显式绑定已批准的 Spine shader，避免同名 Android 占位 shader 被动态查找选中。角色名字、双方血条的尺寸、位置、分阵营颜色与九宫边框沿官方 prefab 恢复，血量消费录像内真实伤害与治疗。
+开场战斗的两名剧情 NPC 现在按固定 APK `871_156598` 的 FightNpc 4201／4202、外观组合 8401／8402 恢复身体与 `pWeapon_100_G_001`／`pWeapon_200_G_001` 武器皮肤；重建原控制器别名及录像技能 `MyPlayableOverrideAnimator` 引用的骨骼动画，使用已确认的 Spine 原生迁移方案。`prepare_opening_fighters.py` 提取原贴图、骨骼、蒙皮与动作；`OpeningFighterAssetTools` 显式绑定已批准的 Spine shader，避免同名 Android 占位 shader 被动态查找选中。角色名字、双方血条的尺寸、位置与九宫边框沿官方 prefab 恢复，血量消费录像内真实伤害与治疗。按用户确认的统一渲染要求，开场血条直接调用共用入口，只转换录像的单位身份与阵营；渲染、颜色、层级、深度遮挡修复和验证范围集中见[战斗执行](battle-execution.md#完整还原部分)。
 
 `prepare_opening_unit_ui.py` 恢复 `GamePlayManagerConfig.FactionEffectDatas`、NPC／怪物头像和 `GameRoundUI` 参数。行动条在战前显示全部 18 个头像，按录像 NextTime、官方最小间距及 0.2 秒移动参数排列，当前行动者放大，并播放原受击和死亡动画，死亡头像保持 0.5 秒后退出。`prepare_opening_damage_ui.py` 恢复五套原位图字体、字距／UV、元素颜色、普通／暴击 prefab、原曲线、暴击底线与 2×2 序列光圈；`ElementConfrontationUI.Reset` 对内容的隐藏不会被父节点动画重新启用。
 

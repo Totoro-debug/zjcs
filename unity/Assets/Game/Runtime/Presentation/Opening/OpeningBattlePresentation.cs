@@ -60,12 +60,12 @@ namespace Zjcs.Presentation.Opening
         {
             if (!catalog.TryGetUnitBar(entity.ClassId, out BattleUnitBarBinding binding))
                 throw new InvalidOperationException("Opening unit HP prefab was not migrated: " + entity.ClassId);
-            var faction = Faction(entity.Faction);
-            var state = new FightBattleUnitState { Id=entity.EntityId, Side=entity.Faction, Hp=entity.Hp,
+            // Translate the record's faction IDs to the common local HUD sides.
+            // Bar geometry, colors, material and sorting belong to that module.
+            var state = new FightBattleUnitState { Id=entity.EntityId, Side=entity.Faction == 0 ? 1 : 2,
+                RoleEntityId=entity.ClassId, Hp=entity.Hp,
                 MaxHp=entity.MaxHp, LastMaxHp=entity.MaxHp, MonsterId=entity.MonsterId };
-            var view = OfficialBattleUnitWorldHudView.Create(catalog, binding,
-                new BattleUnitBarFaction { hpColor=Floats(faction["hpColor"]), hpAddColor=Floats(faction["hpAddColor"]),
-                    hpSubColor=Floats(faction["hpSubColor"]) }, state, root, battleCamera, 32000);
+            var view = OfficialBattleUnitWorldHudView.Create(catalog, state, root);
             view.Root.name = "HpBarGame";
             units.Add(entity.EntityId, new Unit { State=state, View=view });
             if (entity.NpcClassId <= 0) return;
