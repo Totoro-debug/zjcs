@@ -15,7 +15,9 @@ def write_receipt():
         'home-experience-growth', 'home-experience-environment', 'home-experience-rewards',
         'home-level-up-windows', 'home-level-up-properties', 'home-no-bless-rules', 'home-resonance-profile',
         'home-hud-native', 'home-repair-native', 'home-furniture-runtime', 'home-hangup-windows-runtime',
-        'home-hangup-host', 'home-income-formula', 'home-award-queue-runtime']
+        'home-hangup-host', 'home-income-formula', 'home-award-queue-runtime',
+        'home-hud-infrastructure-runtime', 'home-hud-infrastructure-native',
+        'home-social-ui-runtime', 'home-currency-windows-native']
     inputs = ['assets/reference/' + name + '-source-manifest.json' for name in sources]
     inputs += ['.tools/source-packages/official-code/framework-firstpass-source/Framework.UI/WindowContainer.cs',
         '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/Framework.UI/WindowContainer.cs']
@@ -26,7 +28,8 @@ def write_receipt():
         'HomeHudView.NativePlayer.cs', 'HomeHudView.NativePlayer.cs.meta', 'HomeHudView.cs',
         'HomeFeatureRuntime.cs', 'HomeAcceptanceDriver.cs', 'HomeHudView.Tasks.cs', 'HomeHudView.BedWindow.cs',
         'HomeHudView.BedAwards.cs', 'OfflineHomeBedServices.cs', 'OfflineHomeBedAwards.cs',
-        'OfflineHomeWindowOrder.cs', 'OfflineHomeWindowOrder.cs.meta', 'Zjcs.Presentation.Home.asmdef']]
+        'OfflineHomeWindowOrder.cs', 'OfflineHomeWindowOrder.cs.meta',
+        'HomeHudView.NativeStatusEntries.cs', 'HomeHudView.NativeStatusEntries.cs.meta', 'Zjcs.Presentation.Home.asmdef']]
     editor = ROOT / 'unity/Assets/Game/Validation/HomeNativePlayer'
     if editor.is_dir():
         bindings += [path.relative_to(ROOT).as_posix() for path in sorted(editor.iterdir()) if path.is_file()]
@@ -35,7 +38,7 @@ def write_receipt():
     digest = lambda name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
     result = dict(manifest='884_156692', inputs={name: digest(name) for name in inputs},
         runtime_bindings={name: digest(name) for name in bindings},
-        loading='Formal HomeHudView.Build -> original MainCanvas Public/Anim -> complete PublicPlayerInfo prefab; original scene bed repair/collection and award queue -> saved progression -> XP reward handler and level-up windows; shared popup order retains the original top-window + 10 interval.')
+        loading='Formal HomeHudView.Build -> original MainCanvas Public/Anim -> complete PublicPlayerInfo prefab; selected HomeHud prefab matching/download subtrees replace the corresponding historical nodes with original controllers and pre-activation local service bindings; original scene bed repair/collection and award queue -> saved progression -> XP reward handler and level-up windows; shared popup order retains the original top-window + 10 interval.')
     (ROOT / 'assets/reference/home-native-player-host-source-manifest.json').write_text(
         json.dumps(result, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
 

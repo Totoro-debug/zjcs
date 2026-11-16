@@ -106,6 +106,7 @@ namespace Zjcs.Presentation.Home
             BuildTopBar();
             BuildBottomBar();
             BuildFunctions();
+            BuildNativeStatusEntries();
             BuildNativePlayerPanel();
             BuildToast();
             SelectTab(2, false);
@@ -1273,6 +1274,7 @@ namespace Zjcs.Presentation.Home
 
         public void Dispose()
         {
+            ReleaseNativeStatusEntries();
             ReleaseNativePlayerPanel();
             ReleaseNativeCurrencyBar();
             ReleaseNativeFunctionMenu();

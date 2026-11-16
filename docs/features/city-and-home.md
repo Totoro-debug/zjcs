@@ -485,6 +485,14 @@ Unity 2022.3.57f1c2 静音有图形 Play Mode 完整收益回归退出码为 0�
 
 静态元数据检查通过（152027 个 GUID），隔离工程导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 退出码均为 0，后者保留既有战斗 Edit Mode 材质释放诊断。原生 2.5 秒计时未改，后台高负载下的首帧稳定性仍需 Windows Player 检查；正式天空／受光组合缺项保留，本修复未作为完整家园功能发布。
 
+### 正式匹配与下载状态接线
+
+`HomeHudView.NativeStatusEntries` 从所选 `OfflineHomeHudAssets.homePrefab` 克隆完整匹配、边玩边下载子树，在正式家园对应的原层级位置替换历史资源树节点；保留原 RectTransform、布局、子对象、动画、字体和序列化引用。所有依赖在激活前注入，显隐继续由原 `GameMatchMiniPanel`／`GameMatchMiniSwitchPanel` 和 `PlayAsYouDownloadEntry` 执行。
+
+按[离线开放范围](offline-access.md)，本地主城没有真人匹配请求；资源随包提供，网络下载功能关闭。原匹配控制器因此隐藏内容并停止计时，原下载控制器隐藏内容且设置 `LayoutElement.ignoreLayout`，不再显示历史 prefab 的“匹配中”或“30% 下载完成”示例状态。下载检查点 ID 从所选完整 `game_settings.PlayAsYouDownloadCheckConditionId` 读取，共用实际角色条件；完成状态不会伪造一次奖励领取记录，也不启动网络或全局下载弹窗。关闭家园时先停用原控件并退订，再释放共享条件和字体服务。
+
+`HomeNativePlayerValidation.Run` 在 Unity 静音有图形 Play Mode 通过正式家园匹配与下载入口显隐、人物页往返、模拟指针、床铺维修及领取、升级通知、家园重开和订阅释放，退出码 0；已查看首页、床铺领取、升级通知及重开画面。当前家园画面仍有 HUD 和场景表现缺项；完整 HomeUI、活动入口、任务原生正式接线和 Windows Player 发布仍未完成。
+
 ### 正式公共玩家面板接线
 
 `HomeHudView.NativePlayer.cs` 在正式入口的原 `MainCanvas/Content/Main/Public/Anim` 下挂载完整所选 `PublicPlayerInfo` prefab，移除旧头像、姓名及等级文本的创建入口。保留原节点、RectTransform、字体与组件；真实角色槽提供姓名、生命、背包与状态记录，原头像摄影棚读取真实角色身份、穿戴和外观缓存。经验环绑定正式成长事务投影、原 `HomeExperienceRewardHandler` 和原升级通知窗口，读取本地独立世界位阶及已激活共鸣；打开人物页时沿原公共面板引用计数隐藏，返回后恢复。

@@ -33,6 +33,13 @@ public sealed partial class HomeNativePlayerRunner
         foreach (var text in panel.Root.GetComponentsInChildren<TMP_Text>(true))
             Debug.Log("HOME_PLAYER_TEXT: " + text.name + "=" + text.text);
         yield return new WaitForSeconds(3);
+        var screenCanvas = panel.Root.GetComponentInParent<Canvas>().rootCanvas;
+        var screenAdjuster = screenCanvas.GetComponent<Zjcs.Official.HomeScreenUI.CanvasWidthAdjuster>();
+        Debug.Log("HOME_NATIVE_SCREEN: screen=" + Screen.width + "x" + Screen.height
+            + " safe=" + Screen.safeArea + " camera=" + home.Scene.Camera.pixelRect
+            + " canvas=" + screenCanvas.pixelRect + " canvasSize=" + ((RectTransform)screenCanvas.transform).sizeDelta
+            + " adaptation=" + screenAdjuster.LastAdaptResult);
+        CheckNativeStatusEntries();
         Require(panel.Root.GetComponentsInChildren<RawImage>(true).Any(image => image.texture), "Native portrait studio supplies a runtime texture");
         foreach (var canvas in UnityEngine.Object.FindObjectsOfType<Canvas>())
             Debug.Log("HOME_PLAYER_CANVAS: " + canvas.name + " mode=" + canvas.renderMode + " order=" + canvas.sortingOrder + " camera=" + canvas.worldCamera);
@@ -48,6 +55,7 @@ public sealed partial class HomeNativePlayerRunner
         Require(home.Hud.TryHandleBack(), "Back closes character page");
         yield return null;
         Require(!home.Hud.CharacterPageOpen && panel.Root.activeInHierarchy, "Public panel restored after character page");
+        CheckNativeStatusEntries();
         var before = home.Profile.Save.Player.Level;
         var tables = Zjcs.Offline.HomeExperienceUI.OfflineHomeExperienceConfiguration.LoadDefault().CreateTables();
         long award = tables.LevelExpParser.GetExp(1, before + 1) - home.Profile.Save.Player.Experience;
@@ -69,14 +77,77 @@ public sealed partial class HomeNativePlayerRunner
         Require(jump && jump.gameObject.activeInHierarchy && jump.interactable, "Current pinned task exposes its real jump button");
         Click(jump);
         Require(taskNavigationRequests == 1, "A simulated pointer click requests task navigation exactly once");
+        var previousStatusServices = HudField<object>("nativeStatusServices");
         home.Close(); yield return null;
+        Require(StatusObserverCount(previousStatusServices, "matchUpdates") == 0
+            && StatusObserverCount(previousStatusServices, "confirmStart") == 0
+            && StatusObserverCount(previousStatusServices, "collectOnce") == 0
+            && StatusObserverCount(previousStatusServices, "downloadProgress") == 0
+            && StatusObserverCount(previousStatusServices, "downloadState") == 0,
+            "Closing the actual home releases every original match/download subscription");
         Open(); yield return new WaitForSeconds(2);
         panel = HudField<OfflineHomePlayerPanel>("nativePlayerPanel");
         Require(home.Profile.Save.Player.Level == before + 1 && panel.Experience.Level == before + 1, "Actual home reopen restores saved level and original XP ring");
         Require(home.Profile.Save.Player.Experience == collectedExperience && home.Session.Save.Inventory.Count == 0,
             "Reopening restores the bed XP exactly once and retains no owed reward");
         Require(taskNavigationRequests == 1, "Reopening home does not repeat task navigation");
+        CheckNativeStatusEntries();
         yield return CaptureFrame("home-native-player-reopened.png");
+    }
+
+    static T StatusField<T>(object owner, string name)
+    {
+        for (var type = owner.GetType(); type != null; type = type.BaseType)
+        {
+            var field = type.GetField(name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+            if (field != null) return (T)field.GetValue(owner);
+        }
+        throw new MissingFieldException(owner.GetType().Name, name);
+    }
+    static int StatusObserverCount(object owner, string name)
+        => StatusField<Delegate>(owner, name)?.GetInvocationList().Length ?? 0;
+    void CheckNativeStatusEntries()
+    {
+        var roots = HudField<List<GameObject>>("nativeStatusEntries");
+        var services = HudField<object>("nativeStatusServices");
+        var prefab = Zjcs.Offline.HomeHudUI.OfflineHomeHudAssets.LoadDefault().homePrefab;
+        var matches = roots.SelectMany(root => root.GetComponentsInChildren<Zjcs.Official.HomeSocialUiControls.GameMatchMiniPanel>(true)).ToArray();
+        var downloads = roots.SelectMany(root => root.GetComponentsInChildren<Zjcs.Official.HomeHudInfrastructureUI.PlayAsYouDownloadEntry>(true)).ToArray();
+        Require(matches.Length > 0 && matches.Length == prefab.GetComponentsInChildren<Zjcs.Official.HomeSocialUiControls.GameMatchMiniPanel>(true).Length
+            && downloads.Length == 1, "Formal home mounts the selected original match and download controllers");
+        foreach (var match in matches)
+        {
+            Require(!StatusField<GameObject>(match, "mContentGo").activeInHierarchy
+                && StatusField<Coroutine>(match, "mCoroutine") == null,
+                "Original controller hides matching content and runs no synthetic matching timer");
+        }
+        foreach (var download in downloads)
+        {
+            Require(download.isActiveAndEnabled && !StatusField<GameObject>(download, "mRoot").activeSelf
+                && StatusField<LayoutElement>(download, "mLayoutElement").ignoreLayout,
+                "Original download controller hides its content and releases its layout space");
+        }
+        foreach (var root in roots)
+        {
+            var source = prefab.GetComponentsInChildren<Transform>(true).Single(value => value.name == root.name);
+            Require(root.GetComponentsInChildren<Transform>(true).Length == source.GetComponentsInChildren<Transform>(true).Length,
+                "Complete original status subtree retained: " + root.name);
+            Require(((RectTransform)root.transform).anchorMin == ((RectTransform)source).anchorMin
+                && ((RectTransform)root.transform).anchorMax == ((RectTransform)source).anchorMax
+                && ((RectTransform)root.transform).pivot == ((RectTransform)source).pivot,
+                "Original status anchors and pivot retained: " + root.name);
+            Require(root.GetComponentsInChildren<MonoBehaviour>(true).All(value => value),
+                "All original status scripts resolve: " + root.name);
+        }
+        int activeMatches = matches.Count(value => value.isActiveAndEnabled);
+        Require(activeMatches > 0 && StatusObserverCount(services, "matchUpdates") == activeMatches
+            && StatusObserverCount(services, "confirmStart") == activeMatches,
+            "Original matching listeners are attached once per active original controller");
+        Require(StatusObserverCount(services, "collectOnce") == 0
+            && StatusObserverCount(services, "downloadProgress") == 0
+            && StatusObserverCount(services, "downloadState") == 0,
+            "Disabled network download feature creates no download or one-time reward observers");
+        Debug.Log("HOME_NATIVE_STATUS_PASSED: formal original matching/download roots, empty local matching state, packaged resources, hidden content, layout release and exact subscriptions.");
     }
 
     IEnumerator CollectBedExperience(long award, long followingLevelExperience)
@@ -212,6 +283,11 @@ public sealed partial class HomeNativePlayerRunner
         Require(tip, "Original notification is retained through the property display interval");
         yield return CaptureFrame("home-native-player-notify-hold.png");
         yield return new WaitForSeconds(.9f);
+        // Original show completion, its hide callback and Unity's deferred
+        // destruction can cross a frame when this editor runs in the background.
+        // Observe actual release rather than assuming the delay resumed last.
+        float releaseDeadline = Time.time + 3;
+        while (tip && Time.time < releaseDeadline) yield return null;
         Require(!tip && HudField<Zjcs.Offline.HomeLevelUpUI.OfflineHomeLevelUpWindows>("nativeLevelUpWindows").WindowCount == 0,
             "Original show completion closes and releases the duplicate notification");
     }
