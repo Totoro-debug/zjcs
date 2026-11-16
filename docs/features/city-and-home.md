@@ -106,6 +106,12 @@
 
 ## 完整还原部分
 
+所选 884 的 `ActivityEntryBtn` 原始 prefab、原贴图／按钮音效和提示图源对象已恢复，`ActivityEntryBtn` 控制器按官方类别计数、活动更新、点击打开窗口与销毁退订顺序迁入；`Resources/Home/OfflineHomeActivityEntryAssets` 显式绑定 prefab、语言和提示图源。隔离静音 Play Mode 使用原 prefab 与所选右侧父级布局，检查序列化脚本、受控活动记录驱动的隐藏／重新显示、UI 射线首命中、模拟点击、原声音播放及监听释放；已查看 608×1080 实际运行画面。静态元数据检查、完整隔离工程导入／编译和 `ProjectTools.Validate` 通过，工程校验保留既有 Edit Mode `Destroy` 诊断。提示图求值、正式活动记录／面板服务、正式家园接线和其他右侧入口仍未完成，不能认定活动入口功能完成。输入和输出哈希见[来源清单](../../assets/reference/home-activity-entry-native-source-manifest.json)；Windows Player 验证尚未执行。
+
+所选 884 的 `FirstPayBtn` 原生 prefab 及 `FirstPayIconEntry` 已恢复，控制器保留官方付款功能条件注册／解锁、首购奖励更新订阅、领取完毕后的显隐和布局占位、点击打开首购窗口的执行顺序；`Resources/Home/OfflineHomeFirstPayEntryAssets` 显式绑定原 prefab、语言与提示图源。隔离静音 Play Mode 使用原 prefab 与所选右侧父级布局，验证受控条件变化、奖励状态、UI 射线首命中、模拟指针、原按钮声音播放及监听释放，并已查看 608×1080 画面。静态元数据检查、完整隔离工程导入／编译和 `ProjectTools.Validate` 通过，保留既有 Edit Mode `Destroy` 诊断；正式角色状态／窗口接线、重开与 Windows Player 尚未验证，首购规则见[商城](commerce.md)。原始输入和输出哈希见[来源清单](../../assets/reference/home-first-pay-entry-native-source-manifest.json)。
+
+`HomeFurnitureHostValidation.Run` 在完整隔离工程的静音 Play Mode 以进程内模拟指针拖动、点击设施和原生维修按钮，检查上述十类默认设施的事务、粒子对象、延迟切换及关闭重开后的持有状态。首次运行在类型 8 的特效释放断言失败；加入时间诊断后的复跑和恢复原夹具后的再次运行均退出码为 0，诊断复跑未再次出现该失败，原因尚未确认。已查看家园和维修通知截图：通知窗口遮挡演出，当前画面也存在 HUD 布局缺项，因此这些结果不证明特效可见性或完整视觉还原；家具专属剧情与 Windows Player 未在此验证。
+
 主页进入技能与伤害测试时保持原 URP 2D 管线，并在退出时恢复前一管线；主城输入与消息在人物页或测试战斗期间停止穿透。`HomeRuntimeShaderBindings` 显式绑定主城流星特效、经固定 APK 原对象哈希核对的天空 ColorShift Windows 转换及 URP 引擎 Sprite-Lit shader，防止独立 Player 裁剪仅按名称加载的程序。主城功能入口恢复原 `FunctionEntrys.controller` 默认的 `FunctionEntrysUI_Folded` 零时长姿势，避免展开按钮遮住收起按钮；战报不另接主页历史入口。
 
 当前完成范围是官方载荷恢复和部分本地底层，没有主城整模块已在 Unity 完整接入并验收的结论。
