@@ -117792,7 +117792,7 @@
     },
     {
       "path": "unity/Assets/Game/Resources/ProfessionUI/skill-images.asset",
-      "sha256": "11de592c9e3243cc8865e84c20383928653749b1633ae12cff6a53fc55876d57"
+      "sha256": "5dbb26aa67f73140ffcdb879daf1dac975cd7b3d834361922e68a5b1a7eb37ce"
     },
     {
       "path": "unity/Assets/Game/Resources/ProfessionUI/skill-images.asset.meta",
@@ -117801,7 +117801,7 @@
   ],
   "catalog": {
     "path": "unity/Assets/Game/Resources/ProfessionUI/skill-images.asset",
-    "sha256": "11de592c9e3243cc8865e84c20383928653749b1633ae12cff6a53fc55876d57"
+    "sha256": "5dbb26aa67f73140ffcdb879daf1dac975cd7b3d834361922e68a5b1a7eb37ce"
   },
   "config": {
     "path": "unity/Assets/Game/Resources/ProfessionUI/info-config.json",
@@ -117809,7 +117809,7 @@
   },
   "generator": {
     "path": "scripts/prepare_unity_profession_skill_icons.py",
-    "sha256": "42d329ffeb2fd1365283f61e6de1f44a996ddb7e5fb5b1759051edea978ae5d2"
+    "sha256": "f21317e891f05525fd42b4749a001504ac8acc9a09f09c6f4e52cf2c66cb0b13"
   },
   "atlas_converter": {
     "path": "scripts/prepare_unity_map12_team_panel_sprites.py",
@@ -117833,7 +117833,7 @@
       "sha256": "d56a9b35574173d213b2c8b2dbd96427b1e783b149374a24dbb776858da545e7"
     }
   ],
-  "operation": "Fully decode five selected official Luban tables. Compare the four complete profession/rank/skin/equipment tables and consumed skill/skin item rows against packaged projections. Select all profession-listed skills, their configured skins and equipment-type icons. Resolve original SpriteAtlas render-data keys, full texture/sampler/mip payloads, and original Sprite geometry/UV/logical properties through the existing independent native Sprite converter. Bind exact source image addresses/AssetTable GUIDs and six native prefabs in a packaged local catalog.",
+  "operation": "Fully decode five selected official Luban tables. Compare the four complete profession/rank/skin/equipment tables and consumed skill/skin item rows against packaged projections. Select all profession-listed skills, their configured skins and equipment-type icons. Resolve original SpriteAtlas render-data keys, full texture/sampler/mip payloads, and original Sprite geometry/UV/logical properties through the existing independent native Sprite converter. Bind exact source image addresses/AssetTable GUIDs and five native prefabs in a packaged local catalog.",
   "validated_scope": "Actual Direct3D Unity validation compared all 400 native Sprite vertices/UVs/triangles and logical properties, all 77 native textures/samplers and every GPU mip SHA256/length (139984896 exact bytes). Play Mode loaded all 412 skill/skin icons through original native ItemIconSkill and verified original star/blessing/debug/skin/pool branches and three actual simulated mouse popup dispatches. Runtime screenshots were viewed. Full equipment-icon presentation, information/upgrade page, popup content, save or Windows release is not covered.",
   "limitations": [
     "Local player/pool/window host binding and complete original information/upgrade pages remain incomplete.",
@@ -117841,6 +117841,6 @@
   ],
   "validation": {
     "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionSkillInfoValidation.cs",
-    "sha256": "7f14766acfc1b8594b58b3b36806d4fd6a3b65e490c7406647d4d6f7e3b81276"
+    "sha256": "b4b1cd8ab06ae89c5408fc02e91fbf270a305856be903d730f89f505d791886e"
   }
 }

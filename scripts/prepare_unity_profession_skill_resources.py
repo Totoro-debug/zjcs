@@ -38,7 +38,7 @@ def build():
         index[row['guid']] = rel
     seeds = ['Prefabs/UI/Item/ItemIconSkill.prefab', 'Prefabs/UI/Profession/ProfessionSkillItem.prefab',
              'Prefabs/UI/Item/Attachments/NotGotTip.prefab', 'Prefabs/UI/Item/Attachments/ProfessionMismatch.prefab',
-             'Prefabs/UI/Item/Attachments/GMDisabled.prefab', 'Prefabs/UI/Item/Attachments/WearingAppendAppearanceGo.prefab']
+             'Prefabs/UI/Item/Attachments/WearingAppendAppearanceGo.prefab']
     selected, scripts, missing, managed, shaders = {}, {}, [], {}, []
     queue = [(p, 'explicit original skill presentation prefab') for p in seeds]
     while queue:

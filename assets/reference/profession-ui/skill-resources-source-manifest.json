@@ -3,7 +3,7 @@
   "manifest": "871_156598",
   "generator": {
     "path": "scripts/prepare_unity_profession_skill_resources.py",
-    "sha256": "38fb6a2aaf9eee6a426069afc5378b053c94008356987c6ad774157416c8f035"
+    "sha256": "9baf034d32e256fb7d6803a20540d2e2e97de080fc173d924a616039b6de07b6"
   },
   "installer": {
     "path": "scripts/install_unity_profession_native_assets.py",
@@ -32,7 +32,7 @@
     "operation": "Take the full original dependency closure of six original skill-icon, slot and attachment prefabs. Preserve native GUIDs, object IDs, hierarchy, layout, animations, serialized bindings and managed references; no constructed replacement UI.",
     "generator": {
       "path": "scripts/prepare_unity_profession_skill_resources.py",
-      "sha256": "38fb6a2aaf9eee6a426069afc5378b053c94008356987c6ad774157416c8f035"
+      "sha256": "9baf034d32e256fb7d6803a20540d2e2e97de080fc173d924a616039b6de07b6"
     },
     "assets": {
       "Prefabs/UI/Item/Attachments/WearingAppendAppearanceGo.prefab": {
@@ -355,7 +355,7 @@
       "Scripts/Assembly-CSharp/ItemIconSkill.cs": {
         "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ItemIconSkill.cs",
         "guid": "5765b9e1d81b5bbbae767f670d35d29f",
-        "sha256": "a87977a622f171e46024dcd15d56a6ff464a340b7f541c3a984a155e55daeed9"
+        "sha256": "88602ea535fda83bfd8de6f11a514531f5936c7e42a1942b377c4cd2b8aa8f1b"
       }
     },
     "pending_scripts": [],
@@ -1376,6 +1376,6 @@
   ],
   "validation": {
     "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionSkillInfoValidation.cs",
-    "sha256": "7f14766acfc1b8594b58b3b36806d4fd6a3b65e490c7406647d4d6f7e3b81276"
+    "sha256": "b4b1cd8ab06ae89c5408fc02e91fbf270a305856be903d730f89f505d791886e"
   }
 }

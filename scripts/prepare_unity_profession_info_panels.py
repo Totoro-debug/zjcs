@@ -77,6 +77,10 @@ def build():
         elif name == 'ProfessionSkillSlot':
             text = text.replace('ItemIconManager.GetIcon<ItemIconSkill>', 'Bindings.GetIcon').replace('ItemIconManager.RecycleIcon', 'Bindings.RecycleIcon').replace('ItemIconManager != null', '(mBindings ?? ProfessionSkillIconBindings.Current) != null')
         elif name == 'ItemIconSkill':
+            # Exclude the remote service attachment method from the local port.
+            text, removed = re.subn(r'\n\tpublic ItemIconSkill \w+\(\)\n\t\{[^{}]*ServerInfoManager[^{}]*\n\t\}\n', '\n', text)
+            if removed != 1:
+                raise ValueError('Inspect remote service method exclusion')
             text = text.replace('MeManager.MainPlayer', 'Bindings.MainPlayer')
             text = text.replace('DebugShowSkillRank.OnChanged', 'Bindings.DebugShowSkillRankChanged').replace('DebugShowSkillRank.IsEnabled', 'Bindings.DebugShowSkillRank')
             text = replace(text, 'LanguageUtils.TextKeyArgWrap text = new LanguageUtils.TextKeyArgWrap("ui_common_level_style_3", level);', 'ProfessionItemText text = new ProfessionItemText { Key = "ui_common_level_style_3", Args = new object[] { level } };')
@@ -89,7 +93,6 @@ def build():
             text = replace(text, '\t\tProfessionDetailDefinitionParser professionBaseInfoParser = Parsers.Instance.ProfessionDetailDefinitionParser;\n', '')
             text = replace(text, 'targetType != int.Player || professionBaseInfoParser.IsSkillAvailableForProfession(myInfo.ClassId, profession)', '!Bindings.IsPlayerTarget(targetType) || Bindings.IsSkillAvailableForProfession(myInfo.ClassId, profession)')
             text = replace(text, 'PetUtils.IsPetSkill(myInfo.ItemType)', 'Bindings.IsPetSkill(myInfo)')
-            text = replace(text, 'ServerInfoManager.Instance.CheckFunctionDisabled(Bindings.MainPlayer, ServerFunctionType.UseSkillItem, new CommonFunctionsDisabledKey(classId))', 'Bindings.IsSkillGMDisabled(classId)')
             text = replace(text, 'SkillDetailDialog.IPropDataProvider', 'object')
             a = text.index('\t\t\tWindowManager.Instance.Popup(')
             b = text.index('\n\t\t});', a)
@@ -133,7 +136,7 @@ def build():
         comparer=dict(sources=[record(CODE/'common-source'/n) for n in ('SkillItemComparer.cs', 'ItemComparerBase.cs')], output=record(comparator), meta=record(comparator.with_name(comparator.name+'.meta')),
             scope='Only InfoPanel default ItemInfo comparator chain; Rank descending, long subtraction and signed collapse, ties return zero with no extra key.'),
         generator=record(Path(__file__)),
-        operation='Copy all methods of eight original information/skill-icon components. Preserve original order, owned/unowned branch, subscriptions, star threshold, quality lookup, blessing effects, skill-skin refresh and icon pool lifecycle. Adapt application parser/player/window/pool accesses to explicit consumed services; reuse original native LoopScroll, ItemIcon, UIBase, MonoDictionary and shared text/state ports.',
+        operation='Migrate eight original information/skill-icon components with the remote service attachment method excluded. Preserve original order, owned/unowned branch, subscriptions, star threshold, quality lookup, blessing effects, skill-skin refresh and icon pool lifecycle. Adapt application parser/player/window/pool accesses to explicit consumed services; reuse original native LoopScroll, ItemIcon, UIBase, MonoDictionary and shared text/state ports.',
         validated_scope='Pending actual Unity Play Mode validation.',
         limitations=['Original information and skill prefab bindings, production services, complete upgrade panel and skill-detail popup remain incomplete.', 'Complete native animated profession pages, save/input and Windows release remain incomplete.'])
     (ROOT/'assets/reference/profession-ui/info-panels-source-manifest.json').write_text(json.dumps(proof, ensure_ascii=False, indent=2)+'\n', encoding='utf-8', newline='\n')

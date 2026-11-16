@@ -38,6 +38,8 @@ def build():
     for name, relative in names.items():
         source = code / relative
         text = source.read_text(encoding="utf-8-sig")
+        if name == "ItemIconAttachmentType":
+            text = re.sub(r"^\t\w+ = 27,\n", "", text, flags=re.M)
         text = re.sub(r"^using (?:Framework(?:\.[\w.]+)?|GFrameCore[\w.]*|Microsoft.Extensions.Logging|ZLogger|Common);\n", "", text, flags=re.M)
         text = re.sub(r"^\s*//IL_[^\n]*\n", "", text, flags=re.M)
         text = text.replace("namespace Common;\n", "")

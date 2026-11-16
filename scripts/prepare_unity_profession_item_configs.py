@@ -63,7 +63,7 @@ def build(unity_project=None):
                     native_relative_path=target.relative_to(exports).as_posix(),
                     export=record(target), meta=record(target.with_name(target.name + ".meta")), reference=reference))
         else:
-            native["Templates"] = fields["Templates"]
+            native["Templates"] = [row for row in fields["Templates"] if row["Type"] != 27]
         relative = path.removeprefix("Assets/")
         target = folder / relative
         target.parent.mkdir(parents=True, exist_ok=True)

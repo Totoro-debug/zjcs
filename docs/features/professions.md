@@ -17,6 +17,7 @@
 ## 完整还原部分
 
 - 官方职业数据、原代码和部分外观／图标资源已有 Unity 运行载荷；官方 `ProfessionUpgradePanel`、职业总览及职业树代码已迁移，但正式人物页的入口、控制器和完整交互尚未全部接通。
+- 技能图标接口与资源目录仅保留持有、职业匹配、星级、等级及外观相关接线。
 - 本地外观预览使用角色档案的只读投影；武器和肖像资源使用显式本地目录。资源接入不代表职业树、详情及升级页完成。
 - 职业属性、徽章消耗、导师寻路、升级／晋升和自由转职尚未形成可游玩的完整流程。
 
@@ -38,3 +39,7 @@
 - 本地职业适配：[`Runtime/Offline/ProfessionUI`](../../unity/Assets/Game/Runtime/Offline/ProfessionUI/)。
 - 原客户端代码：[ProfessionOverviewPanel.cs](../../.tools/source-packages/official-code/client-source/ProfessionOverviewPanel.cs)、[ProfessionTreePanel.cs](../../.tools/source-packages/official-code/client-source/ProfessionTreePanel.cs)、[ProfessionUpgradePanel.cs](../../.tools/source-packages/official-code/client-source/ProfessionUpgradePanel.cs)。
 - 输入版本与资源清单见[来源总览](../../assets/reference/SOURCES.md)。
+
+## 当前验证范围
+
+技能图标端口与本地目录清理已通过 Unity 2022.3.57f1c2 导入、编译和 `Zjcs.Editor.ProjectTools.Validate`（退出码 0），生成脚本通过 Python 语法检查。原 `ProfessionSkillInfoValidation` 所需固定 `871_156598/profession-ui/typed/skill-icons-fixture.json` 当前不存在，未执行该 Play Mode 夹具；静态元数据检查通过（152,611 个 GUID）；本次未验证完整交互、存档或 Windows Player。

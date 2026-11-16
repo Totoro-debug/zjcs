@@ -78,7 +78,7 @@
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ItemIconSkill.cs",
-        "sha256": "a87977a622f171e46024dcd15d56a6ff464a340b7f541c3a984a155e55daeed9"
+        "sha256": "88602ea535fda83bfd8de6f11a514531f5936c7e42a1942b377c4cd2b8aa8f1b"
       },
       "meta": {
         "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ItemIconSkill.cs.meta",
@@ -134,7 +134,7 @@
   "bindings": [
     {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionInfoBindings.cs",
-      "sha256": "e304c5d00912eb95528379fe073f352aa178f231ef8ba0b8c438a32f03848b45"
+      "sha256": "456ece324df32f846a3ae1594b42dd2975be6ae7df34547a78434688e8f98cc2"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionInfoBindings.cs.meta",
@@ -164,9 +164,9 @@
   },
   "generator": {
     "path": "scripts/prepare_unity_profession_info_panels.py",
-    "sha256": "0cf4b7503e474b019af4bf8bf3ca114254f74ad7437c9bf04f92e64d8d2a54a0"
+    "sha256": "acea83c0adc8d1163b3ce60ab3b82442d22d66da744c0376e75f971872861277"
   },
-  "operation": "Copy all methods of eight original information/skill-icon components. Preserve original order, owned/unowned branch, subscriptions, star threshold, quality lookup, blessing effects, skill-skin refresh and icon pool lifecycle. Adapt application parser/player/window/pool accesses to explicit consumed services; reuse original native LoopScroll, ItemIcon, UIBase, MonoDictionary and shared text/state ports.",
+  "operation": "Migrate eight original information/skill-icon components with the remote service attachment method excluded. Preserve original order, owned/unowned branch, subscriptions, star threshold, quality lookup, blessing effects, skill-skin refresh and icon pool lifecycle. Adapt application parser/player/window/pool accesses to explicit consumed services; reuse original native LoopScroll, ItemIcon, UIBase, MonoDictionary and shared text/state ports.",
   "validated_scope": "Actual Direct3D Play Mode validated 412 original skill/skin icon owned/unowned bindings, all 31 profession active/passive Rank-descending sort lists (ties have no extra key), original star threshold, blessing/debug/skin events, pooled slot and attachment lifetimes, event subscription cleanup and three actual simulated mouse popup dispatches. Numeric localization, player and popup endpoints are fixtures; full information panel Init/scroll/equipment/radar and popup contents are not covered. Runtime screenshots were viewed.",
   "limitations": [
     "Original information and skill prefab bindings, production services, complete upgrade panel and skill-detail popup remain incomplete.",
@@ -174,6 +174,6 @@
   ],
   "validation": {
     "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionSkillInfoValidation.cs",
-    "sha256": "7f14766acfc1b8594b58b3b36806d4fd6a3b65e490c7406647d4d6f7e3b81276"
+    "sha256": "b4b1cd8ab06ae89c5408fc02e91fbf270a305856be903d730f89f505d791886e"
   }
 }

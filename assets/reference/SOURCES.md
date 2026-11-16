@@ -1070,3 +1070,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 主线怪物奖励输入：`scripts/prepare_mainline_monster_rewards.py` 从所选官方版本提取阶段、怪物奖励组、奖励规则、复合条件依赖、等级倍率及 261 个阶段／怪物随机奖励包，并核对共享目录中的 253 个怪物奖励包；输入、解码依据和输出哈希见[怪物奖励来源清单](official-map/mainline-monster-rewards-source-manifest.json)。目录 `Resources/World/Mainline/monster-reward-inputs` 由地图怪物胜利事务加载，未生成完整素材快照。
 
 主线怪物等级绑定：`scripts/prepare_mainline_monster_levels.py` 从所选版本提取地图怪物放置点的等级组件及公开／私有等级类型，输入、反编译依据和输出哈希见[怪物等级来源清单](official-map/mainline-monster-levels-source-manifest.json)。数据通过 `Resources/World/Mainline/monster-levels` 加载，尚未生成完整素材快照。
+
+职业技能图标本地目录与脚本端口的输出哈希见 `profession-ui/info-panels-source-manifest.json`、`profession-ui/item-components-source-manifest.json`、`profession-ui/item-configs-source-manifest.json` 和 `profession-ui/skill-icons-source-manifest.json`；所选原包输入与原始提取载荷保持各自来源身份。

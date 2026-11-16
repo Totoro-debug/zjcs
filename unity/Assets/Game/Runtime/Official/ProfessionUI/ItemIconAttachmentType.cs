@@ -32,7 +32,6 @@ public enum ItemIconAttachmentType
 	MaskWithMismatchText = 24,
 	RankMismatchTip = 25,
 	Using = 26,
-	GMDisabled = 27,
 	Linkage = 28,
 	GotCenterTip = 29,
 	SexLimit = 30,

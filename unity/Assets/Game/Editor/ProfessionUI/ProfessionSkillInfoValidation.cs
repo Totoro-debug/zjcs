@@ -132,7 +132,6 @@ namespace Zjcs.Editor.ProfessionUI
             public bool IsSkillAvailableForProfession(int id, int profession) => data.professions.Single(p => p.Profession == profession).Skills.Contains(id);
             public bool IsPetSkill(IProfessionItemInfo info) => false;
             public bool IsPlayerTarget(int targetType) => targetType == 1;
-            public bool IsSkillGMDisabled(int id) => false;
             public bool HasSkillSkin(int skinId) => data.skins.Any(s => s.ClassId == skinId);
             public IProfessionItemInfo GetItemInfo(int id) => data.items.Single(i => i.ClassId == id);
             public void PopupSkillDetail(IProfessionItemData item, object provider) { TypedPopups++; LastPopup = item; LastProvider = provider; }

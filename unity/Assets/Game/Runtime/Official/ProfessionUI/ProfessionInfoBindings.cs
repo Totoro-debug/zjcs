@@ -44,7 +44,6 @@ namespace Zjcs.Official.ProfessionUI
         bool IsSkillAvailableForProfession(int itemId, int profession);
         bool IsPetSkill(IProfessionItemInfo item);
         bool IsPlayerTarget(int targetType);
-        bool IsSkillGMDisabled(int itemId);
         bool HasSkillSkin(int skinId);
         IProfessionItemInfo GetItemInfo(int itemId);
         void PopupSkillDetail(IProfessionItemData data, object propDataProvider);

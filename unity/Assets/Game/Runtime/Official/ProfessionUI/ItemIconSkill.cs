@@ -231,13 +231,6 @@ public class ItemIconSkill : ItemIcon
 		return this;
 	}
 
-	public ItemIconSkill SetSkillGMDisabled()
-	{
-		int classId = myInfo.ClassId;
-		bool show = Bindings.IsSkillGMDisabled(classId);
-		SetAttachment(ItemIconAttachmentType.GMDisabled, show);
-		return this;
-	}
 
 	public void SetSelectedObjActive(bool value)
 	{

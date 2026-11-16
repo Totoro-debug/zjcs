@@ -109,7 +109,7 @@ def build():
     # native prefab closure is restored separately, without rebuilding layout.
     prefab_names = ('UI/Item/ItemIconSkill.prefab','UI/Profession/ProfessionSkillItem.prefab',
         'UI/Item/Attachments/NotGotTip.prefab','UI/Item/Attachments/ProfessionMismatch.prefab',
-        'UI/Item/Attachments/GMDisabled.prefab','UI/Item/Attachments/WearingAppendAppearanceGo.prefab')
+        'UI/Item/Attachments/WearingAppendAppearanceGo.prefab')
     for address in prefab_names:
         row, = [r for r in manifest if r['address'] == address]
         path = ROOT/'unity/Assets/Official/ProfessionUI/Native'/row['path'].removeprefix('Assets/')
@@ -127,7 +127,7 @@ def build():
         atlas_converter=record(ROOT/'scripts/prepare_unity_map12_team_panel_sprites.py'),
         texture_decoder=record(ROOT/'scripts/prepare_unity_map13_native_scene.py'),
         official_code=[record(code/'common-source/Common'/n) for n in ('ItemInfo.cs','SkillRankInfoParser.cs','EquipTypeInfoParser.cs')],
-        operation='Fully decode five selected official Luban tables. Compare the four complete profession/rank/skin/equipment tables and consumed skill/skin item rows against packaged projections. Select all profession-listed skills, their configured skins and equipment-type icons. Resolve original SpriteAtlas render-data keys, full texture/sampler/mip payloads, and original Sprite geometry/UV/logical properties through the existing independent native Sprite converter. Bind exact source image addresses/AssetTable GUIDs and six native prefabs in a packaged local catalog.',
+        operation='Fully decode five selected official Luban tables. Compare the four complete profession/rank/skin/equipment tables and consumed skill/skin item rows against packaged projections. Select all profession-listed skills, their configured skins and equipment-type icons. Resolve original SpriteAtlas render-data keys, full texture/sampler/mip payloads, and original Sprite geometry/UV/logical properties through the existing independent native Sprite converter. Bind exact source image addresses/AssetTable GUIDs and five native prefabs in a packaged local catalog.',
         validated_scope='Pending actual native Sprite/GPU and skill-icon Play Mode validation.',
         limitations=['Local player/pool/window host binding and complete original information/upgrade pages remain incomplete.', 'No complete profession page/save verification or Windows release is claimed.'])
     (ROOT/'assets/reference/profession-ui/skill-icons-source-manifest.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
