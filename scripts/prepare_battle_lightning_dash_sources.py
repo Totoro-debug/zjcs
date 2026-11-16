@@ -66,6 +66,11 @@ def main():
             'scripts/test_battle_lightning_dash.ps1',
             'scripts/test_first_promotion_skill_player.ps1',
             'scripts/verify_lightning_dash_receipt.py',
+            'scripts/test_acquired_active_skill_flow.ps1',
+            'unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestValidation.cs',
+            'unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestValidation.AcquiredActive.cs',
+            'unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestValidation.AcquiredActive.cs.meta',
+            'unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef',
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.LightningDash.cs',
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.LightningDash.cs.meta')],
         runtime_inputs=[identity(source)] + outputs + [identity(ROOT / path) for path in (
@@ -82,7 +87,7 @@ def main():
             'Server AI point selection/path generation is absent. Implementation decisions '
             'and current validation limits belong to docs/features/skills-fighter.md.')
     (ROOT / 'assets/reference/battle-rules/lightning-dash-source-manifest.json').write_text(
-        json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+        json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     print('Verified original 10016/10680 point-target dash, damage and 12 native graph bindings.')
 
 

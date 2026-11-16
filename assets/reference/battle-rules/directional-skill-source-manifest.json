@@ -7974,6 +7974,130 @@
     "manifest": "884_156692",
     "fragments": [
       {
+        "path": "Assets/Config/EC/FightSkill_part1.g.bytes",
+        "source": {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+          "path_id": "-6798024417059081237",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+          "raw_size": 6876458,
+          "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+        },
+        "object_sha256": "f6f457b8d15cd3a426757035c86e74e7e30813e67c2bb3555effcc6f76d44064",
+        "payload_sha256": "ee446a64cedd432f8c3e5e97c14118ae9abf8581cf3d7057c7ff7dcdac19020b",
+        "legacy_prefix": false,
+        "entities": {
+          "10007": {
+            "parent": 0,
+            "components": {
+              "TransformComponent": {},
+              "FightDamageComponent": {
+                "Duration": 0.5,
+                "DieId": 24000,
+                "ReplaySkillOnTaragetDie": false,
+                "StatusList": [],
+                "MoveCfg": {
+                  "MoveBehaviourId": 0,
+                  "Delay": 0.0,
+                  "Offset": {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  "TowardsTargetPos": false,
+                  "SkillMoveDirection": 1,
+                  "Distance": -1,
+                  "BasePercent": 1.0,
+                  "AffectedByProp": false,
+                  "AiMustMoveTo": false,
+                  "AIIgnore": false,
+                  "CanExpandOffset": false,
+                  "CancelDiagonally": false,
+                  "DoMoveConditions": []
+                },
+                "DisperseStatus": {
+                  "BasePercent": 0.0,
+                  "AffectedByProp": false,
+                  "TargetTypes": [],
+                  "Count": 0,
+                  "IsRandom": false,
+                  "ExcludeCharacterTypes": []
+                },
+                "SwitchForm": false,
+                "ChildSkillCfg": {
+                  "Rate": 1.0,
+                  "LessThanHpPer": -1.0,
+                  "SkillId": 0
+                },
+                "TriggerExistStateCfg": {
+                  "StatusIds": [],
+                  "TriggerCount": 0,
+                  "IsOnlyTriggerStatusApplyBySelf": false,
+                  "ActiveTriggerNotComsumeRound": false,
+                  "FilterCondition": null
+                },
+                "StatusListRandomOne": false
+              }
+            }
+          },
+          "10023": {
+            "parent": 0,
+            "components": {
+              "TransformComponent": {},
+              "FightDamageComponent": {
+                "Duration": 0.5,
+                "DieId": 24000,
+                "ReplaySkillOnTaragetDie": false,
+                "StatusList": [],
+                "MoveCfg": {
+                  "MoveBehaviourId": 0,
+                  "Delay": 0.0,
+                  "Offset": {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  "TowardsTargetPos": false,
+                  "SkillMoveDirection": 1,
+                  "Distance": -1,
+                  "BasePercent": 1.0,
+                  "AffectedByProp": false,
+                  "AiMustMoveTo": false,
+                  "AIIgnore": false,
+                  "CanExpandOffset": false,
+                  "CancelDiagonally": false,
+                  "DoMoveConditions": []
+                },
+                "DisperseStatus": {
+                  "BasePercent": 0.0,
+                  "AffectedByProp": false,
+                  "TargetTypes": [],
+                  "Count": 0,
+                  "IsRandom": false,
+                  "ExcludeCharacterTypes": []
+                },
+                "SwitchForm": false,
+                "ChildSkillCfg": {
+                  "Rate": 1.0,
+                  "LessThanHpPer": -1.0,
+                  "SkillId": 0
+                },
+                "TriggerExistStateCfg": {
+                  "StatusIds": [],
+                  "TriggerCount": 0,
+                  "IsOnlyTriggerStatusApplyBySelf": false,
+                  "ActiveTriggerNotComsumeRound": false,
+                  "FilterCondition": null
+                },
+                "StatusListRandomOne": false
+              }
+            }
+          }
+        }
+      },
+      {
         "path": "Assets/Config/EC/FightSkill_part37.g.bytes",
         "source": {
           "bundle": "defaultpackage_assets_config_ec.bundle",
@@ -9199,6 +9323,10 @@
     ],
     "formatters": [
       {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightDamageComponent.cs",
+        "sha256": "6a3fa4e82221392c11cd0c67529906fb8df9db41a82073ffdf74de02b30061a1"
+      },
+      {
         "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitFixedComponent.cs",
         "sha256": "fc2c0dd435e46afe53fa6ffc79d17dbb844ff794c5470465cbb48362eed1a7e5"
       },
@@ -9215,6 +9343,18 @@
         "sha256": "186c98deb85a7221c8dd1c3474f9ded798c356cdf8cab3130dd4adf990980c7d"
       },
       {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/DamageChildSkillCfgFormatter.cs",
+        "sha256": "14370aee04256b4cbafac85bdf2ef81112380deb0bdb388901679b2c9cf8ef09"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/DamageDisperseStatusCfgFormatter.cs",
+        "sha256": "e3bcadef3276157eca7c90e3e3d2c69e130ffdb9db4aa324208a3894457fb025"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/DamageTriggerExistStateCfgFormatter.cs",
+        "sha256": "f15b74585db7ce757d20b509247f9b339cdde4da77f31473e44aa2524cdda258"
+      },
+      {
         "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/DirectionFormatter.cs",
         "sha256": "baeb424b8215f6df8d00696f458eb6622fa91b8ef4bc5d15ab5b190dddfe7982"
       },
@@ -9227,12 +9367,24 @@
         "sha256": "78b8ed62cb6acc289a886758b602f8b271d1bbae983ae547ad36ec5437a43df0"
       },
       {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ESkillMoveDirectionFormatter.cs",
+        "sha256": "828a781d0b93f1d5c1906ef38749df7d551f433dd963ea4b5256e41188f8e40d"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightDamageComponentInfoFormatter.cs",
+        "sha256": "413b3679f0b00cf252b87e6a64b5c3d768be9b5d8d6a8589abf533ee2edfb140"
+      },
+      {
         "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightHitFixedComponentInfoFormatter.cs",
         "sha256": "9f86c02ec221f12eced2d1dd98d9f12a8ef2590f1b36d5dce273493d128f52a7"
       },
       {
         "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightSkillComponentInfoFormatter.cs",
         "sha256": "4e4b6dbf5a6da01a230cd045e55009453e396b252de3bcd0655ce15e0803ac02"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightSKillMoveCfgFormatter.cs",
+        "sha256": "92bcd7a160761b784273342187c5cadc0605007f5f79284f297a90a4f4051595"
       },
       {
         "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightSkillReplayCfgFormatter.cs",
@@ -9317,9 +9469,337 @@
     },
     "operation": "Decode the selected APK-first EC fragments with their own generated formatters. Compare every migrated component field for the requested entities; retain historical runtime source manifests separately. No configuration or expected hash is replaced."
   },
+  "explicit_empty_dispel_defaults": [
+    "10007/DisperseStatus/ExcludeCharacterTypes",
+    "10023/DisperseStatus/ExcludeCharacterTypes"
+  ],
+  "native_inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/10780/10780.prefab",
+      "sha256": "6ca3bdd6fa8666ddb4e1d688828564705bcc75049bf766d698fd5585df2fa28f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/10780/10780.prefab.meta",
+      "sha256": "13cbe37b5558763cfc3fdb16856dd6d2ac31a6ed104dcee4f81f01692620e670"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/10780/10781.prefab",
+      "sha256": "59c871d0febd732a0446fa813aefc60e0c8dc8c2562bf361bfd10effc9bbee5b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/10780/10781.prefab.meta",
+      "sha256": "80ba9588e8c9f907f2d1d4ffa4ce5dbd84787140623c62948eb3f38cbda9ed76"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/10780/playable10780.prefab",
+      "sha256": "8e9e328a72ccbe71b93ce1ec844fa12e36d0ba45a39dabc880da8e6151f7e261"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/10780/playable10780.prefab.meta",
+      "sha256": "7dfce058b73d9b0ee236cfe34581c27bc08de43c69291c8427ea19df9f1ec2d5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/10780/playable10781.prefab",
+      "sha256": "a487b475a500c9e82ab775ba3c24d8b3be2b701c2005c3db75a32dc127ecb1df"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/10780/playable10781.prefab.meta",
+      "sha256": "dfb4c0930b484a1f7aa60849a3976c6048d3b23f9de6c83f5f085f27bc420ef7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11640/11640.prefab",
+      "sha256": "8b07f7057cf96077dcd2ecc440107faa22e8b73d8ac6cbc7d67e491d95bdce65"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11640/11640.prefab.meta",
+      "sha256": "c6a3d18141f1085eac736675aa4e63a4fe51f8abb074a251f43c9efba9818633"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11640/11641.prefab",
+      "sha256": "37d648a1e1a0487088ef63e0f8015f2d014fe3aee91850274be0486e5ab863f3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11640/11641.prefab.meta",
+      "sha256": "dfe3f67d284f1bc6744271b75922488541961b0afd22d56493fe49c59d987249"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11640/playable11640.prefab",
+      "sha256": "e25e42b0e07259181f5a28442007d441c65446e42e08296444df4bada4e939e9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11640/playable11640.prefab.meta",
+      "sha256": "d7a756a494103a0fe08011dbe154b5b1c2c3e0f71d140a61fa94ef17274076e0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11640/playable11641.prefab",
+      "sha256": "5f5435e877ef115b1da2b8196e21c96dcb2593e23caea5803628514203e92e99"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11640/playable11641.prefab.meta",
+      "sha256": "ee675da0642bb0461eeb677f4a546e1688965885f8497ad256e69623b923b45a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11650/11650.prefab",
+      "sha256": "c32e6e106f2ad4e9fb49d4eca28832553fe8f992e0542eac21dd8ba823445d4a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11650/11650.prefab.meta",
+      "sha256": "eba27cfa655e38f8aecb0ac93a37fd5e3a97029da6294710b4e5ba8da252a50f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11650/11651.prefab",
+      "sha256": "3df69d2264bb02c9a200a8e6548e85dbfa9cdb4d45f3f70cb6e06b464b08cbbc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11650/11651.prefab.meta",
+      "sha256": "2d08435363bbeeb6a87f83b600838c802c6cdd8698d339cb2f5b2d4c2882ef95"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11650/playable11650.prefab",
+      "sha256": "c29bcd9251ae1dca5677e228250de07da5c4cb6d6b8a355400a41534473266f6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11650/playable11650.prefab.meta",
+      "sha256": "f3eed1aeb4ff61206131a3fcbb67bf2be5b989de975ee38c66511756328b76a0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11650/playable11651.prefab",
+      "sha256": "d7a5cb18dea6f8d7d95e875a35dc35d60aa1445857ac52e7329f95e2452083b0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11650/playable11651.prefab.meta",
+      "sha256": "a012c246b2deb4a29e590b173336bb6f940e60f86e3aa7f146c546ed0bf55e61"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11660/11660.prefab",
+      "sha256": "ec14d0f3d1da4f366a8c452c8ca5dcb703f443cc0d138c73755cb4b6f009567e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11660/11660.prefab.meta",
+      "sha256": "55e62011dbf543afff2d928f8e27ee601f3dfe2b7e4e3cca5d7a956785a6949d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11660/11661.prefab",
+      "sha256": "a868ec56a6912478a3e53a98fb765d2570cb1f92ada09700644188c6762efc9d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11660/11661.prefab.meta",
+      "sha256": "0cd07cd828ee095e1dbf23b3dab5f7acd0627c206b4e828bc6112e9d2aaab62a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11660/playable11660.prefab",
+      "sha256": "e5de170060f99477808b44525031ea4fe2b8662d76304d640e406acb9b30d7ca"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11660/playable11660.prefab.meta",
+      "sha256": "528c043621757ae9530cf9fdf7753b9f5c8499c4d7874078115f9ce3a4025796"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11660/playable11661.prefab",
+      "sha256": "645780a8ba0f7140c723fd56be86aec8e58527d3fb17051e1d5102b73081d706"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11660/playable11661.prefab.meta",
+      "sha256": "0a53b7fab916dfddbbfb6fa5e7735fff943b9b24bfaa9d511587dd87c1ca8ab4"
+    }
+  ],
+  "native_outputs": [
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10780/10780.prefab",
+      "sha256": "8d158f99f9329845e777a6147c9b10b7d29532a4807e6fa10193603fed211535"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10780/10780.prefab.meta",
+      "sha256": "c1eda771b586336b9a684ac36842438cfb982f2a14efcc675280e80a0b9df75e"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10780/10781.prefab",
+      "sha256": "12892dc198c32add4c5f32a67859bf55079cf44749a5b11de42d9fdf9f1922fe"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10780/10781.prefab.meta",
+      "sha256": "0434066224483e19ff91d62688e6c51e8db4d889d66d23595e038475ac6411d0"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10780/playable10780.prefab",
+      "sha256": "1602f0054e6e694825961286a8c0279d9b0a8228822d91ccbddaf872327dda83"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10780/playable10780.prefab.meta",
+      "sha256": "fb10a3434af8456b63721de8155db0ade5c0a867279c57951ba8f8563d302c7b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10780/playable10781.prefab",
+      "sha256": "fd02b014e3d235b13e741a637eb129100173dc0a4791be3f52d9a7aad73773c4"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10780/playable10781.prefab.meta",
+      "sha256": "11925616a3456de01ea12321d20886ae991294925fc7e103e995fbe14f3e2219"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11640/11640.prefab",
+      "sha256": "d14b647def7cc028e8d9a189ae8c02e3173e8f110968974bb0888709876fb2d0"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11640/11640.prefab.meta",
+      "sha256": "7f99f2b86299e66fdaeff707225d9c1b82ee15c5f849587be8caa96b3e73a451"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11640/11641.prefab",
+      "sha256": "8c5da32f4d1e4457227d801fd3eb18299e90b2ff2d117a479ad1bef94abbe1aa"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11640/11641.prefab.meta",
+      "sha256": "1002a484a4c3d47712d763c8131269870c1f7b3b97d66b6374efe885841b17af"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11640/playable11640.prefab",
+      "sha256": "dddcf7ba21ee82dc46208c7c8b797d5d96356de44d75c590b8b4792955fffaba"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11640/playable11640.prefab.meta",
+      "sha256": "bb99c61bc547d0b48904df085d41508385dfff09696301f966936e09b4a5dcc3"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11640/playable11641.prefab",
+      "sha256": "c8869d8a838fe441689987b8d90eafd4024123a6d7a1897fd78793015e91c6ce"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11640/playable11641.prefab.meta",
+      "sha256": "5fafbe0c4e85ffb737f7aea2169f15eb15210d0eb4b5d09ef824763b1ddeab55"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11650/11650.prefab",
+      "sha256": "37d4808bd62e875216c067ce8472b064afc0e2acc4c1c31f3b8fcad1e2e9b8f9"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11650/11650.prefab.meta",
+      "sha256": "287c4868fbda53454bf15bcff5aeb521a71c2a7366d2f53f506a1497dd9e933e"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11650/11651.prefab",
+      "sha256": "c09cdf19463b28151e3dc5fc3fd8177028903f155550db5cef02c4112d425dfd"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11650/11651.prefab.meta",
+      "sha256": "308470207c5f8e28c7f8229b56c0b84b18aa5ce9d34cec918d670034c47b1277"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11650/playable11650.prefab",
+      "sha256": "ebcdc8c21722416b311caa08f1d2183c7888033684c527cf2b98ff5a7c5937bd"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11650/playable11650.prefab.meta",
+      "sha256": "b6446f5a9c77946d92f563af272258fbf66092af4e570ba8574c0917909dc030"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11650/playable11651.prefab",
+      "sha256": "3d0401370a9c94db7142000a25c91df59b2087ec78938e189311a664d9cb07c0"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11650/playable11651.prefab.meta",
+      "sha256": "df1c5cd41fac7981f276b98ce582e25208fca0d459cf5066ca956a0e6a5a1815"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11660/11660.prefab",
+      "sha256": "2c642c931024660847abb067833a1bc45ebae1296b6d6a43737b474d583bf4c1"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11660/11660.prefab.meta",
+      "sha256": "1457262b6c17bc6997b96a5eb5de2c40ccd0bb67b155642a5612b491aa21c51a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11660/11661.prefab",
+      "sha256": "cd8146cae91f234ad7a69cd15cf0c4836006bc67d93ec2ae8cd3000aa9d1d46d"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11660/11661.prefab.meta",
+      "sha256": "33ffa68ebdfdaea5f87c5628d479b405f516696fbbca6cee4351ff0aa46bc81f"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11660/playable11660.prefab",
+      "sha256": "3c703afaf96fcfda1f681d598f1a365fc23a603d711eea479ac9110028a4f4dc"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11660/playable11660.prefab.meta",
+      "sha256": "aae0a9ed8bd1fe978b20285359d0293b1a7785e2ad1643c82ac7e0098bbf2efc"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11660/playable11661.prefab",
+      "sha256": "e30169e3f80426764bf530dc12fc689c6afad1c8ba80ec5ddae4ce3cbeabc51c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11660/playable11661.prefab.meta",
+      "sha256": "4715db1706988958281718ee6c182a57f353fc6df5cd58a5d9f02ca9b792e9d2"
+    }
+  ],
+  "native_source_manifest": {
+    "path": "assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json",
+    "sha256": "9e19958ac436c87a774a947016954bb93fd870d3c86200104f8baff94558cfeb"
+  },
+  "native_sound_inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/9E556E1D-BAA6-4D09-87A8-4051FFE64935.asset",
+      "sha256": "01c826903d0b429480df97be5dbc5d138978af742e5d7545092cffb068f735d0"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/9E556E1D-BAA6-4D09-87A8-4051FFE64935.asset.meta",
+      "sha256": "d6b138b23e838e75e8bf230f8ff347dd97734f43c5eef33ce169b405bb2e360a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise/catalog.json",
+      "sha256": "93bba01ba4a313f7e61ce198d0a33f121570bde3633fc8d0eea40806de15e4c5"
+    }
+  ],
+  "validation_inputs": [
+    {
+      "path": "scripts/test_battle_directional_skills.ps1",
+      "sha256": "a36c4365bc58a146cdb6fe167e8cf03233ec8451ba2f3784b6d3a970d448cb57"
+    },
+    {
+      "path": "scripts/verify_fire_slash_receipt.py",
+      "sha256": "68d3adf87893c8e2be6377b982340512b031686a9105a70e2f788cb82b5c46a0"
+    },
+    {
+      "path": "scripts/test_first_promotion_skill_player.ps1",
+      "sha256": "1fbd62f36cd2b5a4a89012cb3100534a1c0c9169700177fe2aeaf0556ee7d5e0"
+    },
+    {
+      "path": "scripts/test_acquired_active_skill_flow.ps1",
+      "sha256": "e6b138a62ff7201aa6acc874777a2cf987d84ca9201914b9bb13583a3b91fbec"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestValidation.cs",
+      "sha256": "88d743f5cb011fd3ca7687a7dacb47079cfd0127777e35e8097e9b3ce8266ae4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestValidation.AcquiredActive.cs",
+      "sha256": "8597baf3c298e769728b698c7676396081ab4c0f6a886d04f476f0349bd5f156"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestValidation.AcquiredActive.cs.meta",
+      "sha256": "d3f3c758c5467db8f6b8b027b630aaa8e78b8ed2da89f996a1f9b18d37d40560"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef",
+      "sha256": "632c009fa6d0fa441c2a8b4f5e8734a17d336ea7126266b7ac9b9d97357ec5b3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.FirstPromotion.cs",
+      "sha256": "eef41766eec29069ebbe8f338766e06fc88d14bc2e174b9a95ea562a370f2160"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.FireSlash.cs",
+      "sha256": "bef3e5ead9485e38fab40983ea5912f2163cdd9cb98d81769c8fcbba512a4efc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.FireSlash.cs.meta",
+      "sha256": "884aaa4cffe9dac40321cb49be9fc4847d9c380ed70a52ce11c292e41f65bfbf"
+    }
+  ],
   "generator": {
     "path": "scripts/prepare_battle_directional_skill_sources.py",
-    "sha256": "d05d0c1a8d6997e4c75fadf812e55533b491da06dfb1273f893eafaad679f264"
+    "sha256": "6b8707418e6e4cea9466b8d2f55430ec9ed8b1abdde5a54e1eae57272773df5a"
   },
-  "operation": "APK-first full-field verification of six professions and 104 direct skill/item rows. Verify default and three directional skill entities and their direct hit dependencies. Original dictionary construction, per-entity properties and Pos2d.LookDirection are reused; target-based directional selection is a user-confirmed offline rule, not recovered server code."
+  "operation": "APK-first full-field verification of six professions and 104 direct skill/item rows. Verify default and three directional skill entities, fixed hits and damage dependencies. Compare all 32 original native graph inputs and bound runtime outputs. Original dictionary construction, per-entity properties and Pos2d.LookDirection are reused; target-based directional selection is a user-confirmed offline rule, not recovered server code."
 }

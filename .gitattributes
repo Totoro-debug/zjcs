@@ -2963,3 +2963,19 @@ unity/Assets/Official/Combat/NativeMonsters/Resources/Combat/NativeMonsters/Shad
 
 # Keep the sunset-sword source verifier hash stable on Windows checkouts.
 scripts/prepare_battle_sunset_sword_sources.py text eol=lf
+
+# Keep verified skill-flow and Home property payload bytes stable on Windows.
+unity/Assets/Game/Resources/Home/no-bless-property-chunks.json text eol=lf
+unity/Assets/Official/Equipment/Runtime/*.json text eol=lf
+unity/Assets/Official/Skills/skill-quality-gradient.json text eol=crlf
+scripts/prepare_battle_directional_skill_sources.py text eol=lf
+scripts/prepare_battle_lightning_dash_sources.py text eol=lf
+scripts/verify_fire_slash_receipt.py text eol=lf
+scripts/test_acquired_active_skill_flow.ps1 text eol=lf
+scripts/test_battle_directional_skills.ps1 text eol=lf
+scripts/test_first_promotion_skill_player.ps1 text eol=lf
+assets/reference/battle-rules/directional-skill-source-manifest.json text eol=lf
+assets/reference/battle-rules/lightning-dash-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.FireSlash.cs* text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.FirstPromotion.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestValidation.AcquiredActive.cs* text eol=lf

@@ -135,6 +135,11 @@ namespace Zjcs.Presentation.Home
                 yield return ExercisePortableFlame(slot, root, outputDirectory, click);
                 yield break;
             }
+            if (int.TryParse(Environment.GetEnvironmentVariable("ZJCS_SKILLS_ACQUIRED_ACTIVE"), out int acquiredSkill))
+            {
+                yield return ExerciseAcquiredActive(slot, root, outputDirectory, acquiredSkill);
+                yield break;
+            }
             bool defeat = Environment.GetEnvironmentVariable("ZJCS_SKILLS_VALIDATE_DEFEAT") == "1";
             var fixture = OfflineMainlineProgressSession.OpenCharacter(new ProfileSlotCatalog(root), slot);
             Require(fixture.ApplyCharacterMutation(player => {

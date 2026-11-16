@@ -22,6 +22,7 @@ namespace Zjcs.Presentation.Combat
             = new System.Collections.Generic.HashSet<int>();
         private static readonly float[] FirstPromotionFrameTimes = { .1f, .25f, .45f, .7f };
         private static readonly float[] SunsetSwordFrameTimes = { .78f, 1.02f, 1.2f, 1.45f };
+        private static readonly float[] FireSlashFrameTimes = { .4f, .6f, .75f, .85f };
         private bool ValidateSummonDeath => firstPromotionItemId != 0
             && Environment.GetEnvironmentVariable("ZJCS_SUMMON_DEATH_ACCEPTANCE") == "1";
         private bool summonDeathArmed, summonDeathComplete;
@@ -134,7 +135,8 @@ namespace Zjcs.Presentation.Combat
 
         private bool CaptureFirstPromotionFrame()
         {
-            var frameTimes = firstPromotionItemId == 10053 ? SunsetSwordFrameTimes : FirstPromotionFrameTimes;
+            var frameTimes = firstPromotionItemId == 10053 ? SunsetSwordFrameTimes
+                : firstPromotionItemId == 10026 ? FireSlashFrameTimes : FirstPromotionFrameTimes;
             if (firstPromotionItemId == 0 || nativeCasts == 0 || finisherScheduled
                 || firstPromotionFrameCount >= frameTimes.Length
                 || Time.time - firstPromotionCastClock < frameTimes[firstPromotionFrameCount]) return false;
@@ -244,7 +246,7 @@ namespace Zjcs.Presentation.Combat
                     if (prop.Id == catalog.PropertyType("Speed")) prop.Value = speed;
                     // Isolate the authored facing of the adjacent-target probes. Ordinary landing AI
                     // may otherwise relocate around this already adjacent target.
-                    if ((itemId == 10042 || itemId == 10053 || itemId == 10061
+                    if ((itemId == 10026 || itemId == 10042 || itemId == 10053 || itemId == 10061
                             || itemId == 10008 && (Environment.GetEnvironmentVariable("ZJCS_THUNDER_MYSTERY_ACCEPTANCE") == "1"
                                 || ValidateWindShadow || ValidateElementHarmony)) && unit == player
                         && (prop.Id == catalog.PropertyType("MoveDist")
@@ -352,6 +354,7 @@ namespace Zjcs.Presentation.Combat
             probe.ConfigureArcShieldDiagnostic(checkpoint);
             probe.ConfigurePortableFlameDiagnostic(checkpoint);
             if (itemId == 10053) probe.firstPromotionCaptureAfter = 1.7f;
+            if (itemId == 10026) probe.firstPromotionCaptureAfter = 1f;
             // Preserve short authored particle/action phases across cold-loading frames.
             probe.previousCaptureFramerate = Time.captureFramerate;
             Time.captureFramerate = 60;

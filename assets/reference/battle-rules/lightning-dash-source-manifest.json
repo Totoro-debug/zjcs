@@ -713,11 +713,31 @@
     },
     {
       "path": "scripts/test_first_promotion_skill_player.ps1",
-      "sha256": "3da4b59b9779c58de25b4a1d6e4b2fd2d2fc2117ed5e3faf867615f6118ee22a"
+      "sha256": "1fbd62f36cd2b5a4a89012cb3100534a1c0c9169700177fe2aeaf0556ee7d5e0"
     },
     {
       "path": "scripts/verify_lightning_dash_receipt.py",
       "sha256": "8ea6b70f6132cedc7e34c6d2c1dc2e871234ecd4569278f9502f038a5e2ecd81"
+    },
+    {
+      "path": "scripts/test_acquired_active_skill_flow.ps1",
+      "sha256": "e6b138a62ff7201aa6acc874777a2cf987d84ca9201914b9bb13583a3b91fbec"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestValidation.cs",
+      "sha256": "88d743f5cb011fd3ca7687a7dacb47079cfd0127777e35e8097e9b3ce8266ae4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestValidation.AcquiredActive.cs",
+      "sha256": "8597baf3c298e769728b698c7676396081ab4c0f6a886d04f476f0349bd5f156"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestValidation.AcquiredActive.cs.meta",
+      "sha256": "d3f3c758c5467db8f6b8b027b630aaa8e78b8ed2da89f996a1f9b18d37d40560"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef",
+      "sha256": "632c009fa6d0fa441c2a8b4f5e8734a17d336ea7126266b7ac9b9d97357ec5b3"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.LightningDash.cs",
@@ -812,7 +832,7 @@
   ],
   "verifier": {
     "path": "scripts/prepare_battle_lightning_dash_sources.py",
-    "sha256": "6caa9fe68d4ae79d91e96aee648c57ea5548d5c6efbff80e708f3a0e5b1c7514"
+    "sha256": "79babe507801f22d4330f3dff4535722f40db620befab17d60540d06c7f359ef"
   },
   "operation": "APK-first exact verification of 10016/10680 point targeting, original 10682 movement and 10681/10026 damage, retaining historical runtime input identity. Server AI point selection/path generation is absent. Implementation decisions and current validation limits belong to docs/features/skills-fighter.md."
 }

@@ -68,7 +68,8 @@ namespace Zjcs.Editor.Skills
                 .OrderByDescending(value => value.titleContent.text == "Battle input validation").FirstOrDefault();
             if (view == null) throw new InvalidOperationException("A background skill validation requires an existing Game view.");
             if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") == "1"
-                || Environment.GetEnvironmentVariable("ZJCS_SKILLS_PORTABLE_FLAME_FLOW") == "1")
+                || Environment.GetEnvironmentVariable("ZJCS_SKILLS_PORTABLE_FLAME_FLOW") == "1"
+                || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_SKILLS_ACQUIRED_ACTIVE")))
             {
                 var behavior = editor.GetType("UnityEditor.PlayModeView", true).GetProperty("enterPlayModeBehavior");
                 behavior.SetValue(view, Enum.Parse(behavior.PropertyType, "PlayUnfocused"));
@@ -190,7 +191,8 @@ namespace Zjcs.Editor.Skills
                 return;
             ConfigureShaderCompilation();
             if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") == "1"
-                || Environment.GetEnvironmentVariable("ZJCS_SKILLS_PORTABLE_FLAME_FLOW") == "1")
+                || Environment.GetEnvironmentVariable("ZJCS_SKILLS_PORTABLE_FLAME_FLOW") == "1"
+                || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_SKILLS_ACQUIRED_ACTIVE")))
             {
                 // PlayUnfocused does not initialize the display size through GameView.OnFocus.
                 // Update that render buffer directly, without requesting window focus.

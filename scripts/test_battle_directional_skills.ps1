@@ -1,4 +1,5 @@
-﻿$ErrorActionPreference = 'Stop'
+﻿param([string]$ReceiptDirectory)
+$ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'combat_sources.ps1')
 Add-Type -Path (Get-FightCombatSources)
 $root = Split-Path -Parent $PSScriptRoot
@@ -20,10 +21,35 @@ foreach ($case in @(@(0,1,11640,11641),@(0,-1,11660,11661),@(-1,0,11650,11651),@
         $cp.Units.Add($u)
     }
     $p=$cp.Units[0]; $enemy=$cp.Units[1]; $enemy.X+=$case[0]; $enemy.Y+=$case[1]
+    # Populate every authored cell and a rear control. This verifies the area
+    # against distinct entities, including independent per-column hit delays.
+    $direction = $case[1] -gt 0 ? 0 : $case[1] -lt 0 ? 1 : $case[0] -lt 0 ? 2 : 3
+    $scopeTargets = [Collections.Generic.List[int]]::new(); $scopeTargets.Add(2)
+    $nextId = 3
+    foreach ($localX in @(-1,0,1)) { foreach ($localY in @(1,2)) {
+        $point = [Zjcs.Combat.Official.FightGridTransformMath]::CalcLocalToWorldPos(
+            [Zjcs.Combat.Official.FightGridPoint]::new($localX,$localY),
+            [Zjcs.Combat.Official.FightGridPoint]::new($p.X,$p.Y),0,0,$direction,($direction -eq 2))
+        if ($point.X -eq $enemy.X -and $point.Y -eq $enemy.Y) { continue }
+        $other = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+        $other.Id=$nextId++; $other.Side=2; $other.CharacterType=1
+        $other.Hp=$other.MaxHp=$other.LastMaxHp=1000000
+        $other.X=$point.X; $other.Y=$point.Y
+        $other.Turn.Id=$other.Id; $other.Turn.Hp=$other.Hp; $other.Turn.Speed=1
+        $cp.Units.Add($other); $scopeTargets.Add($other.Id)
+    } }
+    $rear = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+    $rear.Id=$nextId; $rear.Side=2; $rear.CharacterType=1
+    $rear.X=$p.X-$case[0]; $rear.Y=$p.Y-$case[1]
+    $rear.Hp=$rear.MaxHp=$rear.LastMaxHp=1000000
+    $rear.Turn.Id=$rear.Id; $rear.Turn.Hp=$rear.Hp; $rear.Turn.Speed=1
+    $cp.Units.Add($rear)
     $base=$catalog.CreateSkill(10780,0,10026,2,20,1,$null)
     $base.HasCustomDamage=$true; $base.CustomDamage=100
     $p.Skills.Add($base); $p.SkillState.Slots.Add($catalog.CreateSkillSlot($base,3,-10))
-    $w=[Zjcs.Combat.Official.FightBattleWaveState]::new(); $w.UnitIds.Add(2); $cp.Waves.Add($w)
+    $w=[Zjcs.Combat.Official.FightBattleWaveState]::new()
+    foreach ($unit in $cp.Units | Where-Object Side -eq 2) { $w.UnitIds.Add($unit.Id) }
+    $cp.Waves.Add($w)
     $formula=[Zjcs.Combat.Official.FightDamageFormula]::new([Zjcs.Combat.Official.FightDamagePropertySchema]::new(),[Zjcs.Combat.Official.FightDamageFormulaConfig]::new())
     $ex=[Zjcs.Combat.Official.FightBattleExecutor]::Begin($cp,$formula,[Zjcs.Combat.Official.FightDamageSettlement]::new(),$catalog,$items)
     $before=[Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($cp)
@@ -52,12 +78,25 @@ foreach ($case in @(@(0,1,11640,11641),@(0,-1,11660,11661),@(-1,0,11650,11651),@
     Assert-Direction ($cast.Slot -eq 0 -and $cast.SkillItemId -eq 10026) 'Variant lost equipped provenance'
     Assert-Direction ($p.SkillState.Slots[0].ReleasedTimes -eq 1 -and $p.Skills[0].EntityId -eq 10780) 'Variant altered equipment or consumed extra releases'
     Assert-Direction ($step.Event.DamageEvents.Count -gt 0 -and $enemy.Hp -lt 1000000) 'Directional hit did not settle damage'
+    Assert-Direction ($step.Event.DamageEvents.Count -eq 6 -and $rear.Hp -eq 1000000) 'Original 3x2 scope missed a cell or hit behind the caster'
+    Assert-Direction (($step.Event.DamageEvents.TargetId | Sort-Object -Unique).Count -eq 6) 'A multi-cell area hit duplicated an entity'
+    foreach ($id in $scopeTargets) {
+        Assert-Direction (($step.Event.DamageEvents | Where-Object TargetId -eq $id).Count -eq 1) 'An original area target was not hit exactly once'
+    }
+    if ($ReceiptDirectory) {
+        [IO.Directory]::CreateDirectory([IO.Path]::GetFullPath($ReceiptDirectory)) | Out-Null
+        $name = $case[1] -gt 0 ? 'up' : $case[1] -lt 0 ? 'down' : $case[0] -lt 0 ? 'left' : 'right'
+        [IO.File]::WriteAllText((Join-Path $ReceiptDirectory "fire-slash-$name.json"),[Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($cp))
+    }
     $replayed=$ex.Step(0,1)
     Assert-Direction ($replayed.Replayed -and $p.SkillState.Slots[0].ReleasedTimes -eq 1) 'Step receipt consumed variant twice'
     $restored=[Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load($before)
     $again=[Zjcs.Combat.Official.FightBattleExecutor]::Restore($restored,$formula,[Zjcs.Combat.Official.FightDamageSettlement]::new(),$catalog,$items)
     $repeat=$again.Step(0,1)
     Assert-Direction ($repeat.Event.SkillCasts[0].SkillEntityId -eq $case[2] -and $restored.Units[1].Hp -eq $enemy.Hp) 'Cold restore changed directional result'
+    foreach ($unit in $cp.Units) {
+        Assert-Direction (($restored.Units | Where-Object Id -eq $unit.Id).Hp -eq $unit.Hp) 'Cold restore changed an area target or rear control'
+    }
 }
 Write-Output 'Directional skill 10026 passed four actual cast/hit paths, one slot consumption, receipt replay and cold restore.'
 
