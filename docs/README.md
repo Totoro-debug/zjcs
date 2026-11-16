@@ -60,7 +60,7 @@
 | [虚空裂隙与混沌侵袭](features/weekly-challenges.md) | 未完成 |
 | [技能祈愿、材料购买与兑换](features/wishes.md) | 未完成 |
 | [命运果实探寻](features/world-exploration.md) | 未完成 |
-| [世界地图与主线公共模块](features/world-map.md) | 未完成（主线公共模块已完成／单图未完成） |
+| [世界地图与主线公共模块](features/world-map.md) | 未完成（主线公共模块、自动碾压已完成／单图未完成） |
 
 ## 地图验收
 
