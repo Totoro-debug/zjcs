@@ -16,6 +16,7 @@ namespace Zjcs.Presentation.World
         [SerializeField] private int mapClassId = 10;
         [SerializeField] private string catalogResource = CatalogResource;
         private readonly Dictionary<string, GeneratedModel> models = new Dictionary<string, GeneratedModel>();
+        private readonly Dictionary<string, HashSet<int>> immediateStageStates = new Dictionary<string, HashSet<int>>();
         private readonly Dictionary<Collider2D, OfficialMap10EntityInfo> hitTargets =
             new Dictionary<Collider2D, OfficialMap10EntityInfo>();
         private readonly Dictionary<int, GameObject> entityObjects = new Dictionary<int, GameObject>();
@@ -161,7 +162,20 @@ namespace Zjcs.Presentation.World
             try
             {
                 foreach (EntityModel model in catalog.models)
-                    if (model != null && !string.IsNullOrEmpty(model.modelPath)) models.Add(model.modelPath, BuildModel(model));
+                    if (model != null && !string.IsNullOrEmpty(model.modelPath))
+                    {
+                        models.Add(model.modelPath, BuildModel(model));
+                        var states = new HashSet<int>();
+                        if (!string.IsNullOrEmpty(model.interactionsJson))
+                            foreach (var state in Newtonsoft.Json.Linq.JObject.Parse(model.interactionsJson).Properties())
+                            {
+                                var operations = state.Value as Newtonsoft.Json.Linq.JArray;
+                                if (operations?.Count == 1 && (int?)operations[0]["match"] == -1
+                                    && (string)operations[0]["operation"]?["type"] == "ECWorldStageInteractionOperationClick")
+                                    states.Add(int.Parse(state.Name, System.Globalization.CultureInfo.InvariantCulture));
+                            }
+                        immediateStageStates.Add(model.modelPath, states);
+                    }
 
                 foreach (EntityRecord record in catalog.entities)
                 {
@@ -176,6 +190,11 @@ namespace Zjcs.Presentation.World
                 throw;
             }
         }
+
+        // The original display's unconditional Click operation calls StartStage(0)
+        // directly. Window and conditional operations keep their separate paths.
+        internal bool HasImmediateStageInteraction(string modelPath, int state) =>
+            modelPath != null && immediateStageStates.TryGetValue(modelPath, out var states) && states.Contains(state);
 
         public GameObject SpawnStoryEntity(int entityClassId, string modelPath, Vector2 grid)
         {
@@ -586,6 +605,7 @@ namespace Zjcs.Presentation.World
             generatedMeshes.Clear();
             generatedMaterials.Clear();
             models.Clear();
+            immediateStageStates.Clear();
             hitTargets.Clear();
             entityObjects.Clear();
             entityActiveStates.Clear();

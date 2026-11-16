@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &-7061389405107362973
+GameObject:
+  m_Component:
+  - component:
+      fileID: 2940274746205365091
+  - component:
+      fileID: -8295975784239242397
+  m_Layer: 0
+  m_Name: StageCombinate
+  m_Tag: 0
+  m_IsActive: 1
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  serializedVersion: 6
+--- !u!4 &2940274746205365091
+Transform:
+  m_GameObject:
+    fileID: -7061389405107362973
+  m_LocalRotation:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  m_LocalPosition:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  m_LocalScale:
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  m_Children: []
+  m_Father:
+    fileID: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  serializedVersion: 2
+--- !u!114 &-8295975784239242397
+MonoBehaviour:
+  m_GameObject:
+    fileID: -7061389405107362973
+  m_Enabled: 1
+  m_Script:
+    fileID: 11500000
+    guid: 1e954b21625a7f7e70eb75d0c15fda3c
+    type: 3
+  m_Name: ""
+  HorizontalAnchor: 1
+  VerticalAnchor: 1
+  FixedOffset:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  Animation:
+    fileID: 0
+  ShowClip: ""
+  HideClip: ""
+  mHideTime: 0.5
+  mMapControllerEntityRadarTipPrefabs:
+  - fileID: 114884547391421755
+    guid: 831d812fe07c5d60b65705e0785448b2
+    type: 3
+  - fileID: 4522477724878928372
+    guid: f9fa872b16ce56dd87c59544be4fc761
+    type: 3
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_EditorClassIdentifier: ""

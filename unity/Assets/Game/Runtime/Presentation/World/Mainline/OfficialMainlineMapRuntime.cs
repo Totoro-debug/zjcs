@@ -285,6 +285,7 @@ namespace Zjcs.Presentation.World
             FlushPuzzleRegionProgress();
             FlushMap12ChestProgress();
             RefreshNativeMap14State();
+            fastKillRadar?.Refresh();
             RefreshConfiguredNativeGround();
             stamina.RefreshStaminaPoints();
             exploration.RefreshExploration();
@@ -664,6 +665,7 @@ namespace Zjcs.Presentation.World
             map12SteleEntities?.Dispose();
             map12SteleEntities = null;
             nativeMap12World?.Dispose();
+            fastKillRadar?.Dispose(); fastKillRadar = null;
             DisposeNativeMap14();
             configuredNativeGround?.Dispose();
             configuredNativeGround = null;

@@ -62,6 +62,7 @@ namespace Zjcs.Presentation.World
                 SynchronizeOriginalMapEntities();
                 mainlineSharedState.StartClient(navigation.currentGrid.X, navigation.currentGrid.Y);
                 if (mapClassId == 14) InitializeNativeMap14();
+                fastKillRadar = new MainlineFastKillRadar(this);
                 completed = true;
             }
             finally
@@ -91,6 +92,7 @@ namespace Zjcs.Presentation.World
 
         private void DisposeMainlineSharedWorld()
         {
+            fastKillRadar?.Dispose(); fastKillRadar = null;
             var loading = mainlineSharedLoading;
             mainlineSharedLoading = null;
             if (loading != null) StopCoroutine(loading);

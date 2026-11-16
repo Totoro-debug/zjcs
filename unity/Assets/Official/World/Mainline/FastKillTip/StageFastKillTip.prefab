@@ -1,0 +1,240 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &-8735550306846082572
+GameObject:
+  m_Component:
+  - component:
+      fileID: -4200453319279740428
+  - component:
+      fileID: 4522477724878928372
+  - component:
+      fileID: -1548256127959336460
+  - component:
+      fileID: 114001
+  m_Layer: 0
+  m_Name: StageFastKillTip
+  m_Tag: 0
+  m_IsActive: 1
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  serializedVersion: 6
+--- !u!4 &-4200453319279740428
+Transform:
+  m_GameObject:
+    fileID: -8735550306846082572
+  m_LocalRotation:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  m_LocalPosition:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  m_LocalScale:
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  m_Children:
+  - fileID: -875280114047157772
+  m_Father:
+    fileID: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  serializedVersion: 2
+--- !u!1 &-783130033426695692
+GameObject:
+  m_Component:
+  - component:
+      fileID: -875280114047157772
+  - component:
+      fileID: 8354357849081870836
+  m_Layer: 0
+  m_Name: Bg
+  m_Tag: 0
+  m_IsActive: 1
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  serializedVersion: 6
+--- !u!4 &-875280114047157772
+Transform:
+  m_GameObject:
+    fileID: -783130033426695692
+  m_LocalRotation:
+    x: -0.0
+    y: -0.0
+    z: -0.0
+    w: 1.0
+  m_LocalPosition:
+    x: 0.0
+    y: 0.0
+    z: -1.0
+  m_LocalScale:
+    x: 0.7499999403953552
+    y: 0.7499999403953552
+    z: 0.7499999403953552
+  m_Children: []
+  m_Father:
+    fileID: -4200453319279740428
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  serializedVersion: 2
+--- !u!212 &8354357849081870836
+SpriteRenderer:
+  m_GameObject:
+    fileID: -783130033426695692
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_LightmapIndex: 65535
+  m_LightmapIndexDynamic: 65535
+  m_LightmapTilingOffset:
+    x: 1.0
+    y: 1.0
+    z: 0.0
+    w: 0.0
+  m_LightmapTilingOffsetDynamic:
+    x: 1.0
+    y: 1.0
+    z: 0.0
+    w: 0.0
+  m_Materials:
+  - fileID: 2100000
+    guid: 34ca307e4fc3549e851d1c8380f17141
+    type: 2
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot:
+    fileID: 0
+  m_ProbeAnchor:
+    fileID: 0
+  m_LightProbeVolumeOverride:
+    fileID: 0
+  m_SortingLayerID: 1182434123
+  m_SortingLayer: 18
+  m_SortingOrder: 5
+  m_Sprite:
+    fileID: 0
+  m_Color:
+    r: 1.0
+    g: 1.0
+    b: 1.0
+    a: 1.0
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size:
+    x: 1.7999999523162842
+    y: 0.6000000238418579
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 1
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+--- !u!114 &4522477724878928372
+MonoBehaviour:
+  m_GameObject:
+    fileID: -8735550306846082572
+  m_Enabled: 1
+  m_Script:
+    fileID: 11500000
+    guid: 162214e6497d8cf6088dd77b56b58db4
+    type: 3
+  m_Name: ""
+  HorizontalAnchor: 1
+  VerticalAnchor: 1
+  FixedOffset:
+    x: 0.0
+    y: 0.44999998807907104
+    z: 0.0
+  Animation:
+    fileID: -1548256127959336460
+  ShowClip: StageFastKillTipFadeIn
+  HideClip: StageFastKillTipFadeOut
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_EditorClassIdentifier: ""
+--- !u!111 &-1548256127959336460
+Animation:
+  m_GameObject:
+    fileID: -8735550306846082572
+  m_Enabled: 1
+  m_Animation:
+    fileID: 0
+  m_Animations:
+  - fileID: 7400000
+    guid: 9d19496189bb55deb091c6b466afd486
+    type: 2
+  - fileID: 7400000
+    guid: 03d9ebf85c6a57c181e57c186eacc788
+    type: 2
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  serializedVersion: 3
+--- !u!114 &114001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: -8735550306846082572
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script:
+    fileID: 11500000
+    guid: ceba22ba021057ff88df40ed67e5e0de
+    type: 3
+  m_Name: ""
+  m_EditorClassIdentifier: ""
+  bindings:
+  - target:
+      fileID: 8354357849081870836
+    sourceKey: cab-23bef326149fbeb0f636881d59f9eecc:8354357849081870836

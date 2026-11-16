@@ -1072,3 +1072,5 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 主线怪物等级绑定：`scripts/prepare_mainline_monster_levels.py` 从所选版本提取地图怪物放置点的等级组件及公开／私有等级类型，输入、反编译依据和输出哈希见[怪物等级来源清单](official-map/mainline-monster-levels-source-manifest.json)。数据通过 `Resources/World/Mainline/monster-levels` 加载，尚未生成完整素材快照。
 
 职业技能图标本地目录与脚本端口的输出哈希见 `profession-ui/info-panels-source-manifest.json`、`profession-ui/item-components-source-manifest.json`、`profession-ui/item-configs-source-manifest.json` 和 `profession-ui/skill-icons-source-manifest.json`；所选原包输入与原始提取载荷保持各自来源身份。
+
+主线碾压提示资产：`scripts/prepare_mainline_fast_kill_tip.py` 从当前所选 `884_156692` 官方包提取 `StageFastKillTip`、`StageCombinate`、两段原始渐变动画及怪物展示雷达挂点祖先变换。复用图标和材质前核对原始对象字节，输入对象、依赖及输出哈希见[碾压提示来源清单](official-map/mainline-fast-kill-tip-source-manifest.json)；输出位于 `Assets/Official/World/Mainline/FastKillTip`，由 `Resources/World/Mainline/fast-kill-tip` 显式绑定，未生成完整素材快照。

@@ -335,15 +335,15 @@ namespace Zjcs.Presentation.World
             }
             if (Environment.GetCommandLineArgs().Contains("-verify-fast-victory-only"))
             {
-                Open(11, canvas.transform);
-                yield return new WaitForSecondsRealtime(1);
-                progress = Progress;
-                foreach (int region in new[] { 0, 1, 12 })
+                // Finish the entry region to unlock region 1, leaving its
+                // original private monsters present for the interaction test.
+                foreach (int region in new[] { 0 })
                 {
                     progress.SetMapRegionProgress(11, region, 10000);
                     progress.RecordGoddessActivated(11, region, "probe-fast-public-" + region);
                 }
-                yield return Reopen();
+                Open(11, canvas.transform);
+                yield return new WaitForSecondsRealtime(1);
                 yield return VerifyFastVictory();
                 yield return ExitMap();
                 Destroy(canvas);
@@ -464,8 +464,6 @@ namespace Zjcs.Presentation.World
                 progress.Save.Player.GuildName ?? string.Empty,
                 progress.Save.Player.UnlockedMapClassIds).IsApplied,
                 "Isolated fast-victory profile meets the official level and rank gates");
-            yield return Reopen();
-
             progress = Progress;
             var equipmentCatalog = Zjcs.Offline.Equipment.OfficialEquipmentAssetCatalog.LoadDefault().Load();
             int equipmentLevel = equipmentCatalog.Rows("system_level_limit")
@@ -540,28 +538,30 @@ namespace Zjcs.Presentation.World
                 .First(point => mapSession.Movement.IsFit(point) && !entities.Any(value => value.Active
                     && value.Grid[0] == point.X && value.Grid[1] == point.Y));
             yield return At(adjacent);
-            yield return ClickEntity(placementId);
-
-            GameObject dialog = SceneRoot("WorldStageDialog");
-            float dialogDeadline = Time.realtimeSinceStartup + 10f;
-            while ((dialog == null || !dialog.activeInHierarchy) && Time.realtimeSinceStartup < dialogDeadline)
-            {
-                yield return null;
-                dialog = SceneRoot("WorldStageDialog");
-            }
-            Require(dialog != null && dialog.activeInHierarchy,
-                "Simulated map pointer opens the original stage confirmation");
-            yield return WaitForRoadblockPopup(dialog);
-
+            entityView = runtime.GetComponentInChildren<OfficialMap10EntityView>();
             Map10LocalSave before = MapSave;
             int battleCount = before.battleResults == null ? 0 : before.battleResults.Length;
             int winsBefore = progress.StageWinCount(stageId);
             long staminaBefore = progress.InventoryCount(57);
             Dictionary<int, long> inventoryBefore = InventoryCounts(progress.Save.Player);
+            float radarDeadline = Time.realtimeSinceStartup + 30f;
+            while (!runtime.IsFastKillRadarReady
+                && Time.realtimeSinceStartup < radarDeadline) yield return null;
+            yield return new WaitForSecondsRealtime(1f);
+            var radar = entityView.FindEntityObject(placementId).GetComponentsInChildren<MonoBehaviour>().FirstOrDefault(component =>
+                component.GetType().Name == "MapControllerEntityRadarTipFastKill"
+                && component.gameObject.activeInHierarchy);
+            yield return Capture("map-11-fast-victory-radar");
+            Require(radar != null && radar.GetComponentsInChildren<SpriteRenderer>()
+                .Any(renderer => renderer.sprite && renderer.color.a > .95f),
+                "Original fast-kill radar prefab and fade-in render for the eligible monster");
             yield return Capture("map-11-fast-victory-ready");
-            Button confirm = dialog.transform.Find(
-                "BgDialog3/Content/DialogContent (1)/UnlockGo/BtnContent/BattleBtn").GetComponent<Button>();
-            yield return Click(confirm);
+            Require(entityView.HasImmediateStageInteraction(stageInfo.ModelPath, stageInfo.State),
+                "Original monster display binds unconditional Click -> StartStage(0)");
+            yield return ClickEntity(placementId);
+            GameObject dialog = SceneRoot("WorldStageDialog");
+            Require(dialog == null || !dialog.activeInHierarchy,
+                "Simulated monster pointer follows the original direct interaction without an added confirmation");
 
             float resultDeadline = Time.realtimeSinceStartup + 8f;
             Map10LocalSave after = MapSave;
@@ -582,12 +582,18 @@ namespace Zjcs.Presentation.World
             Require(progress.InventoryCount(57) == staminaBefore
                 && inventoryAfter.Any(pair => pair.Value > inventoryBefore.GetValueOrDefault(pair.Key)),
                 "Non-stamina fast victory grants configured monster rewards without stamina cost");
+            yield return new WaitForSecondsRealtime(.3f);
             yield return Capture("map-11-fast-victory-result");
+            yield return new WaitForSecondsRealtime(3f);
+            Require(SceneRoot("MapAwardUI") == null, "Original monster reward animation closes after the native delay");
             string rewardSnapshot = JsonUtility.ToJson(progress.Save);
             yield return Reopen();
             Require(JsonUtility.ToJson(Progress.Save) == rewardSnapshot
                 && MapSave.battleResults.Length == battleCount + 1,
                 "Fast victory rewards, RNG, receipts and battle result survive cold map reload without duplication");
+            radarDeadline = Time.realtimeSinceStartup + 30f;
+            while (!runtime.IsFastKillRadarReady && Time.realtimeSinceStartup < radarDeadline) yield return null;
+            yield return new WaitForSecondsRealtime(1f);
             yield return Capture("map-11-fast-victory-cold");
         }
 

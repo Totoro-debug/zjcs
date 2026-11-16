@@ -133,11 +133,45 @@ namespace Zjcs.Editor
 
         public static void RunLoadedPlayMode()
         {
+            ValidateFastKillTipAssets();
             ProjectTools.Validate();
             Zjcs.Editor.Progression.OfflineMainlineProgressValidation.Run();
             Zjcs.Editor.Progression.OfflineMapStaminaValidation.Run();
             Zjcs.Editor.Progression.OfflineWorldExplorationValidation.Run();
             StartPlayMode();
+        }
+
+        // For repeated interaction checks after ProjectTools.Validate and the
+        // progression checks have passed for the current validation session.
+        public static void RunLoadedProbe()
+        {
+            ValidateFastKillTipAssets();
+            StartPlayMode();
+        }
+
+        public static void ValidateFastKillTipAssets()
+        {
+            var catalog = Resources.Load<OfficialMainlineFastKillTipCatalog>("World/Mainline/fast-kill-tip");
+            if (!catalog || !catalog.Prefab || !catalog.FastKillPrefab || catalog.Manifest != "884_156692")
+                throw new InvalidDataException("Original fast-kill tip catalog is not bound.");
+            var clone = UnityEngine.Object.Instantiate(catalog.FastKillPrefab);
+            try
+            {
+                var animation = clone.GetComponent<Animation>();
+                var fadeIn = animation.GetClip("StageFastKillTipFadeIn");
+                var fadeOut = animation.GetClip("StageFastKillTipFadeOut");
+                if (!fadeIn || !fadeOut || !fadeIn.legacy || !fadeOut.legacy
+                    || !Mathf.Approximately(fadeIn.length, .5f)
+                    || !Mathf.Approximately(fadeOut.length, 2f / 3f))
+                    throw new InvalidDataException("Original fast-kill legacy animations failed native import or binding.");
+                var renderer = clone.GetComponentsInChildren<SpriteRenderer>().Single();
+                fadeIn.SampleAnimation(clone, 0);
+                if (!Mathf.Approximately(renderer.color.a, 0)) throw new InvalidDataException("Original fast-kill fade start is unbound.");
+                fadeIn.SampleAnimation(clone, .5f);
+                if (!Mathf.Approximately(renderer.color.a, 1)) throw new InvalidDataException("Original fast-kill fade end is unbound.");
+            }
+            finally { UnityEngine.Object.DestroyImmediate(clone); }
+            Debug.Log("Original fast-kill prefab legacy clips imported, bound and sampled successfully.");
         }
 
         private static void StartPlayMode()
@@ -225,6 +259,7 @@ namespace Zjcs.Editor
 
         public static void BuildWindowsPlayer()
         {
+            ValidateFastKillTipAssets();
             ProjectTools.Validate();
             OfficialSparseShaderVariants.ValidateProgramDomains();
             string destination = null;

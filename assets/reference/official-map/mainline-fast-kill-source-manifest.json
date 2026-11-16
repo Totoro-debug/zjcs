@@ -25,12 +25,24 @@
     {
       "path": ".tools/source-packages/official-code/client-source/MapControllerEntityRadarTipFastKill.cs",
       "sha256": "f7d97e268d68d5c899b5b4ff7b70bd2c6dbba6c6749805c45d6ba3d8005291cf"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ECWorldStageInteractionOperationClick.cs",
+      "sha256": "2003087ade158dbed4b9c642c00e5ba46115f0345f36d3927eba7a6ba7d95bac"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MapControllerEntityRadar.cs",
+      "sha256": "dc89f9b17a37a1dcc1fb54c434499ad672716f5fdd14245795c536f7d8cabc13"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MapControllerEntityRadarTipFastKill.cs",
+      "sha256": "f7d97e268d68d5c899b5b4ff7b70bd2c6dbba6c6749805c45d6ba3d8005291cf"
     }
   ],
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Battle.cs",
-      "sha256": "23a9b5813962bdc4448336a84d9043a37c5de302e2a4a1f178f00d72c014416a",
+      "sha256": "3c5904c8f381796da005750f4b8a71dd5ffa5c1bcf0f1cceb31c837d587ac0ca",
       "hashLineEndings": "LF"
     },
     {
@@ -40,18 +52,48 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapModuleProbe.cs",
-      "sha256": "540c8f9840aa0e19b57110e9f1fc2c8be09055166bb63e59136c40f90a686b58",
+      "sha256": "3ab944adf95942ff514ce0f06405243a9438ae2708ff354e05f5f1978bd10ef5",
       "hashLineEndings": "LF"
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineMapModuleValidation.cs",
-      "sha256": "e2ecbc3147a7799de9d8811552d2362013215e02d5ae9bc2c76145e2c026c7d3",
+      "sha256": "81abeb1e16dfab70b0545b54d86f0ef2dae110e2c1db16300518bd9b99962945",
       "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.FastKillRadar.cs",
+      "hashLineEndings": "LF",
+      "sha256": "b12aaddbfdc299187dbe38c0b12660d046e3910bbe1354df2b4c66c67410d6cc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.SharedWorld.cs",
+      "hashLineEndings": "LF",
+      "sha256": "46a454f4d0cffee268b66d57648463c7f78f64907014d3eefe0733cd0e64df72"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs",
+      "hashLineEndings": "LF",
+      "sha256": "1c399d9d3ea844e3e4367e88b4e1787c8b6582fabc4bd2fefbfc932d1e26e0eb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineFastKillTipCatalog.cs",
+      "hashLineEndings": "LF",
+      "sha256": "9c58c5fb9459e4735f5bcd594c1418ee36320e05136e58d042b0162889efa326"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMap10EntityView.cs",
+      "hashLineEndings": "LF",
+      "sha256": "36039ecc7813f2a9a1a12cf9884c25168ea4e2f6e409ac729d7b6831f89d90f9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Zjcs.Presentation.World.asmdef",
+      "hashLineEndings": "LF",
+      "sha256": "7fdfdf266d473322ea8af9c770baf3c25f3d3f94c90db9c97be1ecd19d64bece"
     }
   ],
   "validation": {
     "pureRuleEntry": "Zjcs.Editor.MainlineMapModuleValidation.ValidateGameFastTypeRules",
     "playModeEntry": "Zjcs.Presentation.World.OfficialMainlineMapModuleProbe.StartVerification",
-    "scope": "Map11 combat-rating threshold boundary and normal map victory settlement; Map10-16 interaction catalogs are loaded and checked by the shared validation entry."
+    "scope": "Current Map11 exact combat-rating threshold and one-point-short eligibility; original fast-kill prefab, fade and unconditional monster pointer; configured no-stamina rewards, stage/battle records and exact cold save restore. Shared Map10-16 rule catalogs retain their configured gates."
   }
 }

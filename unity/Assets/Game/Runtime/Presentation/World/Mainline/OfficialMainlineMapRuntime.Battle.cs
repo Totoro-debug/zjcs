@@ -69,6 +69,14 @@ namespace Zjcs.Presentation.World
                 return;
             }
 
+            if (entity.TypeId >= 101 && entity.TypeId <= 104
+                && !OfficialMainlineStaminaModule.IsStaminaPoint(entity)
+                && entityView.HasImmediateStageInteraction(entity.ModelPath, entity.State))
+            {
+                StartEntityStage(entity, completed);
+                return;
+            }
+
             selectedStageEntity = entity;
             selectedStageCompletion = completed;
             string root = "/WorldStageDialog/BgDialog3/Content/DialogContent (1)";
@@ -113,16 +121,25 @@ namespace Zjcs.Presentation.World
             OfficialMainlineStageFastTemplate stageFast = Interactions.stageFastTemplates.FirstOrDefault(value =>
                 value.EntityClassId == entity.EntityClassId && string.Equals(value.Component, templateType, StringComparison.Ordinal));
             if (stageFast == null) return false;
-            if (stageFast.FastForwardType >= 0 && stageFast.FastForwardType <= 3)
+            long combatRating = progression.EvaluateProps(DateTimeOffset.UtcNow.ToUnixTimeSeconds()).CombatRating;
+            return TryResolveRegionGameFastType(stageFast.FastForwardType, entity.Region,
+                progression.Player.Level, progression.Player.SubRank, combatRating, out gameFastType);
+        }
+
+        private bool TryResolveRegionGameFastType(int mapFastType, int regionId,
+            int playerLevel, int playerSubRank, long combatRating, out int gameFastType)
+        {
+            gameFastType = 0;
+            if (mapFastType >= 0 && mapFastType <= 3)
             {
-                gameFastType = OfficialMainlineFastTypeRules.Resolve(stageFast.FastForwardType, 0, 0L, 0L,
+                gameFastType = OfficialMainlineFastTypeRules.Resolve(mapFastType, 0, 0L, 0L,
                     0, 0, 0, 0, 0);
                 return true;
             }
-            if (stageFast.FastForwardType < 4 || stageFast.FastForwardType > 7) return false;
+            if (mapFastType < 4 || mapFastType > 7) return false;
 
             OfficialMainlineInteractionRegion region = Interactions.regions.FirstOrDefault(value =>
-                value.MapClassId == mapClassId && value.Region == entity.Region);
+                value.MapClassId == mapClassId && value.Region == regionId);
             IReadOnlyDictionary<string, object> settings = progression.EquipmentCatalog.GameSettings;
             if (region == null || settings == null
                 || !TryReadFastStageSetting(settings, "PrivateWorldFastByDifficultyLevelLimit", out int levelLimit)
@@ -130,15 +147,14 @@ namespace Zjcs.Presentation.World
                 return false;
 
             int rankSuppression = 0;
-            if (stageFast.FastForwardType == 5 || stageFast.FastForwardType == 6 || stageFast.FastForwardType == 7)
+            if (mapFastType == 5 || mapFastType == 6 || mapFastType == 7)
             {
                 fastStageRankData ??= OfflineHomeTaskMapData.LoadDefault();
                 rankSuppression = fastStageRankData.CalcRankSuppression(
-                    (TaskUI.SubRank)progression.Player.SubRank, (TaskUI.SubRank)region.SubRank);
+                    (TaskUI.SubRank)playerSubRank, (TaskUI.SubRank)region.SubRank);
             }
-            long combatRating = progression.EvaluateProps(DateTimeOffset.UtcNow.ToUnixTimeSeconds()).CombatRating;
-            gameFastType = OfficialMainlineFastTypeRules.Resolve(stageFast.FastForwardType, region.GameFastType,
-                region.FastStageCombatRating, combatRating, progression.Player.Level, progression.Player.SubRank,
+            gameFastType = OfficialMainlineFastTypeRules.Resolve(mapFastType, region.GameFastType,
+                region.FastStageCombatRating, combatRating, playerLevel, playerSubRank,
                 levelLimit, subRankLimit, rankSuppression);
             return true;
         }
