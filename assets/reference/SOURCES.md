@@ -4,6 +4,8 @@
 
 家园首购入口：`scripts/prepare_home_first_pay_entry_native.py` 从同版 APK 的 `defaultpackage_assets_prefabs_ui_activityentry.bundle` 恢复 `FirstPayBtn` 原生层级和依赖；原始对象、官方代码、转换输入／输出哈希、复用资源及显式加载绑定见[首购入口来源清单](home-first-pay-entry-native-source-manifest.json)。素材尚未进入完整快照。
 
+装备生成与属性运行规则由 `scripts/prepare_current_equipment_runtime.py` 从所选 `884_156692` 的 Luban 装备配置和 `level_prop` 属性配置构建；输入、表行数及运行载荷 SHA-256 见[装备运行来源清单](equipment-runtime-source-manifest.json)。
+
 战技与秘法碎片的官方类型集合及解码输入见 [skill-piece-types-source-manifest.json](skill-piece-types-source-manifest.json)。`scripts/prepare_skill_piece_types.py` 从所选 `884_156692` APK 解码 `game_settings` 与 `item`，核对 `SkillPieceTypes=[111,112]` 及 190 项战技碎片、186 项秘法碎片的原类型，并生成 `OfficialCharacterCatalog.SkillPieceTypes.cs` 的显式版本适配；原配置载荷与历史预期哈希保持各自身份。清单记录原枚举、道具判定、碎片列表、详情工厂、图标进度与 `SkillRankInfoParser` 初始品阶方法的代码输入，以及生成结果哈希。
 
 技能官方描述与特殊词条从所选 `884_156692` 的 `profession_base`、`skill`、`item` 表及已核验的中文语言 rawfile 提取，键规则依据反编译的 `LanguageUtils`、`SkillHyperLinkDataProvider` 与词条／怪物超链接处理器。原始包身份、配置和语言哈希、原代码输入及文档输出哈希见[技能说明来源](skill-documentation-source-manifest.json)，复核入口为 `scripts/prepare_skill_documentation.py`；仅移除显示标记，保留原文及原有高阶技能说明，不在技能文档记录详细实现或测试流水。

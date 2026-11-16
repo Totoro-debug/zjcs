@@ -13,8 +13,8 @@ namespace Zjcs.Offline.Equipment
 
         private OfficialEquipmentCatalog(Dictionary<string, object> root)
         {
-            if (Text(root, "manifest") != "854_156383")
-                throw new FormatException("Equipment rules are not pinned to 854_156383.");
+            if (Text(root, "manifest") != "884_156692")
+                throw new FormatException("Equipment rules are not pinned to 884_156692.");
             tables = new Dictionary<string, List<Dictionary<string, object>>>(StringComparer.Ordinal);
             Dictionary<string, object> rules = Object(root, "rules");
             foreach (KeyValuePair<string, object> pair in rules)

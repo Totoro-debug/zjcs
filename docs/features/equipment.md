@@ -19,7 +19,9 @@ Unity 已接入装备实例、属性来源、本地存档事务和部分页面�
 - `OfflineEquipmentProfile` 保存装备实例、部位关系、词条、星石及强化状态；装备操作通过角色存档事务提交。
 - `OfficialEquipmentGenerator` 按官方装备配置和随机权重生成装备；装备等级、祝福、品质、词条互斥与套装参与属性计算。
 - 角色页已接入装备槽、候选、详情、比较、强化、继承及星石操作。装备规则载荷与局部界面资源入口见[Unity装备界面来源清单](../../unity/Assets/Official/Equipment/UI/source-manifest.json)。
-- 共鸣属性按原 `PlayerData.ActivedEquipResonanceLevel` 读取独立的已激活记录，复用原 `EquipResonanceInfoParser.PostParse`／`CalcEquipResonanceProps` 累计各档 `Effect`，不按当前穿戴数量自动激活或仅保留最高档。普通属性源使用既有 `854_156383` 装备配置，家园去赐福投影使用所选 `884_156692` 配置，各自输入保持独立；新档与缺字段旧档均为原默认 0。手动激活事务与原生界面仍缺。来源见[共鸣记录接线清单](../../assets/reference/home-resonance-profile-source-manifest.json)。
+- 共鸣属性按原 `PlayerData.ActivedEquipResonanceLevel` 读取独立的已激活记录，复用原 `EquipResonanceInfoParser.PostParse`／`CalcEquipResonanceProps` 累计各档 `Effect`，不按当前穿戴数量自动激活或仅保留最高档。装备生成、属性和等级限制使用所选 `884_156692` 装备配置；家园去赐福投影沿用同版配置。输入及运行载荷见[装备运行来源清单](../../assets/reference/equipment-runtime-source-manifest.json)。新档与缺字段旧档均为原默认 0。手动激活事务与原生界面仍缺。共鸣记录来源见[共鸣记录接线清单](../../assets/reference/home-resonance-profile-source-manifest.json)。
+
+所选版本装备载荷生成测试、1042 项装备选择原代码对照和战斗词条重放／检查点回归通过；Unity 导入、编译及 `ProjectTools.Validate` 退出码 0。该版本切换后的角色装备界面、模拟输入、存档恢复及 Windows Player 尚未验证，不能视为完整装备功能验收。
 
 `HomeResonanceProfileValidation.Run` 已在隔离 Unity 工程批处理与静音 Play Mode 通过全部 240 级累计效果、装备满足条件但未激活、卸装后保留激活、原越界查询、旧档缺字段默认值、真实存档事务／磁盘重开，以及家园去赐福投影对同一激活记录的限制；两次最终退出码均为 0。装备词条既有 1042 项原代码对照回归通过，静态检查通过（152110 个 GUID）。本项未变更界面，未验证手动激活操作或完整 HUD；最新主工程导入／编译及 `ProjectTools.Validate` 已补跑，退出码 0，仍保留既有战斗 Edit Mode 释放诊断；未构建或发布本项 Windows Player。
 
