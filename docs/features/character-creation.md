@@ -38,6 +38,8 @@
 
 ## 完整还原部分
 
+`SaveSelectionProbe` 的体型流程探针增加进入命名页后的输入模块、焦点与输入框检查，通过输入框内部事件模拟中文字符，再检查隔离草稿保存；探针启动时将 `AudioListener.volume` 设为 0，不改写用户音量存档。当前提交包含验证入口，未重新运行该流程，不将新增断言记为已经通过的交互验证。
+
 原生人物的图集 PNG 使用直通 RGBA，完全透明像素仍可能保留脸部或头发 RGB。`Spine-SkeletonDye.shader` 在染色后按纹理 alpha 预乘输出，匹配原 `Blend One OneMinusSrcAlpha`；避免透明 RGB 被叠加成面部碎片、发丝白斑和身体接缝。不更改官方骨骼、附件坐标、图集方向、绘制顺序或用户外观存档。输入沿用已核实的 `871_156598` 原生人物图集与烘焙材质；`CharacterCreationNativeModelTools.BakeSex` 原材质未开启直通 alpha 分支，因此 Windows PNG 路径在专用 shader 内统一转换。`CharacterFaceValidation.RunEditor` 与 Player 的显式环境入口 `ZJCS_CHARACTER_FACE_PROBE=1` 共用透明／不透明像素的 GPU 合成回归，以及男女待机、跑动、两帧和双朝向的模型截图；输出使用 `ZJCS_VALIDATION_DIR`。 本段已通过静态元数据检查、Unity 导入／编译、`ProjectTools.Validate` 和 Play Mode；GPU 的透明与不透明像素对照通过，男女待机／跑动、两帧、双朝向共 16 张运行截图已逐张核对。Windows Player 正在构建，尚未验证与发布。
 
 创角发型条目按官方 `TypeSelectItem.Icon → Background` 绑定每个配置的 `SkinName` 缩略图，避免误写遮罩节点后仍显示模板默认发型；`UIToggleObject` 仅激活原 `Checkmark` 方形选中框，`Background/Select` 圆框保持隐藏。标题复用已迁移的原 `TMPEffect` 及 `Hidden/JSZX/TextMeshPro` 的 Windows shader（显式复用 `SaveSelection/Materials/25`，独立字体实例保留字面与深色外描边），恢复 `SelectSexTitle` 的深色描边：宽度 3、RGBA `(34,34,34,230)`，保留原字体、布局和字号。当前 APK `881_156673`／资源版本 `884_156692` 中的组件指针、字段、对象哈希和来源见[外观绑定凭据](../../assets/reference/character-creation/appearance-bindings-source-manifest.json)，通过 `scripts/inspect_creation_appearance_bindings.py` 重取；既有发型贴图与历史布局载荷保持各自来源记录。本段修复已通过静态元数据检查、Unity 导入／编译、`ProjectTools.Validate` 和 Play Mode；男女发型配置图逐项核对、模拟指针选发型、单一方框及草稿保存通过，并已查看实际截图。Windows Player 尚待验证与发布。

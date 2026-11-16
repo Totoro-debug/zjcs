@@ -48,6 +48,7 @@ namespace Zjcs.Presentation.CharacterCreation
 #endif
             if (output == null) return;
             Application.runInBackground = true;
+            AudioListener.volume = 0;
             restart = File.Exists(Path.Combine(output, "result.json"));
             Directory.CreateDirectory(output);
             if (!File.Exists(Path.Combine(output, "fixtures-ready"))) PrepareProfiles();
@@ -229,7 +230,28 @@ namespace Zjcs.Presentation.CharacterCreation
                     "Body selection was not saved after the simulated click.");
                 yield return new WaitForEndOfFrame(); Capture(female ? "body-female" : "body-male");
             }
-            Debug.Log("BODY_BUTTONS_PASSED: repeated male/female pointer clicks, both original icons and saved draft.");
+            Transform creationPanel = GameObject.Find("OfficialCreatePlayerPanel").transform;
+            yield return WaitForCreationPage(creationPanel, "SelectSexContent");
+            Click(FindActiveButton(creationPanel, "NextBtn").gameObject);
+            yield return WaitForCreationPage(creationPanel, "DIYContent");
+            Click(FindActiveButton(creationPanel, "NextBtn").gameObject);
+            yield return WaitForCreationPage(creationPanel, "SetNameContent");
+
+            TMP_InputField nameInput = FindDescendant(creationPanel, "NameInput").GetComponent<TMP_InputField>();
+            Require(nameInput != null, "The official character name input was not imported in the Player.");
+            Require(EventSystem.current != null && EventSystem.current.isActiveAndEnabled
+                && EventSystem.current.currentInputModule != null
+                && EventSystem.current.currentInputModule.isActiveAndEnabled
+                && EventSystem.current.currentSelectedGameObject == nameInput.gameObject && nameInput.isFocused,
+                "The Windows Player did not focus the name input with an active UI input module.");
+            yield return new WaitForEndOfFrame(); Capture("name-empty-focused");
+            nameInput.ProcessEvent(new Event { type = EventType.KeyDown, character = '测' });
+            Require(nameInput.text == "测", "The Windows Player name input rejected a simulated keyboard character.");
+            yield return new WaitForSecondsRealtime(.5f);
+            Require(CharacterCreationOfflineService.OpenDefault(ProfileRoot).OpenDraft("slot-16").name == "测",
+                "The simulated name input was not persisted to the isolated draft.");
+            yield return new WaitForEndOfFrame(); Capture("name-input-persisted");
+            Debug.Log("NAME_INPUT_PASSED: focused official field accepted simulated Chinese text and persisted the isolated draft.");
         }
 
         private static GameObject FindButton(string text, bool required = true)
@@ -237,6 +259,31 @@ namespace Zjcs.Presentation.CharacterCreation
             var button = Resources.FindObjectsOfTypeAll<Button>().FirstOrDefault(b => b.gameObject.activeInHierarchy && b.GetComponentInChildren<TMP_Text>()?.text == text);
             if (required) Require(button != null, "Missing button " + text);
             return button == null ? null : button.gameObject;
+        }
+        private static Button FindActiveButton(Transform parent, string name)
+        {
+            Button button = parent.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(value => value.gameObject.activeInHierarchy && value.name == name);
+            Require(button != null, "Missing active creation button " + name + ".");
+            return button;
+        }
+        private static Transform FindDescendant(Transform parent, string name)
+        {
+            Transform child = parent.GetComponentsInChildren<Transform>(true).FirstOrDefault(value => value.name == name);
+            Require(child != null, "Missing creation object " + name + ".");
+            return child;
+        }
+        private static IEnumerator WaitForCreationPage(Transform panel, string contentName)
+        {
+            double deadline = Time.realtimeSinceStartupAsDouble + 10.0;
+            Transform content = FindDescendant(panel, contentName);
+            CharacterCreationPerformancePlayer performance = panel.GetComponent<CharacterCreationPerformancePlayer>();
+            while (!content.gameObject.activeInHierarchy || performance == null || performance.IsTransitionPlaying)
+            {
+                Require(Time.realtimeSinceStartupAsDouble < deadline,
+                    "Character creation did not settle on page content " + contentName + ".");
+                yield return null;
+            }
         }
         private static void Click(GameObject target)
         {

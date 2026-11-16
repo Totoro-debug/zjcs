@@ -867,16 +867,18 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 行动条守卫外观接线另核对所选 884 共享程序集反编译的 `FightRoleCharacterGuardComponent`、`GuardType` 与 `ArenaGuardInfo`；输入哈希并入 `battle-hud/round-card-runtime-source-manifest.json`，沿用同版两类原头像卡片及既有取景资源，没有新增或改绘 UI 资产。
 
+家园维修原生界面来源：`scripts/prepare_home_repair_native.py` 按所选 `884_156692` 的 APK 优先顺序及已校验云端载荷，恢复 `FurnitureRepairDialog`、`FurnitureRepairedNotifyDialog`、`PlayerPropItemVariant` 和 13 个官方家具图标的完整原生层级、序列化字段及依赖闭包；原窗口脚本、`HomeSettings`、家具／挂机表和中文语言均核对同版输入。原生空控制器保持原无状态结构，Spine 二进制逐字节与原对象核验；共享资产按 GUID 与原生内容核对后复用，存在转换差异的控制器使用独立 GUID。APK／bundle／对象凭据、当前客户端与共享代码、转换器、原生导出及输入输出 SHA-256 见[家园维修界面来源清单](home-repair-native-source-manifest.json)。背景模糊遮罩与材质复用[同版伙伴窗口来源](partner-friendship-window-source-manifest.json)，保持其独立来源记录。新增素材尚未进入完整素材快照；当前实现和验证范围只在[家园页](../../docs/features/city-and-home.md)维护。
+
+家园默认床铺、工作台、餐桌、炼金炉、神像、储物箱、售货机、时光扭蛋机、小推车和命运星象维修粒子由 `scripts/prepare_home_repair_effect_native.py` 沿所选 `884_156692` 的家具组件 `mRepairEffect` 引用恢复完整原粒子子树、序列化时长及 Windows 依赖，并核对原场景／默认房屋的家具槽位和 prefab 根节点变换。与其他模块的同源材质存在纹理 GUID 差异，因此使用独立材质 GUID 并保留各自闭包。APK／bundle／对象凭据、输入输出 SHA-256 和显式加载绑定见[家园维修粒子来源清单](home-repair-effect-native-source-manifest.json)；新增素材尚未进入完整素材快照，实际运行范围见[家园页](../../docs/features/city-and-home.md)。
+
+家园餐桌及售货机维修剧情的所选版本图、对话、角色、选项及中文文本由 `scripts/prepare_current_home_furniture_stories.py` 从官方 APK／已核验资源和同版代码解码，13 段语音由 `scripts/prepare_current_home_furniture_story_audio.py` 沿同版 Wwise 事件／动作／媒体关系提取并转换；[剧情来源清单](home-furniture-unlock-story-source-manifest.json)及[语音来源清单](home-furniture-unlock-story-audio-source-manifest.json)记录输入与输出哈希。新增素材尚未进入完整素材快照，运行与缺项范围见[家园页](../../docs/features/city-and-home.md)。
+
 六职业技能与依赖输入来源：`scripts/verify_first_promotion_skill_sources.py --write-source-manifest` 按所选 884 APK 优先解码，逐字段核对 104 项技能运行行及从显式实体引用追踪的 383 个 EC 实体；保留 APK／bundle／对象、原始载荷、formatter、表字段投影及运行输入哈希。空默认字段、11552 的原驱散排除名单、24083 的所选字段差异和 `DamageDisperseStatusCfg`／`GameCharacterType` 原码、适配输出身份见[六职业技能来源](battle-rules/first-promotion-source-manifest.json)；不改写历史配置或哈希，没有新增美术载荷。实现和实际验证范围仅在[技能页](../../docs/features/skills.md)维护。
 
 连锁命中输入来源：所选 `884_156692` 的原 `FightHitChainedComponent`／`Info`、基类配置及 `MyFightHitChained` 反编译代码，与保留历史身份的 `854_156383` 战斗／技能运行载荷分别记录；原程序集、代码、配置、迁移入口和工具哈希见[连锁命中来源](battle-rules/chained-hits-source-manifest.json)。继续使用既有原命中 prefab 与连锁图，没有新增或替换美术载荷；服务器下一跳选敌缺口及用户确认的单机规则见[术士技能](../../docs/features/skills-warlock.md#rank-2)。
 
-家园维修原生界面来源：`scripts/prepare_home_repair_native.py` 按所选 `884_156692` 的 APK 优先顺序及已校验云端载荷，恢复 `FurnitureRepairDialog`、`FurnitureRepairedNotifyDialog`、`PlayerPropItemVariant` 和 13 个官方家具图标的完整原生层级、序列化字段及依赖闭包；原窗口脚本、`HomeSettings`、家具／挂机表和中文语言均核对同版输入。原生空控制器保持原无状态结构，Spine 二进制逐字节与原对象核验；共享资产按 GUID 与原生内容核对后复用，存在转换差异的控制器使用独立 GUID。APK／bundle／对象凭据、当前客户端与共享代码、转换器、原生导出及输入输出 SHA-256 见[家园维修界面来源清单](home-repair-native-source-manifest.json)。背景模糊遮罩与材质复用[同版伙伴窗口来源](partner-friendship-window-source-manifest.json)，保持其独立来源记录。新增素材尚未进入完整素材快照；当前实现和验证范围只在[家园页](../../docs/features/city-and-home.md)维护。
-
 吸血公式输入来源：`scripts/prepare_battle_suck_hp_sources.py` 从所选 `884_156692` 共享反编译代码提取 `BattleFormulaHandler` 的 `SuckHp`、`SuckHpByOnceHit`、`CalcCureAdd` 和 `ApplyCureAddSoftCap`，保留原 `BattleFormula.SuckHpInfo` 及角色／属性枚举；原码、既有运行属性／设置表与生成器 SHA-256 见[吸血公式来源](battle-rules/suck-hp-source-manifest.json)。测试只在内存编译原方法，不写入或替换官方素材；当前实现和验证范围仅在[技能页](../../docs/features/skills.md)维护。
 
-家园默认床铺、工作台、餐桌、炼金炉、神像、储物箱、售货机、时光扭蛋机、小推车和命运星象维修粒子由 `scripts/prepare_home_repair_effect_native.py` 沿所选 `884_156692` 的家具组件 `mRepairEffect` 引用恢复完整原粒子子树、序列化时长及 Windows 依赖，并核对原场景／默认房屋的家具槽位和 prefab 根节点变换。与其他模块的同源材质存在纹理 GUID 差异，因此使用独立材质 GUID 并保留各自闭包。APK／bundle／对象凭据、输入输出 SHA-256 和显式加载绑定见[家园维修粒子来源清单](home-repair-effect-native-source-manifest.json)；新增素材尚未进入完整素材快照，实际运行范围见[家园页](../../docs/features/city-and-home.md)。
-家园餐桌及售货机维修剧情的所选版本图、对话、角色、选项及中文文本由 `scripts/prepare_current_home_furniture_stories.py` 从官方 APK／已核验资源和同版代码解码，13 段语音由 `scripts/prepare_current_home_furniture_story_audio.py` 沿同版 Wwise 事件／动作／媒体关系提取并转换；[剧情来源清单](home-furniture-unlock-story-source-manifest.json)及[语音来源清单](home-furniture-unlock-story-audio-source-manifest.json)记录输入与输出哈希。新增素材尚未进入完整素材快照，运行与缺项范围见[家园页](../../docs/features/city-and-home.md)。
 家园底栏原生资源来源：`scripts/prepare_home_bottom_bar_native.py` 按所选 `884_156692` 的 APK 优先顺序恢复完整 `PublicBottomBar` prefab、原脚本字段与外部引用；控制器的原状态、条件、入口及过渡逐项与同版序列化运行常量核对，覆盖控制器按 Unity 原生引用类型绑定。男女头像使用原 AssetTable GUID 显式解析同版 Sprite 与贴图；原 Wwise 事件保持身份并转换为本地 PCM。提示图选择器所用图／节点身份独立绑定，关联原对象的完整字段、对象身份及摘要另存原始 JSON。APK／bundle／对象、官方脚本、转换器、原生导出、输入输出及复用资源 SHA-256 见[家园底栏来源清单](home-bottom-bar-native-source-manifest.json)。所选角色升级查询及原等级上限解析器的代码输入、当前配置载荷和本地适配摘要见[底栏角色查询来源清单](home-bottom-bar-player-source-manifest.json)。新增素材尚未进入完整素材快照；当前实现及验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
 
 当前家园配置与条件来源：`scripts/prepare_current_home_rules.py` 按所选 `884_156692` 的 APK 优先输入及原 Luban 构造器解码 26 张配置（含设施条件所需的 31 项职业基础记录，以及 `luban_map` 中 2039 条 `map_region`），保留原记录、条件对象及单条装潢结构；APK／bundle／对象、构造器、元数据、处理工具及输出 SHA-256 见[当前家园配置清单](home-rules-current-source-manifest.json)。`scripts/prepare_home_condition_runtime.py` 迁入同版条件方法、数据枢纽、比较与阶位转换，复用已核对的伙伴条件叶节点；原始文件／方法摘要、配置闭包、适配及输出 SHA-256 见[家园条件代码清单](home-condition-source-manifest.json)。 `scripts/prepare_home_condition_notifications.py` 另迁入所选条件监听器和有序玩家通知组；原方法、叶节点类型身份、共用枚举来源、适配与输出 SHA256 见[条件通知来源](home-condition-notifications-source-manifest.json)。`Resources/Home/OfficialCurrentHomeRuleAssetCatalog` 显式绑定当前载荷，未改写历史家园载荷或预期哈希；新增载荷尚未进入完整素材快照。当前接入与验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
@@ -937,12 +939,13 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 24072 来源：`scripts/prepare_battle_status_life_reduction_sources.py` 按 APK 优先核对所选 884 的 24072／25112／10712／11142 实体组件，校验原共享组件、参数说明、标签过滤器及空客户端处理器。输入版本、bundle／对象凭据与反编译文件 SHA256 见[寿命扣减来源清单](battle-rules/status-life-reduction-source-manifest.json)；规则与验证范围仅在[技能页](../../docs/features/skills.md)维护。
 
-家园场景 UI 指引来源：`prepare_home_scene_ui_runtime.py` 以所选 `884_156692` 的完整依赖反编译结果迁入原镜头指引、拍照显隐和淡出代码，并核验 MessagePipe 取消对象的三段 AOT 指令及 BCL 调用目标；代码／程序集／AOT 输入与输出 SHA256 见[场景 UI 代码来源](home-scene-ui-runtime-source-manifest.json)。`prepare_home_scene_ui_native.py` 按 APK 优先流程恢复原 MainCanvas 的完整 Guider 子树；CAB／PathID、105 个原对象、脚本绑定、粒子／网格／材质、声音事件到 PCM 及 Windows 转换见[场景 UI 原生来源](home-scene-ui-native-source-manifest.json)。`prepare_home_scene_ui_validation.py` 按 GUID 与内容复用已有依赖，仅对零长度网格流的空路径作 null／空字符串等价核验；新增载荷位于 `unity/Assets/Official/Home/UI/SceneGuider/` 并由 prefab 显式序列化绑定，尚未进入完整素材快照。实现及验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
 25045 来源：`scripts/prepare_battle_status_hit_scope_sources.py` 按 APK 优先核对所选 884 的 25045／11580／11581／11582 原实体组件，校验原共享组件、参数说明及空客户端处理器。输入版本、bundle／对象凭据与原码 SHA256 见[火命中范围来源清单](battle-rules/status-hit-scope-source-manifest.json)；规则和验证范围仅在[技能页](../../docs/features/skills.md)维护。
 
 25031 来源：`scripts/prepare_battle_dark_hit_sources.py` 按 APK 优先核对所选 884 的 25031／24222 原实体组件，校验原共享组件、命中源与状态目标配置及空客户端处理器。输入版本、bundle／对象凭据与五个原码 SHA256 见[暗命中来源清单](battle-rules/dark-hit-source-manifest.json)；规则和验证范围仅在[技能页](../../docs/features/skills.md)维护。
 
 25023 来源：`scripts/prepare_battle_hit_custom_cure_sources.py` 按 APK 优先解码并核对所选 884 的 25023／10520／10521／10028 实体组件及五个原码输入。原包、bundle／对象凭据、完整字段及 SHA256 见[吸血事件与自身治疗链来源](battle-rules/hit-custom-cure-source-manifest.json)；10028 在所选版本新增的空 `DisperseStatus.ExcludeCharacterTypes` 与运行时历史 854 输入的字段差异显式记录，未修改历史载荷或预期哈希。原公式身份仍见[吸血公式来源](battle-rules/suck-hp-source-manifest.json)，规则与验证范围仅在[技能页](../../docs/features/skills.md)维护。
+
+家园场景 UI 指引来源：`prepare_home_scene_ui_runtime.py` 以所选 `884_156692` 的完整依赖反编译结果迁入原镜头指引、拍照显隐和淡出代码，并核验 MessagePipe 取消对象的三段 AOT 指令及 BCL 调用目标；代码／程序集／AOT 输入与输出 SHA256 见[场景 UI 代码来源](home-scene-ui-runtime-source-manifest.json)。`prepare_home_scene_ui_native.py` 按 APK 优先流程恢复原 MainCanvas 的完整 Guider 子树；CAB／PathID、105 个原对象、脚本绑定、粒子／网格／材质、声音事件到 PCM 及 Windows 转换见[场景 UI 原生来源](home-scene-ui-native-source-manifest.json)。`prepare_home_scene_ui_validation.py` 按 GUID 与内容复用已有依赖，仅对零长度网格流的空路径作 null／空字符串等价核验；新增载荷位于 `unity/Assets/Official/Home/UI/SceneGuider/` 并由 prefab 显式序列化绑定，尚未进入完整素材快照。实现及验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
 
 25027 来源：`scripts/prepare_battle_move_scope_sources.py` 按 APK 优先核对所选 884 的 25027／11630／11631／11632／3320 完整实体组件，并核验原共享组件、空客户端处理器与角色小跳绑定。输入版本、实际 bundle／对象、五格原概率及四个原码 SHA256 见[移动灼烧来源清单](battle-rules/move-scope-source-manifest.json)；规则及验证范围仅在[技能页](../../docs/features/skills.md)维护。
 
@@ -1045,13 +1048,13 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 新角色初心者位阶初始化来源：所选 `884_156692` 的 `Common.SubRank`／`Common.Rank` 枚举、`SystemLevelLimitInfoParser` 与经验配置定义有效初心者数值及等级上限；新档初始位阶 1 由用户确认，服务器创建初值不作官方来源声称。输入、创建代码与验证夹具哈希见 [家园真实经验接线来源](home-experience-profile-source-manifest.json)。重新运行原经验规则提取器后，生成代码与配置的输出哈希全部保持一致。
 
+家园玩家状态记录来源：所选 `884_156692` 的 `PlayerStatusEffectData`、`PlayerStatusEffectDataWrap`、`PlayerStatusEffectManager` 与状态／作用域／词条 Luban 构造器；`scripts/prepare_home_player_status.py` 从经所选索引核对的 APK 配置包提取全部记录，保留 APK 与所选版本的独立来源。原始输入、CAB／PathID、二进制配置与迁移输出 SHA256 见 [home-player-status-source-manifest.json](home-player-status-source-manifest.json)。未新增图像或素材快照；实现、差异及实际验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
+
 公共战斗持续状态的官方 `MyFightStatus`／`MyAction` 生命周期、既有状态与 3204 模型资源凭据，以及模型重建接线 SHA-256 见[状态与模型生命周期来源](battle-animation/status-model-lifecycle-source-manifest.json)，生成入口为 `scripts/record_battle_status_model_sources.py`。本项复用既有原生资产，未改写美术载荷；实现及验证范围见[公共战斗页](../../docs/features/battle-execution.md)。
 
 公共战斗原状态伤害公式的 884 共享代码与原逻辑处理器配置、运行属性表、提取程序及实现／验证身份见[状态伤害公式来源](battle-rules/status-damage-source-manifest.json)，生成入口为 `scripts/prepare_battle_status_damage_sources.py`。原始输入使用原字节哈希；新增代码与验证使用明确标记的 CRLF → LF 文本哈希。此项不转换或替换美术载荷；当前实现和验证范围见[公共战斗](../../docs/features/battle-execution.md)。
 
 公共战斗 `FightStatusDamageProcessNoIndependentMultiplierComponent` 的 884 组件声明、单机适配及双实例回归见[状态伤害处理来源](battle-rules/status-damage-process-source-manifest.json)。APK 只提供共享组件和客户端空代理，服务端合并规则缺失；本地适配明确保留该差异，配置输入仍使用 `battle-rules.json` 的原始哈希。
-
-家园玩家状态记录来源：所选 `884_156692` 的 `PlayerStatusEffectData`、`PlayerStatusEffectDataWrap`、`PlayerStatusEffectManager` 与状态／作用域／词条 Luban 构造器；`scripts/prepare_home_player_status.py` 从经所选索引核对的 APK 配置包提取全部记录，保留 APK 与所选版本的独立来源。原始输入、CAB／PathID、二进制配置与迁移输出 SHA256 见 [home-player-status-source-manifest.json](home-player-status-source-manifest.json)。未新增图像或素材快照；实现、差异及实际验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
 
 家园无赐福属性来源：所选 884_156692 的 NoBlessPlayerInfoProvider、SystemLevelLimitInfoParser、EquipResonanceInfoParser 及古遗物／幻兽 Luban 配置；scripts/prepare_home_no_bless_rules.py 提取原始等级、共鸣、古遗物、幻兽和属性曲线，运行时由 OfflineHomeNoBlessConfiguration 显式加载。原始输入、输出与 SHA256 见 [home-no-bless-rules-source-manifest.json](home-no-bless-rules-source-manifest.json)。实现、单机差异及验证范围仅在[家园页](../../docs/features/city-and-home.md)维护。
 
@@ -1063,14 +1066,28 @@ Windows 构建额外交付固定 Unity Mono 的原 `System.Memory` 类型转发�
 
 家园共鸣记录来源：原 `PlayerData` 已激活字段与 `EquipResonanceInfoParser`、装备及家园各自所选配置、共享属性源和存档接线的 SHA-256 见[共鸣记录清单](home-resonance-profile-source-manifest.json)。未转换美术载荷；实现与验证范围在[装备页](../../docs/features/equipment.md)维护。
 
+家园剧情选项来源：所选 `884_156692` 的 `OptionTalkDialog` 原 `OptionSlots` 子树、相关客户端组件、动态箭头与 `Main_Cursor_Normal` 音效，经 `scripts/prepare_home_story_option_code.py`、`scripts/prepare_home_story_option_native.py` 恢复，并由 `scripts/install_home_story_options.py` 登记显式目录 `Resources/Home/HomeStoryOptionAssets`。源对象、依赖、代码端口和输入输出 SHA-256 分别见[选项代码清单](home-story-option-code-source-manifest.json)与[选项原生清单](home-story-option-native-source-manifest.json)；新增素材尚未生成完整快照，功能及验证范围在[家园页](../../docs/features/city-and-home.md)维护。
+
+家园剧情肖像来源：所选 `884_156692` 的 `Npc_Portrait_8402`／`Npc_Portrait_8411` 原 prefab、`PortraitFace` 类及所引用 Sprite 代理，经 `scripts/prepare_home_story_portrait_code.py`、`scripts/prepare_home_story_portrait_native.py` 恢复，并由 `scripts/install_home_story_portraits.py` 登记显式目录 `Resources/Home/HomeStoryPortraitAssets`。源对象、资源代理、代码端口和输入输出 SHA-256 见[肖像代码清单](home-story-portrait-code-source-manifest.json)与[肖像原生清单](home-story-portrait-native-source-manifest.json)；新增素材尚未生成完整快照，功能及验证范围在[家园页](../../docs/features/city-and-home.md)维护。
+
+家园剧情人物动画来源：所选 `884_156692` 的 `OptionTalkDialog/CharacterGroup`、左右人物动画和原 `TalkDialogCharacter`／切换组件，经 `scripts/prepare_home_story_character_code.py`、`scripts/prepare_home_story_character_native.py` 恢复，并由 `scripts/install_home_story_characters.py` 登记显式目录 `Resources/Home/HomeStoryCharacterAssets`。源对象、动画、代码端口和输入输出 SHA-256 见[人物动画代码清单](home-story-character-code-source-manifest.json)与[人物动画原生清单](home-story-character-native-source-manifest.json)；新增素材尚未生成完整快照，功能及验证范围在[家园页](../../docs/features/city-and-home.md)维护。
+
+家园剧情设置来源：`scripts/prepare_home_story_settings.py` 从所选 `884_156692` 的官方 `StorySettings` 提取旁白、语音及对话镜头字段，运行载荷为 `Resources/Home/story-settings`；对象、程序集、转换及输入输出 SHA-256 见[剧情设置清单](home-story-settings-source-manifest.json)。本次未生成完整素材快照，功能及验证范围在[家园页](../../docs/features/city-and-home.md)维护。
+
+家园完整剧情窗口来源：所选 `884_156692` 的 `OptionTalkDialog` 原 prefab、`TalkDialog`／`OptionTalkDialogPanel`、窗口显示动画及原声音，经 `scripts/prepare_home_story_dialog_code.py`、`scripts/prepare_home_story_dialog_native.py` 恢复；`scripts/prepare_home_story_mask_native.py` 按原 `WindowContainer.MaskList` 恢复对话使用的透明遮罩。`scripts/install_home_story_dialog.py` 登记显式目录 `Resources/Home/HomeStoryDialogAssets`，绑定窗口、遮罩、同版剧情文本与语音，原键查询及窗口宿主由 `Offline/HomeStoryDialog` 适配。窗口末帧时序的原 `PopupWindow.PlayPlayable`、共享适配及验证夹具也在[对话原生清单](home-story-dialog-native-source-manifest.json)登记哈希；代码端口、源对象、资源依赖及输入输出见[对话代码清单](home-story-dialog-code-source-manifest.json)、原生清单和[遮罩清单](home-story-mask-native-source-manifest.json)。新增素材尚未生成完整快照，功能及验证范围在[家园页](../../docs/features/city-and-home.md)维护。
+
+餐桌维修剧情的未修复碰撞子树由 `scripts/prepare_home_story_furniture_collider.py` 按所选版本 APK 的原 `DiningTable/unrepaired/touch`、原家园和房屋挂点链提取；原对象身份、碰撞参数、父链、代码依据、输入输出哈希及显式目录 `Resources/Home/HomeStoryFurnitureColliderAssets` 见[碰撞来源清单](home-story-furniture-collider-source-manifest.json)。新增素材尚未生成完整快照，运行范围见[家园页](../../docs/features/city-and-home.md)。
+
+家园相机由 `scripts/prepare_home_camera_runtime.py`、`scripts/prepare_home_camera_native.py` 和 `scripts/prepare_home_main_camera_native.py` 从所选 `884_156692` 官方程序集及主场景恢复，`scripts/install_home_camera_native.py` 绑定 Windows Unity 组件并登记 `Resources/Home/HomeCameraAssets`。程序集及反编译源码哈希见[相机代码清单](home-camera-runtime-source-manifest.json)，原场景对象、父级变换、相机设置、两套 Bloom 配置、Wwise 组件及输出哈希见[相机原生清单](home-camera-native-source-manifest.json)。主相机渲染栈原本指向场景中的 UI 相机，实例化时须按清单显式连接；新增素材尚未生成完整快照，运行范围见[家园页](../../docs/features/city-and-home.md)。
+
 创角试穿条目原始 prefab 与 `ItemIconConfig`：固定输入及 PNG／布局输出哈希见 [试穿模板清单](character-creation/trial-ui-source-manifest.json)，由 `scripts/prepare_creation_trial_ui.py` 从当前 APK 提取，Unity 原生绑定由 `CharacterCreationUiTools.RestoreTrialIcons` 生成。
 
 创角发型与标题绑定：`scripts/inspect_creation_appearance_bindings.py` 从当前 APK 提取 `TypeSelectItem`、`UIToggleObject` 与 `TMPEffect` 的原字段、指针目标及对象 SHA-256；输入凭据见[外观绑定清单](character-creation/appearance-bindings-source-manifest.json)。未新增美术载荷，功能与验证范围见[创角页](../../docs/features/character-creation.md)。
 
 主线怪物奖励输入：`scripts/prepare_mainline_monster_rewards.py` 从所选官方版本提取阶段、怪物奖励组、奖励规则、复合条件依赖、等级倍率及 261 个阶段／怪物随机奖励包，并核对共享目录中的 253 个怪物奖励包；输入、解码依据和输出哈希见[怪物奖励来源清单](official-map/mainline-monster-rewards-source-manifest.json)。目录 `Resources/World/Mainline/monster-reward-inputs` 由地图怪物胜利事务加载，未生成完整素材快照。
 
+主线碾压提示资产：`scripts/prepare_mainline_fast_kill_tip.py` 从当前所选 `884_156692` 官方包提取 `StageFastKillTip`、`StageCombinate`、两段原始渐变动画及怪物展示雷达挂点祖先变换。复用图标和材质前核对原始对象字节，输入对象、依赖及输出哈希见[碾压提示来源清单](official-map/mainline-fast-kill-tip-source-manifest.json)；输出位于 `Assets/Official/World/Mainline/FastKillTip`，由 `Resources/World/Mainline/fast-kill-tip` 显式绑定，未生成完整素材快照。
+
 主线怪物等级绑定：`scripts/prepare_mainline_monster_levels.py` 从所选版本提取地图怪物放置点的等级组件及公开／私有等级类型，输入、反编译依据和输出哈希见[怪物等级来源清单](official-map/mainline-monster-levels-source-manifest.json)。数据通过 `Resources/World/Mainline/monster-levels` 加载，尚未生成完整素材快照。
 
 职业技能图标本地目录与脚本端口的输出哈希见 `profession-ui/info-panels-source-manifest.json`、`profession-ui/item-components-source-manifest.json`、`profession-ui/item-configs-source-manifest.json` 和 `profession-ui/skill-icons-source-manifest.json`；所选原包输入与原始提取载荷保持各自来源身份。
-
-主线碾压提示资产：`scripts/prepare_mainline_fast_kill_tip.py` 从当前所选 `884_156692` 官方包提取 `StageFastKillTip`、`StageCombinate`、两段原始渐变动画及怪物展示雷达挂点祖先变换。复用图标和材质前核对原始对象字节，输入对象、依赖及输出哈希见[碾压提示来源清单](official-map/mainline-fast-kill-tip-source-manifest.json)；输出位于 `Assets/Official/World/Mainline/FastKillTip`，由 `Resources/World/Mainline/fast-kill-tip` 显式绑定，未生成完整素材快照。

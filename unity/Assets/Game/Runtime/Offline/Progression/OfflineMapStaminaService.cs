@@ -54,7 +54,7 @@ namespace Zjcs.Offline.Progression
             this.session = session ?? throw new ArgumentNullException(nameof(session));
             TextAsset asset = Resources.Load<TextAsset>("World/Mainline/interactions");
             data = asset == null ? null : JsonUtility.FromJson<OfficialMapStaminaData>(asset.text);
-            if (data?.manifest != "854_156383" || data.staminaEntities?.Length != 4)
+            if (data?.manifest != "884_156692" || data.staminaEntities?.Length != 4)
                 throw new InvalidDataException("Official map stamina rules are unbound.");
         }
 

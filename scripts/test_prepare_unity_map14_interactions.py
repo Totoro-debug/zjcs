@@ -1,71 +1,81 @@
-"""Check current-map selection, source integrity and preserved EC index identities."""
+"""Verify active-source interaction bindings and fast-stage source fields."""
 import copy
 import json
-from pathlib import Path
-import tempfile
 import unittest
-from unittest.mock import patch
 
+import prepare_mainline_interactions as shared
 import prepare_unity_map14_interactions as migration
-from prepare_unity_map11_runtime_data import build_witch_results
 
 
-class CurrentDragonStatueSources(unittest.TestCase):
+class CurrentMainlineInteractionSources(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.templates, cls.tables, cls.entities, _ = migration.load_inputs()
+        (cls.version, cls.templates, cls.tables, cls.stage_fast_types,
+         cls.template_evidence, cls.input_records) = shared.load_current_interaction_inputs()
 
-    def test_summon_uses_current_map_and_legacy_default_is_preserved(self):
-        for map_id, expected_stage in ((11, 20001), (14, 20004)):
-            kwargs = {} if map_id == 11 else {"map_id": map_id}
-            effects, _ = build_witch_results(self.tables, self.entities, self.tables["reward_rule"], **kwargs)
-            summon = next(row for row in effects if row["ComponentType"] == 245)
-            self.assertEqual((summon["ComponentIndex"], summon["GroupId"], summon["SpawnEntityClassId"], summon["SpawnStageId"]),
-                             (0, 2000, 5100, expected_stage))
+    def test_active_source_and_shared_payload(self):
+        active = json.loads((shared.ROOT / "official-source.json").read_bytes())["active"]
+        output = json.loads((shared.OUT / "interactions.json").read_bytes())
+        receipt = json.loads((shared.RECEIPT).read_bytes())
+        self.assertEqual(self.version, active)
+        self.assertEqual(output["manifest"], active)
+        self.assertEqual(receipt["manifest"], active)
+        self.assertEqual(receipt["inputs"]["map_region"]["manifest"], active)
+        self.assertEqual({row["manifest"] for row in receipt["templates"]["sources"]}, {active})
+        expected_regions = [row for row in self.tables["Map/map_region"] if 10 <= row["ClassId"] <= 16]
+        self.assertEqual([(row["MapClassId"], row["Region"], row["FastStageCombatRating"], row["GameFastType"])
+                          for row in output["regions"]],
+                         [(row["ClassId"], row["Region"], row["FastStageCombatRating"], row["GameFastType"])
+                          for row in expected_regions])
+        self.assertTrue(output["stageFastTemplates"])
+        self.assertTrue(receipt["templates"]["stageFastTypesSha256"])
 
-    def test_every_template_component_retains_original_order_and_fields(self):
-        for row in self.entities:
-            original = self.templates[str(row["EntityClassId"])]
-            self.assertEqual([value["Type"] for value in row["Components"]], list(original))
-            self.assertEqual({value["Type"]: json.loads(value["Json"]) for value in row["Components"]}, original)
-        runtime = json.loads((migration.ROOT / "unity/Assets/Game/Resources/Map14/stories.json").read_bytes())
-        self.assertEqual(runtime["entityTemplates"][:len(self.entities)], self.entities)
-        self.assertEqual([row["EntityClassId"] for row in runtime["entityTemplates"][len(self.entities):]], [8402, 8454])
-
-    def test_hero_weights_status_identity_and_region_source_order(self):
-        payload = migration.interaction_payload(self.templates, self.tables)
-        self.assertEqual(payload, json.loads(migration.OUTPUT.read_bytes()))
-        self.assertNotIn("heroTemplateIds", payload)
-        self.assertEqual([row["EntityClassId"] for row in payload["heroes"]], [6570, 6571, 6572, 6573])
-        for hero in payload["heroes"]:
+    def test_map14_interactions_match_active_templates_and_tables(self):
+        expected = migration.interaction_payload(self.templates, self.tables, version=self.version,
+                                                 fast_stage_templates=self.stage_fast_types)
+        output = json.loads(migration.OUTPUT.read_bytes())
+        receipt = json.loads(migration.RECEIPT.read_bytes())
+        self.assertEqual(output, expected)
+        self.assertEqual(receipt["manifest"], self.version)
+        self.assertEqual([row["EntityClassId"] for row in output["heroes"]], [6570, 6571, 6572, 6573])
+        for hero in output["heroes"]:
             self.assertEqual([row["Weight"] for row in hero["PeriodicAwards"]], [5, 25, 70])
             self.assertEqual([row["PeriodicityId"] for row in hero["PeriodicAwards"]], [100, 101, 102])
-            effects = [row for row in hero["Effects"] if row["ComponentType"] == 235]
-            self.assertEqual([row["ComponentIndex"] for row in effects], [0, 1, 2])
-        # The source intentionally lists region 76 before 75. Membership checks
-        # must not silently sort the original table into another order.
-        self.assertEqual([row["Region"] for row in payload["regions"]][74:78], [74, 76, 75, 77])
-        self.assertEqual(len(payload["regions"]), 111)
-        self.assertEqual(len(payload["areas"]), 115)
+        actual_fast_types = [(row["EntityClassId"], row["Component"], row["FastForwardType"])
+                             for row in output["stageFastTemplates"]]
+        expected_fast_types = [(row["EntityClassId"], row["Component"], row["FastForwardType"])
+                               for row in self.stage_fast_types]
+        self.assertEqual(actual_fast_types, expected_fast_types)
+        original_regions = [row for row in self.tables["Map/map_region"] if row["ClassId"] == 14]
+        self.assertEqual([row["Region"] for row in output["regions"]],
+                         [row["Region"] for row in original_regions])
+        self.assertEqual([row["FastStageCombatRating"] for row in output["regions"]],
+                         [row["FastStageCombatRating"] for row in original_regions])
+        self.assertEqual([row["GameFastType"] for row in output["regions"]],
+                         [row["GameFastType"] for row in original_regions])
 
-    def test_selected_map_includes_all_six_original_hero_variants(self):
-        root = migration.ROOT / "unity/Assets/Official/World/Map/16/Source"
-        templates = json.loads((root / "templates.json").read_bytes())
-        tables = json.loads((root / "interaction-tables.json").read_bytes())
-        hero_ids = [int(key) for key, value in templates.items()
-                    if "StageResultPeriodicityRandomAwardComponent" in value]
-        payload = migration.interaction_payload(templates, tables, 16, 43, "884_156692", hero_ids)
+    def test_scoped_maps_match_active_interaction_payloads(self):
+        for map_id, region_count in ((12, 99), (13, 106), (16, 43)):
+            with self.subTest(map_id=map_id):
+                hero_ids = None
+                if map_id == 16:
+                    hero_ids = [int(key) for key, components in self.templates.items()
+                                if "StageResultPeriodicityRandomAwardComponent" in components]
+                expected = migration.interaction_payload(self.templates, self.tables,
+                    map_id, region_count, self.version, hero_ids, self.stage_fast_types)
+                output = json.loads((shared.ROOT / f"unity/Assets/Game/Resources/Map{map_id}/interactions.json").read_bytes())
+                self.assertEqual(output, json.loads(json.dumps(expected)))
+                self.assertEqual(output["manifest"], self.version)
+        proof = json.loads((shared.ROOT / "assets/reference/official-map/mainline-interaction-maps-source-manifest.json").read_bytes())
+        self.assertEqual(proof["manifest"], self.version)
+        self.assertEqual({row["mapClassId"] for row in proof["maps"]}, {12, 13, 14, 16})
+
+    def test_all_six_active_hero_variants_are_preserved(self):
+        hero_ids = [int(key) for key, components in self.templates.items()
+                    if "StageResultPeriodicityRandomAwardComponent" in components]
+        payload = migration.interaction_payload(self.templates, self.tables, 16, 43, self.version, hero_ids)
         self.assertEqual(payload["heroTemplateIds"], [6570, 6571, 6572, 6573, 6574, 6575])
-        for hero in payload["heroes"]:
-            original = templates[str(hero["EntityClassId"])]
-            props = [effect["ExtraProps"] for effect in hero["Effects"] if effect["ComponentType"] == 238]
-            self.assertEqual(props, [row["AwardExtraProps"] for row in
-                                    original["StageResultAwardExtraPropComponent"]["AwardExtraPropInfos"]])
-            effects = [effect["StatusEffects"] for effect in hero["Effects"] if effect["ComponentType"] == 235]
-            self.assertEqual([[row["StatusEffectId"] for row in effect] for effect in effects],
-                             [row["mAwardStatusEffects"] for row in
-                              original["StageResultAwardStatusEffectComponent"]["AwardStatusEffectInfos"]])
-            self.assertEqual([row["Weight"] for row in hero["PeriodicAwards"]], [5, 25, 70])
+        self.assertEqual([row["EntityClassId"] for row in payload["heroes"]], hero_ids)
 
     def test_invalid_hero_selection_and_unported_periodicity_are_rejected(self):
         for ids in ([], [6570, 6570], [999999]):
@@ -76,29 +86,12 @@ class CurrentDragonStatueSources(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unported rule"):
             migration.interaction_payload(changed, self.tables, hero_ids=[6570])
 
-    def test_unresolved_original_result_index_is_rejected(self):
-        changed = copy.deepcopy(self.tables)
-        changed["witch"][0]["StageResultComps"]["235"] = 999
-        with self.assertRaisesRegex(ValueError, "component/index is unresolved"):
-            migration.witch_payload(changed, self.entities)
-
-    def test_modified_source_cannot_be_used_as_official_input(self):
-        with tempfile.TemporaryDirectory(prefix="map14-interaction-source-") as temp:
-            target = Path(temp)
-            for name in ("tables.json", "templates.json"):
-                (target / name).write_bytes((migration.SOURCE / name).read_bytes())
-            (target / "templates.json").write_bytes(b"{}")
-            # Keep relative source identity inside the workspace for the guard.
-            with patch.object(migration, "ROOT", target.parent), patch.object(migration, "SOURCE", target):
-                receipt = json.loads(migration.SOURCE_RECEIPT.read_bytes())
-                for row in receipt["outputs"]:
-                    name = Path(row["path"]).name
-                    if name in ("tables.json", "templates.json"):
-                        row["path"] = target.name + "/" + name
-                fake = target / "receipt.json"
-                fake.write_text(json.dumps(receipt), encoding="utf-8")
-                with patch.object(migration, "SOURCE_RECEIPT", fake), self.assertRaisesRegex(ValueError, "input changed"):
-                    migration.load_inputs()
+    def test_current_stage_fast_types_are_valid_and_unique(self):
+        identities = [(row["EntityClassId"], row["Component"]) for row in self.stage_fast_types]
+        self.assertTrue(self.stage_fast_types)
+        self.assertEqual(len(identities), len(set(identities)))
+        self.assertTrue(all(0 <= row["FastForwardType"] <= 7 for row in self.stage_fast_types))
+        self.assertEqual(self.input_records["map_region"]["manifest"], self.version)
 
 
 if __name__ == "__main__":

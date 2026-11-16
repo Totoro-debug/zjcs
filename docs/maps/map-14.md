@@ -36,6 +36,8 @@
 
 ## 代码与资源入口
 
+- 道路门规则定义：[OfficialMap14RoadblockRules.cs](../../unity/Assets/Game/Runtime/Presentation/World/OfficialMap14RoadblockRules.cs) 保存五处放置标识、属性门槛、开放格偏移及覆盖层标识；当前运行接线与已完成范围仍以 [NPC邀请](../features/npc-assistance.md) 为准，本次仅纳入既有规则文件，不新增完成结论。
+
 - 地图定义及主线宿主：[OfficialMainlineMapProfile.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs)、[OfficialMainlineMapRuntime.cs](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs)。
 - 通用地图／战斗规则：[主线地图公共模块](../features/world-map.md#主线地图公共模块)、[战斗执行](../features/battle-execution.md)。
 - 来源：[Map14 来源清单](../../assets/reference/official-map/map14-source-manifest.json)、[实体目录来源](../../assets/reference/official-map/map14-entity-catalog-source-manifest.json)、[剧情来源](../../assets/reference/official-map/map14-story-runtime-source-manifest.json)、[机关来源](../../assets/reference/official-map/map14-puzzles-source-manifest.json)。

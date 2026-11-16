@@ -56,6 +56,8 @@ Map11 的家园资源图标按原 Sprite 对象绑定，来源与显式加载路
 
 ## 完整还原部分
 
+当前 `Resources/Map11/UI` 资产包含窗口子树与对象引用重建、部分锚点和布局字段调整、小地图标记材质绑定，以及 `DynamicItems` 的品质星级图片目录；34 张 UI 图片的导入元数据改为 Sprite，并调整透明边缘、mipmap、包裹及压缩设置。原输入凭据仍见 `unity/Assets/Official/World/Map/11/UI/source-manifest.json`，不以本地序列化结果改写原包预期哈希。小地图来源检查目前有 46 处预期哈希不一致，涉及共享脚本、代码及程序集定义；这些失败文件与 HEAD 内容一致，保留既有问题。当前批次未重新完成 UI Play Mode 与 Windows Player 验证，不据此扩大地图完成范围。
+
 正式入口的原世界加载、原玩家与放置实体状态同步及退出释放统一使用[主线地图公共模块](../features/world-map.md#主线地图公共模块)。该公共接线不代表本图完整表现与交互已完成。未验证跨图快照窗口或 Windows Player，整图状态仍为未完成。
 
 本图完整小地图根按所选884版数据加载，包含531个原序列化对象、原接缝线与地区说明引用；本图数据采用240×180导航及77个地区。共享生命周期和状态适配见[主线地图公共模块](../features/world-map.md#主线地图公共模块)。正式离线响应、白雾／标记、HUD输入和地图存档仍待接通。来源见[当前完整小地图根](../../assets/reference/official-map/map11-current-minimap-root-source-manifest.json)。

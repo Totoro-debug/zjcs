@@ -14,6 +14,8 @@
 
 ## 完整还原部分
 
+Windows 工程当前使用 Mono 脚本后端，编辑器关闭异步 shader 编译；部分家园／副本 shader 序列化资产的 `m_CodeHash` 为零，家园升级及伙伴卡片的动态字体图集含本地序列化变化。静态工程检查通过（152,622 个 GUID）。该批次仅保存当前工程状态，未重新验证全部受影响画面；主工程由其他验证进程占用，Unity 导入／编译、`ProjectTools.Validate` 及相关 Play Mode 本次未重跑。来源预期哈希保持原值，不能把这些派生变化当作已核验的原始素材更新。
+
 - `WorldPopupWindow.SetCanvasSortingOrder` 按官方调用顺序更新画布排序并发送变更通知；`SortingOrderSetter` 随通知更新子节点排序。
 - 通用界面转换保留原 prefab 层级、组件字段、动画曲线和资源引用；Windows 运行时通过本地资源目录加载。
 

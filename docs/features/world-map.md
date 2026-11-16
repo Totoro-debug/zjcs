@@ -88,6 +88,8 @@
 
 ## 完整还原部分
 
+主线交互生成器 `scripts/prepare_unity_map14_interactions.py` 使用 `official-source.json` 当前选定版本及共享输入读取器，保留地区顺序、雕像结果组件索引与周期奖励权重，并输出 `FastStageCombatRating`、`GameFastType` 和 `stageFastTemplates`。雕像等级属性与地图体力服务的载荷版本校验同步为 `884_156692`。对应 6 项测试已通过，覆盖当前版本、地图 12／13／14／16 载荷、六种雕像及快速类型范围；此范围不代替地图界面与存档的实际运行验证。
+
 Unity 已建立地图数据模型与 `IWorldMapAssets.Load(int)` 资源接口。`OfficialMapNavigationView`、`OfficialMapPathfinder`、`OfficialMapGroundRules`、`OfficialMapExplorationProgress` 和 `OfficialMapProgressCalculator` 实现导航读取、A* 路径、地面规则、探索点累计与区域／地图进度计算。导航实现见 [OfficialMapPathfinder.cs](../../unity/Assets/Game/Runtime/Offline/World/OfficialMapPathfinder.cs)。相关代码位于 [`Runtime/Official/World`](../../unity/Assets/Game/Runtime/Official/World/) 和 [`Runtime/Offline/World`](../../unity/Assets/Game/Runtime/Offline/World/)。
 
 `WorldMapProgressCondition` 按是否指定地区分别检查单区或整图进度；整图进度汇总地区进度并按原最大值归一化，全部地区公开时增加原完成值。原进度节点达到配置百分比后由玩家手动领取，世界地图入口显示可领取红点。此进度与命运探寻、女神像激活分开处理。

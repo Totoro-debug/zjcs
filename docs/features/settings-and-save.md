@@ -36,6 +36,8 @@ Bloom 的0／25／50／100四档、反射及其他质量效果须恢复原 URP V
 
 ### 启动存档选择界面
 
+当前选档资源纳入 `PlanesListPanel`、`PlanesRoleItem`、四份 Animator Controller 与 `Font-24` 的本地序列化变化，包括子对象标识和引用重建；原来源凭据保持独立。此批资源未重新完成 Play Mode／Windows Player 的点击、画面及冷读检查，不能据序列化变化认定交互或视觉已验收。
+
 直接使用固定 `871_156598` 官方 APK 的 `PlanesListPanel`、`PlanesRoleItem` 与启动页模糊遮罩；保留原布局、字体、材质、页签动画和弹窗曲线。背景按 `WindowBlurMask` 流程捕获当前启动主题。
 
 迁移官方 `PlanesListPanel.InitShow / OnTabItemChange`、`PlanesInfoItemBase.Init`、`PlanesInfoItemWithRoleInfo.InitRoleInfo` 的视图分支，由本地槽位替代联网角色列表。已创建角色显示真实姓名、等级与当前属性计算的战力；头像复用原模型外观、染色、骨骼网格及 `PlayerPortraitSettings` 的100×120头照摄影、排除部位和 `home/idle_01` 姿势。未创建的槽位使用原默认头像，标注“继续创建”。损坏的主档使用原灰色状态标记；点击显示中文错误并保留文件。空列表和新建页复用原 `EmptyTip` 与原按钮。

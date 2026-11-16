@@ -20,7 +20,7 @@ namespace Zjcs.Offline.Progression
             {
                 var asset = Resources.Load<TextAsset>("World/Mainline/interactions");
                 var data = asset == null ? null : JsonUtility.FromJson<Data>(asset.text);
-                if (data?.manifest != "854_156383" || data.heroLevelProps?.Length != 500)
+                if (data?.manifest != "884_156692" || data.heroLevelProps?.Length != 500)
                     throw new InvalidDataException("Official hero statue LevelProp rows are unbound.");
                 rows = data.heroLevelProps.ToDictionary(value => value.Level,
                     value => value.Types.Select((type, index) => new { type, count = value.Values[index] })

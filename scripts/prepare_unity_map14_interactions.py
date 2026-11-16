@@ -1,58 +1,25 @@
-"""Bind current Dragon Country EC templates and original statue interaction data."""
+"""Bind Map14 interactions from the active local official source."""
 from __future__ import annotations
 
 import hashlib
-import inspect
 import json
 from pathlib import Path
 
 from prepare_unity_map13_story_runtime import json_meta, source_record, write_json
-from prepare_unity_map11_runtime_data import build_witch_results
+from prepare_mainline_interactions import load_current_interaction_inputs
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "unity/Assets/Official/World/Map/14/Source"
-SOURCE_RECEIPT = ROOT / "assets/reference/official-map/map14-source-manifest.json"
 OUTPUT = ROOT / "unity/Assets/Game/Resources/Map14/interactions.json"
 RECEIPT = ROOT / "assets/reference/official-map/map14-interactions-source-manifest.json"
-VERSION = "871_156598"
 
 
-def load_inputs():
-    receipt = json.loads(SOURCE_RECEIPT.read_bytes())
-    if receipt["manifest"] != VERSION or receipt["mapClassId"] != 14:
-        raise ValueError("Dragon Country interaction source version changed")
-    expected = {row["path"]: row["sha256"] for row in receipt["outputs"]}
-    paths = [SOURCE / name for name in ("templates.json", "tables.json")]
-    for path in paths:
-        if hashlib.sha256(path.read_bytes()).hexdigest() != expected[path.relative_to(ROOT).as_posix()]:
-            raise ValueError("Original Dragon Country interaction input changed: " + path.name)
-    templates, tables = (json.loads(path.read_bytes()) for path in paths)
-    if len(templates) != 169 or sum(len(value) for value in templates.values()) != 1483:
-        raise ValueError("Dragon Country original EC template closure changed")
-    # Keep the original component order and raw fields; stage result indices
-    # address these exact arrays inside each original component.
-    entities = [{"EntityClassId": int(key), "Components": [
-        {"Type": name, "Json": json.dumps(value, ensure_ascii=False, separators=(",", ":"))}
-        for name, value in components.items()]} for key, components in templates.items()]
-    return templates, tables, entities, paths
+def active_source_version():
+    return json.loads((ROOT / "official-source.json").read_bytes())["active"]
 
 
-def witch_payload(tables, entities):
-    effects, awards = build_witch_results(tables, entities, tables["reward_rule"], map_id=14)
-    infos = [{"ActiveCount": row["WitchActivedCount"], "StoryBookId": row["StoryBookId"],
-              "IsNextState": row["IsNextState"], "StageResults": [
-                  {"ComponentType": int(kind), "ComponentIndex": index}
-                  for kind, index in row["StageResultComps"].items()]} for row in tables["witch"]]
-    if [row["ActiveCount"] for row in infos] != list(range(14)):
-        raise ValueError("Original witch activation progression changed")
-    identities = {(row["ComponentType"], row["ComponentIndex"]) for row in effects}
-    if any((ref["ComponentType"], ref["ComponentIndex"]) not in identities
-           for row in infos + awards for ref in row["StageResults"]):
-        raise ValueError("Original witch result component/index is unresolved")
-    return dict(witchInfos=infos, witchResultEffects=effects, witchPeriodicityAwards=awards)
-
-
-def interaction_payload(templates, tables, map_id=14, region_count=111, version=VERSION, hero_ids=None):
+def interaction_payload(templates, tables, map_id=14, region_count=111, version=None, hero_ids=None,
+                       fast_stage_templates=None):
+    version = version or active_source_version()
     statuses = {row["ClassId"]: row for row in tables["status_effect"]}
     configured_heroes = None if hero_ids is None else list(hero_ids)
     selected_heroes = (6570, 6571, 6572, 6573) if configured_heroes is None else configured_heroes
@@ -96,52 +63,73 @@ def interaction_payload(templates, tables, map_id=14, region_count=111, version=
             raise ValueError("Original hero periodic result component/index is unresolved")
         heroes.append(dict(EntityClassId=entity_id, Effects=effects, PeriodicAwards=awards))
     regions = [dict(MapClassId=row["ClassId"], Region=row["Region"], Level=row["Level"],
-                    SubRank=row["SubRank"], ForbidExplore=row["ForbidExplore"], DropItems=row["DropItems"])
+                    SubRank=row["SubRank"], FastStageCombatRating=row["FastStageCombatRating"],
+                    GameFastType=row["GameFastType"], ForbidExplore=row["ForbidExplore"], DropItems=row["DropItems"])
                for row in tables["Map/map_region"] if row["ClassId"] == map_id]
     if sorted(row["Region"] for row in regions) != list(range(region_count)):
         raise ValueError("Original interaction regions changed for map " + str(map_id))
+    if fast_stage_templates is None:
+        stage_fast_templates = []
+        for entity_id, components in templates.items():
+            for component_type, value in components.items():
+                if not component_type.startswith("StageBeh") or not isinstance(value, dict) or "FastForwardType" not in value:
+                    continue
+                fast_type = int(value["FastForwardType"])
+                if fast_type < 0 or fast_type > 7:
+                    raise ValueError("Original FastForwardType is out of range: " + component_type)
+                stage_fast_templates.append(dict(EntityClassId=int(entity_id), Component=component_type,
+                                                 FastForwardType=fast_type))
+        stage_fast_templates.sort(key=lambda row: (row["EntityClassId"], row["Component"]))
+    else:
+        stage_fast_templates = [dict(row) for row in fast_stage_templates]
+        identities = [(row["EntityClassId"], row["Component"]) for row in stage_fast_templates]
+        if (any(row["FastForwardType"] < 0 or row["FastForwardType"] > 7 for row in stage_fast_templates)
+                or len(identities) != len(set(identities))):
+            raise ValueError("Current official FastForwardType template set is invalid")
     payload = dict(manifest=version, mapClassId=map_id, heroes=heroes,
                 parameters=[dict(EntityClassId=row["EntityClassId"], CompleteState=row["CompleteState"],
                                  PublicDefaultState=row["PublicDefaultState"], Progress=row["Progress"],
                                  CostItems=row["CostItems"] or []) for row in tables["Map/entity_extend_parameter"]],
-                regions=regions, areas=[row for row in tables["Map/map_area"] if row["ClassId"] == map_id])
+                regions=regions, areas=[row for row in tables["Map/map_area"] if row["ClassId"] == map_id],
+                stageFastTemplates=stage_fast_templates)
     if configured_heroes is not None:
         payload["heroTemplateIds"] = configured_heroes
     return payload
 
 
 def build():
-    templates, tables, entities, paths = load_inputs()
-    witch = witch_payload(tables, entities)
-    payload = interaction_payload(templates, tables)
+    version, templates, tables, stage_fast_types, template_evidence, table_inputs = load_current_interaction_inputs()
+    payload = interaction_payload(templates, tables, map_id=14, region_count=111, version=version,
+                                  fast_stage_templates=stage_fast_types)
     write_json(OUTPUT, payload)
     json_meta(OUTPUT)
-    code = ROOT / ".tools/source-packages/current" / VERSION / "official-code"
-    official = [code / "common-source/Common" / (name + ".cs") for name in (
-        "MapPeriodicityRandomAwardInteractionInfoParser", "MapEntityPeriodicityInteractionInfoPackParser",
-        "StageResultAwardExtraPropComponentInfo", "StageResultSpawnEntityComponentInfo", "WitchInfo")]
+    code = ROOT / ".tools/source-packages/current" / version / "official-code"
+    official = [code / relative for relative in (
+        "client-source/MapControllerEntityRadarTipFastKill.cs",
+        "client-source/MapWorldStageInteractionHandler.cs",
+        "common-source/MapUtils.cs",
+        "common-source/Common/MapStageFastForwardType.cs")]
     for path in official:
         if not path.is_file():
             raise FileNotFoundError("Original statue implementation needs decompilation: " + str(path))
-    receipt = dict(format=1, manifest=VERSION, mapClassId=14,
-        operation="Preserve current official hero effect component/index, ordered periodic weights, original costs and all Dragon Country region/area bindings. Resolve witch spawn against Map14 rather than another map.",
-        inputs=[source_record(path) for path in [SOURCE_RECEIPT, *paths, Path(__file__),
-            ROOT / "scripts/prepare_unity_map13_story_runtime.py",
-            ROOT / "scripts/prepare_mainline_interactions.py"]],
+    receipt = dict(format=1, manifest=version, mapClassId=14,
+        operation="Convert Map14 hero component/index bindings, ordered periodic weights, original costs, current FastForwardType templates, fast-stage thresholds, configured game fast types and all current Dragon Country region/area bindings.",
+        officialSource=source_record(ROOT / "official-source.json"),
+        inputs=dict(tables=table_inputs, templates=template_evidence),
         officialCode=[source_record(path) for path in official],
         runtimeBindings=[dict(path=relative, hashLineEndings="LF",
             sha256=hashlib.sha256((ROOT / relative).read_bytes().replace(b"\r\n", b"\n")).hexdigest())
             for relative in (
                 "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineInteractionCatalog.cs",
+                "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs",
+                "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Battle.cs",
                 "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Catalogs.cs",
                 "unity/Assets/Game/Runtime/Presentation/World/OfficialMap11WitchWindow.cs",
                 "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Map14Statues.cs")],
-        sharedPort=dict(path="scripts/prepare_unity_map11_runtime_data.py", symbol="build_witch_results",
-                        sourceSha256LF=hashlib.sha256(inspect.getsource(build_witch_results).replace("\r\n", "\n").encode()).hexdigest()),
         outputs=[source_record(OUTPUT), source_record(Path(str(OUTPUT) + ".meta"))],
-        counts=dict(entityTemplates=len(entities), components=sum(len(row["Components"]) for row in entities),
-                    heroes=len(payload["heroes"]), parameters=len(payload["parameters"]), regions=len(payload["regions"]),
-                    areas=len(payload["areas"]), **{key: len(value) for key, value in witch.items()}),
+        counts=dict(heroes=len(payload["heroes"]), parameters=len(payload["parameters"]),
+                    regions=len(payload["regions"]), areas=len(payload["areas"]),
+                    stageFastTemplates=len(stage_fast_types)),
         remaining=["formal mainline state and UI integration", "statue interaction visual effects", "full Map14 gameplay and persistence", "Windows Player release"])
     write_json(RECEIPT, receipt)
     print(json.dumps(receipt["counts"], ensure_ascii=False))
