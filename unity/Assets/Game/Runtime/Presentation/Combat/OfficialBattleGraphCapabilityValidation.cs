@@ -56,6 +56,7 @@ namespace Zjcs.Presentation.Combat
 
         public static OfficialBattleGraphCapabilityValidation Configure(FightBattleCheckpoint checkpoint)
         {
+            if (ValidateChargedBurst) return ConfigureChargedBurst(checkpoint);
             if (ValidateElementHarmony) return ConfigureElementHarmony(checkpoint);
             if (ValidateWindShadow) return ConfigureWindShadow(checkpoint);
             if (Environment.GetEnvironmentVariable("ZJCS_VOID_MIRAGE_ACCEPTANCE") == "1")
@@ -238,6 +239,7 @@ namespace Zjcs.Presentation.Combat
 
         public void ObserveStep(OfficialBattleRuntimeController controller)
         {
+            if (ObserveChargedBurstStep(controller)) return;
             if (ObserveVoidMirageStep(controller)) return;
             if (ObserveFighterHpSecretsStep(controller)) return;
             if (ObserveReflectionArmorStep(controller)) return;
@@ -373,6 +375,7 @@ namespace Zjcs.Presentation.Combat
         public void ObserveFrame(OfficialBattleRuntimeController controller)
         {
             CaptureName = null;
+            if (ObserveChargedBurstFrame(controller)) return;
             if (ObserveVoidMirageFrame(controller)) return;
             if (ObserveFighterHpSecretsFrame(controller)) return;
             if (ObserveReflectionArmorFrame(controller)) return;
@@ -526,6 +529,7 @@ namespace Zjcs.Presentation.Combat
 
         public void Verify(FightBattleCheckpoint checkpoint)
         {
+            if (ValidateChargedBurst) { VerifyChargedBurst(checkpoint); return; }
             VerifyElementHarmony();
             VerifyWindShadow();
             if (ValidateVoidMirage) { VerifyVoidMirage(checkpoint); return; }

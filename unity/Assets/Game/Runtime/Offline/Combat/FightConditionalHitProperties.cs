@@ -35,6 +35,11 @@ namespace Zjcs.Combat.Official
                     || status.ForbiddenType!=0
                     || c.DurationSkillCount==0
                     || c.IsApplyOneHit && seen.Contains(status)) continue;
+                // The official component limits which skills receive these properties
+                // as well as which casts consume its finite skill-count duration.
+                if(c.DurationSkillCount>=0 && (skill==null
+                    || !Matches(c.OnlySkillActions,skill.ActionType)
+                    || skill.SkillType!=c.OnlySkillType)) continue;
                 if(c.RoundResetCount>0 && (c.LastResetRound<0
                     || actor.SkillState.Round-c.LastResetRound>=c.RoundResetCount))
                 { c.LastResetRound=actor.SkillState.Round;c.InvokeCount=0;c.ConditionProgress=0; }
