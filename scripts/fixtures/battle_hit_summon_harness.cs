@@ -141,7 +141,7 @@ public static class BattleHitSummonHarness
         var nearby=Unit(2,2,10,11,expiry ? 1 : 1000);
         var summon=Unit(3,1,10,10);summon.MasterId=summon.Turn.MasterId=1;summon.MonsterId=3190;
         var far=Unit(4,2,1,2);var friendly=Unit(5,1,11,10);
-        var trigger=Status(catalog,25015,1,1);player.Statuses.Add(trigger);
+        var trigger=catalog.CreateStatus(25015,1,1,1,0,10530,2,20,1);player.Statuses.Add(trigger);
         if(!expiry)
         {
             var attack=new FightBattleSkillDefinition {EntityId=90010,Slot=0,TargetType=1};
@@ -160,9 +160,12 @@ public static class BattleHitSummonHarness
         Check(casts.Count==1,"Removal did not release exactly one official 11020.");
         Check(casts[0].ActorId==1 && casts[0].Presentation.TargetX==10
             && casts[0].Presentation.TargetY==10,"Removal lost summoner identity or removed summon position.");
+        Check(casts[0].SkillItemId==10530 && casts[0].Slot==-1,
+            "Removal child lost the equipped passive source or consumed an active slot.");
         Check(Math.Abs(casts[0].Delay-(expiry ? 0f : 0.4f))<0.00001f,
             "Removal cast lost its parent death time.");
-        Check(step.DamageEvents.Exists(d=>d.SkillEntityId==11020 && d.SourceId==1 && d.TargetId==2),
+        Check(step.DamageEvents.Exists(d=>d.SkillEntityId==11020 && d.SkillItemId==10530
+            && d.SourceId==1 && d.TargetId==2),
             "Removal did not hit the enemy near the summon.");
         Check(!step.DamageEvents.Exists(d=>d.SkillEntityId==11020 && (d.TargetId==4 || d.TargetId==5)),
             "Removal hit an enemy near the caster or a friendly unit.");
@@ -170,6 +173,9 @@ public static class BattleHitSummonHarness
             "Removal receipt/counter was not retained.");
         cp=FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(cp));
         Check(cp.Units.Find(u=>u.Id==3).HitSummonRemoveProcessed,"Removal receipt was lost in JSON.");
+        var restoredPassive=cp.Units.Find(u=>u.Id==1).Statuses.Find(s=>s.ClassId==25015);
+        Check(restoredPassive.ApplyingSkillItemId==10530 && restoredPassive.SourceSkillRank==2
+            && restoredPassive.SourceSkillLevel==20,"Removal passive lost its cultivation source after restore.");
         runner=FightBattleExecutor.Restore(cp,formula,new FightDamageSettlement(),catalog,items);
         Check(!runner.Step(0,cp.Counter+1).Event.SkillCasts.Exists(c=>c.SkillEntityId==11020),
             "Restoring a removed summon released the removal skill again.");
