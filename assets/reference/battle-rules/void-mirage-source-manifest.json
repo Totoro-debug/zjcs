@@ -472,12 +472,22 @@
       "sha256": "38d8d2ac7c92dd1b1c447da940c78471fcace6898ed4d38f96113962efb4a6f6"
     }
   ],
+  "runtime_inputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.VoidMirage.cs",
+      "sha256": "b156aac6a32bc30383b1448a21dc8019eb5d8b96fccd54691736a401894762e7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.VoidMirage.cs.meta",
+      "sha256": "f7c5c696a1f522cb3a7a3374d0a4808075e3430d3bb9fcfdf9e1dddfde716bdc"
+    }
+  ],
   "explicit_defaults": [
     "25022/ReportSkillTriggerCount=false"
   ],
   "generator": {
     "path": "scripts/prepare_battle_void_mirage_sources.py",
-    "sha256": "33eb9026422bb71dfc58583b2757c3471ecdc19073667a16a733cd2ae5798150"
+    "sha256": "8d709be97abc174a6fa5785c7d5f880382800c2357b7c36aed5b27040077b410"
   },
   "operation": "Verify the selected APK configuration and decompiled input code."
 }

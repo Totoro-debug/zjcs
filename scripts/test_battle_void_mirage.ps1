@@ -3,7 +3,7 @@ $ErrorActionPreference='Stop'
 if(-not $env:ZJCS_VALIDATION_DIR) { throw 'Set ZJCS_VALIDATION_DIR to this session workspace.' }
 $root=Split-Path -Parent $PSScriptRoot
 $proof=Get-Content (Join-Path $root 'assets/reference/battle-rules/void-mirage-source-manifest.json') -Raw|ConvertFrom-Json
-foreach($entry in @($proof.official_code)+@($proof.generator)) {
+foreach($entry in @($proof.official_code)+@($proof.runtime_inputs)+@($proof.generator)) {
     if((Get-FileHash -LiteralPath (Join-Path $root $entry.path) -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.sha256) {
         throw "Void mirage source identity changed: $($entry.path)"
     }

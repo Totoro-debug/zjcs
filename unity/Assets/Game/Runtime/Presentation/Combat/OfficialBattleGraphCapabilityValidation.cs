@@ -56,6 +56,8 @@ namespace Zjcs.Presentation.Combat
 
         public static OfficialBattleGraphCapabilityValidation Configure(FightBattleCheckpoint checkpoint)
         {
+            if (Environment.GetEnvironmentVariable("ZJCS_VOID_MIRAGE_ACCEPTANCE") == "1")
+                return ConfigureVoidMirage(checkpoint);
             if (Environment.GetEnvironmentVariable("ZJCS_FIGHTER_HP_SECRETS") == "1")
                 return ConfigureFighterHpSecrets(checkpoint);
             if (Environment.GetEnvironmentVariable("ZJCS_REFLECTION_ARMOR") == "1")
@@ -233,6 +235,7 @@ namespace Zjcs.Presentation.Combat
 
         public void ObserveStep(OfficialBattleRuntimeController controller)
         {
+            if (ObserveVoidMirageStep(controller)) return;
             if (ObserveFighterHpSecretsStep(controller)) return;
             if (ObserveReflectionArmorStep(controller)) return;
             if (ObserveSwordCounterattackStep(controller)) return;
@@ -367,6 +370,7 @@ namespace Zjcs.Presentation.Combat
         public void ObserveFrame(OfficialBattleRuntimeController controller)
         {
             CaptureName = null;
+            if (ObserveVoidMirageFrame(controller)) return;
             if (ObserveFighterHpSecretsFrame(controller)) return;
             if (ObserveReflectionArmorFrame(controller)) return;
             ObserveArcShieldSoundFrame(controller);
@@ -517,6 +521,7 @@ namespace Zjcs.Presentation.Combat
 
         public void Verify(FightBattleCheckpoint checkpoint)
         {
+            if (ValidateVoidMirage) { VerifyVoidMirage(checkpoint); return; }
             if (Environment.GetEnvironmentVariable("ZJCS_THUNDER_MYSTERY_ACCEPTANCE") == "1")
                 Require(thunderNativeCasts == 1 && thunderCaptured,
                     "Original lightning graph or its captured frame is missing.");

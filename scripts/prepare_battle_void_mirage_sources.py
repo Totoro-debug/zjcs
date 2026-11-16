@@ -34,7 +34,9 @@ def main():
         'common-source/Common/FightStatusShieldPersistentComponentInfo.cs',
         'common-source/Common/FightStatusPropComponentInfo.cs',
         'client-source/MyFightStatusHpLessThan.cs')]
+    runtime = ROOT / 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.VoidMirage.cs'
     proof = dict(manifest='884_156692', configuration=configuration, official_code=originals,
+        runtime_inputs=[identity(runtime), identity(Path(str(runtime) + '.meta'))],
         explicit_defaults=['25022/ReportSkillTriggerCount=false'], generator=identity(Path(__file__)),
         operation='Verify the selected APK configuration and decompiled input code.')
     (ROOT / 'assets/reference/battle-rules/void-mirage-source-manifest.json').write_text(
