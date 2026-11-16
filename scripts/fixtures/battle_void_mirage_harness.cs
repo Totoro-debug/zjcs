@@ -6,23 +6,25 @@ using Zjcs.Combat.Official;
 public static class BattleVoidMirageHarness
 {
     static void Check(bool condition,string message) { if(!condition) throw new InvalidOperationException("Void mirage: "+message); }
-    static FightBattleUnitState Unit(int id,long hp,FightDamageFormula formula)
+    static FightBattleUnitState Unit(int id,long hp,long maxHp,FightDamageFormula formula)
     {
         var unit=new FightBattleUnitState {Id=id,Side=id,CharacterType=1,Level=50,SubRank=1,
-            X=4+id,Y=4,Hp=hp,MaxHp=1000,LastMaxHp=1000,
+            X=4+id,Y=4,Hp=hp,MaxHp=maxHp,LastMaxHp=maxHp,
             Turn=new FightTurnUnit {Id=id,Hp=hp,Speed=id==1?1000:10}};
-        foreach(var entry in new Dictionary<int,long>{{1,100},{2,10},{3,1000},{4,unit.Turn.Speed}})
+        foreach(var entry in new Dictionary<int,long>{{1,100},{2,10},{3,maxHp},{4,unit.Turn.Speed}})
             unit.Properties.Add(new FightPropertyValue {Id=entry.Key,Value=entry.Value});
         unit.Properties.Add(new FightPropertyValue {Id=formula.PropertyId("CritAvoidPercent"),Value=10000});
         return unit;
     }
     public static string Run(FightOfficialCombatCatalog catalog,FightDamageFormula formula,FightOfficialSkillItemCatalog items)
     {
-        foreach(var damage in new long[]{499,500,501,1000})
+        foreach(var maxHp in new long[]{1000,2000})
+        foreach(var damagePerThousand in new long[]{499,500,501,1000})
         {
-            var actor=Unit(1,1000,formula);var target=Unit(2,1000,formula);
-            var props=catalog.CalculateSkillProps(25022,2,20,1)
-                .Select(value=>new FightPropertyValue {Id=value.Key,Value=value.Value}).ToList();
+            long damage=damagePerThousand*maxHp/1000;
+            var actor=Unit(1,1000,1000,formula);var target=Unit(2,maxHp,maxHp,formula);
+            // CreatePassiveStatusBindings snapshots the equipped owner's properties.
+            var props=target.Properties.Select(value=>new FightPropertyValue {Id=value.Id,Value=value.Value}).ToList();
             var passive=catalog.CreateStatus(25022,2,2,1,25022,10556,2,20,1,props);
             Check(passive.HpLessThanPercentage==.5f&&!passive.HpLessThanTryAtStart
                 &&!passive.HpLessThanInvokeOnDie&&passive.HpLessThanMaxCount==1,"Original threshold configuration changed");
@@ -42,7 +44,7 @@ public static class BattleVoidMirageHarness
             Check(FightBattleCheckpointSerializer.Save(cp)==FightBattleCheckpointSerializer.Save(restored),"Cold continuation differs");
             var hit=step.DamageEvents.Single(x=>x.SkillEntityId==990501);
             Check(hit.BeforeHp-hit.AfterHp==damage,"Controlled damage did not settle");
-            bool expected=damage==500||damage==501;
+            bool expected=damagePerThousand==500||damagePerThousand==501;
             var shield=target.Statuses.SingleOrDefault(x=>x.ClassId==24213);
             var dodge=target.Statuses.SingleOrDefault(x=>x.ClassId==24209);
             Check((shield!=null)==expected&&(dodge!=null)==expected&&passive.HpLessThanTriggeredCount==(expected?1:0),
@@ -54,7 +56,13 @@ public static class BattleVoidMirageHarness
                 Check(shield.ApplyingSkillItemId==10556&&dodge.ApplyingSkillItemId==10556
                     &&shield.SourceSkillRank==2&&shield.SourceSkillLevel==20&&dodge.SourceSkillRank==2,
                     "Effects lost passive source or cultivation");
-                Check(shield.ShieldInitialized&&shield.ShieldRemainValue>0,"Original shield was not initialized");
+                var shieldProps=catalog.CalculateSkillProps(24213,2,20,1).ToDictionary(value=>value.Key,value=>value.Value);
+                long expectedShield=(long)formula.ReadProperty(shieldProps,formula.PropertyId("SkillFixedShield"))
+                    +(long)(maxHp*formula.ReadProperty(shieldProps,formula.PropertyId("ShieldByTargetHp")));
+                Check(shield.ShieldInitialized&&shield.ShieldRemainValue==expectedShield,
+                    "Shield did not use the original fixed and target maximum-HP properties");
+                Check(dodge.ResolvedProperties.Any(value=>value.Id==formula.PropertyId("DodgePercent")&&value.Value==5000),
+                    "Original dodge property differs");
                 int start=Math.Max(0,shield.StartRound);
                 FightStatusLifecycle.TickTurn(actor,cp.Units,start+2,FightStatusLifecycle.TimingEnd);
                 Check(target.Statuses.Contains(shield)&&target.Statuses.Contains(dodge),"Enemy round expired protection");
@@ -67,7 +75,7 @@ public static class BattleVoidMirageHarness
                 Check(!target.Statuses.Any(x=>x.ClassId==24213||x.ClassId==24209),"Protection triggered twice");
             }
         }
-        var low=Unit(3,499,formula);low.Statuses.Add(catalog.CreateStatus(25022,3,3,1,25022,10556,2,20,1));
+        var low=Unit(3,499,1000,formula);low.Statuses.Add(catalog.CreateStatus(25022,3,3,1,25022,10556,2,20,1));
         FightStatusTriggerRuntime.Apply(low,catalog,true,units:new[]{low});
         Check(!low.Statuses.Any(x=>x.ClassId==24213||x.ClassId==24209),"TryAtStart=false was ignored");
         return "Void mirage passed: 50% boundary, lethal/start exclusions, two-round effects, source, shield and checkpoint.";

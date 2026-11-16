@@ -29,6 +29,8 @@ def main():
     originals = [identity(code / path) for path in (
         'common-source/Common/FightStatusHpLessThanComponent.cs',
         'common-source/Common/FightStatusHpLessThanComponentInfo.cs',
+        'common-source/Common/FightStatusComponentImplement.cs',
+        'common-source/Common/BattleFormulaHandler.cs',
         'common-source/Common/FightStatusShieldPersistentComponentInfo.cs',
         'common-source/Common/FightStatusPropComponentInfo.cs',
         'client-source/MyFightStatusHpLessThan.cs')]
