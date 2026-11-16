@@ -18,6 +18,7 @@ using Zjcs.Presentation.CharacterCreation;
 namespace Zjcs.Presentation.World
 {
     /// <summary>Isolated regression of the shared modules in both Play Mode and a Windows development Player.</summary>
+    [UnityEngine.Scripting.Preserve]
     public sealed class OfficialMainlineMapModuleProbe : MonoBehaviour
     {
         public const string Argument = "-verify-mainline-modules";
@@ -34,6 +35,7 @@ namespace Zjcs.Presentation.World
         private Vector2? press;
         private Vector3? worldPress;
 
+        [UnityEngine.Scripting.Preserve]
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void StartFromCommandLine()
         {
