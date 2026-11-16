@@ -137,6 +137,9 @@ namespace Zjcs.Official.WorldUI
                     yield return null;
                     if (!(IsPause & supportPause)) remaining -= Time.deltaTime;
                 }
+                // The original PlayPlayable yields once after the clip duration
+                // so its last animation update is applied before switching clips.
+                yield return null;
             }
             transition = null;
             completed?.Invoke();
@@ -150,7 +153,6 @@ namespace Zjcs.Official.WorldUI
             AnimationClipPlayable playable = AnimationClipPlayable.Create(graph, clip);
             output.SetSourcePlayable(playable);
             playable.SetTime(0);
-            graph.Evaluate(0);
         }
     }
 }

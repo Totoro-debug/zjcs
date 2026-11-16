@@ -34,6 +34,9 @@ namespace Zjcs.Presentation.Home
         private readonly HomeCameraData camera;
         private readonly Dictionary<int, GameObject> repaired = new Dictionary<int, GameObject>();
         private readonly Dictionary<int, GameObject> unrepaired = new Dictionary<int, GameObject>();
+        private readonly Dictionary<int, HomeFurnitureState> pendingRepairStates = new Dictionary<int, HomeFurnitureState>();
+        private readonly HashSet<int> replacedFurniture = new HashSet<int>();
+        private bool replacedHouse;
         private readonly Dictionary<int, List<GameObject>> furnitureBaseObjects = new Dictionary<int, List<GameObject>>();
         private readonly Dictionary<int, List<GameObject>> themeBaseObjects = new Dictionary<int, List<GameObject>>();
         private readonly Dictionary<int, List<GameObject>> furnitureSkinObjects = new Dictionary<int, List<GameObject>>();
@@ -553,9 +556,58 @@ namespace Zjcs.Presentation.Home
         /// <summary>Applies the official four-state switch to one furniture type.</summary>
         public void SetFurnitureState(int type, HomeFurnitureState state)
         {
+            if (pendingRepairStates.ContainsKey(type))
+            {
+                pendingRepairStates[type] = state;
+                return;
+            }
             bool functional = state == HomeFurnitureState.Functional;
-            if (repaired.TryGetValue(type, out GameObject on)) on.SetActive(functional);
-            if (unrepaired.TryGetValue(type, out GameObject off)) off.SetActive(!functional);
+            if (repaired.TryGetValue(type, out GameObject on) && on) on.SetActive(functional);
+            if (unrepaired.TryGetValue(type, out GameObject off) && off) off.SetActive(!functional);
+        }
+
+        public HomeFurnitureState FurnitureClickState(int type, HomeFurnitureState actual)
+            => pendingRepairStates.ContainsKey(type) ? HomeFurnitureState.CanRepair : actual;
+
+        public void BeginFurnitureRepairEffect(int type)
+        {
+            if (!Root.activeInHierarchy || (type != 0 && type != 1 && type != 2 && type != 3 && type != 5 && type != 7
+                && type != 8 && type != 9 && type != 10 && type != 12) || replacedFurniture.Contains(type)
+                || replacedHouse && (type == 0 || type == 1 || type == 2 || type == 3 || type == 7)) return;
+            if (pendingRepairStates.ContainsKey(type))
+                throw new InvalidOperationException("Furniture repair effect is already running: " + type);
+            var assets = Resources.Load<HomeRepairEffectAssets>("Home/HomeRepairEffectAssets");
+            var entry = assets ? assets.Find(type) : null;
+            if (entry == null || !entry.Prefab || entry.ShowTime < 0 || entry.FullTime < entry.ShowTime)
+                throw new InvalidOperationException("Original furniture repair effect is unavailable: " + type);
+            HomeFurnitureScene furniture = (catalog.Scene.furniture ?? Array.Empty<HomeFurnitureScene>())
+                .Single(value => value.type == type);
+            if (furniture.slot == null || furniture.slot.Length != 3)
+                throw new InvalidOperationException("Original furniture repair slot is unavailable: " + type);
+            var anchor = new GameObject("FurnitureRepairEffect_" + type);
+            try
+            {
+                anchor.SetActive(false);
+                anchor.transform.SetParent(Root.transform, false);
+                anchor.transform.localPosition = SlotPosition(furniture.slot) + entry.RootOffset;
+                GameObject effect = UnityEngine.Object.Instantiate(entry.Prefab, anchor.transform, false);
+                effect.SetActive(false);
+                anchor.SetActive(true);
+                var player = anchor.AddComponent<HomeRepairEffectPlayer>();
+                pendingRepairStates.Add(type, HomeFurnitureState.CanRepair);
+                player.Play(effect, entry.ShowTime, entry.FullTime, () =>
+                {
+                    if (!pendingRepairStates.TryGetValue(type, out HomeFurnitureState state)) return;
+                    pendingRepairStates.Remove(type);
+                    SetFurnitureState(type, state);
+                });
+            }
+            catch
+            {
+                pendingRepairStates.Remove(type);
+                UnityEngine.Object.Destroy(anchor);
+                throw;
+            }
         }
 
         public void ApplyHomeSkins(HomeSkinRuntimeData data, IReadOnlyList<OfflineHomeSkinSelection> selections,
@@ -564,6 +616,8 @@ namespace Zjcs.Presentation.Home
             if (data == null || rules == null) throw new ArgumentNullException(data == null ? nameof(data) : nameof(rules));
             ClearSkinObjects(furnitureSkinObjects);
             ClearSkinObjects(themeSkinObjects);
+            replacedFurniture.Clear();
+            replacedHouse = false;
 
             int environmentId = SelectedSkin(selections, 2, 1,
                 rules.Data.environmentSkins.First(value => value.environmentType == 1 && value.isDefault).skinItemId);
@@ -578,6 +632,7 @@ namespace Zjcs.Presentation.Home
                 HomeSkinEntity entity = FindSkinEntity(data, skinId, environmentVariant)
                     ?? FindSkinEntity(data, skinId, 0);
                 bool replaceBase = entity != null && (skinId != defaultSkin.skinItemId || environmentVariant != 0);
+                if (replaceBase) replacedFurniture.Add(group.Key);
                 if (group.Key != 4) SetObjectsActive(furnitureBaseObjects, group.Key, !replaceBase);
                 if (replaceBase) CreateFurnitureSkin(entity, group.Key);
             }
@@ -590,6 +645,7 @@ namespace Zjcs.Presentation.Home
                 HomeSkinEntity entity = FindSkinEntity(data, skinId, environmentVariant)
                     ?? FindSkinEntity(data, skinId, 0);
                 bool replaceBase = entity != null && (skinId != defaultSkin.skinItemId || environmentVariant != 0);
+                if (group.Key == 1 && replaceBase) replacedHouse = true;
                 SetObjectsActive(themeBaseObjects, group.Key, !replaceBase);
                 if (replaceBase) CreateThemeSkin(entity, group.Key);
             }

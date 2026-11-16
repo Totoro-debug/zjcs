@@ -1,0 +1,72 @@
+{
+  "manifest": "884_156692",
+  "settings": {
+    "mDialogVoiceStopEventKey": "Voice_StopAll",
+    "mVoiceOverIds": [
+      100000
+    ],
+    "TalkBubblePlayablePath": "",
+    "IsTalkNeedCameraMove": 1,
+    "IsDialogNodeNeedCameraMove": 1,
+    "TalkCameraMoveXCurve": {
+      "m_Curve": [
+        {
+          "time": 1.1444091796875e-05,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "weightedMode": 0,
+          "inWeight": 0.0,
+          "outWeight": 0.3333333432674408
+        },
+        {
+          "time": 0.99981689453125,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "weightedMode": 0,
+          "inWeight": 0.3333333432674408,
+          "outWeight": 0.0
+        }
+      ],
+      "m_PreInfinity": 2,
+      "m_PostInfinity": 2,
+      "m_RotationOrder": 4
+    },
+    "TalkCameraMoveYCurve": {
+      "m_Curve": [
+        {
+          "time": 0.0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "weightedMode": 0,
+          "inWeight": 0.0,
+          "outWeight": 0.0
+        },
+        {
+          "time": 1.0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "weightedMode": 0,
+          "inWeight": 0.0,
+          "outWeight": 0.0
+        }
+      ],
+      "m_PreInfinity": 2,
+      "m_PostInfinity": 2,
+      "m_RotationOrder": 4
+    },
+    "TalkCameraMoveDuration": 0.6000000238418579,
+    "TalkCameraViewOffset": {
+      "x": 0.0,
+      "y": -1.0,
+      "z": 0.0
+    },
+    "GetEntityPosOffset": {
+      "x": 0.0,
+      "y": -1.0
+    }
+  }
+}

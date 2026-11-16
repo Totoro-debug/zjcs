@@ -1,0 +1,1422 @@
+{
+  "manifest": "884_156692",
+  "storyRows": [
+    {
+      "StoryName": "SenSenHomeStore",
+      "Order": 106,
+      "IsShowSkipBtn": false,
+      "AllowToRunAsTeammate": false,
+      "AllowRunInFight": false,
+      "MaxCount": 1,
+      "AutoRunOnMeetCondition": false,
+      "ResPath": "Map11Story/SenSenStory/SenSenHomeStore"
+    },
+    {
+      "StoryName": "UnlockCommunication",
+      "Order": 117,
+      "IsShowSkipBtn": false,
+      "AllowToRunAsTeammate": false,
+      "AllowRunInFight": false,
+      "MaxCount": 1,
+      "AutoRunOnMeetCondition": false,
+      "ResPath": "Map11Story/BasicGuide/UnlockCommunication"
+    }
+  ],
+  "graphs": {
+    "UnlockCommunication": {
+      "nodes": {
+        "1": {
+          "m_Name": "Start Story",
+          "NodeId": 1,
+          "Entry": {},
+          "Exit": {},
+          "CanStart": 1,
+          "HideMainUI": 0,
+          "InStoryMode": 0,
+          "_type": "StartStoryNode",
+          "ports": {
+            "CanStart": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": []
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "45",
+                  "port": "Entry"
+                }
+              ]
+            }
+          }
+        },
+        "2": {
+          "m_Name": "Wait Start Story",
+          "NodeId": 2,
+          "Entry": {},
+          "Exit": {},
+          "CanStart": 1,
+          "ConditionSatisfied": 1,
+          "NewMode": 0,
+          "ArrowReplayWhenMetConditions": 0,
+          "_type": "WaitStartStoryNode",
+          "ports": {
+            "CanStart": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "ConditionSatisfied": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": []
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": []
+            }
+          }
+        },
+        "3": {
+          "m_Name": "Finish Story",
+          "NodeId": 3,
+          "Entry": {},
+          "Exit": {},
+          "_type": "FinishStoryNode",
+          "ports": {
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "25",
+                  "port": "Exit"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": []
+            }
+          }
+        },
+        "4": {
+          "m_Name": "Finish Story Condition",
+          "NodeId": 4,
+          "Entry": {},
+          "Exit": {},
+          "_type": "FinishStoryConditionNode",
+          "ports": {
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": []
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": []
+            }
+          }
+        },
+        "17": {
+          "m_Name": "Camera Drag",
+          "NodeId": 17,
+          "Entry": {},
+          "Exit": {},
+          "CanDrag": 0,
+          "_type": "CameraDragNode",
+          "ports": {
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "1",
+                  "port": "Exit"
+                },
+                {
+                  "node": "44",
+                  "port": "Exit"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "46",
+                  "port": "Entry"
+                }
+              ]
+            }
+          }
+        },
+        "18": {
+          "m_Name": "Dialog",
+          "NodeId": 18,
+          "Entry": {},
+          "Exit": {},
+          "DialogId": 0,
+          "DialogItems": [],
+          "AutoCloseDialog": 1,
+          "AutoPlayConfig": {
+            "IsAutoPlay": 0,
+            "AutoPlayWaitTime": 0.0,
+            "AutoPlayDura": 0.0
+          },
+          "IsHideOtherUI": 1,
+          "IsNeedMoveCamera": 1,
+          "DialogVariantType": 0,
+          "Immediately": 0,
+          "_type": "DialogNode",
+          "ports": {
+            "DialogId": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "DialogItems": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Immediately": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "46",
+                  "port": "Exit"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "23",
+                  "port": "Entry"
+                }
+              ]
+            }
+          }
+        },
+        "23": {
+          "m_Name": "Repair Furniture",
+          "NodeId": 23,
+          "Entry": {},
+          "Exit": {},
+          "IsForbidDragCam": 1,
+          "Furniture": 2,
+          "FurnitureMaskSet": {
+            "Offset": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "ShowMask": 1,
+            "TipUIKeyId": 0
+          },
+          "RepaireBtnMaskSet": {
+            "Offset": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "ShowMask": 1,
+            "TipUIKeyId": 0
+          },
+          "_type": "RepairFurnitureNode",
+          "ports": {
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "18",
+                  "port": "Exit"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "24",
+                  "port": "Entry"
+                }
+              ]
+            }
+          }
+        },
+        "24": {
+          "m_Name": "Wait All No Tip Window Closed",
+          "NodeId": 24,
+          "Entry": {},
+          "Exit": {},
+          "_type": "WaitAllNoTipWindowClosedNode",
+          "ports": {
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "23",
+                  "port": "Exit"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "25",
+                  "port": "Entry"
+                }
+              ]
+            }
+          }
+        },
+        "25": {
+          "m_Name": "Dialog",
+          "NodeId": 25,
+          "Entry": {},
+          "Exit": {},
+          "DialogId": 1,
+          "DialogItems": [],
+          "AutoCloseDialog": 1,
+          "AutoPlayConfig": {
+            "IsAutoPlay": 0,
+            "AutoPlayWaitTime": 0.0,
+            "AutoPlayDura": 0.0
+          },
+          "IsHideOtherUI": 1,
+          "IsNeedMoveCamera": 1,
+          "DialogVariantType": 0,
+          "Immediately": 0,
+          "_type": "DialogNode",
+          "ports": {
+            "DialogId": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "DialogItems": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Immediately": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "24",
+                  "port": "Exit"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "3",
+                  "port": "Entry"
+                }
+              ]
+            }
+          }
+        },
+        "44": {
+          "m_Name": "Set Free Camera Force Pos X",
+          "NodeId": 44,
+          "Entry": {},
+          "Exit": {},
+          "PositionX": 11.02439022064209,
+          "Margin": 1,
+          "_type": "SetFreeCameraForcePosXNode",
+          "ports": {
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "45",
+                  "port": "Exit"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "17",
+                  "port": "Entry"
+                }
+              ]
+            }
+          }
+        },
+        "45": {
+          "m_Name": "Wait All No Tip Window Closed",
+          "NodeId": 45,
+          "Entry": {},
+          "Exit": {},
+          "_type": "WaitAllNoTipWindowClosedNode",
+          "ports": {
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "1",
+                  "port": "Exit"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "44",
+                  "port": "Entry"
+                }
+              ]
+            }
+          }
+        },
+        "46": {
+          "m_Name": "Hide All UI",
+          "NodeId": 46,
+          "Entry": {},
+          "Exit": {},
+          "_type": "HideAllUINode",
+          "ports": {
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "17",
+                  "port": "Exit"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "18",
+                  "port": "Entry"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "properties": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 6672162475386946227
+        },
+        "m_Name": "UnlockCommunication",
+        "NodeIdRecoder": 46
+      }
+    },
+    "SenSenHomeStore": {
+      "nodes": {
+        "1": {
+          "m_Name": "Start Story",
+          "NodeId": 1,
+          "Entry": {},
+          "Exit": {},
+          "CanStart": 1,
+          "HideMainUI": 0,
+          "InStoryMode": 0,
+          "_type": "StartStoryNode",
+          "ports": {
+            "CanStart": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "36",
+                  "port": "Entry"
+                }
+              ]
+            },
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": []
+            }
+          }
+        },
+        "2": {
+          "m_Name": "Wait Start Story",
+          "NodeId": 2,
+          "Entry": {},
+          "Exit": {},
+          "CanStart": 1,
+          "ConditionSatisfied": 1,
+          "NewMode": 0,
+          "ArrowReplayWhenMetConditions": 0,
+          "_type": "WaitStartStoryNode",
+          "ports": {
+            "CanStart": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": []
+            },
+            "ConditionSatisfied": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": []
+            }
+          }
+        },
+        "3": {
+          "m_Name": "Finish Story",
+          "NodeId": 3,
+          "Entry": {},
+          "Exit": {},
+          "_type": "FinishStoryNode",
+          "ports": {
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "54",
+                  "port": "Exit"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": []
+            }
+          }
+        },
+        "4": {
+          "m_Name": "Finish Story Condition",
+          "NodeId": 4,
+          "Entry": {},
+          "Exit": {},
+          "_type": "FinishStoryConditionNode",
+          "ports": {
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": []
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": []
+            }
+          }
+        },
+        "36": {
+          "m_Name": "Wait All No Tip Window Closed",
+          "NodeId": 36,
+          "Entry": {},
+          "Exit": {},
+          "_type": "WaitAllNoTipWindowClosedNode",
+          "ports": {
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "1",
+                  "port": "Exit"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "37",
+                  "port": "Entry"
+                }
+              ]
+            }
+          }
+        },
+        "37": {
+          "m_Name": "Camera Move",
+          "NodeId": 37,
+          "Entry": {},
+          "Exit": {},
+          "MoveXCurve": {
+            "m_Curve": [
+              {
+                "time": 0.0,
+                "value": 0.0,
+                "inSlope": 0.0,
+                "outSlope": 0.0,
+                "weightedMode": 0,
+                "inWeight": 0.0,
+                "outWeight": 0.3333333432674408
+              },
+              {
+                "time": 1.0,
+                "value": 0.0,
+                "inSlope": 0.0,
+                "outSlope": 0.0,
+                "weightedMode": 0,
+                "inWeight": 0.3333333432674408,
+                "outWeight": 0.0
+              }
+            ],
+            "m_PreInfinity": 2,
+            "m_PostInfinity": 2,
+            "m_RotationOrder": 4
+          },
+          "MoveYCurve": {
+            "m_Curve": [
+              {
+                "time": 0.0,
+                "value": 0.0,
+                "inSlope": 0.0,
+                "outSlope": 0.0,
+                "weightedMode": 0,
+                "inWeight": 0.0,
+                "outWeight": 0.0
+              },
+              {
+                "time": 1.0,
+                "value": 1.0,
+                "inSlope": 0.0,
+                "outSlope": 0.0,
+                "weightedMode": 0,
+                "inWeight": 0.0,
+                "outWeight": 0.0
+              }
+            ],
+            "m_PreInfinity": 2,
+            "m_PostInfinity": 2,
+            "m_RotationOrder": 4
+          },
+          "TargetPosition": {
+            "x": 0.6899999976158142,
+            "y": -1.7999999523162842
+          },
+          "Duration": 0.0,
+          "_type": "CameraMoveNode",
+          "ports": {
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "36",
+                  "port": "Exit"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "48",
+                  "port": "Entry"
+                }
+              ]
+            }
+          }
+        },
+        "48": {
+          "m_Name": "Camera Drag",
+          "NodeId": 48,
+          "Entry": {},
+          "Exit": {},
+          "CanDrag": 0,
+          "_type": "CameraDragNode",
+          "ports": {
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "37",
+                  "port": "Exit"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "49",
+                  "port": "Entry"
+                }
+              ]
+            }
+          }
+        },
+        "49": {
+          "m_Name": "Option Dialog",
+          "NodeId": 49,
+          "Entry": {},
+          "Exit": {},
+          "DialogId": 0,
+          "BlackboardRecord": {
+            "NeedRecord": 0,
+            "Key": ""
+          },
+          "Immediately": 0,
+          "AutoCloseDialog": 1,
+          "ShowOptionsAtBegin": 0,
+          "IsNeedHideOtherUI": 1,
+          "DialogItems": [],
+          "Options": [
+            910,
+            911
+          ],
+          "OptionConfigs": [],
+          "OptionParams": [],
+          "IsNeedMoveCamera": 1,
+          "DialogVariantType": 0,
+          "_type": "OptionDialogNode",
+          "ports": {
+            "Immediately": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "DialogItems": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Options": {
+              "direction": 1,
+              "flow": 1,
+              "connections": []
+            },
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "48",
+                  "port": "Exit"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": []
+            },
+            "Options 0": {
+              "direction": 1,
+              "flow": 0,
+              "connections": [
+                {
+                  "node": "50",
+                  "port": "Entry"
+                }
+              ]
+            },
+            "Options 1": {
+              "direction": 1,
+              "flow": 0,
+              "connections": [
+                {
+                  "node": "51",
+                  "port": "Entry"
+                }
+              ]
+            },
+            "OptionParams": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "OptionConfigs": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            }
+          }
+        },
+        "50": {
+          "m_Name": "Dialog",
+          "NodeId": 50,
+          "Entry": {},
+          "Exit": {},
+          "DialogId": 1,
+          "DialogItems": [],
+          "AutoCloseDialog": 1,
+          "AutoPlayConfig": {
+            "IsAutoPlay": 0,
+            "AutoPlayWaitTime": 0.0,
+            "AutoPlayDura": 0.0
+          },
+          "IsHideOtherUI": 1,
+          "IsNeedMoveCamera": 1,
+          "DialogVariantType": 0,
+          "Immediately": 0,
+          "_type": "DialogNode",
+          "ports": {
+            "DialogId": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "DialogItems": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Immediately": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "49",
+                  "port": "Options 0"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "53",
+                  "port": "Entry"
+                }
+              ]
+            }
+          }
+        },
+        "51": {
+          "m_Name": "Dialog",
+          "NodeId": 51,
+          "Entry": {},
+          "Exit": {},
+          "DialogId": 2,
+          "DialogItems": [],
+          "AutoCloseDialog": 1,
+          "AutoPlayConfig": {
+            "IsAutoPlay": 0,
+            "AutoPlayWaitTime": 0.0,
+            "AutoPlayDura": 0.0
+          },
+          "IsHideOtherUI": 1,
+          "IsNeedMoveCamera": 1,
+          "DialogVariantType": 0,
+          "Immediately": 0,
+          "_type": "DialogNode",
+          "ports": {
+            "DialogId": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "DialogItems": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Immediately": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "49",
+                  "port": "Options 1"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "53",
+                  "port": "Entry"
+                }
+              ]
+            }
+          }
+        },
+        "53": {
+          "m_Name": "Option Dialog",
+          "NodeId": 53,
+          "Entry": {},
+          "Exit": {},
+          "DialogId": 3,
+          "BlackboardRecord": {
+            "NeedRecord": 0,
+            "Key": ""
+          },
+          "Immediately": 0,
+          "AutoCloseDialog": 1,
+          "ShowOptionsAtBegin": 0,
+          "IsNeedHideOtherUI": 1,
+          "DialogItems": [],
+          "Options": [
+            912
+          ],
+          "OptionConfigs": [],
+          "OptionParams": [],
+          "IsNeedMoveCamera": 1,
+          "DialogVariantType": 0,
+          "_type": "OptionDialogNode",
+          "ports": {
+            "Immediately": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "DialogItems": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Options": {
+              "direction": 1,
+              "flow": 1,
+              "connections": []
+            },
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "50",
+                  "port": "Exit"
+                },
+                {
+                  "node": "51",
+                  "port": "Exit"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": []
+            },
+            "Options 0": {
+              "direction": 1,
+              "flow": 0,
+              "connections": [
+                {
+                  "node": "54",
+                  "port": "Entry"
+                }
+              ]
+            },
+            "OptionParams": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "OptionConfigs": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            }
+          }
+        },
+        "54": {
+          "m_Name": "Dialog",
+          "NodeId": 54,
+          "Entry": {},
+          "Exit": {},
+          "DialogId": 4,
+          "DialogItems": [],
+          "AutoCloseDialog": 1,
+          "AutoPlayConfig": {
+            "IsAutoPlay": 0,
+            "AutoPlayWaitTime": 0.0,
+            "AutoPlayDura": 0.0
+          },
+          "IsHideOtherUI": 1,
+          "IsNeedMoveCamera": 1,
+          "DialogVariantType": 0,
+          "Immediately": 0,
+          "_type": "DialogNode",
+          "ports": {
+            "DialogId": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "DialogItems": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Immediately": {
+              "direction": 0,
+              "flow": 1,
+              "connections": []
+            },
+            "Entry": {
+              "direction": 0,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "53",
+                  "port": "Options 0"
+                }
+              ]
+            },
+            "Exit": {
+              "direction": 1,
+              "flow": 2,
+              "connections": [
+                {
+                  "node": "3",
+                  "port": "Entry"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "properties": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 6672162475386946227
+        },
+        "m_Name": "SenSenHomeStore",
+        "NodeIdRecoder": 54
+      }
+    }
+  },
+  "dialogues": {
+    "SenSenHomeStore": {
+      "0": [
+        {
+          "StoryName": "SenSenHomeStore",
+          "Id": 0,
+          "Order": 0,
+          "DialogType": 1,
+          "VoiceEventKey": "chapter_2_guide_4_01",
+          "RoleId": 840200,
+          "RoleFaceType": "doubt",
+          "EntityLogicId": 0,
+          "CreateEntityClassId": 0,
+          "PlayablePath": ""
+        },
+        {
+          "StoryName": "SenSenHomeStore",
+          "Id": 0,
+          "Order": 1,
+          "DialogType": 1,
+          "VoiceEventKey": "chapter_2_guide_4_02",
+          "RoleId": 841100,
+          "RoleFaceType": "",
+          "EntityLogicId": 0,
+          "CreateEntityClassId": 0,
+          "PlayablePath": "Playables/DisplayPackage/Story/NPCAnimator/playable_npc_thank"
+        },
+        {
+          "StoryName": "SenSenHomeStore",
+          "Id": 0,
+          "Order": 2,
+          "DialogType": 1,
+          "VoiceEventKey": "chapter_2_guide_4_03",
+          "RoleId": 840200,
+          "RoleFaceType": "",
+          "EntityLogicId": 0,
+          "CreateEntityClassId": 0,
+          "PlayablePath": ""
+        },
+        {
+          "StoryName": "SenSenHomeStore",
+          "Id": 0,
+          "Order": 3,
+          "DialogType": 1,
+          "VoiceEventKey": "chapter_2_guide_4_04",
+          "RoleId": 841100,
+          "RoleFaceType": "",
+          "EntityLogicId": 0,
+          "CreateEntityClassId": 0,
+          "PlayablePath": ""
+        }
+      ],
+      "1": [
+        {
+          "StoryName": "SenSenHomeStore",
+          "Id": 1,
+          "Order": 0,
+          "DialogType": 1,
+          "VoiceEventKey": "chapter_2_guide_4_05",
+          "RoleId": 840200,
+          "RoleFaceType": "",
+          "EntityLogicId": 0,
+          "CreateEntityClassId": 0,
+          "PlayablePath": ""
+        }
+      ],
+      "2": [
+        {
+          "StoryName": "SenSenHomeStore",
+          "Id": 2,
+          "Order": 0,
+          "DialogType": 1,
+          "VoiceEventKey": "chapter_2_guide_4_06",
+          "RoleId": 840200,
+          "RoleFaceType": "",
+          "EntityLogicId": 0,
+          "CreateEntityClassId": 0,
+          "PlayablePath": ""
+        }
+      ],
+      "3": [
+        {
+          "StoryName": "SenSenHomeStore",
+          "Id": 3,
+          "Order": 0,
+          "DialogType": 1,
+          "VoiceEventKey": "chapter_2_guide_4_07",
+          "RoleId": 841100,
+          "RoleFaceType": "",
+          "EntityLogicId": 0,
+          "CreateEntityClassId": 0,
+          "PlayablePath": ""
+        }
+      ],
+      "4": [
+        {
+          "StoryName": "SenSenHomeStore",
+          "Id": 4,
+          "Order": 0,
+          "DialogType": 1,
+          "VoiceEventKey": "chapter_2_guide_4_08",
+          "RoleId": 841100,
+          "RoleFaceType": "",
+          "EntityLogicId": 0,
+          "CreateEntityClassId": 0,
+          "PlayablePath": "Playables/DisplayPackage/Story/NPCAnimator/playable_npc_bye"
+        },
+        {
+          "StoryName": "SenSenHomeStore",
+          "Id": 4,
+          "Order": 1,
+          "DialogType": 1,
+          "VoiceEventKey": "chapter_2_guide_4_09",
+          "RoleId": 840200,
+          "RoleFaceType": "",
+          "EntityLogicId": 0,
+          "CreateEntityClassId": 0,
+          "PlayablePath": ""
+        },
+        {
+          "StoryName": "SenSenHomeStore",
+          "Id": 4,
+          "Order": 2,
+          "DialogType": 1,
+          "VoiceEventKey": "chapter_2_guide_4_10",
+          "RoleId": 840200,
+          "RoleFaceType": "",
+          "EntityLogicId": 0,
+          "CreateEntityClassId": 0,
+          "PlayablePath": ""
+        }
+      ]
+    },
+    "UnlockCommunication": {
+      "0": [
+        {
+          "StoryName": "UnlockCommunication",
+          "Id": 0,
+          "Order": 0,
+          "DialogType": 1,
+          "VoiceEventKey": "chapter_2_guide_18_01",
+          "RoleId": 840200,
+          "RoleFaceType": "",
+          "EntityLogicId": 0,
+          "CreateEntityClassId": 0,
+          "PlayablePath": ""
+        }
+      ],
+      "1": [
+        {
+          "StoryName": "UnlockCommunication",
+          "Id": 1,
+          "Order": 0,
+          "DialogType": 1,
+          "VoiceEventKey": "chapter_2_guide_18_02",
+          "RoleId": 840200,
+          "RoleFaceType": "",
+          "EntityLogicId": 0,
+          "CreateEntityClassId": 0,
+          "PlayablePath": ""
+        },
+        {
+          "StoryName": "UnlockCommunication",
+          "Id": 1,
+          "Order": 1,
+          "DialogType": 1,
+          "VoiceEventKey": "chapter_2_guide_18_03",
+          "RoleId": 840200,
+          "RoleFaceType": "",
+          "EntityLogicId": 0,
+          "CreateEntityClassId": 0,
+          "PlayablePath": ""
+        }
+      ]
+    }
+  },
+  "dialogRoles": [
+    {
+      "RoleId": 840200,
+      "EntityClassId": 8402,
+      "RoleName": "绯乐",
+      "PortraitPath": "UI/Portrait/Npc_Portrait_8402"
+    },
+    {
+      "RoleId": 841100,
+      "EntityClassId": 8411,
+      "RoleName": "森森",
+      "PortraitPath": "UI/Portrait/Npc_Portrait_8411"
+    }
+  ],
+  "storyOptions": [
+    {
+      "StoryName": "SenSenHomeStore",
+      "Id": 910,
+      "Text": "这都行？",
+      "Icon": "UI/Dialogue/Iconarrow_1",
+      "BlackIcon": "",
+      "MinorText": "",
+      "ConditionType": 0,
+      "ConditionParams": ""
+    },
+    {
+      "StoryName": "SenSenHomeStore",
+      "Id": 911,
+      "Text": "燃起来了！",
+      "Icon": "UI/Dialogue/Iconarrow_1",
+      "BlackIcon": "",
+      "MinorText": "",
+      "ConditionType": 0,
+      "ConditionParams": ""
+    },
+    {
+      "StoryName": "SenSenHomeStore",
+      "Id": 912,
+      "Text": "谢谢你。",
+      "Icon": "UI/Dialogue/Iconarrow_1",
+      "BlackIcon": "",
+      "MinorText": "",
+      "ConditionType": 0,
+      "ConditionParams": ""
+    }
+  ],
+  "localization": {
+    "dialog_SenSenHomeStore_0_0": "咦，这个被白布盖着的东西是……？",
+    "dialog_SenSenHomeStore_0_1": "锵锵~这就是我要给你们带的礼物！",
+    "dialog_SenSenHomeStore_0_2": "哇，森森！你是怎么找到我们家的，还带来了这么大的礼物~",
+    "dialog_SenSenHomeStore_0_3": "路上是不太好走啦，不过村长说过，只要坚持就能做到任何事情！",
+    "dialog_SenSenHomeStore_1_0": "这不是坚持能做到的事情吧……不过还是先看看你带来的礼物吧~",
+    "dialog_SenSenHomeStore_2_0": "连冒险者都被你的壮举感染了呢！赶紧看看森森带来的礼物吧~",
+    "dialog_SenSenHomeStore_3_0": "这个是我的小货车。施加了超~级厉害的魔法，每天都有货物自己冒出来哦。",
+    "dialog_SenSenHomeStore_4_0": "不用客气！我要回村子里挖土豆了，下次再见啦。",
+    "dialog_SenSenHomeStore_4_1": "下次见！慢点走，回去的路上要小心哦~   ",
+    "dialog_SenSenHomeStore_4_2": "森森真是超级可爱呢，看看她带来的售货车吧！",
+    "dialog_UnlockCommunication_0_0": "嘿嘿~被你发现了呢，快打开看看吧~",
+    "dialog_UnlockCommunication_1_0": "这是很厉害的通讯设备，记录了我们旅途中认识的人，还能接收到他们发来的讯息~",
+    "dialog_UnlockCommunication_1_1": "有空记得看看，说不定会有意外惊喜呢。",
+    "story_SenSenHomeStore_910_option": "这都行？",
+    "story_SenSenHomeStore_911_option": "燃起来了！",
+    "story_SenSenHomeStore_912_option": "谢谢你。",
+    "dialog_role_840200_name": "绯乐",
+    "dialog_role_841100_name": "森森"
+  },
+  "serverRecords": {
+    "SenSenHomeStore": [
+      {
+        "Item1": "StartStoryNode",
+        "Item2": "{\"CanStart\":true,\"HideMainUI\":false,\"InStoryMode\":false,\"Entry\":{},\"Exit\":{},\"ports\":{\"CanStart\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Exit\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":36}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Entry\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}},\"NodeId\":1,\"Mono\":\"\",\"IsMonoShow\":false,\"ShouldBeHiden\":false,\"name\":\"Start Story\",\"hideFlags\":\"None\"}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":2,\"Ports\":{\"CanStart\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Exit\":{\"connections\":[],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"ConditionSatisfied\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Entry\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":3,\"Ports\":{\"Entry\":{\"connections\":[{\"fieldName\":\"Exit\",\"NodeId\":54}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":4,\"Ports\":{\"Entry\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":36,\"Ports\":{\"Entry\":{\"connections\":[{\"fieldName\":\"Exit\",\"NodeId\":1}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":37}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":37,\"Ports\":{\"Entry\":{\"connections\":[{\"fieldName\":\"Exit\",\"NodeId\":36}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":48}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":48,\"Ports\":{\"Entry\":{\"connections\":[{\"fieldName\":\"Exit\",\"NodeId\":37}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":49}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":49,\"Ports\":{\"Immediately\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"DialogItems\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Options\":{\"connections\":[],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Entry\":{\"connections\":[{\"fieldName\":\"Exit\",\"NodeId\":48}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Options 0\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":50}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"None\",\"IsStatic\":false},\"Options 1\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":51}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"None\",\"IsStatic\":false},\"OptionParams\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"OptionConfigs\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":50,\"Ports\":{\"DialogId\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"DialogItems\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Immediately\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Entry\":{\"connections\":[{\"fieldName\":\"Options 0\",\"NodeId\":49}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":53}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":51,\"Ports\":{\"DialogId\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"DialogItems\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Immediately\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Entry\":{\"connections\":[{\"fieldName\":\"Options 1\",\"NodeId\":49}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":53}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":53,\"Ports\":{\"Immediately\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"DialogItems\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Options\":{\"connections\":[],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Entry\":{\"connections\":[{\"fieldName\":\"Exit\",\"NodeId\":50},{\"fieldName\":\"Exit\",\"NodeId\":51}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Options 0\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":54}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"None\",\"IsStatic\":false},\"OptionParams\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"OptionConfigs\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":54,\"Ports\":{\"DialogId\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"DialogItems\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Immediately\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Entry\":{\"connections\":[{\"fieldName\":\"Options 0\",\"NodeId\":53}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":3}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      }
+    ],
+    "UnlockCommunication": [
+      {
+        "Item1": "StartStoryNode",
+        "Item2": "{\"CanStart\":true,\"HideMainUI\":false,\"InStoryMode\":false,\"Entry\":{},\"Exit\":{},\"ports\":{\"CanStart\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Entry\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":45}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}},\"NodeId\":1,\"Mono\":\"\",\"IsMonoShow\":false,\"ShouldBeHiden\":false,\"name\":\"Start Story\",\"hideFlags\":\"None\"}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":2,\"Ports\":{\"CanStart\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"ConditionSatisfied\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Entry\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":3,\"Ports\":{\"Entry\":{\"connections\":[{\"fieldName\":\"Exit\",\"NodeId\":25}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":4,\"Ports\":{\"Entry\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":17,\"Ports\":{\"Entry\":{\"connections\":[{\"fieldName\":\"Exit\",\"NodeId\":1},{\"fieldName\":\"Exit\",\"NodeId\":44}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":46}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":18,\"Ports\":{\"DialogId\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"DialogItems\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Immediately\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Entry\":{\"connections\":[{\"fieldName\":\"Exit\",\"NodeId\":46}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":23}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":23,\"Ports\":{\"Entry\":{\"connections\":[{\"fieldName\":\"Exit\",\"NodeId\":18}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":24}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":24,\"Ports\":{\"Entry\":{\"connections\":[{\"fieldName\":\"Exit\",\"NodeId\":23}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":25}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":25,\"Ports\":{\"DialogId\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"DialogItems\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Immediately\":{\"connections\":[],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Branch\",\"IsStatic\":true},\"Entry\":{\"connections\":[{\"fieldName\":\"Exit\",\"NodeId\":24}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":3}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":44,\"Ports\":{\"Entry\":{\"connections\":[{\"fieldName\":\"Exit\",\"NodeId\":45}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":17}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":45,\"Ports\":{\"Entry\":{\"connections\":[{\"fieldName\":\"Exit\",\"NodeId\":1}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":44}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      },
+      {
+        "Item1": "ClientExportedRunNode",
+        "Item2": "{\"IsSubGraphNode\":false,\"Entry\":{},\"Exit\":{},\"NodeId\":46,\"Ports\":{\"Entry\":{\"connections\":[{\"fieldName\":\"Exit\",\"NodeId\":17}],\"direction\":\"Input\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true},\"Exit\":{\"connections\":[{\"fieldName\":\"Entry\",\"NodeId\":18}],\"direction\":\"Output\",\"connectionType\":\"Multiple\",\"typeConstraint\":\"None\",\"flowConnectionType\":\"Main\",\"IsStatic\":true}}}"
+      }
+    ]
+  }
+}

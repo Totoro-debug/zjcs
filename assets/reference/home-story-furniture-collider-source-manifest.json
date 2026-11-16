@@ -1,0 +1,488 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    "scripts/prepare_home_story_furniture_collider.py": "3f64eba10e1347c00008e1fd0d239688276d89395642d631885cab7011d6f2d4",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Home/Dynamic/Furniture/DiningTable/DiningTable.prefab": "47b96dfe7b8524ebca42e35a9c74e262ebb8c569609a116bcdb8a59f97e2692c",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Home/Dynamic/Furniture/DiningTable/DiningTable.prefab.meta": "d290908bf1e7fce65c03c2c31f6d478ad927698bd6d3840a135a93b3d1f6555c",
+    "scripts/prepare_current_partner_native.py": "4808ad47045bc6210327e0da53f4a62b053f1cccdaf0e6d4fbd232972d9b4ae7",
+    ".tools/source-packages/official-code/client-source/RepairFurnitureNode.cs": "3b26bdf13d084d3cbc6382bf7a16bd7fb54b6b7f7f76992dbec98f017b425548",
+    ".tools/source-packages/official-code/client-source/BaseHomeEntityCreator.cs": "0ccea6ab933a7fdf0205116d7dbf44b060054ed00564e041252501bbb0045608"
+  },
+  "recovery": {
+    "name": "DiningTableUnrepairedTouch",
+    "originalRoot": "cab-604cc786a1c1d8e8549f06c1cc7632c4:-6421532609616633544",
+    "originalSource": {
+      "bundle": "defaultpackage_assets_prefabs_home_dynamic_furniture_diningtable.bundle",
+      "bundle_hash": "2ad0b0a2b5dc48ddcc20d427463e75e9",
+      "path_id": "-6421532609616633544",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/2ad0b0a2b5dc48ddcc20d427463e75e9.bundle",
+      "raw_size": 192910,
+      "raw_sha256": "78330f28a7d053343e9b11255b40bc05f843ea99be986982f663d02870607794"
+    },
+    "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Home/Dynamic/Furniture/DiningTable/DiningTable.prefab",
+    "native_sha256": "47b96dfe7b8524ebca42e35a9c74e262ebb8c569609a116bcdb8a59f97e2692c",
+    "mapped_objects": 3,
+    "recovered_components": 0,
+    "unresolved": 0,
+    "pendingBindings": {},
+    "output": "DiningTableUnrepairedTouch.json",
+    "subtree": {
+      "original_parent": {
+        "fileID": 4416529295595857
+      },
+      "detached_parent": {
+        "fileID": 0
+      }
+    },
+    "nativeMeta_sha256": "d290908bf1e7fce65c03c2c31f6d478ad927698bd6d3840a135a93b3d1f6555c",
+    "output_sha256": "c4c522d698e0a724f8671f5183018c382cf69862d6c0b245d3021289b5823638"
+  },
+  "chain": {
+    "furniture": [
+      {
+        "name": "touch",
+        "source": "cab-604cc786a1c1d8e8549f06c1cc7632c4:9096365014314754360",
+        "sha256": "444304312bd4e2dd78ba3caa34ab051dd9d95641b4a4c017329636345ff4b241",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ],
+        "provenance": {
+          "bundle": "defaultpackage_assets_prefabs_home_dynamic_furniture_diningtable.bundle",
+          "bundle_hash": "2ad0b0a2b5dc48ddcc20d427463e75e9",
+          "path_id": "9096365014314754360",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/2ad0b0a2b5dc48ddcc20d427463e75e9.bundle",
+          "raw_size": 192910,
+          "raw_sha256": "78330f28a7d053343e9b11255b40bc05f843ea99be986982f663d02870607794"
+        }
+      },
+      {
+        "name": "unrepaired",
+        "source": "cab-604cc786a1c1d8e8549f06c1cc7632c4:-5854679481997549256",
+        "sha256": "81010fe3d1bef6534d5c0b0c542141950a760110ddea79389706094cbc92e9f0",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ],
+        "provenance": {
+          "bundle": "defaultpackage_assets_prefabs_home_dynamic_furniture_diningtable.bundle",
+          "bundle_hash": "2ad0b0a2b5dc48ddcc20d427463e75e9",
+          "path_id": "-5854679481997549256",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/2ad0b0a2b5dc48ddcc20d427463e75e9.bundle",
+          "raw_size": 192910,
+          "raw_sha256": "78330f28a7d053343e9b11255b40bc05f843ea99be986982f663d02870607794"
+        }
+      },
+      {
+        "name": "DiningTable",
+        "source": "cab-604cc786a1c1d8e8549f06c1cc7632c4:-54199176340790984",
+        "sha256": "774d1b9a76cd647c29d011999a8f2ac56f92d6a3c77fe14598dd32059ab001bf",
+        "position": [
+          0.017999999225139618,
+          -0.04699999839067459,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "provenance": {
+          "bundle": "defaultpackage_assets_prefabs_home_dynamic_furniture_diningtable.bundle",
+          "bundle_hash": "2ad0b0a2b5dc48ddcc20d427463e75e9",
+          "path_id": "-54199176340790984",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/2ad0b0a2b5dc48ddcc20d427463e75e9.bundle",
+          "raw_size": 192910,
+          "raw_sha256": "78330f28a7d053343e9b11255b40bc05f843ea99be986982f663d02870607794"
+        }
+      }
+    ],
+    "slot": [
+      {
+        "name": "DiningTableSlot",
+        "source": "cab-57d07147413fe34e5caf2d6862f6834e:-2013495917034672729",
+        "sha256": "c7712f05742f2d58ade66516c11b8c12446a1e950057fea0330b967639106c38",
+        "position": [
+          11.239953994750977,
+          -4.455999374389648,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ],
+        "provenance": {
+          "bundle": "defaultpackage_assets_prefabs_home_dynamic_theme_house.bundle",
+          "bundle_hash": "38270b46036fb4ecf8d600d5a875c437",
+          "path_id": "-2013495917034672729",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/38270b46036fb4ecf8d600d5a875c437.bundle",
+          "raw_size": 772409,
+          "raw_sha256": "a42557508939723a7099f18d4d1fcadd2e049b4db1d7917da492b533c02b7970"
+        }
+      },
+      {
+        "name": "Furnitures",
+        "source": "cab-57d07147413fe34e5caf2d6862f6834e:-8515005829305733721",
+        "sha256": "d91935c3598cdb6e1a413a9f8bfaab86de63f55fc334b24515e341a8ad6c04d5",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ],
+        "provenance": {
+          "bundle": "defaultpackage_assets_prefabs_home_dynamic_theme_house.bundle",
+          "bundle_hash": "38270b46036fb4ecf8d600d5a875c437",
+          "path_id": "-8515005829305733721",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/38270b46036fb4ecf8d600d5a875c437.bundle",
+          "raw_size": 772409,
+          "raw_sha256": "a42557508939723a7099f18d4d1fcadd2e049b4db1d7917da492b533c02b7970"
+        }
+      },
+      {
+        "name": "House",
+        "source": "cab-57d07147413fe34e5caf2d6862f6834e:-7578783662436717145",
+        "sha256": "a6998af2355410a9041d24265a1227e1d2d762d6382ffa44d2b8360edf840b6e",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "provenance": {
+          "bundle": "defaultpackage_assets_prefabs_home_dynamic_theme_house.bundle",
+          "bundle_hash": "38270b46036fb4ecf8d600d5a875c437",
+          "path_id": "-7578783662436717145",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/38270b46036fb4ecf8d600d5a875c437.bundle",
+          "raw_size": 772409,
+          "raw_sha256": "a42557508939723a7099f18d4d1fcadd2e049b4db1d7917da492b533c02b7970"
+        }
+      }
+    ],
+    "house": [
+      {
+        "name": "HouseSlot",
+        "source": "cab-751fab858e3d97e99b41c72f3fe69e13:1339",
+        "sha256": "d6ba9dd035ff757278a2917fcc2acac59f82d135b0f2b0e90b44088ccef03b7b",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "provenance": {
+          "bundle": "defaultpackage_assets_scenes_main.bundle",
+          "bundle_hash": "3e14d3e22d0761d950555642bfa131c3",
+          "path_id": "1339",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/3e14d3e22d0761d950555642bfa131c3.bundle",
+          "raw_size": 247249,
+          "raw_sha256": "c08d26af6aebe7b99492ab9cbc3529dfe9a702eeb42c2738c1bc5acc4a2d3925"
+        }
+      },
+      {
+        "name": "Theme",
+        "source": "cab-751fab858e3d97e99b41c72f3fe69e13:1317",
+        "sha256": "941fe2316abee504e35f8641efa82cb5ddec6f0b50b25631ca903a98a1474065",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          -0.0,
+          -0.0,
+          -0.0,
+          1.0
+        ],
+        "provenance": {
+          "bundle": "defaultpackage_assets_scenes_main.bundle",
+          "bundle_hash": "3e14d3e22d0761d950555642bfa131c3",
+          "path_id": "1317",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/3e14d3e22d0761d950555642bfa131c3.bundle",
+          "raw_size": 247249,
+          "raw_sha256": "c08d26af6aebe7b99492ab9cbc3529dfe9a702eeb42c2738c1bc5acc4a2d3925"
+        }
+      },
+      {
+        "name": "Home",
+        "source": "cab-751fab858e3d97e99b41c72f3fe69e13:1347",
+        "sha256": "4c14ae68288f0252e69b5d0fe28f310cb624a8aa6d0b37687d2f578a497a4b9b",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "provenance": {
+          "bundle": "defaultpackage_assets_scenes_main.bundle",
+          "bundle_hash": "3e14d3e22d0761d950555642bfa131c3",
+          "path_id": "1347",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/3e14d3e22d0761d950555642bfa131c3.bundle",
+          "raw_size": 247249,
+          "raw_sha256": "c08d26af6aebe7b99492ab9cbc3529dfe9a702eeb42c2738c1bc5acc4a2d3925"
+        }
+      },
+      {
+        "name": "HomeRoot",
+        "source": "cab-751fab858e3d97e99b41c72f3fe69e13:1289",
+        "sha256": "c751d2cd718c6493388ad3af2fc781c0c84993a7d1d79ed1b0db67c7341ec9b8",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "provenance": {
+          "bundle": "defaultpackage_assets_scenes_main.bundle",
+          "bundle_hash": "3e14d3e22d0761d950555642bfa131c3",
+          "path_id": "1289",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/3e14d3e22d0761d950555642bfa131c3.bundle",
+          "raw_size": 247249,
+          "raw_sha256": "c08d26af6aebe7b99492ab9cbc3529dfe9a702eeb42c2738c1bc5acc4a2d3925"
+        }
+      }
+    ]
+  },
+  "rootScripts": [
+    {
+      "name": "HomeNpcChatEntry",
+      "source": "cab-604cc786a1c1d8e8549f06c1cc7632c4:7258478372240924984",
+      "sha256": "8708ba4cbd30654c522a78ff69a488426588b600436ee45e37b8ba15d8e50009"
+    },
+    {
+      "name": "EntityClickSound",
+      "source": "cab-604cc786a1c1d8e8549f06c1cc7632c4:-7135496885462785736",
+      "sha256": "37b68713377d4de3ac56fcd6e07281399e71d9022a215cf5ef20992b2473635d"
+    },
+    {
+      "name": "DiningTableNpcPopClick",
+      "source": "cab-604cc786a1c1d8e8549f06c1cc7632c4:5128528680845943096",
+      "sha256": "3ad26ad589ad2ecb5c07e35cc1e32bf4037980935e9a5b9c00e9083fed3c2fd6"
+    },
+    {
+      "name": "HomePlayableClipBind",
+      "source": "cab-604cc786a1c1d8e8549f06c1cc7632c4:-5494921953236508360",
+      "sha256": "83c670e1b3c515ca62db6c2a472bfa0cd952c61341e2003fbbea5022569ef77e"
+    },
+    {
+      "name": "HomeEntityNodeRegister",
+      "source": "cab-604cc786a1c1d8e8549f06c1cc7632c4:-5479245417854164680",
+      "sha256": "3dbc69b8254e22c67c9bb4504a4c14c06eaed2fe5c284375630330f8cf218449"
+    },
+    {
+      "name": "HomeEntityDataProvider",
+      "source": "cab-604cc786a1c1d8e8549f06c1cc7632c4:-2936365307159076552",
+      "sha256": "29fb889a0e032cd3e640807a2955b30d21f76c130e0de44c09015915772c8215"
+    },
+    {
+      "name": "HomeBindingAuthoring",
+      "source": "cab-604cc786a1c1d8e8549f06c1cc7632c4:-7699221068305751752",
+      "sha256": "70ff653914473a8eae3c3abf30048aaac17b7314143a6c216d5909363934b390"
+    }
+  ],
+  "collider": {
+    "source": "cab-604cc786a1c1d8e8549f06c1cc7632c4:-2141973025619271368",
+    "sha256": "06bf0a6a25261e42b1d50c7051f6d0da2f6f4d79a1d1504406fced95efbfa319",
+    "provenance": {
+      "bundle": "defaultpackage_assets_prefabs_home_dynamic_furniture_diningtable.bundle",
+      "bundle_hash": "2ad0b0a2b5dc48ddcc20d427463e75e9",
+      "path_id": "-2141973025619271368",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/2ad0b0a2b5dc48ddcc20d427463e75e9.bundle",
+      "raw_size": 192910,
+      "raw_sha256": "78330f28a7d053343e9b11255b40bc05f843ea99be986982f663d02870607794"
+    },
+    "fields": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": -6421532609616633544
+      },
+      "m_Material": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "m_IncludeLayers": {
+        "m_Bits": 0
+      },
+      "m_ExcludeLayers": {
+        "m_Bits": 0
+      },
+      "m_LayerOverridePriority": 0,
+      "m_IsTrigger": false,
+      "m_ProvidesContacts": false,
+      "m_Enabled": true,
+      "m_Size": {
+        "x": 2.5,
+        "y": 1.5,
+        "z": 0.0
+      },
+      "m_Center": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    }
+  },
+  "outputs": {
+    "DiningTableUnrepairedTouch.prefab": "3eeb35c05d250bd8c2cf1e92514a52d6bd4fe75b438b490d69a2f2b165cc97a5",
+    "DiningTableUnrepairedTouch.prefab.meta": "802a2c9327c70e179307e8911bc483c97424ed57df60e1a25ed5ac90b7206fc4"
+  },
+  "root": {
+    "fileID": 1833703512093738,
+    "guid": "942f9ea673bb9edd02038f254550c0fd",
+    "type": 3
+  },
+  "scope": "Original unrepaired collision subtree and explicit catalog; actual story-host binding remains pending.",
+  "installed_output_sha256": {
+    "unity/Assets/Official/Home/StoryColliderNative/DiningTableUnrepairedTouch.prefab": "3eeb35c05d250bd8c2cf1e92514a52d6bd4fe75b438b490d69a2f2b165cc97a5",
+    "unity/Assets/Official/Home/StoryColliderNative/DiningTableUnrepairedTouch.prefab.meta": "802a2c9327c70e179307e8911bc483c97424ed57df60e1a25ed5ac90b7206fc4",
+    "unity/Assets/Official/Home/StoryColliderNative.meta": "431c49c90b770ba0f99ba8d9e08d7ea9efdee9d8011853eacfcfcccddfeacb90",
+    "unity/Assets/Game/Runtime/Offline/HomeStoryDialog/HomeStoryFurnitureColliderAssets.cs": "5ea3394835a1fb0134f82e8d8ebebe331b677cddaa33ade8ed6c14ca57e3259c",
+    "unity/Assets/Game/Runtime/Offline/HomeStoryDialog/HomeStoryFurnitureColliderAssets.cs.meta": "aca35e4877b3b28c5851b82df409e250d4c7f225a42b163d99ae75c2e1b2e876",
+    "unity/Assets/Game/Resources/Home/HomeStoryFurnitureColliderAssets.asset": "ba3ec46417959c898a88b70a82169539dce9c65160a34774b5353ee4c4c04815",
+    "unity/Assets/Game/Resources/Home/HomeStoryFurnitureColliderAssets.asset.meta": "ae2c3ecd052ba1ecbe57373f0aea037a796a6b1b3c67a217f90bac2fe0c3174d"
+  },
+  "validation_inputs": {
+    "scripts/prepare_home_story_mask_validation.py": "b7099dbebcd7bafc84ee790cf6d5778d060c4ec05a32d9e73116fda89d096417",
+    "scripts/fixtures/home_story_mask_validation.cs": "fd097b67f4fd4543daf4da0941ffca2e2bf88ad443cac6ca39082efa2b9c15aa"
+  }
+}

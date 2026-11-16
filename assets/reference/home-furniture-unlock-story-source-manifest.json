@@ -1,0 +1,6547 @@
+{
+  "manifest": "884_156692",
+  "sources": {
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbStoryInfo.cs": "611830e9b45548bb62c0a91164c9ce087496d3b1dbbfca98c87513a11ff1f6ae",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/StoryInfo.cs": "017dbd4d4172f33e813e1c139d4c370b46ecc21c3c8858ed9e8e602a7ff7ac05",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbDialogInfo.cs": "a03aafbb268daaf0e482b9f7351ff5ca452d49c0bbdbda0460368ca497be39c5",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/DialogInfo.cs": "2361dff63780cbe332d64c49c814ec4c428bd96e45b1315f1cf320950a98aa79",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbStoryOptionInfo.cs": "e7e9246fce1c5d0c957311259692c871d3a45f9a749f84f822ccdd1208908aef",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/StoryOptionInfo.cs": "6e245887c6eb982bb571c2c420c4166e1494d8310a4aa880691f353f70c2b860",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbDialogRoleInfo.cs": "60c7bfcf364f8fbee01a518e1189166e5fba9b97e46c7fd71de0d8d9cc094ec2",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/DialogRoleInfo.cs": "6674f56a822dc964128a929e74814666b4e3f04ec705217ff290c8545fad610b",
+    "scripts/prepare_current_home_furniture_stories.py": "0a5d084b33c8ea7f1a9ecebeedb68ac56f9f5ba1e8ea6ee9602f170fbb7775f9",
+    "scripts/official_tables.py": "77762a9b2aba2d92a6ad3ebd8ce5f7d0bb42a6b4cfc872ae7094c1d10b1e0473",
+    "scripts/official_unity_schema.py": "934af3c56159da97a5c6d97a1412547b3ca847f71303bd961bbd37bee8b3aceb",
+    "scripts/prepare_map16_story_source.py": "1bd0f9284bf861ee8de32576d0addbad3875b84c3bc0f73a76ccb8d671157461",
+    ".tools/source-packages/current/884_156692/official-code/global-metadata.dat": "c0fe5e062fb3ed1814781e54fd1b4859757970632655138adc091820ded88e0e",
+    ".tools/source-packages/current/884_156692/official-code/client-source/FurnitureBase.cs": "28b94fc87181e1110953b8960ee52f06a693227e6af24212f85f01768381e85a",
+    ".tools/source-packages/current/884_156692/official-code/client-source/DialogNode.cs": "5a6062f4e7e8fb127e4b3aa7c304edf5d70afd873f0c7a8269fcdbba0832e48f",
+    ".tools/source-packages/current/884_156692/official-code/client-source/OptionDialogNode.cs": "ffd6f7e92d3a3a7aefcb5f0bd19aff64e6aec1452b81610e969004fbc64633c0",
+    ".tools/source-packages/current/884_156692/official-code/client-source/OptionTalkDialogPanel.cs": "87a71c8e9a934b6213ba7a1944d7c591b02ebb547ed086804c7eca5f3c427b58",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TalkDialog.cs": "911e163b342d2be1ff1cfdbfcd6bba5afc4c2bceaebf1490fc103b953ebb12a6",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/DialogInfoParser.cs": "ffab9875d8e7da05717192df3b942fe4bebb838453704e66826c95c4d23b1a37",
+    ".tools/source-packages/current/884_156692/code-manifest.json": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LanguageUtils.cs": "ddc94bb5dd46f8c71b6d58ab0f03e2048cde72911de11e343304ce73e4b9a61c",
+    ".tools/source-packages/current/884_156692/official-code/client-source/CameraDragNode.cs": "bb1f73c79a0cbab9e0c06563b78a47bc903a5fb8f640692ebb85f4d9f26c4f75",
+    ".tools/source-packages/current/884_156692/official-code/client-source/CameraMoveNode.cs": "acf871c8f454c222c3308c72c49c3fa154e9136d701f3dd3795576129d2227ce",
+    ".tools/source-packages/current/884_156692/official-code/client-source/FinishStoryConditionNode.cs": "ce301a7c11430e4b32b5075b81d967486ee6cb4534d2a584e86c6ac252005b4c",
+    ".tools/source-packages/current/884_156692/official-code/client-source/FinishStoryNode.cs": "d0fb9cf7fb0d6cf905041c67711cbc4775d9b7bb704522748162b1456d8cdd05",
+    ".tools/source-packages/current/884_156692/official-code/client-source/HideAllUINode.cs": "53a6f31ae2dd1b123fe234a6a58c51aba5a41eab2f59e19c813878db10482508",
+    ".tools/source-packages/current/884_156692/official-code/client-source/RepairFurnitureNode.cs": "3b26bdf13d084d3cbc6382bf7a16bd7fb54b6b7f7f76992dbec98f017b425548",
+    ".tools/source-packages/current/884_156692/official-code/client-source/SetFreeCameraForcePosXNode.cs": "69c84e8ea0e7ca3e1cbfda1ac1500d7dea4834b9b07f78d50a9b57d338f11fcd",
+    ".tools/source-packages/current/884_156692/official-code/client-source/StartStoryNode.cs": "ead294ad76e3e65d0c0df98c1d80ba39888e0875edba4c21bde43a60a369afcf",
+    ".tools/source-packages/current/884_156692/official-code/client-source/StoryGraph.cs": "87d69d2ef381d109cf849f6229b66bd0c3998d3a8529dddf736d0f3f7fe82bc6",
+    ".tools/source-packages/current/884_156692/official-code/client-source/WaitAllNoTipWindowClosedNode.cs": "01fe3d81c05d72423e5b1434c3e46dd3a3318fa0c786e450a4d0cadf2ddbbc0f",
+    ".tools/source-packages/current/884_156692/official-code/client-source/WaitStartStoryNode.cs": "b42b62c58098481c0caa2344c91b01e818e9ca3d6f97e90743b0804b03c4cccb"
+  },
+  "tables": [
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "c127151ca016b1013e487423db2b7090",
+        "path_id": "5337393257897255075",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+        "raw_size": 2142435,
+        "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+      },
+      "table": "story",
+      "constructor": "TbStoryInfo",
+      "object_sha256": "8f0d5d90122af7685381c6c81c5502f9360148689c582b96710837d94a1cbe18",
+      "payload_sha256": "3db490217b4748fa01515ea9c3ef7a2e69aeb0380dbccf013cb42cb572c69c23",
+      "bytes": 58365
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "c127151ca016b1013e487423db2b7090",
+        "path_id": "7377324464202116261",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+        "raw_size": 2142435,
+        "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+      },
+      "table": "dialog",
+      "constructor": "TbDialogInfo",
+      "object_sha256": "08a2950b00563f1f04309f91a53006afdfb0070a007ea5f5dcd2e20b46e7ca77",
+      "payload_sha256": "23ff63a725c5a31da3f23742ef95bd49d7c23a5f861e3ea00a2f2e472c1118cc",
+      "bytes": 279860
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "c127151ca016b1013e487423db2b7090",
+        "path_id": "8807966754541551752",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+        "raw_size": 2142435,
+        "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+      },
+      "table": "story_option_dialog",
+      "constructor": "TbStoryOptionInfo",
+      "object_sha256": "e3b914631efe067fadf30044521e6f0799198d3f2b385054f28a4f9817f84144",
+      "payload_sha256": "e467ea7860549f7c8d23ffacbf4bb5d86cd1e1b33dee5898d7dafed4c311f546",
+      "bytes": 106496
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban_dialog.bundle",
+        "bundle_hash": "cc48a2130d3e62f6e57a055ecb02734e",
+        "path_id": "-7830826545954998254",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/cc48a2130d3e62f6e57a055ecb02734e.bundle",
+        "raw_size": 5754,
+        "raw_sha256": "49220d32853c833bf6d9a261f60469093548d34aa7528fd03acc8e6bbda67484"
+      },
+      "table": "Dialog/dialog_role",
+      "constructor": "TbDialogRoleInfo",
+      "object_sha256": "2737764d3dd2a3c5aa447c84f99c47ae745104953ccda1be6cf7b500d0eedf34",
+      "payload_sha256": "17fc1e8c41473daea75b04ca34e5a03049773058af417b6e561148b4fdccf81e",
+      "bytes": 9668
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_config_story.bundle",
+        "bundle_hash": "3eae4e8fd2950505527c07ef4170a527",
+        "path_id": "-8806823155469313951",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/3eae4e8fd2950505527c07ef4170a527.bundle",
+        "raw_size": 604480,
+        "raw_sha256": "e8222947215e239d83fcfca0a9584616392d8110021a031cd46ceba456c3487b"
+      },
+      "asset": "Assets/Config/Story/SenSenHomeStore.json",
+      "object_sha256": "49c2b7d4a5621d43e89a7b79e38cdc9078abbb40ca940c412e97d6fac8ffc020",
+      "payload_sha256": "a959e53ad7654cfd39529e45f64fd90fb68614105b9be3697b17ee2aba600ad3",
+      "bytes": 10652
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_config_story.bundle",
+        "bundle_hash": "3eae4e8fd2950505527c07ef4170a527",
+        "path_id": "3483847419767197752",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/3eae4e8fd2950505527c07ef4170a527.bundle",
+        "raw_size": 604480,
+        "raw_sha256": "e8222947215e239d83fcfca0a9584616392d8110021a031cd46ceba456c3487b"
+      },
+      "asset": "Assets/Config/Story/UnlockCommunication.json",
+      "object_sha256": "2178e48029c7c1e7fe6e02c96ae630edcec756596e1a2a8b8ec5ae44a9e1e96e",
+      "payload_sha256": "64c355a216324fed660a49810959e84a910ff9a98ac3af9d684fdf174ec4cb67",
+      "bytes": 7838
+    }
+  ],
+  "graphs": {
+    "UnlockCommunication": {
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_basicguide.bundle",
+        "bundle_hash": "2358bd33d19c7fcce7b2915c3a1c9cfa",
+        "path_id": "4143810608779044889",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/2358bd33d19c7fcce7b2915c3a1c9cfa.bundle",
+        "raw_size": 23744,
+        "raw_sha256": "9c04e907ea21057121eb6d98ee746282aa68d5f72681f5ec7127183436159d3b"
+      },
+      "object_sha256": "e9ffa025aa19ff1930fcd1bbc53824240e70fc6c186431b2c11e4d596420cde2",
+      "nodes": [
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_basicguide.bundle",
+            "bundle_hash": "2358bd33d19c7fcce7b2915c3a1c9cfa",
+            "path_id": "4561129179011229721",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/2358bd33d19c7fcce7b2915c3a1c9cfa.bundle",
+            "raw_size": 23744,
+            "raw_sha256": "9c04e907ea21057121eb6d98ee746282aa68d5f72681f5ec7127183436159d3b"
+          },
+          "object_sha256": "60feed8c24da5ae31ec09020dfef87f945af1c542c1316f3bb2d0c3775d7ece7",
+          "node_id": 1,
+          "node_type": "StartStoryNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_basicguide.bundle",
+            "bundle_hash": "2358bd33d19c7fcce7b2915c3a1c9cfa",
+            "path_id": "-822869349976889319",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/2358bd33d19c7fcce7b2915c3a1c9cfa.bundle",
+            "raw_size": 23744,
+            "raw_sha256": "9c04e907ea21057121eb6d98ee746282aa68d5f72681f5ec7127183436159d3b"
+          },
+          "object_sha256": "3020aa9bd1317e7e8e170573f816d5e2f86ee0c7481da36ef154c5c6bad06cea",
+          "node_id": 2,
+          "node_type": "WaitStartStoryNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_basicguide.bundle",
+            "bundle_hash": "2358bd33d19c7fcce7b2915c3a1c9cfa",
+            "path_id": "6313637121054550041",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/2358bd33d19c7fcce7b2915c3a1c9cfa.bundle",
+            "raw_size": 23744,
+            "raw_sha256": "9c04e907ea21057121eb6d98ee746282aa68d5f72681f5ec7127183436159d3b"
+          },
+          "object_sha256": "eee24a64113c9b1b7c24834a41c041f555a86c865c36579f0a80d635e737171d",
+          "node_id": 3,
+          "node_type": "FinishStoryNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_basicguide.bundle",
+            "bundle_hash": "2358bd33d19c7fcce7b2915c3a1c9cfa",
+            "path_id": "6999260367347001369",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/2358bd33d19c7fcce7b2915c3a1c9cfa.bundle",
+            "raw_size": 23744,
+            "raw_sha256": "9c04e907ea21057121eb6d98ee746282aa68d5f72681f5ec7127183436159d3b"
+          },
+          "object_sha256": "54be3d1c3fbba543a1e051437e4166466f93faf8821504ad5fb1f259fe42495e",
+          "node_id": 4,
+          "node_type": "FinishStoryConditionNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_basicguide.bundle",
+            "bundle_hash": "2358bd33d19c7fcce7b2915c3a1c9cfa",
+            "path_id": "-4823908653104093159",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/2358bd33d19c7fcce7b2915c3a1c9cfa.bundle",
+            "raw_size": 23744,
+            "raw_sha256": "9c04e907ea21057121eb6d98ee746282aa68d5f72681f5ec7127183436159d3b"
+          },
+          "object_sha256": "ab6694400d6fecd6d56b17d793bb42e8b836833a83fd4216b87ed61d97adc111",
+          "node_id": 17,
+          "node_type": "CameraDragNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_basicguide.bundle",
+            "bundle_hash": "2358bd33d19c7fcce7b2915c3a1c9cfa",
+            "path_id": "-3822095470075303911",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/2358bd33d19c7fcce7b2915c3a1c9cfa.bundle",
+            "raw_size": 23744,
+            "raw_sha256": "9c04e907ea21057121eb6d98ee746282aa68d5f72681f5ec7127183436159d3b"
+          },
+          "object_sha256": "e1d61234acefcdd352c4e6d2d6f43ae5408f5e96194bd759c30d4effcdf56e87",
+          "node_id": 18,
+          "node_type": "DialogNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_basicguide.bundle",
+            "bundle_hash": "2358bd33d19c7fcce7b2915c3a1c9cfa",
+            "path_id": "7044854871516194841",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/2358bd33d19c7fcce7b2915c3a1c9cfa.bundle",
+            "raw_size": 23744,
+            "raw_sha256": "9c04e907ea21057121eb6d98ee746282aa68d5f72681f5ec7127183436159d3b"
+          },
+          "object_sha256": "c95ac00454fdef9edf5cb2479115afc5edd5eb2a1baa57994dd6ccf4b0b29b32",
+          "node_id": 23,
+          "node_type": "RepairFurnitureNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_basicguide.bundle",
+            "bundle_hash": "2358bd33d19c7fcce7b2915c3a1c9cfa",
+            "path_id": "-8017667496449398759",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/2358bd33d19c7fcce7b2915c3a1c9cfa.bundle",
+            "raw_size": 23744,
+            "raw_sha256": "9c04e907ea21057121eb6d98ee746282aa68d5f72681f5ec7127183436159d3b"
+          },
+          "object_sha256": "727f8d8644b0be697cdb03dca5c8673422cc9794707f0b00402609c3552e6cf1",
+          "node_id": 24,
+          "node_type": "WaitAllNoTipWindowClosedNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_basicguide.bundle",
+            "bundle_hash": "2358bd33d19c7fcce7b2915c3a1c9cfa",
+            "path_id": "-7499336473938024423",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/2358bd33d19c7fcce7b2915c3a1c9cfa.bundle",
+            "raw_size": 23744,
+            "raw_sha256": "9c04e907ea21057121eb6d98ee746282aa68d5f72681f5ec7127183436159d3b"
+          },
+          "object_sha256": "37247f27d9cc3d1d9a5dd86259772094c1cf95d899d7231d4b6f4ac266ab5202",
+          "node_id": 25,
+          "node_type": "DialogNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_basicguide.bundle",
+            "bundle_hash": "2358bd33d19c7fcce7b2915c3a1c9cfa",
+            "path_id": "-403373961789429735",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/2358bd33d19c7fcce7b2915c3a1c9cfa.bundle",
+            "raw_size": 23744,
+            "raw_sha256": "9c04e907ea21057121eb6d98ee746282aa68d5f72681f5ec7127183436159d3b"
+          },
+          "object_sha256": "3f278a166b1c7a3a9d8e969bac7f253cd59e20cbe798fc13cc33f6f3e5939c87",
+          "node_id": 44,
+          "node_type": "SetFreeCameraForcePosXNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_basicguide.bundle",
+            "bundle_hash": "2358bd33d19c7fcce7b2915c3a1c9cfa",
+            "path_id": "-2324831753215072231",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/2358bd33d19c7fcce7b2915c3a1c9cfa.bundle",
+            "raw_size": 23744,
+            "raw_sha256": "9c04e907ea21057121eb6d98ee746282aa68d5f72681f5ec7127183436159d3b"
+          },
+          "object_sha256": "b531416d9297a6555baa88645df37d72b6fd6a4aeb97d532c1c631450c24f649",
+          "node_id": 45,
+          "node_type": "WaitAllNoTipWindowClosedNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_basicguide.bundle",
+            "bundle_hash": "2358bd33d19c7fcce7b2915c3a1c9cfa",
+            "path_id": "5793475367597647897",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/2358bd33d19c7fcce7b2915c3a1c9cfa.bundle",
+            "raw_size": 23744,
+            "raw_sha256": "9c04e907ea21057121eb6d98ee746282aa68d5f72681f5ec7127183436159d3b"
+          },
+          "object_sha256": "ef12b485575f94ab65660cd912731bec8158b3c62e93fecdabd65045dcb7ea8f",
+          "node_id": 46,
+          "node_type": "HideAllUINode"
+        }
+      ]
+    },
+    "SenSenHomeStore": {
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_sensenstory.bundle",
+        "bundle_hash": "ca996808f29bc8f42235d562327ee3d2",
+        "path_id": "-1636192923610827046",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/ca996808f29bc8f42235d562327ee3d2.bundle",
+        "raw_size": 14014,
+        "raw_sha256": "396c015b35eade274f9f6f1844824f65e3b85c0177ba7de889fbfefaa6852789"
+      },
+      "object_sha256": "590993b5c47417c4efe690bd19943a9a38e60b56730d26624f00f5df4f27492d",
+      "nodes": [
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_sensenstory.bundle",
+            "bundle_hash": "ca996808f29bc8f42235d562327ee3d2",
+            "path_id": "-7256903411675744550",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/ca996808f29bc8f42235d562327ee3d2.bundle",
+            "raw_size": 14014,
+            "raw_sha256": "396c015b35eade274f9f6f1844824f65e3b85c0177ba7de889fbfefaa6852789"
+          },
+          "object_sha256": "ebaa57bf4300d81ec5dc2924ad312a26d26ccd97bb55ab7e1453f38560e58a84",
+          "node_id": 1,
+          "node_type": "StartStoryNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_sensenstory.bundle",
+            "bundle_hash": "ca996808f29bc8f42235d562327ee3d2",
+            "path_id": "-5188321828778002726",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/ca996808f29bc8f42235d562327ee3d2.bundle",
+            "raw_size": 14014,
+            "raw_sha256": "396c015b35eade274f9f6f1844824f65e3b85c0177ba7de889fbfefaa6852789"
+          },
+          "object_sha256": "a4d5ded866885b33cd2e25a22e391a15b88b7b298399cfa3047063366651833b",
+          "node_id": 2,
+          "node_type": "WaitStartStoryNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_sensenstory.bundle",
+            "bundle_hash": "ca996808f29bc8f42235d562327ee3d2",
+            "path_id": "-1588963328739952934",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/ca996808f29bc8f42235d562327ee3d2.bundle",
+            "raw_size": 14014,
+            "raw_sha256": "396c015b35eade274f9f6f1844824f65e3b85c0177ba7de889fbfefaa6852789"
+          },
+          "object_sha256": "a1555b9ba21483ec29f73836a0056f7ca6d226171f6c719a723530d3252d1113",
+          "node_id": 3,
+          "node_type": "FinishStoryNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_sensenstory.bundle",
+            "bundle_hash": "ca996808f29bc8f42235d562327ee3d2",
+            "path_id": "-5949810333015722278",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/ca996808f29bc8f42235d562327ee3d2.bundle",
+            "raw_size": 14014,
+            "raw_sha256": "396c015b35eade274f9f6f1844824f65e3b85c0177ba7de889fbfefaa6852789"
+          },
+          "object_sha256": "ba4684df9901badd3497dfe79205f49031fc34c7e95ebb161d7ebc772a4872ae",
+          "node_id": 4,
+          "node_type": "FinishStoryConditionNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_sensenstory.bundle",
+            "bundle_hash": "ca996808f29bc8f42235d562327ee3d2",
+            "path_id": "20098943751894746",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/ca996808f29bc8f42235d562327ee3d2.bundle",
+            "raw_size": 14014,
+            "raw_sha256": "396c015b35eade274f9f6f1844824f65e3b85c0177ba7de889fbfefaa6852789"
+          },
+          "object_sha256": "07e14f4233491c69c6fc4bf3e02325900bca5ca1e6673df0e0e0f080dc9b6255",
+          "node_id": 36,
+          "node_type": "WaitAllNoTipWindowClosedNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_sensenstory.bundle",
+            "bundle_hash": "ca996808f29bc8f42235d562327ee3d2",
+            "path_id": "-4624159241976858918",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/ca996808f29bc8f42235d562327ee3d2.bundle",
+            "raw_size": 14014,
+            "raw_sha256": "396c015b35eade274f9f6f1844824f65e3b85c0177ba7de889fbfefaa6852789"
+          },
+          "object_sha256": "19cde812fb43c498a2d886a5c2ce3a1eaac354c4d6562de69d966ce5db8c5221",
+          "node_id": 37,
+          "node_type": "CameraMoveNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_sensenstory.bundle",
+            "bundle_hash": "ca996808f29bc8f42235d562327ee3d2",
+            "path_id": "-5863088844461558054",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/ca996808f29bc8f42235d562327ee3d2.bundle",
+            "raw_size": 14014,
+            "raw_sha256": "396c015b35eade274f9f6f1844824f65e3b85c0177ba7de889fbfefaa6852789"
+          },
+          "object_sha256": "bd5aa859c42862e616ad48a761cbaca15b260f4a9bbd3334bfe20d78b4c54072",
+          "node_id": 48,
+          "node_type": "CameraDragNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_sensenstory.bundle",
+            "bundle_hash": "ca996808f29bc8f42235d562327ee3d2",
+            "path_id": "-1566217220403939622",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/ca996808f29bc8f42235d562327ee3d2.bundle",
+            "raw_size": 14014,
+            "raw_sha256": "396c015b35eade274f9f6f1844824f65e3b85c0177ba7de889fbfefaa6852789"
+          },
+          "object_sha256": "d41d494be71ff899397ba3eed88dbc33712039e1c7d63e0f7390474fb055059d",
+          "node_id": 49,
+          "node_type": "OptionDialogNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_sensenstory.bundle",
+            "bundle_hash": "ca996808f29bc8f42235d562327ee3d2",
+            "path_id": "8227148290401318618",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/ca996808f29bc8f42235d562327ee3d2.bundle",
+            "raw_size": 14014,
+            "raw_sha256": "396c015b35eade274f9f6f1844824f65e3b85c0177ba7de889fbfefaa6852789"
+          },
+          "object_sha256": "2caf3eee41ce9dd680ad8d5e12f50bbca432297c1ac0cd27386d93029bc2cb5d",
+          "node_id": 50,
+          "node_type": "DialogNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_sensenstory.bundle",
+            "bundle_hash": "ca996808f29bc8f42235d562327ee3d2",
+            "path_id": "-7227744243752225062",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/ca996808f29bc8f42235d562327ee3d2.bundle",
+            "raw_size": 14014,
+            "raw_sha256": "396c015b35eade274f9f6f1844824f65e3b85c0177ba7de889fbfefaa6852789"
+          },
+          "object_sha256": "03c109933c6e9725fef13102422422de94ec69d9088f010e2764a909807ade8f",
+          "node_id": 51,
+          "node_type": "DialogNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_sensenstory.bundle",
+            "bundle_hash": "ca996808f29bc8f42235d562327ee3d2",
+            "path_id": "-7536734573188204838",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/ca996808f29bc8f42235d562327ee3d2.bundle",
+            "raw_size": 14014,
+            "raw_sha256": "396c015b35eade274f9f6f1844824f65e3b85c0177ba7de889fbfefaa6852789"
+          },
+          "object_sha256": "5e4aa9c8c42a2f053e548ffcc79bd496e6f3b8b930a47479d3c2e43cc4c41c98",
+          "node_id": 53,
+          "node_type": "OptionDialogNode"
+        },
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_scriptableconfig_story_map11story_sensenstory.bundle",
+            "bundle_hash": "ca996808f29bc8f42235d562327ee3d2",
+            "path_id": "-2387680979116935462",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/ca996808f29bc8f42235d562327ee3d2.bundle",
+            "raw_size": 14014,
+            "raw_sha256": "396c015b35eade274f9f6f1844824f65e3b85c0177ba7de889fbfefaa6852789"
+          },
+          "object_sha256": "88f95a62c29ee2352aa869ddd50682f79848202b2f536350401c03912db9f4cc",
+          "node_id": 54,
+          "node_type": "DialogNode"
+        }
+      ]
+    }
+  },
+  "language": [
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/WwiseBnk/495eff606d09ccff377d3b54ba4c1bc4.rawfile",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "raw_size": 5556,
+      "raw_sha256": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365",
+      "name": "wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile",
+      "payload_sha256": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365",
+      "bytes": 5556,
+      "md5": "495eff606d09ccff377d3b54ba4c1bc4"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/WwiseBnk/7457975a4ff474fa84c666b9b720bb3d.rawfile",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "raw_size": 5300206,
+      "raw_sha256": "a7e72b9478ce455a7ef12974f16e3f78e684ded497b7750f7901dacb66eacfad",
+      "name": "wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile",
+      "payload_sha256": "a7e72b9478ce455a7ef12974f16e3f78e684ded497b7750f7901dacb66eacfad",
+      "bytes": 5300206,
+      "md5": "7457975a4ff474fa84c666b9b720bb3d"
+    }
+  ],
+  "schema_records": {
+    "Assembly-CSharp:StoryGraph": [
+      {
+        "level": 0,
+        "type": "StoryGraph",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "nodes",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "PPtr<$Node>",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "NodeIdRecoder",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp:StartStoryNode": [
+      {
+        "level": 0,
+        "type": "StartStoryNode",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$NodeGraph>",
+        "name": "graph",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "Vector2",
+        "name": "position",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "NodePortDictionary",
+        "name": "ports",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "keys",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "values",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "NodePort",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_fieldName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "PPtr<$Node>",
+        "name": "_node",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_typeQualifiedName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "vector",
+        "name": "connections",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "PortConnection",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "string",
+        "name": "fieldName",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "PPtr<$Node>",
+        "name": "node",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "vector",
+        "name": "reroutePoints",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "Vector2",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_direction",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_connectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_typeConstraint",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_flowConnectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "UInt8",
+        "name": "_dynamic",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "NodeId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "Mono",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsMonoShow",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Entry",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Exit",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "CanStart",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "HideMainUI",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "InStoryMode",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:WaitStartStoryNode": [
+      {
+        "level": 0,
+        "type": "WaitStartStoryNode",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$NodeGraph>",
+        "name": "graph",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "Vector2",
+        "name": "position",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "NodePortDictionary",
+        "name": "ports",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "keys",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "values",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "NodePort",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_fieldName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "PPtr<$Node>",
+        "name": "_node",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_typeQualifiedName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "vector",
+        "name": "connections",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "PortConnection",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "string",
+        "name": "fieldName",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "PPtr<$Node>",
+        "name": "node",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "vector",
+        "name": "reroutePoints",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "Vector2",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_direction",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_connectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_typeConstraint",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_flowConnectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "UInt8",
+        "name": "_dynamic",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "NodeId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "Mono",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsMonoShow",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Entry",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Exit",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "CanStart",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "ConditionSatisfied",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "NewMode",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "ArrowReplayWhenMetConditions",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:FinishStoryNode": [
+      {
+        "level": 0,
+        "type": "FinishStoryNode",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$NodeGraph>",
+        "name": "graph",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "Vector2",
+        "name": "position",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "NodePortDictionary",
+        "name": "ports",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "keys",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "values",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "NodePort",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_fieldName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "PPtr<$Node>",
+        "name": "_node",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_typeQualifiedName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "vector",
+        "name": "connections",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "PortConnection",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "string",
+        "name": "fieldName",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "PPtr<$Node>",
+        "name": "node",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "vector",
+        "name": "reroutePoints",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "Vector2",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_direction",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_connectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_typeConstraint",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_flowConnectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "UInt8",
+        "name": "_dynamic",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "NodeId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "Mono",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsMonoShow",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Entry",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Exit",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp:FinishStoryConditionNode": [
+      {
+        "level": 0,
+        "type": "FinishStoryConditionNode",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$NodeGraph>",
+        "name": "graph",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "Vector2",
+        "name": "position",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "NodePortDictionary",
+        "name": "ports",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "keys",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "values",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "NodePort",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_fieldName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "PPtr<$Node>",
+        "name": "_node",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_typeQualifiedName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "vector",
+        "name": "connections",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "PortConnection",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "string",
+        "name": "fieldName",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "PPtr<$Node>",
+        "name": "node",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "vector",
+        "name": "reroutePoints",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "Vector2",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_direction",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_connectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_typeConstraint",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_flowConnectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "UInt8",
+        "name": "_dynamic",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "NodeId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "Mono",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsMonoShow",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Entry",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Exit",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp:CameraDragNode": [
+      {
+        "level": 0,
+        "type": "CameraDragNode",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$NodeGraph>",
+        "name": "graph",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "Vector2",
+        "name": "position",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "NodePortDictionary",
+        "name": "ports",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "keys",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "values",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "NodePort",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_fieldName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "PPtr<$Node>",
+        "name": "_node",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_typeQualifiedName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "vector",
+        "name": "connections",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "PortConnection",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "string",
+        "name": "fieldName",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "PPtr<$Node>",
+        "name": "node",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "vector",
+        "name": "reroutePoints",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "Vector2",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_direction",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_connectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_typeConstraint",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_flowConnectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "UInt8",
+        "name": "_dynamic",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "NodeId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "Mono",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsMonoShow",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Entry",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Exit",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "CanDrag",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:DialogNode": [
+      {
+        "level": 0,
+        "type": "DialogNode",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$NodeGraph>",
+        "name": "graph",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "Vector2",
+        "name": "position",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "NodePortDictionary",
+        "name": "ports",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "keys",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "values",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "NodePort",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_fieldName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "PPtr<$Node>",
+        "name": "_node",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_typeQualifiedName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "vector",
+        "name": "connections",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "PortConnection",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "string",
+        "name": "fieldName",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "PPtr<$Node>",
+        "name": "node",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "vector",
+        "name": "reroutePoints",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "Vector2",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_direction",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_connectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_typeConstraint",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_flowConnectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "UInt8",
+        "name": "_dynamic",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "NodeId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "Mono",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsMonoShow",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Entry",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Exit",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "DialogId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "DialogItems",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "DialogItem",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "Order",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "Content",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "AutoCloseDialog",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "AutoPlayConfig",
+        "name": "AutoPlayConfig",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "UInt8",
+        "name": "IsAutoPlay",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "AutoPlayWaitTime",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "AutoPlayDura",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsHideOtherUI",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsNeedMoveCamera",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "DialogVariantType",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "Immediately",
+        "flags": 16384
+      }
+    ],
+    "Assembly-CSharp:RepairFurnitureNode": [
+      {
+        "level": 0,
+        "type": "RepairFurnitureNode",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$NodeGraph>",
+        "name": "graph",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "Vector2",
+        "name": "position",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "NodePortDictionary",
+        "name": "ports",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "keys",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "values",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "NodePort",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_fieldName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "PPtr<$Node>",
+        "name": "_node",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_typeQualifiedName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "vector",
+        "name": "connections",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "PortConnection",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "string",
+        "name": "fieldName",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "PPtr<$Node>",
+        "name": "node",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "vector",
+        "name": "reroutePoints",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "Vector2",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_direction",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_connectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_typeConstraint",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_flowConnectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "UInt8",
+        "name": "_dynamic",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "NodeId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "Mono",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsMonoShow",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Entry",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Exit",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsForbidDragCam",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "Furniture",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "MaskSetting",
+        "name": "FurnitureMaskSet",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Vector3",
+        "name": "Offset",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "float",
+        "name": "z",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Vector3",
+        "name": "Scale",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "float",
+        "name": "z",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "UInt8",
+        "name": "ShowMask",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "TipUIKeyId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "MaskSetting",
+        "name": "RepaireBtnMaskSet",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Vector3",
+        "name": "Offset",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "float",
+        "name": "z",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Vector3",
+        "name": "Scale",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "float",
+        "name": "z",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "UInt8",
+        "name": "ShowMask",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "TipUIKeyId",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp:WaitAllNoTipWindowClosedNode": [
+      {
+        "level": 0,
+        "type": "WaitAllNoTipWindowClosedNode",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$NodeGraph>",
+        "name": "graph",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "Vector2",
+        "name": "position",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "NodePortDictionary",
+        "name": "ports",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "keys",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "values",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "NodePort",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_fieldName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "PPtr<$Node>",
+        "name": "_node",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_typeQualifiedName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "vector",
+        "name": "connections",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "PortConnection",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "string",
+        "name": "fieldName",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "PPtr<$Node>",
+        "name": "node",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "vector",
+        "name": "reroutePoints",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "Vector2",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_direction",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_connectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_typeConstraint",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_flowConnectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "UInt8",
+        "name": "_dynamic",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "NodeId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "Mono",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsMonoShow",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Entry",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Exit",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp:SetFreeCameraForcePosXNode": [
+      {
+        "level": 0,
+        "type": "SetFreeCameraForcePosXNode",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$NodeGraph>",
+        "name": "graph",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "Vector2",
+        "name": "position",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "NodePortDictionary",
+        "name": "ports",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "keys",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "values",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "NodePort",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_fieldName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "PPtr<$Node>",
+        "name": "_node",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_typeQualifiedName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "vector",
+        "name": "connections",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "PortConnection",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "string",
+        "name": "fieldName",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "PPtr<$Node>",
+        "name": "node",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "vector",
+        "name": "reroutePoints",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "Vector2",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_direction",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_connectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_typeConstraint",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_flowConnectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "UInt8",
+        "name": "_dynamic",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "NodeId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "Mono",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsMonoShow",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Entry",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Exit",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "float",
+        "name": "PositionX",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "Margin",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp:HideAllUINode": [
+      {
+        "level": 0,
+        "type": "HideAllUINode",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$NodeGraph>",
+        "name": "graph",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "Vector2",
+        "name": "position",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "NodePortDictionary",
+        "name": "ports",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "keys",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "values",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "NodePort",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_fieldName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "PPtr<$Node>",
+        "name": "_node",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_typeQualifiedName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "vector",
+        "name": "connections",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "PortConnection",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "string",
+        "name": "fieldName",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "PPtr<$Node>",
+        "name": "node",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "vector",
+        "name": "reroutePoints",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "Vector2",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_direction",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_connectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_typeConstraint",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_flowConnectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "UInt8",
+        "name": "_dynamic",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "NodeId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "Mono",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsMonoShow",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Entry",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Exit",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp:CameraMoveNode": [
+      {
+        "level": 0,
+        "type": "CameraMoveNode",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$NodeGraph>",
+        "name": "graph",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "Vector2",
+        "name": "position",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "NodePortDictionary",
+        "name": "ports",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "keys",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "values",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "NodePort",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_fieldName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "PPtr<$Node>",
+        "name": "_node",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_typeQualifiedName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "vector",
+        "name": "connections",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "PortConnection",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "string",
+        "name": "fieldName",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "PPtr<$Node>",
+        "name": "node",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "vector",
+        "name": "reroutePoints",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "Vector2",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_direction",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_connectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_typeConstraint",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_flowConnectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "UInt8",
+        "name": "_dynamic",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "NodeId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "Mono",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsMonoShow",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Entry",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Exit",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "AnimationCurve",
+        "name": "MoveXCurve",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "m_Curve",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "Keyframe",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "time",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "value",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "inSlope",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "outSlope",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "weightedMode",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "inWeight",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "outWeight",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_PreInfinity",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_PostInfinity",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_RotationOrder",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "AnimationCurve",
+        "name": "MoveYCurve",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "m_Curve",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "Keyframe",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "time",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "value",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "inSlope",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "outSlope",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "weightedMode",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "inWeight",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "outWeight",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_PreInfinity",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_PostInfinity",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_RotationOrder",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "Vector2",
+        "name": "TargetPosition",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "float",
+        "name": "Duration",
+        "flags": 0
+      }
+    ],
+    "Assembly-CSharp:OptionDialogNode": [
+      {
+        "level": 0,
+        "type": "OptionDialogNode",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<$NodeGraph>",
+        "name": "graph",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "Vector2",
+        "name": "position",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "NodePortDictionary",
+        "name": "ports",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "keys",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "values",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "NodePort",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_fieldName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "PPtr<$Node>",
+        "name": "_node",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "string",
+        "name": "_typeQualifiedName",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "vector",
+        "name": "connections",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "PortConnection",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "string",
+        "name": "fieldName",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "PPtr<$Node>",
+        "name": "node",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "vector",
+        "name": "reroutePoints",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 10,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 10,
+        "type": "Vector2",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 11,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_direction",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_connectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_typeConstraint",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "_flowConnectionType",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "UInt8",
+        "name": "_dynamic",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "NodeId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "Mono",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsMonoShow",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Entry",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "EmptyPort",
+        "name": "Exit",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "DialogId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "StoryBlackboardRecordCtrl",
+        "name": "BlackboardRecord",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "UInt8",
+        "name": "NeedRecord",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "string",
+        "name": "Key",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "Immediately",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "AutoCloseDialog",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "ShowOptionsAtBegin",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsNeedHideOtherUI",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "DialogItems",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "DialogItem",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "Order",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "Content",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "Options",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "OptionConfigs",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "OptionItemPresentConfig",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "Type",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "OptionParams",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "NodeStringFormatArgs",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "vector",
+        "name": "Params",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "SerializableObj",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "mInt",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "SInt64",
+        "name": "mLong",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "float",
+        "name": "mFloat",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "double",
+        "name": "mDouble",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "UInt8",
+        "name": "mBool",
+        "flags": 16384
+      },
+      {
+        "level": 7,
+        "type": "string",
+        "name": "mString",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 9,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "mEnum",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "string",
+        "name": "mEnumInfo",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 9,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 9,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "Vector2",
+        "name": "mVector2",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "Vector3",
+        "name": "mVector3",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 8,
+        "type": "float",
+        "name": "z",
+        "flags": 0
+      },
+      {
+        "level": 7,
+        "type": "int",
+        "name": "mValueType",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsNeedMoveCamera",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "DialogVariantType",
+        "flags": 0
+      }
+    ]
+  },
+  "output": {
+    "path": "unity/Assets/Official/Home/Source/furniture-unlock-stories.json",
+    "sha256": "c85c092c173ff4a12d6be8324b036ec3c5b882e4a7708b5ab97cac5ee47418ca",
+    "bytes": 53635,
+    "meta_sha256": "5707847f96bf950083d569b0b692cbb220c742e19bf416cf4f8bb4839f8ae436",
+    "folder_meta_sha256": "ee14bf22df6ef0a1bc7b1be075de9713a384687e1766c1e514a768a1e95dc957"
+  },
+  "counts": {
+    "graphs": 2,
+    "nodes": 24,
+    "dialogues": 13,
+    "roles": 2,
+    "options": 3,
+    "localization": 18
+  },
+  "scope": "Original graph and text source only; scene execution and native dialogue UI require separate integration."
+}

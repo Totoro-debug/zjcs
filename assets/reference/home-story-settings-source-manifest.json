@@ -1,0 +1,634 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    "scripts/prepare_home_story_settings.py": "b8d71beb8a7e715ecbe56fd2dc41e1085aaf1e1348117dce496505cf66606cc3",
+    "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
+    "scripts/official_unity_schema.py": "934af3c56159da97a5c6d97a1412547b3ca847f71303bd961bbd37bee8b3aceb",
+    ".tools/source-packages/current/884_156692/official-code/common-source/StorySettings.cs": "572894ff14fb3c6b0f5ff5a924a358086b19f21888a4b90a7199451cafe4f790",
+    ".tools/source-packages/current/884_156692/official-code/client-source/StoryUtils.cs": "5e1c8678cb3b6cc4103dd0809e66e66a5c489e1e5e8903f2e14d3300a7ea62eb",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TalkDialog.cs": "911e163b342d2be1ff1cfdbfcd6bba5afc4c2bceaebf1490fc103b953ebb12a6",
+    ".tools/source-packages/current/884_156692/official-code/client-source/DialogNode.cs": "5a6062f4e7e8fb127e4b3aa7c304edf5d70afd873f0c7a8269fcdbba0832e48f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/DialogInfoUtils.cs": "73789e7e537911456f306288436cdd3446db2bd04880b440797ab4153502a57a"
+  },
+  "object": {
+    "bundle": "defaultpackage_assets_scriptableconfig_modules_story.bundle",
+    "bundle_hash": "baa7f4cc03886126c33376430869910f",
+    "path_id": "5377815171367770602",
+    "origin": "apk_zip",
+    "manifest": "884_156692",
+    "apk_manifest": "881_156673",
+    "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+    "apk_entry": "assets/yoo/DefaultPackage/baa7f4cc03886126c33376430869910f.bundle",
+    "raw_size": 5418,
+    "raw_sha256": "53cefe69d5e551559d1bed2bfd6db96c61c455632d33251aed3bb8f80ef4c4ee",
+    "object_sha256": "6f0284f8368c65f324c7b878ef8990cd6a16de3445d0f706544eb65e2ddd84c3"
+  },
+  "schema_records": {
+    "Console:StorySettings": [
+      {
+        "level": 0,
+        "type": "StorySettings",
+        "name": "Base",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "PPtr<GameObject>",
+        "name": "m_GameObject",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "m_Enabled",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "PPtr<MonoScript>",
+        "name": "m_Script",
+        "flags": 16384
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_FileID",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "SInt64",
+        "name": "m_PathID",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "m_Name",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "mDialogVoiceStopEventKey",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsTalkNeedCameraMove",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "UInt8",
+        "name": "IsDialogNodeNeedCameraMove",
+        "flags": 16384
+      },
+      {
+        "level": 1,
+        "type": "AnimationCurve",
+        "name": "TalkCameraMoveXCurve",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "m_Curve",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "Keyframe",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "time",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "value",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "inSlope",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "outSlope",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "weightedMode",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "inWeight",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "outWeight",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_PreInfinity",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_PostInfinity",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_RotationOrder",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "AnimationCurve",
+        "name": "TalkCameraMoveYCurve",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "vector",
+        "name": "m_Curve",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "Keyframe",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "time",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "value",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "inSlope",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "outSlope",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "int",
+        "name": "weightedMode",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "inWeight",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "float",
+        "name": "outWeight",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_PreInfinity",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_PostInfinity",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "m_RotationOrder",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "float",
+        "name": "TalkCameraMoveDuration",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "Vector3",
+        "name": "TalkCameraViewOffset",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "z",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "Vector2",
+        "name": "GetEntityPosOffset",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "x",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "float",
+        "name": "y",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "Pos2d",
+        "name": "PlayerArroundRangeSize",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "X",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "int",
+        "name": "Y",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "float",
+        "name": "PlayerTalkDistException",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "int",
+        "name": "DialogNodeNpcAppearRange",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "mVoiceOverIds",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "string",
+        "name": "TalkBubblePlayablePath",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "float",
+        "name": "ScreenTextPlayInterval",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "float",
+        "name": "ScreenTextFadeOutDuration",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "MonsterBodies",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "StoryMonsterBodyInfo",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "MonsterType",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "BodyClassId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "AutoTriggerMapRelatedStoryIds",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "StoryMapRelatedInfo",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "StoryName",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "int",
+        "name": "MapClassId",
+        "flags": 0
+      },
+      {
+        "level": 1,
+        "type": "vector",
+        "name": "PerformanceStepStoryMap",
+        "flags": 0
+      },
+      {
+        "level": 2,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 3,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 3,
+        "type": "StoryPerformanceStepInfo",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "StoryName",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "PerformanceName",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      },
+      {
+        "level": 4,
+        "type": "string",
+        "name": "StepTag",
+        "flags": 0
+      },
+      {
+        "level": 5,
+        "type": "Array",
+        "name": "Array",
+        "flags": 16384
+      },
+      {
+        "level": 6,
+        "type": "int",
+        "name": "size",
+        "flags": 0
+      },
+      {
+        "level": 6,
+        "type": "char",
+        "name": "data",
+        "flags": 0
+      }
+    ]
+  },
+  "output": {
+    "path": "unity/Assets/Game/Resources/Home/story-settings.json",
+    "sha256": "4eaa6617750acc3a65341f1ac8ac5a1ba1322f3b4abdc014a559db920e524a47",
+    "meta_sha256": "8fb4eda81aa06b9ec08db51bef8b45d32e84801dabdc3113cda250d14333c803"
+  },
+  "scope": "Original dialogue voice, narrator and camera settings; execution requires the story host.",
+  "runtime_binding": {
+    "unity/Assets/Game/Runtime/Offline/HomeStory/HomeStorySettings.cs": "b891aeb03fd9b441338c039ac1293dcffcc4037dcb23b187926f0c08cced3de0",
+    "unity/Assets/Game/Runtime/Offline/HomeStory/HomeStorySettings.cs.meta": "49e3edb0943f9ea7c3b1c0c5502bff46b39e8af3fe0d31689d223a214ef23de2"
+  }
+}

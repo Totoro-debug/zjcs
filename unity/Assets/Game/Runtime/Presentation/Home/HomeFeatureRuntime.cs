@@ -1194,7 +1194,7 @@ namespace Zjcs.Presentation.Home
             }
             HomeFurnitureRecord record = rules.FurnitureOf(type);
             if (record == null) return;
-            HomeFurnitureState state = FurnitureState(type);
+            HomeFurnitureState state = scene.FurnitureClickState(type, FurnitureState(type));
             switch (state)
             {
                 case HomeFurnitureState.Functional:
@@ -1487,6 +1487,12 @@ namespace Zjcs.Presentation.Home
             }
             if (repaired)
             {
+                if (type == 0 || type == 1 || type == 2 || type == 3 || type == 5 || type == 7
+                    || type == 8 || type == 9 || type == 10 || type == 12)
+                {
+                    try { scene.BeginFurnitureRepairEffect(type); }
+                    catch (Exception error) { Debug.LogError("Original furniture repair effect failed: " + error); }
+                }
                 ApplyFurnitureStates();
                 RefreshIncomeCatalog();
                 DrainHomeInventory();

@@ -1,0 +1,485 @@
+{
+  "manifest": "884_156692",
+  "package": {
+    "name": "wwisebnk_assets_wwisedata_android_zh_cn_voice_chapter_02_pck.rawfile",
+    "source": {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/WwiseBnk/e1121810435142f93ceb80ae9d2f1359.rawfile",
+      "manifest": "884_156692",
+      "size": 16529411,
+      "sha256": "993ca62d4044620a423ed835d0d3f64158fc5a3ec631bb18f7da84d87b93d2fa"
+    },
+    "sha256": "993ca62d4044620a423ed835d0d3f64158fc5a3ec631bb18f7da84d87b93d2fa",
+    "bytes": 16529411,
+    "bank_count": 1,
+    "media_count": 307
+  },
+  "inputs": {
+    "scripts/prepare_current_home_furniture_story_audio.py": "d8db8f3f2410bc347f97a63a59ea600a3b11294837377555916ddfa072ee9ef7",
+    "scripts/prepare_character_creation_opening_audio.py": "5cb711c193d9cf5e8b885dfc5349b3346e590f922f57d10c879bf4b9f2d1c6ae",
+    "scripts/prepare_unity_map11_dialogue_audio.py": "d82f82d149bc6beb892d9e4cd7b9c728c443ca594a00cd1e52b702023f7fc4b6",
+    ".tools/vgmstream/vgmstream-cli.exe": "10fb0691538d3133f0115a071f89775fc99f32210b7e5991cfc3c2869247e4b2",
+    "unity/Assets/Official/Home/Source/furniture-unlock-stories.json": "c85c092c173ff4a12d6be8324b036ec3c5b882e4a7708b5ab97cac5ee47418ca",
+    "assets/reference/home-furniture-unlock-story-source-manifest.json": "b10ff3151988c6510f904ac8f4fe3b23dc18e943bffecdb83616ef03a4c590f1"
+  },
+  "entries": [
+    {
+      "eventKey": "chapter_2_guide_18_01",
+      "clip": "Home/FurnitureStoryAudio/763294749",
+      "media_id": 763294749,
+      "offset": 11599342,
+      "bytes": 37535,
+      "wem_sha256": "9e1ec6a5bf486fab633c5d977efe1fd275a8abb6b3aef0be43c944691071f4cd",
+      "wav_sha256": "cd007e36466b88682c76e32e72bc60037e192f381cdf460f64cf49921cfcfb32",
+      "wav_bytes": 380122,
+      "format": {
+        "channels": 1,
+        "sample_rate": 48000,
+        "sample_width": 2,
+        "frames": 190039
+      },
+      "event": {
+        "eventId": 1090317332,
+        "actions": [
+          {
+            "id": 999697382,
+            "actionType": 1027,
+            "target": 829092463,
+            "mediaId": 763294749,
+            "transitionMs": 0,
+            "fadeCurve": 4
+          }
+        ]
+      }
+    },
+    {
+      "eventKey": "chapter_2_guide_18_02",
+      "clip": "Home/FurnitureStoryAudio/18428979",
+      "media_id": 18428979,
+      "offset": 650774,
+      "bytes": 58446,
+      "wem_sha256": "15aa0faea36eff66cd86450497072465409f81ac886f175c9296124a0471756f",
+      "wav_sha256": "1daa4a0e958b7a2c3d291b618472e0f5a5a2980add71aacf025e1bc9c9e3ce0c",
+      "wav_bytes": 576574,
+      "format": {
+        "channels": 1,
+        "sample_rate": 48000,
+        "sample_width": 2,
+        "frames": 288265
+      },
+      "event": {
+        "eventId": 1090317335,
+        "actions": [
+          {
+            "id": 168392106,
+            "actionType": 1027,
+            "target": 20253598,
+            "mediaId": 18428979,
+            "transitionMs": 0,
+            "fadeCurve": 4
+          }
+        ]
+      }
+    },
+    {
+      "eventKey": "chapter_2_guide_18_03",
+      "clip": "Home/FurnitureStoryAudio/995419683",
+      "media_id": 995419683,
+      "offset": 15039219,
+      "bytes": 36125,
+      "wem_sha256": "71bc8dc4ca2b1db68da2edae19f7b51f5d4beaab5a426c817b97e6131fcdbd41",
+      "wav_sha256": "c2c1ae1712608992edeb3e987f29cd5bb92673f9c00a224acf62c7ee2cf24a58",
+      "wav_bytes": 358392,
+      "format": {
+        "channels": 1,
+        "sample_rate": 48000,
+        "sample_width": 2,
+        "frames": 179174
+      },
+      "event": {
+        "eventId": 1090317334,
+        "actions": [
+          {
+            "id": 721353130,
+            "actionType": 1027,
+            "target": 230459644,
+            "mediaId": 995419683,
+            "transitionMs": 0,
+            "fadeCurve": 4
+          }
+        ]
+      }
+    },
+    {
+      "eventKey": "chapter_2_guide_4_01",
+      "clip": "Home/FurnitureStoryAudio/973041695",
+      "media_id": 973041695,
+      "offset": 14558196,
+      "bytes": 30996,
+      "wem_sha256": "a9e0bd5f9831a2abda882e42b1a3e3595d03085e08a7a70b25929ca86b661e68",
+      "wav_sha256": "6dc9115eec813ff82e0752d335d9436ba35803205382e8356d4f3ded49a7bdbd",
+      "wav_bytes": 330926,
+      "format": {
+        "channels": 1,
+        "sample_rate": 48000,
+        "sample_width": 2,
+        "frames": 165441
+      },
+      "event": {
+        "eventId": 1439767123,
+        "actions": [
+          {
+            "id": 650403361,
+            "actionType": 1027,
+            "target": 563193559,
+            "mediaId": 973041695,
+            "transitionMs": 0,
+            "fadeCurve": 4
+          }
+        ]
+      }
+    },
+    {
+      "eventKey": "chapter_2_guide_4_02",
+      "clip": "Home/FurnitureStoryAudio/13366275",
+      "media_id": 13366275,
+      "offset": 611524,
+      "bytes": 39250,
+      "wem_sha256": "4853eec76c822f34db86f74dd8879a04afb5327c87081e3e1d69457b45e7db31",
+      "wav_sha256": "7ebd2a61e2c93e19db0bb33490471bede7d2a6bcde6dc5f7ce6251f8eba23342",
+      "wav_bytes": 381634,
+      "format": {
+        "channels": 1,
+        "sample_rate": 48000,
+        "sample_width": 2,
+        "frames": 190795
+      },
+      "event": {
+        "eventId": 1439767120,
+        "actions": [
+          {
+            "id": 685696818,
+            "actionType": 1027,
+            "target": 75373487,
+            "mediaId": 13366275,
+            "transitionMs": 0,
+            "fadeCurve": 4
+          }
+        ]
+      }
+    },
+    {
+      "eventKey": "chapter_2_guide_4_03",
+      "clip": "Home/FurnitureStoryAudio/826567490",
+      "media_id": 826567490,
+      "offset": 12478950,
+      "bytes": 58677,
+      "wem_sha256": "2e83e91810296ff1315352f0e35830592ae0b81394ac4b587a8e5efa9f3c1273",
+      "wav_sha256": "a0aca78641d60d3ccf8cb6af24ebf016eecd98f308a5fcebbd3fd33e65778050",
+      "wav_bytes": 593624,
+      "format": {
+        "channels": 1,
+        "sample_rate": 48000,
+        "sample_width": 2,
+        "frames": 296790
+      },
+      "event": {
+        "eventId": 1439767121,
+        "actions": [
+          {
+            "id": 286202726,
+            "actionType": 1027,
+            "target": 369857057,
+            "mediaId": 826567490,
+            "transitionMs": 0,
+            "fadeCurve": 4
+          }
+        ]
+      }
+    },
+    {
+      "eventKey": "chapter_2_guide_4_04",
+      "clip": "Home/FurnitureStoryAudio/995256364",
+      "media_id": 995256364,
+      "offset": 14975381,
+      "bytes": 63838,
+      "wem_sha256": "fbdb2e228f73ede8afc139348662f778a3c31be8438bb97755292b6e1e42c0dd",
+      "wav_sha256": "9476463be4a6bc4fceaad1c8a7455e87cc20232cb54115a594d897fb65cc8641",
+      "wav_bytes": 643210,
+      "format": {
+        "channels": 1,
+        "sample_rate": 48000,
+        "sample_width": 2,
+        "frames": 321583
+      },
+      "event": {
+        "eventId": 1439767126,
+        "actions": [
+          {
+            "id": 807435361,
+            "actionType": 1027,
+            "target": 39258689,
+            "mediaId": 995256364,
+            "transitionMs": 0,
+            "fadeCurve": 4
+          }
+        ]
+      }
+    },
+    {
+      "eventKey": "chapter_2_guide_4_05",
+      "clip": "Home/FurnitureStoryAudio/915914964",
+      "media_id": 915914964,
+      "offset": 13222947,
+      "bytes": 56650,
+      "wem_sha256": "96f36183c5ee891ae4feba5473d13b44cf3c1a4eb12dadf77ac3bd35030132a3",
+      "wav_sha256": "481b4e2c85c90b76ec5216458e60a6d10294e0a074add080d1b427191d5c526a",
+      "wav_bytes": 577488,
+      "format": {
+        "channels": 1,
+        "sample_rate": 48000,
+        "sample_width": 2,
+        "frames": 288722
+      },
+      "event": {
+        "eventId": 1439767127,
+        "actions": [
+          {
+            "id": 717514865,
+            "actionType": 1027,
+            "target": 26352174,
+            "mediaId": 915914964,
+            "transitionMs": 0,
+            "fadeCurve": 4
+          }
+        ]
+      }
+    },
+    {
+      "eventKey": "chapter_2_guide_4_06",
+      "clip": "Home/FurnitureStoryAudio/360418685",
+      "media_id": 360418685,
+      "offset": 6122807,
+      "bytes": 60038,
+      "wem_sha256": "c944bc350bc350736e0cf6f1265704a99d4ef69b19efb2064e36815ba3242281",
+      "wav_sha256": "3ff1401bae1b53cab5ff86a7bf4fb0b16862cd0cfafc8efd264f249474014123",
+      "wav_bytes": 584050,
+      "format": {
+        "channels": 1,
+        "sample_rate": 48000,
+        "sample_width": 2,
+        "frames": 292003
+      },
+      "event": {
+        "eventId": 1439767124,
+        "actions": [
+          {
+            "id": 650206308,
+            "actionType": 1027,
+            "target": 1061768110,
+            "mediaId": 360418685,
+            "transitionMs": 0,
+            "fadeCurve": 4
+          }
+        ]
+      }
+    },
+    {
+      "eventKey": "chapter_2_guide_4_07",
+      "clip": "Home/FurnitureStoryAudio/140396441",
+      "media_id": 140396441,
+      "offset": 2813394,
+      "bytes": 64645,
+      "wem_sha256": "08cd687d1cb12411eb66483efb7797a7d1dbaab76f89df85d17dcbdbcc5e02dd",
+      "wav_sha256": "55a7856a8be5e14620af739aa74cfa4473b44804cabbc42dae752ee3847dee39",
+      "wav_bytes": 640092,
+      "format": {
+        "channels": 1,
+        "sample_rate": 48000,
+        "sample_width": 2,
+        "frames": 320024
+      },
+      "event": {
+        "eventId": 1439767125,
+        "actions": [
+          {
+            "id": 287689865,
+            "actionType": 1027,
+            "target": 82353408,
+            "mediaId": 140396441,
+            "transitionMs": 0,
+            "fadeCurve": 4
+          }
+        ]
+      }
+    },
+    {
+      "eventKey": "chapter_2_guide_4_08",
+      "clip": "Home/FurnitureStoryAudio/553675587",
+      "media_id": 553675587,
+      "offset": 8842382,
+      "bytes": 47298,
+      "wem_sha256": "45304e1b3207f8a0781f9c5856b9ec5a4e50123161ef31db1313fd1e9aeaf3f8",
+      "wav_sha256": "5cbd1532366df2832b3dcb31f00701ef015c3174eea1e6f2561ca647c6f105cb",
+      "wav_bytes": 470648,
+      "format": {
+        "channels": 1,
+        "sample_rate": 48000,
+        "sample_width": 2,
+        "frames": 235302
+      },
+      "event": {
+        "eventId": 1439767130,
+        "actions": [
+          {
+            "id": 258820044,
+            "actionType": 1027,
+            "target": 535112976,
+            "mediaId": 553675587,
+            "transitionMs": 0,
+            "fadeCurve": 4
+          }
+        ]
+      }
+    },
+    {
+      "eventKey": "chapter_2_guide_4_09",
+      "clip": "Home/FurnitureStoryAudio/336200007",
+      "media_id": 336200007,
+      "offset": 5648946,
+      "bytes": 45067,
+      "wem_sha256": "1f5927811e161746223b3d8a97f5b08e9a32a9c61f990c1118422b13e4da0dbd",
+      "wav_sha256": "5c37a0d10ed32b3793ca0151b0b415615280f21a6f7e4fc2c9695a89962debd2",
+      "wav_bytes": 451386,
+      "format": {
+        "channels": 1,
+        "sample_rate": 48000,
+        "sample_width": 2,
+        "frames": 225671
+      },
+      "event": {
+        "eventId": 1439767131,
+        "actions": [
+          {
+            "id": 634106525,
+            "actionType": 1027,
+            "target": 150815323,
+            "mediaId": 336200007,
+            "transitionMs": 0,
+            "fadeCurve": 4
+          }
+        ]
+      }
+    },
+    {
+      "eventKey": "chapter_2_guide_4_10",
+      "clip": "Home/FurnitureStoryAudio/155354447",
+      "media_id": 155354447,
+      "offset": 3039245,
+      "bytes": 46763,
+      "wem_sha256": "6c3d2cbe67997b2c663b3fc31eee1be219f440e34d73221b779addb56db4af54",
+      "wav_sha256": "97d4e48f845847845b72144195e999f9ddb9b6f069d088d3ed1160e0eed95cd4",
+      "wav_bytes": 477134,
+      "format": {
+        "channels": 1,
+        "sample_rate": 48000,
+        "sample_width": 2,
+        "frames": 238545
+      },
+      "event": {
+        "eventId": 1456544709,
+        "actions": [
+          {
+            "id": 854742170,
+            "actionType": 1027,
+            "target": 653345840,
+            "mediaId": 155354447,
+            "transitionMs": 0,
+            "fadeCurve": 4
+          }
+        ]
+      }
+    }
+  ],
+  "catalog_sha256": "6d161b9adb439e9f42049b77e8af951d19e802aecde452e6ed742e8c86f8ce61",
+  "conversion": "Original Wwise media decoded to PCM WAV by the recorded vgmstream executable.",
+  "scope": "Native local voices only; original dialogue UI and audio lifecycle are not yet connected.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/Home/FurnitureStoryAudio/Resources/Home/FurnitureStoryAudio/763294749.wav",
+      "sha256": "cd007e36466b88682c76e32e72bc60037e192f381cdf460f64cf49921cfcfb32",
+      "meta_sha256": "fc770e84d0d72e5c78864bb29179efa9f2a35ca62c2d963053b348cc66764c3d"
+    },
+    {
+      "path": "unity/Assets/Official/Home/FurnitureStoryAudio/Resources/Home/FurnitureStoryAudio/18428979.wav",
+      "sha256": "1daa4a0e958b7a2c3d291b618472e0f5a5a2980add71aacf025e1bc9c9e3ce0c",
+      "meta_sha256": "e6e01b83c7432f3292cfc26f235da6a339b23db9fd4e8df7521cf87dbded00fb"
+    },
+    {
+      "path": "unity/Assets/Official/Home/FurnitureStoryAudio/Resources/Home/FurnitureStoryAudio/995419683.wav",
+      "sha256": "c2c1ae1712608992edeb3e987f29cd5bb92673f9c00a224acf62c7ee2cf24a58",
+      "meta_sha256": "8ae11fb9523153d604c7eae0600776c91040c927e2eca1cc1ab6e27140f7f073"
+    },
+    {
+      "path": "unity/Assets/Official/Home/FurnitureStoryAudio/Resources/Home/FurnitureStoryAudio/973041695.wav",
+      "sha256": "6dc9115eec813ff82e0752d335d9436ba35803205382e8356d4f3ded49a7bdbd",
+      "meta_sha256": "fb50b84ea6853460fcf895297d816635f66928bf789e7a74f3fcfee8655b0cbc"
+    },
+    {
+      "path": "unity/Assets/Official/Home/FurnitureStoryAudio/Resources/Home/FurnitureStoryAudio/13366275.wav",
+      "sha256": "7ebd2a61e2c93e19db0bb33490471bede7d2a6bcde6dc5f7ce6251f8eba23342",
+      "meta_sha256": "52b058ae0bf45eeeba02f219a341639268ebd44d80df92d6b9f2910ab077f2ad"
+    },
+    {
+      "path": "unity/Assets/Official/Home/FurnitureStoryAudio/Resources/Home/FurnitureStoryAudio/826567490.wav",
+      "sha256": "a0aca78641d60d3ccf8cb6af24ebf016eecd98f308a5fcebbd3fd33e65778050",
+      "meta_sha256": "05e49f3480f0783b2a26b7965b3adb52eb3faf7545b61bd7b56bed7ab9f00dfa"
+    },
+    {
+      "path": "unity/Assets/Official/Home/FurnitureStoryAudio/Resources/Home/FurnitureStoryAudio/995256364.wav",
+      "sha256": "9476463be4a6bc4fceaad1c8a7455e87cc20232cb54115a594d897fb65cc8641",
+      "meta_sha256": "c72a375ce9f3f26ad9910e86511308f2b7c66cc8699eb1ea99f23b6d66dfc2c6"
+    },
+    {
+      "path": "unity/Assets/Official/Home/FurnitureStoryAudio/Resources/Home/FurnitureStoryAudio/915914964.wav",
+      "sha256": "481b4e2c85c90b76ec5216458e60a6d10294e0a074add080d1b427191d5c526a",
+      "meta_sha256": "74d3c0dae706c517ff0505beee60774c858e2e266e8d3142fbe1db4853aab89a"
+    },
+    {
+      "path": "unity/Assets/Official/Home/FurnitureStoryAudio/Resources/Home/FurnitureStoryAudio/360418685.wav",
+      "sha256": "3ff1401bae1b53cab5ff86a7bf4fb0b16862cd0cfafc8efd264f249474014123",
+      "meta_sha256": "6a20b0e7a932b5c5474016c3696be4caa3fecea69d1427ee6a27e5f5ddd98da4"
+    },
+    {
+      "path": "unity/Assets/Official/Home/FurnitureStoryAudio/Resources/Home/FurnitureStoryAudio/140396441.wav",
+      "sha256": "55a7856a8be5e14620af739aa74cfa4473b44804cabbc42dae752ee3847dee39",
+      "meta_sha256": "4f6cc47a1aae6e4cd2f5fda224799872e906199bc9f14d2b4281bcdba0f88821"
+    },
+    {
+      "path": "unity/Assets/Official/Home/FurnitureStoryAudio/Resources/Home/FurnitureStoryAudio/553675587.wav",
+      "sha256": "5cbd1532366df2832b3dcb31f00701ef015c3174eea1e6f2561ca647c6f105cb",
+      "meta_sha256": "c9394b23c7a803473801b31d44014d2c83664c81fd2b131e0cb22ea9f0e1047a"
+    },
+    {
+      "path": "unity/Assets/Official/Home/FurnitureStoryAudio/Resources/Home/FurnitureStoryAudio/336200007.wav",
+      "sha256": "5c37a0d10ed32b3793ca0151b0b415615280f21a6f7e4fc2c9695a89962debd2",
+      "meta_sha256": "9b3553f9c317283c1ed47eafe9714b0568216ce6f565ce0dcf6317be15ba1bf0"
+    },
+    {
+      "path": "unity/Assets/Official/Home/FurnitureStoryAudio/Resources/Home/FurnitureStoryAudio/155354447.wav",
+      "sha256": "97d4e48f845847845b72144195e999f9ddb9b6f069d088d3ed1160e0eed95cd4",
+      "meta_sha256": "b87c46dd84332a367f9309360e24ff9b6d4e6e31d53137bfe76a0280cbb0449e"
+    },
+    {
+      "path": "unity/Assets/Official/Home/FurnitureStoryAudio/Resources/Home/FurnitureStoryAudio/voices.json",
+      "sha256": "6d161b9adb439e9f42049b77e8af951d19e802aecde452e6ed742e8c86f8ce61",
+      "meta_sha256": "ea724d382c1e900e7012e2e2cb72a2e6b8e7e6c1b1cc5322359a681e6b1afa81"
+    }
+  ],
+  "folder_meta_sha256": {
+    "unity/Assets/Official/Home/FurnitureStoryAudio.meta": "87352a225720f4a4c0fc48a743598f87716bb8f1656fe4554f32549b0e27ac53",
+    "unity/Assets/Official/Home/FurnitureStoryAudio/Resources.meta": "fd152af64aef7342a62da6f8e062af1c28e47eee71319d13f4c185c120617b2e",
+    "unity/Assets/Official/Home/FurnitureStoryAudio/Resources/Home.meta": "766f2dbf725379118bae983944354981f6f10978c05040a21196afb76d19d548",
+    "unity/Assets/Official/Home/FurnitureStoryAudio/Resources/Home/FurnitureStoryAudio.meta": "f3ed9e68f95b21753be1de89bc5a2925e6abfb7cfe72b68004728e0d388ba86a"
+  }
+}
