@@ -1,0 +1,223 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "operation": "Extract stage awards, monster reward group bindings, reward rules and level multipliers; no settlement implementation is implied.",
+  "officialSource": {
+    "path": "official-source.json",
+    "bytes": 2673,
+    "sha256": "a29067dd1363590c8fde67a7d5326fcb5a4632441e8c73ae8b64300aa491a3a6"
+  },
+  "inputs": {
+    "stage": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-1310591482892603796",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "sha256": "24eb6aa8e55d897082067b7907d785a8639c088d658811bf8da6f154970339e3"
+    },
+    "monster_reward": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "4651268682427373808",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "sha256": "d5a42f9a567a4c6347f597cfc00ecd7b9f6a77a5f9fd4d18379347b657f377eb"
+    },
+    "reward_rule": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "7169546492845704538",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "sha256": "bb036852e797177f2a845865136dcd30657a2defe8b3899d414b8764ff7eb1ee"
+    },
+    "level_number": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-5102505721400995906",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "sha256": "dcc3a4302e5b2c71049880398a606e801291321e9ecccf72aa391ec99aa6341c"
+    }
+  },
+  "officialCode": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MonsterInfoDialog.cs",
+      "bytes": 8544,
+      "sha256": "4f2a70f096352754585a170947dce78260bc2521b50f7242b613aaeb99a4c2d5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AutoInteractionMonsterDropItemSupporter.cs",
+      "bytes": 3349,
+      "sha256": "0e440f302fb852a39cf163243751aff9561803d000a04cc30c3b4b70e28c018b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapEntityHelper.cs",
+      "bytes": 800,
+      "sha256": "c17f95f622677535638ac9888efcca67262378dba1ab7c5a4329f21fbf8a4d8f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RewardRuleInfoParser.cs",
+      "bytes": 23563,
+      "sha256": "826e9a131dcd64a0a56cf0fa872d44f2ff45f76dd7f912cd9518cd1c49849239"
+    }
+  ],
+  "constructors": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/CompositeAndCondition.cs",
+      "bytes": 2142,
+      "sha256": "1a7d5ccf8f1dcf8401e1a46aeb4596bd464f5c8774edc50adcdb4d55b111571c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/CompositeCondition.cs",
+      "bytes": 2159,
+      "sha256": "9e45aefb344d4e75fffe52fa8f0fcea3e4886d3e396b2c3fa10128ebe35cf54d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/CompositeOrCondition.cs",
+      "bytes": 2141,
+      "sha256": "b4d4f14990bcc59bb196a4bfcc360df4d38f1142e040ec9015c14211b6530aca"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ICondition.cs",
+      "bytes": 20075,
+      "sha256": "12a4005edaf53df080240808b91e6e3e55fc08bceb91fd154e6c3993cdc704ff"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelNumber.cs",
+      "bytes": 958,
+      "sha256": "8d2aa22c4bae5bc7ab0ac33fe7a879b8353f6a54b52e20ba829570cb4f73b227"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapGroupLocationCondition.cs",
+      "bytes": 1799,
+      "sha256": "d51e568d8474f1ac04ca1c2181f4f25197cc03c71ffd077854b92314658dc899"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapLocationCondition.cs",
+      "bytes": 1418,
+      "sha256": "def782b1f2b231ae5557c7e4328d353deb8a4906fabcc3f1db56cadd3c2d27a5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MonsterRewardInfo.cs",
+      "bytes": 1108,
+      "sha256": "58bfe198f2958f94bdb60da5579e1ceb526b622a04116f4471cccce3f96a30bb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerProfessionCondition.cs",
+      "bytes": 2572,
+      "sha256": "aab00582befdfa0170aaaadc7b94fff520a3e7a297778ed094f1d6a207c41655"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerProfessionFactionCondition.cs",
+      "bytes": 1750,
+      "sha256": "bbdc25a4f79632e1cdc03418324198387dc20994772e5ea79dcc94c158ff3eeb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Pos2d.cs",
+      "bytes": 4791,
+      "sha256": "8129206cd36eefdedf3d3d6a2a011d0c52325e35a7690a42b350ad96669fa8ea"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common.LubanGen/Pos2d.cs",
+      "bytes": 400,
+      "sha256": "872527a4acb6bc4a8d538b5f1ee730773ebb0bf8334afaa1762e078dfa9c840a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RegionCodeCondition.cs",
+      "bytes": 1743,
+      "sha256": "4d1f14fd4fd30a44f59d0b6ac7eebcd704bdb990e054c34bd800820c7c0f0e21"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RewardRuleInfo.cs",
+      "bytes": 4642,
+      "sha256": "9c3443e9edd071a49b15691f6eca8acb509fda1ec1bb05c1ce0fcec02cc6c49f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/StageInfo.cs",
+      "bytes": 11366,
+      "sha256": "2e74b84021e43ae63af965c3d05502bb0676d241f3bd6c09926541a9939ea1fb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SubRankCondition.cs",
+      "bytes": 3808,
+      "sha256": "5754156223f0fba2094056f64be9f558868de2d2bd036201a67cdd9cfef5ce29"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbLevelNumber.cs",
+      "bytes": 1124,
+      "sha256": "a41e708e6e973c5755bde0879ca32492e64902be51aac2c41120e2c287c7f1cd"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbMonsterRewardInfo.cs",
+      "bytes": 1201,
+      "sha256": "56e39983bc5ff253caae753fea697e9a7d74e67594005c12ce170b790867b77f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbRewardRuleInfo.cs",
+      "bytes": 3686,
+      "sha256": "ba5603824d4c87642cf1f950379df87ebc84d05ca64fbd17bc1467646fe504c1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbStageInfo.cs",
+      "bytes": 2840,
+      "sha256": "910e20cad04b3274093926c9382c671af0cf4b89df649d0839ce0962db7cc1f9"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_mainline_monster_rewards.py",
+      "bytes": 3950,
+      "sha256": "eb7d55bbd1de937104627749e61739327442dc400c2535c34ca9c56abe7226ef"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/monster-reward-inputs.json",
+      "bytes": 1411853,
+      "sha256": "58477a39983eaf5ba95baebd4db86591fcd98070faa024e17e472080f394db9f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/monster-reward-inputs.json.meta",
+      "bytes": 155,
+      "sha256": "73b8a360803a101d1ed00531e299b15c1967cf77d6f77e95e2c8b46ea1e2c557"
+    }
+  ],
+  "counts": {
+    "stages": 9266,
+    "monsterRewards": 477,
+    "rewardRules": 959,
+    "levelNumbers": 3
+  },
+  "missingRewardRuleIds": [
+    400,
+    401,
+    402,
+    403,
+    1850,
+    1853,
+    27105,
+    27402
+  ]
+}
