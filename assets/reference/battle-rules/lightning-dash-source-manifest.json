@@ -764,11 +764,19 @@
     {
       "path": "unity/Assets/Game/Resources/Combat/skill-playables.json",
       "sha256": "3dc65b3484008faebc8caff768ab58a9e0e86f79b2013dc61f2e2d43b709c3e8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.LightningDash.cs",
+      "sha256": "7889956a16faab7cda5f452db8350300839d0585ad0236df67f464a9a7898435"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.LightningDash.cs.meta",
+      "sha256": "10f7de41a9a39f2d6e47613369d9fa647a08371a7197d2fa55174a1cef17f96b"
     }
   ],
   "verifier": {
     "path": "scripts/prepare_battle_lightning_dash_sources.py",
-    "sha256": "13ce258c4432c90e46b3e04bdc2f2bc555fc1b52178816a810626b85a424d241"
+    "sha256": "d55af545e9c7eccb9d2e05fbc2004e097a75d9d39bab1703feb7443a28094a3a"
   },
   "operation": "APK-first exact verification of 10016/10680 point targeting, original 10682 movement and 10681/10026 damage, retaining historical runtime input identity. Server AI point selection/path generation is absent. Implementation decisions and current validation limits belong to docs/features/skills-fighter.md."
 }

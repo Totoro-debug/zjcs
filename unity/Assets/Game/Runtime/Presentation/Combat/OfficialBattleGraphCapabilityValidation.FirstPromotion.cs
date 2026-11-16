@@ -205,6 +205,8 @@ namespace Zjcs.Presentation.Combat
             int distance = skill.Range.Where(point => point.X * dy == 0 && point.Y * dx == 0
                 && point.X * dx + point.Y * dy > 0).Select(point => Math.Abs(point.X) + Math.Abs(point.Y))
                 .DefaultIfEmpty(1).Min();
+            // The fifth cell is the dash's empty landing; enemies belong to its intermediate hit strip.
+            if (itemId == 10016) distance = 2;
             // Keep every cardinal probe on its requested axis while the ordinary
             // AI chooses its landing. Adjacent placement can attract an equally
             // valid landing on another side before the actual cast.

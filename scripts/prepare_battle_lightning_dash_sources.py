@@ -61,7 +61,9 @@ def main():
             'unity/Assets/Official/Combat/battle-rules.json',
             'unity/Assets/Official/Combat/rules.json',
             'unity/Assets/Official/Skills/fidelity-texts.json',
-            'unity/Assets/Game/Resources/Combat/skill-playables.json')],
+            'unity/Assets/Game/Resources/Combat/skill-playables.json',
+            'unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.LightningDash.cs',
+            'unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.LightningDash.cs.meta')],
         verifier=identity(Path(__file__)),
         operation='APK-first exact verification of 10016/10680 point targeting, original '
             '10682 movement and 10681/10026 damage, retaining historical runtime input identity. '

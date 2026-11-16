@@ -349,6 +349,16 @@ namespace Zjcs.Combat.Official
                         random: random);
                 }
                 if (actor.Hp <= 0) break;
+                FightBattleUnitState dashPosition = null;
+                if (IsLightningDash(skill)
+                    && !TryPlanLightningDash(actor, skill, out dashPosition, out targets))
+                {
+                    checkedSlots.Add(skill.Slot);
+                    continue;
+                }
+                if (dashPosition != null)
+                    actor.Direction = dashPosition.X < actor.X ? 1 : dashPosition.X > actor.X ? 3
+                        : dashPosition.Y > actor.Y ? 2 : 0;
                 if (skill.ComboSkills.Count > 0)
                     targets.RemoveAll(target => !ComboTargetAllowed(actor, skill, target));
                 if (targets.Count == 0 && skill.TargetType != 5
@@ -360,7 +370,7 @@ namespace Zjcs.Combat.Official
 
                 // FightSkillAgentComponentImplement.UpdateSkillDataOnRun records this
                 // release before its end callbacks can check LimitedTimes or modify CD.
-                FightBattleUnitState comboTargetPosition = null;
+                FightBattleUnitState comboTargetPosition = dashPosition;
                 if (skill.ComboSkills.Count > 0 || skill.FallbackSkills.Count > 0)
                 {
                     if (targets.Count > 0)
@@ -1632,6 +1642,16 @@ namespace Zjcs.Combat.Official
                 if (move.Distance < 0)
                 {
                     int movementIndex = movements.Count;
+                    if (IsLightningDash(skill))
+                    {
+                        if (targetPosition != null && TryLightningDashPath(actor,
+                            new FightGridPoint(targetPosition.X, targetPosition.Y), out var dashPath))
+                        {
+                            ApplyMovementPath(actor, dashPath, dashPath.Count - 1, movements);
+                            ApplyMovementAction(movements, movementIndex, move, skill, true);
+                        }
+                        continue;
+                    }
                     if (move.AiMustMoveTo && !move.AIIgnore && !move.CanExpandOffset
                         && move.Direction == 1 && move.TowardsTargetPos && statusCatalog != null)
                     {
@@ -2772,6 +2792,7 @@ namespace Zjcs.Combat.Official
         private bool MoveIntoSkillRange(FightBattleUnitState actor,
             FightBattleSkillDefinition skill, List<FightBattleMovementEvent> movements)
         {
+            if (IsLightningDash(skill) && TryPlanLightningDash(actor, skill, out _, out _)) return false;
             FightBattleGrid grid = checkpoint.Grid;
             if (grid == null || actor.MoveDist <= 0 || skill.Range == null || skill.Range.Count == 0
                 || statusCatalog != null && !statusCatalog.CanStartAction(actor,

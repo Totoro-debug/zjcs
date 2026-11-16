@@ -44,6 +44,8 @@ foreach($row in $active) {
         $distance=@($definition.Range | Where-Object { $_.X*$direction[1] -eq 0 -and $_.Y*$direction[0] -eq 0 -and $_.X*$direction[0]+$_.Y*$direction[1] -gt 0 } |
             ForEach-Object { [Math]::Abs($_.X)+[Math]::Abs($_.Y) } | Sort-Object | Select-Object -First 1)
         $distance=if($distance.Count){[int]$distance[0]}else{1}
+        # 10016 selects an empty fifth-cell landing and hits intermediate cells 1..4.
+        if ($row.ClassId -eq 10016) { $distance = 2 }
         $enemy.X+=$direction[0]*$distance; $enemy.Y+=$direction[1]*$distance
         $ally.X-=$direction[0]; $ally.Y-=$direction[1]
         foreach($u in @($actor,$enemy,$ally)) { $cp.Units.Add($u) }
