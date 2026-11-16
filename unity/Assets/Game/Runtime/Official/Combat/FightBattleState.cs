@@ -1205,6 +1205,7 @@ namespace Zjcs.Combat.Official
         public string LogicDefinitionJson;
         public bool LogicSelfInitialized;
         public bool LogicStartInitialized;
+        public bool ElementHarmonyStartChecked;
         public int LogicTriggeredCount;
         public List<FightBattleLogicBlackboardValue> LogicBlackboard =
             new List<FightBattleLogicBlackboardValue>();

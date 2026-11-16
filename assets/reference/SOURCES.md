@@ -27,6 +27,8 @@
 
 虚空泡影 `10556／25022→24213、24209` 的所选 APK 配置与反编译代码由 `scripts/prepare_battle_void_mirage_sources.py` 核对，输入身份及哈希见[虚空泡影来源](battle-rules/void-mirage-source-manifest.json)；25022 的报告次数标志仅补全所选配置默认值。
 
+元素调和 `10602／25111→24388` 及其验证使用的风神之羽、火焰随身伤害链，均由 `scripts/prepare_battle_element_harmony_sources.py` 核对所选 APK 配置与反编译代码；输入身份及哈希见[元素调和来源](battle-rules/element-harmony-source-manifest.json)。
+
 疾光一闪 `10016／10680→10681／10682→10026` 的所选 APK 原配置、程序集、八份共享／客户端代码与十二项原生输入／十二项现有 Windows 输出，由 `scripts/prepare_battle_lightning_dash_sources.py` 核对并记录于[疾光一闪来源](battle-rules/lightning-dash-source-manifest.json)。原载荷及历史来源保持独立，10026 的空驱散排除名单仅作所选默认值比较；实现缺口、单机决策和验证范围仅维护于[斗士技能页](../../docs/features/skills-fighter.md#rank-2)。
 
 技能职业判定参照由 `scripts/prepare_skill_profession_reference.py` 在标记的隔离工程提取所选 `884_156692` 原职业枚举、两个职业可用性函数和两个武器回退函数；原 `PlayerProfessionDataEx`、`PlayerSkillDataExt`、`PlayerSnapshotData`、`FightUtilsHandler` 调用依据、`FightSkillBaseInfo`／`FightSkillData` 外观映射依据、`SkillPanelSkillDetailDialog` 按钮代码、程序集、既有人物／技能／战斗载荷与参照模板哈希见[职业判定来源](battle-rules/skill-profession-source-manifest.json)。未修改配置或美术；规则与验证范围在[技能页](../../docs/features/skills.md)维护。

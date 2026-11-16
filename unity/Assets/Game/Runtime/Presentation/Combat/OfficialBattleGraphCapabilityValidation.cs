@@ -56,6 +56,7 @@ namespace Zjcs.Presentation.Combat
 
         public static OfficialBattleGraphCapabilityValidation Configure(FightBattleCheckpoint checkpoint)
         {
+            if (ValidateElementHarmony) return ConfigureElementHarmony(checkpoint);
             if (Environment.GetEnvironmentVariable("ZJCS_VOID_MIRAGE_ACCEPTANCE") == "1")
                 return ConfigureVoidMirage(checkpoint);
             if (Environment.GetEnvironmentVariable("ZJCS_FIGHTER_HP_SECRETS") == "1")
@@ -379,6 +380,7 @@ namespace Zjcs.Presentation.Combat
             if (ObserveSwordCounterattackFrame(controller)) return;
             ObserveChainedHitViews(controller);
             ObserveFirstPromotionGeneration(controller);
+            if (CaptureElementHarmonyFrame(controller)) return;
             if (Environment.GetEnvironmentVariable("ZJCS_THUNDER_MYSTERY_ACCEPTANCE") == "1"
                 && thunderNativeCasts > 0 && !thunderCaptured && Time.time - thunderNativeClock >= .35f)
             { thunderCaptured = true; CaptureName = "thunder-mystery-native"; return; }
@@ -521,6 +523,7 @@ namespace Zjcs.Presentation.Combat
 
         public void Verify(FightBattleCheckpoint checkpoint)
         {
+            VerifyElementHarmony();
             if (ValidateVoidMirage) { VerifyVoidMirage(checkpoint); return; }
             if (Environment.GetEnvironmentVariable("ZJCS_THUNDER_MYSTERY_ACCEPTANCE") == "1")
                 Require(thunderNativeCasts == 1 && thunderCaptured,

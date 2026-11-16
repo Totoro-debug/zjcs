@@ -561,6 +561,7 @@ namespace Zjcs.Combat.Official
                 LogicDefinitionJson = template.LogicDefinitionJson,
                 LogicSelfInitialized = template.LogicSelfInitialized,
                 LogicStartInitialized = template.LogicStartInitialized,
+                ElementHarmonyStartChecked = template.ElementHarmonyStartChecked,
                 LogicTriggeredCount = template.LogicTriggeredCount,
                 LogicBlackboard = CopyLogicBlackboard(template.LogicBlackboard),
                 FalloffTarget = template.FalloffTarget,

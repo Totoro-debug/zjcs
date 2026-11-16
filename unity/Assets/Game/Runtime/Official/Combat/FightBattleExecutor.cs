@@ -92,6 +92,7 @@ namespace Zjcs.Combat.Official
                             statusCatalog.RestoreDarkHitDefinition(status);
                             statusCatalog.RestoreHitCustomCureDefinition(status);
                             statusCatalog.RestoreMoveScopeDefinition(status, initialize);
+                            RestoreElementHarmonyDefinition(status);
                             statusCatalog.RestoreApplyConditionDefinition(status);
                             statusCatalog.RestoreSkillEndDefinition(status);
                             RestoreRevivalDefinition(status);

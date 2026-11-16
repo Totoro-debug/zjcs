@@ -62,7 +62,8 @@ namespace Zjcs.Combat.Official
                     if (IsPendingHpStart(owner, status) || IsPendingRoundStart(owner, status)
                         || IsPendingMoveScopeStart(owner, status)
                         || IsPendingLogicStart(status)
-                        || IsPendingStackCountStart(owner, status)) return true;
+                        || IsPendingStackCountStart(owner, status)
+                        || IsPendingElementHarmonyStart(owner, status)) return true;
             return false;
         }
 
@@ -181,13 +182,15 @@ namespace Zjcs.Combat.Official
                                 && (IsPendingHpStart(owner, statuses[index]) || IsPendingRoundStart(owner, statuses[index])
                                     || IsPendingMoveScopeStart(owner, statuses[index])
                                     || IsPendingLogicStart(statuses[index])
-                                    || IsPendingStackCountStart(owner, statuses[index])))
+                                    || IsPendingStackCountStart(owner, statuses[index])
+                                    || IsPendingElementHarmonyStart(owner, statuses[index])))
                             {
                                 if (firstOwner == null) firstOwner = owner;
                                 changed += StartHpStatus(owner, statuses[index]);
                                 changed += StartRoundStatus(owner, statuses[index]);
                                 changed += StartMoveScope(owner, statuses[index]);
                                 ApplyLogicStart(owner, statuses[index]);
+                                StartElementHarmony(owner, statuses[index]);
                                 if (IsPendingStackCountStart(owner, statuses[index]))
                                     OnStatusStackChanged(statuses[index]);
                             }

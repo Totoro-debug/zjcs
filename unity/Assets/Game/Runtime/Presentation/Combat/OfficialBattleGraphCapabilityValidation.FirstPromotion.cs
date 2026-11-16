@@ -243,7 +243,8 @@ namespace Zjcs.Presentation.Combat
                     // Isolate the authored facing of the adjacent-target probes. Ordinary landing AI
                     // may otherwise relocate around this already adjacent target.
                     if ((itemId == 10042 || itemId == 10053 || itemId == 10061
-                            || itemId == 10008 && Environment.GetEnvironmentVariable("ZJCS_THUNDER_MYSTERY_ACCEPTANCE") == "1") && unit == player
+                            || itemId == 10008 && (Environment.GetEnvironmentVariable("ZJCS_THUNDER_MYSTERY_ACCEPTANCE") == "1"
+                                || ValidateElementHarmony)) && unit == player
                         && (prop.Id == catalog.PropertyType("MoveDist")
                             || prop.Id == catalog.PropertyType("FixedMoveDist"))) prop.Value = 0;
                 }
@@ -357,6 +358,7 @@ namespace Zjcs.Presentation.Combat
 
         private void ObserveFirstPromotionStep(FightBattleCheckpoint checkpoint, FightBattleStepEvent step)
         {
+            ObserveElementHarmonyStep(checkpoint, step);
             var player = checkpoint.Units.Single(unit => unit.Id == 1);
             var cast = step.SkillCasts.Single(value => value.ActorId == player.Id && value.Slot == 0);
             if (Environment.GetEnvironmentVariable("ZJCS_THUNDER_MYSTERY_ACCEPTANCE") == "1")

@@ -278,6 +278,11 @@ namespace Zjcs.Combat.Official
         {
             if (statusCatalog == null || owner == null || status == null
                 || status.Components?.Start == null) return;
+            if (status.ClassId == 25111)
+            {
+                ApplyElementHarmony(owner, status);
+                return;
+            }
             foreach (FightBattleStatusStateTrigger trigger in status.Components.Start.Statuses)
             {
                 if (trigger == null || !RollComponent(trigger.BasePercent)) continue;
