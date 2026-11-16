@@ -55,7 +55,14 @@ public static class BattleVoidMirageHarness
                     &&shield.SourceSkillRank==2&&shield.SourceSkillLevel==20&&dodge.SourceSkillRank==2,
                     "Effects lost passive source or cultivation");
                 Check(shield.ShieldInitialized&&shield.ShieldRemainValue>0,"Original shield was not initialized");
-                FightStatusLifecycle.End(target,shield);FightStatusLifecycle.End(target,dodge);
+                int start=Math.Max(0,shield.StartRound);
+                FightStatusLifecycle.TickTurn(actor,cp.Units,start+2,FightStatusLifecycle.TimingEnd);
+                Check(target.Statuses.Contains(shield)&&target.Statuses.Contains(dodge),"Enemy round expired protection");
+                FightStatusLifecycle.TickTurn(target,cp.Units,start,FightStatusLifecycle.TimingEnd);
+                FightStatusLifecycle.TickTurn(target,cp.Units,start+1,FightStatusLifecycle.TimingEnd);
+                Check(target.Statuses.Contains(shield)&&target.Statuses.Contains(dodge),"Protection expired before two owner rounds");
+                FightStatusLifecycle.TickTurn(target,cp.Units,start+2,FightStatusLifecycle.TimingEnd);
+                Check(!target.Statuses.Contains(shield)&&!target.Statuses.Contains(dodge),"Protection outlived two owner rounds");
                 FightStatusTriggerRuntime.Apply(target,catalog,false,units:cp.Units);
                 Check(!target.Statuses.Any(x=>x.ClassId==24213||x.ClassId==24209),"Protection triggered twice");
             }
@@ -63,6 +70,6 @@ public static class BattleVoidMirageHarness
         var low=Unit(3,499,formula);low.Statuses.Add(catalog.CreateStatus(25022,3,3,1,25022,10556,2,20,1));
         FightStatusTriggerRuntime.Apply(low,catalog,true,units:new[]{low});
         Check(!low.Statuses.Any(x=>x.ClassId==24213||x.ClassId==24209),"TryAtStart=false was ignored");
-        return "Void mirage passed: 50% boundary, lethal/start exclusions, two original statuses, source, shield and checkpoint.";
+        return "Void mirage passed: 50% boundary, lethal/start exclusions, two-round effects, source, shield and checkpoint.";
     }
 }
