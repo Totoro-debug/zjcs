@@ -210,7 +210,6 @@ namespace Zjcs.Offline.Home
     [Serializable]
     public sealed class HomeRulesData
     {
-        public string version;
         public HomeFurnitureRecord[] furniture;
         public HomeHangUpRecord[] hangUps;
         public HomeHangUpRewardRecord[] hangUpRewards;
@@ -230,7 +229,6 @@ namespace Zjcs.Offline.Home
     [Serializable]
     public sealed class HomeRewardTypesData
     {
-        public string version;
         public HomeRewardTypeRecord[] types;
         public HomeRewardGroupRecord[] groups;
         public HomeRewardSlotRecord[] slots;
@@ -304,15 +302,12 @@ namespace Zjcs.Offline.Home
         private Func<HomeConditionNode, bool> evaluateFurnitureCondition;
         private Func<int, bool> hasSelectedFurniture;
 
-        public string FurnitureVersion { get; private set; }
+        public bool HasFurnitureConfiguration => hasSelectedFurniture != null;
 
-        // A migration boundary for the selected furniture table. Its composite
-        // IDs must be evaluated by that version's condition parser, never by the
-        // historical condition table retained for the other home systems.
-        public void BindFurniture(string version, HomeFurnitureRecord[] records,
+        // Bound furniture records and their predicates share the same parser.
+        public void BindFurniture(HomeFurnitureRecord[] records,
             Func<HomeConditionNode, bool> evaluate, Func<int, bool> hasFurniture)
         {
-            if (string.IsNullOrEmpty(version)) throw new ArgumentException("A furniture version is required.", nameof(version));
             if (records == null || records.Length == 0) throw new ArgumentException("Furniture records are required.", nameof(records));
             if (evaluate == null) throw new ArgumentNullException(nameof(evaluate));
             if (hasFurniture == null) throw new ArgumentNullException(nameof(hasFurniture));
@@ -325,7 +320,6 @@ namespace Zjcs.Offline.Home
             foreach (var entry in classes) byClassId.Add(entry.Key, entry.Value);
             foreach (var entry in types) byType.Add(entry.Key, entry.Value);
             Data.furniture = records;
-            FurnitureVersion = version;
             selectedFurnitureConditions = nodes;
             evaluateFurnitureCondition = evaluate;
             hasSelectedFurniture = hasFurniture;
@@ -396,8 +390,8 @@ namespace Zjcs.Offline.Home
             if (string.IsNullOrWhiteSpace(folder)) throw new ArgumentException("A home payload folder is required.", nameof(folder));
             HomeRulesData data = ReadJson<HomeRulesData>(Path.Combine(folder, "rules.json"));
             HomeRewardTypesData rewards = ReadJson<HomeRewardTypesData>(Path.Combine(folder, "rewards.json"));
-            if (data == null || data.version != "854_156383")
-                throw new FormatException("The official home rules are missing or from an unsupported manifest.");
+            if (data == null)
+                throw new FormatException("The official home rules are missing or incomplete.");
             if (rewards == null || rewards.slots == null || rewards.slots.Length != 29
                 || rewards.types == null || rewards.types.Length != 2)
                 throw new FormatException("The official home random reward tables are incomplete.");
@@ -450,7 +444,7 @@ namespace Zjcs.Offline.Home
         public double LevelNumber(int levelRuleId, int level)
         {
             if (levelNumbers.TryGetValue(Key(levelRuleId, level), out double value)) return value;
-            if (IncomeVersion != null) return 0;
+            if (HasIncomeConfiguration) return 0;
             // The official table is dense; fall back to the highest level not above the request.
             double result = 0;
             foreach (KeyValuePair<long, double> pair in levelNumbers)

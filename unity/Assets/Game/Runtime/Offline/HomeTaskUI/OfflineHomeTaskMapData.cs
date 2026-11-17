@@ -34,7 +34,7 @@ namespace Zjcs.Offline.HomeTaskUI
             var data=JObject.Parse(json);var proof=JObject.Parse(proofJson);
             string hash;
             using(var sha=SHA256.Create())hash=BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(json))).Replace("-","").ToLowerInvariant();
-            if((string)data["manifest"]!="884_156692"||(string)proof["manifest"]!="884_156692"||(string)proof["output_sha256"]!=hash)
+            if((string)proof["output_sha256"]!=hash)
                 throw new FormatException("Original task map payload differs from its selected source.");
             return new OfflineHomeTaskMapData(data);
         }

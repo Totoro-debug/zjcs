@@ -129,7 +129,6 @@ namespace Zjcs.Offline.HomeCurrencyUI
             if(data!=null)return;
             if(!configuration||!texts)throw new InvalidOperationException("Original currency configuration is absent.");
             var parsed=JObject.Parse(configuration.text);
-            if((string)parsed["manifest"]!="884_156692")throw new FormatException("Unexpected currency configuration version.");
             itemRows=((JArray)parsed["tables"]["item"]).Cast<JObject>().ToDictionary(row=>(int)row["ClassId"]);
             quickRows=((JArray)parsed["tables"]["quick_buy"]).Cast<JObject>().ToDictionary(row=>(int)row["ItemId"]);
             numbers=((JArray)parsed["tables"]["level_number"]).Cast<JObject>().ToDictionary(row=>(int)row["Id"]);

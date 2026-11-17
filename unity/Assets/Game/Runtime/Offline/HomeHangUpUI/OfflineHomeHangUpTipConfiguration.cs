@@ -10,7 +10,7 @@ namespace Zjcs.Offline.HomeHangUpUI
     public sealed class OfflineHomeHangUpTipConfiguration
     {
         [Serializable] public sealed class Record { public int id; public EFurniture furniture; }
-        public string manifest;
+
         public List<HomeHangUpTipSettings.HangUpTipSetting> settings;
         public float expForLevelUpPercentTip;
         public float directionGuideFocusDuration;
@@ -21,7 +21,7 @@ namespace Zjcs.Offline.HomeHangUpUI
             var asset = Resources.Load<TextAsset>("Home/hangup-tips");
             if (!asset) throw new InvalidOperationException("Selected home tip configuration is absent.");
             var value = JsonUtility.FromJson<OfflineHomeHangUpTipConfiguration>(asset.text);
-            if (value == null || value.manifest != "884_156692" || value.settings == null || value.records == null)
+            if (value == null || value.settings == null || value.records == null)
                 throw new InvalidOperationException("Invalid selected home tip configuration.");
             return value;
         }

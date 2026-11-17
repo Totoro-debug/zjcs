@@ -33,7 +33,7 @@ public static class HomeFurnitureValidation
         new OfflineCurrentHomeFurniture(configuration, partners.Conditions, () => player).Bind(rules);
         var progression = new OfflineHomeProgression(rules);
         var context = new HomeConditionContext { Level = 999, MaxProfessionRank = 999, HasManualMeetNpc = true };
-        Require(rules.FurnitureVersion == "884_156692" && rules.Furniture.Count == 13, "Selected furniture binding");
+        Require(rules.HasFurnitureConfiguration && rules.Furniture.Count == 13, "Selected furniture binding");
         Require(progression.FurnitureState(home, 0, context) == HomeFurnitureState.Locked, "Saved level overrides legacy context");
         saved.Player.Level = 1;
         Require(progression.FurnitureState(home, 0, context) == HomeFurnitureState.RepairNotice, "Original repair notice");

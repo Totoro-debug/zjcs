@@ -1,4 +1,4 @@
-"""Recover selected home furniture story voices from the pinned Wwise package."""
+"""Recover selected home furniture story voices from verified Wwise inputs."""
 import argparse
 import hashlib
 import json
@@ -14,7 +14,6 @@ from prepare_unity_map13_sources import encode, meta
 from validation_workspace import validation_directory
 
 
-VERSION = '884_156692'
 PACKAGE = 'wwisebnk_assets_wwisedata_android_zh_cn_voice_chapter_02_pck.rawfile'
 STORY_SOURCE = ROOT / 'unity/Assets/Official/Home/Source/furniture-unlock-stories.json'
 STORY_RECEIPT = ROOT / 'assets/reference/home-furniture-unlock-story-source-manifest.json'
@@ -33,19 +32,21 @@ def build(work):
     story_raw = STORY_SOURCE.read_bytes()
     story_proof_raw = STORY_RECEIPT.read_bytes()
     story_proof = json.loads(story_proof_raw)
-    if story_proof['manifest'] != VERSION or sha(story_raw) != story_proof['output']['sha256']:
+    if sha(story_raw) != story_proof['output']['sha256']:
         raise ValueError('Selected furniture story source does not match its manifest')
     story = json.loads(story_raw)
     rows = [row for groups in story['dialogues'].values() for group in groups.values() for row in group]
     if any(not row['VoiceEventKey'] for row in rows if row['DialogType'] == 1):
         raise ValueError('An original Voice dialogue row has no event key')
     keys = sorted({row['VoiceEventKey'] for row in rows if row['DialogType'] == 1})
-    if len(keys) != 13:
-        raise ValueError('Selected furniture story voice closure changed')
+    if not keys:
+        raise ValueError('Selected furniture story voice closure is empty')
     apk = Apk.current()
-    if apk.version != VERSION:
-        raise ValueError('Voice package differs from the selected source version')
-    verified = apk.reader.read('WwiseBnk', PACKAGE)
+    try:
+        verified = apk.reader.read('WwiseBnk', PACKAGE)
+        source_version = apk.version
+    finally:
+        apk.reader.close()
     package = verified.data
     banks, files = parse_pck(package)
     by_id = {row[0]: row for row in files}
@@ -83,12 +84,14 @@ def build(work):
             media_id=media_id, offset=offset, bytes=size, wem_sha256=sha(wem),
             wav_sha256=sha(wav), wav_bytes=len(wav), format=format_info, event=events[key]))
         wem_path.unlink()
-    catalog = encode(dict(manifest=VERSION, events=[dict(eventKey=row['eventKey'], clip=row['clip'],
+    catalog = encode(dict(events=[dict(eventKey=row['eventKey'], clip=row['clip'],
                                                         sha256=row['wav_sha256']) for row in entries]))
     (target / 'voices.json').write_bytes(catalog)
     source_files = [Path(__file__), ROOT / 'scripts/prepare_character_creation_opening_audio.py',
         ROOT / 'scripts/prepare_unity_map11_dialogue_audio.py', VGMSTREAM, STORY_SOURCE, STORY_RECEIPT]
-    proof = dict(manifest=VERSION, package=dict(name=PACKAGE, source=dict(verified.provenance),
+    provenance = {key: value for key, value in verified.provenance.items()
+                  if key not in ('manifest', 'apk_manifest', 'source_manifest', 'resource_version')}
+    proof = dict(manifest=source_version, package=dict(name=PACKAGE, source=provenance,
         sha256=sha(package), bytes=len(package), bank_count=len(banks), media_count=len(files)),
         inputs={path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in source_files},
         entries=entries, catalog_sha256=sha(catalog),

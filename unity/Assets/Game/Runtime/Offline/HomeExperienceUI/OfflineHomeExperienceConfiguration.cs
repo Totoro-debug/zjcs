@@ -10,14 +10,13 @@ namespace Zjcs.Offline.HomeExperienceUI
     [Serializable]
     public sealed class OfflineHomeExperienceConfiguration
     {
-        public string manifest;
         public int playerExpItemId;
         public Rank firstBlessRank;
         public Dictionary<string, object> tables;
 
         public HomeExperienceTables CreateTables()
         {
-            if (manifest != "884_156692" || playerExpItemId != 50 || firstBlessRank != Rank.Bronze || tables == null)
+            if (playerExpItemId != 50 || firstBlessRank != Rank.Bronze || tables == null)
                 throw new InvalidDataException("The selected original home experience configuration is unbound.");
             return new HomeExperienceTables(Rows<LevelExp>("level_exp"), Rows<LevelBlessInfo>("level_bless"),
                 Rows<SystemLevelLimitInfo>("system_level_limit"), Rows<AstrologicalSeasonConfig>("astrological_season_config"), playerExpItemId, firstBlessRank);

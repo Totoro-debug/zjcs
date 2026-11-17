@@ -5,9 +5,11 @@ from pathlib import Path
 import re
 
 from official_apk import Apk, ROOT
+from official_source import OfficialSource
 from official_tables import Constructors
 
-CODE = ROOT/'.tools/source-packages/current/884_156692/official-code'
+SOURCE = OfficialSource()
+CODE = ROOT/'.tools/source-packages/current'/SOURCE.version/'official-code'
 DEST = ROOT/'unity/Assets/Game/Runtime/Official/HomeAutoIncrease'
 
 
@@ -150,7 +152,7 @@ def build():
         item, = [row for row in tables['item'] if row['ClassId'] == stamina]
         effect, = [row for row in item['Effects'] if row['_type'] == 'ItemEffectAutoIncrease']
         limit, = [row for row in tables['item_count_limit'] if row['ClassId'] == stamina]
-        config = dict(manifest=apk.version, itemId=stamina, increaseSpeed=effect['IncreaseSpeed'],
+        config = dict(itemId=stamina, increaseSpeed=effect['IncreaseSpeed'],
             maxCount=effect['MaxCount'], calcOverflow=effect['CalcOverflow'],
             increaseSpeedPercentProp=effect['IncreaseSpeedPercentProp'], itemCountLimit=limit['MaxCount'],
             outputAdditionItems=sorted(int(key) for key in tables['game_settings']['OutputAdditionSetting']['ItemOutputGroupTypeDict']))
@@ -164,7 +166,7 @@ def build():
     write(DEST/'Zjcs.Official.HomeAutoIncrease.asmdef', json.dumps(dict(name='Zjcs.Official.HomeAutoIncrease',
         rootNamespace='Zjcs.Official.HomeAutoIncrease',references=[],noEngineReferences=True),indent=2)+'\n')
     outputs[metadata(DEST,True).relative_to(ROOT).as_posix()] = sha(metadata(DEST,True))
-    proof = dict(manifest='884_156692', generator_sha256=sha(Path(__file__)),inputs=inputs,outputs=outputs,
+    proof = dict(manifest=SOURCE.version, generator_sha256=sha(Path(__file__)),inputs=inputs,outputs=outputs,
         configuration=sources,stamina=config,
         adaptations=['Original parameter fields without transport wrapper; offline persistence encodes DateTime as ticks.',
             'Original selected PlayerItemDataWrap count/get/set/speed/max methods, original segmented helper and time conversions.',

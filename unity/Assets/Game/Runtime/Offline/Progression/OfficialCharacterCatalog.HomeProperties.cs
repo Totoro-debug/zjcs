@@ -18,7 +18,6 @@ namespace Zjcs.Offline.Progression
                 if (BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(json))).Replace("-", "").ToLowerInvariant() != expectedSha256)
                     throw new FormatException("Home property configuration source hash differs.");
             var payload = Object(OfficialEquipmentJson.Parse(json), "home property rules");
-            if (Text(payload, "manifest") != "884_156692") throw new FormatException("Home property configuration is not pinned.");
             var merged = new Dictionary<string, List<Dictionary<string, object>>>(tables, StringComparer.Ordinal);
             var supplied = Object(payload, "tables");
             foreach (var entry in supplied)

@@ -50,10 +50,9 @@ namespace Zjcs.Offline.HomeTaskUI
             var hash=JObject.Parse(hashText);
             using(var algorithm=SHA256.Create()){
                 string digest=BitConverter.ToString(algorithm.ComputeHash(Encoding.UTF8.GetBytes(text))).Replace("-","").ToLowerInvariant();
-                if((string)hash["manifest"]!="884_156692"||digest!=(string)hash["output_sha256"])throw new FormatException("Selected official map entry hash differs.");
+                if(digest!=(string)hash["output_sha256"])throw new FormatException("Selected official map entry hash differs.");
             }
             var data=JObject.Parse(text);
-            if((string)data["manifest"]!="884_156692")throw new FormatException("Selected official map entry version differs.");
             return new OfflineHomeTaskMapEntryData(data);
         }
         public HomeTaskMapPart GetMapPartInfo(int mapClassId)=>defaults.TryGetValue(mapClassId,out int id)?new HomeTaskMapPart{DefEntryId=id}:null;

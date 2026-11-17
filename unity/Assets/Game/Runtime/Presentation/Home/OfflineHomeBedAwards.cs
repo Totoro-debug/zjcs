@@ -26,9 +26,9 @@ namespace Zjcs.Presentation.Home
         IProfessionItemPlayer, IProfessionSoundHost, IDisposable
     {
         [Serializable] sealed class TextRow { public string key, text; }
-        [Serializable] sealed class Data { public string manifest; public Info item; public Palette global_colors; public TextRow[] texts; }
+        [Serializable] sealed class Data { public Info item; public Palette global_colors; public TextRow[] texts; }
         [Serializable] sealed class Info { public int ClassId, Quality, ItemType, Rank; public string RawIcon, IconEffect; public bool CanOverlap; }
-        [Serializable] sealed class IncomeData { public string manifest; public IncomeTables tables; }
+        [Serializable] sealed class IncomeData { public IncomeTables tables; }
         [Serializable] sealed class IncomeTables { public Info[] item; public IncomeSettings game_settings; }
         [Serializable] sealed class IncomeSettings { public int[] IgnoreShowAwardId; }
         [Serializable] sealed class TextColor { public Color Color; }
@@ -103,14 +103,14 @@ namespace Zjcs.Presentation.Home
                 assets = OfficialHomeAwardQueueAssetCatalog.LoadDefault();
                 var configuration = UnityEngine.Resources.Load<TextAsset>("Home/home-award-queue-data");
                 data = configuration ? JsonUtility.FromJson<Data>(configuration.text) : null;
-                if (data?.manifest != "884_156692" || data.item?.ClassId != 50
+                if (data == null || data.item?.ClassId != 50
                     || data.item.ItemType != 50 || !data.item.CanOverlap || !string.IsNullOrEmpty(data.item.IconEffect))
                     throw new InvalidOperationException("Selected bed XP award data is unbound.");
                 experience = new IncomeItem { Source = data.item };
                 texts = data.texts.ToDictionary(row => row.key, row => row.text);
                 var incomeAssets = Zjcs.Official.HomeFastHangUpUI.OfficialHomeFastHangUpAssetCatalog.LoadDefault();
                 var incomeData = JsonUtility.FromJson<IncomeData>(incomeAssets.rules.text);
-                if (incomeData?.manifest != data.manifest || incomeData.tables?.item == null
+                if (incomeData == null || incomeData.tables?.item == null
                     || incomeData.tables.game_settings?.IgnoreShowAwardId == null)
                     throw new InvalidOperationException("Selected home income reward data is unbound.");
                 incomeItems = incomeData.tables.item.ToDictionary(item => item.ClassId,

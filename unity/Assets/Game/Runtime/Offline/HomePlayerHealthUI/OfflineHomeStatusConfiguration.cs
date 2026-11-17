@@ -20,8 +20,6 @@ namespace Zjcs.Offline.HomePlayerHealthUI
 
         private OfflineHomeStatusConfiguration(JObject source)
         {
-            if ((string)source["manifest"] != "884_156692")
-                throw new InvalidDataException("Wrong player-status source version.");
             statuses = source["statuses"].ToObject<StatusEffectInfo[]>().ToDictionary(row => row.ClassId);
             Scopes = source["scopes"].Cast<JObject>().ToDictionary(row => (int)row["Id"]);
             Entries = source["entries"].Cast<JObject>().ToDictionary(row => (int)row["Id"]);

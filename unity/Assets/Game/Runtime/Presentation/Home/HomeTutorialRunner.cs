@@ -55,7 +55,6 @@ namespace Zjcs.Presentation.Home
     internal sealed class HomeTutorialRunnerSave
     {
         public int Schema = 2;
-        public string Version;
         public string SourceSha256;
         public string QueuedGuide;
         public string ActiveGuide;
@@ -169,7 +168,7 @@ namespace Zjcs.Presentation.Home
     }
 
     /// <summary>
-    /// Executes the six fixed-version Home tutorial graphs as connected node/port flows.
+    /// Executes the six official Home tutorial graphs as connected node/port flows.
     /// Presentation and game mutations are delegated to an explicit host; graph state and
     /// story status are stored locally under the selected profile.
     /// </summary>
@@ -217,12 +216,12 @@ namespace Zjcs.Presentation.Home
             if (string.IsNullOrWhiteSpace(profileSavePath))
                 throw new ArgumentException("A profile-local tutorial save path is required.", nameof(profileSavePath));
             savePath = profileSavePath;
-            save = Load(savePath, catalog.Data.version, catalog.Data.sourceSha256);
+            save = Load(savePath, catalog.Data.sourceSha256);
             if (!string.IsNullOrEmpty(save.ActiveGuide))
             {
                 activeGuide = catalog.Guide(save.ActiveGuide);
                 if (activeGuide == null)
-                    throw new FormatException("Saved tutorial guide is missing from the fixed-version catalog: " + save.ActiveGuide);
+                    throw new FormatException("Saved tutorial guide is missing from the bound catalog: " + save.ActiveGuide);
                 BuildIndexes(activeGuide);
                 resumePending = save.Pending;
             }
@@ -817,17 +816,16 @@ namespace Zjcs.Presentation.Home
             return progress;
         }
 
-        private static HomeTutorialRunnerSave Load(string path, string version, string sourceSha256)
+        private static HomeTutorialRunnerSave Load(string path, string sourceSha256)
         {
             if (!File.Exists(path)) return new HomeTutorialRunnerSave
             {
-                Version = version,
                 SourceSha256 = sourceSha256
             };
             HomeTutorialRunnerSave loaded = JsonUtility.FromJson<HomeTutorialRunnerSave>(File.ReadAllText(path));
-            if (loaded == null || (loaded.Schema != 1 && loaded.Schema != 2) || loaded.Version != version
+            if (loaded == null || (loaded.Schema != 1 && loaded.Schema != 2)
                 || loaded.SourceSha256 != sourceSha256)
-                throw new FormatException("Home tutorial save does not match the fixed official graph version.");
+                throw new FormatException("Home tutorial save does not match the bound official graph content.");
             if (loaded.Schema == 1)
             {
                 loaded.Schema = 2;

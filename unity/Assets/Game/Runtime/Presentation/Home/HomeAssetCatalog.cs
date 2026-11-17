@@ -58,7 +58,6 @@ namespace Zjcs.Presentation.Home
     [Serializable]
     public sealed class HomeSkinRuntimeData
     {
-        public string version;
         public HomeSkinEntity[] entities;
     }
 
@@ -118,7 +117,6 @@ namespace Zjcs.Presentation.Home
     [Serializable]
     public sealed class HomeSceneData
     {
-        public string version;
         public HomeCameraData camera;
         public HomeSceneLayer[] background;
         public HomeFurnitureScene[] furniture;
@@ -348,7 +346,6 @@ namespace Zjcs.Presentation.Home
     [Serializable]
     public sealed class HomeUiPanelExtensionData
     {
-        public string version;
         public HomeUiFlatPanel[] panels;
         public HomeDynamicSprite[] dynamic_sprites;
         public HomeTextPair[] texts;
@@ -447,7 +444,6 @@ namespace Zjcs.Presentation.Home
     [Serializable]
     public sealed class HomeUiData
     {
-        public string version;
         public HomeUiFlatPanel[] panels;
         public HomeTextPair[] texts;
         public HomeDynamicSprite[] dynamic_sprites;
@@ -489,7 +485,6 @@ namespace Zjcs.Presentation.Home
     [Serializable]
     public sealed class HomeTreasureGachaMachineConfig
     {
-        public string manifest;
         public HomeStateGameObjectConfig[] map_game_object_states;
         public HomeStateImageConfig[] map_sprite_states;
         public HomeStateImageConfig[] element_sprite_states;
@@ -582,7 +577,7 @@ namespace Zjcs.Presentation.Home
                 throw new InvalidDataException("The official home scene payload is missing.");
             if (ui == null || ui.panels == null || ui.panels.Length == 0)
                 throw new InvalidDataException("The official home UI payload is missing.");
-            if (homeSkins == null || homeSkins.version != "854_156383"
+            if (homeSkins == null
                 || homeSkins.entities == null || homeSkins.entities.Length == 0)
                 throw new InvalidDataException("The official home skin payload is missing or invalid.");
             return new HomeAssetCatalog(folder, scene, ui, homeSkins);
@@ -629,7 +624,7 @@ namespace Zjcs.Presentation.Home
         public void LoadTreasureGachaMachine(string path)
         {
             HomeTreasureGachaMachineConfig machine = Read<HomeTreasureGachaMachineConfig>(path);
-            if (machine == null || machine.manifest != "854_156383"
+            if (machine == null
                 || machine.map_game_object_states == null || machine.map_game_object_states.Length == 0
                 || machine.map_sprite_states == null || machine.map_sprite_states.Length == 0
                 || machine.element_sprite_states == null || machine.element_sprite_states.Length == 0

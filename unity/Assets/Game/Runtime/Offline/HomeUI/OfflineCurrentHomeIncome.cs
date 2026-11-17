@@ -33,7 +33,6 @@ namespace Zjcs.Offline.HomeUI
             var rewardIds = new HashSet<int>(rewardRows.Select(row => row.rewardRuleId));
             Data = new HomeRulesData
             {
-                version = "884_156692",
                 hangUps = configuration.Rows("hang_up").Select(row => new HomeHangUpRecord
                 {
                     id = Number(row, "Id"), bindFurniture = Number(row, "BindFurniture"),
@@ -96,7 +95,7 @@ namespace Zjcs.Offline.HomeUI
         public void Bind(OfficialHomeRules rules)
         {
             if (rules == null) throw new ArgumentNullException(nameof(rules));
-            rules.BindIncome(Data.version, Data, node => node == null || conditions.IsMet(nodes[node], player()));
+            rules.BindIncome(Data, node => node == null || conditions.IsMet(nodes[node], player()));
         }
 
         private HomeConditionNode Condition(object value)

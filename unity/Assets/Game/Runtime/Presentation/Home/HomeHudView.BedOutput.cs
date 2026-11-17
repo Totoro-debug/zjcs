@@ -20,7 +20,7 @@ namespace Zjcs.Presentation.Home
         FontAssetFontService bedOutputFonts;
         readonly List<GameObject> bedOutputRows = new List<GameObject>();
         [Serializable] sealed class BedOutputText { public string key, text; }
-        [Serializable] sealed class BedOutputTextData { public string manifest; public BedOutputText[] texts; }
+        [Serializable] sealed class BedOutputTextData { public BedOutputText[] texts; }
         Dictionary<string, string> bedOutputTexts;
         string BedOutputTextFor(string key)
         {
@@ -28,7 +28,7 @@ namespace Zjcs.Presentation.Home
             {
                 var asset = Resources.Load<TextAsset>("Home/home-bed-output-texts");
                 var data = asset ? JsonUtility.FromJson<BedOutputTextData>(asset.text) : null;
-                if (data == null || data.manifest != "884_156692")
+                if (data == null)
                     throw new InvalidOperationException("Selected bed output language is unavailable.");
                 bedOutputTexts = new Dictionary<string, string>(StringComparer.Ordinal);
                 foreach (var row in data.texts) bedOutputTexts.Add(row.key, row.text);

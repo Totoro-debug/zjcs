@@ -41,7 +41,7 @@ namespace Zjcs.Offline.HomeUI
         public void Bind(OfficialHomeRules rules)
         {
             if (rules == null) throw new ArgumentNullException(nameof(rules));
-            rules.BindFurniture("884_156692", Records, node => conditions.IsMet(nodes[node], player()),
+            rules.BindFurniture(Records, node => conditions.IsMet(nodes[node], player()),
                 type => rules.FurnitureOf(type) != null && player().GetItemAmount(rules.FurnitureClassId(type)) >= 1);
         }
 

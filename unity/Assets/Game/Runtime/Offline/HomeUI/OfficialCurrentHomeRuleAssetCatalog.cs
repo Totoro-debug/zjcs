@@ -42,8 +42,6 @@ namespace Zjcs.Offline.HomeUI
             if (tables!=null) return;
             if (configuration==null) throw new InvalidOperationException("Selected home configuration binding is absent.");
             var root=JObject.Parse(configuration.text);
-            if ((string)root["manifest"]!="884_156692")
-                throw new FormatException("Unexpected selected home configuration version.");
             var parsed=new Dictionary<string,object>(StringComparer.Ordinal);
             foreach (var table in ((JObject)root["tables"]).Properties())
             {

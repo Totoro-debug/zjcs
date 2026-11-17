@@ -64,19 +64,18 @@ namespace Zjcs.Offline.Home
     [Serializable]
     public sealed class HomeTutorialData
     {
-        public string version;
         public HomeTutorialGuide[] guides;
         public string sourceSha256;
     }
 
     /// <summary>
-    /// Fixed-version Home tutorial graphs/dialogues decoded from Adventure tables.
+    /// Official Home tutorial graphs/dialogues decoded from Adventure tables.
     /// This catalog retains every official node, port connection and dialogue line;
     /// runtime graph execution can therefore be implemented without inventing steps.
     /// </summary>
     public sealed class HomeTutorialCatalog
     {
-        // Decoded from story_option_dialog.g.bytes for manifest 854_156383.
+        // Decoded from story_option_dialog.g.bytes from the official source.
         private static readonly HomeTutorialStoryOption[] OfficialStoryOptions =
         {
             new HomeTutorialStoryOption
@@ -116,9 +115,9 @@ namespace Zjcs.Offline.Home
             string path = Path.Combine(Application.streamingAssetsPath, "Home", "tutorials.json");
             if (!File.Exists(path)) throw new FileNotFoundException("Official home tutorial graph payload is missing.", path);
             HomeTutorialData data = JsonUtility.FromJson<HomeTutorialData>(File.ReadAllText(path));
-            if (data == null || data.version != "854_156383" || data.guides == null
+            if (data == null || data.guides == null
                 || data.guides.Length != RequiredGuides.Length || string.IsNullOrEmpty(data.sourceSha256))
-                throw new FormatException("Official home tutorial payload is incomplete or from an unsupported version.");
+                throw new FormatException("Official home tutorial payload is incomplete.");
             foreach (string name in RequiredGuides)
             {
                 HomeTutorialGuide guide = data.guides.FirstOrDefault(value => value.name == name);

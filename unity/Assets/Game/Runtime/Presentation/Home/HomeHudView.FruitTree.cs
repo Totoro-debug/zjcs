@@ -42,7 +42,7 @@ namespace Zjcs.Presentation.Home
     [Serializable]
     internal sealed class HomeFruitTreeTutorialData
     {
-        public string manifest;
+
         public HomeFruitTreeTutorialStory[] stories;
         public HomeFruitTreeTutorialVoice[] voices;
     }
@@ -59,7 +59,7 @@ namespace Zjcs.Presentation.Home
                 if (!File.Exists(path)) throw new FileNotFoundException("Official fruit tree tutorials are missing.", path);
                 data = JsonUtility.FromJson<HomeFruitTreeTutorialData>(File.ReadAllText(path));
             }
-            if (data == null || data.manifest != "854_156383" || data.stories == null)
+            if (data == null || data.stories == null)
                 throw new FormatException("Official fruit tree tutorial data is incomplete or unsupported.");
             HomeFruitTreeTutorialStory story = data.stories.FirstOrDefault(value => value.id == storyId);
             HomeFruitTreeTutorialDialogue dialogue = story?.dialogues?.FirstOrDefault(value => value.id == dialogueId);

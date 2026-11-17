@@ -105,7 +105,7 @@ namespace Zjcs.Offline.Home
         public int HangUpLevel(OfflineHomeIncomeSession session, HomeHangUpRecord record, int blessingLevel)
         {
             if (record == null) return 1;
-            return record.useBlessingLevel ? rules.IncomeVersion != null ? blessingLevel : Math.Max(1, blessingLevel)
+            return record.useBlessingLevel ? rules.HasIncomeConfiguration ? blessingLevel : Math.Max(1, blessingLevel)
                 : session.HangUpLevel(record.id);
         }
 
@@ -176,7 +176,7 @@ namespace Zjcs.Offline.Home
                 if (reward == null) continue;
                 int level = HangUpLevel(session, record, blessingLevel);
                 double levelNumber = rules.LevelNumber(record.levelRuleId, level);
-                if (levelNumber <= 0 && rules.IncomeVersion == null) levelNumber = 1;
+                if (levelNumber <= 0 && !rules.HasIncomeConfiguration) levelNumber = 1;
                 HomeRewardRuleRecord rule = rules.SelectRewardRule(reward.rewardRuleId, context);
                 if (rule == null || rule.ids == null || rule.ids.Length == 0) continue;
                 bool autoUnlocked = record.initAutoUnlock || record.unlock == null

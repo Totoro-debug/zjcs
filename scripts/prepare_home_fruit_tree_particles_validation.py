@@ -26,7 +26,7 @@ def main():
     editor = project / 'Assets/Editor/HomeFurniture'
     assert (editor / 'HomeFurnitureValidation.asmdef').is_file(), 'Stage the real home furniture host first'
     source = (ROOT / 'scripts/fixtures/home_furniture_host_validation.cs').read_text('utf8')
-    before = 'Require(home.Rules.FurnitureVersion == "884_156692"'
+    before = 'Require(home.Rules.HasFurnitureConfiguration'
     source = source.replace(before, '''var particles = home.Scene.Root.transform.Find("FruitTree");
         Require(particles != null && particles.GetComponentsInChildren<ParticleSystem>(true).Length == 23,
             "Current original particle module count");
@@ -44,7 +44,7 @@ def main():
             }
         Require(boundMaterials == 23 && emptyMaterials == 1,
             "Original 23 bound particle materials and one empty renderer material slot");
-        Require(home.Rules.FurnitureVersion == "884_156692"''', 1)
+        Require(home.Rules.HasFurnitureConfiguration''', 1)
     marker = 'Color sky = SkyPixel();'
     assert marker in source
     source = source.replace(marker, marker + '''

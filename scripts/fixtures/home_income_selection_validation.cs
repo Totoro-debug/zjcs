@@ -40,7 +40,7 @@ public sealed partial class HomeIncomeSelectionHostRunner
         Require(rates.Get(1) == early && rates.Get(2) == fallback && rates.Get(999) == null,
             "rate selector orders positive keys and keeps -1 fallback only when no positive keys exist");
 
-        Require(home.Rules.IncomeVersion == "884_156692", "formal home opts into selected income tables");
+        Require(home.Rules.HasIncomeConfiguration, "formal home opts into selected income tables");
         var selected = OfficialCurrentHomeRuleAssetCatalog.LoadDefault();
         Require(home.Rules.HangUps.Count == 12 && home.Rules.Data.hangUpRewards.Length == 11
             && home.Rules.Data.furnitureLevelRules.Length == 595 && home.Rules.Data.hangUpUpgradeMaterials.Length == 3024,

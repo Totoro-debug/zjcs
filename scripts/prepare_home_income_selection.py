@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from official_apk import ROOT
+from official_source import OfficialSource
 from prepare_home_auto_increase_runtime import method
 
 
@@ -12,7 +13,8 @@ def digest(path):
 
 
 def build():
-    code = ROOT / '.tools/source-packages/current/884_156692/official-code'
+    source = OfficialSource()
+    code = ROOT / '.tools/source-packages/current' / source.version / 'official-code'
     target = ROOT / 'unity/Assets/Game/Runtime/Official/HomeIncomeRules'
     inputs, outputs = {}, {}
 
@@ -32,7 +34,6 @@ def build():
                  ROOT / 'unity/Assets/Official/Home/home-rules-current.json'):
         inputs[path.relative_to(ROOT).as_posix()] = digest(path)
     table_proof = json.loads((ROOT / 'assets/reference/home-rules-current-source-manifest.json').read_bytes())
-    assert table_proof['manifest'] == '884_156692'
     assert digest(ROOT / table_proof['output']['path']) == table_proof['output']['sha256']
     for name in ('HangUpUtils', 'PlayerHangUpDataExt', 'FurnitureLevelRuleInfo'):
         read(name)
@@ -77,7 +78,7 @@ def build():
                             '\nMonoImporter:\n  externalObjects: {}\n  serializedVersion: 2\n', 'utf8', newline='\n')
         for output in (path, meta):
             outputs[output.relative_to(ROOT).as_posix()] = digest(output)
-    receipt = dict(manifest='884_156692', generator_sha256=digest(Path(__file__)), inputs=inputs, outputs=outputs,
+    receipt = dict(manifest=source.version, generator_sha256=digest(Path(__file__)), inputs=inputs, outputs=outputs,
                    adaptation='Original sorted indexes and selection branches. Generic row carrier and explicit condition callbacks replace parser inheritance and DataHub; original missing-key default lookup retained. No reward, condition or order values changed.')
     (ROOT / 'assets/reference/home-income-selection-source-manifest.json').write_text(
         json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')

@@ -64,10 +64,10 @@ namespace Zjcs.Offline.HomeHudUI
         public static OfflineHomeMainlineTaskData Load(string json, string proofJson, string transactionsJson)
         {
             var proof = JObject.Parse(proofJson);
-            if ((string)proof["manifest"] != "884_156692" || (string)proof["output_sha256"] != Hash(json))
+            if ((string)proof["output_sha256"] != Hash(json))
                 throw new FormatException("Selected home task payload differs from its source hash.");
             var data = JObject.Parse(json);
-            if ((string)data["manifest"] != "884_156692" || (string)data["transactionCatalogSha256"] != Hash(transactionsJson))
+            if ((string)data["transactionCatalogSha256"] != Hash(transactionsJson))
                 throw new FormatException("Home task data requires the exactly compared transaction catalog.");
             return new OfflineHomeMainlineTaskData(data);
         }

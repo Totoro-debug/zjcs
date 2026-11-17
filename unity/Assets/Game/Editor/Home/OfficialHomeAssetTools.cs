@@ -71,7 +71,7 @@ namespace Zjcs.Editor.Home
                 throw new FileNotFoundException("Run scripts/prepare_unity_home_assets.py after AssetRipper export.", manifestPath);
 
             MigrationManifest manifest = JsonUtility.FromJson<MigrationManifest>(File.ReadAllText(manifestPath));
-            if (manifest == null || manifest.module != "city-and-home" || manifest.source_manifest != "854_156383"
+            if (manifest == null || manifest.module != "city-and-home"
                 || manifest.outputs == null || manifest.outputs.Length < 100)
                 throw new BuildFailedException("The Home Unity migration manifest is missing or incomplete.");
 

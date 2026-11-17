@@ -37,10 +37,14 @@ namespace Zjcs.Presentation.Home
         private readonly List<string> log = new List<string>();
         private readonly Dictionary<string, object> report = new Dictionary<string, object>();
         private bool mainlandRequested;
+        private readonly List<string> runtimeErrors = new List<string>();
 
         private IEnumerator Start()
         {
+            AudioListener.volume = 0f;
             Application.runInBackground = true;
+            if (Environment.GetCommandLineArgs().Contains("-homeSourceValidation"))
+                Application.logMessageReceived += RecordRuntimeError;
             Directory.CreateDirectory(Output);
             var slots = new ProfileSlotCatalog(Root);
             string slotId = slots.GetSlotIds().FirstOrDefault();
@@ -70,6 +74,13 @@ namespace Zjcs.Presentation.Home
             yield return null;
             yield return null;
             yield return null;
+
+            if (Environment.GetCommandLineArgs().Contains("-homeSourceValidation"))
+            {
+                HideForeignCanvases();
+                yield return VerifyHomeSourceConfiguration(runtime);
+                yield break;
+            }
 
             if (Environment.GetCommandLineArgs().Contains("-npcAdventureAcceptance"))
             {
@@ -589,8 +600,70 @@ namespace Zjcs.Presentation.Home
                 // Bootstrap keeps its splash/age and save-selection canvases alive
                 // while the home runtime is created. They must not cover the
                 // partner window captured by this Play Mode acceptance.
-                if (canvas.gameObject.scene.IsValid()) canvas.gameObject.SetActive(false);
+                bool startup = canvas.GetComponentsInParent<MonoBehaviour>(true)
+                    .Any(value => value != null && value.GetType().Name == "OfficialSaveSelectionView");
+                if (startup && canvas.gameObject.scene.IsValid()) canvas.gameObject.SetActive(false);
             }
+        }
+
+        private IEnumerator VerifyHomeSourceConfiguration(HomeFeatureRuntime runtime)
+        {
+            bool passed = Check("home-source-configuration", () =>
+            {
+                Assert(runtime.Rules.HasFurnitureConfiguration && runtime.Rules.HasIncomeConfiguration,
+                    "home binds the furniture and income configuration");
+                Assert(runtime.Rules.Furniture.Count > 0 && runtime.Rules.HangUps.Count > 0,
+                    "home configuration contains furniture and income rows");
+                return "furniture and income select their bound configuration without source versions";
+            });
+            yield return Capture("home-source-before-repair.png");
+            passed &= Check("home-source-scene-pointer", () =>
+            {
+                Assert(runtime.Scene.TryGetFurnitureClickBounds(0, out Rect bounds), "bed click bounds");
+                Vector2 point = runtime.Scene.Camera.WorldToScreenPoint(bounds.center);
+                var pointer = new PointerEventData(EventSystem.current) { position = point };
+                var hits = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(pointer, hits);
+                Assert(hits.Count == 0, "bed scene input is not covered by UI");
+                object input = PrivateField<object>(runtime, "input");
+                foreach (string method in new[] { "PointerDown", "PointerUp" })
+                    input.GetType().GetMethod(method, BindingFlags.Instance | BindingFlags.NonPublic)
+                        .Invoke(input, new object[] { point, false });
+                return "simulated scene pointer reaches the bed";
+            });
+            yield return new WaitForSecondsRealtime(.8f);
+            yield return Capture("home-source-repair.png");
+            passed &= Check("home-source-repair-pointer", () =>
+            {
+                var dialog = UnityEngine.Object.FindObjectOfType<Zjcs.Official.HomeUI.FurnitureRepairDialog>();
+                Assert(dialog != null && dialog.RepairBtn != null, "official bed repair dialog");
+                ClickPartnerUi(dialog.RepairBtn);
+                return "simulated pointer hits the official repair button";
+            });
+            yield return new WaitForSecondsRealtime(.8f);
+            passed &= Check("home-source-ownership", () =>
+            {
+                Assert(runtime.Session.OwnsFurniture(0), "repair persists bed ownership");
+                Assert(runtime.HomeProgression.FurnitureState(runtime.Session, 0, runtime.Rules.CurrentContext)
+                    == HomeFurnitureState.Functional, "repaired bed is functional");
+                return "official condition evaluation and local repair transaction completed";
+            });
+            yield return Capture("home-source-repaired.png");
+            runtime.Close();
+            yield return null;
+            var slots = new ProfileSlotCatalog(Root);
+            var restored = HomeFeatureRuntime.Begin(slots.GetSlotIds().First(), Root, null);
+            restored.TutorialAutoStartEnabled = false;
+            yield return new WaitForSecondsRealtime(1f);
+            passed &= Check("home-source-restored", () =>
+            {
+                Assert(restored.Rules.HasIncomeConfiguration && restored.Session.OwnsFurniture(0),
+                    "reopening restores bound income and bed ownership");
+                return "local save restores repaired furniture";
+            });
+            yield return Capture("home-source-restored.png");
+            restored.Close();
+            Finish(passed);
         }
         private void DumpFullscreen()
         {
@@ -626,12 +699,20 @@ namespace Zjcs.Presentation.Home
         }
         private void Finish(bool ok)
         {
+            Application.logMessageReceived -= RecordRuntimeError;
+            foreach (string error in runtimeErrors) log.Add("FAIL runtime: " + error);
+            ok &= runtimeErrors.Count == 0;
             report["success"] = ok;
             report["log"] = log;
             File.WriteAllText(Path.Combine(Output, "report.json"),
                 JsonUtility.ToJson(new SerializedReport { success = ok, lines = log.ToArray() }, true));
             Debug.Log("[HomeAcceptance] success=" + ok + "\n" + string.Join("\n", log));
             Quit(ok ? 0 : 1);
+        }
+        private void RecordRuntimeError(string message, string stack, LogType type)
+        {
+            if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
+                runtimeErrors.Add(message);
         }
         private IEnumerator CheckUi(HomeFeatureRuntime runtime, Action<bool> result)
         {

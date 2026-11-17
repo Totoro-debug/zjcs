@@ -41,7 +41,6 @@ namespace Zjcs.Offline.HomeLevelUpUI
             var asset = Resources.Load<TextAsset>("Home/level-up-properties");
             if (!asset) throw new InvalidDataException("The selected level-up property configuration is unbound.");
             var source = JObject.Parse(asset.text);
-            if ((string)source["manifest"] != "884_156692") throw new InvalidDataException("Wrong level-up property configuration version.");
             string path = Path.Combine(Application.streamingAssetsPath, "PartnerNpcShared", "Config", "Binary", "level_prop.g.bytes");
             byte[] bytes = File.ReadAllBytes(path);
             string actual;

@@ -8,7 +8,7 @@ namespace Zjcs.Offline.HomeFunctionMenuUI
     {
         [Serializable] public sealed class SoundEntry { public uint eventId; public AudioClip clip; }
         [Serializable] private sealed class TextEntry { public string key, text; }
-        [Serializable] private sealed class TextPayload { public string manifest; public TextEntry[] texts; }
+        [Serializable] private sealed class TextPayload { public TextEntry[] texts; }
         public GameObject prefab;
         public TextAsset texts;
         public TextAsset tipSourceObjects;
@@ -23,7 +23,7 @@ namespace Zjcs.Offline.HomeFunctionMenuUI
             if (localized == null)
             {
                 var payload = JsonUtility.FromJson<TextPayload>(texts.text);
-                if (payload == null || payload.manifest != "884_156692")
+                if (payload == null)
                     throw new InvalidOperationException("Unexpected original function menu source.");
                 localized = new Dictionary<string, string>(StringComparer.Ordinal);
                 foreach (var row in payload.texts) localized.Add(row.key, row.text);

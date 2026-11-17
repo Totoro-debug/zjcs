@@ -28,7 +28,6 @@ namespace Zjcs.Offline.Progression
     [Serializable]
     public sealed class OfficialHomeAutoIncreaseConfiguration
     {
-        public string manifest;
         public int itemId;
         public double increaseSpeed;
         public long maxCount;
@@ -41,7 +40,7 @@ namespace Zjcs.Offline.Progression
         {
             var asset = Resources.Load<TextAsset>("Home/item-auto-increase");
             var value = asset ? JsonUtility.FromJson<OfficialHomeAutoIncreaseConfiguration>(asset.text) : null;
-            if (value == null || value.manifest != "884_156692" || value.itemId != 57
+            if (value == null || value.itemId != 57
                 || value.increaseSpeed != 5 || value.maxCount != 300 || value.itemCountLimit != 1200
                 || value.increaseSpeedPercentProp != 1016 || !value.calcOverflow || value.outputAdditionItems == null)
                 throw new InvalidDataException("The selected official stamina configuration is unbound.");

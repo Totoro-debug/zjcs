@@ -63,7 +63,7 @@ def prepare(root_project=False):
     source = source.replace('try { if (!checks.MoveNext()) break; current = checks.Current; }',
         'try { if (!steps.Peek().MoveNext()) { steps.Pop(); if (steps.Count == 0) break; continue; } current = steps.Peek().Current; }')
     source = source.replace('            yield return current;', '            if (current is IEnumerator nested) { steps.Push(nested); continue; }\n            yield return current;')
-    a = source.index('        Require(home.Rules.FurnitureVersion')
+    a = source.index('        Require(home.Rules.HasFurnitureConfiguration')
     b = source.index('    private void Open()', a)
     source = source[:a] + '        yield return CheckFormalPlayer();\n    }\n}\n'
     source = source.replace('    private RenderTexture target;\n', '').replace('        CloseCapture();\n', '')

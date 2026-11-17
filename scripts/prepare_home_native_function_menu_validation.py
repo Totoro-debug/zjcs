@@ -20,7 +20,7 @@ def prepare():
     source=source.replace('var checks = Check();','var steps = new Stack<IEnumerator>(); steps.Push(Check());')
     source=source.replace('try { if (!checks.MoveNext()) break; current = checks.Current; }','try { if (!steps.Peek().MoveNext()) { steps.Pop(); if (steps.Count == 0) break; continue; } current = steps.Peek().Current; }')
     source=source.replace('            yield return current;','            if (current is IEnumerator nested) { steps.Push(nested); continue; }\n            yield return current;')
-    a=source.index('        Require(home.Rules.FurnitureVersion'); b=source.index('    private void Open()',a)
+    a=source.index('        Require(home.Rules.HasFurnitureConfiguration'); b=source.index('    private void Open()',a)
     source=source[:a]+'        yield return CheckFormalMenu();\n    }\n'+source[b:]
     source=source.replace('home.Scene.Camera.targetTexture = target;','home.Scene.Camera.targetTexture = null;\n        home.Scene.Camera.gameObject.AddComponent<AudioListener>();')
     source=source.replace('private void Capture(string name)\n    {','private void Capture(string name)\n    {\n        home.Scene.Camera.targetTexture = target;')

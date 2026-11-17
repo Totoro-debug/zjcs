@@ -6,7 +6,7 @@ namespace Zjcs.Offline.HomeEnvironmentTime
 {
     public static class OfflineHomeEnvironmentConfiguration
     {
-        [Serializable] sealed class Payload { public string manifest; public Configuration configuration; }
+        [Serializable] sealed class Payload { public Configuration configuration; }
         [Serializable] sealed class Configuration
         {
             public float HomeTimeScale;
@@ -39,7 +39,7 @@ namespace Zjcs.Offline.HomeEnvironmentTime
             if (!asset) throw new InvalidOperationException("Selected original home environment configuration is missing.");
             var payload = JsonUtility.FromJson<Payload>(asset.text);
             var data = payload?.configuration;
-            if (payload?.manifest != "884_156692" || data == null || data.HomeTimeScale <= 0
+            if (payload == null || data == null || data.HomeTimeScale <= 0
                 || data.SecondsPerMinute <= 0 || data.MinutesPerHour <= 0 || data.HoursPerDay <= 0
                 || data.DaysPerMonth <= 0 || data.MonthsPerYear <= 0 || data.FastCycleDays <= 0
                 || data.FastCycleDaySeconds <= 0 || data.FastCycleCurve?.m_Curve == null

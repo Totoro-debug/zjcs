@@ -29,6 +29,8 @@ namespace Zjcs.Editor.Home
         {
             try
             {
+                AudioListener.volume = 0f;
+                Application.runInBackground = true;
                 AssetDatabase.DisallowAutoRefresh();
                 autoRefreshSuspended = true;
                 EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
@@ -109,14 +111,7 @@ namespace Zjcs.Editor.Home
                 selectedIndex = (int)countMethod.Invoke(group, null) - 1;
             }
             Type viewType = editor.GetType("UnityEditor.GameView");
-            foreach (EditorWindow old in Resources.FindObjectsOfTypeAll(viewType)) old.Close();
-            // Keep a visible render surface in unattended runs. A selected size
-            // on a docked, hidden Game tab can leave Screen at the desktop size.
-            EditorWindow view = ScriptableObject.CreateInstance(viewType) as EditorWindow;
-            Rect editorBounds = EditorGUIUtility.GetMainWindowPosition();
-            view.titleContent = new GUIContent("Home partner validation");
-            view.position = new Rect(editorBounds.x + 40, editorBounds.y + 40, width, height + 21);
-            view.Show();
+            EditorWindow view = EditorWindow.GetWindow(viewType, false, "Game", false);
             viewType.GetProperty("selectedSizeIndex", BindingFlags.Instance | BindingFlags.Public
                 | BindingFlags.NonPublic).SetValue(view, selectedIndex);
             view.Repaint();
@@ -155,6 +150,7 @@ namespace Zjcs.Editor.Home
                 player.MaxProfessionRank = 1;
                 player.Wardrobe.Profession = 1;
             });
+            Apply("stamina", player => OfflineItemAutoIncrease.InitializeNewCharacter(player, DateTime.UtcNow));
             Apply("crystal", player =>
             {
                 if (player.Inventory == null) player.Inventory = new System.Collections.Generic.List<OfflineItemStack>();

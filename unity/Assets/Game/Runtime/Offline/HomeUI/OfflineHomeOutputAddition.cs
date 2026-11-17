@@ -18,7 +18,7 @@ namespace Zjcs.Offline.HomeUI
         }
         private sealed class Configuration
         {
-            public string manifest;
+
             public OutputAdditionInfo[] rows;
             public HomeOutputAdditionSettings settings;
         }
@@ -37,7 +37,7 @@ namespace Zjcs.Offline.HomeUI
             var asset = Resources.Load<TextAsset>("Home/output-addition-rules");
             if (!asset) throw new InvalidOperationException("The original output-addition configuration is unavailable.");
             configuration = JsonConvert.DeserializeObject<Configuration>(asset.text);
-            if (configuration?.manifest != "884_156692" || configuration.rows == null
+            if (configuration==null || configuration.rows == null
                 || configuration.settings?.HomeHangUpAddPercentTypeDict == null
                 || configuration.settings.HomeHangUpMaxStoreTypeDict == null)
                 throw new InvalidOperationException("The selected output-addition configuration is unbound.");

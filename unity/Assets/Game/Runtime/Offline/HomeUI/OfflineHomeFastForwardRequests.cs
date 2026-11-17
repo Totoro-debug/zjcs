@@ -32,15 +32,13 @@ namespace Zjcs.Offline.HomeUI
             this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.additions = additions ?? throw new ArgumentNullException(nameof(additions));
             var data = JObject.Parse(OfficialHomeFastHangUpAssetCatalog.LoadDefault().rules.text);
-            if ((string)data["manifest"] != "884_156692")
-                throw new InvalidOperationException("Selected acceleration item definitions are unavailable.");
             autoIncreaseItems = new HashSet<int>(((JArray)data["tables"]["item"])
                 .Where(item => (item["Effects"] as JArray)?.Any(effect =>
                     (string)effect["_type"] == "ItemEffectAutoIncrease") == true)
                 .Select(item => (int)item["ClassId"]));
             var output = Resources.Load<TextAsset>("Home/output-addition-rules");
             var outputData = output ? JObject.Parse(output.text) : null;
-            if ((string)outputData?["manifest"] != "884_156692")
+            if (outputData == null)
                 throw new InvalidOperationException("Selected item output additions are unavailable.");
             speedAdditionTypes = outputData["settings"]["ItemIncreaseSpeedAddPercentTypeDict"]
                 .ToObject<Dictionary<int, OutputAdditionPropType>>();

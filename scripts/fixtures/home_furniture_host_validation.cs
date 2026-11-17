@@ -87,7 +87,7 @@ public sealed class HomeFurnitureHostRunner : MonoBehaviour
         Require(profile.ApplyCharacterMutation(player => { player.Level = 3; player.Experience = character.CumulativeLevelExperience[3]; player.SubRank = 1; }, "host-level").IsApplied, "Seed real level 3 profile");
         Open();
         yield return new WaitForSeconds(1);
-        Require(home.Rules.FurnitureVersion == "884_156692" && !home.Session.OwnsFurniture(0), "Actual home uses current furniture table");
+        Require(home.Rules.HasFurnitureConfiguration && !home.Session.OwnsFurniture(0), "Actual home uses current furniture table");
         Require(home.HomeProgression.FurnitureState(home.Session, 0, home.Rules.CurrentContext) == HomeFurnitureState.CanRepair, "Actual home bed is repairable");
         Capture("home-current-before-repair.png");
         SceneClick(0);

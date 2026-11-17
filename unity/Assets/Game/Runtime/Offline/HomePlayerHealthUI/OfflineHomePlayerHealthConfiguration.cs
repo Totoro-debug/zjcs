@@ -12,7 +12,6 @@ namespace Zjcs.Offline.HomePlayerHealthUI
     [Serializable]
     public sealed class OfflineHomePlayerHealthConfiguration
     {
-        public string manifest;
         public float playerHpRedDotThreshold;
         public int cookingItemType;
         public CookingInfo[] cooking;
@@ -35,7 +34,7 @@ namespace Zjcs.Offline.HomePlayerHealthUI
         {
             var asset = Resources.Load<TextAsset>("Home/player-health-ui");
             var result = asset ? JsonConvert.DeserializeObject<OfflineHomePlayerHealthConfiguration>(asset.text) : null;
-            if (result == null || result.manifest != "884_156692" || result.cooking == null || result.itemTypes == null
+            if (result == null || result.cooking == null || result.itemTypes == null
                 || result.cooking.Length == 0 || result.playerHpRedDotThreshold <= 0 || result.playerHpRedDotThreshold > 1)
                 throw new InvalidDataException("The selected original health HUD configuration is unbound.");
             return result;

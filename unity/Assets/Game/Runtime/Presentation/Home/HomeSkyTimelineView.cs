@@ -31,7 +31,7 @@ namespace Zjcs.Presentation.Home
                 "environment-visuals", "day-sky-timeline.json");
             if (!File.Exists(path)) throw new FileNotFoundException("Official Home Day_Common timeline is missing.", path);
             HomeSkyTimelineData data = JsonUtility.FromJson<HomeSkyTimelineData>(File.ReadAllText(path));
-            if (data == null || data.sourceManifest != "854_156383" || data.duration <= 0
+            if (data == null || data.duration <= 0
                 || string.IsNullOrEmpty(data.rootPath) || data.nodes == null || data.renderers == null
                 || data.lights == null || data.tracks == null || data.tracks.Length == 0)
                 throw new InvalidDataException("The official Home Day_Common timeline payload is incomplete.");
@@ -385,7 +385,7 @@ namespace Zjcs.Presentation.Home
 
         [Serializable] private sealed class HomeSkyTimelineData
         {
-            public string sourceManifest;
+
             public string sourceTimeline;
             public string sourceClip;
             public float duration;
