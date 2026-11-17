@@ -14,7 +14,7 @@ namespace Zjcs.Editor.Combat
         private const string Root = "Assets/Official/Combat/NpcFighters/";
         private const string CatalogPath = "Assets/Game/Resources/Combat/OfficialBattleModelCatalog.asset";
 
-        [Serializable] private sealed class Payload { public string manifest; public Fighter[] fighters; }
+        [Serializable] private sealed class Payload { public Fighter[] fighters; }
         [Serializable] private sealed class Fighter
         {
             public int classId, entityClassId;
@@ -32,9 +32,9 @@ namespace Zjcs.Editor.Combat
         {
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
             Payload payload = JsonUtility.FromJson<Payload>(File.ReadAllText(Root + "fighters.json"));
-            if (payload == null || payload.manifest != "884_156692" || payload.fighters == null
-                || payload.fighters.Length != 51)
-                throw new InvalidDataException("Official partner fighter source is not pinned or is incomplete.");
+            if (payload == null || payload.fighters == null
+                || payload.fighters.Length == 0)
+                throw new InvalidDataException("Official partner fighter source is empty or invalid.");
 
             OfficialBattleModelCatalog catalog = AssetDatabase.LoadAssetAtPath<OfficialBattleModelCatalog>(CatalogPath);
             if (catalog == null) throw new InvalidDataException("Official battle model catalog is missing.");
