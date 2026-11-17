@@ -32,7 +32,8 @@ try {
     if ($PSCmdlet.ParameterSetName -eq 'Play') {
         $env:ZJCS_SKILLS_AUTORUN = '1'
         $env:ZJCS_SKILLS_HOME_ONLY = '1'
-        $arguments = @('-muteAudio','-projectPath', ('"' + $projectPath + '"'), '-logFile', ('"' + $log + '"'))
+        $arguments = @('-muteAudio','-job-worker-count','2','-gc-helper-count','2',
+            '-projectPath', ('"' + $projectPath + '"'), '-logFile', ('"' + $log + '"'))
     } else {
         $arguments = @('-muteAudio','-screen-fullscreen','0','-screen-width','675','-screen-height','1463',
             '-logFile', ('"' + $log + '"'), '--zjcs-validate-skill-damage', ('"' + $run + '"'))
