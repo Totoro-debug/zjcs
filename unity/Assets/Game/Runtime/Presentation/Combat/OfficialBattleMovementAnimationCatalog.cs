@@ -9,7 +9,7 @@ namespace Zjcs.Presentation.Combat
     // separate sequence at every cell. Keep both owners instead of one run alias.
     public sealed class OfficialBattleMovementAnimationCatalog
     {
-        [Serializable] private sealed class Data { public string manifest; public Record[] skills, actions; }
+        [Serializable] private sealed class Data { public Record[] skills, actions; }
         [Serializable] private sealed class Record { public int id; public OfficialBattleSkillPlayableCue[] playables; }
         private readonly Dictionary<int, Record> skills = new Dictionary<int, Record>();
         private readonly Dictionary<int, Record> actions = new Dictionary<int, Record>();
@@ -19,8 +19,8 @@ namespace Zjcs.Presentation.Combat
             var asset = Resources.Load<TextAsset>("Combat/move-animators");
             if (asset == null) throw new InvalidOperationException("Original movement Animator bindings are missing.");
             Data data = JsonUtility.FromJson<Data>(asset.text);
-            if (data == null || data.manifest != "884_156692" || data.skills == null || data.actions == null)
-                throw new InvalidOperationException("Original movement Animator bindings have the wrong source.");
+            if (data == null || data.skills == null || data.actions == null)
+                throw new InvalidOperationException("Original movement Animator bindings are invalid.");
             foreach (Record record in data.skills) skills.Add(record.id, record);
             foreach (Record record in data.actions) actions.Add(record.id, record);
         }

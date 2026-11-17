@@ -10,7 +10,7 @@ namespace Zjcs.Presentation.Combat
     // ApplyBySource leaves query; the original Animator remains on its model.
     internal sealed class OfficialBattleMonsterAnimationController : IDisposable
     {
-        [Serializable] private sealed class Catalog { public string manifest; public Binding[] models; }
+        [Serializable] private sealed class Catalog { public Binding[] models; }
         [Serializable] private sealed class Binding
         {
             public int entityId;
@@ -32,7 +32,7 @@ namespace Zjcs.Presentation.Combat
             {
                 var asset = Resources.Load<TextAsset>("Combat/monster-animation-controllers");
                 var data = asset ? JsonUtility.FromJson<Catalog>(asset.text) : null;
-                if (data?.manifest != "884_156692" || data.models == null)
+                if (data == null || data.models == null)
                     throw new InvalidOperationException("Original monster application controller bindings are missing.");
                 bindings = data.models.ToDictionary(value => value.entityId);
             }

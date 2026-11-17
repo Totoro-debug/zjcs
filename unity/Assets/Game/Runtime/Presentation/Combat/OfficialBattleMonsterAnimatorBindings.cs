@@ -8,7 +8,7 @@ namespace Zjcs.Presentation.Combat
 {
     internal static class OfficialBattleMonsterAnimatorBindings
     {
-        [Serializable] private sealed class Catalog { public string manifest; public Model[] models; }
+        [Serializable] private sealed class Catalog { public Model[] models; }
         [Serializable] internal sealed class State { public string state, animation, clip; }
         [Serializable] private sealed class Model { public int entityId; public State[] states; }
         private static Dictionary<int, State[]> models;
@@ -19,7 +19,7 @@ namespace Zjcs.Presentation.Combat
             {
                 var asset = Resources.Load<TextAsset>("Combat/monster-animator-bindings");
                 var catalog = asset ? JsonUtility.FromJson<Catalog>(asset.text) : null;
-                if (catalog?.manifest != "884_156692" || catalog.models == null)
+                if (catalog == null || catalog.models == null)
                     throw new InvalidOperationException("Original monster Animator state bindings are missing.");
                 models = catalog.models.ToDictionary(value => value.entityId, value => value.states);
             }

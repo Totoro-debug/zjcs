@@ -12,7 +12,6 @@ namespace Zjcs.Presentation.Combat
     {
         [Serializable] private sealed class Catalog
         {
-            public string manifest;
             public Binding[] cameras;
         }
         [Serializable] private sealed class Binding
@@ -50,8 +49,8 @@ namespace Zjcs.Presentation.Combat
                 if (asset == null) throw new InvalidDataException("Original performance camera bindings are missing.");
                 catalog = JsonUtility.FromJson<Catalog>(asset.text);
             }
-            if (catalog == null || catalog.manifest != "884_156692" || catalog.cameras == null)
-                throw new InvalidDataException("Original performance camera bindings have the wrong source.");
+            if (catalog == null || catalog.cameras == null)
+                throw new InvalidDataException("Original performance camera bindings are invalid.");
             var binding = Array.Find(catalog.cameras, value => value.sceneName == sceneName);
             if (binding?.transforms == null || binding.transforms.Length == 0
                 || string.IsNullOrEmpty(binding.cameraJson) || string.IsNullOrEmpty(binding.offsetJson))

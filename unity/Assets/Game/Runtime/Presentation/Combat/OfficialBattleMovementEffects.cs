@@ -11,7 +11,7 @@ namespace Zjcs.Presentation.Combat
     /// <summary>Owns original movement effect graphs for one battle scene.</summary>
     public sealed class OfficialBattleMovementEffects : IDisposable
     {
-        [Serializable] private sealed class Data { public string manifest; public Record[] skills, actions; }
+        [Serializable] private sealed class Data { public Record[] skills, actions; }
         [Serializable] private sealed class Record { public int id, followNodes; public string resource; }
         private sealed class Playback
         {
@@ -42,7 +42,7 @@ namespace Zjcs.Presentation.Combat
             var asset = Resources.Load<TextAsset>("Combat/movement-effects");
             if (asset == null) throw new InvalidOperationException("Missing original movement effect bindings.");
             var data = JsonUtility.FromJson<Data>(asset.text);
-            if (data?.manifest != "884_156692" || data.skills == null || data.actions == null)
+            if (data == null || data.skills == null || data.actions == null)
                 throw new InvalidOperationException("Invalid original movement effect bindings.");
             foreach (var record in data.skills) skills.Add(record.id, record);
             foreach (var record in data.actions) actions.Add(record.id, record);

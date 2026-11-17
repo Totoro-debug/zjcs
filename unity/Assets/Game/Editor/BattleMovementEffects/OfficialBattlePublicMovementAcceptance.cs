@@ -79,6 +79,8 @@ namespace Zjcs.Editor
             var viewType = editor.GetType("UnityEditor.GameView", true);
             foreach (EditorWindow old in Resources.FindObjectsOfTypeAll(viewType)) old.Close();
             var view = (EditorWindow)ScriptableObject.CreateInstance(viewType);
+            var behavior = viewType.GetProperty("enterPlayModeBehavior", flags);
+            behavior.SetValue(view, Enum.Parse(behavior.PropertyType, "PlayUnfocused"));
             var bounds = EditorGUIUtility.GetMainWindowPosition();
             view.titleContent = new GUIContent("Public battle verification");
             view.position = new Rect(bounds.x + 40, bounds.y + 40, 450, 996);
