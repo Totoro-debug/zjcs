@@ -9,7 +9,6 @@ namespace Zjcs.Offline.Progression
     [Serializable]
     public sealed class OfficialHomeShopRuntimeData
     {
-        public string version;
         public int shop_id;
         public string currency_policy;
         public OfficialHomeShopRuleHashes source_rule_tables;
@@ -222,7 +221,7 @@ namespace Zjcs.Offline.Progression
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException("A HomeShop rules path is required.", nameof(path));
             if (!File.Exists(path)) throw new FileNotFoundException("The official offline HomeShop rules are missing.", path);
             OfficialHomeShopRuntimeData data = JsonUtility.FromJson<OfficialHomeShopRuntimeData>(File.ReadAllText(path));
-            if (data == null || data.version != "854_156383" || data.shop_id != 1
+            if (data == null || data.shop_id != 1
                 || data.source_rule_tables == null
                 || data.source_rule_tables.shop != "784ca23dac58f9e9f1eb9db07e9850662dcde60a5e8e565b7dccc8047861f852"
                 || data.source_rule_tables.shop_goods != "2376414c79ae91f8e923110a435cf46036ca2f5c7ec0958c1a55e61633cbccca"

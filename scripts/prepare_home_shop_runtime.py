@@ -20,7 +20,6 @@ OUTPUT = STREAMING / "HomeShop"
 SHOP_SOURCE_MANIFEST = ROOT / "assets" / "reference" / "shop-ui" / "source-manifest.json"
 CITY_SOURCE_MANIFEST = ROOT / "assets" / "reference" / "official-city" / "source-manifest.json"
 RULE_MANIFEST = ROOT / "assets" / "reference" / "official-city" / "rules-manifest.json"
-MANIFEST_VERSION = "854_156383"
 PANEL_KEYS = ("shop", "shop_goods", "shop_item")
 
 
@@ -218,8 +217,6 @@ def build() -> dict:
     city_manifest = read_json(CITY_SOURCE_MANIFEST)
     shop_manifest = read_json(SHOP_SOURCE_MANIFEST)
 
-    if shop_manifest.get("version") != MANIFEST_VERSION:
-        raise ValueError("HomeShop icon source manifest is not the fixed APK version.")
     if rule_manifest.get("tables", {}).get("shop", {}).get("sha256") != "784ca23dac58f9e9f1eb9db07e9850662dcde60a5e8e565b7dccc8047861f852":
         raise ValueError("Official shop table hash differs from the fixed APK manifest.")
     if rule_manifest.get("tables", {}).get("shop_goods", {}).get("sha256") != "2376414c79ae91f8e923110a435cf46036ca2f5c7ec0958c1a55e61633cbccca":
@@ -439,7 +436,6 @@ def build() -> dict:
             }
 
     payload = {
-        "version": MANIFEST_VERSION,
         "shop_id": 1,
         "currency_policy": "official item currencies and per-good PriceOff table",
         "source_rule_tables": {
@@ -489,7 +485,7 @@ def build() -> dict:
     achievement_texts = [{"key": key, "value": texts[key]} for key in achievement_text_keys if key in texts]
     if len(achievement_texts) != len(achievement_text_keys):
         raise ValueError("Official HomeShop gift achievement localization is missing.")
-    (OUTPUT / "ui.json").write_text(json.dumps({"version": MANIFEST_VERSION, "panels": panels,
+    (OUTPUT / "ui.json").write_text(json.dumps({"panels": panels,
                                                   "texts": achievement_texts}, ensure_ascii=False,
                                                  separators=(",", ":")), encoding="utf-8")
     (OUTPUT / "rules.json").write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
