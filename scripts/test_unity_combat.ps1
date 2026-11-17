@@ -61,6 +61,27 @@ $officialCatalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
     $skillJson, $skillSource.output_sha256, $skillSource.manifest,
     $battleJson, $battleSource.output_sha256, $battleSource.manifest,
     $hpPliesJson, $hpPliesSource.output_sha256, $hpPliesSource.manifest)
+$unversionedSource = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::ReadSourceManifest(
+    ('{"output_sha256":"' + $skillSource.output_sha256 + '"}'))
+Assert-Combat ($unversionedSource.OutputSha256 -eq $skillSource.output_sha256) 'Source digest must load without version metadata'
+$unversionedHpPlies = $hpPliesJson -replace '"manifest"\s*:\s*"[^"]*"\s*,', ''
+$digest = [System.Security.Cryptography.SHA256]::Create()
+try {
+    $hpDigest = [Convert]::ToHexString($digest.ComputeHash([Text.Encoding]::UTF8.GetBytes($unversionedHpPlies))).ToLowerInvariant()
+} finally { $digest.Dispose() }
+$unversionedCatalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
+    $skillJson, $skillSource.output_sha256, $null,
+    $battleJson, $battleSource.output_sha256, 'another-source',
+    $unversionedHpPlies, $hpDigest, $null)
+Assert-Combat ($unversionedCatalog.EntityCount -eq $officialCatalog.EntityCount -and
+    $unversionedCatalog.MonsterHpPliesFor(3601, 2, 10) -eq 60) 'Version metadata changed catalog or HP plies loading'
+$unversionedCorruptionRejected = $false
+try {
+    [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
+        ($skillJson + ' '), $skillSource.output_sha256, $null,
+        $battleJson, $battleSource.output_sha256, 'another-source')
+} catch { $unversionedCorruptionRejected = $_.Exception.ToString().Contains('SHA-256 differs') }
+Assert-Combat $unversionedCorruptionRejected 'Removing version metadata must not bypass payload digest verification'
 Assert-Combat ($officialCatalog.MonsterHpPliesFor(3601, 2, 9) -eq 50 -and $officialCatalog.MonsterHpPliesFor(3601, 2, 10) -eq 60 -and $officialCatalog.MonsterHpPliesFor(999999, 0, 10) -eq 1) 'Official monster HP plies group and level lookup mismatch'
 $moveProperties = [System.Collections.Generic.Dictionary[int,long]]::new()
 $moveProperties[$officialCatalog.PropertyType('MoveDist')] = 4

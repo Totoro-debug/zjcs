@@ -16,7 +16,6 @@ namespace Zjcs.Combat.Official
 
     public sealed class FightOfficialNpcAssistanceCatalog
     {
-        public const string ExpectedManifest = "871_156598";
         private const int CompanionNpcType = 4;
         private readonly Dictionary<int, Dictionary<string, object>> npcs = new Dictionary<int, Dictionary<string, object>>();
         private readonly Dictionary<int, List<Dictionary<string, object>>> levelDetails =
@@ -45,13 +44,9 @@ namespace Zjcs.Combat.Official
             FightDamageFormula formula)
         {
             FightOfficialCombatCatalog.VerifyPayloadForDerived("npc-assistance-rules.json", rulesJson,
-                rulesSha256, manifest, ExpectedManifest);
+                rulesSha256, manifest);
             Dictionary<string, object> rules = FightOfficialCombatCatalog.ParseObject(rulesJson,
                 "npc-assistance-rules.json");
-            if (!rules.TryGetValue("manifest", out object payloadManifest)
-                || !string.Equals(Convert.ToString(payloadManifest, CultureInfo.InvariantCulture),
-                    manifest, StringComparison.Ordinal))
-                throw new FormatException("Official NPC assistance payload manifest differs from its receipt.");
             var catalog = new FightOfficialNpcAssistanceCatalog(combat, skillItems, formula);
             foreach (Dictionary<string, object> row in Rows(rules, "conditions"))
                 catalog.conditions.Add(Int(row, "ClassId"), FightOfficialCombatCatalog.ParseObject(

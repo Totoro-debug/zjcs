@@ -14,7 +14,6 @@ namespace Zjcs.Combat.Official
 
     public sealed partial class FightOfficialCombatCatalog
     {
-        public const string ExpectedManifest = "854_156383";
         public const int MoveActionType = 1;
         public const int SkillMoveActionType = 6;
 
@@ -41,7 +40,8 @@ namespace Zjcs.Combat.Official
             Dictionary<string, object> manifest = Object(OfficialJson.Parse(json), "source manifest");
             return new FightOfficialCombatSourceManifest
             {
-                Manifest = Convert.ToString(Required(manifest, "manifest"), CultureInfo.InvariantCulture),
+                Manifest = manifest.TryGetValue("manifest", out object sourceVersion)
+                    ? Convert.ToString(sourceVersion, CultureInfo.InvariantCulture) : null,
                 OutputSha256 = Convert.ToString(Required(manifest, "output_sha256"), CultureInfo.InvariantCulture)
             };
         }
@@ -2008,10 +2008,6 @@ namespace Zjcs.Combat.Official
         private void ParseMonsterHpPlies(string json)
         {
             Dictionary<string, object> root = Object(OfficialJson.Parse(json), "monster HP plies");
-            string sourceManifest = Convert.ToString(Required(root, "manifest"),
-                CultureInfo.InvariantCulture);
-            if (!string.Equals(sourceManifest, ExpectedManifest, StringComparison.Ordinal))
-                throw new InvalidOperationException("Monster HP plies table is not from the pinned original version.");
             foreach (object rawRow in Array(Required(root, "rows"), "monster HP plies rows"))
             {
                 Dictionary<string, object> row = Object(rawRow, "monster HP plies row");
@@ -2157,12 +2153,6 @@ namespace Zjcs.Combat.Official
             string manifest)
         {
             VerifyPayload(name, json, expectedSha256, manifest);
-        }
-
-        internal static void VerifyPayloadForDerived(string name, string json, string expectedSha256,
-            string manifest, string expectedManifest)
-        {
-            VerifyPayload(name, json, expectedSha256, manifest, expectedManifest);
         }
 
         internal static Dictionary<string, object> ParseObject(string json, string path)
@@ -3698,15 +3688,7 @@ namespace Zjcs.Combat.Official
 
         private static void VerifyPayload(string name, string json, string expectedSha256, string manifest)
         {
-            VerifyPayload(name, json, expectedSha256, manifest, ExpectedManifest);
-        }
-
-        private static void VerifyPayload(string name, string json, string expectedSha256,
-            string manifest, string expectedManifest)
-        {
             if (string.IsNullOrEmpty(json)) throw new ArgumentException(name + " payload is empty.", nameof(json));
-            if (!string.Equals(manifest, expectedManifest, StringComparison.Ordinal))
-                throw new InvalidOperationException(name + " source manifest is not the pinned original version.");
             string actual;
             using (SHA256 sha = SHA256.Create())
             {

@@ -136,7 +136,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (asset == null) throw new InvalidOperationException("Official source manifest is not bound for " + name);
             FightOfficialCombatSourceManifest manifest = FightOfficialCombatCatalog.ReadSourceManifest(asset.text);
-            if (string.IsNullOrEmpty(manifest.Manifest) || string.IsNullOrEmpty(manifest.OutputSha256))
+            if (string.IsNullOrEmpty(manifest.OutputSha256))
                 throw new InvalidOperationException("Official source manifest is invalid for " + name);
             return manifest;
         }
