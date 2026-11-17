@@ -57,7 +57,6 @@ namespace Zjcs.Offline.HomeStoryDialog
             this.font = font;
             characters = new HomeStoryCharacterServices(portraits, environment.Region, settings.IsVoiceOver);
             JObject root = JObject.Parse(assets.StorySource.text);
-            if ((string)root["manifest"] != "884_156692") throw new InvalidOperationException("The story source version differs.");
             var groups = root["dialogues"] as JObject ?? throw new InvalidOperationException("Original story dialogues are missing.");
             foreach (var story in groups.Properties())
             {

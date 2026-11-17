@@ -44,6 +44,10 @@ Bloom 的0／25／50／100四档、反射及其他质量效果须恢复原 URP V
 
 加载入口是 `Resources/SaveSelection/OfficialSaveSelectionAssets`，原始转换载荷在 `unity/Assets/Official/SaveSelection/`，Unity 原生 prefab、字体、材质、Sprite 与动画在 `unity/Assets/Game/Resources/SaveSelection/`。提取入口为 `scripts/prepare_official_save_selection.py`，原生恢复入口为 `Zjcs.Editor.Startup.OfficialStartupTools.RestoreSaveSelection`，运行适配为 `OfficialSaveSelectionView`。APK／CAB／对象／代码来源及输入输出哈希见[源清单](../../assets/reference/save-selection/source-manifest.json)和[原生绑定清单](../../assets/reference/save-selection/native-source-manifest.json)。素材尚未加入完整备份快照。
 
+编辑器恢复入口对载荷做结构检查，不再要求指定官方来源版本；项目静态元数据检查、编辑器程序集隔离编译、Unity 导入编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。完整素材提取和恢复流程尚未重新执行。
+
+共享界面提取器按当前官方来源读取，生成的界面与头像载荷不携带来源版本；完整提取与恢复尚未验证。
+
 官方档案选择界面已接入本地槽位列表、创建草稿、继续创角及损坏文件保留逻辑。完整游戏发布与其余功能的存档恢复分别见[工程页](unity-project.md)和所属功能页。
 
 正式发布路径的 Windows Player 已通过存档页模拟点击、列表滚动、新建草稿、已有槽位选择和损坏槽位提示；退出进程后再次启动，恢复最近选择并继续未完成创角。已查看存档页与恢复后的实际画面，测试存档位于隔离目录；该范围不包含完整角色切换和游戏内所有模块的存档恢复。

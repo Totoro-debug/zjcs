@@ -43,7 +43,7 @@ namespace Zjcs.Offline.HomeStoryDialog
             if (!source) throw new ArgumentNullException(nameof(source));
             this.host = host ?? throw new ArgumentNullException(nameof(host));
             JObject root = JObject.Parse(source.text);
-            if ((string)root["manifest"] != "884_156692" || !(root["graphs"] is JObject data))
+            if (!(root["graphs"] is JObject data))
                 throw new InvalidDataException("The selected original furniture stories are missing.");
             foreach (JProperty story in data.Properties())
             {

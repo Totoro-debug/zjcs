@@ -1,7 +1,7 @@
-"""Restore APK Boot/Launch prefab fields and their artwork as native Windows assets.
+"""Restore official Boot/Launch prefab fields and artwork as native Windows assets.
 
-No Android bundles are loaded at runtime. The APK is checked before extraction;
-all PPtrs are resolved against its CAB files and written as explicit bindings.
+No Android bundles are loaded at runtime. Verified local APK and cloud bundles
+provide the CAB objects used to write explicit bindings.
 """
 from __future__ import annotations
 
@@ -11,9 +11,8 @@ import math
 from pathlib import Path
 import re
 import struct
-import zipfile
 
-from official_apk import Apk, ROOT, UnityPy
+from official_apk import Apk, ROOT
 from official_source import OfficialSource
 from official_unity_schema import ScriptSchemas
 from UnityPy.classes.PPtr import PPtr
@@ -32,6 +31,12 @@ def digest(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
+def bundle_provenance(value):
+    # The source receipt records the selected source once at module level.
+    return {key: item for key, item in value.items()
+            if key not in ('manifest', 'source_manifest', 'apk_manifest', 'resource_version')}
+
+
 def write(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
@@ -39,27 +44,28 @@ def write(path, value):
 
 def build(save_selection=False):
     global ART, REF
-    if save_selection:
-        ART = ROOT / 'unity/Assets/Official/SaveSelection'
-        REF = ROOT / 'assets/reference/save-selection'
-    source = OfficialSource('854_156383')
-    with source.apk.open('rb') as stream:
-        if hashlib.file_digest(stream, 'sha256').hexdigest() != source.apk_sha256:
-            raise ValueError('Pinned APK SHA256 differs')
-    archive = zipfile.ZipFile(source.apk)
-    apk = Apk('854_156383', reuse_current_cache=True) if save_selection else None
-    env = apk.env if apk else UnityPy.Environment()
+    ART = ROOT / 'unity/Assets/Official' / ('SaveSelection' if save_selection else 'Startup')
+    REF = ROOT / 'assets/reference' / ('save-selection' if save_selection else 'startup')
+    source = OfficialSource()
+    apk = Apk.current()
+    reader = apk.reader
+    try:
+        return _build_from_reader(source, apk, reader, save_selection)
+    finally:
+        reader.close()
+
+
+def _build_from_reader(source, apk, reader, save_selection):
+    archive = reader.archive
+    env = apk.env
     provenance, inputs, containers = {}, [], {}
-    # APK lookup precedes any cloud lookup. All required Boot/Launch payloads
-    # and their CAB dependency closure are packaged in this APK.
+    # The shared reader checks the APK first and then the verified cloud cache.
     for package in ['Boot', 'Launch']:
         for bundle in source.manifest(package, archive)['bundles']:
-            entry = 'assets/yoo/' + package + '/' + bundle['file']
-            raw = archive.read(entry)
-            if len(raw) != bundle['size'] or hashlib.md5(raw).hexdigest() != bundle['hash']:
-                raise ValueError('APK manifest mismatch: ' + entry)
+            verified = reader.read(package, bundle['name'])
+            raw = verified.data
             loaded = env.load_file(Apk.decode(raw), name=bundle['name'])
-            record = dict(package=package, bundle=bundle['name'], apk_entry=entry,
+            record = dict(bundle_provenance(verified.provenance), package=package, bundle=bundle['name'],
                           bytes=len(raw), md5=bundle['hash'], sha256=digest(raw))
             for asset in loaded.files.values():
                 if hasattr(asset, 'objects'):
@@ -68,7 +74,7 @@ def build(save_selection=False):
     used = set()
     def record(obj):
         if obj.assets_file.name not in provenance:
-            original = apk.provenance(obj)
+            original = bundle_provenance(apk.provenance(obj))
             provenance[obj.assets_file.name] = dict(original, cab=obj.assets_file.name)
         row = provenance[obj.assets_file.name]
         used.add(row['bundle'])
@@ -122,14 +128,12 @@ def build(save_selection=False):
     default_manifest = {b['name']: b for b in source.manifest('DefaultPackage', archive)['bundles']}
     def default_asset(bundle_name, asset_path):
         bundle = default_manifest[bundle_name]
-        entry = 'assets/yoo/DefaultPackage/' + bundle['file']
-        raw = archive.read(entry)
-        if len(raw) != bundle['size'] or hashlib.md5(raw).hexdigest() != bundle['hash']:
-            raise ValueError('Original streaming font bundle checksum differs')
+        verified = reader.read('DefaultPackage', bundle_name)
+        raw = verified.data
         loaded = env.load_file(Apk.decode(raw), name=bundle_name)
         for file in loaded.files.values():
             if hasattr(file, 'objects'):
-                provenance[file.name] = dict(package='DefaultPackage', bundle=bundle_name, apk_entry=entry,
+                provenance[file.name] = dict(bundle_provenance(verified.provenance), package='DefaultPackage', bundle=bundle_name,
                                             bytes=len(raw), md5=bundle['hash'], sha256=digest(raw))
                 for path, pointer in file.container.items():
                     if path == asset_path:
@@ -270,8 +274,8 @@ def build(save_selection=False):
                 if found: return found
         roots.append(dict(name='BlurMask', node=walk(find_go(launch_root, 'BlurMask'))))
         # The tabbed dialog's background is selected by an original GUID proxy.
-        manifest_entry = next(n for n in archive.namelist() if 'PackageManifest_DefaultPackage_' in n and n.endswith('.bytes'))
-        guids = {m[2].decode(): m[1].decode() for m in re.finditer(rb'(Assets/[^\x00-\x1f]+?)\x20\x00([a-f0-9]{32})', archive.read(manifest_entry))}
+        manifest_bytes = source.manifest_bytes('DefaultPackage', archive)
+        guids = {m[2].decode(): m[1].decode() for m in re.finditer(rb'(Assets/[^\x00-\x1f]+?)\x20\x00([a-f0-9]{32})', manifest_bytes)}
         for item in special:
             if item['type'] != 'PlanesListPanel': continue
             for config in item['fields']['references']['RefIds']:
@@ -478,11 +482,11 @@ def build(save_selection=False):
         record(camera)
         camera_fields = camera.read_typetree()
         request = next(s for s in special if s['type'] == 'HeadCharacterPortrait')['fields']['mRequestor']
-        write(ART / 'head-photography.json', dict(manifest=source.version, width=head['TextureWidth'], height=head['TextureHeight'],
+        write(ART / 'head-photography.json', dict(width=head['TextureWidth'], height=head['TextureHeight'],
               size=head['Size'], offset=[head['mOffset'][a] for a in 'xyz'], depth=head['mDepthBuffer'],
               captureParticles=bool(head['mCaptureParticle']), excludes=head['mExcludeSkinTypes'],
               animation=request['mAnimationName'], near=camera_fields['near clip plane'], far=camera_fields['far clip plane']))
-    result = dict(manifest=source.version, roots=roots, nodes=nodes, refs=refs, animations=animations, special=special, default_portrait_id=default_portrait_id,
+    result = dict(roots=roots, nodes=nodes, refs=refs, animations=animations, special=special, default_portrait_id=default_portrait_id,
                   texts=[dict(key=k, value=v) for k, v in sorted(texts.items())])
     write(ART / ('save-selection-ui.json' if save_selection else 'startup-ui.json'), result)
     inputs = [row for row in provenance.values() if row['bundle'] in used]

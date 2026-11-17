@@ -24,6 +24,10 @@
 
 运行绑定入口为 `Resources/Startup/OfficialStartupAssets`。原始载荷位于 `unity/Assets/Official/Startup/`；原生 prefab、字体、材质、Sprite、动画和控制器位于 `unity/Assets/Game/Resources/Startup/`；官方逻辑位于 `Runtime/Official/Startup/`，本地加载适配位于 `Runtime/Offline/Startup/`。提取入口为 `scripts/prepare_official_startup.py`，原生恢复入口为 `Zjcs.Editor.Startup.OfficialStartupTools.Restore`；输入对象、CAB／bundle、版本、处理方式与哈希见[来源总表](../../assets/reference/SOURCES.md)。新增素材尚未生成完整备份快照。
 
+启动及存档选择界面的编辑器恢复入口校验所需的载荷结构，不再读取或限制官方来源版本号；项目静态元数据检查、编辑器程序集隔离编译、Unity 导入编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。完整素材提取和恢复流程尚未重新执行。
+
+提取器读取当前官方来源，通过共享读取器依次核对 APK 与云端缓存；新生成的界面和头像载荷不写来源版本，来源凭据在模块清单记录。当前 Boot、Launch 及字体配置 bundle 读取验证通过，完整提取与恢复尚未验证。
+
 启动界面已接入健康提示、背景／标志、进度条、适龄弹窗、档案选择和官方开场路由。完整弹窗附属组件与当前提交工程对应的 Windows Player 仍待完成。
 
 通用 Unity 验证与临时产物管理见[素材管理](../asset-management.md)；本模块资源绑定见[来源总表](../../assets/reference/SOURCES.md)。

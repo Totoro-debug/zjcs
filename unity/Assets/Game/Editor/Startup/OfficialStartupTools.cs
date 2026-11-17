@@ -18,7 +18,7 @@ namespace Zjcs.Editor.Startup
     public static class OfficialStartupTools
     {
         private static string Output = "Assets/Game/Resources/Startup";
-        [Serializable] private sealed class Data { public string manifest; public Root[] roots; public Node[] nodes; public Ref[] refs; public Clip[] animations; public Text[] texts; public int default_portrait_id; }
+        [Serializable] private sealed class Data { public Root[] roots; public Node[] nodes; public Ref[] refs; public Clip[] animations; public Text[] texts; public int default_portrait_id; }
         [Serializable] private sealed class Root { public string name; public int node; }
         [Serializable] private sealed class Node { public string name, transform_json, SafeArea, CanvasWidthAdjuster, text_effect, animator; public bool active, rect; public int parent, id, transform_id, layer, language_sprite_id; public Part[] components; }
         [Serializable] private sealed class Part { public int id; public string type, json; }
@@ -44,7 +44,8 @@ namespace Zjcs.Editor.Startup
             Directory.CreateDirectory(Output + "/Sprites");
             AssetDatabase.Refresh();
             Data data = JsonUtility.FromJson<Data>(File.ReadAllText(Art + (saveSelection ? "/save-selection-ui.json" : "/startup-ui.json")));
-            if (data.manifest != "854_156383") throw new InvalidOperationException("Startup APK version differs.");
+            if (data == null || data.roots == null || data.nodes == null || data.refs == null || data.animations == null || data.texts == null)
+                throw new InvalidDataException("Startup UI data is incomplete.");
             var bindings = new Dictionary<int, Object>();
             foreach (Ref row in data.refs.Where(r => r.kind == "Sprite" || r.kind == "Texture2D"))
             {

@@ -14,7 +14,6 @@ from prepare_unity_map13_sources import encode, meta
 from validation_workspace import validation_directory
 
 
-VERSION = '884_156692'
 STORIES = {
     'UnlockCommunication': 'defaultpackage_assets_scriptableconfig_story_map11story_basicguide.bundle',
     'SenSenHomeStore': 'defaultpackage_assets_scriptableconfig_story_map11story_sensenstory.bundle',
@@ -25,6 +24,15 @@ RECEIPT = ROOT / 'assets/reference/home-furniture-unlock-story-source-manifest.j
 
 def sha(raw):
     return hashlib.sha256(raw).hexdigest()
+
+
+def without_source_versions(value):
+    if isinstance(value, dict):
+        return {key: without_source_versions(item) for key, item in value.items()
+                if key not in ('manifest', 'source_manifest', 'apk_manifest', 'resource_version')}
+    if isinstance(value, list):
+        return [without_source_versions(item) for item in value]
+    return value
 
 
 def decode_graph(apk, schemas, name, bundle):
@@ -78,11 +86,9 @@ def build(work):
     if not (work / '.zjcs-validation.json').is_file():
         raise ValueError('An owned validation workspace is required')
     apk = Apk.current()
-    if apk.version != VERSION:
-        raise ValueError('Selected home story version differs from the pinned source')
-    code = ROOT / '.tools/source-packages/current' / VERSION / 'official-code'
+    code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
     code_manifest = code.parent / 'code-manifest.json'
-    if json.loads(code_manifest.read_bytes()).get('manifest') != VERSION:
+    if json.loads(code_manifest.read_bytes()).get('manifest') != apk.version:
         raise ValueError('Story code manifest differs from the selected source')
     constructors = Constructors(code)
     schemas = ScriptSchemas(code_root=code)
@@ -143,7 +149,7 @@ def build(work):
             object_sha256=sha(obj.get_raw_data()), payload_sha256=sha(raw), bytes=len(raw)))
     if set(server_records) != names:
         raise ValueError('Selected client-exported story records are incomplete')
-    payload = encode(dict(manifest=VERSION, storyRows=story_rows, graphs=graphs,
+    payload = encode(dict(storyRows=story_rows, graphs=graphs,
         dialogues=dialogues, dialogRoles=roles, storyOptions=options,
         localization=localization, serverRecords=server_records))
     (work / 'furniture-unlock-stories.json').write_bytes(payload)
@@ -168,8 +174,8 @@ def build(work):
         if not path.is_file():
             raise FileNotFoundError('Original story class is missing: ' + node_type)
         sources[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
-    proof = dict(manifest=VERSION, sources=sources, tables=table_proofs, graphs=graph_proofs,
-        language=language_proofs, schema_records=schemas.records,
+    proof = dict(manifest=apk.version, sources=sources, tables=without_source_versions(table_proofs), graphs=without_source_versions(graph_proofs),
+        language=without_source_versions(language_proofs), schema_records=schemas.records,
         output=dict(path=OUTPUT.relative_to(ROOT).as_posix(), sha256=sha(payload), bytes=len(payload)),
         counts=dict(graphs=len(graphs), nodes=sum(len(g['nodes']) for g in graphs.values()),
             dialogues=len(dialogs), roles=len(roles), options=len(options), localization=len(localization)),
