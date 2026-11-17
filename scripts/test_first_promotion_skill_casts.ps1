@@ -5,9 +5,12 @@ $root=Split-Path -Parent $PSScriptRoot
 function Read-Input($name) { [IO.File]::ReadAllText((Join-Path $root "unity/Assets/Official/Combat/$name.json")) }
 function Hash-Input($name) { (Get-FileHash (Join-Path $root "unity/Assets/Official/Combat/$name.json")).Hash.ToLowerInvariant() }
 function Check($ok,$message) { if(-not $ok) { throw $message } }
-$catalog=[Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load((Read-Input 'skill-rules'),(Hash-Input 'skill-rules'),'854_156383',(Read-Input 'battle-rules'),(Hash-Input 'battle-rules'),'854_156383')
-$items=[Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load((Read-Input 'rules'),(Hash-Input 'rules'),'854_156383')
-$formula=$catalog.CreateDamageFormula((Read-Input 'rules'),(Hash-Input 'rules'),'854_156383')
+$skillProof=Get-Content (Join-Path $root 'unity/Assets/Official/Combat/skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
+$battleProof=Get-Content (Join-Path $root 'unity/Assets/Official/Combat/battle-rules-source-manifest.json') -Raw | ConvertFrom-Json
+$rulesProof=Get-Content (Join-Path $root 'unity/Assets/Official/Combat/rules-source-manifest.json') -Raw | ConvertFrom-Json
+$catalog=[Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load((Read-Input 'skill-rules'),$skillProof.output_sha256,$skillProof.manifest,(Read-Input 'battle-rules'),$battleProof.output_sha256,$battleProof.manifest)
+$items=[Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load((Read-Input 'rules'),$rulesProof.output_sha256,$rulesProof.manifest)
+$formula=$catalog.CreateDamageFormula((Read-Input 'rules'),$rulesProof.output_sha256,$rulesProof.manifest)
 $rules=Read-Input 'rules' | ConvertFrom-Json
 $ids=@($rules.profession_base | Where-Object Profession -in @(1,10,2,6,11,15) | ForEach-Object { $_.Skills; $_.FightUsedSkills }) | Sort-Object -Unique
 $active=@($rules.skill | Where-Object { $_.ClassId -in $ids -and $items.ItemTypeFor($_.ClassId) -eq 100 })

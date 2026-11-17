@@ -57,8 +57,8 @@ def source(path):
 
 def build(write):
     apk = Apk.current()
-    if apk.version != "884_156692" or OfficialSource().version != apk.version:
-        raise ValueError("Review the selected APK/language version before rebuilding skill documentation.")
+    if OfficialSource().version != apk.version:
+        raise ValueError("Selected APK and language source identities differ.")
     code = ROOT / ".tools/source-packages/current" / apk.version / "official-code"
     constructors = Constructors(code)
     table_inputs = []
@@ -174,7 +174,7 @@ def build(write):
         "按官方描述迁移主动战技、被动秘法、被动与触发效果、子技能、增益与减益、动画及人物动作；已确认的单机边界只在对应技能的实现要点中简述。", "",
         "合成、装配、升级、进阶与存档使用公共培养及界面流程，技能差异由官方配置驱动。", "",
         "装配仅使用已持有且职业可用的技能；空战技方案允许进入战斗，正常结算回合与被动，不自动补战技。", "",
-        "连锁下一跳以上一命中格为中心沿用原范围，遵守重复、回跳与优先未访配置；无合法目标即中止。合法目标按最近身体格选择，同距按单位 ID、原身体格顺序稳定选择。", "",
+        "连锁攻击遵循已确认的[单机目标选择规则](battle-execution.md#自定义实现)。", "",
         "完整技能流程、原生表现与 Windows 发布仍未完成。高阶职业仅保留既有技能说明，不计入本次完成范围。", ""])
     documents["docs/features/skills.md"] = "\n".join(common).encode("utf8")
     for name, payload in documents.items():
