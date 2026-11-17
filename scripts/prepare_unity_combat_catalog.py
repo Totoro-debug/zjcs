@@ -20,7 +20,6 @@ SOURCES = (
      "Assets/Official/Combat/rules.json", "Assets/Official/Combat/rules-source-manifest.json",
      "data_sha256.rules.json"),
 )
-EXPECTED_VERSION = "854_156383"
 MODULE_MANIFEST = "Assets/Official/Combat/source-manifest.json"
 BATTLE_RULES = "Assets/Official/Combat/battle-rules.json"
 BATTLE_SIDECAR = "Assets/Official/Combat/battle-rules-source-manifest.json"
@@ -92,7 +91,6 @@ def is_verified_pre_mutex_battle_pair(unity_root, source_root, module_entry, sid
     source_payload.get("tables", {}).pop("state_mutex", None)
     return (
         module_entry.get("output_sha256") == sidecar.get("output_sha256")
-        and sidecar.get("manifest") == EXPECTED_VERSION
         and current_payload == source_payload
         and sidecar == baseline_sidecar
     )
@@ -116,11 +114,9 @@ def is_verified_current_combat_skill_pair(unity_root, source_root, module_entry,
     baseline_sidecar.pop("current_combat_payload_conversion", None)
     baseline_sidecar["output_sha256"] = conversion.get("previous_output_sha256")
     return (
-        conversion.get("manifest") == "871_156598"
-        and conversion.get("source_manifest_sha256") == hashlib.sha256(conversion_bytes).hexdigest()
+        conversion.get("source_manifest_sha256") == hashlib.sha256(conversion_bytes).hexdigest()
         and conversion.get("staged_sha256") == payload_hash
         and sha256(staged_path) == payload_hash
-        and conversion_receipt.get("manifest") == "871_156598"
         and output is not None
         and output.get("sha256") == payload_hash
         and output.get("previous_sha256") == conversion.get("previous_output_sha256")
@@ -138,8 +134,6 @@ def previous_verified_hashes(unity_root, source_root):
     if not module_target.exists():
         raise ValueError("Cannot refresh combat payloads without their module manifest")
     module_manifest = json.loads(module_target.read_text(encoding="utf-8"))
-    if module_manifest.get("manifest") != EXPECTED_VERSION:
-        raise ValueError("Existing Unity combat module manifest has an unexpected version")
     entries = {entry.get("path"): entry for entry in module_manifest.get("assets", [])}
     verified = {MODULE_MANIFEST: sha256(module_target)}
     battle_entry = entries.get(BATTLE_RULES)
@@ -171,8 +165,7 @@ def previous_verified_hashes(unity_root, source_root):
             raise ValueError("Existing Unity combat payload differs from its module manifest: " + target_name)
         sidecar = json.loads(manifest_target.read_text(encoding="utf-8"))
         sidecar_matches_legacy = (is_legacy_battle and sidecar == battle_sidecar) or is_converted_skill
-        if (sidecar.get("manifest") != EXPECTED_VERSION
-                or sidecar.get("output_sha256") != payload_hash and not sidecar_matches_legacy):
+        if sidecar.get("output_sha256") != payload_hash and not sidecar_matches_legacy:
             raise ValueError("Existing Unity combat source manifest does not verify: " + manifest_target_name)
         if manifest_field == "output_sha256":
             if (sha256(manifest_target) != entry.get("source_manifest_sha256")
@@ -206,8 +199,6 @@ def restore(source_root=ROOT, unity_root=ROOT / "unity", replace_verified_stale=
         payload = source_root / Path(payload_name)
         manifest_path = source_root / Path(manifest_name)
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        if manifest.get("manifest") != EXPECTED_VERSION:
-            raise ValueError("Combat source manifest is not pinned to " + EXPECTED_VERSION + ": " + manifest_name)
         if manifest_field == "output_sha256":
             expected_hash = manifest.get("output_sha256")
             manifest_bytes = manifest_path.read_bytes()
@@ -215,7 +206,7 @@ def restore(source_root=ROOT, unity_root=ROOT / "unity", replace_verified_stale=
             section, key = manifest_field.split(".", 1)
             expected_hash = manifest.get(section, {}).get(key)
             manifest_bytes = (json.dumps({
-                "manifest": EXPECTED_VERSION,
+                "manifest": manifest.get("manifest"),
                 "output_sha256": expected_hash,
                 "source_manifest": manifest_name,
                 "source_manifest_sha256": sha256(manifest_path),
@@ -241,7 +232,6 @@ def restore(source_root=ROOT, unity_root=ROOT / "unity", replace_verified_stale=
             "source_manifest_sha256": sha256(source_root / Path(source_manifest)),
         })
     module_manifest = (json.dumps({
-        "manifest": EXPECTED_VERSION,
         "assets": module_entries,
     }, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
     module_target = target_path(unity_root, MODULE_MANIFEST)

@@ -1,15 +1,15 @@
 import hashlib
 import json
-import tempfile
 import unittest
 from pathlib import Path
 
 import prepare_unity_combat_catalog as catalog
+from validation_workspace import temporary_validation_directory
 
 
 class UnityCombatCatalogRestoreTests(unittest.TestCase):
     def setUp(self):
-        self.temporary = tempfile.TemporaryDirectory()
+        self.temporary = temporary_validation_directory("combat-catalog-")
         self.root = Path(self.temporary.name)
         self.unity = self.root / "unity"
         self.sources = (
@@ -33,9 +33,9 @@ class UnityCombatCatalogRestoreTests(unittest.TestCase):
             payload.write_bytes(("payload-" + str(index)).encode("ascii"))
             digest = hashlib.sha256(payload.read_bytes()).hexdigest()
             if manifest_field == "output_sha256":
-                record = {"manifest": catalog.EXPECTED_VERSION, "output_sha256": digest}
+                record = {"manifest": "source-" + str(index), "output_sha256": digest}
             else:
-                record = {"manifest": catalog.EXPECTED_VERSION, "data_sha256": {"rules.json": digest}}
+                record = {"manifest": "source-" + str(index), "data_sha256": {"rules.json": digest}}
             manifest.write_text(json.dumps(record), encoding="utf-8")
 
     def tearDown(self):
@@ -50,10 +50,10 @@ class UnityCombatCatalogRestoreTests(unittest.TestCase):
         self.assertTrue(all(entry["restored"] for entry in first))
         self.assertTrue(all(not entry["restored"] for entry in second))
         module_manifest = json.loads((self.unity / catalog.MODULE_MANIFEST).read_text(encoding="utf-8"))
-        self.assertEqual(module_manifest["manifest"], catalog.EXPECTED_VERSION)
+        self.assertNotIn("manifest", module_manifest)
         self.assertEqual(len(module_manifest["assets"]), 3)
         rules_manifest = json.loads((self.unity / self.sources[2][3]).read_text(encoding="utf-8"))
-        self.assertEqual(rules_manifest["manifest"], catalog.EXPECTED_VERSION)
+        self.assertEqual(rules_manifest["manifest"], "source-2")
         self.assertEqual(rules_manifest["source_field"], "data_sha256.rules.json")
         for payload_name, _, target_name, _, _ in self.sources:
             self.assertEqual((self.unity / target_name).read_bytes(), (self.root / payload_name).read_bytes())
@@ -66,6 +66,26 @@ class UnityCombatCatalogRestoreTests(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "output hash differs"):
             catalog.restore(self.root, self.unity)
+
+    def test_source_version_metadata_is_optional(self):
+        for _, manifest_name, _, _, _ in self.sources:
+            manifest = self.root / manifest_name
+            record = json.loads(manifest.read_text(encoding="utf-8"))
+            record.pop("manifest")
+            manifest.write_text(json.dumps(record), encoding="utf-8")
+        catalog.restore(self.root, self.unity)
+        catalog.restore(self.root, self.unity, replace_verified_stale=True)
+
+    def test_version_metadata_does_not_allow_overwriting_changed_payload(self):
+        catalog.restore(self.root, self.unity)
+        target = self.unity / self.sources[2][2]
+        target.write_bytes(b"local change")
+        module = self.unity / catalog.MODULE_MANIFEST
+        record = json.loads(module.read_text(encoding="utf-8"))
+        record["manifest"] = "another-source"
+        module.write_text(json.dumps(record), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "differs from its module manifest"):
+            catalog.restore(self.root, self.unity, replace_verified_stale=True)
 
     def test_refuses_changed_payload_destination(self):
         target = self.unity / self.sources[0][2]
