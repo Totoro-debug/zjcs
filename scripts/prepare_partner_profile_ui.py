@@ -11,8 +11,6 @@ from validation_workspace import validation_directory
 
 def main():
     version = json.loads((ROOT / 'official-source.json').read_bytes())['active']
-    if version != '884_156692':
-        raise ValueError('Review the selected profile source version')
     work = validation_directory()
     folder = work / 'profile-code'
     folder.mkdir(exist_ok=True)

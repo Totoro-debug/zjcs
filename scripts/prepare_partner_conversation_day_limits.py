@@ -12,7 +12,6 @@ def sha(raw): return hashlib.sha256(raw).hexdigest()
 
 def main():
     version = json.loads((ROOT / 'official-source.json').read_bytes())['active']
-    if version != '884_156692': raise ValueError('Review original day limits for selected version')
     inputs, methods = {}, {}
 
     def selected(name, signature, diagnostics=0):

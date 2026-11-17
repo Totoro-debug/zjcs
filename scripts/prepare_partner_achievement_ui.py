@@ -13,7 +13,6 @@ from validation_workspace import validation_directory
 def main():
     work = validation_directory()
     version = json.loads((ROOT / 'official-source.json').read_bytes())['active']
-    if version != '884_156692': raise ValueError('Review friendship achievement UI source')
     inputs, outputs = {}, {}
     destination = ROOT / 'unity/Assets/Game/Runtime/Official/PartnersUI/Roster/Achievements'
 

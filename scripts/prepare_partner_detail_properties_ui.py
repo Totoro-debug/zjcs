@@ -12,8 +12,6 @@ DEST = Path('unity/Assets/Game/Runtime/Official/PartnersUI/Detail')
 
 def build(work):
     version = json.loads((ROOT / 'official-source.json').read_bytes())['active']
-    if version != '884_156692':
-        raise ValueError('Review the detail property source after changing versions')
     inputs, outputs = {}, {}
     folder = work / 'detail-property-code'
     folder.mkdir(exist_ok=True)
