@@ -25,8 +25,9 @@ namespace Zjcs.Presentation.Home
         {
             AudioListener.volume = 0f;
             Action<Selectable> click = Click;
-            Require(skillId == 10016 || skillId == 10026 || skillId == 10053,
-                "Select an implemented Fighter acquisition diagnostic.");
+            Require(skillId == 10008 || skillId == 10016 || skillId == 10026 || skillId == 10053,
+                "Select an implemented active-skill acquisition diagnostic.");
+            int profession = skillId == 10008 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -49,9 +50,9 @@ namespace Zjcs.Presentation.Home
             player.CharacterCreated = true; player.CharacterName = skillName + "\u9a8c\u8bc1";
             player.Level = 50; player.Rank = 2; player.SubRank = 5; player.MaxProfessionRank = 2;
             player.Experience = assets.Load().CumulativeLevelExperience[50];
-            player.InitialWeaponType = 200; player.Wardrobe.Profession = 6;
+            player.InitialWeaponType = 200; player.Wardrobe.Profession = profession;
             int mergeCount = assets.Load().SkillMergePiece(skillId);
-            Require(mergeCount > 0 && definition.AvailableProfessions.Contains(6), "Original Fighter acquisition inputs missing.");
+            Require(mergeCount > 0 && definition.AvailableProfessions.Contains(profession), "Original acquisition inputs missing.");
             void Supply(int item, long count)
             {
                 var stack = player.Inventory.SingleOrDefault(value => value.ItemId == item);
@@ -206,7 +207,7 @@ namespace Zjcs.Presentation.Home
             var actor = checkpoint.Units.Single(value => value.Id == 1);
             var active = actor.Skills.Single(value => value.Slot == 0);
             Require(active.ItemId == skillId && active.Rank == cultivatedRank && active.Level == 2
-                && active.SubRank == progression.Player.SubRank && actor.Profession == 6,
+                && active.SubRank == progression.Player.SubRank && actor.Profession == profession,
                 "Production battle assembly lost the actual saved skill/profession/cultivation.");
             int casts = 0, hits = 0;
             battle.Controller.StepCompleted += step => {
@@ -216,7 +217,8 @@ namespace Zjcs.Presentation.Home
                 foreach (var cast in skillCasts)
                 {
                     File.WriteAllText(Path.Combine(output, "acquired-active-ui-latest.json"), FightBattleCheckpointSerializer.Save(checkpoint));
-                    Require(skillId == 10016 ? cast.SkillEntityId == 10680
+                    Require(skillId == 10008 ? cast.SkillEntityId == 10600
+                        : skillId == 10016 ? cast.SkillEntityId == 10680
                         : skillId == 10053 ? cast.SkillEntityId == 11250
                         : cast.SkillEntityId == 10780 || cast.SkillEntityId == 11640 || cast.SkillEntityId == 11650 || cast.SkillEntityId == 11660,
                         "The acquired active skill selected a foreign entity: " + cast.SkillEntityId);
@@ -236,10 +238,10 @@ namespace Zjcs.Presentation.Home
                     }
                     foreach (var hit in damageEvents)
                     {
-                        int damage = skillId == 10016 ? 10026 : skillId == 10053 ? 10022
+                        int damage = skillId == 10016 ? 10026 : skillId == 10008 || skillId == 10053 ? 10022
                             : cast.SkillEntityId == 11660 ? 10007 : 10023;
                         Require(hit.TargetId != 1 && hit.HitEntityId == cast.SkillEntityId + 1
-                            && hit.DamageEntityId == damage && hit.Damage < 0 && hit.TrueDamage == (skillId != 10053)
+                            && hit.DamageEntityId == damage && hit.Damage < 0 && hit.TrueDamage == (skillId != 10008 && skillId != 10053)
                             && hit.ElementType == (skillId == 10026 ? 102 : 0),
                             "The acquired active skill lost its original caster-owned damage.");
                         hits++;

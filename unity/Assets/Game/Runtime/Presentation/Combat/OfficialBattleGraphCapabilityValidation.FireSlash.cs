@@ -8,52 +8,61 @@ namespace Zjcs.Presentation.Combat
     {
         // Original directional fire-slash playables start Skill_10026 at cast time zero.
         private const uint FireSlashSoundEvent = 3761013056u;
+        // Original playable10600 starts Skill_10008 at .245 seconds.
+        private const uint WarriorSlashSoundEvent = 3727457896u;
+        private bool ValidateWarriorSlashSound => firstPromotionItemId == 10008
+            && Environment.GetEnvironmentVariable("ZJCS_WARRIOR_SLASH_SOUND") == "1";
         private uint fireSlashPlayingId;
         private bool fireSlashSoundComplete;
 
         private void ObserveFireSlashSound(OfficialBattleRuntimeController controller)
         {
-            if (firstPromotionItemId != 10026 || nativeCasts == 0 || fireSlashSoundComplete) return;
+            if ((firstPromotionItemId != 10026 && !ValidateWarriorSlashSound) || nativeCasts == 0 || fireSlashSoundComplete) return;
+            uint expectedEvent = ValidateWarriorSlashSound ? WarriorSlashSoundEvent : FireSlashSoundEvent;
+            float expectedTime = ValidateWarriorSlashSound ? .245f : 0f;
+            string soundName = ValidateWarriorSlashSound ? "Skill_10008" : "Skill_10026";
             var body = controller.TryGetUnitTransform(1);
             foreach (var sound in UnityEngine.Object.FindObjectsOfType<MyPlayableSound>())
             {
-                if (sound.SoundEvent == null || sound.SoundEvent.Id != FireSlashSoundEvent
+                if (sound.SoundEvent == null || sound.SoundEvent.Id != expectedEvent
                     || sound.SoundEvent.PlayingId == 0) continue;
                 uint playing = sound.SoundEvent.PlayingId;
-                if (ArcNativeSoundEvent(playing) != FireSlashSoundEvent) continue;
+                if (ArcNativeSoundEvent(playing) != expectedEvent) continue;
                 Require(body && (sound.mySource == body.gameObject || sound.myTarget == body.gameObject),
-                    "Original Skill_10026 sound lost its casting character.");
+                    "Original " + soundName + " sound lost its casting character.");
                 if (fireSlashPlayingId != 0)
                 {
-                    Require(fireSlashPlayingId == playing, "Original Skill_10026 sound played more than once.");
+                    Require(fireSlashPlayingId == playing, "Original " + soundName + " sound played more than once.");
                     continue;
                 }
-                Require(Math.Abs(Time.time - firstPromotionCastClock) < .1f,
-                    "Original Skill_10026 sound did not begin at its authored cast time.");
+                Require(Math.Abs(Time.time - firstPromotionCastClock - expectedTime) < .1f,
+                    "Original " + soundName + " sound did not begin at its authored cast time.");
                 fireSlashPlayingId = playing;
-                Debug.Log("[Fire slash sound] Original Skill_10026 is live in the native engine: " + playing);
+                Debug.Log("[Fire slash sound] Original " + soundName + " is live in the native engine: " + playing);
             }
             if (fireSlashPlayingId != 0 && ArcNativeSoundEvent(fireSlashPlayingId) == 0)
             {
                 fireSlashSoundComplete = true;
-                Debug.Log("[Fire slash sound] Original cast binding, native playback and completion passed.");
+                Debug.Log(ValidateWarriorSlashSound
+                    ? "[Warrior slash sound] Original cast binding, native playback and completion passed."
+                    : "[Fire slash sound] Original cast binding, native playback and completion passed.");
             }
         }
 
         private bool HoldFireSlashSound()
         {
-            if (firstPromotionItemId != 10026 || !captured || fireSlashSoundComplete) return false;
+            if ((firstPromotionItemId != 10026 && !ValidateWarriorSlashSound) || !captured || fireSlashSoundComplete) return false;
             Require(Time.time - firstPromotionCastClock < 12f,
-                "Original Skill_10026 sound did not play and finish through the native engine.");
+                "Original slash sound did not play and finish through the native engine.");
             return true;
         }
 
         private void VerifyFireSlashSound()
         {
-            if (firstPromotionItemId != 10026) return;
+            if (firstPromotionItemId != 10026 && !ValidateWarriorSlashSound) return;
             Require(fireSlashSoundComplete && fireSlashPlayingId != 0
                 && ArcNativeSoundEvent(fireSlashPlayingId) == 0,
-                "Original Skill_10026 native sound verification was incomplete.");
+                "Original slash native sound verification was incomplete.");
         }
     }
 }

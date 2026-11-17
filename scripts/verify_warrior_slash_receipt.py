@@ -1,0 +1,79 @@
+"""Check recorded 10008 casts against the official adjacent single-hit rules."""
+import argparse
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+DIRECTIONS = {"up": (2, 0, 1), "down": (0, 0, -1),
+              "left": (1, -1, 0), "right": (3, 1, 0)}
+
+
+def verify(path, direction):
+    entities = {}
+    for name in ("skill-rules.json", "battle-rules.json"):
+        for key, components in json.loads((ROOT / "unity/Assets/Official/Combat" / name).read_bytes())["entities"].items():
+            entities.setdefault(key, {}).update(components)
+    skill = entities["10600"]["FightSkillComponent"]
+    hit = entities["10601"]["FightHitFixedComponent"]
+    links = skill["HitList"]
+    if (skill["SkillTargetType"] != 1 or skill["TargetType"] != 1 or skill["ElementType"] != 0
+            or len(links) != 1 or links[0]["ClassId"] != 10601 or hit["DamageId"] != 10022
+            or hit["DamageType"] != 1 or hit["IsTrueDamage"] or len(hit["Scope"]) != 1
+            or hit["Scope"][0]["Pos"] != {"X": 0, "Y": 1} or hit["Scope"][0]["Delay"] != 0):
+        raise ValueError("Review the original slash configuration")
+    valid_range = {(p["X"], p["Y"]) for p in skill["Range"]}
+    if valid_range != {(0, 1), (0, -1), (1, 0), (-1, 0)}:
+        raise ValueError("Review the original slash range")
+    checkpoint = json.loads(path.read_text(encoding="utf-8-sig"))["checkpoint"]
+    unlimited_hp = bool((checkpoint.get("DamageTest") or {}).get("EnableMonsterUnlimitHp"))
+    count = 0
+    for receipt in checkpoint["Receipts"]:
+        step = receipt["Event"]
+        for cast in step["SkillCasts"]:
+            if cast["SkillItemId"] != 10008 or cast["Slot"] != 0:
+                continue
+            pose = cast["Presentation"]
+            dx, dy = pose["TargetX"] - pose["SourceX"], pose["TargetY"] - pose["SourceY"]
+            if (cast["SkillEntityId"] != 10600 or (pose["FacingIndex"], dx, dy) not in DIRECTIONS.values()
+                    or (dx, dy) not in valid_range
+                    or abs(pose["Duration"] - skill["Duration"]) > .0001):
+                raise ValueError("Slash changed its original target range, entity or duration")
+            if direction and (pose["FacingIndex"], dx, dy) != DIRECTIONS[direction]:
+                raise ValueError("Slash used the wrong requested facing or target position")
+            selections = cast["HitSelections"]
+            if (len(selections) != 1 or selections[0]["HitEntityId"] != 10601
+                    or len(selections[0]["Targets"]) != 1
+                    or selections[0]["Targets"][0]["TargetId"] != pose["TargetId"]
+                    or abs(selections[0]["Delay"] - links[0]["Delay"]) > .0001):
+                raise ValueError("Slash changed its original hit selection or delay")
+            ids = cast["DamageEventIds"]
+            events = [event for event in step["DamageEvents"] if event["DamageId"] in ids]
+            if len(ids) != 1 or len(events) != 1:
+                raise ValueError("Slash did not produce exactly one linked damage event")
+            event = events[0]
+            if (event["SourceId"] != cast["ActorId"] or event["TargetId"] != pose["TargetId"]
+                    or event["SkillEntityId"] != 10600 or event["HitEntityId"] != 10601
+                    or event["DamageEntityId"] != hit["DamageId"] or event["DamageType"] != hit["DamageType"]
+                    or event["ElementType"] != skill["ElementType"] or event["TrueDamage"] or event["IsCure"]
+                    or event["Damage"] >= 0
+                    or (event["AfterHp"] - event["BeforeHp"] != event["Damage"]
+                        and not (unlimited_hp and event["AfterHp"] == event["BeforeHp"]))
+                    or not event["HasDamagePosition"] or (event["DamageX"], event["DamageY"]) != (pose["TargetX"], pose["TargetY"])
+                    or abs(event["Delay"] - cast["Delay"] - links[0]["Delay"]) > .0001):
+                raise ValueError("Slash changed its original target, physical damage or timing")
+            count += 1
+    if not count:
+        raise ValueError("No equipped 10008 cast was recorded")
+    return count
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("receipt", type=Path)
+    parser.add_argument("--direction", choices=DIRECTIONS)
+    args = parser.parse_args()
+    try:
+        count = verify(args.receipt, args.direction)
+    except ValueError as error:
+        parser.exit(1, str(error) + "\n")
+    print(f"Original 10008 adjacent physical hit and timing passed: {count} casts")
