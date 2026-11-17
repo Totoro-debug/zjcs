@@ -71,11 +71,11 @@ def receipts(path):
     return result
 
 
-def configuration(expected):
+def configuration():
     source = OfficialSource()
     version = source.profile['resource_version']
-    if not re.fullmatch(r'[0-9]+', version) or (expected and version != expected):
-        raise ValueError('Selected resource version differs from the pinned source: ' + version)
+    if not re.fullmatch(r'[0-9]+', version):
+        raise ValueError('Invalid recorded resource version: ' + version)
     cache = source.cloud_path
     inventory = json.loads((cache / 'inventory.json').read_text(encoding='utf-8'))
     raw = (cache / 'server-config.json').read_bytes()
@@ -142,22 +142,15 @@ def cached_package_manifest(package, destination, source):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    mode = parser.add_mutually_exclusive_group()
-    mode.add_argument('--expected-resource-version', help='Require the ResVersion observed in the client')
-    mode.add_argument('--verify-cache', metavar='RESOURCE_VERSION', help='Verify a saved version without network requests or downloads')
+    parser.add_argument('--verify-cache', action='store_true', help='Verify the recorded current cache without network requests or downloads')
     parser.add_argument('--workers', type=int, choices=range(1, 17), default=12, metavar='1..16')
     args = parser.parse_args()
     if args.verify_cache and (not APK.exists() or APK.stat().st_size != SIZE):
         raise ValueError('Offline verification requires the complete pinned APK')
     download()
     if args.verify_cache:
-        resource_version = args.verify_cache
-        if not re.fullmatch(r'[0-9]+', resource_version):
-            raise ValueError('Invalid cached resource version')
         source = OfficialSource()
-        if resource_version != source.profile['resource_version']:
-            raise ValueError('Only the selected official resource version may be verified: ' +
-                             source.profile['resource_version'])
+        resource_version = source.profile['resource_version']
         destination = source.cloud_path
         recorded = json.loads((destination / 'inventory.json').read_text(encoding='utf-8'))
         raw = (destination / 'server-config.json').read_bytes()
@@ -166,7 +159,7 @@ def main():
             raise ValueError('Cached configuration differs from recorded provenance')
         roots = recorded['roots']
     else:
-        raw, resource_version, roots = configuration(args.expected_resource_version)
+        raw, resource_version, roots = configuration()
     destination = CACHE / 'cloud/runtime' / resource_version
     destination.mkdir(parents=True, exist_ok=True)
     (destination / 'server-config.json').write_bytes(raw)

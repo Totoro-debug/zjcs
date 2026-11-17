@@ -14,10 +14,11 @@
 | 原版游戏官方 APK | `.tools/source-packages/zjcs_M509085.apk` |
 | 原版游戏已下载的云端资源 | `.tools/source-packages/cloud/` |
 | 官方程序集与反编译代码 | `.tools/source-packages/official-code/` |
-| 资源版本选择 | `official-source.json` |
+| 当前官方来源记录 | `official-source.json` |
 | 来源、工具与哈希记录 | `assets/reference/SOURCES.md` 及各模块来源清单 |
 
 - 迁移前必须先提取、解密并反编译官方 APK，取得相关官方代码，查清配置、调用关系和依赖，再复制或迁移官方代码到 Unity 工程。已有可核实来源的反编译结果可以复用。
+- 新迁移以当时取得的最新官方来源制作，不增加手选版本或固定版本号的要求；除非用户明确要求更新，官方发布新版本后无需回头更新已迁移的代码或资源。来源版本与哈希仅如实记录实际输入，保留必要的文件完整性和输入一致性检查。
 - 官方代码目录中，`managed/decoded/` 保存程序集，`client-source/` 保存客户端反编译结果，`common-source/` 等保存共享实现。缺少所需结果时运行 `python scripts/prepare_official_sources.py --decompile-client`，按本机路径配置 `--dotnet`／`--ilspy`，并核对提取范围。
 - 优先直接复用官方代码；反编译修复、C# 适配和离线迁移须保持官方数值、公式、分支、状态变化与执行顺序。不得跳过官方实现查找而自行重写一套近似玩法。
 - APK 不一定包含服务器实现。缺少服务器逻辑时，先核对客户端计算、请求／响应消费、配置和已确认的单机方案；仍缺公式、奖励、条件或状态规则时，说明具体类／函数、已知证据和行为缺口，请用户决定。
