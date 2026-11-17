@@ -25,7 +25,8 @@ namespace Zjcs.Presentation.Home
         {
             AudioListener.volume = 0f;
             Action<Selectable> click = Click;
-            Require(skillId == 10016 || skillId == 10026, "Select an implemented Fighter acquisition diagnostic.");
+            Require(skillId == 10016 || skillId == 10026 || skillId == 10053,
+                "Select an implemented Fighter acquisition diagnostic.");
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -216,16 +217,31 @@ namespace Zjcs.Presentation.Home
                 {
                     File.WriteAllText(Path.Combine(output, "acquired-active-ui-latest.json"), FightBattleCheckpointSerializer.Save(checkpoint));
                     Require(skillId == 10016 ? cast.SkillEntityId == 10680
+                        : skillId == 10053 ? cast.SkillEntityId == 11250
                         : cast.SkillEntityId == 10780 || cast.SkillEntityId == 11640 || cast.SkillEntityId == 11650 || cast.SkillEntityId == 11660,
                         "The acquired active skill selected a foreign entity: " + cast.SkillEntityId);
-                    foreach (var hit in step.Event.DamageEvents.Where(value => value.SourceId == 1
-                        && value.SkillEntityId == cast.SkillEntityId))
+                    var damageEvents = step.Event.DamageEvents.Where(value => value.SourceId == 1
+                        && value.SkillEntityId == cast.SkillEntityId).ToArray();
+                    if (skillId == 10053)
                     {
-                        int damage = skillId == 10016 ? 10026 : cast.SkillEntityId == 11660 ? 10007 : 10023;
+                        float[] delays = { .726f, .861f, .987f, 1.14f, 1.39f };
+                        foreach (var target in damageEvents.GroupBy(value => value.TargetId))
+                        {
+                            var ordered = target.OrderBy(value => value.Delay).ToArray();
+                            Require(ordered.Length == delays.Length, "Sunset sword lost a damage occurrence.");
+                            for (int i = 0; i < ordered.Length; i++)
+                                Require(Math.Abs(ordered[i].Delay - cast.Delay - delays[i]) < .0001f,
+                                    "Sunset sword changed its original hit timing.");
+                        }
+                    }
+                    foreach (var hit in damageEvents)
+                    {
+                        int damage = skillId == 10016 ? 10026 : skillId == 10053 ? 10022
+                            : cast.SkillEntityId == 11660 ? 10007 : 10023;
                         Require(hit.TargetId != 1 && hit.HitEntityId == cast.SkillEntityId + 1
-                            && hit.DamageEntityId == damage && hit.Damage < 0 && hit.TrueDamage
+                            && hit.DamageEntityId == damage && hit.Damage < 0 && hit.TrueDamage == (skillId != 10053)
                             && hit.ElementType == (skillId == 10026 ? 102 : 0),
-                            "The acquired active skill lost its original caster-owned annihilation damage.");
+                            "The acquired active skill lost its original caster-owned damage.");
                         hits++;
                     }
                 }

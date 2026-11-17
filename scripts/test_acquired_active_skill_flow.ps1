@@ -2,7 +2,7 @@
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet(10016,10026)][int]$SkillId = 10026
+    [ValidateSet(10016,10026,10053)][int]$SkillId = 10026
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -32,9 +32,9 @@ try {
     if ($PSCmdlet.ParameterSetName -eq 'Play') {
         $env:ZJCS_SKILLS_AUTORUN = '1'
         $env:ZJCS_SKILLS_HOME_ONLY = '1'
-        $arguments = @('-projectPath', ('"' + $projectPath + '"'), '-logFile', ('"' + $log + '"'))
+        $arguments = @('-muteAudio','-projectPath', ('"' + $projectPath + '"'), '-logFile', ('"' + $log + '"'))
     } else {
-        $arguments = @('-screen-fullscreen','0','-screen-width','675','-screen-height','1463',
+        $arguments = @('-muteAudio','-screen-fullscreen','0','-screen-width','675','-screen-height','1463',
             '-logFile', ('"' + $log + '"'), '--zjcs-validate-skill-damage', ('"' + $run + '"'))
     }
     $process = Start-UnityOnInternalDisplay -Editor $executable -ArgumentList $arguments
@@ -63,7 +63,13 @@ try {
     if (-not (Select-String -LiteralPath $log -Pattern ('\[Skill UI data\] Verified (embedded TextAsset|native Windows pack): ' + $expectedUi))) {
         throw "The runtime skill UI did not verify its current payload identity: $run"
     }
-    $cultivatedRank = if ($SkillId -eq 10016) { 4 } else { 2 }
+    $combatRules = Get-Content -LiteralPath (Join-Path $repository 'unity/Assets/Official/Combat/rules.json') -Raw | ConvertFrom-Json
+    $skillRules = Get-Content -LiteralPath (Join-Path $repository 'unity/Assets/Official/Skills/skill-runtime-rules.json') -Raw | ConvertFrom-Json
+    $skillItems = @($combatRules.item | Where-Object ClassId -eq $SkillId)
+    if ($skillItems.Count -ne 1) { throw "The original skill item is not unique: $SkillId" }
+    $rankRows = @($skillRules.RankDisplays | Where-Object Quality -eq $skillItems[0].Quality)
+    if ($rankRows.Count -eq 0) { throw "The original skill quality has no rank display: $SkillId" }
+    $cultivatedRank = ($rankRows | Measure-Object Rank -Minimum).Minimum + 1
     foreach ($text in @(
         "[Acquired active UI] $SkillId fragment acquisition, original slot input, level/rank cultivation and disk reload passed.",
         "[Acquired active UI] $SkillId saved rank=$cultivatedRank level=2, original damage/result/return and unchanged save passed.")) {
@@ -78,7 +84,7 @@ try {
     if (-not (Test-Path -LiteralPath (Join-Path $run 'acquired-active-ui-checkpoint.json'))) {
         throw "The completed skill-page battle checkpoint is absent: $run"
     }
-    $receiptVerifier = if ($SkillId -eq 10016) { 'verify_lightning_dash_receipt.py' } else { 'verify_fire_slash_receipt.py' }
+    $receiptVerifier = if ($SkillId -eq 10016) { 'verify_lightning_dash_receipt.py' } elseif ($SkillId -eq 10053) { 'verify_sunset_sword_receipt.py' } else { 'verify_fire_slash_receipt.py' }
     & python -B (Join-Path $PSScriptRoot $receiptVerifier) (Join-Path $run 'acquired-active-ui-checkpoint.json')
     if ($LASTEXITCODE -ne 0) { throw "The acquired skill's original battle receipts failed: $run" }
     Write-Output "Acquired active skill-page flow passed: $run"
