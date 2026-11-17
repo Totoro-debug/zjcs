@@ -12,20 +12,25 @@ namespace Zjcs.Presentation.Combat
         private const uint WarriorSlashSoundEvent = 3727457896u;
         // Original playable10630 starts Skill_10011 at cast time zero.
         private const uint LionComboSoundEvent = 3744235474u;
+        // Original playable10640 starts Skill_10012 at .15 seconds.
+        private const uint WindBladeSoundEvent = 3744235473u;
         private bool ValidateWarriorSlashSound => firstPromotionItemId == 10008
             && Environment.GetEnvironmentVariable("ZJCS_WARRIOR_SLASH_SOUND") == "1";
         private bool ValidateLionComboSound => firstPromotionItemId == 10011
             && Environment.GetEnvironmentVariable("ZJCS_LION_COMBO_SOUND") == "1";
+        private bool ValidateWindBladeSound => firstPromotionItemId == 10012
+            && Environment.GetEnvironmentVariable("ZJCS_WIND_BLADE_SOUND") == "1";
         private uint fireSlashPlayingId;
         private bool fireSlashSoundComplete;
 
         private void ObserveFireSlashSound(OfficialBattleRuntimeController controller)
         {
-            if ((firstPromotionItemId != 10026 && !ValidateWarriorSlashSound && !ValidateLionComboSound) || nativeCasts == 0 || fireSlashSoundComplete) return;
+            if ((firstPromotionItemId != 10026 && !ValidateWarriorSlashSound && !ValidateLionComboSound && !ValidateWindBladeSound) || nativeCasts == 0 || fireSlashSoundComplete) return;
             uint expectedEvent = ValidateWarriorSlashSound ? WarriorSlashSoundEvent
-                : ValidateLionComboSound ? LionComboSoundEvent : FireSlashSoundEvent;
-            float expectedTime = ValidateWarriorSlashSound ? .245f : 0f;
-            string soundName = ValidateWarriorSlashSound ? "Skill_10008" : ValidateLionComboSound ? "Skill_10011" : "Skill_10026";
+                : ValidateLionComboSound ? LionComboSoundEvent : ValidateWindBladeSound ? WindBladeSoundEvent : FireSlashSoundEvent;
+            float expectedTime = ValidateWarriorSlashSound ? .245f : ValidateWindBladeSound ? .15f : 0f;
+            string soundName = ValidateWarriorSlashSound ? "Skill_10008" : ValidateLionComboSound ? "Skill_10011"
+                : ValidateWindBladeSound ? "Skill_10012" : "Skill_10026";
             var body = controller.TryGetUnitTransform(1);
             foreach (var sound in UnityEngine.Object.FindObjectsOfType<MyPlayableSound>())
             {
@@ -48,7 +53,9 @@ namespace Zjcs.Presentation.Combat
             if (fireSlashPlayingId != 0 && ArcNativeSoundEvent(fireSlashPlayingId) == 0)
             {
                 fireSlashSoundComplete = true;
-                Debug.Log(ValidateLionComboSound
+                Debug.Log(ValidateWindBladeSound
+                    ? "[Wind blade sound] Original cast binding, native playback and completion passed."
+                    : ValidateLionComboSound
                     ? "[Lion combo sound] Original cast binding, native playback and completion passed."
                     : ValidateWarriorSlashSound
                     ? "[Warrior slash sound] Original cast binding, native playback and completion passed."
@@ -58,7 +65,7 @@ namespace Zjcs.Presentation.Combat
 
         private bool HoldFireSlashSound()
         {
-            if ((firstPromotionItemId != 10026 && !ValidateWarriorSlashSound && !ValidateLionComboSound) || !captured || fireSlashSoundComplete) return false;
+            if ((firstPromotionItemId != 10026 && !ValidateWarriorSlashSound && !ValidateLionComboSound && !ValidateWindBladeSound) || !captured || fireSlashSoundComplete) return false;
             Require(Time.time - firstPromotionCastClock < 12f,
                 "Original slash sound did not play and finish through the native engine.");
             return true;
@@ -66,7 +73,7 @@ namespace Zjcs.Presentation.Combat
 
         private void VerifyFireSlashSound()
         {
-            if (firstPromotionItemId != 10026 && !ValidateWarriorSlashSound && !ValidateLionComboSound) return;
+            if (firstPromotionItemId != 10026 && !ValidateWarriorSlashSound && !ValidateLionComboSound && !ValidateWindBladeSound) return;
             Require(fireSlashSoundComplete && fireSlashPlayingId != 0
                 && ArcNativeSoundEvent(fireSlashPlayingId) == 0,
                 "Original slash native sound verification was incomplete.");

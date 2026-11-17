@@ -247,7 +247,7 @@ namespace Zjcs.Presentation.Combat
                     // Isolate the authored facing of the adjacent-target probes. Ordinary landing AI
                     // may otherwise relocate around this already adjacent target.
                     if ((itemId == 10026 || itemId == 10042 || itemId == 10053 || itemId == 10061
-                            || itemId == 10008 || itemId == 10011) && unit == player
+                            || itemId == 10008 || itemId == 10011 || itemId == 10012) && unit == player
                         && (prop.Id == catalog.PropertyType("MoveDist")
                             || prop.Id == catalog.PropertyType("FixedMoveDist"))) prop.Value = 0;
                 }
@@ -342,6 +342,8 @@ namespace Zjcs.Presentation.Combat
                 player.Statuses.Add(catalog.CreateStatus(25112, player.Id, player.Id, 900001,
                     0, 10603, 2, 20, player.SubRank));
             }
+            if (itemId == 10012 && Environment.GetEnvironmentVariable("ZJCS_WIND_BLADE_KNOCKBACK") == "1")
+                checkpoint.RandomSeed = 1012348; // A reproducible original probability outcome in this isolated fixture.
             probe.ConfigureActionInvisibleDiagnostic(checkpoint);
             probe.ConfigureAirComboDiagnostic(itemId, checkpoint);
             skill.LimitedTimes = 1;
@@ -382,6 +384,19 @@ namespace Zjcs.Presentation.Combat
                 + cast.SkillItemId + "/" + firstPromotionItemId + "; entity=" + cast.SkillEntityId + "/" + skillId
                 + "; facing=" + cast.Presentation?.FacingIndex + "/" + firstPromotionFacingIndex
                 + "; releases=" + player.SkillState.Slots[0].ReleasedTimes);
+            if (firstPromotionItemId == 10012 && Environment.GetEnvironmentVariable("ZJCS_WIND_BLADE_KNOCKBACK") == "1")
+            {
+                var hit = step.DamageEvents.Single(value => value.SkillEntityId == 10640 && value.HitEntityId == 10641);
+                var movement = step.Movements.Single(value => value.UnitId == hit.TargetId && value.MoveBehaviourId == 10643);
+                var target = checkpoint.Units.Single(value => value.Id == hit.TargetId);
+                Require(hit.SourceId == player.Id && hit.DamageEntityId == 10642 && hit.ElementType == 100
+                    && hit.Damage < 0 && !hit.TrueDamage && Math.Abs(hit.Delay - cast.Delay - .62f) < .0001f
+                    && movement.Path.Count == 2 && movement.Path[0].X == hit.HitGridX && movement.Path[0].Y == hit.HitGridY
+                    && movement.Path[1].X == hit.HitGridX && movement.Path[1].Y == hit.HitGridY + 1
+                    && target.X == movement.Path[1].X && target.Y == movement.Path[1].Y,
+                    "Original 10012 up-facing hit or one-cell 10643 knockback differs.");
+                Debug.Log("[Wind blade knockback] Original wind hit and one-cell 10643 target movement passed.");
+            }
             if (firstPromotionItemId == 10053)
             {
                 var hits = step.DamageEvents.Where(value => value.SourceId == player.Id
