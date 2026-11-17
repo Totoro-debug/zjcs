@@ -247,7 +247,7 @@ namespace Zjcs.Presentation.Combat
                     // Isolate the authored facing of the adjacent-target probes. Ordinary landing AI
                     // may otherwise relocate around this already adjacent target.
                     if ((itemId == 10026 || itemId == 10042 || itemId == 10053 || itemId == 10061
-                            || itemId == 10008 || itemId == 10011 || itemId == 10012) && unit == player
+                            || itemId == 10008 || itemId == 10011 || itemId == 10012 || itemId == 10013) && unit == player
                         && (prop.Id == catalog.PropertyType("MoveDist")
                             || prop.Id == catalog.PropertyType("FixedMoveDist"))) prop.Value = 0;
                 }
