@@ -16,6 +16,8 @@
 
 战斗规则读取按配套来源清单的 SHA256 校验，技能／战斗配置、怪物血条分层和 NPC 助战均不以固定来源版本号决定加载；来源版本只作为可选的模块元数据。缺少版本字段及不同版本标签的读取、载荷被改动时的拒绝检查，以及 460 组公式／战斗核心回归通过；Unity 导入编译与 `ProjectTools.Validate` 通过。本项只调整读取校验，未新增玩法、素材或发布 Windows Player。
 
+战斗场景、格网移动、地面特效、角色材质、功能入口和元素反馈目录也不以来源版本号拒绝加载；读取器保留空数据、曲线参数、对象路径与资源绑定检查，目录条目不依赖旧来源的固定数量。来源版本在模块来源记录中追溯，既有素材载荷未重新生成。Unity 编译、`ProjectTools.Validate` 和 11 组静音公共战斗 Play Mode 回归通过，已查看 80 张运行截图；覆盖模拟点击、移动、暂停、技能命中、伤害／状态反馈、伙伴与怪物外观及原场景声音事件。受控黑底用例只验证对应角色和 HUD，原场景用例另行核对场景渲染；未构建或发布新的 Windows Player。
+
 原 `FightHitExtHemophagiaComponentInfo.HemophagiaPropType` 指向 `OnceHitHemophagiaPer`，共享组件没有服务端执行体。所选 `Battle.HemophagiaEntityId` 为 10110；原自目标治疗技能经 10111 固定命中使用伤害实体 10028，其公共图为 `playable_cure_lifesteal`。原技能 `CanTriggerChild=false`、状态白名单仅 25136，原治疗公式及禁疗／转盾继续按此配置执行；相关原 prefab、图及依赖已包含在既有技能／命中／伤害资源目录，不新增替代资源。
 
 原 `AppearanceOnDemandTextureLoader.GetPlaceholderTextureName` 返回图集页名加 `_placeholder`。部分导出图集在外观加载器绑定前即被解析；原生材质加载适配仅在加载器未绑定时接受这个原命名，保留已绑定加载器的原查询。使用现存材质及其贴图，不改名、不重绘，也不把占位页视为完整换装贴图；来源见[图集占位页绑定](../../assets/reference/battle-animation/atlas-placeholder-binding-source-manifest.json)。

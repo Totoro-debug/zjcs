@@ -8,7 +8,7 @@ namespace Zjcs.Presentation.Combat
     // prefabs whose rotation/scale application and follow-target flags are disabled.
     internal sealed class OfficialBattleGridMotion
     {
-        [Serializable] private sealed class Data { public string manifest; public Track[] tracks; }
+        [Serializable] private sealed class Data { public Track[] tracks; }
         [Serializable] private sealed class Curve
         {
             public Key[] keys;
@@ -55,7 +55,7 @@ namespace Zjcs.Presentation.Combat
             TextAsset asset = Resources.Load<TextAsset>("Combat/grid-motion");
             if (asset == null) throw new InvalidOperationException("Original grid movement bindings are missing.");
             Data data = JsonUtility.FromJson<Data>(asset.text);
-            if (data == null || data.manifest != "884_156692" || data.tracks == null)
+            if (data == null || data.tracks == null)
                 throw new InvalidOperationException("Original grid movement bindings have the wrong source.");
             foreach (Track track in data.tracks)
             {

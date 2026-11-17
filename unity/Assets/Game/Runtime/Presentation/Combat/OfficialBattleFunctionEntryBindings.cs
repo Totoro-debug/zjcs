@@ -72,8 +72,8 @@ namespace Zjcs.Presentation.Combat
             TextAsset asset = Resources.Load<TextAsset>("Combat/battle-function-entry");
             if (asset == null) throw new InvalidOperationException("Official function-entry bindings are missing.");
             var data = JsonUtility.FromJson<BattleFunctionEntryData>(asset.text);
-            if (data.manifest != "854_156383" || data.entries == null || data.entries.Length != 1)
-                throw new InvalidOperationException("Unexpected official function-entry prefab version.");
+            if (data == null || data.entries == null || data.entries.Length == 0)
+                throw new InvalidOperationException("Official function-entry prefab bindings are invalid.");
             foreach (BattleFunctionEntry entry in data.entries)
             {
                 GameObject owner = Require(renderer, entry.owner);

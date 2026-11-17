@@ -22,8 +22,8 @@ namespace Zjcs.Presentation.Combat
             if (catalogAsset == null)
                 throw new InvalidOperationException("Official battle-scene catalog is missing: " + CatalogResource);
             SceneCatalog catalog = JsonUtility.FromJson<SceneCatalog>(catalogAsset.text);
-            if (catalog == null || catalog.manifest != "854_156383" || catalog.scenes == null)
-                throw new InvalidDataException("Official battle-scene catalog is malformed or not pinned.");
+            if (catalog == null || catalog.scenes == null)
+                throw new InvalidDataException("Official battle-scene catalog is malformed.");
 
             SceneBinding scene = null;
             foreach (SceneBinding candidate in catalog.scenes)
@@ -298,7 +298,6 @@ namespace Zjcs.Presentation.Combat
         [Serializable]
         private sealed class SceneCatalog
         {
-            public string manifest;
             public SceneBinding[] scenes;
         }
 

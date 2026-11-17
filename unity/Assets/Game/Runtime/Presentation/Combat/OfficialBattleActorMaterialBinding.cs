@@ -8,7 +8,7 @@ namespace Zjcs.Presentation.Combat
     // root interface and serialized references consumed by material playables.
     internal static class OfficialBattleActorMaterialBinding
     {
-        [Serializable] private sealed class Catalog { public string manifest; public Actor[] actors; }
+        [Serializable] private sealed class Catalog { public Actor[] actors; }
         [Serializable] private sealed class Actor
         {
             public int entityId;
@@ -25,7 +25,8 @@ namespace Zjcs.Presentation.Combat
                 var asset = Resources.Load<TextAsset>("Combat/actor-material-bindings");
                 if (!asset) throw new InvalidOperationException("Original actor material bindings are missing.");
                 catalog = JsonUtility.FromJson<Catalog>(asset.text);
-                if (catalog.manifest != "884_156692") throw new InvalidOperationException("Original actor material version differs.");
+                if (catalog == null || catalog.actors == null)
+                    throw new InvalidOperationException("Original actor material bindings are invalid.");
             }
             var actor = Array.Find(catalog.actors, value => value.entityId == entityId);
             if (actor == null) return null;

@@ -8,7 +8,7 @@ namespace Zjcs.Presentation.Combat
     /// <summary>Local native prefab loading for the original ApplyByGroundType.</summary>
     public sealed class OfficialBattleGroundEffectLibrary : IPlayableGroundEffectHost
     {
-        [Serializable] private sealed class Catalog { public string manifest; public Entry[] effects; }
+        [Serializable] private sealed class Catalog { public Entry[] effects; }
         [Serializable] private sealed class Entry { public string guid, resource; }
         private readonly Dictionary<string, string> resources = new Dictionary<string, string>();
         private readonly Func<IPlayableGroundSurface> ground;
@@ -19,7 +19,7 @@ namespace Zjcs.Presentation.Combat
             var asset = Resources.Load<TextAsset>("Combat/ground-effects");
             if (asset == null) throw new InvalidOperationException("Missing original battle ground effect catalog.");
             var data = JsonUtility.FromJson<Catalog>(asset.text);
-            if (data == null || data.manifest != "884_156692" || data.effects == null)
+            if (data == null || data.effects == null)
                 throw new InvalidOperationException("Invalid original battle ground effect catalog.");
             foreach (var entry in data.effects)
             {

@@ -105,8 +105,8 @@ namespace Zjcs.Presentation.Combat
             var asset = Resources.Load<TextAsset>(ResourceRoot+"element-feedback");
             if (asset == null) throw new InvalidOperationException("Original element feedback bindings are missing.");
             var data = JsonUtility.FromJson<BattleElementFeedbackData>(asset.text);
-            if (data.manifest != "854_156383" || data.bindings == null || data.bindings.Length != 6)
-                throw new FormatException("Unpinned original element feedback bindings.");
+            if (data == null || data.bindings == null || data.bindings.Length == 0)
+                throw new FormatException("Original element feedback bindings are invalid.");
             return current = data;
         }
         public static BattleElementFeedbackBinding Find(int effectType)
