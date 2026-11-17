@@ -663,6 +663,7 @@ namespace Zjcs.Combat.Official
                 LimitedTimes = Int(skill, "LimitedTimes", -1),
                 ReplayMaxCountEachRound = Int(skill, "ReplayMaxCountEachRound", -1),
                 ResetCooldownAtStart = Bool(skill, "ResetCDAtStart"),
+                IsFixedProp = Bool(skill, "IsFixedProp"),
                 CostType = Int(skill, "CostType"),
                 MustHaveValidCost = Bool(skill, "MustHaveValidCost"),
                 TargetType = Int(skill, "TargetType", 1),
@@ -745,6 +746,8 @@ namespace Zjcs.Combat.Official
         internal void RestoreSkillLogicDefinition(FightBattleSkillDefinition skill)
         {
             RestoreSkillSequenceDefinition(skill);
+            if (skill != null && entities.TryGetValue(skill.EntityId, out var fixedComponents))
+                skill.IsFixedProp = Bool(Component(fixedComponents, "FightSkillComponent"), "IsFixedProp");
             if (skill == null || skill.LogicDefinitionResolved
                 || !entities.TryGetValue(skill.EntityId, out var components)) return;
             var logic = Component(components, "FightSkillLogicComponent");

@@ -12,6 +12,8 @@
 
 开战自动触发技能的反编译枚举、技能表和战斗配置输入及哈希见[技能开场来源](battle-rules/skill-start-source-manifest.json)。
 
+虚空祝祷与金汤铁壁的原技能固定属性标记、子技能阈值、状态属性转换公式、唯一增益配置及共享源属性容器的反编译输入与哈希见[唯一增益来源](battle-rules/void-blessing-source-manifest.json)。
+
 对白透明边缘：scripts/prepare_dialogue_transparent_background.py 从所选 884_156692 APK 的 image_ui_dialogue 提取 ImgBg_Talk，保留原始输入并生成透明阴影派生载荷；输入输出 SHA-256、APK／bundle／Sprite 对象及显式绑定见[来源清单](official-map/dialogue-transparent-background-source-manifest.json)。
 
 

@@ -1,0 +1,66 @@
+{
+  "manifest": "854_156383",
+  "skill_item_ids": [
+    10060,
+    10127,
+    10571,
+    10128
+  ],
+  "status_entity_ids": [
+    24190,
+    24200
+  ],
+  "original_code": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DamageChildSkillCfg.cs",
+      "sha256": "8b105e224cca5a77993308e3c953cb1295d4d7faa371e37ccb5edf4ea8fb1af7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillComponentInfo.cs",
+      "sha256": "a8fd469ff28f0aa1142f3ab9e8a643d8d7ededd80c70dc0ee88a371155445008"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSourceInfo.cs",
+      "sha256": "0d795321dfdce83733228aa1ebd1e1f0dcc4316296d83101d1c86e15a83bf002"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusPropCfg.cs",
+      "sha256": "02521706b1734dfd0062c595dfa7689476b55bdecaebe9309d961bbe951baede"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusPropComponentInfo.cs",
+      "sha256": "f7910e49724b054e05309e077433eb819c306352f459ba881e2389b7de1247f2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusPropComponent.cs",
+      "sha256": "f07d2e86fa0d736d53bc7c6b2a931a9cc47b2ad3086786a199016a87b004783d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillComponentImplement.cs",
+      "sha256": "4e4b33efb54d32ada48f3ac6e46bb11f50e5b1c33499a063cdc06c91b463368d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusProp.cs",
+      "sha256": "cf5c69df7ccdc0aa14d18841153d5f6e3ccda5e9096400b5b818b8d6f5ce6d2c"
+    }
+  ],
+  "runtime_inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+    },
+    {
+      "path": "assets/reference/battle-rules/first-promotion-source-manifest.json",
+      "sha256": "d0aaa37bdeb491a5723f00d9f3a5a2c1e15e926bd5f84a0ff788524c98d0246d"
+    }
+  ],
+  "operation": "Reuse the APK-decompiled child threshold, skill fixed-property flag, source-property container, status transition formula and MutexByBetter configuration. The APK lacks server child-boundary, fixed-property capture and unique-status replacement call sites; confirmed offline decisions are maintained in docs/features/battle-execution.md."
+}

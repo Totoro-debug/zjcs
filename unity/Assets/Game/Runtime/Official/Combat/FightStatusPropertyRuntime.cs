@@ -103,6 +103,17 @@ namespace Zjcs.Combat.Official
                 status.SourceProperties = definition.SourceProperties;
         }
 
+        internal static void ResolveForApplication(FightBattleStatusState status,
+            FightBattleUnitState owner, IReadOnlyList<FightBattleUnitState> units,
+            FightOfficialCombatCatalog catalog, FightDamageFormula formula)
+        {
+            EnsurePropertyDefinition(status, catalog);
+            var properties = Map(owner.BaseProperties ?? owner.Properties);
+            InitializeProperties(status, owner, units, properties, catalog, formula);
+            if (status.ResolvedProperties == null)
+                status.ResolvedProperties = ToValues(Resolve(status, owner, units, properties, catalog, formula));
+        }
+
         private static Dictionary<int, long> Resolve(FightBattleStatusState status,
             FightBattleUnitState owner, IReadOnlyList<FightBattleUnitState> units,
             Dictionary<int, long> ownerProperties, FightOfficialCombatCatalog catalog,

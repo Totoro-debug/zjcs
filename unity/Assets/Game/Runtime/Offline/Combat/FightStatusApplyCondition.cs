@@ -113,7 +113,7 @@ namespace Zjcs.Combat.Official
                     FightStatusLifecycle.End(owner, protection);
                 return true;
             }
-            return false;
+            return RejectUniquePropertyEffect(owner, incoming);
         }
     }
 }

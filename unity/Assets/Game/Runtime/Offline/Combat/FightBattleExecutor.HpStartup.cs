@@ -148,7 +148,7 @@ namespace Zjcs.Combat.Official
 
         private FightBattleExecutionResult ExecutePendingStatusStarts(int sequence, int counter)
         {
-            if (!HasPendingStatusStarts()) return null;
+            if (!HasPendingStatusStarts() && !HasPendingAutoStartSkills()) return null;
             var before = new Dictionary<int, long>();
             foreach (var unit in units) before[unit.Id] = unit.Hp;
             var context = new MovementStartContext
@@ -202,9 +202,18 @@ namespace Zjcs.Combat.Official
                     CollectStatusCustomActions(currentStepStatusCustomActions);
                     RefreshTurnUnits();
                     SpawnNextWaveIfCleared();
-                    UpdateOutcome(Math.Max(1, turns.GlobalRound()));
+                    if (!HasPendingAutoStartSkills()) UpdateOutcome(Math.Max(1, turns.GlobalRound()));
                 }
                 while (!checkpoint.Finished && HasPendingStatusStarts());
+                if (!checkpoint.Finished)
+                {
+                    ExecuteAutoStartSkills(context, ref firstOwner);
+                    RebuildBattleProperties();
+                    CollectStatusCustomActions(currentStepStatusCustomActions);
+                    RefreshTurnUnits();
+                    SpawnNextWaveIfCleared();
+                    UpdateOutcome(Math.Max(1, turns.GlobalRound()));
+                }
                 bool hpChanged = false;
                 foreach (var unit in units)
                     if (!before.TryGetValue(unit.Id, out long hp) || hp != unit.Hp) hpChanged = true;

@@ -13,6 +13,7 @@ namespace Zjcs.Combat.Official
         public int ReleasedTimes;
         public int LimitedTimes = -1;
         public bool ResetCooldownAtStart;
+        public bool AutoStartChecked;
     }
 
     [Serializable]

@@ -79,7 +79,8 @@ namespace Zjcs.Combat.Official
         public static FightBattleSkillDefinition FindReadySkill(FightBattleUnitState actor,
             IReadOnlyList<FightBattleUnitState> units, int round, bool driving = true,
             ISet<int> excludedSlots = null, int globalRound = 0,
-            Func<FightBattleSkillDefinition, bool?> configuredCureAvailability = null)
+            Func<FightBattleSkillDefinition, bool?> configuredCureAvailability = null,
+            bool ignoreCooldown = false)
         {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
             if (units == null) throw new ArgumentNullException(nameof(units));
@@ -92,7 +93,7 @@ namespace Zjcs.Combat.Official
             {
                 if (slotState == null || excludedSlots != null && excludedSlots.Contains(slotState.Slot)
                     || !state.CanRelease(slotState.Slot)
-                    || state.LeftCooldown(slotState.Slot) > 0) continue;
+                    || !ignoreCooldown && state.LeftCooldown(slotState.Slot) > 0) continue;
                 FightBattleSkillDefinition skill = FindSkill(actor.Skills, slotState.Slot);
                 if (skill == null || !skill.RangeVerified) continue;
                 if (!CanReleaseUnderControl(actor, skill)) continue;

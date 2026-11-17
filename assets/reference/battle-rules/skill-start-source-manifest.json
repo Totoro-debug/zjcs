@@ -28,5 +28,5 @@
       "sha256": "d0aaa37bdeb491a5723f00d9f3a5a2c1e15e926bd5f84a0ff788524c98d0246d"
     }
   ],
-  "operation": "Read the APK-verified skill table start flags and configured round-start components. The client exposes the flag and status view but not server startup scheduling; the offline executor invokes equipped AutoSelfAtStart passive statuses before ordinary turns."
+  "operation": "Read the APK-verified skill table start flags and configured round-start components. The client exposes AutoSelfAtStart/AutoAIAtStart flags and status views but not server startup scheduling; confirmed offline start rules are maintained in docs/features/battle-execution.md."
 }

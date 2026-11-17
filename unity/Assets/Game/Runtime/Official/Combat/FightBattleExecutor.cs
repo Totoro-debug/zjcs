@@ -40,6 +40,7 @@ namespace Zjcs.Combat.Official
         }
         private MovementStartContext movementStartContext;
         private FightConditionalHitProperties conditionalHitProperties;
+        private List<FightPropertyValue> fixedSkillSourceProperties;
         private bool applyingActionExistStatuses;
         private readonly FightStatusMutexRuntime statusMutex;
         private FightBattleExecutor(FightBattleCheckpoint checkpoint, FightDamageFormula formula,
@@ -599,7 +600,7 @@ namespace Zjcs.Combat.Official
             turns.Initialize();
             checkpoint.RoleDiePlayPending = units.Any(unit => unit.Statuses.Any(status =>
                 status.ClassId == 25014 && status.RoleDieRulesSupported));
-            if (!HasPendingStatusStarts()) UpdateOutcome(1);
+            if (!HasPendingStatusStarts() && !HasPendingAutoStartSkills()) UpdateOutcome(1);
             checkpoint.RandomSeed = random.Seed;
         }
 
@@ -755,6 +756,14 @@ namespace Zjcs.Combat.Official
             // their lifetime to the caller before that caller offsets the whole cast.
             var previousMovementContext = movementStartContext;
             var previousConditionalProperties = conditionalHitProperties;
+            var previousFixedSourceProperties = fixedSkillSourceProperties;
+            // FightSkillComponentInfo.IsFixedProp freezes the source of produced statuses.
+            // The confirmed offline capture point is the beginning of this cast.
+            // The built-in 12730 variant omits the flag; the user confirmed the same
+            // per-cast capture for both versions of Void Blessing.
+            fixedSkillSourceProperties = skill.IsFixedProp || skill.EntityId == 12730
+                ? actor.Properties.Select(value => new FightPropertyValue { Id = value.Id, Value = value.Value }).ToList()
+                : null;
             var previousGridViewCast = gridViewCast;
             var previousGridViewTime = gridViewTimeOverride;
             gridViewCast = presentationCast;
@@ -775,6 +784,7 @@ namespace Zjcs.Combat.Official
             {
                 SynchronizePetEnergyHp(actor);
                 conditionalHitProperties = previousConditionalProperties;
+                fixedSkillSourceProperties = previousFixedSourceProperties;
                 movementStartContext = previousMovementContext;
                 gridViewCast = previousGridViewCast;
                 gridViewTimeOverride = previousGridViewTime;
@@ -1806,8 +1816,17 @@ namespace Zjcs.Combat.Official
                 || hit.ChildSkillId <= 0 || !parentSkill.CanTriggerChild) return;
             if (actor == null || target == null || target.Hp <= 0) return;
             if (hit.ChildSkillRate < 1f && random.Next() > hit.ChildSkillRate) return;
-            if (hit.ChildSkillLessThanHpPer >= 0f
-                && target.Hp / (double)Math.Max(1L, target.MaxHp) > hit.ChildSkillLessThanHpPer) return;
+            if (hit.ChildSkillLessThanHpPer >= 0f)
+            {
+                // Confirmed offline boundary for Void Blessing: strictly below 30%.
+                // Decimal conversion removes the original float threshold's binary tail,
+                // which would otherwise admit an exact 30% even with a >= comparison.
+                bool voidBlessing = (parentSkill.EntityId == 11180 && hit.ChildSkillId == 11620)
+                    || (parentSkill.EntityId == 12730 && hit.ChildSkillId == 12733);
+                if (voidBlessing
+                    ? target.Hp / (decimal)Math.Max(1L, target.MaxHp) >= (decimal)hit.ChildSkillLessThanHpPer
+                    : target.Hp / (double)Math.Max(1L, target.MaxHp) > hit.ChildSkillLessThanHpPer) return;
+            }
             int rank = Math.Max(1, parentSkill.Rank);
             int level = Math.Max(1, parentSkill.Level);
             // Skill property tables are keyed from the first real sub-rank. A legacy/root
@@ -2622,7 +2641,7 @@ namespace Zjcs.Combat.Official
                     : skill.RootEntityId > 0 ? skill.RootEntityId : skill.EntityId,
                 skill == null ? 0 : skill.ItemId, skill == null ? 1 : skill.Rank,
                 skill == null ? 1 : skill.Level, skill == null ? actor.SubRank : skill.SubRank,
-                actor.Properties, customStatusValue, null, skill?.BlessPropertyScales);
+                fixedSkillSourceProperties ?? actor.Properties, customStatusValue, null, skill?.BlessPropertyScales);
             template.Origin = FightBattleStatusOrigin.Resolve(skill, actor.Id).Copy();
             // Preserve old pending notifications; only the invocation caused by
             // this exact StatusList application may acquire this hit's timing.

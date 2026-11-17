@@ -1376,6 +1376,7 @@ namespace Zjcs.Combat.Official
         public int RootEntityId;
         public int LimitedTimes = -1;
         public bool ResetCooldownAtStart;
+        public bool IsFixedProp;
         public int CostType;
         public long SkillCost;
         public bool MustHaveValidCost;
