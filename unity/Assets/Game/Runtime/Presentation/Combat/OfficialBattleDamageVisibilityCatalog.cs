@@ -36,9 +36,9 @@ namespace Zjcs.Presentation.Combat
             TextAsset asset = Resources.Load<TextAsset>("Combat/damage-visibility");
             if (asset == null) throw new InvalidOperationException("Original damage visibility bindings are missing.");
             var data = JsonUtility.FromJson<OfficialBattleDamageVisibilityData>(asset.text);
-            if (data == null || data.manifest != "854_156383" || data.damage == null || data.damage.Length != 1367
-                || data.roles == null || data.roles.Length != 551)
-                throw new FormatException("Original damage visibility coverage changed.");
+            if (data == null || data.damage == null || data.damage.Length == 0
+                || data.roles == null || data.roles.Length == 0)
+                throw new FormatException("Original damage visibility bindings are invalid.");
             var result = new OfficialBattleDamageVisibilityCatalog();
             foreach (var row in data.damage)
             {

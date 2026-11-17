@@ -24,6 +24,7 @@ namespace Zjcs.Editor.Combat
         {
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
+            BattleGameViewInput.Focus();
             SessionState.SetBool(Key, true); SessionState.SetInt(Key + ".result", 1);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 300);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);

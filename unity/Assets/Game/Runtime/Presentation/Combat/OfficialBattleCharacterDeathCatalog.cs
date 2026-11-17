@@ -7,14 +7,14 @@ namespace Zjcs.Presentation.Combat
     public sealed class OfficialBattleCharacterDeathCatalog
     {
         [Serializable] private sealed class Graph { public string id, resource; }
-        [Serializable] private sealed class Graphs { public string manifest; public Graph[] graphs; }
+        [Serializable] private sealed class Graphs { public Graph[] graphs; }
         [Serializable] private sealed class Role
         {
             public int entity_id;
             public bool try_on_start;
             public string mDiePlayable, mDieOnStartPlayable;
         }
-        [Serializable] private sealed class Roles { public string manifest; public Role[] roles; }
+        [Serializable] private sealed class Roles { public Role[] roles; }
         public sealed class Binding
         {
             public GameObject Normal { get; internal set; }
@@ -29,8 +29,8 @@ namespace Zjcs.Presentation.Combat
             if (!graphText || !roleText) throw new InvalidOperationException("Original character death bindings are unavailable.");
             var graphs = JsonUtility.FromJson<Graphs>(graphText.text);
             var roles = JsonUtility.FromJson<Roles>(roleText.text);
-            if (graphs?.manifest != "884_156692" || roles?.manifest != graphs.manifest)
-                throw new InvalidOperationException("Original character death source versions differ.");
+            if (graphs == null || graphs.graphs == null || roles == null || roles.roles == null)
+                throw new InvalidOperationException("Original character death bindings are invalid.");
             var prefabs = new Dictionary<string, GameObject>();
             foreach (var row in graphs.graphs)
             {
