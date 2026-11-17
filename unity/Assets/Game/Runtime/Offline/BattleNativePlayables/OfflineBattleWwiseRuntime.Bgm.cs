@@ -11,7 +11,7 @@ namespace Zjcs.Offline.BattleNativePlayables
         [Serializable] private sealed class BgmConfigLocation { public string location, resource; }
         [Serializable] private sealed class BgmBindings
         {
-            public string manifest, provider_resource, default_config_resource;
+            public string provider_resource, default_config_resource;
             public BgmScene[] scenes;
             public BgmOverride[] stage_override_bgm, fight_theme;
             public BgmConfigLocation[] configs;
@@ -26,7 +26,7 @@ namespace Zjcs.Offline.BattleNativePlayables
             if (bgmManager != null) return;
             var asset = Resources.Load<TextAsset>("Combat/Wwise/Bgm/catalog");
             bgmBindings = asset == null ? null : JsonUtility.FromJson<BgmBindings>(asset.text);
-            if (bgmBindings?.manifest != "884_156692" || bgmBindings.scenes == null)
+            if (bgmBindings == null || bgmBindings.scenes == null)
                 throw new InvalidOperationException("Original battle BGM bindings are missing.");
             var prefab = Resources.Load<GameObject>(bgmBindings.provider_resource);
             if (prefab == null) throw new InvalidOperationException("Original BgmGameObject prefab is missing.");

@@ -10,7 +10,7 @@ namespace Zjcs.Offline.BattleNativePlayables
     [DefaultExecutionOrder(-100)]
     public sealed partial class OfflineBattleWwiseRuntime : MonoBehaviour
     {
-        [Serializable] private sealed class Bindings { public string manifest, prefab_resource; public int[] game_ids; }
+        [Serializable] private sealed class Bindings { public string prefab_resource; public int[] game_ids; }
         private static OfflineBattleWwiseRuntime instance;
         private static float[] volumes;
         private readonly HashSet<Lease> leases = new HashSet<Lease>();
@@ -23,7 +23,7 @@ namespace Zjcs.Offline.BattleNativePlayables
             if (!Application.isPlaying) throw new InvalidOperationException("Battle sound scenes require Play Mode.");
             var data = Resources.Load<TextAsset>("Combat/Wwise/listener-bindings");
             var bindings = data == null ? null : JsonUtility.FromJson<Bindings>(data.text);
-            if (bindings?.manifest != "884_156692" || bindings.game_ids == null
+            if (bindings == null || bindings.game_ids == null
                 || Array.IndexOf(bindings.game_ids, gameId) < 0)
                 throw new InvalidOperationException("Original battle listener binding is missing: " + gameId);
             var prefab = Resources.Load<GameObject>(bindings.prefab_resource);

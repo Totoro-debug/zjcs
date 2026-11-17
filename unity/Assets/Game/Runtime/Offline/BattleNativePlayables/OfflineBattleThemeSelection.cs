@@ -15,7 +15,6 @@ namespace Zjcs.Offline.BattleNativePlayables
         }
         [Serializable] private sealed class Bindings
         {
-            public string manifest;
             public FightThemeInfo[] theme_selection;
             public ConditionInfo[] theme_conditions;
         }
@@ -31,7 +30,7 @@ namespace Zjcs.Offline.BattleNativePlayables
             {
                 var asset = Resources.Load<TextAsset>("Combat/Wwise/Bgm/catalog");
                 var bindings = asset ? JsonUtility.FromJson<Bindings>(asset.text) : null;
-                if (bindings?.manifest != "884_156692" || bindings.theme_selection == null
+                if (bindings == null || bindings.theme_selection == null
                     || bindings.theme_conditions == null)
                     throw new InvalidOperationException("Original fight theme selection bindings are missing.");
                 var rows = new Dictionary<int, FightThemeInfo>();

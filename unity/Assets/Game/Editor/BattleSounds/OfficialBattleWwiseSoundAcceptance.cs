@@ -28,9 +28,8 @@ namespace Zjcs.Editor
                 throw new InvalidOperationException("Use the isolated validation workspace.");
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
-            if (controllerOnly)
-                Type.GetType("Zjcs.Editor.Combat.BattleGameViewInput, Zjcs.Editor.Combat", true)
-                    .GetMethod("Focus").Invoke(null, null);
+            Type.GetType("Zjcs.Editor.Combat.BattleGameViewInput, Zjcs.Editor.Combat", true)
+                .GetMethod("Focus").Invoke(null, null);
             SessionState.SetBool(Key, true);
             SessionState.SetBool(Key + ".controllerOnly", controllerOnly);
             SessionState.SetInt(Key + ".result", 1);

@@ -16,7 +16,7 @@ namespace Zjcs.Offline.BattleNativePlayables
     public sealed class OfflineBattleWwiseSoundHost : IProfessionSoundHost, IProfessionSoundObjectHost, IBgmPlayback, IDisposable
     {
         [Serializable] private sealed class Package { public string file, bank, language; }
-        [Serializable] private sealed class Catalog { public string manifest, sdk_version; public Package[] packages; }
+        [Serializable] private sealed class Catalog { public string sdk_version; public Package[] packages; }
         private readonly Dictionary<int, GameObject> objects = new Dictionary<int, GameObject>();
         private readonly HashSet<int> emptyEnvironments = new HashSet<int>();
         private readonly List<uint> banks = new List<uint>(), packages = new List<uint>();
@@ -38,7 +38,7 @@ namespace Zjcs.Offline.BattleNativePlayables
             if (settings == null || text == null) throw new InvalidOperationException("Original Windows Wwise bindings are missing.");
             platform = AkWwiseInitializationSettings.ActivePlatformSettings;
             var catalog = JsonUtility.FromJson<Catalog>(text.text);
-            if (catalog.manifest != "884_156692" || catalog.sdk_version != "2022.1.18.8567" || catalog.packages == null)
+            if (catalog == null || catalog.sdk_version != "2022.1.18.8567" || catalog.packages == null)
                 throw new InvalidDataException("Unexpected original battle sound catalog.");
             try
             {

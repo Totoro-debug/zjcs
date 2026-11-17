@@ -27,8 +27,8 @@ namespace Zjcs.Editor.Combat
         public static void Focus()
         {
             Type type = typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView", true);
-            // A test must not create/show a native window: Show() can activate the app.
-            // The checked project layout already owns a Game view. Fail without UI if absent.
+            // Reuse the current Game view or create its container without activation.
+            // EditorWindow.Show/GetWindow would focus a newly created native window.
             RestoreGameViewAfterReload();
             Type playViewType = typeof(EditorWindow).Assembly.GetType("UnityEditor.PlayModeView", true);
             PropertyInfo behavior = playViewType.GetProperty("enterPlayModeBehavior",
@@ -217,7 +217,27 @@ namespace Zjcs.Editor.Combat
             gameView = Resources.FindObjectsOfTypeAll(type).OfType<EditorWindow>()
                 .OrderByDescending(view => view.titleContent.text == "Battle input validation")
                 .FirstOrDefault();
-            if (gameView == null) throw new InvalidOperationException("Create the Game view before simulated battle input.");
+            if (gameView == null) gameView = CreateBackgroundGameView(type);
+        }
+
+        private static EditorWindow CreateBackgroundGameView(Type viewType)
+        {
+            const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            Assembly editor = typeof(EditorWindow).Assembly;
+            var view = (EditorWindow)ScriptableObject.CreateInstance(viewType);
+            view.position = ValidationRect(450f, 821f);
+            Type hostType = editor.GetType("UnityEditor.HostView", true);
+            var host = ScriptableObject.CreateInstance(hostType);
+            hostType.GetProperty("actualView", flags).SetValue(host, view);
+            Type containerType = editor.GetType("UnityEditor.ContainerWindow", true);
+            var container = ScriptableObject.CreateInstance(containerType);
+            containerType.GetProperty("position", flags).SetValue(container, view.position);
+            containerType.GetProperty("rootView", flags).SetValue(container, host);
+            typeof(EditorWindow).GetMethod("MakeParentsSettingsMatchMe", flags).Invoke(view, null);
+            containerType.GetMethod("Show", flags).Invoke(container, new[] {
+                Enum.Parse(editor.GetType("UnityEditor.ShowMode", true), "NormalWindow"),
+                (object)false, true, false });
+            return view;
         }
 
         private static bool TryGetGameViewContent(out Rect window, out Rect target, out float pixelsPerPoint)
