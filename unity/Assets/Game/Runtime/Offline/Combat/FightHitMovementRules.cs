@@ -41,7 +41,7 @@ namespace Zjcs.Combat.Official
         private static readonly Dictionary<int, int> TargetDistanceActions = new Dictionary<int, int>
         {
             {12322, 12323}, {13802, 10873}, {60043, 60044}, {64362, 64363},
-            {15984, 15983}, {16373, 16374}, {18324, 15983}, {10872, 10873},
+            {15984, 15983}, {16373, 16374}, {18324, 15983},
             {19364, 19363}, {11122, 11123}
         };
         private static readonly Dictionary<int, int> SideActions = new Dictionary<int, int>

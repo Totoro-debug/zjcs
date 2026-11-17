@@ -126,6 +126,9 @@ namespace Zjcs.Combat.Official
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             foreach (var unit in units)
                 foreach (var status in unit.Statuses) InitializeRoundStartDelay(status);
+            foreach (var unit in units)
+                foreach (var status in unit.Statuses)
+                    FightStatusTriggerRuntime.InitializeRepeatableHpCrossing(unit, status);
         }
 
         public FightBattleCheckpoint State => checkpoint;

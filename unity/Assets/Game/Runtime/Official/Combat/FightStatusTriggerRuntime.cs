@@ -24,7 +24,7 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState source, FightBattleUnitState listener,
             IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
             FightOfficialCombatCatalog catalog = null, FightBattleStatusState onlyStatus = null,
-            bool atStatusStart = false, int phase = 0)
+            bool atStatusStart = false, int phase = 0, bool autoSelfAtBattleStart = false)
         {
             var result = new List<FightBattleStatusSkillInvocation>();
             if (source == null || listener == null || source.Statuses == null) return result;
@@ -34,7 +34,8 @@ namespace Zjcs.Combat.Official
                     || status.ForbiddenType != 0
                     || status.ForbiddenOnApplicatorDie && source.Hp <= 0
                     || (onlyStatus != null && status != onlyStatus)
-                    || !status.RoundStartRulesSupported || (atStatusStart && !status.RoundStartTryAtStart)
+                    || !status.RoundStartRulesSupported
+                    || (atStatusStart && !status.RoundStartTryAtStart && !autoSelfAtBattleStart)
                     || (!atStatusStart && status.RoundStartPhase != phase)
                     || status.RoundStartMeetCount < 1
                     || (FightStatusLifecycle.RoundStartMaximumCount(status) >= 0
@@ -1285,6 +1286,8 @@ namespace Zjcs.Combat.Official
                     FightBattleStatusState status = initialStatuses[i];
                     if (status == null || !owner.Statuses.Contains(status)
                         || startingStatus != null && !ReferenceEquals(status, startingStatus)) continue;
+                    bool? crossed = !atStart && owner == unit && status.ClassId == 25019
+                        ? UpdateRepeatableHpCrossing(unit, status) : (bool?)null;
                     if (IsCurrentHpStackSource(status))
                     {
                         if (owner == unit) applied += RecalculateCurrentHpStacks(unit, status, catalog, atStart, random);
@@ -1336,10 +1339,10 @@ namespace Zjcs.Combat.Official
                     {
                         foreach (var changedUnit in new List<FightBattleUnitState>(units))
                             if (ApplyHpLessThan(owner, changedUnit, status, catalog, true, units, random,
-                                triggerSkills, configuredTriggerSkills, executeHpSkills)) applied++;
+                                triggerSkills, configuredTriggerSkills, executeHpSkills, null)) applied++;
                     }
                     else if (ApplyHpLessThan(owner, unit, status, catalog, atStart, units, random,
-                        triggerSkills, configuredTriggerSkills, executeHpSkills)) applied++;
+                        triggerSkills, configuredTriggerSkills, executeHpSkills, crossed)) applied++;
                     if (owner == unit && ApplyHpLimit(unit, status, catalog, atStart, units, random,
                         configuredTriggerSkills)) applied++;
                 }
@@ -1352,7 +1355,7 @@ namespace Zjcs.Combat.Official
             IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
             List<FightBattleStatusStateTrigger> triggerSkills,
             List<FightBattleStatusSkillInvocation> configuredTriggerSkills,
-            Action<List<FightBattleStatusSkillInvocation>> executeHpSkills)
+            Action<List<FightBattleStatusSkillInvocation>> executeHpSkills, bool? crossed)
         {
             if (status == null || !status.HasHpLessThan || status.HpLessThanEvaluating
                 || changed == null || changed.Ended || changed.MaxHp <= 0
@@ -1370,6 +1373,7 @@ namespace Zjcs.Combat.Official
                     RemoveHpLessThanTriggeredStatuses(owner, status);
                 return false;
             }
+            if (crossed == false) return false;
             int fired = 0;
             status.HpLessThanEvaluating = true;
             try
@@ -1412,6 +1416,27 @@ namespace Zjcs.Combat.Official
                 return fired > 0;
             }
             finally { status.HpLessThanEvaluating = false; }
+        }
+
+        public static void InitializeRepeatableHpCrossing(FightBattleUnitState owner, FightBattleStatusState status)
+        {
+            if (owner == null || status == null || status.ClassId != 25019
+                || status.HpLessThanCrossingInitialized || owner.MaxHp <= 0) return;
+            status.HpLessThanCrossingArmed = owner.Hp / (double)owner.MaxHp > status.HpLessThanPercentage;
+            status.HpLessThanCrossingLastHp = owner.Hp;
+            status.HpLessThanCrossingInitialized = true;
+        }
+
+        private static bool UpdateRepeatableHpCrossing(FightBattleUnitState owner, FightBattleStatusState status)
+        {
+            InitializeRepeatableHpCrossing(owner, status);
+            if (!status.HpLessThanCrossingInitialized) return false;
+            bool above = owner.Hp / (double)owner.MaxHp > status.HpLessThanPercentage;
+            bool crossed = status.HpLessThanCrossingArmed && owner.Hp < status.HpLessThanCrossingLastHp
+                && status.HpLessThanCrossingLastHp / (double)owner.MaxHp > status.HpLessThanPercentage && !above;
+            status.HpLessThanCrossingArmed = above;
+            status.HpLessThanCrossingLastHp = owner.Hp;
+            return crossed;
         }
 
         private static bool HpLessThanMeets(FightBattleUnitState changed, FightBattleStatusState status)

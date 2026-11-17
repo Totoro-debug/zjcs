@@ -23,7 +23,7 @@ public static class BattleResoluteArmorHarness
 
     public static string Run(FightOfficialCombatCatalog catalog, FightDamageFormula formula, FightOfficialSkillItemCatalog items)
     {
-        foreach (long damage in new long[] { 499, 501, 1000 })
+        foreach (long damage in new long[] { 499, 500, 501, 1000 })
         {
             var actor = Unit(1, 1000, formula);
             var target = Unit(2, 1000, formula);
@@ -52,7 +52,7 @@ public static class BattleResoluteArmorHarness
             var hit = step.DamageEvents.Single(x => x.SkillEntityId == 990601);
             Check(hit.BeforeHp - hit.AfterHp == damage, "controlled damage did not settle");
             var shield = target.Statuses.SingleOrDefault(x => x.ClassId == 24211);
-            bool expected = damage == 501;
+            bool expected = damage == 500 || damage == 501;
             Check((shield != null) == expected && passive.HpLessThanTriggeredCount == (expected ? 1 : 0),
                 "shield threshold or lethal exclusion differs for damage " + damage);
             if (expected)
@@ -71,6 +71,37 @@ public static class BattleResoluteArmorHarness
         low.Statuses.Add(catalog.CreateStatus(25019, 3, 3, 1, 25019, 10539, 2, 20, 1));
         FightStatusTriggerRuntime.Apply(low, catalog, true, units: new[] { low });
         Check(!low.Statuses.Any(x => x.ClassId == 24211), "battle-start exclusion ignored");
-        return "Resolute armor passed: HP threshold, survival, source, shield and checkpoint.";
+        var owner = Unit(1, 1000, formula);
+        var repeated = catalog.CreateStatus(25019, 1, 1, 1, 25019, 10539, 2, 20, 1, owner.Properties);
+        owner.Statuses.Add(repeated);
+        var checkpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 5, RandomSeed = 91,
+            Grid = new FightBattleGrid { Width = 12, Height = 12 } };
+        checkpoint.Units.Add(owner);
+        FightBattleExecutor.Begin(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+        Action<long> change = hp => { owner.Hp = owner.Turn.Hp = hp;
+            FightStatusTriggerRuntime.Apply(owner, catalog, false, units: checkpoint.Units); };
+        change(500);
+        Check(repeated.HpLessThanTriggeredCount == 1 && owner.Statuses.Any(x => x.ClassId == 24211),
+            "First crossing at exactly 50% did not grant a shield.");
+        FightStatusLifecycle.End(owner, owner.Statuses.Single(x => x.ClassId == 24211));
+        change(400); change(450); change(450);
+        Check(repeated.HpLessThanTriggeredCount == 1 && !owner.Statuses.Any(x => x.ClassId == 24211),
+            "Below-threshold damage, partial healing or unchanged HP retriggered the shield.");
+        checkpoint = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+        FightBattleExecutor.Restore(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+        owner = checkpoint.Units.Single(x => x.Id == 1);
+        repeated = owner.Statuses.Single(x => x.ClassId == 25019);
+        change = hp => { owner.Hp = owner.Turn.Hp = hp;
+            FightStatusTriggerRuntime.Apply(owner, catalog, false, units: checkpoint.Units); };
+        change(300);
+        Check(repeated.HpLessThanTriggeredCount == 1, "Checkpoint restore rearmed a still-low threshold.");
+        change(501); change(500);
+        Check(repeated.HpLessThanTriggeredCount == 2 && owner.Statuses.Any(x => x.ClassId == 24211),
+            "Healing above 50% did not rearm the next downward crossing.");
+        FightStatusLifecycle.End(owner, owner.Statuses.Single(x => x.ClassId == 24211));
+        change(600); owner.MaxHp = 1400; change(600); change(550);
+        Check(repeated.HpLessThanTriggeredCount == 2 && !owner.Statuses.Any(x => x.ClassId == 24211),
+            "Increasing maximum HP retriggered a crossing without the HP falling across the current threshold.");
+        return "Resolute armor passed: crossing boundary, repeat gating, shield and checkpoint.";
     }
 }

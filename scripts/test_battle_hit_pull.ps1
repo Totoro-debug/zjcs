@@ -13,9 +13,10 @@ $sourceIds = @(12877,13127,57594,57713,58642,58927,59274,59494,59634,61564,61647
 $targetIds = @(59972,15543,10583,11342,11352)
 $awayIds = @(59523,63243,63863,64833,17823)
 $facingIds = @(13214,57522,59072,17612)
-$targetDistanceIds = @(12322,13802,60043,64362,15984,16373,18324,10872,19364,11122)
+$targetDistanceIds = @(12322,13802,60043,64362,15984,16373,18324,19364,11122)
+$shieldOwnerDistanceIds = @(10872)
 $sideIds = @(56233,56323,56524,56834,57623,58063,59153,59733,59753,62403,62443,62448,63573,63883,64813,17143,19623,11733)
-foreach ($id in ($sourceIds + $targetIds + $awayIds + $facingIds + $targetDistanceIds + $sideIds)) {
+foreach ($id in ($sourceIds + $targetIds + $awayIds + $facingIds + $targetDistanceIds + $shieldOwnerDistanceIds + $sideIds)) {
     $raw = $catalog.entities[[string]$id].FightDamageComponent.MoveCfg
     if ($null -eq $raw) { throw "Missing official damage movement $id" }
     $component = $officialRows[$id].changed.FightDamageComponent

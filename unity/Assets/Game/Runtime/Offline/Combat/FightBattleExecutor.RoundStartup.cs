@@ -118,11 +118,23 @@ namespace Zjcs.Combat.Official
             }
         }
 
-        private static bool IsPendingRoundStart(FightBattleUnitState owner, FightBattleStatusState status)
+        private bool IsPendingRoundStart(FightBattleUnitState owner, FightBattleStatusState status)
         {
             return owner != null && !owner.Ended && status != null && !status.RoundStartStartChecked
-                && status.HasRoundStartTrigger && status.RoundStartRulesSupported && status.RoundStartTryAtStart
+                && status.HasRoundStartTrigger && status.RoundStartRulesSupported
+                && (status.RoundStartTryAtStart || IsAutoSelfPassiveAtBattleStart(owner, status))
                 && status.RoundStartDelayRound == 0;
+        }
+
+        private bool IsAutoSelfPassiveAtBattleStart(FightBattleUnitState owner, FightBattleStatusState status)
+        {
+            if (checkpoint.Counter != 0 || owner == null || status == null || skillItems == null
+                || status.CreatorId != owner.Id || status.ApplyingSkillItemId <= 0
+                || !skillItems.TryGet(status.ApplyingSkillItemId, out FightOfficialSkillItem item)
+                || (item.TryAtStartType & 1) == 0 || item.PassiveStatusIds == null) return false;
+            foreach (int statusId in item.PassiveStatusIds)
+                if (statusId == status.ClassId) return true;
+            return false;
         }
 
         private int RoundStartClockRound(FightBattleStatusState status)
@@ -147,7 +159,8 @@ namespace Zjcs.Combat.Official
             FightStatusLifecycle.Initialize(status, StatusClockRound(status));
             int listenerId = FightStatusLifecycle.ResolveTargetUnitId(status, status.RoundStartListenTarget, units);
             if (!unitById.TryGetValue(listenerId, out var listener)) return 0;
-            return ExecuteRoundStartStatus(owner, listener, status, true);
+            return ExecuteRoundStartStatus(owner, listener, status, true,
+                autoSelfAtBattleStart: IsAutoSelfPassiveAtBattleStart(owner, status));
         }
 
         private void ExecuteRoundStartTriggers(FightBattleUnitState owner, FightBattleUnitState listener, int phase = 0)
@@ -165,7 +178,8 @@ namespace Zjcs.Combat.Official
         }
 
         private int ExecuteRoundStartStatus(FightBattleUnitState owner, FightBattleUnitState listener,
-            FightBattleStatusState status, bool atStatusStart, int phase = 0)
+            FightBattleStatusState status, bool atStatusStart, int phase = 0,
+            bool autoSelfAtBattleStart = false)
         {
             if (status == null || !status.HasRoundStartTrigger || !status.RoundStartRulesSupported
                 || !atStatusStart && status.RoundStartPhase != phase
@@ -174,7 +188,7 @@ namespace Zjcs.Combat.Official
                 return 0;
             int before = status.RoundStartTriggeredCount;
             var invocations = FightStatusTriggerRuntime.CollectRoundStartInvocations(owner, listener,
-                units, random, statusCatalog, status, atStatusStart, phase);
+                units, random, statusCatalog, status, atStatusStart, phase, autoSelfAtBattleStart);
             if (status.RoundStartTriggeredCount != before)
             {
                 RecordStatusView(owner, status, FightBattleStatusViewEventKind.Update);

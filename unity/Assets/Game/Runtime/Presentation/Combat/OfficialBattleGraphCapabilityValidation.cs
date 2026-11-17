@@ -56,6 +56,7 @@ namespace Zjcs.Presentation.Combat
 
         public static OfficialBattleGraphCapabilityValidation Configure(FightBattleCheckpoint checkpoint)
         {
+            if (ValidateWindShieldStart) return ConfigureWindShieldStart(checkpoint);
             if (ValidateChargedBurst) return ConfigureChargedBurst(checkpoint);
             if (ValidateElementHarmony) return ConfigureElementHarmony(checkpoint);
             if (ValidateWindShadow) return ConfigureWindShadow(checkpoint);
@@ -239,6 +240,7 @@ namespace Zjcs.Presentation.Combat
 
         public void ObserveStep(OfficialBattleRuntimeController controller)
         {
+            if (ObserveWindShieldStartStep(controller)) return;
             if (ObserveChargedBurstStep(controller)) return;
             if (ObserveVoidMirageStep(controller)) return;
             if (ObserveFighterHpSecretsStep(controller)) return;
@@ -375,6 +377,7 @@ namespace Zjcs.Presentation.Combat
         public void ObserveFrame(OfficialBattleRuntimeController controller)
         {
             CaptureName = null;
+            if (ObserveWindShieldStartFrame(controller)) return;
             if (ObserveChargedBurstFrame(controller)) return;
             if (ObserveVoidMirageFrame(controller)) return;
             if (ObserveFighterHpSecretsFrame(controller)) return;
@@ -533,6 +536,7 @@ namespace Zjcs.Presentation.Combat
 
         public void Verify(FightBattleCheckpoint checkpoint)
         {
+            if (ValidateWindShieldStart) { VerifyWindShieldStart(checkpoint); return; }
             if (ValidateChargedBurst) { VerifyChargedBurst(checkpoint); return; }
             VerifyElementHarmony();
             VerifyWindShadow();

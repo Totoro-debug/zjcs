@@ -13,6 +13,8 @@ namespace Zjcs.Combat.Official
     {
         public int ItemId;
         public int EntityId;
+        // Common.ESkillTryAtStartType: AutoSelfAtStart=1, AutoAIAtStart=2.
+        public int TryAtStartType;
         // Keys retain Common.Direction (Up, Down, Left, Right), not the local AI index.
         public Dictionary<int, int> DirectionEntityIds = new Dictionary<int, int>();
         public int UserType;
@@ -88,6 +90,7 @@ namespace Zjcs.Combat.Official
                 {
                     ItemId = itemId,
                     EntityId = entityId,
+                    TryAtStartType = FightOfficialCombatCatalog.ReadInt(skill, "TryAtStartType"),
                     DirectionEntityIds = ReadDirectionEntities(skill),
                     UserType = FightOfficialCombatCatalog.ReadInt(skill, "UserType"),
                     AiPriorityId = FightOfficialCombatCatalog.ReadInt(skill, "AiPriorityId", -1),

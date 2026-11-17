@@ -1,0 +1,32 @@
+{
+  "manifest": "884_156692",
+  "original_code": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ESkillTryAtStartType.cs",
+      "sha256": "f34030b73483918b3fbc536cb5d0c19a0a3d30bfbbae76704a4ea100ea566faa"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillInfo.cs",
+      "sha256": "b403f503798af59fe02a307c8f4d6fbfd1dfb94d11431d17d007a68f5945745d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusRoundStart.cs",
+      "sha256": "6e3793b3c5affea7908502892e9624d69589ed3fcc4f6d6770442094b29ff6dd"
+    }
+  ],
+  "runtime_inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    },
+    {
+      "path": "assets/reference/battle-rules/first-promotion-source-manifest.json",
+      "sha256": "d0aaa37bdeb491a5723f00d9f3a5a2c1e15e926bd5f84a0ff788524c98d0246d"
+    }
+  ],
+  "operation": "Read the APK-verified skill table start flags and configured round-start components. The client exposes the flag and status view but not server startup scheduling; the offline executor invokes equipped AutoSelfAtStart passive statuses before ordinary turns."
+}

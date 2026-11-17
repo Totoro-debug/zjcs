@@ -887,6 +887,10 @@ namespace Zjcs.Combat.Official
         public bool HpLessThanTryAtStart;
         public int HpLessThanMaxCount = -1;
         public int HpLessThanTriggeredCount;
+        // Confirmed offline rule for the repeatable 25019 threshold listener.
+        public bool HpLessThanCrossingInitialized;
+        public bool HpLessThanCrossingArmed;
+        public long HpLessThanCrossingLastHp;
         public bool HpLessThanAutoDestroy;
         public bool HpLessThanCheckExistForbidden;
         public bool HpLessThanNotMeetRemoveStatus;

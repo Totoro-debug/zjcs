@@ -125,6 +125,7 @@ namespace Zjcs.Combat.Official
         private void OnStatusStarted(FightBattleUnitState owner, FightBattleStatusState status)
         {
             if (status != null) status.StackChanged = OnStatusStackChanged;
+            FightStatusTriggerRuntime.InitializeRepeatableHpCrossing(owner, status);
             InitializeStatusDeathForbidden(owner, status);
             statusMutex.Add(owner, status);
             if (statusCatalog != null && status != null && status.HasPropertyComponent)
