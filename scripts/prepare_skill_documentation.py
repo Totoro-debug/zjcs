@@ -107,9 +107,11 @@ def build(write):
     if len(scope_ids) != 104:
         raise ValueError("Review the requested first/second profession scope.")
     documents = {}
+    page_complete = {}
     for page in PAGES:
         lines = [titles[page], "", "[总索引](../README.md) · [技能目录](skills.md)", "", "状态：未完成", ""]
         glossary = {}
+        scoped_statuses = []
         for rank, profession, title in routes[page]:
             prof = professions[profession]
             if prof["Rank"] != rank:
@@ -151,6 +153,8 @@ def build(write):
                 else:
                     note = "已接入施法；条件、子技能、状态及原生演出仍待完整验收。"
                 complete, note = existing_notes.get(item_id, ("未完成", note))
+                if profession in SCOPE:
+                    scoped_statuses.append(complete)
                 kind_name = "内置战斗项" if item_id in prof["FightUsedSkills"] else {100: "主动战技", 101: "被动秘法"}[items[item_id]["ItemType"]]
                 lines.append("| " + " | ".join([kind_name, str(item_id), cell(name), cell(description),
                     "、".join(terms) or "无", complete, note]) + " |")
@@ -161,6 +165,10 @@ def build(write):
         for anchor, (name, description) in glossary.items():
             lines.append(f'| <a id="{anchor}"></a>{cell(name)} | {cell(description)} |')
         lines.append("")
+        if not scoped_statuses:
+            raise ValueError("No requested skills routed to " + page)
+        page_complete[page] = all(status == "已完成" for status in scoped_statuses)
+        lines[4] = "状态：" + ("已完成" if page_complete[page] else "未完成")
         documents[f"docs/features/skills-{page}.md"] = "\n".join(lines).encode("utf8")
     common = ["# 技能目录", "", "[总索引](../README.md)", "", "状态：未完成", "",
               "本次迁移范围：一阶初始职业与二阶首次转职的全部技能，共 104 项；转职后继承前置职业技能。", "",
@@ -169,12 +177,16 @@ def build(write):
     labels = {"warrior": "战士（一阶）", "mage": "法师（一阶）", "knight": "骑士（二阶）",
               "fighter": "斗士（二阶）", "warlock": "术士（二阶）", "sage": "贤者（二阶）"}
     for page in PAGES:
-        common.append(f"| [{labels[page]}](skills-{page}.md) | 未完成 |")
+        status = "已完成" if page_complete[page] else "未完成"
+        common.append(f"| [{labels[page]}](skills-{page}.md) | {status} |")
+    if all(page_complete.values()):
+        common[4] = "状态：已完成"
     common.extend(["", '<a id="自定义实现"></a>', '<a id="尚未实现"></a>', "", "## 实现要点", "",
         "按官方描述迁移主动战技、被动秘法、被动与触发效果、子技能、增益与减益、动画及人物动作；已确认的单机边界只在对应技能的实现要点中简述。", "",
         "合成、装配、升级、进阶与存档使用公共培养及界面流程，技能差异由官方配置驱动。", "",
         "装配仅使用已持有且职业可用的技能；空战技方案允许进入战斗，正常结算回合与被动，不自动补战技。", "",
         "连锁攻击遵循已确认的[单机目标选择规则](battle-execution.md#自定义实现)。", "",
+        "高阶职业仅保留既有技能说明，不计入本次完成范围。" if all(page_complete.values()) else
         "完整技能流程、原生表现与 Windows 发布仍未完成。高阶职业仅保留既有技能说明，不计入本次完成范围。", ""])
     documents["docs/features/skills.md"] = "\n".join(common).encode("utf8")
     for name, payload in documents.items():
