@@ -99,6 +99,39 @@ public static class BattleConditionalHitHarness
         TagConditions(catalog,items);
         BurningGridCount(catalog,items,formula);
         ActualHits(catalog,items,formula);
+        ArcaneResonance(catalog,items);
+    }
+    static void ArcaneResonance(FightOfficialCombatCatalog catalog,FightOfficialSkillItemCatalog items)
+    {
+        var actor=Unit(1);var target=Unit(2);
+        var status=catalog.CreateStatus(25047,1,1,1,25047,10578,2,20,1);
+        var condition=status.Components.HitDmgAddPer;
+        Check(condition!=null && condition.StatusFilter!=null && condition.DefinitionResolved && condition.ScalePropByStatusTypeCount
+            && condition.StatusFilter.CountType==2 && condition.StatusFilter.MaxStatusCount==3,
+            "Original arcane resonance condition or cap differs.");
+        status.StatusProperties=new List<FightPropertyValue>();
+        foreach(var property in catalog.CalculateSkillProps(25047,2,20,1))
+            status.StatusProperties.Add(new FightPropertyValue {Id=property.Key,Value=property.Value});
+        actor.Statuses.Add(status);
+        var skill=new FightBattleSkillDefinition {EntityId=90010,ActionType=2};
+        var hit=new FightBattleHitDefinition {EntityId=90011};
+        var cast=new FightConditionalHitProperties(actor,skill,items);
+        int prop=catalog.PropertyType("StatusDmgAddPer");
+        Check(status.StatusProperties!=null && status.StatusProperties.Exists(p=>p.Id==prop),
+            "Original arcane resonance damage property was not initialized.");
+        long baseValue=status.StatusProperties.Find(p=>p.Id==prop).Value;
+        Check(baseValue>0,"Original arcane resonance damage property is absent.");
+        foreach(int count in new[]{0,1,2,3,4})
+        {
+            target.Statuses.Clear();
+            for(int i=0;i<count;i++)
+                target.Statuses.Add(new FightBattleStatusState {ClassId=91000+i,StatusType=i%2==0?2:3});
+            if(count>0) target.Statuses.Add(new FightBattleStatusState {ClassId=91000,StatusType=2});
+            target.Statuses.Add(new FightBattleStatusState {ClassId=92000,StatusType=1});
+            var properties=Props();cast.Merge(target,hit,new FightDamageTypeData(),false,null,properties);
+            Check(Value(properties,prop)==baseValue*Math.Min(count,3),
+                "Arcane resonance lost distinct negative-status scaling or its cap: "+count);
+        }
     }
     static void ApplyConditions(FightOfficialCombatCatalog catalog,FightOfficialSkillItemCatalog items)
     {
