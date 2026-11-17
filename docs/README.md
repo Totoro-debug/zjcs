@@ -2,11 +2,11 @@
 
 [项目首页](../README.md)
 
-本页仅提供功能与地图导航及完成状态。实现细节、自定义决策和未完成项见各自所属页面。
+本页仅提供功能、地图及概括状态导航；必要约定与已确认的单机决策归所属页面。技能、装备等确需查阅的详细内容按需保留，其余可查询信息不重复登记。
 
-共用操作：[素材管理](asset-management.md) · [官方来源](../assets/reference/SOURCES.md) · [项目协作约定](../AGENTS.md)。
+共用约定：[素材管理](asset-management.md) · [官方来源](../assets/reference/SOURCES.md) · [项目协作约定](../AGENTS.md)。
 
-## 功能验收
+## 功能导航
 
 | 名称 | 状态 |
 | --- | --- |
@@ -34,7 +34,7 @@
 | [世界阶段手动推进](features/manual-world-stage.md) | 未完成 |
 | [素材秘境与快速采集](features/material-gathering.md) | 未完成 |
 | [月卡与星眷累计奖励](features/monthly-card.md) | 未完成 |
-| [NPC邀请、站位与战前准备](features/npc-assistance.md) | 未完成（道路助战子模块已完成） |
+| [NPC邀请、站位与战前准备](features/npc-assistance.md) | 未完成 |
 | [离线开放条件与单机范围](features/offline-access.md) | 未完成 |
 | [伙伴旅行、品质与保底](features/partner-travel.md) | 未完成 |
 | [NPC伙伴、好感与餐桌通话](features/partners.md) | 未完成 |
@@ -46,7 +46,7 @@
 | [设置、拍照与本地存档](features/settings-and-save.md) | 未完成 |
 | [共用界面、文字与资源运行](features/shared-ui.md) | 未完成 |
 | [主题签到与长期活动入口](features/sign-ins.md) | 未完成 |
-| [技能目录（一、二阶）](features/skills.md) | 未完成；官方描述与特殊词条已整理，完整迁移继续进行 |
+| [技能目录（一、二阶）](features/skills.md) | 未完成 |
 | [战士职业技能详情（一阶）](features/skills-warrior.md) | 未完成 |
 | [法师职业技能详情（一阶）](features/skills-mage.md) | 未完成 |
 | [骑士路线职业技能详情](features/skills-knight.md) | 未完成 |
@@ -60,9 +60,9 @@
 | [虚空裂隙与混沌侵袭](features/weekly-challenges.md) | 未完成 |
 | [技能祈愿、材料购买与兑换](features/wishes.md) | 未完成 |
 | [命运果实探寻](features/world-exploration.md) | 未完成 |
-| [世界地图与主线公共模块](features/world-map.md) | 未完成（主线公共模块、自动碾压已完成／单图未完成） |
+| [世界地图与主线公共模块](features/world-map.md) | 未完成 |
 
-## 地图验收
+## 地图导航
 
 ### 坎斯汀大陆
 
@@ -72,7 +72,7 @@
 | [11 森之国](maps/map-11.md) | 未完成 |
 | [12 山之国](maps/map-12.md) | 未完成 |
 | [13 泽之国](maps/map-13.md) | 未完成 |
-| [14 龙之国](maps/map-14.md) | 未完成（道路属性门子模块已完成） |
+| [14 龙之国](maps/map-14.md) | 未完成 |
 | [16 鲸背岛](maps/map-16.md) | 未完成 |
 | [17 羽之国](maps/map-17.md) | 未完成 |
 | [18 虚空碎片](maps/map-18.md) | 未完成 |
