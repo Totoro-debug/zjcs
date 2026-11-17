@@ -9,11 +9,14 @@ namespace Zjcs.Official.WorldUI
         public float PaddingTop, PaddingBottom;
         public bool DisableTopAdapt, DisableBottomAdapt;
         private int width, height;
+        private bool dirty;
         // Official SafeArea.Awake resets even a disabled component's rectangle.
         private void Awake() => SetDefaultSize();
         private void OnEnable() => Apply();
         private void Start() => Apply();
-        private void LateUpdate() { if (width != Screen.width || height != Screen.height) Apply(); }
+        // SafeArea.OnRectTransformDimensionsChange marks the initialized panel dirty.
+        private void OnRectTransformDimensionsChange() => dirty = true;
+        private void LateUpdate() { if (dirty || width != Screen.width || height != Screen.height) Apply(); }
 
         private void Apply()
         {
@@ -36,6 +39,7 @@ namespace Zjcs.Official.WorldUI
             root.GetWorldCorners(corners);
             Vector3 origin = self.worldToLocalMatrix.MultiplyPoint3x4(corners[0]);
             self.anchoredPosition += new Vector2(origin.x + area.x, origin.y + area.y);
+            dirty = false;
         }
 
         private void SetDefaultSize()

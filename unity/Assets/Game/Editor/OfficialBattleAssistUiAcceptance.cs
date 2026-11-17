@@ -23,11 +23,15 @@ namespace Zjcs.Editor
         [Serializable] private sealed class Entry { public string key, value; }
         public static void Run()
         {
+            Application.runInBackground = true;
+            EditorApplication.isPaused = false;
             Environment.SetEnvironmentVariable("ZJCS_CREATION_AUTOMATION", "1");
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             SessionState.SetBool(Key, true); SessionState.SetInt(Key + ".result", 1);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 180);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            Type.GetType("Zjcs.Editor.Combat.BattleGameViewInput, Zjcs.Editor.Combat", true)
+                .GetMethod("Focus").Invoke(null, null);
             typeof(Skills.SkillPlayModeAcceptance).GetMethod("ConfigurePortraitGameView",
                 System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)
                 .Invoke(null, new object[] { 450, 800 });
@@ -47,13 +51,17 @@ namespace Zjcs.Editor
             EditorApplication.Exit(SessionState.GetInt(Key + ".result", 1));
         }
         private static void Observe(string message, string trace, LogType type)
-        { if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) errors++; }
+        {
+            if (type != LogType.Error && type != LogType.Exception && type != LogType.Assert) return;
+            errors++;
+            EditorApplication.delayCall += () => EditorApplication.isPlaying = false;
+        }
         private static void Tick()
         {
             if (EditorApplication.timeSinceStartup > SessionState.GetFloat(Key + ".deadline", 0))
             { Debug.LogError("Native assistance UI verification timed out."); EditorApplication.isPlaying = false; return; }
             if (started || !EditorApplication.isPlaying || EditorApplication.isCompiling) return;
-            started = true; Application.logMessageReceived += Observe;
+            started = true; AudioListener.volume = 0f; Application.logMessageReceived += Observe;
             new GameObject("Native assistance UI verification").AddComponent<Runner>().StartCoroutine(Verify());
         }
         private static IEnumerator Verify()
@@ -71,6 +79,12 @@ namespace Zjcs.Editor
         }
         private static IEnumerator Steps()
         {
+            float surfaceDeadline = Time.realtimeSinceStartup + 15f;
+            while (Screen.width != 450 || Screen.height != 800)
+            {
+                Require(Time.realtimeSinceStartup < surfaceDeadline, "Native invitation render surface did not adopt 450x800.");
+                yield return null;
+            }
             new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
             var host = new GameObject("Native UI host", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             var camera = new GameObject("Native invitation UI camera").AddComponent<Camera>();
@@ -89,6 +103,9 @@ namespace Zjcs.Editor
             scaler.referenceResolution = new Vector2(settings.referenceResolution[0], settings.referenceResolution[1]);
             scaler.screenMatchMode = (CanvasScaler.ScreenMatchMode)settings.screenMatchMode;
             scaler.matchWidthOrHeight = settings.matchWidthOrHeight;
+            // The original virtual list initializes against an already laid out host canvas.
+            yield return null;
+            Canvas.ForceUpdateCanvases();
             var candidates = Enumerable.Range(1, 20).Select(id => new OfficialBattleAssistSelectionView.Candidate {
                 Id = id == 3 ? 11015 : id == 4 ? 11014 : id >= 5 && id <= 11 ? 11011 + id : id,
                 Name = id == 4 ? "Candidate 11014" : id >= 3 && id <= 11
@@ -121,9 +138,13 @@ namespace Zjcs.Editor
             Graphic ordinaryPortrait = ordinaryRow.GetComponentsInChildren<Graphic>(true).Single(value => value.name == "HeadImg");
             Require(ordinaryPortrait.transform.Find("OfflineNpcNameFallback") == null,
                 "missing portrait name is not applied to unrelated candidate ids");
-            Click(first); yield return null;
+            yield return new WaitForEndOfFrame();
+            var initialScreenshot = ScreenCapture.CaptureScreenshotAsTexture();
+            File.WriteAllBytes(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"), "shared-assist-ui-open.png"), initialScreenshot.EncodeToPNG());
+            UnityEngine.Object.Destroy(initialScreenshot);
+            yield return Click(first);
             Require(changed == 1 && candidates[0].Selected && first.isOn, "selection refresh through public interface");
-            Click(first); yield return null;
+            yield return Click(first);
             Require(changed == 2 && !candidates[0].Selected && !first.isOn, "deselection refresh through public interface");
             view.Refresh(candidates.Take(2).ToArray(), 3); yield return null;
             Require(list.content.GetComponentsInChildren<Toggle>().Length == 2, "shrinking host candidates releases old visible cells");
@@ -135,8 +156,8 @@ namespace Zjcs.Editor
             UnityEngine.Object.Destroy(screenshot);
             Button button = panel.transform.Find("BgPanel1/Content/MiddleGo/FriendRobotGo/BottomGo")
                 .GetComponentsInChildren<Button>().First(value => value.name == "CommonBtn_12");
-            Click(button); Require(confirmed == 1, "original confirmation pointer input");
-            Click(panel.GetComponentsInChildren<Button>().First(value => value.name == "CloseBtn_dark"));
+            yield return Click(button); Require(confirmed == 1, "original confirmation pointer input");
+            yield return Click(panel.GetComponentsInChildren<Button>().First(value => value.name == "CloseBtn_dark"));
             Require(cancelled == 1, "original close pointer input");
             foreach (Graphic graphic in panel.GetComponentsInChildren<Graphic>()) Require(graphic.materialForRendering.shader.isSupported, "native UI shader " + graphic.name);
             view.Dispose(); yield return null;
@@ -144,22 +165,9 @@ namespace Zjcs.Editor
             UnityEngine.Object.Destroy(host); UnityEngine.Object.Destroy(camera.gameObject); yield return null;
         }
 
-        private static void Click(Selectable button)
-        {
-            Require(button.IsActive() && button.IsInteractable(), "active confirmation button");
-            var corners = new Vector3[4]; button.GetComponent<RectTransform>().GetWorldCorners(corners);
-            Camera camera = button.GetComponentInParent<Canvas>().rootCanvas.worldCamera;
-            var hits = new List<RaycastResult>(); var pointer = new PointerEventData(EventSystem.current) { button = PointerEventData.InputButton.Left };
-            for (int y = 1; y < 10; y++) for (int x = 1; x < 10; x++)
-            {
-                pointer.position = RectTransformUtility.WorldToScreenPoint(camera, Vector3.Lerp(Vector3.Lerp(corners[0], corners[3], x / 10f), Vector3.Lerp(corners[1], corners[2], x / 10f), y / 10f));
-                hits.Clear(); EventSystem.current.RaycastAll(pointer, hits);
-                if (hits.Count == 0 || ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject) != button.gameObject) continue;
-                var target = hits[0].gameObject; ExecuteEvents.ExecuteHierarchy(target, pointer, ExecuteEvents.pointerDownHandler);
-                ExecuteEvents.ExecuteHierarchy(target, pointer, ExecuteEvents.pointerUpHandler); ExecuteEvents.ExecuteHierarchy(target, pointer, ExecuteEvents.pointerClickHandler); return;
-            }
-            throw new InvalidOperationException("Native invitation confirmation has no visible pointer target.");
-        }
+        private static IEnumerator Click(Selectable button) =>
+            (IEnumerator)Type.GetType("Zjcs.Editor.Combat.BattleGameViewInput, Zjcs.Editor.Combat", true)
+                .GetMethod("Click").Invoke(null, new object[] { button });
         private static void Require(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
         public sealed class Runner : MonoBehaviour { }
     }

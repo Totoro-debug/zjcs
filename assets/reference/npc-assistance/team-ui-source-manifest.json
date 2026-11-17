@@ -749,5 +749,16 @@
     "official_outputs": 45,
     "runtime_prefabs": 6,
     "shared_assets": 52
+  },
+  "safe_area_runtime": {
+    "official_code": {
+      "path": ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source-resolved/SafeArea.cs",
+      "sha256": "9609e1cdc08fb57e07a0b993872a94f3d435d0d013ad5ce0feaee1719b78a22e"
+    },
+    "runtime": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldSafeArea.cs",
+      "sha256": "6235a48618c32919bde9e1bfd411293138526cded4ea8ec74f0b4c77276927bf"
+    },
+    "operation": "Restore SafeArea.OnRectTransformDimensionsChange dirty notification and the existing apply/reset sequence after a native window changes its parent dimensions. Original layout parameters and resource bindings are unchanged."
   }
 }

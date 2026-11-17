@@ -27,7 +27,7 @@ namespace Zjcs.Presentation.Combat
             public Sprite Portrait;
             public bool Available, Selected, FriendshipBlocked;
         }
-        [Serializable] private sealed class Texts { public string manifest; public Text[] texts; }
+        [Serializable] private sealed class Texts { public Text[] texts; }
         [Serializable] private sealed class Text { public string key, value; }
         private readonly TMP_FontAsset font;
         private readonly Dictionary<string, string> texts;
@@ -70,8 +70,8 @@ namespace Zjcs.Presentation.Combat
             if (font == null || data == null || prefab == null || row == null)
                 throw new InvalidOperationException("Original native battle invitation assets are missing.");
             Texts original = JsonUtility.FromJson<Texts>(data.text);
-            if (original?.manifest != "871_156598" || original.texts == null)
-                throw new InvalidOperationException("Original invitation text identity differs.");
+            if (original == null || original.texts == null)
+                throw new InvalidOperationException("Original invitation texts are invalid.");
             texts = original.texts.ToDictionary(value => value.key, value => value.value);
             var staging = new GameObject("Battle invitation staging", typeof(RectTransform));
             staging.transform.SetParent(parent, false); staging.SetActive(false);
