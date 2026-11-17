@@ -2,7 +2,7 @@
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet(10008,10009,10016,10026,10053)][int]$SkillId = 10026
+    [ValidateSet(10008,10009,10011,10016,10026,10053)][int]$SkillId = 10026
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -42,8 +42,13 @@ try {
     $process.PriorityClass = 'BelowNormal'
     Write-Output "Acquired active skill-page flow PID=$($process.Id): $run"
     $timer = [Diagnostics.Stopwatch]::StartNew()
-    while (-not $process.WaitForExit(30000)) {
-        if ($timer.Elapsed.TotalMinutes -gt 25 -or ((Test-Path -LiteralPath $log) -and
+    $resultSeenAt = $null
+    while (-not $process.WaitForExit(5000)) {
+        if ($null -eq $resultSeenAt -and (Test-Path -LiteralPath (Join-Path $run 'result.json'))) {
+            $resultSeenAt = $timer.Elapsed.TotalSeconds
+        }
+        if ($timer.Elapsed.TotalMinutes -gt 25 -or ($null -ne $resultSeenAt -and
+            $timer.Elapsed.TotalSeconds - $resultSeenAt -gt 120) -or ((Test-Path -LiteralPath $log) -and
             (Select-String -LiteralPath $log -Pattern 'error CS\d+'))) {
             Stop-Process -Id $process.Id
             throw "Skill-page flow stopped after timeout or compile failure: $run"
@@ -83,7 +88,7 @@ try {
     if (-not (Test-Path -LiteralPath (Join-Path $run 'acquired-active-ui-checkpoint.json'))) {
         throw "The completed skill-page battle checkpoint is absent: $run"
     }
-    $receiptVerifier = if ($SkillId -eq 10008) { 'verify_warrior_slash_receipt.py' } elseif ($SkillId -eq 10009) { 'verify_heavy_strike_receipt.py' } elseif ($SkillId -eq 10016) { 'verify_lightning_dash_receipt.py' } elseif ($SkillId -eq 10053) { 'verify_sunset_sword_receipt.py' } else { 'verify_fire_slash_receipt.py' }
+    $receiptVerifier = if ($SkillId -eq 10008) { 'verify_warrior_slash_receipt.py' } elseif ($SkillId -eq 10009) { 'verify_heavy_strike_receipt.py' } elseif ($SkillId -eq 10011) { 'verify_lion_combo_receipt.py' } elseif ($SkillId -eq 10016) { 'verify_lightning_dash_receipt.py' } elseif ($SkillId -eq 10053) { 'verify_sunset_sword_receipt.py' } else { 'verify_fire_slash_receipt.py' }
     & python -B (Join-Path $PSScriptRoot $receiptVerifier) (Join-Path $run 'acquired-active-ui-checkpoint.json')
     if ($LASTEXITCODE -ne 0) { throw "The acquired skill's original battle receipts failed: $run" }
     Write-Output "Acquired active skill-page flow passed: $run"

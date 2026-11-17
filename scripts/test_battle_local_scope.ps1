@@ -4,9 +4,11 @@ Add-Type -Path (Get-FightCombatSources)
 $root = Split-Path -Parent $PSScriptRoot
 function Assert-LocalScope($ok, $message) { if (-not $ok) { throw $message } }
 function Read-LocalScopeRule($name) { [IO.File]::ReadAllText((Join-Path $root "unity/Assets/Official/Combat/$name.json")) }
-function Hash-LocalScopeRule($text) { [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($text))).ToLowerInvariant() }
 $skills = Read-LocalScopeRule 'skill-rules'; $battle = Read-LocalScopeRule 'battle-rules'
-$catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load($skills,(Hash-LocalScopeRule $skills),'854_156383',$battle,(Hash-LocalScopeRule $battle),'854_156383')
+$skillSource = Read-LocalScopeRule 'skill-rules-source-manifest' | ConvertFrom-Json
+$battleSource = Read-LocalScopeRule 'battle-rules-source-manifest' | ConvertFrom-Json
+$catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
+    $skills,$skillSource.output_sha256,$skillSource.manifest,$battle,$battleSource.output_sha256,$battleSource.manifest)
 $skill = $catalog.CreateSkill(10630,0,10011,1,40,0,$null)
 $hits = [Zjcs.Combat.Official.FightBattleHitCollector]::CollectAll($skill)
 Assert-LocalScope ($hits.Count -eq 3 -and $hits[0].ScopeTransform -ne $null) 'Original 10011 local-scope metadata missing'
