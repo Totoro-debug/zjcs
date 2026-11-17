@@ -27,7 +27,7 @@ def write_if_unchanged(path: Path, data: bytes) -> None:
 
 
 def build() -> dict:
-    apk = Apk()
+    apk = Apk.current()
     matches = [obj for obj in apk.objects(BUNDLE)
                if obj.type.name == "MonoBehaviour"
                and obj.read(check_read=False).m_Script.read().m_ClassName == "AppearanceConfig"]
@@ -35,7 +35,8 @@ def build() -> dict:
         raise ValueError("Expected one pinned AppearanceConfig, found " + str(len(matches)))
 
     obj = matches[0]
-    tree = ScriptSchemas().read(obj)
+    code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
+    tree = ScriptSchemas(code_root=code).read(obj)
     rows = tree.get("mPlayerSkinTypes")
     if not isinstance(rows, list) or not rows:
         raise ValueError("Pinned AppearanceConfig has no player skin type rules")
@@ -52,27 +53,20 @@ def build() -> dict:
                       "can_normal_set": bool(row["mCanNormalSet"])})
     types.sort(key=lambda item: item["type"])
 
-    bundle_entry = "assets/yoo/DefaultPackage/" + apk.index[BUNDLE] + ".bundle"
-    bundle_bytes = apk.archive.read(bundle_entry)
-    bundle_md5 = hashlib.md5(bundle_bytes).hexdigest()
-    if bundle_md5 != apk.index[BUNDLE]:
-        raise ValueError("Pinned AppearanceConfig bundle MD5 differs from the APK manifest")
-    source = {
-        "bundle": BUNDLE,
-        "bundle_md5": bundle_md5,
-        "bundle_sha256": sha256(bundle_bytes),
-        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+    from prepare_character_creation_opening import without_source_versions
+    source = dict(without_source_versions(apk.provenance(obj)), **{
+        "raw_sha256": sha256(obj.get_raw_data()),
         "asset_class": "AppearanceConfig",
         "path_id": str(obj.path_id),
-        "code": ".tools/source-packages/official-code/common-source/AppearanceConfig.cs"
-    }
-    payload = {"manifest": "854_156383", "source": source, "skin_types": types}
+        "code": code.relative_to(ROOT).as_posix() + "/common-source/AppearanceConfig.cs"
+    })
+    payload = {"skin_types": types}
     encoded = (json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
     digest = sha256(encoded)
     write_if_unchanged(PAYLOAD, encoded)
 
     reference = {
-        "manifest": "854_156383",
+        "manifest": apk.version,
         "source": source,
         "output": "unity/Assets/Official/CharacterCreation/appearance-config-rules.json",
         "output_sha256": digest

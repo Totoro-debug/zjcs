@@ -67,8 +67,6 @@ namespace Zjcs.Presentation.Opening
             var transforms = OpeningJson.Object(OpeningJson.Parse(System.IO.File.ReadAllBytes(
                 System.IO.Path.Combine(Application.streamingAssetsPath, "Opening", "model-transforms.json"))),
                 "opening model transforms");
-            if (OpeningJson.String(transforms, "manifest") != OpeningAssets.Manifest)
-                throw new FormatException("Opening model transforms are not pinned.");
             foreach (object value in OpeningJson.Array(transforms["units"], "model transforms"))
             {
                 var entry = OpeningJson.Object(value, "model transform");

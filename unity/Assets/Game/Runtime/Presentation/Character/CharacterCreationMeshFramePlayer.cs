@@ -25,7 +25,7 @@ namespace Zjcs.Presentation.CharacterCreation
         [Serializable] private sealed class TextureEntry { public string name, texture, mask; }
         [Serializable] private sealed class PoseIndex { public float fps, duration; public SkinEntry[] skins; }
         [Serializable] private sealed class SkinEntry { public string name; public string[] entries; }
-        [Serializable] private sealed class Manifest { public string manifest; public Entry[] entries; }
+        [Serializable] private sealed class Manifest { public Entry[] entries; }
         [Serializable] private sealed class Entry { public string name, sha256; }
         private sealed class Instance
         {
@@ -68,9 +68,8 @@ namespace Zjcs.Presentation.CharacterCreation
                 Manifest manifest;
                 using (var reader = new StreamReader(archive.GetEntry("manifest.json").Open()))
                     manifest = JsonUtility.FromJson<Manifest>(reader.ReadToEnd());
-                if (manifest == null || (manifest.manifest != "854_156383" && manifest.manifest != "871_156598")
-                    || manifest.entries == null)
-                    throw new InvalidDataException("Character creation mesh package is not pinned.");
+                if (manifest == null || manifest.entries == null)
+                    throw new InvalidDataException("Character creation mesh package manifest is invalid.");
                 hashes = manifest.entries.ToDictionary(entry => entry.name, entry => entry.sha256, StringComparer.Ordinal);
                 nativeShader = Zjcs.Offline.CharacterCreation.CharacterCreationAssetCatalog.LoadDefault().NativeCreationShader;
                 foreach (string name in new[] { "home/idle_01", "map/run_01", "map/portal_01" })

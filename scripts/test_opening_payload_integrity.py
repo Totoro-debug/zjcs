@@ -50,7 +50,7 @@ class OpeningPayloadIntegrityTests(unittest.TestCase):
         visit(record)
         self.assertEqual(fighters, {row["class_id"] for row in transforms["units"]})
         for row in transforms["units"]:
-            self.assertTrue(all(source["origin"] == "apk_zip" and len(source["sha256"]) == 64
+            self.assertTrue(all(source["origin"] in ("apk_zip", "official_cdn") and len(source["sha256"]) == 64
                                 for source in row["sources"]))
         receipt = json.loads((ROOT / "assets/reference/character-creation/opening-source-manifest.json")
                              .read_bytes())
@@ -75,7 +75,7 @@ class OpeningPayloadIntegrityTests(unittest.TestCase):
         sources = receipt["ui"]["layout_sources"]
         self.assertTrue(any(source["object_path"].endswith("/NpcName/NpcNameText")
                             and source["script"] == "ContentSizeFitter" for source in sources))
-        self.assertTrue(all(source["origin"] == "apk_zip" and source["manifest"] == "854_156383"
+        self.assertTrue(all(source["origin"] in ("apk_zip", "official_cdn")
                             and len(source["component_sha256"]) == 64 for source in sources))
 
 

@@ -280,7 +280,6 @@ namespace Zjcs.Presentation.Opening
 
     public sealed class OpeningStoryData
     {
-        public string Manifest = string.Empty;
         public readonly Dictionary<string, OpeningStoryGraph> Graphs =
             new Dictionary<string, OpeningStoryGraph>(StringComparer.Ordinal);
         public readonly List<OpeningDialogLine> Dialogues = new List<OpeningDialogLine>();
@@ -540,7 +539,6 @@ namespace Zjcs.Presentation.Opening
     /// <summary>Loads and validates the shipped opening payload.</summary>
     public sealed class OpeningAssets
     {
-        public const string Manifest = "854_156383";
         public const string Folder = "Opening";
 
         public OpeningStoryData Story { get; private set; }
@@ -581,8 +579,7 @@ namespace Zjcs.Presentation.Opening
         private static OpeningStoryData ParseStory(byte[] bytes)
         {
             Dictionary<string, object> root = OpeningJson.Object(OpeningJson.Parse(bytes), "story");
-            var data = new OpeningStoryData { Manifest = OpeningJson.String(root, "manifest") };
-            if (data.Manifest != Manifest) throw new FormatException("Opening story manifest is not pinned.");
+            var data = new OpeningStoryData();
             foreach (KeyValuePair<string, object> entry in OpeningJson.Object(root["graphs"], "graphs"))
             {
                 Dictionary<string, object> raw = OpeningJson.Object(entry.Value, "graph");
@@ -679,8 +676,6 @@ namespace Zjcs.Presentation.Opening
         private static Dictionary<string, string> ParseVoices(byte[] bytes)
         {
             Dictionary<string, object> root = OpeningJson.Object(OpeningJson.Parse(bytes), "opening voices");
-            if (OpeningJson.String(root, "manifest") != Manifest)
-                throw new FormatException("Opening voice payload manifest is not pinned.");
             var result = new Dictionary<string, string>(StringComparer.Ordinal);
             foreach (object item in OpeningJson.Array(root["voices"], "opening voices"))
             {

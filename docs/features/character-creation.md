@@ -12,6 +12,20 @@
 
 ### 当前离线开场实现
 
+开场剧情、界面、录像动作、战场、语音和特效运行时代码不再按固定官方来源版本拒绝载荷，保留原有结构、资源与哈希检查。生成器直接从当前官方剧情图、配置、本地化和战斗网格解码，模块清单记录来源；对照现有载荷，三张剧情图、六条对白和 648 个网格数据一致，隔离提取 UI 得到 9 个 prefab、47 个 Sprite、3 张图集及 2 个肖像。运行时及编辑器程序集隔离编译、Unity 导入编译和 `Zjcs.Editor.ProjectTools.Validate` 通过；剧情和语音载荷分别使用缺失或变更版本字段验证了解析。
+
+开场完整生成器已在隔离目录试跑，得到原录像、剧情、关卡和 UI，未改写已交付素材；模型变换、动作与单位界面生成器也分别使用当前官方来源在隔离目录验证，得到 7 个模型、3 组动作和 7 个单位头像，生成的运行载荷不记录细节来源版本。
+
+两条开场语音提取路径从当前官方 Wwise 包读取并校验实际文件，语音事件来自剧情载荷，WAV 映射不写版本号。隔离解码验证了 6 个事件及转换结果；未播放音频或覆盖现有素材。
+
+战场生成器直接从当前官方战斗表和伤害配置解码，移除固定 bundle 哈希门槛，仍按官方清单校验输入；隔离生成的网格、伤害颜色与既有载荷一致，得到 142 个绘制批次和 23 个粒子系统。伤害界面按当前官方清单定位 19 个预制体和 5 套字体，生成数据不携带来源版本。角色资产编辑器也不再按来源版本拒绝载荷。技能特效生成器保留内容和来源清单的哈希检查，不因来源版本或历史前驱文件要求而替换已有资源；该生成器缺少当前工作区的中间输入，尚未完成端到端验证。
+
+创角网格播放器、模型包和肖像摄影配置不再限制官方来源版本，继续校验文件清单、SHA-256 和结构；资产编辑器按来源清单核对实际 APK 身份、bundle 哈希及绑定，不使用固定来源版本或固定素材数量。创角外观规则已从当前官方配置隔离解码，13 项皮肤类型标记与既有数据一致，生成的运行数据不写来源版本。网格包未重建，打包脚本所需的中间输入在当前工作区不完整，完整生成流程尚待验证。
+
+创角皮肤图标提取器改用当前官方清单和共享 APK／云端读取器；隔离生成得到 155 个 Sprite，覆盖现有 141 个选项图标，155 份 PNG 均与已安装素材的哈希一致。模型导入以实际暂存清单和输入哈希核对来源，不以既有来源版本决定能否重建；当前工作区缺少其完整 AssetRipper 中间输入，未执行完整模型重建。
+
+已在静音、隔离存档的实际 Play Mode 中用 UI 射线命中及模拟指针点击验证：官方档案页新建槽位、剧情对白与语音加载、战斗单位和动画、战场网格／特效绑定、录像快进、进入创角，以及再次打开同一槽位时不重复开场；Unity 退出码为 0。已查看存档页、战前对白、战场和创角运行截图。创角截图覆盖进入体型选择，未覆盖全部外观操作或证明画面完整还原；技能特效的新生成结果、原生 UI 重建和完整 Windows Player 流程未在此范围重新验证。
+
 [CharacterCreationFlowController.CreateSlot / OpenSlot](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs) 在新建槽位或打开未创角槽位时调用 [CharacterOpeningFlow.Begin](../../unity/Assets/Game/Runtime/Presentation/Opening/CharacterOpeningFlow.cs)；`Begin` 先按 `ShouldSkipNewbieCutscene` 判定跳过，未跳过时依次执行 `BeforeFight` → 官方录像回放 → `AfterFight` → 战斗到主场景等待 → 打开创角面板。提交角色后 [SubmitCharacter](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs) 调用 `PlayFirstStory`，`FirstStory` 结束后再进入本地初始武器选择。开场剧情的跳过节流、回放时钟、快进与失败回退见下文“自定义实现”。
 
 序章故事图的公共执行接口和适配器见[主线剧情公共模块](story.md)；本页继续维护序章与创角的具体表现和未完成项。
@@ -62,7 +76,7 @@
 
 固定版 `871_156598` 的创角数据、`CreatePlayerPanel`、`CreatePlayerPanelDIYContent`、选项条目、颜色滑块及 `ConfirmDialog` 已转换为 Unity 可用资产。客户端行为依据见 [CreatePlayerPanel.cs](../../.tools/source-packages/official-code/client-source/CreatePlayerPanel.cs)、[CreatePlayerDIYContent.cs](../../.tools/source-packages/official-code/client-source/CreatePlayerDIYContent.cs) 和 [AppearanceUtils.cs](../../.tools/source-packages/official-code/client-source/AppearanceSystem.Runtime/AppearanceUtils.cs)。
 
-开场输入由 [prepare_character_creation_opening.py](../../scripts/prepare_character_creation_opening.py) 从固定 APK 与已转换官方数据提取，输出与哈希见 [opening source manifest](../../assets/reference/character-creation/opening-source-manifest.json)：`Assets/Config/Story/CreatePlayerFightRecord.bytes`（bundle `defaultpackage_assets_config_story.bundle`，34,004 字节 GZip，解压后 14 回合、1,168 步、19 个实体、`GameResultMsg=null`）、`BeforeFight`／`AfterFight` 剧情图（`..._story_storyfight.bundle`）、`FirstStory` 剧情图（`..._story_map10story_basicguide.bundle`）、三段共 6 条对白与两名角色（840100 薇兰、840200 绯乐）、`stage` 表 20 行（`Type=33` RecordFight、`GameId=902` → 场景 `game_902`、波次怪物 3803/3282/3281/3283/3481）及网格地面。剧情 UI 由同一脚本从 `prefabs_ui_story`／`prefabs_ui_global`／`prefabs_ui_fight_fightmainpanel_extmodel_fightmainpanelrecordfight` 导出 9 个 prefab 的层级、布局、按钮、文本、图片与材质数据，供 [OpeningUiView](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningUi.cs) 在运行时还原。
+开场输入由 [prepare_character_creation_opening.py](../../scripts/prepare_character_creation_opening.py) 从当前官方来源提取，输出与哈希见 [opening source manifest](../../assets/reference/character-creation/opening-source-manifest.json)：`Assets/Config/Story/CreatePlayerFightRecord.bytes`（bundle `defaultpackage_assets_config_story.bundle`，34,004 字节 GZip，解压后 14 回合、1,168 步、19 个实体、`GameResultMsg=null`）、`BeforeFight`／`AfterFight` 剧情图（`..._story_storyfight.bundle`）、`FirstStory` 剧情图（`..._story_map10story_basicguide.bundle`）、三段共 6 条对白与两名角色（840100 薇兰、840200 绯乐）、`stage` 表 20 行（`Type=33` RecordFight、`GameId=902` → 场景 `game_902`、波次怪物 3803/3282/3281/3283/3481）及网格地面。剧情 UI 由同一脚本从 `prefabs_ui_story`／`prefabs_ui_global`／`prefabs_ui_fight_fightmainpanel_extmodel_fightmainpanelrecordfight` 导出 9 个 prefab 的层级、布局、按钮、文本、图片与材质数据，供 [OpeningUiView](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningUi.cs) 在运行时还原。
 
 创角过场从固定版本 `CreatePlayerPanel` 官方 prefab 动画数据恢复 13 个命名片段、男女两份 UIMesh 溶解网格和角色层级顺序曲线，生成资产及来源哈希见 [来源总表](../../assets/reference/SOURCES.md)。`CharacterCreationPerformanceTools.BuildAndValidate` 将曲线转为 Unity AnimationClip；`CharacterCreationEffectDissolve.shader` 是官方 `UI/EffectDissolve` 的 Windows HLSL 适配，按原 dissolve 参数、边缘颜色、Blend 和 stencil 设置绘制。未单独逐帧验收全部溶解曲线和音效。
 

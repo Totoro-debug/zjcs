@@ -28,9 +28,14 @@ namespace Zjcs.Editor.CharacterCreation
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 throw new InvalidOperationException("Exit Play Mode before running opening acceptance.");
+            AudioListener.volume = 0f;
+            Application.runInBackground = true;
             ConfigurePortraitGameView();
-            string testPath = Path.Combine(Directory.GetParent(Application.dataPath).FullName,
-                "output", "opening-smoke-" + Guid.NewGuid().ToString("N"));
+            string validationRoot = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+            if (string.IsNullOrWhiteSpace(validationRoot))
+                throw new InvalidOperationException("Opening acceptance requires an isolated validation workspace.");
+            string testPath = Path.Combine(Path.GetFullPath(validationRoot), "profiles");
+            UnityEditor.SceneManagement.EditorSceneManager.OpenScene("Assets/Game/Scenes/Bootstrap.unity");
             SessionState.SetString(PathKey, testPath);
             SessionState.SetInt(ResultKey, 2);
             SessionState.SetFloat(DeadlineKey, (float)EditorApplication.timeSinceStartup + 420f);
@@ -78,6 +83,7 @@ namespace Zjcs.Editor.CharacterCreation
         private static void LocateController()
         {
             if (!SessionState.GetBool(ActiveKey, false) || !EditorApplication.isPlaying) return;
+            AudioListener.volume = 0f;
             if (EditorApplication.timeSinceStartup > SessionState.GetFloat(DeadlineKey, 0f))
             {
                 Finish(false, new TimeoutException("Opening acceptance exceeded its deadline."));
@@ -142,12 +148,18 @@ namespace Zjcs.Editor.CharacterCreation
             Require(!CharacterOpeningFlow.ShouldSkipNewbieCutscene(() => string.Empty, () => string.Empty),
                 "The official skip condition 21003 matched an empty channel/media.");
 
-            ClickByLabel(controller, "新建存档");
+            OfficialSaveSelectionView selection = null;
+            yield return WaitUntil(() =>
+            {
+                selection = UnityEngine.Object.FindObjectOfType<OfficialSaveSelectionView>();
+                return selection != null && selection.IsReady;
+            }, "The official save selection panel did not become ready.");
+            yield return Capture("opening-save-selection");
+            Click(selection.Panel.CreateButton);
             yield return WaitUntil(() => Field(flow, "assets").GetValue(flow) != null,
                 "The opening assets were not loaded: " + CurrentStatus(controller));
 
             OpeningAssets assets = (OpeningAssets)Field(flow, "assets").GetValue(flow);
-            Require(assets.Story.Manifest == "854_156383", "Unexpected opening story manifest.");
             Require(assets.Story.Graphs.Count == 3, "The three official opening graphs were not loaded.");
             Require(assets.Story.Dialogues.Count == 6, "The official opening dialogues are incomplete.");
             VerifyOfficialVoiceFiles(assets);
@@ -241,7 +253,15 @@ namespace Zjcs.Editor.CharacterCreation
                 "Returning to the slot list failed.");
             yield return null;
             yield return null;
-            ClickByLabel(controller, "新角色 · 存档 1");
+            selection = null;
+            yield return WaitUntil(() =>
+            {
+                selection = UnityEngine.Object.FindObjectOfType<OfficialSaveSelectionView>();
+                return selection != null && selection.IsReady;
+            }, "The official save selection panel did not reopen.");
+            Transform savedSlot = selection.Panel.RoleItemSlot.Find("SaveSlot_slot-1");
+            Require(savedSlot != null, "The isolated opening draft was not saved.");
+            ClickTarget(savedSlot.gameObject);
             yield return WaitUntil(() => Field(flow, "assets").GetValue(flow) == null
                 && (GameObject)Field(controller, "officialPanel").GetValue(controller) != null,
                 "The already-played opening replayeed or the creation panel did not reopen.");
@@ -377,8 +397,7 @@ namespace Zjcs.Editor.CharacterCreation
             {
                 if (!button.gameObject.activeInHierarchy || !button.interactable) continue;
                 if (!button.name.EndsWith("NextBtn", StringComparison.Ordinal)) continue;
-                Click(button);
-                return;
+                if (TryClickTarget(button.gameObject)) return;
             }
         }
 
@@ -429,10 +448,35 @@ namespace Zjcs.Editor.CharacterCreation
 
         private static void Click(Button button)
         {
-            ExecuteEvents.Execute(button.gameObject, new PointerEventData(EventSystem.current)
+            ClickTarget(button.gameObject);
+        }
+
+        private static void ClickTarget(GameObject target)
+        {
+            Require(TryClickTarget(target), "The control has no unobstructed pointer hit: " + target.name);
+        }
+
+        private static bool TryClickTarget(GameObject target)
+        {
+            Canvas.ForceUpdateCanvases();
+            RectTransform rect = target.GetComponent<RectTransform>();
+            Canvas canvas = target.GetComponentInParent<Canvas>();
+            Camera eventCamera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay
+                ? canvas.worldCamera : null;
+            var pointer = new PointerEventData(EventSystem.current)
             {
                 button = PointerEventData.InputButton.Left,
-            }, ExecuteEvents.pointerClickHandler);
+                position = RectTransformUtility.WorldToScreenPoint(eventCamera, rect.TransformPoint(rect.rect.center)),
+            };
+            var hits = new System.Collections.Generic.List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointer, hits);
+            if (hits.Count == 0) return false;
+            GameObject receiver = ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject);
+            if (receiver != target) return false;
+            ExecuteEvents.Execute(receiver, pointer, ExecuteEvents.pointerDownHandler);
+            ExecuteEvents.Execute(receiver, pointer, ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.Execute(receiver, pointer, ExecuteEvents.pointerClickHandler);
+            return true;
         }
 
         private static string CurrentStatus(CharacterCreationFlowController controller)
@@ -479,7 +523,7 @@ namespace Zjcs.Editor.CharacterCreation
             group.GetType().GetMethod("AddCustomSize").Invoke(group, new[] { size });
             int index = (int)group.GetType().GetMethod("GetTotalCount").Invoke(group, null) - 1;
             Type viewType = editor.GetType("UnityEditor.GameView");
-            EditorWindow view = EditorWindow.GetWindow(viewType);
+            EditorWindow view = EditorWindow.GetWindow(viewType, false, null, false);
             viewType.GetProperty("selectedSizeIndex", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                 .SetValue(view, index);
         }

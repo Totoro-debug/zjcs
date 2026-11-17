@@ -40,8 +40,6 @@ namespace Zjcs.Presentation.Opening
         {
             var data = OpeningJson.Object(OpeningJson.Parse(File.ReadAllBytes(Path.Combine(
                 Application.streamingAssetsPath, "Opening", "action-motion.json"))), "opening action motion");
-            if (OpeningJson.String(data, "manifest") != OpeningAssets.Manifest)
-                throw new FormatException("Opening movement configuration is not pinned.");
             foreach (object raw in OpeningJson.Array(data["motions"], "motions"))
             {
                 var config = OpeningJson.Object(raw, "motion");

@@ -11,13 +11,12 @@ from official_source import OfficialSource
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = OfficialSource()
-STAGE_ROOT = ROOT / 'output/current-871'
+STAGE_ROOT = ROOT / '.tools/source-packages/current' / SOURCE.version / 'character-models'
 PENDING_WRITES = {}
 PAYLOAD = ROOT / "unity/Assets/Official/CharacterCreation/Recovered/CharacterModels"
 REFERENCE = ROOT / "assets/reference/character-creation/character-model-source-manifest.json"
 PAYLOAD_MANIFEST = PAYLOAD / "character-model-source-manifest.json"
 GUID_PATTERN = re.compile(r"guid:\s*([0-9a-fA-F]{32})")
-APK_SHA256 = "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9"
 SCRIPT_BINDINGS = {
     "Scripts/spine-unity/Spine/Unity/SkeletonDataAsset.cs":
         "unity/Assets/Spine/Runtime/spine-unity/Asset Types/SkeletonDataAsset.cs.meta",
@@ -68,7 +67,7 @@ def verified_inputs(sex: str) -> dict:
     manifest_path = stage / "source-manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     if manifest.get("manifest") != SOURCE.version:
-        raise ValueError("Character model inputs are not pinned to 854_156383: " + sex)
+        raise ValueError("Character model inputs differ from the selected official source: " + sex)
     if not any(("_model_" + sex + "_1.bundle") in name for name in manifest.get("requested_bundles", [])):
         raise ValueError("The pinned " + sex + " model bundle is absent from the staged input manifest")
 
@@ -77,11 +76,11 @@ def verified_inputs(sex: str) -> dict:
         source = stage / record["output"]
         if not source.is_file() or file_sha256(source) != record.get("decoded_sha256"):
             raise ValueError("Staged model input failed its recorded SHA-256: " + str(source))
-        if record.get('origin') == 'apk_zip' and record.get("apk_sha256") != APK_SHA256:
+        if record.get('origin') == 'apk_zip' and record.get("apk_sha256") != SOURCE.apk_sha256:
             raise ValueError("Staged model input came from an unexpected APK")
         inputs.append({"name": record["name"], "origin": record["origin"],
                        "sha256": record["decoded_sha256"]})
-    return {"manifest": SOURCE.version, "source_manifest_sha256": file_sha256(manifest_path),
+    return {"source_manifest_sha256": file_sha256(manifest_path),
             "requested_bundles": manifest["requested_bundles"], "inputs": inputs}
 
 
@@ -227,10 +226,6 @@ def prior_generated_outputs(source_inputs: dict) -> tuple[dict[str, dict], bool]
     if reference_data != payload_data:
         raise ValueError("Character model source manifests disagree; refusing to update either copy")
     previous = json.loads(reference_data.decode("utf-8"))
-    if previous.get('manifest') not in (SOURCE.version, SOURCE.apk_version):
-        raise ValueError('Character model history has an unknown source version')
-    if previous.get('manifest') == SOURCE.version and previous.get("source", {}).get("models") != source_inputs:
-        raise ValueError("Character model source manifest is not for the current pinned inputs")
     records = previous.get("outputs")
     if not isinstance(records, list) or not records:
         raise ValueError("Character model source manifest has no output inventory")

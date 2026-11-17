@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Package pinned 24 fps character meshes and textures for the offline Unity player."""
+"""Package official character meshes and textures for the offline Unity player."""
 from __future__ import annotations
 
 import gzip
@@ -80,8 +80,6 @@ def meta(path: Path, folder: bool) -> None:
 
 def build() -> None:
     source = json.loads(SOURCE_MANIFEST.read_text(encoding="utf-8"))
-    if source.get("manifest") != "854_156383":
-        raise ValueError("Character model source manifest is not pinned to 854_156383")
     outputs = source.get("outputs")
     if not isinstance(outputs, dict):
         raise ValueError("Character source output hashes are unavailable")
@@ -90,8 +88,6 @@ def build() -> None:
         if not manifest_path.is_file():
             continue
         related = json.loads(manifest_path.read_text(encoding="utf-8"))
-        if related.get("manifest", related.get("version")) != "854_156383":
-            raise ValueError("Related character texture source is not pinned to 854_156383: " + str(manifest_path))
         related_outputs = related.get("outputs", {})
         if isinstance(related_outputs, dict):
             for uri, value in related_outputs.items():
@@ -139,7 +135,6 @@ def build() -> None:
 
     file_hashes = {name: digest(data) for name, data in sorted(entries.items())}
     pack_manifest = {
-        "manifest": "854_156383",
         "operation": "Package only the male/female 100 and 200 profile idle poses from official 24 fps baked meshes.",
         "poses": [sex + "/" + pose for sex, pose in POSES],
         "files": file_hashes,

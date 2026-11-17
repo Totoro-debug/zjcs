@@ -1,9 +1,9 @@
-"""Migrate the pinned opening fight-stage scene (game_902) into the Unity project.
+"""Migrate the current official opening fight-stage scene (game_902).
 
 The official stage package is 2D: no mesh renderers, but 144 sprite renderers,
 4 tilemaps (3,813 tiles), 23 particle systems, two orthographic cameras and the
 grid ground that lives in the stage tables. This script reads the verified
-pinned bundle, flattens sprites and tiles into world-space quad batches grouped
+verified bundle, flattens sprites and tiles into world-space quad batches grouped
 by atlas page and sorting order, exports the official atlas/FX textures that the
 scene and its particle materials use, and writes a compact runtime payload plus
 a source manifest.
@@ -15,26 +15,21 @@ import hashlib
 import io
 import json
 import math
+import re
 import struct
 import sys
 from pathlib import Path, PurePosixPath
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-VERSION = "854_156383"
 ROOT = Path(__file__).resolve().parents[1]
-SCENES = ROOT / "assets/official/battle-stages.json"
-SCENES_MANIFEST = ROOT / "assets/reference/official-map/battle-stages-source-manifest.json"
 BUNDLE = "defaultpackage_assets_prefabs_ecentity_fight_fightstage_902.bundle"
-BUNDLE_MD5 = "67c160d271bba532c38a428252304295"
 VISUAL_PATH = "Assets/Prefabs/EcEntity/Fight/FightStage/902/game_902.prefab"
 HOST_PATH = "Assets/Prefabs/EcEntity/Fight/FightStage/902/902.prefab"
 PAYLOAD = ROOT / "unity/Assets/StreamingAssets/Opening/battlefield"
 TEXTURES = ROOT / "unity/Assets/Official/Opening/Battlefield/Resources/OpeningBattlefield/Textures"
 REFERENCE = ROOT / "assets/reference/character-creation/opening-battlefield-source-manifest.json"
 STAGE_ID = 902
-LAYOUT_SOURCE = ROOT / "assets/official/battle-stages.json"
-DAMAGE_RULES = ROOT / "assets/official/battle-hud/rules.json"
 
 TEXTURE_META = """fileFormatVersion: 2
 guid: {guid}
@@ -655,10 +650,16 @@ def load_npc_models() -> list[dict]:
     return models
 
 
-def damage_colors() -> dict:
-    """Official damage number colours (element/variant) from the battle HUD rules."""
-    data = json.loads(DAMAGE_RULES.read_text(encoding="utf-8"))["damage_settings"]
+def damage_settings(apk):
+    from official_unity_schema import ScriptSchemas
+    obj = apk.asset("scriptableconfig_modules_fight", "/FightDamageSettings.asset")
+    code = ROOT / ".tools/source-packages/current" / apk.version / "official-code"
+    data = ScriptSchemas(code_root=code).read(obj)
+    return {key: value for key, value in data.items() if not key.startswith("m_")}, obj
 
+
+def damage_colors(data) -> dict:
+    """Official damage number colours (element/variant) from the battle HUD rules."""
     def text_color(entry):
         value = entry["TextColor"]
         return [round(float(value[channel]), 6) for channel in ("r", "g", "b", "a")]
@@ -681,9 +682,27 @@ def damage_colors() -> dict:
     }
 
 
-def load_grid() -> dict:
-    data = json.loads(SCENES.read_text(encoding="utf-8"))
-    stage = data["stages"][str(STAGE_ID)]
+def load_grid(apk):
+    from official_ec_codec import Formats
+    from official_map_codec import unpack
+    code = ROOT / ".tools/source-packages/current" / apk.version / "official-code"
+    formats = Formats(code)
+    matches = []
+    for path, pointer in apk.container("config_ec"):
+        if not re.search(r"/FightStage_part\d+\.g\.bytes$", path):
+            continue
+        obj = pointer.deref()
+        raw = obj.read().m_Script.encode("utf-8", "surrogateescape")
+        for parent, key, components in unpack(raw)[0]:
+            if parent == 0 and key == STAGE_ID:
+                stage = {kind.rsplit(".", 1)[-1]: formats.component(kind, value)
+                         for kind, value in components if kind in (
+                             "Common.FightGridGroundComponent", "Common.FightComponent",
+                             "Common.FightRoleMonsterNormalComponent")}
+                matches.append((stage, obj, raw))
+    if len(matches) != 1:
+        raise ValueError("Official opening fight stage is missing or ambiguous")
+    stage, obj, raw = matches[0]
     ground = stage["FightGridGroundComponent"]
     fight = stage.get("FightComponent") or {}
     blocked = []
@@ -701,15 +720,14 @@ def load_grid() -> dict:
         "entry": [int(entry["X"]), int(entry["Y"])],
         "wave_origin": [[int(value["X"]), int(value["Y"])] for value in waves.get("WaveOriPos") or []],
         "blocked": blocked,
-    }
+    }, obj, raw
 
 
 def build() -> int:
     from official_apk import Apk
+    from prepare_character_creation_opening import without_source_versions
 
-    apk = Apk()
-    if apk.index.get(BUNDLE) != BUNDLE_MD5:
-        raise ValueError("Fight stage bundle hash differs from the pinned manifest")
+    apk = Apk.current()
     scene = StageScene(apk, BUNDLE, VISUAL_PATH)
     host = StageScene(apk, BUNDLE, HOST_PATH)
 
@@ -761,36 +779,39 @@ def build() -> int:
     root_offset = [round(root_transform.m_LocalPosition.x, 4), round(root_transform.m_LocalPosition.y, 4),
                    round(root_transform.m_LocalPosition.z, 4)] if root_transform is not None else [0.0, 0.0, 0.0]
     main = next((camera for camera in cameras if camera["active"]), cameras[0])
+    grid, grid_obj, grid_raw = load_grid(apk)
+    settings, settings_obj = damage_settings(apk)
     payload = {
-        "manifest": VERSION,
         "stage": STAGE_ID,
         "scene": "game_902",
         "cell_size": grid_cell,
         "root_offset": root_offset,
         "world_origin": root_offset,
         "cameras": cameras,
-        "grid": load_grid(),
+        "grid": grid,
         "textures": texture_list,
         "ground_dissolve": ground_dissolve,
         "batches": payload_batches,
         "particles": particles,
         "npc_models": load_npc_models(),
-        "damage_colors": damage_colors(),
+        "damage_colors": damage_colors(settings),
     }
+    payload = without_source_versions(payload)
     data = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
     target = PAYLOAD / "game_902.json"
     write_bytes(target, data)
 
     manifest = {
-        "manifest": VERSION,
-        "operation": "Pinned fight-stage prefab flattened into world-space quad batches; "
+        "manifest": apk.version,
+        "operation": "Official fight-stage prefab flattened into world-space quad batches; "
                      "official sprite atlas, particle textures and GroundDissolve material data decoded "
-                     "from their pinned objects",
+                     "from their verified objects",
         "inputs": {
-            "bundle": {"name": BUNDLE, "md5": BUNDLE_MD5, "packaged_in_apk": True,
+            "bundle": {"name": BUNDLE, "md5": apk.index[BUNDLE],
                        "visual_prefab": VISUAL_PATH, "host_prefab": HOST_PATH},
-            "stage_table": {"path": SCENES_MANIFEST.relative_to(ROOT).as_posix(),
-                            "sha256": sha256(SCENES.relative_to(ROOT).resolve().read_bytes())},
+            "stage_table": dict(apk.provenance(grid_obj), payload_sha256=sha256(grid_raw)),
+            "damage_settings": dict(apk.provenance(settings_obj),
+                                    sha256=sha256(settings_obj.get_raw_data())),
             "ground_dissolve": ground_dissolve["source"],
             "ground_dissolve_material": ground_dissolve["material"]["source"],
             "ground_dissolve_shader": ground_dissolve["material"]["shaderSource"],
@@ -813,6 +834,7 @@ def build() -> int:
                 + entry["name"] + ".png"): entry["sha256"] for entry in texture_list},
         },
     }
+    manifest = dict(without_source_versions(manifest), manifest=apk.version)
     write_bytes(REFERENCE, (json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True)
                             + "\n").encode("utf-8"))
     print(json.dumps({"stage": STAGE_ID, "batches": len(payload_batches), "textures": len(texture_list),

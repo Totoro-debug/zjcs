@@ -19,8 +19,6 @@ ACTION_FILES = {
 
 def build():
     source = json.loads(SOURCE_MANIFEST.read_text('utf-8'))
-    if source['manifest'] != '854_156383':
-        raise ValueError('Unpinned mesh source')
     outputs = dict(source['outputs'])
     receipts = []
     for path in (SOURCE_MANIFEST, *RELATED_MANIFESTS, GROUP_MANIFEST):
@@ -37,14 +35,12 @@ def build():
     options = json.loads((folder/'appearance-options.json').read_text('utf-8'))
     rules = json.loads((folder/'wardrobe-rules.json').read_text('utf-8'))
     groups = json.loads(GROUP_MANIFEST.read_text('utf-8'))
-    if groups.get('manifest') != '854_156383' or len(groups.get('groups', [])) != 12:
-        raise ValueError('Appearance group source is not the pinned 12-group manifest')
+    if not groups.get('groups'):
+        raise ValueError('Appearance group source contains no groups')
     player_actions = {}
     action_skin_groups = {}
     for sex, manifest_path in ACTION_MANIFESTS.items():
         action_manifest = json.loads(manifest_path.read_text('utf-8'))
-        if action_manifest.get('manifest') != '854_156383':
-            raise ValueError(f'{sex} player action source is not pinned to 854_156383')
         action_data_path = ACTION_FILES[sex]
         action_bytes = action_data_path.read_bytes()
         action_hashes = action_manifest.get('outputs', {})
@@ -141,7 +137,7 @@ def build():
             entries['masks/' + name + '.png'] = read(mask)
         texture_paths.append({'name': name, 'texture': filename, 'mask': 'masks/'+name+'.png' if mask else ''})
     entries['textures.json'] = json.dumps({'textures': texture_paths}, separators=(',', ':')).encode()
-    manifest = {'manifest': '854_156383', 'operation': 'Reuse pinned official 24 fps mesh frames with native Unity Mesh playback; no Spine runtime dependency.',
+    manifest = {'operation': 'Reuse official mesh frames with native Unity Mesh playback; no Spine runtime dependency.',
                 'source_manifests': receipts, 'source_files': inputs, 'source_uri_aliases': aliases,
                 'files': {name: digest(data) for name,data in entries.items()},
                 'pose_skin_ids': pose_skin_ids}

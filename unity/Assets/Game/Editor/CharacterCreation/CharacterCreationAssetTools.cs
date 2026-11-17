@@ -16,7 +16,6 @@ namespace Zjcs.Editor.CharacterCreation
         [Serializable]
         private sealed class SourceManifest
         {
-            public string manifest;
             public SourceOutput[] outputs;
         }
 
@@ -30,7 +29,6 @@ namespace Zjcs.Editor.CharacterCreation
         [Serializable]
         private sealed class RecoveredUiManifest
         {
-            public string manifest;
             public RecoveredUiOutput[] outputs;
         }
 
@@ -44,7 +42,6 @@ namespace Zjcs.Editor.CharacterCreation
         [Serializable]
         private sealed class SkinIconSourceManifest
         {
-            public string manifest;
             public string apk_sha256;
             public SkinIconSourceBundle source_bundle;
             public int required_option_icon_count;
@@ -57,6 +54,7 @@ namespace Zjcs.Editor.CharacterCreation
             public string name;
             public string origin;
             public string apk_entry;
+            public string url;
             public string bundle_md5;
             public string bundle_sha256;
             public long bytes;
@@ -74,7 +72,6 @@ namespace Zjcs.Editor.CharacterCreation
         [Serializable]
         private sealed class AppearanceGroupIconSourceManifest
         {
-            public string manifest;
             public string apk_sha256;
             public AppearanceGroupIconLocalizationSource source_localization;
             public AppearanceGroupIconSourceBundle[] source_bundles;
@@ -88,6 +85,7 @@ namespace Zjcs.Editor.CharacterCreation
             public string origin;
             public string apk_sha256;
             public string apk_entry;
+            public string url;
             public string bundle_md5;
             public string bundle_sha256;
             public long bytes;
@@ -103,7 +101,6 @@ namespace Zjcs.Editor.CharacterCreation
             public long bytes;
             public string apk_sha256;
             public string apk_entry;
-            public string manifest;
             public string url;
         }
 
@@ -133,9 +130,6 @@ namespace Zjcs.Editor.CharacterCreation
         private const string DiyPrefabPath = CharacterCreationUiTools.Root + "/CreatePlayerPanelDIYContent.prefab";
         private const string ConfirmDialogPrefabPath = CharacterCreationUiTools.Root + "/ConfirmDialog.prefab";
         private const string SkinIconBundleName = "defaultpackage_assets_image_ui_playerskin.bundle";
-        private const string SkinIconBundleMd5 = "d9e385395fb855fe84340d2e1c152e18";
-        private const string SkinIconBundleSha256 = "e4354846fefeee9a126484352ada989205d9c96dd3f6d58b36ea82547cf608b6";
-        private const string PinnedApkSha256 = "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9";
         private static readonly string[] Names =
         {
             "creation-performance.json", "appearance-ui.json", "appearance-options.json",
@@ -282,29 +276,43 @@ namespace Zjcs.Editor.CharacterCreation
             Debug.Log("Official character creation catalogs, UI audio, skin icons, appearance group icons, and source hashes validated.");
         }
 
+        private static bool ValidHash(string value, int length)
+        {
+            if (value == null || value.Length != length) return false;
+            foreach (char character in value)
+                if (!Uri.IsHexDigit(character)) return false;
+            return true;
+        }
+
+        private static bool ValidSource(string origin, string apkHash, string expectedApkHash,
+            string apkEntry, string url)
+        {
+            if (origin == "apk_zip")
+                return ValidHash(apkHash, 64) && string.Equals(apkHash, expectedApkHash,
+                    StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(apkEntry);
+            return origin == "official_cdn" && Uri.TryCreate(url, UriKind.Absolute, out Uri source)
+                && source.Scheme == Uri.UriSchemeHttps;
+        }
+
         private static AppearanceGroupIconSourceManifest ParseAppearanceGroupIconManifest(string json)
         {
             AppearanceGroupIconSourceManifest manifest = JsonUtility.FromJson<AppearanceGroupIconSourceManifest>(json);
-            if (manifest == null || manifest.manifest != "854_156383" || manifest.apk_sha256 != PinnedApkSha256
-                || manifest.source_localization == null
+            if (manifest == null || manifest.source_localization == null
                 || manifest.source_localization.name != "wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile"
-                || manifest.source_localization.origin != "apk_zip"
-                || manifest.source_localization.apk_sha256 != PinnedApkSha256
-                || manifest.source_localization.apk_entry != "assets/yoo/WwiseBnk/9a0b6ab8c5136050fd005ead8f567863.rawfile"
-                || manifest.source_localization.bundle_md5 != "9a0b6ab8c5136050fd005ead8f567863"
-                || manifest.source_localization.bundle_sha256 != "738069eafacd7fe33aae970aa5edacd76f48ed02acdd07ededad1c4a499b93b8"
-                || manifest.source_localization.bytes != 5291479
-                || manifest.source_bundles == null || manifest.source_bundles.Length != 5
-                || manifest.groups == null || manifest.groups.Length != 12)
-                throw new BuildFailedException("Official appearance group icon source manifest is not pinned to the expected APK assets.");
+                || !ValidSource(manifest.source_localization.origin, manifest.source_localization.apk_sha256,
+                    manifest.apk_sha256, manifest.source_localization.apk_entry, manifest.source_localization.url)
+                || !ValidHash(manifest.source_localization.bundle_md5, 32)
+                || !ValidHash(manifest.source_localization.bundle_sha256, 64)
+                || manifest.source_localization.bytes <= 0
+                || manifest.source_bundles == null || manifest.source_bundles.Length == 0
+                || manifest.groups == null || manifest.groups.Length == 0)
+                throw new BuildFailedException("Official appearance group icon source manifest is invalid.");
             foreach (AppearanceGroupIconSourceBundle bundle in manifest.source_bundles)
             {
-                bool validApk = bundle != null && bundle.origin == "apk_zip" && bundle.apk_sha256 == PinnedApkSha256
-                    && !string.IsNullOrEmpty(bundle.apk_entry);
-                bool validCdn = bundle != null && bundle.origin == "official_cdn" && bundle.manifest == "854_156383"
-                    && !string.IsNullOrEmpty(bundle.url);
-                if (!validApk && !validCdn)
-                    throw new BuildFailedException("Appearance group icon bundle source is invalid or from another manifest.");
+                if (bundle == null || !ValidSource(bundle.origin, bundle.apk_sha256, manifest.apk_sha256,
+                        bundle.apk_entry, bundle.url) || !ValidHash(bundle.bundle_md5, 32)
+                    || !ValidHash(bundle.bundle_sha256, 64) || bundle.bytes <= 0)
+                    throw new BuildFailedException("Appearance group icon bundle source is invalid.");
             }
             var groups = new System.Collections.Generic.HashSet<int>();
             foreach (AppearanceGroupIconSourceOutput output in manifest.groups)
@@ -361,12 +369,15 @@ namespace Zjcs.Editor.CharacterCreation
         private static SkinIconSourceManifest ParseSkinIconManifest(string json)
         {
             SkinIconSourceManifest manifest = JsonUtility.FromJson<SkinIconSourceManifest>(json);
-            if (manifest == null || manifest.manifest != "854_156383" || manifest.apk_sha256 != PinnedApkSha256
+            if (manifest == null
                 || manifest.source_bundle == null || manifest.source_bundle.name != SkinIconBundleName
-                || manifest.source_bundle.origin != "apk_zip" || manifest.source_bundle.bundle_md5 != SkinIconBundleMd5
-                || manifest.source_bundle.bundle_sha256 != SkinIconBundleSha256
-                || manifest.required_option_icon_count != 141 || manifest.sprites == null || manifest.sprites.Length != 155)
-                throw new BuildFailedException("Official player skin icon source manifest is not pinned to the expected APK bundle.");
+                || !ValidSource(manifest.source_bundle.origin, manifest.apk_sha256, manifest.apk_sha256,
+                    manifest.source_bundle.apk_entry, manifest.source_bundle.url)
+                || !ValidHash(manifest.source_bundle.bundle_md5, 32)
+                || !ValidHash(manifest.source_bundle.bundle_sha256, 64) || manifest.source_bundle.bytes <= 0
+                || manifest.required_option_icon_count <= 0 || manifest.sprites == null
+                || manifest.sprites.Length < manifest.required_option_icon_count)
+                throw new BuildFailedException("Official player skin icon source manifest is invalid.");
             return manifest;
         }
 
@@ -425,7 +436,7 @@ namespace Zjcs.Editor.CharacterCreation
         private static void ValidateRecoveredUiHashes(string json)
         {
             RecoveredUiManifest manifest = JsonUtility.FromJson<RecoveredUiManifest>(json);
-            if (manifest == null || manifest.manifest != "854_156383" || manifest.outputs == null
+            if (manifest == null || manifest.outputs == null
                 || manifest.outputs.Length == 0)
                 throw new BuildFailedException("Recovered CreatePlayer UI source manifest is invalid.");
             foreach (RecoveredUiOutput output in manifest.outputs)
@@ -445,8 +456,8 @@ namespace Zjcs.Editor.CharacterCreation
         private static void ValidateSourceHashes(string json)
         {
             SourceManifest manifest = JsonUtility.FromJson<SourceManifest>(json);
-            if (manifest == null || manifest.manifest != "854_156383" || manifest.outputs == null)
-                throw new BuildFailedException("Character source manifest is not pinned to 854_156383.");
+            if (manifest == null || manifest.outputs == null)
+                throw new BuildFailedException("Character source manifest is invalid.");
             foreach (SourceOutput output in manifest.outputs)
             {
                 string path = PayloadRoot + output.name;

@@ -1,29 +1,17 @@
-"""Extract and convert the official opening dialogue voices from the pinned Wwise PCK."""
+"""Extract and convert official opening dialogue voices from local Wwise data."""
 import hashlib
 import json
 import struct
 import subprocess
-import tempfile
 import wave
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_NAME = "wwisebnk_assets_wwisedata_android_zh_cn_voice_prologue_pck.rawfile"
-SOURCE = ROOT / ".tools/source-packages/WwiseBnk" / SOURCE_NAME
-PACKAGE_INDEX = ROOT / ".tools/source-packages/WwiseBnk/bundle-index.json"
-PACKAGE_SOURCES = ROOT / ".tools/source-packages/WwiseBnk/bundle-sources.json"
 PAYLOAD = ROOT / "unity/Assets/StreamingAssets/Opening"
 REFERENCE = ROOT / "assets/reference/character-creation/opening-source-manifest.json"
 WWISER = ROOT / ".tools/wwiser"
 VGMSTREAM = ROOT / ".tools/vgmstream/vgmstream-cli.exe"
-EVENTS = (
-    "prologue_main_1_01",
-    "prologue_main_1_02",
-    "prologue_main_2_01",
-    "prologue_main_2_02",
-    "prologue_main_3_01",
-    "prologue_main_3_02",
-)
 
 
 def sha256(value):
@@ -69,19 +57,20 @@ def parse_pck(raw):
     return banks, files
 
 
-def source_receipt(raw):
-    expected_md5 = json.loads(PACKAGE_INDEX.read_text(encoding="utf-8"))[SOURCE_NAME]
-    actual_md5 = hashlib.md5(raw).hexdigest()
-    if actual_md5 != expected_md5:
-        raise ValueError("Pinned Wwise source MD5 mismatch: " + actual_md5)
-    receipts = json.loads(PACKAGE_SOURCES.read_text(encoding="utf-8"))[SOURCE_NAME]
-    if receipts.get("bundle_hash") != expected_md5:
-        raise ValueError("Wwise source receipt does not match its package index")
-    return {"package": "WwiseBnk", "manifest": "854_156383", "asset": SOURCE_NAME,
-            "md5": actual_md5, "sha256": sha256(raw), "receipt": receipts}
+def source_payload():
+    from official_bundle_reader import OfficialBundleReader
+    from official_source import OfficialSource
+    from prepare_character_creation_opening import without_source_versions
+
+    selected = OfficialSource()
+    with OfficialBundleReader(selected) as reader:
+        verified = reader.read('WwiseBnk', SOURCE_NAME)
+        return verified.data, {"package": "WwiseBnk", "asset": SOURCE_NAME,
+            "md5": hashlib.md5(verified.data).hexdigest(), "sha256": sha256(verified.data),
+            "receipt": without_source_versions(dict(verified.provenance))}, selected.version
 
 
-def resolve_media(bank_path, banks, files):
+def resolve_media(bank_path, banks, files, events):
     import sys
     sys.path.insert(0, str(WWISER))
     from wwiser import wfnv
@@ -102,7 +91,7 @@ def resolve_media(bank_path, banks, files):
     objects_by_id = {read_field(item, "ulID"): item for item in objects}
 
     result = {}
-    for event in EVENTS:
+    for event in events:
         event_id = wfnv.Fnv().get_hash(event)
         event_object = objects_by_id.get(event_id)
         if event_object is None:
@@ -129,13 +118,21 @@ def resolve_media(bank_path, banks, files):
 
 
 def main():
-    if not SOURCE.is_file() or not VGMSTREAM.is_file():
-        raise FileNotFoundError("Official Wwise source or vgmstream converter is missing")
-    raw = SOURCE.read_bytes()
-    source = source_receipt(raw)
+    from validation_workspace import temporary_validation_directory, validation_directory
+    import os
+    if not os.environ.get('ZJCS_VALIDATION_DIR') or not (validation_directory() / '.zjcs-validation.json').is_file():
+        raise ValueError('Use an owned validation workspace for opening audio extraction')
+    if not VGMSTREAM.is_file():
+        raise FileNotFoundError("The vgmstream converter is missing")
+    raw, source, source_version = source_payload()
+    story = json.loads((PAYLOAD / 'opening-story.json').read_bytes())
+    events = list(dict.fromkeys(line['voice'].strip() for line in story['dialogues']
+                                if line.get('dialog_type') == 'Voice' and line.get('voice', '').strip()))
+    if not events:
+        raise ValueError('The opening story has no official voice events')
     banks, files = parse_pck(raw)
     PAYLOAD.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="opening-audio-", dir=ROOT / ".tools/unity-temp") as temp:
+    with temporary_validation_directory(prefix="opening-audio-") as temp:
         temp = Path(temp)
         bank_id = next((entry[0] for entry in banks if entry[0] == 0x5F314EDB), None)
         if bank_id is None:
@@ -144,10 +141,10 @@ def main():
         _, _, size, offset, _ = bank_record
         bank_path = temp / "voice_prologue.bnk"
         bank_path.write_bytes(raw[offset:offset + size])
-        resolved = resolve_media(bank_path, banks, files)
+        resolved = resolve_media(bank_path, banks, files, events)
         voice_dir = PAYLOAD / "voices"
         voice_dir.mkdir(parents=True, exist_ok=True)
-        mapping = {"manifest": "854_156383", "voices": []}
+        mapping = {"voices": []}
         output_records = []
         for event, binding in resolved.items():
             media_id, _, size, offset, _ = binding["media"]
@@ -180,7 +177,7 @@ def main():
     manifest["outputs"] = [item for item in manifest.get("outputs", []) if item["path"] not in previous]
     manifest["outputs"].extend(output_records)
     manifest["outputs"].sort(key=lambda item: item["path"])
-    manifest["voices"] = {"source": source, "bank_id": bank_id, "events": resolved,
+    manifest["voices"] = {"manifest": source_version, "source": source, "bank_id": bank_id, "events": resolved,
                           "conversion": "Wwise Vorbis WEM to PCM WAV via pinned local vgmstream",
                           "outputs": [item["path"] for item in output_records]}
     REFERENCE.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

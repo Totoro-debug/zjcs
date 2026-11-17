@@ -72,7 +72,6 @@ namespace Zjcs.Offline.CharacterCreation
     [Serializable]
     internal sealed class CharacterCreationAppearanceGroupManifest
     {
-        public string manifest;
         public CharacterCreationAppearanceGroupInfo[] groups;
     }
 
@@ -355,7 +354,7 @@ namespace Zjcs.Offline.CharacterCreation
         {
             if (source == null) throw new InvalidOperationException("Official appearance group data is not bound.");
             CharacterCreationAppearanceGroupManifest data = JsonUtility.FromJson<CharacterCreationAppearanceGroupManifest>(source.text);
-            if (data == null || data.manifest != "854_156383" || data.groups == null || data.groups.Length != 12)
+            if (data == null || data.groups == null || data.groups.Length == 0)
                 throw new FormatException("Official appearance group source data is invalid.");
             var groupsBySex = new Dictionary<int, List<CharacterCreationAppearanceGroupInfo>>
             {
@@ -426,7 +425,6 @@ namespace Zjcs.Offline.CharacterCreation
     [Serializable]
     internal sealed class CharacterCreationAppearanceRulesData
     {
-        public string manifest;
         public CharacterCreationSkinTypeRule[] skin_types;
     }
 
@@ -456,7 +454,7 @@ namespace Zjcs.Offline.CharacterCreation
         {
             if (source == null) throw new InvalidOperationException("Official AppearanceConfig rules are not bound.");
             CharacterCreationAppearanceRulesData data = JsonUtility.FromJson<CharacterCreationAppearanceRulesData>(source.text);
-            if (data == null || data.manifest != "854_156383" || data.skin_types == null || data.skin_types.Length == 0)
+            if (data == null || data.skin_types == null || data.skin_types.Length == 0)
                 throw new FormatException("Official AppearanceConfig rules are invalid.");
             var byType = new Dictionary<int, CharacterCreationSkinTypeRule>();
             foreach (CharacterCreationSkinTypeRule rule in data.skin_types)

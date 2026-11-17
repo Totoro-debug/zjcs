@@ -14,7 +14,7 @@ namespace Zjcs.Editor.CharacterCreation
     public static class CharacterCreationUiTools
     {
         internal const string Root = "Assets/Official/CharacterCreation/RuntimeUI";
-        [Serializable] private sealed class Data { public string manifest; public string[] page_titles; public Node[] nodes; public int creation_root, diy_root, confirm_root; public SpriteInfo[] sprites; public string[] quality_keys; public TrialItem[] trial_items; }
+        [Serializable] private sealed class Data { public string[] page_titles; public Node[] nodes; public int creation_root, diy_root, confirm_root; public SpriteInfo[] sprites; public string[] quality_keys; public TrialItem[] trial_items; }
         [Serializable] private sealed class TrialItem { public int id, quality; }
         public static string[] PageTitles { get; private set; }
         [Serializable] private sealed class SpriteInfo { public string key, path; public float[] border; public float ppu; }
@@ -41,7 +41,7 @@ namespace Zjcs.Editor.CharacterCreation
         [Serializable] private sealed class NativeTrack { public string path, property; public NativeKey[] keys; }
         [Serializable] private sealed class NativeKey { public float time, value, in_tangent, out_tangent; }
         [Serializable] private sealed class FileRecord { public string path, sha256; }
-        [Serializable] private sealed class Receipt { public string manifest, operation; public FileRecord[] inputs, outputs; }
+        [Serializable] private sealed class Receipt { public string operation; public FileRecord[] inputs, outputs; }
 
         private static readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>(StringComparer.Ordinal);
         private static TMP_FontAsset font;
@@ -116,7 +116,11 @@ namespace Zjcs.Editor.CharacterCreation
         public static void Restore()
         {
             Data data = JsonUtility.FromJson<Data>(File.ReadAllText(Root + "/runtime-ui.json"));
-            if (data == null || data.manifest != "854_156383") throw new InvalidOperationException("Pinned creation UI is missing.");
+            if (data == null || data.nodes == null || data.sprites == null || data.page_titles == null
+                || data.creation_root < 0 || data.creation_root >= data.nodes.Length
+                || data.diy_root < 0 || data.diy_root >= data.nodes.Length
+                || data.confirm_root < 0 || data.confirm_root >= data.nodes.Length)
+                throw new InvalidOperationException("Official creation UI data is missing or invalid.");
             PageTitles = data.page_titles;
             font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/Game/Resources/Combat/FZY4K-Dynamic.asset");
             if (font == null || font.sourceFontFile == null) throw new InvalidOperationException("Official FZY4K font is missing.");
@@ -177,7 +181,7 @@ namespace Zjcs.Editor.CharacterCreation
                 inputs.Add(Record(project, sprite.path));
                 outputs.Add(Record(project, sprite.path + ".meta"));
             }
-            var receipt = new Receipt { manifest = data.manifest,
+            var receipt = new Receipt {
                 operation = "Rebuild original serialized UGUI/TMP fields, layout and sprite imports; bind the original FZY4K TTF through its dynamic TMP asset.",
                 inputs = inputs.ToArray(), outputs = outputs.ToArray() };
             string json = JsonUtility.ToJson(receipt, true) + "\n";

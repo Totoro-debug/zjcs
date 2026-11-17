@@ -270,7 +270,6 @@ namespace Zjcs.Presentation.Opening
         private static Dictionary<string,object> Read(string file)
         {
             var data=OpeningJson.Object(OpeningJson.Parse(File.ReadAllBytes(Path.Combine(OpeningAssets.Directory,file))),file);
-            if (OpeningJson.String(data,"manifest") != OpeningAssets.Manifest) throw new InvalidDataException("Unpinned opening UI: "+file);
             return data;
         }
         private static Transform FindPath(Transform root,string path)

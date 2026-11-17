@@ -1,6 +1,6 @@
-"""Extract the official character-creation prologue voice-over from the pinned Wwise bank.
+"""Extract the official character-creation prologue voice-over from Wwise data.
 
-Inputs come from the fixed APK (854_156383), WwiseBnk package:
+Inputs come from the current official WwiseBnk package:
   wwisebnk_assets_wwisedata_android_zh_cn_voice_prologue_pck.rawfile
 The package is an AKPK v1 container holding the `voice_prologue` Wwise bank plus
 the six streamed Vorbis WEM files.  Every `dialogue.voice` event of
@@ -20,7 +20,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-import shutil
+import os
 import struct
 import subprocess
 import sys
@@ -35,23 +35,14 @@ for entry in (ROOT / "scripts", TOOLCHAIN, WWISER):
     if str(entry) not in sys.path:
         sys.path.insert(0, str(entry))
 
-VERSION = "854_156383"
 PACKAGE = "WwiseBnk"
 PCK_BUNDLE = "wwisebnk_assets_wwisedata_android_zh_cn_voice_prologue_pck.rawfile"
-PCK_SIZE = 236441
-PCK_SHA256 = "eff6311c3106d6289bba7246a18537bd9cb74bb872edd4acb76d5b94c584ccad"
 BANK_NAME = "voice_prologue"
-BANK_VERSION = 145
 BANK_ID = 1597066971  # 0x5f314edb = FNV-1 32 bit of "voice_prologue"
-BANK_SHA256 = "4ae89e4ea15def53c45efda743cd708a3e159f098a68ad57c7b36639e4b44f4d"
-PCK_PATH = ROOT / ".tools/source-packages/WwiseBnk" / PCK_BUNDLE
-PACKAGE_DIR = PCK_PATH.parent
-BUNDLE_INDEX = PACKAGE_DIR / "bundle-index.json"
-BUNDLE_SOURCES = PACKAGE_DIR / "bundle-sources.json"
 STORY = ROOT / "unity/Assets/StreamingAssets/Opening/opening-story.json"
 VOICE_DIR = ROOT / "unity/Assets/StreamingAssets/Opening/voice"
 REFERENCE = ROOT / "assets/reference/character-creation/opening-voice-source-manifest.json"
-WORK = ROOT / "output/opening-voice-work"
+WORK = None
 META_GUID_NAMESPACE = "zjcs-opening:"
 META_TEMPLATE = (
     "fileFormatVersion: 2\nguid: %s\n%sDefaultImporter:\n  externalObjects: {}\n"
@@ -368,24 +359,15 @@ def apk_provenance() -> dict:
 
 
 def ensure_package() -> dict:
-    from fetch_official_assets import extract
+    from official_bundle_reader import OfficialBundleReader
+    from official_source import OfficialSource
 
-    if not PCK_PATH.exists():
-        extract("zh_cn_voice_prologue_pck", PACKAGE)
-    if not PCK_PATH.exists():
-        raise FileNotFoundError("Wwise package is unavailable: " + PCK_BUNDLE)
-    raw = PCK_PATH.read_bytes()
-    if len(raw) != PCK_SIZE or sha256(raw) != PCK_SHA256:
-        raise ValueError("Wwise prologue package does not match the pinned hash")
-    index = json.loads(BUNDLE_INDEX.read_text(encoding="utf-8")) if BUNDLE_INDEX.exists() else {}
-    sources = json.loads(BUNDLE_SOURCES.read_text(encoding="utf-8")) if BUNDLE_SOURCES.exists() else {}
-    record = dict(sources.get(PCK_BUNDLE) or {})
-    if not record:
-        if PCK_BUNDLE not in index:
-            raise ValueError("Wwise package is missing from the pinned bundle index")
-        record = {"origin": "apk_zip", "apk_sha256": None, "bundle_hash": index[PCK_BUNDLE],
-                  "path": "assets/yoo/WwiseBnk/" + index[PCK_BUNDLE] + ".rawfile"}
-    return {"raw": raw, "source": record}
+    selected = OfficialSource()
+    with OfficialBundleReader(selected) as reader:
+        record = next(row for row in reader.manifest(PACKAGE)['bundles'] if row['name'] == PCK_BUNDLE)
+        verified = reader.read(PACKAGE, PCK_BUNDLE)
+        return {"raw": verified.data, "source": dict(verified.provenance),
+                "manifest": selected.version, "bundle_hash": record['hash']}
 
 
 def story_events() -> list:
@@ -431,15 +413,13 @@ def main() -> None:
         raise ValueError("Prologue package does not contain exactly one %s bank" % BANK_NAME)
     bank_entry = bank_entries[0]
     bank_raw = raw[bank_entry["offset"]:bank_entry["offset"] + bank_entry["bytes"]]
-    if sha256(bank_raw) != BANK_SHA256:
-        raise ValueError("Prologue sound bank does not match the pinned hash")
     chunks = bank_chunks(bank_raw)
     header_offset, header_size = chunks["BKHD"]
     if header_size < 12:
         raise ValueError("Prologue sound bank header is truncated")
     version, bank_id, language_id = struct.unpack_from("<3I", bank_raw, header_offset)
-    if version != BANK_VERSION or bank_id != BANK_ID:
-        raise ValueError("Prologue sound bank header differs from the pinned bank")
+    if bank_id != BANK_ID:
+        raise ValueError("Prologue sound bank identity differs from the requested bank")
     media = media_index(bank_raw, chunks)
     data_offset = chunks["DATA"][0]
     files = {entry["id"]: entry for entry in pck["files"]}
@@ -515,8 +495,8 @@ def main() -> None:
         except (ValueError, KeyError, TypeError):
             previous = {}
     verification = {
-        "package_hash": sha256(raw) == PCK_SHA256,
-        "bank_hash": sha256(bank_raw) == BANK_SHA256,
+        "package_manifest_verified": True,
+        "bank_sha256": sha256(bank_raw),
         "bank_id": "0x%08x" % bank_id,
         "events_resolved": len(resolved),
         "prefetch_prefixes_match": all(item["prefetch"]["matches_wem_prefix"] for item in resolved),
@@ -538,7 +518,7 @@ def main() -> None:
 
     source = package["source"]
     manifest = {
-        "manifest": VERSION,
+        "manifest": package['manifest'],
         "operation": (
             "Resolve every Voice dialogue event of the opening story through the pinned Wwise "
             "sound bank (event -> play action -> sound -> streamed Vorbis media id), decode the "
@@ -556,11 +536,11 @@ def main() -> None:
             "package": {
                 "package": PACKAGE,
                 "bundle": PCK_BUNDLE,
-                "bundle_hash": source.get("bundle_hash"),
+                "bundle_hash": package['bundle_hash'],
                 "origin": source.get("origin"),
-                "apk_entry": source.get("path"),
+                "apk_entry": source.get("apk_entry"),
                 "apk_sha256": source.get("apk_sha256", apk["sha256"]),
-                "url": URL,
+                "url": source.get("url", URL),
                 "bytes": len(raw),
                 "sha256": sha256(raw),
             },
@@ -614,7 +594,9 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    try:
+    from validation_workspace import temporary_validation_directory, validation_directory
+    if not os.environ.get('ZJCS_VALIDATION_DIR') or not (validation_directory() / '.zjcs-validation.json').is_file():
+        raise ValueError('Use an owned validation workspace for voice extraction')
+    with temporary_validation_directory('opening-voice-') as temporary:
+        WORK = Path(temporary)
         main()
-    finally:
-        shutil.rmtree(WORK, ignore_errors=True)

@@ -8,7 +8,7 @@ namespace Zjcs.Editor.CharacterCreation
     public static class OpeningDamageAssetTools
     {
         private const string Root = "Assets/Official/Opening/Damage/Resources/OpeningDamage/";
-        [Serializable] private sealed class Payload { public string manifest; public BitmapFont[] fonts; }
+        [Serializable] private sealed class Payload { public BitmapFont[] fonts; }
         [Serializable] private sealed class BitmapFont
         {
             public string name;
@@ -28,7 +28,8 @@ namespace Zjcs.Editor.CharacterCreation
         {
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
             var payload = JsonUtility.FromJson<Payload>(File.ReadAllText(Root + "fonts.json"));
-            if (payload.manifest != "854_156383") throw new InvalidDataException("Unpinned damage bitmap fonts.");
+            if (payload == null || payload.fonts == null || payload.fonts.Length == 0)
+                throw new InvalidDataException("Official damage bitmap font data is missing.");
             foreach (var entry in payload.fonts)
             {
                 string texturePath = Root + entry.name + ".png";

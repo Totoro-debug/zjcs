@@ -1,10 +1,10 @@
-"""Recover opening unit transforms from the pinned APK's fight entity prefabs."""
+"""Recover opening unit transforms from official fight entity prefabs."""
 import hashlib
 import json
 from pathlib import Path
 
 from official_apk import Apk
-from prepare_character_creation_opening import ROOT, PAYLOAD, REFERENCE, VERSION, json_bytes, write_with_meta
+from prepare_character_creation_opening import ROOT, PAYLOAD, REFERENCE, json_bytes, write_with_meta, without_source_versions
 
 
 def main():
@@ -61,9 +61,9 @@ def main():
             raise ValueError(f"Expected one official fighter model: {class_id}: {len(matches)}")
         units.extend(matches)
     output = write_with_meta(PAYLOAD / "model-transforms.json",
-                             json_bytes(dict(manifest=VERSION, units=units)))
+                             json_bytes(dict(units=without_source_versions(units))))
     receipt = json.loads(REFERENCE.read_text(encoding="utf-8"))
-    receipt["model_transforms"] = dict(units=units, generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
+    receipt["model_transforms"] = dict(units=without_source_versions(units), generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
     receipt["outputs"] = [row for row in receipt["outputs"] if row["path"] != output["path"]] + [output]
     variants = ROOT / "unity/Assets/Game/Resources/Opening/OpeningShaderVariants.shadervariants"
     variant_output = dict(path=variants.relative_to(ROOT).as_posix(), bytes=variants.stat().st_size,

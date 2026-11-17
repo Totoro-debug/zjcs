@@ -80,8 +80,6 @@ namespace Zjcs.Presentation.Character
             if (ui == null) throw new FileNotFoundException("The pinned skill appearance prefab data is missing.");
             Dictionary<string, object> data = CharacterModelPackage.AsObject(
                 OfficialEquipmentJson.Parse(ui.text), "official skill appearance UI");
-            if (!string.Equals(CharacterModelPackage.String(data, "manifest"), "854_156383", StringComparison.Ordinal))
-                throw new FormatException("The skill appearance UI is not pinned to the original 854_156383 package.");
             texts = CharacterModelPackage.AsObject(data["texts"], "skill appearance text");
             gridItemTemplate = CharacterModelPackage.AsObject(data["grid_item"], "official skill appearance grid item");
             skillIconTemplate = CharacterModelPackage.AsObject(data["skill_icon"], "official skill item icon");

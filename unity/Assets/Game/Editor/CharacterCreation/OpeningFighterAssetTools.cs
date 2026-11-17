@@ -17,7 +17,7 @@ namespace Zjcs.Editor.CharacterCreation
             CharacterOpeningVisualPlayModeAcceptance.Run();
         }
         private const string Root = "Assets/Official/Opening/Fighters/";
-        [Serializable] private sealed class Payload { public string manifest; public Fighter[] fighters; }
+        [Serializable] private sealed class Payload { public Fighter[] fighters; }
         [Serializable] private sealed class Fighter
         {
             public int classId;
@@ -35,7 +35,7 @@ namespace Zjcs.Editor.CharacterCreation
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
             ImportUnitBarBorders();
             Payload payload = JsonUtility.FromJson<Payload>(File.ReadAllText(Root + "fighters.json"));
-            if (payload == null || payload.manifest != "854_156383" || payload.fighters.Length != 2)
+            if (payload == null || payload.fighters == null || payload.fighters.Length != 2)
                 throw new InvalidDataException("Opening fighter source is not pinned.");
             var catalog = OpeningNpcModelCatalog.LoadDefault();
             var serialized = new SerializedObject(catalog);

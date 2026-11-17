@@ -14,7 +14,6 @@ namespace Zjcs.Presentation.Character
     [Serializable]
     internal sealed class OfficialCharacterPanelsData
     {
-        public string manifest;
         public string ui_sha256;
         public OfficialCharacterPanelSet screens;
     }
@@ -998,8 +997,7 @@ namespace Zjcs.Presentation.Character
         {
             Dictionary<string, object> package = CharacterModelPackage.AsObject(
                 OfficialEquipmentJson.Parse(assets.CharacterPanels.text), "character panel package");
-            if (CharacterModelPackage.String(package, "manifest") != "854_156383"
-                || !package.TryGetValue("screens", out object rawScreens))
+            if (!package.TryGetValue("screens", out object rawScreens))
                 throw new FormatException("Pinned original character panel data are invalid.");
             return CharacterModelPackage.AsObject(rawScreens, "character panel screens");
         }

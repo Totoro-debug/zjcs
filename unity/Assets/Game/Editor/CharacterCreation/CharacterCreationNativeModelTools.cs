@@ -20,7 +20,6 @@ namespace Zjcs.Editor.CharacterCreation
         [Serializable]
         private sealed class Manifest
         {
-            public string manifest;
             public string operation;
             public FileHash[] inputs;
             public FileHash[] outputs;
@@ -67,7 +66,6 @@ namespace Zjcs.Editor.CharacterCreation
         [Serializable]
         private sealed class ProfessionAtlasManifest
         {
-            public string manifest;
             public ProfessionAtlasOutput[] outputs;
         }
 
@@ -212,8 +210,7 @@ namespace Zjcs.Editor.CharacterCreation
             if (!payload.SequenceEqual(File.ReadAllBytes(referencePath)))
                 throw new BuildFailedException("Official profession atlas source manifests disagree.");
             ProfessionAtlasManifest manifest = JsonUtility.FromJson<ProfessionAtlasManifest>(Encoding.UTF8.GetString(payload));
-            if (manifest == null || manifest.manifest != "854_156383" || manifest.outputs == null
-                || manifest.outputs.Length != 12)
+            if (manifest == null || manifest.outputs == null || manifest.outputs.Length == 0)
                 throw new BuildFailedException("Official profession atlas source manifest is invalid.");
 
             var seen = new HashSet<string>(StringComparer.Ordinal);
@@ -893,9 +890,8 @@ namespace Zjcs.Editor.CharacterCreation
             if (!referenceBytes.SequenceEqual(File.ReadAllBytes(payloadPath)))
                 throw new BuildFailedException("Native character bake manifests disagree.");
             Manifest previous = JsonUtility.FromJson<Manifest>(Encoding.UTF8.GetString(referenceBytes));
-            if (previous == null || previous.manifest != "854_156383"
-                || previous.inputs == null || previous.outputs == null)
-                throw new BuildFailedException("Native character bake manifest is not pinned to 854_156383.");
+            if (previous == null || previous.inputs == null || previous.outputs == null)
+                throw new BuildFailedException("Native character bake manifest is invalid.");
             bool inputsChanged = false;
             foreach (FileHash input in previous.inputs)
             {
@@ -922,7 +918,6 @@ namespace Zjcs.Editor.CharacterCreation
         {
             var manifest = new Manifest
             {
-                manifest = "854_156383",
                     operation = "Bake official default and creation skins to native Unity Animator meshes with home, map, Pet Gacha, and wardrobe transition animations; wardrobe transitions play once and target poses loop; bind pinned dye maps and leave officially missing maps untinted.",
                 inputs = GetInputs(projectRoot, bakes, catalog),
                 outputs = GetOutputs(projectRoot, catalog),

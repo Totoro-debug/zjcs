@@ -6,11 +6,12 @@ import io
 import json
 import sys
 from pathlib import Path
+from official_source import OfficialSource
+from official_bundle_reader import OfficialBundleReader
 
 ROOT = Path(__file__).resolve().parents[1]
 BUNDLE_NAME = "defaultpackage_assets_image_ui_playerskin.bundle"
-APK_SHA256 = "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9"
-EXTRACTED = ROOT / ".tools/source-packages/extracted"
+SOURCE = OfficialSource()
 PAYLOAD = ROOT / "unity/Assets/Official/CharacterCreation/Recovered/PlayerSkinIcons"
 PAYLOAD_MANIFEST = PAYLOAD / "source-manifest.json"
 REFERENCE_MANIFEST = ROOT / "assets/reference/character-creation/player-skin-icons-source-manifest.json"
@@ -154,26 +155,22 @@ def sprite_meta(relative_path: str) -> bytes:
             "  assetBundleVariant: \n").encode("utf-8")
 
 
-def source_records() -> tuple[Path, dict, dict]:
-    bundle_path = EXTRACTED / BUNDLE_NAME
-    sources = json.loads((EXTRACTED / "bundle-sources.json").read_text(encoding="utf-8"))
-    index = json.loads((EXTRACTED / "bundle-index.json").read_text(encoding="utf-8"))
-    source = sources.get(BUNDLE_NAME)
-    if not bundle_path.is_file() or not isinstance(source, dict):
-        raise FileNotFoundError("The pinned player skin icon bundle has not been extracted.")
-    actual_md5 = hashlib.md5(bundle_path.read_bytes()).hexdigest()
-    if source.get("origin") != "apk_zip" or source.get("apk_sha256") != APK_SHA256:
-        raise ValueError("Player skin icon source is not the pinned APK bundle.")
-    if source.get("bundle_hash") != actual_md5 or index.get(BUNDLE_NAME) != actual_md5:
-        raise ValueError("Player skin icon bundle does not match the extracted source index.")
-    return bundle_path, source, {
+def source_records() -> tuple[bytes, dict, dict]:
+    with OfficialBundleReader(SOURCE) as reader:
+        verified = reader.read('DefaultPackage', BUNDLE_NAME)
+    data, source = verified.data, dict(verified.provenance)
+    bundle = {
         "name": BUNDLE_NAME,
         "origin": source["origin"],
-        "apk_entry": source["path"],
-        "bundle_md5": actual_md5,
-        "bundle_sha256": sha256(bundle_path.read_bytes()),
-        "bytes": bundle_path.stat().st_size,
+        "bundle_md5": hashlib.md5(data).hexdigest(),
+        "bundle_sha256": sha256(data),
+        "bytes": len(data),
     }
+    if source['origin'] == 'apk_zip':
+        bundle.update(apk_entry=source['apk_entry'], apk_sha256=source['apk_sha256'])
+    else:
+        bundle['url'] = source['url']
+    return data, source, bundle
 
 
 def required_option_icons() -> set[str]:
@@ -189,8 +186,9 @@ def required_option_icons() -> set[str]:
     return required
 
 
-def collect_sprites(bundle_path: Path, UnityPy) -> dict[str, bytes]:
-    environment = UnityPy.load(str(bundle_path))
+def collect_sprites(bundle_data: bytes, UnityPy) -> dict[str, bytes]:
+    from official_apk import Apk
+    environment = UnityPy.load(Apk.decode(bundle_data))
     output = {}
     for obj in environment.objects:
         if obj.type.name != "Sprite":
@@ -219,8 +217,6 @@ def build() -> dict:
     previous = json.loads(previous_data.decode("utf-8")) if previous_data else None
     previous_hashes = {}
     if previous is not None:
-        if previous.get("manifest") != "854_156383" or previous.get("apk_sha256") != APK_SHA256:
-            raise ValueError("Existing player skin icon manifest uses another pinned source.")
         previous_hashes = {item["path"]: item["sha256"] for item in previous.get("sprites", [])}
         if PAYLOAD_MANIFEST.is_file() and PAYLOAD_MANIFEST.read_bytes() != previous_data:
             raise ValueError("Player skin icon payload and reference manifests disagree.")
@@ -239,8 +235,8 @@ def build() -> dict:
         payload_files.append((relative, data))
 
     manifest = {
-        "manifest": "854_156383",
-        "apk_sha256": APK_SHA256,
+        "manifest": SOURCE.version,
+        "apk_sha256": SOURCE.apk_sha256,
         "source_bundle": bundle,
         "required_option_icon_count": len(required),
         "sprites": outputs,

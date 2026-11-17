@@ -1,4 +1,4 @@
-"""Extract the opening record's skill movement prefabs, curves and EC info from APK 854."""
+"""Extract official opening skill movement prefabs, curves and EC information."""
 import hashlib
 import json
 import math
@@ -10,12 +10,14 @@ from official_manifest import read_asset_manifest
 from official_unity_schema import ScriptSchemas
 from official_shader_programs import gles_programs
 from prepare_official_combat_entities import iter_rows
-from prepare_character_creation_opening import json_bytes, write_with_meta, REFERENCE
+from prepare_character_creation_opening import json_bytes, write_with_meta, REFERENCE, without_source_versions
 from UnityPy.classes.PPtr import PPtr
 
 
 def main():
-    apk, schemas, formats = Apk(), ScriptSchemas(), Formats()
+    apk = Apk.current()
+    code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
+    schemas, formats = ScriptSchemas(code_root=code), Formats(code)
     identities = (11532, 11833, 15301)
     configs, inputs = {}, {}
 
@@ -41,9 +43,8 @@ def main():
     for _, ptr in apk.container('config_ec'):
         obj = ptr.deref()
         if obj.type.name == 'TextAsset': record(obj)
-    assets = [row for name in apk.archive.namelist()
-              if name.startswith('assets/yoo/') and name.endswith('_854_156383.v3.bytes')
-              for row in read_asset_manifest(apk.archive.read(name))]
+    assets = [row for package in apk.source.manifests
+              for row in read_asset_manifest(apk.source.manifest_bytes(package, apk.archive))]
     motions = []
     for identity in identities:
         location, = [row for row in assets if row['path'].endswith('/' + str(identity) + '.prefab')]
@@ -91,7 +92,7 @@ def main():
     if fields(action_obj)['myEffect']['m_PathID'] != 0:
         raise ValueError('Generic skill action now contains an animation effect')
     output = write_with_meta(ROOT / 'unity/Assets/StreamingAssets/Opening/action-motion.json',
-                             json_bytes(finite(dict(manifest='854_156383', motions=motions, animations=animation_events))))
+                             json_bytes(without_source_versions(finite(dict(motions=motions, animations=animation_events)))))
     hit_sources = []
     for identity in (3481, 3803):
         bundle = f'defaultpackage_assets_prefabs_ecentity_fight_fightmonster_{identity}.bundle'
@@ -120,7 +121,7 @@ def main():
         'client-source/MyPlayableAnimator.cs', 'client-source/MeshMaterialProperty.cs',
         'client-source/MyPlayableMaterialProperty.cs', 'client-source/Spine.Extension/CustomRenderExistingMesh.cs',
         'client-source/AppearanceSystem/AppearanceRendererLite.cs', 'common-source/Common/FightActionSkillMoveComponent.cs']
-    receipt['action_motion'] = dict(inputs=inputs, hit_material_sources=hit_sources,
+    receipt['action_motion'] = dict(inputs=without_source_versions(inputs), hit_material_sources=without_source_versions(hit_sources),
         generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         official_code=[dict(path=(source_dir / name).relative_to(ROOT).as_posix(),
             sha256=hashlib.sha256((source_dir / name).read_bytes()).hexdigest()) for name in source_files],

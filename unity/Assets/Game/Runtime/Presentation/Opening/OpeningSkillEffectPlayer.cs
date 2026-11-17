@@ -69,8 +69,6 @@ namespace Zjcs.Presentation.Opening
             }
             Dictionary<string, object> root = OpeningJson.Object(
                 OpeningJson.Parse(File.ReadAllBytes(path)), "opening skill effects");
-            if (OpeningJson.String(root, "manifest") != OpeningAssets.Manifest)
-                throw new FormatException("Opening skill effect payload is not pinned.");
             var player = new OpeningSkillEffectPlayer(log);
             if (root.TryGetValue("models",out object modelData))
                 player.modelPresentations=OpeningJson.Object(modelData,"model presentations");

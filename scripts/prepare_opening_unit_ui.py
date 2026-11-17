@@ -8,15 +8,16 @@ from official_apk import Apk, ROOT
 from official_manifest import read_asset_manifest
 from official_tables import Constructors
 from official_unity_schema import ScriptSchemas
-from prepare_character_creation_opening import json_bytes, write_with_meta, REFERENCE, PAYLOAD, prefab_walk, decode_text
+from prepare_character_creation_opening import json_bytes, write_with_meta, REFERENCE, PAYLOAD, prefab_walk, decode_text, without_source_versions
 from UnityPy.classes.PPtr import PPtr
 
 
 def main():
-    apk, schemas = Apk(), ScriptSchemas()
-    assets = [row for name in apk.archive.namelist()
-              if name.startswith("assets/yoo/") and name.endswith("_854_156383.v3.bytes")
-              for row in read_asset_manifest(apk.archive.read(name))]
+    apk = Apk.current()
+    code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
+    schemas = ScriptSchemas(code_root=code)
+    assets = [row for package in apk.source.manifests
+              for row in read_asset_manifest(apk.source.manifest_bytes(package, apk.archive))]
     sources, outputs = [], []
 
     def record(obj):
@@ -51,7 +52,7 @@ def main():
             hpAddColor=list(data["HpAddColor"].values()), hpSubColor=list(data["HpSubColor"].values()),
             roundBackground=sprite(data["FactionRoundImgPath"])))
     npc_obj = record(apk.asset("config_luban", "/npc.g.bytes"))
-    npcs = Constructors().table(npc_obj.read().m_Script.encode("utf-8", "surrogateescape"), "TbNpcInfo")
+    npcs = Constructors(code).table(npc_obj.read().m_Script.encode("utf-8", "surrogateescape"), "TbNpcInfo")
     heads = []
     for class_id in (8401, 8402):
         npc = next(row for row in npcs if row["Id"] == class_id)
@@ -93,11 +94,11 @@ def main():
     for head in heads:
         if "nameKey" in head:
             head["name"] = names[head["nameKey"]]
-    ui = dict(manifest="854_156383", factions=factions, heads=heads,
+    ui = dict(factions=factions, heads=heads,
               timeline=dict(paths, minDist=round_settings["MinDist"], moveDuration=round_settings["IconMoveDuration"]))
     outputs.append(write_with_meta(PAYLOAD / "unit-ui.json", json_bytes(ui)))
     receipt = json.loads(REFERENCE.read_text(encoding="utf-8"))
-    receipt["unit_ui"] = dict(inputs=sources, language_sources=language_sources,
+    receipt["unit_ui"] = dict(inputs=without_source_versions(sources), language_sources=without_source_versions(language_sources),
         generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
     official_code = ROOT / ".tools/source-packages/official-code/client-source"
     source_names = ("GameRoundUI", "GameRoundCharacterItem", "CharacterDamageUI", "ElementConfrontationUI",

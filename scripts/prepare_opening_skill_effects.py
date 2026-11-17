@@ -1,7 +1,7 @@
 """Prepare the verified battle-presentation effects used by the opening record.
 
 Effect JSON, sprites, Wwise clips, and source hashes are checked against their
-pinned manifests before the native runtime payload is written.
+source receipts before the native runtime payload is written.
 """
 from __future__ import annotations
 
@@ -13,7 +13,6 @@ import re
 from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "854_156383"
 RECORD = ROOT / "unity/Assets/StreamingAssets/Opening/opening-record.bytes"
 EFFECTS = ROOT / "assets/official/battle-presentation/effects.json"
 EFFECT_ROOT = ROOT / "assets/official/battle-presentation/effects"
@@ -83,6 +82,30 @@ def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def read_verified_effect_source(manifest: dict, manifest_path: str, source: Path, root: Path) -> tuple[str, bytes]:
+    expected_hash = manifest["outputs"].get(manifest_path)
+    source_bytes = source.read_bytes()
+    if not expected_hash or sha(source_bytes) != expected_hash:
+        raise ValueError("Effect payload hash differs from its source receipt: " + manifest_path)
+    conversion = manifest.get("current_output_conversion") or {}
+    if not conversion:
+        return expected_hash, source_bytes
+    conversion_source = next((item for item in conversion.get("sources", [])
+                              if item.get("path") == "assets/reference/official-map/current-material-source-manifest.json"), None)
+    if conversion_source is None:
+        raise ValueError("Material conversion has no verified source receipt: " + manifest_path)
+    conversion_bytes = (root / PurePosixPath(conversion_source["path"])).read_bytes()
+    if sha(conversion_bytes) != conversion_source.get("sha256"):
+        raise ValueError("Material conversion receipt changed: " + manifest_path)
+    conversion_manifest = json.loads(conversion_bytes.decode("utf-8"))
+    output_path = "assets/official/" + manifest_path
+    converted = next((item for item in conversion_manifest.get("outputs", [])
+                      if item.get("path") == output_path), None)
+    if converted is not None and converted.get("sha256") != expected_hash:
+        raise ValueError("Effect payload differs from its verified conversion: " + manifest_path)
+    return expected_hash, source_bytes
+
+
 def guid(path: str) -> str:
     return hashlib.md5(("zjcs-official:" + path).encode("utf-8")).hexdigest()
 
@@ -117,13 +140,13 @@ def main() -> int:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     effects_bytes = EFFECTS.read_bytes()
     expected = manifest["outputs"].get("battle-presentation/effects.json")
-    if manifest.get("manifest") != VERSION or not expected or sha(effects_bytes) != expected:
-        raise ValueError("Battle effect catalog differs from its pinned source manifest")
+    if not expected or sha(effects_bytes) != expected:
+        raise ValueError("Battle effect catalog differs from its source receipt")
     catalog = json.loads(effects_bytes.decode("utf-8"))
     audio_manifest = json.loads(BATTLE_AUDIO_MANIFEST.read_text(encoding="utf-8"))
     audio_catalog_bytes = BATTLE_AUDIO.read_bytes()
     audio_catalog_hash = audio_manifest.get("outputs", {}).get("res://assets/official/battle-audio/catalog.json")
-    if audio_manifest.get("manifest") != VERSION or not audio_catalog_hash \
+    if not audio_catalog_hash \
             or sha(audio_catalog_bytes) != audio_catalog_hash:
         raise ValueError("Battle audio catalog differs from its pinned source manifest")
     audio_catalog = json.loads(audio_catalog_bytes.decode("utf-8"))
@@ -168,7 +191,6 @@ def main() -> int:
     particle_objects = {}
     material_objects = {}
     material_shader_data = {}
-    restored_pinned_payloads = []
 
     def load_apk():
         nonlocal apk
@@ -176,51 +198,6 @@ def main() -> int:
             from official_apk import Apk
             apk = Apk()
         return apk
-
-    def load_pinned_effect_source(manifest_path: str, source: Path) -> tuple[str, bytes]:
-        expected_hash = manifest["outputs"].get(manifest_path)
-        source_bytes = source.read_bytes()
-        conversion = manifest.get("current_output_conversion") or {}
-        if conversion.get("manifest") != "871_156598":
-            if expected_hash and sha(source_bytes) == expected_hash:
-                return expected_hash, source_bytes
-            raise ValueError("Effect payload hash differs from its pinned source manifest: " + manifest_path)
-        conversion_source = next((item for item in conversion.get("sources", [])
-                                  if item.get("path") == "assets/reference/official-map/current-material-source-manifest.json"),
-                                 None)
-        if conversion_source is None:
-            raise ValueError("Current material conversion has no verified source receipt: " + manifest_path)
-        conversion_manifest_path = ROOT / PurePosixPath(conversion_source["path"])
-        conversion_manifest_bytes = conversion_manifest_path.read_bytes()
-        if sha(conversion_manifest_bytes) != conversion_source.get("sha256"):
-            raise ValueError("Current material conversion receipt changed: " + manifest_path)
-        conversion_manifest = json.loads(conversion_manifest_bytes.decode("utf-8"))
-        if conversion_manifest.get("manifest") != conversion.get("manifest"):
-            raise ValueError("Current material conversion version differs from its receipt: " + manifest_path)
-
-        output_path = "assets/official/" + manifest_path
-        converted_output = next((item for item in conversion_manifest.get("outputs", [])
-                                 if item.get("path") == output_path), None)
-        if converted_output is None:
-            if expected_hash and sha(source_bytes) == expected_hash:
-                return expected_hash, source_bytes
-            raise ValueError("Effect payload hash differs from its pinned source manifest: " + manifest_path)
-        if converted_output.get("sha256") != expected_hash or sha(source_bytes) != expected_hash:
-            raise ValueError("Current effect payload is not identified by its verified conversion: " + manifest_path)
-        previous = converted_output.get("previous") or {}
-        previous_hash = converted_output.get("previous_sha256", "")
-        if previous.get("path") != output_path or previous.get("sha256") != previous_hash:
-            raise ValueError("Current effect payload has no pinned predecessor record: " + manifest_path)
-        preserved_path = previous.get("preserved", "")
-        if not preserved_path:
-            raise ValueError("Current effect payload has no preserved pinned predecessor: " + manifest_path)
-        preserved = ROOT / PurePosixPath(preserved_path)
-        pinned_bytes = preserved.read_bytes()
-        if not previous_hash or sha(pinned_bytes) != previous_hash:
-            raise ValueError("Preserved effect payload differs from its pinned predecessor hash: " + manifest_path)
-        restored_pinned_payloads.append({"path": manifest_path, "sha256": previous_hash,
-                                         "preserved": preserved_path})
-        return previous_hash, pinned_bytes
 
     def register_texture(texture_uri: str) -> str:
         if not texture_uri:
@@ -1146,7 +1123,7 @@ def main() -> int:
             relative = uri[len("res://"):]
             source = ROOT / PurePosixPath(relative)
             manifest_path = relative.removeprefix("assets/official/")
-            source_hash, source_bytes = load_pinned_effect_source(manifest_path, source)
+            source_hash, source_bytes = read_verified_effect_source(manifest, manifest_path, source, ROOT)
             data = json.loads(source_bytes.decode("utf-8"))
             effect_inputs[manifest_path] = {
                 "sha256": source_hash,
@@ -1193,7 +1170,6 @@ def main() -> int:
     effect_inputs["model:3803"] = {"source": boss["source"],
         "systems": [particle["source"] for node in boss["nodes"] for particle in node["particles"]]}
     output = {
-        "manifest": VERSION,
         "record_sha256": sha(RECORD.read_bytes()),
         "effects_catalog_sha256": expected,
         "effect_manifest_sha256": sha(MANIFEST.read_bytes()),
@@ -1203,6 +1179,8 @@ def main() -> int:
         "meshes": output_meshes,
         "models": {"3803": boss},
     }
+    from prepare_character_creation_opening import without_source_versions
+    output = without_source_versions(output)
     data = (json.dumps(output, ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf-8")
     TARGET.parent.mkdir(parents=True, exist_ok=True)
     TARGET.write_bytes(data)
@@ -1216,8 +1194,8 @@ def main() -> int:
     for entry in output_meshes.values():
         output_hashes[(ROOT / "unity/Assets/StreamingAssets" / entry["path"]).relative_to(ROOT).as_posix()] = entry["sha256"]
     reference = {
-        "manifest": VERSION,
-        "operation": "Pinned opening-record battle playables and Wwise variants; native ParticleSystem/audio "
+        "manifest": manifest.get("manifest"),
+        "operation": "Opening-record battle playables and Wwise variants; native ParticleSystem/audio "
                      "runtime adapters preserve event timing, source transforms, particle modules including "
                      "recursive sub-emitters, material maps, mesh renderers and verified hashes",
         "inputs": {
@@ -1249,6 +1227,7 @@ def main() -> int:
         "meshes": output_meshes,
         "outputs": output_hashes,
     }
+    reference = dict(without_source_versions(reference), manifest=manifest.get("manifest"))
     reference_data = (json.dumps(reference, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
     REFERENCE.parent.mkdir(parents=True, exist_ok=True)
     REFERENCE.write_bytes(reference_data)
@@ -1260,7 +1239,6 @@ def main() -> int:
                           for node in prefab.get("nodes", [])),
                       "sounds": sum(e.get("kind") == "sound" for e in output_effects),
                       "textures": len(output_textures), "audioFiles": len(output_sounds), "payloadBytes": len(data),
-                      "restoredPinnedPayloads": restored_pinned_payloads,
                       "payloadSha256": sha(data), "manifest": REFERENCE.relative_to(ROOT).as_posix(),
                       "selected": [e["key"] for e in output_effects]}, ensure_ascii=False))
     return 0

@@ -1,4 +1,4 @@
-"""Recover the opening NPCs' fight skins and lazy animation bytes from APK 854_156383.
+"""Recover the official NPCs' fight skins and lazy animation bytes.
 
 The existing offline Spine repacker copies the original skin/timeline bytes; it
 does not bake poses or create a replacement animation runtime.
@@ -15,17 +15,15 @@ from official_unity_schema import ScriptSchemas
 from official_battle_spine_component import read_component
 from official_manifest import read_asset_manifest
 from prepare_character_creation_native_data import read_aligned_string, parse_split_binary_object
-from prepare_character_creation_opening import json_bytes, write_with_meta, REFERENCE
+from prepare_character_creation_opening import json_bytes, write_with_meta, REFERENCE, without_source_versions
 from UnityPy.classes.PPtr import PPtr
 
-VERSION = "854_156383"
 OUT = ROOT / "unity/Assets/Official/Opening/Fighters"
 CACHE = ROOT / ".tools/source-packages/opening-fighters"
 
 
 def main():
     partner_mode = os.environ.get("ZJCS_PARTNER_FIGHTERS", "") == "1"
-    version = "884_156692" if partner_mode else VERSION
     output = ROOT / "unity/Assets/Official/Combat/NpcFighters" if partner_mode else OUT
     cache = ROOT / ".tools/source-packages/partner-fighters" if partner_mode else CACHE
     reference = ROOT / "assets/reference/partner-battle-fighters-source-manifest.json" if partner_mode else REFERENCE
@@ -35,13 +33,12 @@ def main():
                         if int(row.get("NpcType", 0)) == 4 and int(row.get("FightEntityId", 0)) > 0})
     else:
         pairs = [(4201, 8401), (4202, 8402)]
-    apk, schemas = Apk(), ScriptSchemas()
+    apk = Apk.current()
+    schemas = ScriptSchemas(code_root=ROOT / ".tools/source-packages/current" / apk.version / "official-code")
     cache.mkdir(parents=True, exist_ok=True)
     inputs, outputs, jobs, fighters, page_sources, fighter_page_sources, skipped = {}, [], {}, [], {}, {}, []
-    assets = (read_asset_manifest(apk.source.manifest_bytes("DefaultPackage", apk.archive))
-              if partner_mode else [row for name in apk.archive.namelist()
-              if name.startswith("assets/yoo/") and name.endswith("_" + version + ".v3.bytes")
-              for row in read_asset_manifest(apk.archive.read(name))])
+    assets = [row for package in apk.source.manifests
+              for row in read_asset_manifest(apk.source.manifest_bytes(package, apk.archive))]
     assets_by_path = {}
     atlas_pages_by_name = {}
     for row in assets:
@@ -227,12 +224,12 @@ def main():
         for suffix in (".skel.bytes", ".atlas.txt"):
             path = output / (stem + suffix)
             outputs.append(write_with_meta(path, path.read_bytes()))
-    outputs.append(write_with_meta(output / "fighters.json", json_bytes(dict(manifest=version, fighters=fighters))))
+    outputs.append(write_with_meta(output / "fighters.json", json_bytes(dict(fighters=fighters))))
     if reference.exists():
         receipt = json.loads(reference.read_text(encoding="utf-8"))
     else:
-        receipt = {"manifest": version, "outputs": []}
-    receipt["fight_npc_appearance"] = dict(inputs=list(inputs.values()), reassembly=repacked,
+        receipt = {"manifest": apk.version, "outputs": []}
+    receipt["fight_npc_appearance"] = dict(inputs=without_source_versions(list(inputs.values())), reassembly=repacked,
         generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), fighters=fighters,
         skipped=skipped, override_events_sha256=hashlib.sha256(effects_bytes).hexdigest())
     if partner_mode:

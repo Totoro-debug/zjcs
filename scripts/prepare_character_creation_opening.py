@@ -1,7 +1,6 @@
-"""Extract the pinned opening story-fight data and story UI for the offline flow.
+"""Extract official opening story-fight data and story UI for the offline flow.
 
-Inputs come from the fixed APK (854_156383) and the already converted official
-story catalog. Outputs:
+Inputs come from the current official source. Outputs:
   assets/official/character-creation/opening-story.json
   assets/official/character-creation/opening-stage.json
   unity/Assets/StreamingAssets/Opening/*.json|*.bytes
@@ -24,10 +23,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-VERSION = "854_156383"
-STORY_PATH = ROOT / "assets/official/adventure.json"
-STORY_MANIFEST = ROOT / "assets/reference/official-map/story-source-manifest.json"
-BATTLE_STAGES = ROOT / "assets/official/battle-stages.json"
 MODEL_IDENTITIES = ROOT / "unity/Assets/Official/Combat/Presentation/model-identities.json"
 OFFICIAL_DATA = ROOT / "assets/official/character-creation"
 PAYLOAD = ROOT / "unity/Assets/StreamingAssets/Opening"
@@ -54,6 +49,15 @@ def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def without_source_versions(value):
+    if isinstance(value, dict):
+        return {key: without_source_versions(item) for key, item in value.items()
+                if key not in ("manifest", "source_manifest", "apk_manifest", "resource_version")}
+    if isinstance(value, list):
+        return [without_source_versions(item) for item in value]
+    return value
+
+
 def json_bytes(value) -> bytes:
     return (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
 
@@ -72,12 +76,8 @@ def write_with_meta(path: Path, data: bytes) -> dict:
 
 
 # ---------------------------------------------------------------- story graphs
-def story_payload(apk, manifest):
-    raw = STORY_PATH.read_bytes()
-    digest = sha256(raw)
-    if digest != manifest["adventure_sha256"]:
-        raise ValueError("Converted story catalog does not match its pinned manifest")
-    catalog = json.loads(raw.decode("utf-8"))
+def story_payload(apk, catalog, manifest):
+    digest = sha256(json_bytes(catalog))
     graphs = {}
     for name in STORIES:
         if name not in catalog["stories"]:
@@ -170,7 +170,6 @@ def story_payload(apk, manifest):
 
     provenance = manifest["graphs"]
     return {
-        "manifest": VERSION,
         "source_sha256": digest,
         "graphs": graphs,
         "dialogues": dialogues,
@@ -211,17 +210,32 @@ def record_payload(apk):
 # --------------------------------------------------------------------- stage
 def stage_payload(apk):
     from official_tables import Constructors
-    c = Constructors()
+    from official_ec_codec import Formats
+    from official_map_codec import unpack
+    code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
+    c = Constructors(code)
     stage_obj = apk.asset("config_luban", "/stage.g.bytes")
     rows = c.table(stage_obj.read().m_Script.encode("utf-8", "surrogateescape"), "TbStageInfo")
     stage = next((row for row in rows if row.get("Id") == 20), None)
     if stage is None:
         raise ValueError("Official stage 20 is missing")
-    battle = json.loads(BATTLE_STAGES.read_text(encoding="utf-8"))
     game_key = str(stage["GameId"])
-    grid = (battle["stages"].get(game_key) or {}).get("FightGridGroundComponent")
-    if not grid:
-        raise ValueError("Official grid ground for game " + game_key + " is missing")
+    grid_candidates = []
+    formats = Formats(code)
+    for asset_path, pointer in apk.container('config_ec'):
+        if not re.search(r'/FightStage_part\d+\.g\.bytes$', asset_path):
+            continue
+        obj = pointer.deref()
+        raw = obj.read().m_Script.encode('utf8', 'surrogateescape')
+        for parent, key, components in unpack(raw)[0]:
+            if parent != 0 or key != int(game_key):
+                continue
+            for kind, content in components:
+                if kind == 'Common.FightGridGroundComponent':
+                    grid_candidates.append((formats.component(kind, content), obj, raw))
+    if len(grid_candidates) != 1:
+        raise ValueError("Official grid ground for game " + game_key + " is missing or ambiguous")
+    grid, grid_obj, grid_raw = grid_candidates[0]
     cells = []
     for info in grid.get("PosInfos") or []:
         cells.append([int(info["Pos"]["X"]), int(info["Pos"]["Y"]),
@@ -233,7 +247,6 @@ def stage_payload(apk):
     model_keys = {row["monster_id"]: row["key"] for row in identities["monster_models"]}
     models = {str(monster): model_keys.get(monster, "") for monster in monsters}
     return {
-        "manifest": VERSION,
         "stage_id": int(stage["Id"]),
         "type": int(stage.get("Type", 0)),
         "game_id": int(stage["GameId"]),
@@ -246,6 +259,7 @@ def stage_payload(apk):
         "monsters": monsters,
         "models": models,
         "source": apk.provenance(stage_obj),
+        "grid_source": dict(apk.provenance(grid_obj), payload_sha256=sha256(grid_raw)),
     }
 
 
@@ -962,7 +976,7 @@ def ui_payload(apk, target_dir, story):
     except StopIteration:
         pass
     entries, atlases, count = pack_atlas(sprites, target_dir / "atlas.png")
-    payload = {"manifest": VERSION, "atlas": atlases[0], "atlases": atlases,
+    payload = {"atlas": atlases[0], "atlases": atlases,
                "sprites": entries, "prefabs": prefabs}
     atlas_paths = [target_dir / entry["file"] for entry in atlases]
     texture_outputs = list(sprites.texture_outputs.values())
@@ -1002,34 +1016,90 @@ def restore_ui_layout(apk):
         visit(pointer.read())
     output = write_with_meta(target, json_bytes(ui))
     receipt["outputs"] = [output if row["path"] == output["path"] else row for row in receipt["outputs"]]
-    receipt["ui"]["layout_sources"] = inputs
+    receipt["ui"]["layout_sources"] = without_source_versions(inputs)
     receipt["ui"]["layout_generator_sha256"] = sha256(Path(__file__).read_bytes())
     REFERENCE.write_bytes((json.dumps(receipt, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
     print(json.dumps(dict(layout_components=len(inputs), output=output), ensure_ascii=False))
 
 
+def read_opening_story_source(apk):
+    from official_tables import Constructors
+    from official_unity_schema import ScriptSchemas
+    from prepare_current_home_furniture_stories import decode_graph
+    from prepare_map16_story_source import decode_localization
+
+    code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
+    constructors = Constructors(code)
+    schemas = ScriptSchemas(code_root=code)
+    inputs = []
+
+    def table(bundle, name, constructor):
+        obj = apk.asset(bundle, '/' + name + '.g.bytes')
+        raw = obj.read().m_Script.encode('utf8', 'surrogateescape')
+        inputs.append(dict(source=apk.provenance(obj), table=name,
+                           payload_sha256=sha256(raw)))
+        return constructors.table(raw, constructor)
+
+    names = set(STORIES)
+    story_rows = [row for row in table('config_luban', 'story', 'TbStoryInfo')
+                  if row.get('StoryName') in names]
+    if len(story_rows) != len(names) or {row['StoryName'] for row in story_rows} != names:
+        raise ValueError('Official opening story configuration is incomplete or ambiguous')
+    graphs, graph_proofs = {}, {}
+    for row in story_rows:
+        bundle = 'defaultpackage_assets_scriptableconfig_story_' + row['ResPath'].rsplit('/', 1)[0].replace('/', '_').lower() + '.bundle'
+        graphs[row['StoryName']], graph_proofs[row['StoryName']] = decode_graph(
+            apk, schemas, row['StoryName'], bundle)
+    dialogs = [row for row in table('config_luban', 'dialog', 'TbDialogInfo')
+               if row.get('StoryName') in names]
+    role_ids = {row['RoleId'] for row in dialogs if row['RoleId'] > 0}
+    roles = [row for row in table('config_luban_dialog', 'Dialog/dialog_role', 'TbDialogRoleInfo')
+             if row['RoleId'] in role_ids]
+    if {row['RoleId'] for row in roles} != role_ids:
+        raise ValueError('Official opening dialogue roles are incomplete')
+    keys = {f"dialog_{row['StoryName']}_{row['Id']}_{row['Order']}" for row in dialogs}
+    localized, language_inputs = decode_localization(apk, keys, keys)
+    enum_source = (code / 'common-source/Common/DialogType.cs').read_text('utf-8-sig')
+    enum_body = enum_source.split('{', 1)[1].split('}', 1)[0]
+    dialog_types = [entry.strip() for entry in enum_body.split(',') if entry.strip()]
+    dialogues = {}
+    for row in dialogs:
+        dialog_type = int(row['DialogType'])
+        if dialog_type < 0 or dialog_type >= len(dialog_types):
+            raise ValueError('Unknown official dialogue type: ' + str(dialog_type))
+        item = dict(row, DialogType=dialog_types[dialog_type],
+                    Text=localized[f"dialog_{row['StoryName']}_{row['Id']}_{row['Order']}"])
+        dialogues.setdefault(row['StoryName'], {}).setdefault(str(row['Id']), []).append(item)
+    catalog = dict(stories=graphs, dialogues=dialogues,
+                   tables={'story': story_rows, 'Dialog/dialog_role': roles})
+    return catalog, dict(graphs=graph_proofs, tables=inputs, language=language_inputs,
+                         dialog_type_sha256=sha256(enum_source.encode('utf8')))
+
+
 def main():
     from official_apk import Apk
-    apk = Apk()
+    apk = Apk.current()
     if "--ui-layout-only" in sys.argv:
         restore_ui_layout(apk)
         return
-    story_manifest = json.loads(STORY_MANIFEST.read_text(encoding="utf-8"))
-    story = story_payload(apk, story_manifest)
+    catalog, story_manifest = read_opening_story_source(apk)
+    story = story_payload(apk, catalog, story_manifest)
     record = record_payload(apk)
     stage = stage_payload(apk)
 
     OFFICIAL_DATA.mkdir(parents=True, exist_ok=True)
     PAYLOAD.mkdir(parents=True, exist_ok=True)
     outputs = []
-    outputs.append(write_with_meta(OFFICIAL_DATA / "opening-stage.json", json_bytes(stage)))
-    outputs.append(write_with_meta(PAYLOAD / "opening-stage.json", json_bytes(stage)))
+    runtime_stage = {key: value for key, value in stage.items() if key not in ("source", "grid_source")}
+    outputs.append(write_with_meta(OFFICIAL_DATA / "opening-stage.json", json_bytes(runtime_stage)))
+    outputs.append(write_with_meta(PAYLOAD / "opening-stage.json", json_bytes(runtime_stage)))
     outputs.append(write_with_meta(PAYLOAD / "opening-record.bytes", record["bytes"]))
 
     ui, atlas_paths, texture_outputs, failures, atlas_sprites, portrait_sources, ui_sources = ui_payload(
         apk, PAYLOAD / "ui", story)
-    outputs.append(write_with_meta(OFFICIAL_DATA / "opening-story.json", json_bytes(story)))
-    outputs.append(write_with_meta(PAYLOAD / "opening-story.json", json_bytes(story)))
+    runtime_story = {key: value for key, value in story.items() if key != "provenance"}
+    outputs.append(write_with_meta(OFFICIAL_DATA / "opening-story.json", json_bytes(runtime_story)))
+    outputs.append(write_with_meta(PAYLOAD / "opening-story.json", json_bytes(runtime_story)))
     outputs.append(write_with_meta(PAYLOAD / "ui" / "opening-ui.json", json_bytes(ui)))
     for atlas_path in atlas_paths:
         outputs.append({"path": atlas_path.relative_to(ROOT).as_posix(), "bytes": atlas_path.stat().st_size,
@@ -1037,7 +1107,7 @@ def main():
     outputs.extend(texture_outputs)
 
     manifest = {
-        "manifest": VERSION,
+        "manifest": apk.version,
         "record": {
             "source": record["source"],
             "path": RECORD_PATH,
@@ -1047,19 +1117,23 @@ def main():
             "summary": record["summary"],
         },
         "story": {
-            "source_path": STORY_PATH.relative_to(ROOT).as_posix(),
+            "source_tables": story_manifest['tables'],
+            "language_sources": story_manifest['language'],
+            "dialog_type_sha256": story_manifest['dialog_type_sha256'],
             "source_sha256": story["source_sha256"],
             "graphs": story["provenance"],
             "dialogues": len(story["dialogues"]),
             "roles": story["roles"],
         },
-        "stage": {"source": stage["source"], "stage_id": stage["stage_id"], "game_id": stage["game_id"],
+        "stage": {"source": stage["source"], "grid_source": stage['grid_source'], "stage_id": stage["stage_id"], "game_id": stage["game_id"],
                   "scene": stage["scene"], "monsters": stage["monsters"], "cells": len(stage["grid"]["cells"])},
         "ui": {"prefabs": [entry["key"] for entry in ui["prefabs"]], "sprites": atlas_sprites,
                "atlas": ui["atlas"], "atlases": ui["atlases"], "unresolved": failures,
                "portrait_sources": portrait_sources, "sources": ui_sources},
         "outputs": sorted(outputs, key=lambda entry: entry["path"]),
     }
+    manifest = {key: value if key == 'manifest' else without_source_versions(value)
+                for key, value in manifest.items()}
     REFERENCE.parent.mkdir(parents=True, exist_ok=True)
     REFERENCE.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"record": record["summary"], "stories": list(story["graphs"]),

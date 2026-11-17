@@ -67,8 +67,6 @@ namespace Zjcs.Presentation.Opening
                 throw new FileNotFoundException("Opening battlefield payload is missing.", path);
             Dictionary<string, object> data = OpeningJson.Object(
                 OpeningJson.Parse(File.ReadAllBytes(path)), "battlefield");
-            if (OpeningJson.String(data, "manifest") != OpeningAssets.Manifest)
-                throw new FormatException("Opening battlefield payload is not pinned.");
 
             var rootObject = new GameObject("OpeningBattlefield");
             rootObject.transform.SetParent(parent, false);

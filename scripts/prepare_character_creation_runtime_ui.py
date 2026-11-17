@@ -21,22 +21,26 @@ def build():
     panels = ROOT / 'assets/official/ui.json'
     source_manifest = json.loads((creation.parent / 'source-manifest.json').read_text(encoding='utf-8'))
     expected = next(v['sha256'] for v in source_manifest['outputs'] if v['name'] == creation.name)
-    if digest(creation) != expected or source_manifest['manifest'] != '854_156383':
+    if digest(creation) != expected:
         raise ValueError('Creation layout differs from its original extraction receipt')
     ui = json.loads(panels.read_text(encoding='utf-8'))
     ui_receipt = json.loads((ROOT / 'assets/reference/official-city/source-manifest.json').read_text(encoding='utf-8'))
-    if digest(panels) != ui_receipt['data_sha256']['ui.json'] or ui_receipt['manifest'] != '854_156383':
+    if digest(panels) != ui_receipt['data_sha256']['ui.json']:
         raise ValueError('Official DIY/confirmation layouts differ from their original extraction receipt')
-    data = dict(manifest='854_156383',
-                creation=json.loads(creation.read_text(encoding='utf-8'))['root'],
+    data = dict(creation=json.loads(creation.read_text(encoding='utf-8'))['root'],
                 diy=ui['creation_diy']['root'], confirm=ui['common_confirm']['root'])
     from official_apk import Apk
     from official_unity_schema import ScriptSchemas
     from npc_travel_language import language
-    apk = Apk()
+    apk = Apk.current()
     bundle = 'defaultpackage_assets_prefabs_ui_createplayer.bundle'
-    component = next(o for o in apk.objects(bundle) if o.path_id == -3964310077427183409)
-    title_keys = ScriptSchemas().read(component)['StepTitles']
+    components = [o for o in apk.objects(bundle) if o.type.name == 'MonoBehaviour'
+                  and o.read(check_read=False).m_Script.read().m_ClassName == 'CreatePlayerPanel']
+    if len(components) != 1:
+        raise ValueError('Official CreatePlayerPanel is missing or ambiguous')
+    component = components[0]
+    schemas = ScriptSchemas(code_root=ROOT / '.tools/source-packages/current' / apk.version / 'official-code')
+    title_keys = schemas.read(component)['StepTitles']
     localized, language_sources = language(title_keys)
     data['page_titles'] = [localized[key] for key in title_keys]
     sprites = {}
@@ -88,14 +92,15 @@ def build():
     data['sprites'] = [dict(key=key, path=record['path'].removeprefix('unity/'),
                             border=record['border'], ppu=record['ppu']) for key, record in sorted(sprites.items())]
     path = DEST / 'runtime-ui.json'
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
+    from prepare_character_creation_opening import without_source_versions
+    path.write_text(json.dumps(without_source_versions(data), ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     outputs.append(dict(path=path.relative_to(ROOT).as_posix(), sha256=digest(path)))
-    receipt = dict(manifest='854_156383', operation='Restore original decoded creation UI fields as native Unity UGUI/TMP components; preserve hierarchy, coordinates, sprites and text.',
+    receipt = dict(manifest=source_manifest.get('manifest'), operation='Restore original decoded creation UI fields as native Unity UGUI/TMP components; preserve hierarchy, coordinates, sprites and text.',
                    inputs=[dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p)) for p in (creation, panels)],
                    outputs=outputs)
     receipt['title_source'] = dict(bundle=bundle, bundle_md5=apk.index[bundle],
                                   component_path_id=str(component.path_id), keys=title_keys,
-                                  language_sources=language_sources)
+                                  language_sources=without_source_versions(language_sources))
     encoded = json.dumps(receipt, ensure_ascii=False, indent=2) + '\n'
     for path in (DEST / 'source-manifest.json', ROOT / 'assets/reference/character-creation/runtime-ui-source-manifest.json'):
         path.write_text(encoded, encoding='utf-8', newline='\n')

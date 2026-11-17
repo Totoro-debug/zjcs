@@ -11,14 +11,14 @@ namespace Zjcs.Presentation.CharacterCreation
     [Serializable]
     public sealed class CharacterPortraitPhotography
     {
-        public string manifest, animation;
+        public string animation;
         public int width, height, depth;
         public float size, near, far;
         public float[] offset;
         public int[] excludes;
         public bool captureParticles;
 
-        [Serializable] private sealed class Receipt { public string manifest, output_sha256; }
+        [Serializable] private sealed class Receipt { public string output_sha256; }
 
         public static CharacterPortraitPhotography LoadBattleHead()
         {
@@ -28,7 +28,7 @@ namespace Zjcs.Presentation.CharacterCreation
             Receipt receipt = JsonUtility.FromJson<Receipt>(provenance.text);
             string hash;
             using (var sha = SHA256.Create()) hash = BitConverter.ToString(sha.ComputeHash(asset.bytes)).Replace("-", "").ToLowerInvariant();
-            if (receipt == null || receipt.manifest != "854_156383" || receipt.output_sha256 != hash)
+            if (receipt == null || receipt.output_sha256 != hash)
                 throw new InvalidOperationException("Battle portrait photography differs from its original source.");
             return JsonUtility.FromJson<CharacterPortraitPhotography>(asset.text);
         }

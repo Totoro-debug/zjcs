@@ -11,7 +11,6 @@ namespace Zjcs.Presentation.Opening
     /// <summary>Official story UI payload: prefab layout trees plus one sprite atlas.</summary>
     public sealed class OpeningUiData
     {
-        public string Manifest = string.Empty;
         public string DirectoryPath = string.Empty;
         public readonly List<byte[]> AtlasBytes = new List<byte[]>();
         public readonly List<OpeningUiSprite> AtlasPages = new List<OpeningUiSprite>();
@@ -25,11 +24,8 @@ namespace Zjcs.Presentation.Opening
             Dictionary<string, object> root = OpeningJson.Object(OpeningJson.Parse(bytes), "ui");
             var data = new OpeningUiData
             {
-                Manifest = OpeningJson.String(root, "manifest"),
                 DirectoryPath = directory,
             };
-            if (data.Manifest != OpeningAssets.Manifest)
-                throw new FormatException("Opening UI manifest is not pinned.");
             var atlases = new List<Dictionary<string, object>>();
             if (root.TryGetValue("atlases", out object pages) && pages is List<object> pageList)
                 foreach (object entry in pageList)

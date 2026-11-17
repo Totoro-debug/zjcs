@@ -5,7 +5,7 @@ import json
 import struct
 from pathlib import Path
 from official_apk import Apk, ROOT
-from prepare_character_creation_opening import json_bytes, write_with_meta, REFERENCE, PAYLOAD
+from prepare_character_creation_opening import json_bytes, write_with_meta, REFERENCE, PAYLOAD, without_source_versions
 from UnityPy.classes.PPtr import PPtr
 from official_unity_schema import ScriptSchemas
 
@@ -13,9 +13,8 @@ OUT = ROOT / "unity/Assets/Official/Opening/Damage/Resources/OpeningDamage"
 
 
 def main():
-    apk = Apk()
-    schemas = ScriptSchemas()
-    source = json.loads((ROOT / "assets/reference/battle-hud/source-manifest.json").read_text(encoding="utf-8"))
+    apk = Apk.current()
+    schemas = ScriptSchemas(code_root=ROOT / ".tools/source-packages/current" / apk.version / "official-code")
     fonts, prefabs, inputs, outputs = {}, [], {}, []
 
     def record(obj):
@@ -64,11 +63,18 @@ def main():
             go = transform.m_Father.read().m_GameObject.read() if transform.m_Father.path_id else None
         return "/" + "/".join(names)
 
-    for key, entry in source["prefabs"].items():
-        if not key.startswith("damage_"):
-            continue
+    bundles = sorted(name for name in apk.index
+                     if name.startswith("defaultpackage_assets_prefabs_ui_fight_damage_"))
+    if not bundles:
+        raise ValueError("Official damage prefabs are missing")
+    for bundle in bundles:
+        roots = [path for path, pointer in apk.container(bundle)
+                 if path.lower().endswith(".prefab") and pointer.type.name == "GameObject"]
+        if len(roots) != 1:
+            raise ValueError("Official damage bundle has no unique prefab: " + bundle)
+        key = "damage_" + Path(roots[0]).stem
         texts, images = [], []
-        for obj in apk.objects(entry["bundle"]):
+        for obj in apk.objects(bundle):
             if obj.type.name != "MonoBehaviour":
                 continue
             value = obj.read(check_read=False)
@@ -94,7 +100,7 @@ def main():
             if script.m_ClassName != "Text" or script.m_Namespace != "UnityEngine.UI":
                 continue
             raw = record(obj).get_raw_data()
-            # Pinned Unity 2022 UGUI Graphic/MaskableGraphic + FontData serialization.
+            # Official UGUI Graphic/MaskableGraphic + FontData serialization.
             # FontData begins at 88; m_Text immediately follows its 56 bytes.
             file_id, path_id = struct.unpack_from("<iq", raw, 88)
             length = struct.unpack_from("<i", raw, 144)[0]
@@ -109,13 +115,13 @@ def main():
                 horizontalOverflow=struct.unpack_from("<i", raw, 132)[0], verticalOverflow=struct.unpack_from("<i", raw, 136)[0],
                 lineSpacing=struct.unpack_from("<f", raw, 140)[0], color=list(struct.unpack_from("<4f", raw, 44))))
         prefabs.append(dict(key=key, texts=texts, images=images))
-    outputs.append(write_with_meta(OUT / "fonts.json", json_bytes(dict(manifest="854_156383", fonts=list(fonts.values())))))
-    from prepare_opening_battlefield import DAMAGE_RULES
-    rules_bytes = DAMAGE_RULES.read_bytes()
-    colors = json.loads(rules_bytes)["damage_settings"]
-    outputs.append(write_with_meta(PAYLOAD / "damage-ui.json", json_bytes(dict(manifest="854_156383", prefabs=prefabs, colors=colors))))
+    outputs.append(write_with_meta(OUT / "fonts.json", json_bytes(dict(fonts=list(fonts.values())))))
+    from prepare_opening_battlefield import damage_settings
+    colors, settings_obj = damage_settings(apk)
+    outputs.append(write_with_meta(PAYLOAD / "damage-ui.json", json_bytes(dict(prefabs=prefabs, colors=colors))))
     receipt = json.loads(REFERENCE.read_text(encoding="utf-8"))
-    receipt["bitmap_damage_ui"] = dict(inputs=list(inputs.values()), rules_sha256=hashlib.sha256(rules_bytes).hexdigest(),
+    receipt["bitmap_damage_ui"] = dict(inputs=without_source_versions(list(inputs.values())),
+        rules_source=without_source_versions(dict(apk.provenance(settings_obj), sha256=hashlib.sha256(settings_obj.get_raw_data()).hexdigest())),
         generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
     paths = {row["path"] for row in outputs}
     receipt["outputs"] = [row for row in receipt["outputs"] if row["path"] not in paths] + outputs
