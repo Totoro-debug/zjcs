@@ -1,15 +1,15 @@
 import hashlib
 import json
 from pathlib import Path
-import tempfile
 import unittest
 
 import prepare_unity_equipment_catalog as catalog
+from validation_workspace import temporary_validation_directory
 
 
 class UnityEquipmentCatalogRestoreTests(unittest.TestCase):
     def test_restore_verifies_sources_and_is_idempotent(self):
-        with tempfile.TemporaryDirectory() as temporary:
+        with temporary_validation_directory("equipment-catalog-") as temporary:
             root = Path(temporary)
             source = root / "source"
             unity = root / "unity"
@@ -27,14 +27,14 @@ class UnityEquipmentCatalogRestoreTests(unittest.TestCase):
             source_manifest.parent.mkdir(parents=True)
             digest = hashlib.sha256(payload).hexdigest()
             source_manifest.write_text(json.dumps({
-                "manifest": catalog.MANIFEST_VERSION,
+                "manifest": "source-rules",
                 "data_sha256": {"rules.json": digest},
             }), encoding="utf-8")
             fidelity = source / "assets/reference/equipment-fidelity/source-manifest.json"
             fidelity.parent.mkdir(parents=True)
             equipment_digest = hashlib.sha256(payloads["assets/official/equipment-rules.json"]).hexdigest()
             fidelity.write_text(json.dumps({
-                "manifest": catalog.MANIFEST_VERSION,
+                "manifest": "source-equipment",
                 "outputs": {"equipment-rules.json": equipment_digest},
             }), encoding="utf-8")
             completion = source / "assets/reference/equipment-completion/source-manifest.json"
@@ -61,7 +61,7 @@ class UnityEquipmentCatalogRestoreTests(unittest.TestCase):
             ui_path.parent.mkdir(parents=True, exist_ok=True)
             ui_path.write_bytes(ui_content)
             completion.write_text(json.dumps({
-                "manifest": catalog.MANIFEST_VERSION,
+                "manifest": "source-completion",
                 "output_sha256": {
                     "fidelity-rules.json": completion_digest,
                     "ui.json": hashlib.sha256(ui_content).hexdigest(),
@@ -70,7 +70,6 @@ class UnityEquipmentCatalogRestoreTests(unittest.TestCase):
             feedback = source / "assets/reference/equipment-feedback/source-manifest.json"
             feedback.parent.mkdir(parents=True)
             feedback.write_text(json.dumps({
-                "manifest": catalog.MANIFEST_VERSION,
                 "inheritance_prefab": dict(panel_source),
             }), encoding="utf-8")
             city_data = json.loads(source_manifest.read_text(encoding="utf-8"))
@@ -86,23 +85,33 @@ class UnityEquipmentCatalogRestoreTests(unittest.TestCase):
             self.assertTrue((unity / "Assets/Official/Equipment/Runtime/equipment-runtime-rules.json").is_file())
             self.assertTrue((unity / "Assets/Official/Equipment/UI/equipment-ui.json").is_file())
             self.assertEqual(sprite_content, (unity / "Assets/Official/Equipment/UI/Sprites/equipment-test.png").read_bytes())
+            runtime_bytes = (unity / catalog.RUNTIME_RULES).read_bytes()
+            self.assertNotIn("manifest", json.loads(runtime_bytes))
+            for relative in catalog.SOURCE_MANIFESTS:
+                path = source / relative
+                record = json.loads(path.read_text(encoding="utf-8"))
+                record.pop("manifest")
+                path.write_text(json.dumps(record), encoding="utf-8")
+            unversioned_unity = root / "unversioned-unity"
+            catalog.restore(source, unversioned_unity)
+            self.assertEqual(runtime_bytes, (unversioned_unity / catalog.RUNTIME_RULES).read_bytes())
 
     def test_refuses_existing_payload_with_different_hash(self):
-        with tempfile.TemporaryDirectory() as temporary:
+        with temporary_validation_directory("equipment-catalog-") as temporary:
             target = Path(temporary) / "payload.json"
             target.write_bytes(b"local edit")
             with self.assertRaisesRegex(ValueError, "Refusing to overwrite"):
                 catalog.copy_verified(b"official", target, hashlib.sha256(b"official").hexdigest())
 
     def test_rejects_output_that_disagrees_with_source_manifest(self):
-        with tempfile.TemporaryDirectory() as temporary:
+        with temporary_validation_directory("equipment-catalog-") as temporary:
             root = Path(temporary)
             source = root / "source"
             unity = root / "unity"
             for relative in catalog.SOURCE_MANIFESTS:
                 path = source / relative
                 path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text(json.dumps({"manifest": catalog.MANIFEST_VERSION}), encoding="utf-8")
+                path.write_text(json.dumps({}), encoding="utf-8")
             for source_name, manifest_name, field in catalog.SOURCES:
                 path = source / source_name
                 path.parent.mkdir(parents=True, exist_ok=True)

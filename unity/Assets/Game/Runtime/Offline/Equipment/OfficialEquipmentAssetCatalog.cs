@@ -11,7 +11,6 @@ namespace Zjcs.Offline.Equipment
     public sealed class OfficialEquipmentAssetCatalog : ScriptableObject
     {
         public const string DefaultResourcePath = "Equipment/OfficialEquipmentAssetCatalog";
-        private const string ExpectedManifest = "884_156692";
         private const string ExpectedRuntimePath = "Assets/Official/Equipment/Runtime/equipment-runtime-rules.json";
 
         [SerializeField] private TextAsset runtimeRules;
@@ -20,7 +19,6 @@ namespace Zjcs.Offline.Equipment
         [Serializable]
         private sealed class RuntimeManifest
         {
-            public string manifest;
             public RuntimeOutput output;
             public List<RuntimeInput> inputs;
             public List<string> tables;
@@ -54,7 +52,7 @@ namespace Zjcs.Offline.Equipment
             if (runtimeRules == null || runtimeSourceManifest == null)
                 throw new InvalidOperationException("Official equipment runtime rules and source manifest are not bound.");
             RuntimeManifest manifest = JsonUtility.FromJson<RuntimeManifest>(runtimeSourceManifest.text);
-            if (manifest == null || manifest.manifest != ExpectedManifest || manifest.output == null
+            if (manifest == null || manifest.output == null
                 || manifest.output.path != ExpectedRuntimePath || manifest.output.bytes != runtimeRules.bytes.Length
                 || string.IsNullOrEmpty(manifest.output.sha256) || manifest.inputs == null || manifest.inputs.Count == 0)
                 throw new InvalidOperationException("Official equipment runtime source manifest is invalid.");

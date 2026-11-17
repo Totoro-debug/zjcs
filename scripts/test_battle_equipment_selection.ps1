@@ -18,6 +18,9 @@ Invoke-ZjcsValidation -Name 'skills-equipment-selection-rules' -ScriptBlock {
         (Join-Path $runtime 'Offline/Progression/OfflineEquipmentPropSource.cs'),
         (Join-Path $runtime 'Offline/Progression/OfflineEquipmentPropSource.BattleTerms.cs'),
         $reference, (Join-Path $PSScriptRoot 'fixtures/battle_equipment_selection.cs'))
-    [EquipmentSelectionChecks]::Run([IO.File]::ReadAllText(
-        (Join-Path $root 'unity/Assets/Official/Equipment/Runtime/equipment-runtime-rules.json')))
+    $payload = [IO.File]::ReadAllText(
+        (Join-Path $root 'unity/Assets/Official/Equipment/Runtime/equipment-runtime-rules.json'))
+    [EquipmentSelectionChecks]::Run($payload)
+    $unversioned = $payload -replace '"manifest"\s*:\s*"[^"]*"\s*,', ''
+    [EquipmentSelectionChecks]::Run($unversioned)
 }

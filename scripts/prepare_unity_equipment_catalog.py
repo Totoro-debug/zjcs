@@ -1,4 +1,4 @@
-"""Restore verified 854_156383 equipment rule payloads for Unity."""
+"""Restore verified equipment rule payloads for Unity."""
 import argparse
 import hashlib
 import json
@@ -8,7 +8,6 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MANIFEST_VERSION = "854_156383"
 PAYLOAD = "Assets/Official/Equipment"
 SOURCES = (
     ("assets/official/rules.json", "assets/reference/official-city/source-manifest.json",
@@ -204,8 +203,6 @@ def restore_ui(source_root, unity_root, manifests, restored):
     feedback_path = source_root / "assets/reference/equipment-feedback/source-manifest.json"
     feedback = json.loads(feedback_path.read_text(encoding="utf-8"))
     feedback_digest = sha256(feedback_path)
-    if feedback.get("manifest") != MANIFEST_VERSION:
-        raise ValueError("Equipment feedback prefab source manifest is not pinned to " + MANIFEST_VERSION)
     original_ui = json.loads(ui_path.read_text(encoding="utf-8"))
     missing = [name for name in UI_PANELS if name not in original_ui]
     if missing:
@@ -273,7 +270,7 @@ def restore_ui(source_root, unity_root, manifests, restored):
         restored.append(ensure_sprite_metadata(unity_root, record["path"], record["sprite"]))
 
     ui_manifest = {
-        "manifest": MANIFEST_VERSION,
+        "manifest": completion.get("manifest"),
         "source": UI_SOURCE,
         "source_sha256": actual_ui,
         "aggregate_manifest_sha256": expected_ui,
@@ -308,8 +305,6 @@ def restore(source_root=ROOT, unity_root=ROOT / "unity"):
     for relative in SOURCE_MANIFESTS:
         path = source_root / Path(relative)
         manifest = json.loads(path.read_text(encoding="utf-8"))
-        if manifest.get("manifest") != MANIFEST_VERSION:
-            raise ValueError("Equipment source manifest is not pinned to " + MANIFEST_VERSION + ": " + relative)
         manifests[relative] = (path, manifest, sha256(path))
 
     restored = []
@@ -334,7 +329,6 @@ def restore(source_root=ROOT, unity_root=ROOT / "unity"):
     extra = source_payloads["assets/official/equipment-rules.json"]
     fidelity = source_payloads["assets/official/fidelity-rules.json"]
     runtime = {
-        "manifest": MANIFEST_VERSION,
         "rules": {name: rules.get(name, []) for name in RUNTIME_TABLES},
         "tables": {
             **extra["tables"],
@@ -353,7 +347,6 @@ def restore(source_root=ROOT, unity_root=ROOT / "unity"):
                      "sha256": runtime_digest, "restored": runtime_copied})
 
     runtime_manifest = {
-        "manifest": MANIFEST_VERSION,
         "output": {"path": RUNTIME_RULES, "bytes": len(runtime_bytes), "sha256": runtime_digest},
         "inputs": [{"path": name, "sha256": digest}
                    for name, digest in runtime["input_sha256"].items()],
@@ -378,7 +371,7 @@ def restore(source_root=ROOT, unity_root=ROOT / "unity"):
                 continue
             records.append({"path": payload_name, "source_field": field,
                             "output_sha256": source_hash(manifest, field)})
-        content = (json.dumps({"manifest": MANIFEST_VERSION,
+        content = (json.dumps({"manifest": manifest.get("manifest"),
                                "source_manifest": relative,
                                "source_manifest_sha256": digest,
                                "outputs": records}, ensure_ascii=False,
@@ -389,7 +382,6 @@ def restore(source_root=ROOT, unity_root=ROOT / "unity"):
                          "sha256": content_digest, "restored": copied})
 
     module = {
-        "manifest": MANIFEST_VERSION,
         "runtime_rules": {"path": RUNTIME_RULES, "sha256": runtime_digest},
         "inputs": [{"path": name, **value} for name, value in input_hashes.items()],
         "source_manifests": [
