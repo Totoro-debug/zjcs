@@ -23,7 +23,7 @@ namespace Zjcs.Offline.BattleThemeUI
         private IProfessionAppearanceTextureBindings previousTextures;
         private bool disposed;
         [Serializable] private sealed class TextRow { public string key, text; }
-        [Serializable] private sealed class TextData { public string manifest; public TextRow[] texts; }
+        [Serializable] private sealed class TextData { public TextRow[] texts; }
 
         public static OfflineBattleThemeNpcView Mount(Transform slot, string prefabPath)
         {
@@ -70,7 +70,7 @@ namespace Zjcs.Offline.BattleThemeUI
                 instance.SetActive(false);
                 var languageAsset = Resources.Load<TextAsset>("Combat/Theme/LuoTianYi/theme-npc-texts");
                 var language = languageAsset ? JsonUtility.FromJson<TextData>(languageAsset.text) : null;
-                if (language?.manifest != "884_156692" || language.texts == null)
+                if (language == null || language.texts == null)
                     throw new InvalidOperationException("Packaged original theme NPC localization is missing.");
                 Dictionary<string, string> texts = language.texts.ToDictionary(row => row.key, row => row.text);
                 foreach (var label in instance.GetComponentsInChildren<WorldMultiLanguageText>(true))
