@@ -7,6 +7,7 @@ using Zjcs.Combat.Official;
 using Zjcs.Offline.ProfessionUI;
 using Zjcs.Official.BattleStatusPlayables;
 using Zjcs.Official.EntityLifecycle;
+using Zjcs.Official.StorySounds;
 
 namespace Zjcs.Presentation.Combat
 {
@@ -24,6 +25,25 @@ namespace Zjcs.Presentation.Combat
         private Vector3[] airComboPose;
         private string airComboLastAnimation;
         private bool airComboFacingChecked;
+        private uint heavyStrikePlayingId;
+
+        private void ObserveHeavyStrikeSound(OfficialBattleRuntimeController controller)
+        {
+            if (firstPromotionItemId != 10009 || nativeCasts == 0 || heavyStrikePlayingId != 0) return;
+            const uint soundEvent = 2958003277u;
+            var body = controller.TryGetUnitTransform(1);
+            foreach (var sound in UnityEngine.Object.FindObjectsOfType<MyPlayableSound>())
+            {
+                if (sound.SoundEvent == null || sound.SoundEvent.Id != soundEvent
+                    || sound.SoundEvent.PlayingId == 0 || ArcNativeSoundEvent(sound.SoundEvent.PlayingId) != soundEvent) continue;
+                Require(body && (sound.mySource == body.gameObject || sound.myTarget == body.gameObject),
+                    "Original Skill_10009_1 sound lost its casting character.");
+                Require(Math.Abs(Time.time - firstPromotionCastClock) < .1f,
+                    "Original Skill_10009_1 sound did not begin at its authored cast time.");
+                heavyStrikePlayingId = sound.SoundEvent.PlayingId;
+                Debug.Log("[Heavy strike sound] Original event is live in the native engine: " + heavyStrikePlayingId);
+            }
+        }
 
         private void ConfigureAirComboDiagnostic(int itemId, FightBattleCheckpoint checkpoint)
         {
@@ -102,7 +122,9 @@ namespace Zjcs.Presentation.Combat
 
         private bool ObserveAirComboDiagnostic(OfficialBattleRuntimeController controller)
         {
-            if (!ValidateAirCombo || airComboEndCaptured) return false;
+            if (!ValidateAirCombo) return false;
+            ObserveHeavyStrikeSound(controller);
+            if (airComboEndCaptured) return false;
             Require(nativeCasts == 0 || Time.time - firstPromotionCastClock < 8f,
                 "Airborne observation did not finish: transitions=" + string.Join(",", airComboTransitions)
                     + ", animated=" + airComboAnimated + ", advanced=" + airComboAdvanced
@@ -215,6 +237,12 @@ namespace Zjcs.Presentation.Combat
             Require(airComboAnimated && airComboAdvanced && airComboPaused && airComboResumed
                 && airComboSaved && airComboRecoveryCaptured && airComboEndCaptured && airComboFacingChecked,
                 "Original airborne action, pause, checkpoint or native lifecycle was not fully observed.");
+            if (firstPromotionItemId == 10009)
+            {
+                Require(heavyStrikePlayingId != 0 && ArcNativeSoundEvent(heavyStrikePlayingId) == 0,
+                    "Original Skill_10009_1 native sound did not play and finish.");
+                Debug.Log("[Heavy strike sound] Original cast binding, native playback and completion passed.");
+            }
         }
     }
 }
