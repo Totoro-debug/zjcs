@@ -61,7 +61,7 @@ namespace Zjcs.Combat.Official
                         || !FightSkillTriggerPolicy.AllowsStatus(skill, status)) continue;
                     FightBattleStatusHitSkillComponentState hitSkill = status.Components?.HitSkill;
                     if (hitSkill != null && HitSourceMatches(status, hitSkill.HitSourceType, actor)
-                        && (status.ClassId != 25000 && status.ClassId != 25038 || status.ForbiddenType == 0 && resolved != null
+                        && (status.ClassId != 25000 && status.ClassId != 25005 && status.ClassId != 25025 && status.ClassId != 25026 && status.ClassId != 25038 || status.ForbiddenType == 0 && resolved != null
                             && !resolved.Type.Dodge && !resolved.Type.Blinding && !resolved.Type.Immunity)
                         && HitRuleMatches(hitSkill.Rate, hitSkill.Block, hitSkill.Crit,
                             hitSkill.Damage, hitSkill.Cure, hitSkill.IsTrueDamage,
