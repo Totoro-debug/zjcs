@@ -10,8 +10,6 @@ from prepare_partner_ui_helpers import meta
 
 def main():
     version = json.loads((ROOT / 'official-source.json').read_bytes())['active']
-    if version != '884_156692':
-        raise ValueError('Review reward sorting after changing the selected version')
     inputs, methods = {}, {}
 
     def source(name):

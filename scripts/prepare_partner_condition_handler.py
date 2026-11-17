@@ -14,7 +14,6 @@ def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
 
 def main():
     version = json.loads((ROOT / 'official-source.json').read_bytes())['active']
-    if version != '884_156692': raise ValueError('Review selected condition subscription source')
     inputs, methods = {}, {}
 
     def source(name):

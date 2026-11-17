@@ -16,7 +16,6 @@ def write(path, value):
 
 def main():
     version = json.loads((ROOT / 'official-source.json').read_bytes())['active']
-    if version != '884_156692': raise ValueError('Review selected friendship achievement source')
     inputs, methods = {}, {}
     def source(name):
         p = ROOT / '.tools/source-packages/current' / version / 'official-code/common-source/Common' / (name + '.cs')

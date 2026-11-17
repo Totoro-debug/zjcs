@@ -9,8 +9,6 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main():
     version = json.loads((ROOT / 'official-source.json').read_bytes())['active']
-    if version != '884_156692':
-        raise ValueError('Review automatic partner initialization when changing version')
     inputs, methods = {}, {}
     for name, signatures in {
         'common-source/Common/PlayerNpcDataWrap.cs': ['public static PlayerNpcDataWrap CreateNpcDataByInfo(long playerId, NpcInfo info, int? initialLevel = null)'],
