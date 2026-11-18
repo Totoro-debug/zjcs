@@ -19,11 +19,11 @@ namespace Zjcs.Presentation.Combat
 {
     public sealed class OfficialBattleSkillEntityPlayback
     {
-        public int Casts, Moves; public Func<int, Transform> DamageTargets;
+        public int Casts, Moves; public FightBattleSkillCastEvent LastCast; public Func<int, Transform> DamageTargets;
         public Action<FightBattleMovementEvent> Contact;
         public void BindDamageUITargets(Func<int, Transform> value) { DamageTargets = value; }
         public EcEntityIdentifier Start(FightBattleSkillCastEvent cast, Transform source, Transform target)
-        { Casts++; return new EcEntityIdentifier { Value = Casts }; }
+        { LastCast = cast; Casts++; return new EcEntityIdentifier { Value = Casts }; }
         public bool OwnsMovement(FightBattleMovementEvent movement) => movement.MoveBehaviourId == 11123;
         public void StartMovement(FightBattleMovementEvent movement, Transform source,
             FightGridPoint? position = null, Action<FightBattleMovementEvent> contact = null)
@@ -72,6 +72,12 @@ namespace Zjcs.Presentation.Combat
             driver.BlockedContact += _ => contactEvents++;
             driver.Pump(.1f);
             var session = OfficialBattleLiveImpactSession.Last;
+            var approach = new FightBattleMovementEvent { UnitId = 2, MoveBehaviourId = 11123 };
+            Check(session.Move(null, approach) && views.Moves == 1,
+                "an immediate ordinary approach must start without a skill cast");
+            approach.Delay = .1f;
+            Check(!session.Move(null, approach) && views.Moves == 1,
+                "a movement with no cast cannot invent a delay origin");
             var cast = new FightBattleSkillCastEvent { ActorId = 1, SkillEntityId = 11120,
                 Presentation = new FightBattleSkillCastPresentation { TargetId = 2 },
                 HasSkillCostHp = true, SkillCostBeforeHp = 100, SkillCostAfterHp = 90 };
@@ -85,13 +91,29 @@ namespace Zjcs.Presentation.Combat
                 && driver.DisplayUnit(1).Hp == 90 && checkpoint.Units[0].Hp == 100,
                 "the actual cast must project cost without modifying the checkpoint");
             Check(!session.Cast(cast, out _), "the same cast cannot start twice");
+            var ordinary = new FightBattleMovementEvent { UnitId = 1, MoveBehaviourId = 11123,
+                MoveSkillEntityId = 15300, OrdinarySkillPresentation = new FightBattleSkillCastPresentation(),
+                Delay = .2f, OrdinaryMoveDelay = .2f };
+            hasSkill = false;
+            Check(!session.Move(null, ordinary) && views.Casts == 1,
+                "ordinary motion must wait for its original skill graph");
+            hasSkill = true;
+            Check(!session.Move(null, ordinary) && views.Casts == 2 && views.Moves == 1
+                && views.LastCast.SkillEntityId == 15300 && views.LastCast.ActorId == 1,
+                "ordinary motion must start its original movement skill before the action");
+            driver.Pump(.1f);
+            Check(!session.Move(null, ordinary) && views.Casts == 2,
+                "the movement prelude must not restart its skill or finish early");
+            driver.Pump(.15f);
+            Check(session.Move(null, ordinary) && views.Casts == 2 && views.Moves == 2,
+                "the original movement action must start after its authored skill prelude");
             var move = new FightBattleMovementEvent { UnitId = 2, MoveBehaviourId = 11123, Delay = .5f };
             Check(!session.Move(cast, move), "the movement must wait for its own cast action time");
-            driver.Pump(.25f);
+            driver.Pump(.1f);
             Check(!session.Blocked(cast, move, new FightGridPoint(3, 4), () => contacts++),
                 "a blocked movement cannot start early");
-            driver.Pump(.3f);
-            Check(session.Blocked(cast, move, new FightGridPoint(3, 4), () => contacts++) && views.Moves == 1
+            driver.Pump(.2f);
+            Check(session.Blocked(cast, move, new FightGridPoint(3, 4), () => contacts++) && views.Moves == 3
                 && contacts == 0 && contactEvents == 0, "blocked action start cannot fabricate contact");
             views.Contact(move); views.Contact(move);
             Check(contacts == 1 && contactEvents == 1, "actual contact must be delivered exactly once");

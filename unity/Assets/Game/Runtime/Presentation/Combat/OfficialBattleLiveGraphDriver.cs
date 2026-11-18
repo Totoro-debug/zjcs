@@ -17,6 +17,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Action<FightBattleDamageEvent, FightBattleUnitState> damageShown;
         private readonly Action<FightBattleSkillCastEvent, FightBattleUnitState> costShown;
         private readonly Dictionary<FightBattleSkillCastEvent, float> started = new Dictionary<FightBattleSkillCastEvent, float>();
+        private readonly Dictionary<FightBattleMovementEvent, float> ordinaryStarted = new Dictionary<FightBattleMovementEvent, float>();
         private float clock;
         private bool disposed, transferred;
         internal event Action Disposed;
@@ -79,11 +80,30 @@ namespace Zjcs.Presentation.Combat
         private bool MovementReady(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement, out Transform source)
         {
             source = null;
-            if (cast == null || movement == null || !started.TryGetValue(cast, out float castStart)
-                || float.IsNaN(movement.Delay) || float.IsInfinity(movement.Delay) || movement.Delay < 0f
-                || clock - castStart < movement.Delay || !views.OwnsMovement(movement)) return false;
+            if (movement == null || float.IsNaN(movement.Delay) || float.IsInfinity(movement.Delay)
+                || movement.Delay < 0f || !views.OwnsMovement(movement)) return false;
             source = body(movement.UnitId);
-            return source;
+            if (!source) return false;
+            // An ordinary approach has its own original movement skill, independent
+            // of the later attack. Its authored move delay starts with that skill.
+            if (cast == null)
+            {
+                if (movement.OrdinarySkillPresentation == null) return movement.Delay == 0f;
+                if (!FightOrdinaryMovementTiming.Supports(movement.MoveSkillEntityId)
+                    || !hasSkill(movement.MoveSkillEntityId)
+                    || movement.Delay != movement.OrdinaryMoveDelay) return false;
+                if (!ordinaryStarted.TryGetValue(movement, out float moveStart))
+                {
+                    var ordinaryCast = new FightBattleSkillCastEvent { ActorId = movement.UnitId, Slot = -1,
+                        SkillEntityId = movement.MoveSkillEntityId, Presentation = movement.OrdinarySkillPresentation };
+                    views.Start(ordinaryCast, source, null);
+                    ordinaryStarted.Add(movement, moveStart = clock);
+                }
+                return clock - moveStart >= movement.OrdinaryMoveDelay;
+            }
+            else if (!started.TryGetValue(cast, out float castStart) || clock - castStart < movement.Delay)
+                return false;
+            return true;
         }
 
         private bool StartMovement(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement)
@@ -136,7 +156,7 @@ namespace Zjcs.Presentation.Combat
             if (disposed) return;
             disposed = true;
             try { session.Dispose(); }
-            finally { started.Clear(); Disposed?.Invoke(); Disposed = null; }
+            finally { started.Clear(); ordinaryStarted.Clear(); Disposed?.Invoke(); Disposed = null; }
         }
     }
 }

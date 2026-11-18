@@ -1218,6 +1218,58 @@ namespace Zjcs.Editor.Combat
             }
             Destroy(liveRoot.gameObject);
 
+            // Ordinary approach is an independent original movement skill, not an attack cast.
+            var approachUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 12) };
+            approachUnits[0].Properties.Add(new FightPropertyValue { Id = 100, Value = 2 });
+            var approachSkill = liveCatalog.CreateSkill(10600, 0, 10008, 2, 20, 1,
+                liveCatalog.CalculateSkillProps(10600, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+            approachSkill.LimitedTimes = 1; approachUnits[0].Skills.Add(approachSkill);
+            approachUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(approachSkill, 0));
+            var approachCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+            approachCheckpoint.Units.AddRange(approachUnits); var approachWave = new FightBattleWaveState(); approachWave.UnitIds.Add(2);
+            approachCheckpoint.Waves.Add(approachWave);
+            FightBattleExecutor.Begin(approachCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+            var approachRoot = new GameObject("Live ordinary approach scene").transform; approachRoot.SetParent(root, false);
+            var approachSource = new GameObject("Approach source").transform; approachSource.SetParent(approachRoot, false);
+            approachSource.localPosition = new Vector3(2, 5, 0); approachSource.gameObject.AddComponent<MyTransform>();
+            var approachTarget = new GameObject("Approach target").transform; approachTarget.SetParent(approachRoot, false);
+            approachTarget.localPosition = new Vector3(12, 5, 0); approachTarget.gameObject.AddComponent<MyTransform>();
+            NativeJumpAppearanceFixture approachAppearance = null;
+            if (OfficialBattleHitPlaybackAcceptance.PlayerJump)
+            {
+                approachAppearance = NativeJumpAppearanceFixture.Create(approachSource.gameObject);
+                yield return null;
+            }
+            using (var approachScope = new OfflineBattleNativePlayableScope(approachRoot, null))
+            using (var approachViews = new OfficialBattleSkillEntityPlayback(approachRoot,
+                new OfficialBattleGridMapper(approachRoot, grid), approachScope, id => approachUnits.FirstOrDefault(value => value.Id == id)))
+            using (var approachGraph = new OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog.TryLoadDefault(), approachScope, approachViews))
+            using (var approachDriver = approachGraph.CreateLiveStep(approachCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()),
+                id => id == 1 ? approachSource : id == 2 ? approachTarget : null, null,
+                (damage, display) => throw new InvalidOperationException("A distant approach must not cause damage.")))
+            {
+                bool sawAction = false, sawSkill = false;
+                approachViews.CastStarted += cast => {
+                    if (cast.SkillEntityId == 15300) sawSkill = true;
+                };
+                deadline = Time.realtimeSinceStartup + 20f;
+                while (Time.realtimeSinceStartup < deadline && (!approachDriver.IsCompleted || !sawAction)) {
+                    approachDriver.Pump(Time.deltaTime); approachGraph.Tick(Time.deltaTime); approachGraph.LateTick();
+                    sawAction |= approachRoot.GetComponentsInChildren<MyFightActionSkillMove>(false).Length > 0;
+                    if (sawAction && approachAppearance != null) Capture("live-ordinary-approach.png", false);
+                    yield return null;
+                }
+                bool approachCompleted = approachDriver.TryTakeCompleted(out _, out var approachResult);
+                bool recordedApproach = approachCompleted && approachResult.Event.Movements.Any(value => value.UnitId == 1 && value.MoveSkillEntityId == 15300);
+                Require(approachCompleted && recordedApproach && sawAction && sawSkill && approachCheckpoint.Units[0].X == 2,
+                    $"Original approach: completed={approachCompleted}, recorded={recordedApproach}, action={sawAction}, skill={sawSkill}, x={approachCheckpoint.Units[0].X}, pending={approachDriver.PendingMovement != null}, "
+                    + $"resultMove={approachResult?.Checkpoint.Units[0].MoveDist}, targetable={approachResult?.Checkpoint.Units[1].Targetable}, range={approachSkill.Range.Count}, casts={approachResult?.Event.SkillCasts.Count}, moves={approachResult?.Event.Movements.Count}.");
+            }
+            approachAppearance?.Dispose();
+            Destroy(approachRoot.gameObject);
+
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(1, 0), Delay = .8f });
