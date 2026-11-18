@@ -13,9 +13,11 @@ public static class BattleImpactGateHarness
         public FightBattlePendingImpact Impact;
         public ManualResetEventSlim Released = new ManualResetEventSlim(false);
     }
-    private sealed class Gate : IFightBattleImpactGate
+    private sealed class Gate : IFightBattleImpactGate, IFightBattleCastPreparationObserver
     {
         public readonly BlockingCollection<Pending> Items = new BlockingCollection<Pending>();
+        public readonly ConcurrentQueue<FightBattleSkillCastEvent> Prepared = new ConcurrentQueue<FightBattleSkillCastEvent>();
+        public void CastPrepared(FightBattleSkillCastEvent cast) { Prepared.Enqueue(cast); }
         public void AwaitImpact(FightBattlePendingImpact impact)
         {
             var pending = new Pending { Impact = impact };
@@ -76,6 +78,8 @@ public static class BattleImpactGateHarness
                         && impact.SkillEntityId == setup[1] && impact.HitEntityId > 0 && impact.DamageEntityId > 0
                         && impact.Cast != null && impact.HitSelection != null,
                         "The native hit lacks its original cast, hit, target or location");
+                    Check(gate.Prepared.Any(cast => ReferenceEquals(cast, impact.Cast)),
+                        "The impact was requested before its cast preparation notification");
                     Check(target.Hp == previousHp, "HP changed before the presentation released the pending impact");
                     Check(!step.Wait(50) && target.Hp == previousHp, "A paused impact settled without its presentation event");
                 }
@@ -102,15 +106,20 @@ public static class BattleImpactGateHarness
             var actor = Unit(1, 1, 7, 7, formula); var target = Unit(2, 2, 8, 7, formula);
             var skill = catalog.CreateSkill(10600, 0, 10008, 2, 20, 1,
                 catalog.CalculateSkillProps(10600, 2, 20, 1).Select(p => new FightPropertyValue { Id = p.Key, Value = p.Value }).ToList());
+            skill.CostType = 1; skill.SkillCost = 100;
             skill.LimitedTimes = 1; actor.Skills.Add(skill); actor.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
             cp.Units.AddRange(new[] { actor, target }); var wave = new FightBattleWaveState(); wave.UnitIds.Add(2); cp.Waves.Add(wave);
             var executor = FightBattleExecutor.Begin(cp, formula, new FightDamageSettlement(), catalog, items);
             var gate = new Gate(); executor.ImpactGate = gate; var task = Task.Run(() => executor.Step(0, 1));
             var pending = gate.Next();
+            Check(gate.Prepared.TryPeek(out var started) && ReferenceEquals(started, pending.Impact.Cast)
+                && started.HasSkillCostHp && started.SkillCostBeforeHp == 1000000
+                && started.SkillCostAfterHp == 999900 && actor.Hp == 999900,
+                "Cast preparation must follow original HP cost and precede the pending hit");
             target.Hp = target.Turn.Hp = removed ? 0 : 500000;
             pending.Released.Set();
             Check(task.Wait(TimeSpan.FromSeconds(20)), "Changed target did not finish the action");
-            var hits = task.Result.Event.DamageEvents.Where(d => d.SkillItemId == 10008).ToArray();
+            var hits = task.Result.Event.DamageEvents.Where(d => d.SkillItemId == 10008 && !d.IsSkillCost).ToArray();
             Check(removed ? hits.Length == 0 : hits.Length == 1 && hits[0].BeforeHp == 500000 && hits[0].AfterHp < 500000,
                 "The impact did not use the target's live state when the presentation reached it");
         }

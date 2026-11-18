@@ -846,6 +846,9 @@ namespace Zjcs.Combat.Official
                 SynchronizeDeathForbidden(actor);
             }
 
+            if (presentationCast != null && ImpactGate is IFightBattleCastPreparationObserver castObserver)
+                castObserver.CastPrepared(presentationCast);
+
             var skillLogic = FightSkillLogicRuntime.Create(actor, skill, units, statusCatalog, random, checkpoint.GridItems);
             if (skillLogic != null && skillLogic.OnSkillStart()) RebuildBattleProperties();
             if (skillLogic != null && skillLogic.OnConfiguredSkillStart(

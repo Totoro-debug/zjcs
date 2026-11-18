@@ -17,4 +17,14 @@ namespace Zjcs.Combat.Official
     {
         void AwaitImpact(FightBattlePendingImpact impact);
     }
+
+    /// <summary>
+    /// Optional preparation notification after skill cost and before nested skill logic.
+    /// Presentation offsets and durations may still be incomplete; the host must not
+    /// treat this callback as the actual animation start. Capture fields before returning.
+    /// </summary>
+    public interface IFightBattleCastPreparationObserver
+    {
+        void CastPrepared(FightBattleSkillCastEvent cast);
+    }
 }
