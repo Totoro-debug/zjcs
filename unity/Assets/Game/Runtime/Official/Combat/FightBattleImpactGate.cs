@@ -61,4 +61,13 @@ namespace Zjcs.Combat.Official
     {
         void ImpactSettled(FightBattlePendingImpact impact, FightBattleDamageEvent damage);
     }
+
+    /// <summary>
+    /// Optional notification after this occurrence's configured status applications have
+    /// actually completed. Earlier callbacks may run nested skills before this result exists.
+    /// </summary>
+    public interface IFightBattleImpactStatusResolutionObserver
+    {
+        void ImpactStatusResolved(FightBattlePendingImpact impact, FightBattleDamageEvent damage);
+    }
 }

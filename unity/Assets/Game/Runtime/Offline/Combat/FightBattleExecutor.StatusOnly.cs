@@ -14,11 +14,14 @@ namespace Zjcs.Combat.Official
             List<FightBattleSkillCastEvent> casts, List<FightBattleDamageEvent> damages,
             List<FightBattleMovementEvent> movements, ref float lastDelay,
             ref float statusDuration, ref float statusActionDuration,
-            FightGridPoint hitOrigin, FightBattleSkillCastPresentation hitCast)
+            FightGridPoint hitOrigin, FightBattleSkillCastPresentation hitCast,
+            FightBattlePendingImpact pendingImpact, IFightBattleImpactGate impactGate)
         {
             damage.IsDamageTriggerStatus = ApplyHitStatuses(actor, target, skill, hit, random,
                 skillCostHp, 0, damage);
             damage.HasDamageTriggerStatus = true;
+            if (pendingImpact != null && impactGate is IFightBattleImpactStatusResolutionObserver statusObserver)
+                statusObserver.ImpactStatusResolved(pendingImpact, damage);
             var invocations = new List<FightBattleStatusSkillInvocation>();
             CollectHitTriggerSkill(actor, target, skill, hit, invocations, hitOrigin, hitCast, damage.Delay);
             ApplyMissingStatusComponentsOnHit(actor, target, skill, hit, resolved, 0, invocations);

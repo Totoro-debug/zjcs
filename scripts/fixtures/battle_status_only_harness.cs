@@ -1,10 +1,19 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Zjcs.Combat.Official;
 
 public static class BattleStatusOnlyHarness
 {
+    private sealed class StatusObserver : IFightBattleImpactGate, IFightBattleImpactStatusResolutionObserver
+    {
+        public readonly List<(FightBattlePendingImpact Impact, int DamageId, bool Known, bool Triggered)> Results =
+            new List<(FightBattlePendingImpact, int, bool, bool)>();
+        public void AwaitImpact(FightBattlePendingImpact impact) { }
+        public void ImpactStatusResolved(FightBattlePendingImpact impact, FightBattleDamageEvent damage)
+            => Results.Add((impact, damage.DamageId, damage.HasDamageTriggerStatus, damage.IsDamageTriggerStatus));
+    }
     private static void Check(bool value, string message) { if (!value) throw new Exception(message); }
 
     public static void Run(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
@@ -80,9 +89,15 @@ public static class BattleStatusOnlyHarness
             source.Skills.Add(skill); source.SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = -1 });
             cp.Units.AddRange(new[] { source, target, other });
             var wave = new FightBattleWaveState(); wave.UnitIds.AddRange(new[] { 2, 3 }); cp.Waves.Add(wave);
-            var step = FightBattleExecutor.Begin(cp, formula, new FightDamageSettlement(), catalog, items).Step(0, 1).Event;
+            var executor = FightBattleExecutor.Begin(cp, formula, new FightDamageSettlement(), catalog, items);
+            var observer = new StatusObserver(); executor.ImpactGate = observer;
+            var step = executor.Step(0, 1).Event;
             var receipts = step.DamageEvents.Where(d => !d.IsSkillCost && d.SkillEntityId == skill.EntityId).ToArray();
             Check(receipts.Length > 0, name + ": original None occurrence was dropped.");
+            foreach (var receipt in receipts)
+                Check(observer.Results.Count(value => value.DamageId == receipt.DamageId && value.Known
+                    && value.Impact.TargetId == receipt.TargetId && value.Triggered == receipt.IsDamageTriggerStatus) == 1,
+                    name + ": the actual status outcome must be reported once for its own hit.");
             foreach (var receipt in receipts.Where(d => name != "mixed"))
                 Check(!receipt.IsCure && !receipt.HasDamageValue && !receipt.HasAbsoluteDamage
                     && receipt.BeforeHp == receipt.AfterHp && receipt.Damage == 0 && receipt.ShieldDamage == 0

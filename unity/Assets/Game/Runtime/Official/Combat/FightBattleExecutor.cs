@@ -1129,7 +1129,8 @@ namespace Zjcs.Combat.Official
                         ExecuteStatusOnlyHit(actor, target, targetPosition ?? (targets.Count > 0 ? targets[0] : null),
                             skill, hit, resolved, damage,
                             skillCostHp, casts, damageEvents, movements, ref lastDelay,
-                            ref statusTriggerDuration, ref statusTriggerActionDuration, hitOrigin, castHit);
+                            ref statusTriggerDuration, ref statusTriggerActionDuration, hitOrigin, castHit,
+                            pendingImpact, impactGate);
                         continue;
                     }
                     checkpoint.Statistics.RecordHit(damage, damageHitTargets);
@@ -1158,6 +1159,8 @@ namespace Zjcs.Combat.Official
                     damage.IsDamageTriggerStatus = ApplyHitStatuses(actor, target, skill, hit, random, skillCostHp,
                         actualHpLoss, damage);
                     damage.HasDamageTriggerStatus = true;
+                    if (pendingImpact != null && impactGate is IFightBattleImpactStatusResolutionObserver statusObserver)
+                        statusObserver.ImpactStatusResolved(pendingImpact, damage);
                     CollectHitTriggerSkill(actor, target, skill, hit, configuredComponentInvocations,
                         hitOrigin, castHit, hitDelay);
                     ApplyMissingStatusComponentsOnHit(actor, target, skill, hit, resolved,

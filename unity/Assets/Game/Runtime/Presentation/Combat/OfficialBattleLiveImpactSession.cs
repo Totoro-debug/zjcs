@@ -28,6 +28,7 @@ namespace Zjcs.Presentation.Combat
         private FightBattlePreparedCast preparation;
         private FightBattleSelectedHit selection;
         private FightBattleSettledImpact settlement;
+        private FightBattleSettledImpact resolvingStatus;
         private FightBattleCompletedCast completion;
         private float clock;
         private bool disposed, transferred, pumping;
@@ -35,7 +36,9 @@ namespace Zjcs.Presentation.Combat
         private Action<FightBattleDamageEvent> lastAfterDamageStarted;
 
         public bool IsCompleted => step.IsCompleted;
-        public FightBattleSettledImpact PendingSettlement => settlement;
+        public FightBattleSettledImpact PendingSettlement => settlement ?? resolvingStatus;
+        /// <summary>A nested presentation interrupted status resolution; the host must not advance this step.</summary>
+        public bool StatusResolutionBlocked => resolvingStatus != null && settlement == null;
 
         public OfficialBattleLiveImpactSession(FightBattleCheckpoint checkpoint,
             Func<FightBattleCheckpoint, FightBattleExecutor> restore,
@@ -72,6 +75,14 @@ namespace Zjcs.Presentation.Combat
                 {
                     // Arrivals are keyed independently and may precede target requests.
                     while (step.Latch.TryTake(out _)) { }
+                    if (resolvingStatus != null)
+                    {
+                        if (!step.Latch.TryTakeSettlement(out settlement)) return progressed;
+                        if (!settlement.IsStatusResolution || !ReferenceEquals(settlement.Damage, resolvingStatus.Damage)
+                            || !ReferenceEquals(settlement.Impact, resolvingStatus.Impact))
+                            throw new InvalidOperationException("The completed status result belongs to another impact.");
+                        resolvingStatus = null;
+                    }
                     if (preparation == null) step.Latch.TryTakePreparation(out preparation);
                     if (preparation != null)
                     {
@@ -95,6 +106,14 @@ namespace Zjcs.Presentation.Combat
                     if (settlement != null)
                     {
                         var active = Find(settlement.Impact.Cast);
+                        if (!settlement.Damage.HasDamageTriggerStatus)
+                        {
+                            resolvingStatus = settlement;
+                            step.Latch.DeferStatusResolution(settlement, out long deferredRevision);
+                            settlement = null; progressed = true;
+                            step.Latch.WaitForWorkerBoundary(deferredRevision);
+                            continue;
+                        }
                         if (!bridge.TryQueueSettlement(settlement, active.Id, out long revision, afterDamageStarted)) return progressed;
                         settlement = null; progressed = true;
                         step.Latch.WaitForWorkerBoundary(revision);

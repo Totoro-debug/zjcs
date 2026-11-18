@@ -35,6 +35,7 @@ namespace Zjcs.Combat.Official
     {
         internal FightBattleImpactLatch Owner;
         internal bool Taken, Completed, Delivering;
+        public bool IsStatusResolution { get; internal set; }
         public FightBattlePendingImpact Impact { get; internal set; }
         public FightBattleDamageEvent Damage { get; internal set; }
     }
@@ -44,7 +45,7 @@ namespace Zjcs.Combat.Official
     /// The step runs on a worker; the presentation thread takes requests without blocking and
     /// records actual arrivals. A single scope arrival may affect multiple target occurrences.
     /// </summary>
-    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleCastCompletionObserver, IFightBattleHitSelectionObserver, IFightBattleImpactSettlementObserver, IDisposable
+    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleCastCompletionObserver, IFightBattleHitSelectionObserver, IFightBattleImpactSettlementObserver, IFightBattleImpactStatusResolutionObserver, IDisposable
     {
         private readonly struct Signal : IEquatable<Signal>
         {
@@ -71,6 +72,8 @@ namespace Zjcs.Combat.Official
         private readonly Queue<FightBattleCompletedCast> completedCasts = new Queue<FightBattleCompletedCast>();
         private readonly Queue<FightBattleSelectedHit> selections = new Queue<FightBattleSelectedHit>();
         private readonly Queue<FightBattleSettledImpact> settlements = new Queue<FightBattleSettledImpact>();
+        private readonly Dictionary<FightBattleDamageEvent, FightBattlePendingImpact> deferredStatusResults =
+            new Dictionary<FightBattleDamageEvent, FightBattlePendingImpact>();
         private bool disposed;
         private int workerThread;
         private long waitRevision;
@@ -273,6 +276,45 @@ namespace Zjcs.Combat.Official
             }
         }
 
+        /// <summary>Releases an incomplete receipt solely to compute its real status result.</summary>
+        public void DeferStatusResolution(FightBattleSettledImpact settlement, out long releasedRevision)
+        {
+            if (settlement == null) throw new ArgumentNullException(nameof(settlement));
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (!ReferenceEquals(settlement.Owner, this) || !settlement.Taken || settlement.Completed
+                    || settlement.Delivering || settlement.IsStatusResolution || settlement.Damage.HasDamageTriggerStatus
+                    || deferredStatusResults.ContainsKey(settlement.Damage))
+                    throw new InvalidOperationException("The hit has no unresolved status result to defer.");
+                deferredStatusResults.Add(settlement.Damage, settlement.Impact);
+                releasedRevision = waitRevision;
+                settlement.Completed = true;
+                Monitor.PulseAll(sync);
+            }
+        }
+
+        public void ImpactStatusResolved(FightBattlePendingImpact impact, FightBattleDamageEvent damage)
+        {
+            if (impact == null) throw new ArgumentNullException(nameof(impact));
+            if (damage == null) throw new ArgumentNullException(nameof(damage));
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (!deferredStatusResults.TryGetValue(damage, out var expectedImpact)) return;
+                if (!ReferenceEquals(impact, expectedImpact))
+                    throw new InvalidOperationException("The status result belongs to another impact.");
+                if (!damage.HasDamageTriggerStatus)
+                    throw new InvalidOperationException("The deferred status result is still unknown.");
+                deferredStatusResults.Remove(damage);
+                var settlement = new FightBattleSettledImpact { Owner = this, Impact = impact, Damage = damage,
+                    IsStatusResolution = true };
+                settlements.Enqueue(settlement);
+                while (!disposed && !settlement.Completed) ParkWorker();
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+            }
+        }
+
         /// <summary>Copies must be made before completion; later effects may modify the event.</summary>
         public bool TryTakeSettlement(out FightBattleSettledImpact settlement)
         {
@@ -401,7 +443,7 @@ namespace Zjcs.Combat.Official
             lock (sync)
             {
                 if (disposed) return;
-                disposed = true; arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear();
+                disposed = true; arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear(); deferredStatusResults.Clear();
                 Monitor.PulseAll(sync);
             }
         }

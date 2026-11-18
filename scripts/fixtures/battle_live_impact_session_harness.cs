@@ -24,7 +24,8 @@ namespace Zjcs.Presentation.Combat
         public FightBattleHitSelectionSnapshot Selection;
         public float SelectionElapsed, CompletionElapsed;
         public int Damages, Completions;
-        public bool ArriveImmediately;
+        public bool ArriveImmediately, RejectDamage;
+        public FightBattleDamageEvent LastDamage;
         public void QueueSelectedHit(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
             FightBattleHitSelectionSnapshot selection, float elapsed)
         {
@@ -35,7 +36,7 @@ namespace Zjcs.Presentation.Combat
             }
         }
         public bool QueueSettledDamage(FightBattleSkillCastEvent cast, EcEntityIdentifier id, FightBattleDamageEvent damage)
-        { if (!damage.HasDamageTriggerStatus) return false; Damages++; return ReferenceEquals(cast, Cast); }
+        { if (!damage.HasDamageTriggerStatus || RejectDamage) return false; Damages++; LastDamage = damage; return ReferenceEquals(cast, Cast); }
         public void CompleteLiveCast(FightBattleSkillCastEvent cast, EcEntityIdentifier id, float elapsed)
         { if (!ReferenceEquals(cast, Cast)) throw new InvalidOperationException("Wrong completed cast"); Completions++; CompletionElapsed = elapsed; }
         public void Arrive(int scope) => HitSelectionViewArrived?.Invoke(Cast, Selection, 0, new Pos2d(10, 7), scope);
@@ -139,28 +140,32 @@ namespace Zjcs.Presentation.Combat
             jumpWave.UnitIds.Add(2); jumpCp.Waves.Add(jumpWave);
             FightBattleExecutor.Begin(jumpCp, formula, new FightDamageSettlement(), catalog, items);
             string beforeJump = FightBattleCheckpointSerializer.Save(jumpCp);
+            var jumpBaseline = FightBattleCheckpointSerializer.Load(beforeJump);
+            var jumpOrdinary = FightBattleExecutor.Restore(jumpBaseline, formula, new FightDamageSettlement(), catalog, items).Step(0, 1);
+            var expectedJumpDamage = jumpOrdinary.Event.DamageEvents.Single(d => d.SkillItemId == 10015);
             var jumpViews = new OfficialBattleSkillEntityPlayback();
-            using (var pendingSession = new OfficialBattleLiveImpactSession(jumpCp,
+            using (var jumpSession = new OfficialBattleLiveImpactSession(jumpCp,
                 copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), jumpViews, 0, 1))
             {
                 bool StartJump(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
                 { id = new EcEntityIdentifier(43); return true; }
-                Check(SpinWait.SpinUntil(() => { pendingSession.Pump(0f, StartJump); return jumpViews.Selection != null; }, 20000),
+                Check(SpinWait.SpinUntil(() => { jumpSession.Pump(0f, StartJump); return jumpViews.Selection != null; }, 20000),
                     "The status-bearing jump did not offer its selected hit");
-                var jumpOccurrence = jumpViews.Selection.Targets.Single(t => t.TargetId == 2);
-                jumpViews.Arrive(jumpOccurrence.HasScopeIndex ? jumpOccurrence.ScopeIndex : -1);
-                Check(SpinWait.SpinUntil(() => { pendingSession.Pump(0f, StartJump); return pendingSession.PendingSettlement != null; }, 20000)
-                    && !pendingSession.PendingSettlement.Damage.HasDamageTriggerStatus && jumpViews.Damages == 0,
-                    "An unknown status result must remain held rather than being invented");
-                Check(!pendingSession.TryCompletePendingSettlement((impact, damage) => false)
-                    && pendingSession.PendingSettlement != null && !pendingSession.IsCompleted,
-                    "A declined fallback must keep the exact settlement waiting");
-                pendingSession.Dispose();
-                Check(SpinWait.SpinUntil(() => pendingSession.IsCompleted, 20000)
-                    && FightBattleCheckpointSerializer.Save(jumpCp) == beforeJump,
-                    "Canceling an unsupported live result changed the committed checkpoint");
+                var hit = jumpViews.Selection.Targets.Single(t => t.TargetId == 2);
+                jumpViews.Arrive(hit.HasScopeIndex ? hit.ScopeIndex : -1);
+                Check(jumpViews.Damages == 1 && jumpViews.LastDamage.HasDamageTriggerStatus
+                    && jumpViews.LastDamage.IsDamageTriggerStatus == expectedJumpDamage.IsDamageTriggerStatus
+                    && jumpViews.LastDamage.DamageValue == expectedJumpDamage.DamageValue
+                    && !jumpSession.StatusResolutionBlocked && jumpSession.PendingSettlement == null,
+                    "The jump's actual status outcome and damage did not arrive in the impact frame");
+                Check(SpinWait.SpinUntil(() => { jumpSession.Pump(0f, StartJump); return jumpSession.IsCompleted; }, 20000)
+                    && jumpViews.Completions == 1 && FightBattleCheckpointSerializer.Save(jumpCp) == beforeJump,
+                    "The status-bearing hit did not finish in an isolated checkpoint");
+                Check(jumpSession.TryTakeCompleted(out _, out var result)
+                    && FightBattleCheckpointSerializer.Save(result.Checkpoint) == FightBattleCheckpointSerializer.Save(jumpBaseline),
+                    "Resolving the original status changed the completed deterministic result");
             }
-            var fallbackViews = new OfficialBattleSkillEntityPlayback();
+            var fallbackViews = new OfficialBattleSkillEntityPlayback { RejectDamage = true };
             using (var fallbackSession = new OfficialBattleLiveImpactSession(jumpCp,
                 copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), fallbackViews, 0, 1))
             {
@@ -170,10 +175,14 @@ namespace Zjcs.Presentation.Combat
                     "The fallback fixture did not reach its actual hit");
                 var hit = fallbackViews.Selection.Targets.Single(t => t.TargetId == 2);
                 fallbackViews.Arrive(hit.HasScopeIndex ? hit.ScopeIndex : -1);
-                Check(fallbackSession.PendingSettlement != null, "The unresolved result did not remain held in the impact frame");
+                Check(fallbackSession.PendingSettlement != null && fallbackSession.PendingSettlement.Damage.HasDamageTriggerStatus,
+                    "A declined real result must remain held without inventing its status");
+                Check(!fallbackSession.TryCompletePendingSettlement((impact, damage) => false)
+                    && fallbackSession.PendingSettlement != null && !fallbackSession.IsCompleted,
+                    "A declined fallback must keep the exact settlement waiting");
                 bool delivered = false;
                 Check(fallbackSession.TryCompletePendingSettlement((impact, damage) => {
-                    delivered = !damage.HasDamageTriggerStatus && damage.BeforeHp == 1000000
+                    delivered = damage.HasDamageTriggerStatus && damage.BeforeHp == 1000000
                         && damage.AfterHp < 1000000 && !fallbackSession.IsCompleted;
                     return delivered;
                 }) && delivered, "The host could not deliver the held result while the worker was suspended");
@@ -184,7 +193,31 @@ namespace Zjcs.Presentation.Combat
                     && fallbackResult.Event.DamageEvents.Any(d => d.SkillItemId == 10015),
                     "The resumed jump result was not transferable");
             }
-            return "Live impact session passed: deferred start, same-frame impact, HP handoff, lifetime, isolation and unresolved-status handling.";
+            var nestedCp = FightBattleCheckpointSerializer.Load(beforeJump);
+            var fragile = nestedCp.Units.Single(unit => unit.Id == 2);
+            fragile.Hp = fragile.Turn.Hp = 1;
+            fragile.Statuses.Add(catalog.CreateStatus(25013, 2, 2, 1, 25013, 10518, 6, 17, 1));
+            string beforeNested = FightBattleCheckpointSerializer.Save(nestedCp);
+            var nestedViews = new OfficialBattleSkillEntityPlayback();
+            using (var nestedSession = new OfficialBattleLiveImpactSession(nestedCp,
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), nestedViews, 0, 1))
+            {
+                bool StartJump(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = new EcEntityIdentifier(46); return true; }
+                Check(SpinWait.SpinUntil(() => { nestedSession.Pump(0f, StartJump); return nestedViews.Selection != null; }, 20000),
+                    "The fatal-prevention fixture did not reach its jump impact");
+                var hit = nestedViews.Selection.Targets.Single(t => t.TargetId == 2);
+                nestedViews.Arrive(hit.HasScopeIndex ? hit.ScopeIndex : -1);
+                Check(nestedSession.StatusResolutionBlocked && nestedSession.PendingSettlement != null
+                    && !nestedSession.PendingSettlement.Damage.HasDamageTriggerStatus && nestedViews.Damages == 0
+                    && !nestedSession.IsCompleted && FightBattleCheckpointSerializer.Save(nestedCp) == beforeNested,
+                    "A recovery skill inside status resolution must stay blocked without inventing or displaying a result");
+                nestedSession.Dispose();
+                Check(SpinWait.SpinUntil(() => nestedSession.IsCompleted, 20000)
+                    && FightBattleCheckpointSerializer.Save(nestedCp) == beforeNested,
+                    "Canceling a nested unresolved impact changed the committed checkpoint");
+            }
+            return "Live impact session passed: deferred start, same-frame impact, HP handoff, lifetime, isolation and actual status resolution.";
         }
     }
 }

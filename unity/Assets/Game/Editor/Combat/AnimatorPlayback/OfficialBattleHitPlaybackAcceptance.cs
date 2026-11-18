@@ -671,7 +671,49 @@ namespace Zjcs.Editor.Combat
             fireViews.Tick(sessionCast.Presentation.Duration + .01f);
             Require(fireViews.GetEntity(sessionSkillId) == null, "The live session did not end the original cast entity.");
             fireViews.HitSelectionViewArrived -= sessionObserver;
-            liveSession.Dispose(); fireViews.Dispose(); Destroy(fireRoot.gameObject);
+            liveSession.Dispose();
+
+            // Keep the real fireball presentation, and attach an isolated status application
+            // to exercise the incomplete-to-actual result handoff with Unity's native views.
+            var statusCp = FightBattleCheckpointSerializer.Load(committedFire);
+            var statusSkill = statusCp.Units.Single(unit => unit.Id == 1).Skills.Single(value => value.ItemId == 10028);
+            statusSkill.HitGraphEntities.Single(value => value.EntityId == 10801).AppliedStatuses.Add(new FightBattleStatusApplication {
+                StatusId = 24031, Chance = 1, AffectedByProp = false, LessThanHpPer = -1f });
+            string statusCheckpoint = FightBattleCheckpointSerializer.Save(statusCp);
+            var statusBaseline = FightBattleCheckpointSerializer.Load(statusCheckpoint);
+            var statusBaselineResult = FightBattleExecutor.Restore(statusBaseline, formula, new FightDamageSettlement(),
+                liveCatalog, combatAssets.LoadSkillItems()).Step(0, 1);
+            var expectedStatusDamage = statusBaselineResult.Event.DamageEvents.Single(value => value.SkillItemId == 10028);
+            Require(expectedStatusDamage.IsDamageTriggerStatus, "The status handoff fixture must actually apply its status.");
+            fireDisplayUnits[1].Hp = 1000000; fireDisplayUnits[1].Turn.Hp = 1000000;
+            int beforeStatusFire = played.Count;
+            bool statusDamageShown = false;
+            FightBattleSkillCastEvent statusCast = null;
+            using var statusSession = new OfficialBattleLiveImpactSession(statusCp, copy => FightBattleExecutor.Restore(copy,
+                formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), fireViews, 0, 1);
+            bool StartStatusCast(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) {
+                statusCast = cast; id = fireViews.Start(cast, fireSource, fireTarget); return true;
+            }
+            void RefreshStatusHp(FightBattleDamageEvent damage) {
+                fireDisplayUnits[1].Hp = damage.AfterHp; fireDisplayUnits[1].Turn.Hp = damage.AfterHp;
+                statusDamageShown = damage.HasDamageTriggerStatus && damage.IsDamageTriggerStatus
+                    && damage.DamageValue == expectedStatusDamage.DamageValue && damageNotifications == 4
+                    && played.Skip(beforeStatusFire).Any(value => value.Name == "playable10801" && value.Frame == Time.frameCount);
+                Require(statusDamageShown, "The actual applied status and native damage must reach the same impact frame.");
+            }
+            deadline = Time.realtimeSinceStartup + 10f;
+            while (!statusSession.IsCompleted && Time.realtimeSinceStartup < deadline) {
+                statusSession.Pump(Time.deltaTime, StartStatusCast, RefreshStatusHp);
+                Require(!statusSession.StatusResolutionBlocked, "The simple status unexpectedly started a nested presentation.");
+                fireViews.Tick(Time.deltaTime); fireScope.LateTick();
+                yield return null;
+            }
+            Require(statusDamageShown && statusSession.IsCompleted && statusCast != null
+                && statusSession.TryTakeCompleted(out _, out var statusResult)
+                && FightBattleCheckpointSerializer.Save(statusCp) == statusCheckpoint
+                && FightBattleCheckpointSerializer.Save(statusResult.Checkpoint) == FightBattleCheckpointSerializer.Save(statusBaseline),
+                "The live status result changed the original checkpoint or deterministic outcome.");
+            statusSession.Dispose(); fireViews.Dispose(); Destroy(fireRoot.gameObject);
 
 
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);

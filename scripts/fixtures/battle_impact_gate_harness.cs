@@ -13,12 +13,16 @@ public static class BattleImpactGateHarness
         public FightBattlePendingImpact Impact;
         public ManualResetEventSlim Released = new ManualResetEventSlim(false);
     }
-    private sealed class Gate : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleImpactSettlementObserver
+    private sealed class Gate : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleImpactSettlementObserver, IFightBattleImpactStatusResolutionObserver
     {
         public readonly ConcurrentQueue<(int SkillItemId, bool HasStatusResult, bool StatusTriggered)> Settlements =
             new ConcurrentQueue<(int, bool, bool)>();
         public void ImpactSettled(FightBattlePendingImpact impact, FightBattleDamageEvent damage)
             => Settlements.Enqueue((impact.SkillItemId, damage.HasDamageTriggerStatus, damage.IsDamageTriggerStatus));
+        public readonly ConcurrentQueue<(FightBattlePendingImpact Impact, int DamageId, bool Known, bool Triggered)> StatusResults =
+            new ConcurrentQueue<(FightBattlePendingImpact, int, bool, bool)>();
+        public void ImpactStatusResolved(FightBattlePendingImpact impact, FightBattleDamageEvent damage)
+            => StatusResults.Enqueue((impact, damage.DamageId, damage.HasDamageTriggerStatus, damage.IsDamageTriggerStatus));
         public readonly BlockingCollection<Pending> Items = new BlockingCollection<Pending>();
         public readonly ConcurrentQueue<FightBattleSkillCastEvent> Prepared = new ConcurrentQueue<FightBattleSkillCastEvent>();
         public void CastPrepared(FightBattleSkillCastEvent cast) { Prepared.Enqueue(cast); }
@@ -54,6 +58,37 @@ public static class BattleImpactGateHarness
     }
     public static string Run(FightOfficialCombatCatalog catalog, FightDamageFormula formula, FightOfficialSkillItemCatalog items)
     {
+        {
+            using var deferred = new FightBattleImpactLatch();
+            var impact = new FightBattlePendingImpact();
+            var damage = new FightBattleDamageEvent { BeforeHp = 100, AfterHp = 70 };
+            var child = new FightBattleSkillCastEvent();
+            var worker = Task.Run(() => {
+                deferred.ImpactSettled(impact, damage);
+                deferred.CastPrepared(child);
+                damage.IsDamageTriggerStatus = true;
+                damage.HasDamageTriggerStatus = true;
+                deferred.ImpactStatusResolved(impact, damage);
+            });
+            FightBattleSettledImpact initial = null;
+            Check(SpinWait.SpinUntil(() => deferred.TryTakeSettlement(out initial), 20000)
+                && !initial.Damage.HasDamageTriggerStatus, "The actual unresolved result was not offered");
+            deferred.DeferStatusResolution(initial, out _);
+            FightBattlePreparedCast nested = null;
+            Check(SpinWait.SpinUntil(() => deferred.TryTakePreparation(out nested), 20000)
+                && ReferenceEquals(nested.Cast, child) && !deferred.TryTakeSettlement(out _)
+                && !damage.HasDamageTriggerStatus,
+                "A nested skill before status resolution must not acquire an invented result");
+            deferred.CompletePreparation(nested);
+            FightBattleSettledImpact resolved = null;
+            Check(SpinWait.SpinUntil(() => deferred.TryTakeSettlement(out resolved), 20000)
+                && resolved.IsStatusResolution && ReferenceEquals(resolved.Impact, impact)
+                && ReferenceEquals(resolved.Damage, damage) && damage.HasDamageTriggerStatus
+                && damage.IsDamageTriggerStatus && !worker.IsCompleted,
+                "The deferred outcome was not handed back at its actual completion");
+            deferred.CompleteSettlement(resolved);
+            Check(worker.Wait(20000), "Completing the actual status result did not resume its worker");
+        }
         {
             var cast = new FightBattleSkillCastEvent { SkillEntityId = 10100 };
             using var preparationLatch = new FightBattleImpactLatch();
@@ -242,6 +277,11 @@ public static class BattleImpactGateHarness
                     "Only an empty original status list has a known result at the impact boundary");
             }
             Check(actual.Event.DamageEvents.Count(d => d.SkillItemId == setup[0]) == setup[3], "A hit was lost or duplicated");
+            var resolved = gate.StatusResults.Where(value => value.Impact.SkillItemId == setup[0]).ToArray();
+            Check(resolved.Length == setup[3] && resolved.All(value => value.Known
+                && actual.Event.DamageEvents.Any(d => d.DamageId == value.DamageId
+                    && d.TargetId == value.Impact.TargetId && d.IsDamageTriggerStatus == value.Triggered)),
+                "A damage's completed status result was omitted, guessed or associated with another hit");
             Check(FightBattleCheckpointSerializer.Save(checkpoint) == FightBattleCheckpointSerializer.Save(baseline),
                 "Gating changed the original deterministic result");
         }
