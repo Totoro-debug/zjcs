@@ -25,6 +25,9 @@ namespace Zjcs.Presentation.Combat
         public Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot> OnQueue;
         public void QueueSelectedHit(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
             FightBattleHitSelectionSnapshot selection, float elapsed) => OnQueue?.Invoke(cast, selection);
+        public Func<FightBattleSkillCastEvent, FightBattleDamageEvent, bool> OnDamage;
+        public bool QueueSettledDamage(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
+            FightBattleDamageEvent damage) => OnDamage != null && OnDamage(cast, damage);
     }
 
     public static class BattleImpactViewBridgeHarness
@@ -69,6 +72,24 @@ namespace Zjcs.Presentation.Combat
             Check(queueHeld && reentrantRejected && selectedWorker.Wait(20000),
                 "An immediate native arrival was lost during selection handoff");
             views.OnQueue = null;
+            var actualImpact = Pending(0);
+            var actualDamage = new FightBattleDamageEvent { BeforeHp = 100, AfterHp = 70 };
+            var settledWorker = Task.Run(() => latch.ImpactSettled(actualImpact, actualDamage));
+            FightBattleSettledImpact settled = null;
+            Check(SpinWait.SpinUntil(() => latch.TryTakeSettlement(out settled), 20000),
+                "The actual settlement was not offered to the host");
+            views.OnDamage = (owner, value) => false;
+            Check(!bridge.TryQueueSettlement(settled, new EcEntityIdentifier(42)) && !settledWorker.Wait(50),
+                "An incomplete view result must leave the executor waiting");
+            bool reentrantSettlementRejected = false;
+            views.OnDamage = (owner, value) => {
+                try { latch.CompleteSettlement(settled); }
+                catch (InvalidOperationException) { reentrantSettlementRejected = true; }
+                return ReferenceEquals(owner, cast) && ReferenceEquals(value, actualDamage) && !settledWorker.IsCompleted;
+            };
+            Check(bridge.TryQueueSettlement(settled, new EcEntityIdentifier(42))
+                && reentrantSettlementRejected && settledWorker.Wait(20000),
+                "The actual damage was not shown before the executor continued");
             cast = new FightBattleSkillCastEvent();
             var first = Task.Run(() => latch.AwaitImpact(Pending(0)));
             Check(SpinWait.SpinUntil(() => latch.TryTake(out _), 20000), "The first impact was not offered to the host");

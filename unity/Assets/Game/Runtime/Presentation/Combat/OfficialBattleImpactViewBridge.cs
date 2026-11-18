@@ -30,6 +30,14 @@ namespace Zjcs.Presentation.Combat
                 views.QueueSelectedHit(cast, skillId, selection, elapsedSinceCast));
         }
 
+        /// <summary>Returns false without releasing an incomplete or unsupported damage result.</summary>
+        public bool TryQueueSettlement(FightBattleSettledImpact settlement, EcEntityIdentifier skillId)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleImpactViewBridge));
+            return latch.TryCompleteSettlement(settlement, (impact, damage) =>
+                views.QueueSettledDamage(impact.Cast, skillId, damage));
+        }
+
         private void OnArrival(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot selection,
             int centerIndex, Pos2d position, int scopeIndex)
         {

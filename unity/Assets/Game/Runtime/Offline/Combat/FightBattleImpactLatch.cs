@@ -26,7 +26,7 @@ namespace Zjcs.Combat.Official
     public sealed class FightBattleSettledImpact
     {
         internal FightBattleImpactLatch Owner;
-        internal bool Taken, Completed;
+        internal bool Taken, Completed, Delivering;
         public FightBattlePendingImpact Impact { get; internal set; }
         public FightBattleDamageEvent Damage { get; internal set; }
     }
@@ -176,15 +176,29 @@ namespace Zjcs.Combat.Official
         }
 
         public void CompleteSettlement(FightBattleSettledImpact settlement)
+            => TryCompleteSettlement(settlement, (impact, damage) => true);
+
+        /// <summary>Delivers the actual result while the executor is suspended; false leaves it waiting.</summary>
+        public bool TryCompleteSettlement(FightBattleSettledImpact settlement,
+            Func<FightBattlePendingImpact, FightBattleDamageEvent, bool> deliver)
         {
             if (settlement == null) throw new ArgumentNullException(nameof(settlement));
+            if (deliver == null) throw new ArgumentNullException(nameof(deliver));
             lock (sync)
             {
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
-                if (!ReferenceEquals(settlement.Owner, this) || !settlement.Taken || settlement.Completed)
+                if (!ReferenceEquals(settlement.Owner, this) || !settlement.Taken
+                    || settlement.Completed || settlement.Delivering)
                     throw new InvalidOperationException("The hit settlement is not awaiting this host.");
+                bool delivered;
+                settlement.Delivering = true;
+                try { delivered = deliver(settlement.Impact, settlement.Damage); }
+                finally { settlement.Delivering = false; }
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (!delivered) return false;
                 settlement.Completed = true;
                 Monitor.PulseAll(sync);
+                return true;
             }
         }
 

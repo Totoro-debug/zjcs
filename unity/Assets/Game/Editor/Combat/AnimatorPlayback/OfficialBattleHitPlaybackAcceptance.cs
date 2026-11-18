@@ -532,24 +532,24 @@ namespace Zjcs.Editor.Combat
                 SourceId = fireDamage.Damage.SourceId, SkillEntityId = fireDamage.Damage.SkillEntityId };
             Require(!fireViews.QueueSettledDamage(fireCast, fireSkillId, incomplete) && damageNotifications == 0,
                 "An incomplete damage result cannot start the native damage view.");
-            Require(fireViews.QueueSettledDamage(fireCast, fireSkillId, fireDamage.Damage)
-                && damageNotifications == 1 && observedDamage == fireDamage.Damage.DamageValue,
+            long fireDamageValue = fireDamage.Damage.DamageValue;
+            Require(fireBridge.TryQueueSettlement(fireDamage, fireSkillId)
+                && damageNotifications == 1 && observedDamage == fireDamageValue,
                 "Actual fireball settlement must start its original damage entity exactly once.");
-            bool duplicateDamageRejected = false;
-            try { fireViews.QueueSettledDamage(fireCast, fireSkillId, fireDamage.Damage); }
-            catch (InvalidOperationException) { duplicateDamageRejected = true; }
-            Require(duplicateDamageRejected, "The same impact cannot create duplicate native damage entities.");
             var floats = floatRoot.GetComponentsInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUI>();
             Require(floats.Any(ui => ui.EntityId == new EcEntityIdentifier(1, 2)
                 && ui.GetComponentsInChildren<TextMesh>(true).Any(text =>
-                    text.text == Math.Abs(fireDamage.Damage.DamageValue).ToString())),
+                    text.text == Math.Abs(fireDamageValue).ToString())),
                 "The original damage UI must display a number on the actual target at impact.");
             Capture("fireball-damage-impact.png");
-            fireLatch.CompleteSettlement(fireDamage);
             deadline = Time.realtimeSinceStartup + 10f;
             while (!fireStep.IsCompleted && Time.realtimeSinceStartup < deadline) yield return null;
             Require(fireStep.IsCompleted && !fireStep.IsFaulted && !fireStep.IsCanceled,
                 "The official fireball action did not complete after impact.");
+            bool duplicateDamageRejected = false;
+            try { fireViews.QueueSettledDamage(fireCast, fireSkillId, fireDamage.Damage); }
+            catch (InvalidOperationException) { duplicateDamageRejected = true; }
+            Require(duplicateDamageRejected, "The same impact cannot create duplicate native damage entities.");
             fireViews.HitSelectionViewArrived -= fireObserver;
             fireBridge.Dispose(); fireLatch.Dispose(); fireViews.Dispose();
             Destroy(fireRoot.gameObject);
