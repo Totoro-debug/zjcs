@@ -24,9 +24,16 @@ namespace Zjcs.Presentation.Combat
         public FightBattleHitSelectionSnapshot Selection;
         public float SelectionElapsed, CompletionElapsed;
         public int Damages, Completions;
+        public bool ArriveImmediately;
         public void QueueSelectedHit(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
             FightBattleHitSelectionSnapshot selection, float elapsed)
-        { Cast = cast; Selection = selection; SelectionElapsed = elapsed; }
+        {
+            Cast = cast; Selection = selection; SelectionElapsed = elapsed;
+            if (ArriveImmediately) {
+                var target = selection.Targets.Single(t => t.TargetId == 2);
+                Arrive(target.HasScopeIndex ? target.ScopeIndex : -1);
+            }
+        }
         public bool QueueSettledDamage(FightBattleSkillCastEvent cast, EcEntityIdentifier id, FightBattleDamageEvent damage)
         { if (!damage.HasDamageTriggerStatus) return false; Damages++; return ReferenceEquals(cast, Cast); }
         public void CompleteLiveCast(FightBattleSkillCastEvent cast, EcEntityIdentifier id, float elapsed)
@@ -90,7 +97,13 @@ namespace Zjcs.Presentation.Combat
             Check(views.SelectionElapsed >= 0f && target.Hp == 1000000 && views.Damages == 0,
                 "The local result changed before the native hit arrival");
             var occurrence = views.Selection.Targets.Single(t => t.TargetId == 2);
-            views.Arrive(occurrence.HasScopeIndex ? occurrence.ScopeIndex : -1);
+            int expectedScope = occurrence.HasScopeIndex ? occurrence.ScopeIndex : -1;
+            views.Arrive(expectedScope + 1);
+            Check(views.Damages == 0 && target.Hp == 1000000,
+                "An unrelated scope arrival released the pending impact");
+            views.Arrive(expectedScope);
+            Check(hpRefreshed && views.Damages == 1,
+                "The matching arrival returned before its original damage and HP were displayed");
             Check(SpinWait.SpinUntil(() => { session.Pump(.001f, Start, Refresh); return session.IsCompleted; }, 20000)
                 && hpRefreshed && reentrantRejected && transferReentrantRejected && views.Damages == 1 && views.Completions == 1
                 && views.CompletionElapsed >= views.SelectionElapsed && target.Hp == 1000000,
@@ -104,6 +117,17 @@ namespace Zjcs.Presentation.Combat
             try { session.TryTakeCompleted(out _, out _); }
             catch (InvalidOperationException) { duplicate = true; }
             Check(duplicate, "The live result was transferred twice");
+            var earlyViews = new OfficialBattleSkillEntityPlayback { ArriveImmediately = true };
+            using (var early = new OfficialBattleLiveImpactSession(cp,
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), earlyViews, 0, 1))
+            {
+                bool StartEarly(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = new EcEntityIdentifier(44); return true; }
+                Check(SpinWait.SpinUntil(() => { early.Pump(0f, StartEarly); return early.IsCompleted; }, 20000)
+                    && earlyViews.Damages == 1 && earlyViews.Completions == 1
+                    && FightBattleCheckpointSerializer.Save(cp) == committed,
+                    "An arrival during selection delivery did not settle without a lost wakeup");
+            }
 
             var jumpCp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
                 Grid = new FightBattleGrid { Width = 20, Height = 20, DefaultGroundType = 2 } };
@@ -136,7 +160,31 @@ namespace Zjcs.Presentation.Combat
                     && FightBattleCheckpointSerializer.Save(jumpCp) == beforeJump,
                     "Canceling an unsupported live result changed the committed checkpoint");
             }
-            return "Live impact session passed: deferred start, actual impact, HP handoff, lifetime, isolation and unresolved-status cancellation.";
+            var fallbackViews = new OfficialBattleSkillEntityPlayback();
+            using (var fallbackSession = new OfficialBattleLiveImpactSession(jumpCp,
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), fallbackViews, 0, 1))
+            {
+                bool StartJump(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = new EcEntityIdentifier(45); return true; }
+                Check(SpinWait.SpinUntil(() => { fallbackSession.Pump(0f, StartJump); return fallbackViews.Selection != null; }, 20000),
+                    "The fallback fixture did not reach its actual hit");
+                var hit = fallbackViews.Selection.Targets.Single(t => t.TargetId == 2);
+                fallbackViews.Arrive(hit.HasScopeIndex ? hit.ScopeIndex : -1);
+                Check(fallbackSession.PendingSettlement != null, "The unresolved result did not remain held in the impact frame");
+                bool delivered = false;
+                Check(fallbackSession.TryCompletePendingSettlement((impact, damage) => {
+                    delivered = !damage.HasDamageTriggerStatus && damage.BeforeHp == 1000000
+                        && damage.AfterHp < 1000000 && !fallbackSession.IsCompleted;
+                    return delivered;
+                }) && delivered, "The host could not deliver the held result while the worker was suspended");
+                Check(SpinWait.SpinUntil(() => { fallbackSession.Pump(0f, StartJump); return fallbackSession.IsCompleted; }, 20000)
+                    && fallbackViews.Completions == 1 && FightBattleCheckpointSerializer.Save(jumpCp) == beforeJump,
+                    "An accepted fallback did not resume the isolated step safely");
+                Check(fallbackSession.TryTakeCompleted(out _, out var fallbackResult)
+                    && fallbackResult.Event.DamageEvents.Any(d => d.SkillItemId == 10015),
+                    "The resumed jump result was not transferable");
+            }
+            return "Live impact session passed: deferred start, same-frame impact, HP handoff, lifetime, isolation and unresolved-status handling.";
         }
     }
 }

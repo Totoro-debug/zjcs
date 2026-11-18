@@ -29,7 +29,10 @@ namespace Zjcs.Combat.Official
                 throw new InvalidOperationException("The restored executor must own the isolated checkpoint.");
             Latch = new FightBattleImpactLatch();
             executor.ImpactGate = Latch;
-            worker = Task.Run(() => executor.Step(sequence, counter));
+            worker = Task.Run(() => {
+                try { Latch.BindWorker(); return executor.Step(sequence, counter); }
+                finally { Latch.FinishWorker(); }
+            });
         }
 
         /// <summary>Transfers a finished step once; exceptions are rethrown on the caller.</summary>

@@ -407,10 +407,15 @@ public static class BattleImpactGateHarness
             {
                 Check(SpinWait.SpinUntil(() => canceled.Latch.TryTakePreparation(out _), 20000),
                     "The canceled isolated step did not reach a safe rendezvous");
+                long revision = canceled.Latch.WorkerWaitRevision;
+                var fence = Task.Run(() => {
+                    try { canceled.Latch.WaitForWorkerBoundary(revision); return false; }
+                    catch (OperationCanceledException) { return true; }
+                });
                 canceled.Dispose();
-                Check(SpinWait.SpinUntil(() => canceled.IsCompleted, 20000)
+                Check(fence.Wait(20000) && fence.Result && SpinWait.SpinUntil(() => canceled.IsCompleted, 20000)
                     && FightBattleCheckpointSerializer.Save(cp) == committed,
-                    "Canceling a partial isolated step changed the committed checkpoint");
+                    "Canceling a partial isolated step did not release its fence or preserve the checkpoint");
             }
         }
         foreach (bool removed in new[] { false, true })

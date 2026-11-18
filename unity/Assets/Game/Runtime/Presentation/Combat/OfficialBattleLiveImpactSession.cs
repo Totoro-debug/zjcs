@@ -31,6 +31,8 @@ namespace Zjcs.Presentation.Combat
         private FightBattleCompletedCast completion;
         private float clock;
         private bool disposed, transferred, pumping;
+        private StartCast lastStartCast;
+        private Action<FightBattleDamageEvent> lastAfterDamageStarted;
 
         public bool IsCompleted => step.IsCompleted;
         public FightBattleSettledImpact PendingSettlement => settlement;
@@ -42,12 +44,13 @@ namespace Zjcs.Presentation.Combat
             this.views = views ?? throw new ArgumentNullException(nameof(views));
             step = new FightBattleIsolatedStep(checkpoint, restore, sequence, counter);
             bridge = new OfficialBattleImpactViewBridge(views, step.Latch);
+            bridge.WorkerReleasedByArrival += OnWorkerReleasedByArrival;
         }
 
         /// <summary>
-        /// Processes available handoffs without blocking the presentation thread. If the
-        /// start callback declines, the prepared cast remains held until a later pump.
-        /// If a damage result is incomplete, it remains held for the host to handle.
+        /// Processes handoffs through the next presentation boundary. The host waits for
+        /// local rule work after releasing a handoff, so an impact and its damage share
+        /// the same frame. Declined starts and incomplete damage remain held.
         /// </summary>
         public bool Pump(float elapsed, StartCast startCast, Action<FightBattleDamageEvent> afterDamageStarted = null)
         {
@@ -57,49 +60,68 @@ namespace Zjcs.Presentation.Combat
                 throw new ArgumentOutOfRangeException(nameof(elapsed));
             if (startCast == null) throw new ArgumentNullException(nameof(startCast));
             if (pumping) throw new InvalidOperationException("The live step is already being pumped.");
+            lastStartCast = startCast;
+            lastAfterDamageStarted = afterDamageStarted;
             pumping = true;
             try
             {
                 clock += elapsed;
                 if (float.IsInfinity(clock)) throw new InvalidOperationException("The live presentation clock overflowed.");
                 bool progressed = false;
-                // These requests are diagnostic only; arrivals are keyed independently and
-                // can precede a target request. Do not keep completed requests indefinitely.
-                while (step.Latch.TryTake(out _)) { }
-                if (preparation == null) step.Latch.TryTakePreparation(out preparation);
-                if (preparation != null)
+                while (true)
                 {
-                    if (!startCast(preparation.Cast, out var id)) return progressed;
-                    casts.Add(preparation.Cast, new ActiveCast { Id = id, Started = clock });
-                    step.Latch.CompletePreparation(preparation);
-                    preparation = null; progressed = true;
+                    // Arrivals are keyed independently and may precede target requests.
+                    while (step.Latch.TryTake(out _)) { }
+                    if (preparation == null) step.Latch.TryTakePreparation(out preparation);
+                    if (preparation != null)
+                    {
+                        if (!startCast(preparation.Cast, out var id)) return progressed;
+                        casts.Add(preparation.Cast, new ActiveCast { Id = id, Started = clock });
+                        step.Latch.CompletePreparation(preparation, out long revision);
+                        preparation = null; progressed = true;
+                        step.Latch.WaitForWorkerBoundary(revision);
+                        continue;
+                    }
+                    if (selection == null) step.Latch.TryTakeSelection(out selection);
+                    if (selection != null)
+                    {
+                        var active = Find(selection.Cast);
+                        long revision = bridge.QueueSelection(selection, active.Id, clock - active.Started);
+                        selection = null; progressed = true;
+                        step.Latch.WaitForWorkerBoundary(revision);
+                        continue;
+                    }
+                    if (settlement == null) step.Latch.TryTakeSettlement(out settlement);
+                    if (settlement != null)
+                    {
+                        var active = Find(settlement.Impact.Cast);
+                        if (!bridge.TryQueueSettlement(settlement, active.Id, out long revision, afterDamageStarted)) return progressed;
+                        settlement = null; progressed = true;
+                        step.Latch.WaitForWorkerBoundary(revision);
+                        continue;
+                    }
+                    if (completion == null) step.Latch.TryTakeCastCompletion(out completion);
+                    if (completion != null)
+                    {
+                        var active = Find(completion.Cast);
+                        views.CompleteLiveCast(completion.Cast, active.Id, clock - active.Started);
+                        step.Latch.CompleteCast(completion, out long revision);
+                        casts.Remove(completion.Cast);
+                        completion = null; progressed = true;
+                        step.Latch.WaitForWorkerBoundary(revision);
+                        continue;
+                    }
+                    return progressed;
                 }
-                if (selection == null) step.Latch.TryTakeSelection(out selection);
-                if (selection != null)
-                {
-                    var active = Find(selection.Cast);
-                    bridge.QueueSelection(selection, active.Id, clock - active.Started);
-                    selection = null; progressed = true;
-                }
-                if (settlement == null) step.Latch.TryTakeSettlement(out settlement);
-                if (settlement != null)
-                {
-                    var active = Find(settlement.Impact.Cast);
-                    if (!bridge.TryQueueSettlement(settlement, active.Id, afterDamageStarted)) return progressed;
-                    settlement = null; progressed = true;
-                }
-                if (completion == null) step.Latch.TryTakeCastCompletion(out completion);
-                if (completion != null)
-                {
-                    var active = Find(completion.Cast);
-                    views.CompleteLiveCast(completion.Cast, active.Id, clock - active.Started);
-                    step.Latch.CompleteCast(completion);
-                    casts.Remove(completion.Cast);
-                    completion = null; progressed = true;
-                }
-                return progressed;
             }
             finally { pumping = false; }
+        }
+
+        private void OnWorkerReleasedByArrival(long revision)
+        {
+            if (disposed || transferred || pumping || lastStartCast == null) return;
+            step.Latch.WaitForWorkerBoundary(revision);
+            Pump(0f, lastStartCast, lastAfterDamageStarted);
         }
 
         /// <summary>Lets the host deliver an unsupported result while the worker remains held.</summary>
@@ -110,14 +132,18 @@ namespace Zjcs.Presentation.Combat
             if (pumping) throw new InvalidOperationException("The live step is already being pumped.");
             if (deliver == null) throw new ArgumentNullException(nameof(deliver));
             if (settlement == null) return false;
+            bool delivered = false;
             pumping = true;
             try
             {
-                if (!step.Latch.TryCompleteSettlement(settlement, deliver)) return false;
+                if (!step.Latch.TryCompleteSettlement(settlement, deliver, out long revision)) return false;
                 settlement = null;
-                return true;
+                step.Latch.WaitForWorkerBoundary(revision);
+                delivered = true;
             }
             finally { pumping = false; }
+            if (delivered && lastStartCast != null) Pump(0f, lastStartCast, lastAfterDamageStarted);
+            return delivered;
         }
 
         private ActiveCast Find(FightBattleSkillCastEvent cast)
@@ -133,6 +159,7 @@ namespace Zjcs.Presentation.Combat
             if (transferred) throw new InvalidOperationException("The live step was already transferred.");
             if (pumping) throw new InvalidOperationException("The live step is already being pumped.");
             if (!step.TryTakeCompleted(out executor, out result)) return false;
+            bridge.WorkerReleasedByArrival -= OnWorkerReleasedByArrival;
             bridge.Dispose();
             transferred = true;
             return true;
@@ -142,6 +169,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) return;
             disposed = true;
+            bridge.WorkerReleasedByArrival -= OnWorkerReleasedByArrival;
             bridge.Dispose();
             step.Dispose();
             casts.Clear();

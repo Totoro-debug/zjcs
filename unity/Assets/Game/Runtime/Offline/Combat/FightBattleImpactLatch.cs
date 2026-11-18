@@ -72,6 +72,49 @@ namespace Zjcs.Combat.Official
         private readonly Queue<FightBattleSelectedHit> selections = new Queue<FightBattleSelectedHit>();
         private readonly Queue<FightBattleSettledImpact> settlements = new Queue<FightBattleSettledImpact>();
         private bool disposed;
+        private int workerThread;
+        private long waitRevision;
+        private bool workerWaiting, workerStopped, hasWaitingImpact;
+        private Signal waitingImpact;
+
+        // The isolated step owns exactly one worker. Other latch users retain the
+        // original independent wait semantics and do not participate in its fence.
+        internal void BindWorker()
+        {
+            lock (sync)
+            {
+                if (workerThread != 0) throw new InvalidOperationException("The impact latch already has a worker.");
+                workerThread = Thread.CurrentThread.ManagedThreadId;
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+            }
+        }
+
+        internal void FinishWorker()
+        {
+            lock (sync) { workerStopped = true; workerWaiting = false; hasWaitingImpact = false; Monitor.PulseAll(sync); }
+        }
+
+        private void ParkWorker()
+        {
+            bool tracked = workerThread == Thread.CurrentThread.ManagedThreadId;
+            if (tracked) { workerWaiting = true; waitRevision++; Monitor.PulseAll(sync); }
+            try { Monitor.Wait(sync); }
+            finally { if (tracked) workerWaiting = false; }
+        }
+
+        /// <summary>Captures the current isolated-worker wait before releasing a handoff.</summary>
+        public long WorkerWaitRevision { get { lock (sync) return waitRevision; } }
+
+        /// <summary>Waits for that worker to park at its next rule boundary or finish.</summary>
+        public void WaitForWorkerBoundary(long previousRevision)
+        {
+            lock (sync)
+            {
+                while (!disposed && !workerStopped && (!workerWaiting || waitRevision <= previousRevision))
+                    Monitor.Wait(sync);
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+            }
+        }
 
         public void CastPrepared(FightBattleSkillCastEvent cast)
         {
@@ -83,7 +126,7 @@ namespace Zjcs.Combat.Official
                     throw new InvalidOperationException("The cast was already prepared for this step.");
                 var preparation = new FightBattlePreparedCast { Owner = this, Cast = cast };
                 preparations.Enqueue(preparation);
-                while (!disposed && !preparation.Completed) Monitor.Wait(sync);
+                while (!disposed && !preparation.Completed) ParkWorker();
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
             }
         }
@@ -103,13 +146,18 @@ namespace Zjcs.Combat.Official
         }
 
         public void CompletePreparation(FightBattlePreparedCast preparation)
+            => CompletePreparation(preparation, out _);
+
+        public void CompletePreparation(FightBattlePreparedCast preparation, out long releasedRevision)
         {
+            releasedRevision = 0;
             if (preparation == null) throw new ArgumentNullException(nameof(preparation));
             lock (sync)
             {
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
                 if (!ReferenceEquals(preparation.Owner, this) || !preparation.Taken || preparation.Completed)
                     throw new InvalidOperationException("The cast preparation is not awaiting this host.");
+                releasedRevision = waitRevision;
                 preparation.Completed = true;
                 Monitor.PulseAll(sync);
             }
@@ -125,7 +173,7 @@ namespace Zjcs.Combat.Official
                 if (!preparedCasts.Remove(cast)) return;
                 var completed = new FightBattleCompletedCast { Owner = this, Cast = cast };
                 completedCasts.Enqueue(completed);
-                while (!disposed && !completed.Completed) Monitor.Wait(sync);
+                while (!disposed && !completed.Completed) ParkWorker();
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
             }
         }
@@ -141,14 +189,18 @@ namespace Zjcs.Combat.Official
             }
         }
 
-        public void CompleteCast(FightBattleCompletedCast completed)
+        public void CompleteCast(FightBattleCompletedCast completed) => CompleteCast(completed, out _);
+
+        public void CompleteCast(FightBattleCompletedCast completed, out long releasedRevision)
         {
+            releasedRevision = 0;
             if (completed == null) throw new ArgumentNullException(nameof(completed));
             lock (sync)
             {
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
                 if (!ReferenceEquals(completed.Owner, this) || !completed.Taken || completed.Completed)
                     throw new InvalidOperationException("The cast completion is not awaiting this host.");
+                releasedRevision = waitRevision;
                 completed.Completed = true;
                 Monitor.PulseAll(sync);
             }
@@ -163,7 +215,7 @@ namespace Zjcs.Combat.Official
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
                 var selected = new FightBattleSelectedHit { Owner = this, Cast = cast, Selection = selection };
                 selections.Enqueue(selected);
-                while (!disposed && !selected.Completed) Monitor.Wait(sync);
+                while (!disposed && !selected.Completed) ParkWorker();
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
             }
         }
@@ -185,7 +237,12 @@ namespace Zjcs.Combat.Official
         /// <summary>Delivers a selection while its executor remains suspended.</summary>
         public void CompleteSelection(FightBattleSelectedHit selected,
             Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot> deliver)
+            => CompleteSelection(selected, deliver, out _);
+
+        public void CompleteSelection(FightBattleSelectedHit selected,
+            Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot> deliver, out long releasedRevision)
         {
+            releasedRevision = 0;
             if (selected == null) throw new ArgumentNullException(nameof(selected));
             lock (sync)
             {
@@ -196,6 +253,7 @@ namespace Zjcs.Combat.Official
                 try { deliver?.Invoke(selected.Cast, selected.Selection); }
                 finally { selected.Delivering = false; }
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                releasedRevision = waitRevision;
                 selected.Completed = true;
                 Monitor.PulseAll(sync);
             }
@@ -210,7 +268,7 @@ namespace Zjcs.Combat.Official
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
                 var settlement = new FightBattleSettledImpact { Owner = this, Impact = impact, Damage = damage };
                 settlements.Enqueue(settlement);
-                while (!disposed && !settlement.Completed) Monitor.Wait(sync);
+                while (!disposed && !settlement.Completed) ParkWorker();
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
             }
         }
@@ -232,7 +290,12 @@ namespace Zjcs.Combat.Official
         /// <summary>Delivers the actual result while the executor is suspended; false leaves it waiting.</summary>
         public bool TryCompleteSettlement(FightBattleSettledImpact settlement,
             Func<FightBattlePendingImpact, FightBattleDamageEvent, bool> deliver)
+            => TryCompleteSettlement(settlement, deliver, out _);
+
+        public bool TryCompleteSettlement(FightBattleSettledImpact settlement,
+            Func<FightBattlePendingImpact, FightBattleDamageEvent, bool> deliver, out long releasedRevision)
         {
+            releasedRevision = 0;
             if (settlement == null) throw new ArgumentNullException(nameof(settlement));
             if (deliver == null) throw new ArgumentNullException(nameof(deliver));
             lock (sync)
@@ -247,6 +310,7 @@ namespace Zjcs.Combat.Official
                 finally { settlement.Delivering = false; }
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
                 if (!delivered) return false;
+                releasedRevision = waitRevision;
                 settlement.Completed = true;
                 Monitor.PulseAll(sync);
                 return true;
@@ -260,7 +324,13 @@ namespace Zjcs.Combat.Official
             {
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
                 requests.Enqueue(impact);
-                while (!disposed && !arrived.Contains(signal)) Monitor.Wait(sync);
+                while (!disposed && !arrived.Contains(signal))
+                {
+                    bool tracked = workerThread == Thread.CurrentThread.ManagedThreadId;
+                    if (tracked) { waitingImpact = signal; hasWaitingImpact = true; }
+                    try { ParkWorker(); }
+                    finally { if (tracked) hasWaitingImpact = false; }
+                }
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
             }
         }
@@ -277,8 +347,13 @@ namespace Zjcs.Combat.Official
 
         /// <summary>Records an actual hit-centre (-1) or authored scope playback arrival.</summary>
         public bool RecordArrival(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot selection,
-            int centerIndex, int scopeIndex)
+            int centerIndex, int scopeIndex) => RecordArrival(cast, selection, centerIndex, scopeIndex, out _);
+
+        /// <summary>Also returns the waiting worker revision when this exact arrival releases it.</summary>
+        public bool RecordArrival(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot selection,
+            int centerIndex, int scopeIndex, out long releasedRevision)
         {
+            releasedRevision = 0;
             if (cast == null) throw new ArgumentNullException(nameof(cast));
             if (selection == null) throw new ArgumentNullException(nameof(selection));
             if (centerIndex < 0 || selection.EffectCenters == null || centerIndex >= selection.EffectCenters.Count)
@@ -287,7 +362,9 @@ namespace Zjcs.Combat.Official
             lock (sync)
             {
                 if (disposed) return false;
-                bool added = arrived.Add(new Signal(cast, selection, centerIndex, scopeIndex));
+                var signal = new Signal(cast, selection, centerIndex, scopeIndex);
+                bool added = arrived.Add(signal);
+                if (workerWaiting && hasWaitingImpact && waitingImpact.Equals(signal)) releasedRevision = waitRevision;
                 Monitor.PulseAll(sync);
                 return added;
             }

@@ -124,6 +124,7 @@ namespace Zjcs.Editor.Combat
         {
             public string Name;
             public float At;
+            public int Frame;
             public GameObject Source, Target;
             public Vector3 SourcePosition, TargetPosition;
         }
@@ -239,7 +240,7 @@ namespace Zjcs.Editor.Combat
                 var playable = instance.GetComponent<MyPlayable>();
                 if (playable) playable.OnPlay += value => played.Add(new Played
                 {
-                    Name = instance.name.Replace("(Clone)", ""), At = Time.time,
+                    Name = instance.name.Replace("(Clone)", ""), At = Time.time, Frame = Time.frameCount,
                     Source = value.mySource, Target = value.myTarget,
                     SourcePosition = value.mySource ? value.mySource.transform.position : default,
                     TargetPosition = value.myTarget ? value.myTarget.transform.position : default
@@ -472,7 +473,7 @@ namespace Zjcs.Editor.Combat
             var fireScope = new OfflineBattleNativePlayableScope(fireRoot, null);
             fireScope.BindNativePrefabAdapter(instance => {
                 var playable = instance.GetComponent<MyPlayable>();
-                if (playable) playable.OnPlay += value => played.Add(new Played { Name = instance.name.Replace("(Clone)", ""), At = Time.time });
+                if (playable) playable.OnPlay += value => played.Add(new Played { Name = instance.name.Replace("(Clone)", ""), At = Time.time, Frame = Time.frameCount });
             });
             FightBattleUnitState[] fireDisplayUnits = null;
             using var fireViews = new OfficialBattleSkillEntityPlayback(fireRoot, new OfficialBattleGridMapper(fireRoot, grid),
@@ -615,6 +616,7 @@ namespace Zjcs.Editor.Combat
             EcEntityIdentifier sessionSkillId = default;
             int startAttempts = 0;
             bool allowSessionStart = false, sessionArrival = false, sessionHpRefreshed = false, sessionCaptured = false;
+            int beforeSessionFire = played.Count;
             bool StartSessionCast(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) {
                 startAttempts++;
                 if (!allowSessionStart) { id = default; return false; }
@@ -624,15 +626,21 @@ namespace Zjcs.Editor.Combat
             void RefreshSessionHp(FightBattleDamageEvent damage) {
                 sessionDamage = damage;
                 fireDisplayUnits[1].Hp = damage.AfterHp; fireDisplayUnits[1].Turn.Hp = damage.AfterHp;
-                sessionHpRefreshed = sessionArrival && !liveSession.IsCompleted && fireUnits[1].Hp == 1000000
+                sessionHpRefreshed = !liveSession.IsCompleted && fireUnits[1].Hp == 1000000
                     && damage.BeforeHp == 1000000 && damage.AfterHp < 1000000 && damage.HasDamageTriggerStatus
-                    && !damage.IsDamageTriggerStatus && damageNotifications == 3 && observedDamage == damage.DamageValue;
+                    && !damage.IsDamageTriggerStatus && damageNotifications == 3 && observedDamage == damage.DamageValue
+                    && played.Skip(beforeSessionFire).Any(value => value.Name == "playable10801" && value.Frame == Time.frameCount);
+                Require(sessionHpRefreshed
+                    && floatRoot.GetComponentsInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUI>().Any(ui =>
+                        ui.EntityId == new EcEntityIdentifier(1, 2) && ui.GetComponentsInChildren<TextMesh>(true)
+                            .Any(text => text.text == Math.Abs(observedDamage).ToString())),
+                    "The live session must show actual HP and the original damage number in the impact frame.");
+                Capture("session-fireball-damage.png"); sessionCaptured = true;
             }
             Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, Pos2d, int> sessionObserver =
                 (c, h, center, pos, cell) => { if (ReferenceEquals(c, sessionCast) && cell >= 0
                     && pos.Equals(new Pos2d(5, 5))) sessionArrival = true; };
             fireViews.HitSelectionViewArrived += sessionObserver;
-            int beforeSessionFire = played.Count;
             deadline = Time.realtimeSinceStartup + 10f;
             while (startAttempts == 0 && Time.realtimeSinceStartup < deadline) {
                 liveSession.Pump(0f, StartSessionCast, RefreshSessionHp); yield return null;
@@ -645,14 +653,6 @@ namespace Zjcs.Editor.Combat
                 liveSession.Pump(Time.deltaTime, StartSessionCast, RefreshSessionHp);
                 if (!sessionArrival) Require(fireUnits[1].Hp == 1000000 && damageNotifications == 2,
                     "The live fireball changed HP or displayed damage during flight.");
-                if (damageNotifications == 3 && !sessionCaptured) {
-                    Require(sessionArrival && sessionHpRefreshed
-                        && floatRoot.GetComponentsInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUI>().Any(ui =>
-                            ui.EntityId == new EcEntityIdentifier(1, 2) && ui.GetComponentsInChildren<TextMesh>(true)
-                                .Any(text => text.text == Math.Abs(observedDamage).ToString())),
-                        "The live session must show actual HP and the original damage number at impact.");
-                    Capture("session-fireball-damage.png"); sessionCaptured = true;
-                }
                 fireViews.Tick(Time.deltaTime); fireScope.LateTick();
                 yield return null;
             }
@@ -660,6 +660,8 @@ namespace Zjcs.Editor.Combat
                 && sessionDamage != null && damageNotifications == 3
                 && played.Skip(beforeSessionFire).Any(x => x.Name == "playable10801"),
                 "The live session did not complete its original fireball impact.");
+            yield return null;
+            Capture("session-fireball-rendered.png");
             Require(liveSession.TryTakeCompleted(out var sessionExecutor, out var sessionResult)
                 && ReferenceEquals(sessionExecutor.State, sessionResult.Checkpoint)
                 && FightBattleCheckpointSerializer.Save(cp) == committedFire

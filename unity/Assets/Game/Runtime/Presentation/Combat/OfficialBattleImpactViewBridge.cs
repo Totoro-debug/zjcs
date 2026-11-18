@@ -12,6 +12,8 @@ namespace Zjcs.Presentation.Combat
         private readonly FightBattleImpactLatch latch;
         private bool disposed;
 
+        public event Action<long> WorkerReleasedByArrival;
+
         public OfficialBattleImpactViewBridge(OfficialBattleSkillEntityPlayback views, FightBattleImpactLatch latch)
         {
             this.views = views ?? throw new ArgumentNullException(nameof(views));
@@ -23,11 +25,12 @@ namespace Zjcs.Presentation.Combat
         /// Starts the selected hit view while the executor is held; an immediate original
         /// arrival can safely be recorded before the worker continues.
         /// </summary>
-        public void QueueSelection(FightBattleSelectedHit selected, EcEntityIdentifier skillId, float elapsedSinceCast)
+        public long QueueSelection(FightBattleSelectedHit selected, EcEntityIdentifier skillId, float elapsedSinceCast)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleImpactViewBridge));
             latch.CompleteSelection(selected, (cast, selection) =>
-                views.QueueSelectedHit(cast, skillId, selection, elapsedSinceCast));
+                views.QueueSelectedHit(cast, skillId, selection, elapsedSinceCast), out long revision);
+            return revision;
         }
 
         /// <summary>
@@ -36,19 +39,24 @@ namespace Zjcs.Presentation.Combat
         /// </summary>
         public bool TryQueueSettlement(FightBattleSettledImpact settlement, EcEntityIdentifier skillId,
             Action<FightBattleDamageEvent> afterDamageStarted = null)
+            => TryQueueSettlement(settlement, skillId, out _, afterDamageStarted);
+
+        public bool TryQueueSettlement(FightBattleSettledImpact settlement, EcEntityIdentifier skillId,
+            out long releasedRevision, Action<FightBattleDamageEvent> afterDamageStarted = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleImpactViewBridge));
             return latch.TryCompleteSettlement(settlement, (impact, damage) => {
                 if (!views.QueueSettledDamage(impact.Cast, skillId, damage)) return false;
                 afterDamageStarted?.Invoke(damage);
                 return true;
-            });
+            }, out releasedRevision);
         }
 
         private void OnArrival(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot selection,
             int centerIndex, Pos2d position, int scopeIndex)
         {
-            latch.RecordArrival(cast, selection, centerIndex, scopeIndex);
+            latch.RecordArrival(cast, selection, centerIndex, scopeIndex, out long revision);
+            if (revision > 0) WorkerReleasedByArrival?.Invoke(revision);
         }
 
         public void Dispose()
