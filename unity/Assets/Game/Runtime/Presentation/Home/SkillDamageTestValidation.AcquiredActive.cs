@@ -25,9 +25,9 @@ namespace Zjcs.Presentation.Home
         {
             AudioListener.volume = 0f;
             Action<Selectable> click = Click;
-            Require(skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10053,
+            Require(skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10043 || skillId == 10053,
                 "Select an implemented active-skill acquisition diagnostic.");
-            int profession = skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 ? 1 : 6;
+            int profession = skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -227,6 +227,7 @@ namespace Zjcs.Presentation.Home
                         : skillId == 10016 ? cast.SkillEntityId == 10680
                         : skillId == 10018 ? cast.SkillEntityId == 10700
                         : skillId == 10024 ? cast.SkillEntityId == 10760
+                        : skillId == 10043 ? cast.SkillEntityId == 10590
                         : skillId == 10053 ? cast.SkillEntityId == 11250
                         : cast.SkillEntityId == 10780 || cast.SkillEntityId == 11640 || cast.SkillEntityId == 11650 || cast.SkillEntityId == 11660,
                         "The acquired active skill selected a foreign entity: " + cast.SkillEntityId);
@@ -276,13 +277,13 @@ namespace Zjcs.Presentation.Home
                     foreach (var hit in damageEvents)
                     {
                         if (skillId == 10024) continue;
-                        int damage = skillId == 10009 ? 10612 : skillId == 10012 ? 10642 : skillId == 10014 ? (hit.HitEntityId == 10661 ? 10022 : 10663) : skillId == 10015 ? 10673 : skillId == 10016 ? 10026 : skillId == 10018 ? 10702 : skillId == 10008 || skillId == 10011 || skillId == 10013 || skillId == 10053 ? 10022
+                        int damage = skillId == 10009 ? 10612 : skillId == 10012 ? 10642 : skillId == 10014 ? (hit.HitEntityId == 10661 ? 10022 : 10663) : skillId == 10015 ? 10673 : skillId == 10016 ? 10026 : skillId == 10018 ? 10702 : skillId == 10043 ? 10592 : skillId == 10008 || skillId == 10011 || skillId == 10013 || skillId == 10053 ? 10022
                             : cast.SkillEntityId == 11660 ? 10007 : 10023;
                         Require(hit.TargetId != 1 && (skillId == 10011 ? hit.HitEntityId >= 10631 && hit.HitEntityId <= 10633
                                 : skillId == 10014 ? hit.HitEntityId == 10661 || hit.HitEntityId == 10662
                                 : hit.HitEntityId == cast.SkillEntityId + 1)
-                            && hit.DamageEntityId == damage && hit.Damage < 0 && hit.TrueDamage == (skillId != 10008 && skillId != 10009 && skillId != 10011 && skillId != 10012 && skillId != 10013 && skillId != 10014 && skillId != 10015 && skillId != 10018 && skillId != 10053)
-                            && hit.ElementType == (skillId == 10026 ? 102 : skillId == 10012 || skillId == 10018 ? 100 : 0),
+                            && hit.DamageEntityId == damage && hit.Damage < 0 && hit.TrueDamage == (skillId != 10008 && skillId != 10009 && skillId != 10011 && skillId != 10012 && skillId != 10013 && skillId != 10014 && skillId != 10015 && skillId != 10018 && skillId != 10043 && skillId != 10053)
+                            && hit.ElementType == (skillId == 10026 ? 102 : skillId == 10012 || skillId == 10018 || skillId == 10043 ? 100 : 0),
                             "The acquired active skill lost its original caster-owned damage.");
                         hits++;
                     }

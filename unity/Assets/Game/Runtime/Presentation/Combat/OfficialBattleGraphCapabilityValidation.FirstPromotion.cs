@@ -209,8 +209,8 @@ namespace Zjcs.Presentation.Combat
                 .DefaultIfEmpty(1).Min();
             // The fifth cell is the dash's empty landing; enemies belong to its intermediate hit strip.
             if (itemId == 10016) distance = 2;
-            // Give the pull an unoccupied approach path to the caster.
-            if (itemId == 10018) distance = 3;
+            // Exercise point-target skills at range and leave an approach path for the pull.
+            if (itemId == 10018 || itemId == 10043) distance = 3;
             // Keep every cardinal probe on its requested axis while the ordinary
             // AI chooses its landing. Adjacent placement can attract an equally
             // valid landing on another side before the actual cast.
@@ -249,7 +249,7 @@ namespace Zjcs.Presentation.Combat
                     // Isolate the authored facing of the adjacent-target probes. Ordinary landing AI
                     // may otherwise relocate around this already adjacent target.
                     if ((itemId == 10026 || itemId == 10042 || itemId == 10053 || itemId == 10061
-                            || itemId == 10008 || itemId == 10011 || itemId == 10012 || itemId == 10013 || itemId == 10014 || itemId == 10018) && unit == player
+                            || itemId == 10008 || itemId == 10011 || itemId == 10012 || itemId == 10013 || itemId == 10014 || itemId == 10018 || itemId == 10043) && unit == player
                         && (prop.Id == catalog.PropertyType("MoveDist")
                             || prop.Id == catalog.PropertyType("FixedMoveDist"))) prop.Value = 0;
                 }
