@@ -5,6 +5,12 @@ using Zjcs.Combat.Official;
 
 public static class BattleStatusSecondsHarness
 {
+    sealed class DuringCast : IFightBattleImpactGate, IFightBattleCastPreparationObserver
+    {
+        public Action OnFirstCast;
+        public void CastPrepared(FightBattleSkillCastEvent cast) { var action=OnFirstCast; OnFirstCast=null; action?.Invoke(); }
+        public void AwaitImpact(FightBattlePendingImpact impact) {}
+    }
     static void Check(bool value, string message) { if (!value) throw new Exception(message); }
     static void Near(double actual, double expected, string message) {
         Check(Math.Abs(actual-expected)<1e-7, message+": "+actual+" != "+expected);
@@ -115,6 +121,30 @@ public static class BattleStatusSecondsHarness
         int invoked=0;frameExecutor.StatusSecondsInvoked+=(owner,status)=>invoked++;
         frameExecutor.AdvanceStatusSecondsWithPresentation(.6,delta=>{});
         Check(invoked==1,"Original InvokePlayable signal repeated the first hit, displacement or miss");
+        // A live hit can advance this clock while the enclosing step still owns
+        // its status callbacks. Starting a seconds status must preserve those
+        // callbacks until the step finishes, including its recovery successor.
+        cp=NewBattle(c,f,items);
+        var clockOwner=cp.Units[1];var caster=cp.Units[0];
+        caster.X=5;caster.Y=5;caster.Direction=2;clockOwner.X=5;clockOwner.Y=6;
+        var liveSkill=c.CreateSkill(10600,0,10008,2,20,1,
+            c.CalculateSkillProps(10600,2,20,1).Select(p=>new FightPropertyValue{Id=p.Key,Value=p.Value}).ToList());
+        caster.Skills.Add(liveSkill);caster.SkillState.Slots.Add(c.CreateSkillSlot(liveSkill,0));
+        clock=Clock(cp,c);clock.Enqueue(0,2,true,false,false,Launch(c));
+        var activeExecutor=FightBattleExecutor.Restore(cp,f,new FightDamageSettlement(),c,items);
+        var duringCast=new DuringCast();int liveTransitions=0;
+        activeExecutor.StatusSecondsChanged+=(owner,status,start)=>liveTransitions++;
+        duringCast.OnFirstCast=()=>{
+            Check(clockOwner.StatusStarted!=null&&clockOwner.StatusEnded!=null,"Step did not own status lifecycle callbacks");
+            activeExecutor.AdvanceStatusSeconds(0);
+            Check(Only(cp,24269).StackChanged!=null,"Active step lost the airborne stack callback");
+            activeExecutor.AdvanceStatusSeconds(.7);
+            Check(Only(cp,24270).StackChanged!=null,"Active step lost the recovery stack callback");
+        };
+        activeExecutor.ImpactGate=duringCast;activeExecutor.Step(0,1);
+        Check(duringCast.OnFirstCast==null&&liveTransitions==3,"Active step lost or duplicated airborne transitions");
+        Check(cp.Units.All(u=>u.StatusStarted==null&&u.StatusEnded==null&&u.Statuses.All(s=>s.StackChanged==null)),
+            "Completed step retained status callbacks");
         // The real executor must carry the original hit setting through the
         // catalog/collector and queue its final presentation delay, once only.
         foreach(int itemId in new[]{10006,10009,10052}) {

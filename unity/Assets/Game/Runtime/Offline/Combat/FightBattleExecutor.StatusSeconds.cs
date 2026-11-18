@@ -94,13 +94,16 @@ namespace Zjcs.Combat.Official
             clock.StatusChanged += (owner, status, started) => {
                 if (started)
                 {
-                    OnStatusStarted(owner, status);
-                    // These callbacks also serve Step, whose finally normally
-                    // releases the checkpoint's temporary executor references.
-                    // A seconds tick runs outside that scope.
-                    status.StackChanged = null;
+                    // During a step, FightStatusLifecycle.Apply already called the
+                    // installed lifecycle handler and the step owns its callback.
+                    if (owner.StatusStarted == null)
+                    {
+                        OnStatusStarted(owner, status);
+                        status.StackChanged = null;
+                    }
                 }
-                else OnStatusEnded(owner, status);
+                // FightStatusLifecycle.End likewise notifies an active step itself.
+                else if (owner.StatusEnded == null) OnStatusEnded(owner, status);
                 StatusSecondsChanged?.Invoke(owner, status, started);
                 changed = true;
             };

@@ -139,6 +139,13 @@ namespace Zjcs.Editor.Combat
             public Vector3 SourcePosition, TargetPosition;
         }
 
+        private sealed class StatusClockDuringCast : IFightBattleImpactGate, IFightBattleCastPreparationObserver
+        {
+            public Action Start;
+            public void CastPrepared(FightBattleSkillCastEvent cast) { var action = Start; Start = null; action?.Invoke(); }
+            public void AwaitImpact(FightBattlePendingImpact impact) { }
+        }
+
         private sealed class HitArrival
         {
             public EcEntityIdentifier SkillId, HitId;
@@ -1477,7 +1484,10 @@ namespace Zjcs.Editor.Combat
             airRoot.SetParent(root, false);
             var airTarget = new GameObject("Airborne target").transform;
             airTarget.SetParent(airRoot, false);
+            airTarget.localPosition = new Vector3(5, 5, 0);
             airTarget.gameObject.AddComponent<MyTransform>();
+            var airAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
+                ? NativeJumpAppearanceFixture.Create(airTarget.gameObject) : null;
             var airScope = new OfflineBattleNativePlayableScope(airRoot, null);
             using (var airViews = new OfficialBattleAirComboPlayback(oldAirExecutor, airRoot, airScope,
                 id => id == 2 ? airTarget : null)) {
@@ -1503,6 +1513,35 @@ namespace Zjcs.Editor.Combat
                 Require(leases.Count == 0, "The adopted recovery status did not remove its native view.");
             }
             airScope.Dispose();
+            var activeAirCheckpoint = FightBattleCheckpointSerializer.Load(committedFire);
+            var activeAirClock = new FightBattleStatusSeconds(activeAirCheckpoint, liveCatalog,
+                new FightRandomStream(activeAirCheckpoint.RandomSeed));
+            activeAirClock.Enqueue(0, 2, true, false, false,
+                liveCatalog.CreateStatus(24269, 2, 1, 1, 10580, 10006, 2, 20, 1));
+            var activeAirExecutor = FightBattleExecutor.Restore(activeAirCheckpoint, formula,
+                new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+            var activeAirScope = new OfflineBattleNativePlayableScope(airRoot, null);
+            using (var activeAirViews = new OfficialBattleAirComboPlayback(activeAirExecutor, airRoot, activeAirScope,
+                id => id == 2 ? airTarget : null)) {
+                var leases = (IDictionary)typeof(OfficialBattleAirComboPlayback)
+                    .GetField("leases", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(activeAirViews);
+                var gate = new StatusClockDuringCast();
+                gate.Start = () => {
+                    activeAirExecutor.AdvanceStatusSeconds(0);
+                    Require(leases.Count == 1 && activeAirCheckpoint.Units[1].Statuses.Any(value => value.ClassId == 24269),
+                        "A native airborne state did not start during the active skill.");
+                    activeAirScope.Tick(.05f); activeAirScope.LateTick();
+                    if (airAppearance != null) Capture("active-cast-airborne.png", false);
+                    activeAirExecutor.AdvanceStatusSeconds(.7);
+                    Require(leases.Count == 1 && activeAirCheckpoint.Units[1].Statuses.Any(value => value.ClassId == 24270),
+                        "A native airborne state did not recover during the active skill.");
+                };
+                activeAirExecutor.ImpactGate = gate;
+                activeAirExecutor.Step(0, 1);
+                Require(gate.Start == null, "The active status clock was not exercised during the cast.");
+            }
+            activeAirScope.Dispose();
+            airAppearance?.Dispose();
             Destroy(airRoot.gameObject);
 
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
