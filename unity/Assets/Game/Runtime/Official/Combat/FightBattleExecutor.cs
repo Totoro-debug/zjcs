@@ -1148,8 +1148,9 @@ namespace Zjcs.Combat.Official
                         damageEvents, movements, ref lastDelay);
                     ApplyHitDisperse(actor, target, hit, random, damage);
                     int hitMovementStart = movements.Count;
-                    ApplyHitMoveAtTime(actor, target, targetPosition ?? (targets.Count > 0 ? targets[0] : null),
-                        skill, hit, castHit, movements, hitDelay);
+                    var hitMoveTarget = hit.Anchor == 1 && FightHitMovementRules.UsesSkillTarget(hit)
+                        ? actor.ProbeAt(hitOrigin) : targetPosition ?? (targets.Count > 0 ? targets[0] : null);
+                    ApplyHitMoveAtTime(actor, target, hitMoveTarget, skill, hit, castHit, movements, hitDelay);
                     bool hitDisplacedTarget = false;
                     for (int movementIndex = hitMovementStart; movementIndex < movements.Count; movementIndex++)
                         hitDisplacedTarget |= movements[movementIndex].UnitId == target.Id

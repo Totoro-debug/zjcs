@@ -1,0 +1,1253 @@
+{
+  "manifest": "884_156692",
+  "configuration": {
+    "manifest": "884_156692",
+    "fragments": [
+      {
+        "path": "Assets/Config/EC/FightSkill_part1.g.bytes",
+        "source": {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+          "path_id": "-6798024417059081237",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+          "raw_size": 6876458,
+          "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+        },
+        "object_sha256": "f6f457b8d15cd3a426757035c86e74e7e30813e67c2bb3555effcc6f76d44064",
+        "payload_sha256": "ee446a64cedd432f8c3e5e97c14118ae9abf8581cf3d7057c7ff7dcdac19020b",
+        "legacy_prefix": false,
+        "entities": {
+          "10006": {
+            "parent": 0,
+            "components": {
+              "TransformComponent": {},
+              "FightDamageComponent": {
+                "Duration": 0.5,
+                "DieId": 24000,
+                "ReplaySkillOnTaragetDie": false,
+                "StatusList": [],
+                "MoveCfg": {
+                  "MoveBehaviourId": 0,
+                  "Delay": 0.0,
+                  "Offset": {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  "TowardsTargetPos": false,
+                  "SkillMoveDirection": 1,
+                  "Distance": -1,
+                  "BasePercent": 1.0,
+                  "AffectedByProp": false,
+                  "AiMustMoveTo": false,
+                  "AIIgnore": false,
+                  "CanExpandOffset": false,
+                  "CancelDiagonally": false,
+                  "DoMoveConditions": []
+                },
+                "DisperseStatus": {
+                  "BasePercent": 0.0,
+                  "AffectedByProp": false,
+                  "TargetTypes": [],
+                  "Count": 0,
+                  "IsRandom": false,
+                  "ExcludeCharacterTypes": []
+                },
+                "SwitchForm": false,
+                "ChildSkillCfg": {
+                  "Rate": 1.0,
+                  "LessThanHpPer": -1.0,
+                  "SkillId": 0
+                },
+                "TriggerExistStateCfg": {
+                  "StatusIds": [],
+                  "TriggerCount": 0,
+                  "IsOnlyTriggerStatusApplyBySelf": false,
+                  "ActiveTriggerNotComsumeRound": false,
+                  "FilterCondition": null
+                },
+                "StatusListRandomOne": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "path": "Assets/Config/EC/FightSkill_part2.g.bytes",
+        "source": {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+          "path_id": "-3280823071744367283",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+          "raw_size": 6876458,
+          "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+        },
+        "object_sha256": "451f319588070881c12c9b1ddd14d96ea5722b2b141e93d927ff45aba44aa824",
+        "payload_sha256": "b118c5f8f535d0e665757f530fcbb862e6b7c56078052b011e93ba8d9ff07a2f",
+        "legacy_prefix": false,
+        "entities": {
+          "10100": {
+            "parent": 0,
+            "components": {
+              "GridTransformComponent": {
+                "BodyRangeInfos": [
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  }
+                ],
+                "BodyCrossBlockedInfos": [],
+                "UnlockWholeRequestCount": 1,
+                "RealCenter": [
+                  0.0,
+                  0.0
+                ],
+                "IsRigidBody": true
+              },
+              "TransformComponent": {},
+              "FightSkillComponent": {
+                "SkillType": 0,
+                "CostType": 0,
+                "SkillTargetType": 1,
+                "TargetType": 4,
+                "HitTargetActionType": 0,
+                "ElementType": 0,
+                "RangeType": 1,
+                "Range": [
+                  {
+                    "X": 0,
+                    "Y": 0
+                  }
+                ],
+                "HitList": [
+                  {
+                    "ClassId": 10101,
+                    "Delay": 0.0,
+                    "ActOnSouce": 0,
+                    "IgnoreAICount": false
+                  }
+                ],
+                "SourceMoveList": [],
+                "ActionDuration": -1.0,
+                "AllEndedActionDuration": 0.0,
+                "AllRelevantEndedActionDuration": -1.0,
+                "Duration": -1.0,
+                "AllEndedDuration": 0.10000000149011612,
+                "AllRelevantEndedDuration": -1.0,
+                "LimitedTimes": -1,
+                "ResetCDAtStart": false,
+                "ExtSkill": [],
+                "Replay": {
+                  "Rate": 0.0,
+                  "ReplaceSkillArrayOnReplay": []
+                },
+                "ReplayMaxCountEachRound": -1,
+                "CanTriggerChild": false,
+                "CanTriggerStatusEntityIds": [],
+                "Ai": {
+                  "DontKeepDistance": false,
+                  "AiPriorityTypes": [],
+                  "LastAIPriorityTypes": [],
+                  "IgnoreStatusArray": [],
+                  "AIPriroityCharacterType": 8,
+                  "ReleaseWhileRidicule": false,
+                  "ReleaseWhileConfusion": false,
+                  "IsReleaseSkillAfterMove": false,
+                  "IsFixSkillDirection": false,
+                  "FixedDirection": 0,
+                  "MoveByTeleport": false,
+                  "AIPriorityHpLowerCharacterTypeFilter": [],
+                  "AiPriorityPropType": 0,
+                  "AiPriorityFindMax": true,
+                  "AIPriorityCharacterTypeGroups": []
+                },
+                "ActionType": 0,
+                "FlipSource": false,
+                "NeedConditionStatusMeetToRelease": false,
+                "MustHaveValidCost": false,
+                "IsFixedProp": false,
+                "ResetReleasedTimeOnNextWave": false
+              }
+            }
+          },
+          "10101": {
+            "parent": 0,
+            "components": {
+              "GridTransformComponent": {
+                "BodyRangeInfos": [
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  }
+                ],
+                "BodyCrossBlockedInfos": [],
+                "UnlockWholeRequestCount": 1,
+                "RealCenter": [
+                  0.0,
+                  0.0
+                ],
+                "IsRigidBody": true
+              },
+              "TransformComponent": {},
+              "FightHitFixedComponent": {
+                "DamageId": 10006,
+                "DamageType": 8,
+                "DamageBasicProp": 1,
+                "DamageProp": 0,
+                "FixedDamageProp": 190,
+                "DamageParam": 10000,
+                "DamageActionType": 4,
+                "DelayDistFactor": 0.0,
+                "Offset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "TargetOffset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "IsUseCenterRotation": false,
+                "RotateCenterOffset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "UseDamageFactor": false,
+                "DamageIgnoreShield": false,
+                "IsTrueDamage": false,
+                "AirCombo": {
+                  "AirComboStatusId": 0,
+                  "BasePercent": 0.0,
+                  "AffectedByProp": false
+                },
+                "DestroyDelay": 0.10000000149011612,
+                "IsBreakResilience": false,
+                "Scope": [
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "Delay": 0.0,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      {
+        "path": "Assets/Config/EC/FightSkill_part55.g.bytes",
+        "source": {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+          "path_id": "-9080576122990167248",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+          "raw_size": 6876458,
+          "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+        },
+        "object_sha256": "f8ca362e603d496f22e0bb017a1ceb39186aa92d048a58183a9a17d9aebe0808",
+        "payload_sha256": "c11dda3f2e3cf85311be71b0871b0b82e366aae80180a474c77d5fb715f56a9e",
+        "legacy_prefix": false,
+        "entities": {
+          "11120": {
+            "parent": 0,
+            "components": {
+              "GridTransformComponent": {
+                "BodyRangeInfos": [
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  }
+                ],
+                "BodyCrossBlockedInfos": [],
+                "UnlockWholeRequestCount": 1,
+                "RealCenter": [
+                  0.0,
+                  0.0
+                ],
+                "IsRigidBody": true
+              },
+              "TransformComponent": {},
+              "FightSkillComponent": {
+                "SkillType": 0,
+                "CostType": 0,
+                "SkillTargetType": 0,
+                "TargetType": 1,
+                "HitTargetActionType": 0,
+                "ElementType": 0,
+                "RangeType": 0,
+                "Range": [
+                  {
+                    "X": 0,
+                    "Y": 0
+                  }
+                ],
+                "HitList": [
+                  {
+                    "ClassId": 11121,
+                    "Delay": 0.23499999940395355,
+                    "ActOnSouce": 1,
+                    "IgnoreAICount": false
+                  }
+                ],
+                "SourceMoveList": [],
+                "ActionDuration": 1.0,
+                "AllEndedActionDuration": -1.0,
+                "AllRelevantEndedActionDuration": -1.0,
+                "Duration": 1.0,
+                "AllEndedDuration": -1.0,
+                "AllRelevantEndedDuration": -1.0,
+                "LimitedTimes": -1,
+                "ResetCDAtStart": false,
+                "ExtSkill": [],
+                "Replay": {
+                  "Rate": 0.0,
+                  "ReplaceSkillArrayOnReplay": []
+                },
+                "ReplayMaxCountEachRound": -1,
+                "CanTriggerChild": true,
+                "CanTriggerStatusEntityIds": [],
+                "Ai": {
+                  "DontKeepDistance": false,
+                  "AiPriorityTypes": [],
+                  "LastAIPriorityTypes": [],
+                  "IgnoreStatusArray": [],
+                  "AIPriroityCharacterType": 8,
+                  "ReleaseWhileRidicule": false,
+                  "ReleaseWhileConfusion": false,
+                  "IsReleaseSkillAfterMove": false,
+                  "IsFixSkillDirection": false,
+                  "FixedDirection": 0,
+                  "MoveByTeleport": false,
+                  "AIPriorityHpLowerCharacterTypeFilter": [],
+                  "AiPriorityPropType": 0,
+                  "AiPriorityFindMax": true,
+                  "AIPriorityCharacterTypeGroups": []
+                },
+                "ActionType": 2,
+                "FlipSource": true,
+                "NeedConditionStatusMeetToRelease": false,
+                "MustHaveValidCost": false,
+                "IsFixedProp": false,
+                "ResetReleasedTimeOnNextWave": false
+              }
+            }
+          },
+          "11121": {
+            "parent": 0,
+            "components": {
+              "GridTransformComponent": {
+                "BodyRangeInfos": [
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 0
+                    },
+                    "GroundType": 0,
+                    "IgnoreClick": false,
+                    "OverrideGroundType": false
+                  }
+                ],
+                "BodyCrossBlockedInfos": [],
+                "UnlockWholeRequestCount": 1,
+                "RealCenter": [
+                  0.0,
+                  0.0
+                ],
+                "IsRigidBody": true
+              },
+              "TransformComponent": {},
+              "FightHitFixedComponent": {
+                "DamageId": 11122,
+                "DamageType": 1,
+                "DamageBasicProp": 1,
+                "DamageProp": 200,
+                "FixedDamageProp": 190,
+                "DamageParam": 0,
+                "DamageActionType": 4,
+                "DelayDistFactor": 0.0,
+                "Offset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "TargetOffset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "IsUseCenterRotation": false,
+                "RotateCenterOffset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "UseDamageFactor": false,
+                "DamageIgnoreShield": false,
+                "IsTrueDamage": false,
+                "AirCombo": {
+                  "AirComboStatusId": 24269,
+                  "BasePercent": 1.0,
+                  "AffectedByProp": false
+                },
+                "DestroyDelay": 0.0,
+                "IsBreakResilience": false,
+                "Scope": [
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": 0
+                    },
+                    "Delay": 0.04500000178813934,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": -1
+                    },
+                    "Delay": 0.04500000178813934,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 1
+                    },
+                    "Delay": 0.04500000178813934,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 0
+                    },
+                    "Delay": 0.04500000178813934,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": -2,
+                      "Y": 0
+                    },
+                    "Delay": 0.16500000655651093,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": -1
+                    },
+                    "Delay": 0.16500000655651093,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": -1,
+                      "Y": 1
+                    },
+                    "Delay": 0.16500000655651093,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": -2
+                    },
+                    "Delay": 0.16500000655651093,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 0,
+                      "Y": 2
+                    },
+                    "Delay": 0.16500000655651093,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": -1
+                    },
+                    "Delay": 0.16500000655651093,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 1,
+                      "Y": 1
+                    },
+                    "Delay": 0.16500000655651093,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  },
+                  {
+                    "Pos": {
+                      "X": 2,
+                      "Y": 0
+                    },
+                    "Delay": 0.16500000655651093,
+                    "DamageOffset": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    "DamageRotation": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ],
+                    "DamageRotZOffset": 0.0,
+                    "FlipBySourceX": true,
+                    "FlipByTargetY": true
+                  }
+                ]
+              }
+            }
+          },
+          "11122": {
+            "parent": 0,
+            "components": {
+              "TransformComponent": {},
+              "FightDamageComponent": {
+                "Duration": 0.5,
+                "DieId": 24000,
+                "ReplaySkillOnTaragetDie": false,
+                "StatusList": [],
+                "MoveCfg": {
+                  "MoveBehaviourId": 11123,
+                  "Delay": 0.0,
+                  "Offset": {
+                    "X": 0,
+                    "Y": 0
+                  },
+                  "TowardsTargetPos": false,
+                  "SkillMoveDirection": 1,
+                  "Distance": 1,
+                  "BasePercent": 0.6000000238418579,
+                  "AffectedByProp": true,
+                  "AiMustMoveTo": false,
+                  "AIIgnore": false,
+                  "CanExpandOffset": false,
+                  "CancelDiagonally": false,
+                  "DoMoveConditions": []
+                },
+                "DisperseStatus": {
+                  "BasePercent": 0.0,
+                  "AffectedByProp": false,
+                  "TargetTypes": [],
+                  "Count": 0,
+                  "IsRandom": false,
+                  "ExcludeCharacterTypes": []
+                },
+                "SwitchForm": false,
+                "ChildSkillCfg": {
+                  "Rate": 1.0,
+                  "LessThanHpPer": -1.0,
+                  "SkillId": 0
+                },
+                "TriggerExistStateCfg": {
+                  "StatusIds": [],
+                  "TriggerCount": 0,
+                  "IsOnlyTriggerStatusApplyBySelf": false,
+                  "ActiveTriggerNotComsumeRound": false,
+                  "FilterCondition": null
+                },
+                "StatusListRandomOne": false
+              }
+            }
+          },
+          "11123": {
+            "parent": 0,
+            "components": {
+              "FightActionSkillMoveComponent": {
+                "UpdateFlipX": false,
+                "ReverseFlipX": false,
+                "PassHeight": 0,
+                "MoveDuration": -1.0,
+                "MoveSpeed": 2.5,
+                "BlockedLen": 0.800000011920929,
+                "BlockedSkillId": 10100,
+                "DelayDestroyTime": 0.0,
+                "ForceToTargetPos": false,
+                "ForcePushOutSkillId": 0
+              },
+              "ActionComponent": {
+                "ActionType": 7
+              }
+            }
+          }
+        }
+      }
+    ],
+    "skill_item_bindings": {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "c127151ca016b1013e487423db2b7090",
+        "path_id": "1398458758611605706",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+        "raw_size": 2142435,
+        "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+      },
+      "object_sha256": "5f5cf749e0186ca524be7bce5c36c14cbb73d1579a62c510632a445434bf5b34",
+      "payload_sha256": "5da6dd4982bdb6259e13043da7e2b7b4dc6b655beff1661b5f92f4fd65e0c81f",
+      "rows": [
+        {
+          "ClassId": 10052,
+          "EcEntityId": 11120
+        }
+      ],
+      "constructors": [
+        {
+          "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemPartInfo.cs",
+          "sha256": "685012dc0b4db06adf6b1b5f4d37e04ac1197b2391763694badfdbf1ae278cea"
+        },
+        {
+          "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillInfo.cs",
+          "sha256": "b403f503798af59fe02a307c8f4d6fbfd1dfb94d11431d17d007a68f5945745d"
+        },
+        {
+          "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Tables.cs",
+          "sha256": "0e4882f1ad41958e5ec017543447e17f5196c5453f8168c685926ea2c134c9bc"
+        },
+        {
+          "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbSkillInfo.cs",
+          "sha256": "b2322998e0b8972434132a2d9f744e3a3a8f63c3ab244c1d982b8f47d75521f8"
+        }
+      ]
+    },
+    "selected_entity_path_overrides": {},
+    "runtime_source_manifests": [
+      {
+        "path": "unity/Assets/Official/Combat/skill-rules-source-manifest.json",
+        "sha256": "9b447a15838602a598b7530eb0398a3b0c9e1a6d93d7eb8d0e194932cd24d8bf"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/battle-rules-source-manifest.json",
+        "sha256": "cef8b0b5a12460f2bdb2b4d8031f95fb8d560a391a9170641e401b67ef08968b"
+      }
+    ],
+    "formatters": [
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActionComponent.cs",
+        "sha256": "574e476645f5e9f86b9f5015ed794a2aac103df4be65f9beef9fd762107cc1c7"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightActionSkillMoveComponent.cs",
+        "sha256": "a9abaf1448ee70438a1a6886fc68122f6120c0404c76e7e4f1e726d1c6ef115e"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightDamageComponent.cs",
+        "sha256": "6a3fa4e82221392c11cd0c67529906fb8df9db41a82073ffdf74de02b30061a1"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitFixedComponent.cs",
+        "sha256": "fc2c0dd435e46afe53fa6ffc79d17dbb844ff794c5470465cbb48362eed1a7e5"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillComponent.cs",
+        "sha256": "f8f1bfec783d0313e0719ced2b777bdb1ccd04f17e61be9900c35c3ac1495792"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GridTransformComponent.cs",
+        "sha256": "6317a98b45782f004e871886effb70264ad7cb708b6d8665933970c1dd7160e9"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ActionComponentInfoFormatter.cs",
+        "sha256": "411f5e5de63ab3d144412a003d547b89fc387104aa19e665236786fe805a3d7b"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ActionTypeFormatter.cs",
+        "sha256": "186c98deb85a7221c8dd1c3474f9ded798c356cdf8cab3130dd4adf990980c7d"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/DamageChildSkillCfgFormatter.cs",
+        "sha256": "14370aee04256b4cbafac85bdf2ef81112380deb0bdb388901679b2c9cf8ef09"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/DamageDisperseStatusCfgFormatter.cs",
+        "sha256": "e3bcadef3276157eca7c90e3e3d2c69e130ffdb9db4aa324208a3894457fb025"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/DamageTriggerExistStateCfgFormatter.cs",
+        "sha256": "f15b74585db7ce757d20b509247f9b339cdde4da77f31473e44aa2524cdda258"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/DirectionFormatter.cs",
+        "sha256": "baeb424b8215f6df8d00696f458eb6622fa91b8ef4bc5d15ab5b190dddfe7982"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/EFightSkillCostTypeFormatter.cs",
+        "sha256": "b81a0173c287f0eb0def7db0b228840ad7e2bb97d4ced503d3e6291b63edafb4"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ElementTypeFormatter.cs",
+        "sha256": "78b8ed62cb6acc289a886758b602f8b271d1bbae983ae547ad36ec5437a43df0"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/ESkillMoveDirectionFormatter.cs",
+        "sha256": "828a781d0b93f1d5c1906ef38749df7d551f433dd963ea4b5256e41188f8e40d"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightActionSkillMoveComponentInfoFormatter.cs",
+        "sha256": "559d10e5c0a160c8da24bf53f081778b7462cb296737d7ea51739473375b9309"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightDamageComponentInfoFormatter.cs",
+        "sha256": "413b3679f0b00cf252b87e6a64b5c3d768be9b5d8d6a8589abf533ee2edfb140"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightHitFixedComponentInfoFormatter.cs",
+        "sha256": "9f86c02ec221f12eced2d1dd98d9f12a8ef2590f1b36d5dce273493d128f52a7"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightSkillComponentInfoFormatter.cs",
+        "sha256": "4e4b6dbf5a6da01a230cd045e55009453e396b252de3bcd0655ce15e0803ac02"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightSKillMoveCfgFormatter.cs",
+        "sha256": "92bcd7a160761b784273342187c5cadc0605007f5f79284f297a90a4f4051595"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightSkillReplayCfgFormatter.cs",
+        "sha256": "9784d406374db418e719d4ec5058368120cad55f4e1e49b6599ea754dcf46b68"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GameCharacterTypeFormatter.cs",
+        "sha256": "4f0cfe2340b1331caf498f7fcc95eb58b783abfcce2905815d2a04d2fd12e722"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GridTransformComponentBodyPosInfoFormatter.cs",
+        "sha256": "50ade9afa83a6ad54577f4d31772eb38728a563601e53a8d81ebba050f91d8b9"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GridTransformComponentInfoFormatter.cs",
+        "sha256": "cc512519f920485ca7d9cbfcdb033c84003121db28761cbbb015f47cd8f97092"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/GroundTypeFormatter.cs",
+        "sha256": "48f32fbc167d3a9f69f0824c14d864bc77ee00abfc9e44cb1b05100077a4ae20"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitAirComboCfgFormatter.cs",
+        "sha256": "baeb2fb38be079871c8e669cb46c60f4952c580d5f452ce59c0ced74b80f4aca"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitAnchorFormatter.cs",
+        "sha256": "ad2601d0490d0cca17466565a960c3d859d195e8794cc1335e9f8259e6dea8a1"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitCfgFormatter.cs",
+        "sha256": "09f74504e8e09e69420d558f7956aee1b85fb0ae77d11d7c0a3ce8b17fe2c1bc"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitDamageTypeFormatter.cs",
+        "sha256": "931b9e7015ee7a22be48724d11c193ad1325ac9e41fe7fdfcb6630d269ae968f"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitScopCfgFormatter.cs",
+        "sha256": "026f24488d8939b3c8c2cead1929d18d806d0dc8db6b23a4338859096a976960"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/HitTargetTypeFormatter.cs",
+        "sha256": "f26070c6d1ad7e7dd2f26519990fbc2298dcbb0d3bc6461319d5cb8049dacd7d"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/Pos2dFormatter.cs",
+        "sha256": "7625a36013d02ba1732aa27c15ad8b131f41b56ffff72095b93781fe47d3fd4c"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/PropTypeFormatter.cs",
+        "sha256": "139c97ed0ff65c426fd6d7e1bc4a85186275b0c0eb58fafff9f3ece905d946ec"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/SkillAiCfgFormatter.cs",
+        "sha256": "739c172510869289b85ea494d4cd68f880ad5403bc9fe5aa46306f551dbfbb8a"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/SkillRangeTypeFormatter.cs",
+        "sha256": "4cc7bff2a4304deb1139d5cf0a0ccd17a0171dac7db6fb729f5a2db8d205874a"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/SkillTargetTypeFormatter.cs",
+        "sha256": "c4aaca29bae4b1d7a61108688e48aedeb5ec967aecde98adef3439b6bfe9216c"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/SkillTypeFormatter.cs",
+        "sha256": "c3d104e7a24ee38fb39f92744ee6352ab65e30bef68f2c38a6200af0b0a3a755"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Resolvers/GeneratedStaticGSerializableFormatterResolver.cs",
+        "sha256": "9e0eb448ce32ffcdd2f082db548d27df8211dfdf9ec98be78c9fa85adeb3af08"
+      },
+      {
+        "path": ".tools/source-packages/current/884_156692/official-code/common-source/Properties/AssemblyInfo.cs",
+        "sha256": "d85ed3684e7117155ebd5d8de5d415c29e4c83f090715776d9f74bf4f4a20785"
+      }
+    ],
+    "verifier": {
+      "path": "scripts/verify_battle_skill_graph_rules.py",
+      "sha256": "be15b59559e75fea48de0334b5ed63bde7d08fe124bd0e664abcb408733ccec7"
+    },
+    "operation": "Decode the selected APK-first EC fragments with their own generated formatters. Compare every migrated component field for the requested entities; retain historical runtime source manifests separately. No configuration or expected hash is replaced."
+  },
+  "explicit_empty_dispel_defaults": [
+    "11122/DisperseStatus/ExcludeCharacterTypes",
+    "10006/DisperseStatus/ExcludeCharacterTypes"
+  ],
+  "original_code": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillComponentInfo.cs",
+      "sha256": "a8fd469ff28f0aa1142f3ab9e8a643d8d7ededd80c70dc0ee88a371155445008"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillComponentImplement.cs",
+      "sha256": "4e4b33efb54d32ada48f3ac6e46bb11f50e5b1c33499a063cdc06c91b463368d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightHitFixedComponentInfo.cs",
+      "sha256": "5b4b346f898921bdb054017fe7e6fcb7ac7437b2f23437e793cd18bd2addd4d8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightDamageComponentImplement.cs",
+      "sha256": "19ccdea699e765707483dbe8ba57a42c7018a364a4f7f631b7885d9706df3b8c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightDamageComponentInfo.cs",
+      "sha256": "8b61c78f7dd5f1fb25565619cecefea205fb26a3ac7e6ff57d16891836e67a49"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSKillMoveCfg.cs",
+      "sha256": "04e9c5fd0575872c0ee70d2440ea68834dde2e7da976292718e1d437e4761466"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightActionSkillMoveComponent.cs",
+      "sha256": "a9abaf1448ee70438a1a6886fc68122f6120c0404c76e7e4f1e726d1c6ef115e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightActionSkillMoveComponentInfo.cs",
+      "sha256": "7f3b3ac4aaf6a3ab128af1eae7d480b53aa9d2678369015197021dbc57a5e4da"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/HitScopCfg.cs",
+      "sha256": "86a386d620ab98e0ef53f5fc85a8419fee71edb69f843524cead081a65bc0191"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitBase.cs",
+      "sha256": "815ca26f5525f3023a5deb90a0753a8ee00daad936e596d2fb1bce1ad02c98fc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightHitFixed.cs",
+      "sha256": "0ca7fd1d15c9892617490bbfcd624dc94f8755a9dbee122c36ee5603d7db82a6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightActionSkill.cs",
+      "sha256": "30ae4b88a719ef3eb459550e3174343f33645d0fc24f6686241688ad13f2c21c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightActionSkillMove.cs",
+      "sha256": "87b1e139b0c6fde0e55fc3e35dcef835d60e2339d8276a7d74de8686899b7069"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyPlayableSound.cs",
+      "sha256": "f58057d9ca971d45618279659b27e0fd508c685065af7b3476a95d566ce788ca"
+    }
+  ],
+  "airborne_source_manifest": {
+    "path": "assets/reference/battle-rules/air-combo-source-manifest.json",
+    "sha256": "5ef854a22feed01996f0e0349b505af3f61e5d2fad3b3bfb272137290b88691e"
+  },
+  "native_source_manifest": {
+    "path": "assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json",
+    "sha256": "9e19958ac436c87a774a947016954bb93fd870d3c86200104f8baff94558cfeb"
+  },
+  "native_inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/10100/10100.prefab",
+      "sha256": "ecfe0c11a841d94b7aa564ea8315443b0f6c4518bb83efab80e2dd688dc5dd19"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/10100/10100.prefab.meta",
+      "sha256": "fb10dc8ea2054f2826135ba35778c95ee69b209fb25e391c1338be46524241a5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/10100/10101.prefab",
+      "sha256": "1dc04ba9f44284abae383cc4fd4335a18a8e0d2adf935d49ca0a055220c3b71f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/10100/10101.prefab.meta",
+      "sha256": "3ce58346822aea68c6c1b8100e4528f6c74aa27d0c39b169c1a3aede95beecd6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/11120.prefab",
+      "sha256": "b4e1340ec3240d6a653d374619db1fba22aca7418d65865d0ed89135f5d08a2d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/11120.prefab.meta",
+      "sha256": "f237247fabeac2af997bd9f6f7ab378c9c35203b03f0f19c0ae4aeefe014dd9b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/11121.prefab",
+      "sha256": "c4ab2466be04b04a6a6b3d701ad1a59443b36572ef16a58cbbbb68e3b502a7c2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/11121.prefab.meta",
+      "sha256": "31dd3dd8b92b32875721ac1fd5f144990876bea2e479e5235562edb12a29a062"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/11122.prefab",
+      "sha256": "750932b97f3ba69b7d23e8af6758fc6559ec25db94e160ba44d0f968c1947c14"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/11122.prefab.meta",
+      "sha256": "09294ffabe70c5f35620d43941a09ebdd0d2d27845a440d4acc2d15f165e9737"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/11123.prefab",
+      "sha256": "de44403aa8ea8c5cc2132a777cf263a0ec85cf3898c12827505aae21e8ae0103"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/11123.prefab.meta",
+      "sha256": "b6fa7943026adb05303f90fd02cc9cb7fce9eae5fc795b749de51f101112b83a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/playable11120.prefab",
+      "sha256": "c08a41f2ed7145c58b7ff9e69c9cbbb7ad3e89c2615ec9c5226ffc10bb1ca3e1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/playable11120.prefab.meta",
+      "sha256": "30273792548991d32e6d52cf197e550acaa6ea3d69973f38030eddf2495b5fc8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/playable11123_move.prefab",
+      "sha256": "a5937609918b256eb3e4849772385443508425339411cc7ac8e746d39ca38ba9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/playable11123_move.prefab.meta",
+      "sha256": "311465f62d348e773608bd47a00991a34747cc5f9a18998207aaa657848480c2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/playable_damage_11120.prefab",
+      "sha256": "1f6b66e239b6888533e10b66ab48ecc92f3f50e38a4468b841509d2e4d26e145"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/playable_damage_11120.prefab.meta",
+      "sha256": "a562c2f1df7099749527376b02fd6cbafc283b0bec56f50a26462b430bc363f2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/track11123.prefab",
+      "sha256": "2089f8050b634a4d9a6841e4b4ec010a66fc35475af40a6bbc8b2719b14b6ee4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/track11123.prefab.meta",
+      "sha256": "d447569a0a887245f119559a8c875c589366804fa16608f852bbff907bf9d009"
+    }
+  ],
+  "native_outputs": [
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10100/10100.prefab",
+      "sha256": "e1928070f217526612c7ee8ca65fc2a176d10c3dac78bd053eefce15f0841ef6"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10100/10100.prefab.meta",
+      "sha256": "df84f8f64d481f1e90b5cb9c09fe7a7de2abcdae30ce6d3dc7e94a30c05b959b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10100/10101.prefab",
+      "sha256": "87e08d7805f488080cae70e08baa6d30cb0c68cb92e8e6bd7d21a11bc08edb46"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10100/10101.prefab.meta",
+      "sha256": "81acaf9721fc0e50bb62fa14660bf747a487db096f400002b3eb2c5812000b83"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/11120.prefab",
+      "sha256": "cfd25e32bbe667a389267842b1c830cfd4067d75c01e94ae3c7010c36de08f56"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/11120.prefab.meta",
+      "sha256": "35a6a111a2ceb5cdd401a512ffd695363d6ad9d5f3918c298761f3c8e464ac13"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/11121.prefab",
+      "sha256": "3c9eea258a9854d3060c849b6dbecb25bfed91b2c5174ef330cd2fcbb75ff571"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/11121.prefab.meta",
+      "sha256": "3b5faa2159adc4868f9c5e150ca45d9cf6fc8f1d1c6f46044c1dd65474b89c06"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/11122.prefab",
+      "sha256": "242dbf9421f875c569e3839623b48a52d6629e77b058ce9b0baa161c4549b10c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/11122.prefab.meta",
+      "sha256": "82b2f28b6d8c5184e5abccc317967a907cf914ab2bdccf92fb4331ea802c26e6"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/11123.prefab",
+      "sha256": "ef2605f5e5321372641bdba113405c4380cd75979a8c2ab9d8b6d7a767cf445c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/11123.prefab.meta",
+      "sha256": "7257bfb0e2c08ac237987f2b035dceef3cebaaa8f5d5945af843210c246a067f"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/playable11120.prefab",
+      "sha256": "e67bd74a94fe2e14eaf5c7c2f712e7062c2b385219f13a1b54222d660b8c4a6a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/playable11120.prefab.meta",
+      "sha256": "7f503bff6f6e756c6973e8e517c8fb66ae579b1b586e37a609842a6a55fe96c7"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/playable11123_move.prefab",
+      "sha256": "4cdb5671a083fc614e4bb36af5247d65e5228a8e4ca285944664f60843399fd7"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/playable11123_move.prefab.meta",
+      "sha256": "b0b5f78bb58210c6c2c5f10ff47757fd900c65e13e7e1d77357664a50ac8cf23"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/playable_damage_11120.prefab",
+      "sha256": "0495aa2182c0b1e1faceb57261a85bfb6c4bec79860e935d4129632f8c603f5f"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/playable_damage_11120.prefab.meta",
+      "sha256": "83bc99bbb4caf073ff2e43529514a3d7ec3e3481cf874118b9a40e9f8f6506ee"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/track11123.prefab",
+      "sha256": "1c1456de548d03a5102ce301f227d579655acc9f1c1a394d30beae483b7f5bd7"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/track11123.prefab.meta",
+      "sha256": "cf6c8e8a5db6a9dd6ab123a4d1d4db3ca5a33a8011e176613f36721d24ac0e7b"
+    }
+  ],
+  "sound_source_manifest": {
+    "path": "assets/reference/battle-animation/native-sound-sources-source-manifest.json",
+    "sha256": "9c095c5e2b16414129e96fea3f2392f65247e395a885d2a22f567d92f265e50b"
+  },
+  "sound_inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/772048B5-B8C2-4EA2-B0F7-EF6D8B8E3EB1.asset",
+      "sha256": "198fa672105aa9a670e2ef4c604b9fd056529fe340d25efa82c00cf1a59df892"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/772048B5-B8C2-4EA2-B0F7-EF6D8B8E3EB1.asset.meta",
+      "sha256": "77dad710e918ab2861478c72a372e7f9b1bc35045c79c9516f3848e680343bd8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/772048B5-B8C2-4EA2-B0F7-EF6D8B8E3EB1.asset",
+      "sha256": "5654dd50044cfd6d434f4b6c09ef366f4b7f355d28aa12cff78168c2abb81305"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/772048B5-B8C2-4EA2-B0F7-EF6D8B8E3EB1.asset.meta",
+      "sha256": "c1b432645e137c1a1fec5bd330418797fab789ca9e0a9a86882022811f3be647"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativeSound/Resources/Combat/Wwise/catalog.json",
+      "sha256": "93bba01ba4a313f7e61ce198d0a33f121570bde3633fc8d0eea40806de15e4c5"
+    }
+  ],
+  "character_binding": {
+    "path": "unity/Assets/Game/Resources/Combat/skill-playables.json",
+    "sha256": "3dc65b3484008faebc8caff768ab58a9e0e86f79b2013dc61f2e2d43b709c3e8"
+  },
+  "generator": {
+    "path": "scripts/prepare_battle_mountain_smash_sources.py",
+    "sha256": "2cd8c384ff331fe897c1052b2cc1749cc4fbaa927e355dc1fec19136ee3f715c"
+  }
+}
