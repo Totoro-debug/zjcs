@@ -42,10 +42,12 @@ namespace Zjcs.Presentation.Combat
             => TryQueueSettlement(settlement, skillId, out _, afterDamageStarted);
 
         public bool TryQueueSettlement(FightBattleSettledImpact settlement, EcEntityIdentifier skillId,
-            out long releasedRevision, Action<FightBattleDamageEvent> afterDamageStarted = null)
+            out long releasedRevision, Action<FightBattleDamageEvent> afterDamageStarted = null,
+            Func<FightBattleDamageEvent, bool> canStartDamage = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleImpactViewBridge));
             return latch.TryCompleteSettlement(settlement, (impact, damage) => {
+                if (canStartDamage != null && !canStartDamage(damage)) return false;
                 if (!views.QueueSettledDamage(impact.Cast, skillId, damage)) return false;
                 afterDamageStarted?.Invoke(damage);
                 return true;

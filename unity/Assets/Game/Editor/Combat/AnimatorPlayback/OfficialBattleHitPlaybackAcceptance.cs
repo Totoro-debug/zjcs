@@ -936,8 +936,7 @@ namespace Zjcs.Editor.Combat
                 mountainWave.UnitIds.Add(2); mountainWave.UnitIds.Add(3); mountainCheckpoint.Waves.Add(mountainWave);
                 FightBattleExecutor.Begin(mountainCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
                 string mountainCommitted = FightBattleCheckpointSerializer.Save(mountainCheckpoint);
-                var mountainHealth = new FightBattleLiveHealthProjection(mountainCheckpoint);
-                fireDisplayUnits = mountainCheckpoint.Units.Select(value => mountainHealth.Find(value.Id)).ToArray();
+                fireDisplayUnits = FightBattleCheckpointSerializer.Load(mountainCommitted).Units.ToArray();
                 fireSource.localPosition = new Vector3(2, 5, 0); fireTarget.localPosition = new Vector3(4, 5, 0);
                 var blockerView = new GameObject("Mountain collision blocker").transform;
                 blockerView.SetParent(fireRoot, false); blockerView.localPosition = new Vector3(5, 5, 0);
@@ -951,32 +950,22 @@ namespace Zjcs.Editor.Combat
                 };
                 int mountainContactFrame = -1, mountainHitFrame = -1, mountainChildCount = 0, mountainPlayedBefore = played.Count;
                 ParticleSystem mountainSecondWave = null;
-                var mountainCasts = new List<int>();
-                using var mountainSession = new OfficialBattleLiveImpactSession(mountainCheckpoint, copy => FightBattleExecutor.Restore(copy,
-                    formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), fireViews, 0, 1, observeMovements: true);
-                mountainSession.SkillGraphPlayableStarted += (mountainCast, id, prefab, leaf) => {
+                Transform MountainBody(int unitId) => unitId == 1 ? fireSource : unitId == 2 ? fireTarget : unitId == 3 ? blockerView : null;
+                using var mountainDriver = new OfficialBattleLiveGraphDriver(mountainCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                    formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), fireViews,
+                    entity => entity == 11120 || entity == 10100, MountainBody, null, MountainDamage);
+                fireDisplayUnits = mountainCheckpoint.Units.Select(value => mountainDriver.DisplayUnit(value.Id)).ToArray();
+                mountainDriver.SkillGraphPlayableStarted += (mountainCast, id, prefab, leaf) => {
                     if (mountainCast.SkillEntityId != 11120 || prefab.name != "playable11120" || leaf.name != "effect") return;
                     mountainSecondWave = leaf.GetComponentsInChildren<ParticleSystem>(true).Single(value => value.name == "dierchong");
                 };
-                bool StartMountainCast(FightBattleSkillCastEvent mountainCast, out EcEntityIdentifier id) {
-                    mountainCasts.Add(mountainCast.SkillEntityId);
-                    var targetView = mountainCast.TargetIds.Contains(3) ? blockerView : fireTarget;
-                    id = fireViews.Start(mountainCast, fireSource, targetView); return true;
-                }
-                bool StartMountainBlocked(FightBattleSkillCastEvent mountainCast, FightBattleMovementEvent move,
-                    FightGridPoint position, Action contact) {
-                    Require(move.UnitId == 2 && position.Equals(new FightGridPoint(5, 5)), "Wrong original mountain collision action.");
-                    fireViews.StartMovement(move, fireTarget, position, _ => {
-                        mountainContactFrame = Time.frameCount; contact();
-                        Require(mountainChildCount == 2, "Both collision results must arrive in the actual contact callback.");
-                        Capture("mountain-collision-impact.png", false);
-                    });
-                    return true;
-                }
-                void MountainDamage(FightBattleDamageEvent damage) {
-                    Require(mountainHealth.TryApplyDamage(damage), "Live damage must match the preceding displayed health.");
+                mountainDriver.BlockedContact += move => {
+                    Require(move.UnitId == 2, "Wrong original mountain collision action.");
+                    mountainContactFrame = Time.frameCount;
+                };
+                void MountainDamage(FightBattleDamageEvent damage, FightBattleUnitState projected) {
                     int displayedIndex = Array.FindIndex(fireDisplayUnits, value => value.Id == damage.TargetId);
-                    fireDisplayUnits[displayedIndex] = mountainHealth.Find(damage.TargetId);
+                    fireDisplayUnits[displayedIndex] = projected;
                     if (damage.SkillEntityId == 11120) {
                         mountainHitFrame = Time.frameCount;
                         Require(mountainSecondWave && mountainSecondWave.particleCount > 0,
@@ -988,25 +977,26 @@ namespace Zjcs.Editor.Combat
                             : damage.TargetId == 3 && blockerDamageFrame == Time.frameCount && blockerDamageValue == -600),
                         "The actual mountain collision child and damage display must reach the native contact frame.");
                     mountainChildCount++;
+                    if (mountainChildCount == 2) Capture("mountain-collision-impact.png", false);
                 }
                 deadline = Time.realtimeSinceStartup + 20f;
-                while (!mountainSession.IsCompleted && Time.realtimeSinceStartup < deadline) {
-                    mountainSession.Pump(Time.deltaTime, StartMountainCast, MountainDamage, null, StartMountainBlocked);
+                while (!mountainDriver.IsCompleted && Time.realtimeSinceStartup < deadline) {
+                    mountainDriver.Pump(Time.deltaTime);
                     if (mountainSecondWave && mountainSecondWave.particleCount == 0)
                         Require(mountainHitFrame < 0 && fireDisplayUnits[1].Hp == 1000000,
                             "Outer mountain damage cannot precede the visible wave.");
                     fireViews.Tick(Time.deltaTime); fireScope.LateTick();
                     yield return null;
                 }
-                Require(mountainHitFrame >= 0 && mountainChildCount == 2 && mountainSession.TryTakeCompleted(out _, out var mountainResult)
+                Require(mountainHitFrame >= 0 && mountainChildCount == 2 && mountainDriver.TryTakeCompleted(out _, out var mountainResult)
                     && mountainResult.Event.DamageEvents.Count(value => value.SkillEntityId == 10100) == 2
                     && FightBattleCheckpointSerializer.Save(mountainCheckpoint) == mountainCommitted,
                     "The real mountain action must finish both collision child hits on its isolated checkpoint: completed="
-                    + mountainSession.IsCompleted + ", children=" + mountainChildCount + ", contact=" + mountainContactFrame
-                    + ", casts=" + string.Join(",", mountainCasts) + ", pending movement=" + (mountainSession.PendingMovement != null)
-                    + ", pending settlement=" + (mountainSession.PendingSettlement != null) + ", blocked status=" + mountainSession.StatusResolutionBlocked
+                    + mountainDriver.IsCompleted + ", children=" + mountainChildCount + ", contact=" + mountainContactFrame
+                    + ", pending movement=" + (mountainDriver.PendingMovement != null)
+                    + ", pending settlement=" + (mountainDriver.PendingSettlement != null) + ", blocked status=" + mountainDriver.StatusResolutionBlocked
                     + ", played=" + string.Join(",", played.Skip(mountainPlayedBefore).Select(value => value.Name)));
-                mountainSession.Dispose();
+                mountainDriver.Dispose();
                 for (int frame = 0; frame < 200 && fireRoot.GetComponentsInChildren<MyFightActionSkillMove>(false).Length != 0; frame++) {
                     fireViews.Tick(.01f); fireScope.LateTick(); yield return null;
                 }

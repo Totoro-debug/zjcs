@@ -1049,11 +1049,11 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleImpactViewBridge.cs",
-      "sha256": "9adf652e99cda135354c8533f35981929e8b46e55b83b64197d676616599318f"
+      "sha256": "83fd8fb5f5152b78306a398042f83c80088d43b8585f621c8b7f2f791234278d"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveImpactSession.cs",
-      "sha256": "2787f6edb9a155b9ceafb4aabac7ccf4ac90a482a93cd7a2b66b46a1f57105c1"
+      "sha256": "92a290f975e9a27a5e22f818f6c2737820be628b51c40736c5ec8a7b437cd8b4"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveImpactSession.cs.meta",
@@ -1066,6 +1066,14 @@
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMountainWaveImpact.cs.meta",
       "sha256": "39a26c7616a79579bacd460912078267b86665cf5fdf211f2de7d49a9ff74f1c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveGraphDriver.cs",
+      "sha256": "5757948af1044bb00cc3ec3a8070a9ab01812a720cce27dc0f6a237a3652844f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveGraphDriver.cs.meta",
+      "sha256": "6e1f44d3f1145aa8f0fb560f463e0d4749f413f33fbe15117e133e38aa456e26"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleImpactLatch.cs",
@@ -1081,7 +1089,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleLiveHealthProjection.cs",
-      "sha256": "4368285aee0e43e236e838346d8fdae493581ce34bfe93eb50981543414412f7"
+      "sha256": "8b44d74ceff7059ab8ba0e23c494de1581c6411e52cf9c49d6c2b86f1329a599"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleLiveHealthProjection.cs.meta",
@@ -1113,7 +1121,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleHitPlaybackAcceptance.cs",
-      "sha256": "fa75d9b5963f635b35ea3454ed6c7fa8e440d5824d02f3a8ce4383e99f3bca86"
+      "sha256": "2f9830fd38e11d8fb5e070e5ba75c0e24c781a3f64277c3f9eb172350c884362"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/NativeJumpAppearanceFixture.cs",
@@ -1137,7 +1145,7 @@
     },
     {
       "path": "scripts/fixtures/battle_blocked_live_session_harness.cs",
-      "sha256": "00690914bd85c0d5ff13dbc8214d8e548d8bcd16ac0971180df6c22848d953d2"
+      "sha256": "cfdde5da40afe1dac81a823b871ec28ec4d228fd4159433b258f3327e8686f95"
     },
     {
       "path": "scripts/test_battle_live_impact_session.ps1",
@@ -1145,7 +1153,7 @@
     },
     {
       "path": "scripts/fixtures/battle_live_impact_session_harness.cs",
-      "sha256": "7724f41fdcf82906ee40986ee398e370fb8cabc77c58942f330f756ba14a384f"
+      "sha256": "0e4d453d70adf0f2b7cee8b161d77ef37e0895426a4e144028ac9107df7bb7e7"
     },
     {
       "path": "scripts/test_battle_live_health_projection.ps1",
@@ -1153,12 +1161,20 @@
     },
     {
       "path": "scripts/fixtures/battle_live_health_projection_harness.cs",
-      "sha256": "83ee082161dc005918594f906bcaabb8dda8db1890fbb701e3a98f1496eeaf6b"
+      "sha256": "0e4a9c2393e37465335ed0a10a2cf339acc2cb82304c21732d148b64bfe7c61b"
+    },
+    {
+      "path": "scripts/test_battle_live_graph_driver.ps1",
+      "sha256": "965a33981b1a920f196756dcc11ebc262646aac82d773bf24d9e58f115a1dc86"
+    },
+    {
+      "path": "scripts/fixtures/battle_live_graph_driver_harness.cs",
+      "sha256": "7626f2fe0e33b52217a10106c6971bd7111d0c6989ab73d9d56f3add6d1889e0"
     }
   ],
   "generator": {
     "path": "scripts/prepare_battle_hit_view_runtime.py",
-    "sha256": "15ea2f3f208a171388c7f96d81b6d441e4e13253a93c879d06ae84f0d63cb086"
+    "sha256": "ca92ce8b31d58e29ea4d745ba45d0c61f0375b02fbcc37818e38417d8098135e"
   },
   "adaptations": [
     "Namespace and existing Unity entity/Playable types.",

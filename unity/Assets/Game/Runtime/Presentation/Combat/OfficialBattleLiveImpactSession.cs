@@ -47,6 +47,7 @@ namespace Zjcs.Presentation.Combat
         private StartMovement lastStartMovement;
         private StartBlockedMovement lastStartBlockedMovement;
         private Action<FightBattleDamageEvent> lastAfterDamageStarted;
+        private Func<FightBattleDamageEvent, bool> lastCanStartDamage;
         private FightBattleSkillCastEvent currentGraphCast;
         private EcEntityIdentifier currentGraphSkillId;
 
@@ -107,7 +108,8 @@ namespace Zjcs.Presentation.Combat
         /// the same frame. Declined starts and incomplete damage remain held.
         /// </summary>
         public bool Pump(float elapsed, StartCast startCast, Action<FightBattleDamageEvent> afterDamageStarted = null,
-            StartMovement startMovement = null, StartBlockedMovement startBlockedMovement = null)
+            StartMovement startMovement = null, StartBlockedMovement startBlockedMovement = null,
+            Func<FightBattleDamageEvent, bool> canStartDamage = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleLiveImpactSession));
             if (transferred) throw new InvalidOperationException("The live step was already transferred.");
@@ -119,6 +121,7 @@ namespace Zjcs.Presentation.Combat
             lastStartMovement = startMovement;
             lastStartBlockedMovement = startBlockedMovement;
             lastAfterDamageStarted = afterDamageStarted;
+            lastCanStartDamage = canStartDamage;
             pumping = true;
             try
             {
@@ -207,7 +210,8 @@ namespace Zjcs.Presentation.Combat
                             step.Latch.WaitForWorkerBoundary(deferredRevision);
                             continue;
                         }
-                        if (!bridge.TryQueueSettlement(settlement, active.Id, out long revision, afterDamageStarted)) return progressed;
+                        if (!bridge.TryQueueSettlement(settlement, active.Id, out long revision,
+                            afterDamageStarted, canStartDamage)) return progressed;
                         settlement = null; progressed = true;
                         step.Latch.WaitForWorkerBoundary(revision);
                         continue;
@@ -233,7 +237,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed || transferred || pumping || lastStartCast == null) return;
             step.Latch.WaitForWorkerBoundary(revision);
-            Pump(0f, lastStartCast, lastAfterDamageStarted, lastStartMovement, lastStartBlockedMovement);
+            Pump(0f, lastStartCast, lastAfterDamageStarted, lastStartMovement, lastStartBlockedMovement, lastCanStartDamage);
         }
 
         private void OnBlockedMovementContact(FightBattleMovementEvent movement)
@@ -350,7 +354,8 @@ namespace Zjcs.Presentation.Combat
                 delivered = true;
             }
             finally { pumping = false; }
-            if (delivered && lastStartCast != null) Pump(0f, lastStartCast, lastAfterDamageStarted, lastStartMovement, lastStartBlockedMovement);
+            if (delivered && lastStartCast != null) Pump(0f, lastStartCast, lastAfterDamageStarted,
+                lastStartMovement, lastStartBlockedMovement, lastCanStartDamage);
             return delivered;
         }
 

@@ -1,0 +1,139 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using Zjcs.Combat.Official;
+using Zjcs.Official.StoryPlayables;
+
+namespace Zjcs.Presentation.Combat
+{
+    /// <summary>Connects one isolated rule step to the scene's original skill and movement views.</summary>
+    public sealed class OfficialBattleLiveGraphDriver : IDisposable
+    {
+        private readonly OfficialBattleSkillEntityPlayback views;
+        private readonly OfficialBattleLiveImpactSession session;
+        private readonly FightBattleLiveHealthProjection health;
+        private readonly Func<int, bool> hasSkill;
+        private readonly Func<int, Transform> body, pet;
+        private readonly Action<FightBattleDamageEvent, FightBattleUnitState> damageShown;
+        private readonly Action<FightBattleSkillCastEvent, FightBattleUnitState> costShown;
+        private readonly Dictionary<FightBattleSkillCastEvent, float> started = new Dictionary<FightBattleSkillCastEvent, float>();
+        private float clock;
+        private bool disposed, transferred;
+
+        public OfficialBattleLiveGraphDriver(FightBattleCheckpoint checkpoint,
+            Func<FightBattleCheckpoint, FightBattleExecutor> restore, OfficialBattleSkillEntityPlayback views,
+            Func<int, bool> hasSkill, Func<int, Transform> body, Func<int, Transform> pet,
+            Action<FightBattleDamageEvent, FightBattleUnitState> damageShown,
+            Action<FightBattleSkillCastEvent, FightBattleUnitState> costShown = null)
+        {
+            if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
+            this.views = views ?? throw new ArgumentNullException(nameof(views));
+            this.hasSkill = hasSkill ?? throw new ArgumentNullException(nameof(hasSkill));
+            this.body = body ?? throw new ArgumentNullException(nameof(body));
+            this.pet = pet;
+            this.damageShown = damageShown ?? throw new ArgumentNullException(nameof(damageShown));
+            this.costShown = costShown;
+            health = new FightBattleLiveHealthProjection(checkpoint);
+            views.BindDamageUITargets(body);
+            session = new OfficialBattleLiveImpactSession(checkpoint, restore, views,
+                checkpoint.Sequence, checkpoint.Counter + 1, observeMovements: true);
+        }
+
+        public bool IsCompleted => session.IsCompleted;
+        public bool StatusResolutionBlocked => session.StatusResolutionBlocked;
+        public FightBattlePreparedMovement PendingMovement => session.PendingMovement;
+        public FightBattleSettledImpact PendingSettlement => session.PendingSettlement;
+        public FightBattleUnitState DisplayUnit(int unitId) => health.Find(unitId);
+        public event Action<FightBattleMovementEvent> BlockedContact;
+        public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted
+        { add { session.SkillGraphPlayableStarted += value; } remove { session.SkillGraphPlayableStarted -= value; } }
+
+        public bool Pump(float elapsed)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleLiveGraphDriver));
+            if (transferred) throw new InvalidOperationException("The live step was already transferred.");
+            if (float.IsNaN(elapsed) || float.IsInfinity(elapsed) || elapsed < 0f)
+                throw new ArgumentOutOfRangeException(nameof(elapsed));
+            clock += elapsed;
+            if (float.IsInfinity(clock)) throw new InvalidOperationException("The live presentation clock overflowed.");
+            return session.Pump(elapsed, StartCast, ShowDamage, StartMovement, StartBlockedMovement, CanShowDamage);
+        }
+
+        private bool StartCast(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+        {
+            id = default;
+            if (cast?.Presentation == null || !hasSkill(cast.SkillEntityId) || started.ContainsKey(cast)) return false;
+            Transform source = cast.IsPetSupport ? pet?.Invoke(cast.ActorId) : body(cast.ActorId);
+            int targetId = cast.Presentation.TargetId;
+            Transform target = targetId > 0 ? body(targetId) : null;
+            if (!source || targetId > 0 && !target || cast.HasSkillCostHp && !health.CanApplyCost(cast)) return false;
+            if (cast.HasSkillCostHp && !health.TryApplyCost(cast))
+                throw new InvalidOperationException("The actual cast cost could not be projected.");
+            id = views.Start(cast, source, target);
+            started.Add(cast, clock);
+            if (cast.HasSkillCostHp) costShown?.Invoke(cast, health.Find(cast.ActorId));
+            return true;
+        }
+
+        private bool MovementReady(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement, out Transform source)
+        {
+            source = null;
+            if (cast == null || movement == null || !started.TryGetValue(cast, out float castStart)
+                || float.IsNaN(movement.Delay) || float.IsInfinity(movement.Delay) || movement.Delay < 0f
+                || clock - castStart < movement.Delay || !views.OwnsMovement(movement)) return false;
+            source = body(movement.UnitId);
+            return source;
+        }
+
+        private bool StartMovement(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement)
+        {
+            if (!MovementReady(cast, movement, out var source)) return false;
+            views.StartMovement(movement, source);
+            return true;
+        }
+
+        private bool StartBlockedMovement(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement,
+            FightGridPoint blockedPosition, Action contact)
+        {
+            if (!MovementReady(cast, movement, out var source)) return false;
+            bool contacted = false;
+            views.StartMovement(movement, source, blockedPosition, action => {
+                if (disposed || transferred || contacted) return;
+                contacted = true;
+                BlockedContact?.Invoke(action);
+                contact();
+            });
+            return true;
+        }
+
+        private bool CanShowDamage(FightBattleDamageEvent damage)
+        {
+            if (damage == null) return false;
+            if (damage.HasDamageValue) return health.CanApplyDamage(damage);
+            var unit = health.Find(damage.TargetId);
+            return unit != null && unit.Hp == damage.BeforeHp && damage.AfterHp == damage.BeforeHp;
+        }
+
+        private void ShowDamage(FightBattleDamageEvent damage)
+        {
+            if (damage.HasDamageValue && !health.TryApplyDamage(damage))
+                throw new InvalidOperationException("The actual damage no longer matches displayed health.");
+            damageShown(damage, health.Find(damage.TargetId));
+        }
+
+        public bool TryTakeCompleted(out FightBattleExecutor executor, out FightBattleExecutionResult result)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleLiveGraphDriver));
+            if (transferred) throw new InvalidOperationException("The live step was already transferred.");
+            if (!session.TryTakeCompleted(out executor, out result)) return false;
+            transferred = true;
+            return true;
+        }
+
+        public void Dispose()
+        {
+            if (disposed) return;
+            disposed = true; session.Dispose(); started.Clear();
+        }
+    }
+}

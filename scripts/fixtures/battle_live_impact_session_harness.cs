@@ -141,6 +141,31 @@ namespace Zjcs.Presentation.Combat
                     "An arrival during selection delivery did not settle without a lost wakeup");
             }
 
+            var guardedViews = new OfficialBattleSkillEntityPlayback();
+            var guardedHealth = new FightBattleLiveHealthProjection(cp);
+            using (var guarded = new OfficialBattleLiveImpactSession(cp,
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), guardedViews, 0, 1))
+            {
+                bool allowHealth = false;
+                bool StartGuarded(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = new EcEntityIdentifier(46); return true; }
+                bool CanShow(FightBattleDamageEvent damage) => allowHealth && guardedHealth.CanApplyDamage(damage);
+                void ShowHealth(FightBattleDamageEvent damage)
+                { Check(guardedHealth.TryApplyDamage(damage), "Validated health did not apply"); }
+                Check(SpinWait.SpinUntil(() => { guarded.Pump(0f, StartGuarded, ShowHealth, null, null, CanShow);
+                    return guardedViews.Selection != null; }, 20000), "The guarded hit was not selected");
+                var guardedTarget = guardedViews.Selection.Targets.Single(t => t.TargetId == 2);
+                guardedViews.Arrive(guardedTarget.HasScopeIndex ? guardedTarget.ScopeIndex : -1);
+                Check(guarded.PendingSettlement != null && guardedViews.Damages == 0
+                    && guardedHealth.Find(2).Hp == 1000000 && target.Hp == 1000000,
+                    "A rejected health projection must hold the actual damage before native display");
+                allowHealth = true;
+                Check(SpinWait.SpinUntil(() => { guarded.Pump(0f, StartGuarded, ShowHealth, null, null, CanShow);
+                    return guarded.IsCompleted; }, 20000) && guardedViews.Damages == 1
+                    && guardedHealth.Find(2).Hp < 1000000 && target.Hp == 1000000,
+                    "A valid health projection must show the held damage and keep the checkpoint isolated");
+            }
+
             var graphViews = new OfficialBattleSkillEntityPlayback();
             using (var graphSession = new OfficialBattleLiveImpactSession(cp,
                 copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), graphViews, 0, 1))

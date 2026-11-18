@@ -59,7 +59,7 @@ namespace Zjcs.Presentation.Combat {
   public event Action<long> WorkerReleasedByArrival;
   public OfficialBattleImpactViewBridge(OfficialBattleSkillEntityPlayback v,FightBattleImpactLatch l){}
   public long QueueSelection(FightBattleSelectedHit h,EcEntityIdentifier id,float t)=>1;
-  public bool TryQueueSettlement(FightBattleSettledImpact s,EcEntityIdentifier id,out long revision,Action<FightBattleDamageEvent> after){revision=0;return false;}
+  public bool TryQueueSettlement(FightBattleSettledImpact s,EcEntityIdentifier id,out long revision,Action<FightBattleDamageEvent> after,Func<FightBattleDamageEvent,bool> canStart){revision=0;return false;}
   public void RecordArrival(FightBattleSkillCastEvent c,FightBattleHitSelectionSnapshot h,int a,int b){Arrivals.Add(b);}
   public void Dispose(){}
  }

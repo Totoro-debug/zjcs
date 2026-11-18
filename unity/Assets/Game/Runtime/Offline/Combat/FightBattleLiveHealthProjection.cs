@@ -31,25 +31,31 @@ namespace Zjcs.Combat.Official
         /// <summary>Applies only the actual cost captured when this cast was prepared.</summary>
         public bool TryApplyCost(FightBattleSkillCastEvent cast)
         {
-            if (cast == null || !cast.HasSkillCostHp || costs.Contains(cast)
-                || !units.TryGetValue(cast.ActorId, out var unit)
-                || unit.Hp != cast.SkillCostBeforeHp || cast.SkillCostAfterHp < 0
-                || cast.SkillCostAfterHp > unit.MaxHp) return false;
+            if (!CanApplyCost(cast)) return false;
+            var unit = units[cast.ActorId];
             units[unit.Id] = unit.WithPresentationHealth(cast.SkillCostAfterHp, unit.MaxHp);
             costs.Add(cast);
             return true;
         }
 
+        public bool CanApplyCost(FightBattleSkillCastEvent cast) => cast != null && cast.HasSkillCostHp
+            && !costs.Contains(cast) && units.TryGetValue(cast.ActorId, out var unit)
+            && unit.Hp == cast.SkillCostBeforeHp && cast.SkillCostAfterHp >= 0
+            && cast.SkillCostAfterHp <= unit.MaxHp;
+
         /// <summary>Applies one actual damage or healing receipt in its observed order.</summary>
         public bool TryApplyDamage(FightBattleDamageEvent damage)
         {
-            if (damage == null || damage.IsSkillCost || !damage.HasDamageValue || damage.DamageId <= 0
-                || !units.TryGetValue(damage.TargetId, out var unit)
-                || unit.Hp != damage.BeforeHp || damage.MaxHp < 0 || damage.AfterHp < 0
-                || damage.AfterHp > damage.MaxHp || damages.Contains((damage.DamageId, damage.TargetId))) return false;
+            if (!CanApplyDamage(damage)) return false;
+            var unit = units[damage.TargetId];
             units[unit.Id] = unit.WithPresentationHealth(damage.AfterHp, damage.MaxHp);
             damages.Add((damage.DamageId, damage.TargetId));
             return true;
         }
+
+        public bool CanApplyDamage(FightBattleDamageEvent damage) => damage != null && !damage.IsSkillCost
+            && damage.HasDamageValue && damage.DamageId > 0 && units.TryGetValue(damage.TargetId, out var unit)
+            && unit.Hp == damage.BeforeHp && damage.MaxHp >= 0 && damage.AfterHp >= 0
+            && damage.AfterHp <= damage.MaxHp && !damages.Contains((damage.DamageId, damage.TargetId));
     }
 }

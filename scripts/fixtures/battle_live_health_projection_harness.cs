@@ -20,9 +20,9 @@ public static class BattleLiveHealthProjectionHarness
             BeforeHp = 200, AfterHp = 150, MaxHp = 200 };
         var future = new FightBattleDamageEvent { DamageId = 13, TargetId = 2, HasDamageValue = true,
             BeforeHp = 150, AfterHp = 120, MaxHp = 200 };
-        Check(!view.TryApplyDamage(future) && view.Find(2).Hp == 200,
+        Check(!view.CanApplyDamage(future) && !view.TryApplyDamage(future) && view.Find(2).Hp == 200,
             "out-of-order damage cannot modify visible health");
-        Check(view.TryApplyDamage(hit) && view.Find(2).Hp == 150 && checkpoint.Units[1].Hp == 200,
+        Check(view.CanApplyDamage(hit) && view.TryApplyDamage(hit) && view.Find(2).Hp == 150 && checkpoint.Units[1].Hp == 200,
             "the actual impact must update presentation without settling the checkpoint");
         Check(!view.TryApplyDamage(hit) && view.TryApplyDamage(future) && view.Find(2).Hp == 120,
             "duplicate damage must be rejected while the following real hit can proceed");
