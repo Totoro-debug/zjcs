@@ -93,8 +93,61 @@ public static class MountainCollisionHarness
                 throw new InvalidOperationException("Diagonal destination collision did not hit exactly its colliding enemies.");
         }
     }
+    private static void WindBlade(FightOfficialCombatCatalog catalog, FightDamageFormula formula,
+        FightOfficialSkillItemCatalog items, int dx, int dy, int direction, string obstacle, bool suppressed)
+    {
+        var cp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 5, RandomSeed = 1012348,
+            Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+        var actor = Unit(1, 1, 7, 7, formula); actor.Direction = direction;
+        var target = Unit(2, 2, 7 + dx * 4, 7 + dy * 4, formula);
+        var blocker = Unit(3, 2, obstacle == "unit" ? 7 + dx * 5 : 14,
+            obstacle == "unit" ? 7 + dy * 5 : 14, formula);
+        var destination = new FightGridPoint(7 + dx * 5, 7 + dy * 5);
+        if (obstacle == "terrain") cp.Grid.BlockedPositions.Add(destination);
+        if (suppressed)
+            target.Properties.Add(new FightPropertyValue { Id = formula.PropertyId("EffectDodgeValue"), Value = 20000 });
+        else
+            actor.Properties.Add(new FightPropertyValue { Id = formula.PropertyId("EffectRateValue"), Value = 20000 });
+        var skill = catalog.CreateSkill(10640, 0, 10012, 2, 20, 1,
+            catalog.CalculateSkillProps(10640, 2, 20, 1)
+                .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
+        var hit = skill.HitGraphEntities.Single(value => value.EntityId == 10641);
+        if (hit.HitMove == null || hit.HitMove.MoveBehaviourId != 10643 || hit.HitMove.Distance != 1
+            || Math.Abs(hit.HitMove.BasePercent - .5f) > .00001f || !hit.HitMove.AffectedByProp)
+            throw new InvalidOperationException("Original wind blade knockback configuration changed.");
+        skill.LimitedTimes = 1; actor.Skills.Add(skill); actor.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
+        cp.Units.AddRange(new[] { actor, target, blocker });
+        var wave = new FightBattleWaveState(); wave.UnitIds.AddRange(new[] { 2, 3 }); cp.Waves.Add(wave);
+        var executor = FightBattleExecutor.Begin(cp, formula, new FightDamageSettlement(), catalog, items);
+        var gate = new ContactGate { Expected = destination }; executor.ImpactGate = gate;
+        var result = executor.Step(0, 1).Event;
+        var collision = result.DamageEvents.Where(value => value.SkillEntityId == 10100).ToArray();
+        if (!result.DamageEvents.Any(value => value.SkillItemId == 10012 && value.TargetId == target.Id))
+            throw new InvalidOperationException("Wind blade did not hit its fourth cell.");
+        if (suppressed || obstacle == "open")
+        {
+            int expectedX = suppressed ? 7 + dx * 4 : destination.X;
+            int expectedY = suppressed ? 7 + dy * 4 : destination.Y;
+            if (gate.Contact || collision.Length != 0 || target.X != expectedX || target.Y != expectedY)
+                throw new InvalidOperationException("Wind blade's resisted or unblocked push was incorrect.");
+        }
+        else
+        {
+            int[] expected = obstacle == "unit" ? new[] { 2, 3 } : new[] { 2 };
+            if (!gate.Contact || !gate.Bound.SequenceEqual(expected)
+                || !collision.Select(value => value.TargetId).SequenceEqual(expected)
+                || collision.Any(value => value.Damage != -600 || !value.TrueDamage)
+                || target.X != 7 + dx * 4 || target.Y != 7 + dy * 4)
+                throw new InvalidOperationException("Wind blade collision differed from the confirmed knockback rule.");
+        }
+    }
+
     public static void Run(FightOfficialCombatCatalog catalog, FightDamageFormula formula, FightOfficialSkillItemCatalog items)
     {
+        foreach (var direction in new[] { new[] { 0, 1, 2 }, new[] { 0, -1, 0 }, new[] { -1, 0, 1 }, new[] { 1, 0, 3 } })
+        foreach (string obstacle in new[] { "open", "unit", "terrain" })
+        foreach (bool suppressed in new[] { false, true })
+            WindBlade(catalog, formula, items, direction[0], direction[1], direction[2], obstacle, suppressed);
         foreach (string obstacle in new[] { "open", "unit", "terrain" }) Diagonal(catalog, formula, items, obstacle, true);
         Diagonal(catalog, formula, items, "terrain", false);
         var cp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 5, RandomSeed = 1012348,
@@ -143,7 +196,9 @@ public static class MountainCollisionHarness
             while (!live.IsCompleted && DateTime.UtcNow < deadline)
             {
                 while (live.Latch.TryTake(out _)) { }
-                if (live.Latch.TryTakePreparation(out var prepared))
+                if (live.Latch.TryTakeSecondsStatus(out var statusNotice))
+                    live.Latch.CompleteSecondsStatus(statusNotice, out _);
+                else if (live.Latch.TryTakePreparation(out var prepared))
                     live.Latch.CompletePreparation(prepared, out _);
                 else if (live.Latch.TryTakeSelection(out var selected))
                     live.Latch.CompleteSelection(selected, (selectedCast, hit) => {
@@ -176,10 +231,12 @@ public static class MountainCollisionHarness
                 else if (live.Latch.TryTakeCastCompletion(out var completed)) live.Latch.CompleteCast(completed);
                 else Thread.Sleep(1);
             }
-            if (!live.TryTakeCompleted(out _, out var liveResult) || !contacted || childSettlements != 2
-                || liveResult.Event.DamageEvents.Count(value => value.SkillEntityId == 10100) != 2
+            bool stepCompleted = live.TryTakeCompleted(out _, out var liveResult);
+            int childEvents = stepCompleted ? liveResult.Event.DamageEvents.Count(value => value.SkillEntityId == 10100) : -1;
+            if (!stepCompleted || !contacted || childSettlements != 2 || childEvents != 2
                 || FightBattleCheckpointSerializer.Save(original) != initial)
-                throw new InvalidOperationException("The isolated contact worker did not complete both child hits safely.");
+                throw new InvalidOperationException("The isolated contact worker did not complete both child hits safely: completed="
+                    + stepCompleted + ", contacted=" + contacted + ", settlements=" + childSettlements + ", events=" + childEvents);
         }
         Console.WriteLine("Mountain smash collision child, both victims and contact ordering passed.");
     }

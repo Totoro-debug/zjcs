@@ -17,7 +17,9 @@ namespace Zjcs.Combat.Official
             FightBattleSkillDefinition parent, FightBattleHitDefinition hit, FightBattleSkillMove move,
             List<FightBattleMovementEvent> movements, int stepX, int stepY, float hitDelay)
         {
-            if (hit.EntityId != 11121 || hit.DamageId != 11122 || move.MoveBehaviourId != 11123 || move.Distance != 1
+            bool mountain = hit.EntityId == 11121 && hit.DamageId == 11122 && move.MoveBehaviourId == 11123;
+            bool windBlade = hit.EntityId == 10641 && hit.DamageId == 10642 && move.MoveBehaviourId == 10643;
+            if ((!mountain && !windBlade) || move.Distance != 1
                 || move.OffsetX != 0 || move.OffsetY != 0 || statusCatalog == null || checkpoint.Grid == null
                 || movementStartContext == null) return false;
             bool diagonal = stepX != 0 && stepY != 0;
