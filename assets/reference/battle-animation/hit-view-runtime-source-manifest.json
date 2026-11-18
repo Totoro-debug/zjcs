@@ -1053,7 +1053,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveImpactSession.cs",
-      "sha256": "d23e4f564932b32bb9098017450217b669842ae8f00a659179ea99afe59ad854"
+      "sha256": "26f7de8bc1c750b14d045037742cec688967752c6b3dc9e49e42d067108a4160"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveImpactSession.cs.meta",
@@ -1061,7 +1061,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleImpactLatch.cs",
-      "sha256": "89a4c56d2f469fd7c4cfb0c3533069352bc2e2ce6ff7a53a151303d9417a85f2"
+      "sha256": "6c244105bd9e6626bd8ba1f50c3a4562f0dac8abbf8bcabc84c59ebc3fbcdc09"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleIsolatedStep.cs",
@@ -1073,7 +1073,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleImpactGate.cs",
-      "sha256": "1082d82188a198457019d6d96a42036c28e783764f805e12c6b33cf412882f71"
+      "sha256": "f73512cad7c62c007f7078863ef298915bfbbd6b2305fe15b64ebbd1eb8c0f79"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleSkillCastPresentation.cs",
@@ -1106,11 +1106,27 @@
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/NativeJumpAppearanceFixture.cs.meta",
       "sha256": "5be3a238568a1fb5ba2101bf4ab29743c20c641bb2a7a956d79fbc3e6e5e0278"
+    },
+    {
+      "path": "scripts/test_battle_impact_gate.ps1",
+      "sha256": "67001e62e5a6871b02240032a4ed84f3e3498ee7abcae541381e0c8ec483974d"
+    },
+    {
+      "path": "scripts/fixtures/battle_impact_gate_harness.cs",
+      "sha256": "8172105f3c2d5808418e473d2b4505432fbf50515c52a83660c78745d1600497"
+    },
+    {
+      "path": "scripts/test_battle_blocked_live_session.ps1",
+      "sha256": "33356d1b86376647554059d9f0a45e6902f09315ef7003b674faf1b0000f1588"
+    },
+    {
+      "path": "scripts/fixtures/battle_blocked_live_session_harness.cs",
+      "sha256": "ee9b47ac8221bfa2e060588ee01b9f7ed839f32e63530218aaa6c2133ba2bd40"
     }
   ],
   "generator": {
     "path": "scripts/prepare_battle_hit_view_runtime.py",
-    "sha256": "ebef904eae14f5b0fd33b8aacb0696ab3ce630825d63459ce25a028f8063a625"
+    "sha256": "6d090ca318656ef2e111307e5a3295628893d6450e6896f42e0fcf5ed31d7c96"
   },
   "adaptations": [
     "Namespace and existing Unity entity/Playable types.",

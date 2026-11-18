@@ -17,9 +17,11 @@ namespace Zjcs.Combat.Official
     public sealed class FightBattlePreparedMovement
     {
         internal FightBattleImpactLatch Owner;
-        internal bool Taken, Completed;
+        internal bool Taken, Completed, ContactConsumed;
         public FightBattleSkillCastEvent Cast { get; internal set; }
         public FightBattleMovementEvent Movement { get; internal set; }
+        public bool HasBlockedPosition { get; internal set; }
+        public FightGridPoint BlockedPosition { get; internal set; }
     }
 
     /// <summary>A cast whose final duration can be copied while the step is suspended.</summary>
@@ -54,7 +56,7 @@ namespace Zjcs.Combat.Official
     /// The step runs on a worker; the presentation thread takes requests without blocking and
     /// records actual arrivals. A single scope arrival may affect multiple target occurrences.
     /// </summary>
-    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleMovementPreparationObserver, IFightBattleCastCompletionObserver, IFightBattleHitSelectionObserver, IFightBattleImpactSettlementObserver, IFightBattleImpactStatusResolutionObserver, IDisposable
+    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleMovementPreparationObserver, IFightBattleBlockedMovementObserver, IFightBattleCastCompletionObserver, IFightBattleHitSelectionObserver, IFightBattleImpactSettlementObserver, IFightBattleImpactStatusResolutionObserver, IDisposable
     {
         private readonly struct Signal : IEquatable<Signal>
         {
@@ -79,6 +81,9 @@ namespace Zjcs.Combat.Official
         private readonly Queue<FightBattlePendingImpact> requests = new Queue<FightBattlePendingImpact>();
         private readonly Queue<FightBattlePreparedCast> preparations = new Queue<FightBattlePreparedCast>();
         private readonly Queue<FightBattlePreparedMovement> movements = new Queue<FightBattlePreparedMovement>();
+        private readonly Dictionary<FightBattleMovementEvent, FightBattlePreparedMovement> blockedMovements =
+            new Dictionary<FightBattleMovementEvent, FightBattlePreparedMovement>();
+        private readonly HashSet<FightBattleMovementEvent> blockedContacts = new HashSet<FightBattleMovementEvent>();
         private readonly Queue<FightBattleCompletedCast> completedCasts = new Queue<FightBattleCompletedCast>();
         private readonly Queue<FightBattleSelectedHit> selections = new Queue<FightBattleSelectedHit>();
         private readonly Queue<FightBattleSettledImpact> settlements = new Queue<FightBattleSettledImpact>();
@@ -89,6 +94,7 @@ namespace Zjcs.Combat.Official
         private long waitRevision;
         private bool workerWaiting, workerStopped, hasWaitingImpact;
         private Signal waitingImpact;
+        private FightBattleMovementEvent waitingBlockedMovement;
         public bool ObserveMovements { get; internal set; }
 
         // The isolated step owns exactly one worker. Other latch users retain the
@@ -105,7 +111,7 @@ namespace Zjcs.Combat.Official
 
         internal void FinishWorker()
         {
-            lock (sync) { workerStopped = true; workerWaiting = false; hasWaitingImpact = false; Monitor.PulseAll(sync); }
+            lock (sync) { workerStopped = true; workerWaiting = false; hasWaitingImpact = false; waitingBlockedMovement = null; Monitor.PulseAll(sync); }
         }
 
         private void ParkWorker()
@@ -188,6 +194,68 @@ namespace Zjcs.Combat.Official
                 movements.Enqueue(preparation);
                 while (!disposed && !preparation.Completed) ParkWorker();
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+            }
+        }
+
+        public void BlockedMovementPrepared(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement,
+            FightGridPoint blockedPosition)
+        {
+            if (movement == null) throw new ArgumentNullException(nameof(movement));
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (!ObserveMovements) return;
+                var preparation = new FightBattlePreparedMovement { Owner = this, Cast = cast, Movement = movement,
+                    HasBlockedPosition = true, BlockedPosition = blockedPosition };
+                if (blockedMovements.ContainsKey(movement))
+                    throw new InvalidOperationException("The blocked movement is already registered.");
+                blockedMovements.Add(movement, preparation);
+                movements.Enqueue(preparation);
+                while (!disposed && !preparation.Completed) ParkWorker();
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+            }
+        }
+
+        public void AwaitBlockedContact(FightBattleMovementEvent movement)
+        {
+            if (movement == null) throw new ArgumentNullException(nameof(movement));
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (!ObserveMovements) return;
+                if (!blockedMovements.TryGetValue(movement, out var preparation) || !preparation.Completed)
+                    throw new InvalidOperationException("The blocked movement has not started.");
+                if (preparation.ContactConsumed)
+                    throw new InvalidOperationException("The blocked movement contact was already consumed.");
+                while (!disposed && !blockedContacts.Contains(movement))
+                {
+                    bool tracked = workerThread == Thread.CurrentThread.ManagedThreadId;
+                    if (tracked) waitingBlockedMovement = movement;
+                    try { ParkWorker(); }
+                    finally { if (tracked) waitingBlockedMovement = null; }
+                }
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (preparation.ContactConsumed)
+                    throw new InvalidOperationException("The blocked movement contact was already consumed.");
+                preparation.ContactConsumed = true;
+            }
+        }
+
+        /// <summary>Records contact from this movement's actual collision track.</summary>
+        public bool RecordBlockedContact(FightBattleMovementEvent movement, out long releasedRevision)
+        {
+            releasedRevision = 0;
+            if (movement == null) throw new ArgumentNullException(nameof(movement));
+            lock (sync)
+            {
+                if (disposed) return false;
+                if (!blockedMovements.TryGetValue(movement, out var preparation) || !preparation.Taken)
+                    throw new InvalidOperationException("The blocked movement is not held by this host.");
+                bool added = blockedContacts.Add(movement);
+                if (added && workerWaiting && ReferenceEquals(waitingBlockedMovement, movement))
+                    releasedRevision = waitRevision;
+                Monitor.PulseAll(sync);
+                return added;
             }
         }
 
@@ -493,7 +561,7 @@ namespace Zjcs.Combat.Official
             lock (sync)
             {
                 if (disposed) return;
-                disposed = true; arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); movements.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear(); deferredStatusResults.Clear();
+                disposed = true; waitingBlockedMovement = null; arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); movements.Clear(); blockedMovements.Clear(); blockedContacts.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear(); deferredStatusResults.Clear();
                 Monitor.PulseAll(sync);
             }
         }

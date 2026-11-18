@@ -45,6 +45,18 @@ namespace Zjcs.Combat.Official
     }
 
     /// <summary>
+    /// Handoffs for an action that is blocked before reaching its destination.
+    /// The first call publishes its actual blocked cell before action-start effects;
+    /// the second waits until the original collision track reaches that cell.
+    /// </summary>
+    public interface IFightBattleBlockedMovementObserver
+    {
+        void BlockedMovementPrepared(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement,
+            FightGridPoint blockedPosition);
+        void AwaitBlockedContact(FightBattleMovementEvent movement);
+    }
+
+    /// <summary>
     /// Optional notification when a cast's duration is final. Its enclosing step may
     /// still apply later offsets, so this is not an absolute playback start time.
     /// </summary>

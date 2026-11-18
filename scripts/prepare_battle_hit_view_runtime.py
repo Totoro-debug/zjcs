@@ -324,7 +324,11 @@ def main():
         'unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs',
         'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleHitPlaybackAcceptance.cs',
         'unity/Assets/Game/Editor/Combat/AnimatorPlayback/NativeJumpAppearanceFixture.cs',
-        'unity/Assets/Game/Editor/Combat/AnimatorPlayback/NativeJumpAppearanceFixture.cs.meta')]
+        'unity/Assets/Game/Editor/Combat/AnimatorPlayback/NativeJumpAppearanceFixture.cs.meta',
+        'scripts/test_battle_impact_gate.ps1',
+        'scripts/fixtures/battle_impact_gate_harness.cs',
+        'scripts/test_battle_blocked_live_session.ps1',
+        'scripts/fixtures/battle_blocked_live_session_harness.cs')]
     # Existing leaf receipts also name the shared scope. Refresh only records
     # for these changed binding files, preserving unrelated session changes.
     updated_binding_hashes = {

@@ -59,6 +59,107 @@ public static class BattleImpactGateHarness
     public static string Run(FightOfficialCombatCatalog catalog, FightDamageFormula formula, FightOfficialSkillItemCatalog items)
     {
         {
+            using var blocked = new FightBattleImpactLatch { ObserveMovements = true };
+            var cast = new FightBattleSkillCastEvent();
+            var move = new FightBattleMovementEvent();
+            var worker = Task.Run(() => {
+                blocked.BindWorker();
+                try {
+                    blocked.BlockedMovementPrepared(cast, move, new FightGridPoint(4, 5));
+                    blocked.AwaitBlockedContact(move);
+                    try { blocked.AwaitBlockedContact(move); return false; }
+                    catch (InvalidOperationException) { return true; }
+                }
+                finally { blocked.FinishWorker(); }
+            });
+            FightBattlePreparedMovement prepared = null;
+            Check(SpinWait.SpinUntil(() => blocked.TryTakeMovement(out prepared), 20000)
+                && prepared.HasBlockedPosition && prepared.BlockedPosition.Equals(new FightGridPoint(4, 5))
+                && ReferenceEquals(prepared.Cast, cast) && ReferenceEquals(prepared.Movement, move),
+                "Blocked movement must retain its exact cast, action and obstacle position");
+            blocked.CompleteMovement(prepared, out long startRevision);
+            blocked.WaitForWorkerBoundary(startRevision);
+            Check(!worker.IsCompleted, "Collision rules must wait for actual contact");
+            bool rejected = false;
+            try { blocked.RecordBlockedContact(new FightBattleMovementEvent(), out _); }
+            catch (InvalidOperationException) { rejected = true; }
+            Check(rejected && !worker.IsCompleted, "Another movement cannot release a blocked action");
+            Check(blocked.RecordBlockedContact(move, out long contactRevision) && contactRevision > 0,
+                "The actual collision did not release its waiting worker");
+            Check(!blocked.RecordBlockedContact(move, out _), "Repeated contact must not be delivered twice");
+            blocked.WaitForWorkerBoundary(contactRevision);
+            Check(worker.GetAwaiter().GetResult(), "The blocked movement must consume its contact exactly once");
+        }
+        {
+            using var blocked = new FightBattleImpactLatch { ObserveMovements = true };
+            var move = new FightBattleMovementEvent();
+            var worker = Task.Run(() => {
+                blocked.BindWorker();
+                try {
+                    blocked.BlockedMovementPrepared(null, move, new FightGridPoint(2, 3));
+                    blocked.AwaitBlockedContact(move);
+                    return true;
+                }
+                finally { blocked.FinishWorker(); }
+            });
+            FightBattlePreparedMovement prepared = null;
+            Check(SpinWait.SpinUntil(() => blocked.TryTakeMovement(out prepared), 20000), "Early collision fixture missing");
+            Check(blocked.RecordBlockedContact(move, out long earlyRevision) && earlyRevision == 0 && !worker.IsCompleted,
+                "Contact arriving during action start must be retained without releasing preparation");
+            blocked.CompleteMovement(prepared, out long startRevision);
+            blocked.WaitForWorkerBoundary(startRevision);
+            Check(worker.GetAwaiter().GetResult(), "Early contact must release its own later wait");
+        }
+        {
+            var blocked = new FightBattleImpactLatch { ObserveMovements = true };
+            var move = new FightBattleMovementEvent();
+            var worker = Task.Run(() => {
+                blocked.BindWorker();
+                try { blocked.BlockedMovementPrepared(null, move, new FightGridPoint(1, 2)); blocked.AwaitBlockedContact(move); return false; }
+                catch (OperationCanceledException) { return true; }
+                finally { blocked.FinishWorker(); }
+            });
+            FightBattlePreparedMovement prepared = null;
+            Check(SpinWait.SpinUntil(() => blocked.TryTakeMovement(out prepared), 20000), "Canceled collision fixture missing");
+            blocked.CompleteMovement(prepared, out long startRevision);
+            blocked.WaitForWorkerBoundary(startRevision);
+            blocked.Dispose();
+            Check(worker.GetAwaiter().GetResult(), "Canceling the collision wait must release the worker");
+        }
+        {
+            using var blocked = new FightBattleImpactLatch { ObserveMovements = true };
+            var move = new FightBattleMovementEvent();
+            var nested = new FightBattleSkillCastEvent();
+            var worker = Task.Run(() => {
+                blocked.BindWorker();
+                try {
+                    blocked.BlockedMovementPrepared(null, move, new FightGridPoint(1, 2));
+                    blocked.CastPrepared(nested);
+                    blocked.AwaitBlockedContact(move);
+                    return true;
+                }
+                finally { blocked.FinishWorker(); }
+            });
+            FightBattlePreparedMovement movement = null;
+            Check(SpinWait.SpinUntil(() => blocked.TryTakeMovement(out movement), 20000), "Nested collision fixture missing");
+            blocked.CompleteMovement(movement, out long startRevision);
+            blocked.WaitForWorkerBoundary(startRevision);
+            FightBattlePreparedCast child = null;
+            Check(blocked.TryTakePreparation(out child) && ReferenceEquals(child.Cast, nested), "Action-start child must keep its own boundary");
+            Check(blocked.RecordBlockedContact(move, out long contactRevision) && contactRevision == 0 && !worker.IsCompleted,
+                "Contact during a nested action must not release its unrelated preparation");
+            blocked.CompletePreparation(child, out long childRevision);
+            blocked.WaitForWorkerBoundary(childRevision);
+            Check(worker.GetAwaiter().GetResult(), "Nested action must retain the earlier collision signal");
+        }
+        {
+            using var unobserved = new FightBattleImpactLatch();
+            var move = new FightBattleMovementEvent();
+            unobserved.BlockedMovementPrepared(null, move, new FightGridPoint(1, 1));
+            unobserved.AwaitBlockedContact(move);
+            Check(!unobserved.TryTakeMovement(out _), "Opted-out rule execution must retain its existing behavior");
+        }
+        {
             using var deferred = new FightBattleImpactLatch();
             var impact = new FightBattlePendingImpact();
             var damage = new FightBattleDamageEvent { BeforeHp = 100, AfterHp = 70 };

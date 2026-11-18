@@ -15,6 +15,8 @@ namespace Zjcs.Presentation.Combat
     {
         public delegate bool StartCast(FightBattleSkillCastEvent cast, out EcEntityIdentifier skillId);
         public delegate bool StartMovement(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement);
+        public delegate bool StartBlockedMovement(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement,
+            FightGridPoint blockedPosition, Action contact);
 
         private sealed class ActiveCast
         {
@@ -39,6 +41,7 @@ namespace Zjcs.Presentation.Combat
         private bool disposed, transferred, pumping;
         private StartCast lastStartCast;
         private StartMovement lastStartMovement;
+        private StartBlockedMovement lastStartBlockedMovement;
         private Action<FightBattleDamageEvent> lastAfterDamageStarted;
         private FightBattleSkillCastEvent currentGraphCast;
         private EcEntityIdentifier currentGraphSkillId;
@@ -83,7 +86,7 @@ namespace Zjcs.Presentation.Combat
         /// the same frame. Declined starts and incomplete damage remain held.
         /// </summary>
         public bool Pump(float elapsed, StartCast startCast, Action<FightBattleDamageEvent> afterDamageStarted = null,
-            StartMovement startMovement = null)
+            StartMovement startMovement = null, StartBlockedMovement startBlockedMovement = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleLiveImpactSession));
             if (transferred) throw new InvalidOperationException("The live step was already transferred.");
@@ -93,6 +96,7 @@ namespace Zjcs.Presentation.Combat
             if (pumping) throw new InvalidOperationException("The live step is already being pumped.");
             lastStartCast = startCast;
             lastStartMovement = startMovement;
+            lastStartBlockedMovement = startBlockedMovement;
             lastAfterDamageStarted = afterDamageStarted;
             pumping = true;
             try
@@ -125,7 +129,30 @@ namespace Zjcs.Presentation.Combat
                     if (movement == null) step.Latch.TryTakeMovement(out movement);
                     if (movement != null)
                     {
-                        if (startMovement == null || !startMovement(movement.Cast, movement.Movement)) return progressed;
+                        if (movement.HasBlockedPosition)
+                        {
+                            if (startBlockedMovement == null) return progressed;
+                            var blockedMovement = movement.Movement;
+                            bool armed = true, accepted = false, earlyContact = false;
+                            void Contact()
+                            {
+                                if (!armed) return;
+                                if (!accepted) { earlyContact = true; return; }
+                                OnBlockedMovementContact(blockedMovement);
+                            }
+                            bool started;
+                            try { started = startBlockedMovement(movement.Cast, blockedMovement, movement.BlockedPosition, Contact); }
+                            catch { armed = false; throw; }
+                            if (!started)
+                            {
+                                armed = false;
+                                if (earlyContact) throw new InvalidOperationException("A declined movement reported contact.");
+                                return progressed;
+                            }
+                            accepted = true;
+                            if (earlyContact) OnBlockedMovementContact(blockedMovement);
+                        }
+                        else if (startMovement == null || !startMovement(movement.Cast, movement.Movement)) return progressed;
                         step.Latch.CompleteMovement(movement, out long revision);
                         movement = null; progressed = true;
                         step.Latch.WaitForWorkerBoundary(revision);
@@ -179,7 +206,14 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed || transferred || pumping || lastStartCast == null) return;
             step.Latch.WaitForWorkerBoundary(revision);
-            Pump(0f, lastStartCast, lastAfterDamageStarted, lastStartMovement);
+            Pump(0f, lastStartCast, lastAfterDamageStarted, lastStartMovement, lastStartBlockedMovement);
+        }
+
+        private void OnBlockedMovementContact(FightBattleMovementEvent movement)
+        {
+            if (disposed || transferred) return;
+            if (!step.Latch.RecordBlockedContact(movement, out long revision) || revision <= 0 || pumping) return;
+            OnWorkerReleasedByArrival(revision);
         }
 
         private void OnSkillGraphPlayableStarted(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
@@ -255,7 +289,7 @@ namespace Zjcs.Presentation.Combat
                 delivered = true;
             }
             finally { pumping = false; }
-            if (delivered && lastStartCast != null) Pump(0f, lastStartCast, lastAfterDamageStarted, lastStartMovement);
+            if (delivered && lastStartCast != null) Pump(0f, lastStartCast, lastAfterDamageStarted, lastStartMovement, lastStartBlockedMovement);
             return delivered;
         }
 
