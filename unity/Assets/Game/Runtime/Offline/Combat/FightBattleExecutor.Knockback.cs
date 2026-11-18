@@ -43,20 +43,30 @@ namespace Zjcs.Combat.Official
             movement.Path.Add(start); movement.Path.Add(start);
             int movementIndex = movements.Count;
             movements.Add(movement);
+            var context = movementStartContext;
+            void ResolveCollision()
+            {
+                foreach (FightBattleUnitState victim in collision.Victims)
+                {
+                    if (actor.Hp <= 0 || victim.Hp <= 0 || victim.Ended) continue;
+                    ExecuteBlockedCollisionChild(actor, victim, parent, movement, impactObserver, context);
+                }
+            }
+            var sourceCast = gridViewCast?.SkillEntityId == parent.EntityId ? gridViewCast : null;
+            bool collisionDeferred = windBlade && sourceCast != null
+                && ImpactGate is IFightBattleDeferredBlockedImpactObserver deferred
+                && deferred.TryDeferBlockedContact(sourceCast, movement, ResolveCollision);
             ApplyMovementAction(movements, movementIndex, move, parent, originDelay: hitDelay,
                 blockedPosition: collision.BlockedPosition);
+            if (collisionDeferred) return true;
             movementObserver.AwaitBlockedContact(movement);
-            foreach (FightBattleUnitState victim in collision.Victims)
-            {
-                if (actor.Hp <= 0 || victim.Hp <= 0 || victim.Ended) continue;
-                ExecuteBlockedCollisionChild(actor, victim, parent, movement, impactObserver);
-            }
+            ResolveCollision();
             return true;
         }
 
         private void ExecuteBlockedCollisionChild(FightBattleUnitState actor, FightBattleUnitState victim,
             FightBattleSkillDefinition parent, FightBattleMovementEvent movement,
-            IFightBattleBlockedImpactObserver impactObserver)
+            IFightBattleBlockedImpactObserver impactObserver, MovementStartContext context)
         {
             int rank = Math.Max(1, parent.Rank), level = Math.Max(1, parent.Level), subRank = Math.Max(1, parent.SubRank);
             var skill = statusCatalog.CreateSkill(10100, -1, 0, rank, level, subRank,
@@ -68,7 +78,6 @@ namespace Zjcs.Combat.Official
                 Presentation = FightBattleSkillCastPresentation.Capture(actor, skill, targets, victim) };
             cast.TargetIds.Add(victim.Id);
             checkpoint.Statistics.RecordCast(actor.Id, skill.EntityId, skill.ItemId);
-            var context = movementStartContext;
             context.Casts.Add(cast);
             impactObserver.BindBlockedImpact(movement, cast, victim.Id);
             var previous = blockedCollision;

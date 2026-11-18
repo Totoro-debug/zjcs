@@ -1269,6 +1269,8 @@ namespace Zjcs.Combat.Official
                     casts, damageEvents, movements, ref lastDelay,
                     ref statusTriggerDuration, ref statusTriggerActionDuration);
             }
+            if (presentationCast != null && ImpactGate is IFightBattleDeferredBlockedImpactObserver deferredContacts)
+                deferredContacts.AwaitDeferredContacts(presentationCast);
             movementStartContext.StatusStartTime = 0f;
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay,
                 float.PositiveInfinity, completedSourceMoves, targetPosition);

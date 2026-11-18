@@ -65,7 +65,7 @@ namespace Zjcs.Combat.Official
     /// The step runs on a worker; the presentation thread takes requests without blocking and
     /// records actual arrivals. A single scope arrival may affect multiple target occurrences.
     /// </summary>
-    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleMovementPreparationObserver, IFightBattleBlockedMovementObserver, IFightBattleBlockedImpactObserver, IFightBattleCastCompletionObserver, IFightBattleHitSelectionObserver, IFightBattleImpactSettlementObserver, IFightBattleImpactStatusResolutionObserver, IDisposable
+    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleMovementPreparationObserver, IFightBattleBlockedMovementObserver, IFightBattleBlockedImpactObserver, IFightBattleDeferredBlockedImpactObserver, IFightBattleCastCompletionObserver, IFightBattleHitSelectionObserver, IFightBattleImpactSettlementObserver, IFightBattleImpactStatusResolutionObserver, IDisposable
     {
         private sealed class WorkerWait
         {
@@ -78,6 +78,13 @@ namespace Zjcs.Combat.Official
         {
             public Func<bool> Execute;
             public TaskCompletionSource<bool> Completion;
+            public bool AllowNested;
+        }
+        private sealed class DeferredContact
+        {
+            public FightBattleSkillCastEvent Cast;
+            public Action Callback;
+            public bool Queued;
         }
         private readonly struct Signal : IEquatable<Signal>
         {
@@ -105,6 +112,8 @@ namespace Zjcs.Combat.Official
         private readonly Dictionary<FightBattleMovementEvent, FightBattlePreparedMovement> blockedMovements =
             new Dictionary<FightBattleMovementEvent, FightBattlePreparedMovement>();
         private readonly HashSet<FightBattleMovementEvent> blockedContacts = new HashSet<FightBattleMovementEvent>();
+        private readonly Dictionary<FightBattleMovementEvent, DeferredContact> deferredContacts =
+            new Dictionary<FightBattleMovementEvent, DeferredContact>();
         private readonly Dictionary<FightBattleSkillCastEvent, (FightBattleMovementEvent Movement, int TargetId)> blockedImpacts =
             new Dictionary<FightBattleSkillCastEvent, (FightBattleMovementEvent, int)>();
         private readonly HashSet<(FightBattleMovementEvent Movement, int TargetId)> boundBlockedTargets =
@@ -176,16 +185,20 @@ namespace Zjcs.Combat.Official
             }
             try
             {
-                Monitor.Wait(sync);
-                if (tracked && !disposed && !workerCommandActive && workerCommands.Count > 0)
+                if (!tracked || workerCommands.Count == 0
+                    || workerCommandActive && !workerCommands.Peek().AllowNested)
+                    Monitor.Wait(sync);
+                if (tracked && !disposed && workerCommands.Count > 0
+                    && (!workerCommandActive || workerCommands.Peek().AllowNested))
                 {
                     var command = workerCommands.Dequeue();
+                    bool wasCommandActive = workerCommandActive;
                     workerWaiting = false; workerCommandActive = true;
                     bool result = false; Exception failure = null;
                     Monitor.Exit(sync);
                     try { result = command.Execute(); }
                     catch (Exception error) { failure = error; }
-                    finally { Monitor.Enter(sync); workerCommandActive = false; }
+                    finally { Monitor.Enter(sync); workerCommandActive = wasCommandActive; }
                     if (failure != null) { command.Completion.TrySetException(failure); throw new InvalidOperationException("The isolated worker command failed.", failure); }
                     command.Completion.TrySetResult(result);
                 }
@@ -319,6 +332,8 @@ namespace Zjcs.Combat.Official
                 if (!ObserveMovements) return;
                 var preparation = new FightBattlePreparedMovement { Owner = this, Cast = cast, Movement = movement,
                     HasBlockedPosition = true, BlockedPosition = blockedPosition };
+                if (deferredContacts.TryGetValue(movement, out var deferred) && !ReferenceEquals(deferred.Cast, cast))
+                    throw new InvalidOperationException("The deferred movement belongs to another cast.");
                 if (blockedMovements.ContainsKey(movement))
                     throw new InvalidOperationException("The blocked movement is already registered.");
                 blockedMovements.Add(movement, preparation);
@@ -369,6 +384,79 @@ namespace Zjcs.Combat.Official
             }
         }
 
+        public bool TryDeferBlockedContact(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement, Action onContact)
+        {
+            if (cast == null) throw new ArgumentNullException(nameof(cast));
+            if (movement == null) throw new ArgumentNullException(nameof(movement));
+            if (onContact == null) throw new ArgumentNullException(nameof(onContact));
+            DeferredContact deferred;
+            bool contactAlreadyReached;
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (!ObserveMovements || workerThread != Thread.CurrentThread.ManagedThreadId) return false;
+                blockedMovements.TryGetValue(movement, out var preparation);
+                if (preparation != null && !ReferenceEquals(preparation.Cast, cast))
+                    throw new InvalidOperationException("The blocked movement belongs to another cast.");
+                if (preparation?.ContactConsumed == true || deferredContacts.ContainsKey(movement))
+                    throw new InvalidOperationException("The blocked contact already has a consumer.");
+                deferred = new DeferredContact { Cast = cast, Callback = onContact };
+                deferredContacts.Add(movement, deferred);
+                contactAlreadyReached = preparation?.Completed == true && blockedContacts.Contains(movement);
+                if (contactAlreadyReached) deferred.Queued = true;
+            }
+            if (contactAlreadyReached) RunDeferredContact(movement, deferred);
+            return true;
+        }
+
+        public void AwaitDeferredContacts(FightBattleSkillCastEvent cast)
+        {
+            if (cast == null) throw new ArgumentNullException(nameof(cast));
+            lock (sync)
+            {
+                if (!HasDeferredContacts(cast)) return;
+                if (workerThread != Thread.CurrentThread.ManagedThreadId)
+                    throw new InvalidOperationException("Only the rule worker can wait for deferred contacts.");
+                while (!disposed && HasDeferredContacts(cast)) ParkWorker();
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+            }
+        }
+
+        private bool HasDeferredContacts(FightBattleSkillCastEvent cast)
+        {
+            foreach (var value in deferredContacts.Values)
+                if (ReferenceEquals(value.Cast, cast)) return true;
+            return false;
+        }
+
+        private void RunDeferredContact(FightBattleMovementEvent movement, DeferredContact deferred)
+        {
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (!blockedContacts.Contains(movement) || !blockedMovements.TryGetValue(movement, out var preparation)
+                    || !preparation.Completed || preparation.ContactConsumed || !deferredContacts.TryGetValue(movement, out var pending)
+                    || !ReferenceEquals(pending, deferred))
+                    throw new InvalidOperationException("The deferred contact is not awaiting this worker.");
+                preparation.ContactConsumed = true;
+            }
+            try { deferred.Callback(); }
+            finally
+            {
+                lock (sync) { deferredContacts.Remove(movement); Monitor.PulseAll(sync); }
+            }
+        }
+
+        private void QueueDeferredContact(FightBattleMovementEvent movement, DeferredContact deferred)
+        {
+            deferred.Queued = true;
+            workerCommands.Enqueue(new WorkerCommand {
+                AllowNested = true,
+                Completion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously),
+                Execute = () => { RunDeferredContact(movement, deferred); return true; }
+            });
+        }
+
         /// <summary>Records contact from this movement's actual collision track.</summary>
         public bool RecordBlockedContact(FightBattleMovementEvent movement, out long releasedRevision)
         {
@@ -380,7 +468,12 @@ namespace Zjcs.Combat.Official
                 if (!blockedMovements.TryGetValue(movement, out var preparation) || !preparation.Taken)
                     throw new InvalidOperationException("The blocked movement is not held by this host.");
                 bool added = blockedContacts.Add(movement);
-                if (added && workerWait != null && ReferenceEquals(workerWait.BlockedMovement, movement))
+                if (added && preparation.Completed && deferredContacts.TryGetValue(movement, out var deferred) && !deferred.Queued)
+                {
+                    QueueDeferredContact(movement, deferred);
+                    if (workerWaiting && workerWait != null) releasedRevision = workerWait.Revision;
+                }
+                else if (added && workerWait != null && ReferenceEquals(workerWait.BlockedMovement, movement))
                     releasedRevision = workerWait.Revision;
                 Monitor.PulseAll(sync);
                 return added;
@@ -408,6 +501,9 @@ namespace Zjcs.Combat.Official
                     throw new InvalidOperationException("The movement preparation is not awaiting this host.");
                 releasedRevision = waitRevision;
                 preparation.Completed = true;
+                if (preparation.HasBlockedPosition && blockedContacts.Contains(preparation.Movement)
+                    && deferredContacts.TryGetValue(preparation.Movement, out var deferred) && !deferred.Queued)
+                    QueueDeferredContact(preparation.Movement, deferred);
                 Monitor.PulseAll(sync);
             }
         }
@@ -699,7 +795,7 @@ namespace Zjcs.Combat.Official
             lock (sync)
             {
                 if (disposed) return;
-                disposed = true; workerWait = null; CancelWorkerCommands(); arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); movements.Clear(); blockedMovements.Clear(); blockedContacts.Clear(); blockedImpacts.Clear(); boundBlockedTargets.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear(); secondsStatuses.Clear(); deferredStatusResults.Clear();
+                disposed = true; workerWait = null; CancelWorkerCommands(); arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); movements.Clear(); blockedMovements.Clear(); blockedContacts.Clear(); deferredContacts.Clear(); blockedImpacts.Clear(); boundBlockedTargets.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear(); secondsStatuses.Clear(); deferredStatusResults.Clear();
                 Monitor.PulseAll(sync);
             }
         }

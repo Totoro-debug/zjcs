@@ -1,3 +1,5 @@
+using System;
+
 namespace Zjcs.Combat.Official
 {
     /// <summary>A pending original hit whose local settlement has not started.</summary>
@@ -61,6 +63,13 @@ namespace Zjcs.Combat.Official
     public interface IFightBattleBlockedImpactObserver
     {
         void BindBlockedImpact(FightBattleMovementEvent movement, FightBattleSkillCastEvent cast, int targetId);
+    }
+
+    /// <summary>Lets another hit continue while an already-started blocked action approaches contact.</summary>
+    public interface IFightBattleDeferredBlockedImpactObserver
+    {
+        bool TryDeferBlockedContact(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement, Action onContact);
+        void AwaitDeferredContacts(FightBattleSkillCastEvent cast);
     }
 
     /// <summary>

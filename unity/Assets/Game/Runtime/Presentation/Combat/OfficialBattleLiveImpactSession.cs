@@ -62,6 +62,7 @@ namespace Zjcs.Presentation.Combat
             new HashSet<(FightBattleHitSelectionSnapshot, int)>();
         private readonly List<OfficialBattleSlashImpact> slashEffects = new List<OfficialBattleSlashImpact>();
         private FightBattlePreparedCast preparation;
+        private readonly Stack<FightBattlePreparedCast> suspendedPreparations = new Stack<FightBattlePreparedCast>();
         private FightBattlePreparedMovement movement;
         private FightBattleSelectedHit selection;
         private FightBattleSettledImpact settlement;
@@ -222,12 +223,18 @@ namespace Zjcs.Presentation.Combat
                         continue;
                     }
                     if (preparation == null) step.Latch.TryTakePreparation(out preparation);
+                    else if (step.Latch.TryTakePreparation(out var nestedPreparation))
+                    {
+                        suspendedPreparations.Push(preparation);
+                        preparation = nestedPreparation;
+                    }
                     if (preparation != null)
                     {
                         if (!startCast(preparation.Cast, out var id)) return progressed;
                         casts.Add(preparation.Cast, new ActiveCast { Id = id, Started = clock });
                         step.Latch.CompletePreparation(preparation, out long revision);
-                        preparation = null; progressed = true;
+                        preparation = suspendedPreparations.Count > 0 ? suspendedPreparations.Pop() : null;
+                        progressed = true;
                         step.Latch.WaitForWorkerBoundary(revision);
                         continue;
                     }
@@ -629,6 +636,7 @@ namespace Zjcs.Presentation.Combat
             slashCasters.Clear(); heavyCasters.Clear(); comboCasters.Clear(); observedComboEffects.Clear();
             reachedComboEffects.Clear(); sentComboHits.Clear(); observedSlashes.Clear(); reachedSlashes.Clear(); sentSlashes.Clear(); slashEffects.Clear();
             resolvingStatuses.Clear();
+            suspendedPreparations.Clear();
             SecondsStatusChanged = null;
         }
     }

@@ -79,6 +79,21 @@ namespace Zjcs.Presentation.Combat {
   private static FightBattleMovementEvent Prepare(){var move=new FightBattleMovementEvent{UnitId=4};FightBattleImpactLatch.Last.Pending=new FightBattlePreparedMovement{Movement=move,HasBlockedPosition=true,BlockedPosition=new FightGridPoint(6,7)};return move;}
   public static void Run(){
    {
+    var parent=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10640};
+    var child=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10100};
+    using(var session=NewSession()){
+     var started=new List<FightBattleSkillCastEvent>();bool allowParent=false;
+     bool StartNested(FightBattleSkillCastEvent cast,out EcEntityIdentifier id){id=new EcEntityIdentifier();if(ReferenceEquals(cast,parent)&&!allowParent)return false;started.Add(cast);return true;}
+     FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=parent};
+     Check(!session.Pump(0,StartNested),"The initial unavailable cast must remain held");
+     FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=child};
+     Check(session.Pump(0,StartNested)&&started.Count==1&&ReferenceEquals(started[0],child),
+      "A nested collision cast must start while an outer cast remains held");
+     allowParent=true;Check(session.Pump(0,StartNested)&&started.Count==2&&ReferenceEquals(started[1],parent),
+      "The outer cast must resume after its nested collision");
+    }
+   }
+   {
     var hit=new FightBattleHitEntity{EntityId=10641,ScopeEntries=new List<FightBattleHitScopeEntry>()};
     for(int i=1;i<=4;i++)hit.ScopeEntries.Add(new FightBattleHitScopeEntry{Position=new FightGridPoint(0,i)});
     var skill=new FightBattleSkillDefinition{EntityId=10640,HitGraphEntities=new List<FightBattleHitEntity>{hit}};

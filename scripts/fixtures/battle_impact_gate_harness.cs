@@ -304,6 +304,190 @@ public static class BattleImpactGateHarness
             blocked.WaitForWorkerBoundary(childRevision);
             Check(worker.GetAwaiter().GetResult(), "Nested action must retain the earlier collision signal");
         }
+        foreach (bool contactWhileNextHeld in new[] { false, true })
+        {
+            using var deferredContact = new FightBattleImpactLatch { ObserveMovements = true };
+            var cast = new FightBattleSkillCastEvent { ActorId = 1 };
+            var next = new FightBattleSkillCastEvent { ActorId = 1 };
+            var child = new FightBattleSkillCastEvent { ActorId = 1, SkillEntityId = 10100 };
+            child.TargetIds.Add(2);
+            var move = new FightBattleMovementEvent();
+            int contacts = 0, nextFinished = 0;
+            var worker = Task.Run(() => {
+                deferredContact.BindWorker();
+                try {
+                    Check(deferredContact.TryDeferBlockedContact(cast, move, () => {
+                        deferredContact.BindBlockedImpact(move, child, 2); contacts++;
+                        deferredContact.CastPrepared(child);
+                    }), "A started blocked action was not deferred");
+                    deferredContact.BlockedMovementPrepared(cast, move, new FightGridPoint(1, 2));
+                    deferredContact.CastPrepared(next); nextFinished++;
+                    deferredContact.AwaitDeferredContacts(cast);
+                    return true;
+                }
+                finally { deferredContact.FinishWorker(); }
+            });
+            FightBattlePreparedMovement movement = null;
+            Check(SpinWait.SpinUntil(() => deferredContact.TryTakeMovement(out movement), 20000),
+                "Deferred collision fixture did not start its action");
+            deferredContact.CompleteMovement(movement, out long startRevision);
+            deferredContact.WaitForWorkerBoundary(startRevision);
+            FightBattlePreparedCast nextPreparation = null;
+            Check(deferredContact.TryTakePreparation(out nextPreparation) && ReferenceEquals(nextPreparation.Cast, next)
+                && contacts == 0, "A later hit could not proceed while collision was pending");
+            if (!contactWhileNextHeld)
+            {
+                deferredContact.CompletePreparation(nextPreparation, out long nextRevision);
+                deferredContact.WaitForWorkerBoundary(nextRevision);
+                Check(nextFinished == 1 && !worker.IsCompleted && contacts == 0,
+                    "The cast must wait for its still-pending collision only after the later hit");
+            }
+            Check(deferredContact.RecordBlockedContact(move, out long contactRevision) && contactRevision > 0,
+                "Actual contact did not schedule the deferred collision on the worker");
+            deferredContact.WaitForWorkerBoundary(contactRevision);
+            FightBattlePreparedCast childPreparation = null;
+            Check(deferredContact.TryTakePreparation(out childPreparation) && ReferenceEquals(childPreparation.Cast, child)
+                && contacts == 1 && !deferredContact.RecordBlockedContact(move, out _),
+                "The collision child must start exactly once after actual contact");
+            deferredContact.CompletePreparation(childPreparation, out long childRevision);
+            deferredContact.WaitForWorkerBoundary(childRevision);
+            if (contactWhileNextHeld)
+            {
+                Check(nextFinished == 0 && !worker.IsCompleted, "A nested collision released another held hit");
+                deferredContact.CompletePreparation(nextPreparation, out long nextRevision);
+                deferredContact.WaitForWorkerBoundary(nextRevision);
+            }
+            Check(worker.GetAwaiter().GetResult() && contacts == 1 && nextFinished == 1,
+                "Deferred collision did not finish the original cast safely");
+        }
+        {
+            using var early = new FightBattleImpactLatch { ObserveMovements = true };
+            var cast = new FightBattleSkillCastEvent { ActorId = 1 };
+            var move = new FightBattleMovementEvent();
+            int contacts = 0;
+            var worker = Task.Run(() => {
+                early.BindWorker();
+                try {
+                    Check(early.TryDeferBlockedContact(cast, move, () => contacts++), "Early contact could not be deferred");
+                    early.BlockedMovementPrepared(cast, move, new FightGridPoint(1, 2));
+                    early.AwaitDeferredContacts(cast);
+                    return true;
+                }
+                finally { early.FinishWorker(); }
+            });
+            FightBattlePreparedMovement preparation = null;
+            Check(SpinWait.SpinUntil(() => early.TryTakeMovement(out preparation), 20000), "Early deferred action missing");
+            Check(early.RecordBlockedContact(move, out long contactRevision) && contactRevision == 0,
+                "A contact during movement preparation must be retained");
+            early.CompleteMovement(preparation, out long startRevision);
+            early.WaitForWorkerBoundary(startRevision);
+            Check(worker.GetAwaiter().GetResult() && contacts == 1, "Early deferred contact was not consumed once");
+        }
+        {
+            using var queued = new FightBattleImpactLatch { ObserveMovements = true };
+            using var running = new ManualResetEventSlim();
+            using var proceed = new ManualResetEventSlim();
+            var cast = new FightBattleSkillCastEvent { ActorId = 1 };
+            var next = new FightBattleSkillCastEvent { ActorId = 1 };
+            var child = new FightBattleSkillCastEvent { ActorId = 1, SkillEntityId = 10100 };
+            child.TargetIds.Add(2); var move = new FightBattleMovementEvent(); int contacts = 0;
+            var worker = Task.Run(() => {
+                queued.BindWorker();
+                try {
+                    Check(queued.TryDeferBlockedContact(cast, move, () => {
+                        queued.BindBlockedImpact(move, child, 2); contacts++; queued.CastPrepared(child);
+                    }), "Busy-worker contact did not defer");
+                    queued.BlockedMovementPrepared(cast, move, new FightGridPoint(1, 2));
+                    running.Set();
+                    if (!proceed.Wait(20000)) throw new TimeoutException("The fixture did not resume its worker.");
+                    queued.CastPrepared(next); queued.AwaitDeferredContacts(cast); return true;
+                }
+                finally { queued.FinishWorker(); }
+            });
+            FightBattlePreparedMovement movement = null;
+            Check(SpinWait.SpinUntil(() => queued.TryTakeMovement(out movement), 20000), "Busy-worker action missing");
+            queued.CompleteMovement(movement, out _);
+            Check(running.Wait(20000), "The worker did not leave movement preparation");
+            Check(queued.RecordBlockedContact(move, out long revision) && revision == 0 && contacts == 0,
+                "A contact while the worker runs must be queued without a false wait revision");
+            proceed.Set();
+            FightBattlePreparedCast outer = null, inner = null;
+            Check(SpinWait.SpinUntil(() => queued.TryTakePreparation(out outer), 20000)
+                && ReferenceEquals(outer.Cast, next), "The outer preparation was lost");
+            Check(SpinWait.SpinUntil(() => queued.TryTakePreparation(out inner), 20000)
+                && ReferenceEquals(inner.Cast, child) && contacts == 1, "The queued contact lost its wakeup");
+            queued.CompletePreparation(inner, out long childRevision); queued.WaitForWorkerBoundary(childRevision);
+            queued.CompletePreparation(outer, out long outerRevision); queued.WaitForWorkerBoundary(outerRevision);
+            Check(worker.GetAwaiter().GetResult() && contacts == 1, "Queued contact did not complete safely");
+        }
+        {
+            using var nestedContacts = new FightBattleImpactLatch { ObserveMovements = true };
+            var cast = new FightBattleSkillCastEvent { ActorId = 1 };
+            var moves = new[] { new FightBattleMovementEvent(), new FightBattleMovementEvent() };
+            var children = new[] { new FightBattleSkillCastEvent { ActorId = 1, SkillEntityId = 10100 },
+                new FightBattleSkillCastEvent { ActorId = 1, SkillEntityId = 10100 } };
+            children[0].TargetIds.Add(2); children[1].TargetIds.Add(3);
+            var contacts = new List<int>();
+            var worker = Task.Run(() => {
+                nestedContacts.BindWorker();
+                try {
+                    for (int i = 0; i < 2; i++) {
+                        int index = i;
+                        Check(nestedContacts.TryDeferBlockedContact(cast, moves[index], () => {
+                            nestedContacts.BindBlockedImpact(moves[index], children[index], index + 2);
+                            contacts.Add(index); nestedContacts.CastPrepared(children[index]);
+                        }), "A concurrent contact did not defer");
+                        nestedContacts.BlockedMovementPrepared(cast, moves[index], new FightGridPoint(index + 1, 2));
+                    }
+                    nestedContacts.AwaitDeferredContacts(cast); return true;
+                }
+                finally { nestedContacts.FinishWorker(); }
+            });
+            for (int i = 0; i < 2; i++) {
+                FightBattlePreparedMovement movement = null;
+                Check(SpinWait.SpinUntil(() => nestedContacts.TryTakeMovement(out movement), 20000)
+                    && ReferenceEquals(movement.Movement, moves[i]), "Concurrent blocked action missing");
+                nestedContacts.CompleteMovement(movement, out long revision); nestedContacts.WaitForWorkerBoundary(revision);
+            }
+            Check(nestedContacts.RecordBlockedContact(moves[0], out long firstRevision) && firstRevision > 0,
+                "First concurrent contact did not reach the worker");
+            nestedContacts.WaitForWorkerBoundary(firstRevision);
+            FightBattlePreparedCast first = null;
+            Check(nestedContacts.TryTakePreparation(out first) && ReferenceEquals(first.Cast, children[0]),
+                "First collision child was not prepared");
+            Check(nestedContacts.RecordBlockedContact(moves[1], out long secondRevision) && secondRevision > 0,
+                "A second contact could not interrupt the first child handoff");
+            nestedContacts.WaitForWorkerBoundary(secondRevision);
+            FightBattlePreparedCast second = null;
+            Check(nestedContacts.TryTakePreparation(out second) && ReferenceEquals(second.Cast, children[1]),
+                "Nested collision child was not prepared");
+            nestedContacts.CompletePreparation(second, out long childRevision); nestedContacts.WaitForWorkerBoundary(childRevision);
+            Check(!worker.IsCompleted && contacts.SequenceEqual(new[] { 0, 1 }),
+                "The first collision must remain held while its nested contact finishes");
+            nestedContacts.CompletePreparation(first, out long firstChildRevision); nestedContacts.WaitForWorkerBoundary(firstChildRevision);
+            Check(worker.GetAwaiter().GetResult(), "Nested contacts did not complete their parent cast");
+        }
+        {
+            var canceled = new FightBattleImpactLatch { ObserveMovements = true };
+            var cast = new FightBattleSkillCastEvent { ActorId = 1 };
+            var move = new FightBattleMovementEvent(); int contacts = 0;
+            var worker = Task.Run(() => {
+                canceled.BindWorker();
+                try {
+                    canceled.BlockedMovementPrepared(cast, move, new FightGridPoint(1, 2));
+                    Check(canceled.TryDeferBlockedContact(cast, move, () => contacts++), "Canceled contact did not defer");
+                    canceled.AwaitDeferredContacts(cast); return false;
+                }
+                catch (OperationCanceledException) { return true; }
+                finally { canceled.FinishWorker(); }
+            });
+            FightBattlePreparedMovement preparation = null;
+            Check(SpinWait.SpinUntil(() => canceled.TryTakeMovement(out preparation), 20000), "Canceled deferred action missing");
+            canceled.CompleteMovement(preparation, out long startRevision);
+            canceled.WaitForWorkerBoundary(startRevision); canceled.Dispose();
+            Check(worker.GetAwaiter().GetResult() && contacts == 0,
+                "Disposing a pending contact must not execute its collision");
+        }
         {
             using var unobserved = new FightBattleImpactLatch();
             var move = new FightBattleMovementEvent();

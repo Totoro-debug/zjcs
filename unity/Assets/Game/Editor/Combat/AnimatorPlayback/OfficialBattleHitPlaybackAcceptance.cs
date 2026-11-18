@@ -1603,80 +1603,92 @@ namespace Zjcs.Editor.Combat
                 windAppearance?.Dispose(); Destroy(windRoot.gameObject); yield return null;
             }
 
-            // A fourth-cell wind hit pushes into a fifth-cell enemy: both collision
-            // victims must settle on the actual original blocked-movement contact.
-            var windCollisionUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 6), LiveUnit(3, 2, 7) };
-            windCollisionUnits[0].Properties.Add(new FightPropertyValue { Id = formula.PropertyId("EffectRateValue"), Value = 20000 });
-            var windCollisionSkill = liveCatalog.CreateSkill(10640, 0, 10012, 2, 20, 1,
-                liveCatalog.CalculateSkillProps(10640, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
-            windCollisionSkill.LimitedTimes = 1; windCollisionUnits[0].Skills.Add(windCollisionSkill);
-            windCollisionUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(windCollisionSkill, 0));
-            var windCollisionCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
-                Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
-            windCollisionCheckpoint.Units.AddRange(windCollisionUnits); var windCollisionWave = new FightBattleWaveState();
-            windCollisionWave.UnitIds.AddRange(new[] { 2, 3 }); windCollisionCheckpoint.Waves.Add(windCollisionWave);
-            FightBattleExecutor.Begin(windCollisionCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
-            string windCollisionCommitted = FightBattleCheckpointSerializer.Save(windCollisionCheckpoint);
-            var windCollisionDisplay = FightBattleCheckpointSerializer.Load(windCollisionCommitted).Units.ToArray();
-            var windCollisionRoot = new GameObject("Live wind blade collision").transform; windCollisionRoot.SetParent(root, false);
-            var windCollisionBodies = new Dictionary<int, Transform>();
-            foreach (var unit in windCollisionUnits) {
-                var body = new GameObject("Wind collision unit " + unit.Id).transform; body.SetParent(windCollisionRoot, false);
-                body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
-                var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
-                body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
-                windCollisionBodies.Add(unit.Id, body);
-            }
-            var windCollisionAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
-                ? NativeJumpAppearanceFixture.Create(windCollisionBodies[1].gameObject) : null;
-            var windCollisionScope = new OfflineBattleNativePlayableScope(windCollisionRoot, null);
-            using (var windCollisionViews = new OfficialBattleSkillEntityPlayback(windCollisionRoot,
-                new OfficialBattleGridMapper(windCollisionRoot, grid), windCollisionScope,
-                id => windCollisionDisplay.FirstOrDefault(value => value.Id == id))) {
-                windCollisionViews.BindDamageUI(windCollisionRoot, 0);
-                var nativeCollisionFrames = new Dictionary<int, int>();
-                foreach (var pair in windCollisionBodies) {
-                    int unitId = pair.Key;
-                    windCollisionViews.EnsureUnit(unitId, pair.Value).GetComponent<MyFightRoleFight>().OnDamage += (role, damage) => {
-                        if (damage.Component.DamageResult.DamageValue == -600) nativeCollisionFrames[unitId] = Time.frameCount;
-                    };
+            // A blocked wind push can overlap another cell's original hit.
+            foreach (bool overlappingWindHit in new[] { false, true })
+            {
+                var windCollisionUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, overlappingWindHit ? 3 : 6),
+                    LiveUnit(3, 2, overlappingWindHit ? 5 : 7) };
+                windCollisionUnits[0].Properties.Add(new FightPropertyValue { Id = formula.PropertyId("EffectRateValue"), Value = 20000 });
+                var windCollisionSkill = liveCatalog.CreateSkill(10640, 0, 10012, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(10640, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+                windCollisionSkill.LimitedTimes = 1; windCollisionUnits[0].Skills.Add(windCollisionSkill);
+                windCollisionUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(windCollisionSkill, 0));
+                var windCollisionCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                if (overlappingWindHit) windCollisionCheckpoint.Grid.BlockedPositions.Add(new FightGridPoint(4, 5));
+                windCollisionCheckpoint.Units.AddRange(windCollisionUnits); var windCollisionWave = new FightBattleWaveState();
+                windCollisionWave.UnitIds.AddRange(new[] { 2, 3 }); windCollisionCheckpoint.Waves.Add(windCollisionWave);
+                FightBattleExecutor.Begin(windCollisionCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                string windCollisionCommitted = FightBattleCheckpointSerializer.Save(windCollisionCheckpoint);
+                var windCollisionDisplay = FightBattleCheckpointSerializer.Load(windCollisionCommitted).Units.ToArray();
+                var windCollisionRoot = new GameObject("Live wind blade collision").transform; windCollisionRoot.SetParent(root, false);
+                var windCollisionBodies = new Dictionary<int, Transform>();
+                foreach (var unit in windCollisionUnits) {
+                    var body = new GameObject("Wind collision unit " + unit.Id).transform; body.SetParent(windCollisionRoot, false);
+                    body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                    var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
+                    body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                    windCollisionBodies.Add(unit.Id, body);
                 }
-                int windContactFrame = -1, windDirectHits = 0, windCollisionHits = 0;
-                var windCollisionTargets = new HashSet<int>();
-                Transform WindCollisionBody(int id) => windCollisionBodies.TryGetValue(id, out var body) ? body : null;
-                void WindCollisionDamage(FightBattleDamageEvent damage, FightBattleUnitState projected) {
-                    int index = Array.FindIndex(windCollisionDisplay, value => value.Id == damage.TargetId);
-                    windCollisionDisplay[index] = projected;
-                    if (damage.SkillEntityId == 10640) { windDirectHits++; return; }
-                    Require(damage.SkillEntityId == 10100 && windContactFrame == Time.frameCount
-                        && damage.TrueDamage && damage.Damage == -600 && windCollisionTargets.Add(damage.TargetId)
-                        && nativeCollisionFrames.TryGetValue(damage.TargetId, out int frame) && frame == Time.frameCount,
-                        "Wind collision and its native damage number must share the actual contact frame.");
-                    windCollisionHits++;
-                    if (windCollisionHits == 2) Capture("wind-collision-impact.png", false);
-                }
-                using (var windCollisionDriver = new OfficialBattleLiveGraphDriver(windCollisionCheckpoint,
-                    copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()),
-                    windCollisionViews, entity => entity == 10640 || entity == 10100, WindCollisionBody, null, WindCollisionDamage)) {
-                    windCollisionDisplay = windCollisionCheckpoint.Units.Select(value => windCollisionDriver.DisplayUnit(value.Id)).ToArray();
-                    windCollisionDriver.SecondsStatusChanged += _ => { };
-                    windCollisionDriver.BlockedContact += move => {
-                        Require(move.UnitId == 2 && move.MoveBehaviourId == 10643, "Wrong wind blade blocked action.");
-                        windContactFrame = Time.frameCount;
-                    };
-                    deadline = Time.realtimeSinceStartup + 20f;
-                    while (!windCollisionDriver.IsCompleted && Time.realtimeSinceStartup < deadline) {
-                        windCollisionDriver.Pump(Time.deltaTime); windCollisionViews.Tick(Time.deltaTime);
-                        windCollisionScope.LateTick(); yield return null;
+                var windCollisionAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
+                    ? NativeJumpAppearanceFixture.Create(windCollisionBodies[1].gameObject) : null;
+                var windCollisionScope = new OfflineBattleNativePlayableScope(windCollisionRoot, null);
+                using (var windCollisionViews = new OfficialBattleSkillEntityPlayback(windCollisionRoot,
+                    new OfficialBattleGridMapper(windCollisionRoot, grid), windCollisionScope,
+                    id => windCollisionDisplay.FirstOrDefault(value => value.Id == id))) {
+                    windCollisionViews.BindDamageUI(windCollisionRoot, 0);
+                    var nativeCollisionFrames = new Dictionary<int, int>();
+                    foreach (var pair in windCollisionBodies) {
+                        int unitId = pair.Key;
+                        windCollisionViews.EnsureUnit(unitId, pair.Value).GetComponent<MyFightRoleFight>().OnDamage += (role, damage) => {
+                            if (damage.Component.DamageResult.DamageValue == -600) nativeCollisionFrames[unitId] = Time.frameCount;
+                        };
                     }
-                    Require(windDirectHits == 1 && windCollisionHits == 2 && windCollisionTargets.SetEquals(new[] { 2, 3 })
-                        && windCollisionDriver.TryTakeCompleted(out _, out var windCollisionResult)
-                        && windCollisionResult.Event.DamageEvents.Count(value => value.SkillEntityId == 10100) == 2
-                        && FightBattleCheckpointSerializer.Save(windCollisionCheckpoint) == windCollisionCommitted,
-                        "Wind blade did not complete both original collision child hits.");
+                    int windContactFrame = -1, windDirectHits = 0, windCollisionHits = 0;
+                    var windCollisionTargets = new HashSet<int>();
+                    Transform WindCollisionBody(int id) => windCollisionBodies.TryGetValue(id, out var body) ? body : null;
+                    void WindCollisionDamage(FightBattleDamageEvent damage, FightBattleUnitState projected) {
+                        int index = Array.FindIndex(windCollisionDisplay, value => value.Id == damage.TargetId);
+                        windCollisionDisplay[index] = projected;
+                        if (damage.SkillEntityId == 10640) {
+                            windDirectHits++;
+                            if (overlappingWindHit && damage.TargetId == 3)
+                                Require(windContactFrame < 0, "A later wind hit waited for an earlier blocked contact.");
+                            return;
+                        }
+                        Require(damage.SkillEntityId == 10100 && windContactFrame == Time.frameCount
+                            && damage.TrueDamage && damage.Damage == -600 && windCollisionTargets.Add(damage.TargetId)
+                            && nativeCollisionFrames.TryGetValue(damage.TargetId, out int frame) && frame == Time.frameCount,
+                            "Wind collision and its native damage number must share the actual contact frame.");
+                        windCollisionHits++;
+                        if (windCollisionHits == (overlappingWindHit ? 1 : 2))
+                            Capture(overlappingWindHit ? "wind-overlapping-collision.png" : "wind-collision-impact.png", false);
+                    }
+                    using (var windCollisionDriver = new OfficialBattleLiveGraphDriver(windCollisionCheckpoint,
+                        copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()),
+                        windCollisionViews, entity => entity == 10640 || entity == 10100, WindCollisionBody, null, WindCollisionDamage)) {
+                        windCollisionDisplay = windCollisionCheckpoint.Units.Select(value => windCollisionDriver.DisplayUnit(value.Id)).ToArray();
+                        windCollisionDriver.SecondsStatusChanged += _ => { };
+                        windCollisionDriver.BlockedContact += move => {
+                            Require(move.UnitId == 2 && move.MoveBehaviourId == 10643, "Wrong wind blade blocked action.");
+                            windContactFrame = Time.frameCount;
+                        };
+                        deadline = Time.realtimeSinceStartup + 20f;
+                        while (!windCollisionDriver.IsCompleted && Time.realtimeSinceStartup < deadline) {
+                            windCollisionDriver.Pump(Time.deltaTime); windCollisionViews.Tick(Time.deltaTime);
+                            windCollisionScope.LateTick(); yield return null;
+                        }
+                        Require(windDirectHits == (overlappingWindHit ? 2 : 1)
+                            && windCollisionHits == (overlappingWindHit ? 1 : 2)
+                            && windCollisionTargets.SetEquals(overlappingWindHit ? new[] { 2 } : new[] { 2, 3 })
+                            && windCollisionDriver.TryTakeCompleted(out _, out var windCollisionResult)
+                            && windCollisionResult.Event.DamageEvents.Count(value => value.SkillEntityId == 10100) == (overlappingWindHit ? 1 : 2)
+                            && FightBattleCheckpointSerializer.Save(windCollisionCheckpoint) == windCollisionCommitted,
+                            "Wind blade did not complete both original collision child hits.");
+                    }
                 }
+                windCollisionAppearance?.Dispose(); Destroy(windCollisionRoot.gameObject); yield return null;
             }
-            windCollisionAppearance?.Dispose(); Destroy(windCollisionRoot.gameObject); yield return null;
 
             // Exercise the same live driver through the production graph owner's factory.
             var graphUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 5) };
