@@ -335,6 +335,8 @@ public static class BattleImpactGateHarness
             FightBattlePreparedCast nextPreparation = null;
             Check(deferredContact.TryTakePreparation(out nextPreparation) && ReferenceEquals(nextPreparation.Cast, next)
                 && contacts == 0, "A later hit could not proceed while collision was pending");
+            Check(ReferenceEquals(deferredContact.CurrentWorkerHandoff, nextPreparation),
+                "The later preparation must identify the currently suspended rule work");
             if (!contactWhileNextHeld)
             {
                 deferredContact.CompletePreparation(nextPreparation, out long nextRevision);
@@ -349,16 +351,67 @@ public static class BattleImpactGateHarness
             Check(deferredContact.TryTakePreparation(out childPreparation) && ReferenceEquals(childPreparation.Cast, child)
                 && contacts == 1 && !deferredContact.RecordBlockedContact(move, out _),
                 "The collision child must start exactly once after actual contact");
+            Check(ReferenceEquals(deferredContact.CurrentWorkerHandoff, childPreparation),
+                "A nested collision must replace the outer handoff until it finishes");
             deferredContact.CompletePreparation(childPreparation, out long childRevision);
             deferredContact.WaitForWorkerBoundary(childRevision);
             if (contactWhileNextHeld)
             {
                 Check(nextFinished == 0 && !worker.IsCompleted, "A nested collision released another held hit");
+                Check(ReferenceEquals(deferredContact.CurrentWorkerHandoff, nextPreparation),
+                    "The outer handoff must become current again after the collision child finishes");
                 deferredContact.CompletePreparation(nextPreparation, out long nextRevision);
                 deferredContact.WaitForWorkerBoundary(nextRevision);
             }
             Check(worker.GetAwaiter().GetResult() && contacts == 1 && nextFinished == 1,
                 "Deferred collision did not finish the original cast safely");
+        }
+        {
+            using var statusContact = new FightBattleImpactLatch { ObserveMovements = true };
+            var cast = new FightBattleSkillCastEvent { ActorId = 1 };
+            var child = new FightBattleSkillCastEvent { ActorId = 1, SkillEntityId = 10100 };
+            child.TargetIds.Add(2);
+            var move = new FightBattleMovementEvent();
+            var owner = Unit(1, 1, 7, 7, formula);
+            var status = new FightBattleStatusState { ClassId = 24269, InstanceId = 1 };
+            int contacts = 0, statusFinished = 0;
+            var worker = Task.Run(() => {
+                statusContact.BindWorker();
+                try {
+                    Check(statusContact.TryDeferBlockedContact(cast, move, () => {
+                        statusContact.BindBlockedImpact(move, child, 2); contacts++;
+                        statusContact.CastPrepared(child);
+                    }), "Status overlap could not defer the collision");
+                    statusContact.BlockedMovementPrepared(cast, move, new FightGridPoint(1, 2));
+                    statusContact.SecondsStatusChanged(owner, status, true); statusFinished++;
+                    statusContact.AwaitDeferredContacts(cast);
+                    return true;
+                }
+                finally { statusContact.FinishWorker(); }
+            });
+            FightBattlePreparedMovement movement = null;
+            Check(SpinWait.SpinUntil(() => statusContact.TryTakeMovement(out movement), 20000),
+                "Status overlap did not prepare its movement");
+            statusContact.CompleteMovement(movement, out long movementRevision);
+            statusContact.WaitForWorkerBoundary(movementRevision);
+            FightBattleSecondsStatusNotice notice = null;
+            Check(statusContact.TryTakeSecondsStatus(out notice) && ReferenceEquals(statusContact.CurrentWorkerHandoff, notice),
+                "The original status handoff was not current");
+            Check(statusContact.RecordBlockedContact(move, out long contactRevision) && contactRevision > 0,
+                "A collision during a status handoff was not scheduled");
+            statusContact.WaitForWorkerBoundary(contactRevision);
+            FightBattlePreparedCast collision = null;
+            Check(statusContact.TryTakePreparation(out collision) && ReferenceEquals(collision.Cast, child)
+                && ReferenceEquals(statusContact.CurrentWorkerHandoff, collision) && statusFinished == 0,
+                "The collision child must suspend the unrelated status handoff");
+            statusContact.CompletePreparation(collision, out long childRevision);
+            statusContact.WaitForWorkerBoundary(childRevision);
+            Check(ReferenceEquals(statusContact.CurrentWorkerHandoff, notice) && statusFinished == 0,
+                "The original status handoff did not resume after collision");
+            statusContact.CompleteSecondsStatus(notice, out long statusRevision);
+            statusContact.WaitForWorkerBoundary(statusRevision);
+            Check(worker.GetAwaiter().GetResult() && contacts == 1 && statusFinished == 1,
+                "Status and collision did not finish exactly once");
         }
         {
             using var early = new FightBattleImpactLatch { ObserveMovements = true };

@@ -30,23 +30,28 @@ namespace Zjcs.Combat.Official {
  public class FightBattleStatusViewEvent {}
  public class FightBattleSecondsStatusNotice {public FightBattleStatusViewEvent Event;}
  public class FightBattleImpactLatch {
-  public static FightBattleImpactLatch Last;public FightBattlePreparedMovement Pending;public FightBattlePreparedCast PendingCast;public FightBattleSelectedHit PendingSelection;public int Completions,Records,Waits;public bool Arrived,Disposed;public FightBattleMovementEvent LastContact;
+  public static FightBattleImpactLatch Last;public FightBattlePreparedMovement Pending;public FightBattlePreparedCast PendingCast;public FightBattleSelectedHit PendingSelection;public FightBattleSecondsStatusNotice PendingStatus;public FightBattleSettledImpact PendingResult;public int Completions,Records,Waits;public bool Arrived,Disposed;public FightBattleMovementEvent LastContact;
+  private object active;private readonly Stack<object> suspended=new Stack<object>();
+  public object CurrentWorkerHandoff => (object)PendingCast??Pending??(object)PendingSelection??PendingStatus??(object)PendingResult??active;
+  private void Taken(object value){if(value==null)return;if(active!=null)suspended.Push(active);active=value;}
+  private void Finished(object value){if(!ReferenceEquals(active,value))throw new InvalidOperationException("Wrong active handoff");active=suspended.Count>0?suspended.Pop():null;}
   public FightBattleImpactLatch(){Last=this;}
   public bool TryTake(out FightBattlePendingImpact v){v=null;return false;}
-  public bool TryTakeSecondsStatus(out FightBattleSecondsStatusNotice v){v=null;return false;}
-  public void CompleteSecondsStatus(FightBattleSecondsStatusNotice v,out long revision){revision=1;}
-  public bool TryTakePreparation(out FightBattlePreparedCast v){v=PendingCast;PendingCast=null;return v!=null;}
-  public void CompletePreparation(FightBattlePreparedCast x,out long revision){revision=1;}
-  public bool TryTakeMovement(out FightBattlePreparedMovement v){v=Pending;Pending=null;return v!=null;}
-  public void CompleteMovement(FightBattlePreparedMovement v,out long revision){Completions++;revision=1;}
+  public bool TryTakeSecondsStatus(out FightBattleSecondsStatusNotice v){v=PendingStatus;PendingStatus=null;Taken(v);return v!=null;}
+  public void CompleteSecondsStatus(FightBattleSecondsStatusNotice v,out long revision){Finished(v);revision=1;}
+  public bool TryTakePreparation(out FightBattlePreparedCast v){v=PendingCast;PendingCast=null;Taken(v);return v!=null;}
+  public void CompletePreparation(FightBattlePreparedCast x,out long revision){Finished(x);revision=1;}
+  public bool TryTakeMovement(out FightBattlePreparedMovement v){v=Pending;Pending=null;Taken(v);return v!=null;}
+  public void CompleteMovement(FightBattlePreparedMovement v,out long revision){Finished(v);Completions++;revision=1;}
   public bool RecordBlockedContact(FightBattleMovementEvent v,out long revision){revision=0;if(Disposed)return false;LastContact=v;Records++;if(Arrived)return false;Arrived=true;revision=2;return true;}
   public void WaitForWorkerBoundary(long revision){Waits++;}
-  public bool TryTakeSelection(out FightBattleSelectedHit v){v=PendingSelection;PendingSelection=null;return v!=null;}
-  public bool TryTakeSettlement(out FightBattleSettledImpact v){v=null;return false;}
+  public bool TryTakeSelection(out FightBattleSelectedHit v){v=PendingSelection;PendingSelection=null;Taken(v);return v!=null;}
+  public void CompleteSelection(FightBattleSelectedHit v){Finished(v);}
+  public bool TryTakeSettlement(out FightBattleSettledImpact v){v=PendingResult;PendingResult=null;Taken(v);return v!=null;}
   public bool TryTakeCastCompletion(out FightBattleCompletedCast v){v=null;return false;}
   public void DeferStatusResolution(FightBattleSettledImpact x,out long revision){revision=1;}
   public void CompleteCast(FightBattleCompletedCast c,out long revision){revision=1;}
-  public bool TryCompleteSettlement(FightBattleSettledImpact x,Func<FightBattlePendingImpact,FightBattleDamageEvent,bool> f,out long revision){revision=0;return false;}
+  public bool TryCompleteSettlement(FightBattleSettledImpact x,Func<FightBattlePendingImpact,FightBattleDamageEvent,bool> f,out long revision){revision=0;if(!f(x.Impact,x.Damage))return false;Finished(x);revision=1;return true;}
  }
  public class FightBattleIsolatedStep:IDisposable {
   public readonly FightBattleImpactLatch Latch=new FightBattleImpactLatch();public bool IsCompleted;
@@ -63,9 +68,10 @@ namespace Zjcs.Presentation.Combat {
  public class OfficialBattleSkillEntityPlayback {public event Action<FightBattleSkillCastEvent,EcEntityIdentifier,GameObject,MyPlayable> SkillGraphPlayableStarted;public void CompleteLiveCast(FightBattleSkillCastEvent c,EcEntityIdentifier id,float t){} public void Graph(FightBattleSkillCastEvent c,string prefab="playable11120",string leaf="effect"){SkillGraphPlayableStarted?.Invoke(c,new EcEntityIdentifier(),new GameObject{name=prefab},new MyPlayable{name=leaf});} }
  public class OfficialBattleImpactViewBridge:IDisposable {
   public static readonly List<int> Arrivals=new List<int>();
+  private readonly FightBattleImpactLatch latch;
   public event Action<long> WorkerReleasedByArrival;
-  public OfficialBattleImpactViewBridge(OfficialBattleSkillEntityPlayback v,FightBattleImpactLatch l){}
-  public long QueueSelection(FightBattleSelectedHit h,EcEntityIdentifier id,float t)=>1;
+  public OfficialBattleImpactViewBridge(OfficialBattleSkillEntityPlayback v,FightBattleImpactLatch l){latch=l;}
+  public long QueueSelection(FightBattleSelectedHit h,EcEntityIdentifier id,float t){latch.CompleteSelection(h);return 1;}
   public bool TryQueueSettlement(FightBattleSettledImpact s,EcEntityIdentifier id,out long revision,Action<FightBattleDamageEvent> after,Func<FightBattleDamageEvent,bool> canStart){revision=0;return false;}
   internal bool TryQueueUnresolved(FightBattleSettledImpact s,EcEntityIdentifier id,Action<FightBattleDamageEvent> after,Func<FightBattleDamageEvent,bool> canStart)=>false;
   internal bool TryResolveStatus(FightBattleSettledImpact s,out long revision){revision=0;return false;}
@@ -78,6 +84,39 @@ namespace Zjcs.Presentation.Combat {
   private static OfficialBattleLiveImpactSession NewSession(){return new OfficialBattleLiveImpactSession(new FightBattleCheckpoint(),_=>new FightBattleExecutor(),new OfficialBattleSkillEntityPlayback(),0,1,true);}
   private static FightBattleMovementEvent Prepare(){var move=new FightBattleMovementEvent{UnitId=4};FightBattleImpactLatch.Last.Pending=new FightBattlePreparedMovement{Movement=move,HasBlockedPosition=true,BlockedPosition=new FightGridPoint(6,7)};return move;}
   public static void Run(){
+   {
+    var child=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10100};
+    using(var session=NewSession()){
+     var notice=new FightBattleSecondsStatusNotice{Event=new FightBattleStatusViewEvent()};
+     FightBattleImpactLatch.Last.PendingStatus=notice;
+     Check(!session.Pump(0,StartCast),"A status without a presentation listener must stay held");
+     int children=0,notices=0;
+     bool StartChild(FightBattleSkillCastEvent cast,out EcEntityIdentifier id){id=new EcEntityIdentifier();children++;return ReferenceEquals(cast,child);}
+     FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=child};
+     Check(session.Pump(0,StartChild)&&children==1&&notices==0&&ReferenceEquals(session.PendingSecondsStatus,notice),
+      "A nested collision cast must start while an outer status notice is held");
+     session.SecondsStatusChanged+=_=>notices++;
+     Check(session.Pump(0,StartChild)&&notices==1&&children==1,
+      "The outer status notice must resume exactly once after its nested cast");
+    }
+   }
+   {
+    var parent=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10640};
+    var child=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10100};
+    using(var session=NewSession()){
+     FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=parent};session.Pump(0,StartCast);
+     var result=new FightBattleSettledImpact{Impact=new FightBattlePendingImpact{Cast=parent},Damage=new FightBattleDamageEvent{HasDamageTriggerStatus=true}};
+     FightBattleImpactLatch.Last.PendingResult=result;
+     Check(!session.Pump(0,StartCast)&&ReferenceEquals(session.PendingSettlement,result),"An unavailable damage view must remain held");
+     FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=child};
+     int delivered=0;
+     Check(!session.TryCompletePendingSettlement((impact,damage)=>{delivered++;return true;})&&delivered==0,
+      "A suspended outer result must not complete while a collision child is current");
+     Check(session.Pump(0,StartCast),"A collision child must start while an outer result remains held");
+     Check(session.TryCompletePendingSettlement((impact,damage)=>{delivered++;return ReferenceEquals(impact,result.Impact);})&&delivered==1,
+      "The outer result must resume exactly once after the collision child");
+    }
+   }
    {
     var parent=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10640};
     var child=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10100};

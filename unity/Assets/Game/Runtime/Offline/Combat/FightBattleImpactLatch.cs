@@ -69,6 +69,7 @@ namespace Zjcs.Combat.Official
     {
         private sealed class WorkerWait
         {
+            public object Handoff;
             public Signal? Impact;
             public FightBattleMovementEvent BlockedMovement;
             public long Revision;
@@ -174,13 +175,13 @@ namespace Zjcs.Combat.Official
             }
         }
 
-        private void ParkWorker(Signal? impact = null, FightBattleMovementEvent blockedMovement = null)
+        private void ParkWorker(object handoff = null, Signal? impact = null, FightBattleMovementEvent blockedMovement = null)
         {
             bool tracked = workerThread == Thread.CurrentThread.ManagedThreadId;
             WorkerWait previous = workerWait;
             if (tracked)
             {
-                workerWait = new WorkerWait { Impact = impact, BlockedMovement = blockedMovement, Revision = ++waitRevision };
+                workerWait = new WorkerWait { Handoff = handoff, Impact = impact, BlockedMovement = blockedMovement, Revision = ++waitRevision };
                 workerWaiting = true; Monitor.PulseAll(sync);
             }
             try
@@ -209,6 +210,9 @@ namespace Zjcs.Combat.Official
         /// <summary>Captures the current isolated-worker wait before releasing a handoff.</summary>
         public long WorkerWaitRevision { get { lock (sync) return waitRevision; } }
 
+        /// <summary>The innermost rule handoff, or null when waiting for an impact or contact.</summary>
+        public object CurrentWorkerHandoff { get { lock (sync) return workerWaiting ? workerWait?.Handoff : null; } }
+
         /// <summary>Waits for that worker to park at its next rule boundary or finish.</summary>
         public void WaitForWorkerBoundary(long previousRevision)
         {
@@ -235,7 +239,7 @@ namespace Zjcs.Combat.Official
             {
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
                 secondsStatuses.Enqueue(notice);
-                while (!disposed && !notice.Completed) ParkWorker();
+                while (!disposed && !notice.Completed) ParkWorker(handoff: notice);
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
             }
         }
@@ -271,7 +275,7 @@ namespace Zjcs.Combat.Official
                     throw new InvalidOperationException("The cast was already prepared for this step.");
                 var preparation = new FightBattlePreparedCast { Owner = this, Cast = cast };
                 preparations.Enqueue(preparation);
-                while (!disposed && !preparation.Completed) ParkWorker();
+                while (!disposed && !preparation.Completed) ParkWorker(handoff: preparation);
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
             }
         }
@@ -317,7 +321,7 @@ namespace Zjcs.Combat.Official
                 if (!ObserveMovements) return;
                 var preparation = new FightBattlePreparedMovement { Owner = this, Cast = cast, Movement = movement };
                 movements.Enqueue(preparation);
-                while (!disposed && !preparation.Completed) ParkWorker();
+                while (!disposed && !preparation.Completed) ParkWorker(handoff: preparation);
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
             }
         }
@@ -338,7 +342,7 @@ namespace Zjcs.Combat.Official
                     throw new InvalidOperationException("The blocked movement is already registered.");
                 blockedMovements.Add(movement, preparation);
                 movements.Enqueue(preparation);
-                while (!disposed && !preparation.Completed) ParkWorker();
+                while (!disposed && !preparation.Completed) ParkWorker(handoff: preparation);
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
             }
         }
@@ -518,7 +522,7 @@ namespace Zjcs.Combat.Official
                 if (!preparedCasts.Remove(cast)) return;
                 var completed = new FightBattleCompletedCast { Owner = this, Cast = cast };
                 completedCasts.Enqueue(completed);
-                while (!disposed && !completed.Completed) ParkWorker();
+                while (!disposed && !completed.Completed) ParkWorker(handoff: completed);
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
             }
         }
@@ -560,7 +564,7 @@ namespace Zjcs.Combat.Official
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
                 var selected = new FightBattleSelectedHit { Owner = this, Cast = cast, Selection = selection };
                 selections.Enqueue(selected);
-                while (!disposed && !selected.Completed) ParkWorker();
+                while (!disposed && !selected.Completed) ParkWorker(handoff: selected);
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
             }
         }
@@ -613,7 +617,7 @@ namespace Zjcs.Combat.Official
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
                 var settlement = new FightBattleSettledImpact { Owner = this, Impact = impact, Damage = damage };
                 settlements.Enqueue(settlement);
-                while (!disposed && !settlement.Completed) ParkWorker();
+                while (!disposed && !settlement.Completed) ParkWorker(handoff: settlement);
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
             }
         }
@@ -652,7 +656,7 @@ namespace Zjcs.Combat.Official
                 var settlement = new FightBattleSettledImpact { Owner = this, Impact = impact, Damage = damage,
                     IsStatusResolution = true };
                 settlements.Enqueue(settlement);
-                while (!disposed && !settlement.Completed) ParkWorker();
+                while (!disposed && !settlement.Completed) ParkWorker(handoff: settlement);
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
             }
         }

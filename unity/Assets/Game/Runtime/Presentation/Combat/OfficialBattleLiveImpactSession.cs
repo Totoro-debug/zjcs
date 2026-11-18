@@ -64,11 +64,16 @@ namespace Zjcs.Presentation.Combat
         private FightBattlePreparedCast preparation;
         private readonly Stack<FightBattlePreparedCast> suspendedPreparations = new Stack<FightBattlePreparedCast>();
         private FightBattlePreparedMovement movement;
+        private readonly Stack<FightBattlePreparedMovement> suspendedMovements = new Stack<FightBattlePreparedMovement>();
         private FightBattleSelectedHit selection;
+        private readonly Stack<FightBattleSelectedHit> suspendedSelections = new Stack<FightBattleSelectedHit>();
         private FightBattleSettledImpact settlement;
+        private readonly Stack<FightBattleSettledImpact> suspendedSettlements = new Stack<FightBattleSettledImpact>();
         private FightBattleSecondsStatusNotice secondsStatus;
+        private readonly Stack<FightBattleSecondsStatusNotice> suspendedSecondsStatuses = new Stack<FightBattleSecondsStatusNotice>();
         private readonly Stack<FightBattleSettledImpact> resolvingStatuses = new Stack<FightBattleSettledImpact>();
         private FightBattleCompletedCast completion;
+        private readonly Stack<FightBattleCompletedCast> suspendedCompletions = new Stack<FightBattleCompletedCast>();
         private float clock;
         private bool disposed, transferred, pumping;
         private StartCast lastStartCast;
@@ -200,46 +205,46 @@ namespace Zjcs.Presentation.Combat
                 {
                     // Arrivals are keyed independently and may precede target requests.
                     while (step.Latch.TryTake(out _)) { }
-                    if (secondsStatus == null) step.Latch.TryTakeSecondsStatus(out secondsStatus);
-                    if (secondsStatus != null)
+                    object current = step.Latch.CurrentWorkerHandoff;
+                    CaptureHandoff(current, ref secondsStatus, suspendedSecondsStatuses,
+                        () => step.Latch.TryTakeSecondsStatus(out var value) ? value : null);
+                    if (secondsStatus != null && ReferenceEquals(current, secondsStatus))
                     {
                         if (SecondsStatusChanged == null) return progressed;
                         SecondsStatusChanged(secondsStatus.Event);
                         step.Latch.CompleteSecondsStatus(secondsStatus, out long secondsRevision);
-                        secondsStatus = null; progressed = true;
+                        ReleaseHandoff(ref secondsStatus, suspendedSecondsStatuses); progressed = true;
                         step.Latch.WaitForWorkerBoundary(secondsRevision);
                         continue;
                     }
-                    if (settlement == null) step.Latch.TryTakeSettlement(out settlement);
-                    if (settlement?.IsStatusResolution == true)
+                    CaptureHandoff(current, ref settlement, suspendedSettlements,
+                        () => step.Latch.TryTakeSettlement(out var value) ? value : null);
+                    if (settlement?.IsStatusResolution == true && ReferenceEquals(current, settlement))
                     {
                         if (resolvingStatuses.Count == 0
                             || !ReferenceEquals(settlement.Damage, resolvingStatuses.Peek().Damage)
                             || !ReferenceEquals(settlement.Impact, resolvingStatuses.Peek().Impact))
                             throw new InvalidOperationException("The completed status result belongs to another impact.");
                         if (!bridge.TryResolveStatus(settlement, out long statusRevision)) return progressed;
-                        resolvingStatuses.Pop(); settlement = null; progressed = true;
+                        resolvingStatuses.Pop(); ReleaseHandoff(ref settlement, suspendedSettlements); progressed = true;
                         step.Latch.WaitForWorkerBoundary(statusRevision);
                         continue;
                     }
-                    if (preparation == null) step.Latch.TryTakePreparation(out preparation);
-                    else if (step.Latch.TryTakePreparation(out var nestedPreparation))
-                    {
-                        suspendedPreparations.Push(preparation);
-                        preparation = nestedPreparation;
-                    }
-                    if (preparation != null)
+                    CaptureHandoff(current, ref preparation, suspendedPreparations,
+                        () => step.Latch.TryTakePreparation(out var value) ? value : null);
+                    if (preparation != null && ReferenceEquals(current, preparation))
                     {
                         if (!startCast(preparation.Cast, out var id)) return progressed;
                         casts.Add(preparation.Cast, new ActiveCast { Id = id, Started = clock });
                         step.Latch.CompletePreparation(preparation, out long revision);
-                        preparation = suspendedPreparations.Count > 0 ? suspendedPreparations.Pop() : null;
+                        ReleaseHandoff(ref preparation, suspendedPreparations);
                         progressed = true;
                         step.Latch.WaitForWorkerBoundary(revision);
                         continue;
                     }
-                    if (movement == null) step.Latch.TryTakeMovement(out movement);
-                    if (movement != null)
+                    CaptureHandoff(current, ref movement, suspendedMovements,
+                        () => step.Latch.TryTakeMovement(out var value) ? value : null);
+                    if (movement != null && ReferenceEquals(current, movement))
                     {
                         if (movement.HasBlockedPosition)
                         {
@@ -266,12 +271,13 @@ namespace Zjcs.Presentation.Combat
                         }
                         else if (startMovement == null || !startMovement(movement.Cast, movement.Movement)) return progressed;
                         step.Latch.CompleteMovement(movement, out long revision);
-                        movement = null; progressed = true;
+                        ReleaseHandoff(ref movement, suspendedMovements); progressed = true;
                         step.Latch.WaitForWorkerBoundary(revision);
                         continue;
                     }
-                    if (selection == null) step.Latch.TryTakeSelection(out selection);
-                    if (selection != null)
+                    CaptureHandoff(current, ref selection, suspendedSelections,
+                        () => step.Latch.TryTakeSelection(out var value) ? value : null);
+                    if (selection != null && ReferenceEquals(current, selection))
                     {
                         var active = Find(selection.Cast);
                         var selectedCast = selection.Cast;
@@ -290,12 +296,11 @@ namespace Zjcs.Presentation.Combat
                         if (reachedComboEffects.TryGetValue(selectedCast, out int comboReached))
                             for (int index = 0; index < 3; index++)
                                 if ((comboReached & (1 << index)) != 0) RouteComboImpact(selectedCast, active.Id, index);
-                        selection = null; progressed = true;
+                        ReleaseHandoff(ref selection, suspendedSelections); progressed = true;
                         step.Latch.WaitForWorkerBoundary(revision);
                         continue;
                     }
-                    if (settlement == null) step.Latch.TryTakeSettlement(out settlement);
-                    if (settlement != null)
+                    if (settlement != null && ReferenceEquals(current, settlement))
                     {
                         var active = Find(settlement.Impact.Cast);
                         if (!settlement.Damage.HasDamageTriggerStatus)
@@ -303,24 +308,25 @@ namespace Zjcs.Presentation.Combat
                             if (!bridge.TryQueueUnresolved(settlement, active.Id, afterDamageStarted, canStartDamage)) return progressed;
                             resolvingStatuses.Push(settlement);
                             step.Latch.DeferStatusResolution(settlement, out long deferredRevision);
-                            settlement = null; progressed = true;
+                            ReleaseHandoff(ref settlement, suspendedSettlements); progressed = true;
                             step.Latch.WaitForWorkerBoundary(deferredRevision);
                             continue;
                         }
                         if (!bridge.TryQueueSettlement(settlement, active.Id, out long revision,
                             afterDamageStarted, canStartDamage)) return progressed;
-                        settlement = null; progressed = true;
+                        ReleaseHandoff(ref settlement, suspendedSettlements); progressed = true;
                         step.Latch.WaitForWorkerBoundary(revision);
                         continue;
                     }
-                    if (completion == null) step.Latch.TryTakeCastCompletion(out completion);
-                    if (completion != null)
+                    CaptureHandoff(current, ref completion, suspendedCompletions,
+                        () => step.Latch.TryTakeCastCompletion(out var value) ? value : null);
+                    if (completion != null && ReferenceEquals(current, completion))
                     {
                         var active = Find(completion.Cast);
                         views.CompleteLiveCast(completion.Cast, active.Id, clock - active.Started);
                         step.Latch.CompleteCast(completion, out long revision);
                         casts.Remove(completion.Cast);
-                        completion = null; progressed = true;
+                        ReleaseHandoff(ref completion, suspendedCompletions); progressed = true;
                         step.Latch.WaitForWorkerBoundary(revision);
                         continue;
                     }
@@ -329,6 +335,19 @@ namespace Zjcs.Presentation.Combat
             }
             finally { pumping = false; }
         }
+
+        private static void CaptureHandoff<T>(object current, ref T held, Stack<T> suspended, Func<T> take) where T : class
+        {
+            if (!(current is T) || ReferenceEquals(current, held)) return;
+            T next = take();
+            if (!ReferenceEquals(current, next))
+                throw new InvalidOperationException("The current rule handoff was not available to the presentation host.");
+            if (held != null) suspended.Push(held);
+            held = next;
+        }
+
+        private static void ReleaseHandoff<T>(ref T held, Stack<T> suspended) where T : class
+            => held = suspended.Count > 0 ? suspended.Pop() : null;
 
         private void OnWorkerReleasedByArrival(long revision)
         {
@@ -580,13 +599,13 @@ namespace Zjcs.Presentation.Combat
             if (transferred) throw new InvalidOperationException("The live step was already transferred.");
             if (pumping) throw new InvalidOperationException("The live step is already being pumped.");
             if (deliver == null) throw new ArgumentNullException(nameof(deliver));
-            if (settlement == null) return false;
+            if (settlement == null || !ReferenceEquals(settlement, step.Latch.CurrentWorkerHandoff)) return false;
             bool delivered = false;
             pumping = true;
             try
             {
                 if (!step.Latch.TryCompleteSettlement(settlement, deliver, out long revision)) return false;
-                settlement = null;
+                ReleaseHandoff(ref settlement, suspendedSettlements);
                 step.Latch.WaitForWorkerBoundary(revision);
                 delivered = true;
             }
