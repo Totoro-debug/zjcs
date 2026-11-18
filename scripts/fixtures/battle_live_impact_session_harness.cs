@@ -19,6 +19,11 @@ namespace Zjcs.Official.StoryPlayables
 namespace UnityEngine { public class GameObject { public string name; } }
 namespace Zjcs.Presentation.Combat
 {
+    internal sealed class OfficialBattleMountainWaveImpact
+    {
+        internal static OfficialBattleMountainWaveImpact Attach(MyPlayable playable, Action<int> arrival) => null;
+        internal void Detach() { }
+    }
     // Drives the production session with real battle rules and a controlled native-view boundary.
     public sealed class OfficialBattleSkillEntityPlayback
     {

@@ -13,7 +13,7 @@ namespace Zjcs.Combat.Official {
  public class FightBattleUnitState {public int Id;public List<FightBattleSkillDefinition> Skills;}
  public class FightBattleSkillDefinition {public int EntityId;public List<FightBattleHitEntity> HitGraphEntities;}
  public class FightBattleHitEntity {public int EntityId;public List<FightBattleHitScopeEntry> ScopeEntries;}
- public class FightBattleHitScopeEntry {public float Delay;}
+ public class FightBattleHitScopeEntry {public float Delay;public FightGridPoint Position;}
  public class FightBattleSkillCastPresentation {public float Duration;}
  public class FightBattleSkillCastEvent {public int SkillEntityId,ActorId;public FightBattleSkillCastPresentation Presentation;public List<FightBattleHitSelectionSnapshot> HitSelections;}
  public class FightBattleHitSelectionSnapshot {public int HitEntityId;public List<TargetOccurrence> Targets;public class TargetOccurrence {public int EffectCenterIndex,ScopeIndex;public bool HasScopeIndex;}}
@@ -28,16 +28,16 @@ namespace Zjcs.Combat.Official {
  public class FightBattleSettledImpact {public bool IsStatusResolution;public FightBattlePendingImpact Impact;public FightBattleDamageEvent Damage;}
  public class FightBattleCompletedCast {public FightBattleSkillCastEvent Cast;}
  public class FightBattleImpactLatch {
-  public static FightBattleImpactLatch Last;public FightBattlePreparedMovement Pending;public int Completions,Records,Waits;public bool Arrived,Disposed;public FightBattleMovementEvent LastContact;
+  public static FightBattleImpactLatch Last;public FightBattlePreparedMovement Pending;public FightBattlePreparedCast PendingCast;public FightBattleSelectedHit PendingSelection;public int Completions,Records,Waits;public bool Arrived,Disposed;public FightBattleMovementEvent LastContact;
   public FightBattleImpactLatch(){Last=this;}
   public bool TryTake(out FightBattlePendingImpact v){v=null;return false;}
-  public bool TryTakePreparation(out FightBattlePreparedCast v){v=null;return false;}
+  public bool TryTakePreparation(out FightBattlePreparedCast v){v=PendingCast;PendingCast=null;return v!=null;}
   public void CompletePreparation(FightBattlePreparedCast x,out long revision){revision=1;}
   public bool TryTakeMovement(out FightBattlePreparedMovement v){v=Pending;Pending=null;return v!=null;}
   public void CompleteMovement(FightBattlePreparedMovement v,out long revision){Completions++;revision=1;}
   public bool RecordBlockedContact(FightBattleMovementEvent v,out long revision){revision=0;if(Disposed)return false;LastContact=v;Records++;if(Arrived)return false;Arrived=true;revision=2;return true;}
   public void WaitForWorkerBoundary(long revision){Waits++;}
-  public bool TryTakeSelection(out FightBattleSelectedHit v){v=null;return false;}
+  public bool TryTakeSelection(out FightBattleSelectedHit v){v=PendingSelection;PendingSelection=null;return v!=null;}
   public bool TryTakeSettlement(out FightBattleSettledImpact v){v=null;return false;}
   public bool TryTakeCastCompletion(out FightBattleCompletedCast v){v=null;return false;}
   public void DeferStatusResolution(FightBattleSettledImpact x,out long revision){revision=1;}
@@ -52,13 +52,15 @@ namespace Zjcs.Combat.Official {
  }
 }
 namespace Zjcs.Presentation.Combat {
- public class OfficialBattleSkillEntityPlayback {public event Action<FightBattleSkillCastEvent,EcEntityIdentifier,GameObject,MyPlayable> SkillGraphPlayableStarted;public void CompleteLiveCast(FightBattleSkillCastEvent c,EcEntityIdentifier id,float t){} }
+ internal sealed class OfficialBattleMountainWaveImpact {internal static OfficialBattleMountainWaveImpact Last;private Action<int> arrival;internal static OfficialBattleMountainWaveImpact Attach(MyPlayable p,Action<int> a){Last=new OfficialBattleMountainWaveImpact{arrival=a};return Last;}internal void Trigger(int wave){arrival?.Invoke(wave);}internal void Detach(){arrival=null;}}
+ public class OfficialBattleSkillEntityPlayback {public event Action<FightBattleSkillCastEvent,EcEntityIdentifier,GameObject,MyPlayable> SkillGraphPlayableStarted;public void CompleteLiveCast(FightBattleSkillCastEvent c,EcEntityIdentifier id,float t){} public void Graph(FightBattleSkillCastEvent c){SkillGraphPlayableStarted?.Invoke(c,new EcEntityIdentifier(),new GameObject{name="playable11120"},new MyPlayable{name="effect"});} }
  public class OfficialBattleImpactViewBridge:IDisposable {
+  public static readonly List<int> Arrivals=new List<int>();
   public event Action<long> WorkerReleasedByArrival;
   public OfficialBattleImpactViewBridge(OfficialBattleSkillEntityPlayback v,FightBattleImpactLatch l){}
   public long QueueSelection(FightBattleSelectedHit h,EcEntityIdentifier id,float t)=>1;
   public bool TryQueueSettlement(FightBattleSettledImpact s,EcEntityIdentifier id,out long revision,Action<FightBattleDamageEvent> after){revision=0;return false;}
-  public void RecordArrival(FightBattleSkillCastEvent c,FightBattleHitSelectionSnapshot h,int a,int b){}
+  public void RecordArrival(FightBattleSkillCastEvent c,FightBattleHitSelectionSnapshot h,int a,int b){Arrivals.Add(b);}
   public void Dispose(){}
  }
  public static class BlockedLiveSessionHarness {
@@ -67,6 +69,26 @@ namespace Zjcs.Presentation.Combat {
   private static OfficialBattleLiveImpactSession NewSession(){return new OfficialBattleLiveImpactSession(new FightBattleCheckpoint(),_=>new FightBattleExecutor(),new OfficialBattleSkillEntityPlayback(),0,1,true);}
   private static FightBattleMovementEvent Prepare(){var move=new FightBattleMovementEvent{UnitId=4};FightBattleImpactLatch.Last.Pending=new FightBattlePreparedMovement{Movement=move,HasBlockedPosition=true,BlockedPosition=new FightGridPoint(6,7)};return move;}
   public static void Run(){
+   {
+    var hit=new FightBattleHitEntity{EntityId=11121,ScopeEntries=new List<FightBattleHitScopeEntry>()};
+    for(int x=-2;x<=2;x++)for(int y=-2;y<=2;y++)if(Math.Abs(x)+Math.Abs(y)>=1&&Math.Abs(x)+Math.Abs(y)<=2)
+     hit.ScopeEntries.Add(new FightBattleHitScopeEntry{Position=new FightGridPoint(x,y)});
+    int far=hit.ScopeEntries.FindIndex(value=>Math.Abs(value.Position.X)+Math.Abs(value.Position.Y)==2);
+    var skill=new FightBattleSkillDefinition{EntityId=11120,HitGraphEntities=new List<FightBattleHitEntity>{hit}};
+    var actor=new FightBattleUnitState{Id=1,Skills=new List<FightBattleSkillDefinition>{skill}};
+    var cp=new FightBattleCheckpoint{Units=new List<FightBattleUnitState>{actor}};
+    var views=new OfficialBattleSkillEntityPlayback();var cast=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=11120,HitSelections=new List<FightBattleHitSelectionSnapshot>()};
+    using(var session=new OfficialBattleLiveImpactSession(cp,_=>new FightBattleExecutor(),views,0,1,true)){
+     OfficialBattleImpactViewBridge.Arrivals.Clear();FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=cast};session.Pump(0,StartCast);
+     views.Graph(cast);var observer=OfficialBattleMountainWaveImpact.Last;Check(observer!=null,"Original mountain effect was not observed");
+     observer.Trigger(2);Check(OfficialBattleImpactViewBridge.Arrivals.Count==0,"A wave without a selected hit fabricated an arrival");
+     var selection=new FightBattleHitSelectionSnapshot{HitEntityId=11121,Targets=new List<FightBattleHitSelectionSnapshot.TargetOccurrence>{new FightBattleHitSelectionSnapshot.TargetOccurrence{HasScopeIndex=true,ScopeIndex=far}}};
+     cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartCast);
+     Check(OfficialBattleImpactViewBridge.Arrivals.Count==1&&OfficialBattleImpactViewBridge.Arrivals[0]==far,"An early visible wave was not retained for its later selected hit");
+     observer.Trigger(1);Check(OfficialBattleImpactViewBridge.Arrivals.Count==1,"The inner wave affected an outer target");
+     session.Dispose();observer.Trigger(2);Check(OfficialBattleImpactViewBridge.Arrivals.Count==1,"A disposed session accepted its old wave");
+    }
+   }
    using(var session=NewSession()){
     var move=Prepare();Action declined=null,contact=null;
     bool Decline(FightBattleSkillCastEvent c,FightBattleMovementEvent m,FightGridPoint p,Action action){declined=action;return false;}

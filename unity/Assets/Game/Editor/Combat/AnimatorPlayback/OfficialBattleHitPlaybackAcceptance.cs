@@ -948,19 +948,14 @@ namespace Zjcs.Editor.Combat
                 fireViews.EnsureUnit(3, blockerView).GetComponent<MyFightRoleFight>().OnDamage += (role, damage) => {
                     blockerDamageFrame = Time.frameCount; blockerDamageValue = damage.Component.DamageResult.DamageValue;
                 };
-                int mountainContactFrame = -1, mountainChildCount = 0, mountainPlayedBefore = played.Count;
+                int mountainContactFrame = -1, mountainHitFrame = -1, mountainChildCount = 0, mountainPlayedBefore = played.Count;
+                ParticleSystem mountainSecondWave = null;
                 var mountainCasts = new List<int>();
                 using var mountainSession = new OfficialBattleLiveImpactSession(mountainCheckpoint, copy => FightBattleExecutor.Restore(copy,
                     formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), fireViews, 0, 1, observeMovements: true);
-                // The parent hit has no scope playable; this fixture explicitly releases it
-                // to exercise the subsequent original blocked-action contact. Its exact
-                // player-facing strike timing remains a separate unresolved integration.
                 mountainSession.SkillGraphPlayableStarted += (mountainCast, id, prefab, leaf) => {
                     if (mountainCast.SkillEntityId != 11120 || prefab.name != "playable11120" || leaf.name != "effect") return;
-                    foreach (var selection in mountainCast.HitSelections.Where(value => value.HitEntityId == 11121))
-                        foreach (var occurrence in selection.Targets)
-                            mountainSession.RecordGraphImpact(mountainCast, selection, occurrence.EffectCenterIndex,
-                                occurrence.HasScopeIndex ? occurrence.ScopeIndex : -1);
+                    mountainSecondWave = leaf.GetComponentsInChildren<ParticleSystem>(true).Single(value => value.name == "dierchong");
                 };
                 bool StartMountainCast(FightBattleSkillCastEvent mountainCast, out EcEntityIdentifier id) {
                     mountainCasts.Add(mountainCast.SkillEntityId);
@@ -980,6 +975,11 @@ namespace Zjcs.Editor.Combat
                 void MountainDamage(FightBattleDamageEvent damage) {
                     var displayed = fireDisplayUnits.Single(value => value.Id == damage.TargetId);
                     displayed.Hp = damage.AfterHp; displayed.Turn.Hp = damage.AfterHp;
+                    if (damage.SkillEntityId == 11120) {
+                        mountainHitFrame = Time.frameCount;
+                        Require(mountainSecondWave && mountainSecondWave.particleCount > 0,
+                            "The outer mountain hit must wait for its original visible particle wave.");
+                    }
                     if (damage.SkillEntityId != 10100) return;
                     Require(mountainContactFrame == Time.frameCount && damage.TrueDamage && damage.Damage == -600
                         && (damage.TargetId == 2 ? observedDamage == -600
@@ -990,10 +990,13 @@ namespace Zjcs.Editor.Combat
                 deadline = Time.realtimeSinceStartup + 20f;
                 while (!mountainSession.IsCompleted && Time.realtimeSinceStartup < deadline) {
                     mountainSession.Pump(Time.deltaTime, StartMountainCast, MountainDamage, null, StartMountainBlocked);
+                    if (mountainSecondWave && mountainSecondWave.particleCount == 0)
+                        Require(mountainHitFrame < 0 && fireDisplayUnits[1].Hp == 1000000,
+                            "Outer mountain damage cannot precede the visible wave.");
                     fireViews.Tick(Time.deltaTime); fireScope.LateTick();
                     yield return null;
                 }
-                Require(mountainChildCount == 2 && mountainSession.TryTakeCompleted(out _, out var mountainResult)
+                Require(mountainHitFrame >= 0 && mountainChildCount == 2 && mountainSession.TryTakeCompleted(out _, out var mountainResult)
                     && mountainResult.Event.DamageEvents.Count(value => value.SkillEntityId == 10100) == 2
                     && FightBattleCheckpointSerializer.Save(mountainCheckpoint) == mountainCommitted,
                     "The real mountain action must finish both collision child hits on its isolated checkpoint: completed="
@@ -1007,6 +1010,83 @@ namespace Zjcs.Editor.Combat
                 }
                 Require(fireRoot.GetComponentsInChildren<MyFightActionSkillMove>(false).Length == 0,
                     "The real blocked movement must finish before the interruption fixture starts.");
+
+                var nearUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 3) };
+                nearUnits[1].Properties.Add(new FightPropertyValue { Id = formula.PropertyId("EffectDodgeValue"), Value = 20000 });
+                var nearSkill = liveCatalog.CreateSkill(11120, 0, 10052, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(11120, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+                nearSkill.LimitedTimes = 1; nearUnits[0].Skills.Add(nearSkill);
+                nearUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(nearSkill, 0));
+                var nearCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                nearCheckpoint.Units.AddRange(nearUnits); var nearWave = new FightBattleWaveState();
+                nearWave.UnitIds.Add(2); nearCheckpoint.Waves.Add(nearWave);
+                FightBattleExecutor.Begin(nearCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                fireDisplayUnits = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(nearCheckpoint)).Units.ToArray();
+                fireSource.localPosition = new Vector3(2, 5, 0); fireTarget.localPosition = new Vector3(3, 5, 0);
+                ParticleSystem nearFirst = null, nearSecond = null; bool nearDamage = false, nearPaused = false, nearResumed = false;
+                int pauseFrames = 0;
+                using var nearSession = new OfficialBattleLiveImpactSession(nearCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                    formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), fireViews, 0, 1, observeMovements: true);
+                nearSession.SkillGraphPlayableStarted += (nearCast, id, prefab, leaf) => {
+                    if (nearCast.SkillEntityId != 11120 || prefab.name != "playable11120" || leaf.name != "effect") return;
+                    var particles = leaf.GetComponentsInChildren<ParticleSystem>(true);
+                    nearFirst = particles.Single(value => value.name == "diyichon");
+                    nearSecond = particles.Single(value => value.name == "dierchong");
+                };
+                bool StartNearCast(FightBattleSkillCastEvent nearCast, out EcEntityIdentifier id) {
+                    id = fireViews.Start(nearCast, fireSource, fireTarget); return true;
+                }
+                void NearDamage(FightBattleDamageEvent damage) {
+                    nearDamage = nearFirst && nearFirst.particleCount > 0 && nearSecond && nearSecond.particleCount == 0;
+                    Require(nearDamage, "The inner mountain hit must coincide with the first visible wave.");
+                    fireDisplayUnits[1].Hp = damage.AfterHp; fireDisplayUnits[1].Turn.Hp = damage.AfterHp;
+                }
+                deadline = Time.realtimeSinceStartup + 20f;
+                while (!nearSession.IsCompleted && Time.realtimeSinceStartup < deadline) {
+                    nearSession.Pump(Time.deltaTime, StartNearCast, NearDamage);
+                    if (nearFirst && !nearPaused) {
+                        Require(nearFirst.particleCount == 0 && nearSecond.particleCount == 0,
+                            "The pause fixture must start before either original wave.");
+                        nearFirst.Pause(); nearSecond.Pause(); nearPaused = true;
+                    }
+                    if (nearPaused && !nearResumed) {
+                        Require(!nearDamage && nearFirst.particleCount == 0 && nearSecond.particleCount == 0,
+                            "Paused original particle waves cannot trigger damage.");
+                        if (++pauseFrames == 5) { nearFirst.Play(); nearSecond.Play(); nearResumed = true; }
+                    }
+                    if (nearFirst && nearFirst.particleCount == 0)
+                        Require(!nearDamage && fireDisplayUnits[1].Hp == 1000000, "Inner damage preceded its visible wave.");
+                    fireViews.Tick(Time.deltaTime); fireScope.LateTick(); yield return null;
+                }
+                Require(nearDamage && nearPaused && nearResumed && nearSession.TryTakeCompleted(out _, out _),
+                    "The resumed inner wave did not complete its actual hit.");
+                nearSession.Dispose();
+
+                string canceledCheckpoint = FightBattleCheckpointSerializer.Save(nearCheckpoint);
+                fireDisplayUnits = FightBattleCheckpointSerializer.Load(canceledCheckpoint).Units.ToArray();
+                ParticleSystem canceledFirst = null; bool canceledDamage = false;
+                using var canceledSession = new OfficialBattleLiveImpactSession(nearCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                    formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), fireViews, 0, 1, observeMovements: true);
+                canceledSession.SkillGraphPlayableStarted += (canceledCast, id, prefab, leaf) => {
+                    if (canceledCast.SkillEntityId == 11120 && prefab.name == "playable11120" && leaf.name == "effect")
+                        canceledFirst = leaf.GetComponentsInChildren<ParticleSystem>(true).Single(value => value.name == "diyichon");
+                };
+                deadline = Time.realtimeSinceStartup + 10f;
+                while (!canceledFirst && Time.realtimeSinceStartup < deadline) {
+                    canceledSession.Pump(Time.deltaTime, StartNearCast, _ => canceledDamage = true);
+                    fireViews.Tick(Time.deltaTime); fireScope.LateTick(); yield return null;
+                }
+                Require(canceledFirst && canceledFirst.particleCount == 0 && !canceledDamage,
+                    "The interruption fixture must stop before the first original wave.");
+                canceledSession.Dispose();
+                deadline = Time.realtimeSinceStartup + 10f;
+                while (canceledFirst && canceledFirst.particleCount == 0 && Time.realtimeSinceStartup < deadline) {
+                    fireViews.Tick(Time.deltaTime); fireScope.LateTick(); yield return null;
+                }
+                Require(canceledFirst && canceledFirst.particleCount > 0 && !canceledDamage
+                    && FightBattleCheckpointSerializer.Save(nearCheckpoint) == canceledCheckpoint,
+                    "An interrupted session cannot settle damage when its former wave later appears.");
                 blockedBefore = played.Count;
                 fireSource.localPosition = new Vector3(3, 5, 0);
                 fireViews.StartMovement(blocked, fireSource, new FightGridPoint(4, 5), _ => contacts++);

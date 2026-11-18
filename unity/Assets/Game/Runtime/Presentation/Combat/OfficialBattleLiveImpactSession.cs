@@ -31,6 +31,10 @@ namespace Zjcs.Presentation.Combat
             new Dictionary<FightBattleSkillCastEvent, ActiveCast>();
         private readonly HashSet<FightBattleHitSelectionSnapshot> selectedHits = new HashSet<FightBattleHitSelectionSnapshot>();
         private readonly Dictionary<int, HashSet<int>> jumpSlashScopes = new Dictionary<int, HashSet<int>>();
+        private readonly Dictionary<int, HashSet<int>[]> mountainScopes = new Dictionary<int, HashSet<int>[]>();
+        private readonly HashSet<FightBattleSkillCastEvent> observedMountains = new HashSet<FightBattleSkillCastEvent>();
+        private readonly Dictionary<FightBattleSkillCastEvent, int> reachedMountainWaves = new Dictionary<FightBattleSkillCastEvent, int>();
+        private readonly List<OfficialBattleMountainWaveImpact> mountainWaves = new List<OfficialBattleMountainWaveImpact>();
         private FightBattlePreparedCast preparation;
         private FightBattlePreparedMovement movement;
         private FightBattleSelectedHit selection;
@@ -63,14 +67,31 @@ namespace Zjcs.Presentation.Combat
                 if (unit?.Skills == null) continue;
                 foreach (var skill in unit.Skills)
                 {
-                    if (skill?.EntityId != 10670 || skill.HitGraphEntities == null) continue;
+                    if (skill?.HitGraphEntities == null) continue;
                     foreach (var hit in skill.HitGraphEntities)
                     {
-                        if (hit?.EntityId != 10671 || hit.ScopeEntries == null) continue;
-                        var scopes = new HashSet<int>();
-                        for (int index = 0; index < hit.ScopeEntries.Count; index++)
-                            if (hit.ScopeEntries[index] != null && hit.ScopeEntries[index].Delay == 0f) scopes.Add(index);
-                        if (scopes.Count > 0) jumpSlashScopes[unit.Id] = scopes;
+                        if (hit?.ScopeEntries == null) continue;
+                        if (skill.EntityId == 10670 && hit.EntityId == 10671)
+                        {
+                            var scopes = new HashSet<int>();
+                            for (int index = 0; index < hit.ScopeEntries.Count; index++)
+                                if (hit.ScopeEntries[index] != null && hit.ScopeEntries[index].Delay == 0f) scopes.Add(index);
+                            if (scopes.Count > 0) jumpSlashScopes[unit.Id] = scopes;
+                        }
+                        if (skill.EntityId == 11120 && hit.EntityId == 11121)
+                        {
+                            var rings = new[] { new HashSet<int>(), new HashSet<int>() };
+                            var positions = new HashSet<FightGridPoint>();
+                            for (int index = 0; index < hit.ScopeEntries.Count; index++)
+                            {
+                                var entry = hit.ScopeEntries[index];
+                                if (entry == null || !positions.Add(entry.Position)) continue;
+                                long distance = Math.Abs((long)entry.Position.X) + Math.Abs((long)entry.Position.Y);
+                                if (distance == 1 || distance == 2) rings[(int)distance - 1].Add(index);
+                            }
+                            if (hit.ScopeEntries.Count == 12 && rings[0].Count == 4 && rings[1].Count == 8)
+                                mountainScopes[unit.Id] = rings;
+                        }
                     }
                 }
             }
@@ -162,8 +183,14 @@ namespace Zjcs.Presentation.Combat
                     if (selection != null)
                     {
                         var active = Find(selection.Cast);
+                        var selectedCast = selection.Cast;
                         selectedHits.Add(selection.Selection);
                         long revision = bridge.QueueSelection(selection, active.Id, clock - active.Started);
+                        if (reachedMountainWaves.TryGetValue(selectedCast, out int reached))
+                        {
+                            if ((reached & 1) != 0) RouteMountainWave(selectedCast, active.Id, 1);
+                            if ((reached & 2) != 0) RouteMountainWave(selectedCast, active.Id, 2);
+                        }
                         selection = null; progressed = true;
                         step.Latch.WaitForWorkerBoundary(revision);
                         continue;
@@ -225,8 +252,42 @@ namespace Zjcs.Presentation.Combat
             try { SkillGraphPlayableStarted?.Invoke(cast, id, prefab, playable); }
             finally
             {
-                try { RouteJumpSlashImpact(cast, prefab, playable); }
+                try { RouteJumpSlashImpact(cast, prefab, playable); AttachMountainWaves(cast, id, prefab, playable); }
                 finally { currentGraphCast = previousCast; currentGraphSkillId = previousId; }
+            }
+        }
+
+        private void AttachMountainWaves(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
+            GameObject prefab, MyPlayable playable)
+        {
+            if (cast?.SkillEntityId != 11120 || prefab == null || prefab.name != "playable11120"
+                || playable == null || playable.name != "effect" || !mountainScopes.ContainsKey(cast.ActorId)
+                || observedMountains.Contains(cast) || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            var observer = OfficialBattleMountainWaveImpact.Attach(playable, wave => RouteMountainWave(cast, id, wave));
+            if (observer == null) return;
+            observedMountains.Add(cast); mountainWaves.Add(observer);
+        }
+
+        private void RouteMountainWave(FightBattleSkillCastEvent cast, EcEntityIdentifier id, int wave)
+        {
+            if (disposed || transferred || wave < 1 || wave > 2 || !observedMountains.Contains(cast)
+                || !mountainScopes.TryGetValue(cast.ActorId, out var rings)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            reachedMountainWaves.TryGetValue(cast, out int reached);
+            reachedMountainWaves[cast] = reached | (1 << (wave - 1));
+            if (cast.HitSelections == null) return;
+            var scopes = rings[wave - 1];
+            foreach (var hit in new List<FightBattleHitSelectionSnapshot>(cast.HitSelections))
+            {
+                if (hit?.HitEntityId != 11121 || !selectedHits.Contains(hit) || hit.Targets == null) continue;
+                var sent = new HashSet<(int Center, int Scope)>();
+                foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
+                {
+                    if (!casts.ContainsKey(cast)) return;
+                    if (target == null || !target.HasScopeIndex || !scopes.Contains(target.ScopeIndex)
+                        || !sent.Add((target.EffectCenterIndex, target.ScopeIndex))) continue;
+                    bridge.RecordArrival(cast, hit, target.EffectCenterIndex, target.ScopeIndex);
+                }
             }
         }
 
@@ -309,6 +370,7 @@ namespace Zjcs.Presentation.Combat
             bridge.WorkerReleasedByArrival -= OnWorkerReleasedByArrival;
             views.SkillGraphPlayableStarted -= OnSkillGraphPlayableStarted;
             bridge.Dispose();
+            foreach (var observer in mountainWaves) if (observer != null) observer.Detach();
             transferred = true;
             return true;
         }
@@ -320,8 +382,9 @@ namespace Zjcs.Presentation.Combat
             bridge.WorkerReleasedByArrival -= OnWorkerReleasedByArrival;
             views.SkillGraphPlayableStarted -= OnSkillGraphPlayableStarted;
             bridge.Dispose();
+            foreach (var observer in mountainWaves) if (observer != null) observer.Detach();
             step.Dispose();
-            casts.Clear(); selectedHits.Clear(); jumpSlashScopes.Clear();
+            casts.Clear(); selectedHits.Clear(); jumpSlashScopes.Clear(); mountainScopes.Clear(); observedMountains.Clear(); reachedMountainWaves.Clear(); mountainWaves.Clear();
         }
     }
 }

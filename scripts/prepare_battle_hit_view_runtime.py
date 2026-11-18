@@ -313,6 +313,8 @@ def main():
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleImpactViewBridge.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveImpactSession.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveImpactSession.cs.meta',
+        'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMountainWaveImpact.cs',
+        'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMountainWaveImpact.cs.meta',
         'unity/Assets/Game/Runtime/Offline/Combat/FightBattleImpactLatch.cs',
         'unity/Assets/Game/Runtime/Offline/Combat/FightBattleIsolatedStep.cs',
         'unity/Assets/Game/Runtime/Offline/Combat/FightBattleIsolatedStep.cs.meta',
@@ -328,7 +330,9 @@ def main():
         'scripts/test_battle_impact_gate.ps1',
         'scripts/fixtures/battle_impact_gate_harness.cs',
         'scripts/test_battle_blocked_live_session.ps1',
-        'scripts/fixtures/battle_blocked_live_session_harness.cs')]
+        'scripts/fixtures/battle_blocked_live_session_harness.cs',
+        'scripts/test_battle_live_impact_session.ps1',
+        'scripts/fixtures/battle_live_impact_session_harness.cs')]
     # Existing leaf receipts also name the shared scope. Refresh only records
     # for these changed binding files, preserving unrelated session changes.
     updated_binding_hashes = {
