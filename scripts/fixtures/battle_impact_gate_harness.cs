@@ -59,6 +59,129 @@ public static class BattleImpactGateHarness
     public static string Run(FightOfficialCombatCatalog catalog, FightDamageFormula formula, FightOfficialSkillItemCatalog items)
     {
         {
+            using var latch = new FightBattleImpactLatch();
+            var parent = new FightBattleSkillCastEvent(); var child = new FightBattleSkillCastEvent();
+            int workerThread = 0, commandThread = 0;
+            var worker = Task.Run(() => {
+                latch.BindWorker(); workerThread = Thread.CurrentThread.ManagedThreadId;
+                try { latch.CastPrepared(parent); return true; }
+                finally { latch.FinishWorker(); }
+            });
+            FightBattlePreparedCast held = null;
+            Check(SpinWait.SpinUntil(() => latch.TryTakePreparation(out held), 20000), "Worker command fixture missing its parent");
+            Check(latch.TryQueueWorkerCommand(() => {
+                commandThread = Thread.CurrentThread.ManagedThreadId;
+                latch.CastPrepared(child); return true;
+            }, out var command), "A held worker did not accept its command");
+            FightBattlePreparedCast nested = null;
+            Check(SpinWait.SpinUntil(() => latch.TryTakePreparation(out nested), 20000)
+                && ReferenceEquals(nested.Cast, child), "A worker command lost its nested handoff");
+            Check(!latch.TryQueueWorkerCommand(() => true, out _) && !command.IsCompleted && !worker.IsCompleted,
+                "A second command overtook a nested worker command");
+            latch.CompletePreparation(nested);
+            Check(command.Wait(20000) && command.Result && commandThread == workerThread
+                && commandThread != Thread.CurrentThread.ManagedThreadId && !worker.IsCompleted,
+                "A worker command ran on the host or released its parent handoff");
+            latch.CompletePreparation(held);
+            Check(worker.Wait(20000) && worker.Result, "The held parent did not resume after its command");
+        }
+        {
+            using var latch = new FightBattleImpactLatch();
+            var cast = new FightBattleSkillCastEvent();
+            var selection = new FightBattleHitSelectionSnapshot(); selection.EffectCenters.Add(new FightGridPoint(1, 1));
+            selection.Targets.Add(new FightBattleHitSelectionSnapshot.TargetOccurrence { TargetId = 2 });
+            var impact = new FightBattlePendingImpact { Cast = cast, HitSelection = selection, TargetId = 2 };
+            var child = new FightBattleSkillCastEvent();
+            var worker = Task.Run(() => {
+                latch.BindWorker();
+                try { latch.AwaitImpact(impact); return true; }
+                finally { latch.FinishWorker(); }
+            });
+            Check(SpinWait.SpinUntil(() => latch.TryTake(out _), 20000), "Worker command impact fixture missing");
+            Check(latch.TryQueueWorkerCommand(() => { latch.CastPrepared(child); return true; }, out var command),
+                "Impact wait did not accept a worker command");
+            FightBattlePreparedCast nested = null;
+            Check(SpinWait.SpinUntil(() => latch.TryTakePreparation(out nested), 20000), "Nested impact command missing");
+            Check(latch.RecordArrival(cast, selection, 0, -1, out long earlyRevision) && earlyRevision == 0,
+                "A parent arrival must not release an unrelated nested handoff");
+            latch.CompletePreparation(nested);
+            Check(command.Wait(20000) && command.Result && worker.Wait(20000) && worker.Result,
+                "A parent arrival was lost while the nested command ran");
+        }
+        {
+            using var latch = new FightBattleImpactLatch();
+            using var started = new ManualResetEventSlim(); using var resume = new ManualResetEventSlim();
+            var cast = new FightBattleSkillCastEvent();
+            var selection = new FightBattleHitSelectionSnapshot(); selection.EffectCenters.Add(new FightGridPoint(1, 1));
+            selection.Targets.Add(new FightBattleHitSelectionSnapshot.TargetOccurrence { TargetId = 2 });
+            var impact = new FightBattlePendingImpact { Cast = cast, HitSelection = selection, TargetId = 2 };
+            var worker = Task.Run(() => {
+                latch.BindWorker();
+                try { latch.AwaitImpact(impact); return true; }
+                finally { latch.FinishWorker(); }
+            });
+            Check(SpinWait.SpinUntil(() => latch.TryTake(out _), 20000), "Concurrent arrival fixture missing");
+            Check(latch.TryQueueWorkerCommand(() => { started.Set(); return resume.Wait(20000); }, out var command)
+                && started.Wait(20000), "Worker command did not start");
+            Check(latch.RecordArrival(cast, selection, 0, -1, out long revision) && revision > 0,
+                "An arrival during the command lost its worker fence");
+            resume.Set(); latch.WaitForWorkerBoundary(revision);
+            Check(command.Wait(20000) && command.Result && worker.Wait(20000) && worker.Result,
+                "The fenced arrival did not resume after the worker command");
+        }
+        {
+            using var latch = new FightBattleImpactLatch { ObserveMovements = true };
+            using var started = new ManualResetEventSlim(); using var resume = new ManualResetEventSlim();
+            var move = new FightBattleMovementEvent();
+            var worker = Task.Run(() => {
+                latch.BindWorker();
+                try { latch.BlockedMovementPrepared(null, move, new FightGridPoint(1, 2)); latch.AwaitBlockedContact(move); return true; }
+                finally { latch.FinishWorker(); }
+            });
+            FightBattlePreparedMovement movement = null;
+            Check(SpinWait.SpinUntil(() => latch.TryTakeMovement(out movement), 20000), "Concurrent collision fixture missing");
+            latch.CompleteMovement(movement, out long movementRevision); latch.WaitForWorkerBoundary(movementRevision);
+            Check(latch.TryQueueWorkerCommand(() => { started.Set(); return resume.Wait(20000); }, out var command)
+                && started.Wait(20000), "Collision clock command did not start");
+            Check(latch.RecordBlockedContact(move, out long revision) && revision > 0,
+                "A collision during the command lost its worker fence");
+            resume.Set(); latch.WaitForWorkerBoundary(revision);
+            Check(command.Wait(20000) && command.Result && worker.Wait(20000) && worker.Result,
+                "The fenced collision did not resume after the worker command");
+        }
+        {
+            using var latch = new FightBattleImpactLatch();
+            var worker = Task.Run(() => {
+                latch.BindWorker();
+                try { latch.CastPrepared(new FightBattleSkillCastEvent()); }
+                finally { latch.FinishWorker(); }
+            });
+            Check(SpinWait.SpinUntil(() => latch.TryTakePreparation(out _), 20000), "Failed command fixture missing");
+            Check(latch.TryQueueWorkerCommand(() => throw new InvalidOperationException("clock failure"), out var command),
+                "Failed command fixture did not queue");
+            bool commandFailed = false, workerFailed = false;
+            try { command.GetAwaiter().GetResult(); } catch (InvalidOperationException error) { commandFailed = error.Message == "clock failure"; }
+            try { worker.GetAwaiter().GetResult(); } catch (InvalidOperationException error) { workerFailed = error.InnerException?.Message == "clock failure"; }
+            Check(commandFailed && workerFailed, "A failed command must fail the isolated worker as well");
+        }
+        {
+            var latch = new FightBattleImpactLatch();
+            var worker = Task.Run(() => {
+                latch.BindWorker();
+                try { latch.CastPrepared(new FightBattleSkillCastEvent()); }
+                finally { latch.FinishWorker(); }
+            });
+            Check(SpinWait.SpinUntil(() => latch.TryTakePreparation(out _), 20000), "Canceled command fixture missing");
+            Check(latch.TryQueueWorkerCommand(() => { latch.CastPrepared(new FightBattleSkillCastEvent()); return true; }, out var command),
+                "Canceled command did not queue");
+            Check(SpinWait.SpinUntil(() => latch.TryTakePreparation(out _), 20000), "Canceled nested command did not start");
+            latch.Dispose();
+            bool commandCanceled = false, workerCanceled = false;
+            try { command.GetAwaiter().GetResult(); } catch (OperationCanceledException) { commandCanceled = true; }
+            try { worker.GetAwaiter().GetResult(); } catch (InvalidOperationException error) { workerCanceled = error.InnerException is OperationCanceledException; }
+            Check(commandCanceled && workerCanceled, "Disposal must release a command suspended in a nested handoff");
+        }
+        {
             using var blocked = new FightBattleImpactLatch { ObserveMovements = true };
             var cast = new FightBattleSkillCastEvent { ActorId = 1 };
             var move = new FightBattleMovementEvent();
@@ -514,6 +637,42 @@ public static class BattleImpactGateHarness
                 .Single(c => c.SkillItemId == 10043).HitSelections.Single(s => s.HitEntityId == 10591);
             Check(oldRecorded.Targets.All(t => !t.HasScopeIndex),
                 "A legacy checkpoint invented scope indices that were not recorded");
+        }
+        {
+            var cp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                Grid = new FightBattleGrid { Width = 20, Height = 20, DefaultGroundType = 2 } };
+            var actor = Unit(1, 1, 7, 7, formula); var target = Unit(2, 2, 10, 7, formula);
+            var skill = catalog.CreateSkill(10800, 0, 10028, 2, 20, 1,
+                catalog.CalculateSkillProps(10800, 2, 20, 1).Select(p => new FightPropertyValue { Id = p.Key, Value = p.Value }).ToList());
+            actor.Skills.Add(skill); actor.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
+            cp.Units.AddRange(new[] { actor, target }); var wave = new FightBattleWaveState(); wave.UnitIds.Add(2); cp.Waves.Add(wave);
+            FightBattleExecutor.Begin(cp, formula, new FightDamageSettlement(), catalog, items);
+            var clock = new FightBattleStatusSeconds(cp, catalog, new FightRandomStream(cp.RandomSeed));
+            clock.Enqueue(0, 2, true, false, false, catalog.CreateStatus(24269, 2, 1, 1, 10580, 10006, 2, 20, 1));
+            string committed = FightBattleCheckpointSerializer.Save(cp);
+            FightBattleExecutor privateExecutor = null; int callbackThread = 0;
+            using (var isolated = new FightBattleIsolatedStep(cp, state => {
+                privateExecutor = FightBattleExecutor.Restore(state, formula, new FightDamageSettlement(), catalog, items);
+                privateExecutor.StatusSecondsChanged += (_, __, ___) => callbackThread = Thread.CurrentThread.ManagedThreadId;
+                return privateExecutor;
+            }, 0, 1)) {
+                FightBattlePreparedCast held = null;
+                Check(SpinWait.SpinUntil(() => isolated.Latch.TryTakePreparation(out held), 20000),
+                    "The timed isolated step did not reach its cast handoff");
+                Check(isolated.TryAdvanceStatusSeconds(0, out var launch) && launch.Wait(20000) && launch.Result,
+                    "The isolated worker did not apply its due airborne state");
+                Check(callbackThread != 0 && callbackThread != Thread.CurrentThread.ManagedThreadId
+                    && privateExecutor.State.Units[1].Statuses.Any(status => status.ClassId == 24269)
+                    && FightBattleCheckpointSerializer.Save(cp) == committed,
+                    "The status clock escaped its worker or changed the committed checkpoint");
+                Task<bool> recovery = null;
+                Check(SpinWait.SpinUntil(() => isolated.TryAdvanceStatusSeconds(.7, out recovery), 20000)
+                    && recovery.Wait(20000) && recovery.Result
+                    && privateExecutor.State.Units[1].Statuses.Any(status => status.ClassId == 24270),
+                    "The isolated worker did not advance to the original recovery state");
+            }
+            Check(FightBattleCheckpointSerializer.Save(cp) == committed,
+                "Canceling a timed isolated step published its partial state");
         }
         {
             var cp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,

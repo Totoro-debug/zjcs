@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Zjcs.Combat.Official
 {
@@ -58,6 +59,18 @@ namespace Zjcs.Combat.Official
     /// </summary>
     public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleMovementPreparationObserver, IFightBattleBlockedMovementObserver, IFightBattleBlockedImpactObserver, IFightBattleCastCompletionObserver, IFightBattleHitSelectionObserver, IFightBattleImpactSettlementObserver, IFightBattleImpactStatusResolutionObserver, IDisposable
     {
+        private sealed class WorkerWait
+        {
+            public Signal? Impact;
+            public FightBattleMovementEvent BlockedMovement;
+            public long Revision;
+        }
+
+        private sealed class WorkerCommand
+        {
+            public Func<bool> Execute;
+            public TaskCompletionSource<bool> Completion;
+        }
         private readonly struct Signal : IEquatable<Signal>
         {
             private readonly FightBattleSkillCastEvent cast;
@@ -93,12 +106,12 @@ namespace Zjcs.Combat.Official
         private readonly Queue<FightBattleSettledImpact> settlements = new Queue<FightBattleSettledImpact>();
         private readonly Dictionary<FightBattleDamageEvent, FightBattlePendingImpact> deferredStatusResults =
             new Dictionary<FightBattleDamageEvent, FightBattlePendingImpact>();
+        private readonly Queue<WorkerCommand> workerCommands = new Queue<WorkerCommand>();
         private bool disposed;
         private int workerThread;
         private long waitRevision;
-        private bool workerWaiting, workerStopped, hasWaitingImpact;
-        private Signal waitingImpact;
-        private FightBattleMovementEvent waitingBlockedMovement;
+        private bool workerWaiting, workerStopped, workerCommandActive;
+        private WorkerWait workerWait;
         public bool ObserveMovements { get; internal set; }
         bool IFightBattleBlockedMovementObserver.ObservesBlockedMovements => ObserveMovements;
 
@@ -116,15 +129,58 @@ namespace Zjcs.Combat.Official
 
         internal void FinishWorker()
         {
-            lock (sync) { workerStopped = true; workerWaiting = false; hasWaitingImpact = false; waitingBlockedMovement = null; Monitor.PulseAll(sync); }
+            lock (sync) { workerStopped = true; workerWaiting = false; workerWait = null; CancelWorkerCommands(); Monitor.PulseAll(sync); }
         }
 
-        private void ParkWorker()
+        private void CancelWorkerCommands()
+        {
+            while (workerCommands.Count > 0) workerCommands.Dequeue().Completion.TrySetCanceled();
+        }
+
+        // Only the bound rule worker executes commands, while its current handoff
+        // remains held. A command may itself reach another nested handoff.
+        internal bool TryQueueWorkerCommand(Func<bool> execute, out Task<bool> completion)
+        {
+            if (execute == null) throw new ArgumentNullException(nameof(execute));
+            lock (sync)
+            {
+                if (disposed) throw new ObjectDisposedException(nameof(FightBattleImpactLatch));
+                if (workerStopped || !workerWaiting || workerCommandActive || workerCommands.Count != 0)
+                { completion = null; return false; }
+                var command = new WorkerCommand { Execute = execute,
+                    Completion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously) };
+                workerCommands.Enqueue(command); completion = command.Completion.Task;
+                Monitor.PulseAll(sync);
+                return true;
+            }
+        }
+
+        private void ParkWorker(Signal? impact = null, FightBattleMovementEvent blockedMovement = null)
         {
             bool tracked = workerThread == Thread.CurrentThread.ManagedThreadId;
-            if (tracked) { workerWaiting = true; waitRevision++; Monitor.PulseAll(sync); }
-            try { Monitor.Wait(sync); }
-            finally { if (tracked) workerWaiting = false; }
+            WorkerWait previous = workerWait;
+            if (tracked)
+            {
+                workerWait = new WorkerWait { Impact = impact, BlockedMovement = blockedMovement, Revision = ++waitRevision };
+                workerWaiting = true; Monitor.PulseAll(sync);
+            }
+            try
+            {
+                Monitor.Wait(sync);
+                if (tracked && !disposed && !workerCommandActive && workerCommands.Count > 0)
+                {
+                    var command = workerCommands.Dequeue();
+                    workerWaiting = false; workerCommandActive = true;
+                    bool result = false; Exception failure = null;
+                    Monitor.Exit(sync);
+                    try { result = command.Execute(); }
+                    catch (Exception error) { failure = error; }
+                    finally { Monitor.Enter(sync); workerCommandActive = false; }
+                    if (failure != null) { command.Completion.TrySetException(failure); throw new InvalidOperationException("The isolated worker command failed.", failure); }
+                    command.Completion.TrySetResult(result);
+                }
+            }
+            finally { if (tracked) { workerWaiting = false; workerWait = previous; } }
         }
 
         /// <summary>Captures the current isolated-worker wait before releasing a handoff.</summary>
@@ -234,10 +290,7 @@ namespace Zjcs.Combat.Official
                     throw new InvalidOperationException("The blocked movement contact was already consumed.");
                 while (!disposed && !blockedContacts.Contains(movement))
                 {
-                    bool tracked = workerThread == Thread.CurrentThread.ManagedThreadId;
-                    if (tracked) waitingBlockedMovement = movement;
-                    try { ParkWorker(); }
-                    finally { if (tracked) waitingBlockedMovement = null; }
+                    ParkWorker(blockedMovement: movement);
                 }
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
                 if (preparation.ContactConsumed)
@@ -276,8 +329,8 @@ namespace Zjcs.Combat.Official
                 if (!blockedMovements.TryGetValue(movement, out var preparation) || !preparation.Taken)
                     throw new InvalidOperationException("The blocked movement is not held by this host.");
                 bool added = blockedContacts.Add(movement);
-                if (added && workerWaiting && ReferenceEquals(waitingBlockedMovement, movement))
-                    releasedRevision = waitRevision;
+                if (added && workerWait != null && ReferenceEquals(workerWait.BlockedMovement, movement))
+                    releasedRevision = workerWait.Revision;
                 Monitor.PulseAll(sync);
                 return added;
             }
@@ -523,10 +576,7 @@ namespace Zjcs.Combat.Official
                 requests.Enqueue(impact);
                 while (!disposed && !arrived.Contains(signal))
                 {
-                    bool tracked = workerThread == Thread.CurrentThread.ManagedThreadId;
-                    if (tracked) { waitingImpact = signal; hasWaitingImpact = true; }
-                    try { ParkWorker(); }
-                    finally { if (tracked) hasWaitingImpact = false; }
+                    ParkWorker(impact: signal);
                 }
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
             }
@@ -561,7 +611,7 @@ namespace Zjcs.Combat.Official
                 if (disposed) return false;
                 var signal = new Signal(cast, selection, centerIndex, scopeIndex);
                 bool added = arrived.Add(signal);
-                if (workerWaiting && hasWaitingImpact && waitingImpact.Equals(signal)) releasedRevision = waitRevision;
+                if (workerWait?.Impact is Signal waitingImpact && waitingImpact.Equals(signal)) releasedRevision = workerWait.Revision;
                 Monitor.PulseAll(sync);
                 return added;
             }
@@ -598,7 +648,7 @@ namespace Zjcs.Combat.Official
             lock (sync)
             {
                 if (disposed) return;
-                disposed = true; waitingBlockedMovement = null; arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); movements.Clear(); blockedMovements.Clear(); blockedContacts.Clear(); blockedImpacts.Clear(); boundBlockedTargets.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear(); deferredStatusResults.Clear();
+                disposed = true; workerWait = null; CancelWorkerCommands(); arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); movements.Clear(); blockedMovements.Clear(); blockedContacts.Clear(); blockedImpacts.Clear(); boundBlockedTargets.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear(); deferredStatusResults.Clear();
                 Monitor.PulseAll(sync);
             }
         }

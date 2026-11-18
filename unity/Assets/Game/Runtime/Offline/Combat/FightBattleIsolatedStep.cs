@@ -18,6 +18,23 @@ namespace Zjcs.Combat.Official
         public FightBattleImpactLatch Latch { get; }
         public bool IsCompleted => worker.IsCompleted;
 
+        /// <summary>
+        /// Request a clock advance on the rule worker at a held handoff. Its status
+        /// callbacks also run on that worker; hosts must transfer them to their own
+        /// presentation thread. A false return leaves the clock unchanged.
+        /// </summary>
+        public bool TryAdvanceStatusSeconds(double seconds, out Task<bool> completion)
+        {
+            if (double.IsNaN(seconds) || double.IsInfinity(seconds) || seconds < 0d)
+                throw new ArgumentOutOfRangeException(nameof(seconds));
+            lock (sync)
+            {
+                if (disposed) throw new ObjectDisposedException(nameof(FightBattleIsolatedStep));
+                if (taken) throw new InvalidOperationException("The isolated step was already transferred.");
+                return Latch.TryQueueWorkerCommand(() => executor.AdvanceStatusSeconds(seconds), out completion);
+            }
+        }
+
         public FightBattleIsolatedStep(FightBattleCheckpoint checkpoint,
             Func<FightBattleCheckpoint, FightBattleExecutor> restore, int sequence, int counter,
             bool observeMovements = false)
