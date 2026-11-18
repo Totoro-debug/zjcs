@@ -77,7 +77,8 @@ public static class BattleWindBladeHarness
             if (moves.Length == 1)
             {
                 Check(target.X == 7 + dx * (distance + 1) && target.Y == 7 + dy * (distance + 1)
-                    && moves[0].MoveBehaviourId == 10643 && moves[0].Path.Count == 2,
+                    && moves[0].MoveBehaviourId == 10643 && moves[0].Path.Count == 2
+                    && Math.Abs(moves[0].Delay - damage.Delay - hit.HitMove.Delay) < .0001f,
                     "Original knockback did not move exactly one cell away from the caster: direction="
                         + dx + "," + dy + ", distance=" + distance + ", target=" + target.X + "," + target.Y
                         + ", move entity=" + moves[0].MoveBehaviourId + ", path length=" + moves[0].Path.Count);

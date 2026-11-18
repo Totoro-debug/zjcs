@@ -1141,8 +1141,8 @@ namespace Zjcs.Combat.Official
                         damageEvents, movements, ref lastDelay);
                     ApplyHitDisperse(actor, target, hit, random, damage);
                     int hitMovementStart = movements.Count;
-                    ApplyHitMove(actor, target, targetPosition ?? (targets.Count > 0 ? targets[0] : null),
-                        skill, hit, castHit, movements);
+                    ApplyHitMoveAtTime(actor, target, targetPosition ?? (targets.Count > 0 ? targets[0] : null),
+                        skill, hit, castHit, movements, hitDelay);
                     bool hitDisplacedTarget = false;
                     for (int movementIndex = hitMovementStart; movementIndex < movements.Count; movementIndex++)
                         hitDisplacedTarget |= movements[movementIndex].UnitId == target.Id
@@ -2317,7 +2317,14 @@ namespace Zjcs.Combat.Official
         private void ApplyHitMove(FightBattleUnitState actor, FightBattleUnitState target, FightBattleUnitState skillTarget,
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit, FightBattleSkillCastPresentation cast,
             List<FightBattleMovementEvent> movements)
+            => ApplyHitMoveAtTime(actor, target, skillTarget, skill, hit, cast, movements,
+                movementStartContext?.StatusStartTime ?? 0f);
+
+        private void ApplyHitMoveAtTime(FightBattleUnitState actor, FightBattleUnitState target, FightBattleUnitState skillTarget,
+            FightBattleSkillDefinition skill, FightBattleHitDefinition hit, FightBattleSkillCastPresentation cast,
+            List<FightBattleMovementEvent> movements, float hitDelay)
         {
+            // MoveCfg is owned by the damage entity and starts relative to this hit.
             FightBattleSkillMove move = hit == null ? null : hit.HitMove;
             IFightHitMovementRule movementRule = FightHitMovementRules.For(hit);
             if (move == null || !MoveConditionsSatisfied(move, actor, target)
@@ -2334,17 +2341,17 @@ namespace Zjcs.Combat.Official
                 });
                 int movementIndex = movements.Count;
                 if (path != null && ApplyMovementPath(target, path, path.Count - 1, movements))
-                    ApplyMovementAction(movements, movementIndex, move, skill);
+                    ApplyMovementAction(movements, movementIndex, move, skill, originDelay: hitDelay);
                 return;
             }
             if (move.Direction == 2)
             {
                 if (FightHitMovementRules.UsesConfirmedSideMove(hit))
                 {
-                    ApplyConfirmedHitSideMove(target, actor, skillTarget, move, movements, skill);
+                    ApplyConfirmedHitSideMove(target, actor, skillTarget, move, movements, skill, hitDelay);
                     return;
                 }
-                ApplyPathSideMove(target, actor, target, move, movements, skill);
+                ApplyPathSideMove(target, actor, target, move, movements, skill, originDelay: hitDelay);
                 return;
             }
             if (move.Direction != 0 && move.Direction != 1) return;
@@ -2372,14 +2379,14 @@ namespace Zjcs.Combat.Official
                     target.Y + stepY * distance + move.OffsetY);
                 int movementIndex = movements.Count;
                 if (!TryMoveUnit(target, desired, distance, movements)) continue;
-                ApplyMovementAction(movements, movementIndex, move, skill);
+                ApplyMovementAction(movements, movementIndex, move, skill, originDelay: hitDelay);
                 break;
             }
         }
 
         private void ApplyConfirmedHitSideMove(FightBattleUnitState mover, FightBattleUnitState source,
             FightBattleUnitState skillTarget, FightBattleSkillMove move,
-            List<FightBattleMovementEvent> movements, FightBattleSkillDefinition skill)
+            List<FightBattleMovementEvent> movements, FightBattleSkillDefinition skill, float hitDelay)
         {
             if (mover == null || source == null || skillTarget == null || checkpoint.Grid == null) return;
             int dx = skillTarget.X - source.X, dy = skillTarget.Y - source.Y;
@@ -2424,7 +2431,7 @@ namespace Zjcs.Combat.Official
                     if (!canStand) continue;
                     int movementIndex = movements.Count;
                     if (ApplyMovementPath(mover, path, steps, movements))
-                        ApplyMovementAction(movements, movementIndex, move, skill);
+                        ApplyMovementAction(movements, movementIndex, move, skill, originDelay: hitDelay);
                     return;
                 }
             }
@@ -2432,7 +2439,7 @@ namespace Zjcs.Combat.Official
 
         private bool ApplyPathSideMove(FightBattleUnitState mover, FightBattleUnitState source,
             FightBattleUnitState target, FightBattleSkillMove move,
-            List<FightBattleMovementEvent> movements, FightBattleSkillDefinition skill, bool activeMove = false)
+            List<FightBattleMovementEvent> movements, FightBattleSkillDefinition skill, bool activeMove = false, float originDelay = 0f)
         {
             if (mover == null || source == null || target == null || move == null
                 || move.Distance <= 0 || movements == null) return false;
@@ -2455,7 +2462,7 @@ namespace Zjcs.Combat.Official
                         mover.Y + sideY * distance + move.OffsetY);
                     int movementIndex = movements.Count;
                     if (!TryMoveUnit(mover, desired, distance, movements)) continue;
-                    ApplyMovementAction(movements, movementIndex, move, skill, activeMove);
+                    ApplyMovementAction(movements, movementIndex, move, skill, activeMove, originDelay);
                     return true;
                 }
             }
@@ -2463,7 +2470,7 @@ namespace Zjcs.Combat.Official
         }
 
         private void ApplyMovementAction(List<FightBattleMovementEvent> movements,
-            int startIndex, FightBattleSkillMove move, FightBattleSkillDefinition skill, bool activeMove = false)
+            int startIndex, FightBattleSkillMove move, FightBattleSkillDefinition skill, bool activeMove = false, float originDelay = 0f)
         {
             if (movements == null || move == null) return;
             // A start listener can append another movement. Do not overwrite its own action timing
@@ -2473,7 +2480,7 @@ namespace Zjcs.Combat.Official
             {
                 FightBattleMovementEvent movement = movements[index];
                 if (movement == null) continue;
-                movement.Delay = move.Delay;
+                movement.Delay = originDelay + move.Delay;
                 movement.MoveBehaviourId = move.MoveBehaviourId;
                 movement.MoveDuration = move.MoveDuration;
                 movement.MoveSpeed = move.MoveSpeed;

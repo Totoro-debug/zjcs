@@ -56,8 +56,12 @@ public static class BattleStatusOnlyHarness
                     target.Statuses.Add(old); hit.DisperseStatusTypes.Add(old.StatusType);
                     hit.DisperseChance = 1; hit.DisperseCount = 1;
                 }
-                if (name == "move") hit.HitMove = new FightBattleSkillMove {
-                    Distance = 1, Direction = 1, BasePercent = 1, AffectedByProp = false };
+                if (name == "move")
+                {
+                    hit.Delay = .6f;
+                    hit.HitMove = new FightBattleSkillMove {
+                        Distance = 1, Direction = 1, BasePercent = 1, AffectedByProp = false, Delay = .25f };
+                }
                 if (name == "child") { hit.ChildSkillId = 10100; hit.ChildSkillRate = 1; hit.ChildSkillLessThanHpPer = -1; }
                 if (name.EndsWith("listener"))
                 {
@@ -116,7 +120,9 @@ public static class BattleStatusOnlyHarness
                 && receipts.Single().HasDisperseNotification && receipts.Single().DisperseNotificationIndex == 0,
                 "The successful pure-status disperse retains its exact causing hit and compatible operation slot.");
             else Check(receipts.All(d => !d.HasDisperseNotification), "An unrelated hit must not acquire a disperse notification.");
-            if (name == "move") Check(target.X != 6 || target.Y != 5, "Configured displacement did not execute.");
+            if (name == "move") Check((target.X != 6 || target.Y != 5) && step.Movements.Count == 1
+                && Math.Abs(step.Movements[0].Delay - receipts.Single().Delay - .25f) < .0001f,
+                "Configured status-only displacement did not follow its actual hit and authored delay.");
             if (name == "child") Check(step.SkillCasts.Any(c => c.SkillEntityId == 10100), "Configured child skill did not execute.");
             if (hitListener != null) Check(hitListener.InvokeCount == (name == "hit-listener" ? 1 : 0)
                 && damageListener.RoundTriggeredCount == 0, name + ": generic hit listener vs damage/cure listeners.");

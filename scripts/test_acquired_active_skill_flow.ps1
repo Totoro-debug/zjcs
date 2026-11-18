@@ -2,7 +2,7 @@
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet(10008,10009,10011,10012,10013,10014,10016,10024,10026,10053)][int]$SkillId = 10026
+    [ValidateSet(10008,10009,10011,10012,10013,10014,10016,10018,10024,10026,10053)][int]$SkillId = 10026
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -89,7 +89,7 @@ try {
     if (-not (Test-Path -LiteralPath (Join-Path $run 'acquired-active-ui-checkpoint.json'))) {
         throw "The completed skill-page battle checkpoint is absent: $run"
     }
-    $receiptVerifier = if ($SkillId -eq 10008) { 'verify_warrior_slash_receipt.py' } elseif ($SkillId -eq 10009) { 'verify_heavy_strike_receipt.py' } elseif ($SkillId -eq 10011) { 'verify_lion_combo_receipt.py' } elseif ($SkillId -eq 10012) { 'verify_wind_blade_receipt.py' } elseif ($SkillId -eq 10013) { 'verify_four_way_slash_receipt.py' } elseif ($SkillId -eq 10014) { 'verify_whirlwind_slash_receipt.py' } elseif ($SkillId -eq 10016) { 'verify_lightning_dash_receipt.py' } elseif ($SkillId -eq 10024) { 'verify_arc_shield_receipt.py' } elseif ($SkillId -eq 10053) { 'verify_sunset_sword_receipt.py' } else { 'verify_fire_slash_receipt.py' }
+    $receiptVerifier = if ($SkillId -eq 10008) { 'verify_warrior_slash_receipt.py' } elseif ($SkillId -eq 10009) { 'verify_heavy_strike_receipt.py' } elseif ($SkillId -eq 10011) { 'verify_lion_combo_receipt.py' } elseif ($SkillId -eq 10012) { 'verify_wind_blade_receipt.py' } elseif ($SkillId -eq 10013) { 'verify_four_way_slash_receipt.py' } elseif ($SkillId -eq 10014) { 'verify_whirlwind_slash_receipt.py' } elseif ($SkillId -eq 10016) { 'verify_lightning_dash_receipt.py' } elseif ($SkillId -eq 10018) { 'verify_pull_skill_receipt.py' } elseif ($SkillId -eq 10024) { 'verify_arc_shield_receipt.py' } elseif ($SkillId -eq 10053) { 'verify_sunset_sword_receipt.py' } else { 'verify_fire_slash_receipt.py' }
     & python -B (Join-Path $PSScriptRoot $receiptVerifier) (Join-Path $run 'acquired-active-ui-checkpoint.json')
     if ($LASTEXITCODE -ne 0) { throw "The acquired skill's original battle receipts failed: $run" }
     Write-Output "Acquired active skill-page flow passed: $run"

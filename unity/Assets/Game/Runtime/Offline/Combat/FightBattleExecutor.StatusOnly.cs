@@ -23,7 +23,7 @@ namespace Zjcs.Combat.Official
             CollectHitTriggerSkill(actor, target, skill, hit, invocations, hitOrigin, hitCast, damage.Delay);
             ApplyMissingStatusComponentsOnHit(actor, target, skill, hit, resolved, 0, invocations);
             ApplyHitDisperse(actor, target, hit, random, damage);
-            ApplyHitMove(actor, target, skillTarget, skill, hit, hitCast, movements);
+            ApplyHitMoveAtTime(actor, target, skillTarget, skill, hit, hitCast, movements, damage.Delay);
             RebuildBattleProperties();
             if (invocations.Count > 0)
             {

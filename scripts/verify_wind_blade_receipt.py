@@ -76,6 +76,10 @@ def verify(path, direction, initial=None):
                 path_points = movement["Path"]
                 if len(path_points) != 2:
                     raise ValueError("Wind blade changed its original one-cell knockback")
+                if not any(event["TargetId"] == movement["UnitId"]
+                           and abs(movement["Delay"] - event["Delay"] - move["Delay"]) < .0001
+                           for event in events):
+                    raise ValueError("Wind blade knockback did not follow its original hit")
                 x_offset = path_points[0]["X"] - pose["SourceX"]
                 y_offset = path_points[0]["Y"] - pose["SourceY"]
                 step_x = (x_offset > 0) - (x_offset < 0)
