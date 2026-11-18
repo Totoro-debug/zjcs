@@ -87,37 +87,57 @@ namespace Zjcs.Presentation.Combat
                 if (!seen.Add(id) || !receipts.TryGetValue(id, out var receipt) || receipt.IsSkillCost
                     || receipt.SourceId != cast.ActorId || receipt.SkillEntityId != cast.SkillEntityId)
                     throw new InvalidOperationException("Damage receipt does not belong to this actual cast: " + id);
-                // Legacy receipts keep missing results/positions unknown. Do not
-                // infer either from the scene, current HP or surviving statuses.
-                // Original trigger-only hits (for example 13522) have no
-                // damage entity. Their hit graph and child skill own playback.
-                if (!CanCreate(receipt)) continue;
-                if (!catalog.TryGetComponent(receipt.DamageEntityId, "FightDamageComponent", out var config))
-                    throw new InvalidOperationException("Original damage configuration is missing: " + receipt.DamageEntityId);
-                float lifetime = config.TryGetValue("Duration", out var duration)
-                    ? Convert.ToSingle(duration, CultureInfo.InvariantCulture) : .5f;
-                if (lifetime < 0f || float.IsNaN(lifetime) || float.IsInfinity(lifetime))
-                    throw new InvalidOperationException("Review original damage lifetime: " + receipt.DamageEntityId);
-                var position = new Pos2d(receipt.DamageX, receipt.DamageY);
-                var grid = catalog.HasComponent(receipt.DamageEntityId, "GridTransformComponent")
-                    ? new Grid { Position = position, Facing = direction, Mirrored = flipX, Views = views } : null;
-                var result = new DamageResultParameter {
-                    DamageValue = receipt.DamageValue, ShieldValue = receipt.ShieldDamage,
-                    AbsoluteDamage = receipt.AbsoluteDamage, Pos = position,
-                    IsElementAffect = receipt.IsElementAffect, ElementConfrontation = receipt.ElementConfrontation,
-                    SkillElementType = (ElementType)receipt.ElementType,
-                    ResultType = receipt.IsCure ? DamageResultType.Cure
-                        : receipt.HasAbsoluteDamage ? DamageResultType.Damage : DamageResultType.None,
-                    DamageTypeData = new DamageTypeData { IsBlock = receipt.Block, IsCrit = receipt.Critical,
-                        IsDodge = receipt.Dodge, IsBlinding = receipt.Blinding, IsImmunity = receipt.Immunity,
-                        IsBreakResilience = receipt.BreakResilience, IsTrueDamage = receipt.TrueDamage } };
-                pending.Add(new Pending { Receipt = receipt, Remaining = Mathf.Max(0f, receipt.Delay - cast.Delay), Lifetime = lifetime,
-                    Status = status, Data = new OfficialBattleDamageEntityData(new EcEntityIdentifier(6, ++serial),
-                        receipt.DamageEntityId, skillId, new EcEntityIdentifier(1, receipt.TargetId), result,
-                        receipt.IsDamageTriggerStatus, views.GridToPos(position), direction.DirToRotation(),
-                        new Vector3(flipX ? -1f : 1f, 1f, 1f), grid) });
+                QueueReceipt(skillId, receipt, direction, flipX, status,
+                    Mathf.Max(0f, receipt.Delay - cast.Delay));
             }
             DispatchDue();
+        }
+
+        // Called while the executor is paused immediately after the actual hit.
+        public bool EnqueueImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier skillId,
+            FightBattleDamageEvent receipt, Direction direction, bool flipX)
+        {
+            if (!CanCreate(receipt)) return false;
+            var source = views.GetEntity(skillId).GetComponent<MyFightSkill>().Component.SrcEntityId;
+            var status = new OfficialBattleSkillSourceStatusSnapshot(cast.Presentation, source, catalog);
+            bool queued = QueueReceipt(skillId, receipt, direction, flipX, status, 0f);
+            DispatchDue();
+            return queued;
+        }
+
+        private bool QueueReceipt(EcEntityIdentifier skillId, FightBattleDamageEvent receipt,
+            Direction direction, bool flipX, IFightPlayableOverrideStatusServices status, float remaining)
+        {
+            // Legacy receipts keep missing results/positions unknown. Do not
+            // infer either from the scene, current HP or surviving statuses.
+            // Original trigger-only hits (for example 13522) have no
+            // damage entity. Their hit graph and child skill own playback.
+            if (!CanCreate(receipt)) return false;
+            if (!catalog.TryGetComponent(receipt.DamageEntityId, "FightDamageComponent", out var config))
+                throw new InvalidOperationException("Original damage configuration is missing: " + receipt.DamageEntityId);
+            float lifetime = config.TryGetValue("Duration", out var duration)
+                ? Convert.ToSingle(duration, CultureInfo.InvariantCulture) : .5f;
+            if (lifetime < 0f || float.IsNaN(lifetime) || float.IsInfinity(lifetime))
+                throw new InvalidOperationException("Review original damage lifetime: " + receipt.DamageEntityId);
+            var position = new Pos2d(receipt.DamageX, receipt.DamageY);
+            var grid = catalog.HasComponent(receipt.DamageEntityId, "GridTransformComponent")
+                ? new Grid { Position = position, Facing = direction, Mirrored = flipX, Views = views } : null;
+            var result = new DamageResultParameter {
+                DamageValue = receipt.DamageValue, ShieldValue = receipt.ShieldDamage,
+                AbsoluteDamage = receipt.AbsoluteDamage, Pos = position,
+                IsElementAffect = receipt.IsElementAffect, ElementConfrontation = receipt.ElementConfrontation,
+                SkillElementType = (ElementType)receipt.ElementType,
+                ResultType = receipt.IsCure ? DamageResultType.Cure
+                    : receipt.HasAbsoluteDamage ? DamageResultType.Damage : DamageResultType.None,
+                DamageTypeData = new DamageTypeData { IsBlock = receipt.Block, IsCrit = receipt.Critical,
+                    IsDodge = receipt.Dodge, IsBlinding = receipt.Blinding, IsImmunity = receipt.Immunity,
+                    IsBreakResilience = receipt.BreakResilience, IsTrueDamage = receipt.TrueDamage } };
+            pending.Add(new Pending { Receipt = receipt, Remaining = remaining, Lifetime = lifetime,
+                Status = status, Data = new OfficialBattleDamageEntityData(new EcEntityIdentifier(6, ++serial),
+                    receipt.DamageEntityId, skillId, new EcEntityIdentifier(1, receipt.TargetId), result,
+                    receipt.IsDamageTriggerStatus, views.GridToPos(position), direction.DirToRotation(),
+                    new Vector3(flipX ? -1f : 1f, 1f, 1f), grid) });
+            return true;
         }
 
         public void Advance(float elapsed)

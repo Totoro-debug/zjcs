@@ -457,17 +457,35 @@ namespace Zjcs.Editor.Combat
                 value.Properties.Add(new FightPropertyValue { Id = formula.PropertyId("CritAvoidPercent"), Value = 10000 });
                 return value;
             }
-            var previousSourceUnit = units[0]; var previousTargetUnit = units[1];
-            units[0] = LiveUnit(1, 1, 2); units[1] = LiveUnit(2, 2, 5);
+            var fireUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 5) };
+            var fireRoot = new GameObject("Isolated fireball scene").transform;
+            fireRoot.SetParent(root, false);
+            var fireSource = new GameObject("Fireball source").transform; fireSource.SetParent(fireRoot, false);
+            fireSource.localPosition = new Vector3(2, 5, 0); fireSource.gameObject.AddComponent<MyTransform>();
+            var fireTarget = new GameObject("Fireball target").transform; fireTarget.SetParent(fireRoot, false);
+            fireTarget.localPosition = new Vector3(5, 5, 0); fireTarget.gameObject.AddComponent<MyTransform>();
+            foreach (var actorView in new[] { fireSource, fireTarget }) {
+                var renderer = actorView.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false;
+                renderer.sharedMaterials = Array.Empty<Material>();
+                actorView.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+            }
+            var fireScope = new OfflineBattleNativePlayableScope(fireRoot, null);
+            fireScope.BindNativePrefabAdapter(instance => {
+                var playable = instance.GetComponent<MyPlayable>();
+                if (playable) playable.OnPlay += value => played.Add(new Played { Name = instance.name.Replace("(Clone)", ""), At = Time.time });
+            });
+            using var fireViews = new OfficialBattleSkillEntityPlayback(fireRoot, new OfficialBattleGridMapper(fireRoot, grid),
+                fireScope, id => fireUnits.FirstOrDefault(value => value.Id == id));
+            fireViews.BindDamageUI(fireRoot, 0);
             var fire = liveCatalog.CreateSkill(10800, 0, 10028, 2, 20, 1,
                 liveCatalog.CalculateSkillProps(10800, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
-            fire.LimitedTimes = 1; units[0].Skills.Add(fire); units[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(fire, 0));
+            fire.LimitedTimes = 1; fireUnits[0].Skills.Add(fire); fireUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(fire, 0));
             var cp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
                 Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
-            cp.Units.AddRange(units); var fireWave = new FightBattleWaveState(); fireWave.UnitIds.Add(2); cp.Waves.Add(fireWave);
+            cp.Units.AddRange(fireUnits); var fireWave = new FightBattleWaveState(); fireWave.UnitIds.Add(2); cp.Waves.Add(fireWave);
             var executor = FightBattleExecutor.Begin(cp, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
             using var fireLatch = new FightBattleImpactLatch();
-            using var fireBridge = new OfficialBattleImpactViewBridge(views, fireLatch);
+            using var fireBridge = new OfficialBattleImpactViewBridge(fireViews, fireLatch);
             executor.ImpactGate = fireLatch;
             var fireStep = System.Threading.Tasks.Task.Run(() => executor.Step(0, 1));
             FightBattlePreparedCast firePrepared = null;
@@ -475,7 +493,13 @@ namespace Zjcs.Editor.Combat
             while (!fireLatch.TryTakePreparation(out firePrepared) && Time.realtimeSinceStartup < deadline) yield return null;
             Require(firePrepared != null && firePrepared.Cast.SkillItemId == 10028, "Official fireball was not prepared.");
             var fireCast = firePrepared.Cast;
-            var fireSkillId = views.Start(fireCast, source, target);
+            var fireSkillId = fireViews.Start(fireCast, fireSource, fireTarget);
+            var floatRoot = fireRoot.GetComponentInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUIManager>().transform;
+            int damageNotifications = 0;
+            long observedDamage = 0;
+            fireViews.EnsureUnit(2, fireTarget).GetComponent<MyFightRoleFight>().OnDamage += (role, damage) => {
+                damageNotifications++; observedDamage = damage.Component.DamageResult.DamageValue;
+            };
             fireLatch.CompletePreparation(firePrepared);
             FightBattleSelectedHit fireSelected = null;
             deadline = Time.realtimeSinceStartup + 10f;
@@ -487,29 +511,49 @@ namespace Zjcs.Editor.Combat
                     if (ReferenceEquals(c, fireCast) && ReferenceEquals(h, fireSelected.Selection)
                         && cell == fireSelected.Selection.Targets[0].ScopeIndex) fireArrival = true;
                 };
-            views.HitSelectionViewArrived += fireObserver;
+            fireViews.HitSelectionViewArrived += fireObserver;
             int beforeFire = played.Count;
             fireBridge.QueueSelection(fireSelected, fireSkillId, 0f);
             FightBattleSettledImpact fireDamage = null;
             deadline = Time.realtimeSinceStartup + 10f;
             while (!fireLatch.TryTakeSettlement(out fireDamage) && Time.realtimeSinceStartup < deadline) {
-                if (!fireArrival) Require(units[1].Hp == 1000000, "Fireball HP changed while its projectile was flying.");
+                if (!fireArrival) Require(fireUnits[1].Hp == 1000000
+                    && floatRoot.GetComponentsInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUI>().Length == 0,
+                    "Fireball HP and damage numbers must wait for the projectile impact.");
+                fireViews.Tick(Time.deltaTime); fireScope.LateTick();
                 yield return null;
             }
             Require(fireDamage != null && fireArrival && fireDamage.Damage.BeforeHp == 1000000
-                && fireDamage.Damage.AfterHp < 1000000 && units[1].Hp == fireDamage.Damage.AfterHp
+                && fireDamage.Damage.AfterHp < 1000000 && fireUnits[1].Hp == fireDamage.Damage.AfterHp
                 && fireDamage.Damage.HasDamageTriggerStatus && !fireDamage.Damage.IsDamageTriggerStatus
                 && played.Skip(beforeFire).Any(x => x.Name == "playable10801"),
                 "Official fireball did not settle its actual HP at the native explosion.");
-            Capture("fireball-actual-impact.png");
+            var incomplete = new FightBattleDamageEvent { DamageId = fireDamage.Damage.DamageId,
+                SourceId = fireDamage.Damage.SourceId, SkillEntityId = fireDamage.Damage.SkillEntityId };
+            Require(!fireViews.QueueSettledDamage(fireCast, fireSkillId, incomplete) && damageNotifications == 0,
+                "An incomplete damage result cannot start the native damage view.");
+            Require(fireViews.QueueSettledDamage(fireCast, fireSkillId, fireDamage.Damage)
+                && damageNotifications == 1 && observedDamage == fireDamage.Damage.DamageValue,
+                "Actual fireball settlement must start its original damage entity exactly once.");
+            bool duplicateDamageRejected = false;
+            try { fireViews.QueueSettledDamage(fireCast, fireSkillId, fireDamage.Damage); }
+            catch (InvalidOperationException) { duplicateDamageRejected = true; }
+            Require(duplicateDamageRejected, "The same impact cannot create duplicate native damage entities.");
+            var floats = floatRoot.GetComponentsInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUI>();
+            Require(floats.Any(ui => ui.EntityId == new EcEntityIdentifier(1, 2)
+                && ui.GetComponentsInChildren<TextMesh>(true).Any(text =>
+                    text.text == Math.Abs(fireDamage.Damage.DamageValue).ToString())),
+                "The original damage UI must display a number on the actual target at impact.");
+            Capture("fireball-damage-impact.png");
             fireLatch.CompleteSettlement(fireDamage);
             deadline = Time.realtimeSinceStartup + 10f;
             while (!fireStep.IsCompleted && Time.realtimeSinceStartup < deadline) yield return null;
             Require(fireStep.IsCompleted && !fireStep.IsFaulted && !fireStep.IsCanceled,
                 "The official fireball action did not complete after impact.");
-            views.HitSelectionViewArrived -= fireObserver;
-            fireBridge.Dispose(); fireLatch.Dispose();
-            units[0] = previousSourceUnit; units[1] = previousTargetUnit;
+            fireViews.HitSelectionViewArrived -= fireObserver;
+            fireBridge.Dispose(); fireLatch.Dispose(); fireViews.Dispose();
+            Destroy(fireRoot.gameObject);
+
 
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });

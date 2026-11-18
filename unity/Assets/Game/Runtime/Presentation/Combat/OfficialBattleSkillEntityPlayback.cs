@@ -95,6 +95,7 @@ namespace Zjcs.Presentation.Combat
             public EcEntityIdentifier Id;
             public FightBattleSkillCastEvent Cast;
             public readonly HashSet<FightBattleHitSelectionSnapshot> ScheduledHits = new HashSet<FightBattleHitSelectionSnapshot>();
+            public readonly HashSet<int> ScheduledDamages = new HashSet<int>();
             public float Remaining;
             public bool Removed;
         }
@@ -250,6 +251,8 @@ namespace Zjcs.Presentation.Combat
                 Remaining = cast.Presentation.Duration < 0f ? float.PositiveInfinity : cast.Presentation.Duration };
             if (cast.HitSelections != null)
                 foreach (var selection in cast.HitSelections) activeCast.ScheduledHits.Add(selection);
+            if (cast.DamageEventIds != null)
+                foreach (int damageId in cast.DamageEventIds) activeCast.ScheduledDamages.Add(damageId);
             casts.Add(activeCast);
             if (damageUI != null) scope.Dispatch(() => damageUI.SkillCostHp(cast, state.Data.Identifier));
             scope.Dispatch(entity.MyStart);
@@ -281,6 +284,28 @@ namespace Zjcs.Presentation.Combat
             if (!active.ScheduledHits.Add(selection))
                 throw new InvalidOperationException("The selected hit has already been queued for this cast.");
             receiptHits.EnqueueSelection(cast, selection, skillId, elapsedSinceCast);
+        }
+
+        /// <summary>
+        /// Starts the original damage entity at impact when its result is complete. The host
+        /// must keep the executor suspended while this method reads the actual receipt.
+        /// </summary>
+        public bool QueueSettledDamage(FightBattleSkillCastEvent cast, EcEntityIdentifier skillId,
+            FightBattleDamageEvent damage)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillEntityPlayback));
+            if (cast == null) throw new ArgumentNullException(nameof(cast));
+            if (damage == null) throw new ArgumentNullException(nameof(damage));
+            var active = casts.Find(value => !value.Removed && value.Id.Equals(skillId));
+            if (active == null || !ReferenceEquals(active.Cast, cast) || cast.DamageEventIds == null
+                || !cast.DamageEventIds.Contains(damage.DamageId) || damage.IsSkillCost
+                || damage.SourceId != cast.ActorId || damage.SkillEntityId != cast.SkillEntityId)
+                throw new InvalidOperationException("The damage does not belong to this active cast.");
+            if (!OfficialBattleDamageReceiptPlayback.CanCreate(damage)) return false;
+            if (!active.ScheduledDamages.Add(damage.DamageId))
+                throw new InvalidOperationException("The damage has already been queued for this cast.");
+            return receiptDamages.EnqueueImpact(cast, skillId, damage,
+                Facing(cast.Presentation.FacingIndex), cast.Presentation.FlipX);
         }
 
         // Original ECViewDriver injects its serialized views during Awake.
