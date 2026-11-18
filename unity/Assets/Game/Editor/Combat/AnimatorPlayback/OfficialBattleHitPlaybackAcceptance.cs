@@ -498,6 +498,7 @@ namespace Zjcs.Editor.Combat
             }
             Require(fireDamage != null && fireArrival && fireDamage.Damage.BeforeHp == 1000000
                 && fireDamage.Damage.AfterHp < 1000000 && units[1].Hp == fireDamage.Damage.AfterHp
+                && fireDamage.Damage.HasDamageTriggerStatus && !fireDamage.Damage.IsDamageTriggerStatus
                 && played.Skip(beforeFire).Any(x => x.Name == "playable10801"),
                 "Official fireball did not settle its actual HP at the native explosion.");
             Capture("fireball-actual-impact.png");

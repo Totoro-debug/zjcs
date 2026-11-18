@@ -13,8 +13,12 @@ public static class BattleImpactGateHarness
         public FightBattlePendingImpact Impact;
         public ManualResetEventSlim Released = new ManualResetEventSlim(false);
     }
-    private sealed class Gate : IFightBattleImpactGate, IFightBattleCastPreparationObserver
+    private sealed class Gate : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleImpactSettlementObserver
     {
+        public readonly ConcurrentQueue<(int SkillItemId, bool HasStatusResult, bool StatusTriggered)> Settlements =
+            new ConcurrentQueue<(int, bool, bool)>();
+        public void ImpactSettled(FightBattlePendingImpact impact, FightBattleDamageEvent damage)
+            => Settlements.Enqueue((impact.SkillItemId, damage.HasDamageTriggerStatus, damage.IsDamageTriggerStatus));
         public readonly BlockingCollection<Pending> Items = new BlockingCollection<Pending>();
         public readonly ConcurrentQueue<FightBattleSkillCastEvent> Prepared = new ConcurrentQueue<FightBattleSkillCastEvent>();
         public void CastPrepared(FightBattleSkillCastEvent cast) { Prepared.Enqueue(cast); }
@@ -210,6 +214,13 @@ public static class BattleImpactGateHarness
             }
             Check(step.Wait(TimeSpan.FromSeconds(20)), "The final impact did not finish the action");
             var actual = step.Result;
+            if (setup[0] == 10015 || setup[0] == 10028)
+            {
+                var direct = gate.Settlements.Where(value => value.SkillItemId == setup[0]).ToArray();
+                Check(direct.Length == 1 && direct[0].HasStatusResult == (setup[0] == 10028)
+                    && !direct[0].StatusTriggered,
+                    "Only an empty original status list has a known result at the impact boundary");
+            }
             Check(actual.Event.DamageEvents.Count(d => d.SkillItemId == setup[0]) == setup[3], "A hit was lost or duplicated");
             Check(FightBattleCheckpointSerializer.Save(checkpoint) == FightBattleCheckpointSerializer.Save(baseline),
                 "Gating changed the original deterministic result");

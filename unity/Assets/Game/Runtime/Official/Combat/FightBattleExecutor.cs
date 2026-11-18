@@ -1091,6 +1091,9 @@ namespace Zjcs.Combat.Official
                         DamageX = damagePosition.X,
                         DamageY = damagePosition.Y,
                         IsCure = resolved.IsCure,
+                        // An empty status list has a known false result even before later effects run.
+                        HasDamageTriggerStatus = statusCatalog == null || hit.AppliedStatuses == null
+                            || hit.AppliedStatuses.Count == 0,
                         Critical = resolved.Type.Critical,
                         Block = resolved.Type.Block,
                         Dodge = resolved.Type.Dodge,
