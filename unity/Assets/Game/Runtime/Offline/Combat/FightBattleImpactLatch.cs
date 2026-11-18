@@ -13,6 +13,14 @@ namespace Zjcs.Combat.Official
         public FightBattleSkillCastEvent Cast { get; internal set; }
     }
 
+    /// <summary>A cast whose final duration can be copied while the step is suspended.</summary>
+    public sealed class FightBattleCompletedCast
+    {
+        internal FightBattleImpactLatch Owner;
+        internal bool Taken, Completed;
+        public FightBattleSkillCastEvent Cast { get; internal set; }
+    }
+
     /// <summary>A selected hit held while its current values are copied by the host.</summary>
     public sealed class FightBattleSelectedHit
     {
@@ -36,7 +44,7 @@ namespace Zjcs.Combat.Official
     /// The step runs on a worker; the presentation thread takes requests without blocking and
     /// records actual arrivals. A single scope arrival may affect multiple target occurrences.
     /// </summary>
-    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleHitSelectionObserver, IFightBattleImpactSettlementObserver, IDisposable
+    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleCastCompletionObserver, IFightBattleHitSelectionObserver, IFightBattleImpactSettlementObserver, IDisposable
     {
         private readonly struct Signal : IEquatable<Signal>
         {
@@ -57,8 +65,10 @@ namespace Zjcs.Combat.Official
 
         private readonly object sync = new object();
         private readonly HashSet<Signal> arrived = new HashSet<Signal>();
+        private readonly HashSet<FightBattleSkillCastEvent> preparedCasts = new HashSet<FightBattleSkillCastEvent>();
         private readonly Queue<FightBattlePendingImpact> requests = new Queue<FightBattlePendingImpact>();
         private readonly Queue<FightBattlePreparedCast> preparations = new Queue<FightBattlePreparedCast>();
+        private readonly Queue<FightBattleCompletedCast> completedCasts = new Queue<FightBattleCompletedCast>();
         private readonly Queue<FightBattleSelectedHit> selections = new Queue<FightBattleSelectedHit>();
         private readonly Queue<FightBattleSettledImpact> settlements = new Queue<FightBattleSettledImpact>();
         private bool disposed;
@@ -69,6 +79,8 @@ namespace Zjcs.Combat.Official
             lock (sync)
             {
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (!preparedCasts.Add(cast))
+                    throw new InvalidOperationException("The cast was already prepared for this step.");
                 var preparation = new FightBattlePreparedCast { Owner = this, Cast = cast };
                 preparations.Enqueue(preparation);
                 while (!disposed && !preparation.Completed) Monitor.Wait(sync);
@@ -99,6 +111,45 @@ namespace Zjcs.Combat.Official
                 if (!ReferenceEquals(preparation.Owner, this) || !preparation.Taken || preparation.Completed)
                     throw new InvalidOperationException("The cast preparation is not awaiting this host.");
                 preparation.Completed = true;
+                Monitor.PulseAll(sync);
+            }
+        }
+
+        public void CastCompleted(FightBattleSkillCastEvent cast)
+        {
+            if (cast == null) throw new ArgumentNullException(nameof(cast));
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                // A rejected cast can still have its duration finalized without ever starting.
+                if (!preparedCasts.Remove(cast)) return;
+                var completed = new FightBattleCompletedCast { Owner = this, Cast = cast };
+                completedCasts.Enqueue(completed);
+                while (!disposed && !completed.Completed) Monitor.Wait(sync);
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+            }
+        }
+
+        /// <summary>Copy final duration before completion; enclosing step offsets may still change.</summary>
+        public bool TryTakeCastCompletion(out FightBattleCompletedCast completed)
+        {
+            lock (sync)
+            {
+                if (completedCasts.Count == 0) { completed = null; return false; }
+                completed = completedCasts.Dequeue(); completed.Taken = true;
+                return true;
+            }
+        }
+
+        public void CompleteCast(FightBattleCompletedCast completed)
+        {
+            if (completed == null) throw new ArgumentNullException(nameof(completed));
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (!ReferenceEquals(completed.Owner, this) || !completed.Taken || completed.Completed)
+                    throw new InvalidOperationException("The cast completion is not awaiting this host.");
+                completed.Completed = true;
                 Monitor.PulseAll(sync);
             }
         }
@@ -273,7 +324,7 @@ namespace Zjcs.Combat.Official
             lock (sync)
             {
                 if (disposed) return;
-                disposed = true; arrived.Clear(); requests.Clear(); preparations.Clear(); selections.Clear(); settlements.Clear();
+                disposed = true; arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear();
                 Monitor.PulseAll(sync);
             }
         }

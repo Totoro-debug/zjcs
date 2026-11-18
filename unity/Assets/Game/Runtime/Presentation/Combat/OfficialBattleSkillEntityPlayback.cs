@@ -97,7 +97,7 @@ namespace Zjcs.Presentation.Combat
             public readonly HashSet<FightBattleHitSelectionSnapshot> ScheduledHits = new HashSet<FightBattleHitSelectionSnapshot>();
             public readonly HashSet<int> ScheduledDamages = new HashSet<int>();
             public float Remaining;
-            public bool Removed;
+            public bool Removed, LiveCompletionReceived;
         }
 
         private readonly Transform root;
@@ -263,6 +263,25 @@ namespace Zjcs.Presentation.Combat
             // Return the assigned identity, not the pooled object whose Id can
             // change on reuse. Dependent views belong to this exact cast.
             return state.Data.Identifier;
+        }
+
+        /// <summary>Updates a live cast's final lifetime while its executor is suspended.</summary>
+        public void CompleteLiveCast(FightBattleSkillCastEvent cast, EcEntityIdentifier skillId, float elapsedSinceCast)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillEntityPlayback));
+            if (cast == null) throw new ArgumentNullException(nameof(cast));
+            if (float.IsNaN(elapsedSinceCast) || float.IsInfinity(elapsedSinceCast) || elapsedSinceCast < 0f)
+                throw new ArgumentOutOfRangeException(nameof(elapsedSinceCast));
+            var active = casts.Find(value => !value.Removed && value.Id.Equals(skillId));
+            if (active == null || !ReferenceEquals(active.Cast, cast) || cast.Presentation == null)
+                throw new InvalidOperationException("The completed cast is not the active skill entity.");
+            if (active.LiveCompletionReceived)
+                throw new InvalidOperationException("The live cast duration was already completed.");
+            float duration = cast.Presentation.Duration;
+            if (float.IsNaN(duration) || float.IsInfinity(duration))
+                throw new InvalidOperationException("The cast duration must be finite.");
+            active.Remaining = duration < 0f ? float.PositiveInfinity : Mathf.Max(0f, duration - elapsedSinceCast);
+            active.LiveCompletionReceived = true;
         }
 
         /// <summary>

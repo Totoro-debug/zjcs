@@ -496,6 +496,7 @@ namespace Zjcs.Editor.Combat
             while (!fireLatch.TryTakePreparation(out firePrepared) && Time.realtimeSinceStartup < deadline) yield return null;
             Require(firePrepared != null && firePrepared.Cast.SkillItemId == 10028, "Official fireball was not prepared.");
             var fireCast = firePrepared.Cast;
+            float fireStartedAt = Time.time;
             var fireSkillId = fireViews.Start(fireCast, fireSource, fireTarget);
             var floatRoot = fireRoot.GetComponentInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUIManager>().transform;
             int damageNotifications = 0;
@@ -552,6 +553,22 @@ namespace Zjcs.Editor.Combat
                     text.text == Math.Abs(fireDamageValue).ToString())),
                 "The original damage UI must display a number on the actual target at impact.");
             Capture("fireball-damage-impact.png");
+            FightBattleCompletedCast fireCompletion = null;
+            deadline = Time.realtimeSinceStartup + 10f;
+            while (!fireLatch.TryTakeCastCompletion(out fireCompletion) && Time.realtimeSinceStartup < deadline) {
+                fireViews.Tick(Time.deltaTime); fireScope.LateTick();
+                yield return null;
+            }
+            Require(fireCompletion != null && ReferenceEquals(fireCompletion.Cast, fireCast)
+                && fireCompletion.Cast.Presentation.Duration >= 0f && !fireStep.IsCompleted,
+                "The original cast must report its final lifetime before the step completes.");
+            float fireElapsedAtCompletion = Time.time - fireStartedAt;
+            fireViews.CompleteLiveCast(fireCast, fireSkillId, fireElapsedAtCompletion);
+            bool duplicateLifetimeRejected = false;
+            try { fireViews.CompleteLiveCast(fireCast, fireSkillId, fireElapsedAtCompletion); }
+            catch (InvalidOperationException) { duplicateLifetimeRejected = true; }
+            Require(duplicateLifetimeRejected, "A live cast lifetime must be finalized only once.");
+            fireLatch.CompleteCast(fireCompletion);
             deadline = Time.realtimeSinceStartup + 10f;
             while (!fireStep.IsCompleted && Time.realtimeSinceStartup < deadline) yield return null;
             Require(fireStep.IsCompleted, "The official fireball action did not complete after impact.");
@@ -563,6 +580,14 @@ namespace Zjcs.Editor.Combat
             try { fireViews.QueueSettledDamage(fireCast, fireSkillId, fireDamage.Damage); }
             catch (InvalidOperationException) { duplicateDamageRejected = true; }
             Require(duplicateDamageRejected, "The same impact cannot create duplicate native damage entities.");
+            float fireRemaining = Mathf.Max(0f, fireCompletion.Cast.Presentation.Duration - fireElapsedAtCompletion);
+            Require(fireRemaining > .02f, "The fireball lifetime fixture must retain a visible remainder.");
+            fireViews.Tick(fireRemaining - .01f);
+            Require(fireViews.GetEntity(fireSkillId) != null,
+                "The original live skill entity cannot end before its finalized lifetime.");
+            fireViews.Tick(.02f);
+            Require(fireViews.GetEntity(fireSkillId) == null,
+                "The original live skill entity must end at its finalized cast lifetime.");
             var restoredFire = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(completedFire.Checkpoint));
             var restoredEvent = restoredFire.Receipts.Last().Event;
             var restoredCast = restoredEvent.SkillCasts.Single(c => c.SkillItemId == 10028);

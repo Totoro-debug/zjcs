@@ -79,11 +79,13 @@ namespace Zjcs.Combat.Official
 
     public sealed partial class FightBattleExecutor
     {
-        private static void CompleteCastPresentation(FightBattleSkillCastEvent cast,
+        private void CompleteCastPresentation(FightBattleSkillCastEvent cast,
             FightBattleSkillDefinition skill, float lastDelay)
         {
             cast.Presentation.Duration = ResolveDuration(skill, lastDelay);
             cast.Presentation.ActionDuration = ResolveActionDuration(skill, lastDelay);
+            if (ImpactGate is IFightBattleCastCompletionObserver castObserver)
+                castObserver.CastCompleted(cast);
         }
     }
 }

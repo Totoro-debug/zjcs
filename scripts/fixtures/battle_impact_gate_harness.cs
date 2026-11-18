@@ -78,6 +78,26 @@ public static class BattleImpactGateHarness
             Check(canceled.Wait(20000) && canceled.Result, "Disposal did not cancel cast preparation");
         }
         {
+            using var completionLatch = new FightBattleImpactLatch();
+            completionLatch.CastCompleted(new FightBattleSkillCastEvent());
+            Check(!completionLatch.TryTakeCastCompletion(out _), "A rejected cast was reported as started");
+            var cast = new FightBattleSkillCastEvent();
+            var prepare = Task.Run(() => completionLatch.CastPrepared(cast));
+            FightBattlePreparedCast preparation = null;
+            Check(SpinWait.SpinUntil(() => completionLatch.TryTakePreparation(out preparation), 20000),
+                "The completion fixture did not prepare its cast");
+            completionLatch.CompletePreparation(preparation);
+            Check(prepare.Wait(20000), "The completion fixture did not release preparation");
+            var canceled = Task.Run(() => {
+                try { completionLatch.CastCompleted(cast); return false; }
+                catch (OperationCanceledException) { return true; }
+            });
+            Check(SpinWait.SpinUntil(() => completionLatch.TryTakeCastCompletion(out _), 20000),
+                "The cast completion did not reach the host");
+            completionLatch.Dispose();
+            Check(canceled.Wait(20000) && canceled.Result, "Disposal did not cancel cast completion");
+        }
+        {
             using var selectionLatch = new FightBattleImpactLatch();
             var cast = new FightBattleSkillCastEvent();
             var selection = new FightBattleHitSelectionSnapshot();
@@ -299,6 +319,15 @@ public static class BattleImpactGateHarness
                     && !task.IsCompleted, "The host did not observe actual HP at the matching impact");
                 latch.CompleteSettlement(settled);
             }
+            FightBattleCompletedCast completedCast = null;
+            Check(SpinWait.SpinUntil(() => latch.TryTakeCastCompletion(out completedCast), 20000)
+                && ReferenceEquals(completedCast.Cast, preparation.Cast) && completedCast.Cast.Presentation.Duration >= 0f
+                && !task.IsCompleted, "The completed cast duration was not offered before the step finished");
+            latch.CompleteCast(completedCast);
+            bool duplicateCompletion = false;
+            try { latch.CompleteCast(completedCast); }
+            catch (InvalidOperationException) { duplicateCompletion = true; }
+            Check(duplicateCompletion, "One cast completion was applied more than once");
             Check(task.Wait(TimeSpan.FromSeconds(20)) && task.Result.Event.DamageEvents.Count(d => d.SkillItemId == 10043) == 5,
                 "Cross-scope impacts were lost or duplicated");
             var saved = FightBattleCheckpointSerializer.Save(cp);
@@ -353,6 +382,11 @@ public static class BattleImpactGateHarness
                     && FightBattleCheckpointSerializer.Save(cp) == committed,
                     "Impact settlement escaped into the committed checkpoint");
                 isolated.Latch.CompleteSettlement(settled);
+                FightBattleCompletedCast castCompletion = null;
+                Check(SpinWait.SpinUntil(() => isolated.Latch.TryTakeCastCompletion(out castCompletion), 20000)
+                    && ReferenceEquals(castCompletion.Cast, preparation.Cast),
+                    "The isolated cast did not report its final duration");
+                isolated.Latch.CompleteCast(castCompletion);
                 FightBattleExecutor completedExecutor = null; FightBattleExecutionResult completed = null;
                 Check(SpinWait.SpinUntil(() => isolated.TryTakeCompleted(out completedExecutor, out completed), 20000)
                     && completed != null && ReferenceEquals(completedExecutor.State, completed.Checkpoint)

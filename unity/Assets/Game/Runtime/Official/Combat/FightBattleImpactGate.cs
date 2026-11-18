@@ -35,6 +35,15 @@ namespace Zjcs.Combat.Official
     }
 
     /// <summary>
+    /// Optional notification when a cast's duration is final. Its enclosing step may
+    /// still apply later offsets, so this is not an absolute playback start time.
+    /// </summary>
+    public interface IFightBattleCastCompletionObserver
+    {
+        void CastCompleted(FightBattleSkillCastEvent cast);
+    }
+
+    /// <summary>
     /// Optional notification once an original hit has selected its targets and centers.
     /// This also covers view-only and summon hits. Capture needed fields before returning;
     /// subsequent effects may add spawn information to the selection.
