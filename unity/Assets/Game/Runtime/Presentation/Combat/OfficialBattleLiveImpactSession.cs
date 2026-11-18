@@ -34,6 +34,12 @@ namespace Zjcs.Presentation.Combat
         private readonly Dictionary<int, HashSet<int>> jumpSlashScopes = new Dictionary<int, HashSet<int>>();
         private readonly Dictionary<int, HashSet<int>[]> mountainScopes = new Dictionary<int, HashSet<int>[]>();
         private readonly Dictionary<int, HashSet<int>> crossScopes = new Dictionary<int, HashSet<int>>();
+        private readonly Dictionary<int, FightBattleHitEntity> windBladeScopes = new Dictionary<int, FightBattleHitEntity>();
+        private readonly HashSet<FightBattleSkillCastEvent> observedWindBlades = new HashSet<FightBattleSkillCastEvent>();
+        private readonly Dictionary<FightBattleSkillCastEvent, int> reachedWindBlades = new Dictionary<FightBattleSkillCastEvent, int>();
+        private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center, int Scope)> sentWindHits =
+            new HashSet<(FightBattleHitSelectionSnapshot, int, int)>();
+        private readonly List<OfficialBattleWindBladeImpact> windBlades = new List<OfficialBattleWindBladeImpact>();
         private readonly HashSet<FightBattleSkillCastEvent> observedCrossEffects = new HashSet<FightBattleSkillCastEvent>();
         private readonly HashSet<FightBattleSkillCastEvent> reachedCrossEffects = new HashSet<FightBattleSkillCastEvent>();
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center, int Scope)> sentCrossHits =
@@ -151,6 +157,8 @@ namespace Zjcs.Presentation.Combat
                             }
                             if (hit.ScopeEntries.Count == 4 && scopes.Count == 4) crossScopes[unit.Id] = scopes;
                         }
+                        if (skill.EntityId == 10640 && hit.EntityId == 10641 && hit.ScopeEntries.Count == 4)
+                            windBladeScopes[unit.Id] = hit;
                     }
                     if (skill.EntityId == 10630 && comboValid && comboMask == 7) comboCasters.Add(unit.Id);
                 }
@@ -269,6 +277,9 @@ namespace Zjcs.Presentation.Combat
                         }
                         if (reachedSlashes.Contains(selectedCast)) RouteSlashImpact(selectedCast, active.Id);
                         if (reachedCrossEffects.Contains(selectedCast)) RouteCrossImpact(selectedCast, active.Id);
+                        if (reachedWindBlades.TryGetValue(selectedCast, out int windReached))
+                            for (int index = 0; index < 4; index++)
+                                if ((windReached & (1 << index)) != 0) RouteWindBladeImpact(selectedCast, active.Id, index);
                         if (reachedComboEffects.TryGetValue(selectedCast, out int comboReached))
                             for (int index = 0; index < 3; index++)
                                 if ((comboReached & (1 << index)) != 0) RouteComboImpact(selectedCast, active.Id, index);
@@ -337,8 +348,41 @@ namespace Zjcs.Presentation.Combat
             {
                 try { RouteJumpSlashImpact(cast, prefab, playable); AttachMountainWaves(cast, id, prefab, playable);
                     AttachSlashImpact(cast, id, prefab, playable); AttachComboImpact(cast, id, prefab, playable);
-                    AttachCrossImpact(cast, id, prefab, playable); }
+                    AttachCrossImpact(cast, id, prefab, playable); AttachWindBladeImpact(cast, id, prefab, playable); }
                 finally { currentGraphCast = previousCast; currentGraphSkillId = previousId; }
+            }
+        }
+
+        private void AttachWindBladeImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
+            GameObject prefab, MyPlayable playable)
+        {
+            if (cast?.SkillEntityId != 10640 || prefab == null || prefab.name != "playable10640"
+                || playable == null || playable.name != "effect (2)" || observedWindBlades.Contains(cast)
+                || !windBladeScopes.TryGetValue(cast.ActorId, out var hit)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            var observer = OfficialBattleWindBladeImpact.Attach(prefab, playable, hit,
+                index => RouteWindBladeImpact(cast, id, index));
+            if (observer == null) return;
+            observedWindBlades.Add(cast); windBlades.Add(observer);
+        }
+
+        private void RouteWindBladeImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id, int index)
+        {
+            if (disposed || transferred || index < 0 || index >= 4 || !observedWindBlades.Contains(cast)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            reachedWindBlades.TryGetValue(cast, out int reached);
+            reachedWindBlades[cast] = reached | (1 << index);
+            if (cast.HitSelections == null) return;
+            foreach (var hit in new List<FightBattleHitSelectionSnapshot>(cast.HitSelections))
+            {
+                if (hit?.HitEntityId != 10641 || !selectedHits.Contains(hit) || hit.Targets == null) continue;
+                foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
+                {
+                    if (!casts.ContainsKey(cast)) return;
+                    if (target == null || !target.HasScopeIndex || target.ScopeIndex != index
+                        || !sentWindHits.Add((hit, target.EffectCenterIndex, index))) continue;
+                    bridge.RecordArrival(cast, hit, target.EffectCenterIndex, index);
+                }
             }
         }
 
@@ -563,6 +607,7 @@ namespace Zjcs.Presentation.Combat
             bridge.Dispose();
             foreach (var observer in mountainWaves) if (observer != null) observer.Detach();
             foreach (var observer in slashEffects) if (observer != null) observer.Detach();
+            foreach (var observer in windBlades) if (observer != null) observer.Detach();
             transferred = true;
             return true;
         }
@@ -576,9 +621,11 @@ namespace Zjcs.Presentation.Combat
             bridge.Dispose();
             foreach (var observer in mountainWaves) if (observer != null) observer.Detach();
             foreach (var observer in slashEffects) if (observer != null) observer.Detach();
+            foreach (var observer in windBlades) if (observer != null) observer.Detach();
             step.Dispose();
             casts.Clear(); selectedHits.Clear(); jumpSlashScopes.Clear(); mountainScopes.Clear(); crossScopes.Clear();
             observedCrossEffects.Clear(); reachedCrossEffects.Clear(); sentCrossHits.Clear(); observedMountains.Clear(); reachedMountainWaves.Clear(); mountainWaves.Clear();
+            windBladeScopes.Clear(); observedWindBlades.Clear(); reachedWindBlades.Clear(); sentWindHits.Clear(); windBlades.Clear();
             slashCasters.Clear(); heavyCasters.Clear(); comboCasters.Clear(); observedComboEffects.Clear();
             reachedComboEffects.Clear(); sentComboHits.Clear(); observedSlashes.Clear(); reachedSlashes.Clear(); sentSlashes.Clear(); slashEffects.Clear();
             resolvingStatuses.Clear();

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Zjcs.Combat.Official;
 using Zjcs.Official.StoryPlayables;
 
 namespace Zjcs.Presentation.Combat
@@ -62,6 +63,68 @@ namespace Zjcs.Presentation.Combat
         {
             if (arrival == null || !slash || slash.particleCount <= 0) return;
             var callback = arrival; arrival = null; callback();
+        }
+
+        internal void Detach() { arrival = null; }
+    }
+
+    // Maps the original scope timings onto the original moving blade's animation
+    // curve, then waits for that actual animated position rather than a timer.
+    internal sealed class OfficialBattleWindBladeImpact : MonoBehaviour
+    {
+        private Animator blade;
+        private ParticleSystem visibleBlade;
+        private float[] positions;
+        private int next;
+        private Action<int> arrival;
+
+        internal static OfficialBattleWindBladeImpact Attach(GameObject prefab, MyPlayable playable,
+            FightBattleHitEntity hit, Action<int> arrival)
+        {
+            if (!prefab || !playable || hit == null || hit.ScopeEntries == null || arrival == null) return null;
+            var sequence = prefab.GetComponent<MyPlayableSequence>();
+            if (!sequence || sequence.myPlayables == null) return null;
+            float effectStart = -1f; int effectCount = 0;
+            foreach (var entry in sequence.myPlayables)
+                if (entry?.myPlayable && entry.myPlayable.name == "effect (2)")
+                { effectStart = entry.myTime; effectCount++; }
+            if (effectCount != 1 || effectStart < 0f || hit.ScopeEntries.Count != 4) return null;
+            Animator blade = null; ParticleSystem visible = null;
+            foreach (var value in playable.GetComponentsInChildren<Animator>(true))
+                if (value.name == "ani") { if (blade) return null; blade = value; }
+            foreach (var value in playable.GetComponentsInChildren<ParticleSystem>(true))
+                if (value.name == "fengren liang") { if (visible) return null; visible = value; }
+            if (!blade || !visible || !blade.runtimeAnimatorController) return null;
+            AnimationClip clip = null;
+            foreach (var value in blade.runtimeAnimatorController.animationClips)
+                if (value && value.name == "Eff_Skill_Windknife") { if (clip) return null; clip = value; }
+            if (!clip) return null;
+            var positions = new float[hit.ScopeEntries.Count];
+            var sample = new GameObject("Wind blade animation sample");
+            try
+            {
+                for (int index = 0; index < positions.Length; index++)
+                {
+                    var entry = hit.ScopeEntries[index];
+                    if (entry == null || entry.Position.X != 0 || entry.Position.Y != index + 1) return null;
+                    float time = hit.Delay + entry.Delay - effectStart;
+                    if (float.IsNaN(time) || float.IsInfinity(time) || time < 0f || time > clip.length) return null;
+                    clip.SampleAnimation(sample, time);
+                    positions[index] = sample.transform.localPosition.y;
+                    if (index > 0 && positions[index] <= positions[index - 1]) return null;
+                }
+            }
+            finally { Destroy(sample); }
+            var observer = playable.gameObject.AddComponent<OfficialBattleWindBladeImpact>();
+            observer.blade = blade; observer.visibleBlade = visible; observer.positions = positions; observer.arrival = arrival;
+            return observer;
+        }
+
+        private void LateUpdate()
+        {
+            if (arrival == null || !blade || !visibleBlade || visibleBlade.particleCount <= 0) return;
+            float position = blade.transform.localPosition.y;
+            while (arrival != null && next < positions.Length && position >= positions[next]) arrival(next++);
         }
 
         internal void Detach() { arrival = null; }

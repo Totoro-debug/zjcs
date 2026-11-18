@@ -57,6 +57,7 @@ namespace Zjcs.Combat.Official {
  }
 }
 namespace Zjcs.Presentation.Combat {
+ internal sealed class OfficialBattleWindBladeImpact {internal static OfficialBattleWindBladeImpact Last;private Action<int> arrival;internal static OfficialBattleWindBladeImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,FightBattleHitEntity hit,Action<int> a){Last=new OfficialBattleWindBladeImpact{arrival=a};return Last;}internal void Trigger(int index){arrival?.Invoke(index);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleMountainWaveImpact {internal static OfficialBattleMountainWaveImpact Last;private Action<int> arrival;internal static OfficialBattleMountainWaveImpact Attach(MyPlayable p,Action<int> a){Last=new OfficialBattleMountainWaveImpact{arrival=a};return Last;}internal void Trigger(int wave){arrival?.Invoke(wave);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleSlashImpact {internal static OfficialBattleSlashImpact Last;internal string Particle;private Action arrival;internal static OfficialBattleSlashImpact Attach(MyPlayable p,string particle,Action a){Last=new OfficialBattleSlashImpact{arrival=a,Particle=particle};return Last;}internal void Trigger(){arrival?.Invoke();}internal void Detach(){arrival=null;}}
  public class OfficialBattleSkillEntityPlayback {public event Action<FightBattleSkillCastEvent,EcEntityIdentifier,GameObject,MyPlayable> SkillGraphPlayableStarted;public void CompleteLiveCast(FightBattleSkillCastEvent c,EcEntityIdentifier id,float t){} public void Graph(FightBattleSkillCastEvent c,string prefab="playable11120",string leaf="effect"){SkillGraphPlayableStarted?.Invoke(c,new EcEntityIdentifier(),new GameObject{name=prefab},new MyPlayable{name=leaf});} }
@@ -77,6 +78,25 @@ namespace Zjcs.Presentation.Combat {
   private static OfficialBattleLiveImpactSession NewSession(){return new OfficialBattleLiveImpactSession(new FightBattleCheckpoint(),_=>new FightBattleExecutor(),new OfficialBattleSkillEntityPlayback(),0,1,true);}
   private static FightBattleMovementEvent Prepare(){var move=new FightBattleMovementEvent{UnitId=4};FightBattleImpactLatch.Last.Pending=new FightBattlePreparedMovement{Movement=move,HasBlockedPosition=true,BlockedPosition=new FightGridPoint(6,7)};return move;}
   public static void Run(){
+   {
+    var hit=new FightBattleHitEntity{EntityId=10641,ScopeEntries=new List<FightBattleHitScopeEntry>()};
+    for(int i=1;i<=4;i++)hit.ScopeEntries.Add(new FightBattleHitScopeEntry{Position=new FightGridPoint(0,i)});
+    var skill=new FightBattleSkillDefinition{EntityId=10640,HitGraphEntities=new List<FightBattleHitEntity>{hit}};
+    var cp=new FightBattleCheckpoint{Units=new List<FightBattleUnitState>{new FightBattleUnitState{Id=1,Skills=new List<FightBattleSkillDefinition>{skill}}}};
+    var views=new OfficialBattleSkillEntityPlayback();var cast=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10640,HitSelections=new List<FightBattleHitSelectionSnapshot>()};
+    using(var session=new OfficialBattleLiveImpactSession(cp,_=>new FightBattleExecutor(),views,0,1,true)){
+     OfficialBattleImpactViewBridge.Arrivals.Clear();FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=cast};session.Pump(0,StartCast);
+     OfficialBattleWindBladeImpact.Last=null;views.Graph(cast,"playable10640","effect (1)");Check(OfficialBattleWindBladeImpact.Last==null,"Wind buildup cannot deliver a hit");
+     views.Graph(cast,"playable10640","effect (2)");var observer=OfficialBattleWindBladeImpact.Last;Check(observer!=null,"Original wind blade was not observed");
+     observer.Trigger(0);Check(OfficialBattleImpactViewBridge.Arrivals.Count==0,"An early blade fabricated its hit selection");
+     var selection=new FightBattleHitSelectionSnapshot{HitEntityId=10641,Targets=new List<FightBattleHitSelectionSnapshot.TargetOccurrence>()};
+     for(int i=0;i<4;i++)selection.Targets.Add(new FightBattleHitSelectionSnapshot.TargetOccurrence{HasScopeIndex=true,ScopeIndex=i});
+     cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartCast);
+     Check(OfficialBattleImpactViewBridge.Arrivals.Count==1&&OfficialBattleImpactViewBridge.Arrivals[0]==0,"The first blade scope was not retained");
+     for(int i=1;i<4;i++){observer.Trigger(i);observer.Trigger(i);Check(OfficialBattleImpactViewBridge.Arrivals.Count==i+1&&OfficialBattleImpactViewBridge.Arrivals[i]==i,"Blade scope was missing or repeated");}
+     session.Dispose();observer.Trigger(0);Check(OfficialBattleImpactViewBridge.Arrivals.Count==4,"A disposed blade accepted a stale callback");
+    }
+   }
    {
     var hit=new FightBattleHitEntity{EntityId=10601,ScopeEntries=new List<FightBattleHitScopeEntry>{new FightBattleHitScopeEntry{Position=new FightGridPoint(0,1)}}};
     var skill=new FightBattleSkillDefinition{EntityId=10600,HitGraphEntities=new List<FightBattleHitEntity>{hit}};

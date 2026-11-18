@@ -19,6 +19,11 @@ namespace Zjcs.Official.StoryPlayables
 namespace UnityEngine { public class GameObject { public string name; } }
 namespace Zjcs.Presentation.Combat
 {
+    internal sealed class OfficialBattleWindBladeImpact
+    {
+        internal static OfficialBattleWindBladeImpact Attach(GameObject prefab, MyPlayable playable, FightBattleHitEntity hit, Action<int> arrival) => null;
+        internal void Detach() { }
+    }
     internal sealed class OfficialBattleMountainWaveImpact
     {
         internal static OfficialBattleMountainWaveImpact Attach(MyPlayable playable, Action<int> arrival) => null;
