@@ -312,6 +312,8 @@ def main():
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleImpactViewBridge.cs',
         'unity/Assets/Game/Runtime/Offline/Combat/FightBattleImpactLatch.cs',
+        'unity/Assets/Game/Runtime/Offline/Combat/FightBattleIsolatedStep.cs',
+        'unity/Assets/Game/Runtime/Offline/Combat/FightBattleIsolatedStep.cs.meta',
         'unity/Assets/Game/Runtime/Official/Combat/FightBattleImpactGate.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/Zjcs.Presentation.Combat.asmdef',
         'unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleNativePlayableScope.cs',

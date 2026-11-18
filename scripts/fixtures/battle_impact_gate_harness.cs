@@ -316,6 +316,69 @@ public static class BattleImpactGateHarness
             Check(oldRecorded.Targets.All(t => !t.HasScopeIndex),
                 "A legacy checkpoint invented scope indices that were not recorded");
         }
+        {
+            var cp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                Grid = new FightBattleGrid { Width = 20, Height = 20, DefaultGroundType = 2 } };
+            var actor = Unit(1, 1, 7, 7, formula); var target = Unit(2, 2, 10, 7, formula);
+            var skill = catalog.CreateSkill(10800, 0, 10028, 2, 20, 1,
+                catalog.CalculateSkillProps(10800, 2, 20, 1).Select(p => new FightPropertyValue { Id = p.Key, Value = p.Value }).ToList());
+            skill.LimitedTimes = 1; actor.Skills.Add(skill); actor.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
+            cp.Units.AddRange(new[] { actor, target }); var wave = new FightBattleWaveState(); wave.UnitIds.Add(2); cp.Waves.Add(wave);
+            FightBattleExecutor.Begin(cp, formula, new FightDamageSettlement(), catalog, items);
+            string committed = FightBattleCheckpointSerializer.Save(cp);
+            var ordinary = FightBattleCheckpointSerializer.Load(committed);
+            FightBattleExecutor.Restore(ordinary, formula, new FightDamageSettlement(), catalog, items).Step(0, 1);
+            FightBattleExecutor Restore(FightBattleCheckpoint state) =>
+                FightBattleExecutor.Restore(state, formula, new FightDamageSettlement(), catalog, items);
+            using (var isolated = new FightBattleIsolatedStep(cp, Restore, 0, 1))
+            {
+                FightBattlePreparedCast preparation = null;
+                Check(SpinWait.SpinUntil(() => isolated.Latch.TryTakePreparation(out preparation), 20000),
+                    "The isolated step did not offer the actual cast");
+                Check(FightBattleCheckpointSerializer.Save(cp) == committed && target.Hp == 1000000,
+                    "A running step changed its committed checkpoint");
+                isolated.Latch.CompletePreparation(preparation);
+                FightBattleSelectedHit selected = null;
+                Check(SpinWait.SpinUntil(() => isolated.Latch.TryTakeSelection(out selected), 20000),
+                    "The isolated step did not offer the selected hit");
+                isolated.Latch.CompleteSelection(selected);
+                FightBattlePendingImpact impact = null;
+                Check(SpinWait.SpinUntil(() => isolated.Latch.TryTake(out impact), 20000),
+                    "The isolated step did not await the impact");
+                isolated.Latch.RecordArrival(impact.Cast, impact.HitSelection, impact.EffectCenterIndex,
+                    impact.HasScopeIndex ? impact.ScopeIndex : -1);
+                FightBattleSettledImpact settled = null;
+                Check(SpinWait.SpinUntil(() => isolated.Latch.TryTakeSettlement(out settled), 20000)
+                    && settled.Damage.AfterHp < 1000000 && target.Hp == 1000000
+                    && FightBattleCheckpointSerializer.Save(cp) == committed,
+                    "Impact settlement escaped into the committed checkpoint");
+                isolated.Latch.CompleteSettlement(settled);
+                FightBattleExecutor completedExecutor = null; FightBattleExecutionResult completed = null;
+                Check(SpinWait.SpinUntil(() => isolated.TryTakeCompleted(out completedExecutor, out completed), 20000)
+                    && completed != null && ReferenceEquals(completedExecutor.State, completed.Checkpoint)
+                    && completedExecutor.ImpactGate == null && FightBattleCheckpointSerializer.Save(cp) == committed
+                    && FightBattleCheckpointSerializer.Save(completed.Checkpoint) == FightBattleCheckpointSerializer.Save(ordinary),
+                    "The isolated completed step changed deterministic results or its original checkpoint");
+                bool duplicateTransfer = false;
+                try { isolated.TryTakeCompleted(out _, out _); }
+                catch (InvalidOperationException) { duplicateTransfer = true; }
+                Check(duplicateTransfer, "The isolated result was transferred more than once");
+            }
+            bool aliased = false;
+            try { using var invalid = new FightBattleIsolatedStep(cp, _ => Restore(cp), 0, 1); }
+            catch (InvalidOperationException) { aliased = true; }
+            Check(aliased && FightBattleCheckpointSerializer.Save(cp) == committed,
+                "An executor bound to the committed checkpoint was accepted");
+            using (var canceled = new FightBattleIsolatedStep(cp, Restore, 0, 1))
+            {
+                Check(SpinWait.SpinUntil(() => canceled.Latch.TryTakePreparation(out _), 20000),
+                    "The canceled isolated step did not reach a safe rendezvous");
+                canceled.Dispose();
+                Check(SpinWait.SpinUntil(() => canceled.IsCompleted, 20000)
+                    && FightBattleCheckpointSerializer.Save(cp) == committed,
+                    "Canceling a partial isolated step changed the committed checkpoint");
+            }
+        }
         foreach (bool removed in new[] { false, true })
         {
             var cp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,

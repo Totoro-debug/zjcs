@@ -474,8 +474,9 @@ namespace Zjcs.Editor.Combat
                 var playable = instance.GetComponent<MyPlayable>();
                 if (playable) playable.OnPlay += value => played.Add(new Played { Name = instance.name.Replace("(Clone)", ""), At = Time.time });
             });
+            FightBattleUnitState[] fireDisplayUnits = null;
             using var fireViews = new OfficialBattleSkillEntityPlayback(fireRoot, new OfficialBattleGridMapper(fireRoot, grid),
-                fireScope, id => fireUnits.FirstOrDefault(value => value.Id == id));
+                fireScope, id => fireDisplayUnits?.FirstOrDefault(value => value.Id == id));
             fireViews.BindDamageUI(fireRoot, 0);
             var fire = liveCatalog.CreateSkill(10800, 0, 10028, 2, 20, 1,
                 liveCatalog.CalculateSkillProps(10800, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
@@ -483,11 +484,13 @@ namespace Zjcs.Editor.Combat
             var cp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
                 Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
             cp.Units.AddRange(fireUnits); var fireWave = new FightBattleWaveState(); fireWave.UnitIds.Add(2); cp.Waves.Add(fireWave);
-            var executor = FightBattleExecutor.Begin(cp, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
-            using var fireLatch = new FightBattleImpactLatch();
+            FightBattleExecutor.Begin(cp, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+            string committedFire = FightBattleCheckpointSerializer.Save(cp);
+            fireDisplayUnits = FightBattleCheckpointSerializer.Load(committedFire).Units.ToArray();
+            using var fireStep = new FightBattleIsolatedStep(cp, copy => FightBattleExecutor.Restore(copy,
+                formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), 0, 1);
+            var fireLatch = fireStep.Latch;
             using var fireBridge = new OfficialBattleImpactViewBridge(fireViews, fireLatch);
-            executor.ImpactGate = fireLatch;
-            var fireStep = System.Threading.Tasks.Task.Run(() => executor.Step(0, 1));
             FightBattlePreparedCast firePrepared = null;
             float deadline = Time.realtimeSinceStartup + 10f;
             while (!fireLatch.TryTakePreparation(out firePrepared) && Time.realtimeSinceStartup < deadline) yield return null;
@@ -524,7 +527,8 @@ namespace Zjcs.Editor.Combat
                 yield return null;
             }
             Require(fireDamage != null && fireArrival && fireDamage.Damage.BeforeHp == 1000000
-                && fireDamage.Damage.AfterHp < 1000000 && fireUnits[1].Hp == fireDamage.Damage.AfterHp
+                && fireDamage.Damage.AfterHp < 1000000 && fireUnits[1].Hp == 1000000
+                && fireDisplayUnits[1].Hp == 1000000 && FightBattleCheckpointSerializer.Save(cp) == committedFire
                 && fireDamage.Damage.HasDamageTriggerStatus && !fireDamage.Damage.IsDamageTriggerStatus
                 && played.Skip(beforeFire).Any(x => x.Name == "playable10801"),
                 "Official fireball did not settle its actual HP at the native explosion.");
@@ -535,8 +539,11 @@ namespace Zjcs.Editor.Combat
             long fireDamageValue = fireDamage.Damage.DamageValue;
             bool hpRefreshAtImpact = false;
             Require(fireBridge.TryQueueSettlement(fireDamage, fireSkillId, damage => {
-                hpRefreshAtImpact = !fireStep.IsCompleted && fireUnits[1].Hp == damage.AfterHp
-                    && damageNotifications == 1 && observedDamage == fireDamageValue;
+                fireDisplayUnits[1].Hp = damage.AfterHp;
+                fireDisplayUnits[1].Turn.Hp = damage.AfterHp;
+                hpRefreshAtImpact = !fireStep.IsCompleted && fireUnits[1].Hp == 1000000
+                    && fireDisplayUnits[1].Hp == damage.AfterHp && damageNotifications == 1
+                    && observedDamage == fireDamageValue;
             }) && hpRefreshAtImpact,
                 "Actual fireball settlement must show damage and allow HP refresh at the same impact.");
             var floats = floatRoot.GetComponentsInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUI>();
@@ -547,13 +554,16 @@ namespace Zjcs.Editor.Combat
             Capture("fireball-damage-impact.png");
             deadline = Time.realtimeSinceStartup + 10f;
             while (!fireStep.IsCompleted && Time.realtimeSinceStartup < deadline) yield return null;
-            Require(fireStep.IsCompleted && !fireStep.IsFaulted && !fireStep.IsCanceled,
-                "The official fireball action did not complete after impact.");
+            Require(fireStep.IsCompleted, "The official fireball action did not complete after impact.");
+            Require(fireStep.TryTakeCompleted(out var completedExecutor, out var completedFire)
+                && ReferenceEquals(completedExecutor.State, completedFire.Checkpoint)
+                && FightBattleCheckpointSerializer.Save(cp) == committedFire,
+                "The completed fireball must transfer its isolated checkpoint without changing the original.");
             bool duplicateDamageRejected = false;
             try { fireViews.QueueSettledDamage(fireCast, fireSkillId, fireDamage.Damage); }
             catch (InvalidOperationException) { duplicateDamageRejected = true; }
             Require(duplicateDamageRejected, "The same impact cannot create duplicate native damage entities.");
-            var restoredFire = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(cp));
+            var restoredFire = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(completedFire.Checkpoint));
             var restoredEvent = restoredFire.Receipts.Last().Event;
             var restoredCast = restoredEvent.SkillCasts.Single(c => c.SkillItemId == 10028);
             var restoredDamage = restoredEvent.DamageEvents.Single(d => d.DamageId == fireDamage.Damage.DamageId);
@@ -569,7 +579,7 @@ namespace Zjcs.Editor.Combat
             Require(damageNotifications == 2 && observedDamage == fireDamageValue,
                 "The saved receipt must still play the same original damage once at its boundary.");
             fireViews.HitSelectionViewArrived -= fireObserver;
-            fireBridge.Dispose(); fireLatch.Dispose(); fireViews.Dispose();
+            fireBridge.Dispose(); fireStep.Dispose(); fireViews.Dispose();
             Destroy(fireRoot.gameObject);
 
 
