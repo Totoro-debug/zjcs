@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Official.World.NativeTerrain.Common;
 using Zjcs.Official.StoryPlayables;
@@ -13,13 +14,16 @@ namespace Zjcs.Official.World.NativeTerrain.Common
 namespace Zjcs.Official.StoryPlayables
 {
     public struct EcEntityIdentifier { public int Value; public EcEntityIdentifier(int value) { Value = value; } }
+    public class MyPlayable { }
 }
+namespace UnityEngine { public class GameObject { } }
 namespace Zjcs.Presentation.Combat
 {
     // Drives the production session with real battle rules and a controlled native-view boundary.
     public sealed class OfficialBattleSkillEntityPlayback
     {
         public event Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, Pos2d, int> HitSelectionViewArrived;
+        public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted;
         public FightBattleSkillCastEvent Cast;
         public FightBattleHitSelectionSnapshot Selection;
         public float SelectionElapsed, CompletionElapsed;
@@ -40,6 +44,7 @@ namespace Zjcs.Presentation.Combat
         public void CompleteLiveCast(FightBattleSkillCastEvent cast, EcEntityIdentifier id, float elapsed)
         { if (!ReferenceEquals(cast, Cast)) throw new InvalidOperationException("Wrong completed cast"); Completions++; CompletionElapsed = elapsed; }
         public void Arrive(int scope) => HitSelectionViewArrived?.Invoke(Cast, Selection, 0, new Pos2d(10, 7), scope);
+        public void StartGraph(EcEntityIdentifier id) => SkillGraphPlayableStarted?.Invoke(Cast, id, new GameObject(), new MyPlayable());
     }
 
     public static class BattleLiveImpactSessionHarness
@@ -128,6 +133,38 @@ namespace Zjcs.Presentation.Combat
                     && earlyViews.Damages == 1 && earlyViews.Completions == 1
                     && FightBattleCheckpointSerializer.Save(cp) == committed,
                     "An arrival during selection delivery did not settle without a lost wakeup");
+            }
+
+            var graphViews = new OfficialBattleSkillEntityPlayback();
+            using (var graphSession = new OfficialBattleLiveImpactSession(cp,
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), graphViews, 0, 1))
+            {
+                bool StartGraphCast(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = new EcEntityIdentifier(47); return true; }
+                Check(SpinWait.SpinUntil(() => { graphSession.Pump(0f, StartGraphCast); return graphViews.Selection != null; }, 20000),
+                    "The graph fixture did not offer its actual selection");
+                var hit = graphViews.Selection.Targets.Single(t => t.TargetId == 2);
+                int scope = hit.HasScopeIndex ? hit.ScopeIndex : -1;
+                bool outsideRejected = false, otherCastRejected = false, otherScopeRejected = false, otherIdRejected = false;
+                try { graphSession.RecordGraphImpact(graphViews.Cast, graphViews.Selection, 0, scope); }
+                catch (InvalidOperationException) { outsideRejected = true; }
+                graphSession.SkillGraphPlayableStarted += (cast, id, prefab, leaf) => {
+                    try { graphSession.RecordGraphImpact(new FightBattleSkillCastEvent(), graphViews.Selection, 0, scope); }
+                    catch (InvalidOperationException) { otherCastRejected = true; }
+                    try { graphSession.RecordGraphImpact(cast, graphViews.Selection, 0, scope + 1); }
+                    catch (InvalidOperationException) { otherScopeRejected = true; }
+                    if (id.Value != 47) {
+                        try { graphSession.RecordGraphImpact(cast, graphViews.Selection, 0, scope); }
+                        catch (InvalidOperationException) { otherIdRejected = true; }
+                    } else graphSession.RecordGraphImpact(cast, graphViews.Selection, 0, scope);
+                };
+                graphViews.StartGraph(new EcEntityIdentifier(48));
+                Check(outsideRejected && otherCastRejected && otherScopeRejected && otherIdRejected && graphViews.Damages == 0,
+                    "An unrelated cast, scope, entity or non-playback call released the graph impact");
+                graphViews.StartGraph(new EcEntityIdentifier(47));
+                Check(graphViews.Damages == 1 && SpinWait.SpinUntil(() => graphSession.IsCompleted, 20000)
+                    && graphViews.Completions == 1 && FightBattleCheckpointSerializer.Save(cp) == committed,
+                    "The matching original graph callback did not settle in its playback frame");
             }
 
             var jumpCp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,

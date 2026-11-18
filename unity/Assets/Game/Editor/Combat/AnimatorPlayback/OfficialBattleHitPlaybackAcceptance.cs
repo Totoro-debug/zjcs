@@ -623,6 +623,10 @@ namespace Zjcs.Editor.Combat
             FightBattleSkillCastEvent sessionCast = null;
             FightBattleDamageEvent sessionDamage = null;
             EcEntityIdentifier sessionSkillId = default;
+            var sessionGraphStarts = new List<(FightBattleSkillCastEvent Cast, EcEntityIdentifier Id, string Name)>();
+            liveSession.SkillGraphPlayableStarted += (cast, id, prefab, leaf) => {
+                if (prefab.name == "playable10800") sessionGraphStarts.Add((cast, id, leaf.name));
+            };
             int startAttempts = 0;
             bool allowSessionStart = false, sessionArrival = false, sessionHpRefreshed = false, sessionCaptured = false;
             int beforeSessionFire = played.Count;
@@ -672,6 +676,9 @@ namespace Zjcs.Editor.Combat
             Require(new[] { "anim", "effect" }.All(name => graphStarts.Any(value => ReferenceEquals(value.Cast, sessionCast)
                 && value.Id.Equals(sessionSkillId) && value.Prefab.name == "playable10800" && value.Leaf.name == name)),
                 "The original animation and delayed effect leaves must each retain their actual cast identity.");
+            Require(new[] { "anim", "effect" }.All(name => sessionGraphStarts.Any(value => ReferenceEquals(value.Cast, sessionCast)
+                && value.Id.Equals(sessionSkillId) && value.Name == name)),
+                "The live session must forward the original action and effect callbacks for its exact cast.");
             yield return null;
             Capture("session-fireball-rendered.png");
             Require(liveSession.TryTakeCompleted(out var sessionExecutor, out var sessionResult)

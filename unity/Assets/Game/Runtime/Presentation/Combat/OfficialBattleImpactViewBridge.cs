@@ -54,7 +54,12 @@ namespace Zjcs.Presentation.Combat
 
         private void OnArrival(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot selection,
             int centerIndex, Pos2d position, int scopeIndex)
+            => RecordArrival(cast, selection, centerIndex, scopeIndex);
+
+        internal void RecordArrival(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot selection,
+            int centerIndex, int scopeIndex)
         {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleImpactViewBridge));
             latch.RecordArrival(cast, selection, centerIndex, scopeIndex, out long revision);
             if (revision > 0) WorkerReleasedByArrival?.Invoke(revision);
         }

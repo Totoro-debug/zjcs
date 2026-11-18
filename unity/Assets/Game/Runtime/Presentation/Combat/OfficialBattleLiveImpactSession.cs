@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Official.StoryPlayables;
 
@@ -25,6 +26,7 @@ namespace Zjcs.Presentation.Combat
         private readonly OfficialBattleImpactViewBridge bridge;
         private readonly Dictionary<FightBattleSkillCastEvent, ActiveCast> casts =
             new Dictionary<FightBattleSkillCastEvent, ActiveCast>();
+        private readonly HashSet<FightBattleHitSelectionSnapshot> selectedHits = new HashSet<FightBattleHitSelectionSnapshot>();
         private FightBattlePreparedCast preparation;
         private FightBattleSelectedHit selection;
         private FightBattleSettledImpact settlement;
@@ -34,11 +36,14 @@ namespace Zjcs.Presentation.Combat
         private bool disposed, transferred, pumping;
         private StartCast lastStartCast;
         private Action<FightBattleDamageEvent> lastAfterDamageStarted;
+        private FightBattleSkillCastEvent currentGraphCast;
+        private EcEntityIdentifier currentGraphSkillId;
 
         public bool IsCompleted => step.IsCompleted;
         public FightBattleSettledImpact PendingSettlement => settlement ?? resolvingStatus;
         /// <summary>A nested presentation interrupted status resolution; the host must not advance this step.</summary>
         public bool StatusResolutionBlocked => resolvingStatus != null && settlement == null;
+        public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted;
 
         public OfficialBattleLiveImpactSession(FightBattleCheckpoint checkpoint,
             Func<FightBattleCheckpoint, FightBattleExecutor> restore,
@@ -48,6 +53,7 @@ namespace Zjcs.Presentation.Combat
             step = new FightBattleIsolatedStep(checkpoint, restore, sequence, counter);
             bridge = new OfficialBattleImpactViewBridge(views, step.Latch);
             bridge.WorkerReleasedByArrival += OnWorkerReleasedByArrival;
+            views.SkillGraphPlayableStarted += OnSkillGraphPlayableStarted;
         }
 
         /// <summary>
@@ -97,6 +103,7 @@ namespace Zjcs.Presentation.Combat
                     if (selection != null)
                     {
                         var active = Find(selection.Cast);
+                        selectedHits.Add(selection.Selection);
                         long revision = bridge.QueueSelection(selection, active.Id, clock - active.Started);
                         selection = null; progressed = true;
                         step.Latch.WaitForWorkerBoundary(revision);
@@ -143,6 +150,35 @@ namespace Zjcs.Presentation.Combat
             Pump(0f, lastStartCast, lastAfterDamageStarted);
         }
 
+        private void OnSkillGraphPlayableStarted(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
+            GameObject prefab, MyPlayable playable)
+        {
+            var previousCast = currentGraphCast;
+            var previousId = currentGraphSkillId;
+            currentGraphCast = cast; currentGraphSkillId = id;
+            try { SkillGraphPlayableStarted?.Invoke(cast, id, prefab, playable); }
+            finally { currentGraphCast = previousCast; currentGraphSkillId = previousId; }
+        }
+
+        /// <summary>Associates a verified original graph leaf with its selected hit during that leaf's playback callback.</summary>
+        public void RecordGraphImpact(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot hit,
+            int centerIndex, int scopeIndex)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleLiveImpactSession));
+            if (transferred) throw new InvalidOperationException("The live step was already transferred.");
+            if (cast == null || !ReferenceEquals(currentGraphCast, cast) || hit == null || !selectedHits.Contains(hit)
+                || cast.HitSelections == null || !cast.HitSelections.Contains(hit)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(currentGraphSkillId))
+                throw new InvalidOperationException("The impact does not belong to the currently playing selected cast.");
+            bool selected = false;
+            if (hit.Targets != null) foreach (var target in hit.Targets)
+                if (target != null && target.EffectCenterIndex == centerIndex
+                    && (scopeIndex < 0 ? !target.HasScopeIndex : target.HasScopeIndex && target.ScopeIndex == scopeIndex))
+                { selected = true; break; }
+            if (!selected) throw new InvalidOperationException("The graph impact has no matching selected occurrence.");
+            bridge.RecordArrival(cast, hit, centerIndex, scopeIndex);
+        }
+
         /// <summary>Lets the host deliver an unsupported result while the worker remains held.</summary>
         public bool TryCompletePendingSettlement(Func<FightBattlePendingImpact, FightBattleDamageEvent, bool> deliver)
         {
@@ -179,6 +215,7 @@ namespace Zjcs.Presentation.Combat
             if (pumping) throw new InvalidOperationException("The live step is already being pumped.");
             if (!step.TryTakeCompleted(out executor, out result)) return false;
             bridge.WorkerReleasedByArrival -= OnWorkerReleasedByArrival;
+            views.SkillGraphPlayableStarted -= OnSkillGraphPlayableStarted;
             bridge.Dispose();
             transferred = true;
             return true;
@@ -189,9 +226,10 @@ namespace Zjcs.Presentation.Combat
             if (disposed) return;
             disposed = true;
             bridge.WorkerReleasedByArrival -= OnWorkerReleasedByArrival;
+            views.SkillGraphPlayableStarted -= OnSkillGraphPlayableStarted;
             bridge.Dispose();
             step.Dispose();
-            casts.Clear();
+            casts.Clear(); selectedHits.Clear();
         }
     }
 }
