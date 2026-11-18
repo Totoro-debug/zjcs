@@ -30,12 +30,19 @@ namespace Zjcs.Presentation.Combat
                 views.QueueSelectedHit(cast, skillId, selection, elapsedSinceCast));
         }
 
-        /// <summary>Returns false without releasing an incomplete or unsupported damage result.</summary>
-        public bool TryQueueSettlement(FightBattleSettledImpact settlement, EcEntityIdentifier skillId)
+        /// <summary>
+        /// Returns false without releasing an incomplete or unsupported damage result.
+        /// The optional callback can refresh HP while the executor is still suspended.
+        /// </summary>
+        public bool TryQueueSettlement(FightBattleSettledImpact settlement, EcEntityIdentifier skillId,
+            Action<FightBattleDamageEvent> afterDamageStarted = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleImpactViewBridge));
-            return latch.TryCompleteSettlement(settlement, (impact, damage) =>
-                views.QueueSettledDamage(impact.Cast, skillId, damage));
+            return latch.TryCompleteSettlement(settlement, (impact, damage) => {
+                if (!views.QueueSettledDamage(impact.Cast, skillId, damage)) return false;
+                afterDamageStarted?.Invoke(damage);
+                return true;
+            });
         }
 
         private void OnArrival(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot selection,

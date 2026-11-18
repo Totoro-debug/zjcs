@@ -87,9 +87,11 @@ namespace Zjcs.Presentation.Combat
                 catch (InvalidOperationException) { reentrantSettlementRejected = true; }
                 return ReferenceEquals(owner, cast) && ReferenceEquals(value, actualDamage) && !settledWorker.IsCompleted;
             };
-            Check(bridge.TryQueueSettlement(settled, new EcEntityIdentifier(42))
-                && reentrantSettlementRejected && settledWorker.Wait(20000),
-                "The actual damage was not shown before the executor continued");
+            bool hpRefreshed = false;
+            Check(bridge.TryQueueSettlement(settled, new EcEntityIdentifier(42), damage => {
+                hpRefreshed = ReferenceEquals(damage, actualDamage) && damage.AfterHp == 70 && !settledWorker.IsCompleted;
+            }) && hpRefreshed && reentrantSettlementRejected && settledWorker.Wait(20000),
+                "The actual damage and HP were not shown before the executor continued");
             cast = new FightBattleSkillCastEvent();
             var first = Task.Run(() => latch.AwaitImpact(Pending(0)));
             Check(SpinWait.SpinUntil(() => latch.TryTake(out _), 20000), "The first impact was not offered to the host");

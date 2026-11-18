@@ -533,9 +533,12 @@ namespace Zjcs.Editor.Combat
             Require(!fireViews.QueueSettledDamage(fireCast, fireSkillId, incomplete) && damageNotifications == 0,
                 "An incomplete damage result cannot start the native damage view.");
             long fireDamageValue = fireDamage.Damage.DamageValue;
-            Require(fireBridge.TryQueueSettlement(fireDamage, fireSkillId)
-                && damageNotifications == 1 && observedDamage == fireDamageValue,
-                "Actual fireball settlement must start its original damage entity exactly once.");
+            bool hpRefreshAtImpact = false;
+            Require(fireBridge.TryQueueSettlement(fireDamage, fireSkillId, damage => {
+                hpRefreshAtImpact = !fireStep.IsCompleted && fireUnits[1].Hp == damage.AfterHp
+                    && damageNotifications == 1 && observedDamage == fireDamageValue;
+            }) && hpRefreshAtImpact,
+                "Actual fireball settlement must show damage and allow HP refresh at the same impact.");
             var floats = floatRoot.GetComponentsInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUI>();
             Require(floats.Any(ui => ui.EntityId == new EcEntityIdentifier(1, 2)
                 && ui.GetComponentsInChildren<TextMesh>(true).Any(text =>
