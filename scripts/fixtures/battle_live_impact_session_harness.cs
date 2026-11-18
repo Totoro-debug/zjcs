@@ -139,6 +139,31 @@ namespace Zjcs.Presentation.Combat
             try { session.TryTakeCompleted(out _, out _); }
             catch (InvalidOperationException) { duplicate = true; }
             Check(duplicate, "The live result was transferred twice");
+            {
+                var timed = FightBattleCheckpointSerializer.Load(committed);
+                var clock = new FightBattleStatusSeconds(timed, catalog, new FightRandomStream(timed.RandomSeed));
+                clock.Enqueue(0, 2, true, false, false, catalog.CreateStatus(24269, 2, 1, 1, 10580, 10006, 2, 20, 1));
+                string timedCommitted = FightBattleCheckpointSerializer.Save(timed);
+                var timedViews = new OfficialBattleSkillEntityPlayback();
+                using var timedSession = new OfficialBattleLiveImpactSession(timed,
+                    copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), timedViews, 0, 1);
+                bool Hold(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) { id = default; return false; }
+                System.Threading.Tasks.Task<bool> tick = null;
+                Check(SpinWait.SpinUntil(() => { timedSession.Pump(0, Hold); return timedSession.TryAdvanceStatusSeconds(0, out tick); }, 20000),
+                    "A held live session did not accept its status clock");
+                Check(SpinWait.SpinUntil(() => { timedSession.Pump(0, Hold); return timedSession.PendingSecondsStatus != null; }, 20000)
+                    && !tick.IsCompleted, "An undelivered native status must keep the worker suspended");
+                int mainThread = Thread.CurrentThread.ManagedThreadId, notices = 0;
+                timedSession.SecondsStatusChanged += status => {
+                    Check(Thread.CurrentThread.ManagedThreadId == mainThread && status.Kind == FightBattleStatusViewEventKind.Start
+                        && status.Status.ClassId == 24269, "A status notice lost its owner thread or original state");
+                    notices++;
+                };
+                Check(SpinWait.SpinUntil(() => { timedSession.Pump(0, Hold); return tick.IsCompleted; }, 20000)
+                    && tick.GetAwaiter().GetResult() && notices == 1
+                    && FightBattleCheckpointSerializer.Save(timed) == timedCommitted,
+                    "The actual status was duplicated or published into the committed checkpoint");
+            }
             var earlyViews = new OfficialBattleSkillEntityPlayback { ArriveImmediately = true };
             using (var early = new OfficialBattleLiveImpactSession(cp,
                 copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), earlyViews, 0, 1))

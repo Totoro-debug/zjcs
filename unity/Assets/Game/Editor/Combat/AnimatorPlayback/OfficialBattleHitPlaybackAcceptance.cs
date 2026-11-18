@@ -1541,6 +1541,59 @@ namespace Zjcs.Editor.Combat
                 Require(gate.Start == null, "The active status clock was not exercised during the cast.");
             }
             activeAirScope.Dispose();
+            var threadedCheckpoint = FightBattleCheckpointSerializer.Load(committedFire);
+            var threadedClock = new FightBattleStatusSeconds(threadedCheckpoint, liveCatalog,
+                new FightRandomStream(threadedCheckpoint.RandomSeed));
+            threadedClock.Enqueue(0, 2, true, false, false,
+                liveCatalog.CreateStatus(24269, 2, 1, 1, 10580, 10006, 2, 20, 1));
+            string threadedCommitted = FightBattleCheckpointSerializer.Save(threadedCheckpoint);
+            var threadedOriginal = FightBattleExecutor.Restore(threadedCheckpoint, formula,
+                new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+            var threadedScope = new OfflineBattleNativePlayableScope(airRoot, null);
+            using (var threadedViews = new OfficialBattleSkillEntityPlayback(airRoot,
+                new OfficialBattleGridMapper(airRoot, grid), threadedScope,
+                id => threadedCheckpoint.Units.FirstOrDefault(value => value.Id == id)))
+            using (var threadedAir = new OfficialBattleAirComboPlayback(threadedOriginal, airRoot, threadedScope,
+                id => id == 2 ? airTarget : null))
+            using (var threadedSession = new OfficialBattleLiveImpactSession(threadedCheckpoint, copy =>
+                FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()),
+                threadedViews, 0, 1)) {
+                int mainThread = Thread.CurrentThread.ManagedThreadId;
+                var delivered = new List<string>();
+                var apply = typeof(OfficialBattleAirComboPlayback).GetMethod("ApplySecondsStatus", BindingFlags.Instance | BindingFlags.NonPublic);
+                threadedSession.SecondsStatusChanged += value => {
+                    Require(Thread.CurrentThread.ManagedThreadId == mainThread, "Native status notification left Unity's main thread.");
+                    delivered.Add(value.Kind + ":" + value.Status.ClassId);
+                    apply.Invoke(threadedAir, new object[] { value });
+                };
+                bool HoldThreadedCast(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) { id = default; return false; }
+                Task<bool> timedLaunch = null;
+                deadline = Time.realtimeSinceStartup + 10f;
+                while (!threadedSession.TryAdvanceStatusSeconds(0, out timedLaunch) && Time.realtimeSinceStartup < deadline) {
+                    threadedSession.Pump(0, HoldThreadedCast); yield return null;
+                }
+                Require(timedLaunch != null, "The isolated status clock never reached a held cast.");
+                while (!timedLaunch.IsCompleted && Time.realtimeSinceStartup < deadline) {
+                    threadedSession.Pump(0, HoldThreadedCast); yield return null;
+                }
+                Require(timedLaunch.IsCompleted && timedLaunch.GetAwaiter().GetResult()
+                    && delivered.SequenceEqual(new[] { "Start:24269" }), "The isolated airborne start was not presented once.");
+                threadedScope.Tick(.05f); threadedScope.LateTick();
+                if (airAppearance != null) Capture("threaded-airborne.png", false);
+                Task<bool> timedRecovery = null;
+                while (!threadedSession.TryAdvanceStatusSeconds(.7, out timedRecovery) && Time.realtimeSinceStartup < deadline) {
+                    threadedSession.Pump(0, HoldThreadedCast); yield return null;
+                }
+                Require(timedRecovery != null, "The isolated recovery clock never reached a held cast.");
+                while (!timedRecovery.IsCompleted && Time.realtimeSinceStartup < deadline) {
+                    threadedSession.Pump(0, HoldThreadedCast); yield return null;
+                }
+                Require(timedRecovery.IsCompleted && timedRecovery.GetAwaiter().GetResult()
+                    && delivered.SequenceEqual(new[] { "Start:24269", "End:24269", "Start:24270" })
+                    && FightBattleCheckpointSerializer.Save(threadedCheckpoint) == threadedCommitted,
+                    "The isolated recovery changed order, repeated a view or mutated the committed checkpoint.");
+            }
+            threadedScope.Dispose();
             airAppearance?.Dispose();
             Destroy(airRoot.gameObject);
 

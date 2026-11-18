@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Official.StoryPlayables;
@@ -48,6 +49,14 @@ namespace Zjcs.Presentation.Combat
         public FightBattleSettledImpact PendingSettlement => session.PendingSettlement;
         public FightBattleUnitState DisplayUnit(int unitId) => health.Find(unitId);
         public event Action<FightBattleMovementEvent> BlockedContact;
+        public event Action<FightBattleStatusViewEvent> SecondsStatusChanged
+        { add { session.SecondsStatusChanged += value; } remove { session.SecondsStatusChanged -= value; } }
+        public bool TryAdvanceStatusSeconds(double seconds, out Task<bool> completion)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleLiveGraphDriver));
+            if (transferred) throw new InvalidOperationException("The live step was already transferred.");
+            return session.TryAdvanceStatusSeconds(seconds, out completion);
+        }
         public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted
         { add { session.SkillGraphPlayableStarted += value; } remove { session.SkillGraphPlayableStarted -= value; } }
 

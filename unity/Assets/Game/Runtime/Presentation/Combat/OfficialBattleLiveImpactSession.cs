@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Official.StoryPlayables;
@@ -45,6 +46,7 @@ namespace Zjcs.Presentation.Combat
         private FightBattlePreparedMovement movement;
         private FightBattleSelectedHit selection;
         private FightBattleSettledImpact settlement;
+        private FightBattleSecondsStatusNotice secondsStatus;
         private readonly Stack<FightBattleSettledImpact> resolvingStatuses = new Stack<FightBattleSettledImpact>();
         private FightBattleCompletedCast completion;
         private float clock;
@@ -60,9 +62,18 @@ namespace Zjcs.Presentation.Combat
         public bool IsCompleted => step.IsCompleted;
         public FightBattleSettledImpact PendingSettlement => settlement ?? (resolvingStatuses.Count > 0 ? resolvingStatuses.Peek() : null);
         public FightBattlePreparedMovement PendingMovement => movement;
+        public FightBattleSecondsStatusNotice PendingSecondsStatus => secondsStatus;
         /// <summary>An outer hit still awaits its status result; nested presentation may continue.</summary>
         public bool StatusResolutionBlocked => resolvingStatuses.Count > 0 && settlement == null;
         public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted;
+        public event Action<FightBattleStatusViewEvent> SecondsStatusChanged;
+
+        public bool TryAdvanceStatusSeconds(double seconds, out Task<bool> completion)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleLiveImpactSession));
+            if (transferred) throw new InvalidOperationException("The live step was already transferred.");
+            return step.TryAdvanceStatusSeconds(seconds, out completion);
+        }
 
         public OfficialBattleLiveImpactSession(FightBattleCheckpoint checkpoint,
             Func<FightBattleCheckpoint, FightBattleExecutor> restore,
@@ -142,6 +153,16 @@ namespace Zjcs.Presentation.Combat
                 {
                     // Arrivals are keyed independently and may precede target requests.
                     while (step.Latch.TryTake(out _)) { }
+                    if (secondsStatus == null) step.Latch.TryTakeSecondsStatus(out secondsStatus);
+                    if (secondsStatus != null)
+                    {
+                        if (SecondsStatusChanged == null) return progressed;
+                        SecondsStatusChanged(secondsStatus.Event);
+                        step.Latch.CompleteSecondsStatus(secondsStatus, out long secondsRevision);
+                        secondsStatus = null; progressed = true;
+                        step.Latch.WaitForWorkerBoundary(secondsRevision);
+                        continue;
+                    }
                     if (settlement == null) step.Latch.TryTakeSettlement(out settlement);
                     if (settlement?.IsStatusResolution == true)
                     {
@@ -442,6 +463,7 @@ namespace Zjcs.Presentation.Combat
             casts.Clear(); selectedHits.Clear(); jumpSlashScopes.Clear(); mountainScopes.Clear(); observedMountains.Clear(); reachedMountainWaves.Clear(); mountainWaves.Clear();
             slashCasters.Clear(); observedSlashes.Clear(); reachedSlashes.Clear(); sentSlashes.Clear(); slashEffects.Clear();
             resolvingStatuses.Clear();
+            SecondsStatusChanged = null;
         }
     }
 }

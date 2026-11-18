@@ -27,10 +27,14 @@ namespace Zjcs.Combat.Official {
  public class FightBattlePendingImpact {public FightBattleSkillCastEvent Cast;}
  public class FightBattleSettledImpact {public bool IsStatusResolution;public FightBattlePendingImpact Impact;public FightBattleDamageEvent Damage;}
  public class FightBattleCompletedCast {public FightBattleSkillCastEvent Cast;}
+ public class FightBattleStatusViewEvent {}
+ public class FightBattleSecondsStatusNotice {public FightBattleStatusViewEvent Event;}
  public class FightBattleImpactLatch {
   public static FightBattleImpactLatch Last;public FightBattlePreparedMovement Pending;public FightBattlePreparedCast PendingCast;public FightBattleSelectedHit PendingSelection;public int Completions,Records,Waits;public bool Arrived,Disposed;public FightBattleMovementEvent LastContact;
   public FightBattleImpactLatch(){Last=this;}
   public bool TryTake(out FightBattlePendingImpact v){v=null;return false;}
+  public bool TryTakeSecondsStatus(out FightBattleSecondsStatusNotice v){v=null;return false;}
+  public void CompleteSecondsStatus(FightBattleSecondsStatusNotice v,out long revision){revision=1;}
   public bool TryTakePreparation(out FightBattlePreparedCast v){v=PendingCast;PendingCast=null;return v!=null;}
   public void CompletePreparation(FightBattlePreparedCast x,out long revision){revision=1;}
   public bool TryTakeMovement(out FightBattlePreparedMovement v){v=Pending;Pending=null;return v!=null;}
@@ -47,6 +51,7 @@ namespace Zjcs.Combat.Official {
  public class FightBattleIsolatedStep:IDisposable {
   public readonly FightBattleImpactLatch Latch=new FightBattleImpactLatch();public bool IsCompleted;
   public FightBattleIsolatedStep(FightBattleCheckpoint c,Func<FightBattleCheckpoint,FightBattleExecutor> restore,int s,int n,bool observe){}
+  public bool TryAdvanceStatusSeconds(double s,out System.Threading.Tasks.Task<bool> task){task=null;return false;}
   public bool TryTakeCompleted(out FightBattleExecutor e,out FightBattleExecutionResult r){e=null;r=null;return false;}
   public void Dispose(){Latch.Disposed=true;}
  }

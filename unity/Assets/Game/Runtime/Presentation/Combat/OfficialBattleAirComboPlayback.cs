@@ -21,16 +21,16 @@ namespace Zjcs.Presentation.Combat
         {
             private int count;
             private bool forbidden;
-            public FightBattleStatusState Value;
+            public FightBattleStatusViewState Value;
             public int StackedCount => Value.StackCount;
-            public bool CanStackCount => Value.IsOpenStack;
-            public bool Forbidden => Value.ForbiddenType != 0;
+            public bool CanStackCount => Value.CanStack;
+            public bool Forbidden => Value.Forbidden;
             public event Action<IFightStatusPlayableState, int, int> OnStatusStackUpdate;
             public event Action<IFightStatusPlayableState> OnInvoked;
             public event Action<IFightStatusPlayableState, bool> OnForbiddenChanged;
-            public State(FightBattleStatusState value)
+            public State(FightBattleStatusViewState value)
             { Value = value; count = StackedCount; forbidden = Forbidden; }
-            public void Refresh(FightBattleStatusState value)
+            public void Refresh(FightBattleStatusViewState value)
             {
                 int previousCount = count; bool previousForbidden = forbidden;
                 Value = value; count = StackedCount; forbidden = Forbidden;
@@ -60,7 +60,7 @@ namespace Zjcs.Presentation.Combat
         }
         private sealed class EntityData : ECViewEntityData, IBattleGridComponentViewData
         {
-            public FightBattleStatusState Status;
+            public FightBattleStatusViewState Status;
             public ActionData Action;
             public override int ClassId => Status.ClassId;
             public override EcEntityIdentifier Id => new EcEntityIdentifier(4, Status.InstanceId);
@@ -139,29 +139,44 @@ namespace Zjcs.Presentation.Combat
                 {
                     if (!prefabs.ContainsKey(status.ClassId) || status.Components?.Seconds?.Started != true) continue;
                     long key = Key(unit.Id, status.InstanceId); current.Add(key);
-                    if (leases.TryGetValue(key, out var lease)) scope.Dispatch(() => lease.State.Refresh(status));
-                    else Start(unit, status, false);
+                    var snapshot = FightBattleStatusViewState.Capture(status);
+                    if (leases.TryGetValue(key, out var lease)) scope.Dispatch(() => lease.State.Refresh(snapshot));
+                    else Start(unit.Id, snapshot, false);
                 }
             foreach (long key in new List<long>(leases.Keys)) if (!current.Contains(key)) End(key);
         }
 
         private void Changed(FightBattleUnitState owner, FightBattleStatusState status, bool started)
-        {
-            if (!prefabs.ContainsKey(status.ClassId)) return;
-            if (started) Start(owner, status, true); else End(Key(owner.Id, status.InstanceId));
-        }
+            => ApplySecondsStatus(new FightBattleStatusViewEvent { OwnerId = owner.Id,
+                Kind = started ? FightBattleStatusViewEventKind.Start : FightBattleStatusViewEventKind.End,
+                Status = FightBattleStatusViewState.Capture(status) });
 
         private void Invoked(FightBattleUnitState owner, FightBattleStatusState status)
+            => ApplySecondsStatus(new FightBattleStatusViewEvent { OwnerId = owner.Id,
+                Kind = FightBattleStatusViewEventKind.Invoke, Status = FightBattleStatusViewState.Capture(status) });
+
+        internal void ApplySecondsStatus(FightBattleStatusViewEvent value)
         {
-            if (leases.TryGetValue(Key(owner.Id, status.InstanceId), out var lease))
-                scope.Dispatch(lease.State.Invoke);
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleAirComboPlayback));
+            if (value?.Status == null) throw new ArgumentNullException(nameof(value));
+            if (!prefabs.ContainsKey(value.Status.ClassId)) return;
+            long key = Key(value.OwnerId, value.Status.InstanceId);
+            switch (value.Kind)
+            {
+                case FightBattleStatusViewEventKind.Start: Start(value.OwnerId, value.Status, true); break;
+                case FightBattleStatusViewEventKind.End: End(key); break;
+                case FightBattleStatusViewEventKind.Invoke:
+                    if (leases.TryGetValue(key, out var lease)) scope.Dispatch(lease.State.Invoke);
+                    break;
+                default: throw new ArgumentOutOfRangeException(nameof(value.Kind));
+            }
         }
 
-        private void Start(FightBattleUnitState owner, FightBattleStatusState status, bool fresh)
+        private void Start(int ownerId, FightBattleStatusViewState status, bool fresh)
         {
-            long key = Key(owner.Id, status.InstanceId);
+            long key = Key(ownerId, status.InstanceId);
             if (leases.ContainsKey(key)) return;
-            Transform target = body(owner.Id);
+            Transform target = body(ownerId);
             if (!target) return; // An attached original model can become available on a later frame.
             var agent = target.GetComponent<MyFightStatusAgent>();
             if (!agent) { agent = target.gameObject.AddComponent<MyFightStatusAgent>(); ownedAgents.Add(agent); }
@@ -170,7 +185,7 @@ namespace Zjcs.Presentation.Combat
             var view = go.GetComponent<MyFightStatus>();
             var state = new State(status);
             view.Bind(new Context { Status = state, Body = target.gameObject, StatusAgent = agent }, scope);
-            entity.Bind(container, new EntityData { Status = status, Action = new ActionData { Owner = owner.Id } }, fresh);
+            entity.Bind(container, new EntityData { Status = status, Action = new ActionData { Owner = ownerId } }, fresh);
             leases.Add(key, new Lease { Entity = entity, View = view, State = state });
             go.transform.SetParent(root, false);
             scope.Dispatch(() => { entity.MyStart(); view.OnStart(fresh); });

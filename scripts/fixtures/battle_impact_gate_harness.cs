@@ -659,15 +659,31 @@ public static class BattleImpactGateHarness
                 FightBattlePreparedCast held = null;
                 Check(SpinWait.SpinUntil(() => isolated.Latch.TryTakePreparation(out held), 20000),
                     "The timed isolated step did not reach its cast handoff");
-                Check(isolated.TryAdvanceStatusSeconds(0, out var launch) && launch.Wait(20000) && launch.Result,
-                    "The isolated worker did not apply its due airborne state");
+                Check(isolated.TryAdvanceStatusSeconds(0, out var launch), "The isolated worker did not accept its status clock");
+                FightBattleSecondsStatusNotice notice = null;
+                Check(SpinWait.SpinUntil(() => isolated.Latch.TryTakeSecondsStatus(out notice), 20000)
+                    && notice.Event.OwnerId == 2 && notice.Event.Kind == FightBattleStatusViewEventKind.Start
+                    && notice.Event.Status.ClassId == 24269 && !launch.IsCompleted,
+                    "The original airborne start was not held for the host");
+                var launchSnapshot = notice.Event.Status;
+                isolated.Latch.CompleteSecondsStatus(notice, out _);
+                Check(launch.Wait(20000) && launch.Result, "The isolated worker did not apply its due airborne state");
                 Check(callbackThread != 0 && callbackThread != Thread.CurrentThread.ManagedThreadId
                     && privateExecutor.State.Units[1].Statuses.Any(status => status.ClassId == 24269)
                     && FightBattleCheckpointSerializer.Save(cp) == committed,
                     "The status clock escaped its worker or changed the committed checkpoint");
                 Task<bool> recovery = null;
-                Check(SpinWait.SpinUntil(() => isolated.TryAdvanceStatusSeconds(.7, out recovery), 20000)
-                    && recovery.Wait(20000) && recovery.Result
+                Check(SpinWait.SpinUntil(() => isolated.TryAdvanceStatusSeconds(.7, out recovery), 20000),
+                    "The isolated worker did not accept the recovery clock");
+                Check(SpinWait.SpinUntil(() => isolated.Latch.TryTakeSecondsStatus(out notice), 20000)
+                    && notice.Event.Kind == FightBattleStatusViewEventKind.End && notice.Event.Status.ClassId == 24269,
+                    "The airborne end lost its host handoff");
+                isolated.Latch.CompleteSecondsStatus(notice, out _);
+                Check(SpinWait.SpinUntil(() => isolated.Latch.TryTakeSecondsStatus(out notice), 20000)
+                    && notice.Event.Kind == FightBattleStatusViewEventKind.Start && notice.Event.Status.ClassId == 24270,
+                    "The recovery start did not follow airborne end");
+                isolated.Latch.CompleteSecondsStatus(notice, out _);
+                Check(recovery.Wait(20000) && recovery.Result && launchSnapshot.ClassId == 24269
                     && privateExecutor.State.Units[1].Statuses.Any(status => status.ClassId == 24270),
                     "The isolated worker did not advance to the original recovery state");
             }

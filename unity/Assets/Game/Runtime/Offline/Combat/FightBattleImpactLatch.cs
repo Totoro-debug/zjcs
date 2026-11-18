@@ -52,6 +52,14 @@ namespace Zjcs.Combat.Official
         public FightBattleDamageEvent Damage { get; internal set; }
     }
 
+    /// <summary>A seconds-based status transition held for presentation on the host thread.</summary>
+    public sealed class FightBattleSecondsStatusNotice
+    {
+        internal FightBattleImpactLatch Owner;
+        internal bool Taken, Completed;
+        public FightBattleStatusViewEvent Event { get; internal set; }
+    }
+
     /// <summary>
     /// One step's thread-safe rendezvous between original hit-view arrivals and local settlement.
     /// The step runs on a worker; the presentation thread takes requests without blocking and
@@ -104,6 +112,7 @@ namespace Zjcs.Combat.Official
         private readonly Queue<FightBattleCompletedCast> completedCasts = new Queue<FightBattleCompletedCast>();
         private readonly Queue<FightBattleSelectedHit> selections = new Queue<FightBattleSelectedHit>();
         private readonly Queue<FightBattleSettledImpact> settlements = new Queue<FightBattleSettledImpact>();
+        private readonly Queue<FightBattleSecondsStatusNotice> secondsStatuses = new Queue<FightBattleSecondsStatusNotice>();
         private readonly Dictionary<FightBattleDamageEvent, FightBattlePendingImpact> deferredStatusResults =
             new Dictionary<FightBattleDamageEvent, FightBattlePendingImpact>();
         private readonly Queue<WorkerCommand> workerCommands = new Queue<WorkerCommand>();
@@ -194,6 +203,47 @@ namespace Zjcs.Combat.Official
                 while (!disposed && !workerStopped && (!workerWaiting || waitRevision <= previousRevision))
                     Monitor.Wait(sync);
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+            }
+        }
+
+        internal void SecondsStatusChanged(FightBattleUnitState owner, FightBattleStatusState status, bool started)
+            => HoldSecondsStatus(owner, status, started ? FightBattleStatusViewEventKind.Start : FightBattleStatusViewEventKind.End);
+
+        internal void SecondsStatusInvoked(FightBattleUnitState owner, FightBattleStatusState status)
+            => HoldSecondsStatus(owner, status, FightBattleStatusViewEventKind.Invoke);
+
+        private void HoldSecondsStatus(FightBattleUnitState owner, FightBattleStatusState status, FightBattleStatusViewEventKind kind)
+        {
+            if (owner == null || status == null) throw new ArgumentNullException(owner == null ? nameof(owner) : nameof(status));
+            var notice = new FightBattleSecondsStatusNotice { Owner = this, Event = new FightBattleStatusViewEvent {
+                OwnerId = owner.Id, Kind = kind, Status = FightBattleStatusViewState.Capture(status) } };
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                secondsStatuses.Enqueue(notice);
+                while (!disposed && !notice.Completed) ParkWorker();
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+            }
+        }
+
+        public bool TryTakeSecondsStatus(out FightBattleSecondsStatusNotice notice)
+        {
+            lock (sync)
+            {
+                if (secondsStatuses.Count == 0) { notice = null; return false; }
+                notice = secondsStatuses.Dequeue(); notice.Taken = true; return true;
+            }
+        }
+
+        public void CompleteSecondsStatus(FightBattleSecondsStatusNotice notice, out long releasedRevision)
+        {
+            if (notice == null) throw new ArgumentNullException(nameof(notice));
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (!ReferenceEquals(notice.Owner, this) || !notice.Taken || notice.Completed)
+                    throw new InvalidOperationException("The status notice is not awaiting this host.");
+                releasedRevision = waitRevision; notice.Completed = true; Monitor.PulseAll(sync);
             }
         }
 
@@ -648,7 +698,7 @@ namespace Zjcs.Combat.Official
             lock (sync)
             {
                 if (disposed) return;
-                disposed = true; workerWait = null; CancelWorkerCommands(); arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); movements.Clear(); blockedMovements.Clear(); blockedContacts.Clear(); blockedImpacts.Clear(); boundBlockedTargets.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear(); deferredStatusResults.Clear();
+                disposed = true; workerWait = null; CancelWorkerCommands(); arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); movements.Clear(); blockedMovements.Clear(); blockedContacts.Clear(); blockedImpacts.Clear(); boundBlockedTargets.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear(); secondsStatuses.Clear(); deferredStatusResults.Clear();
                 Monitor.PulseAll(sync);
             }
         }

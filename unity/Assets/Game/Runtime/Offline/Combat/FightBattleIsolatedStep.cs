@@ -47,6 +47,8 @@ namespace Zjcs.Combat.Official
                 throw new InvalidOperationException("The restored executor must own the isolated checkpoint.");
             Latch = new FightBattleImpactLatch { ObserveMovements = observeMovements };
             executor.ImpactGate = Latch;
+            executor.StatusSecondsChanged += Latch.SecondsStatusChanged;
+            executor.StatusSecondsInvoked += Latch.SecondsStatusInvoked;
             worker = Task.Run(() => {
                 try { Latch.BindWorker(); return executor.Step(sequence, counter); }
                 finally { Latch.FinishWorker(); }
@@ -63,6 +65,8 @@ namespace Zjcs.Combat.Official
                 if (!worker.IsCompleted) { completedExecutor = null; result = null; return false; }
                 result = worker.GetAwaiter().GetResult();
                 executor.ImpactGate = null;
+                executor.StatusSecondsChanged -= Latch.SecondsStatusChanged;
+                executor.StatusSecondsInvoked -= Latch.SecondsStatusInvoked;
                 completedExecutor = executor;
                 taken = true;
                 return true;

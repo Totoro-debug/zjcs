@@ -53,6 +53,7 @@ namespace Zjcs.Combat.Official
         public List<int> HitGraphEntities = new List<int>(), Hits = new List<int>(), ExtraSkills = new List<int>();
     }
     public class FightBattleDamageEvent { public int DamageId, TargetId, SourceId, SkillEntityId, DamageEntityId; public bool IsSkillCost, IsCure, HasDisperseNotification; public int DisperseNotificationIndex; public float Delay; public long BeforeHp, AfterHp; }
+    public class FightBattleStatusViewEvent { }
     public class FightBattleStatusCustomActionEvent { public int UnitId, Action, SourceDamageId, SourceDamageTargetId; public bool HasDelay; public float Delay; }
     public class FightBattleUnitEndEvent { public int UnitId, StatusId; public float Delay; }
     public class FightBattleUnitLifeEvent { public int UnitId; public bool IsDead; public long BeforeHp,BeforeMaxHp,Hp,MaxHp; public float Delay; }
@@ -81,6 +82,8 @@ namespace Zjcs.Presentation.Combat
     {
         public readonly Func<int, bool> HasSkill; public readonly Func<int, Transform> Body;
         public bool IsDisposed; internal event Action Disposed;
+        public event Action<FightBattleStatusViewEvent> SecondsStatusChanged;
+        public void DeliverStatus(FightBattleStatusViewEvent value) => SecondsStatusChanged?.Invoke(value);
         public OfficialBattleLiveGraphDriver(FightBattleCheckpoint cp, Func<FightBattleCheckpoint, FightBattleExecutor> restore,
             OfficialBattleSkillEntityPlayback views, Func<int, bool> hasSkill, Func<int, Transform> body,
             Func<int, Transform> pet, Action<FightBattleDamageEvent, FightBattleUnitState> damage,
@@ -107,10 +110,13 @@ namespace Zjcs.Presentation.Combat
     public sealed class OfficialBattleAirComboPlayback : IDisposable
     {
         public static FightBattleExecutor ReboundExecutor;
+        public static FightBattleStatusViewEvent LastNotice;
+        public static int Synchronizations;
         public OfficialBattleAirComboPlayback(FightBattleExecutor executor, Transform root,
             OfflineBattleNativePlayableScope scope, Func<int, Transform> body) {}
         public void Rebind(FightBattleExecutor executor) { ReboundExecutor = executor; }
-        public void Synchronize() {}
+        public void ApplySecondsStatus(FightBattleStatusViewEvent value) { LastNotice = value; }
+        public void Synchronize() { Synchronizations++; }
         public void Dispose() {}
     }
     // This fixture leaves the separately tested grid lifecycle seam unbound.
@@ -255,6 +261,13 @@ public static class BattleSkillGraphDispatchHarness
             && ReferenceEquals(OfficialBattleAirComboPlayback.ReboundExecutor, adopted),
             "An adopted executor must be forwarded to both native status clocks");
         var live = livePlayback.CreateLiveStep(checkpoint, _ => new FightBattleExecutor(), resolve, null, (_, __) => { });
+        var notice = new FightBattleStatusViewEvent(); live.DeliverStatus(notice);
+        Require(ReferenceEquals(OfficialBattleAirComboPlayback.LastNotice, notice),
+            "Live status transitions must reach the original airborne view");
+        int beforeLiveTick = OfficialBattleAirComboPlayback.Synchronizations;
+        livePlayback.Tick(0);
+        Require(OfficialBattleAirComboPlayback.Synchronizations == beforeLiveTick,
+            "The committed executor must not overwrite live status views");
         Require(live.HasSkill(10) && !live.HasSkill(999) && ReferenceEquals(live.Body(2), transforms[2]),
             "The live step must use the graph catalog and actual unit resolver");
         bool rejectedLiveOverlap = false;
@@ -262,6 +275,9 @@ public static class BattleSkillGraphDispatchHarness
         catch (InvalidOperationException) { rejectedLiveOverlap = true; }
         Require(rejectedLiveOverlap, "Two live steps cannot own the same graph");
         live.Dispose();
+        livePlayback.Tick(0);
+        Require(OfficialBattleAirComboPlayback.Synchronizations == beforeLiveTick + 1,
+            "Status synchronization must resume after the live step ends");
         var secondLive = livePlayback.CreateLiveStep(checkpoint, _ => new FightBattleExecutor(), resolve, null, (_, __) => { });
         livePlayback.Dispose();
         Require(secondLive.IsDisposed, "Disposing the graph must cancel its live step");

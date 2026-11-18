@@ -114,6 +114,7 @@ namespace Zjcs.Presentation.Combat
             Transform Resolve(int id) => gridViews?.TryGetTransform(id) ?? unitTransform(id);
             var driver = new OfficialBattleLiveGraphDriver(checkpoint, restore, entityViews,
                 catalog.ContainsSkill, Resolve, petTransform, damageShown, costShown);
+            if (airComboViews != null) driver.SecondsStatusChanged += airComboViews.ApplySecondsStatus;
             liveDriver = driver;
             driver.Disposed += () => { if (ReferenceEquals(liveDriver, driver)) liveDriver = null; };
             return driver;
@@ -376,7 +377,9 @@ namespace Zjcs.Presentation.Combat
             if (float.IsNaN(deltaTime) || float.IsInfinity(deltaTime) || deltaTime < 0f)
                 throw new ArgumentOutOfRangeException(nameof(deltaTime));
             embeddedMecanim.Update();
-            airComboViews?.Synchronize();
+            // A live step owns the status transitions until its executor is adopted.
+            // The previous committed checkpoint must not remove those native views.
+            if (liveDriver == null) airComboViews?.Synchronize();
             statusViews?.DispatchDue();
             float remaining = deltaTime;
             while (true)
