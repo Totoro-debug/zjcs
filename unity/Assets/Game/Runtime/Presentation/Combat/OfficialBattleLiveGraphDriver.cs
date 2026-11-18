@@ -18,6 +18,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Action<FightBattleSkillCastEvent, FightBattleUnitState> costShown;
         private readonly Dictionary<FightBattleSkillCastEvent, float> started = new Dictionary<FightBattleSkillCastEvent, float>();
         private readonly Dictionary<FightBattleMovementEvent, float> ordinaryStarted = new Dictionary<FightBattleMovementEvent, float>();
+        private readonly HashSet<int> ordinaryMoving = new HashSet<int>();
         private float clock;
         private bool disposed, transferred;
         internal event Action Disposed;
@@ -64,7 +65,8 @@ namespace Zjcs.Presentation.Combat
         private bool StartCast(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
         {
             id = default;
-            if (cast?.Presentation == null || !hasSkill(cast.SkillEntityId) || started.ContainsKey(cast)) return false;
+            if (cast?.Presentation == null || !hasSkill(cast.SkillEntityId) || started.ContainsKey(cast)
+                || !cast.IsPetSupport && cast.Slot >= 0 && ordinaryMoving.Contains(cast.ActorId)) return false;
             Transform source = cast.IsPetSupport ? pet?.Invoke(cast.ActorId) : body(cast.ActorId);
             int targetId = cast.Presentation.TargetId;
             Transform target = targetId > 0 ? body(targetId) : null;
@@ -91,12 +93,19 @@ namespace Zjcs.Presentation.Combat
                 if (movement.OrdinarySkillPresentation == null) return movement.Delay == 0f;
                 if (!FightOrdinaryMovementTiming.Supports(movement.MoveSkillEntityId)
                     || !hasSkill(movement.MoveSkillEntityId)
-                    || movement.Delay != movement.OrdinaryMoveDelay) return false;
+                    || movement.Delay != movement.OrdinaryMoveDelay
+                    || float.IsNaN(movement.OrdinarySkillPresentation.ActionDuration)
+                    || float.IsInfinity(movement.OrdinarySkillPresentation.ActionDuration)
+                    || movement.OrdinarySkillPresentation.ActionDuration < 0f) return false;
                 if (!ordinaryStarted.TryGetValue(movement, out float moveStart))
                 {
+                    if (ordinaryMoving.Contains(movement.UnitId)) return false;
                     var ordinaryCast = new FightBattleSkillCastEvent { ActorId = movement.UnitId, Slot = -1,
                         SkillEntityId = movement.MoveSkillEntityId, Presentation = movement.OrdinarySkillPresentation };
-                    views.Start(ordinaryCast, source, null);
+                    ordinaryMoving.Add(movement.UnitId);
+                    try { views.Start(ordinaryCast, source, null,
+                        onActionCompleted: () => ordinaryMoving.Remove(movement.UnitId)); }
+                    catch { ordinaryMoving.Remove(movement.UnitId); throw; }
                     ordinaryStarted.Add(movement, moveStart = clock);
                 }
                 return clock - moveStart >= movement.OrdinaryMoveDelay;
@@ -156,7 +165,7 @@ namespace Zjcs.Presentation.Combat
             if (disposed) return;
             disposed = true;
             try { session.Dispose(); }
-            finally { started.Clear(); ordinaryStarted.Clear(); Disposed?.Invoke(); Disposed = null; }
+            finally { started.Clear(); ordinaryStarted.Clear(); ordinaryMoving.Clear(); Disposed?.Invoke(); Disposed = null; }
         }
     }
 }

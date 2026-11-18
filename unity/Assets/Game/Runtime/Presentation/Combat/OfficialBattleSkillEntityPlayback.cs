@@ -100,6 +100,13 @@ namespace Zjcs.Presentation.Combat
             public bool Removed, LiveCompletionReceived;
         }
 
+        private sealed class ActionBoundary
+        {
+            public float Remaining;
+            public Action Completed;
+        }
+        private readonly List<ActionBoundary> actionBoundaries = new List<ActionBoundary>();
+
         private readonly Transform root;
         private readonly OfficialBattleEntityPositionContainer positionContainer;
         private readonly OfficialBattleGridMapper gridMapper;
@@ -225,7 +232,7 @@ namespace Zjcs.Presentation.Combat
         }
 
         public EcEntityIdentifier Start(FightBattleSkillCastEvent cast, Transform source, Transform target,
-            IReadOnlyDictionary<int, FightBattleDamageEvent> damageReceipts = null)
+            IReadOnlyDictionary<int, FightBattleDamageEvent> damageReceipts = null, Action onActionCompleted = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillEntityPlayback));
             if (cast.Presentation == null)
@@ -271,6 +278,8 @@ namespace Zjcs.Presentation.Combat
             receiptHits.Enqueue(cast, state.Data.Identifier);
             receiptDamages.Enqueue(cast, state.Data.Identifier, damageReceipts, sourceFacing, cast.Presentation.FlipX);
             CastStarted?.Invoke(cast);
+            if (onActionCompleted != null && cast.Presentation.ActionDuration >= 0f)
+                actionBoundaries.Add(new ActionBoundary { Remaining = cast.Presentation.ActionDuration, Completed = onActionCompleted });
             // Return the assigned identity, not the pooled object whose Id can
             // change on reuse. Dependent views belong to this exact cast.
             return state.Data.Identifier;
@@ -382,6 +391,7 @@ namespace Zjcs.Presentation.Combat
             {
                 float next = float.PositiveInfinity;
                 foreach (var cast in casts) if (!cast.Removed) next = Mathf.Min(next, cast.Remaining);
+                foreach (var boundary in actionBoundaries) next = Mathf.Min(next, boundary.Remaining);
                 next = Mathf.Min(next, moveViews.NextDelay);
                 next = Mathf.Min(next, receiptHits.NextDelay);
                 next = Mathf.Min(next, receiptDamages.NextDelay);
@@ -391,6 +401,7 @@ namespace Zjcs.Presentation.Combat
                 receiptHits.Advance(elapsed);
                 receiptDamages.Advance(elapsed);
                 foreach (var cast in casts) if (!cast.Removed) cast.Remaining -= elapsed;
+                foreach (var boundary in actionBoundaries) boundary.Remaining -= elapsed;
                 remaining -= elapsed;
                 // Hits due at a cast's final boundary still resolve that exact
                 // skill identity before the original skill returns to its pool.
@@ -398,6 +409,12 @@ namespace Zjcs.Presentation.Combat
                 receiptDamages.DispatchDue();
                 foreach (var cast in casts)
                     if (!cast.Removed && cast.Remaining <= 0f) Remove(cast);
+                for (int index = actionBoundaries.Count - 1; index >= 0; index--)
+                    if (actionBoundaries[index].Remaining <= 0f)
+                    {
+                        var boundary = actionBoundaries[index]; actionBoundaries.RemoveAt(index);
+                        boundary.Completed();
+                    }
                 if (remaining <= 0f) break;
             }
         }
@@ -485,6 +502,7 @@ namespace Zjcs.Presentation.Combat
             skillViews.Dispose();
             scope.Dispose();
             casts.Clear();
+            actionBoundaries.Clear();
             foreach (var lease in units.Values) ReleaseUnit(lease);
             foreach (var lease in pets.Values) ReleaseUnit(lease);
             units.Clear(); pets.Clear(); entities.Clear(); nativeGridIds.Clear();

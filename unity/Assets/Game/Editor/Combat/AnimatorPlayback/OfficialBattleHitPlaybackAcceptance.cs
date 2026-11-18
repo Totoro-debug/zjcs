@@ -1265,10 +1265,68 @@ namespace Zjcs.Editor.Combat
                 bool recordedApproach = approachCompleted && approachResult.Event.Movements.Any(value => value.UnitId == 1 && value.MoveSkillEntityId == 15300);
                 Require(approachCompleted && recordedApproach && sawAction && sawSkill && approachCheckpoint.Units[0].X == 2,
                     $"Original approach: completed={approachCompleted}, recorded={recordedApproach}, action={sawAction}, skill={sawSkill}, x={approachCheckpoint.Units[0].X}, pending={approachDriver.PendingMovement != null}, "
-                    + $"resultMove={approachResult?.Checkpoint.Units[0].MoveDist}, targetable={approachResult?.Checkpoint.Units[1].Targetable}, range={approachSkill.Range.Count}, casts={approachResult?.Event.SkillCasts.Count}, moves={approachResult?.Event.Movements.Count}.");
+                    + $"resultMove={approachResult?.Checkpoint.Units[0].MoveDist}, targetable={approachResult?.Checkpoint.Units[1].Targetable}, range={approachSkill.Range.Count}, casts={approachResult?.Event.SkillCasts.Count}, moves={approachResult?.Event.Movements.Count}, "
+                    + $"actionDuration={approachDriver.PendingMovement?.Movement.OrdinarySkillPresentation?.ActionDuration}, delay={approachDriver.PendingMovement?.Movement.Delay}, moveDuration={approachDriver.PendingMovement?.Movement.MoveDuration}, pathCount={approachDriver.PendingMovement?.Movement.Path.Count}.");
             }
             approachAppearance?.Dispose();
             Destroy(approachRoot.gameObject);
+
+            // An ordinary attack must not start while its approach action is still playing.
+            var followUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 5) };
+            followUnits[0].Properties.Add(new FightPropertyValue { Id = 100, Value = 2 });
+            var followSkill = liveCatalog.CreateSkill(10600, 0, 10008, 2, 20, 1,
+                liveCatalog.CalculateSkillProps(10600, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+            followSkill.LimitedTimes = 1; followUnits[0].Skills.Add(followSkill);
+            followUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(followSkill, 0));
+            var followCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+            followCheckpoint.Units.AddRange(followUnits); var followWave = new FightBattleWaveState(); followWave.UnitIds.Add(2);
+            followCheckpoint.Waves.Add(followWave);
+            FightBattleExecutor.Begin(followCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+            var followRoot = new GameObject("Live approach and attack scene").transform; followRoot.SetParent(root, false);
+            var followSource = new GameObject("Follow source").transform; followSource.SetParent(followRoot, false); followSource.localPosition = new Vector3(2, 5, 0);
+            var followTarget = new GameObject("Follow target").transform; followTarget.SetParent(followRoot, false); followTarget.localPosition = new Vector3(5, 5, 0);
+            foreach (var body in new[] { followSource, followTarget }) {
+                body.gameObject.AddComponent<MyTransform>();
+                var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
+                body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+            }
+            using (var followScope = new OfflineBattleNativePlayableScope(followRoot, null))
+            using (var followViews = new OfficialBattleSkillEntityPlayback(followRoot, new OfficialBattleGridMapper(followRoot, grid),
+                followScope, id => followUnits.FirstOrDefault(value => value.Id == id)))
+            using (var followGraph = new OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog.TryLoadDefault(), followScope, followViews))
+            {
+                followGraph.BindDamageUI(followRoot, 0);
+                bool sawFollowAttack = false, movedBeforeAttack = false, followDamage = false, afterActionEnd = false;
+                float followMoveStarted = -1f, followGraphElapsed = 0f; int followImpactFrame = -1;
+                followViews.CastStarted += cast => {
+                    if (cast.SkillEntityId == 15300) followMoveStarted = Time.time;
+                    if (cast.SkillEntityId == 10600) {
+                        sawFollowAttack = true;
+                        movedBeforeAttack = followRoot.GetComponentsInChildren<MyFightActionSkillMove>(false).Length == 0;
+                        afterActionEnd = followMoveStarted >= 0f && followGraphElapsed >= .5f - .0001f;
+                    }
+                };
+                followViews.HitSelectionViewArrived += (cast, hit, center, position, scopeIndex) => {
+                    if (cast.SkillEntityId == 10600 && hit.HitEntityId == 10601) followImpactFrame = Time.frameCount;
+                };
+                using var followDriver = followGraph.CreateLiveStep(followCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                    formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()),
+                    id => id == 1 ? followSource : id == 2 ? followTarget : null, null, (damage, display) => {
+                        followDamage = followImpactFrame == Time.frameCount && display.Hp == damage.AfterHp
+                            && followCheckpoint.Units[1].Hp == 1000000;
+                    });
+                deadline = Time.realtimeSinceStartup + 20f;
+                while (!sawFollowAttack && Time.realtimeSinceStartup < deadline) {
+                    followDriver.Pump(Time.deltaTime);
+                    if (followMoveStarted >= 0f && !sawFollowAttack) followGraphElapsed += Time.deltaTime;
+                    followGraph.Tick(Time.deltaTime); followGraph.LateTick();
+                    yield return null;
+                }
+                Require(sawFollowAttack && movedBeforeAttack && afterActionEnd && !followDamage && followCheckpoint.Units[1].Hp == 1000000,
+                    $"Approach and attack: started={sawFollowAttack}, afterMove={movedBeforeAttack}, afterAction={afterActionEnd}, elapsed={followGraphElapsed}, damage={followDamage}, pendingMove={followDriver.PendingMovement != null}.");
+            }
+            Destroy(followRoot.gameObject);
 
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });

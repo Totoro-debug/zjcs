@@ -21,9 +21,11 @@ namespace Zjcs.Presentation.Combat
     {
         public int Casts, Moves; public FightBattleSkillCastEvent LastCast; public Func<int, Transform> DamageTargets;
         public Action<FightBattleMovementEvent> Contact;
+        public Action Completed;
         public void BindDamageUITargets(Func<int, Transform> value) { DamageTargets = value; }
-        public EcEntityIdentifier Start(FightBattleSkillCastEvent cast, Transform source, Transform target)
-        { LastCast = cast; Casts++; return new EcEntityIdentifier { Value = Casts }; }
+        public EcEntityIdentifier Start(FightBattleSkillCastEvent cast, Transform source, Transform target,
+            IReadOnlyDictionary<int, FightBattleDamageEvent> damageReceipts = null, Action onActionCompleted = null)
+        { LastCast = cast; Casts++; if (onActionCompleted != null) Completed = onActionCompleted; return new EcEntityIdentifier { Value = Casts }; }
         public bool OwnsMovement(FightBattleMovementEvent movement) => movement.MoveBehaviourId == 11123;
         public void StartMovement(FightBattleMovementEvent movement, Transform source,
             FightGridPoint? position = null, Action<FightBattleMovementEvent> contact = null)
@@ -92,12 +94,16 @@ namespace Zjcs.Presentation.Combat
                 "the actual cast must project cost without modifying the checkpoint");
             Check(!session.Cast(cast, out _), "the same cast cannot start twice");
             var ordinary = new FightBattleMovementEvent { UnitId = 1, MoveBehaviourId = 11123,
-                MoveSkillEntityId = 15300, OrdinarySkillPresentation = new FightBattleSkillCastPresentation(),
+                MoveSkillEntityId = 15300, OrdinarySkillPresentation = new FightBattleSkillCastPresentation { ActionDuration = .5f },
                 Delay = .2f, OrdinaryMoveDelay = .2f };
             hasSkill = false;
             Check(!session.Move(null, ordinary) && views.Casts == 1,
                 "ordinary motion must wait for its original skill graph");
             hasSkill = true;
+            ordinary.OrdinarySkillPresentation.ActionDuration = float.NaN;
+            Check(!session.Move(null, ordinary) && views.Casts == 1,
+                "an invalid action end must not start the movement skill");
+            ordinary.OrdinarySkillPresentation.ActionDuration = .5f;
             Check(!session.Move(null, ordinary) && views.Casts == 2 && views.Moves == 1
                 && views.LastCast.SkillEntityId == 15300 && views.LastCast.ActorId == 1,
                 "ordinary motion must start its original movement skill before the action");
@@ -107,6 +113,14 @@ namespace Zjcs.Presentation.Combat
             driver.Pump(.15f);
             Check(session.Move(null, ordinary) && views.Casts == 2 && views.Moves == 2,
                 "the original movement action must start after its authored skill prelude");
+            var attack = new FightBattleSkillCastEvent { ActorId = 1, Slot = 0, SkillEntityId = 10600,
+                Presentation = new FightBattleSkillCastPresentation { TargetId = 2 } };
+            var reaction = new FightBattleSkillCastEvent { ActorId = 1, Slot = -1, SkillEntityId = 10600,
+                Presentation = new FightBattleSkillCastPresentation { TargetId = 2 } };
+            Check(!session.Cast(attack, out _) && session.Cast(reaction, out _),
+                "an ordinary attack must wait for movement without blocking a movement-start trigger");
+            views.Completed();
+            Check(session.Cast(attack, out _), "the ordinary attack must start when the native action completes");
             var move = new FightBattleMovementEvent { UnitId = 2, MoveBehaviourId = 11123, Delay = .5f };
             Check(!session.Move(cast, move), "the movement must wait for its own cast action time");
             driver.Pump(.1f);
