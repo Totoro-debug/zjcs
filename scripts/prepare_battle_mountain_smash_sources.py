@@ -1,11 +1,13 @@
 """Verify original mountain smash rules, native playables and sound against official inputs."""
 import argparse
 import copy
+import hashlib
 import json
 import re
 from pathlib import Path
 
 from official_apk import Apk
+from official_tables import Constructors
 from verify_battle_skill_graph_rules import identity, verify_selected_components
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -67,6 +69,15 @@ def build():
     configuration = verify_selected_components(definitions, [item])
     with Apk.current() as apk:
         version = apk.version
+        code = ROOT / ".tools/source-packages/current" / version / "official-code"
+        settings_asset = apk.asset("config_luban", "/game_settings.g.bytes")
+        settings_raw = settings_asset.read().m_Script.encode("utf8", "surrogateescape")
+        settings = Constructors(code).table(settings_raw, "TbGameSettings")
+        excluded = settings["Battle"]["CanNotApplyBlockedSkillCharacterTypes"]
+        if excluded != rules["game_settings"]["Battle"]["CanNotApplyBlockedSkillCharacterTypes"]:
+            raise ValueError("Runtime blocked-skill character types differ from the selected official settings")
+        collision_settings = dict(source=apk.provenance(settings_asset),
+            payload_sha256=hashlib.sha256(settings_raw).hexdigest(), excluded_character_types=excluded)
     code = ROOT / ".tools/source-packages/current" / version / "official-code"
     originals = [identity(code / "common-source/Common" / (name + ".cs")) for name in (
         "FightSkillComponentInfo", "FightSkillComponentImplement", "FightHitFixedComponentInfo",
@@ -76,10 +87,11 @@ def build():
         "MyFightHitBase", "MyFightHitFixed", "MyFightActionSkill", "MyFightActionSkillMove", "MyPlayableSound"))
     graph_path = ROOT / "assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json"
     graph = json.loads(graph_path.read_bytes())
-    selected = lambda row: "/11120/" in row["path"] or "/10100/" in row["path"]
+    selected = lambda row: ("/11120/" in row["path"] or "/10100/" in row["path"]
+        or "/GlobalPlayable/playable_move_blocked" in row["path"])
     native = [entry for entry in graph["native_inputs"] if selected(entry)]
     outputs = [entry for entry in graph["outputs"] if selected(entry)]
-    if len(native) != 20 or len(outputs) != 20:
+    if len(native) != 24 or len(outputs) != 24:
         raise ValueError("The original mountain smash graph is incomplete")
     for entry in native + outputs:
         if identity(ROOT / entry["path"]) != entry:
@@ -109,7 +121,7 @@ def build():
     if not any(row["kind"] == 1 and row["animation"] == "100/skill_22" for row in cue["playables"]):
         raise ValueError("The original mountain smash character motion is not bound")
     return dict(manifest=version, configuration=configuration, explicit_empty_dispel_defaults=normalized,
-        original_code=originals,
+        original_code=originals, collision_settings=collision_settings,
         airborne_source_manifest=identity(ROOT / "assets/reference/battle-rules/air-combo-source-manifest.json"),
         native_source_manifest=identity(graph_path), native_inputs=native,
         native_outputs=outputs, sound_source_manifest=identity(sound_path),

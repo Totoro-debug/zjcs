@@ -1044,6 +1044,26 @@
       "sha256": "f58057d9ca971d45618279659b27e0fd508c685065af7b3476a95d566ce788ca"
     }
   ],
+  "collision_settings": {
+    "source": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-3869022733471997335",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+    },
+    "payload_sha256": "fca2ae301cb5d5fc345377fedb2a97634682e286f6bede6a738c1be96d1a890e",
+    "excluded_character_types": [
+      5,
+      6,
+      9
+    ]
+  },
   "airborne_source_manifest": {
     "path": "assets/reference/battle-rules/air-combo-source-manifest.json",
     "sha256": "5ef854a22feed01996f0e0349b505af3f61e5d2fad3b3bfb272137290b88691e"
@@ -1132,6 +1152,22 @@
     {
       "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/11120/track11123.prefab.meta",
       "sha256": "d447569a0a887245f119559a8c875c589366804fa16608f852bbff907bf9d009"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_move_blocked.prefab",
+      "sha256": "773b9c227bacf6ae012f5ea3d676a358aa357d230c0f1fd41e5ebbe2918f10b8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_move_blocked.prefab.meta",
+      "sha256": "497fd96a7f5fce5539cf748e7597715e464986f60063ba213988bd01a045d5c1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_move_blocked_track.prefab",
+      "sha256": "37d3fb55c30a5eeab4d88810853cd69b69ced9905e0227b3d57e0a2c3127dcfc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_move_blocked_track.prefab.meta",
+      "sha256": "eee0062d7adec82563c1b16b0b262424147e1c311383c2ac4c1e281f94bc715d"
     }
   ],
   "native_outputs": [
@@ -1214,6 +1250,22 @@
     {
       "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/track11123.prefab.meta",
       "sha256": "cf6c8e8a5db6a9dd6ab123a4d1d4db3ca5a33a8011e176613f36721d24ac0e7b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_move_blocked.prefab",
+      "sha256": "145fd6ee4d894d3447b849d11731c32988a3a37916490df1e7b113f2888e4d06"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_move_blocked.prefab.meta",
+      "sha256": "dc92fbe3dc2c1b14b45721a8e4326837ff3bf33e5e2a7813a9ec10a65431fddc"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_move_blocked_track.prefab",
+      "sha256": "4348c61a7458561c51388bfc6094baea68be411e86192a353f287c984a79c6f4"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_move_blocked_track.prefab.meta",
+      "sha256": "0c3dfe740296151dcc058e1d87a82f0db1ab51c6401a7489b5309c0a072abf66"
     }
   ],
   "sound_source_manifest": {
@@ -1248,6 +1300,6 @@
   },
   "generator": {
     "path": "scripts/prepare_battle_mountain_smash_sources.py",
-    "sha256": "2cd8c384ff331fe897c1052b2cc1749cc4fbaa927e355dc1fec19136ee3f715c"
+    "sha256": "4faac221bbdfd1a878ba0e21c0e85b3a5fdf9259506deddf177563b07e4595c6"
   }
 }
