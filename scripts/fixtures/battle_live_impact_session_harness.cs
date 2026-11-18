@@ -14,9 +14,9 @@ namespace Zjcs.Official.World.NativeTerrain.Common
 namespace Zjcs.Official.StoryPlayables
 {
     public struct EcEntityIdentifier { public int Value; public EcEntityIdentifier(int value) { Value = value; } }
-    public class MyPlayable { }
+    public class MyPlayable { public string name; }
 }
-namespace UnityEngine { public class GameObject { } }
+namespace UnityEngine { public class GameObject { public string name; } }
 namespace Zjcs.Presentation.Combat
 {
     // Drives the production session with real battle rules and a controlled native-view boundary.
@@ -44,7 +44,8 @@ namespace Zjcs.Presentation.Combat
         public void CompleteLiveCast(FightBattleSkillCastEvent cast, EcEntityIdentifier id, float elapsed)
         { if (!ReferenceEquals(cast, Cast)) throw new InvalidOperationException("Wrong completed cast"); Completions++; CompletionElapsed = elapsed; }
         public void Arrive(int scope) => HitSelectionViewArrived?.Invoke(Cast, Selection, 0, new Pos2d(10, 7), scope);
-        public void StartGraph(EcEntityIdentifier id) => SkillGraphPlayableStarted?.Invoke(Cast, id, new GameObject(), new MyPlayable());
+        public void StartGraph(EcEntityIdentifier id, string prefab = null, string leaf = null)
+            => SkillGraphPlayableStarted?.Invoke(Cast, id, new GameObject { name = prefab }, new MyPlayable { name = leaf });
     }
 
     public static class BattleLiveImpactSessionHarness
@@ -189,11 +190,17 @@ namespace Zjcs.Presentation.Combat
                 Check(SpinWait.SpinUntil(() => { jumpSession.Pump(0f, StartJump); return jumpViews.Selection != null; }, 20000),
                     "The status-bearing jump did not offer its selected hit");
                 var hit = jumpViews.Selection.Targets.Single(t => t.TargetId == 2);
-                jumpViews.Arrive(hit.HasScopeIndex ? hit.ScopeIndex : -1);
+                jumpViews.StartGraph(new EcEntityIdentifier(999), "playable10670", "effect (2)");
+                jumpViews.StartGraph(new EcEntityIdentifier(43), "playable10670", "effect (1)");
+                Check(jumpViews.Damages == 0, "The jump cannot settle for another cast or its earlier effect");
+                jumpSession.SkillGraphPlayableStarted += (cast, id, prefab, leaf) => { throw new InvalidOperationException("observer failure"); };
+                bool observerFailed = false;
+                try { jumpViews.StartGraph(new EcEntityIdentifier(43), "playable10670", "effect (2)"); }
+                catch (InvalidOperationException) { observerFailed = true; }
                 Check(jumpViews.Damages == 1 && jumpViews.LastDamage.HasDamageTriggerStatus
                     && jumpViews.LastDamage.IsDamageTriggerStatus == expectedJumpDamage.IsDamageTriggerStatus
                     && jumpViews.LastDamage.DamageValue == expectedJumpDamage.DamageValue
-                    && !jumpSession.StatusResolutionBlocked && jumpSession.PendingSettlement == null,
+                    && observerFailed && !jumpSession.StatusResolutionBlocked && jumpSession.PendingSettlement == null,
                     "The jump's actual status outcome and damage did not arrive in the impact frame");
                 Check(SpinWait.SpinUntil(() => { jumpSession.Pump(0f, StartJump); return jumpSession.IsCompleted; }, 20000)
                     && jumpViews.Completions == 1 && FightBattleCheckpointSerializer.Save(jumpCp) == beforeJump,
@@ -201,6 +208,48 @@ namespace Zjcs.Presentation.Combat
                 Check(jumpSession.TryTakeCompleted(out _, out var result)
                     && FightBattleCheckpointSerializer.Save(result.Checkpoint) == FightBattleCheckpointSerializer.Save(jumpBaseline),
                     "Resolving the original status changed the completed deterministic result");
+            }
+            var delayedCp = FightBattleCheckpointSerializer.Load(beforeJump);
+            var delayedHit = delayedCp.Units.Single(unit => unit.Id == 1).Skills.Single(value => value.EntityId == 10670)
+                .HitGraphEntities.Single(value => value.EntityId == 10671);
+            foreach (var cell in delayedHit.ScopeEntries) cell.Delay = .1f;
+            var delayedViews = new OfficialBattleSkillEntityPlayback();
+            using (var delayedSession = new OfficialBattleLiveImpactSession(delayedCp,
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), delayedViews, 0, 1))
+            {
+                bool StartJump(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = new EcEntityIdentifier(49); return true; }
+                Check(SpinWait.SpinUntil(() => { delayedSession.Pump(0f, StartJump); return delayedViews.Selection != null; }, 20000),
+                    "The delayed-cell fixture did not reach its selection");
+                var hit = delayedViews.Selection.Targets.Single(t => t.TargetId == 2);
+                delayedViews.StartGraph(new EcEntityIdentifier(49), "playable10670", "effect (2)");
+                Check(delayedViews.Damages == 0, "A non-simultaneous scope cell cannot use the landing-effect boundary");
+                delayedViews.Arrive(hit.HasScopeIndex ? hit.ScopeIndex : -1);
+                Check(delayedViews.Damages == 1 && SpinWait.SpinUntil(() => delayedSession.IsCompleted, 20000),
+                    "The independently arriving scope cell did not settle at its actual boundary");
+            }
+            var multiCp = FightBattleCheckpointSerializer.Load(beforeJump);
+            var secondEnemy = Unit(3, 2, 8, formula); secondEnemy.Y = 8;
+            multiCp.Units.Add(secondEnemy); multiCp.Waves[0].UnitIds.Add(3);
+            string beforeMulti = FightBattleCheckpointSerializer.Save(multiCp);
+            var multiBaseline = FightBattleCheckpointSerializer.Load(beforeMulti);
+            var multiExpected = FightBattleExecutor.Restore(multiBaseline, formula, new FightDamageSettlement(), catalog, items).Step(0, 1);
+            int multiHits = multiExpected.Event.DamageEvents.Count(d => d.SkillItemId == 10015);
+            Check(multiHits >= 2, "The jump area fixture must select more than one enemy");
+            var multiViews = new OfficialBattleSkillEntityPlayback();
+            using (var multiSession = new OfficialBattleLiveImpactSession(multiCp,
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), multiViews, 0, 1))
+            {
+                bool StartJump(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = new EcEntityIdentifier(50); return true; }
+                Check(SpinWait.SpinUntil(() => { multiSession.Pump(0f, StartJump); return multiViews.Selection != null; }, 20000),
+                    "The area jump did not offer its selected scopes");
+                multiViews.StartGraph(new EcEntityIdentifier(50), "playable10670", "effect (2)");
+                Check(multiViews.Damages == multiHits && SpinWait.SpinUntil(() => multiSession.IsCompleted, 20000)
+                    && multiSession.TryTakeCompleted(out _, out var result)
+                    && FightBattleCheckpointSerializer.Save(result.Checkpoint) == FightBattleCheckpointSerializer.Save(multiBaseline)
+                    && FightBattleCheckpointSerializer.Save(multiCp) == beforeMulti,
+                    "All simultaneous selected jump cells must settle once in the same landing frame");
             }
             var fallbackViews = new OfficialBattleSkillEntityPlayback { RejectDamage = true };
             using (var fallbackSession = new OfficialBattleLiveImpactSession(jumpCp,

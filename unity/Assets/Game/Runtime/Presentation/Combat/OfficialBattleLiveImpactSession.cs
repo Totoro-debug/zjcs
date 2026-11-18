@@ -27,6 +27,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Dictionary<FightBattleSkillCastEvent, ActiveCast> casts =
             new Dictionary<FightBattleSkillCastEvent, ActiveCast>();
         private readonly HashSet<FightBattleHitSelectionSnapshot> selectedHits = new HashSet<FightBattleHitSelectionSnapshot>();
+        private readonly Dictionary<int, HashSet<int>> jumpSlashScopes = new Dictionary<int, HashSet<int>>();
         private FightBattlePreparedCast preparation;
         private FightBattleSelectedHit selection;
         private FightBattleSettledImpact settlement;
@@ -50,6 +51,22 @@ namespace Zjcs.Presentation.Combat
             OfficialBattleSkillEntityPlayback views, int sequence, int counter)
         {
             this.views = views ?? throw new ArgumentNullException(nameof(views));
+            if (checkpoint?.Units != null) foreach (var unit in checkpoint.Units)
+            {
+                if (unit?.Skills == null) continue;
+                foreach (var skill in unit.Skills)
+                {
+                    if (skill?.EntityId != 10670 || skill.HitGraphEntities == null) continue;
+                    foreach (var hit in skill.HitGraphEntities)
+                    {
+                        if (hit?.EntityId != 10671 || hit.ScopeEntries == null) continue;
+                        var scopes = new HashSet<int>();
+                        for (int index = 0; index < hit.ScopeEntries.Count; index++)
+                            if (hit.ScopeEntries[index] != null && hit.ScopeEntries[index].Delay == 0f) scopes.Add(index);
+                        if (scopes.Count > 0) jumpSlashScopes[unit.Id] = scopes;
+                    }
+                }
+            }
             step = new FightBattleIsolatedStep(checkpoint, restore, sequence, counter);
             bridge = new OfficialBattleImpactViewBridge(views, step.Latch);
             bridge.WorkerReleasedByArrival += OnWorkerReleasedByArrival;
@@ -157,7 +174,33 @@ namespace Zjcs.Presentation.Combat
             var previousId = currentGraphSkillId;
             currentGraphCast = cast; currentGraphSkillId = id;
             try { SkillGraphPlayableStarted?.Invoke(cast, id, prefab, playable); }
-            finally { currentGraphCast = previousCast; currentGraphSkillId = previousId; }
+            finally
+            {
+                try { RouteJumpSlashImpact(cast, prefab, playable); }
+                finally { currentGraphCast = previousCast; currentGraphSkillId = previousId; }
+            }
+        }
+
+        private void RouteJumpSlashImpact(FightBattleSkillCastEvent cast, GameObject prefab, MyPlayable playable)
+        {
+            // The original jump's second effect is its visible landing strike. Only cells
+            // authored as simultaneous can share that actual graph-playback boundary.
+            if (cast?.SkillEntityId != 10670 || prefab == null || prefab.name != "playable10670"
+                || playable == null || playable.name != "effect (2)" || !jumpSlashScopes.TryGetValue(cast.ActorId, out var scopes)
+                || cast.HitSelections == null || !casts.TryGetValue(cast, out var active)
+                || !active.Id.Equals(currentGraphSkillId)) return;
+            foreach (var hit in new List<FightBattleHitSelectionSnapshot>(cast.HitSelections))
+            {
+                if (hit?.HitEntityId != 10671 || !selectedHits.Contains(hit) || hit.Targets == null) continue;
+                var sent = new HashSet<(int Center, int Scope)>();
+                foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
+                {
+                    if (!casts.ContainsKey(cast)) return;
+                    if (target == null || !target.HasScopeIndex || !scopes.Contains(target.ScopeIndex)
+                        || !sent.Add((target.EffectCenterIndex, target.ScopeIndex))) continue;
+                    RecordGraphImpact(cast, hit, target.EffectCenterIndex, target.ScopeIndex);
+                }
+            }
         }
 
         /// <summary>Associates a verified original graph leaf with its selected hit during that leaf's playback callback.</summary>
@@ -229,7 +272,7 @@ namespace Zjcs.Presentation.Combat
             views.SkillGraphPlayableStarted -= OnSkillGraphPlayableStarted;
             bridge.Dispose();
             step.Dispose();
-            casts.Clear(); selectedHits.Clear();
+            casts.Clear(); selectedHits.Clear(); jumpSlashScopes.Clear();
         }
     }
 }

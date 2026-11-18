@@ -732,7 +732,59 @@ namespace Zjcs.Editor.Combat
                 && FightBattleCheckpointSerializer.Save(statusCp) == statusCheckpoint
                 && FightBattleCheckpointSerializer.Save(statusResult.Checkpoint) == FightBattleCheckpointSerializer.Save(statusBaseline),
                 "The live status result changed the original checkpoint or deterministic outcome.");
-            statusSession.Dispose(); fireViews.Dispose(); Destroy(fireRoot.gameObject);
+            statusSession.Dispose();
+            fireViews.Tick(statusCast.Presentation.Duration + .01f);
+            yield return new WaitForSeconds(.6f);
+            var jumpUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 4) };
+            var jumpSkill = liveCatalog.CreateSkill(10670, 0, 10015, 2, 20, 1,
+                liveCatalog.CalculateSkillProps(10670, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+            jumpSkill.LimitedTimes = 1; jumpUnits[0].Skills.Add(jumpSkill); jumpUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(jumpSkill, 0));
+            var jumpCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+            jumpCheckpoint.Units.AddRange(jumpUnits); var jumpWave = new FightBattleWaveState(); jumpWave.UnitIds.Add(2); jumpCheckpoint.Waves.Add(jumpWave);
+            FightBattleExecutor.Begin(jumpCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+            string jumpCommitted = FightBattleCheckpointSerializer.Save(jumpCheckpoint);
+            fireDisplayUnits = FightBattleCheckpointSerializer.Load(jumpCommitted).Units.ToArray();
+            var jumpBaseline = FightBattleCheckpointSerializer.Load(jumpCommitted);
+            var jumpExpected = FightBattleExecutor.Restore(jumpBaseline, formula, new FightDamageSettlement(),
+                liveCatalog, combatAssets.LoadSkillItems()).Step(0, 1);
+            var jumpExpectedDamage = jumpExpected.Event.DamageEvents.Single(value => value.SkillItemId == 10015);
+            fireTarget.localPosition = new Vector3(4, 5, 0);
+            FightBattleSkillCastEvent jumpCast = null;
+            int jumpImpactFrame = -1;
+            bool jumpDamageShown = false;
+            using var jumpSession = new OfficialBattleLiveImpactSession(jumpCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), fireViews, 0, 1);
+            jumpSession.SkillGraphPlayableStarted += (cast, id, prefab, leaf) => {
+                if (ReferenceEquals(cast, jumpCast) && prefab.name == "playable10670" && leaf.name == "effect (2)")
+                    jumpImpactFrame = Time.frameCount;
+            };
+            bool StartJumpCast(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) {
+                jumpCast = cast; id = fireViews.Start(cast, fireSource, fireTarget); return true;
+            }
+            void RefreshJumpHp(FightBattleDamageEvent damage) {
+                fireDisplayUnits[1].Hp = damage.AfterHp; fireDisplayUnits[1].Turn.Hp = damage.AfterHp;
+                jumpDamageShown = jumpImpactFrame == Time.frameCount && damage.HasDamageTriggerStatus
+                    && damage.IsDamageTriggerStatus == jumpExpectedDamage.IsDamageTriggerStatus
+                    && damage.DamageValue == jumpExpectedDamage.DamageValue && damageNotifications == 5
+                    && observedDamage == damage.DamageValue;
+                Require(jumpDamageShown, "The jump's actual damage and status must use its original landing-effect frame.");
+            }
+            deadline = Time.realtimeSinceStartup + 10f;
+            while (!jumpSession.IsCompleted && Time.realtimeSinceStartup < deadline) {
+                jumpSession.Pump(Time.deltaTime, StartJumpCast, RefreshJumpHp);
+                if (jumpImpactFrame < 0) Require(damageNotifications == 4 && fireDisplayUnits[1].Hp == 1000000,
+                    "Jump damage must wait for the original landing effect.");
+                fireViews.Tick(Time.deltaTime); fireScope.LateTick();
+                yield return null;
+            }
+            Require(jumpDamageShown && jumpSession.IsCompleted && jumpSession.TryTakeCompleted(out _, out var jumpResult)
+                && FightBattleCheckpointSerializer.Save(jumpCheckpoint) == jumpCommitted
+                && FightBattleCheckpointSerializer.Save(jumpResult.Checkpoint) == FightBattleCheckpointSerializer.Save(jumpBaseline),
+                "The original jump impact must complete without changing the committed checkpoint or rules result.");
+            yield return null;
+            Capture("session-jump-impact.png");
+            jumpSession.Dispose(); fireViews.Dispose(); Destroy(fireRoot.gameObject);
 
 
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
