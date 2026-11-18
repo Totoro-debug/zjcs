@@ -17,6 +17,7 @@ namespace Zjcs.Presentation.Combat
             public EcEntityIdentifier Id;
             public MyFightActionSkillMove View;
             public float Remaining;
+            public bool Blocked;
         }
 
         private readonly OfficialBattleNativeEntityLoader loader;
@@ -66,11 +67,15 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleMoveActionPlayback));
             if (data == null) throw new ArgumentNullException(nameof(data));
+            if (data.Movement.BlockedPos.HasValue && data.Movement.Info.DelayDestroyTime != 0f)
+                throw new NotSupportedException("Blocked action destruction delay requires its original server schedule.");
             var entity = loader.Create(data);
             var view = entity.GetComponent<MyFightActionSkillMove>();
             view.EntitySlot = loader.EntitySlot;
             var value = new Active { Id = data.Id, View = view,
-                Remaining = data.Movement.TotalMoveDuration + data.Movement.Info.DelayDestroyTime };
+                Blocked = data.Movement.BlockedPos.HasValue,
+                Remaining = data.Movement.BlockedPos.HasValue ? float.PositiveInfinity
+                    : data.Movement.TotalMoveDuration + data.Movement.Info.DelayDestroyTime };
             active.Add(value);
             scope.Dispatch(entity.MyStart);
             if (value.Remaining <= 0f) Remove(value);
@@ -88,7 +93,7 @@ namespace Zjcs.Presentation.Combat
                 {
                     value.View.Advance(deltaTime);
                     value.Remaining -= deltaTime;
-                    if (value.Remaining <= 0f) Remove(value);
+                    if (value.Remaining <= 0f || value.Blocked && !value.View.BlockedPlaybackPending) Remove(value);
                 }
             });
         }

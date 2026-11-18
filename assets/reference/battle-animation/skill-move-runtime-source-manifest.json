@@ -69,7 +69,7 @@
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightActionSkillMove.cs",
-      "sha256": "7dd29e60436cf5c4bbcf6a1b046925875a3cfd0406ba2d0cb848ea1bd8ea97d0"
+      "sha256": "3f212e3cbe58f248ea3f217ec4d3a35edff8268d57be4e84c7af96526a0bfa13"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightActionSkillMove.cs.meta",
@@ -397,11 +397,11 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMoveActionPlayback.cs",
-      "sha256": "2fd4bda73dd2372d7ac0cf88b0c23528b7544664b132e648fefe414273164283"
+      "sha256": "1300967325849842ffa059992f9ad32a54500b390dc12bb29eeb9af12b2a8b3b"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.Movement.cs",
-      "sha256": "c821d44af08700fd25a32a935d8eb9f6e3fc3cf00e04a2635c49e419d2d95792"
+      "sha256": "b445d11c043403616361c101e04291606f747ef1aaed2f0cd76d7869ef883642"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs",
@@ -434,6 +434,14 @@
     {
       "path": "scripts/test_battle_skill_moves.ps1",
       "sha256": "d7cacb261ac8107254b27d3f2d5402256c3633da57492222017c047ecf248c36"
+    },
+    {
+      "path": "scripts/test_battle_blocked_move_action.ps1",
+      "sha256": "43cd83d9edc71700b353028a5c7cb4573dda0b99ef39b8c70b409d64117dccdb"
+    },
+    {
+      "path": "scripts/fixtures/battle_blocked_move_action_harness.cs",
+      "sha256": "3bd82cd41dbefc06bfee09c1cae9751fe75d22c2de1e9bfd6877c2a7a210f085"
     },
     {
       "path": "scripts/test_battle_skill_combo.ps1",
@@ -470,7 +478,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_skill_move_runtime.py",
-    "sha256": "e376f17773b89eeb1dc0e4ec4552547f076eca67a9d352fe50c20a0378ebdbd5"
+    "sha256": "fbf619245e0522b6ce2f4aac942b798e49af94e613c9cebea86b0716903dd597"
   },
   "conversion": [
     "Original client lifecycle and per-path timer; explicit manager injection and optional host timing.",
@@ -480,6 +488,7 @@
   "confirmed_offline_rules": [
     "Self actions snapshot the settled skill direction before path settlement, preserving configured fixed direction; ordinary approach/retreat and forced target actions snapshot the moved unit direction at action creation. FlipX is independent; legacy receipts without direction keep their fallback.",
     "For these settled paths without collision data, action lifetime is original total movement duration plus DelayDestroyTime, then original End/Remove and pooling. Path eligibility, probability, resistance and landing retain their existing configured rules; missing paths or collision information are not inferred.",
+    "When a caller supplies an actual blocked cell and DelayDestroyTime is zero, retain the original action until its blocked playable ends before End/Remove; the view does not infer collision targets or damage.",
     "Only the 22 original ordinary movement skills use earliest nonnegative fixed/AllEnded/AllRelevantEnded entity and action timers independently; AllEnded starts at movement End including DelayDestroyTime. The native skill is created before its action with a negative slot and calls original MyFightSkill.OnRemove; graphs finish naturally. Current approach/retreat entry points carry creation snapshots; remaining special entry points and shared rule start/end reactions are not claimed complete."
   ],
   "implementation_document": "docs/features/skills.md"

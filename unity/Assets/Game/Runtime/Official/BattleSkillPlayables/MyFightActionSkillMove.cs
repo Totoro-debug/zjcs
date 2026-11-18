@@ -39,6 +39,7 @@ public class MyFightActionSkillMove : MyActionBase<FightActionSkillMoveComponent
 	// The battle host advances this same original timer at presentation boundaries.
 	public bool ManualTiming { get; set; }
 	public float RemainingMoveTime => mMoving ? Mathf.Max(0f, mMoveDuration - mMoveTimer) : float.PositiveInfinity;
+	public bool BlockedPlaybackPending => mMoving || mBlockedPlayable && mBlockedPlayable.myStatus != MyPlayable.PlayableStatus.Stop;
 
 	public override void OnStart(bool newEntity)
 	{

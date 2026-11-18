@@ -16,7 +16,8 @@ namespace Zjcs.Presentation.Combat
             && movement.HasDirection && movement.HasFacing && movement.Path != null
             && movement.Path.Count > 1 && moveViews.ContainsClass(movement.MoveBehaviourId);
 
-        public void StartMovement(FightBattleMovementEvent movement, Transform source)
+        public void StartMovement(FightBattleMovementEvent movement, Transform source,
+            FightGridPoint? blockedPosition = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillEntityPlayback));
             if (!OwnsMovement(movement))
@@ -25,14 +26,14 @@ namespace Zjcs.Presentation.Combat
             var end = movement.Path[movement.Path.Count - 1];
             lease.Projection.Position = new Pos2d(end.X, end.Y);
             lease.Projection.Mirrored = movement.EndFlipX;
-            moveViews.Create(MovementData(movement, new EcEntityIdentifier(5, ++movementSerial)));
+            moveViews.Create(MovementData(movement, new EcEntityIdentifier(5, ++movementSerial), blockedPosition));
         }
 
         internal float MovementDuration(FightBattleMovementEvent movement) =>
             MovementData(movement, default).Movement.TotalMoveDuration;
 
         private OfficialBattleMoveActionData MovementData(FightBattleMovementEvent movement,
-            EcEntityIdentifier identity)
+            EcEntityIdentifier identity, FightGridPoint? blockedPosition = null)
         {
             var path = new List<Pos2d>();
             for (int index = 1; index < movement.Path.Count; index++)
@@ -40,7 +41,8 @@ namespace Zjcs.Presentation.Combat
             var start = movement.Path[0];
             return new OfficialBattleMoveActionData(combatCatalog, movement.MoveBehaviourId,
                 identity, UnitId(movement.UnitId),
-                new Pos2d(start.X, start.Y), path, Facing(movement.Direction));
+                new Pos2d(start.X, start.Y), path, Facing(movement.Direction),
+                blockedPosition.HasValue ? new Pos2d(blockedPosition.Value.X, blockedPosition.Value.Y) : (Pos2d?)null);
         }
     }
 }

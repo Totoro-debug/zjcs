@@ -835,6 +835,32 @@ namespace Zjcs.Editor.Combat
                 "The original jump impact must complete without changing the committed checkpoint or rules result.");
             yield return null;
             Capture("session-jump-impact.png");
+            if (jumpAppearance != null)
+            {
+                // A blocked movement has a one-point original path at its starting
+                // grid. Its actual blocked graph moves to the collision and returns.
+                var blocked = new FightBattleMovementEvent { UnitId = 1, MoveBehaviourId = 11123,
+                    HasDirection = true, Direction = 3, HasFacing = true, EndFlipX = false };
+                blocked.Path.Add(new FightGridPoint(3, 5)); blocked.Path.Add(new FightGridPoint(3, 5));
+                fireSource.localPosition = new Vector3(3, 5, 0);
+                Require(fireViews.OwnsMovement(blocked), "Original blocked movement action is available.");
+                int blockedBefore = played.Count;
+                fireViews.StartMovement(blocked, fireSource, new FightGridPoint(4, 5));
+                float farthest = fireSource.localPosition.x;
+                bool captured = false;
+                for (int frame = 0; frame < 100; frame++)
+                {
+                    fireViews.Tick(.01f); fireScope.LateTick();
+                    farthest = Mathf.Max(farthest, fireSource.localPosition.x);
+                    if (!captured && farthest > 3.79f)
+                    { Capture("session-collision.png", false); captured = true; }
+                    yield return null;
+                }
+                Require(captured && Mathf.Abs(fireSource.localPosition.x - 3f) < .01f
+                    && played.Skip(blockedBefore).Any(value => value.Name == "playable_move_blocked")
+                    && fireRoot.GetComponentsInChildren<MyFightActionSkillMove>(false).Length == 0,
+                    "Original blocked movement must reach the collision and return before its own removal.");
+            }
             jumpAppearance?.Dispose();
             jumpSession.Dispose(); fireViews.Dispose(); Destroy(fireRoot.gameObject);
 
