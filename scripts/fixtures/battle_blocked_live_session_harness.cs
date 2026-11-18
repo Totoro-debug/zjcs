@@ -112,6 +112,24 @@ namespace Zjcs.Presentation.Combat {
     }
    }
    {
+    var hits=new List<FightBattleHitEntity>();for(int i=0;i<3;i++)hits.Add(new FightBattleHitEntity{EntityId=10631+i,ScopeEntries=new List<FightBattleHitScopeEntry>{new FightBattleHitScopeEntry{Position=new FightGridPoint(0,1)}}});
+    var skill=new FightBattleSkillDefinition{EntityId=10630,HitGraphEntities=hits};
+    var cp=new FightBattleCheckpoint{Units=new List<FightBattleUnitState>{new FightBattleUnitState{Id=1,Skills=new List<FightBattleSkillDefinition>{skill}}}};
+    var views=new OfficialBattleSkillEntityPlayback();var cast=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10630,HitSelections=new List<FightBattleHitSelectionSnapshot>()};
+    using(var session=new OfficialBattleLiveImpactSession(cp,_=>new FightBattleExecutor(),views,0,1,true)){
+     OfficialBattleImpactViewBridge.Arrivals.Clear();FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=cast};session.Pump(0,StartCast);
+     for(int i=0;i<3;i++){
+      OfficialBattleSlashImpact.Last=null;views.Graph(cast,"playable10630","effect ("+(i+1)+")");var observer=OfficialBattleSlashImpact.Last;
+      Check(observer!=null&&observer.Particle==(i==0?"daoguang da (24)":"daoguang da (28)"),"Combo did not bind its original slash particle");
+      observer.Trigger();Check(OfficialBattleImpactViewBridge.Arrivals.Count==i,"An early combo effect fabricated its hit selection");
+      var selection=new FightBattleHitSelectionSnapshot{HitEntityId=10631+i,Targets=new List<FightBattleHitSelectionSnapshot.TargetOccurrence>{new FightBattleHitSelectionSnapshot.TargetOccurrence{HasScopeIndex=true,ScopeIndex=0}}};
+      cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartCast);
+      Check(OfficialBattleImpactViewBridge.Arrivals.Count==i+1,"The combo effect did not reach its own hit selection");
+      observer.Trigger();Check(OfficialBattleImpactViewBridge.Arrivals.Count==i+1,"A combo impact was delivered twice");
+     }
+    }
+   }
+   {
     var hit=new FightBattleHitEntity{EntityId=11121,ScopeEntries=new List<FightBattleHitScopeEntry>()};
     for(int x=-2;x<=2;x++)for(int y=-2;y<=2;y++)if(Math.Abs(x)+Math.Abs(y)>=1&&Math.Abs(x)+Math.Abs(y)<=2)
      hit.ScopeEntries.Add(new FightBattleHitScopeEntry{Position=new FightGridPoint(x,y)});

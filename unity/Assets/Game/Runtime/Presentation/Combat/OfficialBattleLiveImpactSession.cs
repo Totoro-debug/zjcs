@@ -38,6 +38,13 @@ namespace Zjcs.Presentation.Combat
         private readonly List<OfficialBattleMountainWaveImpact> mountainWaves = new List<OfficialBattleMountainWaveImpact>();
         private readonly HashSet<int> slashCasters = new HashSet<int>();
         private readonly HashSet<int> heavyCasters = new HashSet<int>();
+        private readonly HashSet<int> comboCasters = new HashSet<int>();
+        private readonly HashSet<(FightBattleSkillCastEvent Cast, int Index)> observedComboEffects =
+            new HashSet<(FightBattleSkillCastEvent, int)>();
+        private readonly Dictionary<FightBattleSkillCastEvent, int> reachedComboEffects =
+            new Dictionary<FightBattleSkillCastEvent, int>();
+        private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> sentComboHits =
+            new HashSet<(FightBattleHitSelectionSnapshot, int)>();
         private readonly HashSet<FightBattleSkillCastEvent> observedSlashes = new HashSet<FightBattleSkillCastEvent>();
         private readonly HashSet<FightBattleSkillCastEvent> reachedSlashes = new HashSet<FightBattleSkillCastEvent>();
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> sentSlashes =
@@ -87,9 +94,18 @@ namespace Zjcs.Presentation.Combat
                 foreach (var skill in unit.Skills)
                 {
                     if (skill?.HitGraphEntities == null) continue;
+                    int comboMask = 0; bool comboValid = true;
                     foreach (var hit in skill.HitGraphEntities)
                     {
                         if (hit?.ScopeEntries == null) continue;
+                        if (skill.EntityId == 10630 && hit.EntityId >= 10631 && hit.EntityId <= 10633)
+                        {
+                            int bit = 1 << (hit.EntityId - 10631);
+                            if ((comboMask & bit) != 0 || hit.ScopeEntries.Count != 1 || hit.ScopeEntries[0] == null
+                                || hit.ScopeEntries[0].Delay != 0f || hit.ScopeEntries[0].Position.X != 0
+                                || hit.ScopeEntries[0].Position.Y != 1) comboValid = false;
+                            comboMask |= bit;
+                        }
                         if (skill.EntityId == 10600 && hit.EntityId == 10601 && hit.ScopeEntries.Count == 1
                             && hit.ScopeEntries[0] != null && hit.ScopeEntries[0].Delay == 0f
                             && hit.ScopeEntries[0].Position.X == 0 && hit.ScopeEntries[0].Position.Y == 1)
@@ -120,6 +136,7 @@ namespace Zjcs.Presentation.Combat
                                 mountainScopes[unit.Id] = rings;
                         }
                     }
+                    if (skill.EntityId == 10630 && comboValid && comboMask == 7) comboCasters.Add(unit.Id);
                 }
             }
             step = new FightBattleIsolatedStep(checkpoint, restore, sequence, counter, observeMovements);
@@ -235,6 +252,9 @@ namespace Zjcs.Presentation.Combat
                             if ((reached & 2) != 0) RouteMountainWave(selectedCast, active.Id, 2);
                         }
                         if (reachedSlashes.Contains(selectedCast)) RouteSlashImpact(selectedCast, active.Id);
+                        if (reachedComboEffects.TryGetValue(selectedCast, out int comboReached))
+                            for (int index = 0; index < 3; index++)
+                                if ((comboReached & (1 << index)) != 0) RouteComboImpact(selectedCast, active.Id, index);
                         selection = null; progressed = true;
                         step.Latch.WaitForWorkerBoundary(revision);
                         continue;
@@ -299,8 +319,43 @@ namespace Zjcs.Presentation.Combat
             finally
             {
                 try { RouteJumpSlashImpact(cast, prefab, playable); AttachMountainWaves(cast, id, prefab, playable);
-                    AttachSlashImpact(cast, id, prefab, playable); }
+                    AttachSlashImpact(cast, id, prefab, playable); AttachComboImpact(cast, id, prefab, playable); }
                 finally { currentGraphCast = previousCast; currentGraphSkillId = previousId; }
+            }
+        }
+
+        private void AttachComboImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
+            GameObject prefab, MyPlayable playable)
+        {
+            if (cast?.SkillEntityId != 10630 || prefab == null || prefab.name != "playable10630"
+                || playable == null || !comboCasters.Contains(cast.ActorId)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            int index = playable.name == "effect (1)" ? 0 : playable.name == "effect (2)" ? 1
+                : playable.name == "effect (3)" ? 2 : -1;
+            if (index < 0 || observedComboEffects.Contains((cast, index))) return;
+            var observer = OfficialBattleSlashImpact.Attach(playable,
+                index == 0 ? "daoguang da (24)" : "daoguang da (28)", () => RouteComboImpact(cast, id, index));
+            if (observer == null) return;
+            observedComboEffects.Add((cast, index)); slashEffects.Add(observer);
+        }
+
+        private void RouteComboImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id, int index)
+        {
+            if (disposed || transferred || !observedComboEffects.Contains((cast, index))
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            reachedComboEffects.TryGetValue(cast, out int reached);
+            reachedComboEffects[cast] = reached | (1 << index);
+            if (cast.HitSelections == null) return;
+            foreach (var hit in new List<FightBattleHitSelectionSnapshot>(cast.HitSelections))
+            {
+                if (hit?.HitEntityId != 10631 + index || !selectedHits.Contains(hit) || hit.Targets == null) continue;
+                foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
+                {
+                    if (!casts.ContainsKey(cast)) return;
+                    if (target == null || !target.HasScopeIndex || target.ScopeIndex != 0
+                        || !sentComboHits.Add((hit, target.EffectCenterIndex))) continue;
+                    bridge.RecordArrival(cast, hit, target.EffectCenterIndex, target.ScopeIndex);
+                }
             }
         }
 
@@ -474,7 +529,8 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in slashEffects) if (observer != null) observer.Detach();
             step.Dispose();
             casts.Clear(); selectedHits.Clear(); jumpSlashScopes.Clear(); mountainScopes.Clear(); observedMountains.Clear(); reachedMountainWaves.Clear(); mountainWaves.Clear();
-            slashCasters.Clear(); heavyCasters.Clear(); observedSlashes.Clear(); reachedSlashes.Clear(); sentSlashes.Clear(); slashEffects.Clear();
+            slashCasters.Clear(); heavyCasters.Clear(); comboCasters.Clear(); observedComboEffects.Clear();
+            reachedComboEffects.Clear(); sentComboHits.Clear(); observedSlashes.Clear(); reachedSlashes.Clear(); sentSlashes.Clear(); slashEffects.Clear();
             resolvingStatuses.Clear();
             SecondsStatusChanged = null;
         }

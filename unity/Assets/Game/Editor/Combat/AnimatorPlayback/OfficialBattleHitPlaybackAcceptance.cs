@@ -1351,6 +1351,96 @@ namespace Zjcs.Editor.Combat
             yield return null;
             }
 
+            foreach (var comboDirection in new[] { new Vector2Int(1, 0), new Vector2Int(-1, 0),
+                new Vector2Int(0, 1), new Vector2Int(0, -1) }) {
+                string comboDirectionName = comboDirection.x > 0 ? "right" : comboDirection.x < 0 ? "left" : comboDirection.y > 0 ? "up" : "down";
+                int comboExpectedFacing = comboDirection.x > 0 ? 3 : comboDirection.x < 0 ? 1 : comboDirection.y > 0 ? 2 : 0;
+                var comboUnits = new[] { LiveUnit(1, 1, 5), LiveUnit(2, 2, 5 + comboDirection.x) };
+                comboUnits[1].Y += comboDirection.y;
+                var comboSkill = liveCatalog.CreateSkill(10630, 0, 10011, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(10630, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+                comboSkill.LimitedTimes = 1; comboUnits[0].Skills.Add(comboSkill);
+                comboUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(comboSkill, 0));
+                var comboCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                comboCheckpoint.Units.AddRange(comboUnits); var comboWave = new FightBattleWaveState(); comboWave.UnitIds.Add(2); comboCheckpoint.Waves.Add(comboWave);
+                FightBattleExecutor.Begin(comboCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                string comboCommitted = FightBattleCheckpointSerializer.Save(comboCheckpoint);
+                var comboDisplay = FightBattleCheckpointSerializer.Load(comboCommitted).Units.ToArray();
+                var comboRoot = new GameObject("Live three-hit combo").transform; comboRoot.SetParent(root, false);
+                var comboSource = new GameObject("Combo source").transform; comboSource.SetParent(comboRoot, false); comboSource.localPosition = new Vector3(5, 5, 0);
+                var comboTarget = new GameObject("Combo target").transform; comboTarget.SetParent(comboRoot, false); comboTarget.localPosition = new Vector3(5 + comboDirection.x, 5 + comboDirection.y, 0);
+                foreach (var actorView in new[] { comboSource, comboTarget }) {
+                    actorView.gameObject.AddComponent<MyTransform>();
+                    var renderer = actorView.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
+                    actorView.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                }
+                var comboAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump ? NativeJumpAppearanceFixture.Create(comboSource.gameObject) : null;
+                var comboScope = new OfflineBattleNativePlayableScope(comboRoot, null);
+                using (var comboViews = new OfficialBattleSkillEntityPlayback(comboRoot, new OfficialBattleGridMapper(comboRoot, grid),
+                    comboScope, id => comboDisplay.FirstOrDefault(value => value.Id == id)))
+                using (var comboSession = new OfficialBattleLiveImpactSession(comboCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                    formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), comboViews, 0, 1)) {
+                    comboViews.BindDamageUI(comboRoot, 0);
+                    var comboParticles = new ParticleSystem[3]; var comboResumed = new bool[3]; var comboPauseFrames = new int[3];
+                    var comboHitFrames = new int[3];
+                    int comboHits = 0, comboFacing = -1, comboVisibleCaptured = 0, comboLaterCaptured = 0;
+                    comboSession.SecondsStatusChanged += _ => { };
+                    comboSession.SkillGraphPlayableStarted += (cast, id, prefab, leaf) => {
+                        if (cast.SkillEntityId != 10630 || prefab.name != "playable10630") return;
+                        int index = leaf.name == "effect (1)" ? 0 : leaf.name == "effect (2)" ? 1 : leaf.name == "effect (3)" ? 2 : -1;
+                        if (index < 0) return;
+                        comboParticles[index] = leaf.GetComponentsInChildren<ParticleSystem>(true)
+                            .Single(value => value.name == (index == 0 ? "daoguang da (24)" : "daoguang da (28)"));
+                        comboParticles[index].Pause(true);
+                    };
+                    bool StartCombo(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) {
+                        comboFacing = cast.Presentation.FacingIndex; id = comboViews.Start(cast, comboSource, comboTarget); return true;
+                    }
+                    void ComboDamage(FightBattleDamageEvent damage) {
+                        int index = comboHits;
+                        Require(index < 3 && comboResumed[index] && comboParticles[index] && comboParticles[index].particleCount > 0
+                            && damage.BeforeHp == comboDisplay[1].Hp, "A combo hit preceded or repeated its original slash: " + comboDirectionName);
+                        comboHitFrames[index] = Time.frameCount;
+                        comboHits++; comboDisplay[1].Hp = damage.AfterHp; comboDisplay[1].Turn.Hp = damage.AfterHp;
+                        if (comboAppearance != null) Capture("combo-" + comboDirectionName + "-" + comboHits + ".png", false);
+                    }
+                    deadline = Time.realtimeSinceStartup + 20f;
+                    while (!comboSession.IsCompleted && Time.realtimeSinceStartup < deadline) {
+                        comboSession.Pump(Time.deltaTime, StartCombo, ComboDamage);
+                        if (comboAppearance != null && comboVisibleCaptured < comboHits
+                            && Time.frameCount > comboHitFrames[comboVisibleCaptured]) {
+                            comboVisibleCaptured++;
+                            Capture("combo-visible-" + comboDirectionName + "-" + comboVisibleCaptured + ".png", false);
+                        }
+                        if (comboAppearance != null && comboLaterCaptured < comboHits
+                            && Time.frameCount >= comboHitFrames[comboLaterCaptured] + 5) {
+                            comboLaterCaptured++;
+                            Capture("combo-later-" + comboDirectionName + "-" + comboLaterCaptured + ".png", false);
+                        }
+                        for (int index = 0; index < 3; index++) if (comboParticles[index] && !comboResumed[index]) {
+                            Require(comboParticles[index].particleCount == 0 && comboHits == index,
+                                "A paused combo slash cannot settle its damage: " + comboDirectionName);
+                            if (++comboPauseFrames[index] == 5) { comboResumed[index] = true; comboParticles[index].Play(true); }
+                        }
+                        comboViews.Tick(Time.deltaTime); comboScope.LateTick(); yield return null;
+                    }
+                    Require(comboHits == 3 && comboFacing == comboExpectedFacing && comboResumed.All(value => value)
+                        && comboSession.TryTakeCompleted(out _, out var comboResult) && comboResult.Event.DamageEvents.Count == 3
+                        && FightBattleCheckpointSerializer.Save(comboCheckpoint) == comboCommitted,
+                        "The original three combo impacts did not complete: " + comboDirectionName);
+                    if (comboAppearance != null && comboVisibleCaptured < 3) {
+                        yield return null; comboViews.Tick(Time.deltaTime); comboScope.LateTick();
+                        Capture("combo-visible-" + comboDirectionName + "-3.png", false);
+                    }
+                    if (comboAppearance != null && comboLaterCaptured < 3) {
+                        while (Time.frameCount < comboHitFrames[2] + 5) { yield return null; comboViews.Tick(Time.deltaTime); comboScope.LateTick(); }
+                        Capture("combo-later-" + comboDirectionName + "-3.png", false);
+                    }
+                }
+                comboAppearance?.Dispose(); Destroy(comboRoot.gameObject); yield return null;
+            }
+
             // Exercise the same live driver through the production graph owner's factory.
             var graphUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 5) };
             var graphSkill = liveCatalog.CreateSkill(10800, 0, 10028, 2, 20, 1,
