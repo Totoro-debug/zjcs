@@ -80,6 +80,10 @@ public static class BattleImpactGateHarness
                         "The native hit lacks its original cast, hit, target or location");
                     Check(gate.Prepared.Any(cast => ReferenceEquals(cast, impact.Cast)),
                         "The impact was requested before its cast preparation notification");
+                    Check(impact.OccurrenceIndex >= 0 && impact.OccurrenceIndex < impact.HitSelection.Targets.Count
+                        && impact.HitSelection.Targets[impact.OccurrenceIndex].TargetId == impact.TargetId
+                        && impact.HitSelection.Targets[impact.OccurrenceIndex].EffectCenterIndex == impact.EffectCenterIndex,
+                        "The pending impact lost its selected occurrence or effect centre");
                     Check(target.Hp == previousHp, "HP changed before the presentation released the pending impact");
                     Check(!step.Wait(50) && target.Hp == previousHp, "A paused impact settled without its presentation event");
                 }
@@ -98,6 +102,39 @@ public static class BattleImpactGateHarness
             Check(actual.Event.DamageEvents.Count(d => d.SkillItemId == setup[0]) == setup[3], "A hit was lost or duplicated");
             Check(FightBattleCheckpointSerializer.Save(checkpoint) == FightBattleCheckpointSerializer.Save(baseline),
                 "Gating changed the original deterministic result");
+        }
+        {
+            var cp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                Grid = new FightBattleGrid { Width = 24, Height = 24, DefaultGroundType = 2 } };
+            var actor = Unit(1, 1, 10, 10, formula); actor.Direction = 3;
+            var skill = catalog.CreateSkill(10590, 0, 10043, 2, 20, 1,
+                catalog.CalculateSkillProps(10590, 2, 20, 1).Select(p => new FightPropertyValue { Id = p.Key, Value = p.Value }).ToList());
+            skill.LimitedTimes = 1; actor.Skills.Add(skill); actor.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
+            cp.Units.Add(actor); int unitId = 2;
+            foreach (var offset in new[] { new[] {0,0}, new[] {-1,0}, new[] {1,0}, new[] {0,-1}, new[] {0,1} })
+                cp.Units.Add(Unit(unitId++, 2, 13 + offset[0], 10 + offset[1], formula));
+            var wave = new FightBattleWaveState(); wave.UnitIds.AddRange(cp.Units.Where(u => u.Side == 2).Select(u => u.Id)); cp.Waves.Add(wave);
+            var executor = FightBattleExecutor.Begin(cp, formula, new FightDamageSettlement(), catalog, items);
+            var gate = new Gate(); executor.ImpactGate = gate; var task = Task.Run(() => executor.Step(0, 1));
+            var seen = new HashSet<int>();
+            for (int index = 0; index < 5; index++)
+            {
+                var pending = gate.Next();
+                try
+                {
+                    var impact = pending.Impact;
+                    var occurrence = impact.HitSelection.Targets[impact.OccurrenceIndex];
+                    Check(impact.SkillItemId == 10043 && seen.Add(impact.TargetId)
+                        && occurrence.TargetId == impact.TargetId && occurrence.EffectCenterIndex == impact.EffectCenterIndex
+                        && occurrence.HasGridPosition && occurrence.GridX == impact.GridX && occurrence.GridY == impact.GridY,
+                        "A cross-scope impact lost the actual target, body cell or centre identity");
+                    Check(cp.Units.Single(u => u.Id == impact.TargetId).Hp == 1000000,
+                        "A cross-scope target took damage before its own impact");
+                }
+                finally { pending.Released.Set(); }
+            }
+            Check(task.Wait(TimeSpan.FromSeconds(20)) && task.Result.Event.DamageEvents.Count(d => d.SkillItemId == 10043) == 5,
+                "Cross-scope impacts were lost or duplicated");
         }
         foreach (bool removed in new[] { false, true })
         {
@@ -123,6 +160,6 @@ public static class BattleImpactGateHarness
             Check(removed ? hits.Length == 0 : hits.Length == 1 && hits[0].BeforeHp == 500000 && hits[0].AfterHp < 500000,
                 "The impact did not use the target's live state when the presentation reached it");
         }
-        return "Impact gate passed: " + impacts + " held impacts across three-hit combo, jump slash and fireball; exact ungated results preserved.";
+        return "Impact gate passed: " + impacts + " held impacts across three-hit combo, jump slash and fireball; five cross-scope identities, skill cost and exact ungated results verified.";
     }
 }

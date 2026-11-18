@@ -5,6 +5,8 @@ namespace Zjcs.Combat.Official
     {
         public int SourceId, TargetId, SkillEntityId, SkillItemId, HitEntityId, DamageEntityId;
         public int GridX, GridY;
+        // Indices belong to HitSelection when that original selection is available.
+        public int EffectCenterIndex, OccurrenceIndex;
         public FightBattleSkillCastEvent Cast;
         public FightBattleHitSelectionSnapshot HitSelection;
     }

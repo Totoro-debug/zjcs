@@ -993,6 +993,7 @@ namespace Zjcs.Combat.Official
                             SourceId = actor.Id, TargetId = target.Id, SkillEntityId = skill.EntityId,
                             SkillItemId = skill.ItemId, HitEntityId = hit.EntityId, DamageEntityId = hit.DamageId,
                             GridX = damagePosition.X, GridY = damagePosition.Y,
+                            EffectCenterIndex = centerIndex, OccurrenceIndex = targetIndex,
                             Cast = presentationCast, HitSelection = hitReceipt });
                         if (!allowDeadSource && actor.Hp <= 0) break;
                         if (target.Hp <= 0 && hit.ActionType != 62 || target.Ended) continue;
