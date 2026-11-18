@@ -51,6 +51,7 @@ namespace Zjcs.Combat.Official
     /// </summary>
     public interface IFightBattleBlockedMovementObserver
     {
+        bool ObservesBlockedMovements { get; }
         void BlockedMovementPrepared(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement,
             FightGridPoint blockedPosition);
         void AwaitBlockedContact(FightBattleMovementEvent movement);

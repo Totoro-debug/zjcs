@@ -989,6 +989,8 @@ namespace Zjcs.Combat.Official
                     FightGridPoint hitOrigin = hitSelection != null && centerIndex < hitSelection.EffectCenters.Count
                         ? hitSelection.EffectCenters[centerIndex]
                         : FightHitAnchorExtensions.ResolveCenter(hit.Anchor, actor, targetPosition ?? target, castHit);
+                    bool collisionHit = IsBlockedCollisionHit(skill, hit, target);
+                    if (collisionHit) hit.TrueDamage = true;
                     FightBattlePendingImpact pendingImpact = null;
                     IFightBattleImpactGate impactGate = ImpactGate;
                     if (impactGate != null)
@@ -1011,7 +1013,7 @@ namespace Zjcs.Combat.Official
                     int damageId = NextDamageId();
                     bool originalHasCustomDamage = hit.HasCustomDamage;
                     long originalCustomDamage = hit.CustomDamage;
-                    if (!chaosInvasionWipe)
+                    if (!chaosInvasionWipe && !collisionHit)
                         ApplyResilienceDamageOverride(actor, target, skill, hit);
                     float elementConfrontation = 0f;
                     bool elementConfrontationResolved = true;
@@ -1039,7 +1041,10 @@ namespace Zjcs.Combat.Official
                     {
                         try
                         {
-                            resolved = hitExecutor.Apply(random, damageId, actor, target,
+                            resolved = collisionHit
+                                ? hitExecutor.ApplyKnockbackCollision(random, damageId, actor, target, skill, hit,
+                                    CurrentAttack(actor), checkpoint.StageType)
+                                : hitExecutor.Apply(random, damageId, actor, target,
                                 skill, hit, checkpoint.StageType, checkpoint.IsPvp, elementConfrontation,
                                 new List<int>(), allowDeadSource, skillDamageScale
                                     * (hit.UseDamageFactor ? externalDamageFactor : 1.0), conditionalHitProperties,
@@ -2415,6 +2420,7 @@ namespace Zjcs.Combat.Official
                 }
             }
             if (stepX == 0 && stepY == 0) return;
+            if (TryApplyBlockedMountainPush(actor, target, skill, hit, move, movements, stepX, stepY, hitDelay)) return;
             for (int distance = move.Distance; distance > 0; distance--)
             {
                 var desired = new FightGridPoint(target.X + stepX * distance + move.OffsetX,
@@ -2512,7 +2518,8 @@ namespace Zjcs.Combat.Official
         }
 
         private void ApplyMovementAction(List<FightBattleMovementEvent> movements,
-            int startIndex, FightBattleSkillMove move, FightBattleSkillDefinition skill, bool activeMove = false, float originDelay = 0f)
+            int startIndex, FightBattleSkillMove move, FightBattleSkillDefinition skill, bool activeMove = false,
+            float originDelay = 0f, FightGridPoint? blockedPosition = null)
         {
             if (movements == null || move == null) return;
             // A start listener can append another movement. Do not overwrite its own action timing
@@ -2527,21 +2534,24 @@ namespace Zjcs.Combat.Official
                 movement.MoveDuration = move.MoveDuration;
                 movement.MoveSpeed = move.MoveSpeed;
                 NotifyMovementStart(movement, statusCatalog?.EntityActionType(move.MoveBehaviourId) ?? 0,
-                    movements, skill, activeMove);
+                    movements, skill, activeMove, blockedPosition);
             }
         }
 
         private void NotifyMovementStart(FightBattleMovementEvent movement, int actionType,
             List<FightBattleMovementEvent> movements, FightBattleSkillDefinition sourceSkill = null,
-            bool activeMove = false)
+            bool activeMove = false, FightGridPoint? blockedPosition = null)
         {
             if (statusCatalog == null || movement == null
                 || !unitById.TryGetValue(movement.UnitId, out FightBattleUnitState mover)) return;
             statusCatalog.ApplyMovementFacing(mover, movement);
             statusCatalog.CompleteRoleMovement(movement);
-            if (ImpactGate is IFightBattleMovementPreparationObserver movementObserver)
-                movementObserver.MovementPrepared(sourceSkill != null && gridViewCast?.SkillEntityId == sourceSkill.EntityId
-                    ? gridViewCast : null, movement);
+            var sourceCast = sourceSkill != null && gridViewCast?.SkillEntityId == sourceSkill.EntityId
+                ? gridViewCast : null;
+            if (blockedPosition.HasValue && ImpactGate is IFightBattleBlockedMovementObserver blockedObserver)
+                blockedObserver.BlockedMovementPrepared(sourceCast, movement, blockedPosition.Value);
+            else if (ImpactGate is IFightBattleMovementPreparationObserver movementObserver)
+                movementObserver.MovementPrepared(sourceCast, movement);
             if (movementStartContext == null) return;
             if (activeMove) ApplyMoveScopesForMovement(mover, movement);
             // ActionAgentComponentImplement.StartAction fires StartEvent after AddEntity;

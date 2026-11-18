@@ -923,11 +923,98 @@ namespace Zjcs.Editor.Combat
                     "Original blocked movement must signal its actual collision once and return before removal.");
                 collisionWorker.GetAwaiter().GetResult();
                 jumpSession.Dispose();
+
+                var mountainUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 4), LiveUnit(3, 2, 5) };
+                mountainUnits[0].Properties.Add(new FightPropertyValue { Id = formula.PropertyId("EffectRateValue"), Value = 20000 });
+                var mountainSkill = liveCatalog.CreateSkill(11120, 0, 10052, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(11120, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+                mountainSkill.LimitedTimes = 1; mountainUnits[0].Skills.Add(mountainSkill);
+                mountainUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(mountainSkill, 0));
+                var mountainCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                mountainCheckpoint.Units.AddRange(mountainUnits); var mountainWave = new FightBattleWaveState();
+                mountainWave.UnitIds.Add(2); mountainWave.UnitIds.Add(3); mountainCheckpoint.Waves.Add(mountainWave);
+                FightBattleExecutor.Begin(mountainCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                string mountainCommitted = FightBattleCheckpointSerializer.Save(mountainCheckpoint);
+                fireDisplayUnits = FightBattleCheckpointSerializer.Load(mountainCommitted).Units.ToArray();
+                fireSource.localPosition = new Vector3(2, 5, 0); fireTarget.localPosition = new Vector3(4, 5, 0);
+                var blockerView = new GameObject("Mountain collision blocker").transform;
+                blockerView.SetParent(fireRoot, false); blockerView.localPosition = new Vector3(5, 5, 0);
+                blockerView.gameObject.AddComponent<MyTransform>();
+                var blockerRenderer = blockerView.gameObject.AddComponent<MeshRenderer>(); blockerRenderer.enabled = false;
+                blockerRenderer.sharedMaterials = Array.Empty<Material>();
+                blockerView.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = blockerRenderer;
+                int blockerDamageFrame = -1; long blockerDamageValue = 0;
+                fireViews.EnsureUnit(3, blockerView).GetComponent<MyFightRoleFight>().OnDamage += (role, damage) => {
+                    blockerDamageFrame = Time.frameCount; blockerDamageValue = damage.Component.DamageResult.DamageValue;
+                };
+                int mountainContactFrame = -1, mountainChildCount = 0, mountainPlayedBefore = played.Count;
+                var mountainCasts = new List<int>();
+                using var mountainSession = new OfficialBattleLiveImpactSession(mountainCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                    formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), fireViews, 0, 1, observeMovements: true);
+                // The parent hit has no scope playable; this fixture explicitly releases it
+                // to exercise the subsequent original blocked-action contact. Its exact
+                // player-facing strike timing remains a separate unresolved integration.
+                mountainSession.SkillGraphPlayableStarted += (mountainCast, id, prefab, leaf) => {
+                    if (mountainCast.SkillEntityId != 11120 || prefab.name != "playable11120" || leaf.name != "effect") return;
+                    foreach (var selection in mountainCast.HitSelections.Where(value => value.HitEntityId == 11121))
+                        foreach (var occurrence in selection.Targets)
+                            mountainSession.RecordGraphImpact(mountainCast, selection, occurrence.EffectCenterIndex,
+                                occurrence.HasScopeIndex ? occurrence.ScopeIndex : -1);
+                };
+                bool StartMountainCast(FightBattleSkillCastEvent mountainCast, out EcEntityIdentifier id) {
+                    mountainCasts.Add(mountainCast.SkillEntityId);
+                    var targetView = mountainCast.TargetIds.Contains(3) ? blockerView : fireTarget;
+                    id = fireViews.Start(mountainCast, fireSource, targetView); return true;
+                }
+                bool StartMountainBlocked(FightBattleSkillCastEvent mountainCast, FightBattleMovementEvent move,
+                    FightGridPoint position, Action contact) {
+                    Require(move.UnitId == 2 && position.Equals(new FightGridPoint(5, 5)), "Wrong original mountain collision action.");
+                    fireViews.StartMovement(move, fireTarget, position, _ => {
+                        mountainContactFrame = Time.frameCount; contact();
+                        Require(mountainChildCount == 2, "Both collision results must arrive in the actual contact callback.");
+                        Capture("mountain-collision-impact.png", false);
+                    });
+                    return true;
+                }
+                void MountainDamage(FightBattleDamageEvent damage) {
+                    var displayed = fireDisplayUnits.Single(value => value.Id == damage.TargetId);
+                    displayed.Hp = damage.AfterHp; displayed.Turn.Hp = damage.AfterHp;
+                    if (damage.SkillEntityId != 10100) return;
+                    Require(mountainContactFrame == Time.frameCount && damage.TrueDamage && damage.Damage == -600
+                        && (damage.TargetId == 2 ? observedDamage == -600
+                            : damage.TargetId == 3 && blockerDamageFrame == Time.frameCount && blockerDamageValue == -600),
+                        "The actual mountain collision child and damage display must reach the native contact frame.");
+                    mountainChildCount++;
+                }
+                deadline = Time.realtimeSinceStartup + 20f;
+                while (!mountainSession.IsCompleted && Time.realtimeSinceStartup < deadline) {
+                    mountainSession.Pump(Time.deltaTime, StartMountainCast, MountainDamage, null, StartMountainBlocked);
+                    fireViews.Tick(Time.deltaTime); fireScope.LateTick();
+                    yield return null;
+                }
+                Require(mountainChildCount == 2 && mountainSession.TryTakeCompleted(out _, out var mountainResult)
+                    && mountainResult.Event.DamageEvents.Count(value => value.SkillEntityId == 10100) == 2
+                    && FightBattleCheckpointSerializer.Save(mountainCheckpoint) == mountainCommitted,
+                    "The real mountain action must finish both collision child hits on its isolated checkpoint: completed="
+                    + mountainSession.IsCompleted + ", children=" + mountainChildCount + ", contact=" + mountainContactFrame
+                    + ", casts=" + string.Join(",", mountainCasts) + ", pending movement=" + (mountainSession.PendingMovement != null)
+                    + ", pending settlement=" + (mountainSession.PendingSettlement != null) + ", blocked status=" + mountainSession.StatusResolutionBlocked
+                    + ", played=" + string.Join(",", played.Skip(mountainPlayedBefore).Select(value => value.Name)));
+                mountainSession.Dispose();
+                for (int frame = 0; frame < 200 && fireRoot.GetComponentsInChildren<MyFightActionSkillMove>(false).Length != 0; frame++) {
+                    fireViews.Tick(.01f); fireScope.LateTick(); yield return null;
+                }
+                Require(fireRoot.GetComponentsInChildren<MyFightActionSkillMove>(false).Length == 0,
+                    "The real blocked movement must finish before the interruption fixture starts.");
                 blockedBefore = played.Count;
+                fireSource.localPosition = new Vector3(3, 5, 0);
                 fireViews.StartMovement(blocked, fireSource, new FightGridPoint(4, 5), _ => contacts++);
                 fireViews.Tick(0f); fireScope.LateTick();
                 Require(played.Skip(blockedBefore).Any(value => value.Name == "playable_move_blocked"),
-                    "The second original blocked movement starts before interruption.");
+                    "The second original blocked movement starts before interruption: played="
+                    + string.Join(",", played.Skip(blockedBefore).Select(value => value.Name))
+                    + ", actions=" + fireRoot.GetComponentsInChildren<MyFightActionSkillMove>(false).Length);
                 fireViews.Dispose();
                 Require(contacts == 1, "Interrupting the original blocked track must not signal contact.");
             }

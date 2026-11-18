@@ -100,6 +100,7 @@ namespace Zjcs.Combat.Official
         private Signal waitingImpact;
         private FightBattleMovementEvent waitingBlockedMovement;
         public bool ObserveMovements { get; internal set; }
+        bool IFightBattleBlockedMovementObserver.ObservesBlockedMovements => ObserveMovements;
 
         // The isolated step owns exactly one worker. Other latch users retain the
         // original independent wait semantics and do not participate in its fence.
@@ -256,6 +257,7 @@ namespace Zjcs.Combat.Official
                     || !preparation.ContactConsumed || !blockedContacts.Contains(movement))
                     throw new InvalidOperationException("The action has not consumed its actual blocked contact.");
                 if (cast.SkillEntityId != 10100 || cast.ActorId <= 0 || targetId <= 0
+                    || preparation.Cast != null && preparation.Cast.ActorId != cast.ActorId
                     || cast.TargetIds == null || cast.TargetIds.Count != 1 || cast.TargetIds[0] != targetId
                     || blockedImpacts.ContainsKey(cast) || !boundBlockedTargets.Add((movement, targetId)))
                     throw new InvalidOperationException("The collision child does not identify a unique contact target.");

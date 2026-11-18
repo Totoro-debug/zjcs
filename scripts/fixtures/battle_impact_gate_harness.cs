@@ -60,7 +60,7 @@ public static class BattleImpactGateHarness
     {
         {
             using var blocked = new FightBattleImpactLatch { ObserveMovements = true };
-            var cast = new FightBattleSkillCastEvent();
+            var cast = new FightBattleSkillCastEvent { ActorId = 1 };
             var move = new FightBattleMovementEvent();
             var collisionCast = new FightBattleSkillCastEvent { SkillEntityId = 10100, ActorId = 1 };
             collisionCast.TargetIds.Add(2);
@@ -76,6 +76,11 @@ public static class BattleImpactGateHarness
                 try {
                     blocked.BlockedMovementPrepared(cast, move, new FightGridPoint(4, 5));
                     blocked.AwaitBlockedContact(move);
+                    var wrongSource = new FightBattleSkillCastEvent { ActorId = 9, SkillEntityId = 10100 };
+                    wrongSource.TargetIds.Add(2);
+                    bool rejectedWrongSource = false;
+                    try { blocked.BindBlockedImpact(move, wrongSource, 2); }
+                    catch (InvalidOperationException) { rejectedWrongSource = true; }
                     blocked.BindBlockedImpact(move, collisionCast, 2);
                     var wrong = new FightBattlePendingImpact { Cast = collisionCast, HitSelection = selection,
                         SkillEntityId = 10100, HitEntityId = 10101, DamageEntityId = 10006,
@@ -88,7 +93,7 @@ public static class BattleImpactGateHarness
                     catch (InvalidOperationException) { rejectedDuplicate = true; }
                     try { blocked.AwaitBlockedContact(move); }
                     catch (InvalidOperationException) { rejectedContact = true; }
-                    return rejectedWrongTarget && rejectedDuplicate && rejectedContact;
+                    return rejectedWrongSource && rejectedWrongTarget && rejectedDuplicate && rejectedContact;
                 }
                 finally { blocked.FinishWorker(); }
             });
