@@ -37,6 +37,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Dictionary<FightBattleSkillCastEvent, int> reachedMountainWaves = new Dictionary<FightBattleSkillCastEvent, int>();
         private readonly List<OfficialBattleMountainWaveImpact> mountainWaves = new List<OfficialBattleMountainWaveImpact>();
         private readonly HashSet<int> slashCasters = new HashSet<int>();
+        private readonly HashSet<int> heavyCasters = new HashSet<int>();
         private readonly HashSet<FightBattleSkillCastEvent> observedSlashes = new HashSet<FightBattleSkillCastEvent>();
         private readonly HashSet<FightBattleSkillCastEvent> reachedSlashes = new HashSet<FightBattleSkillCastEvent>();
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> sentSlashes =
@@ -93,6 +94,10 @@ namespace Zjcs.Presentation.Combat
                             && hit.ScopeEntries[0] != null && hit.ScopeEntries[0].Delay == 0f
                             && hit.ScopeEntries[0].Position.X == 0 && hit.ScopeEntries[0].Position.Y == 1)
                             slashCasters.Add(unit.Id);
+                        if (skill.EntityId == 10610 && hit.EntityId == 10611 && hit.ScopeEntries.Count == 1
+                            && hit.ScopeEntries[0] != null && hit.ScopeEntries[0].Delay == 0f
+                            && hit.ScopeEntries[0].Position.X == 0 && hit.ScopeEntries[0].Position.Y == 1)
+                            heavyCasters.Add(unit.Id);
                         if (skill.EntityId == 10670 && hit.EntityId == 10671)
                         {
                             var scopes = new HashSet<int>();
@@ -302,10 +307,17 @@ namespace Zjcs.Presentation.Combat
         private void AttachSlashImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
             GameObject prefab, MyPlayable playable)
         {
-            if (cast?.SkillEntityId != 10600 || prefab == null || prefab.name != "playable10600"
-                || playable == null || playable.name != "effect" || !slashCasters.Contains(cast.ActorId)
-                || observedSlashes.Contains(cast) || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
-            var observer = OfficialBattleSlashImpact.Attach(playable, () => RouteSlashImpact(cast, id));
+            if (cast == null || prefab == null || playable == null || observedSlashes.Contains(cast)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            bool slash = cast.SkillEntityId == 10600 && prefab.name == "playable10600"
+                && playable.name == "effect" && slashCasters.Contains(cast.ActorId);
+            bool heavy = cast.SkillEntityId == 10610 && prefab.name == "playable10610"
+                && playable.name == "effect (2)" && heavyCasters.Contains(cast.ActorId);
+            if (!slash && !heavy) return;
+            // The second heavy-chop effect's ground ring starts at the authored
+            // hit boundary; observe that original particle rather than a timer.
+            var observer = OfficialBattleSlashImpact.Attach(playable,
+                heavy ? "dimian_guangyun_an" : "daoguang da (23)", () => RouteSlashImpact(cast, id));
             if (observer == null) return;
             observedSlashes.Add(cast); slashEffects.Add(observer);
         }
@@ -318,7 +330,8 @@ namespace Zjcs.Presentation.Combat
             if (cast.HitSelections == null) return;
             foreach (var hit in new List<FightBattleHitSelectionSnapshot>(cast.HitSelections))
             {
-                if (hit?.HitEntityId != 10601 || !selectedHits.Contains(hit) || hit.Targets == null) continue;
+                int hitEntityId = cast.SkillEntityId == 10610 ? 10611 : 10601;
+                if (hit?.HitEntityId != hitEntityId || !selectedHits.Contains(hit) || hit.Targets == null) continue;
                 var sent = new HashSet<int>();
                 foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
                 {
@@ -461,7 +474,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in slashEffects) if (observer != null) observer.Detach();
             step.Dispose();
             casts.Clear(); selectedHits.Clear(); jumpSlashScopes.Clear(); mountainScopes.Clear(); observedMountains.Clear(); reachedMountainWaves.Clear(); mountainWaves.Clear();
-            slashCasters.Clear(); observedSlashes.Clear(); reachedSlashes.Clear(); sentSlashes.Clear(); slashEffects.Clear();
+            slashCasters.Clear(); heavyCasters.Clear(); observedSlashes.Clear(); reachedSlashes.Clear(); sentSlashes.Clear(); slashEffects.Clear();
             resolvingStatuses.Clear();
             SecondsStatusChanged = null;
         }

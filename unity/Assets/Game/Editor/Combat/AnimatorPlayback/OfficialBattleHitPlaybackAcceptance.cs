@@ -1272,6 +1272,85 @@ namespace Zjcs.Editor.Combat
             jumpAppearance?.Dispose();
             jumpSession.Dispose(); fireViews.Dispose(); Destroy(fireRoot.gameObject);
 
+            // Super-heavy chop has no hit prefab effect. Its original second
+            // slash contains the ground impact that coincides with the hit.
+            foreach (var heavyDirection in new[] { new Vector2Int(1, 0), new Vector2Int(-1, 0),
+                new Vector2Int(0, 1), new Vector2Int(0, -1) }) {
+            string heavyDirectionName = heavyDirection.x > 0 ? "right" : heavyDirection.x < 0 ? "left" : heavyDirection.y > 0 ? "up" : "down";
+            int heavyExpectedFacing = heavyDirection.x > 0 ? 3 : heavyDirection.x < 0 ? 1 : heavyDirection.y > 0 ? 2 : 0;
+            var heavyUnits = new[] { LiveUnit(1, 1, 5), LiveUnit(2, 2, 5 + heavyDirection.x) };
+            heavyUnits[1].Y += heavyDirection.y;
+            var heavySkill = liveCatalog.CreateSkill(10610, 0, 10009, 2, 20, 1,
+                liveCatalog.CalculateSkillProps(10610, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+            heavySkill.LimitedTimes = 1; heavyUnits[0].Skills.Add(heavySkill);
+            heavyUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(heavySkill, 0));
+            var heavyCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+            heavyCheckpoint.Units.AddRange(heavyUnits); var heavyWave = new FightBattleWaveState(); heavyWave.UnitIds.Add(2); heavyCheckpoint.Waves.Add(heavyWave);
+            var heavyExecutor = FightBattleExecutor.Begin(heavyCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+            string heavyCommitted = FightBattleCheckpointSerializer.Save(heavyCheckpoint);
+            var heavyDisplay = FightBattleCheckpointSerializer.Load(heavyCommitted).Units.ToArray();
+            var heavyRoot = new GameObject("Live heavy chop").transform; heavyRoot.SetParent(root, false);
+            var heavySource = new GameObject("Heavy source").transform; heavySource.SetParent(heavyRoot, false); heavySource.localPosition = new Vector3(5, 5, 0);
+            var heavyTarget = new GameObject("Heavy target").transform; heavyTarget.SetParent(heavyRoot, false); heavyTarget.localPosition = new Vector3(5 + heavyDirection.x, 5 + heavyDirection.y, 0);
+            foreach (var actorView in new[] { heavySource, heavyTarget }) {
+                actorView.gameObject.AddComponent<MyTransform>();
+                var renderer = actorView.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
+                actorView.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+            }
+            var heavyAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump ? NativeJumpAppearanceFixture.Create(heavySource.gameObject) : null;
+            var heavyScope = new OfflineBattleNativePlayableScope(heavyRoot, null);
+            using (var heavyViews = new OfficialBattleSkillEntityPlayback(heavyRoot, new OfficialBattleGridMapper(heavyRoot, grid),
+                heavyScope, id => heavyDisplay.FirstOrDefault(value => value.Id == id)))
+            using (var heavyAir = new OfficialBattleAirComboPlayback(heavyExecutor, heavyRoot, heavyScope,
+                id => id == 1 ? heavySource : id == 2 ? heavyTarget : null))
+            using (var heavySession = new OfficialBattleLiveImpactSession(heavyCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), heavyViews, 0, 1)) {
+                heavyViews.BindDamageUI(heavyRoot, 0);
+                ParticleSystem groundImpact = null; bool pausedImpact = false, resumedImpact = false;
+                int heavyDamageFrame = -1, heavyAirFrame = -1, pausedFrames = 0, heavyFacing = -1;
+                var applyAir = typeof(OfficialBattleAirComboPlayback).GetMethod("ApplySecondsStatus", BindingFlags.Instance | BindingFlags.NonPublic);
+                heavySession.SecondsStatusChanged += value => {
+                    if (value.Kind == FightBattleStatusViewEventKind.Start && value.Status.ClassId == 24269)
+                        heavyAirFrame = Time.frameCount;
+                    applyAir.Invoke(heavyAir, new object[] { value });
+                };
+                heavySession.SkillGraphPlayableStarted += (cast, id, prefab, leaf) => {
+                    if (cast.SkillEntityId != 10610 || prefab.name != "playable10610" || leaf.name != "effect (2)") return;
+                    groundImpact = leaf.GetComponentsInChildren<ParticleSystem>(true).Single(value => value.name == "dimian_guangyun_an");
+                    groundImpact.Pause(); pausedImpact = true;
+                };
+                bool StartHeavy(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) {
+                    heavyFacing = cast.Presentation.FacingIndex;
+                    id = heavyViews.Start(cast, heavySource, heavyTarget); return true;
+                }
+                void HeavyDamage(FightBattleDamageEvent damage) {
+                    Require(groundImpact && groundImpact.particleCount > 0 && resumedImpact,
+                        "Heavy damage must wait for the original ground impact particle.");
+                    heavyDamageFrame = Time.frameCount;
+                    heavyDisplay[1].Hp = damage.AfterHp; heavyDisplay[1].Turn.Hp = damage.AfterHp;
+                }
+                deadline = Time.realtimeSinceStartup + 20f;
+                while (!heavySession.IsCompleted && Time.realtimeSinceStartup < deadline) {
+                    heavySession.Pump(Time.deltaTime, StartHeavy, HeavyDamage);
+                    if (pausedImpact && !resumedImpact) {
+                        Require(groundImpact.particleCount == 0 && heavyDamageFrame < 0 && heavyAirFrame < 0
+                            && heavyDisplay[1].Hp == 1000000, "A paused ground impact cannot settle heavy damage or launch.");
+                        if (++pausedFrames == 5) { resumedImpact = true; groundImpact.Play(); }
+                    }
+                    heavyViews.Tick(Time.deltaTime); heavyScope.LateTick(); yield return null;
+                }
+                Require(pausedImpact && resumedImpact && heavyDamageFrame >= 0 && heavyAirFrame == heavyDamageFrame && heavyFacing == heavyExpectedFacing
+                    && heavySession.TryTakeCompleted(out _, out var heavyResult)
+                    && heavyResult.Checkpoint.StatusSeconds.PendingHits.Count == 0
+                    && FightBattleCheckpointSerializer.Save(heavyCheckpoint) == heavyCommitted,
+                    "Heavy damage and airborne status must share the original visible impact frame: " + heavyDirectionName);
+                if (heavyAppearance != null) { yield return null; Capture("heavy-chop-impact-" + heavyDirectionName + ".png", false); }
+            }
+            heavyAppearance?.Dispose(); Destroy(heavyRoot.gameObject);
+            yield return null;
+            }
+
             // Exercise the same live driver through the production graph owner's factory.
             var graphUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 5) };
             var graphSkill = liveCatalog.CreateSkill(10800, 0, 10028, 2, 20, 1,

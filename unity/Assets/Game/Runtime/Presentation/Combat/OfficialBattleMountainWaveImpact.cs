@@ -36,18 +36,18 @@ namespace Zjcs.Presentation.Combat
         internal void Detach() { arrival = null; }
     }
 
-    // The official 10600 skill owns its visible slash; its 10601 hit has no playable.
+    // These official skill effects own the visible impact; their hit entities have no playable.
     internal sealed class OfficialBattleSlashImpact : MonoBehaviour
     {
         private ParticleSystem slash;
         private Action arrival;
 
-        internal static OfficialBattleSlashImpact Attach(MyPlayable playable, Action arrival)
+        internal static OfficialBattleSlashImpact Attach(MyPlayable playable, string particleName, Action arrival)
         {
-            if (!playable || arrival == null) return null;
+            if (!playable || string.IsNullOrEmpty(particleName) || arrival == null) return null;
             ParticleSystem slash = null;
             foreach (var particle in playable.GetComponentsInChildren<ParticleSystem>(true))
-                if (particle.name == "daoguang da (23)")
+                if (particle.name == particleName)
                 {
                     if (slash) return null;
                     slash = particle;

@@ -26,7 +26,7 @@ namespace Zjcs.Presentation.Combat
     }
     internal sealed class OfficialBattleSlashImpact
     {
-        internal static OfficialBattleSlashImpact Attach(MyPlayable playable, Action arrival) => null;
+        internal static OfficialBattleSlashImpact Attach(MyPlayable playable, string particleName, Action arrival) => null;
         internal void Detach() { }
     }
     // Drives the production session with real battle rules and a controlled native-view boundary.
