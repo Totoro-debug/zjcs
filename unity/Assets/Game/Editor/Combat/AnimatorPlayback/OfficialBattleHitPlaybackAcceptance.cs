@@ -852,12 +852,22 @@ namespace Zjcs.Editor.Combat
                     .Invoke(collisionLatch, new object[] { true });
                 var bindWorker = typeof(FightBattleImpactLatch).GetMethod("BindWorker", BindingFlags.Instance | BindingFlags.NonPublic);
                 var finishWorker = typeof(FightBattleImpactLatch).GetMethod("FinishWorker", BindingFlags.Instance | BindingFlags.NonPublic);
+                var collisionHit = typeof(FightBattleHitExecutor).GetMethod("ApplyKnockbackCollision", BindingFlags.Instance | BindingFlags.NonPublic);
+                var collisionExecutor = new FightBattleHitExecutor(formula, new FightDamageSettlement());
+                var collisionSource = new FightBattleUnitState { Id = 1, Hp = 1000, MaxHp = 1000 };
+                var collisionTarget = new FightBattleUnitState { Id = 2, Hp = 1000, MaxHp = 1000 };
+                var collisionSkill = new FightBattleSkillDefinition { EntityId = 10100 };
+                var collisionDefinition = new FightBattleHitDefinition {
+                    EntityId = 10101, DamageId = 10006, DamageType = 8, ActionType = 4 };
+                Require(collisionHit != null, "The local collision settlement must be available.");
                 int collisionSettled = 0;
                 var collisionWorker = Task.Run(() => {
                     bindWorker.Invoke(collisionLatch, null);
                     try {
                         collisionLatch.BlockedMovementPrepared(null, blocked, new FightGridPoint(4, 5));
                         collisionLatch.AwaitBlockedContact(blocked);
+                        collisionHit.Invoke(collisionExecutor, new object[] { new FightRandomStream(1), 1,
+                            collisionSource, collisionTarget, collisionSkill, collisionDefinition, 500L, 1 });
                         Interlocked.Exchange(ref collisionSettled, 1);
                     }
                     finally { finishWorker.Invoke(collisionLatch, null); }
@@ -876,19 +886,20 @@ namespace Zjcs.Editor.Combat
                     Require(collisionLatch.RecordBlockedContact(value, out long collisionRevision) && collisionRevision > 0,
                         "The actual collision must release its own waiting rules worker.");
                     collisionLatch.WaitForWorkerBoundary(collisionRevision);
-                    Require(Volatile.Read(ref collisionSettled) == 1,
-                        "The rules worker must reach its next boundary in the actual collision frame.");
+                    Require(Volatile.Read(ref collisionSettled) == 1 && collisionTarget.Hp == 900,
+                        "Collision damage must settle at the actual contact in the same frame.");
                 });
                 collisionLatch.CompleteMovement(blockedPreparation, out long startRevision);
                 collisionLatch.WaitForWorkerBoundary(startRevision);
-                Require(Volatile.Read(ref collisionSettled) == 0, "Collision rules cannot run at movement start.");
+                Require(Volatile.Read(ref collisionSettled) == 0 && collisionTarget.Hp == 1000,
+                    "Collision rules cannot run at movement start.");
                 float farthest = fireSource.localPosition.x;
                 bool captured = false;
                 for (int frame = 0; frame < 100; frame++)
                 {
                     fireViews.Tick(.01f); fireScope.LateTick();
-                    if (contacts == 0) Require(Volatile.Read(ref collisionSettled) == 0,
-                        "Collision rules must wait for the original contact frame.");
+                    if (contacts == 0) Require(Volatile.Read(ref collisionSettled) == 0 && collisionTarget.Hp == 1000,
+                        "Collision damage must wait for the original contact frame.");
                     farthest = Mathf.Max(farthest, fireSource.localPosition.x);
                     if (!captured && farthest > 3.79f)
                     { Capture("session-collision.png", false); captured = true; }
