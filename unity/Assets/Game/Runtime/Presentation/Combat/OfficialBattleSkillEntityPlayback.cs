@@ -92,6 +92,9 @@ namespace Zjcs.Presentation.Combat
         private sealed class ActiveCast
         {
             public MyEntity Entity;
+            public EcEntityIdentifier Id;
+            public FightBattleSkillCastEvent Cast;
+            public readonly HashSet<FightBattleHitSelectionSnapshot> ScheduledHits = new HashSet<FightBattleHitSelectionSnapshot>();
             public float Remaining;
             public bool Removed;
         }
@@ -243,8 +246,11 @@ namespace Zjcs.Presentation.Combat
                     Facing = sourceFacing, Mirrored = cast.Presentation.FlipX,
                     ToPosition = GridToPos, ToGrid = PositionToGrid } };
             var entity = skillViews.Create(state.Data);
-            casts.Add(new ActiveCast { Entity = entity, Remaining = cast.Presentation.Duration < 0f
-                ? float.PositiveInfinity : cast.Presentation.Duration });
+            var activeCast = new ActiveCast { Entity = entity, Id = state.Data.Identifier, Cast = cast,
+                Remaining = cast.Presentation.Duration < 0f ? float.PositiveInfinity : cast.Presentation.Duration };
+            if (cast.HitSelections != null)
+                foreach (var selection in cast.HitSelections) activeCast.ScheduledHits.Add(selection);
+            casts.Add(activeCast);
             if (damageUI != null) scope.Dispatch(() => damageUI.SkillCostHp(cast, state.Data.Identifier));
             scope.Dispatch(entity.MyStart);
             if (damageUI != null) scope.Dispatch(() => damageUI.Replay(cast, state.Data.Identifier));
@@ -254,6 +260,27 @@ namespace Zjcs.Presentation.Combat
             // Return the assigned identity, not the pooled object whose Id can
             // change on reuse. Dependent views belong to this exact cast.
             return state.Data.Identifier;
+        }
+
+        /// <summary>
+        /// Queues one original selection for an already-started live cast. The host must
+        /// hold the selecting executor while this method reads its cast and selection.
+        /// </summary>
+        public void QueueSelectedHit(FightBattleSkillCastEvent cast, EcEntityIdentifier skillId,
+            FightBattleHitSelectionSnapshot selection, float elapsedSinceCast)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillEntityPlayback));
+            if (cast == null) throw new ArgumentNullException(nameof(cast));
+            if (selection == null) throw new ArgumentNullException(nameof(selection));
+            if (float.IsNaN(elapsedSinceCast) || float.IsInfinity(elapsedSinceCast) || elapsedSinceCast < 0f)
+                throw new ArgumentOutOfRangeException(nameof(elapsedSinceCast));
+            var active = casts.Find(value => !value.Removed && value.Id.Equals(skillId));
+            if (active == null || !ReferenceEquals(active.Cast, cast)
+                || cast.HitSelections == null || !cast.HitSelections.Contains(selection))
+                throw new InvalidOperationException("The selected hit does not belong to this active cast.");
+            if (!active.ScheduledHits.Add(selection))
+                throw new InvalidOperationException("The selected hit has already been queued for this cast.");
+            receiptHits.EnqueueSelection(cast, selection, skillId, elapsedSinceCast);
         }
 
         // Original ECViewDriver injects its serialized views during Awake.

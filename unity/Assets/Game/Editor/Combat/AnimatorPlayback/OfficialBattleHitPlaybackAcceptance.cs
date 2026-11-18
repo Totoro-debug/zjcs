@@ -372,6 +372,30 @@ namespace Zjcs.Editor.Combat
                 "Actual hit arrivals preserve repeated cast, selection and centre identities.");
             views.Tick(.25f);
 
+            var castC = new FightBattleSkillCastEvent { ActorId = 1, Slot = -1, SkillEntityId = 10100,
+                Presentation = FightBattleSkillCastPresentation.Capture(units[0], skill, new List<FightBattleUnitState> { units[1] }) };
+            var skillC = views.Start(castC, source, target);
+            var selectedC = new FightBattleHitSelectionSnapshot { Sequence = 1, HitEntityId = 10101,
+                SourceX = 2, SourceY = 5, Delay = .4f };
+            selectedC.EffectCenters.Add(new FightGridPoint(4, 5)); selectedC.EffectDelays.Add(.4f);
+            castC.HitSelections.Add(selectedC);
+            int beforeLiveSelection = selectionArrivals.Count;
+            views.QueueSelectedHit(castC, skillC, selectedC, .1f);
+            bool duplicateSelectionRejected = false;
+            try { views.QueueSelectedHit(castC, skillC, selectedC, .1f); }
+            catch (InvalidOperationException) { duplicateSelectionRejected = true; }
+            Require(duplicateSelectionRejected, "A live hit selection cannot be queued twice.");
+            views.Tick(.29f);
+            yield return null;
+            Require(selectionArrivals.Count == beforeLiveSelection, "A live hit must wait for its original cast boundary.");
+            views.Tick(.02f);
+            yield return null;
+            yield return null;
+            Require(selectionArrivals.Skip(beforeLiveSelection).Count(x => ReferenceEquals(x.Cast, castC)
+                && ReferenceEquals(x.Selection, selectedC) && x.CenterIndex == 0 && x.ScopeIndex == -1
+                && x.Position.Equals(new Pos2d(4, 5))) == 1,
+                "A live selected hit must emit exactly one native arrival for its cast and centre.");
+
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(1, 0), Delay = .8f });
