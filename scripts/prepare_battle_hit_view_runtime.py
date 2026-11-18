@@ -322,7 +322,9 @@ def main():
         'unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleNativePlayableScope.cs',
         'unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs',
         'unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs',
-        'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleHitPlaybackAcceptance.cs')]
+        'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleHitPlaybackAcceptance.cs',
+        'unity/Assets/Game/Editor/Combat/AnimatorPlayback/NativeJumpAppearanceFixture.cs',
+        'unity/Assets/Game/Editor/Combat/AnimatorPlayback/NativeJumpAppearanceFixture.cs.meta')]
     # Existing leaf receipts also name the shared scope. Refresh only records
     # for these changed binding files, preserving unrelated session changes.
     updated_binding_hashes = {

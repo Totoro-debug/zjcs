@@ -42,9 +42,16 @@ namespace Zjcs.Editor.Combat
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             SessionState.SetInt(Key + ".exit", 1);
+            SessionState.SetBool(Key + ".playerJump", false);
             SessionState.SetBool(Key, true);
             EditorApplication.isPlaying = true;
         }
+        public static void RunWithPlayerJump()
+        {
+            Run();
+            SessionState.SetBool(Key + ".playerJump", true);
+        }
+        internal static bool PlayerJump => SessionState.GetBool(Key + ".playerJump", false);
         internal static void Finish(string failure)
         {
             File.WriteAllText(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"),
@@ -749,6 +756,19 @@ namespace Zjcs.Editor.Combat
             var jumpExpected = FightBattleExecutor.Restore(jumpBaseline, formula, new FightDamageSettlement(),
                 liveCatalog, combatAssets.LoadSkillItems()).Step(0, 1);
             var jumpExpectedDamage = jumpExpected.Event.DamageEvents.Single(value => value.SkillItemId == 10015);
+            NativeJumpAppearanceFixture jumpAppearance = null;
+            Matrix4x4[] jumpInitialPose = null;
+            bool jumpActorCaptured = false, jumpPoseChanged = false, jumpClipObserved = false;
+            if (OfficialBattleHitPlaybackAcceptance.PlayerJump)
+            {
+                DestroyImmediate(fireSource.GetComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>());
+                DestroyImmediate(fireSource.GetComponent<MeshRenderer>());
+                jumpAppearance = NativeJumpAppearanceFixture.Create(fireSource.gameObject);
+                yield return null;
+                Capture("session-jump-actor-idle.png", false);
+                jumpInitialPose = Enumerable.Range(0, jumpAppearance.Native.State.Pose.Count)
+                    .Select(i => jumpAppearance.Native.State.Pose.World(i)).ToArray();
+            }
             fireSource.localPosition = new Vector3(2, 5, 0);
             fireTarget.localPosition = new Vector3(4, 5, 0);
             FightBattleSkillCastEvent jumpCast = null;
@@ -792,14 +812,30 @@ namespace Zjcs.Editor.Combat
                 if (jumpImpactFrame < 0) Require(damageNotifications == 4 && fireDisplayUnits[1].Hp == 1000000,
                     "Jump damage must wait for the original landing effect.");
                 fireViews.Tick(Time.deltaTime); fireScope.LateTick();
+                if (jumpAppearance != null && jumpMovementStarted)
+                {
+                    jumpClipObserved |= jumpAppearance.Animator.GetCurrentAnimatorClipInfo(0)
+                        .Any(entry => entry.clip && entry.clip.name == "100/skill_02");
+                    jumpPoseChanged |= Enumerable.Range(0, jumpInitialPose.Length)
+                        .Any(i => jumpInitialPose[i] != jumpAppearance.Native.State.Pose.World(i));
+                    if (!jumpActorCaptured && jumpClipObserved && jumpPoseChanged)
+                    {
+                        jumpActorCaptured = true;
+                        Capture("session-jump-actor-motion.png", false);
+                    }
+                }
                 yield return null;
             }
+            if (jumpAppearance != null)
+                Require(jumpActorCaptured && jumpClipObserved && jumpPoseChanged,
+                    "The original jump clip must animate the actual player skeleton during movement.");
             Require(jumpDamageShown && jumpSession.IsCompleted && jumpSession.TryTakeCompleted(out _, out var jumpResult)
                 && FightBattleCheckpointSerializer.Save(jumpCheckpoint) == jumpCommitted
                 && FightBattleCheckpointSerializer.Save(jumpResult.Checkpoint) == FightBattleCheckpointSerializer.Save(jumpBaseline),
                 "The original jump impact must complete without changing the committed checkpoint or rules result.");
             yield return null;
             Capture("session-jump-impact.png");
+            jumpAppearance?.Dispose();
             jumpSession.Dispose(); fireViews.Dispose(); Destroy(fireRoot.gameObject);
 
 
