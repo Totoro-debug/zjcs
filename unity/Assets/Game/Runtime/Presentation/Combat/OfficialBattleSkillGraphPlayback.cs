@@ -51,6 +51,7 @@ namespace Zjcs.Presentation.Combat
         private Action<GameObject> bindPlayerClones;
         private readonly Zjcs.Offline.ProfessionUI.EmbeddedMonsterMecanimResources embeddedMecanim;
         private bool disposed;
+        private OfficialBattleLiveGraphDriver liveDriver;
 
         public OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog catalog,
             OfflineBattleNativePlayableScope scope, OfficialBattleSkillEntityPlayback entityViews)
@@ -102,6 +103,21 @@ namespace Zjcs.Presentation.Combat
             return false;
         }
         public OfflineBattleNativePlayableScope Scope => scope;
+        public OfficialBattleLiveGraphDriver CreateLiveStep(FightBattleCheckpoint checkpoint,
+            Func<FightBattleCheckpoint, FightBattleExecutor> restore, Func<int, Transform> unitTransform,
+            Func<int, Transform> petTransform, Action<FightBattleDamageEvent, FightBattleUnitState> damageShown,
+            Action<FightBattleSkillCastEvent, FightBattleUnitState> costShown = null)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillGraphPlayback));
+            if (liveDriver != null) throw new InvalidOperationException("A live step already owns this skill graph.");
+            if (unitTransform == null) throw new ArgumentNullException(nameof(unitTransform));
+            Transform Resolve(int id) => gridViews?.TryGetTransform(id) ?? unitTransform(id);
+            var driver = new OfficialBattleLiveGraphDriver(checkpoint, restore, entityViews,
+                catalog.ContainsSkill, Resolve, petTransform, damageShown, costShown);
+            liveDriver = driver;
+            driver.Disposed += () => { if (ReferenceEquals(liveDriver, driver)) liveDriver = null; };
+            return driver;
+        }
         public Transform TryGetGridTransform(int id) => gridViews?.TryGetTransform(id);
         public void RefreshGridSnapshot(FightBattleCheckpoint checkpoint)
         { gridViews?.RefreshSnapshot(checkpoint); statusViews?.Restore(checkpoint); }
@@ -431,6 +447,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) return;
             disposed = true;
+            liveDriver?.Dispose();
             pending.Clear();
             pendingMoves.Clear();
             pendingStatusActions.Clear();

@@ -310,6 +310,7 @@ def main():
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHitEntityData.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs',
+        'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleImpactViewBridge.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveImpactSession.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveImpactSession.cs.meta',
@@ -340,7 +341,8 @@ def main():
         'scripts/test_battle_live_health_projection.ps1',
         'scripts/fixtures/battle_live_health_projection_harness.cs',
         'scripts/test_battle_live_graph_driver.ps1',
-        'scripts/fixtures/battle_live_graph_driver_harness.cs')]
+        'scripts/fixtures/battle_live_graph_driver_harness.cs',
+        'scripts/fixtures/battle_skill_graph_dispatch_harness.cs')]
     # Existing leaf receipts also name the shared scope. Refresh only records
     # for these changed binding files, preserving unrelated session changes.
     updated_binding_hashes = {

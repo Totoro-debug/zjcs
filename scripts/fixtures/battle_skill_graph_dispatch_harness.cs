@@ -77,6 +77,17 @@ namespace Zjcs.Official.StoryGroundEffects
 }
 namespace Zjcs.Presentation.Combat
 {
+    public sealed class OfficialBattleLiveGraphDriver : IDisposable
+    {
+        public readonly Func<int, bool> HasSkill; public readonly Func<int, Transform> Body;
+        public bool IsDisposed; internal event Action Disposed;
+        public OfficialBattleLiveGraphDriver(FightBattleCheckpoint cp, Func<FightBattleCheckpoint, FightBattleExecutor> restore,
+            OfficialBattleSkillEntityPlayback views, Func<int, bool> hasSkill, Func<int, Transform> body,
+            Func<int, Transform> pet, Action<FightBattleDamageEvent, FightBattleUnitState> damage,
+            Action<FightBattleSkillCastEvent, FightBattleUnitState> cost)
+        { HasSkill = hasSkill; Body = body; }
+        public void Dispose() { if (IsDisposed) return; IsDisposed = true; Disposed?.Invoke(); }
+    }
     // Complete character-status entities have separate native lifecycle coverage.
     public sealed class OfficialBattleStatusPlayback : IDisposable
     {
@@ -230,6 +241,19 @@ public static class BattleSkillGraphDispatchHarness
         checkpoint.Units.Add(actor);
         var transforms = new Dictionary<int, Transform> { { 1, new Transform("actor") }, { 2, new Transform("target") } };
         Func<int, Transform> resolve = id => transforms.TryGetValue(id, out var value) ? value : null;
+        var liveScope = new OfflineBattleNativePlayableScope();
+        var livePlayback = new OfficialBattleSkillGraphPlayback(catalog, liveScope, new OfficialBattleSkillEntityPlayback(liveScope));
+        var live = livePlayback.CreateLiveStep(checkpoint, _ => new FightBattleExecutor(), resolve, null, (_, __) => { });
+        Require(live.HasSkill(10) && !live.HasSkill(999) && ReferenceEquals(live.Body(2), transforms[2]),
+            "The live step must use the graph catalog and actual unit resolver");
+        bool rejectedLiveOverlap = false;
+        try { livePlayback.CreateLiveStep(checkpoint, _ => new FightBattleExecutor(), resolve, null, (_, __) => { }); }
+        catch (InvalidOperationException) { rejectedLiveOverlap = true; }
+        Require(rejectedLiveOverlap, "Two live steps cannot own the same graph");
+        live.Dispose();
+        var secondLive = livePlayback.CreateLiveStep(checkpoint, _ => new FightBattleExecutor(), resolve, null, (_, __) => { });
+        livePlayback.Dispose();
+        Require(secondLive.IsDisposed, "Disposing the graph must cancel its live step");
         int[] facingIndices = { 2, 0, 1, 3 }; // Pos2d.FourDirs -> Common.Direction.
         for (int direction = 0; direction < 4; direction++)
         {

@@ -19,6 +19,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Dictionary<FightBattleSkillCastEvent, float> started = new Dictionary<FightBattleSkillCastEvent, float>();
         private float clock;
         private bool disposed, transferred;
+        internal event Action Disposed;
 
         public OfficialBattleLiveGraphDriver(FightBattleCheckpoint checkpoint,
             Func<FightBattleCheckpoint, FightBattleExecutor> restore, OfficialBattleSkillEntityPlayback views,
@@ -133,7 +134,9 @@ namespace Zjcs.Presentation.Combat
         public void Dispose()
         {
             if (disposed) return;
-            disposed = true; session.Dispose(); started.Clear();
+            disposed = true;
+            try { session.Dispose(); }
+            finally { started.Clear(); Disposed?.Invoke(); Disposed = null; }
         }
     }
 }

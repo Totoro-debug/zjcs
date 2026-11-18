@@ -1165,6 +1165,58 @@ namespace Zjcs.Editor.Combat
             jumpAppearance?.Dispose();
             jumpSession.Dispose(); fireViews.Dispose(); Destroy(fireRoot.gameObject);
 
+            // Exercise the same live driver through the production graph owner's factory.
+            var graphUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 5) };
+            var graphSkill = liveCatalog.CreateSkill(10800, 0, 10028, 2, 20, 1,
+                liveCatalog.CalculateSkillProps(10800, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+            graphSkill.LimitedTimes = 1; graphUnits[0].Skills.Add(graphSkill);
+            graphUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(graphSkill, 0));
+            var graphCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+            graphCheckpoint.Units.AddRange(graphUnits); var graphWave = new FightBattleWaveState(); graphWave.UnitIds.Add(2);
+            graphCheckpoint.Waves.Add(graphWave);
+            FightBattleExecutor.Begin(graphCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+            string graphCommitted = FightBattleCheckpointSerializer.Save(graphCheckpoint);
+            var graphDisplay = FightBattleCheckpointSerializer.Load(graphCommitted).Units.ToArray();
+            var liveRoot = new GameObject("Live production graph scene").transform; liveRoot.SetParent(root, false);
+            var liveSource = new GameObject("Live graph source").transform; liveSource.SetParent(liveRoot, false); liveSource.localPosition = new Vector3(2, 5, 0);
+            var liveTarget = new GameObject("Live graph target").transform; liveTarget.SetParent(liveRoot, false); liveTarget.localPosition = new Vector3(5, 5, 0);
+            foreach (var actorView in new[] { liveSource, liveTarget }) {
+                actorView.gameObject.AddComponent<MyTransform>();
+                var renderer = actorView.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
+                actorView.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+            }
+            using (var liveScope = new OfflineBattleNativePlayableScope(liveRoot, null))
+            using (var liveViews = new OfficialBattleSkillEntityPlayback(liveRoot, new OfficialBattleGridMapper(liveRoot, grid),
+                liveScope, id => graphDisplay.FirstOrDefault(value => value.Id == id)))
+            using (var liveGraph = new OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog.TryLoadDefault(), liveScope, liveViews))
+            {
+                liveGraph.BindDamageUI(liveRoot, 0);
+                int arrivalFrame = -1; bool graphDamageShown = false;
+                liveViews.HitSelectionViewArrived += (cast, hit, center, position, scopeIndex) => {
+                    if (cast.SkillEntityId == 10800 && hit.HitEntityId == 10801) arrivalFrame = Time.frameCount;
+                };
+                Transform LiveBody(int unitId) => unitId == 1 ? liveSource : unitId == 2 ? liveTarget : null;
+                void LiveDamage(FightBattleDamageEvent damage, FightBattleUnitState display) {
+                    graphDamageShown = arrivalFrame == Time.frameCount && display.Hp == damage.AfterHp
+                        && graphCheckpoint.Units[1].Hp == 1000000;
+                    Require(graphDamageShown, "Production graph health must update at the original fireball impact.");
+                    graphDisplay[1] = display;
+                    Capture("live-graph-fireball-impact.png", false);
+                }
+                using var graphDriver = liveGraph.CreateLiveStep(graphCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                    formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), LiveBody, null, LiveDamage);
+                deadline = Time.realtimeSinceStartup + 20f;
+                while (!graphDriver.IsCompleted && Time.realtimeSinceStartup < deadline) {
+                    graphDriver.Pump(Time.deltaTime); liveGraph.Tick(Time.deltaTime); liveGraph.LateTick();
+                    if (arrivalFrame < 0) Require(graphDisplay[1].Hp == 1000000, "Production graph health changed before impact.");
+                    yield return null;
+                }
+                Require(graphDamageShown && graphDriver.TryTakeCompleted(out _, out _)
+                    && FightBattleCheckpointSerializer.Save(graphCheckpoint) == graphCommitted,
+                    "The production graph must complete the isolated fireball step without modifying its checkpoint.");
+            }
+            Destroy(liveRoot.gameObject);
 
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });

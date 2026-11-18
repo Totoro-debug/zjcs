@@ -1048,6 +1048,10 @@
       "sha256": "6759a8e46474de2ef36545671c9694fceb0f39dc7c3d79f4befbf0e1b4504bf9"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs",
+      "sha256": "703da77b3bc8d8e736b5f710cc28eac76cb69f9598021c44258d9fd9af460f39"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleImpactViewBridge.cs",
       "sha256": "83fd8fb5f5152b78306a398042f83c80088d43b8585f621c8b7f2f791234278d"
     },
@@ -1069,7 +1073,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveGraphDriver.cs",
-      "sha256": "5757948af1044bb00cc3ec3a8070a9ab01812a720cce27dc0f6a237a3652844f"
+      "sha256": "08f084fe0ab7e916395d3d0712b0d3df2adc1d426a2dc1ff358184e5d465eb26"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveGraphDriver.cs.meta",
@@ -1121,7 +1125,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleHitPlaybackAcceptance.cs",
-      "sha256": "2f9830fd38e11d8fb5e070e5ba75c0e24c781a3f64277c3f9eb172350c884362"
+      "sha256": "6dceb284d057a52f8dd2659a3c6907d0e98e2fa2281148c1fe6c50d6197dca5e"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/NativeJumpAppearanceFixture.cs",
@@ -1170,11 +1174,15 @@
     {
       "path": "scripts/fixtures/battle_live_graph_driver_harness.cs",
       "sha256": "7626f2fe0e33b52217a10106c6971bd7111d0c6989ab73d9d56f3add6d1889e0"
+    },
+    {
+      "path": "scripts/fixtures/battle_skill_graph_dispatch_harness.cs",
+      "sha256": "e4c1cf95bdbe095f9eb46cb934402189c4df24ed77b94bd0fcfdbedc28066418"
     }
   ],
   "generator": {
     "path": "scripts/prepare_battle_hit_view_runtime.py",
-    "sha256": "ca92ce8b31d58e29ea4d745ba45d0c61f0375b02fbcc37818e38417d8098135e"
+    "sha256": "f765d1fb1aa2f8c71e89bb1c9aea3caaebee520eebc9ee2d548d3a9b0cddac17"
   },
   "adaptations": [
     "Namespace and existing Unity entity/Playable types.",
