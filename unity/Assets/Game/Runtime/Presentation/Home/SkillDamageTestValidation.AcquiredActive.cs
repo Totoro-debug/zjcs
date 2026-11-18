@@ -25,9 +25,9 @@ namespace Zjcs.Presentation.Home
         {
             AudioListener.volume = 0f;
             Action<Selectable> click = Click;
-            Require(skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10016 || skillId == 10026 || skillId == 10053,
+            Require(skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10016 || skillId == 10024 || skillId == 10026 || skillId == 10053,
                 "Select an implemented active-skill acquisition diagnostic.");
-            int profession = skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 ? 1 : 6;
+            int profession = skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10024 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -224,11 +224,28 @@ namespace Zjcs.Presentation.Home
                         : skillId == 10013 ? cast.SkillEntityId == 10650
                         : skillId == 10014 ? cast.SkillEntityId == 10660
                         : skillId == 10016 ? cast.SkillEntityId == 10680
+                        : skillId == 10024 ? cast.SkillEntityId == 10760
                         : skillId == 10053 ? cast.SkillEntityId == 11250
                         : cast.SkillEntityId == 10780 || cast.SkillEntityId == 11640 || cast.SkillEntityId == 11650 || cast.SkillEntityId == 11660,
                         "The acquired active skill selected a foreign entity: " + cast.SkillEntityId);
                     var damageEvents = step.Event.DamageEvents.Where(value => value.SourceId == 1
                         && value.SkillEntityId == cast.SkillEntityId).ToArray();
+                    if (skillId == 10024)
+                    {
+                        var started = step.Event.StatusViewEvents.Where(value => value.Kind == FightBattleStatusViewEventKind.Start
+                            && value.OwnerId == 1 && value.Status.ClassId == 24030 && value.Status.CreatorId == 1
+                            && Math.Abs(value.Delay - cast.Delay - .2f) < .0001f).ToArray();
+                        Require(started.Length == 1 && damageEvents.Length == 1
+                            && damageEvents[0].TargetId == 1 && damageEvents[0].HitEntityId == 10761
+                            && damageEvents[0].DamageEntityId == 10762 && damageEvents[0].Damage == 0,
+                            "The acquired arc shield lost its original self-status or timing.");
+                        var status = actor.Statuses.Single(value => value.InstanceId == started[0].Status.InstanceId);
+                        Require(status.ApplyingSkillItemId == 10024 && status.RootSkillId == 10760
+                            && status.SourceSkillRank == cultivatedRank && status.SourceSkillLevel == 2
+                            && status.DurationRound == 3 && status.ShieldKind == 0,
+                            "The acquired arc shield lost its saved cultivation or original property status.");
+                        hits++;
+                    }
                     if (skillId == 10011)
                     {
                         float[] delays = { .12f, .45f, .72f };
@@ -256,6 +273,7 @@ namespace Zjcs.Presentation.Home
                     }
                     foreach (var hit in damageEvents)
                     {
+                        if (skillId == 10024) continue;
                         int damage = skillId == 10009 ? 10612 : skillId == 10012 ? 10642 : skillId == 10014 ? (hit.HitEntityId == 10661 ? 10022 : 10663) : skillId == 10016 ? 10026 : skillId == 10008 || skillId == 10011 || skillId == 10013 || skillId == 10053 ? 10022
                             : cast.SkillEntityId == 11660 ? 10007 : 10023;
                         Require(hit.TargetId != 1 && (skillId == 10011 ? hit.HitEntityId >= 10631 && hit.HitEntityId <= 10633
@@ -288,7 +306,7 @@ namespace Zjcs.Presentation.Home
             yield return CaptureAcquiredActive(output, "result");
             var result = FindObjectsOfType<Transform>().Single(value => value.name == "damage_test_result");
             var report = result.GetComponent<OfficialBattleResultReport>();
-            Require(report != null && report.FinalReport != null && report.FinalReport.TotalDamageDealt > 0,
+            Require(report != null && report.FinalReport != null && (skillId == 10024 || report.FinalReport.TotalDamageDealt > 0),
                 "Original damage-test result omitted actual active-skill damage.");
             click(result.GetComponentsInChildren<Button>().Single(value => value.name == "Setting"));
             yield return new WaitForSecondsRealtime(.5f);
@@ -301,7 +319,8 @@ namespace Zjcs.Presentation.Home
                 .OrderBy(value => value.ItemId).SelectMany(value => new[] { (long)value.ItemId, value.Count })),
                 "Damage test changed the persisted cultivation, equipped plan or material counts.");
             yield return CaptureAcquiredActive(output, "return");
-            Debug.Log("[Acquired active UI] " + skillId + " saved rank=" + cultivatedRank + " level=2, original damage/result/return and unchanged save passed.");
+            Debug.Log("[Acquired active UI] " + skillId + " saved rank=" + cultivatedRank + " level=2, original "
+                + (skillId == 10024 ? "status" : "damage") + "/result/return and unchanged save passed.");
             File.WriteAllText(Path.Combine(output, "result.json"), JsonUtility.ToJson(new Result { passed = true }, true));
             Destroy(home.gameObject);
             yield return null;

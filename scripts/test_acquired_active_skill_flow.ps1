@@ -2,7 +2,7 @@
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet(10008,10009,10011,10012,10013,10014,10016,10026,10053)][int]$SkillId = 10026
+    [ValidateSet(10008,10009,10011,10012,10013,10014,10016,10024,10026,10053)][int]$SkillId = 10026
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -74,9 +74,10 @@ try {
     $rankQuery = "import json,sys; c=json.load(open(sys.argv[1],encoding='utf-8')); s=json.load(open(sys.argv[2],encoding='utf-8')); rows=[x for x in c['item'] if x['ClassId']==int(sys.argv[3])]; assert len(rows)==1; print(min(x['Rank'] for x in s['RankDisplays'] if x['Quality']==rows[0]['Quality'])+1)"
     $cultivatedRank = & python -B -c $rankQuery (Join-Path $repository 'unity/Assets/Official/Combat/rules.json') (Join-Path $repository 'unity/Assets/Official/Skills/skill-runtime-rules.json') $SkillId
     if ($LASTEXITCODE -ne 0 -or $cultivatedRank -notmatch '^\d+$') { throw "The original skill rank could not be resolved: $SkillId" }
+    $kind = if ($SkillId -eq 10024) { 'status' } else { 'damage' }
     foreach ($text in @(
         "[Acquired active UI] $SkillId fragment acquisition, original slot input, level/rank cultivation and disk reload passed.",
-        "[Acquired active UI] $SkillId saved rank=$cultivatedRank level=2, original damage/result/return and unchanged save passed.")) {
+        "[Acquired active UI] $SkillId saved rank=$cultivatedRank level=2, original $kind/result/return and unchanged save passed.")) {
         if (-not (Select-String -LiteralPath $log -SimpleMatch $text)) { throw "Missing skill-page assertion: $text" }
     }
     foreach ($phase in @('character','pieces','merge-confirm','merge-skill-detail','merge-piece-detail','acquired-detail','equipped','level-up','rank-up','reloaded',
@@ -88,7 +89,7 @@ try {
     if (-not (Test-Path -LiteralPath (Join-Path $run 'acquired-active-ui-checkpoint.json'))) {
         throw "The completed skill-page battle checkpoint is absent: $run"
     }
-    $receiptVerifier = if ($SkillId -eq 10008) { 'verify_warrior_slash_receipt.py' } elseif ($SkillId -eq 10009) { 'verify_heavy_strike_receipt.py' } elseif ($SkillId -eq 10011) { 'verify_lion_combo_receipt.py' } elseif ($SkillId -eq 10012) { 'verify_wind_blade_receipt.py' } elseif ($SkillId -eq 10013) { 'verify_four_way_slash_receipt.py' } elseif ($SkillId -eq 10014) { 'verify_whirlwind_slash_receipt.py' } elseif ($SkillId -eq 10016) { 'verify_lightning_dash_receipt.py' } elseif ($SkillId -eq 10053) { 'verify_sunset_sword_receipt.py' } else { 'verify_fire_slash_receipt.py' }
+    $receiptVerifier = if ($SkillId -eq 10008) { 'verify_warrior_slash_receipt.py' } elseif ($SkillId -eq 10009) { 'verify_heavy_strike_receipt.py' } elseif ($SkillId -eq 10011) { 'verify_lion_combo_receipt.py' } elseif ($SkillId -eq 10012) { 'verify_wind_blade_receipt.py' } elseif ($SkillId -eq 10013) { 'verify_four_way_slash_receipt.py' } elseif ($SkillId -eq 10014) { 'verify_whirlwind_slash_receipt.py' } elseif ($SkillId -eq 10016) { 'verify_lightning_dash_receipt.py' } elseif ($SkillId -eq 10024) { 'verify_arc_shield_receipt.py' } elseif ($SkillId -eq 10053) { 'verify_sunset_sword_receipt.py' } else { 'verify_fire_slash_receipt.py' }
     & python -B (Join-Path $PSScriptRoot $receiptVerifier) (Join-Path $run 'acquired-active-ui-checkpoint.json')
     if ($LASTEXITCODE -ne 0) { throw "The acquired skill's original battle receipts failed: $run" }
     Write-Output "Acquired active skill-page flow passed: $run"
