@@ -130,6 +130,25 @@ namespace Zjcs.Presentation.Combat {
     }
    }
    {
+    var hit=new FightBattleHitEntity{EntityId=10651,ScopeEntries=new List<FightBattleHitScopeEntry>{
+     new FightBattleHitScopeEntry{Position=new FightGridPoint(-1,0)},new FightBattleHitScopeEntry{Position=new FightGridPoint(0,-1)},
+     new FightBattleHitScopeEntry{Position=new FightGridPoint(0,1)},new FightBattleHitScopeEntry{Position=new FightGridPoint(1,0)}}};
+    var skill=new FightBattleSkillDefinition{EntityId=10650,HitGraphEntities=new List<FightBattleHitEntity>{hit}};
+    var cp=new FightBattleCheckpoint{Units=new List<FightBattleUnitState>{new FightBattleUnitState{Id=1,Skills=new List<FightBattleSkillDefinition>{skill}}}};
+    var views=new OfficialBattleSkillEntityPlayback();var cast=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10650,HitSelections=new List<FightBattleHitSelectionSnapshot>()};
+    using(var session=new OfficialBattleLiveImpactSession(cp,_=>new FightBattleExecutor(),views,0,1,true)){
+     OfficialBattleImpactViewBridge.Arrivals.Clear();FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=cast};session.Pump(0,StartCast);
+     OfficialBattleSlashImpact.Last=null;views.Graph(cast,"playable10650");var observer=OfficialBattleSlashImpact.Last;
+     Check(observer!=null&&observer.Particle=="shizi","The original cross slash particle was not observed");
+     observer.Trigger();Check(OfficialBattleImpactViewBridge.Arrivals.Count==0,"An early cross effect fabricated its hit selection");
+     var selection=new FightBattleHitSelectionSnapshot{HitEntityId=10651,Targets=new List<FightBattleHitSelectionSnapshot.TargetOccurrence>()};
+     for(int i=0;i<4;i++)selection.Targets.Add(new FightBattleHitSelectionSnapshot.TargetOccurrence{HasScopeIndex=true,ScopeIndex=i});
+     cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartCast);
+     Check(OfficialBattleImpactViewBridge.Arrivals.Count==4,"The cross did not deliver every original scope once");
+     observer.Trigger();Check(OfficialBattleImpactViewBridge.Arrivals.Count==4,"The same cross effect was delivered twice");
+    }
+   }
+   {
     var hit=new FightBattleHitEntity{EntityId=11121,ScopeEntries=new List<FightBattleHitScopeEntry>()};
     for(int x=-2;x<=2;x++)for(int y=-2;y<=2;y++)if(Math.Abs(x)+Math.Abs(y)>=1&&Math.Abs(x)+Math.Abs(y)<=2)
      hit.ScopeEntries.Add(new FightBattleHitScopeEntry{Position=new FightGridPoint(x,y)});

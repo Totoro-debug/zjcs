@@ -1441,6 +1441,80 @@ namespace Zjcs.Editor.Combat
                 comboAppearance?.Dispose(); Destroy(comboRoot.gameObject); yield return null;
             }
 
+            // Four-way slash uses one simultaneous original cross effect for its four cells.
+            var crossOffsets = new[] { new Vector2Int(-1, 0), new Vector2Int(0, -1),
+                new Vector2Int(0, 1), new Vector2Int(1, 0) };
+            var crossUnits = new List<FightBattleUnitState> { LiveUnit(1, 1, 5) };
+            for (int index = 0; index < crossOffsets.Length; index++) {
+                var unit = LiveUnit(index + 2, 2, 5 + crossOffsets[index].x); unit.Y += crossOffsets[index].y; crossUnits.Add(unit);
+            }
+            var crossSkill = liveCatalog.CreateSkill(10650, 0, 10013, 2, 20, 1,
+                liveCatalog.CalculateSkillProps(10650, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+            crossSkill.LimitedTimes = 1; crossUnits[0].Skills.Add(crossSkill);
+            crossUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(crossSkill, 0));
+            var crossCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+            crossCheckpoint.Units.AddRange(crossUnits); var crossWave = new FightBattleWaveState();
+            crossWave.UnitIds.AddRange(new[] { 2, 3, 4, 5 }); crossCheckpoint.Waves.Add(crossWave);
+            FightBattleExecutor.Begin(crossCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+            string crossCommitted = FightBattleCheckpointSerializer.Save(crossCheckpoint);
+            var crossDisplay = FightBattleCheckpointSerializer.Load(crossCommitted).Units.ToArray();
+            var crossRoot = new GameObject("Live cross slash").transform; crossRoot.SetParent(root, false);
+            var crossBodies = new Dictionary<int, Transform>();
+            foreach (var unit in crossUnits) {
+                var body = new GameObject("Cross unit " + unit.Id).transform; body.SetParent(crossRoot, false);
+                body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
+                body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                crossBodies.Add(unit.Id, body);
+            }
+            var crossAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump ? NativeJumpAppearanceFixture.Create(crossBodies[1].gameObject) : null;
+            var crossScope = new OfflineBattleNativePlayableScope(crossRoot, null);
+            using (var crossViews = new OfficialBattleSkillEntityPlayback(crossRoot, new OfficialBattleGridMapper(crossRoot, grid),
+                crossScope, id => crossDisplay.FirstOrDefault(value => value.Id == id)))
+            using (var crossSession = new OfficialBattleLiveImpactSession(crossCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), crossViews, 0, 1)) {
+                crossViews.BindDamageUI(crossRoot, 0);
+                foreach (var pair in crossBodies) crossViews.EnsureUnit(pair.Key, pair.Value);
+                ParticleSystem crossParticle = null; bool crossPaused = false, crossResumed = false;
+                int crossPauseFrames = 0, crossImpactFrame = -1; var damagedCrossUnits = new HashSet<int>();
+                crossSession.SecondsStatusChanged += _ => { };
+                crossSession.SkillGraphPlayableStarted += (cast, id, prefab, leaf) => {
+                    if (cast.SkillEntityId != 10650 || prefab.name != "playable10650" || leaf.name != "effect") return;
+                    crossParticle = leaf.GetComponentsInChildren<ParticleSystem>(true).Single(value => value.name == "shizi");
+                    crossParticle.Pause(true); crossPaused = true;
+                };
+                bool StartCross(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) {
+                    id = crossViews.Start(cast, crossBodies[1], null); return true;
+                }
+                void CrossDamage(FightBattleDamageEvent damage) {
+                    Require(crossResumed && crossParticle && crossParticle.particleCount > 0
+                        && damagedCrossUnits.Add(damage.TargetId) && crossBodies.ContainsKey(damage.TargetId),
+                        "A cross-scope target was hit before the original effect or more than once.");
+                    if (crossImpactFrame < 0) crossImpactFrame = Time.frameCount;
+                    Require(crossImpactFrame == Time.frameCount, "The simultaneous cross targets did not share one impact frame.");
+                    var display = crossDisplay.Single(value => value.Id == damage.TargetId);
+                    Require(display.Hp == damage.BeforeHp, "The cross target health changed before its own hit.");
+                    display.Hp = damage.AfterHp; display.Turn.Hp = damage.AfterHp;
+                }
+                deadline = Time.realtimeSinceStartup + 20f;
+                while (!crossSession.IsCompleted && Time.realtimeSinceStartup < deadline) {
+                    crossSession.Pump(Time.deltaTime, StartCross, CrossDamage);
+                    if (crossPaused && !crossResumed) {
+                        Require(crossParticle.particleCount == 0 && damagedCrossUnits.Count == 0,
+                            "A paused cross effect cannot settle its targets.");
+                        if (++crossPauseFrames == 5) { crossResumed = true; crossParticle.Play(true); }
+                    }
+                    crossViews.Tick(Time.deltaTime); crossScope.LateTick(); yield return null;
+                }
+                Require(crossPaused && crossResumed && damagedCrossUnits.SetEquals(new[] { 2, 3, 4, 5 })
+                    && crossSession.TryTakeCompleted(out _, out var crossResult) && crossResult.Event.DamageEvents.Count == 4
+                    && FightBattleCheckpointSerializer.Save(crossCheckpoint) == crossCommitted,
+                    "The original cross effect did not reach all four targets exactly once.");
+                if (crossAppearance != null) { yield return null; crossViews.Tick(Time.deltaTime); crossScope.LateTick(); Capture("cross-slash-impact.png", false); }
+            }
+            crossAppearance?.Dispose(); Destroy(crossRoot.gameObject); yield return null;
+
             // Exercise the same live driver through the production graph owner's factory.
             var graphUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 5) };
             var graphSkill = liveCatalog.CreateSkill(10800, 0, 10028, 2, 20, 1,
