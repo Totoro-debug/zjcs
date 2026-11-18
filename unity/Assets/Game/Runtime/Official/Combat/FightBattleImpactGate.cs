@@ -9,6 +9,8 @@ namespace Zjcs.Combat.Official
         public int EffectCenterIndex, OccurrenceIndex;
         public bool HasScopeIndex;
         public int ScopeIndex;
+        // Some aggregate hits have authored scope cells but no unique target-to-cell mapping.
+        public bool ScopeIdentityUnresolved;
         public FightBattleSkillCastEvent Cast;
         public FightBattleHitSelectionSnapshot HitSelection;
     }

@@ -50,6 +50,54 @@ public static class BattleImpactGateHarness
     }
     public static string Run(FightOfficialCombatCatalog catalog, FightDamageFormula formula, FightOfficialSkillItemCatalog items)
     {
+        {
+            var cast = new FightBattleSkillCastEvent();
+            var otherCast = new FightBattleSkillCastEvent();
+            var selection = new FightBattleHitSelectionSnapshot();
+            selection.EffectCenters.Add(new FightGridPoint(4, 5));
+            selection.Targets.Add(new FightBattleHitSelectionSnapshot.TargetOccurrence { TargetId = 2, HasScopeIndex = true, ScopeIndex = 0 });
+            selection.Targets.Add(new FightBattleHitSelectionSnapshot.TargetOccurrence { TargetId = 3, HasScopeIndex = true, ScopeIndex = 0 });
+            selection.Targets.Add(new FightBattleHitSelectionSnapshot.TargetOccurrence { TargetId = 2, HasScopeIndex = true, ScopeIndex = 1 });
+            selection.Targets.Add(new FightBattleHitSelectionSnapshot.TargetOccurrence { TargetId = 4 });
+            FightBattlePendingImpact Pending(int index) => new FightBattlePendingImpact {
+                Cast = cast, HitSelection = selection, TargetId = selection.Targets[index].TargetId,
+                EffectCenterIndex = 0, OccurrenceIndex = index,
+                HasScopeIndex = selection.Targets[index].HasScopeIndex, ScopeIndex = selection.Targets[index].ScopeIndex };
+            var latch = new FightBattleImpactLatch();
+            var unresolved = Pending(3); unresolved.ScopeIdentityUnresolved = true;
+            bool rejected = false;
+            try { latch.AwaitImpact(unresolved); }
+            catch (InvalidOperationException) { rejected = true; }
+            Check(rejected && !latch.TryTake(out _), "An unresolved aggregate scope must not settle at the centre");
+            var one = Task.Run(() => latch.AwaitImpact(Pending(0)));
+            var two = Task.Run(() => latch.AwaitImpact(Pending(1)));
+            var queued = new List<FightBattlePendingImpact>();
+            Check(SpinWait.SpinUntil(() => { while (latch.TryTake(out var item)) queued.Add(item); return queued.Count == 2; }, 20000),
+                "The host did not receive both pending targets");
+            Check(latch.RecordArrival(otherCast, selection, 0, 0) && latch.RecordArrival(cast, selection, 0, 2),
+                "Independent arrivals were not recorded");
+            Check(!one.Wait(50) && !two.Wait(50), "A different cast or scope released the pending targets");
+            Check(latch.RecordArrival(cast, selection, 0, 0) && !latch.RecordArrival(cast, selection, 0, 0),
+                "A repeated scope arrival must remain one event");
+            Check(Task.WaitAll(new[] { one, two }, 20000), "A shared scope arrival did not release both affected targets");
+            Check(latch.RecordArrival(cast, selection, 0, 1), "An early scope arrival was not recorded");
+            var early = Task.Run(() => latch.AwaitImpact(Pending(2)));
+            Check(early.Wait(20000), "An arrival before the target request was lost");
+            var center = Task.Run(() => latch.AwaitImpact(Pending(3)));
+            Check(!center.Wait(50) && latch.RecordArrival(cast, selection, 0, -1) && center.Wait(20000),
+                "A centre hit must wait for its own original arrival");
+            var waitingCast = new FightBattleSkillCastEvent();
+            var canceled = Task.Run(() => {
+                var pending = Pending(0); pending.Cast = waitingCast;
+                try { latch.AwaitImpact(pending); return false; }
+                catch (OperationCanceledException) { return true; }
+            });
+            Check(SpinWait.SpinUntil(() => { while (latch.TryTake(out var item)) if (ReferenceEquals(item.Cast, waitingCast)) return true; return false; }, 20000),
+                "The cancellation fixture never reached its wait");
+            latch.Dispose();
+            Check(canceled.Wait(20000) && canceled.Result && !latch.RecordArrival(cast, selection, 0, 0),
+                "Disposing the step must cancel its waiter and ignore late arrivals");
+        }
         int impacts = 0;
         foreach (var setup in new[] { new[] {10011,10630,1,3}, new[] {10015,10670,2,1}, new[] {10028,10800,3,1} })
         {
@@ -133,26 +181,25 @@ public static class BattleImpactGateHarness
                 cp.Units.Add(Unit(unitId++, 2, 13 + offset[0], 10 + offset[1], formula));
             var wave = new FightBattleWaveState(); wave.UnitIds.AddRange(cp.Units.Where(u => u.Side == 2).Select(u => u.Id)); cp.Waves.Add(wave);
             var executor = FightBattleExecutor.Begin(cp, formula, new FightDamageSettlement(), catalog, items);
-            var gate = new Gate(); executor.ImpactGate = gate; var task = Task.Run(() => executor.Step(0, 1));
+            using var latch = new FightBattleImpactLatch();
+            executor.ImpactGate = latch; var task = Task.Run(() => executor.Step(0, 1));
             var seen = new HashSet<int>();
             var scopeIndices = new HashSet<int>();
             for (int index = 0; index < 5; index++)
             {
-                var pending = gate.Next();
-                try
-                {
-                    var impact = pending.Impact;
-                    var occurrence = impact.HitSelection.Targets[impact.OccurrenceIndex];
-                    Check(impact.SkillItemId == 10043 && seen.Add(impact.TargetId)
-                        && occurrence.TargetId == impact.TargetId && occurrence.EffectCenterIndex == impact.EffectCenterIndex
-                        && impact.HasScopeIndex && occurrence.HasScopeIndex && occurrence.ScopeIndex == impact.ScopeIndex
-                        && scopeIndices.Add(impact.ScopeIndex)
-                        && occurrence.HasGridPosition && occurrence.GridX == impact.GridX && occurrence.GridY == impact.GridY,
-                        "A cross-scope impact lost the actual target, body cell or centre identity");
-                    Check(cp.Units.Single(u => u.Id == impact.TargetId).Hp == 1000000,
-                        "A cross-scope target took damage before its own impact");
-                }
-                finally { pending.Released.Set(); }
+                FightBattlePendingImpact impact = null;
+                Check(SpinWait.SpinUntil(() => latch.TryTake(out impact), 20000), "A cross-scope impact was not offered to the host");
+                var occurrence = impact.HitSelection.Targets[impact.OccurrenceIndex];
+                Check(impact.SkillItemId == 10043 && seen.Add(impact.TargetId)
+                    && occurrence.TargetId == impact.TargetId && occurrence.EffectCenterIndex == impact.EffectCenterIndex
+                    && impact.HasScopeIndex && occurrence.HasScopeIndex && occurrence.ScopeIndex == impact.ScopeIndex
+                    && scopeIndices.Add(impact.ScopeIndex)
+                    && occurrence.HasGridPosition && occurrence.GridX == impact.GridX && occurrence.GridY == impact.GridY,
+                    "A cross-scope impact lost the actual target, body cell or centre identity");
+                Check(cp.Units.Single(u => u.Id == impact.TargetId).Hp == 1000000,
+                    "A cross-scope target took damage before its own impact");
+                Check(latch.RecordArrival(impact.Cast, impact.HitSelection, impact.EffectCenterIndex, impact.ScopeIndex),
+                    "The matching scope arrival was not accepted");
             }
             Check(task.Wait(TimeSpan.FromSeconds(20)) && task.Result.Event.DamageEvents.Count(d => d.SkillItemId == 10043) == 5,
                 "Cross-scope impacts were lost or duplicated");

@@ -19,6 +19,9 @@ public static class BattleChainedHitsHarness
         Check(Cast(lightning, 10820).HitSelections.SelectMany(hit => hit.Targets)
             .Select(hit => hit.TargetId).SequenceEqual(new[] { 2, 3, 5, 4 }),
             "First-promotion lightning lost nearest-distance/ID order or revisited a target.");
+        Check(Cast(lightning, 10820).HitSelections.SelectMany(hit => hit.Targets)
+            .All(hit => hit.HasScopeIndex && hit.ScopeIndex == 0),
+            "A chained single-cell hit lost its original scope index.");
         ValidateEdges(lightning, Cast(lightning, 10820), catalog);
         var reordered = RunCase(catalog, items, formula, 10820, new[] {
             new FightGridPoint(7, 5), new FightGridPoint(8, 5),
