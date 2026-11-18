@@ -209,6 +209,56 @@ namespace Zjcs.Presentation.Combat
                     && FightBattleCheckpointSerializer.Save(result.Checkpoint) == FightBattleCheckpointSerializer.Save(jumpBaseline),
                     "Resolving the original status changed the completed deterministic result");
             }
+            var movingViews = new OfficialBattleSkillEntityPlayback();
+            using (var movingSession = new OfficialBattleLiveImpactSession(jumpCp,
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items),
+                movingViews, 0, 1, observeMovements: true))
+            {
+                FightBattleSkillCastEvent startedCast = null;
+                bool allowMovement = false, movementStarted = false;
+                bool StartJump(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { startedCast = cast; id = new EcEntityIdentifier(51); return true; }
+                bool StartJumpMovement(FightBattleSkillCastEvent cast, FightBattleMovementEvent move)
+                {
+                    Check(ReferenceEquals(cast, startedCast) && move.UnitId == 1 && move.MoveBehaviourId == 10672
+                        && move.Path != null && move.Path.Count == 2 && move.Path[0].X == 7
+                        && move.HasDirection && move.HasFacing,
+                        "The movement handoff lost the original jump cast, direct path or action facing");
+                    if (!allowMovement) return false;
+                    movementStarted = true; return true;
+                }
+                Check(SpinWait.SpinUntil(() => { movingSession.Pump(0f, StartJump, null, StartJumpMovement);
+                    return movingSession.PendingMovement != null; }, 20000)
+                    && !movementStarted && movingViews.Selection == null && jumpTarget.Hp == 1000000
+                    && FightBattleCheckpointSerializer.Save(jumpCp) == beforeJump,
+                    "The host must receive the actual jump movement before its selected hit");
+                movingSession.Pump(.2f, StartJump, null, StartJumpMovement);
+                Check(movingViews.Selection == null && !movementStarted, "A declined movement must keep the rules held");
+                allowMovement = true;
+                Check(SpinWait.SpinUntil(() => { movingSession.Pump(0f, StartJump, null, StartJumpMovement);
+                    return movingViews.Selection != null; }, 20000) && movementStarted,
+                    "Accepting the original jump action did not resume target selection");
+                movingViews.StartGraph(new EcEntityIdentifier(51), "playable10670", "effect (2)");
+                Check(movingViews.Damages == 1 && SpinWait.SpinUntil(() => movingSession.IsCompleted, 20000)
+                    && movingSession.TryTakeCompleted(out _, out var movingResult)
+                    && FightBattleCheckpointSerializer.Save(movingResult.Checkpoint) == FightBattleCheckpointSerializer.Save(jumpBaseline)
+                    && FightBattleCheckpointSerializer.Save(jumpCp) == beforeJump,
+                    "The real movement handoff must preserve the isolated jump outcome");
+            }
+            var canceledMoveViews = new OfficialBattleSkillEntityPlayback();
+            using (var canceledMove = new OfficialBattleLiveImpactSession(jumpCp,
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items),
+                canceledMoveViews, 0, 1, observeMovements: true))
+            {
+                bool StartJump(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = new EcEntityIdentifier(52); return true; }
+                Check(SpinWait.SpinUntil(() => { canceledMove.Pump(0f, StartJump); return canceledMove.PendingMovement != null; }, 20000),
+                    "The cancel fixture did not hold its pending movement");
+                canceledMove.Dispose();
+                Check(SpinWait.SpinUntil(() => canceledMove.IsCompleted, 20000)
+                    && FightBattleCheckpointSerializer.Save(jumpCp) == beforeJump,
+                    "Canceling a pending movement must release the worker and preserve the checkpoint");
+            }
             var delayedCp = FightBattleCheckpointSerializer.Load(beforeJump);
             var delayedHit = delayedCp.Units.Single(unit => unit.Id == 1).Skills.Single(value => value.EntityId == 10670)
                 .HitGraphEntities.Single(value => value.EntityId == 10671);

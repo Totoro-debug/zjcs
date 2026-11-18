@@ -13,6 +13,15 @@ namespace Zjcs.Combat.Official
         public FightBattleSkillCastEvent Cast { get; internal set; }
     }
 
+    /// <summary>A movement whose path and action fields can be copied while the step is suspended.</summary>
+    public sealed class FightBattlePreparedMovement
+    {
+        internal FightBattleImpactLatch Owner;
+        internal bool Taken, Completed;
+        public FightBattleSkillCastEvent Cast { get; internal set; }
+        public FightBattleMovementEvent Movement { get; internal set; }
+    }
+
     /// <summary>A cast whose final duration can be copied while the step is suspended.</summary>
     public sealed class FightBattleCompletedCast
     {
@@ -45,7 +54,7 @@ namespace Zjcs.Combat.Official
     /// The step runs on a worker; the presentation thread takes requests without blocking and
     /// records actual arrivals. A single scope arrival may affect multiple target occurrences.
     /// </summary>
-    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleCastCompletionObserver, IFightBattleHitSelectionObserver, IFightBattleImpactSettlementObserver, IFightBattleImpactStatusResolutionObserver, IDisposable
+    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleMovementPreparationObserver, IFightBattleCastCompletionObserver, IFightBattleHitSelectionObserver, IFightBattleImpactSettlementObserver, IFightBattleImpactStatusResolutionObserver, IDisposable
     {
         private readonly struct Signal : IEquatable<Signal>
         {
@@ -69,6 +78,7 @@ namespace Zjcs.Combat.Official
         private readonly HashSet<FightBattleSkillCastEvent> preparedCasts = new HashSet<FightBattleSkillCastEvent>();
         private readonly Queue<FightBattlePendingImpact> requests = new Queue<FightBattlePendingImpact>();
         private readonly Queue<FightBattlePreparedCast> preparations = new Queue<FightBattlePreparedCast>();
+        private readonly Queue<FightBattlePreparedMovement> movements = new Queue<FightBattlePreparedMovement>();
         private readonly Queue<FightBattleCompletedCast> completedCasts = new Queue<FightBattleCompletedCast>();
         private readonly Queue<FightBattleSelectedHit> selections = new Queue<FightBattleSelectedHit>();
         private readonly Queue<FightBattleSettledImpact> settlements = new Queue<FightBattleSettledImpact>();
@@ -79,6 +89,7 @@ namespace Zjcs.Combat.Official
         private long waitRevision;
         private bool workerWaiting, workerStopped, hasWaitingImpact;
         private Signal waitingImpact;
+        public bool ObserveMovements { get; internal set; }
 
         // The isolated step owns exactly one worker. Other latch users retain the
         // original independent wait semantics and do not participate in its fence.
@@ -160,6 +171,45 @@ namespace Zjcs.Combat.Official
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
                 if (!ReferenceEquals(preparation.Owner, this) || !preparation.Taken || preparation.Completed)
                     throw new InvalidOperationException("The cast preparation is not awaiting this host.");
+                releasedRevision = waitRevision;
+                preparation.Completed = true;
+                Monitor.PulseAll(sync);
+            }
+        }
+
+        public void MovementPrepared(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement)
+        {
+            if (movement == null) throw new ArgumentNullException(nameof(movement));
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (!ObserveMovements) return;
+                var preparation = new FightBattlePreparedMovement { Owner = this, Cast = cast, Movement = movement };
+                movements.Enqueue(preparation);
+                while (!disposed && !preparation.Completed) ParkWorker();
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+            }
+        }
+
+        /// <summary>Copies must be made before completion; enclosing action offsets can still change.</summary>
+        public bool TryTakeMovement(out FightBattlePreparedMovement preparation)
+        {
+            lock (sync)
+            {
+                if (movements.Count == 0) { preparation = null; return false; }
+                preparation = movements.Dequeue(); preparation.Taken = true;
+                return true;
+            }
+        }
+
+        public void CompleteMovement(FightBattlePreparedMovement preparation, out long releasedRevision)
+        {
+            if (preparation == null) throw new ArgumentNullException(nameof(preparation));
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (!ReferenceEquals(preparation.Owner, this) || !preparation.Taken || preparation.Completed)
+                    throw new InvalidOperationException("The movement preparation is not awaiting this host.");
                 releasedRevision = waitRevision;
                 preparation.Completed = true;
                 Monitor.PulseAll(sync);
@@ -443,7 +493,7 @@ namespace Zjcs.Combat.Official
             lock (sync)
             {
                 if (disposed) return;
-                disposed = true; arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear(); deferredStatusResults.Clear();
+                disposed = true; arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); movements.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear(); deferredStatusResults.Clear();
                 Monitor.PulseAll(sync);
             }
         }

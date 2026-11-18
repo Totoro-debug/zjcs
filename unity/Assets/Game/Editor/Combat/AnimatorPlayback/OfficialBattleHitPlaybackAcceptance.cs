@@ -749,18 +749,34 @@ namespace Zjcs.Editor.Combat
             var jumpExpected = FightBattleExecutor.Restore(jumpBaseline, formula, new FightDamageSettlement(),
                 liveCatalog, combatAssets.LoadSkillItems()).Step(0, 1);
             var jumpExpectedDamage = jumpExpected.Event.DamageEvents.Single(value => value.SkillItemId == 10015);
+            fireSource.localPosition = new Vector3(2, 5, 0);
             fireTarget.localPosition = new Vector3(4, 5, 0);
             FightBattleSkillCastEvent jumpCast = null;
             int jumpImpactFrame = -1;
-            bool jumpDamageShown = false;
+            bool jumpDamageShown = false, jumpMovementStarted = false;
+            float jumpCastStarted = 0f;
+            Vector3 jumpLanding = default;
             using var jumpSession = new OfficialBattleLiveImpactSession(jumpCheckpoint, copy => FightBattleExecutor.Restore(copy,
-                formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), fireViews, 0, 1);
+                formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), fireViews, 0, 1, observeMovements: true);
             jumpSession.SkillGraphPlayableStarted += (cast, id, prefab, leaf) => {
-                if (ReferenceEquals(cast, jumpCast) && prefab.name == "playable10670" && leaf.name == "effect (2)")
+                if (ReferenceEquals(cast, jumpCast) && prefab.name == "playable10670" && leaf.name == "effect (2)") {
                     jumpImpactFrame = Time.frameCount;
+                    Require(jumpMovementStarted && Vector3.Distance(fireSource.localPosition, jumpLanding) < .05f,
+                        "The original jump must reach its selected landing before the strike effect.");
+                }
             };
             bool StartJumpCast(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) {
-                jumpCast = cast; id = fireViews.Start(cast, fireSource, fireTarget); return true;
+                jumpCast = cast; jumpCastStarted = Time.time;
+                id = fireViews.Start(cast, fireSource, fireTarget); return true;
+            }
+            bool StartJumpMovement(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement) {
+                Require(ReferenceEquals(cast, jumpCast) && movement.MoveBehaviourId == 10672 && movement.Path.Count == 2,
+                    "The live jump must use its actual original movement action and direct path.");
+                if (Time.time - jumpCastStarted < movement.Delay) return false;
+                var landing = movement.Path[movement.Path.Count - 1];
+                jumpLanding = fireViews.GridToPos(new Pos2d(landing.X, landing.Y));
+                Require(fireViews.OwnsMovement(movement), "The original jump movement prefab is unavailable.");
+                fireViews.StartMovement(movement, fireSource); jumpMovementStarted = true; return true;
             }
             void RefreshJumpHp(FightBattleDamageEvent damage) {
                 fireDisplayUnits[1].Hp = damage.AfterHp; fireDisplayUnits[1].Turn.Hp = damage.AfterHp;
@@ -772,7 +788,7 @@ namespace Zjcs.Editor.Combat
             }
             deadline = Time.realtimeSinceStartup + 10f;
             while (!jumpSession.IsCompleted && Time.realtimeSinceStartup < deadline) {
-                jumpSession.Pump(Time.deltaTime, StartJumpCast, RefreshJumpHp);
+                jumpSession.Pump(Time.deltaTime, StartJumpCast, RefreshJumpHp, StartJumpMovement);
                 if (jumpImpactFrame < 0) Require(damageNotifications == 4 && fireDisplayUnits[1].Hp == 1000000,
                     "Jump damage must wait for the original landing effect.");
                 fireViews.Tick(Time.deltaTime); fireScope.LateTick();

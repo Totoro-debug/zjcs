@@ -14,6 +14,7 @@ namespace Zjcs.Presentation.Combat
     public sealed class OfficialBattleLiveImpactSession : IDisposable
     {
         public delegate bool StartCast(FightBattleSkillCastEvent cast, out EcEntityIdentifier skillId);
+        public delegate bool StartMovement(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement);
 
         private sealed class ActiveCast
         {
@@ -29,6 +30,7 @@ namespace Zjcs.Presentation.Combat
         private readonly HashSet<FightBattleHitSelectionSnapshot> selectedHits = new HashSet<FightBattleHitSelectionSnapshot>();
         private readonly Dictionary<int, HashSet<int>> jumpSlashScopes = new Dictionary<int, HashSet<int>>();
         private FightBattlePreparedCast preparation;
+        private FightBattlePreparedMovement movement;
         private FightBattleSelectedHit selection;
         private FightBattleSettledImpact settlement;
         private FightBattleSettledImpact resolvingStatus;
@@ -36,19 +38,21 @@ namespace Zjcs.Presentation.Combat
         private float clock;
         private bool disposed, transferred, pumping;
         private StartCast lastStartCast;
+        private StartMovement lastStartMovement;
         private Action<FightBattleDamageEvent> lastAfterDamageStarted;
         private FightBattleSkillCastEvent currentGraphCast;
         private EcEntityIdentifier currentGraphSkillId;
 
         public bool IsCompleted => step.IsCompleted;
         public FightBattleSettledImpact PendingSettlement => settlement ?? resolvingStatus;
+        public FightBattlePreparedMovement PendingMovement => movement;
         /// <summary>A nested presentation interrupted status resolution; the host must not advance this step.</summary>
         public bool StatusResolutionBlocked => resolvingStatus != null && settlement == null;
         public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted;
 
         public OfficialBattleLiveImpactSession(FightBattleCheckpoint checkpoint,
             Func<FightBattleCheckpoint, FightBattleExecutor> restore,
-            OfficialBattleSkillEntityPlayback views, int sequence, int counter)
+            OfficialBattleSkillEntityPlayback views, int sequence, int counter, bool observeMovements = false)
         {
             this.views = views ?? throw new ArgumentNullException(nameof(views));
             if (checkpoint?.Units != null) foreach (var unit in checkpoint.Units)
@@ -67,7 +71,7 @@ namespace Zjcs.Presentation.Combat
                     }
                 }
             }
-            step = new FightBattleIsolatedStep(checkpoint, restore, sequence, counter);
+            step = new FightBattleIsolatedStep(checkpoint, restore, sequence, counter, observeMovements);
             bridge = new OfficialBattleImpactViewBridge(views, step.Latch);
             bridge.WorkerReleasedByArrival += OnWorkerReleasedByArrival;
             views.SkillGraphPlayableStarted += OnSkillGraphPlayableStarted;
@@ -78,7 +82,8 @@ namespace Zjcs.Presentation.Combat
         /// local rule work after releasing a handoff, so an impact and its damage share
         /// the same frame. Declined starts and incomplete damage remain held.
         /// </summary>
-        public bool Pump(float elapsed, StartCast startCast, Action<FightBattleDamageEvent> afterDamageStarted = null)
+        public bool Pump(float elapsed, StartCast startCast, Action<FightBattleDamageEvent> afterDamageStarted = null,
+            StartMovement startMovement = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleLiveImpactSession));
             if (transferred) throw new InvalidOperationException("The live step was already transferred.");
@@ -87,6 +92,7 @@ namespace Zjcs.Presentation.Combat
             if (startCast == null) throw new ArgumentNullException(nameof(startCast));
             if (pumping) throw new InvalidOperationException("The live step is already being pumped.");
             lastStartCast = startCast;
+            lastStartMovement = startMovement;
             lastAfterDamageStarted = afterDamageStarted;
             pumping = true;
             try
@@ -113,6 +119,15 @@ namespace Zjcs.Presentation.Combat
                         casts.Add(preparation.Cast, new ActiveCast { Id = id, Started = clock });
                         step.Latch.CompletePreparation(preparation, out long revision);
                         preparation = null; progressed = true;
+                        step.Latch.WaitForWorkerBoundary(revision);
+                        continue;
+                    }
+                    if (movement == null) step.Latch.TryTakeMovement(out movement);
+                    if (movement != null)
+                    {
+                        if (startMovement == null || !startMovement(movement.Cast, movement.Movement)) return progressed;
+                        step.Latch.CompleteMovement(movement, out long revision);
+                        movement = null; progressed = true;
                         step.Latch.WaitForWorkerBoundary(revision);
                         continue;
                     }
@@ -164,7 +179,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed || transferred || pumping || lastStartCast == null) return;
             step.Latch.WaitForWorkerBoundary(revision);
-            Pump(0f, lastStartCast, lastAfterDamageStarted);
+            Pump(0f, lastStartCast, lastAfterDamageStarted, lastStartMovement);
         }
 
         private void OnSkillGraphPlayableStarted(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
@@ -240,7 +255,7 @@ namespace Zjcs.Presentation.Combat
                 delivered = true;
             }
             finally { pumping = false; }
-            if (delivered && lastStartCast != null) Pump(0f, lastStartCast, lastAfterDamageStarted);
+            if (delivered && lastStartCast != null) Pump(0f, lastStartCast, lastAfterDamageStarted, lastStartMovement);
             return delivered;
         }
 

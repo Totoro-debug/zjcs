@@ -19,7 +19,8 @@ namespace Zjcs.Combat.Official
         public bool IsCompleted => worker.IsCompleted;
 
         public FightBattleIsolatedStep(FightBattleCheckpoint checkpoint,
-            Func<FightBattleCheckpoint, FightBattleExecutor> restore, int sequence, int counter)
+            Func<FightBattleCheckpoint, FightBattleExecutor> restore, int sequence, int counter,
+            bool observeMovements = false)
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
             if (restore == null) throw new ArgumentNullException(nameof(restore));
@@ -27,7 +28,7 @@ namespace Zjcs.Combat.Official
             executor = restore(copy) ?? throw new InvalidOperationException("Restoring the isolated battle returned no executor.");
             if (!ReferenceEquals(executor.State, copy))
                 throw new InvalidOperationException("The restored executor must own the isolated checkpoint.");
-            Latch = new FightBattleImpactLatch();
+            Latch = new FightBattleImpactLatch { ObserveMovements = observeMovements };
             executor.ImpactGate = Latch;
             worker = Task.Run(() => {
                 try { Latch.BindWorker(); return executor.Step(sequence, counter); }

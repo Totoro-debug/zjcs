@@ -2539,6 +2539,9 @@ namespace Zjcs.Combat.Official
                 || !unitById.TryGetValue(movement.UnitId, out FightBattleUnitState mover)) return;
             statusCatalog.ApplyMovementFacing(mover, movement);
             statusCatalog.CompleteRoleMovement(movement);
+            if (ImpactGate is IFightBattleMovementPreparationObserver movementObserver)
+                movementObserver.MovementPrepared(sourceSkill != null && gridViewCast?.SkillEntityId == sourceSkill.EntityId
+                    ? gridViewCast : null, movement);
             if (movementStartContext == null) return;
             if (activeMove) ApplyMoveScopesForMovement(mover, movement);
             // ActionAgentComponentImplement.StartAction fires StartEvent after AddEntity;

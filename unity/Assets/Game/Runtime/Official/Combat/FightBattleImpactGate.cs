@@ -35,6 +35,16 @@ namespace Zjcs.Combat.Official
     }
 
     /// <summary>
+    /// Optional handoff after the original movement path and action facing are known,
+    /// before action-start listeners can create nested effects. Timing offsets may
+    /// still be adjusted by an enclosing cast or ordinary approach movement.
+    /// </summary>
+    public interface IFightBattleMovementPreparationObserver
+    {
+        void MovementPrepared(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement);
+    }
+
+    /// <summary>
     /// Optional notification when a cast's duration is final. Its enclosing step may
     /// still apply later offsets, so this is not an absolute playback start time.
     /// </summary>
