@@ -69,7 +69,7 @@
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightActionSkillMove.cs",
-      "sha256": "3f212e3cbe58f248ea3f217ec4d3a35edff8268d57be4e84c7af96526a0bfa13"
+      "sha256": "1aeb778d26071f1e080828f65d568946eed336d5a1abe7ad86289856d64e1dcd"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightActionSkillMove.cs.meta",
@@ -397,11 +397,19 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMoveActionPlayback.cs",
-      "sha256": "1300967325849842ffa059992f9ad32a54500b390dc12bb29eeb9af12b2a8b3b"
+      "sha256": "cf020bb0b1ea25b423cddfaa21f0fc76381d54745cecd80d5bc0bcd3e26f231c"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.Movement.cs",
-      "sha256": "b445d11c043403616361c101e04291606f747ef1aaed2f0cd76d7869ef883642"
+      "sha256": "e2e4ac78ab7820bd92377671a01a99026e7850d2be762d9904f5dd47c292e403"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/BattleBlockedTrackContact.cs",
+      "sha256": "a43f1794c4b3387cc42bf2836e16971778389e694a0f2d2e5d7d38067308976f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/BattleBlockedTrackContact.cs.meta",
+      "sha256": "632ae45e242fe4d423ac2fa096e59651279a86ff5be53e4f868354946bb1edde"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs",
@@ -437,11 +445,19 @@
     },
     {
       "path": "scripts/test_battle_blocked_move_action.ps1",
-      "sha256": "43cd83d9edc71700b353028a5c7cb4573dda0b99ef39b8c70b409d64117dccdb"
+      "sha256": "8c79b44e7c11595b01926dce9176784759f1d6a35536a277ecfadcaa36d08d32"
     },
     {
       "path": "scripts/fixtures/battle_blocked_move_action_harness.cs",
-      "sha256": "3bd82cd41dbefc06bfee09c1cae9751fe75d22c2de1e9bfd6877c2a7a210f085"
+      "sha256": "6acee0c107e57476810e227868137989bbb3f0dacc2f9c903f0f02b7e4e10e4c"
+    },
+    {
+      "path": "scripts/test_battle_blocked_contact.ps1",
+      "sha256": "2574406dcd4c1af49075977368076c4bd8906c1ed48ad0d21149b0763ee12d9e"
+    },
+    {
+      "path": "scripts/fixtures/battle_blocked_contact_harness.cs",
+      "sha256": "5f76b540362cc63ffce413adb92420586cfa4670f04119d442b8d658d884dd76"
     },
     {
       "path": "scripts/test_battle_skill_combo.ps1",
@@ -478,11 +494,12 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_skill_move_runtime.py",
-    "sha256": "fbf619245e0522b6ce2f4aac942b798e49af94e613c9cebea86b0716903dd597"
+    "sha256": "4a93e727aac19b36a9406308f795a49132a800e0be00067640534b6ee8bc0508"
   },
   "conversion": [
     "Original client lifecycle and per-path timer; explicit manager injection and optional host timing.",
     "Original shared duration, speed, distance and flip calculations; Unity logging replaces the shared logger.",
+    "A transient original-track trigger reports its first verified collision endpoint crossing and is removed on stop; interrupted tracks do not report contact.",
     "Unit grid rotation retains an existing native grid direction or the original new-grid Up default. Cast and action direction parameters are independent; original movement StartImpl changes FlipX without changing grid Direction."
   ],
   "confirmed_offline_rules": [

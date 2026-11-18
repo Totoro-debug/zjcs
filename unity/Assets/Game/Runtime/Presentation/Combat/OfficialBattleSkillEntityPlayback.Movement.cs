@@ -17,16 +17,19 @@ namespace Zjcs.Presentation.Combat
             && movement.Path.Count > 1 && moveViews.ContainsClass(movement.MoveBehaviourId);
 
         public void StartMovement(FightBattleMovementEvent movement, Transform source,
-            FightGridPoint? blockedPosition = null)
+            FightGridPoint? blockedPosition = null, Action<FightBattleMovementEvent> onBlockedContact = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillEntityPlayback));
             if (!OwnsMovement(movement))
                 throw new ArgumentException("A bound native action and settled direction/facing snapshot are required.", nameof(movement));
+            if (onBlockedContact != null && !blockedPosition.HasValue)
+                throw new ArgumentException("Collision contact requires a blocked position.", nameof(blockedPosition));
             var lease = BindUnit(movement.UnitId, source);
             var end = movement.Path[movement.Path.Count - 1];
             lease.Projection.Position = new Pos2d(end.X, end.Y);
             lease.Projection.Mirrored = movement.EndFlipX;
-            moveViews.Create(MovementData(movement, new EcEntityIdentifier(5, ++movementSerial), blockedPosition));
+            moveViews.Create(MovementData(movement, new EcEntityIdentifier(5, ++movementSerial), blockedPosition),
+                onBlockedContact == null ? null : (Action)(() => onBlockedContact(movement)));
         }
 
         internal float MovementDuration(FightBattleMovementEvent movement) =>

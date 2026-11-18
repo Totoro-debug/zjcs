@@ -18,6 +18,7 @@ namespace Zjcs.Presentation.Combat
             public MyFightActionSkillMove View;
             public float Remaining;
             public bool Blocked;
+            public Action Contact;
         }
 
         private readonly OfficialBattleNativeEntityLoader loader;
@@ -47,6 +48,7 @@ namespace Zjcs.Presentation.Combat
                     moves[0].EntitySlot = parent;
                     moves[0].ManualTiming = true;
                 });
+            scope.NativePlayableStarted += OnNativePlayableStarted;
         }
 
         MyEntity IMyActionEntityLookup.GetEntity(EcEntityIdentifier id) => entityLookup(id);
@@ -63,17 +65,26 @@ namespace Zjcs.Presentation.Combat
             }
         }
 
-        public MyEntity Create(OfficialBattleMoveActionData data)
+        public MyEntity Create(OfficialBattleMoveActionData data, Action contact = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleMoveActionPlayback));
             if (data == null) throw new ArgumentNullException(nameof(data));
             if (data.Movement.BlockedPos.HasValue && data.Movement.Info.DelayDestroyTime != 0f)
                 throw new NotSupportedException("Blocked action destruction delay requires its original server schedule.");
+            if (contact != null && !data.Movement.BlockedPos.HasValue)
+                throw new ArgumentException("Collision contact requires a blocked position.");
+            if (contact != null)
+            {
+                var prefab = loader.GetPrefab(data.ClassId);
+                var nativeMove = prefab ? prefab.GetComponent<MyFightActionSkillMove>() : null;
+                if (!nativeMove || !BattleBlockedTrackContact.Supports(nativeMove.BlockPlayablePrefab))
+                    throw new NotSupportedException("The original blocked movement has no verified contact track.");
+            }
             var entity = loader.Create(data);
             var view = entity.GetComponent<MyFightActionSkillMove>();
             view.EntitySlot = loader.EntitySlot;
             var value = new Active { Id = data.Id, View = view,
-                Blocked = data.Movement.BlockedPos.HasValue,
+                Blocked = data.Movement.BlockedPos.HasValue, Contact = contact,
                 Remaining = data.Movement.BlockedPos.HasValue ? float.PositiveInfinity
                     : data.Movement.TotalMoveDuration + data.Movement.Info.DelayDestroyTime };
             active.Add(value);
@@ -98,6 +109,19 @@ namespace Zjcs.Presentation.Combat
             });
         }
 
+        private void OnNativePlayableStarted(GameObject prefab, MyPlayable playable)
+        {
+            if (disposed || !prefab || prefab.name != "playable_move_blocked"
+                || !playable || playable.name != "move"
+                || !(playable.TryGetParam("BlockedAction") is GameObject actionObject) || !actionObject) return;
+            var value = active.Find(entry => entry.Contact != null && entry.View.gameObject == actionObject);
+            if (value == null) return;
+            BattleBlockedTrackContact.Attach(playable, () => {
+                if (disposed || !active.Contains(value) || value.Contact == null) return;
+                var callback = value.Contact; value.Contact = null; callback();
+            });
+        }
+
         private void Remove(Active value)
         {
             active.Remove(value);
@@ -107,6 +131,7 @@ namespace Zjcs.Presentation.Combat
         public void Dispose()
         {
             if (disposed) return;
+            scope.NativePlayableStarted -= OnNativePlayableStarted;
             foreach (var value in new List<Active>(active)) Remove(value);
             loader.Dispose();
             disposed = true;

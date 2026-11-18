@@ -261,6 +261,7 @@ public class MyFightActionSkillMove : MyActionBase<FightActionSkillMoveComponent
 		{
 			mParam["ParamSource2TargetDirection"] = Component.Direction;
 		}
+		mParam["BlockedAction"] = ((Component)this).gameObject;
 		return mParam;
 	}
 

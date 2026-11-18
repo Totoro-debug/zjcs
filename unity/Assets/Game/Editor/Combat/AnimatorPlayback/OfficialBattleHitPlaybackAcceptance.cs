@@ -845,7 +845,12 @@ namespace Zjcs.Editor.Combat
                 fireSource.localPosition = new Vector3(3, 5, 0);
                 Require(fireViews.OwnsMovement(blocked), "Original blocked movement action is available.");
                 int blockedBefore = played.Count;
-                fireViews.StartMovement(blocked, fireSource, new FightGridPoint(4, 5));
+                int contacts = 0;
+                float contactX = 0f;
+                fireViews.StartMovement(blocked, fireSource, new FightGridPoint(4, 5), value => {
+                    Require(ReferenceEquals(value, blocked), "Collision must retain the original movement identity.");
+                    contacts++; contactX = fireSource.localPosition.x;
+                });
                 float farthest = fireSource.localPosition.x;
                 bool captured = false;
                 for (int frame = 0; frame < 100; frame++)
@@ -856,10 +861,19 @@ namespace Zjcs.Editor.Combat
                     { Capture("session-collision.png", false); captured = true; }
                     yield return null;
                 }
-                Require(captured && Mathf.Abs(fireSource.localPosition.x - 3f) < .01f
+                Require(captured && contacts == 1 && contactX > 3.78f && contactX < 3.82f
+                    && Mathf.Abs(fireSource.localPosition.x - 3f) < .01f
                     && played.Skip(blockedBefore).Any(value => value.Name == "playable_move_blocked")
                     && fireRoot.GetComponentsInChildren<MyFightActionSkillMove>(false).Length == 0,
-                    "Original blocked movement must reach the collision and return before its own removal.");
+                    "Original blocked movement must signal its actual collision once and return before removal.");
+                jumpSession.Dispose();
+                blockedBefore = played.Count;
+                fireViews.StartMovement(blocked, fireSource, new FightGridPoint(4, 5), _ => contacts++);
+                fireViews.Tick(0f); fireScope.LateTick();
+                Require(played.Skip(blockedBefore).Any(value => value.Name == "playable_move_blocked"),
+                    "The second original blocked movement starts before interruption.");
+                fireViews.Dispose();
+                Require(contacts == 1, "Interrupting the original blocked track must not signal contact.");
             }
             jumpAppearance?.Dispose();
             jumpSession.Dispose(); fireViews.Dispose(); Destroy(fireRoot.gameObject);

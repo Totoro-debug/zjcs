@@ -81,6 +81,8 @@ def generate(destination, receipt):
     move = move.replace('MySerializable userData', 'object userData')
     move = replace_once(move, 'BattleFormula.Instance.CalcFlipX(', 'FightMovementViewMath.CalcFlipX(')
     move = replace_once(move, 'myContainer.myEntitySlot', 'EntitySlot')
+    move = replace_once(move, '\t\treturn mParam;',
+        '\t\tmParam["BlockedAction"] = ((Component)this).gameObject;\n\t\treturn mParam;')
     imports = ('using Object = UnityEngine.Object;\n'
                'using Zjcs.Official.EntityLifecycle;\n'
                'using Zjcs.Official.StoryPlayables;\n'
@@ -177,6 +179,8 @@ using Zjcs.Official.World.NativeTerrain.Common;
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMoveActionData.cs',
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMoveActionPlayback.cs',
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.Movement.cs',
+            'unity/Assets/Game/Runtime/Official/BattleSkillPlayables/BattleBlockedTrackContact.cs',
+            'unity/Assets/Game/Runtime/Official/BattleSkillPlayables/BattleBlockedTrackContact.cs.meta',
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs',
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs',
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs',
@@ -187,6 +191,8 @@ using Zjcs.Official.World.NativeTerrain.Common;
             'scripts/test_battle_skill_moves.ps1',
             'scripts/test_battle_blocked_move_action.ps1',
             'scripts/fixtures/battle_blocked_move_action_harness.cs',
+            'scripts/test_battle_blocked_contact.ps1',
+            'scripts/fixtures/battle_blocked_contact_harness.cs',
             'scripts/test_battle_skill_combo.ps1',
             'scripts/test_battle_hit_move.ps1',
             'scripts/test_battle_ordinary_movement.ps1',
@@ -205,6 +211,7 @@ using Zjcs.Official.World.NativeTerrain.Common;
         generator=identity(Path(__file__)),
         conversion=['Original client lifecycle and per-path timer; explicit manager injection and optional host timing.',
             'Original shared duration, speed, distance and flip calculations; Unity logging replaces the shared logger.',
+            'A transient original-track trigger reports its first verified collision endpoint crossing and is removed on stop; interrupted tracks do not report contact.',
             'Unit grid rotation retains an existing native grid direction or the original new-grid Up default. Cast and action direction parameters are independent; original movement StartImpl changes FlipX without changing grid Direction.'],
         confirmed_offline_rules=[
             'Self actions snapshot the settled skill direction before path settlement, preserving configured fixed direction; ordinary approach/retreat and forced target actions snapshot the moved unit direction at action creation. FlipX is independent; legacy receipts without direction keep their fallback.',
