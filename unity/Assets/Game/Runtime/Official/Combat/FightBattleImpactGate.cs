@@ -33,4 +33,13 @@ namespace Zjcs.Combat.Official
     {
         void CastPrepared(FightBattleSkillCastEvent cast);
     }
+
+    /// <summary>
+    /// Optional notification immediately after a hit changes local HP, before later
+    /// hit effects and nested casts. Capture the damage fields before returning.
+    /// </summary>
+    public interface IFightBattleImpactSettlementObserver
+    {
+        void ImpactSettled(FightBattlePendingImpact impact, FightBattleDamageEvent damage);
+    }
 }

@@ -74,6 +74,31 @@ public static class BattleImpactGateHarness
             Check(canceled.Wait(20000) && canceled.Result, "Disposal did not cancel cast preparation");
         }
         {
+            using var settlementLatch = new FightBattleImpactLatch();
+            var impact = new FightBattlePendingImpact();
+            var damage = new FightBattleDamageEvent { BeforeHp = 100, AfterHp = 70 };
+            var notify = Task.Run(() => settlementLatch.ImpactSettled(impact, damage));
+            FightBattleSettledImpact settlement = null;
+            Check(SpinWait.SpinUntil(() => settlementLatch.TryTakeSettlement(out settlement), 20000)
+                && ReferenceEquals(settlement.Impact, impact) && ReferenceEquals(settlement.Damage, damage),
+                "The host did not receive the actual settled hit");
+            Check(!notify.Wait(50), "The executor continued while the host was copying the settled hit");
+            settlementLatch.CompleteSettlement(settlement);
+            Check(notify.Wait(20000), "Completing the settlement did not resume the executor");
+            bool duplicate = false;
+            try { settlementLatch.CompleteSettlement(settlement); }
+            catch (InvalidOperationException) { duplicate = true; }
+            Check(duplicate, "One settlement was completed more than once");
+            var canceled = Task.Run(() => {
+                try { settlementLatch.ImpactSettled(impact, damage); return false; }
+                catch (OperationCanceledException) { return true; }
+            });
+            Check(SpinWait.SpinUntil(() => settlementLatch.TryTakeSettlement(out _), 20000),
+                "The pending settlement never reached the host");
+            settlementLatch.Dispose();
+            Check(canceled.Wait(20000) && canceled.Result, "Disposal did not cancel settlement");
+        }
+        {
             var cast = new FightBattleSkillCastEvent();
             var otherCast = new FightBattleSkillCastEvent();
             var selection = new FightBattleHitSelectionSnapshot();
@@ -228,6 +253,13 @@ public static class BattleImpactGateHarness
                     "A cross-scope target took damage before its own impact");
                 Check(latch.RecordArrival(impact.Cast, impact.HitSelection, impact.EffectCenterIndex, impact.ScopeIndex),
                     "The matching scope arrival was not accepted");
+                FightBattleSettledImpact settled = null;
+                Check(SpinWait.SpinUntil(() => latch.TryTakeSettlement(out settled), 20000)
+                    && ReferenceEquals(settled.Impact, impact) && settled.Damage.TargetId == impact.TargetId
+                    && settled.Damage.BeforeHp == 1000000 && settled.Damage.AfterHp < 1000000
+                    && cp.Units.Single(u => u.Id == impact.TargetId).Hp == settled.Damage.AfterHp
+                    && !task.IsCompleted, "The host did not observe actual HP at the matching impact");
+                latch.CompleteSettlement(settled);
             }
             Check(task.Wait(TimeSpan.FromSeconds(20)) && task.Result.Event.DamageEvents.Count(d => d.SkillItemId == 10043) == 5,
                 "Cross-scope impacts were lost or duplicated");

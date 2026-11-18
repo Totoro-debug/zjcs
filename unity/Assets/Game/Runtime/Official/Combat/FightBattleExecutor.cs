@@ -987,9 +987,11 @@ namespace Zjcs.Combat.Official
                     FightGridPoint hitOrigin = hitSelection != null && centerIndex < hitSelection.EffectCenters.Count
                         ? hitSelection.EffectCenters[centerIndex]
                         : FightHitAnchorExtensions.ResolveCenter(hit.Anchor, actor, targetPosition ?? target, castHit);
-                    if (ImpactGate != null)
+                    FightBattlePendingImpact pendingImpact = null;
+                    IFightBattleImpactGate impactGate = ImpactGate;
+                    if (impactGate != null)
                     {
-                        ImpactGate.AwaitImpact(new FightBattlePendingImpact {
+                        pendingImpact = new FightBattlePendingImpact {
                             SourceId = actor.Id, TargetId = target.Id, SkillEntityId = skill.EntityId,
                             SkillItemId = skill.ItemId, HitEntityId = hit.EntityId, DamageEntityId = hit.DamageId,
                             GridX = damagePosition.X, GridY = damagePosition.Y,
@@ -998,7 +1000,8 @@ namespace Zjcs.Combat.Official
                             ScopeIndex = occurrence == null ? 0 : Math.Max(0, occurrence.ScopeIndex),
                             ScopeIdentityUnresolved = hit.Scope != null && hit.Scope.Count > 0
                                 && (occurrence == null || occurrence.ScopeIndex < 0),
-                            Cast = presentationCast, HitSelection = hitReceipt });
+                            Cast = presentationCast, HitSelection = hitReceipt };
+                        impactGate.AwaitImpact(pendingImpact);
                         if (!allowDeadSource && actor.Hp <= 0) break;
                         if (target.Hp <= 0 && hit.ActionType != 62 || target.Ended) continue;
                     }
@@ -1114,6 +1117,8 @@ namespace Zjcs.Combat.Official
                             presentationCast.DamageEventIds = new List<int>();
                         presentationCast.DamageEventIds.Add(damage.DamageId);
                     }
+                    if (pendingImpact != null && impactGate is IFightBattleImpactSettlementObserver settlementObserver)
+                        settlementObserver.ImpactSettled(pendingImpact, damage);
                     if (statusOnly)
                     {
                         ExecuteStatusOnlyHit(actor, target, targetPosition ?? (targets.Count > 0 ? targets[0] : null),

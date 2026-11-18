@@ -13,12 +13,21 @@ namespace Zjcs.Combat.Official
         public FightBattleSkillCastEvent Cast { get; internal set; }
     }
 
+    /// <summary>A settled hit held while its current values are copied by the host.</summary>
+    public sealed class FightBattleSettledImpact
+    {
+        internal FightBattleImpactLatch Owner;
+        internal bool Taken, Completed;
+        public FightBattlePendingImpact Impact { get; internal set; }
+        public FightBattleDamageEvent Damage { get; internal set; }
+    }
+
     /// <summary>
     /// One step's thread-safe rendezvous between original hit-view arrivals and local settlement.
     /// The step runs on a worker; the presentation thread takes requests without blocking and
     /// records actual arrivals. A single scope arrival may affect multiple target occurrences.
     /// </summary>
-    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IDisposable
+    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleImpactSettlementObserver, IDisposable
     {
         private readonly struct Signal : IEquatable<Signal>
         {
@@ -41,6 +50,7 @@ namespace Zjcs.Combat.Official
         private readonly HashSet<Signal> arrived = new HashSet<Signal>();
         private readonly Queue<FightBattlePendingImpact> requests = new Queue<FightBattlePendingImpact>();
         private readonly Queue<FightBattlePreparedCast> preparations = new Queue<FightBattlePreparedCast>();
+        private readonly Queue<FightBattleSettledImpact> settlements = new Queue<FightBattleSettledImpact>();
         private bool disposed;
 
         public void CastPrepared(FightBattleSkillCastEvent cast)
@@ -79,6 +89,44 @@ namespace Zjcs.Combat.Official
                 if (!ReferenceEquals(preparation.Owner, this) || !preparation.Taken || preparation.Completed)
                     throw new InvalidOperationException("The cast preparation is not awaiting this host.");
                 preparation.Completed = true;
+                Monitor.PulseAll(sync);
+            }
+        }
+
+        public void ImpactSettled(FightBattlePendingImpact impact, FightBattleDamageEvent damage)
+        {
+            if (impact == null) throw new ArgumentNullException(nameof(impact));
+            if (damage == null) throw new ArgumentNullException(nameof(damage));
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                var settlement = new FightBattleSettledImpact { Owner = this, Impact = impact, Damage = damage };
+                settlements.Enqueue(settlement);
+                while (!disposed && !settlement.Completed) Monitor.Wait(sync);
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+            }
+        }
+
+        /// <summary>Copies must be made before completion; later effects may modify the event.</summary>
+        public bool TryTakeSettlement(out FightBattleSettledImpact settlement)
+        {
+            lock (sync)
+            {
+                if (settlements.Count == 0) { settlement = null; return false; }
+                settlement = settlements.Dequeue(); settlement.Taken = true;
+                return true;
+            }
+        }
+
+        public void CompleteSettlement(FightBattleSettledImpact settlement)
+        {
+            if (settlement == null) throw new ArgumentNullException(nameof(settlement));
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (!ReferenceEquals(settlement.Owner, this) || !settlement.Taken || settlement.Completed)
+                    throw new InvalidOperationException("The hit settlement is not awaiting this host.");
+                settlement.Completed = true;
                 Monitor.PulseAll(sync);
             }
         }
@@ -154,7 +202,7 @@ namespace Zjcs.Combat.Official
             lock (sync)
             {
                 if (disposed) return;
-                disposed = true; arrived.Clear(); requests.Clear(); preparations.Clear();
+                disposed = true; arrived.Clear(); requests.Clear(); preparations.Clear(); settlements.Clear();
                 Monitor.PulseAll(sync);
             }
         }
