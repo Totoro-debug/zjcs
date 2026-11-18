@@ -51,6 +51,29 @@ public static class BattleImpactGateHarness
     public static string Run(FightOfficialCombatCatalog catalog, FightDamageFormula formula, FightOfficialSkillItemCatalog items)
     {
         {
+            var cast = new FightBattleSkillCastEvent { SkillEntityId = 10100 };
+            using var preparationLatch = new FightBattleImpactLatch();
+            var prepare = Task.Run(() => preparationLatch.CastPrepared(cast));
+            FightBattlePreparedCast preparation = null;
+            Check(SpinWait.SpinUntil(() => preparationLatch.TryTakePreparation(out preparation), 20000)
+                && ReferenceEquals(preparation.Cast, cast), "The host did not receive the actual cast preparation");
+            Check(!prepare.Wait(50), "The executor continued while the host was copying cast data");
+            preparationLatch.CompletePreparation(preparation);
+            Check(prepare.Wait(20000), "Completing the cast preparation did not resume the executor");
+            bool duplicate = false;
+            try { preparationLatch.CompletePreparation(preparation); }
+            catch (InvalidOperationException) { duplicate = true; }
+            Check(duplicate, "One cast preparation was completed more than once");
+            var canceled = Task.Run(() => {
+                try { preparationLatch.CastPrepared(new FightBattleSkillCastEvent()); return false; }
+                catch (OperationCanceledException) { return true; }
+            });
+            Check(SpinWait.SpinUntil(() => preparationLatch.TryTakePreparation(out _), 20000),
+                "The pending preparation never reached the host");
+            preparationLatch.Dispose();
+            Check(canceled.Wait(20000) && canceled.Result, "Disposal did not cancel cast preparation");
+        }
+        {
             var cast = new FightBattleSkillCastEvent();
             var otherCast = new FightBattleSkillCastEvent();
             var selection = new FightBattleHitSelectionSnapshot();
@@ -183,6 +206,11 @@ public static class BattleImpactGateHarness
             var executor = FightBattleExecutor.Begin(cp, formula, new FightDamageSettlement(), catalog, items);
             using var latch = new FightBattleImpactLatch();
             executor.ImpactGate = latch; var task = Task.Run(() => executor.Step(0, 1));
+            FightBattlePreparedCast preparation = null;
+            Check(SpinWait.SpinUntil(() => latch.TryTakePreparation(out preparation), 20000)
+                && preparation.Cast.SkillItemId == 10043 && !task.IsCompleted,
+                "The original cross-scope cast was not prepared before its hits");
+            latch.CompletePreparation(preparation);
             var seen = new HashSet<int>();
             var scopeIndices = new HashSet<int>();
             for (int index = 0; index < 5; index++)
