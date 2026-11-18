@@ -45,7 +45,7 @@ namespace Zjcs.Presentation.Combat
         private FightBattlePreparedMovement movement;
         private FightBattleSelectedHit selection;
         private FightBattleSettledImpact settlement;
-        private FightBattleSettledImpact resolvingStatus;
+        private readonly Stack<FightBattleSettledImpact> resolvingStatuses = new Stack<FightBattleSettledImpact>();
         private FightBattleCompletedCast completion;
         private float clock;
         private bool disposed, transferred, pumping;
@@ -58,10 +58,10 @@ namespace Zjcs.Presentation.Combat
         private EcEntityIdentifier currentGraphSkillId;
 
         public bool IsCompleted => step.IsCompleted;
-        public FightBattleSettledImpact PendingSettlement => settlement ?? resolvingStatus;
+        public FightBattleSettledImpact PendingSettlement => settlement ?? (resolvingStatuses.Count > 0 ? resolvingStatuses.Peek() : null);
         public FightBattlePreparedMovement PendingMovement => movement;
-        /// <summary>A nested presentation interrupted status resolution; the host must not advance this step.</summary>
-        public bool StatusResolutionBlocked => resolvingStatus != null && settlement == null;
+        /// <summary>An outer hit still awaits its status result; nested presentation may continue.</summary>
+        public bool StatusResolutionBlocked => resolvingStatuses.Count > 0 && settlement == null;
         public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted;
 
         public OfficialBattleLiveImpactSession(FightBattleCheckpoint checkpoint,
@@ -142,13 +142,17 @@ namespace Zjcs.Presentation.Combat
                 {
                     // Arrivals are keyed independently and may precede target requests.
                     while (step.Latch.TryTake(out _)) { }
-                    if (resolvingStatus != null)
+                    if (settlement == null) step.Latch.TryTakeSettlement(out settlement);
+                    if (settlement?.IsStatusResolution == true)
                     {
-                        if (!step.Latch.TryTakeSettlement(out settlement)) return progressed;
-                        if (!settlement.IsStatusResolution || !ReferenceEquals(settlement.Damage, resolvingStatus.Damage)
-                            || !ReferenceEquals(settlement.Impact, resolvingStatus.Impact))
+                        if (resolvingStatuses.Count == 0
+                            || !ReferenceEquals(settlement.Damage, resolvingStatuses.Peek().Damage)
+                            || !ReferenceEquals(settlement.Impact, resolvingStatuses.Peek().Impact))
                             throw new InvalidOperationException("The completed status result belongs to another impact.");
-                        resolvingStatus = null;
+                        if (!bridge.TryResolveStatus(settlement, out long statusRevision)) return progressed;
+                        resolvingStatuses.Pop(); settlement = null; progressed = true;
+                        step.Latch.WaitForWorkerBoundary(statusRevision);
+                        continue;
                     }
                     if (preparation == null) step.Latch.TryTakePreparation(out preparation);
                     if (preparation != null)
@@ -215,7 +219,8 @@ namespace Zjcs.Presentation.Combat
                         var active = Find(settlement.Impact.Cast);
                         if (!settlement.Damage.HasDamageTriggerStatus)
                         {
-                            resolvingStatus = settlement;
+                            if (!bridge.TryQueueUnresolved(settlement, active.Id, afterDamageStarted, canStartDamage)) return progressed;
+                            resolvingStatuses.Push(settlement);
                             step.Latch.DeferStatusResolution(settlement, out long deferredRevision);
                             settlement = null; progressed = true;
                             step.Latch.WaitForWorkerBoundary(deferredRevision);
@@ -436,6 +441,7 @@ namespace Zjcs.Presentation.Combat
             step.Dispose();
             casts.Clear(); selectedHits.Clear(); jumpSlashScopes.Clear(); mountainScopes.Clear(); observedMountains.Clear(); reachedMountainWaves.Clear(); mountainWaves.Clear();
             slashCasters.Clear(); observedSlashes.Clear(); reachedSlashes.Clear(); sentSlashes.Clear(); slashEffects.Clear();
+            resolvingStatuses.Clear();
         }
     }
 }

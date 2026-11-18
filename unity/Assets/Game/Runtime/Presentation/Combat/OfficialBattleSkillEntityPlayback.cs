@@ -292,7 +292,7 @@ namespace Zjcs.Presentation.Combat
             if (cast == null) throw new ArgumentNullException(nameof(cast));
             if (float.IsNaN(elapsedSinceCast) || float.IsInfinity(elapsedSinceCast) || elapsedSinceCast < 0f)
                 throw new ArgumentOutOfRangeException(nameof(elapsedSinceCast));
-            var active = casts.Find(value => !value.Removed && value.Id.Equals(skillId));
+            var active = casts.Find(value => value.Id.Equals(skillId));
             if (active == null || !ReferenceEquals(active.Cast, cast) || cast.Presentation == null)
                 throw new InvalidOperationException("The completed cast is not the active skill entity.");
             if (active.LiveCompletionReceived)
@@ -300,7 +300,8 @@ namespace Zjcs.Presentation.Combat
             float duration = cast.Presentation.Duration;
             if (float.IsNaN(duration) || float.IsInfinity(duration))
                 throw new InvalidOperationException("The cast duration must be finite.");
-            active.Remaining = duration < 0f ? float.PositiveInfinity : Mathf.Max(0f, duration - elapsedSinceCast);
+            if (!active.Removed)
+                active.Remaining = duration < 0f ? float.PositiveInfinity : Mathf.Max(0f, duration - elapsedSinceCast);
             active.LiveCompletionReceived = true;
         }
 
@@ -347,6 +348,32 @@ namespace Zjcs.Presentation.Combat
                 Facing(cast.Presentation.FacingIndex), cast.Presentation.FlipX)) return true;
             active.ScheduledDamages.Remove(damage.DamageId);
             return false;
+        }
+
+        public bool QueueUnresolvedDamage(FightBattleSkillCastEvent cast, EcEntityIdentifier skillId,
+            FightBattleDamageEvent damage)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillEntityPlayback));
+            if (cast == null) throw new ArgumentNullException(nameof(cast));
+            if (damage == null) throw new ArgumentNullException(nameof(damage));
+            var active = casts.Find(value => !value.Removed && value.Id.Equals(skillId));
+            if (active == null || !ReferenceEquals(active.Cast, cast) || cast.DamageEventIds == null
+                || !cast.DamageEventIds.Contains(damage.DamageId) || damage.IsSkillCost
+                || damage.SourceId != cast.ActorId || damage.SkillEntityId != cast.SkillEntityId)
+                throw new InvalidOperationException("The damage does not belong to this active cast.");
+            if (damage.HasDamageTriggerStatus) return false;
+            if (!active.ScheduledDamages.Add(damage.DamageId))
+                throw new InvalidOperationException("The damage has already been queued for this cast.");
+            if (receiptDamages.EnqueueUnresolvedImpact(cast, skillId, damage,
+                Facing(cast.Presentation.FacingIndex), cast.Presentation.FlipX)) return true;
+            active.ScheduledDamages.Remove(damage.DamageId);
+            return false;
+        }
+
+        public bool ResolveDamageStatus(FightBattleDamageEvent damage)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillEntityPlayback));
+            return receiptDamages.ResolveImpactStatus(damage);
         }
 
         // Original ECViewDriver injects its serialized views during Awake.

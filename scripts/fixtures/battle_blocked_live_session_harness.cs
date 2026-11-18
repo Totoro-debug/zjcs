@@ -61,6 +61,8 @@ namespace Zjcs.Presentation.Combat {
   public OfficialBattleImpactViewBridge(OfficialBattleSkillEntityPlayback v,FightBattleImpactLatch l){}
   public long QueueSelection(FightBattleSelectedHit h,EcEntityIdentifier id,float t)=>1;
   public bool TryQueueSettlement(FightBattleSettledImpact s,EcEntityIdentifier id,out long revision,Action<FightBattleDamageEvent> after,Func<FightBattleDamageEvent,bool> canStart){revision=0;return false;}
+  internal bool TryQueueUnresolved(FightBattleSettledImpact s,EcEntityIdentifier id,Action<FightBattleDamageEvent> after,Func<FightBattleDamageEvent,bool> canStart)=>false;
+  internal bool TryResolveStatus(FightBattleSettledImpact s,out long revision){revision=0;return false;}
   public void RecordArrival(FightBattleSkillCastEvent c,FightBattleHitSelectionSnapshot h,int a,int b){Arrivals.Add(b);}
   public void Dispose(){}
  }

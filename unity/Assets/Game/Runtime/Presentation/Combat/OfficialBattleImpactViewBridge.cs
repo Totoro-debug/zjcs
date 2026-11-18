@@ -54,6 +54,26 @@ namespace Zjcs.Presentation.Combat
             }, out releasedRevision);
         }
 
+        internal bool TryQueueUnresolved(FightBattleSettledImpact settlement, EcEntityIdentifier skillId,
+            Action<FightBattleDamageEvent> afterDamageStarted, Func<FightBattleDamageEvent, bool> canStartDamage)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleImpactViewBridge));
+            var impact = settlement?.Impact;
+            var damage = settlement?.Damage;
+            if (impact == null || damage == null || damage.HasDamageTriggerStatus
+                || canStartDamage != null && !canStartDamage(damage)) return false;
+            if (!views.QueueUnresolvedDamage(impact.Cast, skillId, damage)) return false;
+            afterDamageStarted?.Invoke(damage);
+            return true;
+        }
+
+        internal bool TryResolveStatus(FightBattleSettledImpact settlement, out long releasedRevision)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleImpactViewBridge));
+            return latch.TryCompleteSettlement(settlement,
+                (impact, damage) => views.ResolveDamageStatus(damage), out releasedRevision);
+        }
+
         private void OnArrival(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot selection,
             int centerIndex, Pos2d position, int scopeIndex)
             => RecordArrival(cast, selection, centerIndex, scopeIndex);

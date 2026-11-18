@@ -35,6 +35,8 @@ namespace Zjcs.Presentation.Combat
         public event Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, Pos2d, int> HitSelectionViewArrived;
         public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted;
         public FightBattleSkillCastEvent Cast;
+        public readonly HashSet<FightBattleSkillCastEvent> SelectedCasts = new HashSet<FightBattleSkillCastEvent>();
+        public readonly List<int> DamageSkills = new List<int>();
         public FightBattleHitSelectionSnapshot Selection;
         public float SelectionElapsed, CompletionElapsed;
         public int Damages, Completions;
@@ -43,16 +45,19 @@ namespace Zjcs.Presentation.Combat
         public void QueueSelectedHit(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
             FightBattleHitSelectionSnapshot selection, float elapsed)
         {
-            Cast = cast; Selection = selection; SelectionElapsed = elapsed;
+            Cast = cast; SelectedCasts.Add(cast); Selection = selection; SelectionElapsed = elapsed;
             if (ArriveImmediately) {
                 var target = selection.Targets.Single(t => t.TargetId == 2);
                 Arrive(target.HasScopeIndex ? target.ScopeIndex : -1);
             }
         }
         public bool QueueSettledDamage(FightBattleSkillCastEvent cast, EcEntityIdentifier id, FightBattleDamageEvent damage)
-        { if (!damage.HasDamageTriggerStatus || RejectDamage) return false; Damages++; LastDamage = damage; return ReferenceEquals(cast, Cast); }
+        { if (!damage.HasDamageTriggerStatus || RejectDamage) return false; Damages++; DamageSkills.Add(cast.SkillEntityId); LastDamage = damage; return ReferenceEquals(cast, Cast); }
+        public bool QueueUnresolvedDamage(FightBattleSkillCastEvent cast, EcEntityIdentifier id, FightBattleDamageEvent damage)
+        { if (damage.HasDamageTriggerStatus || RejectDamage) return false; Damages++; DamageSkills.Add(cast.SkillEntityId); LastDamage = damage; return true; }
+        public bool ResolveDamageStatus(FightBattleDamageEvent damage) => damage.HasDamageTriggerStatus;
         public void CompleteLiveCast(FightBattleSkillCastEvent cast, EcEntityIdentifier id, float elapsed)
-        { if (!ReferenceEquals(cast, Cast)) throw new InvalidOperationException("Wrong completed cast"); Completions++; CompletionElapsed = elapsed; }
+        { if (!SelectedCasts.Contains(cast)) throw new InvalidOperationException("Wrong completed cast"); Completions++; CompletionElapsed = elapsed; }
         public void Arrive(int scope) => HitSelectionViewArrived?.Invoke(Cast, Selection, 0, new Pos2d(10, 7), scope);
         public void StartGraph(EcEntityIdentifier id, string prefab = null, string leaf = null)
             => SkillGraphPlayableStarted?.Invoke(Cast, id, new GameObject { name = prefab }, new MyPlayable { name = leaf });
@@ -346,14 +351,14 @@ namespace Zjcs.Presentation.Combat
                     "The fallback fixture did not reach its actual hit");
                 var hit = fallbackViews.Selection.Targets.Single(t => t.TargetId == 2);
                 fallbackViews.Arrive(hit.HasScopeIndex ? hit.ScopeIndex : -1);
-                Check(fallbackSession.PendingSettlement != null && fallbackSession.PendingSettlement.Damage.HasDamageTriggerStatus,
-                    "A declined real result must remain held without inventing its status");
+                Check(fallbackSession.PendingSettlement != null && !fallbackSession.PendingSettlement.Damage.HasDamageTriggerStatus,
+                    "A declined hit must retain its unresolved status without inventing a result");
                 Check(!fallbackSession.TryCompletePendingSettlement((impact, damage) => false)
                     && fallbackSession.PendingSettlement != null && !fallbackSession.IsCompleted,
                     "A declined fallback must keep the exact settlement waiting");
                 bool delivered = false;
                 Check(fallbackSession.TryCompletePendingSettlement((impact, damage) => {
-                    delivered = damage.HasDamageTriggerStatus && damage.BeforeHp == 1000000
+                    delivered = !damage.HasDamageTriggerStatus && damage.BeforeHp == 1000000
                         && damage.AfterHp < 1000000 && !fallbackSession.IsCompleted;
                     return delivered;
                 }) && delivered, "The host could not deliver the held result while the worker was suspended");
@@ -369,24 +374,46 @@ namespace Zjcs.Presentation.Combat
             fragile.Hp = fragile.Turn.Hp = 1;
             fragile.Statuses.Add(catalog.CreateStatus(25013, 2, 2, 1, 25013, 10518, 6, 17, 1));
             string beforeNested = FightBattleCheckpointSerializer.Save(nestedCp);
+            var nestedBaseline = FightBattleCheckpointSerializer.Load(beforeNested);
+            FightBattleExecutor.Restore(nestedBaseline, formula, new FightDamageSettlement(), catalog, items).Step(0, 1);
             var nestedViews = new OfficialBattleSkillEntityPlayback();
             using (var nestedSession = new OfficialBattleLiveImpactSession(nestedCp,
                 copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), nestedViews, 0, 1))
             {
+                var started = new List<int>(); int identity = 46;
                 bool StartJump(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
-                { id = new EcEntityIdentifier(46); return true; }
+                { started.Add(cast.SkillEntityId); id = new EcEntityIdentifier(identity++); return true; }
                 Check(SpinWait.SpinUntil(() => { nestedSession.Pump(0f, StartJump); return nestedViews.Selection != null; }, 20000),
                     "The fatal-prevention fixture did not reach its jump impact");
                 var hit = nestedViews.Selection.Targets.Single(t => t.TargetId == 2);
+                nestedViews.ArriveImmediately = true;
                 nestedViews.Arrive(hit.HasScopeIndex ? hit.ScopeIndex : -1);
-                Check(nestedSession.StatusResolutionBlocked && nestedSession.PendingSettlement != null
-                    && !nestedSession.PendingSettlement.Damage.HasDamageTriggerStatus && nestedViews.Damages == 0
-                    && !nestedSession.IsCompleted && FightBattleCheckpointSerializer.Save(nestedCp) == beforeNested,
-                    "A recovery skill inside status resolution must stay blocked without inventing or displaying a result");
-                nestedSession.Dispose();
-                Check(SpinWait.SpinUntil(() => nestedSession.IsCompleted, 20000)
+                Check(SpinWait.SpinUntil(() => { nestedSession.Pump(0f, StartJump); return nestedSession.IsCompleted; }, 20000)
+                    && started.Contains(10990) && nestedViews.DamageSkills.Contains(10670)
+                    && nestedViews.DamageSkills.Contains(10990)
+                    && nestedSession.TryTakeCompleted(out _, out var nestedResult)
+                    && FightBattleCheckpointSerializer.Save(nestedResult.Checkpoint) == FightBattleCheckpointSerializer.Save(nestedBaseline)
                     && FightBattleCheckpointSerializer.Save(nestedCp) == beforeNested,
-                    "Canceling a nested unresolved impact changed the committed checkpoint");
+                    "A fatal-prevention child must play and settle while its parent's status is unresolved, without changing the committed checkpoint");
+            }
+            var canceledNestedViews = new OfficialBattleSkillEntityPlayback();
+            using (var canceledNested = new OfficialBattleLiveImpactSession(nestedCp,
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), canceledNestedViews, 0, 1))
+            {
+                bool childOffered = false;
+                bool StartOrHoldChild(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = new EcEntityIdentifier(80); if (cast.SkillEntityId != 10990) return true; childOffered = true; return false; }
+                Check(SpinWait.SpinUntil(() => { canceledNested.Pump(0f, StartOrHoldChild); return canceledNestedViews.Selection != null; }, 20000),
+                    "The canceled recovery fixture did not reach its jump impact");
+                var canceledOccurrence = canceledNestedViews.Selection.Targets.Single(value => value.TargetId == 2);
+                canceledNestedViews.Arrive(canceledOccurrence.HasScopeIndex ? canceledOccurrence.ScopeIndex : -1);
+                Check(childOffered && canceledNested.StatusResolutionBlocked && canceledNestedViews.Damages == 1
+                    && !canceledNested.IsCompleted && FightBattleCheckpointSerializer.Save(nestedCp) == beforeNested,
+                    "A declined recovery must retain the displayed parent hit and the uncommitted checkpoint");
+                canceledNested.Dispose();
+                Check(SpinWait.SpinUntil(() => canceledNested.IsCompleted, 20000)
+                    && FightBattleCheckpointSerializer.Save(nestedCp) == beforeNested,
+                    "Canceling a nested recovery changed the committed checkpoint");
             }
             return "Live impact session passed: deferred start, same-frame impact, HP handoff, lifetime, isolation and actual status resolution.";
         }

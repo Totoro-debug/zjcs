@@ -28,6 +28,9 @@ namespace Zjcs.Presentation.Combat
         public Func<FightBattleSkillCastEvent, FightBattleDamageEvent, bool> OnDamage;
         public bool QueueSettledDamage(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
             FightBattleDamageEvent damage) => OnDamage != null && OnDamage(cast, damage);
+        public bool QueueUnresolvedDamage(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
+            FightBattleDamageEvent damage) => OnDamage != null && OnDamage(cast, damage);
+        public bool ResolveDamageStatus(FightBattleDamageEvent damage) => damage.HasDamageTriggerStatus;
     }
 
     public static class BattleImpactViewBridgeHarness

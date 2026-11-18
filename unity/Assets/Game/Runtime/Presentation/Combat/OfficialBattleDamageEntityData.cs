@@ -59,6 +59,7 @@ namespace Zjcs.Presentation.Combat
         }
         public override EcEntityIdentifier Id => identity;
         public override int ClassId => classId;
+        internal void ResolveTriggeredStatus(bool triggered) => damage.TriggerStatus = triggered;
         public override T GetComponent<T>()
         {
             object value = typeof(T).IsInstanceOfType(damage) ? damage

@@ -38,11 +38,16 @@ namespace Zjcs.Presentation.Combat
             public FightBattleDamageEvent Receipt;
             public OfficialBattleDamageEntityData Data;
             public IFightPlayableOverrideStatusServices Status;
+            public bool AwaitStatus;
         }
         private sealed class Active
         {
             public EcEntityIdentifier Id;
             public float Remaining;
+            public FightBattleDamageEvent Receipt;
+            public OfficialBattleDamageEntityData Data;
+            public bool AwaitStatus;
+            public GameObject Target, Source;
         }
 
         private readonly Transform root;
@@ -70,7 +75,7 @@ namespace Zjcs.Presentation.Combat
             {
                 float next = float.PositiveInfinity;
                 foreach (var value in pending) next = Mathf.Min(next, value.Remaining);
-                foreach (var value in active) next = Mathf.Min(next, value.Remaining);
+                foreach (var value in active) if (!value.AwaitStatus) next = Mathf.Min(next, value.Remaining);
                 return next;
             }
         }
@@ -105,14 +110,49 @@ namespace Zjcs.Presentation.Combat
             return queued;
         }
 
+        // Status resolution can itself start a child skill. Show the known hit now,
+        // retaining its native damage entity until the remaining status result arrives.
+        public bool EnqueueUnresolvedImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier skillId,
+            FightBattleDamageEvent receipt, Direction direction, bool flipX)
+        {
+            if (receipt == null || receipt.HasDamageTriggerStatus || receipt.IsSkillCost
+                || !receipt.HasDamagePosition || receipt.DamageEntityId == 0) return false;
+            var source = views.GetEntity(skillId).GetComponent<MyFightSkill>().Component.SrcEntityId;
+            var status = new OfficialBattleSkillSourceStatusSnapshot(cast.Presentation, source, catalog);
+            bool queued = QueueReceipt(skillId, receipt, direction, flipX, status, 0f, true);
+            DispatchDue();
+            return queued;
+        }
+
+        public bool ResolveImpactStatus(FightBattleDamageEvent receipt)
+        {
+            if (receipt == null || !receipt.HasDamageTriggerStatus) return false;
+            var value = active.Find(item => item.AwaitStatus && ReferenceEquals(item.Receipt, receipt));
+            if (value == null) return false;
+            var entity = playback?.GetEntity(value.Id);
+            var view = entity ? entity.GetComponent<MyFightDamage>() : null;
+            if (!view) return false;
+            value.Data.ResolveTriggeredStatus(receipt.IsDamageTriggerStatus);
+            if (receipt.IsDamageTriggerStatus && view.myTriggerStatusPlayable && value.Target && value.Source)
+            {
+                var parameters = new Dictionary<string, object> { { "Damage", view.gameObject } };
+                scope.Dispatch(() => view.mMyPlayableManager.Play(view.myTriggerStatusPlayable,
+                    value.Target, value.Source, 1f, null, parameters));
+            }
+            value.AwaitStatus = false;
+            value.Remaining = Mathf.Max(0f, value.Remaining);
+            return true;
+        }
+
         private bool QueueReceipt(EcEntityIdentifier skillId, FightBattleDamageEvent receipt,
-            Direction direction, bool flipX, IFightPlayableOverrideStatusServices status, float remaining)
+            Direction direction, bool flipX, IFightPlayableOverrideStatusServices status, float remaining,
+            bool awaitStatus = false)
         {
             // Legacy receipts keep missing results/positions unknown. Do not
             // infer either from the scene, current HP or surviving statuses.
             // Original trigger-only hits (for example 13522) have no
             // damage entity. Their hit graph and child skill own playback.
-            if (!CanCreate(receipt)) return false;
+            if (!awaitStatus && !CanCreate(receipt)) return false;
             if (!catalog.TryGetComponent(receipt.DamageEntityId, "FightDamageComponent", out var config))
                 throw new InvalidOperationException("Original damage configuration is missing: " + receipt.DamageEntityId);
             float lifetime = config.TryGetValue("Duration", out var duration)
@@ -132,7 +172,7 @@ namespace Zjcs.Presentation.Combat
                 DamageTypeData = new DamageTypeData { IsBlock = receipt.Block, IsCrit = receipt.Critical,
                     IsDodge = receipt.Dodge, IsBlinding = receipt.Blinding, IsImmunity = receipt.Immunity,
                     IsBreakResilience = receipt.BreakResilience, IsTrueDamage = receipt.TrueDamage } };
-            pending.Add(new Pending { Receipt = receipt, Remaining = remaining, Lifetime = lifetime,
+            pending.Add(new Pending { Receipt = receipt, Remaining = remaining, Lifetime = lifetime, AwaitStatus = awaitStatus,
                 Status = status, Data = new OfficialBattleDamageEntityData(new EcEntityIdentifier(6, ++serial),
                     receipt.DamageEntityId, skillId, new EcEntityIdentifier(1, receipt.TargetId), result,
                     receipt.IsDamageTriggerStatus, views.GridToPos(position), direction.DirToRotation(),
@@ -149,7 +189,7 @@ namespace Zjcs.Presentation.Combat
         public void DispatchDue()
         {
             for (int index = active.Count - 1; index >= 0; index--)
-                if (active[index].Remaining <= 0f)
+                if (!active[index].AwaitStatus && active[index].Remaining <= 0f)
                 { playback.Remove(active[index].Id); active.RemoveAt(index); }
             for (int index = 0; index < pending.Count;)
             {
@@ -158,8 +198,14 @@ namespace Zjcs.Presentation.Combat
                 pending.RemoveAt(index);
                 views.PrepareDamageUITarget((int)value.Data.GetComponent<FightDamageComponent>().TargetId.EntityId);
                 playback ??= new OfficialBattleDamageEntityPlayback(root, container, views, scope);
+                var damageState = value.Data.GetComponent<FightDamageComponent>();
+                var target = views.GetEntity(damageState.TargetId);
+                var skill = views.GetEntity(damageState.SkillId);
+                var source = skill ? skill.GetComponent<MyFightSkill>()?.Source : null;
                 playback.Create(value.Data, value.Status);
-                active.Add(new Active { Id = value.Data.Id, Remaining = value.Lifetime });
+                active.Add(new Active { Id = value.Data.Id, Remaining = value.Lifetime, Receipt = value.Receipt,
+                    Data = value.Data, AwaitStatus = value.AwaitStatus,
+                    Target = target ? target.gameObject : null, Source = source ? source.gameObject : null });
                 views.DamageStarted(value.Receipt);
             }
         }

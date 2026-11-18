@@ -725,10 +725,10 @@ namespace Zjcs.Editor.Combat
             }
             void RefreshStatusHp(FightBattleDamageEvent damage) {
                 fireDisplayUnits[1].Hp = damage.AfterHp; fireDisplayUnits[1].Turn.Hp = damage.AfterHp;
-                statusDamageShown = damage.HasDamageTriggerStatus && damage.IsDamageTriggerStatus
+                statusDamageShown = !damage.HasDamageTriggerStatus
                     && damage.DamageValue == expectedStatusDamage.DamageValue && damageNotifications == 4
                     && played.Skip(beforeStatusFire).Any(value => value.Name == "playable10801" && value.Frame == Time.frameCount);
-                Require(statusDamageShown, "The actual applied status and native damage must reach the same impact frame.");
+                Require(statusDamageShown, "The known native damage must reach the impact frame before status resolution.");
             }
             deadline = Time.realtimeSinceStartup + 10f;
             while (!statusSession.IsCompleted && Time.realtimeSinceStartup < deadline) {
@@ -739,6 +739,7 @@ namespace Zjcs.Editor.Combat
             }
             Require(statusDamageShown && statusSession.IsCompleted && statusCast != null
                 && statusSession.TryTakeCompleted(out _, out var statusResult)
+                && statusResult.Event.DamageEvents.Single(value => value.SkillItemId == 10028).IsDamageTriggerStatus
                 && FightBattleCheckpointSerializer.Save(statusCp) == statusCheckpoint
                 && FightBattleCheckpointSerializer.Save(statusResult.Checkpoint) == FightBattleCheckpointSerializer.Save(statusBaseline),
                 "The live status result changed the original checkpoint or deterministic outcome.");
@@ -803,11 +804,10 @@ namespace Zjcs.Editor.Combat
             }
             void RefreshJumpHp(FightBattleDamageEvent damage) {
                 fireDisplayUnits[1].Hp = damage.AfterHp; fireDisplayUnits[1].Turn.Hp = damage.AfterHp;
-                jumpDamageShown = jumpImpactFrame == Time.frameCount && damage.HasDamageTriggerStatus
-                    && damage.IsDamageTriggerStatus == jumpExpectedDamage.IsDamageTriggerStatus
+                jumpDamageShown = jumpImpactFrame == Time.frameCount && !damage.HasDamageTriggerStatus
                     && damage.DamageValue == jumpExpectedDamage.DamageValue && damageNotifications == 5
                     && observedDamage == damage.DamageValue;
-                Require(jumpDamageShown, "The jump's actual damage and status must use its original landing-effect frame.");
+                Require(jumpDamageShown, "The jump's actual damage must use its original landing-effect frame.");
             }
             deadline = Time.realtimeSinceStartup + 10f;
             while (!jumpSession.IsCompleted && Time.realtimeSinceStartup < deadline) {
@@ -838,6 +838,99 @@ namespace Zjcs.Editor.Combat
                 "The original jump impact must complete without changing the committed checkpoint or rules result.");
             yield return null;
             Capture("session-jump-impact.png");
+            // A fatal-prevention status starts a recovery skill while the jump's
+            // own status result is still being resolved.
+            fireViews.Tick(jumpCast.Presentation.Duration + .01f);
+            yield return new WaitForSeconds(1.5f);
+            var nestedUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 4) };
+            nestedUnits[1].Hp = nestedUnits[1].Turn.Hp = 1;
+            nestedUnits[1].Statuses.Add(liveCatalog.CreateStatus(25013, 2, 2, 1, 25013, 10518, 6, 17, 1));
+            var nestedSkill = liveCatalog.CreateSkill(10670, 0, 10015, 2, 20, 1,
+                liveCatalog.CalculateSkillProps(10670, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+            nestedSkill.LimitedTimes = 1; nestedUnits[0].Skills.Add(nestedSkill);
+            nestedUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(nestedSkill, 0));
+            var nestedCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+            nestedCheckpoint.Units.AddRange(nestedUnits); var nestedWave = new FightBattleWaveState(); nestedWave.UnitIds.Add(2);
+            nestedCheckpoint.Waves.Add(nestedWave);
+            FightBattleExecutor.Begin(nestedCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+            string nestedCommitted = FightBattleCheckpointSerializer.Save(nestedCheckpoint);
+            var nestedBaseline = FightBattleCheckpointSerializer.Load(nestedCommitted);
+            FightBattleExecutor.Restore(nestedBaseline, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()).Step(0, 1);
+            fireDisplayUnits = FightBattleCheckpointSerializer.Load(nestedCommitted).Units.ToArray();
+            fireSource.localPosition = new Vector3(2, 5, 0); fireTarget.localPosition = new Vector3(4, 5, 0);
+            int nestedJumpFrame = -1, nestedCureFrame = -1; var nestedDamageSkills = new List<int>();
+            Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, Pos2d, int> nestedHitObserver =
+                (cast, hit, center, position, scopeIndex) => { if (cast.SkillEntityId == 10990) nestedCureFrame = Time.frameCount; };
+            fireViews.HitSelectionViewArrived += nestedHitObserver;
+            using (var nestedSession = new OfficialBattleLiveImpactSession(nestedCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), fireViews, 0, 1, observeMovements: true))
+            {
+                nestedSession.SkillGraphPlayableStarted += (cast, id, prefab, playable) => {
+                    if (cast.SkillEntityId == 10670 && prefab && prefab.name == "playable10670" && playable && playable.name == "effect (2)")
+                        nestedJumpFrame = Time.frameCount;
+                };
+                bool StartNested(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) {
+                    var source = cast.ActorId == 1 ? fireSource : fireTarget;
+                    var destination = cast.Presentation.TargetId == 1 ? fireSource : fireTarget;
+                    id = fireViews.Start(cast, source, destination); return true;
+                }
+                bool MoveNested(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement) {
+                    fireViews.StartMovement(movement, movement.UnitId == 1 ? fireSource : fireTarget); return true;
+                }
+                void ShowNested(FightBattleDamageEvent damage) {
+                    nestedDamageSkills.Add(damage.SkillEntityId);
+                    fireDisplayUnits[1].Hp = damage.AfterHp; fireDisplayUnits[1].Turn.Hp = damage.AfterHp;
+                    Require(damage.SkillEntityId == 10670 ? nestedJumpFrame == Time.frameCount && !damage.HasDamageTriggerStatus
+                        : damage.SkillEntityId == 10990 && nestedCureFrame == Time.frameCount,
+                        "Parent damage and recovery must each appear at their own original impact.");
+                    if (jumpAppearance != null)
+                        Capture(damage.SkillEntityId == 10670 ? "nested-fatal-hit.png" : "nested-fatal-recovery.png", false);
+                }
+                deadline = Time.realtimeSinceStartup + 20f;
+                while (!nestedSession.IsCompleted && Time.realtimeSinceStartup < deadline) {
+                    nestedSession.Pump(Time.deltaTime, StartNested, ShowNested, MoveNested);
+                    fireViews.Tick(Time.deltaTime); fireScope.LateTick(); yield return null;
+                }
+                Require(nestedSession.IsCompleted && nestedSession.TryTakeCompleted(out _, out var nestedResult)
+                    && nestedDamageSkills.SequenceEqual(new[] { 10670, 10990 })
+                    && FightBattleCheckpointSerializer.Save(nestedResult.Checkpoint) == FightBattleCheckpointSerializer.Save(nestedBaseline)
+                    && FightBattleCheckpointSerializer.Save(nestedCheckpoint) == nestedCommitted,
+                    "Nested fatal recovery must finish in rule order without changing the committed checkpoint.");
+            }
+            fireViews.HitSelectionViewArrived -= nestedHitObserver;
+            // The original status-only damage playable must still run once if
+            // its result arrives after the enclosing skill entity has ended.
+            fireDisplayUnits[1].Hp = fireDisplayUnits[1].Turn.Hp = 1000000;
+            foreach (bool statusApplied in new[] { false, true })
+            {
+                var statusEffectSkill = liveCatalog.CreateSkill(13010, -1, 0, 1, 1, 0, null);
+                var statusEffectCast = new FightBattleSkillCastEvent { ActorId = 1, Slot = -1, SkillEntityId = 13010,
+                    Presentation = FightBattleSkillCastPresentation.Capture(fireDisplayUnits[0], statusEffectSkill,
+                        new List<FightBattleUnitState> { fireDisplayUnits[1] }) };
+                statusEffectCast.Presentation.Duration = statusEffectSkill.Duration;
+                int damageId = statusApplied ? 98766 : 98765;
+                var statusEffectDamage = new FightBattleDamageEvent { DamageId = damageId, DamageEntityId = 13012,
+                    SourceId = 1, TargetId = 2, SkillEntityId = 13010, HasDamagePosition = true, DamageX = 4, DamageY = 5,
+                    HasDamageValue = true, DamageValue = 10, HasAbsoluteDamage = true, AbsoluteDamage = 10,
+                    BeforeHp = 1000000, AfterHp = 999990, MaxHp = 1000000 };
+                int beforeEffect = played.Count, beforeDamage = damageNotifications;
+                var statusEffectId = fireViews.Start(statusEffectCast, fireSource, fireTarget);
+                statusEffectCast.DamageEventIds.Add(damageId);
+                Require(fireViews.QueueUnresolvedDamage(statusEffectCast, statusEffectId, statusEffectDamage)
+                    && damageNotifications == beforeDamage + 1 && !played.Skip(beforeEffect).Any(value => value.Name == "playable13012"),
+                    "Unresolved status must show the known damage without inventing its conditional effect.");
+                fireViews.Tick(1f); fireScope.LateTick();
+                Require(fireViews.GetEntity(statusEffectId) == null, "The original skill lifetime must remain independent of status resolution.");
+                fireViews.CompleteLiveCast(statusEffectCast, statusEffectId, 1f);
+                statusEffectDamage.HasDamageTriggerStatus = true; statusEffectDamage.IsDamageTriggerStatus = statusApplied;
+                Require(fireViews.ResolveDamageStatus(statusEffectDamage)
+                    && !fireViews.ResolveDamageStatus(statusEffectDamage)
+                    && played.Skip(beforeEffect).Count(value => value.Name == "playable13012") == (statusApplied ? 1 : 0)
+                    && damageNotifications == beforeDamage + 1,
+                    "The actual conditional status effect must play once without repeating damage.");
+                fireViews.Tick(0f);
+            }
             if (jumpAppearance != null)
             {
                 // A blocked movement has a one-point original path at its starting
