@@ -936,7 +936,8 @@ namespace Zjcs.Editor.Combat
                 mountainWave.UnitIds.Add(2); mountainWave.UnitIds.Add(3); mountainCheckpoint.Waves.Add(mountainWave);
                 FightBattleExecutor.Begin(mountainCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
                 string mountainCommitted = FightBattleCheckpointSerializer.Save(mountainCheckpoint);
-                fireDisplayUnits = FightBattleCheckpointSerializer.Load(mountainCommitted).Units.ToArray();
+                var mountainHealth = new FightBattleLiveHealthProjection(mountainCheckpoint);
+                fireDisplayUnits = mountainCheckpoint.Units.Select(value => mountainHealth.Find(value.Id)).ToArray();
                 fireSource.localPosition = new Vector3(2, 5, 0); fireTarget.localPosition = new Vector3(4, 5, 0);
                 var blockerView = new GameObject("Mountain collision blocker").transform;
                 blockerView.SetParent(fireRoot, false); blockerView.localPosition = new Vector3(5, 5, 0);
@@ -973,8 +974,9 @@ namespace Zjcs.Editor.Combat
                     return true;
                 }
                 void MountainDamage(FightBattleDamageEvent damage) {
-                    var displayed = fireDisplayUnits.Single(value => value.Id == damage.TargetId);
-                    displayed.Hp = damage.AfterHp; displayed.Turn.Hp = damage.AfterHp;
+                    Require(mountainHealth.TryApplyDamage(damage), "Live damage must match the preceding displayed health.");
+                    int displayedIndex = Array.FindIndex(fireDisplayUnits, value => value.Id == damage.TargetId);
+                    fireDisplayUnits[displayedIndex] = mountainHealth.Find(damage.TargetId);
                     if (damage.SkillEntityId == 11120) {
                         mountainHitFrame = Time.frameCount;
                         Require(mountainSecondWave && mountainSecondWave.particleCount > 0,

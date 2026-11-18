@@ -318,6 +318,8 @@ def main():
         'unity/Assets/Game/Runtime/Offline/Combat/FightBattleImpactLatch.cs',
         'unity/Assets/Game/Runtime/Offline/Combat/FightBattleIsolatedStep.cs',
         'unity/Assets/Game/Runtime/Offline/Combat/FightBattleIsolatedStep.cs.meta',
+        'unity/Assets/Game/Runtime/Offline/Combat/FightBattleLiveHealthProjection.cs',
+        'unity/Assets/Game/Runtime/Offline/Combat/FightBattleLiveHealthProjection.cs.meta',
         'unity/Assets/Game/Runtime/Official/Combat/FightBattleImpactGate.cs',
         'unity/Assets/Game/Runtime/Official/Combat/FightBattleSkillCastPresentation.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/Zjcs.Presentation.Combat.asmdef',
@@ -332,7 +334,9 @@ def main():
         'scripts/test_battle_blocked_live_session.ps1',
         'scripts/fixtures/battle_blocked_live_session_harness.cs',
         'scripts/test_battle_live_impact_session.ps1',
-        'scripts/fixtures/battle_live_impact_session_harness.cs')]
+        'scripts/fixtures/battle_live_impact_session_harness.cs',
+        'scripts/test_battle_live_health_projection.ps1',
+        'scripts/fixtures/battle_live_health_projection_harness.cs')]
     # Existing leaf receipts also name the shared scope. Refresh only records
     # for these changed binding files, preserving unrelated session changes.
     updated_binding_hashes = {
