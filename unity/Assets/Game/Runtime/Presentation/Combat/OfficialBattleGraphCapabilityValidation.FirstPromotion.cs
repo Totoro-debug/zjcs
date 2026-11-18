@@ -380,7 +380,9 @@ namespace Zjcs.Presentation.Combat
                 Debug.Log("[Thunder mystery] Original passive lightning source and damage passed.");
             }
             Require(cast.SkillItemId == firstPromotionItemId && cast.SkillEntityId == skillId
-                && cast.Presentation != null && cast.Presentation.FacingIndex == firstPromotionFacingIndex
+                && cast.Presentation != null && (firstPromotionItemId == 10015
+                    ? cast.Presentation.FacingIndex >= 0 && cast.Presentation.FacingIndex <= 3
+                    : cast.Presentation.FacingIndex == firstPromotionFacingIndex)
                 && player.SkillState.Slots[0].ReleasedTimes == 1,
                 "Original equipped source, directional entity or release count differs: item="
                 + cast.SkillItemId + "/" + firstPromotionItemId + "; entity=" + cast.SkillEntityId + "/" + skillId

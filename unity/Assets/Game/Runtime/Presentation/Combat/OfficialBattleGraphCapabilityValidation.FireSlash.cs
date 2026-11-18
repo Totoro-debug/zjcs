@@ -37,6 +37,7 @@ namespace Zjcs.Presentation.Combat
 
         private void ObserveFireSlashSound(OfficialBattleRuntimeController controller)
         {
+            if (ValidateJumpSlashSound) { ObserveJumpSlashSound(controller); return; }
             if ((firstPromotionItemId != 10026 && !ValidateWarriorSlashSound && !ValidateLionComboSound && !ValidateWindBladeSound && !ValidateFourWaySlashSound && !ValidateWhirlwindSlashSound && !ValidatePullSound) || nativeCasts == 0 || fireSlashSoundComplete) return;
             uint expectedEvent = ValidateWarriorSlashSound ? WarriorSlashSoundEvent
                 : ValidateLionComboSound ? LionComboSoundEvent : ValidateWindBladeSound ? WindBladeSoundEvent
@@ -84,6 +85,7 @@ namespace Zjcs.Presentation.Combat
 
         private bool HoldFireSlashSound()
         {
+            if (ValidateJumpSlashSound) return HoldJumpSlashSound();
             if ((firstPromotionItemId != 10026 && !ValidateWarriorSlashSound && !ValidateLionComboSound && !ValidateWindBladeSound && !ValidateFourWaySlashSound && !ValidateWhirlwindSlashSound && !ValidatePullSound) || !captured || fireSlashSoundComplete) return false;
             Require(Time.time - firstPromotionCastClock < 12f,
                 "Original slash sound did not play and finish through the native engine.");
@@ -92,6 +94,7 @@ namespace Zjcs.Presentation.Combat
 
         private void VerifyFireSlashSound()
         {
+            if (ValidateJumpSlashSound) { VerifyJumpSlashSound(); return; }
             if (firstPromotionItemId != 10026 && !ValidateWarriorSlashSound && !ValidateLionComboSound && !ValidateWindBladeSound && !ValidateFourWaySlashSound && !ValidateWhirlwindSlashSound && !ValidatePullSound) return;
             Require(fireSlashSoundComplete && fireSlashPlayingId != 0
                 && ArcNativeSoundEvent(fireSlashPlayingId) == 0,

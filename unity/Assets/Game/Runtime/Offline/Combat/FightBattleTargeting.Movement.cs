@@ -124,9 +124,51 @@ namespace Zjcs.Combat.Official
             return true;
         }
 
+        // The confirmed offline attack priorities also apply to the original
+        // 10670 standable point: score its actual landing and hit footprint.
+        internal static bool TryPlanJumpSlash(FightBattleUnitState actor,
+            IReadOnlyList<FightBattleUnitState> units, FightBattleSkillDefinition skill,
+            FightBattleGrid grid, out FightBattleUnitState position, out List<FightBattleUnitState> targets)
+        {
+            position = null;
+            targets = new List<FightBattleUnitState>();
+            if (actor == null || units == null || skill == null || grid == null || skill.Range == null) return false;
+            var eligible = SelectCandidates(actor, units, skill.TargetType, skill: skill, keepAllCandidates: true);
+            RestrictForcedTarget(actor, eligible, skill);
+            int priorityClass = AttackPriorityClass(actor, eligible, skill);
+            var occupied = new HashSet<FightGridPoint>();
+            foreach (FightBattleUnitState unit in units)
+            {
+                if (unit.Id == actor.Id || !IsSelectable(unit)) continue;
+                occupied.Add(new FightGridPoint(unit.X, unit.Y));
+                if (unit.BodyOffsets != null)
+                    foreach (FightGridPoint body in unit.BodyOffsets)
+                        occupied.Add(new FightGridPoint(unit.X + body.X, unit.Y + body.Y));
+            }
+            LandingScore best = null;
+            foreach (FightGridPoint offset in skill.Range)
+            {
+                var point = new FightGridPoint(actor.X + offset.X, actor.Y + offset.Y);
+                if (point.X == actor.X && point.Y == actor.Y || !CanLand(actor, point, grid, occupied)) continue;
+                var probe = actor.ProbeAt(point);
+                foreach (FightBattleUnitState target in eligible)
+                {
+                    if (!IsPriorityTarget(actor, target, skill, priorityClass)) continue;
+                    LandingScore score = ScoreLanding(actor, probe, target, units, skill);
+                    if (!score.PrimaryCovered || !MeetsAttackPriority(score, priorityClass)) continue;
+                    if (best != null && CompareLandings(score, best, skill, priorityClass) >= 0) continue;
+                    best = score;
+                    position = new FightBattleUnitState { X = point.X, Y = point.Y };
+                    targets.Clear();
+                    targets.Add(target);
+                }
+            }
+            return position != null;
+        }
+
         private sealed class LandingScore
         {
-            public bool Forced, Marked;
+            public bool Forced, Marked, PrimaryCovered;
             public int LargeBodyCells, TargetCount, TargetId;
             public long MoveDistance, NearestEnemyDistance;
             public double HpPercent, TotalEnemyDistance;
@@ -258,6 +300,7 @@ namespace Zjcs.Combat.Official
             {
                 if (covered.TryGetValue(unit.Id, out HashSet<FightGridPoint> cells))
                 {
+                    if (unit.Id == primary.Id) result.PrimaryCovered = true;
                     result.TargetCount++;
                     if (unit.Side != source.Side && skill.SkillType != 3 && HasMoreHitStatus(unit)) result.Marked = true;
                     if (unit.Side != source.Side && HasLargeBody(unit)) result.LargeBodyCells += cells.Count;
