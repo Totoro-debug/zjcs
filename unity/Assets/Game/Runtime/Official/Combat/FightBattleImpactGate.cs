@@ -35,6 +35,16 @@ namespace Zjcs.Combat.Official
     }
 
     /// <summary>
+    /// Optional notification once an original hit has selected its targets and centers.
+    /// This also covers view-only and summon hits. Capture needed fields before returning;
+    /// subsequent effects may add spawn information to the selection.
+    /// </summary>
+    public interface IFightBattleHitSelectionObserver
+    {
+        void HitSelected(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot selection);
+    }
+
+    /// <summary>
     /// Optional notification immediately after a hit changes local HP, before later
     /// hit effects and nested casts. Capture the damage fields before returning.
     /// </summary>

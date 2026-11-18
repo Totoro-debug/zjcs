@@ -13,6 +13,15 @@ namespace Zjcs.Combat.Official
         public FightBattleSkillCastEvent Cast { get; internal set; }
     }
 
+    /// <summary>A selected hit held while its current values are copied by the host.</summary>
+    public sealed class FightBattleSelectedHit
+    {
+        internal FightBattleImpactLatch Owner;
+        internal bool Taken, Completed;
+        public FightBattleSkillCastEvent Cast { get; internal set; }
+        public FightBattleHitSelectionSnapshot Selection { get; internal set; }
+    }
+
     /// <summary>A settled hit held while its current values are copied by the host.</summary>
     public sealed class FightBattleSettledImpact
     {
@@ -27,7 +36,7 @@ namespace Zjcs.Combat.Official
     /// The step runs on a worker; the presentation thread takes requests without blocking and
     /// records actual arrivals. A single scope arrival may affect multiple target occurrences.
     /// </summary>
-    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleImpactSettlementObserver, IDisposable
+    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleHitSelectionObserver, IFightBattleImpactSettlementObserver, IDisposable
     {
         private readonly struct Signal : IEquatable<Signal>
         {
@@ -50,6 +59,7 @@ namespace Zjcs.Combat.Official
         private readonly HashSet<Signal> arrived = new HashSet<Signal>();
         private readonly Queue<FightBattlePendingImpact> requests = new Queue<FightBattlePendingImpact>();
         private readonly Queue<FightBattlePreparedCast> preparations = new Queue<FightBattlePreparedCast>();
+        private readonly Queue<FightBattleSelectedHit> selections = new Queue<FightBattleSelectedHit>();
         private readonly Queue<FightBattleSettledImpact> settlements = new Queue<FightBattleSettledImpact>();
         private bool disposed;
 
@@ -89,6 +99,44 @@ namespace Zjcs.Combat.Official
                 if (!ReferenceEquals(preparation.Owner, this) || !preparation.Taken || preparation.Completed)
                     throw new InvalidOperationException("The cast preparation is not awaiting this host.");
                 preparation.Completed = true;
+                Monitor.PulseAll(sync);
+            }
+        }
+
+        public void HitSelected(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot selection)
+        {
+            if (cast == null) throw new ArgumentNullException(nameof(cast));
+            if (selection == null) throw new ArgumentNullException(nameof(selection));
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                var selected = new FightBattleSelectedHit { Owner = this, Cast = cast, Selection = selection };
+                selections.Enqueue(selected);
+                while (!disposed && !selected.Completed) Monitor.Wait(sync);
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+            }
+        }
+
+        /// <summary>Copies must be made before completion; later effects may modify the selection.</summary>
+        public bool TryTakeSelection(out FightBattleSelectedHit selected)
+        {
+            lock (sync)
+            {
+                if (selections.Count == 0) { selected = null; return false; }
+                selected = selections.Dequeue(); selected.Taken = true;
+                return true;
+            }
+        }
+
+        public void CompleteSelection(FightBattleSelectedHit selected)
+        {
+            if (selected == null) throw new ArgumentNullException(nameof(selected));
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (!ReferenceEquals(selected.Owner, this) || !selected.Taken || selected.Completed)
+                    throw new InvalidOperationException("The hit selection is not awaiting this host.");
+                selected.Completed = true;
                 Monitor.PulseAll(sync);
             }
         }
@@ -202,7 +250,7 @@ namespace Zjcs.Combat.Official
             lock (sync)
             {
                 if (disposed) return;
-                disposed = true; arrived.Clear(); requests.Clear(); preparations.Clear(); settlements.Clear();
+                disposed = true; arrived.Clear(); requests.Clear(); preparations.Clear(); selections.Clear(); settlements.Clear();
                 Monitor.PulseAll(sync);
             }
         }

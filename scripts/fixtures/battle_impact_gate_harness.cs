@@ -74,6 +74,21 @@ public static class BattleImpactGateHarness
             Check(canceled.Wait(20000) && canceled.Result, "Disposal did not cancel cast preparation");
         }
         {
+            using var selectionLatch = new FightBattleImpactLatch();
+            var cast = new FightBattleSkillCastEvent();
+            var selection = new FightBattleHitSelectionSnapshot();
+            var canceled = Task.Run(() => {
+                try { selectionLatch.HitSelected(cast, selection); return false; }
+                catch (OperationCanceledException) { return true; }
+            });
+            FightBattleSelectedHit selected = null;
+            Check(SpinWait.SpinUntil(() => selectionLatch.TryTakeSelection(out selected), 20000)
+                && ReferenceEquals(selected.Cast, cast) && ReferenceEquals(selected.Selection, selection)
+                && !canceled.Wait(50), "The selected hit was not held for its host");
+            selectionLatch.Dispose();
+            Check(canceled.Wait(20000) && canceled.Result, "Disposal did not cancel hit selection");
+        }
+        {
             using var settlementLatch = new FightBattleImpactLatch();
             var impact = new FightBattlePendingImpact();
             var damage = new FightBattleDamageEvent { BeforeHp = 100, AfterHp = 70 };
@@ -236,12 +251,24 @@ public static class BattleImpactGateHarness
                 && preparation.Cast.SkillItemId == 10043 && !task.IsCompleted,
                 "The original cross-scope cast was not prepared before its hits");
             latch.CompletePreparation(preparation);
+            FightBattleSelectedHit selected = null;
+            Check(SpinWait.SpinUntil(() => latch.TryTakeSelection(out selected), 20000)
+                && ReferenceEquals(selected.Cast, preparation.Cast) && selected.Selection.HitEntityId == 10591
+                && selected.Selection.Targets.Count == 5 && !task.IsCompleted,
+                "The host did not receive the original five-target selection before settlement");
+            latch.CompleteSelection(selected);
+            bool duplicateSelection = false;
+            try { latch.CompleteSelection(selected); }
+            catch (InvalidOperationException) { duplicateSelection = true; }
+            Check(duplicateSelection, "One hit selection was completed more than once");
             var seen = new HashSet<int>();
             var scopeIndices = new HashSet<int>();
             for (int index = 0; index < 5; index++)
             {
                 FightBattlePendingImpact impact = null;
                 Check(SpinWait.SpinUntil(() => latch.TryTake(out impact), 20000), "A cross-scope impact was not offered to the host");
+                Check(ReferenceEquals(impact.HitSelection, selected.Selection),
+                    "The pending hit did not belong to the selected original view");
                 var occurrence = impact.HitSelection.Targets[impact.OccurrenceIndex];
                 Check(impact.SkillItemId == 10043 && seen.Add(impact.TargetId)
                     && occurrence.TargetId == impact.TargetId && occurrence.EffectCenterIndex == impact.EffectCenterIndex

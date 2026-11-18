@@ -945,6 +945,8 @@ namespace Zjcs.Combat.Official
                         hitReceipt = FightBattleHitSelectionSnapshot.Capture(
                             presentationCast.HitSelections.Count + 1, hit, selection, castHit, hitFlight);
                         presentationCast.HitSelections.Add(hitReceipt);
+                        if (ImpactGate is IFightBattleHitSelectionObserver selectionObserver)
+                            selectionObserver.HitSelected(presentationCast, hitReceipt);
                     }
                 }
                 if (hit.IsViewOnly) continue;
