@@ -134,6 +134,9 @@ namespace Zjcs.Combat.Official
 
         public FightBattleCheckpoint State => checkpoint;
 
+        // Optional host handshake; a waiting gate must run Step outside the presentation thread.
+        public IFightBattleImpactGate ImpactGate { get; set; }
+
         public static FightBattleExecutor Begin(FightBattleCheckpoint checkpoint,
             FightDamageFormula formula, FightDamageSettlement settlement,
             FightOfficialCombatCatalog statusCatalog = null,
@@ -981,6 +984,16 @@ namespace Zjcs.Combat.Official
                     FightGridPoint hitOrigin = hitSelection != null && centerIndex < hitSelection.EffectCenters.Count
                         ? hitSelection.EffectCenters[centerIndex]
                         : FightHitAnchorExtensions.ResolveCenter(hit.Anchor, actor, targetPosition ?? target, castHit);
+                    if (ImpactGate != null)
+                    {
+                        ImpactGate.AwaitImpact(new FightBattlePendingImpact {
+                            SourceId = actor.Id, TargetId = target.Id, SkillEntityId = skill.EntityId,
+                            SkillItemId = skill.ItemId, HitEntityId = hit.EntityId, DamageEntityId = hit.DamageId,
+                            GridX = damagePosition.X, GridY = damagePosition.Y,
+                            Cast = presentationCast, HitSelection = hitReceipt });
+                        if (!allowDeadSource && actor.Hp <= 0) break;
+                        if (target.Hp <= 0 && hit.ActionType != 62 || target.Ended) continue;
+                    }
                     long beforeHp = target.Hp;
                     int damageId = NextDamageId();
                     bool originalHasCustomDamage = hit.HasCustomDamage;
