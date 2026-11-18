@@ -343,8 +343,10 @@ namespace Zjcs.Presentation.Combat
             if (!OfficialBattleDamageReceiptPlayback.CanCreate(damage)) return false;
             if (!active.ScheduledDamages.Add(damage.DamageId))
                 throw new InvalidOperationException("The damage has already been queued for this cast.");
-            return receiptDamages.EnqueueImpact(cast, skillId, damage,
-                Facing(cast.Presentation.FacingIndex), cast.Presentation.FlipX);
+            if (receiptDamages.EnqueueImpact(cast, skillId, damage,
+                Facing(cast.Presentation.FacingIndex), cast.Presentation.FlipX)) return true;
+            active.ScheduledDamages.Remove(damage.DamageId);
+            return false;
         }
 
         // Original ECViewDriver injects its serialized views during Awake.

@@ -35,4 +35,35 @@ namespace Zjcs.Presentation.Combat
 
         internal void Detach() { arrival = null; }
     }
+
+    // The official 10600 skill owns its visible slash; its 10601 hit has no playable.
+    internal sealed class OfficialBattleSlashImpact : MonoBehaviour
+    {
+        private ParticleSystem slash;
+        private Action arrival;
+
+        internal static OfficialBattleSlashImpact Attach(MyPlayable playable, Action arrival)
+        {
+            if (!playable || arrival == null) return null;
+            ParticleSystem slash = null;
+            foreach (var particle in playable.GetComponentsInChildren<ParticleSystem>(true))
+                if (particle.name == "daoguang da (23)")
+                {
+                    if (slash) return null;
+                    slash = particle;
+                }
+            if (!slash) return null;
+            var observer = playable.gameObject.AddComponent<OfficialBattleSlashImpact>();
+            observer.slash = slash; observer.arrival = arrival;
+            return observer;
+        }
+
+        private void LateUpdate()
+        {
+            if (arrival == null || !slash || slash.particleCount <= 0) return;
+            var callback = arrival; arrival = null; callback();
+        }
+
+        internal void Detach() { arrival = null; }
+    }
 }

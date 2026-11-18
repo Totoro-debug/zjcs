@@ -53,7 +53,8 @@ namespace Zjcs.Combat.Official {
 }
 namespace Zjcs.Presentation.Combat {
  internal sealed class OfficialBattleMountainWaveImpact {internal static OfficialBattleMountainWaveImpact Last;private Action<int> arrival;internal static OfficialBattleMountainWaveImpact Attach(MyPlayable p,Action<int> a){Last=new OfficialBattleMountainWaveImpact{arrival=a};return Last;}internal void Trigger(int wave){arrival?.Invoke(wave);}internal void Detach(){arrival=null;}}
- public class OfficialBattleSkillEntityPlayback {public event Action<FightBattleSkillCastEvent,EcEntityIdentifier,GameObject,MyPlayable> SkillGraphPlayableStarted;public void CompleteLiveCast(FightBattleSkillCastEvent c,EcEntityIdentifier id,float t){} public void Graph(FightBattleSkillCastEvent c){SkillGraphPlayableStarted?.Invoke(c,new EcEntityIdentifier(),new GameObject{name="playable11120"},new MyPlayable{name="effect"});} }
+ internal sealed class OfficialBattleSlashImpact {internal static OfficialBattleSlashImpact Last;private Action arrival;internal static OfficialBattleSlashImpact Attach(MyPlayable p,Action a){Last=new OfficialBattleSlashImpact{arrival=a};return Last;}internal void Trigger(){arrival?.Invoke();}internal void Detach(){arrival=null;}}
+ public class OfficialBattleSkillEntityPlayback {public event Action<FightBattleSkillCastEvent,EcEntityIdentifier,GameObject,MyPlayable> SkillGraphPlayableStarted;public void CompleteLiveCast(FightBattleSkillCastEvent c,EcEntityIdentifier id,float t){} public void Graph(FightBattleSkillCastEvent c,string prefab="playable11120"){SkillGraphPlayableStarted?.Invoke(c,new EcEntityIdentifier(),new GameObject{name=prefab},new MyPlayable{name="effect"});} }
  public class OfficialBattleImpactViewBridge:IDisposable {
   public static readonly List<int> Arrivals=new List<int>();
   public event Action<long> WorkerReleasedByArrival;
@@ -69,6 +70,23 @@ namespace Zjcs.Presentation.Combat {
   private static OfficialBattleLiveImpactSession NewSession(){return new OfficialBattleLiveImpactSession(new FightBattleCheckpoint(),_=>new FightBattleExecutor(),new OfficialBattleSkillEntityPlayback(),0,1,true);}
   private static FightBattleMovementEvent Prepare(){var move=new FightBattleMovementEvent{UnitId=4};FightBattleImpactLatch.Last.Pending=new FightBattlePreparedMovement{Movement=move,HasBlockedPosition=true,BlockedPosition=new FightGridPoint(6,7)};return move;}
   public static void Run(){
+   {
+    var hit=new FightBattleHitEntity{EntityId=10601,ScopeEntries=new List<FightBattleHitScopeEntry>{new FightBattleHitScopeEntry{Position=new FightGridPoint(0,1)}}};
+    var skill=new FightBattleSkillDefinition{EntityId=10600,HitGraphEntities=new List<FightBattleHitEntity>{hit}};
+    var cp=new FightBattleCheckpoint{Units=new List<FightBattleUnitState>{new FightBattleUnitState{Id=1,Skills=new List<FightBattleSkillDefinition>{skill}}}};
+    var views=new OfficialBattleSkillEntityPlayback();var cast=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10600,HitSelections=new List<FightBattleHitSelectionSnapshot>()};
+    using(var session=new OfficialBattleLiveImpactSession(cp,_=>new FightBattleExecutor(),views,0,1,true)){
+     OfficialBattleImpactViewBridge.Arrivals.Clear();FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=cast};session.Pump(0,StartCast);
+     OfficialBattleSlashImpact.Last=null;views.Graph(cast,"wrong");Check(OfficialBattleSlashImpact.Last==null,"An unrelated graph armed the slash impact");
+     views.Graph(cast,"playable10600");var observer=OfficialBattleSlashImpact.Last;Check(observer!=null,"Original slash effect was not observed");
+     observer.Trigger();Check(OfficialBattleImpactViewBridge.Arrivals.Count==0,"A slash without a selected hit fabricated an arrival");
+     var selection=new FightBattleHitSelectionSnapshot{HitEntityId=10601,Targets=new List<FightBattleHitSelectionSnapshot.TargetOccurrence>{new FightBattleHitSelectionSnapshot.TargetOccurrence{HasScopeIndex=true,ScopeIndex=0}}};
+     cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartCast);
+     Check(OfficialBattleImpactViewBridge.Arrivals.Count==1&&OfficialBattleImpactViewBridge.Arrivals[0]==0,"An early slash was not routed to its selected target");
+     observer.Trigger();Check(OfficialBattleImpactViewBridge.Arrivals.Count==1,"The same visible slash was delivered twice");
+     session.Dispose();observer.Trigger();Check(OfficialBattleImpactViewBridge.Arrivals.Count==1,"A disposed session accepted its old slash");
+    }
+   }
    {
     var hit=new FightBattleHitEntity{EntityId=11121,ScopeEntries=new List<FightBattleHitScopeEntry>()};
     for(int x=-2;x<=2;x++)for(int y=-2;y<=2;y++)if(Math.Abs(x)+Math.Abs(y)>=1&&Math.Abs(x)+Math.Abs(y)<=2)

@@ -1291,14 +1291,23 @@ namespace Zjcs.Editor.Combat
                 var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
                 body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
             }
+            NativeJumpAppearanceFixture followAppearance = null;
+            if (OfficialBattleHitPlaybackAcceptance.PlayerJump)
+            {
+                DestroyImmediate(followSource.GetComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>());
+                DestroyImmediate(followSource.GetComponent<MeshRenderer>());
+                followAppearance = NativeJumpAppearanceFixture.Create(followSource.gameObject);
+                yield return null;
+            }
             using (var followScope = new OfflineBattleNativePlayableScope(followRoot, null))
             using (var followViews = new OfficialBattleSkillEntityPlayback(followRoot, new OfficialBattleGridMapper(followRoot, grid),
                 followScope, id => followUnits.FirstOrDefault(value => value.Id == id)))
             using (var followGraph = new OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog.TryLoadDefault(), followScope, followViews))
             {
                 followGraph.BindDamageUI(followRoot, 0);
-                bool sawFollowAttack = false, movedBeforeAttack = false, followDamage = false, afterActionEnd = false;
-                float followMoveStarted = -1f, followGraphElapsed = 0f; int followImpactFrame = -1;
+                bool sawFollowAttack = false, movedBeforeAttack = false, followDamage = false, afterActionEnd = false, resumedSlash = false;
+                float followMoveStarted = -1f, followGraphElapsed = 0f, slashPaused = 0f;
+                ParticleSystem followSlash = null;
                 followViews.CastStarted += cast => {
                     if (cast.SkillEntityId == 15300) followMoveStarted = Time.time;
                     if (cast.SkillEntityId == 10600) {
@@ -1307,25 +1316,43 @@ namespace Zjcs.Editor.Combat
                         afterActionEnd = followMoveStarted >= 0f && followGraphElapsed >= .5f - .0001f;
                     }
                 };
-                followViews.HitSelectionViewArrived += (cast, hit, center, position, scopeIndex) => {
-                    if (cast.SkillEntityId == 10600 && hit.HitEntityId == 10601) followImpactFrame = Time.frameCount;
-                };
                 using var followDriver = followGraph.CreateLiveStep(followCheckpoint, copy => FightBattleExecutor.Restore(copy,
                     formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()),
                     id => id == 1 ? followSource : id == 2 ? followTarget : null, null, (damage, display) => {
-                        followDamage = followImpactFrame == Time.frameCount && display.Hp == damage.AfterHp
+                        followDamage = resumedSlash && followSlash && followSlash.particleCount > 0 && display.Hp == damage.AfterHp
                             && followCheckpoint.Units[1].Hp == 1000000;
+                        if (followDamage && followAppearance != null) Capture("live-slash-impact.png", false);
                     });
+                followDriver.SkillGraphPlayableStarted += (cast, id, prefab, playable) => {
+                    if (cast.SkillEntityId != 10600 || !prefab || prefab.name != "playable10600" || !playable || playable.name != "effect") return;
+                    followSlash = playable.GetComponentsInChildren<ParticleSystem>(true).Single(value => value.name == "daoguang da (23)");
+                    followSlash.Pause(true);
+                };
                 deadline = Time.realtimeSinceStartup + 20f;
-                while (!sawFollowAttack && Time.realtimeSinceStartup < deadline) {
+                while (!followDriver.IsCompleted && Time.realtimeSinceStartup < deadline) {
                     followDriver.Pump(Time.deltaTime);
                     if (followMoveStarted >= 0f && !sawFollowAttack) followGraphElapsed += Time.deltaTime;
                     followGraph.Tick(Time.deltaTime); followGraph.LateTick();
+                    if (followSlash && !resumedSlash) {
+                        Require(!followDamage && followDriver.DisplayUnit(2).Hp == 1000000,
+                            "A paused original slash must not settle damage.");
+                        slashPaused += Time.deltaTime;
+                        if (slashPaused >= .2f) { resumedSlash = true; followSlash.Play(true); }
+                    }
                     yield return null;
                 }
-                Require(sawFollowAttack && movedBeforeAttack && afterActionEnd && !followDamage && followCheckpoint.Units[1].Hp == 1000000,
-                    $"Approach and attack: started={sawFollowAttack}, afterMove={movedBeforeAttack}, afterAction={afterActionEnd}, elapsed={followGraphElapsed}, damage={followDamage}, pendingMove={followDriver.PendingMovement != null}.");
+                bool completedFollow = followDriver.TryTakeCompleted(out _, out var followResult);
+                Require(completedFollow && sawFollowAttack && movedBeforeAttack && afterActionEnd && followDamage
+                    && followCheckpoint.Units[1].Hp == 1000000 && followResult.Event.DamageEvents.Count == 1,
+                    $"Approach and attack: completed={completedFollow}, started={sawFollowAttack}, afterMove={movedBeforeAttack}, afterAction={afterActionEnd}, elapsed={followGraphElapsed}, slash={followSlash != null}, resumed={resumedSlash}, damage={followDamage}, pendingMove={followDriver.PendingMovement != null}.");
+                if (followAppearance != null) {
+                    yield return null;
+                    followGraph.Tick(Time.deltaTime); followGraph.LateTick();
+                    yield return null;
+                    Capture("live-slash-visible.png", false);
+                }
             }
+            followAppearance?.Dispose();
             Destroy(followRoot.gameObject);
 
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);

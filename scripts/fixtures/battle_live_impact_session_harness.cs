@@ -24,6 +24,11 @@ namespace Zjcs.Presentation.Combat
         internal static OfficialBattleMountainWaveImpact Attach(MyPlayable playable, Action<int> arrival) => null;
         internal void Detach() { }
     }
+    internal sealed class OfficialBattleSlashImpact
+    {
+        internal static OfficialBattleSlashImpact Attach(MyPlayable playable, Action arrival) => null;
+        internal void Detach() { }
+    }
     // Drives the production session with real battle rules and a controlled native-view boundary.
     public sealed class OfficialBattleSkillEntityPlayback
     {
