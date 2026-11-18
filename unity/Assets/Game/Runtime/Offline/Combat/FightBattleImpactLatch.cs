@@ -17,7 +17,7 @@ namespace Zjcs.Combat.Official
     public sealed class FightBattleSelectedHit
     {
         internal FightBattleImpactLatch Owner;
-        internal bool Taken, Completed;
+        internal bool Taken, Completed, Delivering;
         public FightBattleSkillCastEvent Cast { get; internal set; }
         public FightBattleHitSelectionSnapshot Selection { get; internal set; }
     }
@@ -129,13 +129,22 @@ namespace Zjcs.Combat.Official
         }
 
         public void CompleteSelection(FightBattleSelectedHit selected)
+            => CompleteSelection(selected, null);
+
+        /// <summary>Delivers a selection while its executor remains suspended.</summary>
+        public void CompleteSelection(FightBattleSelectedHit selected,
+            Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot> deliver)
         {
             if (selected == null) throw new ArgumentNullException(nameof(selected));
             lock (sync)
             {
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
-                if (!ReferenceEquals(selected.Owner, this) || !selected.Taken || selected.Completed)
+                if (!ReferenceEquals(selected.Owner, this) || !selected.Taken || selected.Completed || selected.Delivering)
                     throw new InvalidOperationException("The hit selection is not awaiting this host.");
+                selected.Delivering = true;
+                try { deliver?.Invoke(selected.Cast, selected.Selection); }
+                finally { selected.Delivering = false; }
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
                 selected.Completed = true;
                 Monitor.PulseAll(sync);
             }

@@ -1,6 +1,7 @@
 using System;
 using Zjcs.Combat.Official;
 using Zjcs.Official.World.NativeTerrain.Common;
+using Zjcs.Official.StoryPlayables;
 
 namespace Zjcs.Presentation.Combat
 {
@@ -16,6 +17,17 @@ namespace Zjcs.Presentation.Combat
             this.views = views ?? throw new ArgumentNullException(nameof(views));
             this.latch = latch ?? throw new ArgumentNullException(nameof(latch));
             views.HitSelectionViewArrived += OnArrival;
+        }
+
+        /// <summary>
+        /// Starts the selected hit view while the executor is held; an immediate original
+        /// arrival can safely be recorded before the worker continues.
+        /// </summary>
+        public void QueueSelection(FightBattleSelectedHit selected, EcEntityIdentifier skillId, float elapsedSinceCast)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleImpactViewBridge));
+            latch.CompleteSelection(selected, (cast, selection) =>
+                views.QueueSelectedHit(cast, skillId, selection, elapsedSinceCast));
         }
 
         private void OnArrival(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot selection,

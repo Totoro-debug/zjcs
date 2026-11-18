@@ -3,10 +3,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Zjcs.Combat.Official;
 using Zjcs.Official.World.NativeTerrain.Common;
+using Zjcs.Official.StoryPlayables;
 
 namespace Zjcs.Official.World.NativeTerrain.Common
 {
     public struct Pos2d { public int X, Y; public Pos2d(int x, int y) { X = x; Y = y; } }
+}
+namespace Zjcs.Official.StoryPlayables
+{
+    public struct EcEntityIdentifier { public int Value; public EcEntityIdentifier(int value) { Value = value; } }
 }
 namespace Zjcs.Presentation.Combat
 {
@@ -17,6 +22,9 @@ namespace Zjcs.Presentation.Combat
             HitSelectionViewArrived;
         public void Arrive(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot selection,
             int center, int scope) => HitSelectionViewArrived?.Invoke(cast, selection, center, new Pos2d(4, 5), scope);
+        public Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot> OnQueue;
+        public void QueueSelectedHit(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
+            FightBattleHitSelectionSnapshot selection, float elapsed) => OnQueue?.Invoke(cast, selection);
     }
 
     public static class BattleImpactViewBridgeHarness
@@ -37,6 +45,31 @@ namespace Zjcs.Presentation.Combat
             FightBattlePendingImpact Pending(int index) => new FightBattlePendingImpact {
                 Cast = cast, HitSelection = selection, TargetId = 2, OccurrenceIndex = index,
                 HasScopeIndex = true, ScopeIndex = index };
+            var selectedWorker = Task.Run(() => {
+                latch.HitSelected(cast, selection);
+                latch.AwaitImpact(Pending(0));
+            });
+            FightBattleSelectedHit offered = null;
+            Check(SpinWait.SpinUntil(() => latch.TryTakeSelection(out offered), 20000),
+                "The original hit selection was not offered");
+            views.OnQueue = (queuedCast, queuedSelection) => throw new InvalidOperationException("queue failed");
+            bool rejected = false;
+            try { bridge.QueueSelection(offered, new EcEntityIdentifier(42), 0f); }
+            catch (InvalidOperationException error) when (error.Message == "queue failed") { rejected = true; }
+            Check(rejected && !selectedWorker.Wait(50), "A failed view delivery released the executor");
+            bool queueHeld = false, reentrantRejected = false;
+            views.OnQueue = (queuedCast, queuedSelection) => {
+                queueHeld = !selectedWorker.IsCompleted && ReferenceEquals(queuedCast, cast)
+                    && ReferenceEquals(queuedSelection, selection);
+                try { latch.CompleteSelection(offered); }
+                catch (InvalidOperationException) { reentrantRejected = true; }
+                views.Arrive(queuedCast, queuedSelection, 0, 0);
+            };
+            bridge.QueueSelection(offered, new EcEntityIdentifier(42), 0f);
+            Check(queueHeld && reentrantRejected && selectedWorker.Wait(20000),
+                "An immediate native arrival was lost during selection handoff");
+            views.OnQueue = null;
+            cast = new FightBattleSkillCastEvent();
             var first = Task.Run(() => latch.AwaitImpact(Pending(0)));
             Check(SpinWait.SpinUntil(() => latch.TryTake(out _), 20000), "The first impact was not offered to the host");
             views.Arrive(cast, selection, 0, 1);
