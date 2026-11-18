@@ -35,6 +35,9 @@ namespace Zjcs.Presentation.Combat
         private readonly Dictionary<int, HashSet<int>[]> mountainScopes = new Dictionary<int, HashSet<int>[]>();
         private readonly Dictionary<int, HashSet<int>> crossScopes = new Dictionary<int, HashSet<int>>();
         private readonly Dictionary<int, FightBattleHitEntity> windBladeScopes = new Dictionary<int, FightBattleHitEntity>();
+        private readonly Dictionary<int, HashSet<int>> pullScopes = new Dictionary<int, HashSet<int>>();
+        private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center, int Scope)> sentPullHits =
+            new HashSet<(FightBattleHitSelectionSnapshot, int, int)>();
         private readonly HashSet<FightBattleSkillCastEvent> observedWindBlades = new HashSet<FightBattleSkillCastEvent>();
         private readonly Dictionary<FightBattleSkillCastEvent, int> reachedWindBlades = new Dictionary<FightBattleSkillCastEvent, int>();
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center, int Scope)> sentWindHits =
@@ -165,6 +168,19 @@ namespace Zjcs.Presentation.Combat
                         }
                         if (skill.EntityId == 10640 && hit.EntityId == 10641 && hit.ScopeEntries.Count == 4)
                             windBladeScopes[unit.Id] = hit;
+                        if (skill.EntityId == 10700 && hit.EntityId == 10701 && hit.ScopeEntries.Count == 9)
+                        {
+                            var positions = new HashSet<FightGridPoint>(); var scopes = new HashSet<int>();
+                            for (int index = 0; index < hit.ScopeEntries.Count; index++)
+                            {
+                                var entry = hit.ScopeEntries[index];
+                                if (entry == null || Math.Abs(entry.Delay - .15f) > .00001f
+                                    || Math.Abs((long)entry.Position.X) > 1 || Math.Abs((long)entry.Position.Y) > 1
+                                    || !positions.Add(entry.Position)) continue;
+                                scopes.Add(index);
+                            }
+                            if (scopes.Count == 9) pullScopes[unit.Id] = scopes;
+                        }
                     }
                     if (skill.EntityId == 10630 && comboValid && comboMask == 7) comboCasters.Add(unit.Id);
                 }
@@ -173,6 +189,7 @@ namespace Zjcs.Presentation.Combat
             bridge = new OfficialBattleImpactViewBridge(views, step.Latch);
             bridge.WorkerReleasedByArrival += OnWorkerReleasedByArrival;
             views.SkillGraphPlayableStarted += OnSkillGraphPlayableStarted;
+            views.HitGraphPlayableStarted += OnHitGraphPlayableStarted;
         }
 
         /// <summary>
@@ -361,6 +378,23 @@ namespace Zjcs.Presentation.Combat
             if (disposed || transferred) return;
             if (!step.Latch.RecordBlockedContact(movement, out long revision) || revision <= 0 || pumping) return;
             OnWorkerReleasedByArrival(revision);
+        }
+
+        private void OnHitGraphPlayableStarted(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot hit,
+            int centerIndex, GameObject prefab, MyPlayable playable)
+        {
+            if (disposed || transferred || cast?.SkillEntityId != 10700 || hit?.HitEntityId != 10701
+                || prefab == null || prefab.name != "playable10701" || playable == null || playable.name != "AtkEffect"
+                || !selectedHits.Contains(hit) || !casts.ContainsKey(cast)
+                || !pullScopes.TryGetValue(cast.ActorId, out var scopes) || hit.Targets == null) return;
+            foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
+            {
+                if (!casts.ContainsKey(cast)) return;
+                if (target == null || target.EffectCenterIndex != centerIndex || !target.HasScopeIndex
+                    || !scopes.Contains(target.ScopeIndex)
+                    || !sentPullHits.Add((hit, centerIndex, target.ScopeIndex))) continue;
+                bridge.RecordArrival(cast, hit, centerIndex, target.ScopeIndex);
+            }
         }
 
         private void OnSkillGraphPlayableStarted(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
@@ -630,6 +664,7 @@ namespace Zjcs.Presentation.Combat
             if (!step.TryTakeCompleted(out executor, out result)) return false;
             bridge.WorkerReleasedByArrival -= OnWorkerReleasedByArrival;
             views.SkillGraphPlayableStarted -= OnSkillGraphPlayableStarted;
+            views.HitGraphPlayableStarted -= OnHitGraphPlayableStarted;
             bridge.Dispose();
             foreach (var observer in mountainWaves) if (observer != null) observer.Detach();
             foreach (var observer in slashEffects) if (observer != null) observer.Detach();
@@ -644,6 +679,7 @@ namespace Zjcs.Presentation.Combat
             disposed = true;
             bridge.WorkerReleasedByArrival -= OnWorkerReleasedByArrival;
             views.SkillGraphPlayableStarted -= OnSkillGraphPlayableStarted;
+            views.HitGraphPlayableStarted -= OnHitGraphPlayableStarted;
             bridge.Dispose();
             foreach (var observer in mountainWaves) if (observer != null) observer.Detach();
             foreach (var observer in slashEffects) if (observer != null) observer.Detach();
@@ -652,6 +688,7 @@ namespace Zjcs.Presentation.Combat
             casts.Clear(); selectedHits.Clear(); jumpSlashScopes.Clear(); mountainScopes.Clear(); crossScopes.Clear();
             observedCrossEffects.Clear(); reachedCrossEffects.Clear(); sentCrossHits.Clear(); observedMountains.Clear(); reachedMountainWaves.Clear(); mountainWaves.Clear();
             windBladeScopes.Clear(); observedWindBlades.Clear(); reachedWindBlades.Clear(); sentWindHits.Clear(); windBlades.Clear();
+            pullScopes.Clear(); sentPullHits.Clear();
             slashCasters.Clear(); heavyCasters.Clear(); comboCasters.Clear(); observedComboEffects.Clear();
             reachedComboEffects.Clear(); sentComboHits.Clear(); observedSlashes.Clear(); reachedSlashes.Clear(); sentSlashes.Clear(); slashEffects.Clear();
             resolvingStatuses.Clear();

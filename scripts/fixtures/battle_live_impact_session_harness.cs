@@ -39,6 +39,9 @@ namespace Zjcs.Presentation.Combat
     {
         public event Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, Pos2d, int> HitSelectionViewArrived;
         public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted;
+        public event Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, GameObject, MyPlayable> HitGraphPlayableStarted;
+        public void HitGraph(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot hit, int center, GameObject prefab, MyPlayable playable)
+            => HitGraphPlayableStarted?.Invoke(cast, hit, center, prefab, playable);
         public FightBattleSkillCastEvent Cast;
         public readonly HashSet<FightBattleSkillCastEvent> SelectedCasts = new HashSet<FightBattleSkillCastEvent>();
         public readonly List<int> DamageSkills = new List<int>();

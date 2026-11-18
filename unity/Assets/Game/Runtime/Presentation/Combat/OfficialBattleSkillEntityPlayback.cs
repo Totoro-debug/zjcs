@@ -144,6 +144,10 @@ namespace Zjcs.Presentation.Combat
         public event Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, Pos2d, int>
             HitSelectionViewArrived;
 
+        /// <summary>An original hit-graph leaf started for its exact selected centre.</summary>
+        public event Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, GameObject, MyPlayable>
+            HitGraphPlayableStarted;
+
         void IFightHitViewArrivalObserver.HitViewArrived(EcEntityIdentifier skillId,
             EcEntityIdentifier hitId, Pos2d position, int scopeIndex)
         {
@@ -180,6 +184,10 @@ namespace Zjcs.Presentation.Combat
 
         private void OnNativePlayableStarted(GameObject prefab, MyPlayable playable)
         {
+            if (playable != null && playable.myTarget != null
+                && playable.myTarget.TryGetComponent<MyEntity>(out var hitEntity)
+                && receiptHits.TryGetOrigin(hitEntity.Id, out var origin))
+                HitGraphPlayableStarted?.Invoke(origin.Cast, origin.Selection, origin.CenterIndex, prefab, playable);
             if (!(playable.TryGetParam("Skill") is GameObject skillObject)
                 || !skillObject || !skillObject.TryGetComponent<MyEntity>(out var skillEntity)) return;
             var active = casts.Find(value => !value.Removed && ReferenceEquals(value.Entity, skillEntity));

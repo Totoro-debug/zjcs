@@ -2111,6 +2111,103 @@ namespace Zjcs.Editor.Combat
                 phantomScope.Dispose(); phantomAppearance.Dispose(); Destroy(phantomRoot.gameObject);
             }
 
+            // The traction hit prefab starts its line first and its target attack effect later.
+            foreach (var direction in new[] { new[] { 1, 0, 3 }, new[] { -1, 0, 1 },
+                new[] { 0, 1, 2 }, new[] { 0, -1, 0 } })
+            {
+                int dx = direction[0], dy = direction[1], centerX = 7 + 3 * dx, centerY = 7 + 3 * dy;
+                var pullUnits = new List<FightBattleUnitState> { LiveUnit(1, 1, 7) };
+                pullUnits[0].Y = 7; pullUnits[0].Direction = direction[2];
+                var pullTargetUnit = LiveUnit(2, 2, centerX); pullTargetUnit.Y = centerY;
+                pullUnits.Add(pullTargetUnit);
+                var pullSkill = liveCatalog.CreateSkill(10700, 0, 10018, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(10700, 2, 20, 1)
+                        .Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+                pullSkill.LimitedTimes = 1; pullUnits[0].Skills.Add(pullSkill);
+                pullUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(pullSkill, 0));
+                var pullCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                pullCheckpoint.Units.AddRange(pullUnits);
+                var pullWave = new FightBattleWaveState(); pullWave.UnitIds.AddRange(pullUnits.Skip(1).Select(unit => unit.Id));
+                pullCheckpoint.Waves.Add(pullWave);
+                FightBattleExecutor.Begin(pullCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                var pullDisplay = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(pullCheckpoint)).Units.ToArray();
+                var pullRoot = new GameObject("Traction acceptance").transform; pullRoot.SetParent(root, false);
+                var pullBodies = new Dictionary<int, Transform>();
+                foreach (var unit in pullUnits)
+                {
+                    var body = new GameObject("Traction unit " + unit.Id).transform; body.SetParent(pullRoot, false);
+                    body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                    var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false;
+                    renderer.sharedMaterials = Array.Empty<Material>();
+                    body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                    pullBodies.Add(unit.Id, body);
+                }
+                var pullAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
+                    ? NativeJumpAppearanceFixture.Create(pullBodies[1].gameObject) : null;
+                var targetAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
+                    ? NativeJumpAppearanceFixture.Create(pullBodies[2].gameObject) : null;
+                var pullScope = new OfflineBattleNativePlayableScope(pullRoot, null);
+                int lineFrame = -1, attackFrame = -1;
+                var pullDamaged = new HashSet<int>();
+                pullScope.NativePlayableStarted += (prefab, leaf) => {
+                    if (prefab.name != "playable10701") return;
+                    if (leaf.name == "LineEffect") lineFrame = Time.frameCount;
+                    if (leaf.name == "AtkEffect") attackFrame = Time.frameCount;
+                };
+                using (var pullViews = new OfficialBattleSkillEntityPlayback(pullRoot,
+                    new OfficialBattleGridMapper(pullRoot, grid), pullScope,
+                    id => pullDisplay.FirstOrDefault(value => value.Id == id)))
+                using (var pullGraph = new OfficialBattleSkillGraphPlayback(
+                    OfficialBattleSkillGraphCatalog.TryLoadDefault(), pullScope, pullViews))
+                {
+                    pullViews.BindDamageUI(pullRoot, 0);
+                    foreach (var pair in pullBodies) pullViews.EnsureUnit(pair.Key, pair.Value);
+                    Transform PullBody(int id) => pullBodies.TryGetValue(id, out var value) ? value : null;
+                    void PullDamage(FightBattleDamageEvent damage, FightBattleUnitState projected)
+                    {
+                        Require(lineFrame >= 0 && attackFrame == Time.frameCount && attackFrame > lineFrame
+                            && damage.SkillEntityId == 10700 && damage.HitEntityId == 10701
+                            && damage.DamageEntityId == 10702 && damage.ElementType == 100 && damage.Damage < 0
+                            && damage.TargetId > 1 && pullDamaged.Add(damage.TargetId),
+                            "Traction damage did not match its original target attack effect: line=" + lineFrame
+                                + ", attack=" + attackFrame + ", damage=" + Time.frameCount + ", target=" + damage.TargetId
+                                + ", skill=" + damage.SkillEntityId + ", hit=" + damage.HitEntityId
+                                + ", entity=" + damage.DamageEntityId + ", element=" + damage.ElementType
+                                + ", amount=" + damage.Damage + ", alreadyHit=" + pullDamaged.Contains(damage.TargetId));
+                        pullDisplay[Array.FindIndex(pullDisplay, unit => unit.Id == damage.TargetId)] = projected;
+                        if (pullAppearance != null) Capture("pull-damage-" + dx + "-" + dy + ".png", false);
+                    }
+                    using (var pullDriver = new OfficialBattleLiveGraphDriver(pullCheckpoint,
+                        copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()),
+                        pullViews, id => id == 10700, PullBody, null, PullDamage))
+                    {
+                        pullDriver.SecondsStatusChanged += _ => { };
+                        pullDisplay = pullCheckpoint.Units.Select(unit => pullDriver.DisplayUnit(unit.Id)).ToArray();
+                        float pullDeadline = Time.realtimeSinceStartup + 15f;
+                        while (!pullDriver.IsCompleted && Time.realtimeSinceStartup < pullDeadline)
+                        {
+                            pullDriver.Pump(Time.deltaTime); pullViews.Tick(Time.deltaTime); pullScope.LateTick(); yield return null;
+                        }
+                        Require(pullDriver.TryTakeCompleted(out _, out var result) && pullDamaged.Count == 1,
+                            "Traction did not settle its original scope target.");
+                        Require(result.Event.Movements.Any(value => value.MoveBehaviourId == 10703)
+                            && result.Event.Movements.Where(value => value.MoveBehaviourId == 10703)
+                                .All(value => pullDamaged.Contains(value.UnitId)),
+                            "Traction did not start its original movement for the hit targets.");
+                        pullDeadline = Time.realtimeSinceStartup + 20f;
+                        while (pullRoot.GetComponentsInChildren<MyFightActionSkillMove>(false).Length > 0
+                            && Time.realtimeSinceStartup < pullDeadline)
+                        {
+                            pullViews.Tick(Time.deltaTime); pullScope.LateTick(); yield return null;
+                        }
+                        Require(pullRoot.GetComponentsInChildren<MyFightActionSkillMove>(false).Length == 0,
+                            "Traction native movement did not finish.");
+                    }
+                }
+                pullScope.Dispose(); pullAppearance?.Dispose(); targetAppearance?.Dispose(); Destroy(pullRoot.gameObject);
+            }
+
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(1, 0), Delay = .8f });
