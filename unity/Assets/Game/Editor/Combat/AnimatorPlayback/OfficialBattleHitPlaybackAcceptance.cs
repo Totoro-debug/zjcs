@@ -478,6 +478,9 @@ namespace Zjcs.Editor.Combat
             FightBattleUnitState[] fireDisplayUnits = null;
             using var fireViews = new OfficialBattleSkillEntityPlayback(fireRoot, new OfficialBattleGridMapper(fireRoot, grid),
                 fireScope, id => fireDisplayUnits?.FirstOrDefault(value => value.Id == id));
+            var graphStarts = new List<(FightBattleSkillCastEvent Cast, EcEntityIdentifier Id, GameObject Prefab, MyPlayable Leaf, int Frame)>();
+            fireViews.SkillGraphPlayableStarted += (cast, id, prefab, leaf) =>
+                graphStarts.Add((cast, id, prefab, leaf, Time.frameCount));
             fireViews.BindDamageUI(fireRoot, 0);
             var fire = liveCatalog.CreateSkill(10800, 0, 10028, 2, 20, 1,
                 liveCatalog.CalculateSkillProps(10800, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
@@ -499,6 +502,9 @@ namespace Zjcs.Editor.Combat
             var fireCast = firePrepared.Cast;
             float fireStartedAt = Time.time;
             var fireSkillId = fireViews.Start(fireCast, fireSource, fireTarget);
+            Require(graphStarts.Any(value => ReferenceEquals(value.Cast, fireCast) && value.Id.Equals(fireSkillId)
+                && value.Prefab.name == "playable10800" && value.Leaf && value.Frame == Time.frameCount),
+                "An original zero-delay skill graph must report its actual cast and playback frame.");
             var floatRoot = fireRoot.GetComponentInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUIManager>().transform;
             int damageNotifications = 0;
             long observedDamage = 0;
@@ -595,7 +601,10 @@ namespace Zjcs.Editor.Combat
             var restoredDamage = restoredEvent.DamageEvents.Single(d => d.DamageId == fireDamage.Damage.DamageId);
             var replayDamage = new Dictionary<int, FightBattleDamageEvent> {
                 { restoredDamage.DamageId, restoredDamage } };
-            fireViews.Start(restoredCast, fireSource, fireTarget, replayDamage);
+            var restoredSkillId = fireViews.Start(restoredCast, fireSource, fireTarget, replayDamage);
+            Require(!restoredSkillId.Equals(fireSkillId) && graphStarts.Any(value => ReferenceEquals(value.Cast, restoredCast)
+                && value.Id.Equals(restoredSkillId) && value.Prefab.name == "playable10800"),
+                "A repeated skill graph must retain its own cast and entity identity.");
             Require(damageNotifications == 1, "A saved fireball receipt cannot display damage before its boundary.");
             deadline = Time.realtimeSinceStartup + 10f;
             while (damageNotifications < 2 && Time.realtimeSinceStartup < deadline) {
@@ -660,6 +669,9 @@ namespace Zjcs.Editor.Combat
                 && sessionDamage != null && damageNotifications == 3
                 && played.Skip(beforeSessionFire).Any(x => x.Name == "playable10801"),
                 "The live session did not complete its original fireball impact.");
+            Require(new[] { "anim", "effect" }.All(name => graphStarts.Any(value => ReferenceEquals(value.Cast, sessionCast)
+                && value.Id.Equals(sessionSkillId) && value.Prefab.name == "playable10800" && value.Leaf.name == name)),
+                "The original animation and delayed effect leaves must each retain their actual cast identity.");
             yield return null;
             Capture("session-fireball-rendered.png");
             Require(liveSession.TryTakeCompleted(out var sessionExecutor, out var sessionResult)

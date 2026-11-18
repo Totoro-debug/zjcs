@@ -127,6 +127,8 @@ namespace Zjcs.Presentation.Combat
         // including negative-slot casts. Preserve the source item separately
         // from MyFightSkill's main-slot-only applied/ended notifications.
         public event Action<FightBattleSkillCastEvent> CastStarted;
+        /// <summary>An original skill-graph leaf has started for this exact live cast.</summary>
+        public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted;
 
         // Raised when the original hit view reaches its centre or starts a scope playable.
         public event Action<EcEntityIdentifier, EcEntityIdentifier, Pos2d, int> HitViewArrived;
@@ -161,12 +163,21 @@ namespace Zjcs.Presentation.Combat
             moveViews = new OfficialBattleMoveActionPlayback(root, positionContainer, scope, GetEntity);
             receiptHits = new OfficialBattleHitReceiptPlayback(this, combatCatalog);
             receiptDamages = new OfficialBattleDamageReceiptPlayback(root, positionContainer, this, scope, combatCatalog);
+            this.scope.NativePlayableStarted += OnNativePlayableStarted;
         }
 
         public MyEntity GetEntity(EcEntityIdentifier id) =>
             entities.TryGetValue(id, out var entity) ? entity
                 : skillViews.GetEntity(id) ?? hitViews?.GetEntity(id) ?? moveViews?.GetEntity(id)
                     ?? receiptDamages.GetEntity(id);
+
+        private void OnNativePlayableStarted(GameObject prefab, MyPlayable playable)
+        {
+            if (!(playable.TryGetParam("Skill") is GameObject skillObject)
+                || !skillObject || !skillObject.TryGetComponent<MyEntity>(out var skillEntity)) return;
+            var active = casts.Find(value => !value.Removed && ReferenceEquals(value.Entity, skillEntity));
+            if (active != null) SkillGraphPlayableStarted?.Invoke(active.Cast, active.Id, prefab, playable);
+        }
 
         public MyEntity EnsureUnit(int id, Transform transform) => nativeGridIds.Contains(id)
             ? entities[UnitId(id)] : BindUnit(id, transform).Entity;
@@ -461,6 +472,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) return;
             disposed = true;
+            scope.NativePlayableStarted -= OnNativePlayableStarted;
             damageUI?.Dispose(); damageUI = null; damageUITarget = null;
             moveViews.Dispose();
             receiptHits.Dispose();

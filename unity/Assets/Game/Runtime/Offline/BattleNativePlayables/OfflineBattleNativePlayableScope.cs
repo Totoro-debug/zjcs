@@ -29,6 +29,9 @@ namespace Zjcs.Offline.BattleNativePlayables
         private Action<GameObject> nativePrefabAdapter;
         private Action<GameObject, GameObject> sourcePrefabAdapter;
 
+        /// <summary>Reports an actual original playable after its PlayImpl has started.</summary>
+        public event Action<GameObject, MyPlayable> NativePlayableStarted;
+
         public OfflineBattleNativePlayableScope(Transform parent, IProfessionSoundHost sound,
             IBattleCameraOffsetHost cameraOffsetHost = null,
             IBattleCharacterPartVisibilityHost characterPartVisibilityHost = null,
@@ -82,7 +85,11 @@ namespace Zjcs.Offline.BattleNativePlayables
             var instance = UnityEngine.Object.Instantiate(prefab, staging.transform, worldPositionStays);
             if (sourcePrefabAdapter != null) sourcePrefabAdapter(prefab, instance);
             else nativePrefabAdapter?.Invoke(instance);
-            foreach (var playable in instance.GetComponentsInChildren<MyPlayable>(true)) playable.MyPlayableCenter = center;
+            foreach (var playable in instance.GetComponentsInChildren<MyPlayable>(true))
+            {
+                playable.MyPlayableCenter = center;
+                playable.OnPostPlay.Subscribe(value => NativePlayableStarted?.Invoke(prefab, value));
+            }
             foreach (MonoBehaviour component in instance.GetComponentsInChildren<MonoBehaviour>(true))
             {
                 if (component is MyPtSubPlayable subPlayable)
@@ -243,7 +250,7 @@ namespace Zjcs.Offline.BattleNativePlayables
             }
             finally
             {
-                disposed = true; owned.Clear(); Application.lowMemory -= OnLowMemory;
+                disposed = true; owned.Clear(); NativePlayableStarted = null; Application.lowMemory -= OnLowMemory;
                 afterimageTextures.Dispose();
                 UnityEngine.Object.Destroy(root);
             }
