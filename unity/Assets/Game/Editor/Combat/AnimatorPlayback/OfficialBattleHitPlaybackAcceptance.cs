@@ -128,7 +128,16 @@ namespace Zjcs.Editor.Combat
             public Vector3 SourcePosition, TargetPosition;
         }
 
+        private sealed class HitArrival
+        {
+            public EcEntityIdentifier SkillId, HitId;
+            public Pos2d Position;
+            public int ScopeIndex;
+            public float At;
+        }
+
         private readonly List<Played> played = new List<Played>();
+        private readonly List<HitArrival> arrivals = new List<HitArrival>();
         private OfflineBattleNativePlayableScope scope;
         private OfficialBattleSkillEntityPlayback views;
         private Camera cameraView;
@@ -228,6 +237,8 @@ namespace Zjcs.Editor.Combat
                 });
             });
             views = new OfficialBattleSkillEntityPlayback(root, mapper, scope, id => units.FirstOrDefault(x => x.Id == id));
+            views.HitViewArrived += (skillId, hitId, position, index) => arrivals.Add(new HitArrival {
+                SkillId = skillId, HitId = hitId, Position = position, ScopeIndex = index, At = Time.time });
             if (Environment.GetEnvironmentVariable("ZJCS_CUSTOM_TARGET_ACCEPTANCE") == "1")
             {
                 combatCatalog = OfficialCombatAssetCatalog.LoadDefault().Load();
@@ -264,10 +275,16 @@ namespace Zjcs.Editor.Combat
             Time.timeScale = 0f;
             Capture("hit-projectile.png");
             int pausedCount = played.Count;
+            int pausedArrivals = arrivals.Count;
             yield return new WaitForSecondsRealtime(.15f);
-            Require(played.Count == pausedCount, "Pause does not advance native hit coroutines.");
+            Require(played.Count == pausedCount && arrivals.Count == pausedArrivals,
+                "Pause does not advance native hit coroutines or emit impact arrivals.");
             Time.timeScale = 2f;
             yield return new WaitForSeconds(.55f);
+            Require(arrivals.Count(x => x.SkillId.Equals(skillEntity.Id)
+                && x.HitId.Equals(projectile.State.Data.Id) && x.ScopeIndex == -1
+                && x.Position.Equals(new Pos2d(6, 4))) == 1,
+                "The native projectile reports its actual arrival and updated hit position once.");
             views.RemoveHit(projectile.State.Data.Id);
             yield return null;
             var returnedPosition = projectileEntity ? projectileEntity.transform.position : default;
@@ -287,15 +304,28 @@ namespace Zjcs.Editor.Combat
             yield return new WaitForSeconds(.2f);
             var cells = played.Skip(before).Where(x => x.Name == "playable10721").ToArray();
             Require(cells.Length == 2, "Original unsorted scope entries retain their order.");
+            var arrivedCells = arrivals.Where(x => x.HitId.Equals(area.State.Data.Id)
+                && x.ScopeIndex >= 0).ToArray();
+            Require(arrivedCells.Length == 2, "Each played scope reports one arrival.");
             Require(Mathf.Abs(cells[0].At - cells[1].At) < .0001f, "Decreasing scope delay plays in the same frame.");
             for (int i = 0; i < cells.Length; i++)
+            {
                 Require(Vector3.Distance(cells[i].TargetPosition,
                     root.TransformPoint(views.GridToPos(area.State.Data.Grid.LocalToWorldPos(area.State.Scopes[i].Pos)))) < .0001f,
                     "Scope uses original direction, flip and RealCenter.");
+                Require(arrivedCells[i].SkillId.Equals(skillEntity.Id) && arrivedCells[i].ScopeIndex == i
+                    && arrivedCells[i].Position.Equals(area.State.Data.Grid.LocalToWorldPos(area.State.Scopes[i].Pos))
+                    && Mathf.Abs(arrivedCells[i].At - cells[i].At) < .0001f,
+                    "Scope arrival follows its actual original playable and transformed grid cell.");
+            }
             yield return new WaitForSeconds(.25f);
             cells = played.Skip(before).Where(x => x.Name == "playable10721").ToArray();
+            arrivedCells = arrivals.Where(x => x.HitId.Equals(area.State.Data.Id) && x.ScopeIndex >= 0).ToArray();
             Require(cells.Length == 3 && cells[2].At - cells[1].At >= .195f,
                 "Scope waits relative to the preceding authored entry.");
+            Require(arrivedCells.Length == 3 && arrivedCells[2].ScopeIndex == 2
+                && Mathf.Abs(arrivedCells[2].At - cells[2].At) < .0001f,
+                "The later scope reports its own actual playback boundary.");
             Capture("hit-scope.png");
             views.RemoveHit(area.State.Data.Id);
             yield return null;

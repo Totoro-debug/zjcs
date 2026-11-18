@@ -3067,3 +3067,7 @@ unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Pref
 unity/Assets/Official/Combat/SkillGraphRuntime/Resources/Combat/SkillGraphs/Wwise/ScriptableObjects/Event/772048B5-B8C2-4EA2-B0F7-EF6D8B8E3EB1.asset* text eol=lf
 scripts/prepare_battle_mountain_smash_sources.py text eol=lf
 assets/reference/battle-rules/mountain-smash-source-manifest.json text eol=lf
+
+# Keep the hit-view generator and its machine-verifiable receipt byte-stable.
+scripts/prepare_battle_hit_view_runtime.py text eol=lf
+assets/reference/battle-animation/hit-view-runtime-source-manifest.json text eol=lf

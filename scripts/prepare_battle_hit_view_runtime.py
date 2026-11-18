@@ -193,6 +193,17 @@ def main():
     logging = block(text, '\t\telse\n\t\t{\n\t\t\tILogger logger = Logger;')
     text = text.replace(logging, '\t\telse\n\t\t{\n'
         '\t\t\tDebug.LogError($"[Fight] MyFightHitBase: start a inactive gameobject coroutine, classId:{mGridTransform.myEntity.ClassId}");\n\t\t}')
+    text = replace_once(text,
+        '\t\tif ((Object)(object)myScopePlayable != (Object)null)\n\t\t{\n\t\t\t((MonoBehaviour)this).StartCoroutine(PlayScopePlayable());',
+        '\t\t(ViewServices as IFightHitViewArrivalObserver)?.HitViewArrived(\n'
+        '\t\t\tComponent.SkillId, Component.Entity.Id, Component.GridTransform.Pos, -1);\n'
+        '\t\tif ((Object)(object)myScopePlayable != (Object)null)\n\t\t{\n\t\t\t((MonoBehaviour)this).StartCoroutine(PlayScopePlayable());')
+    text = replace_once(text, '\t\tfloat num = 0f;\n\t\tList<HitScopCfg> scopes',
+        '\t\tfloat num = 0f;\n\t\tint scopeIndex = 0;\n\t\tList<HitScopCfg> scopes')
+    text = replace_once(text, '\t\t\tmMyPlayableManager.Play(myScopePlayable, val, val);',
+        '\t\t\tmMyPlayableManager.Play(myScopePlayable, val, val);\n'
+        '\t\t\t(ViewServices as IFightHitViewArrivalObserver)?.HitViewArrived(\n'
+        '\t\t\t\tComponent.SkillId, Component.Entity.Id, grid, scopeIndex++);')
     emit('MyFightHitBase.cs', text)
 
     for name in ('Fixed', 'Summon', 'RandomTarget', 'CustomTarget', 'TriggerSkill', 'Chained'):
@@ -329,6 +340,7 @@ def main():
                      'Explicit existing entity, local grid and world position queries.',
                      'The explicit source-status query preserves absent source/skill/status agent checks.',
                      'Original trajectory operations and branch/order retained.',
+                     'Optional local observation follows original hit-centre arrival and scope playable starts.',
                      'Inactive coroutine error uses Unity logging.']),
         ensure_ascii=False, indent=2) + '\n')
     print('Migrated original hit presentation classes and shared trajectory formula.')

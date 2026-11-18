@@ -217,6 +217,8 @@ public class MyFightHitBase<T, TInfo> : MyComponent<T, TInfo>, IFightGetUsePlaya
 		{
 			mMyPlayableManager.Play(myPlayable, ((Component)this).gameObject, ((Component)this).gameObject);
 		}
+		(ViewServices as IFightHitViewArrivalObserver)?.HitViewArrived(
+			Component.SkillId, Component.Entity.Id, Component.GridTransform.Pos, -1);
 		if ((Object)(object)myScopePlayable != (Object)null)
 		{
 			((MonoBehaviour)this).StartCoroutine(PlayScopePlayable());
@@ -243,6 +245,7 @@ public class MyFightHitBase<T, TInfo> : MyComponent<T, TInfo>, IFightGetUsePlaya
 	private IEnumerator PlayScopePlayable()
 	{
 		float num = 0f;
+		int scopeIndex = 0;
 		List<HitScopCfg> scopes = Component.GetScopes();
 		foreach (HitScopCfg scope in scopes)
 		{
@@ -260,6 +263,8 @@ public class MyFightHitBase<T, TInfo> : MyComponent<T, TInfo>, IFightGetUsePlaya
 			}
 			GameObject val = CreateGo(pos, ((Component)myEntity).transform.parent, "tmp_scope_obj");
 			mMyPlayableManager.Play(myScopePlayable, val, val);
+			(ViewServices as IFightHitViewArrivalObserver)?.HitViewArrived(
+				Component.SkillId, Component.Entity.Id, grid, scopeIndex++);
 		}
 	}
 

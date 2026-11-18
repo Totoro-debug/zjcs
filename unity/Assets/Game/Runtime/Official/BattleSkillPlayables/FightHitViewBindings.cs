@@ -18,6 +18,14 @@ namespace Zjcs.Official.BattleSkillPlayables
         IMyPlayableManager mMyPlayableManager { get; set; }
         FightHitViewFormula.SkillHitBaseDelayInfoProvider DelayInfoProvider { get; }
     }
+
+    // Optional local host observation of the original hit view's actual playback.
+    // Scope index -1 denotes the hit entity arriving at its centre.
+    public interface IFightHitViewArrivalObserver
+    {
+        void HitViewArrived(EcEntityIdentifier skillId, EcEntityIdentifier hitId,
+            Pos2d position, int scopeIndex);
+    }
     // Consumed original state only. The host supplies actual shared hit entities,
     // their original ordered scopes and their notifications at each transition.
     public abstract class FightHitBaseComponent : IEntityComponentInfoSource

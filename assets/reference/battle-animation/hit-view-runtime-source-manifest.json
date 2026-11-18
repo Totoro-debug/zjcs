@@ -849,7 +849,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitBase.cs",
-      "sha256": "9b39fc4eb5766466fb04d6183e90e85b59e6db0f3d94b29f0d81e7bc6da7e404"
+      "sha256": "618f304288c4dd7e40a36d7c2a557a04495148174a5eec65b93f1cd085f225f9"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitBase.cs.meta",
@@ -985,7 +985,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightHitViewBindings.cs",
-      "sha256": "4b96ac173eddb6b4b1d30019f9bfb2a4fceef01bf1c10a20232ec60978d350b6"
+      "sha256": "ba4a438343ec8d38c6a9fd2c41f9d2f224be61c2c8c859a709a11f47cca74cbe"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightHitViewBindings.cs.meta",
@@ -1045,7 +1045,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs",
-      "sha256": "8a67b31003937175249f5f31599a1be026e7461d9ac9d09d8788d974abc3bc70"
+      "sha256": "be76d18f2c13109fc6b74f62ea12a1ba935de7a27ce06c43b89ed97141e3b981"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/Zjcs.Presentation.Combat.asmdef",
@@ -1065,18 +1065,19 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleHitPlaybackAcceptance.cs",
-      "sha256": "60d34d823daadf5c974e62a861d8447e7be719615b28b7aa857641572d69bcfb"
+      "sha256": "1ba6736e3fee078f0ba9f2e55d1b0e022f4c0e58fcad0a25ea94570fc3427220"
     }
   ],
   "generator": {
     "path": "scripts/prepare_battle_hit_view_runtime.py",
-    "sha256": "1cd3f7eff6c4abcfa378a7011a69e6afe944a35fcf0e9516d382434121dcf072"
+    "sha256": "2103e0a7380fc521f137f80ffead7ba40b645f4d20dcb13552e4339dd5880e0e"
   },
   "adaptations": [
     "Namespace and existing Unity entity/Playable types.",
     "Explicit existing entity, local grid and world position queries.",
     "The explicit source-status query preserves absent source/skill/status agent checks.",
     "Original trajectory operations and branch/order retained.",
+    "Optional local observation follows original hit-centre arrival and scope playable starts.",
     "Inactive coroutine error uses Unity logging."
   ]
 }

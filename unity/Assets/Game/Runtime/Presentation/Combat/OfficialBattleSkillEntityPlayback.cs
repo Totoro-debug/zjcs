@@ -15,7 +15,7 @@ using Zjcs.Offline.World.NativeMap14EntityLifecycle;
 namespace Zjcs.Presentation.Combat
 {
     /// <summary>Projects settled cast inputs into the original MyFightSkill lifecycle.</summary>
-    public sealed partial class OfficialBattleSkillEntityPlayback : IFightHitViewServices, IServiceProvider, IECViewInjection, IDisposable
+    public sealed partial class OfficialBattleSkillEntityPlayback : IFightHitViewServices, IFightHitViewArrivalObserver, IServiceProvider, IECViewInjection, IDisposable
     {
         private sealed class Grid : ECGridTransformData
         {
@@ -123,6 +123,13 @@ namespace Zjcs.Presentation.Combat
         // including negative-slot casts. Preserve the source item separately
         // from MyFightSkill's main-slot-only applied/ended notifications.
         public event Action<FightBattleSkillCastEvent> CastStarted;
+
+        // Raised when the original hit view reaches its centre or starts a scope playable.
+        public event Action<EcEntityIdentifier, EcEntityIdentifier, Pos2d, int> HitViewArrived;
+
+        void IFightHitViewArrivalObserver.HitViewArrived(EcEntityIdentifier skillId,
+            EcEntityIdentifier hitId, Pos2d position, int scopeIndex)
+            => HitViewArrived?.Invoke(skillId, hitId, position, scopeIndex);
 
         public OfficialBattleSkillEntityPlayback(Transform root, OfficialBattleGridMapper gridMapper,
             OfflineBattleNativePlayableScope scope, Func<int, FightBattleUnitState> unitState)
