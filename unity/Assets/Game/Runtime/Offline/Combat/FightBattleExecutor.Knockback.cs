@@ -18,15 +18,23 @@ namespace Zjcs.Combat.Official
             List<FightBattleMovementEvent> movements, int stepX, int stepY, float hitDelay)
         {
             if (hit.EntityId != 11121 || hit.DamageId != 11122 || move.MoveBehaviourId != 11123 || move.Distance != 1
-                || move.OffsetX != 0 || move.OffsetY != 0 || stepX != 0 && stepY != 0
-                || statusCatalog == null || checkpoint.Grid == null || movementStartContext == null
-                || !(ImpactGate is IFightBattleBlockedMovementObserver movementObserver)
-                || !movementObserver.ObservesBlockedMovements
-                || !(ImpactGate is IFightBattleBlockedImpactObserver impactObserver)) return false;
+                || move.OffsetX != 0 || move.OffsetY != 0 || statusCatalog == null || checkpoint.Grid == null
+                || movementStartContext == null) return false;
+            bool diagonal = stepX != 0 && stepY != 0;
             var start = new FightGridPoint(target.X, target.Y);
             var desired = new FightGridPoint(start.X + stepX, start.Y + stepY);
             if (!FightKnockbackCollision.TryCreate(checkpoint.Grid, units, actor, target, desired,
-                out FightKnockbackCollision collision)) return false;
+                out FightKnockbackCollision collision))
+            {
+                if (!diagonal) return false;
+                int index = movements.Count;
+                if (ApplyMovementPath(target, new[] { start, desired }, 1, movements))
+                    ApplyMovementAction(movements, index, move, parent, originDelay: hitDelay);
+                return true;
+            }
+            if (!(ImpactGate is IFightBattleBlockedMovementObserver movementObserver)
+                || !movementObserver.ObservesBlockedMovements
+                || !(ImpactGate is IFightBattleBlockedImpactObserver impactObserver)) return diagonal;
 
             var movement = new FightBattleMovementEvent { UnitId = target.Id,
                 HasDirection = true, Direction = target.Direction };

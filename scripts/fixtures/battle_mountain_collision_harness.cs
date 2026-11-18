@@ -11,10 +11,11 @@ public static class MountainCollisionHarness
         public bool ObservesBlockedMovements => true;
         public FightBattleMovementEvent Movement;
         public bool Contact;
+        public FightGridPoint Expected = new FightGridPoint(7, 10);
         public readonly List<int> Bound = new List<int>();
         public void BlockedMovementPrepared(FightBattleSkillCastEvent cast, FightBattleMovementEvent movement, FightGridPoint position)
         {
-            if (Contact || Movement != null || position.X != 7 || position.Y != 10)
+            if (Contact || Movement != null || !position.Equals(Expected))
                 throw new InvalidOperationException("Wrong blocked movement.");
             Movement = movement;
         }
@@ -49,8 +50,53 @@ public static class MountainCollisionHarness
         unit.Properties.Add(new FightPropertyValue { Id = formula.PropertyId("CritAvoidPercent"), Value = 10000 });
         return unit;
     }
+    private static void Diagonal(FightOfficialCombatCatalog catalog, FightDamageFormula formula,
+        FightOfficialSkillItemCatalog items, string obstacle, bool observe)
+    {
+        var cp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 5, RandomSeed = 1012348,
+            Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+        var actor = Unit(1, 1, 7, 7, formula); var target = Unit(2, 2, 8, 8, formula);
+        var sideA = Unit(3, 2, 9, 8, formula); var sideB = Unit(4, 2, 8, 9, formula);
+        var blocker = Unit(5, 2, obstacle == "unit" ? 9 : 12, obstacle == "unit" ? 9 : 12, formula);
+        if (obstacle == "terrain") cp.Grid.BlockedPositions.Add(new FightGridPoint(9, 9));
+        actor.Properties.Add(new FightPropertyValue { Id = formula.PropertyId("EffectRateValue"), Value = 20000 });
+        var skill = catalog.CreateSkill(11120, 0, 10052, 2, 20, 1,
+            catalog.CalculateSkillProps(11120, 2, 20, 1)
+                .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
+        skill.LimitedTimes = 1; actor.Skills.Add(skill); actor.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
+        cp.Units.AddRange(new[] { actor, target, sideA, sideB, blocker });
+        var wave = new FightBattleWaveState(); wave.UnitIds.AddRange(new[] { 2, 3, 4, 5 }); cp.Waves.Add(wave);
+        var executor = FightBattleExecutor.Begin(cp, formula, new FightDamageSettlement(), catalog, items);
+        var gate = new ContactGate { Expected = new FightGridPoint(9, 9) };
+        if (observe) executor.ImpactGate = gate;
+        var step = executor.Step(0, 1).Event;
+        var collision = step.DamageEvents.Where(value => value.SkillEntityId == 10100).ToArray();
+        if (obstacle == "open")
+        {
+            if (gate.Contact || target.X != 9 || target.Y != 9 || collision.Length != 0
+                || !step.Movements.Any(value => value.UnitId == 2 && value.Path.Count == 2
+                    && value.Path[1].Equals(new FightGridPoint(9, 9))))
+                throw new InvalidOperationException("Diagonal push must reach the free destination regardless of side cells.");
+        }
+        else if (!observe)
+        {
+            if (target.X != 8 || target.Y != 8 || collision.Length != 0
+                || step.Movements.Any(value => value.UnitId == 2))
+                throw new InvalidOperationException("An unobserved blocked diagonal cannot move sideways or settle early.");
+        }
+        else
+        {
+            int[] expected = obstacle == "unit" ? new[] { 2, 5 } : new[] { 2 };
+            if (!gate.Contact || target.X != 8 || target.Y != 8 || !gate.Bound.SequenceEqual(expected)
+                || !collision.Select(value => value.TargetId).SequenceEqual(expected)
+                || collision.Any(value => value.Damage != -600 || !value.TrueDamage))
+                throw new InvalidOperationException("Diagonal destination collision did not hit exactly its colliding enemies.");
+        }
+    }
     public static void Run(FightOfficialCombatCatalog catalog, FightDamageFormula formula, FightOfficialSkillItemCatalog items)
     {
+        foreach (string obstacle in new[] { "open", "unit", "terrain" }) Diagonal(catalog, formula, items, obstacle, true);
+        Diagonal(catalog, formula, items, "terrain", false);
         var cp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 5, RandomSeed = 1012348,
             Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
         var actor = Unit(1, 1, 7, 7, formula);

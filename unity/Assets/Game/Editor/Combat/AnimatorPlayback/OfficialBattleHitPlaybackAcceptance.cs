@@ -1087,6 +1087,78 @@ namespace Zjcs.Editor.Combat
                 Require(canceledFirst && canceledFirst.particleCount > 0 && !canceledDamage
                     && FightBattleCheckpointSerializer.Save(nearCheckpoint) == canceledCheckpoint,
                     "An interrupted session cannot settle damage when its former wave later appears.");
+
+                foreach (bool blockedDiagonal in new[] { false, true })
+                {
+                    var diagonalUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 3), LiveUnit(3, 2, blockedDiagonal ? 4 : 11),
+                        LiveUnit(4, 2, 4), LiveUnit(5, 2, 3) };
+                    diagonalUnits[1].Y = 6; diagonalUnits[2].Y = blockedDiagonal ? 7 : 11;
+                    diagonalUnits[3].Y = 6; diagonalUnits[4].Y = 7;
+                    diagonalUnits[0].Properties.Add(new FightPropertyValue { Id = formula.PropertyId("EffectRateValue"), Value = 20000 });
+                    var diagonalSkill = liveCatalog.CreateSkill(11120, 0, 10052, 2, 20, 1,
+                        liveCatalog.CalculateSkillProps(11120, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+                    diagonalSkill.LimitedTimes = 1; diagonalUnits[0].Skills.Add(diagonalSkill);
+                    diagonalUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(diagonalSkill, 0));
+                    var diagonalCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                        Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                    diagonalCheckpoint.Units.AddRange(diagonalUnits); var diagonalWave = new FightBattleWaveState();
+                    diagonalWave.UnitIds.AddRange(new[] { 2, 3, 4, 5 }); diagonalCheckpoint.Waves.Add(diagonalWave);
+                    FightBattleExecutor.Begin(diagonalCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                    fireDisplayUnits = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(diagonalCheckpoint)).Units.ToArray();
+                    fireSource.localPosition = new Vector3(2, 5, 0); fireTarget.localPosition = new Vector3(3, 6, 0);
+                    blockerView.localPosition = new Vector3(blockedDiagonal ? 4 : 11, blockedDiagonal ? 7 : 11, 0);
+                    int diagonalContactFrame = -1, diagonalChildren = 0; bool diagonalMovement = false, diagonalPoseChanged = false;
+                    using var diagonalSession = new OfficialBattleLiveImpactSession(diagonalCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                        formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), fireViews, 0, 1, observeMovements: true);
+                    bool StartDiagonalCast(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) {
+                        id = fireViews.Start(cast, fireSource, cast.TargetIds.Contains(3) ? blockerView : fireTarget); return true;
+                    }
+                    bool StartDiagonalMove(FightBattleSkillCastEvent cast, FightBattleMovementEvent move) {
+                        Require(!blockedDiagonal && move.UnitId == 2 && move.Path.Count == 2
+                            && move.Path[1].Equals(new FightGridPoint(4, 7)), "Open diagonal push must use the actual destination.");
+                        fireViews.StartMovement(move, fireTarget); diagonalMovement = true; return true;
+                    }
+                    bool StartDiagonalBlocked(FightBattleSkillCastEvent cast, FightBattleMovementEvent move,
+                        FightGridPoint position, Action contact) {
+                        Require(blockedDiagonal && move.UnitId == 2 && position.Equals(new FightGridPoint(4, 7)),
+                            "Blocked diagonal must retain its actual destination.");
+                        fireViews.StartMovement(move, fireTarget, position, _ => {
+                            diagonalContactFrame = Time.frameCount; contact();
+                            Require(diagonalChildren == 2, "Both diagonal collision results must arrive at contact.");
+                            Capture("mountain-diagonal-collision.png", false);
+                        });
+                        diagonalMovement = true; return true;
+                    }
+                    void DiagonalDamage(FightBattleDamageEvent damage) {
+                        var displayed = fireDisplayUnits.Single(value => value.Id == damage.TargetId);
+                        displayed.Hp = damage.AfterHp; displayed.Turn.Hp = damage.AfterHp;
+                        if (damage.SkillEntityId != 10100) return;
+                        Require(blockedDiagonal && diagonalContactFrame == Time.frameCount && damage.Damage == -600,
+                            "Diagonal collision damage must settle at the original contact.");
+                        diagonalChildren++;
+                    }
+                    deadline = Time.realtimeSinceStartup + 20f;
+                    while (!diagonalSession.IsCompleted && Time.realtimeSinceStartup < deadline) {
+                        diagonalSession.Pump(Time.deltaTime, StartDiagonalCast, DiagonalDamage, StartDiagonalMove, StartDiagonalBlocked);
+                        fireViews.Tick(Time.deltaTime); fireScope.LateTick();
+                        diagonalPoseChanged |= fireTarget.localPosition.x > 3.03f && fireTarget.localPosition.y > 6.03f;
+                        yield return null;
+                    }
+                    Require(diagonalMovement && diagonalSession.TryTakeCompleted(out _, out var diagonalResult)
+                        && diagonalChildren == (blockedDiagonal ? 2 : 0)
+                        && diagonalResult.Checkpoint.Units.Single(value => value.Id == 2).X == (blockedDiagonal ? 3 : 4)
+                        && diagonalResult.Checkpoint.Units.Single(value => value.Id == 2).Y == (blockedDiagonal ? 6 : 7),
+                        "Original diagonal movement and collision did not complete correctly.");
+                    diagonalSession.Dispose();
+                    for (int frame = 0; frame < 200 && fireRoot.GetComponentsInChildren<MyFightActionSkillMove>(false).Length != 0; frame++) {
+                        fireViews.Tick(.01f); fireScope.LateTick();
+                        diagonalPoseChanged |= fireTarget.localPosition.x > 3.03f && fireTarget.localPosition.y > 6.03f;
+                        yield return null;
+                    }
+                    var expectedDiagonalPosition = blockedDiagonal ? new Vector3(3, 6, 0) : new Vector3(4, 7, 0);
+                    Require(diagonalPoseChanged && Vector3.Distance(fireTarget.localPosition, expectedDiagonalPosition) < .05f,
+                        "The native diagonal action must visibly travel and finish at its actual settled position.");
+                }
                 blockedBefore = played.Count;
                 fireSource.localPosition = new Vector3(3, 5, 0);
                 fireViews.StartMovement(blocked, fireSource, new FightGridPoint(4, 5), _ => contacts++);
