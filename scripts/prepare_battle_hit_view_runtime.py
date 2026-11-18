@@ -311,6 +311,8 @@ def main():
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHitEntityData.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleImpactViewBridge.cs',
+        'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveImpactSession.cs',
+        'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveImpactSession.cs.meta',
         'unity/Assets/Game/Runtime/Offline/Combat/FightBattleImpactLatch.cs',
         'unity/Assets/Game/Runtime/Offline/Combat/FightBattleIsolatedStep.cs',
         'unity/Assets/Game/Runtime/Offline/Combat/FightBattleIsolatedStep.cs.meta',

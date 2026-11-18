@@ -604,8 +604,72 @@ namespace Zjcs.Editor.Combat
             Require(damageNotifications == 2 && observedDamage == fireDamageValue,
                 "The saved receipt must still play the same original damage once at its boundary.");
             fireViews.HitSelectionViewArrived -= fireObserver;
-            fireBridge.Dispose(); fireStep.Dispose(); fireViews.Dispose();
-            Destroy(fireRoot.gameObject);
+            fireBridge.Dispose(); fireStep.Dispose();
+            fireViews.Tick(restoredCast.Presentation.Duration + .01f);
+            yield return new WaitForSeconds(.6f);
+            fireDisplayUnits[1].Hp = 1000000; fireDisplayUnits[1].Turn.Hp = 1000000;
+            using var liveSession = new OfficialBattleLiveImpactSession(cp, copy => FightBattleExecutor.Restore(copy,
+                formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), fireViews, 0, 1);
+            FightBattleSkillCastEvent sessionCast = null;
+            FightBattleDamageEvent sessionDamage = null;
+            EcEntityIdentifier sessionSkillId = default;
+            int startAttempts = 0;
+            bool allowSessionStart = false, sessionArrival = false, sessionHpRefreshed = false, sessionCaptured = false;
+            bool StartSessionCast(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) {
+                startAttempts++;
+                if (!allowSessionStart) { id = default; return false; }
+                sessionCast = cast; id = fireViews.Start(cast, fireSource, fireTarget); sessionSkillId = id;
+                return true;
+            }
+            void RefreshSessionHp(FightBattleDamageEvent damage) {
+                sessionDamage = damage;
+                fireDisplayUnits[1].Hp = damage.AfterHp; fireDisplayUnits[1].Turn.Hp = damage.AfterHp;
+                sessionHpRefreshed = sessionArrival && !liveSession.IsCompleted && fireUnits[1].Hp == 1000000
+                    && damage.BeforeHp == 1000000 && damage.AfterHp < 1000000 && damage.HasDamageTriggerStatus
+                    && !damage.IsDamageTriggerStatus && damageNotifications == 3 && observedDamage == damage.DamageValue;
+            }
+            Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, Pos2d, int> sessionObserver =
+                (c, h, center, pos, cell) => { if (ReferenceEquals(c, sessionCast) && cell >= 0
+                    && pos.Equals(new Pos2d(5, 5))) sessionArrival = true; };
+            fireViews.HitSelectionViewArrived += sessionObserver;
+            int beforeSessionFire = played.Count;
+            deadline = Time.realtimeSinceStartup + 10f;
+            while (startAttempts == 0 && Time.realtimeSinceStartup < deadline) {
+                liveSession.Pump(0f, StartSessionCast, RefreshSessionHp); yield return null;
+            }
+            Require(startAttempts > 0 && sessionCast == null && fireUnits[1].Hp == 1000000,
+                "The live session must wait until the host actually starts the cast.");
+            allowSessionStart = true;
+            deadline = Time.realtimeSinceStartup + 10f;
+            while (!liveSession.IsCompleted && Time.realtimeSinceStartup < deadline) {
+                liveSession.Pump(Time.deltaTime, StartSessionCast, RefreshSessionHp);
+                if (!sessionArrival) Require(fireUnits[1].Hp == 1000000 && damageNotifications == 2,
+                    "The live fireball changed HP or displayed damage during flight.");
+                if (damageNotifications == 3 && !sessionCaptured) {
+                    Require(sessionArrival && sessionHpRefreshed
+                        && floatRoot.GetComponentsInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUI>().Any(ui =>
+                            ui.EntityId == new EcEntityIdentifier(1, 2) && ui.GetComponentsInChildren<TextMesh>(true)
+                                .Any(text => text.text == Math.Abs(observedDamage).ToString())),
+                        "The live session must show actual HP and the original damage number at impact.");
+                    Capture("session-fireball-damage.png"); sessionCaptured = true;
+                }
+                fireViews.Tick(Time.deltaTime); fireScope.LateTick();
+                yield return null;
+            }
+            Require(liveSession.IsCompleted && sessionArrival && sessionHpRefreshed && sessionCaptured
+                && sessionDamage != null && damageNotifications == 3
+                && played.Skip(beforeSessionFire).Any(x => x.Name == "playable10801"),
+                "The live session did not complete its original fireball impact.");
+            Require(liveSession.TryTakeCompleted(out var sessionExecutor, out var sessionResult)
+                && ReferenceEquals(sessionExecutor.State, sessionResult.Checkpoint)
+                && FightBattleCheckpointSerializer.Save(cp) == committedFire
+                && FightBattleCheckpointSerializer.Save(sessionResult.Checkpoint)
+                    == FightBattleCheckpointSerializer.Save(completedFire.Checkpoint),
+                "The completed live session changed the committed checkpoint or deterministic result.");
+            fireViews.Tick(sessionCast.Presentation.Duration + .01f);
+            Require(fireViews.GetEntity(sessionSkillId) == null, "The live session did not end the original cast entity.");
+            fireViews.HitSelectionViewArrived -= sessionObserver;
+            liveSession.Dispose(); fireViews.Dispose(); Destroy(fireRoot.gameObject);
 
 
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
