@@ -1054,6 +1054,11 @@ namespace Zjcs.Editor.Combat
                 using var mountainDriver = new OfficialBattleLiveGraphDriver(mountainCheckpoint, copy => FightBattleExecutor.Restore(copy,
                     formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), fireViews,
                     entity => entity == 11120 || entity == 10100, MountainBody, null, MountainDamage);
+                int mountainAirStarts = 0;
+                mountainDriver.SecondsStatusChanged += value => {
+                    if (value.OwnerId == 2 && value.Kind == FightBattleStatusViewEventKind.Start && value.Status.ClassId == 24269)
+                        mountainAirStarts++;
+                };
                 fireDisplayUnits = mountainCheckpoint.Units.Select(value => mountainDriver.DisplayUnit(value.Id)).ToArray();
                 mountainDriver.SkillGraphPlayableStarted += (mountainCast, id, prefab, leaf) => {
                     if (mountainCast.SkillEntityId != 11120 || prefab.name != "playable11120" || leaf.name != "effect") return;
@@ -1088,7 +1093,7 @@ namespace Zjcs.Editor.Combat
                     fireViews.Tick(Time.deltaTime); fireScope.LateTick();
                     yield return null;
                 }
-                Require(mountainHitFrame >= 0 && mountainChildCount == 2 && mountainDriver.TryTakeCompleted(out _, out var mountainResult)
+                Require(mountainHitFrame >= 0 && mountainChildCount == 2 && mountainAirStarts == 1 && mountainDriver.TryTakeCompleted(out _, out var mountainResult)
                     && mountainResult.Event.DamageEvents.Count(value => value.SkillEntityId == 10100) == 2
                     && FightBattleCheckpointSerializer.Save(mountainCheckpoint) == mountainCommitted,
                     "The real mountain action must finish both collision child hits on its isolated checkpoint: completed="
@@ -1120,6 +1125,7 @@ namespace Zjcs.Editor.Combat
                 int pauseFrames = 0;
                 using var nearSession = new OfficialBattleLiveImpactSession(nearCheckpoint, copy => FightBattleExecutor.Restore(copy,
                     formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), fireViews, 0, 1, observeMovements: true);
+                nearSession.SecondsStatusChanged += _ => { };
                 nearSession.SkillGraphPlayableStarted += (nearCast, id, prefab, leaf) => {
                     if (nearCast.SkillEntityId != 11120 || prefab.name != "playable11120" || leaf.name != "effect") return;
                     var particles = leaf.GetComponentsInChildren<ParticleSystem>(true);
@@ -1202,6 +1208,7 @@ namespace Zjcs.Editor.Combat
                     int diagonalContactFrame = -1, diagonalChildren = 0; bool diagonalMovement = false, diagonalPoseChanged = false;
                     using var diagonalSession = new OfficialBattleLiveImpactSession(diagonalCheckpoint, copy => FightBattleExecutor.Restore(copy,
                         formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), fireViews, 0, 1, observeMovements: true);
+                    diagonalSession.SecondsStatusChanged += _ => { };
                     bool StartDiagonalCast(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) {
                         id = fireViews.Start(cast, fireSource, cast.TargetIds.Contains(3) ? blockerView : fireTarget); return true;
                     }

@@ -45,7 +45,7 @@ namespace Zjcs.Combat.Official
             executor = restore(copy) ?? throw new InvalidOperationException("Restoring the isolated battle returned no executor.");
             if (!ReferenceEquals(executor.State, copy))
                 throw new InvalidOperationException("The restored executor must own the isolated checkpoint.");
-            Latch = new FightBattleImpactLatch { ObserveMovements = observeMovements };
+            Latch = new FightBattleImpactLatch { ObserveMovements = observeMovements, ObserveLiveStatusHits = true };
             executor.ImpactGate = Latch;
             executor.StatusSecondsChanged += Latch.SecondsStatusChanged;
             executor.StatusSecondsInvoked += Latch.SecondsStatusInvoked;

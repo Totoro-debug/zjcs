@@ -122,6 +122,7 @@ namespace Zjcs.Combat.Official
         private bool workerWaiting, workerStopped, workerCommandActive;
         private WorkerWait workerWait;
         public bool ObserveMovements { get; internal set; }
+        internal bool ObserveLiveStatusHits { get; set; }
         bool IFightBattleBlockedMovementObserver.ObservesBlockedMovements => ObserveMovements;
 
         // The isolated step owns exactly one worker. Other latch users retain the

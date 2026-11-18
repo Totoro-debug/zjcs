@@ -58,7 +58,8 @@ namespace Zjcs.Presentation.Combat
         public bool ResolveDamageStatus(FightBattleDamageEvent damage) => damage.HasDamageTriggerStatus;
         public void CompleteLiveCast(FightBattleSkillCastEvent cast, EcEntityIdentifier id, float elapsed)
         { if (!SelectedCasts.Contains(cast)) throw new InvalidOperationException("Wrong completed cast"); Completions++; CompletionElapsed = elapsed; }
-        public void Arrive(int scope) => HitSelectionViewArrived?.Invoke(Cast, Selection, 0, new Pos2d(10, 7), scope);
+        public void Arrive(int scope) => HitSelectionViewArrived?.Invoke(Cast, Selection, 0,
+            new Pos2d(Selection.EffectCenters[0].X, Selection.EffectCenters[0].Y), scope);
         public void StartGraph(EcEntityIdentifier id, string prefab = null, string leaf = null)
             => SkillGraphPlayableStarted?.Invoke(Cast, id, new GameObject { name = prefab }, new MyPlayable { name = leaf });
     }
@@ -139,6 +140,67 @@ namespace Zjcs.Presentation.Combat
             try { session.TryTakeCompleted(out _, out _); }
             catch (InvalidOperationException) { duplicate = true; }
             Check(duplicate, "The live result was transferred twice");
+            {
+                var launchCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 20, Height = 20, DefaultGroundType = 2 } };
+                var launchActor = Unit(1, 1, 7, formula); var launchTarget = Unit(2, 2, 8, formula);
+                int launchEntity = items.Required(10009).EntityId;
+                var launchSkill = catalog.CreateSkill(launchEntity, 0, 10009, 2, 20, 1,
+                    catalog.CalculateSkillProps(launchEntity, 2, 20, 1).Select(p => new FightPropertyValue { Id = p.Key, Value = p.Value }).ToList());
+                launchActor.Skills.Add(launchSkill); launchActor.SkillState.Slots.Add(catalog.CreateSkillSlot(launchSkill, 0));
+                launchCheckpoint.Units.AddRange(new[] { launchActor, launchTarget });
+                var launchWave = new FightBattleWaveState(); launchWave.UnitIds.Add(2); launchCheckpoint.Waves.Add(launchWave);
+                FightBattleExecutor.Begin(launchCheckpoint, formula, new FightDamageSettlement(), catalog, items);
+                string beforeLaunch = FightBattleCheckpointSerializer.Save(launchCheckpoint);
+                var launchViews = new OfficialBattleSkillEntityPlayback();
+                using var launchSession = new OfficialBattleLiveImpactSession(launchCheckpoint,
+                    copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), launchViews, 0, 1);
+                int liveStarts = 0, hostThread = Thread.CurrentThread.ManagedThreadId;
+                launchSession.SecondsStatusChanged += status => {
+                    Check(Thread.CurrentThread.ManagedThreadId == hostThread, "Airborne view ran outside the host thread");
+                    if (status.Kind == FightBattleStatusViewEventKind.Start && status.Status.ClassId == 24269) liveStarts++;
+                };
+                bool StartLaunch(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) { id = new EcEntityIdentifier(49); return true; }
+                Check(SpinWait.SpinUntil(() => { launchSession.Pump(0, StartLaunch); return launchViews.Selection != null; }, 20000)
+                    && liveStarts == 0 && launchViews.Damages == 0 && launchTarget.Hp == 1000000,
+                    "An airborne effect started before its actual hit");
+                var hit = launchViews.Selection.Targets.Single(value => value.TargetId == 2);
+                launchViews.Arrive(hit.HasScopeIndex ? hit.ScopeIndex : -1);
+                Check(liveStarts == 1 && launchViews.Damages == 1,
+                    "The actual hit did not deliver its airborne state in the same presentation boundary");
+                Check(SpinWait.SpinUntil(() => { launchSession.Pump(0, StartLaunch); return launchSession.IsCompleted; }, 20000)
+                    && launchSession.TryTakeCompleted(out _, out var launchResult)
+                    && launchResult.Checkpoint.StatusSeconds.PendingHits.Count == 0
+                    && launchResult.Checkpoint.Units[1].Statuses.Any(value => value.ClassId == 24269 || value.ClassId == 24270)
+                    && FightBattleCheckpointSerializer.Save(launchCheckpoint) == beforeLaunch,
+                    "Live airborne state was delayed again or escaped its isolated checkpoint");
+            }
+            {
+                var resetCheckpoint = FightBattleCheckpointSerializer.Load(committed);
+                var resetClock = new FightBattleStatusSeconds(resetCheckpoint, catalog, new FightRandomStream(resetCheckpoint.RandomSeed));
+                resetClock.Enqueue(0, 2, true, false, false, catalog.CreateStatus(24269, 2, 1, 1, 10580, 10006, 2, 20, 1));
+                resetClock.Advance(.2);
+                string beforeReset = FightBattleCheckpointSerializer.Save(resetCheckpoint);
+                var resetViews = new OfficialBattleSkillEntityPlayback();
+                using var resetSession = new OfficialBattleLiveImpactSession(resetCheckpoint,
+                    copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), resetViews, 0, 1);
+                int invokes = 0;
+                resetSession.SecondsStatusChanged += status => {
+                    if (status.Kind == FightBattleStatusViewEventKind.Invoke && status.Status.ClassId == 24269) invokes++;
+                };
+                bool StartReset(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) { id = new EcEntityIdentifier(50); return true; }
+                Check(SpinWait.SpinUntil(() => { resetSession.Pump(0, StartReset); return resetViews.Selection != null; }, 20000)
+                    && invokes == 0, "An existing airborne timer reset before the actual hit");
+                var hit = resetViews.Selection.Targets.Single(value => value.TargetId == 2);
+                resetViews.Arrive(hit.HasScopeIndex ? hit.ScopeIndex : -1);
+                Check(invokes == 1 && resetViews.Damages == 1, "The actual hit did not invoke its existing airborne status once");
+                Check(SpinWait.SpinUntil(() => { resetSession.Pump(0, StartReset); return resetSession.IsCompleted; }, 20000)
+                    && resetSession.TryTakeCompleted(out _, out var resetResult)
+                    && Math.Abs(resetResult.Checkpoint.Units[1].Statuses.Single(value => value.ClassId == 24269).Components.Seconds.RemainingSeconds - .7) < 1e-6
+                    && resetResult.Checkpoint.StatusSeconds.PendingHits.Count == 0
+                    && FightBattleCheckpointSerializer.Save(resetCheckpoint) == beforeReset,
+                    "The live hit did not reset the isolated airborne timer exactly once");
+            }
             {
                 var timed = FightBattleCheckpointSerializer.Load(committed);
                 var clock = new FightBattleStatusSeconds(timed, catalog, new FightRandomStream(timed.RandomSeed));

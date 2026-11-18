@@ -43,9 +43,26 @@ namespace Zjcs.Combat.Official
                     launch.Origin = FightBattleStatusOrigin.Resolve(skill, actor.Id).Copy();
                 }
             }
-            statusSecondsHits.Add(new PendingStatusSecondsHit {
+            var pending = new PendingStatusSecondsHit {
                 Damage = damage, Displacement = displacement, LaunchStatus = launch
-            });
+            };
+            if (ImpactGate is FightBattleImpactLatch live && live.ObserveLiveStatusHits)
+            {
+                // This worker has already waited for the actual native hit. Its
+                // status clock must consume that hit now, not replay the cast's
+                // original offset after the isolated step completes.
+                bool needed = checkpoint.StatusSeconds != null || launch != null;
+                foreach (var owner in units)
+                    foreach (var status in owner.Statuses) needed |= status.Components?.Seconds != null;
+                if (needed)
+                {
+                    var clock = new FightBattleStatusSeconds(checkpoint, statusCatalog, random);
+                    clock.Enqueue(0d, damage.TargetId, true, damage.Block, displacement, launch);
+                    AdvanceStatusSeconds(0d);
+                }
+                return;
+            }
+            statusSecondsHits.Add(pending);
         }
 
         private void CompleteStatusSecondsHits()
