@@ -550,6 +550,21 @@ namespace Zjcs.Editor.Combat
             try { fireViews.QueueSettledDamage(fireCast, fireSkillId, fireDamage.Damage); }
             catch (InvalidOperationException) { duplicateDamageRejected = true; }
             Require(duplicateDamageRejected, "The same impact cannot create duplicate native damage entities.");
+            var restoredFire = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(cp));
+            var restoredEvent = restoredFire.Receipts.Last().Event;
+            var restoredCast = restoredEvent.SkillCasts.Single(c => c.SkillItemId == 10028);
+            var restoredDamage = restoredEvent.DamageEvents.Single(d => d.DamageId == fireDamage.Damage.DamageId);
+            var replayDamage = new Dictionary<int, FightBattleDamageEvent> {
+                { restoredDamage.DamageId, restoredDamage } };
+            fireViews.Start(restoredCast, fireSource, fireTarget, replayDamage);
+            Require(damageNotifications == 1, "A saved fireball receipt cannot display damage before its boundary.");
+            deadline = Time.realtimeSinceStartup + 10f;
+            while (damageNotifications < 2 && Time.realtimeSinceStartup < deadline) {
+                fireViews.Tick(Time.deltaTime); fireScope.LateTick();
+                yield return null;
+            }
+            Require(damageNotifications == 2 && observedDamage == fireDamageValue,
+                "The saved receipt must still play the same original damage once at its boundary.");
             fireViews.HitSelectionViewArrived -= fireObserver;
             fireBridge.Dispose(); fireLatch.Dispose(); fireViews.Dispose();
             Destroy(fireRoot.gameObject);
