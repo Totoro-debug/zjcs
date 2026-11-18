@@ -994,6 +994,8 @@ namespace Zjcs.Combat.Official
                             SkillItemId = skill.ItemId, HitEntityId = hit.EntityId, DamageEntityId = hit.DamageId,
                             GridX = damagePosition.X, GridY = damagePosition.Y,
                             EffectCenterIndex = centerIndex, OccurrenceIndex = targetIndex,
+                            HasScopeIndex = occurrence != null && occurrence.ScopeIndex >= 0,
+                            ScopeIndex = occurrence == null ? 0 : Math.Max(0, occurrence.ScopeIndex),
                             Cast = presentationCast, HitSelection = hitReceipt });
                         if (!allowDeadSource && actor.Hp <= 0) break;
                         if (target.Hp <= 0 && hit.ActionType != 62 || target.Ended) continue;

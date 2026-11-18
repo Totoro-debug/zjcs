@@ -31,13 +31,15 @@ namespace Zjcs.Combat.Official
         public readonly FightGridPoint GridPosition;
         public readonly float Delay;
         public readonly int EffectCenterIndex;
+        // -1 means the occurrence is not attributable to one authored scope cell.
+        public readonly int ScopeIndex;
 
         internal FightHitOccurrence(FightBattleUnitState target,
             bool hasGridPosition = false, FightGridPoint gridPosition = default, float delay = 0f,
-            int effectCenterIndex = 0)
+            int effectCenterIndex = 0, int scopeIndex = -1)
         {
             Target = target; HasGridPosition = hasGridPosition;
-            GridPosition = gridPosition; Delay = delay; EffectCenterIndex = effectCenterIndex;
+            GridPosition = gridPosition; Delay = delay; EffectCenterIndex = effectCenterIndex; ScopeIndex = scopeIndex;
         }
     }
 
@@ -93,7 +95,8 @@ namespace Zjcs.Combat.Official
                     // A single authored cell still delays its damage/status occurrence.
                     // Keeping entity-level selection here must not drop HitScopCfg.Delay.
                     float delay = hit.Scope.Count == 1 ? ScopeDelay(hit, 0) : 0f;
-                    foreach (var target in candidates) result.Add(new FightHitOccurrence(target, delay: delay));
+                    foreach (var target in candidates)
+                        result.Add(new FightHitOccurrence(target, delay: delay, scopeIndex: hit.Scope.Count == 1 ? 0 : -1));
                     return result;
                 }
                 var center = FightHitAnchorExtensions.ResolveCenter(hit.Anchor,
@@ -105,7 +108,7 @@ namespace Zjcs.Combat.Official
                     var cell = new FightGridPoint(center.X + scope[index].X, center.Y + scope[index].Y);
                     float delay = ScopeDelay(hit, index);
                     foreach (var target in candidates)
-                        if (Occupies(target, cell)) result.Add(new FightHitOccurrence(target, true, cell, delay));
+                        if (Occupies(target, cell)) result.Add(new FightHitOccurrence(target, true, cell, delay, scopeIndex: index));
                 }
                 return result;
             }

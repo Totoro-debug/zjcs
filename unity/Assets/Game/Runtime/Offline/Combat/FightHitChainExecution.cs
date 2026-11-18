@@ -157,7 +157,7 @@ namespace Zjcs.Combat.Official
                 var center = selection.EffectCenters[centerIndex];
                 occurrences.Add(new FightHitOccurrence(selection.Targets[index], true,
                     new FightGridPoint(center.X + offset.X, center.Y + offset.Y),
-                    hit.ScopeEntries[0].Delay, centerIndex));
+                    hit.ScopeEntries[0].Delay, centerIndex, 0));
             }
             return new FightHitTargetSelection(selection.Targets, occurrences,
                 selection.SelectedGridPositions, selection.EffectCenters);

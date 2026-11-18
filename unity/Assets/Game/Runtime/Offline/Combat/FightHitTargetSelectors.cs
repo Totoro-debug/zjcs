@@ -84,7 +84,7 @@ namespace Zjcs.Combat.Official
                     foreach (var occurrence in planned)
                     {
                         anchored.Add(new FightHitOccurrence(occurrence.Target, occurrence.HasGridPosition,
-                            occurrence.GridPosition, occurrence.Delay, centers.Count));
+                            occurrence.GridPosition, occurrence.Delay, centers.Count, occurrence.ScopeIndex));
                         centers.Add(FightHitAnchorExtensions.ResolveCenter(context.Hit.Anchor,
                             context.Source, occurrence.Target, context.Cast));
                     }
@@ -210,7 +210,7 @@ namespace Zjcs.Combat.Official
                             selectedTargets, new FightBattleUnitState {
                                 X = selectedPosition.X, Y = selectedPosition.Y }, true))
                             randomOccurrences.Add(new FightHitOccurrence(occurrence.Target,
-                                occurrence.HasGridPosition, occurrence.GridPosition, occurrence.Delay, centerIndex));
+                                occurrence.HasGridPosition, occurrence.GridPosition, occurrence.Delay, centerIndex, occurrence.ScopeIndex));
                     }
                     plannedHits = randomOccurrences;
                     foreach (var occurrence in randomOccurrences) hitTargets.Add(occurrence.Target);

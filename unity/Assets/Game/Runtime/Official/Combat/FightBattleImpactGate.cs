@@ -7,6 +7,8 @@ namespace Zjcs.Combat.Official
         public int GridX, GridY;
         // Indices belong to HitSelection when that original selection is available.
         public int EffectCenterIndex, OccurrenceIndex;
+        public bool HasScopeIndex;
+        public int ScopeIndex;
         public FightBattleSkillCastEvent Cast;
         public FightBattleHitSelectionSnapshot HitSelection;
     }

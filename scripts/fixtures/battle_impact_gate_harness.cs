@@ -104,6 +104,24 @@ public static class BattleImpactGateHarness
                 "Gating changed the original deterministic result");
         }
         {
+            var source = Unit(1, 1, 3, 3, formula);
+            var target = Unit(2, 2, 4, 3, formula);
+            var point = new FightGridPoint(0, 0);
+            var hit = new FightBattleHitDefinition { ActionType = 4, TargetMode = 1,
+                Scope = new List<FightGridPoint> { point, point }, ScopeEntries = new List<FightBattleHitScopeEntry> {
+                    new FightBattleHitScopeEntry { Position = point, Delay = .1f },
+                    new FightBattleHitScopeEntry { Position = point, Delay = .2f } } };
+            var skill = new FightBattleSkillDefinition { SkillType = 0, TargetType = 1 };
+            var occurrences = FightBattleHitPatterns.For(hit).Plan(new FightHitPatternContext {
+                Source = source, Units = new[] { source, target }, Skill = skill, Hit = hit,
+                Targets = new List<FightBattleUnitState> { target }, Primary = target,
+                Cast = FightBattleSkillCastPresentation.Capture(source, skill, new List<FightBattleUnitState> { target }),
+                Random = new FightRandomStream(7) });
+            Check(occurrences.Count == 2 && occurrences[0].ScopeIndex == 0 && occurrences[1].ScopeIndex == 1
+                && occurrences[0].GridPosition.Equals(occurrences[1].GridPosition),
+                "Repeated authored scope cells must retain separate occurrence identities");
+        }
+        {
             var cp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
                 Grid = new FightBattleGrid { Width = 24, Height = 24, DefaultGroundType = 2 } };
             var actor = Unit(1, 1, 10, 10, formula); actor.Direction = 3;
@@ -117,6 +135,7 @@ public static class BattleImpactGateHarness
             var executor = FightBattleExecutor.Begin(cp, formula, new FightDamageSettlement(), catalog, items);
             var gate = new Gate(); executor.ImpactGate = gate; var task = Task.Run(() => executor.Step(0, 1));
             var seen = new HashSet<int>();
+            var scopeIndices = new HashSet<int>();
             for (int index = 0; index < 5; index++)
             {
                 var pending = gate.Next();
@@ -126,6 +145,8 @@ public static class BattleImpactGateHarness
                     var occurrence = impact.HitSelection.Targets[impact.OccurrenceIndex];
                     Check(impact.SkillItemId == 10043 && seen.Add(impact.TargetId)
                         && occurrence.TargetId == impact.TargetId && occurrence.EffectCenterIndex == impact.EffectCenterIndex
+                        && impact.HasScopeIndex && occurrence.HasScopeIndex && occurrence.ScopeIndex == impact.ScopeIndex
+                        && scopeIndices.Add(impact.ScopeIndex)
                         && occurrence.HasGridPosition && occurrence.GridX == impact.GridX && occurrence.GridY == impact.GridY,
                         "A cross-scope impact lost the actual target, body cell or centre identity");
                     Check(cp.Units.Single(u => u.Id == impact.TargetId).Hp == 1000000,
@@ -135,6 +156,20 @@ public static class BattleImpactGateHarness
             }
             Check(task.Wait(TimeSpan.FromSeconds(20)) && task.Result.Event.DamageEvents.Count(d => d.SkillItemId == 10043) == 5,
                 "Cross-scope impacts were lost or duplicated");
+            var saved = FightBattleCheckpointSerializer.Save(cp);
+            var restored = FightBattleCheckpointSerializer.Load(saved);
+            var recorded = restored.Receipts.Last().Event.SkillCasts.Single(c => c.SkillItemId == 10043)
+                .HitSelections.Single(s => s.HitEntityId == 10591);
+            Check(recorded.Targets.Count == 5 && recorded.Targets.All(t => t.HasScopeIndex)
+                && recorded.Targets.Select(t => t.ScopeIndex).Distinct().Count() == 5,
+                "Original scope identities did not survive the checkpoint");
+            string legacy = System.Text.RegularExpressions.Regex.Replace(saved,
+                ",\\\"HasScopeIndex\\\":(?:true|false),\\\"ScopeIndex\\\":-?[0-9]+", "");
+            Check(legacy != saved, "Legacy scope fixture did not remove the new fields");
+            var oldRecorded = FightBattleCheckpointSerializer.Load(legacy).Receipts.Last().Event.SkillCasts
+                .Single(c => c.SkillItemId == 10043).HitSelections.Single(s => s.HitEntityId == 10591);
+            Check(oldRecorded.Targets.All(t => !t.HasScopeIndex),
+                "A legacy checkpoint invented scope indices that were not recorded");
         }
         foreach (bool removed in new[] { false, true })
         {

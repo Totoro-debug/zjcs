@@ -14,6 +14,8 @@ namespace Zjcs.Combat.Official
             public bool HasGridPosition;
             public int GridX, GridY;
             public float ScopeDelay;
+            public bool HasScopeIndex;
+            public int ScopeIndex;
         }
 
         [Serializable]
@@ -74,7 +76,9 @@ namespace Zjcs.Combat.Official
                     HasGridPosition = occurrence != null && occurrence.HasGridPosition,
                     GridX = occurrence == null ? 0 : occurrence.GridPosition.X,
                     GridY = occurrence == null ? 0 : occurrence.GridPosition.Y,
-                    ScopeDelay = occurrence == null ? 0f : occurrence.Delay
+                    ScopeDelay = occurrence == null ? 0f : occurrence.Delay,
+                    HasScopeIndex = occurrence != null && occurrence.ScopeIndex >= 0,
+                    ScopeIndex = occurrence == null ? 0 : Math.Max(0, occurrence.ScopeIndex)
                 });
             }
             return result;
