@@ -859,6 +859,15 @@ namespace Zjcs.Editor.Combat
                 var collisionSkill = new FightBattleSkillDefinition { EntityId = 10100 };
                 var collisionDefinition = new FightBattleHitDefinition {
                     EntityId = 10101, DamageId = 10006, DamageType = 8, ActionType = 4 };
+                var collisionCast = new FightBattleSkillCastEvent { ActorId = 1, SkillEntityId = 10100 };
+                collisionCast.TargetIds.Add(2);
+                var collisionSelection = new FightBattleHitSelectionSnapshot { HitEntityId = 10101 };
+                collisionSelection.EffectCenters.Add(new FightGridPoint(4, 5));
+                collisionSelection.Targets.Add(new FightBattleHitSelectionSnapshot.TargetOccurrence { TargetId = 2 });
+                collisionCast.HitSelections.Add(collisionSelection);
+                var collisionImpact = new FightBattlePendingImpact { Cast = collisionCast,
+                    HitSelection = collisionSelection, SourceId = 1, TargetId = 2, SkillEntityId = 10100,
+                    HitEntityId = 10101, DamageEntityId = 10006 };
                 Require(collisionHit != null, "The local collision settlement must be available.");
                 int collisionSettled = 0;
                 var collisionWorker = Task.Run(() => {
@@ -866,6 +875,8 @@ namespace Zjcs.Editor.Combat
                     try {
                         collisionLatch.BlockedMovementPrepared(null, blocked, new FightGridPoint(4, 5));
                         collisionLatch.AwaitBlockedContact(blocked);
+                        collisionLatch.BindBlockedImpact(blocked, collisionCast, 2);
+                        collisionLatch.AwaitImpact(collisionImpact);
                         collisionHit.Invoke(collisionExecutor, new object[] { new FightRandomStream(1), 1,
                             collisionSource, collisionTarget, collisionSkill, collisionDefinition, 500L, 1 });
                         Interlocked.Exchange(ref collisionSettled, 1);

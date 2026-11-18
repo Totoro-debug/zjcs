@@ -56,6 +56,12 @@ namespace Zjcs.Combat.Official
         void AwaitBlockedContact(FightBattleMovementEvent movement);
     }
 
+    /// <summary>Associates one collision child hit with its already-consumed action contact.</summary>
+    public interface IFightBattleBlockedImpactObserver
+    {
+        void BindBlockedImpact(FightBattleMovementEvent movement, FightBattleSkillCastEvent cast, int targetId);
+    }
+
     /// <summary>
     /// Optional notification when a cast's duration is final. Its enclosing step may
     /// still apply later offsets, so this is not an absolute playback start time.

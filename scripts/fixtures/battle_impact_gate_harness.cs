@@ -62,13 +62,33 @@ public static class BattleImpactGateHarness
             using var blocked = new FightBattleImpactLatch { ObserveMovements = true };
             var cast = new FightBattleSkillCastEvent();
             var move = new FightBattleMovementEvent();
+            var collisionCast = new FightBattleSkillCastEvent { SkillEntityId = 10100, ActorId = 1 };
+            collisionCast.TargetIds.Add(2);
+            var selection = new FightBattleHitSelectionSnapshot { HitEntityId = 10101 };
+            selection.EffectCenters.Add(new FightGridPoint(4, 5));
+            selection.Targets.Add(new FightBattleHitSelectionSnapshot.TargetOccurrence { TargetId = 2 });
+            selection.Targets.Add(new FightBattleHitSelectionSnapshot.TargetOccurrence { TargetId = 3 });
+            collisionCast.HitSelections.Add(selection);
+            var collisionImpact = new FightBattlePendingImpact { Cast = collisionCast, HitSelection = selection,
+                SkillEntityId = 10100, HitEntityId = 10101, DamageEntityId = 10006, SourceId = 1, TargetId = 2 };
             var worker = Task.Run(() => {
                 blocked.BindWorker();
                 try {
                     blocked.BlockedMovementPrepared(cast, move, new FightGridPoint(4, 5));
                     blocked.AwaitBlockedContact(move);
-                    try { blocked.AwaitBlockedContact(move); return false; }
-                    catch (InvalidOperationException) { return true; }
+                    blocked.BindBlockedImpact(move, collisionCast, 2);
+                    var wrong = new FightBattlePendingImpact { Cast = collisionCast, HitSelection = selection,
+                        SkillEntityId = 10100, HitEntityId = 10101, DamageEntityId = 10006,
+                        SourceId = 1, TargetId = 3, OccurrenceIndex = 1 };
+                    bool rejectedWrongTarget = false, rejectedDuplicate = false, rejectedContact = false;
+                    try { blocked.AwaitImpact(wrong); }
+                    catch (InvalidOperationException) { rejectedWrongTarget = true; }
+                    blocked.AwaitImpact(collisionImpact);
+                    try { blocked.BindBlockedImpact(move, collisionCast, 2); }
+                    catch (InvalidOperationException) { rejectedDuplicate = true; }
+                    try { blocked.AwaitBlockedContact(move); }
+                    catch (InvalidOperationException) { rejectedContact = true; }
+                    return rejectedWrongTarget && rejectedDuplicate && rejectedContact;
                 }
                 finally { blocked.FinishWorker(); }
             });
@@ -81,6 +101,10 @@ public static class BattleImpactGateHarness
             blocked.WaitForWorkerBoundary(startRevision);
             Check(!worker.IsCompleted, "Collision rules must wait for actual contact");
             bool rejected = false;
+            try { blocked.BindBlockedImpact(move, collisionCast, 2); }
+            catch (InvalidOperationException) { rejected = true; }
+            Check(rejected, "A child cannot bind to a collision before actual contact");
+            rejected = false;
             try { blocked.RecordBlockedContact(new FightBattleMovementEvent(), out _); }
             catch (InvalidOperationException) { rejected = true; }
             Check(rejected && !worker.IsCompleted, "Another movement cannot release a blocked action");

@@ -56,7 +56,7 @@ namespace Zjcs.Combat.Official
     /// The step runs on a worker; the presentation thread takes requests without blocking and
     /// records actual arrivals. A single scope arrival may affect multiple target occurrences.
     /// </summary>
-    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleMovementPreparationObserver, IFightBattleBlockedMovementObserver, IFightBattleCastCompletionObserver, IFightBattleHitSelectionObserver, IFightBattleImpactSettlementObserver, IFightBattleImpactStatusResolutionObserver, IDisposable
+    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleMovementPreparationObserver, IFightBattleBlockedMovementObserver, IFightBattleBlockedImpactObserver, IFightBattleCastCompletionObserver, IFightBattleHitSelectionObserver, IFightBattleImpactSettlementObserver, IFightBattleImpactStatusResolutionObserver, IDisposable
     {
         private readonly struct Signal : IEquatable<Signal>
         {
@@ -84,6 +84,10 @@ namespace Zjcs.Combat.Official
         private readonly Dictionary<FightBattleMovementEvent, FightBattlePreparedMovement> blockedMovements =
             new Dictionary<FightBattleMovementEvent, FightBattlePreparedMovement>();
         private readonly HashSet<FightBattleMovementEvent> blockedContacts = new HashSet<FightBattleMovementEvent>();
+        private readonly Dictionary<FightBattleSkillCastEvent, (FightBattleMovementEvent Movement, int TargetId)> blockedImpacts =
+            new Dictionary<FightBattleSkillCastEvent, (FightBattleMovementEvent, int)>();
+        private readonly HashSet<(FightBattleMovementEvent Movement, int TargetId)> boundBlockedTargets =
+            new HashSet<(FightBattleMovementEvent, int)>();
         private readonly Queue<FightBattleCompletedCast> completedCasts = new Queue<FightBattleCompletedCast>();
         private readonly Queue<FightBattleSelectedHit> selections = new Queue<FightBattleSelectedHit>();
         private readonly Queue<FightBattleSettledImpact> settlements = new Queue<FightBattleSettledImpact>();
@@ -238,6 +242,24 @@ namespace Zjcs.Combat.Official
                 if (preparation.ContactConsumed)
                     throw new InvalidOperationException("The blocked movement contact was already consumed.");
                 preparation.ContactConsumed = true;
+            }
+        }
+
+        public void BindBlockedImpact(FightBattleMovementEvent movement, FightBattleSkillCastEvent cast, int targetId)
+        {
+            if (movement == null) throw new ArgumentNullException(nameof(movement));
+            if (cast == null) throw new ArgumentNullException(nameof(cast));
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (!ObserveMovements || !blockedMovements.TryGetValue(movement, out var preparation)
+                    || !preparation.ContactConsumed || !blockedContacts.Contains(movement))
+                    throw new InvalidOperationException("The action has not consumed its actual blocked contact.");
+                if (cast.SkillEntityId != 10100 || cast.ActorId <= 0 || targetId <= 0
+                    || cast.TargetIds == null || cast.TargetIds.Count != 1 || cast.TargetIds[0] != targetId
+                    || blockedImpacts.ContainsKey(cast) || !boundBlockedTargets.Add((movement, targetId)))
+                    throw new InvalidOperationException("The collision child does not identify a unique contact target.");
+                blockedImpacts.Add(cast, (movement, targetId));
             }
         }
 
@@ -483,6 +505,19 @@ namespace Zjcs.Combat.Official
             lock (sync)
             {
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (blockedImpacts.TryGetValue(impact.Cast, out var blocked))
+                {
+                    if (impact.SkillEntityId != 10100 || impact.HitEntityId != 10101 || impact.DamageEntityId != 10006
+                        || impact.SourceId != impact.Cast.ActorId || impact.TargetId != blocked.TargetId
+                        || impact.HitSelection.HitEntityId != 10101 || impact.Cast.HitSelections == null
+                        || !impact.Cast.HitSelections.Contains(impact.HitSelection)
+                        || !blockedMovements.TryGetValue(blocked.Movement, out var preparation)
+                        || !preparation.ContactConsumed || !blockedContacts.Contains(blocked.Movement))
+                        throw new InvalidOperationException("The impact does not match its consumed collision contact.");
+                    requests.Enqueue(impact);
+                    blockedImpacts.Remove(impact.Cast);
+                    return;
+                }
                 requests.Enqueue(impact);
                 while (!disposed && !arrived.Contains(signal))
                 {
@@ -561,7 +596,7 @@ namespace Zjcs.Combat.Official
             lock (sync)
             {
                 if (disposed) return;
-                disposed = true; waitingBlockedMovement = null; arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); movements.Clear(); blockedMovements.Clear(); blockedContacts.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear(); deferredStatusResults.Clear();
+                disposed = true; waitingBlockedMovement = null; arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); movements.Clear(); blockedMovements.Clear(); blockedContacts.Clear(); blockedImpacts.Clear(); boundBlockedTargets.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear(); deferredStatusResults.Clear();
                 Monitor.PulseAll(sync);
             }
         }
