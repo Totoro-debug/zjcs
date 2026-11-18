@@ -162,10 +162,29 @@ namespace Zjcs.Presentation.Combat
             foreach (var id in views.Created)
                 Check(!playback.TryGetOrigin(id, out _), "removed hit retained its mapping");
             Check(views.Removed.Count == 4, "completed native entities were not removed");
+            var live = new FightBattleSkillCastEvent { SkillEntityId = 10100 };
+            var selected = Selection(2f, new FightGridPoint(7, 8));
+            int beforeLive = observed.Count;
+            playback.EnqueueSelection(live, selected, new EcEntityIdentifier(2, 4), .75f);
+            Check(observed.Count == beforeLive, "A future original hit was created early");
+            playback.Advance(1.24f); playback.DispatchDue();
+            Check(observed.Count == beforeLive, "The selection delay was not relative to the cast start");
+            playback.Advance(.02f); playback.DispatchDue();
+            Check(observed.Count == beforeLive + 1 && ReferenceEquals(observed[beforeLive].Cast, live)
+                && ReferenceEquals(observed[beforeLive].Selection, selected),
+                "The live selection did not retain its original identity at the due boundary");
+            var late = Selection(1f, new FightGridPoint(8, 9));
+            playback.EnqueueSelection(live, late, new EcEntityIdentifier(2, 4), 1.5f);
+            Check(observed.Count == beforeLive + 2 && ReferenceEquals(observed[beforeLive + 1].Selection, late),
+                "A selection offered after its configured boundary did not dispatch immediately");
+            bool invalidElapsed = false;
+            try { playback.EnqueueSelection(live, selected, new EcEntityIdentifier(2, 4), float.NaN); }
+            catch (ArgumentOutOfRangeException) { invalidElapsed = true; }
+            Check(invalidElapsed, "An invalid live cast clock was accepted");
             var pending = new FightBattleSkillCastEvent { SkillEntityId = 10100 };
             pending.HitSelections.Add(Selection(10f, new FightGridPoint(9, 9)));
             playback.Enqueue(pending, new EcEntityIdentifier(2, 3)); playback.Dispose();
-            Check(!playback.TryGetOrigin(new EcEntityIdentifier(4, 5), out _), "disposing retained a pending hit mapping");
+            Check(!playback.TryGetOrigin(new EcEntityIdentifier(4, 7), out _), "disposing retained a pending hit mapping");
             return "Hit arrival origin passed: repeated casts, repeated selections, multiple centres, removal and disposal.";
         }
     }

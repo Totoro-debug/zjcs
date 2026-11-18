@@ -88,6 +88,27 @@ namespace Zjcs.Presentation.Combat
         public void Enqueue(FightBattleSkillCastEvent cast, EcEntityIdentifier skillId)
         {
             if (cast.HitSelections == null || cast.HitSelections.Count == 0) return;
+            foreach (var selection in cast.HitSelections)
+                QueueSelection(cast, selection, skillId, 0f);
+            DispatchDue();
+        }
+
+        // A live executor can offer each selection before its damage has settled.
+        // Its delay remains relative to the actual cast start, even when offered late.
+        public void EnqueueSelection(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot selection,
+            EcEntityIdentifier skillId, float elapsedSinceCast)
+        {
+            if (cast == null) throw new ArgumentNullException(nameof(cast));
+            if (selection == null) throw new ArgumentNullException(nameof(selection));
+            if (float.IsNaN(elapsedSinceCast) || float.IsInfinity(elapsedSinceCast) || elapsedSinceCast < 0f)
+                throw new ArgumentOutOfRangeException(nameof(elapsedSinceCast));
+            QueueSelection(cast, selection, skillId, elapsedSinceCast);
+            DispatchDue();
+        }
+
+        private void QueueSelection(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot selection,
+            EcEntityIdentifier skillId, float elapsedSinceCast)
+        {
             if (!definitions.TryGetValue(cast.SkillEntityId, out var hits))
             {
                 // Only immutable hit/view configuration is consumed here; rank,
@@ -95,45 +116,41 @@ namespace Zjcs.Presentation.Combat
                 hits = catalog.CreateSkill(cast.SkillEntityId, -1, 0, 1, 1, 1, null).HitGraphEntities;
                 definitions.Add(cast.SkillEntityId, hits);
             }
-            foreach (var selection in cast.HitSelections)
+            var definition = hits.Find(value => value.EntityId == selection.HitEntityId);
+            if (definition == null)
+                throw new InvalidOperationException("Selected hit is absent from its official skill graph: "
+                    + cast.SkillEntityId + "/" + selection.HitEntityId);
+            if (definition.HitComponentType != "FightHitFixedComponent"
+                && definition.HitComponentType != "FightHitSummonComponent"
+                && definition.HitComponentType != "FightHitRandomTargetComponent"
+                && definition.HitComponentType != "FightHitCustomTargetComponent"
+                && definition.HitComponentType != "FightHitChainedComponent"
+                && definition.HitComponentType != "FightHitTriggerSkillComponent") return;
+            if (definition.HitComponentType == "FightHitChainedComponent" && !selection.HasChainedOrigin)
+                return;
+            float scopeEnd = 0f;
+            foreach (var entry in definition.ScopeEntries) scopeEnd = Mathf.Max(scopeEnd, entry.Delay);
+            for (int index = 0; index < selection.EffectCenters.Count; index++)
             {
-                var definition = hits.Find(value => value.EntityId == selection.HitEntityId);
-                if (definition == null)
-                    throw new InvalidOperationException("Settled hit is absent from its official skill graph: "
-                        + cast.SkillEntityId + "/" + selection.HitEntityId);
-                if (definition.HitComponentType != "FightHitFixedComponent"
-                    && definition.HitComponentType != "FightHitSummonComponent"
-                    && definition.HitComponentType != "FightHitRandomTargetComponent"
-                    && definition.HitComponentType != "FightHitCustomTargetComponent"
-                    && definition.HitComponentType != "FightHitChainedComponent"
-                    && definition.HitComponentType != "FightHitTriggerSkillComponent") continue;
-                if (definition.HitComponentType == "FightHitChainedComponent" && !selection.HasChainedOrigin)
-                    continue;
-                float scopeEnd = 0f;
-                foreach (var entry in definition.ScopeEntries) scopeEnd = Mathf.Max(scopeEnd, entry.Delay);
-                for (int index = 0; index < selection.EffectCenters.Count; index++)
-                {
-                    var center = selection.EffectCenters[index];
-                    int facing = selection.FacingIndex == 0 ? 1 : selection.FacingIndex == 1 ? 2
-                        : selection.FacingIndex == 2 ? 0 : selection.FacingIndex;
-                    var grid = new Grid { Position = new Pos2d(center.X, center.Y), Views = views,
-                        Center = definition.ScopeTransform, Facing = definition.ScopeTransform == null ? 0 : facing,
-                        Mirrored = definition.ScopeTransform != null && selection.FlipX };
-                    var id = new EcEntityIdentifier(4, ++serial);
-                    origins.Add(id, new Origin { Cast = cast, Selection = selection, CenterIndex = index });
-                    // Older receipts do not carry EffectDelays; resolve their
-                    // flight from the original view after it has bound its override.
-                    float flight = selection.EffectDelays != null && index < selection.EffectDelays.Count
-                        ? Mathf.Max(0f, selection.EffectDelays[index] - selection.Delay) : -1f;
-                    pending.Add(new Pending { Remaining = Mathf.Max(0f, selection.Delay),
-                        Lifetime = scopeEnd + definition.DestroyDelay,
-                        HasFlight = flight >= 0f, Flight = flight,
-                        Data = new OfficialBattleHitEntityData(id, skillId, definition, grid,
-                            new Pos2d(selection.SourceX, selection.SourceY)),
-                        Source = new Pos2d(selection.SourceX, selection.SourceY), FlipX = selection.FlipX });
-                }
+                var center = selection.EffectCenters[index];
+                int facing = selection.FacingIndex == 0 ? 1 : selection.FacingIndex == 1 ? 2
+                    : selection.FacingIndex == 2 ? 0 : selection.FacingIndex;
+                var grid = new Grid { Position = new Pos2d(center.X, center.Y), Views = views,
+                    Center = definition.ScopeTransform, Facing = definition.ScopeTransform == null ? 0 : facing,
+                    Mirrored = definition.ScopeTransform != null && selection.FlipX };
+                var id = new EcEntityIdentifier(4, ++serial);
+                origins.Add(id, new Origin { Cast = cast, Selection = selection, CenterIndex = index });
+                // Older receipts do not carry EffectDelays; resolve their
+                // flight from the original view after it has bound its override.
+                float flight = selection.EffectDelays != null && index < selection.EffectDelays.Count
+                    ? Mathf.Max(0f, selection.EffectDelays[index] - selection.Delay) : -1f;
+                pending.Add(new Pending { Remaining = Mathf.Max(0f, selection.Delay - elapsedSinceCast),
+                    Lifetime = scopeEnd + definition.DestroyDelay,
+                    HasFlight = flight >= 0f, Flight = flight,
+                    Data = new OfficialBattleHitEntityData(id, skillId, definition, grid,
+                        new Pos2d(selection.SourceX, selection.SourceY)),
+                    Source = new Pos2d(selection.SourceX, selection.SourceY), FlipX = selection.FlipX });
             }
-            DispatchDue();
         }
 
         public void Advance(float elapsed)
