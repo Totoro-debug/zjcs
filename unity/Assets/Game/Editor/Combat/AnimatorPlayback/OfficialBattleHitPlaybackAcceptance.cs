@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -844,18 +847,48 @@ namespace Zjcs.Editor.Combat
                 blocked.Path.Add(new FightGridPoint(3, 5)); blocked.Path.Add(new FightGridPoint(3, 5));
                 fireSource.localPosition = new Vector3(3, 5, 0);
                 Require(fireViews.OwnsMovement(blocked), "Original blocked movement action is available.");
+                using var collisionLatch = new FightBattleImpactLatch();
+                typeof(FightBattleImpactLatch).GetProperty("ObserveMovements").GetSetMethod(true)
+                    .Invoke(collisionLatch, new object[] { true });
+                var bindWorker = typeof(FightBattleImpactLatch).GetMethod("BindWorker", BindingFlags.Instance | BindingFlags.NonPublic);
+                var finishWorker = typeof(FightBattleImpactLatch).GetMethod("FinishWorker", BindingFlags.Instance | BindingFlags.NonPublic);
+                int collisionSettled = 0;
+                var collisionWorker = Task.Run(() => {
+                    bindWorker.Invoke(collisionLatch, null);
+                    try {
+                        collisionLatch.BlockedMovementPrepared(null, blocked, new FightGridPoint(4, 5));
+                        collisionLatch.AwaitBlockedContact(blocked);
+                        Interlocked.Exchange(ref collisionSettled, 1);
+                    }
+                    finally { finishWorker.Invoke(collisionLatch, null); }
+                });
+                FightBattlePreparedMovement blockedPreparation = null;
+                Require(SpinWait.SpinUntil(() => collisionLatch.TryTakeMovement(out blockedPreparation), 20000)
+                    && blockedPreparation.HasBlockedPosition
+                    && blockedPreparation.BlockedPosition.Equals(new FightGridPoint(4, 5)),
+                    "The isolated rules worker must offer the original blocked position.");
                 int blockedBefore = played.Count;
                 int contacts = 0;
                 float contactX = 0f;
                 fireViews.StartMovement(blocked, fireSource, new FightGridPoint(4, 5), value => {
                     Require(ReferenceEquals(value, blocked), "Collision must retain the original movement identity.");
                     contacts++; contactX = fireSource.localPosition.x;
+                    Require(collisionLatch.RecordBlockedContact(value, out long collisionRevision) && collisionRevision > 0,
+                        "The actual collision must release its own waiting rules worker.");
+                    collisionLatch.WaitForWorkerBoundary(collisionRevision);
+                    Require(Volatile.Read(ref collisionSettled) == 1,
+                        "The rules worker must reach its next boundary in the actual collision frame.");
                 });
+                collisionLatch.CompleteMovement(blockedPreparation, out long startRevision);
+                collisionLatch.WaitForWorkerBoundary(startRevision);
+                Require(Volatile.Read(ref collisionSettled) == 0, "Collision rules cannot run at movement start.");
                 float farthest = fireSource.localPosition.x;
                 bool captured = false;
                 for (int frame = 0; frame < 100; frame++)
                 {
                     fireViews.Tick(.01f); fireScope.LateTick();
+                    if (contacts == 0) Require(Volatile.Read(ref collisionSettled) == 0,
+                        "Collision rules must wait for the original contact frame.");
                     farthest = Mathf.Max(farthest, fireSource.localPosition.x);
                     if (!captured && farthest > 3.79f)
                     { Capture("session-collision.png", false); captured = true; }
@@ -866,6 +899,7 @@ namespace Zjcs.Editor.Combat
                     && played.Skip(blockedBefore).Any(value => value.Name == "playable_move_blocked")
                     && fireRoot.GetComponentsInChildren<MyFightActionSkillMove>(false).Length == 0,
                     "Original blocked movement must signal its actual collision once and return before removal.");
+                collisionWorker.GetAwaiter().GetResult();
                 jumpSession.Dispose();
                 blockedBefore = played.Count;
                 fireViews.StartMovement(blocked, fireSource, new FightGridPoint(4, 5), _ => contacts++);
