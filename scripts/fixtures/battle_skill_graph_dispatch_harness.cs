@@ -91,10 +91,12 @@ namespace Zjcs.Presentation.Combat
     // Complete character-status entities have separate native lifecycle coverage.
     public sealed class OfficialBattleStatusPlayback : IDisposable
     {
+        public static FightBattleExecutor ReboundExecutor;
         public OfficialBattleStatusPlayback(FightBattleExecutor executor, Transform root,
             OfflineBattleNativePlayableScope scope, Func<int, Transform> body, Func<int, bool> icons,
             params string[] catalogs) {}
         public float NextDelay => float.PositiveInfinity;
+        public void Rebind(FightBattleExecutor executor) { ReboundExecutor = executor; }
         public void Restore(FightBattleCheckpoint state = null) {}
         public void Enqueue(FightBattleStepEvent step) {}
         public void AdvanceTimers(float elapsed) {}
@@ -104,8 +106,10 @@ namespace Zjcs.Presentation.Combat
     // Airborne native status playback is verified by its own rules and Unity suites.
     public sealed class OfficialBattleAirComboPlayback : IDisposable
     {
+        public static FightBattleExecutor ReboundExecutor;
         public OfficialBattleAirComboPlayback(FightBattleExecutor executor, Transform root,
             OfflineBattleNativePlayableScope scope, Func<int, Transform> body) {}
+        public void Rebind(FightBattleExecutor executor) { ReboundExecutor = executor; }
         public void Synchronize() {}
         public void Dispose() {}
     }
@@ -243,6 +247,13 @@ public static class BattleSkillGraphDispatchHarness
         Func<int, Transform> resolve = id => transforms.TryGetValue(id, out var value) ? value : null;
         var liveScope = new OfflineBattleNativePlayableScope();
         var livePlayback = new OfficialBattleSkillGraphPlayback(catalog, liveScope, new OfficialBattleSkillEntityPlayback(liveScope));
+        livePlayback.BindGridEntities(transforms[1], new OfficialBattleGridMapper(), checkpoint, resolve, _ => false);
+        livePlayback.BindAirCombo(new FightBattleExecutor(), transforms[1], resolve);
+        var adopted = new FightBattleExecutor();
+        livePlayback.AdoptExecutor(adopted);
+        Require(ReferenceEquals(OfficialBattleStatusPlayback.ReboundExecutor, adopted)
+            && ReferenceEquals(OfficialBattleAirComboPlayback.ReboundExecutor, adopted),
+            "An adopted executor must be forwarded to both native status clocks");
         var live = livePlayback.CreateLiveStep(checkpoint, _ => new FightBattleExecutor(), resolve, null, (_, __) => { });
         Require(live.HasSkill(10) && !live.HasSkill(999) && ReferenceEquals(live.Body(2), transforms[2]),
             "The live step must use the graph catalog and actual unit resolver");

@@ -1459,6 +1459,52 @@ namespace Zjcs.Editor.Combat
             }
             cameraView.orthographicSize = previousFollowCameraSize;
 
+            // A completed isolated step replaces its executor. Existing airborne
+            // views must retain their entity and follow the replacement clock only.
+            var airCheckpoint = FightBattleCheckpointSerializer.Load(committedFire);
+            var launch = liveCatalog.CreateStatus(24269, 2, 1, 1, 10580, 10006, 2, 20, 1);
+            launch.Components.Seconds.Started = true;
+            launch.Components.Seconds.RemainingSeconds = launch.Components.Seconds.DurationSeconds;
+            airCheckpoint.Units[1].Statuses.Add(launch);
+            airCheckpoint.StatusInstanceSerial = 1;
+            airCheckpoint.StatusSeconds = new FightBattleStatusSecondsClock();
+            var oldAirExecutor = FightBattleExecutor.Restore(airCheckpoint, formula,
+                new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+            var adoptedAirCheckpoint = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(airCheckpoint));
+            var adoptedAirExecutor = FightBattleExecutor.Restore(adoptedAirCheckpoint, formula,
+                new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+            var airRoot = new GameObject("Airborne executor transfer").transform;
+            airRoot.SetParent(root, false);
+            var airTarget = new GameObject("Airborne target").transform;
+            airTarget.SetParent(airRoot, false);
+            airTarget.gameObject.AddComponent<MyTransform>();
+            var airScope = new OfflineBattleNativePlayableScope(airRoot, null);
+            using (var airViews = new OfficialBattleAirComboPlayback(oldAirExecutor, airRoot, airScope,
+                id => id == 2 ? airTarget : null)) {
+                airViews.Synchronize();
+                var leases = (IDictionary)typeof(OfficialBattleAirComboPlayback)
+                    .GetField("leases", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(airViews);
+                long launchKey = ((long)2 << 32) | 1u;
+                Require(leases.Count == 1 && leases.Contains(launchKey), "Original airborne state did not restore.");
+                object originalLease = leases[launchKey];
+                var rebind = typeof(OfficialBattleAirComboPlayback).GetMethod("Rebind", BindingFlags.Instance | BindingFlags.NonPublic);
+                rebind.Invoke(airViews, new object[] { adoptedAirExecutor });
+                rebind.Invoke(airViews, new object[] { adoptedAirExecutor });
+                Require(leases.Count == 1 && ReferenceEquals(originalLease, leases[launchKey]),
+                    "Adopting an equivalent executor restarted its native airborne state.");
+                oldAirExecutor.AdvanceStatusSeconds(10d);
+                Require(leases.Count == 1 && ReferenceEquals(originalLease, leases[launchKey]),
+                    "The discarded executor still controlled the adopted airborne view.");
+                adoptedAirExecutor.AdvanceStatusSeconds(launch.Components.Seconds.DurationSeconds + .001d);
+                Require(leases.Count == 1 && !leases.Contains(launchKey)
+                    && adoptedAirCheckpoint.Units[1].Statuses.Any(value => value.ClassId == 24270),
+                    "The adopted executor did not deliver the original recovery transition.");
+                adoptedAirExecutor.AdvanceStatusSeconds(10d);
+                Require(leases.Count == 0, "The adopted recovery status did not remove its native view.");
+            }
+            airScope.Dispose();
+            Destroy(airRoot.gameObject);
+
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(1, 0), Delay = .8f });

@@ -77,7 +77,7 @@ namespace Zjcs.Presentation.Combat
             public MyFightStatus View;
             public State State;
         }
-        private readonly FightBattleExecutor executor;
+        private FightBattleExecutor executor;
         private readonly OfflineBattleNativePlayableScope scope;
         private readonly Transform root;
         private readonly Func<int, Transform> body;
@@ -115,6 +115,20 @@ namespace Zjcs.Presentation.Combat
         }
 
         private static long Key(int owner, int instance) => ((long)owner << 32) | (uint)instance;
+
+        /// <summary>Follow an adopted, completed executor without restarting matching native states.</summary>
+        internal void Rebind(FightBattleExecutor next)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleAirComboPlayback));
+            if (next == null) throw new ArgumentNullException(nameof(next));
+            if (ReferenceEquals(executor, next)) return;
+            executor.StatusSecondsChanged -= Changed;
+            executor.StatusSecondsInvoked -= Invoked;
+            executor = next;
+            executor.StatusSecondsChanged += Changed;
+            executor.StatusSecondsInvoked += Invoked;
+            Synchronize();
+        }
 
         public void Synchronize()
         {

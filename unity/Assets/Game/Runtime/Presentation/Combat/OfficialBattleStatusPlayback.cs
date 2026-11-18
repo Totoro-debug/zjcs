@@ -104,7 +104,7 @@ namespace Zjcs.Presentation.Combat
         private sealed class Deferred
         { public int Owner; public FightBattleStatusViewState Status; public bool Fresh; }
 
-        private readonly FightBattleExecutor executor;
+        private FightBattleExecutor executor;
         private FightBattleCheckpoint checkpoint;
         private readonly OfflineBattleNativePlayableScope scope;
         private readonly Func<int, Transform> body;
@@ -148,6 +148,13 @@ namespace Zjcs.Presentation.Combat
         public int Count => leases.Count;
         public float NextDelay => pending.Count == 0 ? float.PositiveInfinity : pending[0].Remaining;
         private static long Key(int owner, int instance) => ((long)owner << 32) | (uint)instance;
+
+        internal void Rebind(FightBattleExecutor next)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleStatusPlayback));
+            executor = next ?? throw new ArgumentNullException(nameof(next));
+            checkpoint = executor.State;
+        }
 
         public void Restore(FightBattleCheckpoint state = null)
         {

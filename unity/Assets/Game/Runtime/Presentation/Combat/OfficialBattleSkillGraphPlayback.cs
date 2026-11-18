@@ -122,6 +122,15 @@ namespace Zjcs.Presentation.Combat
         public void RefreshGridSnapshot(FightBattleCheckpoint checkpoint)
         { gridViews?.RefreshSnapshot(checkpoint); statusViews?.Restore(checkpoint); }
 
+        /// <summary>Transfer state-view subscriptions after a live step has completed.</summary>
+        internal void AdoptExecutor(FightBattleExecutor executor)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillGraphPlayback));
+            if (executor == null) throw new ArgumentNullException(nameof(executor));
+            statusViews?.Rebind(executor);
+            airComboViews?.Rebind(executor);
+        }
+
         public void BindGridEntities(Transform root, OfficialBattleGridMapper mapper,
             FightBattleCheckpoint checkpoint, Func<int, Transform> unitTransform, Func<int, bool> hasStatusIcon)
         {
