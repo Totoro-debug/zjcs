@@ -378,16 +378,31 @@ namespace Zjcs.Editor.Combat
             var selectedC = new FightBattleHitSelectionSnapshot { Sequence = 1, HitEntityId = 10101,
                 SourceX = 2, SourceY = 5, Delay = .4f };
             selectedC.EffectCenters.Add(new FightGridPoint(4, 5)); selectedC.EffectDelays.Add(.4f);
+            selectedC.Targets.Add(new FightBattleHitSelectionSnapshot.TargetOccurrence { TargetId = 2 });
             castC.HitSelections.Add(selectedC);
             int beforeLiveSelection = selectionArrivals.Count;
-            views.QueueSelectedHit(castC, skillC, selectedC, .1f);
+            using var liveLatch = new FightBattleImpactLatch();
+            using var liveBridge = new OfficialBattleImpactViewBridge(views, liveLatch);
+            var pendingImpact = new FightBattlePendingImpact { Cast = castC, HitSelection = selectedC,
+                TargetId = 2, EffectCenterIndex = 0, OccurrenceIndex = 0 };
+            var liveWorker = System.Threading.Tasks.Task.Run(() => {
+                liveLatch.HitSelected(castC, selectedC);
+                liveLatch.AwaitImpact(pendingImpact);
+            });
+            FightBattleSelectedHit offered = null;
+            float handoffDeadline = Time.realtimeSinceStartup + 5f;
+            while (!liveLatch.TryTakeSelection(out offered) && Time.realtimeSinceStartup < handoffDeadline)
+                yield return null;
+            Require(offered != null && !liveWorker.IsCompleted, "The live executor must wait for hit-view selection.");
+            liveBridge.QueueSelection(offered, skillC, .1f);
             bool duplicateSelectionRejected = false;
             try { views.QueueSelectedHit(castC, skillC, selectedC, .1f); }
             catch (InvalidOperationException) { duplicateSelectionRejected = true; }
             Require(duplicateSelectionRejected, "A live hit selection cannot be queued twice.");
             views.Tick(.29f);
             yield return null;
-            Require(selectionArrivals.Count == beforeLiveSelection, "A live hit must wait for its original cast boundary.");
+            Require(selectionArrivals.Count == beforeLiveSelection && !liveWorker.IsCompleted,
+                "A live hit must wait for its original cast boundary.");
             views.Tick(.02f);
             yield return null;
             yield return null;
@@ -395,6 +410,12 @@ namespace Zjcs.Editor.Combat
                 && ReferenceEquals(x.Selection, selectedC) && x.CenterIndex == 0 && x.ScopeIndex == -1
                 && x.Position.Equals(new Pos2d(4, 5))) == 1,
                 "A live selected hit must emit exactly one native arrival for its cast and centre.");
+            float arrivalDeadline = Time.realtimeSinceStartup + 5f;
+            while (!liveWorker.IsCompleted && Time.realtimeSinceStartup < arrivalDeadline)
+                yield return null;
+            Require(liveWorker.IsCompleted && !liveWorker.IsFaulted && !liveWorker.IsCanceled,
+                "The native hit arrival must release the matching local executor impact.");
+            liveBridge.Dispose(); liveLatch.Dispose();
 
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });
