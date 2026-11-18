@@ -53,15 +53,26 @@ namespace Zjcs.Presentation.Combat
             public float Remaining;
         }
 
+        internal sealed class Origin
+        {
+            public FightBattleSkillCastEvent Cast;
+            public FightBattleHitSelectionSnapshot Selection;
+            public int CenterIndex;
+        }
+
         private readonly OfficialBattleSkillEntityPlayback views;
         private readonly FightOfficialCombatCatalog catalog;
         private readonly Dictionary<int, List<FightBattleHitEntity>> definitions = new Dictionary<int, List<FightBattleHitEntity>>();
         private readonly List<Pending> pending = new List<Pending>();
         private readonly List<Active> active = new List<Active>();
+        private readonly Dictionary<EcEntityIdentifier, Origin> origins = new Dictionary<EcEntityIdentifier, Origin>();
         private int serial;
 
         public OfficialBattleHitReceiptPlayback(OfficialBattleSkillEntityPlayback views, FightOfficialCombatCatalog catalog)
         { this.views = views; this.catalog = catalog; }
+
+        internal bool TryGetOrigin(EcEntityIdentifier hitId, out Origin origin)
+            => origins.TryGetValue(hitId, out origin);
 
         public float NextDelay
         {
@@ -109,6 +120,7 @@ namespace Zjcs.Presentation.Combat
                         Center = definition.ScopeTransform, Facing = definition.ScopeTransform == null ? 0 : facing,
                         Mirrored = definition.ScopeTransform != null && selection.FlipX };
                     var id = new EcEntityIdentifier(4, ++serial);
+                    origins.Add(id, new Origin { Cast = cast, Selection = selection, CenterIndex = index });
                     // Older receipts do not carry EffectDelays; resolve their
                     // flight from the original view after it has bound its override.
                     float flight = selection.EffectDelays != null && index < selection.EffectDelays.Count
@@ -134,7 +146,10 @@ namespace Zjcs.Presentation.Combat
         {
             for (int index = active.Count - 1; index >= 0; index--)
                 if (active[index].Remaining <= 0f)
-                { views.RemoveHit(active[index].Id); active.RemoveAt(index); }
+                {
+                    EcEntityIdentifier id = active[index].Id;
+                    views.RemoveHit(id); origins.Remove(id); active.RemoveAt(index);
+                }
             for (int index = 0; index < pending.Count;)
             {
                 var value = pending[index];
@@ -154,7 +169,7 @@ namespace Zjcs.Presentation.Combat
         {
             pending.Clear();
             foreach (var value in active) views.RemoveHit(value.Id);
-            active.Clear(); definitions.Clear();
+            active.Clear(); definitions.Clear(); origins.Clear();
         }
     }
 }

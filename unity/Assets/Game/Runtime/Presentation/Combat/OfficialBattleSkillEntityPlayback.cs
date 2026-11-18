@@ -127,9 +127,17 @@ namespace Zjcs.Presentation.Combat
         // Raised when the original hit view reaches its centre or starts a scope playable.
         public event Action<EcEntityIdentifier, EcEntityIdentifier, Pos2d, int> HitViewArrived;
 
+        // Receipt-backed hits retain their actual cast, selection and effect-centre identity.
+        public event Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, Pos2d, int>
+            HitSelectionViewArrived;
+
         void IFightHitViewArrivalObserver.HitViewArrived(EcEntityIdentifier skillId,
             EcEntityIdentifier hitId, Pos2d position, int scopeIndex)
-            => HitViewArrived?.Invoke(skillId, hitId, position, scopeIndex);
+        {
+            HitViewArrived?.Invoke(skillId, hitId, position, scopeIndex);
+            if (receiptHits.TryGetOrigin(hitId, out var origin))
+                HitSelectionViewArrived?.Invoke(origin.Cast, origin.Selection, origin.CenterIndex, position, scopeIndex);
+        }
 
         public OfficialBattleSkillEntityPlayback(Transform root, OfficialBattleGridMapper gridMapper,
             OfflineBattleNativePlayableScope scope, Func<int, FightBattleUnitState> unitState)

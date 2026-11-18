@@ -136,8 +136,17 @@ namespace Zjcs.Editor.Combat
             public float At;
         }
 
+        private sealed class SelectionArrival
+        {
+            public FightBattleSkillCastEvent Cast;
+            public FightBattleHitSelectionSnapshot Selection;
+            public int CenterIndex, ScopeIndex;
+            public Pos2d Position;
+        }
+
         private readonly List<Played> played = new List<Played>();
         private readonly List<HitArrival> arrivals = new List<HitArrival>();
+        private readonly List<SelectionArrival> selectionArrivals = new List<SelectionArrival>();
         private OfflineBattleNativePlayableScope scope;
         private OfficialBattleSkillEntityPlayback views;
         private Camera cameraView;
@@ -239,6 +248,9 @@ namespace Zjcs.Editor.Combat
             views = new OfficialBattleSkillEntityPlayback(root, mapper, scope, id => units.FirstOrDefault(x => x.Id == id));
             views.HitViewArrived += (skillId, hitId, position, index) => arrivals.Add(new HitArrival {
                 SkillId = skillId, HitId = hitId, Position = position, ScopeIndex = index, At = Time.time });
+            views.HitSelectionViewArrived += (owner, selection, center, position, index) =>
+                selectionArrivals.Add(new SelectionArrival { Cast = owner, Selection = selection,
+                    CenterIndex = center, Position = position, ScopeIndex = index });
             if (Environment.GetEnvironmentVariable("ZJCS_CUSTOM_TARGET_ACCEPTANCE") == "1")
             {
                 combatCatalog = OfficialCombatAssetCatalog.LoadDefault().Load();
@@ -330,6 +342,35 @@ namespace Zjcs.Editor.Combat
             views.RemoveHit(area.State.Data.Id);
             yield return null;
             Require(!root.GetComponentsInChildren<Transform>(true).Any(x => x.name == "tmp_scope_obj"), "Scope anchors reclaimed.");
+
+            var selectedA = new FightBattleHitSelectionSnapshot { Sequence = 1, HitEntityId = 10101,
+                SourceX = 2, SourceY = 5 };
+            selectedA.EffectCenters.Add(new FightGridPoint(5, 5));
+            selectedA.EffectCenters.Add(new FightGridPoint(6, 5));
+            selectedA.EffectDelays.AddRange(new[] { 0f, 0f });
+            var selectedB = new FightBattleHitSelectionSnapshot { Sequence = 1, HitEntityId = 10101,
+                SourceX = 2, SourceY = 5 };
+            selectedB.EffectCenters.Add(new FightGridPoint(5, 5)); selectedB.EffectDelays.Add(0f);
+            var castA = new FightBattleSkillCastEvent { ActorId = 1, Slot = -1, SkillEntityId = 10100,
+                Presentation = FightBattleSkillCastPresentation.Capture(units[0], skill, new List<FightBattleUnitState> { units[1] }) };
+            var castB = new FightBattleSkillCastEvent { ActorId = 1, Slot = -1, SkillEntityId = 10100,
+                Presentation = FightBattleSkillCastPresentation.Capture(units[0], skill, new List<FightBattleUnitState> { units[1] }) };
+            castA.Presentation.Duration = castB.Presentation.Duration = .2f;
+            castA.HitSelections.Add(selectedA); castB.HitSelections.Add(selectedB);
+            int previousSelections = selectionArrivals.Count;
+            views.Start(castA, source, target); views.Start(castB, source, target);
+            yield return null;
+            yield return null;
+            var selectedArrivals = selectionArrivals.Skip(previousSelections).Where(x => x.ScopeIndex == -1).ToArray();
+            Require(selectedArrivals.Length == 3
+                && selectedArrivals.Count(x => ReferenceEquals(x.Cast, castA) && ReferenceEquals(x.Selection, selectedA)
+                    && x.CenterIndex == 0 && x.Position.Equals(new Pos2d(5, 5))) == 1
+                && selectedArrivals.Count(x => ReferenceEquals(x.Cast, castA) && ReferenceEquals(x.Selection, selectedA)
+                    && x.CenterIndex == 1 && x.Position.Equals(new Pos2d(6, 5))) == 1
+                && selectedArrivals.Count(x => ReferenceEquals(x.Cast, castB) && ReferenceEquals(x.Selection, selectedB)
+                    && x.CenterIndex == 0 && x.Position.Equals(new Pos2d(5, 5))) == 1,
+                "Actual hit arrivals preserve repeated cast, selection and centre identities.");
+            views.Tick(.25f);
 
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });
