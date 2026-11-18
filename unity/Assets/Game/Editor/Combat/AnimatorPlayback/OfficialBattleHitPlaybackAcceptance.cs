@@ -2022,6 +2022,95 @@ namespace Zjcs.Editor.Combat
             airAppearance?.Dispose();
             Destroy(airRoot.gameObject);
 
+            // Phantom strike uses the original hit playable and source movement action.
+            foreach (var direction in new[] { new[] { 1, 0, 3 }, new[] { -1, 0, 1 },
+                new[] { 0, 1, 2 }, new[] { 0, -1, 0 } })
+            {
+                int dx = direction[0], dy = direction[1];
+                var phantomUnits = new[] { LiveUnit(1, 1, 7), LiveUnit(2, 2, 7 + dx) };
+                phantomUnits[0].Y = 7; phantomUnits[0].Direction = direction[2];
+                phantomUnits[1].Y = 7 + dy;
+                var phantomSkill = liveCatalog.CreateSkill(11270, 0, 10054, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(11270, 2, 20, 1)
+                        .Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+                phantomSkill.LimitedTimes = 1;
+                phantomUnits[0].Skills.Add(phantomSkill);
+                phantomUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(phantomSkill, 0));
+                var phantomCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                phantomCheckpoint.Units.AddRange(phantomUnits);
+                var phantomWave = new FightBattleWaveState(); phantomWave.UnitIds.Add(2);
+                phantomCheckpoint.Waves.Add(phantomWave);
+                FightBattleExecutor.Begin(phantomCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                var phantomDisplay = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(phantomCheckpoint)).Units.ToArray();
+                var phantomRoot = new GameObject("Phantom strike acceptance").transform; phantomRoot.SetParent(root, false);
+                var phantomBodies = new Dictionary<int, Transform>();
+                foreach (var unit in phantomUnits)
+                {
+                    var body = new GameObject("Phantom unit " + unit.Id).transform; body.SetParent(phantomRoot, false);
+                    body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                    var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false;
+                    renderer.sharedMaterials = Array.Empty<Material>();
+                    body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                    phantomBodies.Add(unit.Id, body);
+                }
+                var phantomAppearance = NativeJumpAppearanceFixture.Create(phantomBodies[1].gameObject);
+                var phantomScope = new OfflineBattleNativePlayableScope(phantomRoot, null);
+                int hitFrame = -1, damageCount = 0;
+                phantomScope.NativePlayableStarted += (prefab, leaf) => {
+                    if (prefab.name == "playable11271" && leaf.name == "effect (1)") hitFrame = Time.frameCount;
+                };
+                using (var phantomViews = new OfficialBattleSkillEntityPlayback(phantomRoot,
+                    new OfficialBattleGridMapper(phantomRoot, grid), phantomScope,
+                    id => phantomDisplay.FirstOrDefault(value => value.Id == id)))
+                using (var phantomGraph = new OfficialBattleSkillGraphPlayback(
+                    OfficialBattleSkillGraphCatalog.TryLoadDefault(), phantomScope, phantomViews))
+                {
+                    phantomViews.BindDamageUI(phantomRoot, 0);
+                    foreach (var pair in phantomBodies) phantomViews.EnsureUnit(pair.Key, pair.Value);
+                    Transform PhantomBody(int id) => phantomBodies.TryGetValue(id, out var value) ? value : null;
+                    void PhantomDamage(FightBattleDamageEvent damage, FightBattleUnitState projected)
+                    {
+                        Require(hitFrame == Time.frameCount && damage.SkillEntityId == 11270
+                            && damage.HitEntityId == 11271 && damage.DamageEntityId == 11273
+                            && damage.TargetId == 2 && damage.ElementType == 0 && damage.Damage < 0,
+                            "Phantom strike damage did not arrive with its native hit effect.");
+                        damageCount++;
+                        phantomDisplay[Array.FindIndex(phantomDisplay, unit => unit.Id == damage.TargetId)] = projected;
+                        Capture("phantom-hit-" + dx + "-" + dy + ".png", false);
+                    }
+                    using (var phantomDriver = new OfficialBattleLiveGraphDriver(phantomCheckpoint,
+                        copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()),
+                        phantomViews, id => id == 11270, PhantomBody, null, PhantomDamage))
+                    {
+                        phantomDriver.SecondsStatusChanged += _ => { };
+                        phantomDisplay = phantomCheckpoint.Units.Select(unit => phantomDriver.DisplayUnit(unit.Id)).ToArray();
+                        float phantomDeadline = Time.realtimeSinceStartup + 15f;
+                        while (!phantomDriver.IsCompleted && Time.realtimeSinceStartup < phantomDeadline)
+                        {
+                            phantomDriver.Pump(Time.deltaTime); phantomViews.Tick(Time.deltaTime); phantomScope.LateTick();
+                            yield return null;
+                        }
+                        Require(phantomDriver.TryTakeCompleted(out _, out var result) && damageCount == 1,
+                            "Phantom strike did not settle one native hit.");
+                        var phantomMove = result.Event.Movements.Single(value => value.UnitId == 1);
+                        Require(phantomMove.MoveBehaviourId == 11272 && phantomMove.Path.Count == 4
+                            && phantomMove.Path.Last().X == 7 - 3 * dx && phantomMove.Path.Last().Y == 7 - 3 * dy,
+                            "Phantom strike did not retreat three cells away from its target.");
+                        phantomDeadline = Time.realtimeSinceStartup + 20f;
+                        while (phantomRoot.GetComponentsInChildren<MyFightActionSkillMove>(false).Length > 0
+                            && Time.realtimeSinceStartup < phantomDeadline)
+                        {
+                            phantomViews.Tick(Time.deltaTime); phantomScope.LateTick(); yield return null;
+                        }
+                        Require(phantomRoot.GetComponentsInChildren<MyFightActionSkillMove>(false).Length == 0
+                            && Vector3.Distance(phantomBodies[1].localPosition, new Vector3(7 - 3 * dx, 7 - 3 * dy, 0)) < .01f,
+                            "Phantom strike native movement did not reach its settled destination.");
+                    }
+                }
+                phantomScope.Dispose(); phantomAppearance.Dispose(); Destroy(phantomRoot.gameObject);
+            }
+
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(1, 0), Delay = .8f });
