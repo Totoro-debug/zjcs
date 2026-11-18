@@ -343,6 +343,29 @@ namespace Zjcs.Editor.Combat
             yield return null;
             Require(!root.GetComponentsInChildren<Transform>(true).Any(x => x.name == "tmp_scope_obj"), "Scope anchors reclaimed.");
 
+            var blast = CreateFixed(10801, skillEntity.Id, views, 5, 5);
+            blast.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = 0f });
+            blast.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(1, 0), Delay = 0f });
+            blast.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 1), Delay = .1f });
+            before = played.Count;
+            views.CreateHit(blast.State.Data);
+            yield return null;
+            yield return null;
+            var explosion = played.Skip(before).Single(x => x.Name == "playable10801");
+            var blastArrivals = arrivals.Where(x => x.HitId.Equals(blast.State.Data.Id)).ToArray();
+            Require(blastArrivals.Length == 3 && blastArrivals.Count(x => x.ScopeIndex == -1) == 1
+                && blastArrivals.Count(x => x.ScopeIndex == 0) == 1 && blastArrivals.Count(x => x.ScopeIndex == 1) == 1
+                && blastArrivals.All(x => Mathf.Abs(x.At - explosion.At) < .0001f)
+                && blastArrivals.Single(x => x.ScopeIndex == 1).Position.Equals(
+                    blast.State.Data.Grid.LocalToWorldPos(blast.State.Scopes[1].Pos)),
+                "A shared original impact playable reports each simultaneous scope at its actual start.");
+            Capture("hit-shared-explosion.png");
+            yield return new WaitForSeconds(.15f);
+            Require(arrivals.Count(x => x.HitId.Equals(blast.State.Data.Id)) == 3,
+                "A scope with a later configured boundary must not be invented by the shared impact.");
+            views.RemoveHit(blast.State.Data.Id);
+            yield return null;
+
             var selectedA = new FightBattleHitSelectionSnapshot { Sequence = 1, HitEntityId = 10101,
                 SourceX = 2, SourceY = 5 };
             selectedA.EffectCenters.Add(new FightGridPoint(5, 5));
@@ -416,6 +439,76 @@ namespace Zjcs.Editor.Combat
             Require(liveWorker.IsCompleted && !liveWorker.IsFaulted && !liveWorker.IsCanceled,
                 "The native hit arrival must release the matching local executor impact.");
             liveBridge.Dispose(); liveLatch.Dispose();
+
+            // Full official fireball rule step, routed through the original native hit graph.
+            var combatAssets = OfficialCombatAssetCatalog.LoadDefault();
+            var liveCatalog = combatAssets.Load();
+            var formula = combatAssets.LoadDamageFormula();
+            FightBattleUnitState LiveUnit(int id, int side, int x) {
+                var value = new FightBattleUnitState { Id = id, Side = side, CharacterType = 1, Profession = 1,
+                    Level = 50, SubRank = 5, X = x, Y = 5, Direction = 3, Hp = 1000000, MaxHp = 1000000,
+                    LastMaxHp = 1000000, MoveDist = 0, MoveMask = 5 };
+                value.Turn.Id = id; value.Turn.Hp = value.Hp; value.Turn.Speed = id == 1 ? 1000 : 10;
+                foreach (var prop in new Dictionary<int, long> { {1,1000}, {2,10}, {3,value.MaxHp}, {4,value.Turn.Speed} })
+                    value.Properties.Add(new FightPropertyValue { Id = prop.Key, Value = prop.Value });
+                foreach (var name in new[] { "BaseBlockPercentValue", "BaseBlockAvoidPercentValue", "BaseCritRatePercentValue",
+                    "BaseCritAvoidPercentValue", "BaseEffectRate", "BaseEffectDodge" })
+                    value.Properties.Add(new FightPropertyValue { Id = formula.PropertyId(name), Value = 10000 });
+                value.Properties.Add(new FightPropertyValue { Id = formula.PropertyId("CritAvoidPercent"), Value = 10000 });
+                return value;
+            }
+            var previousSourceUnit = units[0]; var previousTargetUnit = units[1];
+            units[0] = LiveUnit(1, 1, 2); units[1] = LiveUnit(2, 2, 5);
+            var fire = liveCatalog.CreateSkill(10800, 0, 10028, 2, 20, 1,
+                liveCatalog.CalculateSkillProps(10800, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+            fire.LimitedTimes = 1; units[0].Skills.Add(fire); units[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(fire, 0));
+            var cp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+            cp.Units.AddRange(units); var fireWave = new FightBattleWaveState(); fireWave.UnitIds.Add(2); cp.Waves.Add(fireWave);
+            var executor = FightBattleExecutor.Begin(cp, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+            using var fireLatch = new FightBattleImpactLatch();
+            using var fireBridge = new OfficialBattleImpactViewBridge(views, fireLatch);
+            executor.ImpactGate = fireLatch;
+            var fireStep = System.Threading.Tasks.Task.Run(() => executor.Step(0, 1));
+            FightBattlePreparedCast firePrepared = null;
+            float deadline = Time.realtimeSinceStartup + 10f;
+            while (!fireLatch.TryTakePreparation(out firePrepared) && Time.realtimeSinceStartup < deadline) yield return null;
+            Require(firePrepared != null && firePrepared.Cast.SkillItemId == 10028, "Official fireball was not prepared.");
+            var fireCast = firePrepared.Cast;
+            var fireSkillId = views.Start(fireCast, source, target);
+            fireLatch.CompletePreparation(firePrepared);
+            FightBattleSelectedHit fireSelected = null;
+            deadline = Time.realtimeSinceStartup + 10f;
+            while (!fireLatch.TryTakeSelection(out fireSelected) && Time.realtimeSinceStartup < deadline) yield return null;
+            Require(fireSelected != null && fireSelected.Selection.HitEntityId == 10801, "Official fireball hit was not selected.");
+            bool fireArrival = false;
+            Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, Pos2d, int> fireObserver =
+                (c, h, center, pos, cell) => {
+                    if (ReferenceEquals(c, fireCast) && ReferenceEquals(h, fireSelected.Selection)
+                        && cell == fireSelected.Selection.Targets[0].ScopeIndex) fireArrival = true;
+                };
+            views.HitSelectionViewArrived += fireObserver;
+            int beforeFire = played.Count;
+            fireBridge.QueueSelection(fireSelected, fireSkillId, 0f);
+            FightBattleSettledImpact fireDamage = null;
+            deadline = Time.realtimeSinceStartup + 10f;
+            while (!fireLatch.TryTakeSettlement(out fireDamage) && Time.realtimeSinceStartup < deadline) {
+                if (!fireArrival) Require(units[1].Hp == 1000000, "Fireball HP changed while its projectile was flying.");
+                yield return null;
+            }
+            Require(fireDamage != null && fireArrival && fireDamage.Damage.BeforeHp == 1000000
+                && fireDamage.Damage.AfterHp < 1000000 && units[1].Hp == fireDamage.Damage.AfterHp
+                && played.Skip(beforeFire).Any(x => x.Name == "playable10801"),
+                "Official fireball did not settle its actual HP at the native explosion.");
+            Capture("fireball-actual-impact.png");
+            fireLatch.CompleteSettlement(fireDamage);
+            deadline = Time.realtimeSinceStartup + 10f;
+            while (!fireStep.IsCompleted && Time.realtimeSinceStartup < deadline) yield return null;
+            Require(fireStep.IsCompleted && !fireStep.IsFaulted && !fireStep.IsCanceled,
+                "The official fireball action did not complete after impact.");
+            views.HitSelectionViewArrived -= fireObserver;
+            fireBridge.Dispose(); fireLatch.Dispose();
+            units[0] = previousSourceUnit; units[1] = previousTargetUnit;
 
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });

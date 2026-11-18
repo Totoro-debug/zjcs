@@ -194,10 +194,21 @@ def main():
     text = text.replace(logging, '\t\telse\n\t\t{\n'
         '\t\t\tDebug.LogError($"[Fight] MyFightHitBase: start a inactive gameobject coroutine, classId:{mGridTransform.myEntity.ClassId}");\n\t\t}')
     text = replace_once(text,
-        '\t\tif ((Object)(object)myScopePlayable != (Object)null)\n\t\t{\n\t\t\t((MonoBehaviour)this).StartCoroutine(PlayScopePlayable());',
+        '\t\tif ((Object)(object)myScopePlayable != (Object)null)\n\t\t{\n\t\t\t((MonoBehaviour)this).StartCoroutine(PlayScopePlayable());\n\t\t}',
         '\t\t(ViewServices as IFightHitViewArrivalObserver)?.HitViewArrived(\n'
         '\t\t\tComponent.SkillId, Component.Entity.Id, Component.GridTransform.Pos, -1);\n'
-        '\t\tif ((Object)(object)myScopePlayable != (Object)null)\n\t\t{\n\t\t\t((MonoBehaviour)this).StartCoroutine(PlayScopePlayable());')
+        '\t\tif ((Object)(object)myScopePlayable != (Object)null)\n\t\t{\n\t\t\t((MonoBehaviour)this).StartCoroutine(PlayScopePlayable());\n\t\t}\n'
+        '\t\telse if ((Object)(object)myPlayable != (Object)null && ViewServices is IFightHitViewArrivalObserver observer)\n'
+        '\t\t{\n'
+        '\t\t\t// One original centre playable can cover multiple simultaneous scope cells.\n'
+        '\t\t\tList<HitScopCfg> scopes = Component.GetScopes();\n'
+        '\t\t\tif (scopes != null) for (int index = 0; index < scopes.Count; index++)\n'
+        '\t\t\t{\n'
+        '\t\t\t\tHitScopCfg scope = scopes[index];\n'
+        '\t\t\t\tif (scope.Delay == 0f) observer.HitViewArrived(Component.SkillId, Component.Entity.Id,\n'
+        '\t\t\t\t\tComponent.GridTransform.LocalToWorldPos(scope.Pos), index);\n'
+        '\t\t\t}\n'
+        '\t\t}')
     text = replace_once(text, '\t\tfloat num = 0f;\n\t\tList<HitScopCfg> scopes',
         '\t\tfloat num = 0f;\n\t\tint scopeIndex = 0;\n\t\tList<HitScopCfg> scopes')
     text = replace_once(text, '\t\t\tmMyPlayableManager.Play(myScopePlayable, val, val);',

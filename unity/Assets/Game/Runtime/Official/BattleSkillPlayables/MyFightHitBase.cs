@@ -223,6 +223,17 @@ public class MyFightHitBase<T, TInfo> : MyComponent<T, TInfo>, IFightGetUsePlaya
 		{
 			((MonoBehaviour)this).StartCoroutine(PlayScopePlayable());
 		}
+		else if ((Object)(object)myPlayable != (Object)null && ViewServices is IFightHitViewArrivalObserver observer)
+		{
+			// One original centre playable can cover multiple simultaneous scope cells.
+			List<HitScopCfg> scopes = Component.GetScopes();
+			if (scopes != null) for (int index = 0; index < scopes.Count; index++)
+			{
+				HitScopCfg scope = scopes[index];
+				if (scope.Delay == 0f) observer.HitViewArrived(Component.SkillId, Component.Entity.Id,
+					Component.GridTransform.LocalToWorldPos(scope.Pos), index);
+			}
+		}
 	}
 
 	private Dictionary<string, object> GetPlayableParam()
