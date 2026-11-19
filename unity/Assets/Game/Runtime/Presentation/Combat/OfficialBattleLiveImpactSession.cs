@@ -99,6 +99,14 @@ namespace Zjcs.Presentation.Combat
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> sentAuraHits =
             new HashSet<(FightBattleHitSelectionSnapshot, int)>();
         private readonly List<OfficialBattleTargetParticleImpact> auraHitEffects = new List<OfficialBattleTargetParticleImpact>();
+        private readonly Dictionary<int, HashSet<int>> thornScopes = new Dictionary<int, HashSet<int>>();
+        private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> observedThornEffects =
+            new HashSet<(FightBattleHitSelectionSnapshot, int)>();
+        private readonly Dictionary<FightBattleSkillCastEvent, HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)>> expectedThornHits =
+            new Dictionary<FightBattleSkillCastEvent, HashSet<(FightBattleHitSelectionSnapshot, int)>>();
+        private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> completedThornHits =
+            new HashSet<(FightBattleHitSelectionSnapshot, int)>();
+        private readonly List<OfficialBattleTargetParticleImpact> thornEffects = new List<OfficialBattleTargetParticleImpact>();
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> observedWaterProjectiles =
             new HashSet<(FightBattleHitSelectionSnapshot, int)>();
         private readonly List<OfficialBattleProjectileImpact> waterProjectiles = new List<OfficialBattleProjectileImpact>();
@@ -238,6 +246,18 @@ namespace Zjcs.Presentation.Combat
                             windBladeScopes[unit.Id] = hit;
                         if (skill.EntityId == 10900 && hit.EntityId == 10901 && hit.ScopeEntries.Count == 5)
                             iceConeScopes[unit.Id] = hit;
+                        if (skill.EntityId == 10570 && hit.EntityId == 10571 && hit.ScopeEntries.Count == 5)
+                        {
+                            var positions = new HashSet<FightGridPoint>(); var scopes = new HashSet<int>();
+                            for (int index = 0; index < hit.ScopeEntries.Count; index++)
+                            {
+                                var entry = hit.ScopeEntries[index];
+                                if (entry == null || entry.Delay != 0f || !positions.Add(entry.Position)
+                                    || Math.Abs((long)entry.Position.X) + Math.Abs((long)entry.Position.Y) > 1) continue;
+                                scopes.Add(index);
+                            }
+                            if (scopes.Count == 5) thornScopes[unit.Id] = scopes;
+                        }
                         if (skill.EntityId == 10700 && hit.EntityId == 10701 && hit.ScopeEntries.Count == 9)
                         {
                             var positions = new HashSet<FightGridPoint>(); var scopes = new HashSet<int>();
@@ -292,6 +312,8 @@ namespace Zjcs.Presentation.Combat
             }
             step = new FightBattleIsolatedStep(checkpoint, restore, sequence, counter, observeMovements);
             bridge = new OfficialBattleImpactViewBridge(views, step.Latch);
+            bridge.IgnoreNativeScopeArrival = (cast, hit, scope) => scope >= 0
+                && cast?.SkillEntityId == 10570 && hit?.HitEntityId == 10571;
             bridge.WorkerReleasedByArrival += OnWorkerReleasedByArrival;
             views.SkillGraphPlayableStarted += OnSkillGraphPlayableStarted;
             views.HitGraphPlayableStarted += OnHitGraphPlayableStarted;
@@ -430,6 +452,14 @@ namespace Zjcs.Presentation.Combat
                             for (int index = 0; index < selection.Selection.EffectCenters.Count; index++)
                                 expected.Add((selection.Selection, index));
                         }
+                        if (selectedCast.SkillEntityId == 10570 && selection.Selection.HitEntityId == 10571
+                            && selection.Selection.EffectCenters != null)
+                        {
+                            if (!expectedThornHits.TryGetValue(selectedCast, out var expected))
+                                expectedThornHits.Add(selectedCast, expected = new HashSet<(FightBattleHitSelectionSnapshot, int)>());
+                            for (int index = 0; index < selection.Selection.EffectCenters.Count; index++)
+                                expected.Add((selection.Selection, index));
+                        }
                         long revision = bridge.QueueSelection(selection, active.Id, clock - active.Started);
                         if (reachedMountainWaves.TryGetValue(selectedCast, out int reached))
                         {
@@ -487,6 +517,8 @@ namespace Zjcs.Presentation.Combat
                     {
                         if (expectedFireballHits.TryGetValue(completion.Cast, out var expected)
                             && !expected.IsSubsetOf(completedFireballHits)) return progressed;
+                        if (expectedThornHits.TryGetValue(completion.Cast, out var thornExpected)
+                            && !thornExpected.IsSubsetOf(completedThornHits)) return progressed;
                         var active = Find(completion.Cast);
                         views.CompleteLiveCast(completion.Cast, active.Id, clock - active.Started);
                         step.Latch.CompleteCast(completion, out long revision);
@@ -531,6 +563,15 @@ namespace Zjcs.Presentation.Combat
         private void OnHitGraphPlayableStarted(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot hit,
             int centerIndex, GameObject prefab, MyPlayable playable)
         {
+            if (!disposed && !transferred && cast?.SkillEntityId == 10570 && hit?.HitEntityId == 10571
+                && prefab != null && prefab.name == "playable_scope_10570" && playable != null && playable.name == "effect"
+                && selectedHits.Contains(hit) && casts.ContainsKey(cast) && thornScopes.ContainsKey(cast.ActorId)
+                && !observedThornEffects.Contains((hit, centerIndex)))
+            {
+                var observer = OfficialBattleTargetParticleImpact.Attach(prefab, playable, "tieji (1)",
+                    _ => RouteThornImpact(cast, hit, centerIndex));
+                if (observer != null) { observedThornEffects.Add((hit, centerIndex)); thornEffects.Add(observer); }
+            }
             if (!disposed && !transferred && cast?.SkillEntityId == 10800 && hit?.HitEntityId == 10801
                 && prefab != null && prefab.name == "playable_10801_SourceToHit" && playable != null && playable.name == "track"
                 && selectedHits.Contains(hit) && casts.TryGetValue(cast, out var fireballCast)
@@ -566,6 +607,22 @@ namespace Zjcs.Presentation.Combat
                     || !sentPullHits.Add((hit, centerIndex, target.ScopeIndex))) continue;
                 bridge.RecordArrival(cast, hit, centerIndex, target.ScopeIndex);
             }
+        }
+
+        private void RouteThornImpact(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot hit, int centerIndex)
+        {
+            if (disposed || transferred || !casts.ContainsKey(cast) || !selectedHits.Contains(hit)
+                || !observedThornEffects.Contains((hit, centerIndex)) || !thornScopes.TryGetValue(cast.ActorId, out var scopes)
+                || !completedThornHits.Add((hit, centerIndex))) return;
+            if (hit.Targets != null) foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
+            {
+                if (!casts.ContainsKey(cast)) return;
+                if (target == null || target.EffectCenterIndex != centerIndex || !target.HasScopeIndex
+                    || !scopes.Contains(target.ScopeIndex) || target.ScopeDelay != 0f) continue;
+                bridge.RecordArrival(cast, hit, centerIndex, target.ScopeIndex);
+            }
+            if (!pumping && lastStartCast != null) Pump(0f, lastStartCast, lastAfterDamageStarted,
+                lastStartMovement, lastStartBlockedMovement, lastCanStartDamage);
         }
 
         private bool OnHitViewDeferralRequested(EcEntityIdentifier skillId, EcEntityIdentifier hitId, Action resume)
@@ -1106,6 +1163,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in swordWindEffects) if (observer != null) observer.Detach();
             foreach (var observer in iceHitEffects) if (observer != null) observer.Detach();
             foreach (var observer in auraHitEffects) if (observer != null) observer.Detach();
+            foreach (var observer in thornEffects) if (observer != null) observer.Detach();
             foreach (var observer in waterProjectiles) if (observer != null) observer.Detach();
             foreach (var observer in fireballProjectiles) if (observer != null) observer.Detach();
             transferred = true;
@@ -1130,6 +1188,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in swordWindEffects) if (observer != null) observer.Detach();
             foreach (var observer in iceHitEffects) if (observer != null) observer.Detach();
             foreach (var observer in auraHitEffects) if (observer != null) observer.Detach();
+            foreach (var observer in thornEffects) if (observer != null) observer.Detach();
             foreach (var observer in waterProjectiles) if (observer != null) observer.Detach();
             foreach (var observer in fireballProjectiles) if (observer != null) observer.Detach();
             step.Dispose();
@@ -1145,6 +1204,7 @@ namespace Zjcs.Presentation.Combat
             observedSwordWind.Clear(); reachedSwordWind.Clear(); sentSwordWindHits.Clear(); swordWindEffects.Clear();
             observedIceHits.Clear(); reachedIceHits.Clear(); sentIceHits.Clear(); iceHitEffects.Clear();
             observedAuraHits.Clear(); reachedAuraHits.Clear(); sentAuraHits.Clear(); auraHitEffects.Clear();
+            thornScopes.Clear(); observedThornEffects.Clear(); expectedThornHits.Clear(); completedThornHits.Clear(); thornEffects.Clear();
             observedWaterProjectiles.Clear(); waterProjectiles.Clear();
             fireballFlights.Clear(); fireballProjectiles.Clear();
             expectedFireballHits.Clear(); completedFireballHits.Clear();

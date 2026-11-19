@@ -75,10 +75,13 @@ namespace Zjcs.Presentation.Combat {
  internal sealed class OfficialBattleSlashImpact {internal static OfficialBattleSlashImpact Last;internal string Particle;private Action arrival;internal static OfficialBattleSlashImpact Attach(MyPlayable p,string particle,Action a){Last=new OfficialBattleSlashImpact{arrival=a,Particle=particle};return Last;}internal void Trigger(){arrival?.Invoke();}internal void Detach(){arrival=null;}}
  public class OfficialBattleSkillEntityPlayback {public event Action<FightBattleSkillCastEvent,EcEntityIdentifier,GameObject,MyPlayable> SkillGraphPlayableStarted;public event Action<FightBattleSkillCastEvent,FightBattleHitSelectionSnapshot,int,GameObject,MyPlayable> HitGraphPlayableStarted;internal event Func<EcEntityIdentifier,EcEntityIdentifier,Action,bool> HitViewDeferralRequested;internal bool TryGetHitIdentity(GameObject target,out EcEntityIdentifier id){id=new EcEntityIdentifier{Value=7};return target!=null;}internal bool HasLiveHit(EcEntityIdentifier id)=>true;internal bool Defer(EcEntityIdentifier skill,EcEntityIdentifier hit,Action resume)=>HitViewDeferralRequested?.Invoke(skill,hit,resume)??false;public void CompleteLiveCast(FightBattleSkillCastEvent c,EcEntityIdentifier id,float t){} public void Graph(FightBattleSkillCastEvent c,string prefab="playable11120",string leaf="effect"){SkillGraphPlayableStarted?.Invoke(c,new EcEntityIdentifier(),new GameObject{name=prefab},new MyPlayable{name=leaf});}public void HitGraph(FightBattleSkillCastEvent c,FightBattleHitSelectionSnapshot hit,int center,string leaf,string prefab="playable10701"){HitGraphPlayableStarted?.Invoke(c,hit,center,new GameObject{name=prefab},new MyPlayable{name=leaf,myTarget=new GameObject()});} }
  public class OfficialBattleImpactViewBridge:IDisposable {
+  public static OfficialBattleImpactViewBridge Last;
   public static readonly List<int> Arrivals=new List<int>();
   private readonly FightBattleImpactLatch latch;
   public event Action<long> WorkerReleasedByArrival;
-  public OfficialBattleImpactViewBridge(OfficialBattleSkillEntityPlayback v,FightBattleImpactLatch l){latch=l;}
+  internal Func<FightBattleSkillCastEvent,FightBattleHitSelectionSnapshot,int,bool> IgnoreNativeScopeArrival;
+  public OfficialBattleImpactViewBridge(OfficialBattleSkillEntityPlayback v,FightBattleImpactLatch l){latch=l;Last=this;}
+  public void NativeArrival(FightBattleSkillCastEvent c,FightBattleHitSelectionSnapshot h,int center,int scope){if(IgnoreNativeScopeArrival?.Invoke(c,h,scope)!=true)RecordArrival(c,h,center,scope);}
   public long QueueSelection(FightBattleSelectedHit h,EcEntityIdentifier id,float t){latch.CompleteSelection(h);return 1;}
   public bool TryQueueSettlement(FightBattleSettledImpact s,EcEntityIdentifier id,out long revision,Action<FightBattleDamageEvent> after,Func<FightBattleDamageEvent,bool> canStart){revision=0;return false;}
   internal bool TryQueueUnresolved(FightBattleSettledImpact s,EcEntityIdentifier id,Action<FightBattleDamageEvent> after,Func<FightBattleDamageEvent,bool> canStart)=>false;
@@ -224,6 +227,31 @@ namespace Zjcs.Presentation.Combat {
      cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartCast);
      Check(OfficialBattleImpactViewBridge.Arrivals.Count==1&&OfficialBattleImpactViewBridge.Arrivals[0]==0,"The landed sword did not reach its centre scope");
      observer.Trigger(1);observer.Trigger(1);Check(OfficialBattleImpactViewBridge.Arrivals.Count==5,"The ground effect did not reach the four outer scopes once");
+    }
+   }
+   foreach(bool empty in new[]{false,true})
+   {
+    var hit=new FightBattleHitEntity{EntityId=10571,ScopeEntries=new List<FightBattleHitScopeEntry>{
+     new FightBattleHitScopeEntry{Position=new FightGridPoint(0,0)},new FightBattleHitScopeEntry{Position=new FightGridPoint(-1,0)},
+     new FightBattleHitScopeEntry{Position=new FightGridPoint(1,0)},new FightBattleHitScopeEntry{Position=new FightGridPoint(0,-1)},
+     new FightBattleHitScopeEntry{Position=new FightGridPoint(0,1)}}};
+    var skill=new FightBattleSkillDefinition{EntityId=10570,HitGraphEntities=new List<FightBattleHitEntity>{hit}};
+    var cp=new FightBattleCheckpoint{Units=new List<FightBattleUnitState>{new FightBattleUnitState{Id=1,Skills=new List<FightBattleSkillDefinition>{skill}}}};
+    var views=new OfficialBattleSkillEntityPlayback();var cast=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10570,HitSelections=new List<FightBattleHitSelectionSnapshot>()};
+    using(var session=new OfficialBattleLiveImpactSession(cp,_=>new FightBattleExecutor(),views,0,1,true)){
+     OfficialBattleImpactViewBridge.Arrivals.Clear();FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=cast};session.Pump(0,StartCast);
+     var selection=new FightBattleHitSelectionSnapshot{HitEntityId=10571,Targets=new List<FightBattleHitSelectionSnapshot.TargetOccurrence>()};
+     selection.EffectCenters.Add(new FightGridPoint(4,4));if(!empty)for(int index=0;index<5;index++)selection.Targets.Add(new FightBattleHitSelectionSnapshot.TargetOccurrence{HasScopeIndex=true,ScopeIndex=index});
+     cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartCast);
+     OfficialBattleImpactViewBridge.Last.NativeArrival(cast,selection,0,0);
+     Check(OfficialBattleImpactViewBridge.Arrivals.Count==0,"The unplayed thorn particle must not release the original scope arrival");
+     views.HitGraph(cast,selection,0,"effect","playable_scope_10570");var observer=OfficialBattleTargetParticleImpact.Last;
+     Check(observer!=null&&observer.Particle=="tieji (1)","The original thorn particle was not observed");
+     FightBattleImpactLatch.Last.PendingCompletion=new FightBattleCompletedCast{Cast=cast};session.Pump(0,StartCast);
+     Check(FightBattleImpactLatch.Last.CastCompletions==0,"The thorn cast completed before its visible effect");
+     observer.Trigger(.05f);observer.Trigger(.05f);
+     Check(OfficialBattleImpactViewBridge.Arrivals.Count==(empty?0:5)&&FightBattleImpactLatch.Last.CastCompletions==1,
+      "The actual thorn particle must release each selected scope once, including an empty cast");
     }
    }
    {

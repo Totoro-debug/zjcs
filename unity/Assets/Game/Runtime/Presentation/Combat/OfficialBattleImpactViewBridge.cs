@@ -13,6 +13,7 @@ namespace Zjcs.Presentation.Combat
         private bool disposed;
 
         public event Action<long> WorkerReleasedByArrival;
+        internal Func<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, bool> IgnoreNativeScopeArrival;
 
         public OfficialBattleImpactViewBridge(OfficialBattleSkillEntityPlayback views, FightBattleImpactLatch latch)
         {
@@ -76,7 +77,10 @@ namespace Zjcs.Presentation.Combat
 
         private void OnArrival(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot selection,
             int centerIndex, Pos2d position, int scopeIndex)
-            => RecordArrival(cast, selection, centerIndex, scopeIndex);
+        {
+            if (IgnoreNativeScopeArrival?.Invoke(cast, selection, scopeIndex) == true) return;
+            RecordArrival(cast, selection, centerIndex, scopeIndex);
+        }
 
         internal void RecordArrival(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot selection,
             int centerIndex, int scopeIndex)
@@ -91,6 +95,7 @@ namespace Zjcs.Presentation.Combat
             if (disposed) return;
             disposed = true;
             views.HitSelectionViewArrived -= OnArrival;
+            IgnoreNativeScopeArrival = null;
         }
     }
 }

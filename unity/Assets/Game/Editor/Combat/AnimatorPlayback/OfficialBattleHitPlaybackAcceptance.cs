@@ -690,6 +690,115 @@ namespace Zjcs.Editor.Combat
                 coneScope.Dispose(); coneFarAppearance?.Dispose(); coneTargetAppearance.Dispose(); coneAppearance.Dispose(); Destroy(coneRoot.gameObject);
                 cameraView.transform.position = new Vector3(5, 5, -20);
             }
+            // The original iron thorns appear before the five simultaneous hits and their root results.
+            foreach (var thornDirection in new[] { new[] { 1, 0, 3, 0 }, new[] { -1, 0, 1, 0 },
+                new[] { 0, 1, 2, 0 }, new[] { 0, -1, 0, 0 }, new[] { 1, 0, 3, 1 } })
+            {
+                int dx = thornDirection[0], dy = thornDirection[1];
+                var thornUnits = new List<FightBattleUnitState> { LiveUnit(1, 1, 7 - 3 * dx) };
+                thornUnits[0].Y = 7 - 3 * dy; thornUnits[0].Profession = 10; thornUnits[0].Direction = thornDirection[2];
+                foreach (var offset in new[] { new[] { 0, 0 }, new[] { -1, 0 }, new[] { 1, 0 }, new[] { 0, -1 }, new[] { 0, 1 } })
+                { var unit = LiveUnit(thornUnits.Count + 1, 2, 7 + offset[0]); unit.Y = 7 + offset[1]; thornUnits.Add(unit); }
+                var thornSkill = liveCatalog.CreateSkill(10570, 0, 10005, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(10570, 2, 20, 1).Select(value =>
+                        new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
+                thornSkill.LimitedTimes = 1; thornUnits[0].Skills.Add(thornSkill);
+                thornUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(thornSkill, 0));
+                var thornCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                thornCheckpoint.Units.AddRange(thornUnits);
+                var thornWave = new FightBattleWaveState(); thornWave.UnitIds.AddRange(thornUnits.Skip(1).Select(value => value.Id));
+                thornCheckpoint.Waves.Add(thornWave);
+                FightBattleExecutor.Begin(thornCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                FightBattleCheckpoint thornBaseline = null;
+                for (int attempt = 0; attempt < 64; attempt++)
+                {
+                    var reference = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(thornCheckpoint));
+                    reference.RandomSeed = 73 + attempt * 1234567;
+                    FightBattleExecutor.Restore(reference, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()).Step(0, 1);
+                    int rooted = reference.Units.Skip(1).Count(unit => unit.Statuses.Any(status => status.ClassId == 24020));
+                    if (rooted == 0 || rooted == 5) continue;
+                    thornCheckpoint.RandomSeed = 73 + attempt * 1234567; thornBaseline = reference; break;
+                }
+                Require(thornBaseline != null, "Could not select both original root outcomes for the iron thorns.");
+                string thornCommitted = FightBattleCheckpointSerializer.Save(thornCheckpoint);
+                var thornDisplay = FightBattleCheckpointSerializer.Load(thornCommitted).Units.ToArray();
+                var thornRoot = new GameObject("Isolated iron thorns " + dx + "/" + dy).transform; thornRoot.SetParent(root, false);
+                var thornBodies = new Dictionary<int, Transform>();
+                foreach (var unit in thornUnits)
+                {
+                    var body = new GameObject("Iron thorn unit " + unit.Id).transform; body.SetParent(thornRoot, false);
+                    body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                    var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
+                    body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                    thornBodies.Add(unit.Id, body);
+                }
+                var thornAppearance = NativeJumpAppearanceFixture.Create(thornBodies[1].gameObject, 10);
+                var thornTargetAppearance = NativeJumpAppearanceFixture.Create(thornBodies[2].gameObject);
+                var thornScope = new OfflineBattleNativePlayableScope(thornRoot, null);
+                ParticleSystem thornParticle = null; bool thornResumed = false; int thornPausedFrames = 0;
+                thornScope.NativePlayableStarted += (prefab, leaf) => {
+                    if (prefab.name != "playable_scope_10570" || leaf.name != "effect" || !leaf.myApplyComponent) return;
+                    thornParticle = leaf.myApplyComponent.GetComponentsInChildren<ParticleSystem>(true)
+                        .Single(value => value.name == "tieji (1)");
+                    thornParticle.Pause(false);
+                };
+                var thornHits = new List<(int Target, int Frame)>();
+                cameraView.transform.position = new Vector3(7, 7, -20);
+                using (var thornViews = new OfficialBattleSkillEntityPlayback(thornRoot, new OfficialBattleGridMapper(thornRoot, grid),
+                    thornScope, id => thornDisplay.FirstOrDefault(value => value.Id == id)))
+                using (var thornGraph = new OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog.TryLoadDefault(), thornScope, thornViews))
+                {
+                    thornViews.BindDamageUI(thornRoot, 0);
+                    foreach (var pair in thornBodies) thornViews.EnsureUnit(pair.Key, pair.Value);
+                    Transform ThornBody(int id) => thornBodies.TryGetValue(id, out var body) ? body : null;
+                    void ThornDamage(FightBattleDamageEvent damage, FightBattleUnitState projected)
+                    {
+                        Require(damage.SkillEntityId == 10570 && damage.HitEntityId == 10571 && damage.DamageEntityId == 10572
+                            && damage.ElementType == 100 && damage.TargetId >= 2 && damage.TargetId <= 6 && thornResumed && thornParticle
+                            && (thornParticle.particleCount > 0 || thornDirection[3] == 1 && thornParticle.time > thornParticle.main.startDelay.constant),
+                            "Iron thorn damage must wait for its original visible particle.");
+                        var floats = thornRoot.GetComponentsInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUI>(true);
+                        Require(floats.Any(ui => ui.EntityId == new EcEntityIdentifier(1, damage.TargetId)
+                            && ui.GetComponentsInChildren<TextMesh>(true).Any(text => text.text == Math.Abs(damage.DamageValue).ToString())),
+                            "Iron thorn damage number must appear on its target in the impact frame.");
+                        thornHits.Add((damage.TargetId, Time.frameCount));
+                        if (dx == 1 && thornDirection[3] == 0 && thornHits.Count == 5) Capture("iron-thorn-native-impact.png", false);
+                        thornDisplay[Array.FindIndex(thornDisplay, value => value.Id == damage.TargetId)] = projected;
+                    }
+                    using (var thornDriver = new OfficialBattleLiveGraphDriver(thornCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                        formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), thornViews,
+                        id => id == 10570, ThornBody, null, ThornDamage))
+                    {
+                        thornDriver.SecondsStatusChanged += _ => { };
+                        thornDisplay = thornCheckpoint.Units.Select(value => thornDriver.DisplayUnit(value.Id)).ToArray();
+                        float thornDeadline = Time.realtimeSinceStartup + 15f;
+                        while (!thornDriver.IsCompleted && Time.realtimeSinceStartup < thornDeadline)
+                        {
+                            thornDriver.Pump(Time.deltaTime); thornViews.Tick(Time.deltaTime); thornScope.LateTick();
+                            if (thornParticle && !thornResumed && ++thornPausedFrames >= 8)
+                            {
+                                Require(thornParticle.isPaused && thornHits.Count == 0,
+                                    "A paused iron thorn particle cannot settle damage.");
+                                if (thornDirection[3] == 1) thornParticle.Simulate(.8f, false, true, false);
+                                thornParticle.Play(false); thornResumed = true;
+                            }
+                            yield return null;
+                        }
+                        Require(thornDriver.TryTakeCompleted(out var executor, out var result) && thornResumed && thornHits.Count == 5
+                            && thornHits.Select(value => value.Target).Distinct().Count() == 5
+                            && thornHits.Select(value => value.Frame).Distinct().Count() == 1
+                            && FightBattleCheckpointSerializer.Save(thornCheckpoint) == thornCommitted
+                            && FightBattleCheckpointSerializer.Save(result.Checkpoint) == FightBattleCheckpointSerializer.Save(thornBaseline),
+                            "The iron thorns must preserve their simultaneous hits, root results and original checkpoint.");
+                        foreach (var rooted in executor.State.Units.Skip(1).SelectMany(unit => unit.Statuses).Where(status => status.ClassId == 24020))
+                            Require(rooted.DurationRound == 1 && rooted.CreatorId == 1 && rooted.ApplyingSkillItemId == 10005,
+                                "The iron thorns must preserve the original root source and duration.");
+                    }
+                }
+                thornScope.Dispose(); thornTargetAppearance.Dispose(); thornAppearance.Dispose(); Destroy(thornRoot.gameObject);
+                cameraView.transform.position = new Vector3(5, 5, -20);
+            }
             var fireUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 5) };
             var fireRoot = new GameObject("Isolated fireball scene").transform;
             fireRoot.SetParent(root, false);
