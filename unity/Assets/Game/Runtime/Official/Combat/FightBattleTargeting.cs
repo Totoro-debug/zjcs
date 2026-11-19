@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace Zjcs.Combat.Official
 {
@@ -670,6 +671,13 @@ namespace Zjcs.Combat.Official
                 int rightIndex = RangeIndex(actor, right, skill.Range);
                 if (leftIndex >= 0 && rightIndex >= 0)
                 {
+                    // Healing targets the eligible ally with the lowest health percentage.
+                    // Compare the fractions exactly, before the normal range-order tie breaker.
+                    if (skill.EntityId == 10720 && left.MaxHp > 0 && right.MaxHp > 0)
+                    {
+                        int health = ((BigInteger)left.Hp * right.MaxHp).CompareTo((BigInteger)right.Hp * left.MaxHp);
+                        if (health != 0) return health;
+                    }
                     if (leftIndex != rightIndex) return leftIndex.CompareTo(rightIndex);
                 }
                 else if (leftIndex >= 0) return -1;

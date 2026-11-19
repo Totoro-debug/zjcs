@@ -107,6 +107,14 @@ namespace Zjcs.Presentation.Combat
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> completedThornHits =
             new HashSet<(FightBattleHitSelectionSnapshot, int)>();
         private readonly List<OfficialBattleTargetParticleImpact> thornEffects = new List<OfficialBattleTargetParticleImpact>();
+        private readonly HashSet<int> healingCasters = new HashSet<int>();
+        private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> observedHealingEffects =
+            new HashSet<(FightBattleHitSelectionSnapshot, int)>();
+        private readonly Dictionary<FightBattleSkillCastEvent, HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)>> expectedHealingHits =
+            new Dictionary<FightBattleSkillCastEvent, HashSet<(FightBattleHitSelectionSnapshot, int)>>();
+        private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> completedHealingHits =
+            new HashSet<(FightBattleHitSelectionSnapshot, int)>();
+        private readonly List<OfficialBattleTargetParticleImpact> healingEffects = new List<OfficialBattleTargetParticleImpact>();
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> observedWaterProjectiles =
             new HashSet<(FightBattleHitSelectionSnapshot, int)>();
         private readonly List<OfficialBattleProjectileImpact> waterProjectiles = new List<OfficialBattleProjectileImpact>();
@@ -271,6 +279,10 @@ namespace Zjcs.Presentation.Combat
                             }
                             if (scopes.Count == 5) thornScopes[unit.Id] = scopes;
                         }
+                        if (skill.EntityId == 10720 && hit.EntityId == 10721 && hit.ScopeEntries.Count == 1
+                            && hit.ScopeEntries[0] != null && hit.ScopeEntries[0].Delay == 0f
+                            && hit.ScopeEntries[0].Position.X == 0 && hit.ScopeEntries[0].Position.Y == 0)
+                            healingCasters.Add(unit.Id);
                         if (skill.EntityId == 10700 && hit.EntityId == 10701 && hit.ScopeEntries.Count == 9)
                         {
                             var positions = new HashSet<FightGridPoint>(); var scopes = new HashSet<int>();
@@ -325,8 +337,9 @@ namespace Zjcs.Presentation.Combat
             }
             step = new FightBattleIsolatedStep(checkpoint, restore, sequence, counter, observeMovements, observeStatusViews, observeUnitLives, observeSummons);
             bridge = new OfficialBattleImpactViewBridge(views, step.Latch);
-            bridge.IgnoreNativeScopeArrival = (cast, hit, scope) => scope >= 0
-                && cast?.SkillEntityId == 10570 && hit?.HitEntityId == 10571;
+            bridge.IgnoreNativeScopeArrival = (cast, hit, scope) => scope >= 0 &&
+                (cast?.SkillEntityId == 10570 && hit?.HitEntityId == 10571
+                || cast?.SkillEntityId == 10720 && hit?.HitEntityId == 10721 && healingCasters.Contains(cast.ActorId));
             bridge.WorkerReleasedByArrival += OnWorkerReleasedByArrival;
             views.SkillGraphPlayableStarted += OnSkillGraphPlayableStarted;
             views.HitGraphPlayableStarted += OnHitGraphPlayableStarted;
@@ -506,6 +519,14 @@ namespace Zjcs.Presentation.Combat
                             for (int index = 0; index < selection.Selection.EffectCenters.Count; index++)
                                 expected.Add((selection.Selection, index));
                         }
+                        if (selectedCast.SkillEntityId == 10720 && healingCasters.Contains(selectedCast.ActorId)
+                            && selection.Selection.HitEntityId == 10721 && selection.Selection.EffectCenters != null)
+                        {
+                            if (!expectedHealingHits.TryGetValue(selectedCast, out var expected))
+                                expectedHealingHits.Add(selectedCast, expected = new HashSet<(FightBattleHitSelectionSnapshot, int)>());
+                            for (int index = 0; index < selection.Selection.EffectCenters.Count; index++)
+                                expected.Add((selection.Selection, index));
+                        }
                         long revision = bridge.QueueSelection(selection, active.Id, clock - active.Started);
                         if (reachedMountainWaves.TryGetValue(selectedCast, out int reached))
                         {
@@ -565,6 +586,8 @@ namespace Zjcs.Presentation.Combat
                             && !expected.IsSubsetOf(completedFireballHits)) return progressed;
                         if (expectedThornHits.TryGetValue(completion.Cast, out var thornExpected)
                             && !thornExpected.IsSubsetOf(completedThornHits)) return progressed;
+                        if (expectedHealingHits.TryGetValue(completion.Cast, out var healingExpected)
+                            && !healingExpected.IsSubsetOf(completedHealingHits)) return progressed;
                         var active = Find(completion.Cast);
                         views.CompleteLiveCast(completion.Cast, active.Id, clock - active.Started);
                         step.Latch.CompleteCast(completion, out long revision);
@@ -609,6 +632,15 @@ namespace Zjcs.Presentation.Combat
         private void OnHitGraphPlayableStarted(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot hit,
             int centerIndex, GameObject prefab, MyPlayable playable)
         {
+            if (!disposed && !transferred && cast?.SkillEntityId == 10720 && hit?.HitEntityId == 10721
+                && prefab != null && prefab.name == "playable10721" && playable != null && playable.name == "effect"
+                && selectedHits.Contains(hit) && casts.ContainsKey(cast) && healingCasters.Contains(cast.ActorId)
+                && !observedHealingEffects.Contains((hit, centerIndex)))
+            {
+                var observer = OfficialBattleTargetParticleImpact.Attach(prefab, playable, "lizishui (2)",
+                    _ => RouteHealingImpact(cast, hit, centerIndex));
+                if (observer != null) { observedHealingEffects.Add((hit, centerIndex)); healingEffects.Add(observer); }
+            }
             if (!disposed && !transferred && cast?.SkillEntityId == 10570 && hit?.HitEntityId == 10571
                 && prefab != null && prefab.name == "playable_scope_10570" && playable != null && playable.name == "effect"
                 && selectedHits.Contains(hit) && casts.ContainsKey(cast) && thornScopes.ContainsKey(cast.ActorId)
@@ -653,6 +685,22 @@ namespace Zjcs.Presentation.Combat
                     || !sentPullHits.Add((hit, centerIndex, target.ScopeIndex))) continue;
                 bridge.RecordArrival(cast, hit, centerIndex, target.ScopeIndex);
             }
+        }
+
+        private void RouteHealingImpact(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot hit, int centerIndex)
+        {
+            if (disposed || transferred || !casts.ContainsKey(cast) || !selectedHits.Contains(hit)
+                || !observedHealingEffects.Contains((hit, centerIndex)) || !healingCasters.Contains(cast.ActorId)
+                || !completedHealingHits.Add((hit, centerIndex))) return;
+            if (hit.Targets != null) foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
+            {
+                if (!casts.ContainsKey(cast)) return;
+                if (target == null || target.EffectCenterIndex != centerIndex || !target.HasScopeIndex
+                    || target.ScopeIndex != 0 || target.ScopeDelay != 0f) continue;
+                bridge.RecordArrival(cast, hit, centerIndex, target.ScopeIndex);
+            }
+            if (!pumping && lastStartCast != null) Pump(0f, lastStartCast, lastAfterDamageStarted,
+                lastStartMovement, lastStartBlockedMovement, lastCanStartDamage);
         }
 
         private void RouteThornImpact(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot hit, int centerIndex)
@@ -1210,6 +1258,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in iceHitEffects) if (observer != null) observer.Detach();
             foreach (var observer in auraHitEffects) if (observer != null) observer.Detach();
             foreach (var observer in thornEffects) if (observer != null) observer.Detach();
+            foreach (var observer in healingEffects) if (observer != null) observer.Detach();
             foreach (var observer in waterProjectiles) if (observer != null) observer.Detach();
             foreach (var observer in fireballProjectiles) if (observer != null) observer.Detach();
             transferred = true;
@@ -1251,6 +1300,7 @@ namespace Zjcs.Presentation.Combat
             observedIceHits.Clear(); reachedIceHits.Clear(); sentIceHits.Clear(); iceHitEffects.Clear();
             observedAuraHits.Clear(); reachedAuraHits.Clear(); sentAuraHits.Clear(); auraHitEffects.Clear();
             thornScopes.Clear(); observedThornEffects.Clear(); expectedThornHits.Clear(); completedThornHits.Clear(); thornEffects.Clear();
+            healingCasters.Clear(); observedHealingEffects.Clear(); expectedHealingHits.Clear(); completedHealingHits.Clear(); healingEffects.Clear();
             observedWaterProjectiles.Clear(); waterProjectiles.Clear();
             fireballFlights.Clear(); fireballProjectiles.Clear();
             expectedFireballHits.Clear(); completedFireballHits.Clear();

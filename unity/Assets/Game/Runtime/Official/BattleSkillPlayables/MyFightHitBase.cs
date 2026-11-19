@@ -275,6 +275,7 @@ public class MyFightHitBase<T, TInfo> : MyComponent<T, TInfo>, IFightGetUsePlaya
 				pos.z = ((Component)this).transform.position.z;
 			}
 			GameObject val = CreateGo(pos, ((Component)myEntity).transform.parent, "tmp_scope_obj");
+			(ViewServices as IFightHitScopeOriginObserver)?.HitScopeCreated(Component.Entity.Id, val);
 			mMyPlayableManager.Play(myScopePlayable, val, val);
 			(ViewServices as IFightHitViewArrivalObserver)?.HitViewArrived(
 				Component.SkillId, Component.Entity.Id, grid, scopeIndex++);

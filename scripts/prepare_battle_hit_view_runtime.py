@@ -216,6 +216,7 @@ def main():
     text = replace_once(text, '\t\tfloat num = 0f;\n\t\tList<HitScopCfg> scopes',
         '\t\tfloat num = 0f;\n\t\tint scopeIndex = 0;\n\t\tList<HitScopCfg> scopes')
     text = replace_once(text, '\t\t\tmMyPlayableManager.Play(myScopePlayable, val, val);',
+        '\t\t\t(ViewServices as IFightHitScopeOriginObserver)?.HitScopeCreated(Component.Entity.Id, val);\n'
         '\t\t\tmMyPlayableManager.Play(myScopePlayable, val, val);\n'
         '\t\t\t(ViewServices as IFightHitViewArrivalObserver)?.HitViewArrived(\n'
         '\t\t\t\tComponent.SkillId, Component.Entity.Id, grid, scopeIndex++);')

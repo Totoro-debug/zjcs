@@ -26,6 +26,11 @@ namespace Zjcs.Official.BattleSkillPlayables
         void HitViewArrived(EcEntityIdentifier skillId, EcEntityIdentifier hitId,
             Pos2d position, int scopeIndex);
     }
+    // Associates the original temporary scope anchor with its originating hit view.
+    public interface IFightHitScopeOriginObserver
+    {
+        void HitScopeCreated(EcEntityIdentifier hitId, GameObject scope);
+    }
     // A local host can hold the original hit view until its native projectile arrives.
     public interface IFightHitViewArrivalDeferrer
     {

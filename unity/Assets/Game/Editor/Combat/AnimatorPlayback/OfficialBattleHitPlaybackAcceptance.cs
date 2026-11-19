@@ -475,6 +475,108 @@ namespace Zjcs.Editor.Combat
                 value.Properties.Add(new FightPropertyValue { Id = formula.PropertyId("CritAvoidPercent"), Value = 10000 });
                 return value;
             }
+            // Healing is settled when the original target particles actually appear.
+            foreach (int healingDirection in new[] { 0, 1, 2, 3, 4 })
+            {
+                bool self = healingDirection == 4;
+                var healUnits = new[] { LiveUnit(1, 1, 5), LiveUnit(2, 1, 6), LiveUnit(3, 2, 9) };
+                foreach (var unit in healUnits) foreach (var name in new[] { "BaseCureAdd", "BaseBeCureAdd" })
+                    unit.Properties.Add(new FightPropertyValue { Id = formula.PropertyId(name), Value = 10000 });
+                healUnits[0].Profession = 10; healUnits[0].Direction = healingDirection % 4;
+                var healTarget = self ? healUnits[0] : healUnits[1];
+                healTarget.Hp = healTarget.Turn.Hp = 400000;
+                if (!self) {
+                    var rootStatus = liveCatalog.CreateStatus(24020, 2, 3, 101, 0, 0, 2, 20, 1);
+                    var freezeStatus = liveCatalog.CreateStatus(24215, 2, 3, 102, 0, 0, 2, 20, 1);
+                    rootStatus.DurationRound = freezeStatus.DurationRound = 5;
+                    healTarget.Statuses.Add(rootStatus); healTarget.Statuses.Add(freezeStatus);
+                }
+                var healSkill = liveCatalog.CreateSkill(10720, 0, 10020, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(10720, 2, 20, 1).Select(value =>
+                        new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
+                healSkill.LimitedTimes = 1; healUnits[0].Skills.Add(healSkill);
+                healUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(healSkill, 0));
+                var healCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                healCheckpoint.Units.AddRange(healUnits);
+                var healWave = new FightBattleWaveState(); healWave.UnitIds.Add(3); healCheckpoint.Waves.Add(healWave);
+                FightBattleExecutor.Begin(healCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                string healCommitted = FightBattleCheckpointSerializer.Save(healCheckpoint);
+                var healBaseline = FightBattleCheckpointSerializer.Load(healCommitted);
+                var baselineResult = FightBattleExecutor.Restore(healBaseline, formula, new FightDamageSettlement(), liveCatalog,
+                    combatAssets.LoadSkillItems()).Step(0, 1);
+                Require(healBaseline.Units[healTarget.Id - 1].Hp > healTarget.Hp,
+                    "The healing baseline must restore health to the lowest-health ally.");
+                if (!self) Require(healBaseline.Units[1].Statuses.Count == 1,
+                    "The healing baseline must remove exactly one of two negative effects.");
+                var healDisplay = FightBattleCheckpointSerializer.Load(healCommitted).Units.ToArray();
+                var healRoot = new GameObject("Isolated healing " + healingDirection).transform; healRoot.SetParent(root, false);
+                var healBodies = new Dictionary<int, Transform>();
+                foreach (var unit in healUnits) {
+                    var body = new GameObject("Healing unit " + unit.Id).transform; body.SetParent(healRoot, false);
+                    body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                    var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
+                    body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                    healBodies.Add(unit.Id, body);
+                }
+                var healAppearance = NativeJumpAppearanceFixture.Create(healBodies[1].gameObject, 10);
+                var healTargetAppearance = NativeJumpAppearanceFixture.Create(healBodies[2].gameObject);
+                var healScope = new OfflineBattleNativePlayableScope(healRoot, null);
+                ParticleSystem healParticle = null; bool healResumed = false; int healPausedFrames = 0, healReceipts = 0;
+                healScope.NativePlayableStarted += (prefab, leaf) => {
+                    if (prefab.name != "playable10721" || leaf.name != "effect" || !leaf.myApplyComponent) return;
+                    healParticle = leaf.myApplyComponent.GetComponentsInChildren<ParticleSystem>(true)
+                        .Single(value => value.name == "lizishui (2)");
+                    healParticle.Pause(false);
+                };
+                using (var healViews = new OfficialBattleSkillEntityPlayback(healRoot, new OfficialBattleGridMapper(healRoot, grid),
+                    healScope, id => healDisplay.FirstOrDefault(value => value.Id == id)))
+                using (var healGraph = new OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog.TryLoadDefault(), healScope, healViews))
+                {
+                    healViews.BindDamageUI(healRoot, 0);
+                    foreach (var pair in healBodies) healViews.EnsureUnit(pair.Key, pair.Value);
+                    Transform HealBody(int id) => healBodies.TryGetValue(id, out var body) ? body : null;
+                    healGraph.BindGridEntities(healRoot, new OfficialBattleGridMapper(healRoot, grid), healCheckpoint, HealBody, _ => true);
+                    var healVisualExecutor = FightBattleExecutor.Restore(FightBattleCheckpointSerializer.Load(healCommitted),
+                        formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                    healGraph.BindAirCombo(healVisualExecutor, healRoot, HealBody);
+                    void HealDamage(FightBattleDamageEvent damage, FightBattleUnitState projected)
+                    {
+                        Require(damage.SkillEntityId == 10720 && damage.HitEntityId == 10721 && damage.DamageEntityId == 10722
+                            && damage.TargetId == healTarget.Id && damage.IsCure && healResumed && healParticle
+                            && healParticle.particleCount > 0 && projected.Hp > healTarget.Hp,
+                            "Healing and its projected health must wait for the original visible particles.");
+                        var floats = healRoot.GetComponentsInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUI>(true);
+                        Require(floats.Any(ui => ui.EntityId == new EcEntityIdentifier(1, damage.TargetId)
+                            && ui.GetComponentsInChildren<TextMesh>(true).Any(text => text.text == Math.Abs(damage.DamageValue).ToString())),
+                            "The healing number must appear on the recipient in the same frame.");
+                        healReceipts++;
+                        if (healingDirection == 0) Capture("healing-native-impact.png", false);
+                        healDisplay[Array.FindIndex(healDisplay, value => value.Id == damage.TargetId)] = projected;
+                    }
+                    using (var healDriver = healGraph.CreateLiveStep(healCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                        formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), HealBody, null, HealDamage))
+                    {
+                        healDisplay = healCheckpoint.Units.Select(value => healDriver.DisplayUnit(value.Id)).ToArray();
+                        float healDeadline = Time.realtimeSinceStartup + 15f;
+                        while (!healDriver.IsCompleted && Time.realtimeSinceStartup < healDeadline)
+                        {
+                            healDriver.Pump(Time.deltaTime); healGraph.Tick(Time.deltaTime); healGraph.LateTick();
+                            if (healParticle && !healResumed && ++healPausedFrames >= 8) {
+                                Require(healParticle.isPaused && healReceipts == 0 && healDriver.DisplayUnit(healTarget.Id).Hp == healTarget.Hp,
+                                    "Paused target particles cannot settle healing or change displayed health.");
+                                healParticle.Play(false); healResumed = true;
+                            }
+                            yield return null;
+                        }
+                        Require(healDriver.TryTakeCompleted(out var executor, out var result) && healResumed && healReceipts == 1
+                            && FightBattleCheckpointSerializer.Save(healCheckpoint) == healCommitted
+                            && FightBattleCheckpointSerializer.Save(result.Checkpoint) == FightBattleCheckpointSerializer.Save(healBaseline),
+                            "Healing, random dispel and final checkpoint must match the official rule step.");
+                    }
+                }
+                healScope.Dispose(); healTargetAppearance.Dispose(); healAppearance.Dispose(); Destroy(healRoot.gameObject);
+            }
             // The original fire ring expands through separate near and outer scopes.
             for (int ringDirection = 0; ringDirection < 4; ringDirection++)
             {

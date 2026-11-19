@@ -14,8 +14,13 @@ using Zjcs.Offline.World.NativeMap14EntityLifecycle;
 
 namespace Zjcs.Presentation.Combat
 {
+    internal sealed class OfficialBattleHitScopeOrigin : MonoBehaviour
+    {
+        internal EcEntityIdentifier HitId;
+    }
+
     /// <summary>Projects settled cast inputs into the original MyFightSkill lifecycle.</summary>
-    public sealed partial class OfficialBattleSkillEntityPlayback : IFightHitViewServices, IFightHitViewArrivalObserver, IFightHitViewArrivalDeferrer, IServiceProvider, IECViewInjection, IDisposable
+    public sealed partial class OfficialBattleSkillEntityPlayback : IFightHitViewServices, IFightHitViewArrivalObserver, IFightHitViewArrivalDeferrer, IFightHitScopeOriginObserver, IServiceProvider, IECViewInjection, IDisposable
     {
         private sealed class Grid : ECGridTransformData
         {
@@ -206,14 +211,24 @@ namespace Zjcs.Presentation.Combat
 
         private void OnNativePlayableStarted(GameObject prefab, MyPlayable playable)
         {
-            if (playable != null && playable.myTarget != null
-                && playable.myTarget.TryGetComponent<MyEntity>(out var hitEntity)
-                && receiptHits.TryGetOrigin(hitEntity.Id, out var origin))
-                HitGraphPlayableStarted?.Invoke(origin.Cast, origin.Selection, origin.CenterIndex, prefab, playable);
+            if (playable != null && playable.myTarget != null)
+            {
+                bool hasHit = playable.myTarget.TryGetComponent<MyEntity>(out var hitEntity);
+                OfficialBattleHitScopeOrigin scopeOrigin = null;
+                bool hasScope = !hasHit && playable.myTarget.TryGetComponent(out scopeOrigin);
+                var hitId = hasHit ? hitEntity.Id : hasScope ? scopeOrigin.HitId : default;
+                if ((hasHit || hasScope) && receiptHits.TryGetOrigin(hitId, out var origin))
+                    HitGraphPlayableStarted?.Invoke(origin.Cast, origin.Selection, origin.CenterIndex, prefab, playable);
+            }
             if (!(playable.TryGetParam("Skill") is GameObject skillObject)
                 || !skillObject || !skillObject.TryGetComponent<MyEntity>(out var skillEntity)) return;
             var active = casts.Find(value => !value.Removed && ReferenceEquals(value.Entity, skillEntity));
             if (active != null) SkillGraphPlayableStarted?.Invoke(active.Cast, active.Id, prefab, playable);
+        }
+
+        void IFightHitScopeOriginObserver.HitScopeCreated(EcEntityIdentifier hitId, GameObject scope)
+        {
+            if (scope) scope.AddComponent<OfficialBattleHitScopeOrigin>().HitId = hitId;
         }
 
         public MyEntity EnsureUnit(int id, Transform transform) => nativeGridIds.Contains(id)
