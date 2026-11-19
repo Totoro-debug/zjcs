@@ -65,6 +65,10 @@ namespace Zjcs.Editor.Combat
         [Serializable] private sealed class Result {public bool passed;public string error;}
         private static IEnumerator Check()
         {
+            Time.timeScale = 1f;
+            var live = CheckLive();
+            try { while (live.MoveNext()) yield return live.Current; }
+            finally { (live as IDisposable)?.Dispose(); Time.timeScale = 0f; }
             foreach(int skillId in new[]{10710,10770,11140,12060,13300,13670})
             foreach(bool fallback in skillId>=12060?new[]{false,true}:new[]{false})
             foreach(bool removed in new[]{false,true})
@@ -232,6 +236,111 @@ namespace Zjcs.Editor.Combat
                 Require(FightBattleCheckpointSerializer.Save(state)==saved,"Appearance modified settled combat or save data");
                 Debug.Log("[Summon spawn] Actual "+skillId+": delayed native model, original generation/idle, grid position and repeat refresh passed.");
                 scene.Dispose();graphs.Dispose();scope.Dispose();UnityEngine.Object.DestroyImmediate(root);UnityEngine.Object.Destroy(modelCatalog);
+            }
+        }
+        private static IEnumerator CheckLive()
+        {
+            foreach (var direction in new[] { new[] { 1, 0, 3 }, new[] { -1, 0, 1 }, new[] { 0, 1, 2 }, new[] { 0, -1, 0 } })
+            {
+            var root = new GameObject("Live official summon test");
+            var assets = OfficialCombatAssetCatalog.LoadDefault();
+            var catalog = assets.Load(); var formula = assets.LoadDamageFormula(); var items = assets.LoadSkillItems();
+            var state = new FightBattleCheckpoint { StageId = 1, RandomSeed = 11,
+                Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 0 } };
+            for (int id = 1; id <= 2; id++)
+            {
+                var unit = new FightBattleUnitState { Id = id, Side = id, CharacterType = id == 1 ? 1 : 2,
+                    X = 7 + (id == 1 ? 0 : 3 * direction[0]), Y = 7 + (id == 1 ? 0 : 3 * direction[1]), Hp = 1000000, MaxHp = 1000000, LastMaxHp = 1000000,
+                    Level = 150, SubRank = 1, MoveMask = 5, Direction = direction[2], HasFlipX = true };
+                unit.Turn.Id = id; unit.Turn.Hp = unit.Hp; unit.Turn.Speed = 100 - id;
+                foreach (var p in new[] { new[] { 1, 10001 }, new[] { 2, 10003 }, new[] { 3, 1000000 }, new[] { 4, 100-id } })
+                    unit.Properties.Add(new FightPropertyValue { Id = p[0], Value = p[1] });
+                state.Units.Add(unit);
+            }
+            var skill = catalog.CreateSkill(10710, 0, 10019, 5, 20, 1, null);
+            state.Units[0].Skills.Add(skill); state.Units[0].SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = -1 });
+            var wave = new FightBattleWaveState(); wave.UnitIds.Add(2); state.Waves.Add(wave);
+            FightBattleExecutor.Begin(state, formula, new FightDamageSettlement(), catalog, items);
+            string committed = FightBattleCheckpointSerializer.Save(state);
+            var baseline = FightBattleCheckpointSerializer.Load(committed);
+            FightBattleExecutor.Restore(baseline, formula, new FightDamageSettlement(), catalog, items).Step(0, 1);
+            var summon = baseline.Units.Single(unit => unit.MonsterId == 3181);
+            var mapper = new OfficialBattleGridMapper(root.transform, state.Grid);
+            var modelCatalog = ScriptableObject.CreateInstance<OfficialBattleModelCatalog>();
+            using var scope = new OfflineBattleNativePlayableScope(root.transform, null);
+            using var scene = new OfficialBattleSceneView(modelCatalog, root.transform, _ => null, mapper,
+                (_, __) => "idle_01", (_, __) => { }, nativePlayableScope: scope);
+            scene.Refresh(state);
+            var source = new GameObject("Official summon caster").transform; source.SetParent(root.transform, false);
+            source.localPosition = new Vector3(7, 7, 0); source.gameObject.AddComponent<Zjcs.Official.EntityLifecycle.MyTransform>();
+            var mesh = source.gameObject.AddComponent<MeshRenderer>(); mesh.enabled = false;
+            source.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = mesh;
+            var appearance = NativeJumpAppearanceFixture.Create(source.gameObject, 10);
+            OfficialBattleLiveGraphDriver driver = null;
+            FightBattleUnitState FindState(int id) => driver?.DisplayUnit(id) ?? state.Units.Find(value => value.Id == id);
+            Transform Body(int id) => id == 1 ? source : scene.TryGetUnitTransform(id);
+            using var views = new OfficialBattleSkillEntityPlayback(root.transform, mapper, scope, FindState);
+            using var graphs = new OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog.TryLoadDefault(), scope, views);
+            typeof(OfficialBattleSceneView).GetMethod("BindUnitEndClock", BindingFlags.Instance|BindingFlags.NonPublic).Invoke(scene, new object[] { graphs });
+            graphs.BindGridEntities(root.transform, mapper, state, Body, _ => true);
+            var visualExecutor = FightBattleExecutor.Restore(FightBattleCheckpointSerializer.Load(committed), formula,
+                new FightDamageSettlement(), catalog, items);
+            graphs.BindAirCombo(visualExecutor, root.transform, Body);
+            int arrivalFrame = -1;
+            views.HitViewArrived += (skillId, hitId, point, index) => {
+                if (index == -1 && views.GetEntity(hitId)?.ClassId == 10711) arrivalFrame = Time.frameCount;
+            };
+            driver = graphs.CreateLiveStep(state, copy => FightBattleExecutor.Restore(copy, formula,
+                new FightDamageSettlement(), catalog, items), Body, null, (_, __) => { });
+            int spawnFrame = -1;
+            driver.SummonPresented += (unit, receipt) => {
+                Require(unit.Id == summon.Id && scene.TryGetUnitTransform(unit.Id), "Live summon event preceded its native model.");
+                var created = scene.TryGetUnitTransform(unit.Id);
+                scene.Refresh(state);
+                Require(scene.TryGetUnitTransform(unit.Id) == created,
+                    "Refreshing the committed checkpoint removed the live summon before its step completed.");
+                spawnFrame = Time.frameCount;
+            };
+            bool castStarted = false;
+            driver.SkillGraphPlayableStarted += (cast, id, prefab, playable) => { if (cast.SkillEntityId == 10710) castStarted = true; };
+            float startDeadline = Time.realtimeSinceStartup + 10f;
+            while (!castStarted && Time.realtimeSinceStartup < startDeadline) { driver.Pump(0f); yield return null; }
+            Require(castStarted && !scene.TryGetUnitTransform(summon.Id), "Summon cast did not enter its original playable.");
+            Time.timeScale = 0f;
+            for (int frame = 0; frame < 8; frame++)
+            {
+                driver.Pump(0f); graphs.Tick(0f); graphs.LateTick(); yield return null;
+                Require(arrivalFrame < 0 && !scene.TryGetUnitTransform(summon.Id), "A paused summon arrived early.");
+            }
+            Time.timeScale = 1f;
+            float deadline = Time.realtimeSinceStartup + 20f;
+            while (!driver.IsCompleted && Time.realtimeSinceStartup < deadline)
+            {
+                driver.Pump(Time.deltaTime); scene.Tick(Time.deltaTime); graphs.Tick(Time.deltaTime); graphs.LateTick();
+                if (arrivalFrame < 0) Require(!scene.TryGetUnitTransform(summon.Id), "Summon appeared before its original hit.");
+                yield return null;
+            }
+            Require(driver.TryTakeCompleted(out _, out var result) && spawnFrame == arrivalFrame && spawnFrame >= 0,
+                "Official summon model did not appear on the hit arrival frame: " + spawnFrame + "/" + arrivalFrame);
+            Require(FightBattleCheckpointSerializer.Save(state) == committed
+                && FightBattleCheckpointSerializer.Save(result.Checkpoint) == FightBattleCheckpointSerializer.Save(baseline),
+                "Live summon changed the committed state or deterministic result.");
+            var body = scene.TryGetUnitTransform(summon.Id);
+            scene.Refresh(result.Checkpoint);
+            Require(scene.TryGetUnitTransform(summon.Id) == body,
+                "Adopting the settled checkpoint replaced the already presented summon.");
+            var renderer = body.GetComponentInChildren<BattleNativeMonsterRenderer>();
+            Require(renderer && renderer.Animation == "generate_01", "Original summon generation graph did not play.");
+            Require(root.GetComponentsInChildren<Zjcs.Official.BattleStatusPlayables.MyFightStatus>(true).Any(status => {
+                var entity = status.GetComponent<Zjcs.Official.EntityLifecycle.MyEntity>();
+                return entity && entity.ClassId == 10712 && status.Context != null
+                    && status.Context.Owner == body.gameObject && status.Context.Master == source.gameObject;
+            }), "The original summon lifespan status did not bind its actual owner and master.");
+            for (int frame=0; frame<18; frame++) { scene.Tick(1f/60f); graphs.Tick(1f/60f); graphs.LateTick(); yield return null; }
+            using (var capture = new Capture(renderer.transform.parent.parent, renderer.GetComponent<MeshRenderer>()))
+                capture.Save("live-3181-generate-" + direction[0] + "-" + direction[1] + ".png");
+            driver.Dispose(); scene.Dispose(); graphs.Dispose(); scope.Dispose(); appearance.Dispose();
+            UnityEngine.Object.DestroyImmediate(root); UnityEngine.Object.Destroy(modelCatalog);
             }
         }
         private sealed class Capture : IDisposable

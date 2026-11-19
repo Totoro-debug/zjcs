@@ -18,7 +18,7 @@ namespace Zjcs.Combat.Official {
  public class FightBattleHitScopeEntry {public float Delay;public FightGridPoint Position;}
  public class FightBattleSkillCastPresentation {public float Duration;}
  public class FightBattleSkillCastEvent {public int SkillEntityId,ActorId;public FightBattleSkillCastPresentation Presentation;public List<FightBattleHitSelectionSnapshot> HitSelections;}
- public class FightBattleHitSelectionSnapshot {public int HitEntityId;public float Delay,DelayDistFactor;public List<FightGridPoint> EffectCenters=new List<FightGridPoint>();public List<TargetOccurrence> Targets;public class TargetOccurrence {public int EffectCenterIndex,ScopeIndex;public float ScopeDelay;public bool HasScopeIndex;}}
+ public class FightBattleHitSelectionSnapshot {public int HitEntityId;public float Delay,DelayDistFactor;public List<FightGridPoint> EffectCenters=new List<FightGridPoint>();public List<TargetOccurrence> Targets;public class TargetOccurrence {public int EffectCenterIndex,ScopeIndex;public float ScopeDelay;public bool HasScopeIndex;}public class SpawnedUnit {}}
  public class FightBattleMovementEvent {public int UnitId;}
  public class FightBattleDamageEvent {public bool HasDamageTriggerStatus;}
  public class FightBattleExecutionResult {}
@@ -34,6 +34,7 @@ namespace Zjcs.Combat.Official {
  public class FightBattleSecondsStatusNotice {public FightBattleStatusViewEvent Event;}
  public class FightBattleStatusViewNotice {public FightBattleStatusViewEvent Event;}
  public class FightBattleUnitLifeNotice {public FightBattleUnitLifeEvent Event;}
+ public class FightBattleSummonNotice {public FightBattleUnitState Unit;public FightBattleHitSelectionSnapshot.SpawnedUnit Receipt;}
  public class FightBattleImpactLatch {
   public static FightBattleImpactLatch Last;public FightBattlePreparedMovement Pending;public FightBattlePreparedCast PendingCast;public FightBattleSelectedHit PendingSelection;public FightBattleSecondsStatusNotice PendingStatus;public FightBattleStatusViewNotice PendingView;public FightBattleSettledImpact PendingResult;public FightBattleCompletedCast PendingCompletion;public int Completions,CastCompletions,ViewCompletions,Records,Waits;public bool Arrived,Disposed;public FightBattleMovementEvent LastContact;
   private object active;private readonly Stack<object> suspended=new Stack<object>();
@@ -48,6 +49,8 @@ namespace Zjcs.Combat.Official {
   public void CompleteStatusView(FightBattleStatusViewNotice v,out long revision){Finished(v);ViewCompletions++;revision=1;}
   public bool TryTakeUnitLife(out FightBattleUnitLifeNotice v){v=null;return false;}
   public void CompleteUnitLife(FightBattleUnitLifeNotice v,out long revision){Finished(v);revision=1;}
+  public bool TryTakeSummon(out FightBattleSummonNotice v){v=null;return false;}
+  public void CompleteSummon(FightBattleSummonNotice v,out long revision){Finished(v);revision=1;}
   public bool TryTakePreparation(out FightBattlePreparedCast v){v=PendingCast;PendingCast=null;Taken(v);return v!=null;}
   public void CompletePreparation(FightBattlePreparedCast x,out long revision){Finished(x);revision=1;}
   public bool TryTakeMovement(out FightBattlePreparedMovement v){v=Pending;Pending=null;Taken(v);return v!=null;}
@@ -64,7 +67,7 @@ namespace Zjcs.Combat.Official {
  }
  public class FightBattleIsolatedStep:IDisposable {
   public readonly FightBattleImpactLatch Latch=new FightBattleImpactLatch();public bool IsCompleted;
-  public FightBattleIsolatedStep(FightBattleCheckpoint c,Func<FightBattleCheckpoint,FightBattleExecutor> restore,int s,int n,bool observe,bool observeStatusViews,bool observeUnitLives){}
+  public FightBattleIsolatedStep(FightBattleCheckpoint c,Func<FightBattleCheckpoint,FightBattleExecutor> restore,int s,int n,bool observe,bool observeStatusViews,bool observeUnitLives,bool observeSummons){}
   public bool TryAdvanceStatusSeconds(double s,out System.Threading.Tasks.Task<bool> task){task=null;return false;}
   public bool TryTakeCompleted(out FightBattleExecutor e,out FightBattleExecutionResult r){e=null;r=null;return false;}
   public void Dispose(){Latch.Disposed=true;}

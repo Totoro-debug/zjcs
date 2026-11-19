@@ -68,6 +68,14 @@ namespace Zjcs.Combat.Official
         public FightBattleStatusViewEvent Event { get; internal set; }
     }
 
+    public sealed class FightBattleSummonNotice
+    {
+        internal FightBattleImpactLatch Owner;
+        internal bool Taken, Completed;
+        public FightBattleUnitState Unit { get; internal set; }
+        public FightBattleHitSelectionSnapshot.SpawnedUnit Receipt { get; internal set; }
+    }
+
     /// <summary>A confirmed unit-life transition held for presentation on the host thread.</summary>
     public sealed class FightBattleUnitLifeNotice
     {
@@ -81,7 +89,7 @@ namespace Zjcs.Combat.Official
     /// The step runs on a worker; the presentation thread takes requests without blocking and
     /// records actual arrivals. A single scope arrival may affect multiple target occurrences.
     /// </summary>
-    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleMovementPreparationObserver, IFightBattleBlockedMovementObserver, IFightBattleBlockedImpactObserver, IFightBattleDeferredBlockedImpactObserver, IFightBattleCastCompletionObserver, IFightBattleHitSelectionObserver, IFightBattleImpactSettlementObserver, IFightBattleImpactStatusResolutionObserver, IFightBattleStatusViewObserver, IFightBattleUnitLifeObserver, IDisposable
+    public sealed class FightBattleImpactLatch : IFightBattleImpactGate, IFightBattleCastPreparationObserver, IFightBattleMovementPreparationObserver, IFightBattleBlockedMovementObserver, IFightBattleBlockedImpactObserver, IFightBattleDeferredBlockedImpactObserver, IFightBattleCastCompletionObserver, IFightBattleHitSelectionObserver, IFightBattleImpactSettlementObserver, IFightBattleImpactStatusResolutionObserver, IFightBattleStatusViewObserver, IFightBattleUnitLifeObserver, IFightBattleSummonObserver, IDisposable
     {
         private sealed class WorkerWait
         {
@@ -141,6 +149,7 @@ namespace Zjcs.Combat.Official
         private readonly Queue<FightBattleSecondsStatusNotice> secondsStatuses = new Queue<FightBattleSecondsStatusNotice>();
         private readonly Queue<FightBattleStatusViewNotice> statusViews = new Queue<FightBattleStatusViewNotice>();
         private readonly Queue<FightBattleUnitLifeNotice> unitLives = new Queue<FightBattleUnitLifeNotice>();
+        private readonly Queue<FightBattleSummonNotice> summons = new Queue<FightBattleSummonNotice>();
         private readonly Dictionary<FightBattleDamageEvent, FightBattlePendingImpact> deferredStatusResults =
             new Dictionary<FightBattleDamageEvent, FightBattlePendingImpact>();
         private readonly Queue<WorkerCommand> workerCommands = new Queue<WorkerCommand>();
@@ -153,6 +162,7 @@ namespace Zjcs.Combat.Official
         internal bool ObserveLiveStatusHits { get; set; }
         internal bool ObserveStatusViews { get; set; }
         internal bool ObserveUnitLives { get; set; }
+        internal bool ObserveSummons { get; set; }
         bool IFightBattleBlockedMovementObserver.ObservesBlockedMovements => ObserveMovements;
 
         // The isolated step owns exactly one worker. Other latch users retain the
@@ -241,6 +251,65 @@ namespace Zjcs.Combat.Official
                 while (!disposed && !workerStopped && (!workerWaiting || waitRevision <= previousRevision))
                     Monitor.Wait(sync);
                 if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+            }
+        }
+
+        public bool ObservesSummon(FightBattleSkillCastEvent cast, FightBattleHitDefinition definition,
+            FightBattleHitSelectionSnapshot hit, int centerIndex, int scopeIndex)
+        {
+            if (!ObserveSummons || cast?.SkillEntityId != 10710) return false;
+            if (definition == null || definition.EntityId != 10711 || hit?.HitEntityId != 10711
+                || definition.SummonConfigType != "FightHitSummonMonsterCfg"
+                || definition.ScopeEntries == null || definition.ScopeEntries.Count != 1
+                || definition.ScopeEntries[0] == null || definition.ScopeEntries[0].Delay != 0f
+                || definition.ScopeEntries[0].Position.X != 0 || definition.ScopeEntries[0].Position.Y != 2
+                || definition.SummonPools == null || definition.SummonPools.Count != 1
+                || definition.SummonPools[0] == null || definition.SummonPools[0].MonsterId != 3181 || !definition.SummonImmediateRound
+                || scopeIndex != 0 || centerIndex < 0 || hit.EffectCenters == null || centerIndex >= hit.EffectCenters.Count)
+                throw new InvalidOperationException("The original stone-chief summon configuration changed.");
+            return true;
+        }
+
+        public void AwaitSummonArrival(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot hit, int centerIndex)
+        {
+            var signal = new Signal(cast, hit, centerIndex, -1);
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                while (!disposed && !arrived.Contains(signal)) ParkWorker(impact: signal);
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+            }
+        }
+
+        public void SummonCreated(FightBattleUnitState unit, FightBattleHitSelectionSnapshot.SpawnedUnit receipt)
+        {
+            if (unit == null || receipt == null) throw new ArgumentNullException();
+            var notice = new FightBattleSummonNotice { Owner = this, Unit = FightBattleCheckpointSerializer.CopyUnit(unit),
+                Receipt = new FightBattleHitSelectionSnapshot.SpawnedUnit { UnitId = receipt.UnitId, X = receipt.X, Y = receipt.Y,
+                    EffectCenterIndex = receipt.EffectCenterIndex, ScopeIndex = receipt.ScopeIndex, Delay = receipt.Delay,
+                    HasInitialHealth = receipt.HasInitialHealth, InitialHp = receipt.InitialHp, InitialMaxHp = receipt.InitialMaxHp } };
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                summons.Enqueue(notice);
+                while (!disposed && !notice.Completed) ParkWorker(handoff: notice);
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+            }
+        }
+        public bool TryTakeSummon(out FightBattleSummonNotice notice)
+        {
+            lock (sync) { if (summons.Count == 0) { notice = null; return false; }
+                notice = summons.Dequeue(); notice.Taken = true; return true; }
+        }
+        public void CompleteSummon(FightBattleSummonNotice notice, out long releasedRevision)
+        {
+            if (notice == null) throw new ArgumentNullException(nameof(notice));
+            lock (sync)
+            {
+                if (disposed) throw new OperationCanceledException("The battle impact rendezvous was disposed.");
+                if (!ReferenceEquals(notice.Owner, this) || !notice.Taken || notice.Completed)
+                    throw new InvalidOperationException("The summon notice is not awaiting this host.");
+                releasedRevision = waitRevision; notice.Completed = true; Monitor.PulseAll(sync);
             }
         }
 
@@ -889,7 +958,7 @@ namespace Zjcs.Combat.Official
             lock (sync)
             {
                 if (disposed) return;
-                disposed = true; workerWait = null; CancelWorkerCommands(); arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); movements.Clear(); blockedMovements.Clear(); blockedContacts.Clear(); deferredContacts.Clear(); blockedImpacts.Clear(); boundBlockedTargets.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear(); secondsStatuses.Clear(); statusViews.Clear(); unitLives.Clear(); deferredStatusResults.Clear();
+                disposed = true; workerWait = null; CancelWorkerCommands(); arrived.Clear(); preparedCasts.Clear(); requests.Clear(); preparations.Clear(); movements.Clear(); blockedMovements.Clear(); blockedContacts.Clear(); deferredContacts.Clear(); blockedImpacts.Clear(); boundBlockedTargets.Clear(); completedCasts.Clear(); selections.Clear(); settlements.Clear(); secondsStatuses.Clear(); statusViews.Clear(); unitLives.Clear(); summons.Clear(); deferredStatusResults.Clear();
                 Monitor.PulseAll(sync);
             }
         }

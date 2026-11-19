@@ -585,6 +585,7 @@ namespace Zjcs.Presentation.Combat
                     PlayAnimation(view, "idle_01", true);
             }
 
+            RetainLiveSummons(checkpoint, present);
             RefreshPetFollowers(checkpoint);
 
             if (usesOfficialAnimationFallback && stepEvent != null)

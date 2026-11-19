@@ -17,12 +17,24 @@ namespace Zjcs.Presentation.Combat
         private readonly HashSet<int> seen = new HashSet<int>();
         private readonly Action<FightBattleHitSelectionSnapshot.SpawnedUnit> create;
         private readonly Func<int, bool> present;
+        private readonly Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> createLive;
 
         internal OfficialBattleUnitSpawnPlayback(Action<FightBattleHitSelectionSnapshot.SpawnedUnit> create,
-            Func<int, bool> present)
+            Func<int, bool> present,
+            Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> createLive = null)
         {
             this.create = create ?? throw new ArgumentNullException(nameof(create));
             this.present = present ?? throw new ArgumentNullException(nameof(present));
+            this.createLive = createLive;
+        }
+        internal bool CanApplyLive => createLive != null;
+        internal void ApplyLive(FightBattleUnitState unit, FightBattleHitSelectionSnapshot.SpawnedUnit receipt)
+        {
+            if (unit == null || receipt == null || unit.Id != receipt.UnitId) throw new ArgumentException("Invalid live summon.");
+            if (createLive == null) throw new InvalidOperationException("A live summon view is not bound.");
+            if (!seen.Add(unit.Id)) throw new InvalidOperationException("A live summon was already presented.");
+            if (!present(unit.Id)) createLive(unit, receipt);
+            if (!present(unit.Id)) throw new InvalidOperationException("The live summon model was not created.");
         }
         internal bool IsPending(int id) => pending.Exists(value => value.Receipt.UnitId == id);
         internal float DelayFor(int id) => Math.Max(0f, pending.Find(value => value.Receipt.UnitId == id)?.Remaining ?? 0f);

@@ -152,6 +152,8 @@ namespace Zjcs.Presentation.Combat
         private readonly Stack<FightBattleStatusViewNotice> suspendedStatusViews = new Stack<FightBattleStatusViewNotice>();
         private FightBattleUnitLifeNotice unitLife;
         private readonly Stack<FightBattleUnitLifeNotice> suspendedUnitLives = new Stack<FightBattleUnitLifeNotice>();
+        private FightBattleSummonNotice summon;
+        private readonly Stack<FightBattleSummonNotice> suspendedSummons = new Stack<FightBattleSummonNotice>();
         private readonly Stack<FightBattleSettledImpact> resolvingStatuses = new Stack<FightBattleSettledImpact>();
         private FightBattleCompletedCast completion;
         private readonly Stack<FightBattleCompletedCast> suspendedCompletions = new Stack<FightBattleCompletedCast>();
@@ -173,12 +175,14 @@ namespace Zjcs.Presentation.Combat
         public FightBattleSecondsStatusNotice PendingSecondsStatus => secondsStatus;
         public FightBattleStatusViewNotice PendingStatusView => statusView;
         public FightBattleUnitLifeNotice PendingUnitLife => unitLife;
+        public FightBattleSummonNotice PendingSummon => summon;
         /// <summary>An outer hit still awaits its status result; nested presentation may continue.</summary>
         public bool StatusResolutionBlocked => resolvingStatuses.Count > 0 && settlement == null;
         public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted;
         public event Action<FightBattleStatusViewEvent> SecondsStatusChanged;
         public event Action<FightBattleStatusViewEvent> StatusViewChanged;
         public event Action<FightBattleUnitLifeEvent> UnitLifeChanged;
+        public event Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> SummonCreated;
 
         public bool TryAdvanceStatusSeconds(double seconds, out Task<bool> completion)
         {
@@ -190,7 +194,7 @@ namespace Zjcs.Presentation.Combat
         public OfficialBattleLiveImpactSession(FightBattleCheckpoint checkpoint,
             Func<FightBattleCheckpoint, FightBattleExecutor> restore,
             OfficialBattleSkillEntityPlayback views, int sequence, int counter, bool observeMovements = false,
-            bool observeStatusViews = false, bool observeUnitLives = false)
+            bool observeStatusViews = false, bool observeUnitLives = false, bool observeSummons = false)
         {
             this.views = views ?? throw new ArgumentNullException(nameof(views));
             if (checkpoint?.Units != null) foreach (var unit in checkpoint.Units)
@@ -319,7 +323,7 @@ namespace Zjcs.Presentation.Combat
                     if (skill.EntityId == 10630 && comboValid && comboMask == 7) comboCasters.Add(unit.Id);
                 }
             }
-            step = new FightBattleIsolatedStep(checkpoint, restore, sequence, counter, observeMovements, observeStatusViews, observeUnitLives);
+            step = new FightBattleIsolatedStep(checkpoint, restore, sequence, counter, observeMovements, observeStatusViews, observeUnitLives, observeSummons);
             bridge = new OfficialBattleImpactViewBridge(views, step.Latch);
             bridge.IgnoreNativeScopeArrival = (cast, hit, scope) => scope >= 0
                 && cast?.SkillEntityId == 10570 && hit?.HitEntityId == 10571;
@@ -360,6 +364,17 @@ namespace Zjcs.Presentation.Combat
                     // Arrivals are keyed independently and may precede target requests.
                     while (step.Latch.TryTake(out _)) { }
                     object current = step.Latch.CurrentWorkerHandoff;
+                    CaptureHandoff(current, ref summon, suspendedSummons,
+                        () => step.Latch.TryTakeSummon(out var value) ? value : null);
+                    if (summon != null && ReferenceEquals(current, summon))
+                    {
+                        if (SummonCreated == null) return progressed;
+                        SummonCreated(summon.Unit, summon.Receipt);
+                        step.Latch.CompleteSummon(summon, out long summonRevision);
+                        ReleaseHandoff(ref summon, suspendedSummons); progressed = true;
+                        step.Latch.WaitForWorkerBoundary(summonRevision);
+                        continue;
+                    }
                     CaptureHandoff(current, ref unitLife, suspendedUnitLives,
                         () => step.Latch.TryTakeUnitLife(out var value) ? value : null);
                     if (unitLife != null && ReferenceEquals(current, unitLife))
@@ -1245,6 +1260,7 @@ namespace Zjcs.Presentation.Combat
             suspendedPreparations.Clear();
             suspendedStatusViews.Clear();
             suspendedUnitLives.Clear();
+            suspendedSummons.Clear();
             SecondsStatusChanged = null;
             StatusViewChanged = null;
         }

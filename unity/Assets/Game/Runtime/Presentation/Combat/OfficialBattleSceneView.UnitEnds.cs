@@ -60,6 +60,7 @@ namespace Zjcs.Presentation.Combat
         private void ApplyUnitLife(FightBattleUnitLifeEvent receipt)
         {
             var settled = latestCheckpoint?.Units.Find(value => value != null && value.Id == receipt.UnitId);
+            if (settled == null) liveSummons.TryGetValue(receipt.UnitId, out settled);
             if (settled == null || UnitSpawns.IsPending(receipt.UnitId)) return;
             var state = settled.WithPresentationHealth(receipt.Hp, receipt.MaxHp);
             if (receipt.IsDead)

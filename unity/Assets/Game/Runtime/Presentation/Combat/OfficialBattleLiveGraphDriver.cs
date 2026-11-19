@@ -17,6 +17,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Func<int, Transform> body, pet;
         private readonly Action<FightBattleDamageEvent, FightBattleUnitState> damageShown;
         private readonly Action<FightBattleSkillCastEvent, FightBattleUnitState> costShown;
+        private readonly Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> summonShown;
         private readonly Dictionary<FightBattleSkillCastEvent, float> started = new Dictionary<FightBattleSkillCastEvent, float>();
         private readonly Dictionary<FightBattleMovementEvent, float> ordinaryStarted = new Dictionary<FightBattleMovementEvent, float>();
         private readonly HashSet<int> ordinaryMoving = new HashSet<int>();
@@ -29,7 +30,8 @@ namespace Zjcs.Presentation.Combat
             Func<int, bool> hasSkill, Func<int, Transform> body, Func<int, Transform> pet,
             Action<FightBattleDamageEvent, FightBattleUnitState> damageShown,
             Action<FightBattleSkillCastEvent, FightBattleUnitState> costShown = null, bool observeStatusViews = false,
-            bool observeUnitLives = false)
+            bool observeUnitLives = false,
+            Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> summonShown = null)
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
             this.views = views ?? throw new ArgumentNullException(nameof(views));
@@ -38,11 +40,13 @@ namespace Zjcs.Presentation.Combat
             this.pet = pet;
             this.damageShown = damageShown ?? throw new ArgumentNullException(nameof(damageShown));
             this.costShown = costShown;
+            this.summonShown = summonShown;
             health = new FightBattleLiveHealthProjection(checkpoint);
             views.BindDamageUITargets(body);
             session = new OfficialBattleLiveImpactSession(checkpoint, restore, views,
                 checkpoint.Sequence, checkpoint.Counter + 1, observeMovements: true, observeStatusViews: observeStatusViews,
-                observeUnitLives: observeUnitLives);
+                observeUnitLives: observeUnitLives, observeSummons: summonShown != null);
+            if (summonShown != null) session.SummonCreated += ShowSummon;
         }
 
         public bool IsCompleted => session.IsCompleted;
@@ -51,6 +55,7 @@ namespace Zjcs.Presentation.Combat
         public FightBattleSettledImpact PendingSettlement => session.PendingSettlement;
         public FightBattleUnitState DisplayUnit(int unitId) => health.Find(unitId);
         public event Action<FightBattleMovementEvent> BlockedContact;
+        public event Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> SummonPresented;
         public event Action<FightBattleStatusViewEvent> SecondsStatusChanged
         { add { session.SecondsStatusChanged += value; } remove { session.SecondsStatusChanged -= value; } }
         public event Action<FightBattleStatusViewEvent> StatusViewChanged
@@ -157,6 +162,13 @@ namespace Zjcs.Presentation.Combat
             if (damage.HasDamageValue) return health.CanApplyDamage(damage);
             var unit = health.Find(damage.TargetId);
             return unit != null && unit.Hp == damage.BeforeHp && damage.AfterHp == damage.BeforeHp;
+        }
+
+        private void ShowSummon(FightBattleUnitState unit, FightBattleHitSelectionSnapshot.SpawnedUnit receipt)
+        {
+            health.AddLiveUnit(unit);
+            summonShown(unit, receipt);
+            SummonPresented?.Invoke(unit, receipt);
         }
 
         private void ShowDamage(FightBattleDamageEvent damage)

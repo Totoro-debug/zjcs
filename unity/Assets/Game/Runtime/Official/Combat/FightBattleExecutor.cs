@@ -1346,6 +1346,11 @@ namespace Zjcs.Combat.Official
                         ? CreatePetSummon(actor, skill, pool, hit, position, reference)
                         : CreateSummonedUnit(actor, skill, pool, hit, level, position, reference);
                 if (!CanPlaceSummon(summon, onSourceFallback ? actor.Id : 0)) continue;
+                int centerIndex = i / offsets.Count, scopeIndex = i % offsets.Count;
+                var liveSummon = ImpactGate as IFightBattleSummonObserver;
+                bool observeSummon = liveSummon != null
+                    && liveSummon.ObservesSummon(gridViewCast, hit, receipt, centerIndex, scopeIndex);
+                if (observeSummon) liveSummon.AwaitSummonArrival(gridViewCast, receipt, centerIndex);
 
                 units.Add(summon);
                 unitById.Add(summon.Id, summon);
@@ -1368,7 +1373,6 @@ namespace Zjcs.Combat.Official
                     currentStepSpawnedUnitIds.Add(summon.Id);
                 if (receipt != null)
                 {
-                    int centerIndex = i / offsets.Count, scopeIndex = i % offsets.Count;
                     receipt.SpawnedUnits.Add(new FightBattleHitSelectionSnapshot.SpawnedUnit {
                         UnitId = summon.Id, EffectCenterIndex = centerIndex, ScopeIndex = scopeIndex,
                         X = position.X, Y = position.Y,
@@ -1378,6 +1382,7 @@ namespace Zjcs.Combat.Official
                                 ? hit.ScopeEntries[scopeIndex].Delay : 0f)
                     });
                 }
+                if (observeSummon) liveSummon.SummonCreated(summon, receipt.SpawnedUnits[receipt.SpawnedUnits.Count - 1]);
                 AddSummonStatuses(summon, actor, skill, pool, hit);
                 if (isDoll)
                 {

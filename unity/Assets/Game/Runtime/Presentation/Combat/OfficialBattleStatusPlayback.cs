@@ -106,6 +106,7 @@ namespace Zjcs.Presentation.Combat
 
         private FightBattleExecutor executor;
         private FightBattleCheckpoint checkpoint;
+        private Func<int, FightBattleUnitState> liveUnit;
         private readonly OfflineBattleNativePlayableScope scope;
         private readonly Func<int, Transform> body;
         private readonly Func<int, bool> hasIcon;
@@ -245,8 +246,14 @@ namespace Zjcs.Presentation.Combat
             var target = Body(id.EntityId);
             return target ? target.GetComponent<MyEntity>() : null;
         }
+        internal void BindLiveUnits(Func<int, FightBattleUnitState> lookup) => liveUnit = lookup;
         private int MasterId(int owner)
-        { foreach (var unit in checkpoint.Units) if (unit.Id == owner) return unit.MasterId; return 0; }
+        {
+            var live = liveUnit?.Invoke(owner);
+            if (live != null) return live.MasterId;
+            foreach (var unit in checkpoint.Units) if (unit.Id == owner) return unit.MasterId;
+            return 0;
+        }
 
         private void Start(int owner, FightBattleStatusViewState snapshot, bool fresh)
         {

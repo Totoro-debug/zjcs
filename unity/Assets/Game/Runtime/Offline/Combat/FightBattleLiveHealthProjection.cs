@@ -26,6 +26,8 @@ namespace Zjcs.Combat.Official
             units.Add(unit.Id, unit.WithPresentationHealth(unit.Hp, unit.MaxHp));
         }
 
+        public void AddLiveUnit(FightBattleUnitState unit) => Add(unit);
+
         public FightBattleUnitState Find(int unitId) => units.TryGetValue(unitId, out var unit) ? unit : null;
 
         /// <summary>Applies only the actual cost captured when this cast was prepared.</summary>

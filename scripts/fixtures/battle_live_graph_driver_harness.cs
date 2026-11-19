@@ -40,19 +40,23 @@ namespace Zjcs.Presentation.Combat
         public static OfficialBattleLiveImpactSession Last;
         public StartCast Cast; public StartMovement Move; public StartBlockedMovement Blocked;
         public Action<FightBattleDamageEvent> After; public Func<FightBattleDamageEvent, bool> Before;
-        public bool IsCompleted, StatusResolutionBlocked, Disposed;
+        public bool IsCompleted, StatusResolutionBlocked, Disposed, ObserveSummons;
         public FightBattlePreparedMovement PendingMovement => null;
         public FightBattleSettledImpact PendingSettlement => null;
         public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted;
         public event Action<FightBattleStatusViewEvent> SecondsStatusChanged;
         public event Action<FightBattleStatusViewEvent> StatusViewChanged;
         public event Action<FightBattleUnitLifeEvent> UnitLifeChanged;
+        public event Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> SummonCreated;
+        public void DeliverSummon(FightBattleUnitState unit, FightBattleHitSelectionSnapshot.SpawnedUnit receipt)
+            => SummonCreated?.Invoke(unit, receipt);
         public bool TryAdvanceStatusSeconds(double seconds, out System.Threading.Tasks.Task<bool> completion)
         { completion = null; return false; }
         public OfficialBattleLiveImpactSession(FightBattleCheckpoint checkpoint,
             Func<FightBattleCheckpoint, FightBattleExecutor> restore, OfficialBattleSkillEntityPlayback views,
-            int sequence, int counter, bool observeMovements = false, bool observeStatusViews = false, bool observeUnitLives = false)
-        { if (!observeMovements) throw new InvalidOperationException("Movement observation was not enabled."); Last = this; }
+            int sequence, int counter, bool observeMovements = false, bool observeStatusViews = false, bool observeUnitLives = false,
+            bool observeSummons = false)
+        { if (!observeMovements) throw new InvalidOperationException("Movement observation was not enabled."); ObserveSummons = observeSummons; Last = this; }
         public bool Pump(float elapsed, StartCast cast, Action<FightBattleDamageEvent> after,
             StartMovement move, StartBlockedMovement blocked, Func<FightBattleDamageEvent, bool> before)
         { Cast = cast; Move = move; Blocked = blocked; After = after; Before = before; return true; }
@@ -146,6 +150,24 @@ namespace Zjcs.Presentation.Combat
             Check(driver.TryTakeCompleted(out _, out _), "a completed step was not transferable");
             views.Contact(move); Check(contacts == 1, "transferred driver accepted stale contact");
             driver.Dispose(); Check(session.Disposed, "disposing the driver must cancel its session");
+            int summons = 0, presented = 0;
+            OfficialBattleLiveGraphDriver summonDriver = null;
+            summonDriver = new OfficialBattleLiveGraphDriver(checkpoint, _ => null, views, _ => true,
+                id => transforms.TryGetValue(id, out var value) ? value : null, null, (_, __) => { },
+                summonShown: (unit, receipt) => {
+                    Check(summonDriver.DisplayUnit(unit.Id)?.Hp == unit.Hp && receipt.UnitId == unit.Id,
+                        "the summoned unit must be available to presentation before its view starts");
+                    summons++;
+                });
+            summonDriver.SummonPresented += (_, __) => presented++;
+            var summoned = new FightBattleUnitState { Id = 3, Hp = 60, MaxHp = 60 };
+            var spawned = new FightBattleHitSelectionSnapshot.SpawnedUnit { UnitId = 3 };
+            var summonSession = OfficialBattleLiveImpactSession.Last;
+            Check(summonSession.ObserveSummons, "a bound summon host did not enable live observation");
+            summonSession.DeliverSummon(summoned, spawned);
+            Check(summons == 1 && presented == 1 && summonDriver.DisplayUnit(3).Hp == 60
+                && checkpoint.Units.Count == 2, "the summon handoff changed the committed roster or was duplicated");
+            summonDriver.Dispose();
             Console.WriteLine("Live graph driver cast, action timing, contact and health handoff passed.");
         }
     }

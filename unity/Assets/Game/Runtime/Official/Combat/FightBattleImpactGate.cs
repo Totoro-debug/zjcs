@@ -115,6 +115,14 @@ namespace Zjcs.Combat.Official
         void StatusViewChanged(FightBattleStatusViewEvent transition);
     }
 
+    /// <summary>Coordinates a supported summon with its original hit entity.</summary>
+    public interface IFightBattleSummonObserver
+    {
+        bool ObservesSummon(FightBattleSkillCastEvent cast, FightBattleHitDefinition definition, FightBattleHitSelectionSnapshot hit, int centerIndex, int scopeIndex);
+        void AwaitSummonArrival(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot hit, int centerIndex);
+        void SummonCreated(FightBattleUnitState unit, FightBattleHitSelectionSnapshot.SpawnedUnit receipt);
+    }
+
     /// <summary>Receives a confirmed death or revival after the hit's immediate effects.</summary>
     public interface IFightBattleUnitLifeObserver
     {

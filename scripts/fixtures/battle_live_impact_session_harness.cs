@@ -690,6 +690,64 @@ namespace Zjcs.Presentation.Combat
                     && FightBattleCheckpointSerializer.Save(freezeCp) == beforeFreeze,
                     "Canceling a held status view must leave the committed checkpoint unchanged");
             }
+            var summonCp = FightBattleCheckpointSerializer.Load(committed);
+            var summonActor = summonCp.Units.Single(unit => unit.Id == 1);
+            summonActor.Skills.Clear(); summonActor.SkillState.Slots.Clear();
+            var summonSkill = catalog.CreateSkill(10710, 0, 10019, 2, 20, 1,
+                catalog.CalculateSkillProps(10710, 2, 20, 1).Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
+            summonSkill.LimitedTimes = 1; summonActor.Skills.Add(summonSkill); summonActor.SkillState.Slots.Add(catalog.CreateSkillSlot(summonSkill, 0));
+            string beforeSummon = FightBattleCheckpointSerializer.Save(summonCp);
+            var summonBaseline = FightBattleCheckpointSerializer.Load(beforeSummon);
+            FightBattleExecutor.Restore(summonBaseline, formula, new FightDamageSettlement(), catalog, items).Step(0, 1);
+            var summonViews = new OfficialBattleSkillEntityPlayback();
+            using (var summonSession = new OfficialBattleLiveImpactSession(summonCp,
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), summonViews, 0, 1,
+                observeSummons: true))
+            {
+                int host = Environment.CurrentManagedThreadId, created = 0;
+                FightBattleUnitState displayed = null;
+                summonSession.SummonCreated += (unit, receipt) => {
+                    Check(Environment.CurrentManagedThreadId == host && unit.MonsterId == 3181 && unit.MasterId == 1
+                        && unit.Id == receipt.UnitId && unit.X == receipt.X && unit.Y == receipt.Y
+                        && !summonCp.Units.Any(value => value.Id == unit.Id), "Spawn view did not receive the isolated initial official summon");
+                    displayed = unit; created++;
+                };
+                bool StartSummon(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) { id = new EcEntityIdentifier(95); return true; }
+                Check(SpinWait.SpinUntil(() => { summonSession.Pump(0f, StartSummon); return summonViews.Selection != null; }, 20000)
+                    && created == 0 && !summonSession.IsCompleted, "Summon appeared before its official hit entity arrived");
+                summonViews.Arrive(-1);
+                Check(created == 1, "The summon was not presented in the actual hit arrival frame");
+                FightBattleExecutionResult result = null;
+                Check(SpinWait.SpinUntil(() => { summonSession.Pump(0f, StartSummon); return summonSession.IsCompleted; }, 20000)
+                    && created == 1 && summonSession.TryTakeCompleted(out _, out result)
+                    && FightBattleCheckpointSerializer.Save(result.Checkpoint) == FightBattleCheckpointSerializer.Save(summonBaseline)
+                    && FightBattleCheckpointSerializer.Save(summonCp) == beforeSummon,
+                    "The live summon did not preserve its deterministic result and original checkpoint");
+                Check(displayed != null && !displayed.Statuses.Any(status => status.ClassId == 10712),
+                    "The summon view snapshot must precede subsequent status initialization");
+                var actualSummon = result.Checkpoint.Units.Single(unit => unit.MonsterId == 3181);
+                Check(actualSummon.Statuses.Single(status => status.ClassId == 10712).DurationRound == 5,
+                    "The summoned stone chief lost its five-round lifespan");
+                var next = FightBattleExecutor.Restore(result.Checkpoint, formula, new FightDamageSettlement(), catalog, items).Step(0, 2);
+                Check(next.Event.ActorId == actualSummon.Id, "The original summoned stone chief must act immediately");
+            }
+            var heldSummonViews = new OfficialBattleSkillEntityPlayback();
+            using (var heldSummon = new OfficialBattleLiveImpactSession(summonCp,
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), heldSummonViews, 0, 1,
+                observeSummons: true))
+            {
+                bool StartSummon(FightBattleSkillCastEvent cast, out EcEntityIdentifier id) { id = new EcEntityIdentifier(96); return true; }
+                Check(SpinWait.SpinUntil(() => { heldSummon.Pump(0f, StartSummon); return heldSummonViews.Selection != null; }, 20000),
+                    "The canceled summon fixture did not select its native hit");
+                heldSummonViews.Arrive(-1);
+                Check(heldSummon.PendingSummon?.Unit.MonsterId == 3181 && !heldSummon.IsCompleted
+                    && FightBattleCheckpointSerializer.Save(summonCp) == beforeSummon,
+                    "An undelivered summon must hold the isolated worker without changing the saved checkpoint");
+                heldSummon.Dispose();
+                Check(SpinWait.SpinUntil(() => heldSummon.IsCompleted, 20000)
+                    && FightBattleCheckpointSerializer.Save(summonCp) == beforeSummon,
+                    "Canceling a held summon changed the saved checkpoint");
+            }
             return "Live impact session passed: deferred start, same-frame impact, HP handoff, lifetime, isolation and actual status resolution.";
         }
     }

@@ -27,6 +27,16 @@ namespace Zjcs.Combat.Official
             return builder.ToString();
         }
 
+        internal static FightBattleUnitState CopyUnit(FightBattleUnitState unit)
+        {
+            if (unit == null) throw new ArgumentNullException(nameof(unit));
+            var builder = new StringBuilder();
+            WriteValue(builder, unit, typeof(FightBattleUnitState));
+            var copy = new FightBattleUnitState();
+            Populate(copy, FightOfficialCombatCatalog.ParseObject(builder.ToString(), "unit snapshot"));
+            return copy;
+        }
+
         public static FightBattleCheckpoint Load(string json)
         {
             if (string.IsNullOrWhiteSpace(json))

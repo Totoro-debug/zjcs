@@ -17,14 +17,19 @@ def identity(path):
 def main():
     runtime = 'unity/Assets/Game/Runtime/'
     changed = [runtime + path for path in (
-        'Official/Combat/FightBattleExecutor.cs', 'Offline/Combat/FightBattleHitSelectionSnapshot.cs',
+        'Official/Combat/FightBattleExecutor.cs', 'Official/Combat/FightBattleImpactGate.cs',
+        'Official/Combat/FightBattleCheckpointSerializer.cs', 'Offline/Combat/FightBattleHitSelectionSnapshot.cs',
+        'Offline/Combat/FightBattleImpactLatch.cs', 'Offline/Combat/FightBattleIsolatedStep.cs',
+        'Offline/Combat/FightBattleLiveHealthProjection.cs',
         'Official/Combat/FightBattleState.cs', 'Offline/Combat/FightBattleExecutor.UnitLifeEvents.cs',
         'Offline/Combat/FightBattleExecutor.DeathForbidden.cs', 'Offline/Combat/FightBattleExecutor.StatusStartup.cs',
         'Presentation/Combat/OfficialBattleSceneView.cs', 'Presentation/Combat/OfficialBattleSceneView.Summons.cs',
         'Presentation/Combat/OfficialBattleSceneView.UnitEnds.cs', 'Presentation/Combat/OfficialBattleUnitSpawnPlayback.cs',
         'Presentation/Combat/OfficialBattleUnitEndPlayback.cs',
         'Presentation/Combat/OfficialBattleUnitLifePlayback.cs',
-        'Presentation/Combat/OfficialBattleSkillGraphPlayback.cs', 'Presentation/Combat/OfficialBattleLiveMonsterModelView.cs')]
+        'Presentation/Combat/OfficialBattleSkillGraphPlayback.cs', 'Presentation/Combat/OfficialBattleLiveMonsterModelView.cs',
+        'Presentation/Combat/OfficialBattleLiveImpactSession.cs', 'Presentation/Combat/OfficialBattleLiveGraphDriver.cs',
+        'Presentation/Combat/OfficialBattleStatusPlayback.cs')]
     original = '.tools/source-packages/current/884_156692/official-code/'
     proof = dict(code_manifest='884_156692', configuration_manifest='854_156383',
         original=[identity(original + path) for path in (
@@ -51,9 +56,11 @@ def main():
             'scripts/prepare_battle_damage_playback_validation.py',
             'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSummonSpawnAcceptance.cs')],
         generator=identity('scripts/record_battle_summon_spawn_sources.py'),
-        binding='Successful SpawnSummons -> owning HitSelectionSnapshot.SpawnedUnits -> shared scene -> native graph clock -> original model/generation graph',
+        binding='Successful SpawnSummons -> original hit arrival -> isolated unit snapshot -> shared scene -> original model/generation graph',
         operation='Add presentation-only identity, initial cell and cast-local flight plus original sorted Base scope delay for each successful role summon. '
-            'Retain eager settlement, RNG, placement and status order. Delay model/HUD creation on the existing native graph clock. '
+            'For the supported stone-chief summon, a bound live host waits for the original hit entity, creates the isolated unit view before its status starts, '
+            'and retains it while the committed checkpoint is refreshed. Other and legacy paths retain their existing receipt clock. '
+            'Preserve RNG, placement, status order and the original generation graph. '
             'Restore existing roles without replaying generation. Position the native monster before original birth graph initialization. '
             'Queue existing explicit entity-removal receipts for pending births as well as visible units; '
             'dispatch birth before removal at equal times, suppress births after an earlier removal, and deduplicate removed identities. '
