@@ -29,9 +29,9 @@ namespace Zjcs.Presentation.Home
             bool equipped = Environment.GetEnvironmentVariable("ZJCS_BLAZING_HEART_EQUIPPED") == "1";
             string requestedSecret = Environment.GetEnvironmentVariable("ZJCS_AFFINITY_SECRET_ID");
             int secretId = string.IsNullOrEmpty(requestedSecret) ? 10520 : int.Parse(requestedSecret);
-            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555, "Unexpected property secret.");
+            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583, "Unexpected property secret.");
             int activeId = secretId == 10521 ? 10000 : secretId == 10522 ? 10001 : 10028;
-            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 ? "MaxHp" : "ElementMaster";
+            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 ? "MaxHp" : secretId == 10555 ? "ElementMaster" : "ElementResistance";
             Require(!string.IsNullOrEmpty(sourcePath) && File.Exists(sourcePath), "Missing acquired secret profile.");
             var save = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(sourcePath));
             var profile = save.Player;
@@ -41,7 +41,7 @@ namespace Zjcs.Presentation.Home
                 "The source profile did not acquire and equip the selected secret through the original UI.");
             if (!equipped)
             {
-                foreach (int skillId in new[] { 10520, 10521, 10522, 10550, 10555 })
+                foreach (int skillId in new[] { 10520, 10521, 10522, 10550, 10555, 10583 })
                     VerifyOriginalWish(output, save, skillId);
             }
             if (!equipped)
@@ -91,6 +91,16 @@ namespace Zjcs.Presentation.Home
             // The original boss occupies five cells across; keep its body clear of
             // the player while retaining the real stage and a target within the original skill range.
             enemy.X = player.X + 5; enemy.Y = player.Y;
+            if (secretId == 10583)
+            {
+                // Exercise the original elemental formula against an incoming fireball
+                // while retaining the native weekly stage and battle flow.
+                enemy.Skills.Clear(); enemy.SkillState.Slots.Clear();
+                var incoming = combat.CreateSkill(10800, 0, 10028, 2, 2, enemy.SubRank,
+                    combat.CalculateSkillProps(10800, 2, 2, enemy.SubRank)
+                        .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
+                enemy.Skills.Add(incoming); enemy.SkillState.Slots.Add(combat.CreateSkillSlot(incoming, 0));
+            }
             foreach (var unit in checkpoint.Units)
             {
                 var props = new Dictionary<int, long> { { 1, 1000 }, { 2, 10 }, { 3, 1000000 },
@@ -110,8 +120,10 @@ namespace Zjcs.Presentation.Home
             FightBattleCheckpoint pendingDisk = null;
             controller.StepCompleted += step =>
             {
-                var hit = step.Event.DamageEvents.FirstOrDefault(value => value.SourceId == player.Id
-                    && value.TargetId == enemy.Id && value.SkillItemId == activeId && !value.IsCure && value.Damage < 0);
+                var hit = step.Event.DamageEvents.FirstOrDefault(value => !value.IsCure && value.Damage < 0
+                    && (secretId == 10583
+                        ? value.SourceId == enemy.Id && value.TargetId == player.Id && value.SkillItemId == 10028
+                        : value.SourceId == player.Id && value.TargetId == enemy.Id && value.SkillItemId == activeId));
                 if (hit != null && damage == 0) damage = Math.Abs(hit.Damage);
                 Require(pendingDisk == null, "The previous battle step was not checked on disk.");
                 pendingDisk = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(step.Checkpoint));

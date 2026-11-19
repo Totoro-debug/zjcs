@@ -3,7 +3,7 @@ param(
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
     [Parameter(Mandatory)][string]$Profile,
-    [ValidateSet(10520,10521,10522,10550,10555)][int]$SecretId = 10520
+    [ValidateSet(10520,10521,10522,10550,10555,10583)][int]$SecretId = 10520
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -90,7 +90,7 @@ try {
             throw "The actual battle produced a runtime or shutdown error: $run"
         }
         if (-not $equipped) {
-            foreach ($skill in @(10520,10521,10522,10550,10555)) {
+            foreach ($skill in @(10520,10521,10522,10550,10555,10583)) {
                 if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch "[Passive affinity wish] item=$skill granted")) {
                     throw "Original skill wish acquisition did not complete for $skill : $run"
                 }
@@ -100,7 +100,8 @@ try {
         Write-Output "Blazing heart actual battle passed: equipped=$equipped / $run"
     }
     if ($evidence['True'].affinity -le $evidence['False'].affinity -or
-        ($SecretId -ne 10550 -and $evidence['True'].damage -le $evidence['False'].damage) -or
+        ($SecretId -ne 10550 -and $SecretId -ne 10583 -and $evidence['True'].damage -le $evidence['False'].damage) -or
+        ($SecretId -eq 10583 -and $evidence['True'].damage -ge $evidence['False'].damage) -or
         ($SecretId -eq 10550 -and $evidence['True'].damage -ne $evidence['False'].damage)) {
         throw 'Equipping the acquired secret produced unexpected battle properties or damage.'
     }
