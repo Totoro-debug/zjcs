@@ -19,7 +19,7 @@ namespace Zjcs.Presentation.Home
     public static class SkillBlazingHeartValidation
     {
         [Serializable]
-        private sealed class Evidence { public bool equipped; public long affinity; public long damage; public double effectRate; public int diskChecks; }
+        private sealed class Evidence { public bool equipped; public long affinity; public long secondary; public long damage; public double effectRate; public int diskChecks; }
 
         public static IEnumerator Exercise(string output, Func<string, IEnumerator> capture,
             Func<Selectable, IEnumerator> click)
@@ -29,9 +29,9 @@ namespace Zjcs.Presentation.Home
             bool equipped = Environment.GetEnvironmentVariable("ZJCS_BLAZING_HEART_EQUIPPED") == "1";
             string requestedSecret = Environment.GetEnvironmentVariable("ZJCS_AFFINITY_SECRET_ID");
             int secretId = string.IsNullOrEmpty(requestedSecret) ? 10520 : int.Parse(requestedSecret);
-            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559, "Unexpected property secret.");
+            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554, "Unexpected property secret.");
             int activeId = secretId == 10521 ? 10000 : secretId == 10522 ? 10001 : secretId == 10559 ? 10005 : 10028;
-            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 ? "MaxHp" : secretId == 10555 ? "ElementMaster" : secretId == 10583 ? "ElementResistance" : "EffectRate";
+            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 ? "MaxHp" : secretId == 10555 ? "ElementMaster" : secretId == 10583 ? "ElementResistance" : secretId == 10559 ? "EffectRate" : "CritRatePercent";
             Require(!string.IsNullOrEmpty(sourcePath) && File.Exists(sourcePath), "Missing acquired secret profile.");
             var save = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(sourcePath));
             var profile = save.Player;
@@ -41,7 +41,7 @@ namespace Zjcs.Presentation.Home
                 "The source profile did not acquire and equip the selected secret through the original UI.");
             if (!equipped)
             {
-                foreach (int skillId in new[] { 10520, 10521, 10522, 10550, 10555, 10583, 10559 })
+                foreach (int skillId in new[] { 10520, 10521, 10522, 10550, 10555, 10583, 10559, 10554 })
                     VerifyOriginalWish(output, save, skillId);
             }
             if (!equipped)
@@ -80,6 +80,8 @@ namespace Zjcs.Presentation.Home
             Require(player.Skills.Any(value => value.ItemId == activeId), "The actual battle omitted the saved elemental skill.");
             int elementAffinity = combat.PropertyType(affinityName);
             long affinity = player.Properties.Where(value => value.Id == elementAffinity).Sum(value => value.Value);
+            int critValueProperty = combat.PropertyType("CritRatePercentValue");
+            long secondary = secretId == 10554 ? player.Properties.Where(value => value.Id == critValueProperty).Sum(value => value.Value) : 0;
             if (secretId == 10550)
                 Require(affinity > 0 && player.MaxHp == affinity && player.Hp == affinity,
                     "The actual battle did not initialize health from the equipped secret.");
@@ -107,8 +109,11 @@ namespace Zjcs.Presentation.Home
                     { 4, unit.Id == 1 ? 1000 : 900 }, { combat.PropertyType("BaseElementAdd"), 10000 },
                     { combat.PropertyType("BaseElementReduce"), 10000 }, { combat.PropertyType("BaseElementMaster"), 10000 },
                     { combat.PropertyType("BaseElementResistance"), 10000 }, { combat.PropertyType("BaseEffectRate"), 10000 },
-                    { combat.PropertyType("BaseEffectDodge"), 10000 } };
+                    { combat.PropertyType("BaseEffectDodge"), 10000 }, { combat.PropertyType("BaseCritRatePercentValue"), 10000 },
+                    { combat.PropertyType("BaseCritAvoidPercentValue"), 10000 }, { combat.PropertyType("BaseBlockPercentValue"), 10000 },
+                    { combat.PropertyType("BaseBlockAvoidPercentValue"), 10000 } };
                 if (unit.Id == 1 && affinity != 0) props[elementAffinity] = affinity;
+                if (unit.Id == 1 && secretId == 10554 && secondary != 0) props[critValueProperty] = secondary;
                 OfficialBattleUnitAssembler.Initialize(combatAssets.LoadDamageFormula(), unit, props, 3, 4);
             }
             double effectRate = secretId == 10559
@@ -153,8 +158,11 @@ namespace Zjcs.Presentation.Home
                         .Where(value => value.Id == elementAffinity).Sum(value => value.Value);
                     long savedAffinity = restored.Units.Single(value => value.Id == player.Id).Properties
                         .Where(value => value.Id == elementAffinity).Sum(value => value.Value);
+                    long savedSecondary = secretId == 10554 ? restored.Units.Single(value => value.Id == player.Id).Properties
+                        .Where(value => value.Id == critValueProperty).Sum(value => value.Value) : 0;
                     Require(restored.Sequence == pendingDisk.Sequence && restored.Counter == pendingDisk.Counter
-                        && savedAffinity == expectedAffinity && (diskChecks != 0 || savedAffinity == affinity),
+                        && savedAffinity == expectedAffinity && (diskChecks != 0 || savedAffinity == affinity)
+                        && (secretId != 10554 || savedSecondary == secondary),
                         "Battle checkpoint lost its receipt or elemental affinity.");
                     pendingDisk = null;
                     diskChecks++;
@@ -179,7 +187,7 @@ namespace Zjcs.Presentation.Home
             var reloaded = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(slots.GetProgressPath(slot)));
             Require(JsonUtility.ToJson(reloaded.Player.Skills) == originalSkills, "Battle changed the saved skill plan.");
             File.WriteAllText(Path.Combine(output, "blazing-heart-battle.json"),
-                JsonUtility.ToJson(new Evidence { equipped = equipped, affinity = affinity, damage = damage, effectRate = effectRate, diskChecks = diskChecks }, true));
+                JsonUtility.ToJson(new Evidence { equipped = equipped, affinity = affinity, secondary = secondary, damage = damage, effectRate = effectRate, diskChecks = diskChecks }, true));
             yield return capture("blazing-heart-return");
             home.CloseForNavigation();
             Debug.Log("[Blazing heart battle] equipped=" + equipped + " affinity=" + affinity
