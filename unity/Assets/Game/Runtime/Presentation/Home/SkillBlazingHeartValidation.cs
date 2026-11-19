@@ -29,9 +29,9 @@ namespace Zjcs.Presentation.Home
             bool equipped = Environment.GetEnvironmentVariable("ZJCS_BLAZING_HEART_EQUIPPED") == "1";
             string requestedSecret = Environment.GetEnvironmentVariable("ZJCS_AFFINITY_SECRET_ID");
             int secretId = string.IsNullOrEmpty(requestedSecret) ? 10520 : int.Parse(requestedSecret);
-            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550, "Unexpected property secret.");
+            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555, "Unexpected property secret.");
             int activeId = secretId == 10521 ? 10000 : secretId == 10522 ? 10001 : 10028;
-            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : "MaxHp";
+            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 ? "MaxHp" : "ElementMaster";
             Require(!string.IsNullOrEmpty(sourcePath) && File.Exists(sourcePath), "Missing acquired secret profile.");
             var save = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(sourcePath));
             var profile = save.Player;
@@ -41,7 +41,7 @@ namespace Zjcs.Presentation.Home
                 "The source profile did not acquire and equip the selected secret through the original UI.");
             if (!equipped)
             {
-                foreach (int skillId in new[] { 10520, 10521, 10522, 10550 })
+                foreach (int skillId in new[] { 10520, 10521, 10522, 10550, 10555 })
                     VerifyOriginalWish(output, save, skillId);
             }
             if (!equipped)
@@ -95,7 +95,8 @@ namespace Zjcs.Presentation.Home
             {
                 var props = new Dictionary<int, long> { { 1, 1000 }, { 2, 10 }, { 3, 1000000 },
                     { 4, unit.Id == 1 ? 1000 : 900 }, { combat.PropertyType("BaseElementAdd"), 10000 },
-                    { combat.PropertyType("BaseElementReduce"), 10000 } };
+                    { combat.PropertyType("BaseElementReduce"), 10000 }, { combat.PropertyType("BaseElementMaster"), 10000 },
+                    { combat.PropertyType("BaseElementResistance"), 10000 } };
                 if (unit.Id == 1 && affinity != 0) props[elementAffinity] = affinity;
                 OfficialBattleUnitAssembler.Initialize(combatAssets.LoadDamageFormula(), unit, props, 3, 4);
             }
