@@ -2208,6 +2208,128 @@ namespace Zjcs.Editor.Combat
                 pullScope.Dispose(); pullAppearance?.Dispose(); targetAppearance?.Dispose(); Destroy(pullRoot.gameObject);
             }
 
+            // Falling wind maps centre and adjacent cells to the actual sword and ground particles.
+            foreach (var direction in new[] { new[] { 1, 0, 3 }, new[] { -1, 0, 1 },
+                new[] { 0, 1, 2 }, new[] { 0, -1, 0 } })
+            {
+                int dx = direction[0], dy = direction[1], centerX = 7 + 3 * dx, centerY = 7 + 3 * dy;
+                var fallUnits = new List<FightBattleUnitState> { LiveUnit(1, 1, 7) };
+                fallUnits[0].Y = 7; fallUnits[0].Direction = direction[2];
+                foreach (var offset in new[] { new[] { 0, 0 }, new[] { -1, 0 }, new[] { 1, 0 },
+                    new[] { 0, -1 }, new[] { 0, 1 } })
+                {
+                    var fallTarget = LiveUnit(fallUnits.Count + 1, 2, centerX + offset[0]);
+                    fallTarget.Y = centerY + offset[1]; fallUnits.Add(fallTarget);
+                }
+                var fallSkill = liveCatalog.CreateSkill(10590, 0, 10043, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(10590, 2, 20, 1)
+                        .Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+                fallSkill.LimitedTimes = 1; fallUnits[0].Skills.Add(fallSkill);
+                fallUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(fallSkill, 0));
+                var fallCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                fallCheckpoint.Units.AddRange(fallUnits);
+                var fallWave = new FightBattleWaveState(); fallWave.UnitIds.AddRange(fallUnits.Skip(1).Select(unit => unit.Id));
+                fallCheckpoint.Waves.Add(fallWave);
+                FightBattleExecutor.Begin(fallCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                var fallDisplay = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(fallCheckpoint)).Units.ToArray();
+                var fallRoot = new GameObject("Falling wind acceptance").transform; fallRoot.SetParent(root, false);
+                var fallBodies = new Dictionary<int, Transform>();
+                foreach (var unit in fallUnits)
+                {
+                    var body = new GameObject("Falling wind unit " + unit.Id).transform; body.SetParent(fallRoot, false);
+                    body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                    var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false;
+                    renderer.sharedMaterials = Array.Empty<Material>();
+                    body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                    fallBodies.Add(unit.Id, body);
+                }
+                var fallAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
+                    ? NativeJumpAppearanceFixture.Create(fallBodies[1].gameObject) : null;
+                var fallTargetAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
+                    ? NativeJumpAppearanceFixture.Create(fallBodies[2].gameObject) : null;
+                var fallScope = new OfflineBattleNativePlayableScope(fallRoot, null);
+                MyPlayable fallEffect = null; Animator fallAnimator = null; ParticleSystem fallOuter = null;
+                var pausedFallParticles = new List<ParticleSystem>();
+                var fallDamaged = new HashSet<int>(); int centreFrame = -1, outerFrame = -1;
+                bool fallResumed = false, outerResumed = false; int frozenFrames = 0, outerFrozenFrames = 0;
+                fallScope.NativePlayableStarted += (prefab, leaf) => {
+                    if (prefab.name != "playable10590" || leaf.name != "effect") return;
+                    fallEffect = leaf;
+                    if (!leaf.myApplyComponent) return;
+                    fallAnimator = leaf.myApplyComponent.GetComponent<Animator>();
+                    if (fallAnimator) fallAnimator.speed = 0f;
+                    foreach (var particle in leaf.myApplyComponent.GetComponentsInChildren<ParticleSystem>(true))
+                    {
+                        if (particle.name == "tuci") fallOuter = particle;
+                        if (particle.isPlaying) { particle.Pause(); pausedFallParticles.Add(particle); }
+                    }
+                };
+                using (var fallViews = new OfficialBattleSkillEntityPlayback(fallRoot,
+                    new OfficialBattleGridMapper(fallRoot, grid), fallScope,
+                    id => fallDisplay.FirstOrDefault(value => value.Id == id)))
+                using (var fallGraph = new OfficialBattleSkillGraphPlayback(
+                    OfficialBattleSkillGraphCatalog.TryLoadDefault(), fallScope, fallViews))
+                {
+                    fallViews.BindDamageUI(fallRoot, 0);
+                    foreach (var pair in fallBodies) fallViews.EnsureUnit(pair.Key, pair.Value);
+                    Transform FallBody(int id) => fallBodies.TryGetValue(id, out var value) ? value : null;
+                    void FallDamage(FightBattleDamageEvent damage, FightBattleUnitState projected)
+                    {
+                        Require(damage.SkillEntityId == 10590 && damage.HitEntityId == 10591
+                            && damage.DamageEntityId == 10592 && damage.ElementType == 100 && damage.Damage < 0
+                            && damage.TargetId > 1 && fallDamaged.Add(damage.TargetId) && fallEffect && fallAnimator,
+                            "Falling wind produced an unexpected damage receipt.");
+                        if (damage.TargetId == 2)
+                        {
+                            var sword = fallEffect.myApplyComponent.transform.Find("jian");
+                            Require(fallResumed && sword && sword.localPosition.y <= .376f && fallOuter,
+                                "Falling wind hit its centre before the original sword landed.");
+                            centreFrame = Time.frameCount; fallOuter.Pause();
+                        }
+                        else
+                        {
+                            Require(centreFrame >= 0 && outerResumed && fallOuter && fallOuter.particleCount > 0
+                                && Time.frameCount > centreFrame && (outerFrame < 0 || outerFrame == Time.frameCount),
+                                "Falling wind did not hit adjacent cells with its original ground effect.");
+                            outerFrame = Time.frameCount;
+                        }
+                        fallDisplay[Array.FindIndex(fallDisplay, unit => unit.Id == damage.TargetId)] = projected;
+                        if (fallAppearance != null) Capture("falling-wind-damage-" + dx + "-" + dy + ".png", false);
+                    }
+                    using (var fallDriver = new OfficialBattleLiveGraphDriver(fallCheckpoint,
+                        copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()),
+                        fallViews, id => id == 10590, FallBody, null, FallDamage))
+                    {
+                        fallDriver.SecondsStatusChanged += _ => { };
+                        fallDisplay = fallCheckpoint.Units.Select(unit => fallDriver.DisplayUnit(unit.Id)).ToArray();
+                        float fallDeadline = Time.realtimeSinceStartup + 15f;
+                        while (!fallDriver.IsCompleted && Time.realtimeSinceStartup < fallDeadline)
+                        {
+                            fallDriver.Pump(Time.deltaTime); fallViews.Tick(Time.deltaTime); fallScope.LateTick();
+                            if (fallEffect && !fallResumed && ++frozenFrames >= 8)
+                            {
+                                Require(fallAnimator && fallOuter && fallDamaged.Count == 0,
+                                    "A frozen falling sword settled damage before moving.");
+                                fallAnimator.speed = 1f; foreach (var particle in pausedFallParticles) if (particle) particle.Play();
+                                fallResumed = true;
+                            }
+                            if (centreFrame >= 0 && !outerResumed && ++outerFrozenFrames >= 8)
+                            {
+                                Require(fallDamaged.Count == 1 && fallOuter && fallOuter.isPaused,
+                                    "Frozen ground particles settled an adjacent target.");
+                                fallOuter.Play(); outerResumed = true;
+                            }
+                            yield return null;
+                        }
+                        Require(fallDriver.TryTakeCompleted(out _, out _) && fallDamaged.Count == 5
+                            && centreFrame >= 0 && outerFrame > centreFrame && fallResumed && outerResumed,
+                            "Falling wind did not settle its five original scope targets.");
+                    }
+                }
+                fallScope.Dispose(); fallAppearance?.Dispose(); fallTargetAppearance?.Dispose(); Destroy(fallRoot.gameObject);
+            }
+
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(1, 0), Delay = .8f });
