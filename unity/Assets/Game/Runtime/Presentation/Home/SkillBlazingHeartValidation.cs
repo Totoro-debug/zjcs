@@ -34,7 +34,11 @@ namespace Zjcs.Presentation.Home
             Require(OfflineSkillProgression.OwnedRank(profile.Skills, 10520) > 0
                 && profile.Skills.Plans[profile.Skills.SelectedPlan].PassiveSkills.Contains(10520),
                 "The source profile did not acquire and equip 炽热之心 through the original UI.");
-            if (!equipped) VerifyOriginalWish(output, save);
+            if (!equipped)
+            {
+                foreach (int skillId in new[] { 10520, 10521, 10522 })
+                    VerifyOriginalWish(output, save, skillId);
+            }
             if (!equipped)
                 profile.Skills.Plans[profile.Skills.SelectedPlan].PassiveSkills = new int[4];
             if (!profile.Skills.Skills.Any(value => value.ClassId == 10028))
@@ -158,18 +162,18 @@ namespace Zjcs.Presentation.Home
                 + " fire damage=" + damage + " disk checks=" + diskChecks);
         }
 
-        private static void VerifyOriginalWish(string output, OfflineMainlineSave source)
+        private static void VerifyOriginalWish(string output, OfflineMainlineSave source, int skillId)
         {
             var rules = Resources.Load<TextAsset>("Wishes/wishes-runtime");
             Require(rules != null, "The original skill wish catalog is missing.");
             var catalog = WishRuntimeCatalog.Parse(rules.text);
-            Require(catalog.SkillAvailable(10520, 10), "The original mage wish pool excludes 炽热之心.");
+            Require(catalog.SkillAvailable(skillId, 10), "The original mage wish pool excludes secret " + skillId + ".");
             var save = JsonUtility.FromJson<OfflineMainlineSave>(JsonUtility.ToJson(source));
             save.Player.MaxProfessionRank = 1;
-            save.Player.Skills.Skills.RemoveAll(value => value.ClassId == 10520);
+            save.Player.Skills.Skills.RemoveAll(value => value.ClassId == skillId);
             foreach (var plan in save.Player.Skills.Plans)
                 for (int index = 0; index < plan.PassiveSkills.Length; index++)
-                    if (plan.PassiveSkills[index] == 10520) plan.PassiveSkills[index] = 0;
+                    if (plan.PassiveSkills[index] == skillId) plan.PassiveSkills[index] = 0;
             save.Player.Inventory.RemoveAll(value => value.ItemId == 110);
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 110, Count = 10000 });
             save.Player.Wishes.RandomState = 123456789;
@@ -185,17 +189,17 @@ namespace Zjcs.Presentation.Home
             bool received = false;
             while (!received && draws < 2000)
             {
-                var result = wish.Draw(0, 100, 10, "blazing-heart-wish-" + draws, now, true);
+                var result = wish.Draw(0, 100, 10, "passive-affinity-wish-" + skillId + "-" + draws, now, true);
                 Require(result.IsApplied && result.Awards.Count == 100, "The original skill wish transaction failed: " + result.Message);
                 draws += 100;
-                received = result.Awards.Any(value => value.OriginItemId == 10520 && value.ConvertedItemId == 0);
+                received = result.Awards.Any(value => value.OriginItemId == skillId && value.ConvertedItemId == 0);
             }
-            Require(received && OfflineSkillProgression.OwnedRank(session.Save.Player.Skills, 10520) == 1
+            Require(received && OfflineSkillProgression.OwnedRank(session.Save.Player.Skills, skillId) == 1
                 && session.InventoryCount(110) == 10000 - draws, "The original wish pool did not grant the unowned secret and consume its cost.");
             var restored = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
-            Require(OfflineSkillProgression.OwnedRank(restored.Save.Player.Skills, 10520) == 1
+            Require(OfflineSkillProgression.OwnedRank(restored.Save.Player.Skills, skillId) == 1
                 && restored.InventoryCount(110) == 10000 - draws, "The wish result did not survive profile reload.");
-            Debug.Log("[Blazing heart wish] Original mage pool granted the secret after " + draws + " draws.");
+            Debug.Log("[Passive affinity wish] item=" + skillId + " granted after " + draws + " draws.");
         }
 
         private static void Require(bool value, string message) { if (!value) throw new InvalidOperationException(message); }

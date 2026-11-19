@@ -87,8 +87,12 @@ try {
         if ($errors.Count -gt 0) {
             throw "The actual battle produced a runtime or shutdown error: $run"
         }
-        if (-not $equipped -and -not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Blazing heart wish] Original mage pool granted the secret')) {
-            throw "The original skill wish acquisition did not complete: $run"
+        if (-not $equipped) {
+            foreach ($skill in @(10520,10521,10522)) {
+                if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch "[Passive affinity wish] item=$skill granted")) {
+                    throw "Original skill wish acquisition did not complete for $skill : $run"
+                }
+            }
         }
         $evidence[[string]$equipped] = Get-Content -LiteralPath (Join-Path $run 'blazing-heart-battle.json') -Raw | ConvertFrom-Json
         Write-Output "Blazing heart actual battle passed: equipped=$equipped / $run"
