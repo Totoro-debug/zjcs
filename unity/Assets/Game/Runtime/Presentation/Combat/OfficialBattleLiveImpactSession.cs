@@ -115,6 +115,14 @@ namespace Zjcs.Presentation.Combat
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> completedHealingHits =
             new HashSet<(FightBattleHitSelectionSnapshot, int)>();
         private readonly List<OfficialBattleTargetParticleImpact> healingEffects = new List<OfficialBattleTargetParticleImpact>();
+        private readonly Dictionary<int, FightBattleHitRoot[]> dragonRoots = new Dictionary<int, FightBattleHitRoot[]>();
+        private readonly HashSet<(FightBattleSkillCastEvent Cast, int Wave)> observedDragonWaves =
+            new HashSet<(FightBattleSkillCastEvent, int)>();
+        private readonly Dictionary<FightBattleSkillCastEvent, int> reachedDragonWaves = new Dictionary<FightBattleSkillCastEvent, int>();
+        private readonly Dictionary<FightBattleSkillCastEvent, int> expectedDragonWaves = new Dictionary<FightBattleSkillCastEvent, int>();
+        private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center, int Scope)> sentDragonHits =
+            new HashSet<(FightBattleHitSelectionSnapshot, int, int)>();
+        private readonly List<OfficialBattleTargetParticleImpact> dragonEffects = new List<OfficialBattleTargetParticleImpact>();
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> observedWaterProjectiles =
             new HashSet<(FightBattleHitSelectionSnapshot, int)>();
         private readonly List<OfficialBattleProjectileImpact> waterProjectiles = new List<OfficialBattleProjectileImpact>();
@@ -215,6 +223,26 @@ namespace Zjcs.Presentation.Combat
                 foreach (var skill in unit.Skills)
                 {
                     if (skill?.HitGraphEntities == null) continue;
+                    if (skill.EntityId == 10550 && skill.HitGraphRoots != null && skill.HitGraphRoots.Count == 4)
+                    {
+                        var roots = new FightBattleHitRoot[4]; bool valid = true;
+                        for (int wave = 0; wave < roots.Length; wave++)
+                        {
+                            var root = skill.HitGraphRoots[wave]; roots[wave] = root;
+                            if (root == null || root.EntityId != 10551 + wave
+                                || Math.Abs(root.Delay - (.75f + .1f * wave)) > .00001f) { valid = false; continue; }
+                            FightBattleHitEntity hit = null;
+                            foreach (var candidate in skill.HitGraphEntities)
+                                if (candidate?.EntityId == root.EntityId) { if (hit != null) valid = false; hit = candidate; }
+                            if (hit?.ScopeEntries == null || hit.ScopeEntries.Count != 3) { valid = false; continue; }
+                            var positions = new HashSet<FightGridPoint>();
+                            foreach (var entry in hit.ScopeEntries)
+                                if (entry != null && entry.Delay == 0f && entry.Position.Y == wave + 1
+                                    && Math.Abs(entry.Position.X) <= 1) positions.Add(entry.Position);
+                            if (positions.Count != 3) valid = false;
+                        }
+                        if (valid) dragonRoots[unit.Id] = roots;
+                    }
                     int comboMask = 0; bool comboValid = true;
                     foreach (var hit in skill.HitGraphEntities)
                     {
@@ -541,7 +569,17 @@ namespace Zjcs.Presentation.Combat
                             for (int index = 0; index < selection.Selection.EffectCenters.Count; index++)
                                 expected.Add((selection.Selection, index));
                         }
+                        if (selectedCast.SkillEntityId == 10550 && dragonRoots.TryGetValue(selectedCast.ActorId, out var dragon))
+                            for (int wave = 0; wave < dragon.Length; wave++)
+                                if (selection.Selection.HitEntityId == dragon[wave].EntityId)
+                                {
+                                    expectedDragonWaves.TryGetValue(selectedCast, out int expected);
+                                    expectedDragonWaves[selectedCast] = expected | (1 << wave);
+                                }
                         long revision = bridge.QueueSelection(selection, active.Id, clock - active.Started);
+                        if (reachedDragonWaves.TryGetValue(selectedCast, out int dragonReached))
+                            for (int wave = 0; wave < 4; wave++)
+                                if ((dragonReached & (1 << wave)) != 0) RouteDragonWave(selectedCast, active.Id, wave);
                         if (reachedMountainWaves.TryGetValue(selectedCast, out int reached))
                         {
                             if ((reached & 1) != 0) RouteMountainWave(selectedCast, active.Id, 1);
@@ -602,6 +640,9 @@ namespace Zjcs.Presentation.Combat
                             && !thornExpected.IsSubsetOf(completedThornHits)) return progressed;
                         if (expectedHealingHits.TryGetValue(completion.Cast, out var healingExpected)
                             && !healingExpected.IsSubsetOf(completedHealingHits)) return progressed;
+                        if (expectedDragonWaves.TryGetValue(completion.Cast, out int dragonExpected)
+                            && (!reachedDragonWaves.TryGetValue(completion.Cast, out int dragonReached)
+                                || (dragonReached & dragonExpected) != dragonExpected)) return progressed;
                         var active = Find(completion.Cast);
                         views.CompleteLiveCast(completion.Cast, active.Id, clock - active.Started);
                         step.Latch.CompleteCast(completion, out long revision);
@@ -800,12 +841,49 @@ namespace Zjcs.Presentation.Combat
                 try { RouteJumpSlashImpact(cast, prefab, playable); AttachMountainWaves(cast, id, prefab, playable);
                     AttachSlashImpact(cast, id, prefab, playable); AttachComboImpact(cast, id, prefab, playable);
                     AttachCrossImpact(cast, id, prefab, playable); AttachWindBladeImpact(cast, id, prefab, playable);
-                    AttachIceConeImpact(cast, id, prefab, playable);
+                    AttachIceConeImpact(cast, id, prefab, playable); AttachDragonWave(cast, id, prefab, playable);
                     AttachFallingWindImpact(cast, id, prefab, playable); AttachFireRingImpact(cast, id, prefab, playable);
                     AttachSwordWindImpact(cast, id, prefab, playable);
                     AttachIceHitImpact(cast, id, prefab, playable); AttachAuraHitImpact(cast, id, prefab, playable); }
                 finally { currentGraphCast = previousCast; currentGraphSkillId = previousId; }
             }
+        }
+
+        private void AttachDragonWave(FightBattleSkillCastEvent cast, EcEntityIdentifier id, GameObject prefab, MyPlayable playable)
+        {
+            if (cast?.SkillEntityId != 10550 || prefab == null || prefab.name != "playable10550" || playable == null
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)
+                || !dragonRoots.TryGetValue(cast.ActorId, out var roots)) return;
+            for (int wave = 0; wave < roots.Length; wave++)
+            {
+                if (playable.name != "effect (" + (wave + 2) + ")" || observedDragonWaves.Contains((cast, wave))) continue;
+                int currentWave = wave;
+                var observer = OfficialBattleTargetParticleImpact.AttachWaterDragon(prefab, playable, wave, roots[wave].Delay,
+                    _ => RouteDragonWave(cast, id, currentWave));
+                if (observer != null) { observedDragonWaves.Add((cast, wave)); dragonEffects.Add(observer); }
+            }
+        }
+
+        private void RouteDragonWave(FightBattleSkillCastEvent cast, EcEntityIdentifier id, int wave)
+        {
+            if (disposed || transferred || !observedDragonWaves.Contains((cast, wave))
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)
+                || !dragonRoots.TryGetValue(cast.ActorId, out var roots)) return;
+            reachedDragonWaves.TryGetValue(cast, out int reached);
+            reachedDragonWaves[cast] = reached | (1 << wave);
+            if (cast.HitSelections != null) foreach (var hit in new List<FightBattleHitSelectionSnapshot>(cast.HitSelections))
+            {
+                if (hit == null || hit.HitEntityId != roots[wave].EntityId || !selectedHits.Contains(hit) || hit.Targets == null) continue;
+                foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
+                {
+                    if (!casts.ContainsKey(cast)) return;
+                    if (target == null || !target.HasScopeIndex || target.ScopeIndex < 0 || target.ScopeIndex >= 3
+                        || target.ScopeDelay != 0f || !sentDragonHits.Add((hit, target.EffectCenterIndex, target.ScopeIndex))) continue;
+                    bridge.RecordArrival(cast, hit, target.EffectCenterIndex, target.ScopeIndex);
+                }
+            }
+            if (!pumping && lastStartCast != null) Pump(0f, lastStartCast, lastAfterDamageStarted,
+                lastStartMovement, lastStartBlockedMovement, lastCanStartDamage);
         }
 
         private void AttachAuraHitImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
@@ -1273,6 +1351,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in auraHitEffects) if (observer != null) observer.Detach();
             foreach (var observer in thornEffects) if (observer != null) observer.Detach();
             foreach (var observer in healingEffects) if (observer != null) observer.Detach();
+            foreach (var observer in dragonEffects) if (observer != null) observer.Detach();
             foreach (var observer in waterProjectiles) if (observer != null) observer.Detach();
             foreach (var observer in fireballProjectiles) if (observer != null) observer.Detach();
             transferred = true;
@@ -1315,6 +1394,7 @@ namespace Zjcs.Presentation.Combat
             observedAuraHits.Clear(); reachedAuraHits.Clear(); sentAuraHits.Clear(); auraHitEffects.Clear();
             thornScopes.Clear(); observedThornEffects.Clear(); expectedThornHits.Clear(); completedThornHits.Clear(); thornEffects.Clear();
             healingCasters.Clear(); observedHealingEffects.Clear(); expectedHealingHits.Clear(); completedHealingHits.Clear(); healingEffects.Clear();
+            dragonRoots.Clear(); observedDragonWaves.Clear(); reachedDragonWaves.Clear(); expectedDragonWaves.Clear(); sentDragonHits.Clear(); dragonEffects.Clear();
             observedWaterProjectiles.Clear(); waterProjectiles.Clear();
             fireballFlights.Clear(); fireballProjectiles.Clear();
             expectedFireballHits.Clear(); completedFireballHits.Clear();

@@ -2645,12 +2645,12 @@ namespace Zjcs.Combat.Official
             {
                 int index = Math.Min((int)(random.Next() * hit.AppliedStatuses.Count),
                     hit.AppliedStatuses.Count - 1);
-                return ApplyHitStatus(actor, target, skill, hit.AppliedStatuses[index], random,
+                return ApplyHitStatus(actor, target, skill, hit, hit.AppliedStatuses[index], random,
                     skillCostHp, actualHpLoss, sourceDamage);
             }
             bool applied = false;
             foreach (FightBattleStatusApplication application in hit.AppliedStatuses)
-                applied |= ApplyHitStatus(actor, target, skill, application, random, skillCostHp,
+                applied |= ApplyHitStatus(actor, target, skill, hit, application, random, skillCostHp,
                     actualHpLoss, sourceDamage);
             return applied;
         }
@@ -2678,7 +2678,7 @@ namespace Zjcs.Combat.Official
         }
 
         private bool ApplyHitStatus(FightBattleUnitState actor, FightBattleUnitState target,
-            FightBattleSkillDefinition skill, FightBattleStatusApplication application,
+            FightBattleSkillDefinition skill, FightBattleHitDefinition hit, FightBattleStatusApplication application,
             FightRandomStream random, long skillCostHp, long actualHpLoss, FightBattleDamageEvent sourceDamage)
         {
             if (application == null || application.StatusId <= 0) return false;
@@ -2724,6 +2724,7 @@ namespace Zjcs.Combat.Official
             try { applied = FightStatusLifecycle.Apply(owner, template, -1, instanceId, random); }
             finally { statusApplicationDamage = previousDamage; }
             if (applied == null) return false;
+            FightDamageFalloff.RecordApplyingHit(actor, target, skill, hit, applied, sourceDamage);
             pendingBefore.TryGetValue(applied, out int previousPending);
             int added = Math.Max(0, applied.SkillCooldownActionPendingCount - previousPending);
             if (sourceDamage != null && currentStepStatusCustomActions != null)

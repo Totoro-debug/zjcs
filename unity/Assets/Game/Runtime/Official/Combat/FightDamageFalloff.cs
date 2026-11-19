@@ -30,6 +30,26 @@ namespace Zjcs.Combat.Official
             return result;
         }
 
+        /// <summary>Counts the hit which first applied a same-cast, per-target falloff status.</summary>
+        public static void RecordApplyingHit(FightBattleUnitState source, FightBattleUnitState target,
+            FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
+            FightBattleStatusState status, FightBattleDamageEvent damage)
+        {
+            if (source == null || target == null || skill == null || hit == null || status == null || damage == null
+                || damage.IsCure || damage.Dodge || damage.Blinding || damage.Immunity
+                || skill.FalloffCastId <= 0 || status.Scope == 1 || status.OwnerId != target.Id
+                || status.FalloffTarget != 1 || !status.RemoveOnSourceSkillStart || !(status.Rate >= 1.0)
+                || status.DamageId != 0 || status.RootSkillIds == null || status.RootSkillIds.Length == 0
+                || target.FalloffCounts == null) return;
+            foreach (var counter in target.FalloffCounts)
+                if (counter != null && counter.CastId == skill.FalloffCastId && counter.StatusClassId == status.ClassId)
+                    return;
+            // The original status is installed after this hit settles. Count that hit once
+            // so the next occurrence observes the configured starting count.
+            FightDamageFalloffRules.For(status).Apply(new FightDamageFalloffContext {
+                Source = source, Target = target, Skill = skill, Hit = hit, Status = status }, 0);
+        }
+
         public static void ResetOnSkillStart(IEnumerable<FightBattleUnitState> units, int rootSkillId)
         {
             if (units == null || rootSkillId <= 0) return;

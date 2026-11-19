@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Official.BattleTrackPlayables;
+using Zjcs.Official.StoryAttachment;
+using Zjcs.Official.StoryFollowBone;
 using Zjcs.Official.StoryPlayables;
 
 namespace Zjcs.Presentation.Combat
@@ -485,13 +487,35 @@ namespace Zjcs.Presentation.Combat
         private Action<float> arrival;
 
         internal static OfficialBattleTargetParticleImpact Attach(GameObject prefab, MyPlayable playable, string particleName, Action<float> arrival)
+            => AttachNamed(prefab, playable, "effect", particleName, arrival);
+
+        internal static OfficialBattleTargetParticleImpact AttachWaterDragon(GameObject prefab, MyPlayable playable,
+            int wave, float configuredHitDelay, Action<float> arrival)
+        {
+            if (wave < 0 || wave >= 4 || !(playable is MyPlayableFollowBone follow) || follow.myAttach == null
+                || follow.myAttach.AttachTo != EAttachTo.Skill || follow.myAttach.myBoneName != "body"
+                || Vector3.Distance(follow.myAttach.myOffset, new Vector3(0f, wave + 1, 0f)) > .00001f)
+                return null;
+            string leaf = "effect (" + (wave + 2) + ")";
+            if (playable.name != leaf || !prefab) return null;
+            var sequence = prefab.GetComponent<MyPlayableSequence>();
+            if (!sequence || sequence.myPlayables == null) return null;
+            int count = 0; float time = 0f;
+            foreach (var entry in sequence.myPlayables)
+                if (entry?.myPlayable && entry.myPlayable.name == leaf) { count++; time = entry.myTime; }
+            if (count != 1 || Math.Abs(time + .1f - configuredHitDelay) > .00001f) return null;
+            return AttachNamed(prefab, playable, leaf, "hit (3)", arrival);
+        }
+
+        private static OfficialBattleTargetParticleImpact AttachNamed(GameObject prefab, MyPlayable playable,
+            string leafName, string particleName, Action<float> arrival)
         {
             if (!prefab || !playable || !playable.myApplyComponent || string.IsNullOrEmpty(particleName) || arrival == null) return null;
             var sequence = prefab.GetComponent<MyPlayableSequence>();
             if (!sequence || sequence.myPlayables == null) return null;
             float effectStart = -1f; int effects = 0;
             foreach (var entry in sequence.myPlayables)
-                if (entry?.myPlayable && entry.myPlayable.name == "effect") { effectStart = entry.myTime; effects++; }
+                if (entry?.myPlayable && entry.myPlayable.name == leafName) { effectStart = entry.myTime; effects++; }
             if (effects != 1 || effectStart < 0f) return null;
             ParticleSystem targetParticle = null;
             foreach (var particle in playable.myApplyComponent.GetComponentsInChildren<ParticleSystem>(true))

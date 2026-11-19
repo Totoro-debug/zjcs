@@ -590,6 +590,117 @@ namespace Zjcs.Editor.Combat
                 }
                 healScope.Dispose(); healTargetAppearance.Dispose(); healAppearance.Dispose(); Destroy(healRoot.gameObject);
             }
+            // Each original water-dragon burst releases its corresponding scope row.
+            foreach (var dragonDirection in new[] { new[] { 0, 1, 2 }, new[] { 0, -1, 0 },
+                new[] { -1, 0, 1 }, new[] { 1, 0, 3 } })
+            foreach (bool bigTarget in new[] { false, true })
+            {
+                int dx = dragonDirection[0], dy = dragonDirection[1], sx = -dy, sy = dx;
+                var dragonUnits = new List<FightBattleUnitState> { LiveUnit(1, 1, 7) };
+                dragonUnits[0].Y = 7; dragonUnits[0].Profession = 10; dragonUnits[0].Direction = dragonDirection[2];
+                if (bigTarget)
+                {
+                    var near = LiveUnit(2, 2, 7 + dx); near.Y = 7 + dy; dragonUnits.Add(near);
+                    var big = LiveUnit(3, 2, 7 + 2 * dx); big.Y = 7 + 2 * dy;
+                    big.BodyOffsets.AddRange(new[] { new FightGridPoint(0, 0), new FightGridPoint(sx, sy),
+                        new FightGridPoint(dx, dy), new FightGridPoint(dx + sx, dy + sy) }); dragonUnits.Add(big);
+                }
+                else for (int row = 1; row <= 4; row++) for (int side = -1; side <= 1; side++) {
+                    var unit = LiveUnit(dragonUnits.Count + 1, 2, 7 + row * dx + side * sx);
+                    unit.Y = 7 + row * dy + side * sy; dragonUnits.Add(unit);
+                }
+                var dragonSkill = liveCatalog.CreateSkill(10550, 0, 10003, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(10550, 2, 20, 1).Select(value =>
+                        new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
+                dragonSkill.LimitedTimes = 1; dragonUnits[0].Skills.Add(dragonSkill);
+                dragonUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(dragonSkill, 0));
+                var dragonCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                dragonCheckpoint.Units.AddRange(dragonUnits); var dragonWave = new FightBattleWaveState();
+                dragonWave.UnitIds.AddRange(dragonUnits.Skip(1).Select(value => value.Id)); dragonCheckpoint.Waves.Add(dragonWave);
+                FightBattleExecutor.Begin(dragonCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                string dragonCommitted = FightBattleCheckpointSerializer.Save(dragonCheckpoint);
+                var dragonBaseline = FightBattleCheckpointSerializer.Load(dragonCommitted);
+                FightBattleExecutor.Restore(dragonBaseline, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()).Step(0, 1);
+                var dragonDisplay = FightBattleCheckpointSerializer.Load(dragonCommitted).Units.ToArray();
+                var dragonRoot = new GameObject("Water dragon " + dx + "/" + dy + "/" + bigTarget).transform; dragonRoot.SetParent(root, false);
+                var dragonBodies = new Dictionary<int, Transform>();
+                foreach (var unit in dragonUnits) {
+                    var body = new GameObject("Dragon unit " + unit.Id).transform; body.SetParent(dragonRoot, false);
+                    body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                    var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
+                    body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                    dragonBodies.Add(unit.Id, body);
+                }
+                var dragonAppearance = NativeJumpAppearanceFixture.Create(dragonBodies[1].gameObject, 10);
+                var dragonTargetAppearance = NativeJumpAppearanceFixture.Create(dragonBodies[2].gameObject);
+                var dragonScope = new OfflineBattleNativePlayableScope(dragonRoot, null);
+                var dragonParticles = new ParticleSystem[4]; var dragonResumed = new bool[4];
+                dragonScope.NativePlayableStarted += (prefab, leaf) => {
+                    if (prefab.name != "playable10550" || !leaf.myApplyComponent) return;
+                    for (int row = 0; row < 4; row++) if (leaf.name == "effect (" + (row + 2) + ")") {
+                        Require(!dragonParticles[row], "A water-dragon row started more than once.");
+                        dragonParticles[row] = leaf.myApplyComponent.GetComponentsInChildren<ParticleSystem>(true)
+                            .Single(value => value.name == "hit (3)"); dragonParticles[row].Pause(false);
+                    }
+                };
+                var dragonHits = new List<(int Target, int Wave, int Frame, long Damage)>(); int dragonPauseFrames = 0, dragonNextWave = 0;
+                cameraView.transform.position = new Vector3(7, 7, -20);
+                using (var dragonViews = new OfficialBattleSkillEntityPlayback(dragonRoot, new OfficialBattleGridMapper(dragonRoot, grid),
+                    dragonScope, id => dragonDisplay.FirstOrDefault(value => value.Id == id)))
+                using (var dragonGraph = new OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog.TryLoadDefault(), dragonScope, dragonViews))
+                {
+                    dragonViews.BindDamageUI(dragonRoot, 0); foreach (var pair in dragonBodies) dragonViews.EnsureUnit(pair.Key, pair.Value);
+                    Transform DragonBody(int id) => dragonBodies.TryGetValue(id, out var body) ? body : null;
+                    void DragonDamage(FightBattleDamageEvent damage, FightBattleUnitState projected)
+                    {
+                        int row = damage.HitEntityId - 10551;
+                        Require(damage.SkillEntityId == 10550 && damage.DamageEntityId == 10555 && damage.ElementType == 101
+                            && row >= 0 && row < 4 && dragonResumed[row] && dragonParticles[row]
+                            && dragonParticles[row].particleCount > 0,
+                            "Water damage must wait for the visible burst in its own original row.");
+                        var floats = dragonRoot.GetComponentsInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUI>(true);
+                        Require(floats.Any(ui => ui.EntityId == new EcEntityIdentifier(1, damage.TargetId)
+                            && ui.GetComponentsInChildren<TextMesh>(true).Any(text => text.text == Math.Abs(damage.DamageValue).ToString())),
+                            "Each water-dragon damage number must start on the struck target in the impact frame.");
+                        dragonHits.Add((damage.TargetId, row, Time.frameCount, Math.Abs(damage.Damage)));
+                        if (dx == 0 && dy == 1 && !bigTarget && row == 1 && dragonHits.Count(value => value.Wave == 1) == 3)
+                            Capture("water-dragon-native-impact.png", false);
+                        dragonDisplay[Array.FindIndex(dragonDisplay, value => value.Id == damage.TargetId)] = projected;
+                    }
+                    using (var driver = dragonGraph.CreateLiveStep(dragonCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                        formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), DragonBody, null, DragonDamage))
+                    {
+                        dragonDisplay = dragonCheckpoint.Units.Select(value => driver.DisplayUnit(value.Id)).ToArray();
+                        float dragonDeadline = Time.realtimeSinceStartup + 20f;
+                        while (!driver.IsCompleted && Time.realtimeSinceStartup < dragonDeadline)
+                        {
+                            driver.Pump(Time.deltaTime); dragonGraph.Tick(Time.deltaTime); dragonGraph.LateTick();
+                            if (dragonParticles.All(value => value) && dragonNextWave < 4 && ++dragonPauseFrames >= 5)
+                            {
+                                if (dragonNextWave == 0) Require(dragonHits.Count == 0 && dragonParticles.All(value => value.isPaused),
+                                    "Paused bursts cannot settle any water-dragon hits.");
+                                dragonParticles[dragonNextWave].Play(false); dragonResumed[dragonNextWave++] = true; dragonPauseFrames = 0;
+                            }
+                            yield return null;
+                        }
+                        Require(driver.TryTakeCompleted(out var executor, out var result) && dragonResumed.All(value => value)
+                            && dragonHits.Count == (bigTarget ? 5 : 12)
+                            && dragonHits.GroupBy(value => value.Wave).All(group => group.Select(value => value.Frame).Distinct().Count() == 1)
+                            && FightBattleCheckpointSerializer.Save(dragonCheckpoint) == dragonCommitted
+                            && FightBattleCheckpointSerializer.Save(result.Checkpoint) == FightBattleCheckpointSerializer.Save(dragonBaseline),
+                            "Water-dragon rows, same-frame targets, repeated body hits and checkpoint must match the original step.");
+                        if (bigTarget) {
+                            var hits = dragonHits.Where(value => value.Target == 3).ToArray();
+                            Require(hits.Length == 4 && hits.Select(value => value.Wave).SequenceEqual(new[] {1,1,2,2}),
+                                "The large target must be hit once per struck body cell.");
+                            for (int i = 1; i < hits.Length; i++) Require(hits[i].Damage == (long)(hits[0].Damage * Math.Pow(.75, i)),
+                                "The repeated water hits must apply the original per-target falloff.");
+                        }
+                    }
+                }
+                dragonScope.Dispose(); dragonTargetAppearance.Dispose(); dragonAppearance.Dispose(); Destroy(dragonRoot.gameObject);
+            }
             // The original fire ring expands through separate near and outer scopes.
             for (int ringDirection = 0; ringDirection < 4; ringDirection++)
             {
