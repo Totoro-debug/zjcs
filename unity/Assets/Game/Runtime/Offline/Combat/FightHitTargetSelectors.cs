@@ -115,9 +115,10 @@ namespace Zjcs.Combat.Official
                 var units = context.Units; var skill = context.Skill; var hit = context.Hit;
                 var targets = context.Targets; var targetPosition = context.Primary;
                 var hitCast = context.Cast; var random = context.Random;
-                // Confirmed 10061 rule: its three authored 11202 child references
-                // share three friendly recipients, with one recipient per 11201.
+                // Each authored child reference chooses one centre. The parent minimum
+                // describes the complete set of waves or recipients, not each child.
                 int randomCount = skill?.EntityId == 11200 && hit.EntityId == 11201
+                    || skill?.EntityId == 10910 && hit.EntityId == 10912
                     ? 1 : hit.RandomCount;
                 List<FightBattleUnitState> hitTargets;
                 IReadOnlyList<FightHitOccurrence> plannedHits = null;

@@ -37,7 +37,7 @@ namespace Zjcs.Combat.Official
                     statusActionDuration = Math.Max(statusActionDuration, actionDuration);
             }
             CleanupGridItems();
-            ApplyChildSkill(actor, target, skill, hit, casts, damages, movements, ref lastDelay);
+            ApplyChildSkill(actor, target, skill, hit, casts, damages, movements, ref lastDelay, damage.Delay);
         }
     }
 }

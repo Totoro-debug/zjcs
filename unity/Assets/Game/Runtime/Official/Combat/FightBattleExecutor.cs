@@ -397,7 +397,8 @@ namespace Zjcs.Combat.Official
                 int skillCastStart = casts.Count, skillDamageStart = damageEvents.Count;
                 int skillMovementStart = movements.Count;
                 skillState.RunSkill(skill.Slot);
-                if (skill.ComboSkills.Count > 0) casts.Add(cast);
+                bool parentFirst = skill.ComboSkills.Count > 0 || skill.EntityId == 10910;
+                if (parentFirst) casts.Add(cast);
                 ExecuteSkill(actor, skill, targets, casts, damageEvents, movements,
                     out float castLastDelay, out float skillStartDuration,
                     out float skillStartActionDuration, targetPosition: comboTargetPosition, presentationCast: cast);
@@ -412,7 +413,7 @@ namespace Zjcs.Combat.Official
                 checkedSlots.Add(skill.Slot);
                 performedTargets.AddRange(targets);
                 CompleteCastPresentation(cast, skill, castLastDelay);
-                if (skill.ComboSkills.Count == 0) casts.Add(cast);
+                if (!parentFirst) casts.Add(cast);
                 float cooldownDuration = 0f, cooldownActionDuration = -1f;
                 ExecutePendingCooldownModifySkills(casts, damageEvents, movements,
                     ref cooldownDuration, ref cooldownActionDuration);
@@ -900,7 +901,9 @@ namespace Zjcs.Combat.Official
                     RebuildBattleProperties();
             }
 
-            FightDamageFalloff.BeginCast(skill, ref checkpoint.FalloffSerial);
+            bool inheritedFeatherFalloff = skill.EntityId == 11050 && skill.RootEntityId == 10910
+                && skill.FalloffCastId > 0;
+            if (!inheritedFeatherFalloff) FightDamageFalloff.BeginCast(skill, ref checkpoint.FalloffSerial);
             IReadOnlyList<FightBattleHitDefinition> hits = FightBattleHitCollector.CollectAll(skill, includeRootViews: true);
             var hitExecution = new FightHitChainExecution(hits, hitCast, !chaosInvasionWipe);
             var damageHitTargets = new HashSet<int>();
@@ -1262,7 +1265,7 @@ namespace Zjcs.Combat.Official
                     // considered removed. Property rebuilds alone are not removal boundaries.
                     ApplyMissingHitSummonRemovalTriggers(target);
                     CleanupGridItems();
-                    ApplyChildSkill(actor, target, skill, hit, casts, damageEvents, movements, ref lastDelay);
+                    ApplyChildSkill(actor, target, skill, hit, casts, damageEvents, movements, ref lastDelay, hitDelay);
                 }
                 ExecuteLogicChildRequests(actor, skill,
                     skillLogic?.CollectHitFinishSkills(hit, hitRemovedHp, hitFinishDelay),
@@ -1274,7 +1277,7 @@ namespace Zjcs.Combat.Official
             movementStartContext.StatusStartTime = 0f;
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay,
                 float.PositiveInfinity, completedSourceMoves, targetPosition);
-            FightDamageFalloff.EndCast(units, skill);
+            if (!inheritedFeatherFalloff) FightDamageFalloff.EndCast(units, skill);
             ApplyExtraSkills(actor, skill, casts, damageEvents, movements, ref lastDelay);
             if (statusCatalog != null)
             {
@@ -1864,7 +1867,7 @@ namespace Zjcs.Combat.Official
             FightBattleSkillDefinition parentSkill,
             FightBattleHitDefinition hit,
             List<FightBattleSkillCastEvent> casts, List<FightBattleDamageEvent> damageEvents,
-            List<FightBattleMovementEvent> movements, ref float lastDelay)
+            List<FightBattleMovementEvent> movements, ref float lastDelay, float hitDelay)
         {
             if (statusCatalog == null || parentSkill == null || hit == null
                 || hit.ChildSkillId <= 0 || !parentSkill.CanTriggerChild) return;
@@ -1898,6 +1901,14 @@ namespace Zjcs.Combat.Official
                 return;
             }
             skill.StatusOrigin = FightBattleStatusOrigin.Resolve(parentSkill, actor.Id).Copy();
+            // The seven wind blades are children of the same feather cast. Their configured
+            // per-target falloff belongs to that parent and ends when the parent ends.
+            if ((parentSkill.RootEntityId > 0 ? parentSkill.RootEntityId : parentSkill.EntityId) == 10910
+                && skill.EntityId == 11050)
+            {
+                skill.RootEntityId = 10910;
+                skill.FalloffCastId = parentSkill.FalloffCastId;
+            }
             InheritBlessingScales(skill, parentSkill.BlessPropertyScales);
             // Do not run AI selection across the roster again: each hit owns its child target.
             // Self effects select the caster, while scoped hits retain the original hit position.
@@ -1908,6 +1919,7 @@ namespace Zjcs.Combat.Official
             List<FightBattleUnitState> targets = FightBattleTargeting.Select(actor, candidates,
                 skill.TargetType, 0, false, false, skill, random);
             checkpoint.Statistics.RecordCast(actor.Id, skill.EntityId, skill.ItemId);
+            int castStart = casts.Count, damageStart = damageEvents.Count, movementStart = movements.Count;
             var cast = new FightBattleSkillCastEvent
             {
                 ActorId = actor.Id,
@@ -1921,7 +1933,8 @@ namespace Zjcs.Combat.Official
             ExecuteSkill(actor, skill, targets, casts, damageEvents, movements,
                 out float delay, target, presentationCast: cast);
             CompleteCastPresentation(cast, skill, delay);
-            if (delay > lastDelay) lastDelay = delay;
+            OffsetSkillEvents(casts, castStart, damageEvents, damageStart, movements, movementStart, hitDelay);
+            lastDelay = Math.Max(lastDelay, hitDelay + delay);
         }
 
         private static FightSkillReplayCounter ReplayCounter(FightBattleUnitState actor, FightBattleSkillDefinition skill)

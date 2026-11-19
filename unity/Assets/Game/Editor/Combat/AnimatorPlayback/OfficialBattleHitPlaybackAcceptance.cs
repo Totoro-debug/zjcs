@@ -701,6 +701,67 @@ namespace Zjcs.Editor.Combat
                 }
                 dragonScope.Dispose(); dragonTargetAppearance.Dispose(); dragonAppearance.Dispose(); Destroy(dragonRoot.gameObject);
             }
+            // Seven original feather waves launch one projectile for each affected target.
+            foreach (var featherDirection in new[] { new[] { 0, 1, 2 }, new[] { 0, -1, 0 },
+                new[] { -1, 0, 1 }, new[] { 1, 0, 3 } })
+            {
+                int dx = featherDirection[0], dy = featherDirection[1], sx = -dy, sy = dx;
+                var featherUnits = new[] { LiveUnit(1, 1, 7), LiveUnit(2, 2, 7 + 3 * dx), LiveUnit(3, 2, 7 + 3 * dx + sx) };
+                featherUnits[0].Y = 7; featherUnits[0].Profession = 10; featherUnits[0].Direction = featherDirection[2];
+                featherUnits[1].Y = 7 + 3 * dy; featherUnits[2].Y = 7 + 3 * dy + sy;
+                var featherSkill = liveCatalog.CreateSkill(10910, 0, 10036, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(10910, 2, 20, 1).Select(value => new FightPropertyValue { Id=value.Key, Value=value.Value }).ToList());
+                featherSkill.LimitedTimes = 1; featherUnits[0].Skills.Add(featherSkill);
+                featherUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(featherSkill, 0));
+                var featherCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                featherCheckpoint.Units.AddRange(featherUnits); var featherWave = new FightBattleWaveState();
+                featherWave.UnitIds.AddRange(new[] { 2, 3 }); featherCheckpoint.Waves.Add(featherWave);
+                var featherExecutor = FightBattleExecutor.Begin(featherCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                var featherResult = featherExecutor.Step(0, 1); var featherRoot = new GameObject("Wind feather native").transform; featherRoot.SetParent(root, false);
+                var featherBodies = new Dictionary<int, Transform>();
+                foreach (var unit in featherUnits) {
+                    var body = new GameObject("Feather unit " + unit.Id).transform; body.SetParent(featherRoot, false);
+                    body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                    var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
+                    body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer; featherBodies.Add(unit.Id, body);
+                }
+                var featherAppearance = NativeJumpAppearanceFixture.Create(featherBodies[1].gameObject, 10);
+                var featherTargetAppearance = NativeJumpAppearanceFixture.Create(featherBodies[2].gameObject);
+                var featherScope = new OfflineBattleNativePlayableScope(featherRoot, null);
+                var featherLaunches = new List<float>(); var featherImpacts = new List<float>(); int featherAnimations = 0;
+                featherScope.NativePlayableStarted += (prefab, leaf) => {
+                    if (prefab.name == "playable10910" && leaf.name == "anim") featherAnimations++;
+                    if (prefab.name == "playable11051" && leaf.name == "track") featherLaunches.Add(Time.time);
+                    if (prefab.name == "playable11052" && leaf.name == "HitEffect") featherImpacts.Add(Time.time);
+                };
+                cameraView.transform.position = new Vector3(7, 7, -20);
+                using (var featherViews = new OfficialBattleSkillEntityPlayback(featherRoot, new OfficialBattleGridMapper(featherRoot, grid),
+                    featherScope, id => featherCheckpoint.Units.FirstOrDefault(value => value.Id == id)))
+                using (var featherGraph = new OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog.TryLoadDefault(), featherScope, featherViews)) {
+                    featherViews.BindDamageUI(featherRoot, 0); foreach (var pair in featherBodies) featherViews.EnsureUnit(pair.Key, pair.Value);
+                    Transform FeatherBody(int id) => featherBodies.TryGetValue(id, out var body) ? body : null;
+                    float featherStart = Time.time; featherGraph.Play(featherResult.Event, featherCheckpoint, FeatherBody);
+                    bool captured = false;
+                    while (Time.time - featherStart < 2.2f) {
+                        featherGraph.Tick(Time.deltaTime); featherGraph.LateTick();
+                        if (!captured && Time.time - featherStart > .9f) {
+                            if (dx == 0 && dy == 1) Capture("wind-feather-native.png", false); captured = true;
+                        }
+                        yield return null;
+                    }
+                    Require(captured && featherAnimations == 1 && featherLaunches.Count == 14 && featherImpacts.Count == 14,
+                        "The original feather animation must play seven waves for both targets.");
+                    for (int row = 0; row < 7; row++) {
+                        float expected = featherStart + .37f + row * .1f;
+                        Require(Math.Abs(featherLaunches[row * 2] - expected) < .16f
+                            && Math.Abs(featherLaunches[row * 2 + 1] - expected) < .16f
+                            && featherImpacts[row * 2] > featherLaunches[row * 2],
+                            "Each original projectile must launch after its triggering wave and hit after travel.");
+                    }
+                }
+                featherScope.Dispose(); featherTargetAppearance.Dispose(); featherAppearance.Dispose(); Destroy(featherRoot.gameObject);
+            }
             // The original fire ring expands through separate near and outer scopes.
             for (int ringDirection = 0; ringDirection < 4; ringDirection++)
             {
