@@ -1,6 +1,7 @@
 #pragma warning disable 0067
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Zjcs.Combat.Official;
 using Zjcs.Official.StoryPlayables;
 using UnityEngine;
@@ -64,6 +65,7 @@ namespace Zjcs.Combat.Official {
 }
 namespace Zjcs.Presentation.Combat {
  internal sealed class OfficialBattleWindBladeImpact {internal static OfficialBattleWindBladeImpact Last;private Action<int> arrival;internal static OfficialBattleWindBladeImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,FightBattleHitEntity hit,Action<int> a){Last=new OfficialBattleWindBladeImpact{arrival=a};return Last;}internal void Trigger(int index){arrival?.Invoke(index);}internal void Detach(){arrival=null;}}
+ internal sealed class OfficialBattleIceConeImpact {internal static OfficialBattleIceConeImpact Last;private Action<int> arrival;internal static OfficialBattleIceConeImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,FightBattleHitEntity hit,Action<int> a){Last=new OfficialBattleIceConeImpact{arrival=a};return Last;}internal void Trigger(int index){arrival?.Invoke(index);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleFallingWindImpact {internal static OfficialBattleFallingWindImpact Last;private Action<int> arrival;internal static OfficialBattleFallingWindImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,FightBattleHitRoot root,FightBattleHitEntity hit,Action<int> a){Last=new OfficialBattleFallingWindImpact{arrival=a};return Last;}internal void Trigger(int index){arrival?.Invoke(index);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleFireRingImpact {internal static OfficialBattleFireRingImpact Last;private Action<int> arrival;internal static OfficialBattleFireRingImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,FightBattleHitRoot root,FightBattleHitEntity hit,Action<int> a){Last=new OfficialBattleFireRingImpact{arrival=a};return Last;}internal void Trigger(int index){arrival?.Invoke(index);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleSwordWindImpact {internal static OfficialBattleSwordWindImpact Last;private Action<float> arrival;internal static OfficialBattleSwordWindImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,Action<float> a){Last=new OfficialBattleSwordWindImpact{arrival=a};return Last;}internal void Trigger(float delay){arrival?.Invoke(delay);}internal void Detach(){arrival=null;}}
@@ -222,6 +224,24 @@ namespace Zjcs.Presentation.Combat {
      cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartCast);
      Check(OfficialBattleImpactViewBridge.Arrivals.Count==1&&OfficialBattleImpactViewBridge.Arrivals[0]==0,"The landed sword did not reach its centre scope");
      observer.Trigger(1);observer.Trigger(1);Check(OfficialBattleImpactViewBridge.Arrivals.Count==5,"The ground effect did not reach the four outer scopes once");
+    }
+   }
+   {
+    var hit=new FightBattleHitEntity{EntityId=10901,ScopeEntries=new List<FightBattleHitScopeEntry>()};
+    for(int index=0;index<5;index++)hit.ScopeEntries.Add(new FightBattleHitScopeEntry{Position=new FightGridPoint(0,index+1)});
+    var skill=new FightBattleSkillDefinition{EntityId=10900,HitGraphEntities=new List<FightBattleHitEntity>{hit}};
+    var cp=new FightBattleCheckpoint{Units=new List<FightBattleUnitState>{new FightBattleUnitState{Id=1,Skills=new List<FightBattleSkillDefinition>{skill}}}};
+    var views=new OfficialBattleSkillEntityPlayback();var cast=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10900,HitSelections=new List<FightBattleHitSelectionSnapshot>()};
+    using(var session=new OfficialBattleLiveImpactSession(cp,_=>new FightBattleExecutor(),views,0,1,true)){
+     OfficialBattleImpactViewBridge.Arrivals.Clear();FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=cast};session.Pump(0,StartCast);
+     views.Graph(cast,"playable10900","effect (3)");var observer=OfficialBattleIceConeImpact.Last;Check(observer!=null,"The original ice cone was not observed");
+     observer.Trigger(0);Check(OfficialBattleImpactViewBridge.Arrivals.Count==0,"The ice cone fabricated an unselected hit");
+     var selection=new FightBattleHitSelectionSnapshot{HitEntityId=10901,Targets=new List<FightBattleHitSelectionSnapshot.TargetOccurrence>()};
+     for(int index=0;index<5;index++)selection.Targets.Add(new FightBattleHitSelectionSnapshot.TargetOccurrence{HasScopeIndex=true,ScopeIndex=index});
+     cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartCast);
+     Check(OfficialBattleImpactViewBridge.Arrivals.SequenceEqual(new[]{0}),"A previously reached first scope must be delivered once selected");
+     for(int index=1;index<5;index++){observer.Trigger(index);observer.Trigger(index);}
+     Check(OfficialBattleImpactViewBridge.Arrivals.SequenceEqual(new[]{0,1,2,3,4}),"The ice cone must reach each scope once in order");
     }
    }
    {

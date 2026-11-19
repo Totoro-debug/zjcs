@@ -571,6 +571,125 @@ namespace Zjcs.Editor.Combat
                 ringScope.Dispose(); ringTargetAppearance.Dispose(); ringAppearance.Dispose(); Destroy(ringRoot.gameObject);
                 cameraView.transform.position = new Vector3(5, 5, -20);
             }
+            // Five ice-cone scopes settle at the original animated cone, including its freeze result.
+            foreach (var coneDirection in new[] { new[] { 1, 0, 3, 0 }, new[] { -1, 0, 1, 0 },
+                new[] { 0, 1, 2, 0 }, new[] { 0, -1, 0, 0 }, new[] { 1, 0, 3, 1 } })
+            {
+                int dx = coneDirection[0], dy = coneDirection[1];
+                var coneUnits = new List<FightBattleUnitState> { LiveUnit(1, 1, 7) };
+                coneUnits[0].Y = 7; coneUnits[0].Profession = 10; coneUnits[0].Direction = coneDirection[2];
+                for (int distance = 1; distance <= 5; distance++)
+                { var unit = LiveUnit(distance + 1, 2, 7 + dx * distance); unit.Y = 7 + dy * distance; coneUnits.Add(unit); }
+                var coneSkill = liveCatalog.CreateSkill(10900, 0, 10035, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(10900, 2, 20, 1).Select(value =>
+                        new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
+                coneSkill.LimitedTimes = 1; coneUnits[0].Skills.Add(coneSkill);
+                coneUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(coneSkill, 0));
+                var coneCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                coneCheckpoint.Units.AddRange(coneUnits);
+                var coneWave = new FightBattleWaveState(); coneWave.UnitIds.AddRange(coneUnits.Skip(1).Select(value => value.Id));
+                coneCheckpoint.Waves.Add(coneWave);
+                FightBattleExecutor.Begin(coneCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                FightBattleCheckpoint coneBaseline = null;
+                for (int attempt = 0; attempt < 64; attempt++)
+                {
+                    var reference = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(coneCheckpoint));
+                    reference.RandomSeed = 73 + attempt * 1234567;
+                    FightBattleExecutor.Restore(reference, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()).Step(0, 1);
+                    int frozen = reference.Units.Skip(1).Count(unit => unit.Statuses.Any(status => status.ClassId == 24215));
+                    if (frozen == 0 || frozen == 5) continue;
+                    coneCheckpoint.RandomSeed = 73 + attempt * 1234567; coneBaseline = reference; break;
+                }
+                Require(coneBaseline != null, "Could not select both original freeze outcomes for the ice cone.");
+                string coneCommitted = FightBattleCheckpointSerializer.Save(coneCheckpoint);
+                var coneDisplay = FightBattleCheckpointSerializer.Load(coneCommitted).Units.ToArray();
+                var coneRoot = new GameObject("Isolated ice cone " + dx + "/" + dy).transform; coneRoot.SetParent(root, false);
+                var coneBodies = new Dictionary<int, Transform>();
+                foreach (var unit in coneUnits)
+                {
+                    var body = new GameObject("Ice cone unit " + unit.Id).transform; body.SetParent(coneRoot, false);
+                    body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                    var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
+                    body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                    coneBodies.Add(unit.Id, body);
+                }
+                var coneAppearance = NativeJumpAppearanceFixture.Create(coneBodies[1].gameObject, 10);
+                var coneTargetAppearance = NativeJumpAppearanceFixture.Create(coneBodies[2].gameObject);
+                var coneFarAppearance = dx == 1 && coneDirection[3] == 0
+                    ? NativeJumpAppearanceFixture.Create(coneBodies[6].gameObject) : null;
+                var coneScope = new OfflineBattleNativePlayableScope(coneRoot, null);
+                Animator coneAnimator = null; ParticleSystem coneParticle = null; AnimationClip coneClip = null;
+                bool coneResumed = false, coneCaptured = false; int conePausedFrames = 0;
+                coneScope.NativePlayableStarted += (prefab, leaf) => {
+                    if (prefab.name != "playable10900" || leaf.name != "effect (3)" || !leaf.myApplyComponent) return;
+                    coneAnimator = leaf.myApplyComponent.GetComponentsInChildren<Animator>(true).Single(value => value.name == "ani");
+                    coneParticle = leaf.myApplyComponent.GetComponentsInChildren<ParticleSystem>(true).Single(value => value.name == "da");
+                    coneClip = coneAnimator.runtimeAnimatorController.animationClips.Single(value => value.name == "Fx_Ani_Ice");
+                    coneAnimator.speed = 0f;
+                };
+                var coneHits = new List<(int Target, int Frame)>();
+                cameraView.transform.position = new Vector3(7, 7, -20);
+                using (var coneViews = new OfficialBattleSkillEntityPlayback(coneRoot, new OfficialBattleGridMapper(coneRoot, grid),
+                    coneScope, id => coneDisplay.FirstOrDefault(value => value.Id == id)))
+                using (var coneGraph = new OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog.TryLoadDefault(), coneScope, coneViews))
+                {
+                    coneViews.BindDamageUI(coneRoot, 0);
+                    foreach (var pair in coneBodies) coneViews.EnsureUnit(pair.Key, pair.Value);
+                    Transform ConeBody(int id) => coneBodies.TryGetValue(id, out var body) ? body : null;
+                    void ConeDamage(FightBattleDamageEvent damage, FightBattleUnitState projected)
+                    {
+                        int index = damage.TargetId - 2;
+                        Require(damage.SkillEntityId == 10900 && damage.HitEntityId == 10901 && damage.DamageEntityId == 10902
+                            && damage.ElementType == 101 && index == coneHits.Count && index >= 0 && index < 5
+                            && coneAnimator && coneParticle && coneParticle.particleCount > 0 && coneClip
+                            && coneAnimator.GetCurrentAnimatorClipInfo(0).Any(value => value.clip == coneClip)
+                            && coneResumed, "Ice damage must follow its original visible cone through each scope.");
+                        var floats = coneRoot.GetComponentsInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUI>(true);
+                        Require(floats.Any(ui => ui.EntityId == new EcEntityIdentifier(1, damage.TargetId)
+                            && ui.GetComponentsInChildren<TextMesh>(true).Any(text => text.text == Math.Abs(damage.DamageValue).ToString())),
+                            "Ice damage number must appear on its target in the impact frame.");
+                        coneHits.Add((damage.TargetId, Time.frameCount));
+                        if (dx == 1 && coneDirection[3] == 0 && !coneCaptured)
+                        { Capture("ice-cone-native-impact.png", false); coneCaptured = true; }
+                        if (dx == 1 && coneDirection[3] == 0 && index == 4)
+                        {
+                            cameraView.transform.position = new Vector3(10.5f, 7, -20);
+                            Capture("ice-cone-native-far-impact.png", false);
+                        }
+                        coneDisplay[Array.FindIndex(coneDisplay, value => value.Id == damage.TargetId)] = projected;
+                    }
+                    using (var coneDriver = new OfficialBattleLiveGraphDriver(coneCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                        formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), coneViews,
+                        id => id == 10900, ConeBody, null, ConeDamage))
+                    {
+                        coneDriver.SecondsStatusChanged += _ => { };
+                        coneDisplay = coneCheckpoint.Units.Select(value => coneDriver.DisplayUnit(value.Id)).ToArray();
+                        float coneDeadline = Time.realtimeSinceStartup + 15f;
+                        while (!coneDriver.IsCompleted && Time.realtimeSinceStartup < coneDeadline)
+                        {
+                            coneDriver.Pump(Time.deltaTime); coneViews.Tick(Time.deltaTime); coneScope.LateTick();
+                            if (coneAnimator && !coneResumed && ++conePausedFrames >= 8)
+                            {
+                                Require(coneAnimator.transform.localPosition.y == 0f && coneHits.Count == 0,
+                                    "A paused ice cone cannot reach its targets.");
+                                coneAnimator.speed = coneDirection[3] == 0 ? 1f : 10f; coneResumed = true;
+                            }
+                            yield return null;
+                        }
+                        Require(coneDriver.TryTakeCompleted(out var executor, out var result) && coneResumed && coneHits.Count == 5
+                            && coneHits.Select(value => value.Target).Distinct().Count() == 5
+                            && FightBattleCheckpointSerializer.Save(coneCheckpoint) == coneCommitted
+                            && FightBattleCheckpointSerializer.Save(result.Checkpoint) == FightBattleCheckpointSerializer.Save(coneBaseline),
+                            "The ice cone must preserve all five actual hits, freeze results and the original checkpoint.");
+                        foreach (var frozen in executor.State.Units.Skip(1).SelectMany(unit => unit.Statuses).Where(status => status.ClassId == 24215))
+                            Require(frozen.DurationRound == 1 && frozen.CreatorId == 1 && frozen.ApplyingSkillItemId == 10035,
+                                "The ice cone must preserve the original freeze source and duration.");
+                    }
+                }
+                coneScope.Dispose(); coneFarAppearance?.Dispose(); coneTargetAppearance.Dispose(); coneAppearance.Dispose(); Destroy(coneRoot.gameObject);
+                cameraView.transform.position = new Vector3(5, 5, -20);
+            }
             var fireUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 5) };
             var fireRoot = new GameObject("Isolated fireball scene").transform;
             fireRoot.SetParent(root, false);

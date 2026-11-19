@@ -131,6 +131,110 @@ namespace Zjcs.Presentation.Combat
         internal void Detach() { arrival = null; }
     }
 
+    // The ice cone's original animation travels through five independently timed scopes.
+    internal sealed class OfficialBattleIceConeImpact : MonoBehaviour
+    {
+        private Animator cone;
+        private ParticleSystem visibleCone;
+        private ParticleSystemRenderer coneRenderer;
+        private Transform source;
+        private Mesh renderedCone;
+        private readonly System.Collections.Generic.List<Vector3> renderedVertices = new System.Collections.Generic.List<Vector3>();
+        private readonly System.Collections.Generic.List<Vector3> previousVertices = new System.Collections.Generic.List<Vector3>();
+        private int scopeCount, next;
+        private Action<int> arrival;
+
+        internal static OfficialBattleIceConeImpact Attach(GameObject prefab, MyPlayable playable,
+            FightBattleHitEntity hit, Action<int> arrival)
+        {
+            if (!prefab || !playable || !playable.mySource || hit?.ScopeEntries == null
+                || hit.ScopeEntries.Count != 5 || arrival == null) return null;
+            var sequence = prefab.GetComponent<MyPlayableSequence>();
+            if (!sequence || sequence.myPlayables == null) return null;
+            float effectStart = -1f; int effects = 0;
+            foreach (var entry in sequence.myPlayables)
+                if (entry?.myPlayable && entry.myPlayable.name == "effect (3)") { effectStart = entry.myTime; effects++; }
+            if (effects != 1 || effectStart < 0f) return null;
+            Animator cone = null; ParticleSystem visible = null;
+            foreach (var value in playable.GetComponentsInChildren<Animator>(true))
+                if (value.name == "ani") { if (cone) return null; cone = value; }
+            foreach (var value in playable.GetComponentsInChildren<ParticleSystem>(true))
+                if (value.name == "da") { if (visible) return null; visible = value; }
+            var renderer = visible ? visible.GetComponent<ParticleSystemRenderer>() : null;
+            if (!cone || !cone.transform.parent || !renderer || !cone.runtimeAnimatorController) return null;
+            AnimationClip clip = null;
+            foreach (var value in cone.runtimeAnimatorController.animationClips)
+                if (value && value.name == "Fx_Ani_Ice") { if (clip) return null; clip = value; }
+            if (!clip) return null;
+            var sample = new GameObject("Ice cone animation sample");
+            try
+            {
+                float previous = float.NegativeInfinity;
+                for (int index = 0; index < hit.ScopeEntries.Count; index++)
+                {
+                    var entry = hit.ScopeEntries[index];
+                    if (entry == null || entry.Position.X != 0 || entry.Position.Y != index + 1) return null;
+                    float time = hit.Delay + entry.Delay - effectStart;
+                    if (float.IsNaN(time) || float.IsInfinity(time) || time < 0f || time > clip.length) return null;
+                    clip.SampleAnimation(sample, time);
+                    float position = sample.transform.localPosition.y;
+                    if (position <= previous) return null;
+                    previous = position;
+                }
+            }
+            finally { Destroy(sample); }
+            var observer = playable.gameObject.AddComponent<OfficialBattleIceConeImpact>();
+            observer.cone = cone; observer.visibleCone = visible; observer.scopeCount = hit.ScopeEntries.Count; observer.arrival = arrival;
+            observer.source = playable.mySource.transform; observer.coneRenderer = renderer;
+            observer.renderedCone = new Mesh { name = "Original ice cone impact geometry" };
+            return observer;
+        }
+
+        private void LateUpdate()
+        {
+            if (arrival == null || !cone || !visibleCone || visibleCone.particleCount <= 0) return;
+            RouteVisibleScopes();
+        }
+
+        private void RouteVisibleScopes()
+        {
+            if (!source || !source.parent || !coneRenderer || !renderedCone) return;
+            Camera camera = Camera.main;
+            if (!camera && Camera.allCamerasCount == 1) camera = Camera.allCameras[0];
+            if (!camera) return;
+            Vector3 forward = cone.transform.parent.TransformVector(Vector3.up);
+            float cellSize = source.parent.TransformVector(Vector3.right).magnitude;
+            if (forward.sqrMagnitude <= .000001f || cellSize <= 0f) return;
+            coneRenderer.BakeMesh(renderedCone, camera, true);
+            renderedVertices.Clear(); renderedCone.GetVertices(renderedVertices);
+            if (renderedVertices.Count == 0) return;
+            float minX = float.PositiveInfinity, maxX = float.NegativeInfinity;
+            float minY = float.PositiveInfinity, maxY = float.NegativeInfinity;
+            void Include(Vector3 world)
+            {
+                Vector3 screen = camera.WorldToScreenPoint(world);
+                minX = Mathf.Min(minX, screen.x); maxX = Mathf.Max(maxX, screen.x);
+                minY = Mathf.Min(minY, screen.y); maxY = Mathf.Max(maxY, screen.y);
+            }
+            foreach (var world in previousVertices) Include(world);
+            previousVertices.Clear();
+            foreach (var vertex in renderedVertices)
+            {
+                Vector3 world = coneRenderer.transform.position + vertex;
+                previousVertices.Add(world); Include(world);
+            }
+            while (arrival != null && next < scopeCount)
+            {
+                Vector3 target = camera.WorldToScreenPoint(source.position + forward.normalized * (cellSize * (next + 1)));
+                if (target.z <= 0f || target.x < minX || target.x > maxX || target.y < minY || target.y > maxY) return;
+                arrival(next++);
+            }
+        }
+
+        internal void Detach() { arrival = null; if (renderedCone) Destroy(renderedCone); renderedCone = null; }
+        private void OnDestroy() { if (renderedCone) Destroy(renderedCone); }
+    }
+
     // The original sword lands on the centre; its expanding ground particles reach the outer cells.
     internal sealed class OfficialBattleFallingWindImpact : MonoBehaviour
     {

@@ -66,6 +66,12 @@ namespace Zjcs.Presentation.Combat
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center, int Scope)> sentWindHits =
             new HashSet<(FightBattleHitSelectionSnapshot, int, int)>();
         private readonly List<OfficialBattleWindBladeImpact> windBlades = new List<OfficialBattleWindBladeImpact>();
+        private readonly Dictionary<int, FightBattleHitEntity> iceConeScopes = new Dictionary<int, FightBattleHitEntity>();
+        private readonly HashSet<FightBattleSkillCastEvent> observedIceCones = new HashSet<FightBattleSkillCastEvent>();
+        private readonly Dictionary<FightBattleSkillCastEvent, int> reachedIceCones = new Dictionary<FightBattleSkillCastEvent, int>();
+        private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center, int Scope)> sentIceConeHits =
+            new HashSet<(FightBattleHitSelectionSnapshot, int, int)>();
+        private readonly List<OfficialBattleIceConeImpact> iceCones = new List<OfficialBattleIceConeImpact>();
         private readonly Dictionary<int, AreaRingDefinition> fallingWindDefinitions = new Dictionary<int, AreaRingDefinition>();
         private readonly HashSet<FightBattleSkillCastEvent> observedFallingWind = new HashSet<FightBattleSkillCastEvent>();
         private readonly Dictionary<FightBattleSkillCastEvent, int> reachedFallingWind = new Dictionary<FightBattleSkillCastEvent, int>();
@@ -230,6 +236,8 @@ namespace Zjcs.Presentation.Combat
                         }
                         if (skill.EntityId == 10640 && hit.EntityId == 10641 && hit.ScopeEntries.Count == 4)
                             windBladeScopes[unit.Id] = hit;
+                        if (skill.EntityId == 10900 && hit.EntityId == 10901 && hit.ScopeEntries.Count == 5)
+                            iceConeScopes[unit.Id] = hit;
                         if (skill.EntityId == 10700 && hit.EntityId == 10701 && hit.ScopeEntries.Count == 9)
                         {
                             var positions = new HashSet<FightGridPoint>(); var scopes = new HashSet<int>();
@@ -433,6 +441,9 @@ namespace Zjcs.Presentation.Combat
                         if (reachedWindBlades.TryGetValue(selectedCast, out int windReached))
                             for (int index = 0; index < 4; index++)
                                 if ((windReached & (1 << index)) != 0) RouteWindBladeImpact(selectedCast, active.Id, index);
+                        if (reachedIceCones.TryGetValue(selectedCast, out int coneReached))
+                            for (int index = 0; index < 5; index++)
+                                if ((coneReached & (1 << index)) != 0) RouteIceConeImpact(selectedCast, active.Id, index);
                         if (reachedFallingWind.TryGetValue(selectedCast, out int fallingReached))
                             for (int index = 0; index < 2; index++)
                                 if ((fallingReached & (1 << index)) != 0) RouteFallingWindImpact(selectedCast, active.Id, index);
@@ -624,6 +635,7 @@ namespace Zjcs.Presentation.Combat
                 try { RouteJumpSlashImpact(cast, prefab, playable); AttachMountainWaves(cast, id, prefab, playable);
                     AttachSlashImpact(cast, id, prefab, playable); AttachComboImpact(cast, id, prefab, playable);
                     AttachCrossImpact(cast, id, prefab, playable); AttachWindBladeImpact(cast, id, prefab, playable);
+                    AttachIceConeImpact(cast, id, prefab, playable);
                     AttachFallingWindImpact(cast, id, prefab, playable); AttachFireRingImpact(cast, id, prefab, playable);
                     AttachSwordWindImpact(cast, id, prefab, playable);
                     AttachIceHitImpact(cast, id, prefab, playable); AttachAuraHitImpact(cast, id, prefab, playable); }
@@ -794,6 +806,39 @@ namespace Zjcs.Presentation.Combat
                     if (target == null || !target.HasScopeIndex || !definition.Scopes[ring].Contains(target.ScopeIndex)
                         || !sentFallingWindHits.Add((hit, target.EffectCenterIndex, target.ScopeIndex))) continue;
                     bridge.RecordArrival(cast, hit, target.EffectCenterIndex, target.ScopeIndex);
+                }
+            }
+        }
+
+        private void AttachIceConeImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
+            GameObject prefab, MyPlayable playable)
+        {
+            if (cast?.SkillEntityId != 10900 || prefab == null || prefab.name != "playable10900"
+                || playable == null || playable.name != "effect (3)" || observedIceCones.Contains(cast)
+                || !iceConeScopes.TryGetValue(cast.ActorId, out var hit)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            var observer = OfficialBattleIceConeImpact.Attach(prefab, playable, hit,
+                index => RouteIceConeImpact(cast, id, index));
+            if (observer == null) return;
+            observedIceCones.Add(cast); iceCones.Add(observer);
+        }
+
+        private void RouteIceConeImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id, int index)
+        {
+            if (disposed || transferred || index < 0 || index >= 5 || !observedIceCones.Contains(cast)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            reachedIceCones.TryGetValue(cast, out int reached);
+            reachedIceCones[cast] = reached | (1 << index);
+            if (cast.HitSelections == null) return;
+            foreach (var hit in new List<FightBattleHitSelectionSnapshot>(cast.HitSelections))
+            {
+                if (hit?.HitEntityId != 10901 || !selectedHits.Contains(hit) || hit.Targets == null) continue;
+                foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
+                {
+                    if (!casts.ContainsKey(cast)) return;
+                    if (target == null || !target.HasScopeIndex || target.ScopeIndex != index
+                        || !sentIceConeHits.Add((hit, target.EffectCenterIndex, index))) continue;
+                    bridge.RecordArrival(cast, hit, target.EffectCenterIndex, index);
                 }
             }
         }
@@ -1055,6 +1100,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in mountainWaves) if (observer != null) observer.Detach();
             foreach (var observer in slashEffects) if (observer != null) observer.Detach();
             foreach (var observer in windBlades) if (observer != null) observer.Detach();
+            foreach (var observer in iceCones) if (observer != null) observer.Detach();
             foreach (var observer in fallingWindEffects) if (observer != null) observer.Detach();
             foreach (var observer in fireRingEffects) if (observer != null) observer.Detach();
             foreach (var observer in swordWindEffects) if (observer != null) observer.Detach();
@@ -1078,6 +1124,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in mountainWaves) if (observer != null) observer.Detach();
             foreach (var observer in slashEffects) if (observer != null) observer.Detach();
             foreach (var observer in windBlades) if (observer != null) observer.Detach();
+            foreach (var observer in iceCones) if (observer != null) observer.Detach();
             foreach (var observer in fallingWindEffects) if (observer != null) observer.Detach();
             foreach (var observer in fireRingEffects) if (observer != null) observer.Detach();
             foreach (var observer in swordWindEffects) if (observer != null) observer.Detach();
@@ -1089,6 +1136,7 @@ namespace Zjcs.Presentation.Combat
             casts.Clear(); selectedHits.Clear(); jumpSlashScopes.Clear(); mountainScopes.Clear(); crossScopes.Clear();
             observedCrossEffects.Clear(); reachedCrossEffects.Clear(); sentCrossHits.Clear(); observedMountains.Clear(); reachedMountainWaves.Clear(); mountainWaves.Clear();
             windBladeScopes.Clear(); observedWindBlades.Clear(); reachedWindBlades.Clear(); sentWindHits.Clear(); windBlades.Clear();
+            iceConeScopes.Clear(); observedIceCones.Clear(); reachedIceCones.Clear(); sentIceConeHits.Clear(); iceCones.Clear();
             pullScopes.Clear(); sentPullHits.Clear();
             fallingWindDefinitions.Clear(); observedFallingWind.Clear(); reachedFallingWind.Clear();
             sentFallingWindHits.Clear(); fallingWindEffects.Clear();
