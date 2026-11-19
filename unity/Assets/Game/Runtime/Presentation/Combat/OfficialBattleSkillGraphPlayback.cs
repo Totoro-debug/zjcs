@@ -120,8 +120,10 @@ namespace Zjcs.Presentation.Combat
             var driver = new OfficialBattleLiveGraphDriver(checkpoint, restore, entityViews,
                 catalog.ContainsSkill, Resolve, petTransform, damageShown, costShown, observeStatusViews: statusViews != null,
                 observeUnitLives: unitLife != null, summonShown: unitSpawns?.CanApplyLive == true ? unitSpawns.ApplyLive : null,
-                gridChanged: observeGridViews ? gridViews.ApplyLive : (Action<FightBattleGridViewEvent>)null);
+                gridChanged: observeGridViews ? gridViews.ApplyLive : (Action<FightBattleGridViewEvent>)null,
+                visibleBurningGrid: observeGridViews ? gridViews.HasVisibleBurningEffect : (Func<int, bool>)null);
             gridViews?.BindLiveUnits(driver.DisplayUnit);
+            if (observeGridViews) gridViews.BurningEffectStarted += driver.OnBurningEffectStarted;
             if (airComboViews != null) driver.SecondsStatusChanged += airComboViews.ApplySecondsStatus;
             if (statusViews != null)
             {
@@ -133,6 +135,7 @@ namespace Zjcs.Presentation.Combat
             driver.Disposed += () => {
                 if (!ReferenceEquals(liveDriver, driver)) return;
                 liveDriver = null; statusViews?.BindLiveUnits(null); gridViews?.BindLiveUnits(null);
+                if (observeGridViews) gridViews.BurningEffectStarted -= driver.OnBurningEffectStarted;
             };
             return driver;
         }

@@ -32,7 +32,7 @@ namespace Zjcs.Presentation.Combat
             Action<FightBattleSkillCastEvent, FightBattleUnitState> costShown = null, bool observeStatusViews = false,
             bool observeUnitLives = false,
             Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> summonShown = null,
-            Action<FightBattleGridViewEvent> gridChanged = null)
+            Action<FightBattleGridViewEvent> gridChanged = null, Func<int, bool> visibleBurningGrid = null)
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
             this.views = views ?? throw new ArgumentNullException(nameof(views));
@@ -47,7 +47,7 @@ namespace Zjcs.Presentation.Combat
             session = new OfficialBattleLiveImpactSession(checkpoint, restore, views,
                 checkpoint.Sequence, checkpoint.Counter + 1, observeMovements: true, observeStatusViews: observeStatusViews,
                 observeUnitLives: observeUnitLives, observeSummons: summonShown != null, observeDisperses: views.HasDamageUI,
-                observeGridViews: gridChanged != null);
+                observeGridViews: gridChanged != null, visibleBurningGrid: visibleBurningGrid);
             if (summonShown != null) session.SummonCreated += ShowSummon;
             if (gridChanged != null) session.GridViewChanged += gridChanged;
             if (views.HasDamageUI) session.DisperseResolved += ShowDisperse;
@@ -58,6 +58,7 @@ namespace Zjcs.Presentation.Combat
         public FightBattlePreparedMovement PendingMovement => session.PendingMovement;
         public FightBattleSettledImpact PendingSettlement => session.PendingSettlement;
         public FightBattleUnitState DisplayUnit(int unitId) => health.Find(unitId);
+        internal void OnBurningEffectStarted(int gridId) => session.OnBurningEffectStarted(gridId);
         public event Action<FightBattleMovementEvent> BlockedContact;
         public event Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> SummonPresented;
         public event Action<FightBattleStatusViewEvent> SecondsStatusChanged

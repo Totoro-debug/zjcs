@@ -16,7 +16,11 @@ namespace Zjcs.Official.StoryPlayables
     public struct EcEntityIdentifier { public int Value; public EcEntityIdentifier(int value) { Value = value; } }
     public class MyPlayable { public string name; public UnityEngine.GameObject myTarget; }
 }
-namespace UnityEngine { public class GameObject { public string name; } }
+namespace UnityEngine {
+    public class GameObject { public string name; }
+    public static class Time { public static float timeScale = 1f; }
+    public struct Vector3 { public float x, y; public static Vector3 operator -(Vector3 a, Vector3 b) => new Vector3 { x=a.x-b.x, y=a.y-b.y }; }
+}
 namespace Zjcs.Presentation.Combat
 {
     // The test bridge invokes this after releasing a selected hit, so the
@@ -24,6 +28,17 @@ namespace Zjcs.Presentation.Combat
     internal static class SelectionBoundaryRace
     {
         internal static Action<FightBattleImpactLatch, FightBattleSelectedHit, long> AfterSelection;
+    }
+
+    internal sealed class OfficialBattleFlameSprayImpact
+    {
+        internal static OfficialBattleFlameSprayImpact Last;
+        private Action<int, int> arrival;
+        internal static OfficialBattleFlameSprayImpact Attach(GameObject prefab, MyPlayable playable, FightBattleHitRoot[] roots,
+            FightBattleHitEntity hit, Vector3 origin, Vector3 step, Action<int, int> arrival)
+        { Last = new OfficialBattleFlameSprayImpact { arrival = arrival }; return Last; }
+        internal void Trigger(int wave, int cell) => arrival?.Invoke(wave, cell);
+        internal void Detach() { arrival = null; }
     }
 
     internal sealed class OfficialBattleWindBladeImpact
@@ -79,6 +94,8 @@ namespace Zjcs.Presentation.Combat
     // Drives the production session with real battle rules and a controlled native-view boundary.
     public sealed class OfficialBattleSkillEntityPlayback
     {
+        public Vector3 GridToPos(Pos2d value) => new Vector3 { x=value.X, y=value.Y };
+        public Vector3 ToWorldPos(Vector3 value) => value;
         public event Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, Pos2d, int> HitSelectionViewArrived;
         public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted;
         public event Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, GameObject, MyPlayable> HitGraphPlayableStarted;
@@ -104,7 +121,12 @@ namespace Zjcs.Presentation.Combat
             Cast = cast; SelectedCasts.Add(cast); Selection = selection; SelectionElapsed = elapsed; currentSkill = id;
             if (ArriveImmediately) {
                 var target = selection.Targets.SingleOrDefault(t => t.TargetId == 2);
-                if (target != null) Arrive(target.HasScopeIndex ? target.ScopeIndex : -1);
+                if (target != null && cast.SkillEntityId == 11690) {
+                    if (OfficialBattleFlameSprayImpact.Last == null) StartGraph(id, "playable11690_Down", "effect (2)");
+                    int wave = (int)Math.Round((selection.Delay - .34f) / .5f);
+                    OfficialBattleFlameSprayImpact.Last.Trigger(wave, target.ScopeIndex);
+                }
+                else if (target != null) Arrive(target.HasScopeIndex ? target.ScopeIndex : -1);
             }
         }
         public bool QueueSettledDamage(FightBattleSkillCastEvent cast, EcEntityIdentifier id, FightBattleDamageEvent damage)

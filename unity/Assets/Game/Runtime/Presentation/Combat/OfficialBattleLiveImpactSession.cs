@@ -48,6 +48,22 @@ namespace Zjcs.Presentation.Combat
             public Action Resume;
         }
 
+        private sealed class FlameDefinition
+        {
+            public FightBattleHitRoot[] Roots;
+            public FightBattleHitEntity Hit;
+        }
+
+        private readonly Dictionary<int, FlameDefinition> flameDefinitions = new Dictionary<int, FlameDefinition>();
+        private readonly HashSet<FightBattleSkillCastEvent> observedFlames = new HashSet<FightBattleSkillCastEvent>();
+        private readonly Dictionary<FightBattleSkillCastEvent, int> reachedFlames = new Dictionary<FightBattleSkillCastEvent, int>();
+        private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center, int Scope)> sentFlameHits =
+            new HashSet<(FightBattleHitSelectionSnapshot, int, int)>();
+        private readonly List<OfficialBattleFlameSprayImpact> flameEffects = new List<OfficialBattleFlameSprayImpact>();
+        private readonly List<(FightBattleSkillCastEvent Cast, FightBattleHitSelectionSnapshot Hit)> pendingBurningHits =
+            new List<(FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot)>();
+        private readonly Func<int, bool> visibleBurningGrid;
+
         private readonly FightBattleIsolatedStep step;
         private readonly OfficialBattleSkillEntityPlayback views;
         private readonly OfficialBattleImpactViewBridge bridge;
@@ -219,9 +235,10 @@ namespace Zjcs.Presentation.Combat
             Func<FightBattleCheckpoint, FightBattleExecutor> restore,
             OfficialBattleSkillEntityPlayback views, int sequence, int counter, bool observeMovements = false,
             bool observeStatusViews = false, bool observeUnitLives = false, bool observeSummons = false,
-            bool observeDisperses = false, bool observeGridViews = false)
+            bool observeDisperses = false, bool observeGridViews = false, Func<int, bool> visibleBurningGrid = null)
         {
             this.views = views ?? throw new ArgumentNullException(nameof(views));
+            this.visibleBurningGrid = visibleBurningGrid;
             if (checkpoint?.Units != null) foreach (var unit in checkpoint.Units)
             {
                 if (unit?.Skills == null) continue;
@@ -268,6 +285,11 @@ namespace Zjcs.Presentation.Combat
                             && hit.ScopeEntries[0] != null && hit.ScopeEntries[0].Delay == 0f
                             && hit.ScopeEntries[0].Position.X == 0 && hit.ScopeEntries[0].Position.Y == 1)
                             heavyCasters.Add(unit.Id);
+                        if (skill.EntityId == 11690 && hit.EntityId == 11691 && skill.HitGraphRoots != null
+                            && skill.HitGraphRoots.Count == 3 && skill.HitGraphRoots.TrueForAll(root => root != null && root.EntityId == 11691)
+                            && hit.ScopeEntries.Count == 3)
+                            flameDefinitions[unit.Id] = new FlameDefinition {
+                                Roots = new[] { skill.HitGraphRoots[0], skill.HitGraphRoots[1], skill.HitGraphRoots[2] }, Hit = hit };
                         if (skill.EntityId == 10670 && hit.EntityId == 10671)
                         {
                             var scopes = new HashSet<int>();
@@ -375,7 +397,8 @@ namespace Zjcs.Presentation.Combat
             step = new FightBattleIsolatedStep(checkpoint, restore, sequence, counter, observeMovements, observeStatusViews, observeUnitLives, observeSummons, observeDisperses, observeGridViews);
             bridge = new OfficialBattleImpactViewBridge(views, step.Latch);
             bridge.IgnoreNativeScopeArrival = (cast, hit, scope) => scope >= 0 &&
-                (cast?.SkillEntityId == 10570 && hit?.HitEntityId == 10571
+                (cast?.SkillEntityId == 11690 && hit?.HitEntityId == 11691 && flameDefinitions.ContainsKey(cast.ActorId)
+                || cast?.SkillEntityId == 10570 && hit?.HitEntityId == 10571
                 || cast?.SkillEntityId == 10720 && hit?.HitEntityId == 10721 && healingCasters.Contains(cast.ActorId));
             bridge.WorkerReleasedByArrival += OnWorkerReleasedByArrival;
             views.SkillGraphPlayableStarted += OnSkillGraphPlayableStarted;
@@ -411,6 +434,8 @@ namespace Zjcs.Presentation.Combat
                 bool progressed = false;
                 while (true)
                 {
+                    TryRouteBurningHits();
+                    if (pendingArrivalRevision > 0) WaitForRuleBoundary(pendingArrivalRevision);
                     // Arrivals are keyed independently and may precede target requests.
                     while (step.Latch.TryTake(out _)) { }
                     object current = step.Latch.CurrentWorkerHandoff;
@@ -593,6 +618,12 @@ namespace Zjcs.Presentation.Combat
                                     expectedDragonWaves[selectedCast] = expected | (1 << wave);
                                 }
                         long revision = bridge.QueueSelection(selection, active.Id, clock - active.Started);
+                        if (selectedCast.SkillEntityId == 11590 && selection.Selection.HitEntityId == 11591
+                            && visibleBurningGrid != null) pendingBurningHits.Add((selectedCast, selection.Selection));
+                        TryRouteBurningHits();
+                        if (reachedFlames.TryGetValue(selectedCast, out int flameReached))
+                            for (int wave = 0; wave < 3; wave++) for (int cell = 0; cell < 3; cell++)
+                                if ((flameReached & (1 << (wave * 3 + cell))) != 0) RouteFlameImpact(selectedCast, active.Id, wave, cell);
                         if (reachedDragonWaves.TryGetValue(selectedCast, out int dragonReached))
                             for (int wave = 0; wave < 4; wave++)
                                 if ((dragonReached & (1 << wave)) != 0) RouteDragonWave(selectedCast, active.Id, wave);
@@ -671,6 +702,34 @@ namespace Zjcs.Presentation.Combat
                 }
             }
             finally { pumping = false; }
+        }
+
+        private void TryRouteBurningHits()
+        {
+            if (Time.timeScale == 0f || visibleBurningGrid == null) return;
+            for (int index = pendingBurningHits.Count - 1; index >= 0; index--)
+            {
+                var pending = pendingBurningHits[index];
+                if (!visibleBurningGrid(pending.Cast.ActorId)) continue;
+                pendingBurningHits.RemoveAt(index);
+                if (pending.Hit.Targets == null) continue;
+                var centers = new HashSet<int>();
+                foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(pending.Hit.Targets))
+                    if (target != null && target.HasScopeIndex && target.ScopeIndex == 0 && target.ScopeDelay == 0f
+                        && centers.Add(target.EffectCenterIndex))
+                        bridge.RecordArrival(pending.Cast, pending.Hit, target.EffectCenterIndex, 0);
+            }
+        }
+
+        internal void OnBurningEffectStarted(int gridId)
+        {
+            if (disposed || transferred || pumping || lastStartCast == null) return;
+            foreach (var pending in pendingBurningHits)
+                if (pending.Cast.ActorId == gridId)
+                {
+                    Pump(0f, lastStartCast, lastAfterDamageStarted, lastStartMovement, lastStartBlockedMovement, lastCanStartDamage);
+                    return;
+                }
         }
 
         private static void CaptureHandoff<T>(object current, ref T held, Stack<T> suspended, Func<T> take) where T : class
@@ -871,9 +930,52 @@ namespace Zjcs.Presentation.Combat
                     AttachIceConeImpact(cast, id, prefab, playable); AttachDragonWave(cast, id, prefab, playable);
                     AttachFallingWindImpact(cast, id, prefab, playable); AttachFireRingImpact(cast, id, prefab, playable);
                     AttachSwordWindImpact(cast, id, prefab, playable);
-                    AttachIceHitImpact(cast, id, prefab, playable); AttachAuraHitImpact(cast, id, prefab, playable); }
+                    AttachIceHitImpact(cast, id, prefab, playable); AttachAuraHitImpact(cast, id, prefab, playable);
+                    AttachFlameImpact(cast, id, prefab, playable); }
                 finally { currentGraphCast = previousCast; currentGraphSkillId = previousId; }
             }
+        }
+
+        private void AttachFlameImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id, GameObject prefab, MyPlayable playable)
+        {
+            if (cast?.SkillEntityId != 11690 || cast.Presentation == null || prefab == null || !prefab.name.StartsWith("playable11690_")
+                || playable == null || playable.name != "effect (2)" || observedFlames.Contains(cast)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)
+                || !flameDefinitions.TryGetValue(cast.ActorId, out var definition)) return;
+            int facing = cast.Presentation.FacingIndex;
+            if (facing < 0 || facing > 3) return;
+            int dx = facing == 1 ? -1 : facing == 3 ? 1 : 0;
+            int dy = facing == 0 ? -1 : facing == 2 ? 1 : 0;
+            var origin = new Zjcs.Official.World.NativeTerrain.Common.Pos2d(cast.Presentation.SourceX, cast.Presentation.SourceY);
+            var next = new Zjcs.Official.World.NativeTerrain.Common.Pos2d(origin.X + dx, origin.Y + dy);
+            var worldOrigin = views.ToWorldPos(views.GridToPos(origin));
+            var worldStep = views.ToWorldPos(views.GridToPos(next)) - worldOrigin;
+            var observer = OfficialBattleFlameSprayImpact.Attach(prefab, playable, definition.Roots, definition.Hit,
+                worldOrigin, worldStep, (wave, cell) => RouteFlameImpact(cast, id, wave, cell));
+            if (observer != null) { observedFlames.Add(cast); flameEffects.Add(observer); }
+        }
+
+        private void RouteFlameImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id, int wave, int cell)
+        {
+            if (disposed || transferred || wave < 0 || wave >= 3 || cell < 0 || cell >= 3 || !observedFlames.Contains(cast)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)
+                || !flameDefinitions.TryGetValue(cast.ActorId, out var definition)) return;
+            reachedFlames.TryGetValue(cast, out int reached);
+            reachedFlames[cast] = reached | (1 << (wave * 3 + cell));
+            if (cast.HitSelections != null) foreach (var hit in new List<FightBattleHitSelectionSnapshot>(cast.HitSelections))
+            {
+                if (hit?.HitEntityId != 11691 || Math.Abs(hit.Delay - definition.Roots[wave].Delay) > .00001f
+                    || !selectedHits.Contains(hit) || hit.Targets == null) continue;
+                foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
+                {
+                    if (!casts.ContainsKey(cast)) return;
+                    if (target == null || !target.HasScopeIndex || target.ScopeIndex != cell
+                        || !sentFlameHits.Add((hit, target.EffectCenterIndex, cell))) continue;
+                    bridge.RecordArrival(cast, hit, target.EffectCenterIndex, cell);
+                }
+            }
+            if (!pumping && lastStartCast != null) Pump(0f, lastStartCast, lastAfterDamageStarted,
+                lastStartMovement, lastStartBlockedMovement, lastCanStartDamage);
         }
 
         private void AttachDragonWave(FightBattleSkillCastEvent cast, EcEntityIdentifier id, GameObject prefab, MyPlayable playable)
@@ -1367,6 +1469,7 @@ namespace Zjcs.Presentation.Combat
             views.HitGraphPlayableStarted -= OnHitGraphPlayableStarted;
             views.HitViewDeferralRequested -= OnHitViewDeferralRequested;
             bridge.Dispose();
+            foreach (var observer in flameEffects) if (observer != null) observer.Detach();
             foreach (var observer in mountainWaves) if (observer != null) observer.Detach();
             foreach (var observer in slashEffects) if (observer != null) observer.Detach();
             foreach (var observer in windBlades) if (observer != null) observer.Detach();
@@ -1394,6 +1497,7 @@ namespace Zjcs.Presentation.Combat
             views.HitGraphPlayableStarted -= OnHitGraphPlayableStarted;
             views.HitViewDeferralRequested -= OnHitViewDeferralRequested;
             bridge.Dispose();
+            foreach (var observer in flameEffects) if (observer != null) observer.Detach();
             foreach (var observer in mountainWaves) if (observer != null) observer.Detach();
             foreach (var observer in slashEffects) if (observer != null) observer.Detach();
             foreach (var observer in windBlades) if (observer != null) observer.Detach();
@@ -1407,6 +1511,8 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in waterProjectiles) if (observer != null) observer.Detach();
             foreach (var observer in fireballProjectiles) if (observer != null) observer.Detach();
             step.Dispose();
+            flameDefinitions.Clear(); observedFlames.Clear(); reachedFlames.Clear(); sentFlameHits.Clear();
+            flameEffects.Clear(); pendingBurningHits.Clear();
             casts.Clear(); selectedHits.Clear(); jumpSlashScopes.Clear(); mountainScopes.Clear(); crossScopes.Clear();
             observedCrossEffects.Clear(); reachedCrossEffects.Clear(); sentCrossHits.Clear(); observedMountains.Clear(); reachedMountainWaves.Clear(); mountainWaves.Clear();
             windBladeScopes.Clear(); observedWindBlades.Clear(); reachedWindBlades.Clear(); sentWindHits.Clear(); windBlades.Clear();

@@ -85,6 +85,7 @@ namespace Zjcs.Presentation.Combat
         public readonly bool ObserveStatusViews, ObserveUnitLives;
         public readonly Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> SummonShown;
         public readonly Action<FightBattleGridViewEvent> GridChanged;
+        public int LastBurningGrid;
         public bool IsDisposed; internal event Action Disposed;
         public event Action<FightBattleStatusViewEvent> SecondsStatusChanged;
         public event Action<FightBattleStatusViewEvent> StatusViewChanged;
@@ -97,9 +98,10 @@ namespace Zjcs.Presentation.Combat
             Func<int, Transform> pet, Action<FightBattleDamageEvent, FightBattleUnitState> damage,
             Action<FightBattleSkillCastEvent, FightBattleUnitState> cost, bool observeStatusViews = false, bool observeUnitLives = false,
             Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> summonShown = null,
-            Action<FightBattleGridViewEvent> gridChanged = null)
+            Action<FightBattleGridViewEvent> gridChanged = null, Func<int, bool> visibleBurningGrid = null)
         { HasSkill = hasSkill; Body = body; ObserveStatusViews = observeStatusViews; ObserveUnitLives = observeUnitLives; SummonShown = summonShown; GridChanged = gridChanged; }
         public FightBattleUnitState DisplayUnit(int id) => null;
+        internal void OnBurningEffectStarted(int id) { LastBurningGrid = id; }
         public void Dispose() { if (IsDisposed) return; IsDisposed = true; Disposed?.Invoke(); }
     }
     // Complete character-status entities have separate native lifecycle coverage.
@@ -136,12 +138,16 @@ namespace Zjcs.Presentation.Combat
     public class OfficialBattleGridMapper {}
     public class OfficialBattleGridEntityPlayback : IDisposable
     {
+        internal event Action<int> BurningEffectStarted;
+        public static OfficialBattleGridEntityPlayback Current;
+        internal void StartBurning(int id) => BurningEffectStarted?.Invoke(id);
+        internal bool HasVisibleBurningEffect(int id) => false;
         public static FightBattleGridViewEvent LastLiveEvent;
         public static FightBattleCheckpoint AdoptedCheckpoint;
         public static Func<int, FightBattleUnitState> LiveUnits;
         public OfficialBattleGridEntityPlayback(Transform root, OfficialBattleGridMapper mapper,
             OfflineBattleNativePlayableScope scope, OfficialBattleSkillEntityPlayback views,
-            FightBattleCheckpoint checkpoint, Func<int, Transform> resolve, Func<int, bool> icons) {}
+            FightBattleCheckpoint checkpoint, Func<int, Transform> resolve, Func<int, bool> icons) { Current = this; }
         public float NextDelay => float.PositiveInfinity;
         public Transform TryGetTransform(int id) => null;
         public void RefreshSnapshot(FightBattleCheckpoint checkpoint) {}
@@ -296,6 +302,8 @@ public static class BattleSkillGraphDispatchHarness
         live.GridChanged(gridNotice);
         Require(ReferenceEquals(OfficialBattleGridEntityPlayback.LastLiveEvent, gridNotice),
             "A grid transition did not reach its native view");
+        OfficialBattleGridEntityPlayback.Current.StartBurning(23);
+        Require(live.LastBurningGrid == 23, "The native burning effect did not wake the live step");
         var notice = new FightBattleStatusViewEvent(); live.DeliverStatus(notice);
         var death = new FightBattleUnitLifeEvent { UnitId = 1, IsDead = true };
         live.DeliverLife(death);
@@ -317,6 +325,8 @@ public static class BattleSkillGraphDispatchHarness
         catch (InvalidOperationException) { rejectedLiveOverlap = true; }
         Require(rejectedLiveOverlap, "Two live steps cannot own the same graph");
         live.Dispose();
+        OfficialBattleGridEntityPlayback.Current.StartBurning(24);
+        Require(live.LastBurningGrid == 23, "A disposed step retained its burning effect subscription");
         Require(OfficialBattleGridEntityPlayback.LiveUnits == null, "Disposing the live step retained its grid unit resolver");
         livePlayback.Tick(0);
         Require(OfficialBattleAirComboPlayback.Synchronizations == beforeLiveTick + 1,

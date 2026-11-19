@@ -269,6 +269,11 @@ namespace Zjcs.Editor.Combat
             views.HitSelectionViewArrived += (owner, selection, center, position, index) =>
                 selectionArrivals.Add(new SelectionArrival { Cast = owner, Selection = selection,
                     CenterIndex = center, Position = position, ScopeIndex = index });
+            if (Environment.GetEnvironmentVariable("ZJCS_FLAME_SPRAY_ACCEPTANCE") == "1")
+            {
+                yield return CheckFlameSpray(root, grid);
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_CUSTOM_TARGET_ACCEPTANCE") == "1")
             {
                 combatCatalog = OfficialCombatAssetCatalog.LoadDefault().Load();

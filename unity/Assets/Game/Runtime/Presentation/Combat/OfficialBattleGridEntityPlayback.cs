@@ -29,6 +29,7 @@ namespace Zjcs.Presentation.Combat
             public GameObject Object;
             public MyEntity Entity;
             public GridEntityData Data;
+            public MyPlayable BurningEffect;
             public readonly Dictionary<int, StatusLease> Statuses = new Dictionary<int, StatusLease>();
         }
         private sealed class StatusLease
@@ -36,6 +37,7 @@ namespace Zjcs.Presentation.Combat
             public MyEntity Entity;
             public MyFightStatus View;
             public StatusState State;
+            public int ClassId;
         }
         private sealed class RoleLease
         {
@@ -84,6 +86,7 @@ namespace Zjcs.Presentation.Combat
             staging.transform.SetParent(root, false); staging.SetActive(false);
             container = staging.AddComponent<OfficialBattleEntityPositionContainer>();
             container.EntitySlot = root;
+            scope.NativePlayableStarted += OnNativePlayableStarted;
         }
 
         public long? MainPlayerId => null; // No server account identity is fabricated.
@@ -112,6 +115,25 @@ namespace Zjcs.Presentation.Combat
                 if (lease.Entity == entity) return lease.Data.Snapshot.Side;
             return null;
         }
+        internal event Action<int> BurningEffectStarted;
+        private void OnNativePlayableStarted(GameObject prefab, MyPlayable playable)
+        {
+            if (!prefab || prefab.name != "playable11581" || !playable || playable.name != "effect"
+                || !playable.mySource || !playable.myApplyComponent) return;
+            int id = 0;
+            foreach (var pair in grids)
+                if (pair.Value.Object == playable.mySource) { pair.Value.BurningEffect = playable; id = pair.Key; break; }
+            if (id != 0) BurningEffectStarted?.Invoke(id);
+        }
+        internal bool HasVisibleBurningEffect(int id)
+        {
+            if (!grids.TryGetValue(id, out var lease) || !lease.BurningEffect || !lease.BurningEffect.myApplyComponent
+                || lease.BurningEffect.myStatus == MyPlayable.PlayableStatus.Stop
+                || !lease.BurningEffect.myApplyComponent.gameObject.activeInHierarchy) return false;
+            foreach (var status in lease.Statuses.Values) if (status.ClassId == 11582) return true;
+            return false;
+        }
+
         public Transform TryGetTransform(int id) => grids.TryGetValue(id, out var lease) ? lease.Object.transform : null;
         public float NextDelay => pending.Count == 0 ? float.PositiveInfinity : pending[0].Remaining;
         public int Count => grids.Count;
@@ -266,7 +288,7 @@ namespace Zjcs.Presentation.Combat
             };
             view.Bind(context, scope);
             entity.Bind(container, new StatusEntityData(gridId, state), fresh);
-            grid.Statuses.Add(state.InstanceId, new StatusLease { Entity = entity, View = view, State = status });
+            grid.Statuses.Add(state.InstanceId, new StatusLease { Entity = entity, View = view, State = status, ClassId = state.ClassId });
             grid.Data.Actions.Add(state);
             go.transform.SetParent(root, false);
             scope.Dispatch(() => { entity.MyStart(); view.OnStart(fresh); grid.Data.Actions.NotifyStart(state.InstanceId); });
@@ -306,6 +328,7 @@ namespace Zjcs.Presentation.Combat
         public void Dispose()
         {
             if (disposed) return;
+            scope.NativePlayableStarted -= OnNativePlayableStarted;
             pending.Clear();
             foreach (var id in new List<int>(grids.Keys)) Remove(id);
             foreach (var lease in roles.Values)
