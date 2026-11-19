@@ -2,7 +2,8 @@ param(
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [Parameter(Mandatory)][string]$Profile
+    [Parameter(Mandatory)][string]$Profile,
+    [ValidateSet(10520,10521,10522)][int]$SecretId = 10520
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -39,6 +40,7 @@ try {
     $env:ZJCS_BATTLE_INPUT_AUTOMATION = '1'
     $env:ZJCS_BLAZING_HEART_FLOW = '1'
     $env:ZJCS_BLAZING_HEART_PROFILE = $profilePath
+    $env:ZJCS_AFFINITY_SECRET_ID = [string]$SecretId
     if ($PSCmdlet.ParameterSetName -eq 'Play') {
         $env:ZJCS_SKILLS_AUTORUN = '1'
         $env:ZJCS_SKILLS_HOME_ONLY = '1'
@@ -99,9 +101,9 @@ try {
     }
     if ($evidence['True'].affinity -le $evidence['False'].affinity -or
         $evidence['True'].damage -le $evidence['False'].damage) {
-        throw 'Equipping the acquired secret did not increase fire affinity and actual fire damage.'
+        throw 'Equipping the acquired secret did not increase its affinity and actual elemental damage.'
     }
-    Write-Output "Actual fire damage: $($evidence['False'].damage) -> $($evidence['True'].damage)."
+    Write-Output "Actual skill damage for $SecretId : $($evidence['False'].damage) -> $($evidence['True'].damage)."
 }
 finally {
     Get-ChildItem Env:ZJCS_* | ForEach-Object { Remove-Item ('Env:' + $_.Name) }

@@ -27,13 +27,18 @@ namespace Zjcs.Presentation.Home
             Debug.Log("[Blazing heart battle] validation started");
             string sourcePath = Environment.GetEnvironmentVariable("ZJCS_BLAZING_HEART_PROFILE");
             bool equipped = Environment.GetEnvironmentVariable("ZJCS_BLAZING_HEART_EQUIPPED") == "1";
+            string requestedSecret = Environment.GetEnvironmentVariable("ZJCS_AFFINITY_SECRET_ID");
+            int secretId = string.IsNullOrEmpty(requestedSecret) ? 10520 : int.Parse(requestedSecret);
+            Require(secretId == 10520 || secretId == 10521 || secretId == 10522, "Unexpected affinity secret.");
+            int activeId = secretId == 10520 ? 10028 : secretId == 10521 ? 10000 : 10001;
+            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : "WindDamageAdd";
             Require(!string.IsNullOrEmpty(sourcePath) && File.Exists(sourcePath), "Missing acquired secret profile.");
             var save = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(sourcePath));
             var profile = save.Player;
             OfflineItemAutoIncrease.InitializeNewCharacter(profile, DateTime.UtcNow);
-            Require(OfflineSkillProgression.OwnedRank(profile.Skills, 10520) > 0
-                && profile.Skills.Plans[profile.Skills.SelectedPlan].PassiveSkills.Contains(10520),
-                "The source profile did not acquire and equip 炽热之心 through the original UI.");
+            Require(OfflineSkillProgression.OwnedRank(profile.Skills, secretId) > 0
+                && profile.Skills.Plans[profile.Skills.SelectedPlan].PassiveSkills.Contains(secretId),
+                "The source profile did not acquire and equip the selected secret through the original UI.");
             if (!equipped)
             {
                 foreach (int skillId in new[] { 10520, 10521, 10522 })
@@ -41,9 +46,9 @@ namespace Zjcs.Presentation.Home
             }
             if (!equipped)
                 profile.Skills.Plans[profile.Skills.SelectedPlan].PassiveSkills = new int[4];
-            if (!profile.Skills.Skills.Any(value => value.ClassId == 10028))
-                profile.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = 10028, Rank = 1 });
-            profile.Skills.Plans[profile.Skills.SelectedPlan].ActiveSkills = new[] { 10028, 0, 0, 0 };
+            if (!profile.Skills.Skills.Any(value => value.ClassId == activeId))
+                profile.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = activeId, Rank = 1 });
+            profile.Skills.Plans[profile.Skills.SelectedPlan].ActiveSkills = new[] { activeId, 0, 0, 0 };
             profile.InitialWeaponType = Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType;
             profile.SeasonRank = 0;
             string originalSkills = JsonUtility.ToJson(profile.Skills);
@@ -72,23 +77,23 @@ namespace Zjcs.Presentation.Home
                 World = home.Profile.Save.World, Progression = home.DailyDungeonProgression, RandomSeed = 17
             });
             var player = checkpoint.Units.Single(value => value.Id == 1);
-            Require(player.Skills.Any(value => value.ItemId == 10028), "The actual battle omitted the saved fireball.");
-            int fireAffinity = combat.PropertyType("FireDamageAdd");
-            long affinity = player.Properties.Where(value => value.Id == fireAffinity).Sum(value => value.Value);
+            Require(player.Skills.Any(value => value.ItemId == activeId), "The actual battle omitted the saved elemental skill.");
+            int elementAffinity = combat.PropertyType(affinityName);
+            long affinity = player.Properties.Where(value => value.Id == elementAffinity).Sum(value => value.Value);
             var enemy = checkpoint.Units.First(value => value.Side != player.Side && value.Wave == 0);
             checkpoint.Units.RemoveAll(value => value != player && value != enemy);
             checkpoint.Waves.Clear();
             checkpoint.Waves.Add(new FightBattleWaveState { Index = 0, Spawned = true, UnitIds = new List<int> { enemy.Id } });
             checkpoint.MaxRound = 5; checkpoint.IsPlayerRoundLimit = false; checkpoint.PlayerRoundLimit = 0;
             // The original boss occupies five cells across; keep its body clear of
-            // the player while retaining the real stage and a fireball-range target.
+            // the player while retaining the real stage and a target within the original skill range.
             enemy.X = player.X + 5; enemy.Y = player.Y;
             foreach (var unit in checkpoint.Units)
             {
                 var props = new Dictionary<int, long> { { 1, 1000 }, { 2, 10 }, { 3, 1000000 },
                     { 4, unit.Id == 1 ? 1000 : 900 }, { combat.PropertyType("BaseElementAdd"), 10000 },
                     { combat.PropertyType("BaseElementReduce"), 10000 } };
-                if (unit.Id == 1 && affinity != 0) props[fireAffinity] = affinity;
+                if (unit.Id == 1 && affinity != 0) props[elementAffinity] = affinity;
                 OfficialBattleUnitAssembler.Initialize(combatAssets.LoadDamageFormula(), unit, props, 3, 4);
             }
             var weekly = new OfflineWeeklyChallengeSession(Path.Combine(saveRoot, "saves", slot, "weekly-challenge-save.json"));
@@ -102,7 +107,7 @@ namespace Zjcs.Presentation.Home
             controller.StepCompleted += step =>
             {
                 var hit = step.Event.DamageEvents.FirstOrDefault(value => value.SourceId == player.Id
-                    && value.TargetId == enemy.Id && value.SkillItemId == 10028 && !value.IsCure && value.Damage < 0);
+                    && value.TargetId == enemy.Id && value.SkillItemId == activeId && !value.IsCure && value.Damage < 0);
                 if (hit != null && damage == 0) damage = Math.Abs(hit.Damage);
                 Require(pendingDisk == null, "The previous battle step was not checked on disk.");
                 pendingDisk = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(step.Checkpoint));
@@ -126,12 +131,12 @@ namespace Zjcs.Presentation.Home
                     Require(disk.TryResumeBattle(4800, out string json, out _), "The actual battle checkpoint was not saved.");
                     var restored = FightBattleCheckpointSerializer.Load(json);
                     long expectedAffinity = pendingDisk.Units.Single(value => value.Id == player.Id).Properties
-                        .Where(value => value.Id == fireAffinity).Sum(value => value.Value);
+                        .Where(value => value.Id == elementAffinity).Sum(value => value.Value);
                     long savedAffinity = restored.Units.Single(value => value.Id == player.Id).Properties
-                        .Where(value => value.Id == fireAffinity).Sum(value => value.Value);
+                        .Where(value => value.Id == elementAffinity).Sum(value => value.Value);
                     Require(restored.Sequence == pendingDisk.Sequence && restored.Counter == pendingDisk.Counter
                         && savedAffinity == expectedAffinity && (diskChecks != 0 || savedAffinity == affinity),
-                        "Battle checkpoint lost its receipt or fire affinity.");
+                        "Battle checkpoint lost its receipt or elemental affinity.");
                     pendingDisk = null;
                     diskChecks++;
                 }
@@ -159,7 +164,7 @@ namespace Zjcs.Presentation.Home
             yield return capture("blazing-heart-return");
             home.CloseForNavigation();
             Debug.Log("[Blazing heart battle] equipped=" + equipped + " affinity=" + affinity
-                + " fire damage=" + damage + " disk checks=" + diskChecks);
+                + " skill=" + activeId + " damage=" + damage + " disk checks=" + diskChecks);
         }
 
         private static void VerifyOriginalWish(string output, OfflineMainlineSave source, int skillId)
