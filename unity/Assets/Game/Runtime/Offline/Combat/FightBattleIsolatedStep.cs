@@ -37,7 +37,8 @@ namespace Zjcs.Combat.Official
 
         public FightBattleIsolatedStep(FightBattleCheckpoint checkpoint,
             Func<FightBattleCheckpoint, FightBattleExecutor> restore, int sequence, int counter,
-            bool observeMovements = false, bool observeStatusViews = false, bool observeUnitLives = false, bool observeSummons = false)
+            bool observeMovements = false, bool observeStatusViews = false, bool observeUnitLives = false, bool observeSummons = false,
+            bool observeDisperses = false)
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
             if (restore == null) throw new ArgumentNullException(nameof(restore));
@@ -45,7 +46,7 @@ namespace Zjcs.Combat.Official
             executor = restore(copy) ?? throw new InvalidOperationException("Restoring the isolated battle returned no executor.");
             if (!ReferenceEquals(executor.State, copy))
                 throw new InvalidOperationException("The restored executor must own the isolated checkpoint.");
-            Latch = new FightBattleImpactLatch { ObserveMovements = observeMovements, ObserveLiveStatusHits = true, ObserveStatusViews = observeStatusViews, ObserveUnitLives = observeUnitLives, ObserveSummons = observeSummons };
+            Latch = new FightBattleImpactLatch { ObserveMovements = observeMovements, ObserveLiveStatusHits = true, ObserveStatusViews = observeStatusViews, ObserveUnitLives = observeUnitLives, ObserveSummons = observeSummons, ObserveDisperses = observeDisperses };
             executor.ImpactGate = Latch;
             executor.StatusSecondsChanged += Latch.SecondsStatusChanged;
             executor.StatusSecondsInvoked += Latch.SecondsStatusInvoked;

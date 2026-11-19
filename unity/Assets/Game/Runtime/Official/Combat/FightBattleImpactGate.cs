@@ -115,6 +115,12 @@ namespace Zjcs.Combat.Official
         void StatusViewChanged(FightBattleStatusViewEvent transition);
     }
 
+    /// <summary>Receives a successful dispel after its actual status removals.</summary>
+    public interface IFightBattleDisperseObserver
+    {
+        void DisperseResolved(FightBattleDamageEvent damage);
+    }
+
     /// <summary>Coordinates a supported summon with its original hit entity.</summary>
     public interface IFightBattleSummonObserver
     {

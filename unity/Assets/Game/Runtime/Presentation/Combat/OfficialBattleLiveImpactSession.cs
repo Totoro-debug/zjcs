@@ -155,6 +155,8 @@ namespace Zjcs.Presentation.Combat
         private FightBattleSettledImpact settlement;
         private readonly Stack<FightBattleSettledImpact> suspendedSettlements = new Stack<FightBattleSettledImpact>();
         private FightBattleSecondsStatusNotice secondsStatus;
+        private FightBattleDisperseNotice disperse;
+        private readonly Stack<FightBattleDisperseNotice> suspendedDisperses = new Stack<FightBattleDisperseNotice>();
         private readonly Stack<FightBattleSecondsStatusNotice> suspendedSecondsStatuses = new Stack<FightBattleSecondsStatusNotice>();
         private FightBattleStatusViewNotice statusView;
         private readonly Stack<FightBattleStatusViewNotice> suspendedStatusViews = new Stack<FightBattleStatusViewNotice>();
@@ -189,6 +191,7 @@ namespace Zjcs.Presentation.Combat
         public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted;
         public event Action<FightBattleStatusViewEvent> SecondsStatusChanged;
         public event Action<FightBattleStatusViewEvent> StatusViewChanged;
+        public event Func<FightBattleDamageEvent, bool> DisperseResolved;
         public event Action<FightBattleUnitLifeEvent> UnitLifeChanged;
         public event Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> SummonCreated;
 
@@ -202,7 +205,8 @@ namespace Zjcs.Presentation.Combat
         public OfficialBattleLiveImpactSession(FightBattleCheckpoint checkpoint,
             Func<FightBattleCheckpoint, FightBattleExecutor> restore,
             OfficialBattleSkillEntityPlayback views, int sequence, int counter, bool observeMovements = false,
-            bool observeStatusViews = false, bool observeUnitLives = false, bool observeSummons = false)
+            bool observeStatusViews = false, bool observeUnitLives = false, bool observeSummons = false,
+            bool observeDisperses = false)
         {
             this.views = views ?? throw new ArgumentNullException(nameof(views));
             if (checkpoint?.Units != null) foreach (var unit in checkpoint.Units)
@@ -335,7 +339,7 @@ namespace Zjcs.Presentation.Combat
                     if (skill.EntityId == 10630 && comboValid && comboMask == 7) comboCasters.Add(unit.Id);
                 }
             }
-            step = new FightBattleIsolatedStep(checkpoint, restore, sequence, counter, observeMovements, observeStatusViews, observeUnitLives, observeSummons);
+            step = new FightBattleIsolatedStep(checkpoint, restore, sequence, counter, observeMovements, observeStatusViews, observeUnitLives, observeSummons, observeDisperses);
             bridge = new OfficialBattleImpactViewBridge(views, step.Latch);
             bridge.IgnoreNativeScopeArrival = (cast, hit, scope) => scope >= 0 &&
                 (cast?.SkillEntityId == 10570 && hit?.HitEntityId == 10571
@@ -377,6 +381,16 @@ namespace Zjcs.Presentation.Combat
                     // Arrivals are keyed independently and may precede target requests.
                     while (step.Latch.TryTake(out _)) { }
                     object current = step.Latch.CurrentWorkerHandoff;
+                    CaptureHandoff(current, ref disperse, suspendedDisperses,
+                        () => step.Latch.TryTakeDisperse(out var value) ? value : null);
+                    if (disperse != null && ReferenceEquals(current, disperse))
+                    {
+                        if (DisperseResolved == null || !DisperseResolved(disperse.Damage)) return progressed;
+                        step.Latch.CompleteDisperse(disperse, out long disperseRevision);
+                        ReleaseHandoff(ref disperse, suspendedDisperses); progressed = true;
+                        step.Latch.WaitForWorkerBoundary(disperseRevision);
+                        continue;
+                    }
                     CaptureHandoff(current, ref summon, suspendedSummons,
                         () => step.Latch.TryTakeSummon(out var value) ? value : null);
                     if (summon != null && ReferenceEquals(current, summon))
@@ -1309,10 +1323,12 @@ namespace Zjcs.Presentation.Combat
             resolvingStatuses.Clear();
             suspendedPreparations.Clear();
             suspendedStatusViews.Clear();
+            suspendedDisperses.Clear();
             suspendedUnitLives.Clear();
             suspendedSummons.Clear();
             SecondsStatusChanged = null;
             StatusViewChanged = null;
+            DisperseResolved = null;
         }
     }
 }

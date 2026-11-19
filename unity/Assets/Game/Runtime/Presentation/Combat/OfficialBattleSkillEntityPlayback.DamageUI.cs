@@ -46,6 +46,14 @@ namespace Zjcs.Presentation.Combat
             PrepareDamageUITarget(receipt.TargetId);
             return damageUI.CanPlayDisperse(receipt.TargetId) && disperseReceipts.Add(receipt);
         }
+        internal bool PlayLiveDisperse(FightBattleDamageEvent receipt)
+        {
+            if (damageUI == null || receipt == null || !receipt.HasDisperseNotification) return false;
+            PrepareDamageUITarget(receipt.TargetId);
+            bool played = false;
+            scope.Dispatch(() => played = damageUI.Disperse(receipt.TargetId));
+            return played;
+        }
         internal void DamageStarted(FightBattleDamageEvent receipt)
         {
             // Called after the original MyFightDamage.OnStart (damage, hit and authored graphs).

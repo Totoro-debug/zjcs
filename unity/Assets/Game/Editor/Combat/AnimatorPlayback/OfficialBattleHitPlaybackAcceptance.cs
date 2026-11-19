@@ -522,7 +522,8 @@ namespace Zjcs.Editor.Combat
                 var healAppearance = NativeJumpAppearanceFixture.Create(healBodies[1].gameObject, 10);
                 var healTargetAppearance = NativeJumpAppearanceFixture.Create(healBodies[2].gameObject);
                 var healScope = new OfflineBattleNativePlayableScope(healRoot, null);
-                ParticleSystem healParticle = null; bool healResumed = false; int healPausedFrames = 0, healReceipts = 0;
+                ParticleSystem healParticle = null; bool healResumed = false;
+                int healPausedFrames = 0, healReceipts = 0, healFrame = -1, dispelReceipts = 0;
                 healScope.NativePlayableStarted += (prefab, leaf) => {
                     if (prefab.name != "playable10721" || leaf.name != "effect" || !leaf.myApplyComponent) return;
                     healParticle = leaf.myApplyComponent.GetComponentsInChildren<ParticleSystem>(true)
@@ -551,12 +552,23 @@ namespace Zjcs.Editor.Combat
                             && ui.GetComponentsInChildren<TextMesh>(true).Any(text => text.text == Math.Abs(damage.DamageValue).ToString())),
                             "The healing number must appear on the recipient in the same frame.");
                         healReceipts++;
+                        healFrame = Time.frameCount;
                         if (healingDirection == 0) Capture("healing-native-impact.png", false);
                         healDisplay[Array.FindIndex(healDisplay, value => value.Id == damage.TargetId)] = projected;
                     }
                     using (var healDriver = healGraph.CreateLiveStep(healCheckpoint, copy => FightBattleExecutor.Restore(copy,
                         formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), HealBody, null, HealDamage))
                     {
+                        healDriver.DispersePresented += damage => {
+                            var floats = healRoot.GetComponentsInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUI>(true);
+                            Require(!self && damage.TargetId == healTarget.Id && damage.HasDisperseNotification
+                                && healFrame == Time.frameCount && floats.Any(ui => ui.gameObject.activeInHierarchy
+                                    && ui.EntityId == new EcEntityIdentifier(1, healTarget.Id)
+                                    && ui.Type == Zjcs.Official.BattleDamageUI.EffectUIType.DisperseDamageUI),
+                                "A successful dispel must show its original target notification in the healing frame.");
+                            dispelReceipts++;
+                            if (healingDirection == 0) Capture("healing-native-dispel.png", false);
+                        };
                         healDisplay = healCheckpoint.Units.Select(value => healDriver.DisplayUnit(value.Id)).ToArray();
                         float healDeadline = Time.realtimeSinceStartup + 15f;
                         while (!healDriver.IsCompleted && Time.realtimeSinceStartup < healDeadline)
@@ -570,6 +582,7 @@ namespace Zjcs.Editor.Combat
                             yield return null;
                         }
                         Require(healDriver.TryTakeCompleted(out var executor, out var result) && healResumed && healReceipts == 1
+                            && dispelReceipts == (self ? 0 : 1)
                             && FightBattleCheckpointSerializer.Save(healCheckpoint) == healCommitted
                             && FightBattleCheckpointSerializer.Save(result.Checkpoint) == FightBattleCheckpointSerializer.Save(healBaseline),
                             "Healing, random dispel and final checkpoint must match the official rule step.");

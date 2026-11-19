@@ -1024,6 +1024,30 @@ public static class BattleImpactGateHarness
             Check(removed ? hits.Length == 0 : hits.Length == 1 && hits[0].BeforeHp == 500000 && hits[0].AfterHp < 500000,
                 "The impact did not use the target's live state when the presentation reached it");
         }
+        foreach (bool cancel in new[] { false, true })
+        using (var latch = new FightBattleImpactLatch { ObserveDisperses = true })
+        {
+            var receipt = new FightBattleDamageEvent { TargetId = 2, HasDisperseNotification = true };
+            var worker = Task.Run(() => {
+                try { latch.DisperseResolved(receipt); return false; }
+                catch (OperationCanceledException) { return true; }
+            });
+            FightBattleDisperseNotice notice = null;
+            Check(SpinWait.SpinUntil(() => latch.TryTakeDisperse(out notice), 20000)
+                && ReferenceEquals(notice.Damage, receipt) && !worker.IsCompleted,
+                "A successful dispel must wait for its exact presentation receipt");
+            if (cancel) latch.Dispose();
+            else
+            {
+                latch.CompleteDisperse(notice, out _);
+                bool duplicate = false;
+                try { latch.CompleteDisperse(notice, out _); }
+                catch (InvalidOperationException) { duplicate = true; }
+                Check(duplicate, "A successful dispel presentation cannot be completed twice");
+            }
+            Check(worker.Wait(20000) && worker.Result == cancel,
+                "The dispel worker was not released or canceled at its presentation boundary");
+        }
         return "Impact gate passed: " + impacts + " held impacts across three-hit combo, jump slash and fireball; five cross-scope identities, skill cost and exact ungated results verified.";
     }
 }

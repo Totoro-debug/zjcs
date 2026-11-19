@@ -33,6 +33,7 @@ namespace Zjcs.Combat.Official {
  public class FightBattleUnitLifeEvent {}
  public class FightBattleSecondsStatusNotice {public FightBattleStatusViewEvent Event;}
  public class FightBattleStatusViewNotice {public FightBattleStatusViewEvent Event;}
+ public class FightBattleDisperseNotice {public FightBattleDamageEvent Damage;}
  public class FightBattleUnitLifeNotice {public FightBattleUnitLifeEvent Event;}
  public class FightBattleSummonNotice {public FightBattleUnitState Unit;public FightBattleHitSelectionSnapshot.SpawnedUnit Receipt;}
  public class FightBattleImpactLatch {
@@ -46,6 +47,8 @@ namespace Zjcs.Combat.Official {
   public bool TryTakeSecondsStatus(out FightBattleSecondsStatusNotice v){v=PendingStatus;PendingStatus=null;Taken(v);return v!=null;}
   public void CompleteSecondsStatus(FightBattleSecondsStatusNotice v,out long revision){Finished(v);revision=1;}
   public bool TryTakeStatusView(out FightBattleStatusViewNotice v){v=PendingView;PendingView=null;Taken(v);return v!=null;}
+  public bool TryTakeDisperse(out FightBattleDisperseNotice v){v=null;return false;}
+  public void CompleteDisperse(FightBattleDisperseNotice v,out long revision){Finished(v);revision=1;}
   public void CompleteStatusView(FightBattleStatusViewNotice v,out long revision){Finished(v);ViewCompletions++;revision=1;}
   public bool TryTakeUnitLife(out FightBattleUnitLifeNotice v){v=null;return false;}
   public void CompleteUnitLife(FightBattleUnitLifeNotice v,out long revision){Finished(v);revision=1;}
@@ -67,7 +70,7 @@ namespace Zjcs.Combat.Official {
  }
  public class FightBattleIsolatedStep:IDisposable {
   public readonly FightBattleImpactLatch Latch=new FightBattleImpactLatch();public bool IsCompleted;
-  public FightBattleIsolatedStep(FightBattleCheckpoint c,Func<FightBattleCheckpoint,FightBattleExecutor> restore,int s,int n,bool observe,bool observeStatusViews,bool observeUnitLives,bool observeSummons){}
+  public FightBattleIsolatedStep(FightBattleCheckpoint c,Func<FightBattleCheckpoint,FightBattleExecutor> restore,int s,int n,bool observe,bool observeStatusViews,bool observeUnitLives,bool observeSummons,bool observeDisperses){}
   public bool TryAdvanceStatusSeconds(double s,out System.Threading.Tasks.Task<bool> task){task=null;return false;}
   public bool TryTakeCompleted(out FightBattleExecutor e,out FightBattleExecutionResult r){e=null;r=null;return false;}
   public void Dispose(){Latch.Disposed=true;}

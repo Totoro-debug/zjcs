@@ -45,8 +45,9 @@ namespace Zjcs.Presentation.Combat
             views.BindDamageUITargets(body);
             session = new OfficialBattleLiveImpactSession(checkpoint, restore, views,
                 checkpoint.Sequence, checkpoint.Counter + 1, observeMovements: true, observeStatusViews: observeStatusViews,
-                observeUnitLives: observeUnitLives, observeSummons: summonShown != null);
+                observeUnitLives: observeUnitLives, observeSummons: summonShown != null, observeDisperses: views.HasDamageUI);
             if (summonShown != null) session.SummonCreated += ShowSummon;
+            if (views.HasDamageUI) session.DisperseResolved += ShowDisperse;
         }
 
         public bool IsCompleted => session.IsCompleted;
@@ -62,6 +63,7 @@ namespace Zjcs.Presentation.Combat
         { add { session.StatusViewChanged += value; } remove { session.StatusViewChanged -= value; } }
         public event Action<FightBattleUnitLifeEvent> UnitLifeChanged
         { add { session.UnitLifeChanged += value; } remove { session.UnitLifeChanged -= value; } }
+        public event Action<FightBattleDamageEvent> DispersePresented;
         public bool TryAdvanceStatusSeconds(double seconds, out Task<bool> completion)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleLiveGraphDriver));
@@ -171,6 +173,13 @@ namespace Zjcs.Presentation.Combat
             SummonPresented?.Invoke(unit, receipt);
         }
 
+        private bool ShowDisperse(FightBattleDamageEvent damage)
+        {
+            if (!views.PlayLiveDisperse(damage)) return false;
+            DispersePresented?.Invoke(damage);
+            return true;
+        }
+
         private void ShowDamage(FightBattleDamageEvent damage)
         {
             if (damage.HasDamageValue && !health.TryApplyDamage(damage))
@@ -192,7 +201,7 @@ namespace Zjcs.Presentation.Combat
             if (disposed) return;
             disposed = true;
             try { session.Dispose(); }
-            finally { started.Clear(); ordinaryStarted.Clear(); ordinaryMoving.Clear(); Disposed?.Invoke(); Disposed = null; }
+            finally { started.Clear(); ordinaryStarted.Clear(); ordinaryMoving.Clear(); DispersePresented = null; Disposed?.Invoke(); Disposed = null; }
         }
     }
 }

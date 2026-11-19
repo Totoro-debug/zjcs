@@ -22,6 +22,9 @@ namespace Zjcs.Presentation.Combat
         public int Casts, Moves; public FightBattleSkillCastEvent LastCast; public Func<int, Transform> DamageTargets;
         public Action<FightBattleMovementEvent> Contact;
         public Action Completed;
+        public bool HasDamageUI, CanDisperse; public int Disperses;
+        public bool PlayLiveDisperse(FightBattleDamageEvent damage)
+        { if (!CanDisperse) return false; Disperses++; return true; }
         public void BindDamageUITargets(Func<int, Transform> value) { DamageTargets = value; }
         public EcEntityIdentifier Start(FightBattleSkillCastEvent cast, Transform source, Transform target,
             IReadOnlyDictionary<int, FightBattleDamageEvent> damageReceipts = null, Action onActionCompleted = null)
@@ -47,6 +50,8 @@ namespace Zjcs.Presentation.Combat
         public event Action<FightBattleStatusViewEvent> SecondsStatusChanged;
         public event Action<FightBattleStatusViewEvent> StatusViewChanged;
         public event Action<FightBattleUnitLifeEvent> UnitLifeChanged;
+        public event Func<FightBattleDamageEvent, bool> DisperseResolved;
+        public bool DeliverDisperse(FightBattleDamageEvent damage) => DisperseResolved?.Invoke(damage) ?? false;
         public event Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> SummonCreated;
         public void DeliverSummon(FightBattleUnitState unit, FightBattleHitSelectionSnapshot.SpawnedUnit receipt)
             => SummonCreated?.Invoke(unit, receipt);
@@ -55,7 +60,7 @@ namespace Zjcs.Presentation.Combat
         public OfficialBattleLiveImpactSession(FightBattleCheckpoint checkpoint,
             Func<FightBattleCheckpoint, FightBattleExecutor> restore, OfficialBattleSkillEntityPlayback views,
             int sequence, int counter, bool observeMovements = false, bool observeStatusViews = false, bool observeUnitLives = false,
-            bool observeSummons = false)
+            bool observeSummons = false, bool observeDisperses = false)
         { if (!observeMovements) throw new InvalidOperationException("Movement observation was not enabled."); ObserveSummons = observeSummons; Last = this; }
         public bool Pump(float elapsed, StartCast cast, Action<FightBattleDamageEvent> after,
             StartMovement move, StartBlockedMovement blocked, Func<FightBattleDamageEvent, bool> before)
@@ -168,6 +173,18 @@ namespace Zjcs.Presentation.Combat
             Check(summons == 1 && presented == 1 && summonDriver.DisplayUnit(3).Hp == 60
                 && checkpoint.Units.Count == 2, "the summon handoff changed the committed roster or was duplicated");
             summonDriver.Dispose();
+            var dispelViews = new OfficialBattleSkillEntityPlayback { HasDamageUI = true };
+            var dispelDriver = new OfficialBattleLiveGraphDriver(checkpoint, _ => null, dispelViews, _ => true,
+                id => transforms.TryGetValue(id, out var value) ? value : null, null, (_, __) => { });
+            int dispelEvents = 0; dispelDriver.DispersePresented += _ => dispelEvents++;
+            var dispelSession = OfficialBattleLiveImpactSession.Last;
+            var dispel = new FightBattleDamageEvent { TargetId = 2, HasDisperseNotification = true };
+            Check(!dispelSession.DeliverDisperse(dispel) && dispelEvents == 0 && dispelViews.Disperses == 0,
+                "a missing target view must hold the successful dispel notification");
+            dispelViews.CanDisperse = true;
+            Check(dispelSession.DeliverDisperse(dispel) && dispelEvents == 1 && dispelViews.Disperses == 1,
+                "a successful dispel must be presented once after its target view is available");
+            dispelDriver.Dispose();
             Console.WriteLine("Live graph driver cast, action timing, contact and health handoff passed.");
         }
     }

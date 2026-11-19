@@ -2627,6 +2627,7 @@ namespace Zjcs.Combat.Official
                 damage.HasDisperseNotification = true;
                 damage.DisperseNotificationIndex = currentStepDispersedUnitIds.Count;
                 currentStepDispersedUnitIds.Add(target.Id);
+                if (ImpactGate is IFightBattleDisperseObserver observer) observer.DisperseResolved(damage);
             }
         }
 
