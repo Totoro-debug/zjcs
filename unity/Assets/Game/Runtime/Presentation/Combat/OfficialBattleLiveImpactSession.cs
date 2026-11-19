@@ -175,6 +175,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Stack<FightBattleSettledImpact> resolvingStatuses = new Stack<FightBattleSettledImpact>();
         private FightBattleCompletedCast completion;
         private readonly Stack<FightBattleCompletedCast> suspendedCompletions = new Stack<FightBattleCompletedCast>();
+        private long pendingArrivalRevision;
         private float clock;
         private bool disposed, transferred, pumping;
         private StartCast lastStartCast;
@@ -416,7 +417,7 @@ namespace Zjcs.Presentation.Combat
                         if (DisperseResolved == null || !DisperseResolved(disperse.Damage)) return progressed;
                         step.Latch.CompleteDisperse(disperse, out long disperseRevision);
                         ReleaseHandoff(ref disperse, suspendedDisperses); progressed = true;
-                        step.Latch.WaitForWorkerBoundary(disperseRevision);
+                        WaitForRuleBoundary(disperseRevision);
                         continue;
                     }
                     CaptureHandoff(current, ref summon, suspendedSummons,
@@ -427,7 +428,7 @@ namespace Zjcs.Presentation.Combat
                         SummonCreated(summon.Unit, summon.Receipt);
                         step.Latch.CompleteSummon(summon, out long summonRevision);
                         ReleaseHandoff(ref summon, suspendedSummons); progressed = true;
-                        step.Latch.WaitForWorkerBoundary(summonRevision);
+                        WaitForRuleBoundary(summonRevision);
                         continue;
                     }
                     CaptureHandoff(current, ref unitLife, suspendedUnitLives,
@@ -438,7 +439,7 @@ namespace Zjcs.Presentation.Combat
                         UnitLifeChanged(unitLife.Event);
                         step.Latch.CompleteUnitLife(unitLife, out long lifeRevision);
                         ReleaseHandoff(ref unitLife, suspendedUnitLives); progressed = true;
-                        step.Latch.WaitForWorkerBoundary(lifeRevision);
+                        WaitForRuleBoundary(lifeRevision);
                         continue;
                     }
                     CaptureHandoff(current, ref statusView, suspendedStatusViews,
@@ -449,7 +450,7 @@ namespace Zjcs.Presentation.Combat
                         StatusViewChanged(statusView.Event);
                         step.Latch.CompleteStatusView(statusView, out long viewRevision);
                         ReleaseHandoff(ref statusView, suspendedStatusViews); progressed = true;
-                        step.Latch.WaitForWorkerBoundary(viewRevision);
+                        WaitForRuleBoundary(viewRevision);
                         continue;
                     }
                     CaptureHandoff(current, ref secondsStatus, suspendedSecondsStatuses,
@@ -460,7 +461,7 @@ namespace Zjcs.Presentation.Combat
                         SecondsStatusChanged(secondsStatus.Event);
                         step.Latch.CompleteSecondsStatus(secondsStatus, out long secondsRevision);
                         ReleaseHandoff(ref secondsStatus, suspendedSecondsStatuses); progressed = true;
-                        step.Latch.WaitForWorkerBoundary(secondsRevision);
+                        WaitForRuleBoundary(secondsRevision);
                         continue;
                     }
                     CaptureHandoff(current, ref settlement, suspendedSettlements,
@@ -473,7 +474,7 @@ namespace Zjcs.Presentation.Combat
                             throw new InvalidOperationException("The completed status result belongs to another impact.");
                         if (!bridge.TryResolveStatus(settlement, out long statusRevision)) return progressed;
                         resolvingStatuses.Pop(); ReleaseHandoff(ref settlement, suspendedSettlements); progressed = true;
-                        step.Latch.WaitForWorkerBoundary(statusRevision);
+                        WaitForRuleBoundary(statusRevision);
                         continue;
                     }
                     CaptureHandoff(current, ref preparation, suspendedPreparations,
@@ -502,7 +503,7 @@ namespace Zjcs.Presentation.Combat
                         step.Latch.CompletePreparation(preparation, out long revision);
                         ReleaseHandoff(ref preparation, suspendedPreparations);
                         progressed = true;
-                        step.Latch.WaitForWorkerBoundary(revision);
+                        WaitForRuleBoundary(revision);
                         continue;
                     }
                     CaptureHandoff(current, ref movement, suspendedMovements,
@@ -535,7 +536,7 @@ namespace Zjcs.Presentation.Combat
                         else if (startMovement == null || !startMovement(movement.Cast, movement.Movement)) return progressed;
                         step.Latch.CompleteMovement(movement, out long revision);
                         ReleaseHandoff(ref movement, suspendedMovements); progressed = true;
-                        step.Latch.WaitForWorkerBoundary(revision);
+                        WaitForRuleBoundary(revision);
                         continue;
                     }
                     CaptureHandoff(current, ref selection, suspendedSelections,
@@ -609,7 +610,7 @@ namespace Zjcs.Presentation.Combat
                             for (int index = 0; index < 3; index++)
                                 if ((comboReached & (1 << index)) != 0) RouteComboImpact(selectedCast, active.Id, index);
                         ReleaseHandoff(ref selection, suspendedSelections); progressed = true;
-                        step.Latch.WaitForWorkerBoundary(revision);
+                        WaitForRuleBoundary(revision);
                         continue;
                     }
                     if (settlement != null && ReferenceEquals(current, settlement))
@@ -621,13 +622,13 @@ namespace Zjcs.Presentation.Combat
                             resolvingStatuses.Push(settlement);
                             step.Latch.DeferStatusResolution(settlement, out long deferredRevision);
                             ReleaseHandoff(ref settlement, suspendedSettlements); progressed = true;
-                            step.Latch.WaitForWorkerBoundary(deferredRevision);
+                            WaitForRuleBoundary(deferredRevision);
                             continue;
                         }
                         if (!bridge.TryQueueSettlement(settlement, active.Id, out long revision,
                             afterDamageStarted, canStartDamage)) return progressed;
                         ReleaseHandoff(ref settlement, suspendedSettlements); progressed = true;
-                        step.Latch.WaitForWorkerBoundary(revision);
+                        WaitForRuleBoundary(revision);
                         continue;
                     }
                     CaptureHandoff(current, ref completion, suspendedCompletions,
@@ -648,7 +649,7 @@ namespace Zjcs.Presentation.Combat
                         step.Latch.CompleteCast(completion, out long revision);
                         casts.Remove(completion.Cast);
                         ReleaseHandoff(ref completion, suspendedCompletions); progressed = true;
-                        step.Latch.WaitForWorkerBoundary(revision);
+                        WaitForRuleBoundary(revision);
                         continue;
                     }
                     return progressed;
@@ -670,10 +671,21 @@ namespace Zjcs.Presentation.Combat
         private static void ReleaseHandoff<T>(ref T held, Stack<T> suspended) where T : class
             => held = suspended.Count > 0 ? suspended.Pop() : null;
 
+        private void WaitForRuleBoundary(long revision)
+        {
+            // An arrival can release a newer impact wait while Pump is still
+            // processing an earlier handoff. Do not mistake that released wait
+            // for the next boundary: its settlement must be delivered this frame.
+            revision = Math.Max(revision, pendingArrivalRevision);
+            pendingArrivalRevision = 0;
+            step.Latch.WaitForWorkerBoundary(revision);
+        }
+
         private void OnWorkerReleasedByArrival(long revision)
         {
-            if (disposed || transferred || pumping || lastStartCast == null) return;
-            step.Latch.WaitForWorkerBoundary(revision);
+            if (disposed || transferred || lastStartCast == null) return;
+            if (pumping) { pendingArrivalRevision = Math.Max(pendingArrivalRevision, revision); return; }
+            WaitForRuleBoundary(revision);
             Pump(0f, lastStartCast, lastAfterDamageStarted, lastStartMovement, lastStartBlockedMovement, lastCanStartDamage);
         }
 
@@ -1313,7 +1325,7 @@ namespace Zjcs.Presentation.Combat
             {
                 if (!step.Latch.TryCompleteSettlement(settlement, deliver, out long revision)) return false;
                 ReleaseHandoff(ref settlement, suspendedSettlements);
-                step.Latch.WaitForWorkerBoundary(revision);
+                WaitForRuleBoundary(revision);
                 delivered = true;
             }
             finally { pumping = false; }

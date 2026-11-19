@@ -1,9 +1,20 @@
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'combat_sources.ps1')
 $root = Split-Path -Parent $PSScriptRoot
+$validation = Join-Path $root ('output/validation/live-impact-race-' + [guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Path $validation | Out-Null
+$bridgeSource = [IO.File]::ReadAllText((Join-Path $root 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleImpactViewBridge.cs'))
+$boundary = 'views.QueueSelectedHit(cast, skillId, selection, elapsedSinceCast), out long revision);'
+if ($bridgeSource.IndexOf($boundary, [StringComparison]::Ordinal) -lt 0 -or
+    $bridgeSource.IndexOf($boundary, [StringComparison]::Ordinal) -ne $bridgeSource.LastIndexOf($boundary, [StringComparison]::Ordinal)) {
+    throw 'The native selection handoff boundary changed.'
+}
+$bridgeSource = $bridgeSource.Replace($boundary, $boundary + "`n            SelectionBoundaryRace.AfterSelection?.Invoke(latch, selected, revision);")
+$testBridge = Join-Path $validation 'OfficialBattleImpactViewBridge.cs'
+[IO.File]::WriteAllText($testBridge, $bridgeSource, [Text.UTF8Encoding]::new($false))
 Add-Type -Path (@(Get-FightCombatSources) + @(
     (Join-Path $PSScriptRoot 'fixtures/battle_live_impact_session_harness.cs'),
-    (Join-Path $root 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleImpactViewBridge.cs'),
+    $testBridge,
     (Join-Path $root 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleLiveImpactSession.cs')))
 $inputs = Join-Path $root 'unity/Assets/Official/Combat'
 function Read-Input($name) { [IO.File]::ReadAllText((Join-Path $inputs $name)) }

@@ -19,6 +19,13 @@ namespace Zjcs.Official.StoryPlayables
 namespace UnityEngine { public class GameObject { public string name; } }
 namespace Zjcs.Presentation.Combat
 {
+    // The test bridge invokes this after releasing a selected hit, so the
+    // worker can be held at its impact boundary before the native arrival.
+    internal static class SelectionBoundaryRace
+    {
+        internal static Action<FightBattleImpactLatch, FightBattleSelectedHit, long> AfterSelection;
+    }
+
     internal sealed class OfficialBattleWindBladeImpact
     {
         internal static OfficialBattleWindBladeImpact Attach(GameObject prefab, MyPlayable playable, FightBattleHitEntity hit, Action<int> arrival) => null;
@@ -286,6 +293,35 @@ namespace Zjcs.Presentation.Combat
                     && FightBattleCheckpointSerializer.Save(timed) == timedCommitted,
                     "The actual status was duplicated or published into the committed checkpoint");
             }
+            {
+                var raceViews = new OfficialBattleSkillEntityPlayback();
+                using var raceSession = new OfficialBattleLiveImpactSession(cp,
+                    copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items),
+                    raceViews, 0, 1);
+                bool arrived = false;
+                bool StartRace(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = new EcEntityIdentifier(45); return true; }
+                SelectionBoundaryRace.AfterSelection = (latch, selected, revision) => {
+                    latch.WaitForWorkerBoundary(revision);
+                    var hit = selected.Selection.Targets.Single(value => value.TargetId == 2);
+                    raceViews.Arrive(hit.HasScopeIndex ? hit.ScopeIndex : -1);
+                    arrived = true;
+                };
+                try
+                {
+                    Check(SpinWait.SpinUntil(() => {
+                        raceSession.Pump(0f, StartRace);
+                        if (arrived) Check(raceViews.Damages == 1,
+                            "An impact released during a selection handoff must settle before that same pump returns");
+                        return arrived;
+                    }, 20000), "The controlled impact boundary was not reached");
+                    Check(SpinWait.SpinUntil(() => { raceSession.Pump(0f, StartRace); return raceSession.IsCompleted; }, 20000)
+                        && raceViews.Damages == 1 && raceViews.Completions == 1,
+                        "The controlled arrival did not complete exactly once");
+                }
+                finally { SelectionBoundaryRace.AfterSelection = null; }
+            }
+
             var earlyViews = new OfficialBattleSkillEntityPlayback { ArriveImmediately = true };
             using (var early = new OfficialBattleLiveImpactSession(cp,
                 copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), earlyViews, 0, 1))
