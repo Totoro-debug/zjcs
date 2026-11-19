@@ -9,7 +9,9 @@ $repository = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 . (Join-Path $PSScriptRoot 'validation_workspace.ps1')
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
 function Invoke-ReleaseGit([string[]]$GitArguments) {
-    $result = & git @GitArguments
+    # Runtime source manifests hash the original bytes.  A Windows user's
+    # core.autocrlf setting must not rewrite checked-out build inputs.
+    $result = & git -c core.autocrlf=false -c core.eol=lf @GitArguments
     if ($LASTEXITCODE -ne 0) { throw "Release Git failed: $($GitArguments -join ' ')" }
     return $result
 }
@@ -24,15 +26,27 @@ try {
     $timer = [Diagnostics.Stopwatch]::StartNew()
     $target = Invoke-ReleaseGit -GitArguments @('-C', $repository, 'rev-parse', '--verify', ($Commit+'^{commit}'))
     $pointer = Join-Path $output 'windows-release.json'
+    $workspace = $null
     if (Test-Path -LiteralPath $pointer) {
-        $workspace = (Get-Content -LiteralPath $pointer -Raw | ConvertFrom-Json).workspace
+        $candidate = (Get-Content -LiteralPath $pointer -Raw | ConvertFrom-Json).workspace
         $root = [IO.Path]::GetFullPath((Get-ZjcsValidationRoot)).TrimEnd('\','/')
-        $workspace = [IO.Path]::GetFullPath($workspace)
-        if ([IO.Path]::GetDirectoryName($workspace) -ne $root -or
-            [IO.Path]::GetFileName($workspace) -notmatch '^windows-release-[a-f0-9]{32}$') { throw 'Invalid release workspace pointer' }
-        $marker = Get-Content -LiteralPath (Join-Path $workspace '.zjcs-validation.json') -Raw | ConvertFrom-Json
-        if ($marker.repository -ne $repository) { throw 'Release workspace belongs to another repository' }
-    } else {
+        $candidate = [IO.Path]::GetFullPath($candidate)
+        if ([IO.Path]::GetDirectoryName($candidate) -ne $root -or
+            [IO.Path]::GetFileName($candidate) -notmatch '^windows-release-[a-f0-9]{32}$') { throw 'Invalid release workspace pointer' }
+        if (Test-Path -LiteralPath $candidate) {
+            $marker = Get-Content -LiteralPath (Join-Path $candidate '.zjcs-validation.json') -Raw | ConvertFrom-Json
+            if ($marker.repository -ne $repository) { throw 'Release workspace belongs to another repository' }
+            # Worktrees created before byte-preserving checkout can contain CRLF
+            # files that Git considers clean. Keep those caches untouched.
+            $byteMarker = Join-Path $candidate 'byte-preserved-checkout.json'
+            if (Test-Path -LiteralPath $byteMarker) {
+                $byteState = Get-Content -LiteralPath $byteMarker -Raw | ConvertFrom-Json
+                if ($byteState.format -ne 1) { throw 'Invalid release checkout marker' }
+                $workspace = $candidate
+            }
+        }
+    }
+    if (-not $workspace) {
         $workspace = New-ZjcsValidationWorkspace -Name 'windows-release'
         @{workspace=$workspace} | ConvertTo-Json | Set-Content -LiteralPath $pointer -Encoding utf8
     }
@@ -55,6 +69,16 @@ try {
     $untracked = @(Invoke-ReleaseGit -GitArguments @('-C',$source,'ls-files','--others','--exclude-standard','--','unity/Assets','unity/Packages','unity/ProjectSettings'))
     if ($untracked.Count) { throw "Unexpected untracked release inputs: $($untracked -join ', ')" }
     Invoke-ReleaseGit -GitArguments @('-C',$source,'checkout','--detach',$target)
+    # Detect checkout conversion before importing any assets; keep the runtime
+    # source manifest and its byte-for-byte verification unchanged.
+    $equipmentDirectory = Join-Path $project 'Assets/Official/Equipment/Runtime'
+    $equipmentManifest = Get-Content -LiteralPath (Join-Path $equipmentDirectory 'source-manifest.json') -Raw | ConvertFrom-Json
+    $equipmentRules = Get-Item -LiteralPath (Join-Path $equipmentDirectory 'equipment-runtime-rules.json')
+    if ($equipmentRules.Length -ne $equipmentManifest.output.bytes -or
+        (Get-FileHash -LiteralPath $equipmentRules.FullName -Algorithm SHA256).Hash.ToLowerInvariant() -ne $equipmentManifest.output.sha256) {
+        throw 'Release checkout changed the verified equipment rules bytes.'
+    }
+    @{format=1} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $workspace 'byte-preserved-checkout.json') -Encoding utf8
     Write-Output "Release source: $target; persistent cache: $workspace"
     $syncSeconds = $timer.Elapsed.TotalSeconds
     if ($PrepareOnly) { return }
