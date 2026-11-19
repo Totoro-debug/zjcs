@@ -29,9 +29,9 @@ namespace Zjcs.Presentation.Home
             bool equipped = Environment.GetEnvironmentVariable("ZJCS_BLAZING_HEART_EQUIPPED") == "1";
             string requestedSecret = Environment.GetEnvironmentVariable("ZJCS_AFFINITY_SECRET_ID");
             int secretId = string.IsNullOrEmpty(requestedSecret) ? 10520 : int.Parse(requestedSecret);
-            Require(secretId == 10520 || secretId == 10521 || secretId == 10522, "Unexpected affinity secret.");
-            int activeId = secretId == 10520 ? 10028 : secretId == 10521 ? 10000 : 10001;
-            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : "WindDamageAdd";
+            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550, "Unexpected property secret.");
+            int activeId = secretId == 10521 ? 10000 : secretId == 10522 ? 10001 : 10028;
+            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : "MaxHp";
             Require(!string.IsNullOrEmpty(sourcePath) && File.Exists(sourcePath), "Missing acquired secret profile.");
             var save = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(sourcePath));
             var profile = save.Player;
@@ -41,7 +41,7 @@ namespace Zjcs.Presentation.Home
                 "The source profile did not acquire and equip the selected secret through the original UI.");
             if (!equipped)
             {
-                foreach (int skillId in new[] { 10520, 10521, 10522 })
+                foreach (int skillId in new[] { 10520, 10521, 10522, 10550 })
                     VerifyOriginalWish(output, save, skillId);
             }
             if (!equipped)
@@ -80,6 +80,9 @@ namespace Zjcs.Presentation.Home
             Require(player.Skills.Any(value => value.ItemId == activeId), "The actual battle omitted the saved elemental skill.");
             int elementAffinity = combat.PropertyType(affinityName);
             long affinity = player.Properties.Where(value => value.Id == elementAffinity).Sum(value => value.Value);
+            if (secretId == 10550)
+                Require(affinity > 0 && player.MaxHp == affinity && player.Hp == affinity,
+                    "The actual battle did not initialize health from the equipped secret.");
             var enemy = checkpoint.Units.First(value => value.Side != player.Side && value.Wave == 0);
             checkpoint.Units.RemoveAll(value => value != player && value != enemy);
             checkpoint.Waves.Clear();
