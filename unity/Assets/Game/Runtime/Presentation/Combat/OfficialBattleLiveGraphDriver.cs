@@ -31,7 +31,8 @@ namespace Zjcs.Presentation.Combat
             Action<FightBattleDamageEvent, FightBattleUnitState> damageShown,
             Action<FightBattleSkillCastEvent, FightBattleUnitState> costShown = null, bool observeStatusViews = false,
             bool observeUnitLives = false,
-            Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> summonShown = null)
+            Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> summonShown = null,
+            Action<FightBattleGridViewEvent> gridChanged = null)
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
             this.views = views ?? throw new ArgumentNullException(nameof(views));
@@ -45,8 +46,10 @@ namespace Zjcs.Presentation.Combat
             views.BindDamageUITargets(body);
             session = new OfficialBattleLiveImpactSession(checkpoint, restore, views,
                 checkpoint.Sequence, checkpoint.Counter + 1, observeMovements: true, observeStatusViews: observeStatusViews,
-                observeUnitLives: observeUnitLives, observeSummons: summonShown != null, observeDisperses: views.HasDamageUI);
+                observeUnitLives: observeUnitLives, observeSummons: summonShown != null, observeDisperses: views.HasDamageUI,
+                observeGridViews: gridChanged != null);
             if (summonShown != null) session.SummonCreated += ShowSummon;
+            if (gridChanged != null) session.GridViewChanged += gridChanged;
             if (views.HasDamageUI) session.DisperseResolved += ShowDisperse;
         }
 

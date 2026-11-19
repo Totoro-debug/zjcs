@@ -57,6 +57,7 @@ namespace Zjcs.Presentation.Combat
         private readonly HashSet<MyFightRoleCharacter> characters = new HashSet<MyFightRoleCharacter>();
         private readonly List<Scheduled> pending = new List<Scheduled>();
         private FightBattleCheckpoint checkpoint;
+        private Func<int, FightBattleUnitState> liveUnits;
         private bool disposed;
 
         public OfficialBattleGridEntityPlayback(Transform root, OfficialBattleGridMapper mapper,
@@ -142,6 +143,11 @@ namespace Zjcs.Presentation.Combat
             Restore();
         }
 
+        internal void BindLiveUnits(Func<int, FightBattleUnitState> resolve) => liveUnits = resolve;
+
+        internal void AdoptCheckpoint(FightBattleCheckpoint state)
+            => checkpoint = state ?? throw new ArgumentNullException(nameof(state));
+
         public void Enqueue(FightBattleStepEvent step, FightBattleCheckpoint state)
         {
             checkpoint = state ?? throw new ArgumentNullException(nameof(state));
@@ -162,20 +168,29 @@ namespace Zjcs.Presentation.Combat
             while (pending.Count > 0 && pending[0].Remaining <= 0f)
             {
                 var value = pending[0].Value; pending.RemoveAt(0);
-                switch (value.Kind)
-                {
-                    case FightBattleGridViewEventKind.Create: Create(value.Grid, true); break;
-                    case FightBattleGridViewEventKind.StatusStart: StartStatus(value.GridId, value.Status, true); break;
-                    case FightBattleGridViewEventKind.StatusUpdate: UpdateStatus(value.GridId, value.Status); break;
-                    case FightBattleGridViewEventKind.StatusEnd: EndStatus(value.GridId, value.Status.InstanceId); break;
-                    case FightBattleGridViewEventKind.Remove: Remove(value.GridId); break;
-                    default: throw new ArgumentOutOfRangeException(nameof(value.Kind));
-                }
+                ApplyLive(value);
+            }
+        }
+
+        internal void ApplyLive(FightBattleGridViewEvent value)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleGridEntityPlayback));
+            if (value == null) throw new ArgumentNullException(nameof(value));
+            switch (value.Kind)
+            {
+                case FightBattleGridViewEventKind.Create: Create(value.Grid, true); break;
+                case FightBattleGridViewEventKind.StatusStart: StartStatus(value.GridId, value.Status, true); break;
+                case FightBattleGridViewEventKind.StatusUpdate: UpdateStatus(value.GridId, value.Status); break;
+                case FightBattleGridViewEventKind.StatusEnd: EndStatus(value.GridId, value.Status.InstanceId); break;
+                case FightBattleGridViewEventKind.Remove: Remove(value.GridId); break;
+                default: throw new ArgumentOutOfRangeException(nameof(value.Kind));
             }
         }
 
         private FightBattleUnitState FindState(int id)
         {
+            var live = liveUnits?.Invoke(id);
+            if (live != null) return live;
             foreach (var unit in checkpoint.Units) if (unit.Id == id) return unit;
             foreach (var grid in checkpoint.GridItems) if (grid != null && grid.HasRuntime && grid.Id == id) return grid.Runtime;
             return null;
@@ -299,7 +314,7 @@ namespace Zjcs.Presentation.Combat
                 if (lease.Owned) { lease.Role.OnRemove(null); Destroy(lease.Role); }
                 else RemoveCharacter(lease.Role);
             }
-            roles.Clear(); characters.Clear(); Character = null;
+            roles.Clear(); characters.Clear(); Character = null; liveUnits = null;
             disposed = true; Destroy(staging);
         }
 

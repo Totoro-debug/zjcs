@@ -115,6 +115,12 @@ namespace Zjcs.Combat.Official
         void StatusViewChanged(FightBattleStatusViewEvent transition);
     }
 
+    /// <summary>Receives a grid-entity view transition at its local rule boundary.</summary>
+    public interface IFightBattleGridViewObserver
+    {
+        void GridViewChanged(FightBattleGridViewEvent transition);
+    }
+
     /// <summary>Receives a successful dispel after its actual status removals.</summary>
     public interface IFightBattleDisperseObserver
     {

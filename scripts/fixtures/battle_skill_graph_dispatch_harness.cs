@@ -28,7 +28,8 @@ namespace UnityEngine
 }
 namespace Zjcs.Combat.Official
 {
-    public class FightBattleExecutor {}
+    public class FightBattleExecutor { public FightBattleCheckpoint State = new FightBattleCheckpoint(); }
+    public class FightBattleGridViewEvent {}
     public class FightBattleUnitState { public int Id, Direction, CharacterType; public long Hp,MaxHp;
         public FightBattleUnitState WithPresentationHealth(long hp,long maxHp) {var copy=(FightBattleUnitState)MemberwiseClone();copy.Hp=hp;copy.MaxHp=maxHp;return copy;} }
     public class GridItem { public int Id; public bool HasRuntime; public FightBattleUnitState Runtime; }
@@ -83,6 +84,7 @@ namespace Zjcs.Presentation.Combat
         public readonly Func<int, bool> HasSkill; public readonly Func<int, Transform> Body;
         public readonly bool ObserveStatusViews, ObserveUnitLives;
         public readonly Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> SummonShown;
+        public readonly Action<FightBattleGridViewEvent> GridChanged;
         public bool IsDisposed; internal event Action Disposed;
         public event Action<FightBattleStatusViewEvent> SecondsStatusChanged;
         public event Action<FightBattleStatusViewEvent> StatusViewChanged;
@@ -94,8 +96,9 @@ namespace Zjcs.Presentation.Combat
             OfficialBattleSkillEntityPlayback views, Func<int, bool> hasSkill, Func<int, Transform> body,
             Func<int, Transform> pet, Action<FightBattleDamageEvent, FightBattleUnitState> damage,
             Action<FightBattleSkillCastEvent, FightBattleUnitState> cost, bool observeStatusViews = false, bool observeUnitLives = false,
-            Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> summonShown = null)
-        { HasSkill = hasSkill; Body = body; ObserveStatusViews = observeStatusViews; ObserveUnitLives = observeUnitLives; SummonShown = summonShown; }
+            Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> summonShown = null,
+            Action<FightBattleGridViewEvent> gridChanged = null)
+        { HasSkill = hasSkill; Body = body; ObserveStatusViews = observeStatusViews; ObserveUnitLives = observeUnitLives; SummonShown = summonShown; GridChanged = gridChanged; }
         public FightBattleUnitState DisplayUnit(int id) => null;
         public void Dispose() { if (IsDisposed) return; IsDisposed = true; Disposed?.Invoke(); }
     }
@@ -129,16 +132,22 @@ namespace Zjcs.Presentation.Combat
         public void Synchronize() { Synchronizations++; }
         public void Dispose() {}
     }
-    // This fixture leaves the separately tested grid lifecycle seam unbound.
+    // Native grid entities have separate Unity lifecycle coverage.
     public class OfficialBattleGridMapper {}
     public class OfficialBattleGridEntityPlayback : IDisposable
     {
+        public static FightBattleGridViewEvent LastLiveEvent;
+        public static FightBattleCheckpoint AdoptedCheckpoint;
+        public static Func<int, FightBattleUnitState> LiveUnits;
         public OfficialBattleGridEntityPlayback(Transform root, OfficialBattleGridMapper mapper,
             OfflineBattleNativePlayableScope scope, OfficialBattleSkillEntityPlayback views,
             FightBattleCheckpoint checkpoint, Func<int, Transform> resolve, Func<int, bool> icons) {}
         public float NextDelay => float.PositiveInfinity;
         public Transform TryGetTransform(int id) => null;
         public void RefreshSnapshot(FightBattleCheckpoint checkpoint) {}
+        internal void AdoptCheckpoint(FightBattleCheckpoint checkpoint) { AdoptedCheckpoint = checkpoint; }
+        internal void BindLiveUnits(Func<int, FightBattleUnitState> resolve) { LiveUnits = resolve; }
+        internal void ApplyLive(FightBattleGridViewEvent value) { LastLiveEvent = value; }
         public void Restore() {}
         public void Enqueue(FightBattleStepEvent step, FightBattleCheckpoint checkpoint) {}
         public void DispatchDue() {}
@@ -263,6 +272,10 @@ public static class BattleSkillGraphDispatchHarness
         Func<int, Transform> resolve = id => transforms.TryGetValue(id, out var value) ? value : null;
         var liveScope = new OfflineBattleNativePlayableScope();
         var livePlayback = new OfficialBattleSkillGraphPlayback(catalog, liveScope, new OfficialBattleSkillEntityPlayback(liveScope));
+        bool rejectedMissingGrid = false;
+        try { livePlayback.CreateLiveStep(checkpoint, _ => new FightBattleExecutor(), resolve, null, (_, __) => { }, observeGridViews: true); }
+        catch (InvalidOperationException) { rejectedMissingGrid = true; }
+        Require(rejectedMissingGrid, "Live grid observation requires the native grid view");
         livePlayback.BindGridEntities(transforms[1], new OfficialBattleGridMapper(), checkpoint, resolve, _ => false);
         livePlayback.BindAirCombo(new FightBattleExecutor(), transforms[1], resolve);
         FightBattleUnitLifeEvent observedLife = null;
@@ -273,9 +286,16 @@ public static class BattleSkillGraphDispatchHarness
         var adopted = new FightBattleExecutor();
         livePlayback.AdoptExecutor(adopted);
         Require(ReferenceEquals(OfficialBattleStatusPlayback.ReboundExecutor, adopted)
-            && ReferenceEquals(OfficialBattleAirComboPlayback.ReboundExecutor, adopted),
-            "An adopted executor must be forwarded to both native status clocks");
-        var live = livePlayback.CreateLiveStep(checkpoint, _ => new FightBattleExecutor(), resolve, null, (_, __) => { });
+            && ReferenceEquals(OfficialBattleAirComboPlayback.ReboundExecutor, adopted)
+            && ReferenceEquals(OfficialBattleGridEntityPlayback.AdoptedCheckpoint, adopted.State),
+            "An adopted executor must be forwarded to the native status and grid views");
+        var live = livePlayback.CreateLiveStep(checkpoint, _ => new FightBattleExecutor(), resolve, null, (_, __) => { }, observeGridViews: true);
+        var gridNotice = new FightBattleGridViewEvent();
+        Require(live.GridChanged != null && OfficialBattleGridEntityPlayback.LiveUnits != null,
+            "A bound grid view must receive live transitions and projected units");
+        live.GridChanged(gridNotice);
+        Require(ReferenceEquals(OfficialBattleGridEntityPlayback.LastLiveEvent, gridNotice),
+            "A grid transition did not reach its native view");
         var notice = new FightBattleStatusViewEvent(); live.DeliverStatus(notice);
         var death = new FightBattleUnitLifeEvent { UnitId = 1, IsDead = true };
         live.DeliverLife(death);
@@ -297,10 +317,12 @@ public static class BattleSkillGraphDispatchHarness
         catch (InvalidOperationException) { rejectedLiveOverlap = true; }
         Require(rejectedLiveOverlap, "Two live steps cannot own the same graph");
         live.Dispose();
+        Require(OfficialBattleGridEntityPlayback.LiveUnits == null, "Disposing the live step retained its grid unit resolver");
         livePlayback.Tick(0);
         Require(OfficialBattleAirComboPlayback.Synchronizations == beforeLiveTick + 1,
             "Status synchronization must resume after the live step ends");
         var secondLive = livePlayback.CreateLiveStep(checkpoint, _ => new FightBattleExecutor(), resolve, null, (_, __) => { });
+        Require(secondLive.GridChanged == null, "Unverified grid placement must not be observed by default");
         livePlayback.Dispose();
         Require(secondLive.IsDisposed, "Disposing the graph must cancel its live step");
         int[] facingIndices = { 2, 0, 1, 3 }; // Pos2d.FourDirs -> Common.Direction.

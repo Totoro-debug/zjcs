@@ -168,6 +168,8 @@ namespace Zjcs.Presentation.Combat
         private readonly Stack<FightBattleSecondsStatusNotice> suspendedSecondsStatuses = new Stack<FightBattleSecondsStatusNotice>();
         private FightBattleStatusViewNotice statusView;
         private readonly Stack<FightBattleStatusViewNotice> suspendedStatusViews = new Stack<FightBattleStatusViewNotice>();
+        private FightBattleGridViewNotice gridView;
+        private readonly Stack<FightBattleGridViewNotice> suspendedGridViews = new Stack<FightBattleGridViewNotice>();
         private FightBattleUnitLifeNotice unitLife;
         private readonly Stack<FightBattleUnitLifeNotice> suspendedUnitLives = new Stack<FightBattleUnitLifeNotice>();
         private FightBattleSummonNotice summon;
@@ -193,6 +195,7 @@ namespace Zjcs.Presentation.Combat
         public FightBattlePreparedMovement PendingMovement => movement;
         public FightBattleSecondsStatusNotice PendingSecondsStatus => secondsStatus;
         public FightBattleStatusViewNotice PendingStatusView => statusView;
+        public FightBattleGridViewNotice PendingGridView => gridView;
         public FightBattleUnitLifeNotice PendingUnitLife => unitLife;
         public FightBattleSummonNotice PendingSummon => summon;
         /// <summary>An outer hit still awaits its status result; nested presentation may continue.</summary>
@@ -200,6 +203,7 @@ namespace Zjcs.Presentation.Combat
         public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted;
         public event Action<FightBattleStatusViewEvent> SecondsStatusChanged;
         public event Action<FightBattleStatusViewEvent> StatusViewChanged;
+        public event Action<FightBattleGridViewEvent> GridViewChanged;
         public event Func<FightBattleDamageEvent, bool> DisperseResolved;
         public event Action<FightBattleUnitLifeEvent> UnitLifeChanged;
         public event Action<FightBattleUnitState, FightBattleHitSelectionSnapshot.SpawnedUnit> SummonCreated;
@@ -215,7 +219,7 @@ namespace Zjcs.Presentation.Combat
             Func<FightBattleCheckpoint, FightBattleExecutor> restore,
             OfficialBattleSkillEntityPlayback views, int sequence, int counter, bool observeMovements = false,
             bool observeStatusViews = false, bool observeUnitLives = false, bool observeSummons = false,
-            bool observeDisperses = false)
+            bool observeDisperses = false, bool observeGridViews = false)
         {
             this.views = views ?? throw new ArgumentNullException(nameof(views));
             if (checkpoint?.Units != null) foreach (var unit in checkpoint.Units)
@@ -368,7 +372,7 @@ namespace Zjcs.Presentation.Combat
                     if (skill.EntityId == 10630 && comboValid && comboMask == 7) comboCasters.Add(unit.Id);
                 }
             }
-            step = new FightBattleIsolatedStep(checkpoint, restore, sequence, counter, observeMovements, observeStatusViews, observeUnitLives, observeSummons, observeDisperses);
+            step = new FightBattleIsolatedStep(checkpoint, restore, sequence, counter, observeMovements, observeStatusViews, observeUnitLives, observeSummons, observeDisperses, observeGridViews);
             bridge = new OfficialBattleImpactViewBridge(views, step.Latch);
             bridge.IgnoreNativeScopeArrival = (cast, hit, scope) => scope >= 0 &&
                 (cast?.SkillEntityId == 10570 && hit?.HitEntityId == 10571
@@ -440,6 +444,17 @@ namespace Zjcs.Presentation.Combat
                         step.Latch.CompleteUnitLife(unitLife, out long lifeRevision);
                         ReleaseHandoff(ref unitLife, suspendedUnitLives); progressed = true;
                         WaitForRuleBoundary(lifeRevision);
+                        continue;
+                    }
+                    CaptureHandoff(current, ref gridView, suspendedGridViews,
+                        () => step.Latch.TryTakeGridView(out var value) ? value : null);
+                    if (gridView != null && ReferenceEquals(current, gridView))
+                    {
+                        if (GridViewChanged == null) return progressed;
+                        GridViewChanged(gridView.Event);
+                        step.Latch.CompleteGridView(gridView, out long gridRevision);
+                        ReleaseHandoff(ref gridView, suspendedGridViews); progressed = true;
+                        WaitForRuleBoundary(gridRevision);
                         continue;
                     }
                     CaptureHandoff(current, ref statusView, suspendedStatusViews,
@@ -1414,12 +1429,12 @@ namespace Zjcs.Presentation.Combat
             reachedComboEffects.Clear(); sentComboHits.Clear(); observedSlashes.Clear(); reachedSlashes.Clear(); sentSlashes.Clear(); slashEffects.Clear();
             resolvingStatuses.Clear();
             suspendedPreparations.Clear();
-            suspendedStatusViews.Clear();
+            suspendedStatusViews.Clear(); suspendedGridViews.Clear();
             suspendedDisperses.Clear();
             suspendedUnitLives.Clear();
             suspendedSummons.Clear();
             SecondsStatusChanged = null;
-            StatusViewChanged = null;
+            StatusViewChanged = null; GridViewChanged = null;
             DisperseResolved = null;
         }
     }

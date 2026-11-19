@@ -103,18 +103,25 @@ namespace Zjcs.Presentation.Combat
             return false;
         }
         public OfflineBattleNativePlayableScope Scope => scope;
+        /// <summary>
+        /// Opt into live grid transitions only when the step's grid placements are
+        /// already synchronized with their original hit or summon presentation.
+        /// </summary>
         public OfficialBattleLiveGraphDriver CreateLiveStep(FightBattleCheckpoint checkpoint,
             Func<FightBattleCheckpoint, FightBattleExecutor> restore, Func<int, Transform> unitTransform,
             Func<int, Transform> petTransform, Action<FightBattleDamageEvent, FightBattleUnitState> damageShown,
-            Action<FightBattleSkillCastEvent, FightBattleUnitState> costShown = null)
+            Action<FightBattleSkillCastEvent, FightBattleUnitState> costShown = null, bool observeGridViews = false)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillGraphPlayback));
             if (liveDriver != null) throw new InvalidOperationException("A live step already owns this skill graph.");
             if (unitTransform == null) throw new ArgumentNullException(nameof(unitTransform));
+            if (observeGridViews && gridViews == null) throw new InvalidOperationException("Native grid entities are not bound.");
             Transform Resolve(int id) => gridViews?.TryGetTransform(id) ?? unitTransform(id);
             var driver = new OfficialBattleLiveGraphDriver(checkpoint, restore, entityViews,
                 catalog.ContainsSkill, Resolve, petTransform, damageShown, costShown, observeStatusViews: statusViews != null,
-                observeUnitLives: unitLife != null, summonShown: unitSpawns?.CanApplyLive == true ? unitSpawns.ApplyLive : null);
+                observeUnitLives: unitLife != null, summonShown: unitSpawns?.CanApplyLive == true ? unitSpawns.ApplyLive : null,
+                gridChanged: observeGridViews ? gridViews.ApplyLive : (Action<FightBattleGridViewEvent>)null);
+            gridViews?.BindLiveUnits(driver.DisplayUnit);
             if (airComboViews != null) driver.SecondsStatusChanged += airComboViews.ApplySecondsStatus;
             if (statusViews != null)
             {
@@ -125,7 +132,7 @@ namespace Zjcs.Presentation.Combat
             liveDriver = driver;
             driver.Disposed += () => {
                 if (!ReferenceEquals(liveDriver, driver)) return;
-                liveDriver = null; statusViews?.BindLiveUnits(null);
+                liveDriver = null; statusViews?.BindLiveUnits(null); gridViews?.BindLiveUnits(null);
             };
             return driver;
         }
@@ -138,6 +145,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleSkillGraphPlayback));
             if (executor == null) throw new ArgumentNullException(nameof(executor));
+            gridViews?.AdoptCheckpoint(executor.State);
             statusViews?.Rebind(executor);
             airComboViews?.Rebind(executor);
         }

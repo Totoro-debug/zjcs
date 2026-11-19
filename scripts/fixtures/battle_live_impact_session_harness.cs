@@ -96,19 +96,19 @@ namespace Zjcs.Presentation.Combat
         private EcEntityIdentifier currentSkill;
         public float SelectionElapsed, CompletionElapsed;
         public int Damages, Completions;
-        public bool ArriveImmediately, RejectDamage;
+        public bool ArriveImmediately, RejectDamage, AcceptPreviouslySelectedCast;
         public FightBattleDamageEvent LastDamage;
         public void QueueSelectedHit(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
             FightBattleHitSelectionSnapshot selection, float elapsed)
         {
             Cast = cast; SelectedCasts.Add(cast); Selection = selection; SelectionElapsed = elapsed; currentSkill = id;
             if (ArriveImmediately) {
-                var target = selection.Targets.Single(t => t.TargetId == 2);
-                Arrive(target.HasScopeIndex ? target.ScopeIndex : -1);
+                var target = selection.Targets.SingleOrDefault(t => t.TargetId == 2);
+                if (target != null) Arrive(target.HasScopeIndex ? target.ScopeIndex : -1);
             }
         }
         public bool QueueSettledDamage(FightBattleSkillCastEvent cast, EcEntityIdentifier id, FightBattleDamageEvent damage)
-        { if (!damage.HasDamageTriggerStatus || RejectDamage) return false; Damages++; DamageSkills.Add(cast.SkillEntityId); LastDamage = damage; return ReferenceEquals(cast, Cast); }
+        { if (!damage.HasDamageTriggerStatus || RejectDamage) return false; Damages++; DamageSkills.Add(cast.SkillEntityId); LastDamage = damage; return ReferenceEquals(cast, Cast) || AcceptPreviouslySelectedCast && SelectedCasts.Contains(cast); }
         public bool QueueUnresolvedDamage(FightBattleSkillCastEvent cast, EcEntityIdentifier id, FightBattleDamageEvent damage)
         { if (damage.HasDamageTriggerStatus || RejectDamage) return false; Damages++; DamageSkills.Add(cast.SkillEntityId); LastDamage = damage; return true; }
         public bool ResolveDamageStatus(FightBattleDamageEvent damage) => damage.HasDamageTriggerStatus;
@@ -320,6 +320,52 @@ namespace Zjcs.Presentation.Combat
                         "The controlled arrival did not complete exactly once");
                 }
                 finally { SelectionBoundaryRace.AfterSelection = null; }
+            }
+
+            {
+                var gridCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 20, Height = 20, DefaultGroundType = 0 } };
+                var gridActor = Unit(1, 1, 7, formula); var gridTarget = Unit(2, 2, 8, formula);
+                var gridSkill = catalog.CreateSkill(11690, 0, 10072, 2, 20, 1,
+                    catalog.CalculateSkillProps(11690, 2, 20, 1)
+                        .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
+                gridSkill.LimitedTimes = 1; gridActor.Skills.Add(gridSkill);
+                gridActor.SkillState.Slots.Add(catalog.CreateSkillSlot(gridSkill, 0));
+                var passive = catalog.CreateStatus(25045, 1, 1, 900002, 0, 10576, 2, 20, 1);
+                passive.Components.HitScope.Rate = 1f; gridActor.Statuses.Add(passive);
+                gridCheckpoint.Units.AddRange(new[] { gridActor, gridTarget });
+                var gridWave = new FightBattleWaveState(); gridWave.UnitIds.Add(2); gridCheckpoint.Waves.Add(gridWave);
+                FightBattleExecutor.Begin(gridCheckpoint, formula, new FightDamageSettlement(), catalog, items);
+                string beforeGrid = FightBattleCheckpointSerializer.Save(gridCheckpoint);
+                var gridViews = new OfficialBattleSkillEntityPlayback { ArriveImmediately = true, AcceptPreviouslySelectedCast = true };
+                using var gridSession = new OfficialBattleLiveImpactSession(gridCheckpoint,
+                    copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items),
+                    gridViews, 0, 1, observeGridViews: true);
+                int serial = 60, hostThread = Thread.CurrentThread.ManagedThreadId;
+                bool StartGridCast(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = new EcEntityIdentifier(++serial); return true; }
+                Check(SpinWait.SpinUntil(() => { gridSession.Pump(0f, StartGridCast); return gridSession.PendingGridView != null; }, 20000)
+                    && gridSession.PendingGridView.Event.Kind == FightBattleGridViewEventKind.Create
+                    && gridViews.Damages == 1 && FightBattleCheckpointSerializer.Save(gridCheckpoint) == beforeGrid,
+                    "The first actual grid creation must wait for its presentation host");
+                var transitions = new List<FightBattleGridViewEvent>();
+                gridSession.GridViewChanged += value => {
+                    Check(Thread.CurrentThread.ManagedThreadId == hostThread, "A grid view transition ran outside the host thread");
+                    transitions.Add(value);
+                };
+                FightBattleExecutionResult gridResult = null;
+                Check(SpinWait.SpinUntil(() => { gridSession.Pump(0f, StartGridCast); return gridSession.IsCompleted; }, 20000)
+                    && gridSession.TryTakeCompleted(out _, out gridResult),
+                    "The burning-ground child did not finish after its grid view was accepted");
+                Check(transitions.Count(value => value.Kind == FightBattleGridViewEventKind.Create) == 3
+                    && transitions.Count(value => value.Kind == FightBattleGridViewEventKind.StatusStart && value.Status.ClassId == 11582) == 3
+                    && transitions.Count(value => value.Kind == FightBattleGridViewEventKind.StatusEnd) == 2
+                    && transitions.Count(value => value.Kind == FightBattleGridViewEventKind.Remove) == 2
+                    && transitions.Select(value => (value.Kind, value.GridId)).SequenceEqual(
+                        gridResult.Event.GridViewEvents.Select(value => (value.Kind, value.GridId)))
+                    && gridResult.Event.SkillCasts.Count(value => value.SkillEntityId == 11590) == 3
+                    && FightBattleCheckpointSerializer.Save(gridCheckpoint) == beforeGrid,
+                    "Live grid creation, status and replacement order differs from the completed isolated receipt");
             }
 
             var earlyViews = new OfficialBattleSkillEntityPlayback { ArriveImmediately = true };
@@ -785,7 +831,7 @@ namespace Zjcs.Presentation.Combat
                     && FightBattleCheckpointSerializer.Save(summonCp) == beforeSummon,
                     "Canceling a held summon changed the saved checkpoint");
             }
-            return "Live impact session passed: deferred start, same-frame impact, HP handoff, lifetime, isolation and actual status resolution.";
+            return "Live impact session passed: same-frame impact, grid lifecycle, HP handoff, isolation and actual status resolution.";
         }
     }
 }

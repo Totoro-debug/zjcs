@@ -45,6 +45,10 @@ namespace Zjcs.Combat.Official
             value.Delay = Math.Max(0f, gridViewTimeOverride
                 ?? (movementStartContext == null ? 0f : movementStartContext.StatusStartTime));
             gridViewEvents.Add(new PendingGridViewEvent { Event = value, Cast = gridViewCast });
+            // The completed receipt receives its final cast offset later. The live
+            // view needs its own transition while the originating state is current.
+            (ImpactGate as IFightBattleGridViewObserver)?.GridViewChanged(new FightBattleGridViewEvent {
+                Kind = value.Kind, Delay = value.Delay, GridId = value.GridId, Grid = value.Grid, Status = value.Status });
         }
 
         private void RecordGridViewCreate(FightBattleGridItemState item)
