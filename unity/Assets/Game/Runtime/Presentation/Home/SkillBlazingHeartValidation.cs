@@ -29,9 +29,9 @@ namespace Zjcs.Presentation.Home
             bool equipped = Environment.GetEnvironmentVariable("ZJCS_BLAZING_HEART_EQUIPPED") == "1";
             string requestedSecret = Environment.GetEnvironmentVariable("ZJCS_AFFINITY_SECRET_ID");
             int secretId = string.IsNullOrEmpty(requestedSecret) ? 10520 : int.Parse(requestedSecret);
-            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554, "Unexpected property secret.");
+            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578, "Unexpected property secret.");
             int activeId = secretId == 10521 ? 10000 : secretId == 10522 ? 10001 : secretId == 10559 ? 10005 : 10028;
-            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 ? "MaxHp" : secretId == 10555 ? "ElementMaster" : secretId == 10583 ? "ElementResistance" : secretId == 10559 ? "EffectRate" : "CritRatePercent";
+            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 ? "MaxHp" : secretId == 10555 ? "ElementMaster" : secretId == 10583 ? "ElementResistance" : secretId == 10559 ? "EffectRate" : secretId == 10554 ? "CritRatePercent" : "StatusDmgAddPer";
             Require(!string.IsNullOrEmpty(sourcePath) && File.Exists(sourcePath), "Missing acquired secret profile.");
             var save = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(sourcePath));
             var profile = save.Player;
@@ -41,7 +41,7 @@ namespace Zjcs.Presentation.Home
                 "The source profile did not acquire and equip the selected secret through the original UI.");
             if (!equipped)
             {
-                foreach (int skillId in new[] { 10520, 10521, 10522, 10550, 10555, 10583, 10559, 10554 })
+                foreach (int skillId in new[] { 10520, 10521, 10522, 10550, 10555, 10583, 10559, 10554, 10578 })
                     VerifyOriginalWish(output, save, skillId);
             }
             if (!equipped)
@@ -79,7 +79,7 @@ namespace Zjcs.Presentation.Home
             var player = checkpoint.Units.Single(value => value.Id == 1);
             Require(player.Skills.Any(value => value.ItemId == activeId), "The actual battle omitted the saved elemental skill.");
             int elementAffinity = combat.PropertyType(affinityName);
-            long affinity = player.Properties.Where(value => value.Id == elementAffinity).Sum(value => value.Value);
+            long affinity = PropertyOrResonance(player, elementAffinity, secretId);
             int critValueProperty = combat.PropertyType("CritRatePercentValue");
             long secondary = secretId == 10554 ? player.Properties.Where(value => value.Id == critValueProperty).Sum(value => value.Value) : 0;
             if (secretId == 10550)
@@ -93,6 +93,15 @@ namespace Zjcs.Presentation.Home
             // The original boss occupies five cells across; keep its body clear of
             // the player while retaining the real stage and a target within the original skill range.
             enemy.X = player.X + 5; enemy.Y = player.Y;
+            if (secretId == 10578)
+            {
+                foreach (var value in new[] { new[] { 24020, 900001 }, new[] { 24215, 900002 } })
+                {
+                    var status = combat.CreateStatus(value[0], enemy.Id, player.Id, value[1]);
+                    status.DurationRound = 5;
+                    enemy.Statuses.Add(status);
+                }
+            }
             if (secretId == 10583)
             {
                 // Exercise the original elemental formula against an incoming fireball
@@ -112,7 +121,7 @@ namespace Zjcs.Presentation.Home
                     { combat.PropertyType("BaseEffectDodge"), 10000 }, { combat.PropertyType("BaseCritRatePercentValue"), 10000 },
                     { combat.PropertyType("BaseCritAvoidPercentValue"), 10000 }, { combat.PropertyType("BaseBlockPercentValue"), 10000 },
                     { combat.PropertyType("BaseBlockAvoidPercentValue"), 10000 } };
-                if (unit.Id == 1 && affinity != 0) props[elementAffinity] = affinity;
+                if (unit.Id == 1 && secretId != 10578 && affinity != 0) props[elementAffinity] = affinity;
                 if (unit.Id == 1 && secretId == 10554 && secondary != 0) props[critValueProperty] = secondary;
                 OfficialBattleUnitAssembler.Initialize(combatAssets.LoadDamageFormula(), unit, props, 3, 4);
             }
@@ -123,6 +132,8 @@ namespace Zjcs.Presentation.Home
             FightBattleCheckpoint settled = null;
             var runner = home.StartWeeklyChallengeBattle(4800, value => settled = value);
             var controller = runner.Controller;
+            if (secretId == 10578)
+                affinity = PropertyOrResonance(controller.Checkpoint.Units.Single(value => value.Id == player.Id), elementAffinity, secretId);
             long damage = 0;
             int diskChecks = 0;
             FightBattleCheckpoint pendingDisk = null;
@@ -154,10 +165,8 @@ namespace Zjcs.Presentation.Home
                     var disk = new OfflineWeeklyChallengeSession(Path.Combine(saveRoot, "saves", slot, "weekly-challenge-save.json"));
                     Require(disk.TryResumeBattle(4800, out string json, out _), "The actual battle checkpoint was not saved.");
                     var restored = FightBattleCheckpointSerializer.Load(json);
-                    long expectedAffinity = pendingDisk.Units.Single(value => value.Id == player.Id).Properties
-                        .Where(value => value.Id == elementAffinity).Sum(value => value.Value);
-                    long savedAffinity = restored.Units.Single(value => value.Id == player.Id).Properties
-                        .Where(value => value.Id == elementAffinity).Sum(value => value.Value);
+                    long expectedAffinity = PropertyOrResonance(pendingDisk.Units.Single(value => value.Id == player.Id), elementAffinity, secretId);
+                    long savedAffinity = PropertyOrResonance(restored.Units.Single(value => value.Id == player.Id), elementAffinity, secretId);
                     long savedSecondary = secretId == 10554 ? restored.Units.Single(value => value.Id == player.Id).Properties
                         .Where(value => value.Id == critValueProperty).Sum(value => value.Value) : 0;
                     Require(restored.Sequence == pendingDisk.Sequence && restored.Counter == pendingDisk.Counter
@@ -192,6 +201,13 @@ namespace Zjcs.Presentation.Home
             home.CloseForNavigation();
             Debug.Log("[Blazing heart battle] equipped=" + equipped + " affinity=" + affinity
                 + " skill=" + activeId + " damage=" + damage + " disk checks=" + diskChecks);
+        }
+
+        private static long PropertyOrResonance(FightBattleUnitState unit, int propertyId, int secretId)
+        {
+            if (secretId != 10578) return unit.Properties.Where(value => value.Id == propertyId).Sum(value => value.Value);
+            return unit.Statuses.Where(value => value.ClassId == 25047 && value.StatusProperties != null)
+                .SelectMany(value => value.StatusProperties).Where(value => value.Id == propertyId).Sum(value => value.Value);
         }
 
         private static void VerifyOriginalWish(string output, OfflineMainlineSave source, int skillId)

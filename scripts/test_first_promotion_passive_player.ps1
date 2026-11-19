@@ -2,7 +2,7 @@ param(
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [int[]]$SkillIds=@(10500,10501,10505,10507,10510,10514,10516,10520,10521,10522,10524,10535,10550,10554,10555,10559,10583,10588),
+    [int[]]$SkillIds=@(10500,10501,10505,10507,10510,10514,10516,10520,10521,10522,10524,10535,10550,10554,10555,10559,10578,10583,10588),
     [ValidateSet(0,1,2,6,10,11,15)][int]$Profession=0,
     [switch]$AcquireFromPieces
 )
@@ -34,7 +34,7 @@ try {
     foreach($skill in $SkillIds){
         $owner=@($professions|Where-Object {$skill -in @($_.Skills)+@($_.FightUsedSkills)})
         $row=@($rules.skill|Where-Object ClassId -eq $skill)
-        if($owner.Count -eq 0 -or $row.Count -ne 1 -or $row[0].PassivePropFactors.PSObject.Properties.Count -eq 0){throw "Secret is outside the original property scope: $skill"}
+        if($owner.Count -eq 0 -or $row.Count -ne 1 -or ($row[0].PassivePropFactors.PSObject.Properties.Count -eq 0 -and @($row[0].PassiveStatusIdList | Where-Object {$_ -gt 0}).Count -eq 0)){throw "Secret has no original property or passive status: $skill"}
         $selectedProfession=[int]$owner[0].Profession
         if($Profession -gt 0){
             $candidate=$Profession
@@ -57,9 +57,9 @@ try {
         if($PSCmdlet.ParameterSetName -eq 'Play'){
             $env:ZJCS_SKILLS_AUTORUN='1'
             $env:ZJCS_SKILLS_HOME_ONLY='1'
-            $arguments=@('-projectPath',('"'+$projectPath+'"'),'-logFile',('"'+(Join-Path $run 'player.log')+'"'))
+            $arguments=@('-muteAudio','-projectPath',('"'+$projectPath+'"'),'-logFile',('"'+(Join-Path $run 'player.log')+'"'))
         }else{
-            $arguments=@('-screen-fullscreen','0','-screen-width','675','-screen-height','1463',
+            $arguments=@('-muteAudio','-screen-fullscreen','0','-screen-width','675','-screen-height','1463',
                 '-logFile',('"'+(Join-Path $run 'player.log')+'"'),'--zjcs-validate-skills',('"'+$run+'"'))
         }
         $process=Start-UnityOnInternalDisplay -Editor $executable -ArgumentList $arguments

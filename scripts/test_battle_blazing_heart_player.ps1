@@ -3,7 +3,7 @@ param(
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
     [Parameter(Mandatory)][string]$Profile,
-    [ValidateSet(10520,10521,10522,10550,10555,10583,10559,10554)][int]$SecretId = 10520
+    [ValidateSet(10520,10521,10522,10550,10555,10583,10559,10554,10578)][int]$SecretId = 10520
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -90,7 +90,7 @@ try {
             throw "The actual battle produced a runtime or shutdown error: $run"
         }
         if (-not $equipped) {
-            foreach ($skill in @(10520,10521,10522,10550,10555,10583,10559,10554)) {
+            foreach ($skill in @(10520,10521,10522,10550,10555,10583,10559,10554,10578)) {
                 if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch "[Passive affinity wish] item=$skill granted")) {
                     throw "Original skill wish acquisition did not complete for $skill : $run"
                 }
