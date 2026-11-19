@@ -2537,6 +2537,132 @@ namespace Zjcs.Editor.Combat
                 Time.timeScale = 1f; waterScope.Dispose(); waterAppearance?.Dispose(); waterTargetAppearance?.Dispose(); Destroy(waterRoot.gameObject);
             }
 
+            // The water passive's zero-time child appears on the struck target after the projectile lands.
+            foreach (var direction in new[] { new[] { 1, 0, 3, 0 }, new[] { -1, 0, 1, 0 },
+                new[] { 0, 1, 2, 0 }, new[] { 0, -1, 0, 0 }, new[] { 1, 0, 3, 1 }, new[] { 1, 0, 3, 2 } })
+            {
+                int dx = direction[0], dy = direction[1]; bool shielded = direction[3] == 1, fastForward = direction[3] == 2;
+                bool expectFrozen = dx == 1 && dy == 0 && !shielded;
+                var iceUnits = new[] { LiveUnit(1, 1, 5), LiveUnit(2, 2, 5 + dx * 2) };
+                iceUnits[0].Direction = direction[2]; iceUnits[1].Y = 5 + dy * 2;
+                var iceSkill = liveCatalog.CreateSkill(10500, 0, 10000, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(10500, 2, 20, 1)
+                        .Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+                iceSkill.LimitedTimes = 1; iceUnits[0].Skills.Add(iceSkill);
+                iceUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(iceSkill, 0));
+                var iceStatus = liveCatalog.CreateStatus(25026, 1, 1, 1, 25026, 10560, 2, 20, 1);
+                iceStatus.Components.HitSkill.Rate = 1f; // Original trigger probability is verified by the rule test.
+                iceUnits[0].Statuses.Add(iceStatus);
+                if (shielded) iceUnits[1].Statuses.Add(new FightBattleStatusState {
+                    ClassId = 90003, InstanceId = 1, OwnerId = 2, CreatorId = 2,
+                    ShieldKind = FightBattleShieldKind.Persistent, ShieldInitialized = true,
+                    ShieldValue = 100000000, ShieldRemainValue = 100000000 });
+                var iceCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                iceCheckpoint.Units.AddRange(iceUnits);
+                var iceWave = new FightBattleWaveState(); iceWave.UnitIds.Add(2); iceCheckpoint.Waves.Add(iceWave);
+                FightBattleExecutor.Begin(iceCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                bool foundSeed = false;
+                for (int attempt = 0; attempt < 64; attempt++)
+                {
+                    var reference = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(iceCheckpoint));
+                    reference.RandomSeed = 73 + attempt * 1234567;
+                    FightBattleExecutor.Restore(reference, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()).Step(0, 1);
+                    if (reference.Units.Single(unit => unit.Id == 2).Statuses.Any(status => status.ClassId == 24215) != expectFrozen) continue;
+                    iceCheckpoint.RandomSeed = 73 + attempt * 1234567; foundSeed = true; break;
+                }
+                Require(foundSeed, "Could not select the original freeze outcome for the ice passive.");
+                var iceDisplay = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(iceCheckpoint)).Units.ToArray();
+                var iceRoot = new GameObject("Ice passive acceptance").transform; iceRoot.SetParent(root, false);
+                var iceBodies = new Dictionary<int, Transform>();
+                foreach (var unit in iceUnits)
+                {
+                    var body = new GameObject("Ice unit " + unit.Id).transform; body.SetParent(iceRoot, false);
+                    body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                    var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false;
+                    renderer.sharedMaterials = Array.Empty<Material>();
+                    body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                    iceBodies.Add(unit.Id, body);
+                }
+                var iceAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
+                    ? NativeJumpAppearanceFixture.Create(iceBodies[1].gameObject) : null;
+                var iceTargetAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
+                    ? NativeJumpAppearanceFixture.Create(iceBodies[2].gameObject) : null;
+                var iceScope = new OfflineBattleNativePlayableScope(iceRoot, null);
+                ParticleSystem iceParticle = null; int waterHits = 0, iceHits = 0, icePausedFrames = 0, iceGraphLeaves = 0;
+                bool iceResumed = false;
+                iceScope.NativePlayableStarted += (prefab, leaf) => {
+                    if (prefab.name != "playable11300" || leaf.name != "effect" || !leaf.myApplyComponent) return;
+                    foreach (var particle in leaf.myApplyComponent.GetComponentsInChildren<ParticleSystem>(true))
+                        if (particle.name == "hit_da") { iceParticle = particle; particle.Pause(); }
+                };
+                using (var iceViews = new OfficialBattleSkillEntityPlayback(iceRoot,
+                    new OfficialBattleGridMapper(iceRoot, grid), iceScope,
+                    id => iceDisplay.FirstOrDefault(value => value.Id == id)))
+                using (var iceGraph = new OfficialBattleSkillGraphPlayback(
+                    OfficialBattleSkillGraphCatalog.TryLoadDefault(), iceScope, iceViews))
+                {
+                    iceViews.BindDamageUI(iceRoot, 0);
+                    foreach (var pair in iceBodies) iceViews.EnsureUnit(pair.Key, pair.Value);
+                    Transform IceBody(int id) => iceBodies.TryGetValue(id, out var value) ? value : null;
+                    void IceDamage(FightBattleDamageEvent damage, FightBattleUnitState projected)
+                    {
+                        Require(damage.TargetId == 2 && (!shielded || damage.BeforeHp == damage.AfterHp),
+                            "Ice passive hit the wrong target or bypassed its shield.");
+                        if (damage.SkillEntityId == 10500) waterHits++;
+                        else
+                        {
+                            Require(damage.SkillEntityId == 11300 && damage.HitEntityId == 11301
+                                && damage.DamageEntityId == 11302 && damage.SkillItemId == 10560 && damage.ElementType == 101
+                                && waterHits == 1 && iceResumed && iceParticle
+                                && (iceParticle.particleCount > 0 || fastForward && iceParticle.time >= .2f),
+                                "Ice passive damage did not coincide with its original target effect.");
+                            iceHits++;
+                            if (iceAppearance != null) Capture("ice-passive-" + dx + "-" + dy + "-" + direction[3] + ".png", false);
+                        }
+                        iceDisplay[Array.FindIndex(iceDisplay, unit => unit.Id == damage.TargetId)] = projected;
+                    }
+                    using (var iceDriver = new OfficialBattleLiveGraphDriver(iceCheckpoint,
+                        copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()),
+                        iceViews, id => id == 10500 || id == 11300, IceBody, null, IceDamage))
+                    {
+                        iceDriver.SecondsStatusChanged += _ => { };
+                        iceDriver.SkillGraphPlayableStarted += (cast, id, prefab, leaf) => {
+                            if (cast.SkillEntityId == 11300 && prefab.name == "playable11300" && leaf.name == "effect") iceGraphLeaves++;
+                        };
+                        iceDisplay = iceCheckpoint.Units.Select(unit => iceDriver.DisplayUnit(unit.Id)).ToArray();
+                        float iceDeadline = Time.realtimeSinceStartup + 15f;
+                        while (!iceDriver.IsCompleted && Time.realtimeSinceStartup < iceDeadline)
+                        {
+                            iceDriver.Pump(Time.deltaTime); iceViews.Tick(Time.deltaTime); iceScope.LateTick();
+                            if (iceParticle && !iceResumed && ++icePausedFrames >= 8)
+                            {
+                                Require(iceParticle.isPaused && waterHits == 1 && iceHits == 0,
+                                    "A paused ice effect settled its child hit.");
+                                if (fastForward)
+                                {
+                                    iceParticle.Simulate(.2f, true, true, false);
+                                    Require(iceParticle.time >= .2f && iceParticle.particleCount == 0,
+                                        "The skipped ice burst fixture did not advance past the particle.");
+                                }
+                                iceParticle.Play(); iceResumed = true;
+                            }
+                            yield return null;
+                        }
+                        Require(iceDriver.TryTakeCompleted(out var executor, out var result)
+                            && waterHits == 1 && iceHits == 1 && iceGraphLeaves == 1
+                            && result.Event.SkillCasts.Count(value => value.SkillEntityId == 11300) == 1,
+                            "Ice passive did not settle its original child exactly once.");
+                        var frozen = executor.State.Units.Single(unit => unit.Id == 2).Statuses
+                            .Where(status => status.ClassId == 24215).ToArray();
+                        Require(expectFrozen ? frozen.Length == 1 && frozen[0].DurationRound == 1
+                            && frozen[0].CreatorId == 1 && frozen[0].ApplyingSkillItemId == 10560 : frozen.Length == 0,
+                            "Ice passive did not preserve its original freezing result.");
+                    }
+                }
+                iceScope.Dispose(); iceAppearance?.Dispose(); iceTargetAppearance?.Dispose(); Destroy(iceRoot.gameObject);
+            }
+
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(1, 0), Delay = .8f });

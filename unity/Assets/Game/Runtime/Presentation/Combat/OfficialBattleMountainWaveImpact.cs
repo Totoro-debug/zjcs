@@ -283,6 +283,45 @@ namespace Zjcs.Presentation.Combat
         internal void Detach() { arrival = null; }
     }
 
+    // The ice passive's target effect starts at the original child hit's zero-time boundary.
+    internal sealed class OfficialBattleIceHitImpact : MonoBehaviour
+    {
+        private ParticleSystem ice;
+        private float hitDelay;
+        private float emissionStart;
+        private Action<float> arrival;
+
+        internal static OfficialBattleIceHitImpact Attach(GameObject prefab, MyPlayable playable, Action<float> arrival)
+        {
+            if (!prefab || !playable || !playable.myApplyComponent || arrival == null) return null;
+            var sequence = prefab.GetComponent<MyPlayableSequence>();
+            if (!sequence || sequence.myPlayables == null) return null;
+            float effectStart = -1f; int effects = 0;
+            foreach (var entry in sequence.myPlayables)
+                if (entry?.myPlayable && entry.myPlayable.name == "effect") { effectStart = entry.myTime; effects++; }
+            if (effects != 1 || effectStart < 0f) return null;
+            ParticleSystem ice = null;
+            foreach (var particle in playable.myApplyComponent.GetComponentsInChildren<ParticleSystem>(true))
+                if (particle.name == "hit_da") { if (ice) return null; ice = particle; }
+            if (!ice) return null;
+            var main = ice.main;
+            if (main.startDelay.mode != ParticleSystemCurveMode.Constant || main.useUnscaledTime
+                || Math.Abs(main.simulationSpeed - 1f) > .00001f || main.startDelay.constant < 0f) return null;
+            var observer = playable.gameObject.AddComponent<OfficialBattleIceHitImpact>();
+            observer.ice = ice; observer.emissionStart = main.startDelay.constant;
+            observer.hitDelay = effectStart + observer.emissionStart; observer.arrival = arrival;
+            return observer;
+        }
+
+        private void LateUpdate()
+        {
+            if (arrival == null || !ice || ice.particleCount <= 0 && (ice.isPaused || ice.time <= emissionStart)) return;
+            var callback = arrival; arrival = null; callback(hitDelay);
+        }
+
+        internal void Detach() { arrival = null; Destroy(this); }
+    }
+
     // The original track calls its trigger after moving the projectile to its endpoint.
     internal sealed class OfficialBattleWaterProjectileImpact : MyPlayableTrigger
     {
