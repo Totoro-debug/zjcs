@@ -81,14 +81,19 @@ namespace Zjcs.Presentation.Combat
     public sealed class OfficialBattleLiveGraphDriver : IDisposable
     {
         public readonly Func<int, bool> HasSkill; public readonly Func<int, Transform> Body;
+        public readonly bool ObserveStatusViews, ObserveUnitLives;
         public bool IsDisposed; internal event Action Disposed;
         public event Action<FightBattleStatusViewEvent> SecondsStatusChanged;
+        public event Action<FightBattleStatusViewEvent> StatusViewChanged;
+        public event Action<FightBattleUnitLifeEvent> UnitLifeChanged;
         public void DeliverStatus(FightBattleStatusViewEvent value) => SecondsStatusChanged?.Invoke(value);
+        public void DeliverStatusView(FightBattleStatusViewEvent value) => StatusViewChanged?.Invoke(value);
+        public void DeliverLife(FightBattleUnitLifeEvent value) => UnitLifeChanged?.Invoke(value);
         public OfficialBattleLiveGraphDriver(FightBattleCheckpoint cp, Func<FightBattleCheckpoint, FightBattleExecutor> restore,
             OfficialBattleSkillEntityPlayback views, Func<int, bool> hasSkill, Func<int, Transform> body,
             Func<int, Transform> pet, Action<FightBattleDamageEvent, FightBattleUnitState> damage,
-            Action<FightBattleSkillCastEvent, FightBattleUnitState> cost)
-        { HasSkill = hasSkill; Body = body; }
+            Action<FightBattleSkillCastEvent, FightBattleUnitState> cost, bool observeStatusViews = false, bool observeUnitLives = false)
+        { HasSkill = hasSkill; Body = body; ObserveStatusViews = observeStatusViews; ObserveUnitLives = observeUnitLives; }
         public void Dispose() { if (IsDisposed) return; IsDisposed = true; Disposed?.Invoke(); }
     }
     // Complete character-status entities have separate native lifecycle coverage.
@@ -104,6 +109,7 @@ namespace Zjcs.Presentation.Combat
         public void Enqueue(FightBattleStepEvent step) {}
         public void AdvanceTimers(float elapsed) {}
         public void DispatchDue() {}
+        public void ApplyLiveStatus(FightBattleStatusViewEvent value) {}
         public void Dispose() {}
     }
     // Airborne native status playback is verified by its own rules and Unity suites.
@@ -255,6 +261,8 @@ public static class BattleSkillGraphDispatchHarness
         var livePlayback = new OfficialBattleSkillGraphPlayback(catalog, liveScope, new OfficialBattleSkillEntityPlayback(liveScope));
         livePlayback.BindGridEntities(transforms[1], new OfficialBattleGridMapper(), checkpoint, resolve, _ => false);
         livePlayback.BindAirCombo(new FightBattleExecutor(), transforms[1], resolve);
+        FightBattleUnitLifeEvent observedLife = null;
+        livePlayback.BindUnitLife(new OfficialBattleUnitLifePlayback(value => observedLife = value));
         var adopted = new FightBattleExecutor();
         livePlayback.AdoptExecutor(adopted);
         Require(ReferenceEquals(OfficialBattleStatusPlayback.ReboundExecutor, adopted)
@@ -262,6 +270,10 @@ public static class BattleSkillGraphDispatchHarness
             "An adopted executor must be forwarded to both native status clocks");
         var live = livePlayback.CreateLiveStep(checkpoint, _ => new FightBattleExecutor(), resolve, null, (_, __) => { });
         var notice = new FightBattleStatusViewEvent(); live.DeliverStatus(notice);
+        var death = new FightBattleUnitLifeEvent { UnitId = 1, IsDead = true };
+        live.DeliverLife(death);
+        Require(live.ObserveStatusViews && live.ObserveUnitLives && ReferenceEquals(observedLife, death),
+            "A bound life view must receive confirmed transitions and opt into live observation");
         Require(ReferenceEquals(OfficialBattleAirComboPlayback.LastNotice, notice),
             "Live status transitions must reach the original airborne view");
         int beforeLiveTick = OfficialBattleAirComboPlayback.Synchronizations;

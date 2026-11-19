@@ -80,6 +80,23 @@ namespace Zjcs.Editor.Combat
                     {
                         scene.Refresh(checkpoint);
                         var source = model.Transform.gameObject;
+                        typeof(OfficialBattleSceneView).GetMethod("BindUnitEndClock",
+                            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                            .Invoke(scene, new object[] { playback });
+                        var lifePlayback = typeof(OfficialBattleSceneView).GetField("unitLifePlayback",
+                            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(scene);
+                        var applyLive = lifePlayback.GetType().GetMethod("ApplyLive",
+                            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                        applyLive.Invoke(lifePlayback, new object[] { new FightBattleUnitLifeEvent {
+                            UnitId = unit.Id, IsDead = true, BeforeHp = 100, BeforeMaxHp = 100, Hp = 0, MaxHp = 100 } });
+                        Require(model.Animation == "die_01" && unit.Hp == 100,
+                            "confirmed live death did not reach the original model without modifying the checkpoint");
+                        yield return null;
+                        Capture(source, monsterId + "-live-death");
+                        applyLive.Invoke(lifePlayback, new object[] { new FightBattleUnitLifeEvent {
+                            UnitId = unit.Id, IsDead = false, BeforeHp = 0, BeforeMaxHp = 100, Hp = 100, MaxHp = 100 } });
+                        Require(model.Animation == "idle_01" && unit.Hp == 100,
+                            "live revival did not restore the original model without modifying the checkpoint");
                         var graph = scope.Play(fixture, source, source);
                         Stop(scope, graph);
                         Require(model.Animation == "idle_01", "living source entered death");

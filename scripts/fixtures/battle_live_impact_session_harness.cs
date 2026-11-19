@@ -526,9 +526,12 @@ namespace Zjcs.Presentation.Combat
             FightBattleExecutor.Restore(nestedBaseline, formula, new FightDamageSettlement(), catalog, items).Step(0, 1);
             var nestedViews = new OfficialBattleSkillEntityPlayback();
             using (var nestedSession = new OfficialBattleLiveImpactSession(nestedCp,
-                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), nestedViews, 0, 1))
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), nestedViews, 0, 1,
+                observeUnitLives: true))
             {
                 var started = new List<int>(); int identity = 46;
+                int prematureDeaths = 0;
+                nestedSession.UnitLifeChanged += transition => { if (transition.UnitId == 2 && transition.IsDead) prematureDeaths++; };
                 bool StartJump(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
                 { started.Add(cast.SkillEntityId); id = new EcEntityIdentifier(identity++); return true; }
                 Check(SpinWait.SpinUntil(() => { nestedSession.Pump(0f, StartJump); return nestedViews.Selection != null; }, 20000),
@@ -537,7 +540,7 @@ namespace Zjcs.Presentation.Combat
                 nestedViews.ArriveImmediately = true;
                 nestedViews.Arrive(hit.HasScopeIndex ? hit.ScopeIndex : -1);
                 Check(SpinWait.SpinUntil(() => { nestedSession.Pump(0f, StartJump); return nestedSession.IsCompleted; }, 20000)
-                    && started.Contains(10990) && nestedViews.DamageSkills.Contains(10670)
+                    && prematureDeaths == 0 && started.Contains(10990) && nestedViews.DamageSkills.Contains(10670)
                     && nestedViews.DamageSkills.Contains(10990)
                     && nestedSession.TryTakeCompleted(out _, out var nestedResult)
                     && FightBattleCheckpointSerializer.Save(nestedResult.Checkpoint) == FightBattleCheckpointSerializer.Save(nestedBaseline)
@@ -562,6 +565,60 @@ namespace Zjcs.Presentation.Combat
                 Check(SpinWait.SpinUntil(() => canceledNested.IsCompleted, 20000)
                     && FightBattleCheckpointSerializer.Save(nestedCp) == beforeNested,
                     "Canceling a nested recovery changed the committed checkpoint");
+            }
+            var fatalCp = FightBattleCheckpointSerializer.Load(committed);
+            var fatalTarget = fatalCp.Units.Single(unit => unit.Id == 2);
+            fatalTarget.Hp = 1; fatalTarget.Turn.Hp = 1;
+            string beforeFatal = FightBattleCheckpointSerializer.Save(fatalCp);
+            var fatalBaseline = FightBattleCheckpointSerializer.Load(beforeFatal);
+            FightBattleExecutor.Restore(fatalBaseline, formula, new FightDamageSettlement(), catalog, items).Step(0, 1);
+            var fatalViews = new OfficialBattleSkillEntityPlayback();
+            using (var fatalSession = new OfficialBattleLiveImpactSession(fatalCp,
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), fatalViews, 0, 1,
+                observeUnitLives: true))
+            {
+                int hostThread = Environment.CurrentManagedThreadId, notices = 0;
+                FightBattleUnitLifeEvent liveDeath = null;
+                fatalSession.UnitLifeChanged += transition => {
+                    Check(Environment.CurrentManagedThreadId == hostThread && fatalViews.Damages == 1
+                        && transition.UnitId == 2 && transition.IsDead && transition.Hp == 0 && fatalTarget.Hp == 1,
+                        "Confirmed death must follow the actual displayed hit on the host thread without changing the saved checkpoint");
+                    liveDeath = transition; notices++;
+                };
+                bool StartFatal(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = new EcEntityIdentifier(93); return true; }
+                Check(SpinWait.SpinUntil(() => { fatalSession.Pump(0f, StartFatal); return fatalViews.Selection != null; }, 20000)
+                    && notices == 0 && fatalViews.Damages == 0, "A fatal hit was confirmed before its native arrival");
+                var hit = fatalViews.Selection.Targets.Single(value => value.TargetId == 2);
+                fatalViews.Arrive(hit.HasScopeIndex ? hit.ScopeIndex : -1);
+                FightBattleExecutionResult fatalResult = null;
+                Check(SpinWait.SpinUntil(() => { fatalSession.Pump(0f, StartFatal); return fatalSession.IsCompleted; }, 20000)
+                    && notices == 1 && fatalSession.TryTakeCompleted(out _, out fatalResult)
+                    && FightBattleCheckpointSerializer.Save(fatalResult.Checkpoint) == FightBattleCheckpointSerializer.Save(fatalBaseline)
+                    && FightBattleCheckpointSerializer.Save(fatalCp) == beforeFatal,
+                    "Confirmed live death changed the deterministic result or escaped its isolated checkpoint");
+                var recordedDeath = fatalResult.Event.UnitLifeEvents.Single(value => value.UnitId == 2 && value.IsDead);
+                Check(!ReferenceEquals(liveDeath, recordedDeath) && liveDeath.Hp == recordedDeath.Hp,
+                    "The live death snapshot must not share the receipt whose timing is finalized later");
+            }
+            var heldFatalViews = new OfficialBattleSkillEntityPlayback();
+            using (var heldFatal = new OfficialBattleLiveImpactSession(fatalCp,
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), heldFatalViews, 0, 1,
+                observeUnitLives: true))
+            {
+                bool StartFatal(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = new EcEntityIdentifier(94); return true; }
+                Check(SpinWait.SpinUntil(() => { heldFatal.Pump(0f, StartFatal); return heldFatalViews.Selection != null; }, 20000),
+                    "The canceled fatal fixture did not reach its native hit");
+                var hit = heldFatalViews.Selection.Targets.Single(value => value.TargetId == 2);
+                heldFatalViews.Arrive(hit.HasScopeIndex ? hit.ScopeIndex : -1);
+                Check(heldFatal.PendingUnitLife?.Event.IsDead == true && !heldFatal.IsCompleted
+                    && heldFatalViews.Damages == 1 && FightBattleCheckpointSerializer.Save(fatalCp) == beforeFatal,
+                    "An unhandled death must hold the worker without publishing partial state");
+                heldFatal.Dispose();
+                Check(SpinWait.SpinUntil(() => heldFatal.IsCompleted, 20000)
+                    && FightBattleCheckpointSerializer.Save(fatalCp) == beforeFatal,
+                    "Canceling a held death must leave the committed checkpoint unchanged");
             }
             var freezeCp = FightBattleCheckpointSerializer.Load(beforeJump);
             var freezeActor = freezeCp.Units.Single(unit => unit.Id == 1);

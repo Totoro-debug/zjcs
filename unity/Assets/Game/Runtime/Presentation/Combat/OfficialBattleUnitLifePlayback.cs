@@ -61,6 +61,12 @@ namespace Zjcs.Presentation.Combat
                 if (!pending.Exists(other => other.Event.UnitId == item.Event.UnitId)) projected.Remove(item.Event.UnitId);
             }
         }
+        internal void ApplyLive(FightBattleUnitLifeEvent value)
+        {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+            DispatchDue();
+            apply(value);
+        }
         internal void Cancel(int id)
         {
             pending.RemoveAll(item => item.Event.UnitId == id);

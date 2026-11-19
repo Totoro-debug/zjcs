@@ -46,11 +46,12 @@ namespace Zjcs.Presentation.Combat
         public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted;
         public event Action<FightBattleStatusViewEvent> SecondsStatusChanged;
         public event Action<FightBattleStatusViewEvent> StatusViewChanged;
+        public event Action<FightBattleUnitLifeEvent> UnitLifeChanged;
         public bool TryAdvanceStatusSeconds(double seconds, out System.Threading.Tasks.Task<bool> completion)
         { completion = null; return false; }
         public OfficialBattleLiveImpactSession(FightBattleCheckpoint checkpoint,
             Func<FightBattleCheckpoint, FightBattleExecutor> restore, OfficialBattleSkillEntityPlayback views,
-            int sequence, int counter, bool observeMovements = false, bool observeStatusViews = false)
+            int sequence, int counter, bool observeMovements = false, bool observeStatusViews = false, bool observeUnitLives = false)
         { if (!observeMovements) throw new InvalidOperationException("Movement observation was not enabled."); Last = this; }
         public bool Pump(float elapsed, StartCast cast, Action<FightBattleDamageEvent> after,
             StartMovement move, StartBlockedMovement blocked, Func<FightBattleDamageEvent, bool> before)

@@ -6,6 +6,12 @@ using Zjcs.Presentation.Combat;
 
 public static class BattleDeathForbiddenRegression
 {
+    private sealed class LifeObserver : IFightBattleImpactGate, IFightBattleUnitLifeObserver
+    {
+        public readonly List<FightBattleUnitLifeEvent> Events = new List<FightBattleUnitLifeEvent>();
+        public void AwaitImpact(FightBattlePendingImpact impact) { }
+        public void UnitLifeChanged(FightBattleUnitLifeEvent transition) => Events.Add(transition);
+    }
     private static void Check(bool condition, string message)
     { if (!condition) throw new InvalidOperationException(message); }
 
@@ -121,10 +127,14 @@ public static class BattleDeathForbiddenRegression
             };
         };
         var runner = FightBattleExecutor.Begin(cp, formula, settlement, catalog, items);
+        var observer = new LifeObserver(); runner.ImpactGate = observer;
         var firstStep = runner.Step(0, 1).Event;
         Check(firstStep.HasUnitLifeEvents, "A new step did not publish life receipt capability.");
         var deaths = firstStep.UnitLifeEvents.Where(e => e.UnitId == 2).ToArray();
         Check(deaths.Length == (instant ? 0 : 1), "Raw hit HP produced a false death before immediate revival.");
+        var liveDeaths = observer.Events.Where(e => e.UnitId == 2).ToArray();
+        Check(liveDeaths.Length == deaths.Length && (instant || liveDeaths[0].IsDead && liveDeaths[0].Hp == 0
+            && !ReferenceEquals(liveDeaths[0], deaths[0])), "Live death notification diverged from the confirmed receipt.");
         if (!instant)
             Check(deaths[0].IsDead && deaths[0].BeforeHp == 10 && deaths[0].Hp == 0
                 && deaths[0].MaxHp == victim.MaxHp && deaths[0].Delay > 0
@@ -141,6 +151,8 @@ public static class BattleDeathForbiddenRegression
         string first = FightBattleCheckpointSerializer.Save(cp);
         Check(runner.Step(0, 1).Replayed && FightBattleCheckpointSerializer.Save(cp) == first,
             "Receipt replay repeated death settlement.");
+        Check(observer.Events.Count(e => e.UnitId == 2) == deaths.Length,
+            "Receipt replay duplicated a live life transition.");
         if (instant) return first;
 
         if (restore)
@@ -171,10 +183,15 @@ public static class BattleDeathForbiddenRegression
                 "Revival failed to clear only death before status-start consumers.");
         };
         runner = FightBattleExecutor.Restore(cp, formula, settlement, catalog, items);
+        observer = new LifeObserver(); runner.ImpactGate = observer;
         var nextStep = runner.Step(0, 2).Event;
         var revivals = nextStep.UnitLifeEvents.Where(e => e.UnitId == 2).ToArray();
         Check(revivals.Length == 1 && !revivals[0].IsDead && revivals[0].BeforeHp == 0 && revivals[0].Hp == 1,
             "Later official BackToLife did not publish one confirmed positive-HP transition.");
+        var liveRevivals = observer.Events.Where(e => e.UnitId == 2).ToArray();
+        Check(liveRevivals.Length == 1 && !liveRevivals[0].IsDead && liveRevivals[0].Hp == 1
+            && !ReferenceEquals(liveRevivals[0], revivals[0]),
+            "Later BackToLife did not publish one independent live revival notification.");
         Check(revived && victim.Hp == 1 && marker.StackCount == 4,
             "Next-step revival lost the preserved status state.");
         return FightBattleCheckpointSerializer.Save(cp);

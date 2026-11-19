@@ -30,8 +30,10 @@ namespace Zjcs.Combat.Official {
  public class FightBattleSettledImpact {public bool IsStatusResolution;public FightBattlePendingImpact Impact;public FightBattleDamageEvent Damage;}
  public class FightBattleCompletedCast {public FightBattleSkillCastEvent Cast;}
  public class FightBattleStatusViewEvent {}
+ public class FightBattleUnitLifeEvent {}
  public class FightBattleSecondsStatusNotice {public FightBattleStatusViewEvent Event;}
  public class FightBattleStatusViewNotice {public FightBattleStatusViewEvent Event;}
+ public class FightBattleUnitLifeNotice {public FightBattleUnitLifeEvent Event;}
  public class FightBattleImpactLatch {
   public static FightBattleImpactLatch Last;public FightBattlePreparedMovement Pending;public FightBattlePreparedCast PendingCast;public FightBattleSelectedHit PendingSelection;public FightBattleSecondsStatusNotice PendingStatus;public FightBattleStatusViewNotice PendingView;public FightBattleSettledImpact PendingResult;public FightBattleCompletedCast PendingCompletion;public int Completions,CastCompletions,ViewCompletions,Records,Waits;public bool Arrived,Disposed;public FightBattleMovementEvent LastContact;
   private object active;private readonly Stack<object> suspended=new Stack<object>();
@@ -44,6 +46,8 @@ namespace Zjcs.Combat.Official {
   public void CompleteSecondsStatus(FightBattleSecondsStatusNotice v,out long revision){Finished(v);revision=1;}
   public bool TryTakeStatusView(out FightBattleStatusViewNotice v){v=PendingView;PendingView=null;Taken(v);return v!=null;}
   public void CompleteStatusView(FightBattleStatusViewNotice v,out long revision){Finished(v);ViewCompletions++;revision=1;}
+  public bool TryTakeUnitLife(out FightBattleUnitLifeNotice v){v=null;return false;}
+  public void CompleteUnitLife(FightBattleUnitLifeNotice v,out long revision){Finished(v);revision=1;}
   public bool TryTakePreparation(out FightBattlePreparedCast v){v=PendingCast;PendingCast=null;Taken(v);return v!=null;}
   public void CompletePreparation(FightBattlePreparedCast x,out long revision){Finished(x);revision=1;}
   public bool TryTakeMovement(out FightBattlePreparedMovement v){v=Pending;Pending=null;Taken(v);return v!=null;}
@@ -60,7 +64,7 @@ namespace Zjcs.Combat.Official {
  }
  public class FightBattleIsolatedStep:IDisposable {
   public readonly FightBattleImpactLatch Latch=new FightBattleImpactLatch();public bool IsCompleted;
-  public FightBattleIsolatedStep(FightBattleCheckpoint c,Func<FightBattleCheckpoint,FightBattleExecutor> restore,int s,int n,bool observe,bool observeStatusViews){}
+  public FightBattleIsolatedStep(FightBattleCheckpoint c,Func<FightBattleCheckpoint,FightBattleExecutor> restore,int s,int n,bool observe,bool observeStatusViews,bool observeUnitLives){}
   public bool TryAdvanceStatusSeconds(double s,out System.Threading.Tasks.Task<bool> task){task=null;return false;}
   public bool TryTakeCompleted(out FightBattleExecutor e,out FightBattleExecutionResult r){e=null;r=null;return false;}
   public void Dispose(){Latch.Disposed=true;}

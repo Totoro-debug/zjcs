@@ -113,9 +113,11 @@ namespace Zjcs.Presentation.Combat
             if (unitTransform == null) throw new ArgumentNullException(nameof(unitTransform));
             Transform Resolve(int id) => gridViews?.TryGetTransform(id) ?? unitTransform(id);
             var driver = new OfficialBattleLiveGraphDriver(checkpoint, restore, entityViews,
-                catalog.ContainsSkill, Resolve, petTransform, damageShown, costShown, observeStatusViews: statusViews != null);
+                catalog.ContainsSkill, Resolve, petTransform, damageShown, costShown, observeStatusViews: statusViews != null,
+                observeUnitLives: unitLife != null);
             if (airComboViews != null) driver.SecondsStatusChanged += airComboViews.ApplySecondsStatus;
             if (statusViews != null) driver.StatusViewChanged += statusViews.ApplyLiveStatus;
+            if (unitLife != null) driver.UnitLifeChanged += unitLife.ApplyLive;
             liveDriver = driver;
             driver.Disposed += () => { if (ReferenceEquals(liveDriver, driver)) liveDriver = null; };
             return driver;

@@ -114,4 +114,10 @@ namespace Zjcs.Combat.Official
     {
         void StatusViewChanged(FightBattleStatusViewEvent transition);
     }
+
+    /// <summary>Receives a confirmed death or revival after the hit's immediate effects.</summary>
+    public interface IFightBattleUnitLifeObserver
+    {
+        void UnitLifeChanged(FightBattleUnitLifeEvent transition);
+    }
 }

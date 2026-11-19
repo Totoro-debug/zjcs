@@ -44,15 +44,21 @@ namespace Zjcs.Combat.Official
                 RegisterUnitLife(unit);
                 return;
             }
+            FightBattleUnitLifeEvent transition = null;
             if (before.Dead != dead)
-                unitLifeEvents.Add(new PendingUnitLife {
-                    Event = new FightBattleUnitLifeEvent { UnitId = unit.Id, IsDead = dead,
+            {
+                transition = new FightBattleUnitLifeEvent { UnitId = unit.Id, IsDead = dead,
                         BeforeHp = before.Hp, BeforeMaxHp = before.MaxHp, Hp = unit.Hp, MaxHp = unit.MaxHp,
-                        Delay = Math.Max(0f, unitLifeTimeOverride ?? gridViewTimeOverride ?? movementStartContext?.StatusStartTime ?? 0f) },
-                    Cast = gridViewCast });
+                        Delay = Math.Max(0f, unitLifeTimeOverride ?? gridViewTimeOverride ?? movementStartContext?.StatusStartTime ?? 0f) };
+                unitLifeEvents.Add(new PendingUnitLife { Event = transition, Cast = gridViewCast });
+            }
             before.Dead = dead;
             before.Hp = unit.Hp;
             before.MaxHp = unit.MaxHp;
+            if (transition != null && ImpactGate is IFightBattleUnitLifeObserver observer)
+                observer.UnitLifeChanged(new FightBattleUnitLifeEvent { UnitId = transition.UnitId,
+                    IsDead = transition.IsDead, BeforeHp = transition.BeforeHp, BeforeMaxHp = transition.BeforeMaxHp,
+                    Hp = transition.Hp, MaxHp = transition.MaxHp, Delay = transition.Delay });
         }
 
         private void CompleteUnitLifeEvents(FightBattleStepEvent result)
