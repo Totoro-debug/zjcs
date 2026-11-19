@@ -563,6 +563,76 @@ namespace Zjcs.Presentation.Combat
                     && FightBattleCheckpointSerializer.Save(nestedCp) == beforeNested,
                     "Canceling a nested recovery changed the committed checkpoint");
             }
+            var freezeCp = FightBattleCheckpointSerializer.Load(beforeJump);
+            var freezeActor = freezeCp.Units.Single(unit => unit.Id == 1);
+            var freezeTarget = freezeCp.Units.Single(unit => unit.Id == 2);
+            freezeTarget.X = freezeActor.X + 1; freezeTarget.Y = freezeActor.Y;
+            freezeActor.Skills.Clear(); freezeActor.SkillState.Slots.Clear();
+            var freezeSkill = catalog.CreateSkill(10900, 0, 10035, 2, 20, 1,
+                catalog.CalculateSkillProps(10900, 2, 20, 1).Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
+            freezeSkill.LimitedTimes = 1; freezeActor.Skills.Add(freezeSkill); freezeActor.SkillState.Slots.Add(catalog.CreateSkillSlot(freezeSkill, 0));
+            FightBattleCheckpoint freezeBaseline = null;
+            for (int attempt = 0; attempt < 64; attempt++)
+            {
+                var candidate = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(freezeCp));
+                candidate.RandomSeed = 73 + attempt * 1234567;
+                FightBattleExecutor.Restore(candidate, formula, new FightDamageSettlement(), catalog, items).Step(0, 1);
+                if (!candidate.Units.Single(unit => unit.Id == 2).Statuses.Any(status => status.ClassId == 24215)) continue;
+                freezeCp.RandomSeed = 73 + attempt * 1234567; freezeBaseline = candidate; break;
+            }
+            Check(freezeBaseline != null, "The live freeze fixture could not select its original status result");
+            string beforeFreeze = FightBattleCheckpointSerializer.Save(freezeCp);
+            var freezeViews = new OfficialBattleSkillEntityPlayback();
+            using (var freezeSession = new OfficialBattleLiveImpactSession(freezeCp,
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), freezeViews, 0, 1,
+                observeStatusViews: true))
+            {
+                int hostThread = Environment.CurrentManagedThreadId, notices = 0;
+                FightBattleStatusViewEvent liveFreeze = null;
+                freezeSession.StatusViewChanged += transition => {
+                    if (transition.Kind != FightBattleStatusViewEventKind.Start || transition.Status.ClassId != 24215) return;
+                    Check(Environment.CurrentManagedThreadId == hostThread && freezeViews.Damages == 1
+                        && transition.OwnerId == 2 && transition.Status.CreatorId == 1
+                        && !freezeCp.Units.Single(unit => unit.Id == 2).Statuses.Any(status => status.ClassId == 24215),
+                        "The freeze view must reach the presentation thread at the actual hit without modifying the committed checkpoint");
+                    liveFreeze = transition; notices++;
+                };
+                bool StartFreeze(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = new EcEntityIdentifier(91); return true; }
+                Check(SpinWait.SpinUntil(() => { freezeSession.Pump(0f, StartFreeze); return freezeViews.Selection != null; }, 20000)
+                    && notices == 0 && freezeViews.Damages == 0, "The freeze view preceded its selected hit");
+                var hit = freezeViews.Selection.Targets.Single(target => target.TargetId == 2);
+                freezeViews.Arrive(hit.HasScopeIndex ? hit.ScopeIndex : -1);
+                FightBattleExecutionResult freezeResult = null;
+                Check(SpinWait.SpinUntil(() => { freezeSession.Pump(0f, StartFreeze); return freezeSession.IsCompleted; }, 20000)
+                    && notices == 1 && freezeSession.TryTakeCompleted(out _, out freezeResult)
+                    && FightBattleCheckpointSerializer.Save(freezeResult.Checkpoint) == FightBattleCheckpointSerializer.Save(freezeBaseline)
+                    && FightBattleCheckpointSerializer.Save(freezeCp) == beforeFreeze,
+                    "The live status view must preserve the original result and isolated checkpoint");
+                var recordedFreeze = freezeResult.Event.StatusViewEvents.Single(value => value.Kind == FightBattleStatusViewEventKind.Start
+                    && value.Status.ClassId == 24215 && value.OwnerId == 2);
+                Check(!ReferenceEquals(liveFreeze, recordedFreeze) && liveFreeze.Status.InstanceId == recordedFreeze.Status.InstanceId,
+                    "The live status snapshot must not share the completed receipt whose timing is finalized later");
+            }
+            var canceledFreezeViews = new OfficialBattleSkillEntityPlayback();
+            using (var canceledFreeze = new OfficialBattleLiveImpactSession(freezeCp,
+                copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items), canceledFreezeViews, 0, 1,
+                observeStatusViews: true))
+            {
+                bool StartFreeze(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = new EcEntityIdentifier(92); return true; }
+                Check(SpinWait.SpinUntil(() => { canceledFreeze.Pump(0f, StartFreeze); return canceledFreezeViews.Selection != null; }, 20000),
+                    "The canceled status fixture did not reach its actual hit");
+                var hit = canceledFreezeViews.Selection.Targets.Single(target => target.TargetId == 2);
+                canceledFreezeViews.Arrive(hit.HasScopeIndex ? hit.ScopeIndex : -1);
+                Check(canceledFreeze.PendingStatusView?.Event.Status.ClassId == 24215 && !canceledFreeze.IsCompleted
+                    && canceledFreezeViews.Damages == 1 && FightBattleCheckpointSerializer.Save(freezeCp) == beforeFreeze,
+                    "An unhandled status view must hold the worker without publishing partial state");
+                canceledFreeze.Dispose();
+                Check(SpinWait.SpinUntil(() => canceledFreeze.IsCompleted, 20000)
+                    && FightBattleCheckpointSerializer.Save(freezeCp) == beforeFreeze,
+                    "Canceling a held status view must leave the committed checkpoint unchanged");
+            }
             return "Live impact session passed: deferred start, same-frame impact, HP handoff, lifetime, isolation and actual status resolution.";
         }
     }

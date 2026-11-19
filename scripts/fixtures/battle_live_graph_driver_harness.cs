@@ -45,11 +45,12 @@ namespace Zjcs.Presentation.Combat
         public FightBattleSettledImpact PendingSettlement => null;
         public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted;
         public event Action<FightBattleStatusViewEvent> SecondsStatusChanged;
+        public event Action<FightBattleStatusViewEvent> StatusViewChanged;
         public bool TryAdvanceStatusSeconds(double seconds, out System.Threading.Tasks.Task<bool> completion)
         { completion = null; return false; }
         public OfficialBattleLiveImpactSession(FightBattleCheckpoint checkpoint,
             Func<FightBattleCheckpoint, FightBattleExecutor> restore, OfficialBattleSkillEntityPlayback views,
-            int sequence, int counter, bool observeMovements = false)
+            int sequence, int counter, bool observeMovements = false, bool observeStatusViews = false)
         { if (!observeMovements) throw new InvalidOperationException("Movement observation was not enabled."); Last = this; }
         public bool Pump(float elapsed, StartCast cast, Action<FightBattleDamageEvent> after,
             StartMovement move, StartBlockedMovement blocked, Func<FightBattleDamageEvent, bool> before)

@@ -31,16 +31,19 @@ namespace Zjcs.Combat.Official {
  public class FightBattleCompletedCast {public FightBattleSkillCastEvent Cast;}
  public class FightBattleStatusViewEvent {}
  public class FightBattleSecondsStatusNotice {public FightBattleStatusViewEvent Event;}
+ public class FightBattleStatusViewNotice {public FightBattleStatusViewEvent Event;}
  public class FightBattleImpactLatch {
-  public static FightBattleImpactLatch Last;public FightBattlePreparedMovement Pending;public FightBattlePreparedCast PendingCast;public FightBattleSelectedHit PendingSelection;public FightBattleSecondsStatusNotice PendingStatus;public FightBattleSettledImpact PendingResult;public FightBattleCompletedCast PendingCompletion;public int Completions,CastCompletions,Records,Waits;public bool Arrived,Disposed;public FightBattleMovementEvent LastContact;
+  public static FightBattleImpactLatch Last;public FightBattlePreparedMovement Pending;public FightBattlePreparedCast PendingCast;public FightBattleSelectedHit PendingSelection;public FightBattleSecondsStatusNotice PendingStatus;public FightBattleStatusViewNotice PendingView;public FightBattleSettledImpact PendingResult;public FightBattleCompletedCast PendingCompletion;public int Completions,CastCompletions,ViewCompletions,Records,Waits;public bool Arrived,Disposed;public FightBattleMovementEvent LastContact;
   private object active;private readonly Stack<object> suspended=new Stack<object>();
-  public object CurrentWorkerHandoff => (object)PendingCast??Pending??(object)PendingSelection??PendingStatus??(object)PendingResult??PendingCompletion??active;
+  public object CurrentWorkerHandoff => (object)PendingCast??Pending??(object)PendingSelection??PendingStatus??(object)PendingView??(object)PendingResult??PendingCompletion??active;
   private void Taken(object value){if(value==null)return;if(active!=null)suspended.Push(active);active=value;}
   private void Finished(object value){if(!ReferenceEquals(active,value))throw new InvalidOperationException("Wrong active handoff");active=suspended.Count>0?suspended.Pop():null;}
   public FightBattleImpactLatch(){Last=this;}
   public bool TryTake(out FightBattlePendingImpact v){v=null;return false;}
   public bool TryTakeSecondsStatus(out FightBattleSecondsStatusNotice v){v=PendingStatus;PendingStatus=null;Taken(v);return v!=null;}
   public void CompleteSecondsStatus(FightBattleSecondsStatusNotice v,out long revision){Finished(v);revision=1;}
+  public bool TryTakeStatusView(out FightBattleStatusViewNotice v){v=PendingView;PendingView=null;Taken(v);return v!=null;}
+  public void CompleteStatusView(FightBattleStatusViewNotice v,out long revision){Finished(v);ViewCompletions++;revision=1;}
   public bool TryTakePreparation(out FightBattlePreparedCast v){v=PendingCast;PendingCast=null;Taken(v);return v!=null;}
   public void CompletePreparation(FightBattlePreparedCast x,out long revision){Finished(x);revision=1;}
   public bool TryTakeMovement(out FightBattlePreparedMovement v){v=Pending;Pending=null;Taken(v);return v!=null;}
@@ -57,7 +60,7 @@ namespace Zjcs.Combat.Official {
  }
  public class FightBattleIsolatedStep:IDisposable {
   public readonly FightBattleImpactLatch Latch=new FightBattleImpactLatch();public bool IsCompleted;
-  public FightBattleIsolatedStep(FightBattleCheckpoint c,Func<FightBattleCheckpoint,FightBattleExecutor> restore,int s,int n,bool observe){}
+  public FightBattleIsolatedStep(FightBattleCheckpoint c,Func<FightBattleCheckpoint,FightBattleExecutor> restore,int s,int n,bool observe,bool observeStatusViews){}
   public bool TryAdvanceStatusSeconds(double s,out System.Threading.Tasks.Task<bool> task){task=null;return false;}
   public bool TryTakeCompleted(out FightBattleExecutor e,out FightBattleExecutionResult r){e=null;r=null;return false;}
   public void Dispose(){Latch.Disposed=true;}
@@ -306,6 +309,23 @@ namespace Zjcs.Presentation.Combat {
      views.HitGraph(cast,selection,0,"AtkEffect");
      Check(OfficialBattleImpactViewBridge.Arrivals.Count==9,"The original pull attack effect did not reach all nine scopes once");
      views.HitGraph(cast,selection,0,"AtkEffect");Check(OfficialBattleImpactViewBridge.Arrivals.Count==9,"Pull attack effect repeated a scope arrival");
+    }
+   }
+   {
+    using(var session=NewSession()){
+     var transition=new FightBattleStatusViewEvent();int delivered=0;
+     session.StatusViewChanged+=value=>{Check(ReferenceEquals(value,transition),"The live status snapshot changed during handoff");delivered++;};
+     FightBattleImpactLatch.Last.PendingView=new FightBattleStatusViewNotice{Event=transition};
+     Check(session.Pump(0,StartCast)&&delivered==1&&FightBattleImpactLatch.Last.ViewCompletions==1,
+      "A live status transition must be presented once before its rule worker resumes");
+    }
+    using(var session=NewSession()){
+     FightBattleImpactLatch.Last.PendingView=new FightBattleStatusViewNotice{Event=new FightBattleStatusViewEvent()};
+     Check(!session.Pump(0,StartCast)&&session.PendingStatusView!=null&&FightBattleImpactLatch.Last.ViewCompletions==0,
+      "An unhandled live status must remain held until a presentation listener is available");
+     int delivered=0;session.StatusViewChanged+=_=>delivered++;
+     Check(session.Pump(0,StartCast)&&delivered==1&&FightBattleImpactLatch.Last.ViewCompletions==1,
+      "The held live status must resume once a presentation listener is available");
     }
    }
    {

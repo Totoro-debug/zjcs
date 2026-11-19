@@ -744,6 +744,7 @@ namespace Zjcs.Editor.Combat
                     thornParticle.Pause(false);
                 };
                 var thornHits = new List<(int Target, int Frame)>();
+                int thornStatusStarts = 0;
                 cameraView.transform.position = new Vector3(7, 7, -20);
                 using (var thornViews = new OfficialBattleSkillEntityPlayback(thornRoot, new OfficialBattleGridMapper(thornRoot, grid),
                     thornScope, id => thornDisplay.FirstOrDefault(value => value.Id == id)))
@@ -752,6 +753,10 @@ namespace Zjcs.Editor.Combat
                     thornViews.BindDamageUI(thornRoot, 0);
                     foreach (var pair in thornBodies) thornViews.EnsureUnit(pair.Key, pair.Value);
                     Transform ThornBody(int id) => thornBodies.TryGetValue(id, out var body) ? body : null;
+                    thornGraph.BindGridEntities(thornRoot, new OfficialBattleGridMapper(thornRoot, grid), thornCheckpoint, ThornBody, _ => true);
+                    var thornVisualExecutor = FightBattleExecutor.Restore(FightBattleCheckpointSerializer.Load(thornCommitted),
+                        formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                    thornGraph.BindAirCombo(thornVisualExecutor, thornRoot, ThornBody);
                     void ThornDamage(FightBattleDamageEvent damage, FightBattleUnitState projected)
                     {
                         Require(damage.SkillEntityId == 10570 && damage.HitEntityId == 10571 && damage.DamageEntityId == 10572
@@ -766,20 +771,28 @@ namespace Zjcs.Editor.Combat
                         if (dx == 1 && thornDirection[3] == 0 && thornHits.Count == 5) Capture("iron-thorn-native-impact.png", false);
                         thornDisplay[Array.FindIndex(thornDisplay, value => value.Id == damage.TargetId)] = projected;
                     }
-                    using (var thornDriver = new OfficialBattleLiveGraphDriver(thornCheckpoint, copy => FightBattleExecutor.Restore(copy,
-                        formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), thornViews,
-                        id => id == 10570, ThornBody, null, ThornDamage))
+                    using (var thornDriver = thornGraph.CreateLiveStep(thornCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                        formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), ThornBody, null, ThornDamage))
                     {
-                        thornDriver.SecondsStatusChanged += _ => { };
+                        thornDriver.StatusViewChanged += transition => {
+                            if (transition.Kind != FightBattleStatusViewEventKind.Start || transition.Status.ClassId != 24020) return;
+                            Require(thornHits.Any(hit => hit.Target == transition.OwnerId && hit.Frame == Time.frameCount)
+                                && thornRoot.GetComponentsInChildren<Zjcs.Official.BattleStatusPlayables.MyFightStatus>(true).Any(status => {
+                                    var entity = status.GetComponent<MyEntity>();
+                                    return entity && entity.Entity != null && entity.ClassId == 24020
+                                        && status.Context != null && status.Context.Owner == thornBodies[transition.OwnerId].gameObject;
+                                }), "The original root status view must start on the affected target in its actual impact frame.");
+                            thornStatusStarts++;
+                        };
                         thornDisplay = thornCheckpoint.Units.Select(value => thornDriver.DisplayUnit(value.Id)).ToArray();
                         float thornDeadline = Time.realtimeSinceStartup + 15f;
                         while (!thornDriver.IsCompleted && Time.realtimeSinceStartup < thornDeadline)
                         {
-                            thornDriver.Pump(Time.deltaTime); thornViews.Tick(Time.deltaTime); thornScope.LateTick();
+                            thornDriver.Pump(Time.deltaTime); thornGraph.Tick(Time.deltaTime); thornGraph.LateTick();
                             if (thornParticle && !thornResumed && ++thornPausedFrames >= 8)
                             {
-                                Require(thornParticle.isPaused && thornHits.Count == 0,
-                                    "A paused iron thorn particle cannot settle damage.");
+                                Require(thornParticle.isPaused && thornHits.Count == 0 && thornStatusStarts == 0,
+                                    "A paused iron thorn particle cannot settle damage or show its root state.");
                                 if (thornDirection[3] == 1) thornParticle.Simulate(.8f, false, true, false);
                                 thornParticle.Play(false); thornResumed = true;
                             }
@@ -788,6 +801,7 @@ namespace Zjcs.Editor.Combat
                         Require(thornDriver.TryTakeCompleted(out var executor, out var result) && thornResumed && thornHits.Count == 5
                             && thornHits.Select(value => value.Target).Distinct().Count() == 5
                             && thornHits.Select(value => value.Frame).Distinct().Count() == 1
+                            && thornStatusStarts == thornBaseline.Units.Skip(1).Count(unit => unit.Statuses.Any(status => status.ClassId == 24020))
                             && FightBattleCheckpointSerializer.Save(thornCheckpoint) == thornCommitted
                             && FightBattleCheckpointSerializer.Save(result.Checkpoint) == FightBattleCheckpointSerializer.Save(thornBaseline),
                             "The iron thorns must preserve their simultaneous hits, root results and original checkpoint.");

@@ -28,7 +28,7 @@ namespace Zjcs.Presentation.Combat
             Func<FightBattleCheckpoint, FightBattleExecutor> restore, OfficialBattleSkillEntityPlayback views,
             Func<int, bool> hasSkill, Func<int, Transform> body, Func<int, Transform> pet,
             Action<FightBattleDamageEvent, FightBattleUnitState> damageShown,
-            Action<FightBattleSkillCastEvent, FightBattleUnitState> costShown = null)
+            Action<FightBattleSkillCastEvent, FightBattleUnitState> costShown = null, bool observeStatusViews = false)
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
             this.views = views ?? throw new ArgumentNullException(nameof(views));
@@ -40,7 +40,7 @@ namespace Zjcs.Presentation.Combat
             health = new FightBattleLiveHealthProjection(checkpoint);
             views.BindDamageUITargets(body);
             session = new OfficialBattleLiveImpactSession(checkpoint, restore, views,
-                checkpoint.Sequence, checkpoint.Counter + 1, observeMovements: true);
+                checkpoint.Sequence, checkpoint.Counter + 1, observeMovements: true, observeStatusViews: observeStatusViews);
         }
 
         public bool IsCompleted => session.IsCompleted;
@@ -51,6 +51,8 @@ namespace Zjcs.Presentation.Combat
         public event Action<FightBattleMovementEvent> BlockedContact;
         public event Action<FightBattleStatusViewEvent> SecondsStatusChanged
         { add { session.SecondsStatusChanged += value; } remove { session.SecondsStatusChanged -= value; } }
+        public event Action<FightBattleStatusViewEvent> StatusViewChanged
+        { add { session.StatusViewChanged += value; } remove { session.StatusViewChanged -= value; } }
         public bool TryAdvanceStatusSeconds(double seconds, out Task<bool> completion)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleLiveGraphDriver));

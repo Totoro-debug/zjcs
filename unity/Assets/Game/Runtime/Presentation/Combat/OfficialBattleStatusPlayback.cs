@@ -181,6 +181,17 @@ namespace Zjcs.Presentation.Combat
             }
         }
 
+        /// <summary>Apply a transition captured while its live rule step is held.</summary>
+        internal void ApplyLiveStatus(FightBattleStatusViewEvent value)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleStatusPlayback));
+            if (value?.Status == null) throw new ArgumentNullException(nameof(value));
+            if (!prefabs.ContainsKey(value.Status.ClassId)) return;
+            DispatchDue();
+            pending.Insert(0, new Scheduled { Event = value, Remaining = 0f });
+            DispatchDue();
+        }
+
         public void AdvanceTimers(float elapsed) { foreach (var value in pending) value.Remaining -= elapsed; }
 
         public void DispatchDue()

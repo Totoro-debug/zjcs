@@ -46,11 +46,15 @@ namespace Zjcs.Combat.Official
                 && (!statusViewSnapshots.TryGetValue(key, out var previous) || snapshot.SameView(previous))) return;
             if (kind == FightBattleStatusViewEventKind.End) statusViewSnapshots.Remove(key);
             else statusViewSnapshots[key] = snapshot;
+            float delay = Math.Max(0f, gridViewTimeOverride ?? movementStartContext?.StatusStartTime ?? 0f);
             statusViewEvents.Add(new PendingStatusViewEvent {
-                Event = new FightBattleStatusViewEvent { Kind = kind, OwnerId = owner.Id, Status = snapshot,
-                    Delay = Math.Max(0f, gridViewTimeOverride ?? movementStartContext?.StatusStartTime ?? 0f) },
+                Event = new FightBattleStatusViewEvent { Kind = kind, OwnerId = owner.Id, Status = snapshot, Delay = delay },
                 Cast = gridViewCast
             });
+            // The completed receipt later gains its enclosing cast offset. The live
+            // observer receives a separate transition while this state is current.
+            (ImpactGate as IFightBattleStatusViewObserver)?.StatusViewChanged(new FightBattleStatusViewEvent {
+                Kind = kind, OwnerId = owner.Id, Status = snapshot, Delay = delay });
         }
 
         private void CompleteStatusViewEvents(FightBattleStepEvent result)

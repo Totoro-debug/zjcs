@@ -108,4 +108,10 @@ namespace Zjcs.Combat.Official
     {
         void ImpactStatusResolved(FightBattlePendingImpact impact, FightBattleDamageEvent damage);
     }
+
+    /// <summary>Receives a character-status view transition at its actual local rule boundary.</summary>
+    public interface IFightBattleStatusViewObserver
+    {
+        void StatusViewChanged(FightBattleStatusViewEvent transition);
+    }
 }
