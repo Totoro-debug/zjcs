@@ -22,6 +22,11 @@ namespace Zjcs.Presentation.Home
         public static IEnumerator Exercise(string output, Func<string, IEnumerator> capture,
             Func<Selectable, IEnumerator> click)
         {
+            if (Environment.GetEnvironmentVariable("ZJCS_BLAZING_HEART_FLOW") == "1")
+            {
+                yield return SkillBlazingHeartValidation.Exercise(output, capture, click);
+                yield break;
+            }
             string mode = Environment.GetEnvironmentVariable("ZJCS_ACTIVE_LOADOUT_MODE") ?? "empty";
             Require(mode == "empty" || mode == "invalid" || mode == "mixed", "Unknown active loadout diagnostic.");
             AudioListener.volume = 0f;
