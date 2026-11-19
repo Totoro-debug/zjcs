@@ -26,6 +26,11 @@ namespace Zjcs.Official.BattleSkillPlayables
         void HitViewArrived(EcEntityIdentifier skillId, EcEntityIdentifier hitId,
             Pos2d position, int scopeIndex);
     }
+    // A local host can hold the original hit view until its native projectile arrives.
+    public interface IFightHitViewArrivalDeferrer
+    {
+        bool DeferHitView(EcEntityIdentifier skillId, EcEntityIdentifier hitId, System.Action resume);
+    }
     // Consumed original state only. The host supplies actual shared hit entities,
     // their original ordered scopes and their notifications at each transition.
     public abstract class FightHitBaseComponent : IEntityComponentInfoSource

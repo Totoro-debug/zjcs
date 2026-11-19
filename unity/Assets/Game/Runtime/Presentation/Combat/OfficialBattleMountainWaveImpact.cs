@@ -323,13 +323,13 @@ namespace Zjcs.Presentation.Combat
     }
 
     // The original track calls its trigger after moving the projectile to its endpoint.
-    internal sealed class OfficialBattleWaterProjectileImpact : MyPlayableTrigger
+    internal sealed class OfficialBattleProjectileImpact : MyPlayableTrigger
     {
         private MyPlayableTrack track;
         private MyPlayableTriggerTimeCfg trigger;
         private Action arrival;
 
-        internal static OfficialBattleWaterProjectileImpact Attach(MyPlayable playable, float delayDistFactor, Action arrival)
+        internal static OfficialBattleProjectileImpact Attach(MyPlayable playable, float delayDistFactor, Action arrival)
         {
             if (!(playable is MyPlayableTrack track) || !track.myApplyComponent || !track.myTarget
                 || track.myFixDuration || track.myTrackEndStopTime != 0f || track.myTrackTriggerList == null
@@ -337,7 +337,7 @@ namespace Zjcs.Presentation.Combat
             track.CalcInitialDurationSpd(out _, out float speed);
             if (speed <= 0f || float.IsNaN(delayDistFactor) || float.IsInfinity(delayDistFactor)
                 || Math.Abs(1f / speed - delayDistFactor) > .00001f) return null;
-            var observer = track.gameObject.AddComponent<OfficialBattleWaterProjectileImpact>();
+            var observer = track.gameObject.AddComponent<OfficialBattleProjectileImpact>();
             observer.track = track; observer.arrival = arrival;
             observer.trigger = new MyPlayableTriggerTimeCfg { myTime = 1f, myTrigger = observer };
             track.myTrackTriggerList.Add(observer.trigger);

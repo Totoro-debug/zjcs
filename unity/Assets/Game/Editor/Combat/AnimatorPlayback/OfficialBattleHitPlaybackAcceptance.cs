@@ -2800,6 +2800,120 @@ namespace Zjcs.Editor.Combat
                 auraScope.Dispose(); auraAppearance?.Dispose(); auraTargetAppearance?.Dispose(); Destroy(auraRoot.gameObject);
             }
 
+            // Fireball's shared explosion must wait for its own original projectile.
+            Vector3 fireballPreviousCamera = cameraView.transform.position;
+            foreach (var scenario in new[] { new[] { 1, 0, 3, 0 }, new[] { -1, 0, 1, 0 },
+                new[] { 0, 1, 2, 0 }, new[] { 0, -1, 0, 0 }, new[] { 1, 0, 3, 1 } })
+            {
+                int dx = scenario[0], dy = scenario[1]; bool cancel = scenario[3] != 0;
+                int centerX = 7 + 3 * dx, centerY = 7 + 3 * dy;
+                cameraView.transform.position = new Vector3(7 + 1.5f * dx, 7 + 1.5f * dy, fireballPreviousCamera.z);
+                var fireballUnits = new List<FightBattleUnitState> { LiveUnit(1, 1, 7) };
+                fireballUnits[0].Y = 7; fireballUnits[0].Direction = scenario[2];
+                for (int x = -1; x <= 1; x++) for (int y = -1; y <= 1; y++)
+                {
+                    var unit = LiveUnit(fireballUnits.Count + 1, 2, centerX + x); unit.Y = centerY + y; fireballUnits.Add(unit);
+                }
+                var fireballSkill = liveCatalog.CreateSkill(10800, 0, 10028, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(10800, 2, 20, 1)
+                        .Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+                fireballSkill.LimitedTimes = 1; fireballUnits[0].Skills.Add(fireballSkill);
+                fireballUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(fireballSkill, 0));
+                var fireballCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                fireballCheckpoint.Units.AddRange(fireballUnits);
+                var fireballWave = new FightBattleWaveState(); fireballWave.UnitIds.AddRange(fireballUnits.Skip(1).Select(unit => unit.Id));
+                fireballCheckpoint.Waves.Add(fireballWave);
+                FightBattleExecutor.Begin(fireballCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                var fireballDisplay = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(fireballCheckpoint)).Units.ToArray();
+                var fireballRoot = new GameObject("Fireball arrival acceptance").transform; fireballRoot.SetParent(root, false);
+                var fireballBodies = new Dictionary<int, Transform>();
+                foreach (var unit in fireballUnits)
+                {
+                    var body = new GameObject("Fireball unit " + unit.Id).transform; body.SetParent(fireballRoot, false);
+                    body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                    var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false;
+                    renderer.sharedMaterials = Array.Empty<Material>();
+                    body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                    fireballBodies.Add(unit.Id, body);
+                }
+                var fireballAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
+                    ? NativeJumpAppearanceFixture.Create(fireballBodies[1].gameObject) : null;
+                var fireballTargetAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
+                    ? NativeJumpAppearanceFixture.Create(fireballBodies[6].gameObject) : null;
+                var fireballScope = new OfflineBattleNativePlayableScope(fireballRoot, null);
+                Zjcs.Official.BattleTrackPlayables.MyPlayableTrack fireballTrack = null;
+                var fireballTargets = new HashSet<int>(); int explosionFrame = -1, fireballPausedFrames = 0;
+                bool fireballResumed = false, fireballStopped = false; float fireballPausedTime = 0f, trackSpeed = 0f;
+                fireballScope.NativePlayableStarted += (prefab, leaf) => {
+                    if (prefab.name == "playable_10801_SourceToHit" && leaf.name == "track")
+                    {
+                        fireballTrack = leaf as Zjcs.Official.BattleTrackPlayables.MyPlayableTrack;
+                        if (fireballTrack) { trackSpeed = fireballTrack.Speed; typeof(MyPlayable).GetProperty("Speed").SetValue(fireballTrack, 0f); }
+                    }
+                    if (prefab.name == "playable10801") explosionFrame = Time.frameCount;
+                };
+                using (var fireballViews = new OfficialBattleSkillEntityPlayback(fireballRoot,
+                    new OfficialBattleGridMapper(fireballRoot, grid), fireballScope,
+                    id => fireballDisplay.FirstOrDefault(value => value.Id == id)))
+                using (var fireballGraph = new OfficialBattleSkillGraphPlayback(
+                    OfficialBattleSkillGraphCatalog.TryLoadDefault(), fireballScope, fireballViews))
+                {
+                    fireballViews.BindDamageUI(fireballRoot, 0);
+                    foreach (var pair in fireballBodies) fireballViews.EnsureUnit(pair.Key, pair.Value);
+                    Transform FireballBody(int id) => fireballBodies.TryGetValue(id, out var value) ? value : null;
+                    void FireballDamage(FightBattleDamageEvent damage, FightBattleUnitState projected)
+                    {
+                        Require(!cancel && fireballResumed && fireballTrack && fireballTrack.myApplyComponent && fireballTrack.myTarget
+                            && Vector3.Distance(fireballTrack.myApplyComponent.transform.position, fireballTrack.myTarget.transform.position) < .01f
+                            && explosionFrame == Time.frameCount && damage.SkillEntityId == 10800 && damage.HitEntityId == 10801
+                            && damage.DamageEntityId == 10023 && damage.ElementType == 102 && fireballTargets.Add(damage.TargetId),
+                            "Fireball damage did not coincide with its original projectile and explosion.");
+                        fireballDisplay[Array.FindIndex(fireballDisplay, unit => unit.Id == damage.TargetId)] = projected;
+                        if (fireballTargets.Count == 1 && fireballAppearance != null)
+                            Capture("fireball-arrival-" + dx + "-" + dy + ".png", false);
+                    }
+                    using (var fireballDriver = new OfficialBattleLiveGraphDriver(fireballCheckpoint,
+                        copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()),
+                        fireballViews, id => id == 10800, FireballBody, null, FireballDamage))
+                    {
+                        fireballDriver.SecondsStatusChanged += _ => { };
+                        fireballDisplay = fireballCheckpoint.Units.Select(unit => fireballDriver.DisplayUnit(unit.Id)).ToArray();
+                        float fireballDeadline = Time.realtimeSinceStartup + 20f;
+                        while (!fireballDriver.IsCompleted && Time.realtimeSinceStartup < fireballDeadline)
+                        {
+                            fireballDriver.Pump(Time.deltaTime); fireballViews.Tick(Time.deltaTime); fireballScope.LateTick();
+                            if (fireballTrack && !fireballResumed && !fireballStopped)
+                            {
+                                fireballPausedFrames++; fireballPausedTime += Time.deltaTime;
+                                Require(fireballTargets.Count == 0 && explosionFrame < 0 && fireballTrack.Time == 0f,
+                                    "A paused fireball spawned its explosion or settled damage.");
+                                if (fireballPausedTime >= fireballTrack.GetDuration() + .05f)
+                                {
+                                    if (cancel) { fireballTrack.StopBeforeResetData(); fireballTrack.Stop(true); fireballStopped = true; }
+                                    else { typeof(MyPlayable).GetProperty("Speed").SetValue(fireballTrack, trackSpeed); fireballResumed = true; }
+                                }
+                            }
+                            if (fireballStopped && ++fireballPausedFrames >= 120) break;
+                            yield return null;
+                        }
+                        if (cancel) Require(fireballStopped && fireballTargets.Count == 0 && explosionFrame < 0 && !fireballDriver.IsCompleted,
+                            "Cancelled fireball spawned its explosion or settled damage.");
+                        else Require(fireballDriver.TryTakeCompleted(out _, out _) && fireballResumed && fireballTargets.Count == 9,
+                            "Fireball did not hit all nine original scope cells exactly once.");
+                        if (!cancel && fireballAppearance != null)
+                        {
+                            yield return null; fireballViews.Tick(Time.deltaTime); fireballScope.LateTick();
+                            Capture("fireball-explosion-" + dx + "-" + dy + ".png", false);
+                        }
+                    }
+                    Require(!fireballTrack || fireballTrack.myTrackTriggerList.Count == 0,
+                        "Fireball retained its temporary projectile observer.");
+                }
+                fireballScope.Dispose(); fireballAppearance?.Dispose(); fireballTargetAppearance?.Dispose(); Destroy(fireballRoot.gameObject);
+            }
+            cameraView.transform.position = fireballPreviousCamera;
+
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(1, 0), Delay = .8f });

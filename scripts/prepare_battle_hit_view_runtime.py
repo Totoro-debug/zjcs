@@ -193,6 +193,10 @@ def main():
     logging = block(text, '\t\telse\n\t\t{\n\t\t\tILogger logger = Logger;')
     text = text.replace(logging, '\t\telse\n\t\t{\n'
         '\t\t\tDebug.LogError($"[Fight] MyFightHitBase: start a inactive gameobject coroutine, classId:{mGridTransform.myEntity.ClassId}");\n\t\t}')
+    text = replace_once(text, '\t\t\tDoAfterDelay();',
+        '\t\t\tif (ViewServices is IFightHitViewArrivalDeferrer deferrer\n'
+        '\t\t\t\t&& deferrer.DeferHitView(Component.SkillId, Component.Entity.Id, DoAfterDelay)) yield break;\n'
+        '\t\t\tDoAfterDelay();')
     text = replace_once(text,
         '\t\tif ((Object)(object)myScopePlayable != (Object)null)\n\t\t{\n\t\t\t((MonoBehaviour)this).StartCoroutine(PlayScopePlayable());\n\t\t}',
         '\t\t(ViewServices as IFightHitViewArrivalObserver)?.HitViewArrived(\n'

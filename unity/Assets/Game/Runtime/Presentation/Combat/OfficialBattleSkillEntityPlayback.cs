@@ -15,7 +15,7 @@ using Zjcs.Offline.World.NativeMap14EntityLifecycle;
 namespace Zjcs.Presentation.Combat
 {
     /// <summary>Projects settled cast inputs into the original MyFightSkill lifecycle.</summary>
-    public sealed partial class OfficialBattleSkillEntityPlayback : IFightHitViewServices, IFightHitViewArrivalObserver, IServiceProvider, IECViewInjection, IDisposable
+    public sealed partial class OfficialBattleSkillEntityPlayback : IFightHitViewServices, IFightHitViewArrivalObserver, IFightHitViewArrivalDeferrer, IServiceProvider, IECViewInjection, IDisposable
     {
         private sealed class Grid : ECGridTransformData
         {
@@ -147,6 +147,28 @@ namespace Zjcs.Presentation.Combat
         /// <summary>An original hit-graph leaf started for its exact selected centre.</summary>
         public event Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, GameObject, MyPlayable>
             HitGraphPlayableStarted;
+
+        internal event Func<EcEntityIdentifier, EcEntityIdentifier, Action, bool> HitViewDeferralRequested;
+
+        bool IFightHitViewArrivalDeferrer.DeferHitView(EcEntityIdentifier skillId, EcEntityIdentifier hitId, Action resume)
+        {
+            var handlers = HitViewDeferralRequested;
+            if (handlers == null) return false;
+            foreach (Func<EcEntityIdentifier, EcEntityIdentifier, Action, bool> handler in handlers.GetInvocationList())
+                if (handler(skillId, hitId, resume)) return true;
+            return false;
+        }
+
+        internal bool TryGetHitIdentity(GameObject target, out EcEntityIdentifier id)
+        {
+            id = default;
+            if (!target || !target.TryGetComponent<MyEntity>(out var entity) || !receiptHits.TryGetOrigin(entity.Id, out _))
+                return false;
+            id = entity.Id;
+            return true;
+        }
+
+        internal bool HasLiveHit(EcEntityIdentifier id) => hitViews != null && hitViews.GetEntity(id) != null;
 
         void IFightHitViewArrivalObserver.HitViewArrived(EcEntityIdentifier skillId,
             EcEntityIdentifier hitId, Pos2d position, int scopeIndex)

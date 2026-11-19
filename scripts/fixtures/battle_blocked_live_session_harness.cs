@@ -6,7 +6,7 @@ using Zjcs.Official.StoryPlayables;
 using UnityEngine;
 
 namespace UnityEngine { public class GameObject { public string name; } }
-namespace Zjcs.Official.StoryPlayables { public class MyPlayable { public string name; } public struct EcEntityIdentifier { public int Value; } }
+namespace Zjcs.Official.StoryPlayables { public class MyPlayable { public string name; public UnityEngine.GameObject myTarget; } public struct EcEntityIdentifier { public int Value; } }
 namespace Zjcs.Combat.Official {
  public struct FightGridPoint {public int X,Y;public FightGridPoint(int x,int y){X=x;Y=y;}}
  public class FightBattleCheckpoint {public List<FightBattleUnitState> Units;}
@@ -17,7 +17,7 @@ namespace Zjcs.Combat.Official {
  public class FightBattleHitScopeEntry {public float Delay;public FightGridPoint Position;}
  public class FightBattleSkillCastPresentation {public float Duration;}
  public class FightBattleSkillCastEvent {public int SkillEntityId,ActorId;public FightBattleSkillCastPresentation Presentation;public List<FightBattleHitSelectionSnapshot> HitSelections;}
- public class FightBattleHitSelectionSnapshot {public int HitEntityId;public float Delay,DelayDistFactor;public List<TargetOccurrence> Targets;public class TargetOccurrence {public int EffectCenterIndex,ScopeIndex;public float ScopeDelay;public bool HasScopeIndex;}}
+ public class FightBattleHitSelectionSnapshot {public int HitEntityId;public float Delay,DelayDistFactor;public List<FightGridPoint> EffectCenters=new List<FightGridPoint>();public List<TargetOccurrence> Targets;public class TargetOccurrence {public int EffectCenterIndex,ScopeIndex;public float ScopeDelay;public bool HasScopeIndex;}}
  public class FightBattleMovementEvent {public int UnitId;}
  public class FightBattleDamageEvent {public bool HasDamageTriggerStatus;}
  public class FightBattleExecutionResult {}
@@ -31,9 +31,9 @@ namespace Zjcs.Combat.Official {
  public class FightBattleStatusViewEvent {}
  public class FightBattleSecondsStatusNotice {public FightBattleStatusViewEvent Event;}
  public class FightBattleImpactLatch {
-  public static FightBattleImpactLatch Last;public FightBattlePreparedMovement Pending;public FightBattlePreparedCast PendingCast;public FightBattleSelectedHit PendingSelection;public FightBattleSecondsStatusNotice PendingStatus;public FightBattleSettledImpact PendingResult;public int Completions,Records,Waits;public bool Arrived,Disposed;public FightBattleMovementEvent LastContact;
+  public static FightBattleImpactLatch Last;public FightBattlePreparedMovement Pending;public FightBattlePreparedCast PendingCast;public FightBattleSelectedHit PendingSelection;public FightBattleSecondsStatusNotice PendingStatus;public FightBattleSettledImpact PendingResult;public FightBattleCompletedCast PendingCompletion;public int Completions,CastCompletions,Records,Waits;public bool Arrived,Disposed;public FightBattleMovementEvent LastContact;
   private object active;private readonly Stack<object> suspended=new Stack<object>();
-  public object CurrentWorkerHandoff => (object)PendingCast??Pending??(object)PendingSelection??PendingStatus??(object)PendingResult??active;
+  public object CurrentWorkerHandoff => (object)PendingCast??Pending??(object)PendingSelection??PendingStatus??(object)PendingResult??PendingCompletion??active;
   private void Taken(object value){if(value==null)return;if(active!=null)suspended.Push(active);active=value;}
   private void Finished(object value){if(!ReferenceEquals(active,value))throw new InvalidOperationException("Wrong active handoff");active=suspended.Count>0?suspended.Pop():null;}
   public FightBattleImpactLatch(){Last=this;}
@@ -49,9 +49,9 @@ namespace Zjcs.Combat.Official {
   public bool TryTakeSelection(out FightBattleSelectedHit v){v=PendingSelection;PendingSelection=null;Taken(v);return v!=null;}
   public void CompleteSelection(FightBattleSelectedHit v){Finished(v);}
   public bool TryTakeSettlement(out FightBattleSettledImpact v){v=PendingResult;PendingResult=null;Taken(v);return v!=null;}
-  public bool TryTakeCastCompletion(out FightBattleCompletedCast v){v=null;return false;}
+  public bool TryTakeCastCompletion(out FightBattleCompletedCast v){v=PendingCompletion;PendingCompletion=null;Taken(v);return v!=null;}
   public void DeferStatusResolution(FightBattleSettledImpact x,out long revision){revision=1;}
-  public void CompleteCast(FightBattleCompletedCast c,out long revision){revision=1;}
+  public void CompleteCast(FightBattleCompletedCast c,out long revision){Finished(c);CastCompletions++;revision=1;}
   public bool TryCompleteSettlement(FightBattleSettledImpact x,Func<FightBattlePendingImpact,FightBattleDamageEvent,bool> f,out long revision){revision=0;if(!f(x.Impact,x.Damage))return false;Finished(x);revision=1;return true;}
  }
  public class FightBattleIsolatedStep:IDisposable {
@@ -67,10 +67,10 @@ namespace Zjcs.Presentation.Combat {
  internal sealed class OfficialBattleFallingWindImpact {internal static OfficialBattleFallingWindImpact Last;private Action<int> arrival;internal static OfficialBattleFallingWindImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,FightBattleHitRoot root,FightBattleHitEntity hit,Action<int> a){Last=new OfficialBattleFallingWindImpact{arrival=a};return Last;}internal void Trigger(int index){arrival?.Invoke(index);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleSwordWindImpact {internal static OfficialBattleSwordWindImpact Last;private Action<float> arrival;internal static OfficialBattleSwordWindImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,Action<float> a){Last=new OfficialBattleSwordWindImpact{arrival=a};return Last;}internal void Trigger(float delay){arrival?.Invoke(delay);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleTargetParticleImpact {internal static OfficialBattleTargetParticleImpact Last;internal string Particle;private Action<float> arrival;internal static OfficialBattleTargetParticleImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,string particle,Action<float> a){Last=new OfficialBattleTargetParticleImpact{arrival=a,Particle=particle};return Last;}internal void Trigger(float delay){arrival?.Invoke(delay);}internal void Detach(){arrival=null;}}
- internal sealed class OfficialBattleWaterProjectileImpact {internal static OfficialBattleWaterProjectileImpact Last;private Action arrival;internal static OfficialBattleWaterProjectileImpact Attach(MyPlayable leaf,float factor,Action a){if(factor!=.1f)return null;Last=new OfficialBattleWaterProjectileImpact{arrival=a};return Last;}internal void Trigger(){var callback=arrival;arrival=null;callback?.Invoke();}internal void Detach(){arrival=null;}}
+ internal sealed class OfficialBattleProjectileImpact {internal static OfficialBattleProjectileImpact Last;private Action arrival;internal static OfficialBattleProjectileImpact Attach(MyPlayable leaf,float factor,Action a){if(factor!=.1f&&factor!=.125f)return null;Last=new OfficialBattleProjectileImpact{arrival=a};return Last;}internal void Trigger(){var callback=arrival;arrival=null;callback?.Invoke();}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleMountainWaveImpact {internal static OfficialBattleMountainWaveImpact Last;private Action<int> arrival;internal static OfficialBattleMountainWaveImpact Attach(MyPlayable p,Action<int> a){Last=new OfficialBattleMountainWaveImpact{arrival=a};return Last;}internal void Trigger(int wave){arrival?.Invoke(wave);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleSlashImpact {internal static OfficialBattleSlashImpact Last;internal string Particle;private Action arrival;internal static OfficialBattleSlashImpact Attach(MyPlayable p,string particle,Action a){Last=new OfficialBattleSlashImpact{arrival=a,Particle=particle};return Last;}internal void Trigger(){arrival?.Invoke();}internal void Detach(){arrival=null;}}
- public class OfficialBattleSkillEntityPlayback {public event Action<FightBattleSkillCastEvent,EcEntityIdentifier,GameObject,MyPlayable> SkillGraphPlayableStarted;public event Action<FightBattleSkillCastEvent,FightBattleHitSelectionSnapshot,int,GameObject,MyPlayable> HitGraphPlayableStarted;public void CompleteLiveCast(FightBattleSkillCastEvent c,EcEntityIdentifier id,float t){} public void Graph(FightBattleSkillCastEvent c,string prefab="playable11120",string leaf="effect"){SkillGraphPlayableStarted?.Invoke(c,new EcEntityIdentifier(),new GameObject{name=prefab},new MyPlayable{name=leaf});}public void HitGraph(FightBattleSkillCastEvent c,FightBattleHitSelectionSnapshot hit,int center,string leaf,string prefab="playable10701"){HitGraphPlayableStarted?.Invoke(c,hit,center,new GameObject{name=prefab},new MyPlayable{name=leaf});} }
+ public class OfficialBattleSkillEntityPlayback {public event Action<FightBattleSkillCastEvent,EcEntityIdentifier,GameObject,MyPlayable> SkillGraphPlayableStarted;public event Action<FightBattleSkillCastEvent,FightBattleHitSelectionSnapshot,int,GameObject,MyPlayable> HitGraphPlayableStarted;internal event Func<EcEntityIdentifier,EcEntityIdentifier,Action,bool> HitViewDeferralRequested;internal bool TryGetHitIdentity(GameObject target,out EcEntityIdentifier id){id=new EcEntityIdentifier{Value=7};return target!=null;}internal bool HasLiveHit(EcEntityIdentifier id)=>true;internal bool Defer(EcEntityIdentifier skill,EcEntityIdentifier hit,Action resume)=>HitViewDeferralRequested?.Invoke(skill,hit,resume)??false;public void CompleteLiveCast(FightBattleSkillCastEvent c,EcEntityIdentifier id,float t){} public void Graph(FightBattleSkillCastEvent c,string prefab="playable11120",string leaf="effect"){SkillGraphPlayableStarted?.Invoke(c,new EcEntityIdentifier(),new GameObject{name=prefab},new MyPlayable{name=leaf});}public void HitGraph(FightBattleSkillCastEvent c,FightBattleHitSelectionSnapshot hit,int center,string leaf,string prefab="playable10701"){HitGraphPlayableStarted?.Invoke(c,hit,center,new GameObject{name=prefab},new MyPlayable{name=leaf,myTarget=new GameObject()});} }
  public class OfficialBattleImpactViewBridge:IDisposable {
   public static readonly List<int> Arrivals=new List<int>();
   private readonly FightBattleImpactLatch latch;
@@ -89,14 +89,56 @@ namespace Zjcs.Presentation.Combat {
   private static OfficialBattleLiveImpactSession NewSession(){return new OfficialBattleLiveImpactSession(new FightBattleCheckpoint(),_=>new FightBattleExecutor(),new OfficialBattleSkillEntityPlayback(),0,1,true);}
   private static FightBattleMovementEvent Prepare(){var move=new FightBattleMovementEvent{UnitId=4};FightBattleImpactLatch.Last.Pending=new FightBattlePreparedMovement{Movement=move,HasBlockedPosition=true,BlockedPosition=new FightGridPoint(6,7)};return move;}
   public static void Run(){
+   foreach(bool arrivalFirst in new[]{false,true})
+   {
+    var views=new OfficialBattleSkillEntityPlayback();var cast=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10800,HitSelections=new List<FightBattleHitSelectionSnapshot>()};
+    using(var session=new OfficialBattleLiveImpactSession(new FightBattleCheckpoint(),_=>new FightBattleExecutor(),views,0,1,true)){
+     FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=cast};session.Pump(0,StartCast);
+     var selection=new FightBattleHitSelectionSnapshot{HitEntityId=10801,DelayDistFactor=.125f,Targets=new List<FightBattleHitSelectionSnapshot.TargetOccurrence>{new FightBattleHitSelectionSnapshot.TargetOccurrence{HasScopeIndex=true,ScopeIndex=0}}};
+     cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartCast);
+     OfficialBattleProjectileImpact.Last=null;views.HitGraph(cast,selection,0,"track","playable_10801_SourceToHit");
+     var observer=OfficialBattleProjectileImpact.Last;Check(observer!=null,"The fireball projectile was not observed");
+     int effects=0;var hitId=new EcEntityIdentifier{Value=7};
+     if(arrivalFirst)observer.Trigger();
+     Check(!views.Defer(new EcEntityIdentifier{Value=4},hitId,()=>effects++),"An unrelated cast deferred a fireball effect");
+     bool deferred=views.Defer(new EcEntityIdentifier(),hitId,()=>effects++);
+     Check(deferred && effects==(arrivalFirst?1:0),"The fireball delayed view ignored projectile ordering");
+     if(!arrivalFirst){observer.Trigger();observer.Trigger();Check(effects==1,"The original fireball effect did not resume exactly once");}
+     Check(effects==1 && !views.Defer(new EcEntityIdentifier(),hitId,()=>effects++),"The arrived fireball continued deferring its original effect");
+    }
+   }
+   {
+    var views=new OfficialBattleSkillEntityPlayback();var cast=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10800,HitSelections=new List<FightBattleHitSelectionSnapshot>()};
+    var session=new OfficialBattleLiveImpactSession(new FightBattleCheckpoint(),_=>new FightBattleExecutor(),views,0,1,true);
+    FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=cast};session.Pump(0,StartCast);
+    var selection=new FightBattleHitSelectionSnapshot{HitEntityId=10801,DelayDistFactor=.125f,Targets=new List<FightBattleHitSelectionSnapshot.TargetOccurrence>()};
+    cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartCast);
+    views.HitGraph(cast,selection,0,"track","playable_10801_SourceToHit");var observer=OfficialBattleProjectileImpact.Last;int effects=0;
+    Check(observer!=null && views.Defer(new EcEntityIdentifier(),new EcEntityIdentifier{Value=7},()=>effects++),"The fireball effect was not held");
+    session.Dispose();observer.Trigger();Check(effects==0,"A cancelled fireball resumed its held effect");
+   }
+   {
+    var views=new OfficialBattleSkillEntityPlayback();var cast=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10800,HitSelections=new List<FightBattleHitSelectionSnapshot>()};
+    using(var session=new OfficialBattleLiveImpactSession(new FightBattleCheckpoint(),_=>new FightBattleExecutor(),views,0,1,true)){
+     FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=cast};session.Pump(0,StartCast);
+     var selection=new FightBattleHitSelectionSnapshot{HitEntityId=10801,DelayDistFactor=.125f,Targets=new List<FightBattleHitSelectionSnapshot.TargetOccurrence>()};
+     selection.EffectCenters.Add(new FightGridPoint(7,5));cast.HitSelections.Add(selection);
+     FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartCast);
+     FightBattleImpactLatch.Last.PendingCompletion=new FightBattleCompletedCast{Cast=cast};session.Pump(0,StartCast);
+     Check(FightBattleImpactLatch.Last.CastCompletions==0,"An empty fireball finished before its projectile arrived");
+     views.HitGraph(cast,selection,0,"track","playable_10801_SourceToHit");var observer=OfficialBattleProjectileImpact.Last;int effects=0;
+     Check(observer!=null && views.Defer(new EcEntityIdentifier(),new EcEntityIdentifier{Value=7},()=>effects++),"The empty fireball effect was not held");
+     observer.Trigger();Check(effects==1 && FightBattleImpactLatch.Last.CastCompletions==1,"The empty fireball did not finish after its original effect");
+    }
+   }
    {
     var views=new OfficialBattleSkillEntityPlayback();var cast=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10500,HitSelections=new List<FightBattleHitSelectionSnapshot>()};
     using(var session=new OfficialBattleLiveImpactSession(new FightBattleCheckpoint(),_=>new FightBattleExecutor(),views,0,1,true)){
-     OfficialBattleImpactViewBridge.Arrivals.Clear();OfficialBattleWaterProjectileImpact.Last=null;
+     OfficialBattleImpactViewBridge.Arrivals.Clear();OfficialBattleProjectileImpact.Last=null;
      FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=cast};session.Pump(0,StartCast);
      var selection=new FightBattleHitSelectionSnapshot{HitEntityId=10501,DelayDistFactor=.1f,Targets=new List<FightBattleHitSelectionSnapshot.TargetOccurrence>{new FightBattleHitSelectionSnapshot.TargetOccurrence{HasScopeIndex=true,ScopeIndex=0}}};
      cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartCast);
-     views.HitGraph(cast,selection,0,"effect","playable10501");var observer=OfficialBattleWaterProjectileImpact.Last;
+     views.HitGraph(cast,selection,0,"effect","playable10501");var observer=OfficialBattleProjectileImpact.Last;
      Check(observer!=null&&OfficialBattleImpactViewBridge.Arrivals.Count==0,"The water projectile must not settle at launch");
      observer.Trigger();observer.Trigger();Check(OfficialBattleImpactViewBridge.Arrivals.Count==1,"The projectile endpoint must settle its selected scope once");
     }

@@ -207,6 +207,8 @@ public class MyFightHitBase<T, TInfo> : MyComponent<T, TInfo>, IFightGetUsePlaya
 			bool flipX = skill.Source.myGridTransform.FlipX;
 			float num = FightHitViewFormula.CalcSkillHitDelay(DelayInfoProvider, GetStartPos(), pos, gridGround, flipX);
 			yield return (object)new WaitForSeconds(num);
+			if (ViewServices is IFightHitViewArrivalDeferrer deferrer
+				&& deferrer.DeferHitView(Component.SkillId, Component.Entity.Id, DoAfterDelay)) yield break;
 			DoAfterDelay();
 		}
 	}

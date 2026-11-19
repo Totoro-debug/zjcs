@@ -14,7 +14,7 @@ namespace Zjcs.Official.World.NativeTerrain.Common
 namespace Zjcs.Official.StoryPlayables
 {
     public struct EcEntityIdentifier { public int Value; public EcEntityIdentifier(int value) { Value = value; } }
-    public class MyPlayable { public string name; }
+    public class MyPlayable { public string name; public UnityEngine.GameObject myTarget; }
 }
 namespace UnityEngine { public class GameObject { public string name; } }
 namespace Zjcs.Presentation.Combat
@@ -39,10 +39,14 @@ namespace Zjcs.Presentation.Combat
         internal static OfficialBattleTargetParticleImpact Attach(GameObject prefab, MyPlayable playable, string particleName, Action<float> arrival) => null;
         internal void Detach() { }
     }
-    internal sealed class OfficialBattleWaterProjectileImpact
+    internal sealed class OfficialBattleProjectileImpact
     {
-        internal static OfficialBattleWaterProjectileImpact Attach(MyPlayable playable, float factor, Action arrival) => null;
-        internal void Detach() { }
+        internal static OfficialBattleProjectileImpact Last;
+        private Action arrival;
+        internal static OfficialBattleProjectileImpact Attach(MyPlayable playable, float factor, Action arrival)
+        { if (factor != .125f) return null; Last = new OfficialBattleProjectileImpact { arrival = arrival }; return Last; }
+        internal void Trigger() { var value = arrival; arrival = null; value?.Invoke(); }
+        internal void Detach() { arrival = null; }
     }
     internal sealed class OfficialBattleMountainWaveImpact
     {
@@ -60,12 +64,18 @@ namespace Zjcs.Presentation.Combat
         public event Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, Pos2d, int> HitSelectionViewArrived;
         public event Action<FightBattleSkillCastEvent, EcEntityIdentifier, GameObject, MyPlayable> SkillGraphPlayableStarted;
         public event Action<FightBattleSkillCastEvent, FightBattleHitSelectionSnapshot, int, GameObject, MyPlayable> HitGraphPlayableStarted;
+        internal event Func<EcEntityIdentifier, EcEntityIdentifier, Action, bool> HitViewDeferralRequested;
+        internal bool Defer(EcEntityIdentifier skill, EcEntityIdentifier hit, Action resume)
+            => HitViewDeferralRequested?.Invoke(skill, hit, resume) ?? false;
+        internal bool TryGetHitIdentity(GameObject target, out EcEntityIdentifier id) { id=new EcEntityIdentifier(7); return target!=null; }
+        internal bool HasLiveHit(EcEntityIdentifier id) => true;
         public void HitGraph(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot hit, int center, GameObject prefab, MyPlayable playable)
             => HitGraphPlayableStarted?.Invoke(cast, hit, center, prefab, playable);
         public FightBattleSkillCastEvent Cast;
         public readonly HashSet<FightBattleSkillCastEvent> SelectedCasts = new HashSet<FightBattleSkillCastEvent>();
         public readonly List<int> DamageSkills = new List<int>();
         public FightBattleHitSelectionSnapshot Selection;
+        private EcEntityIdentifier currentSkill;
         public float SelectionElapsed, CompletionElapsed;
         public int Damages, Completions;
         public bool ArriveImmediately, RejectDamage;
@@ -73,7 +83,7 @@ namespace Zjcs.Presentation.Combat
         public void QueueSelectedHit(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
             FightBattleHitSelectionSnapshot selection, float elapsed)
         {
-            Cast = cast; SelectedCasts.Add(cast); Selection = selection; SelectionElapsed = elapsed;
+            Cast = cast; SelectedCasts.Add(cast); Selection = selection; SelectionElapsed = elapsed; currentSkill = id;
             if (ArriveImmediately) {
                 var target = selection.Targets.Single(t => t.TargetId == 2);
                 Arrive(target.HasScopeIndex ? target.ScopeIndex : -1);
@@ -86,8 +96,19 @@ namespace Zjcs.Presentation.Combat
         public bool ResolveDamageStatus(FightBattleDamageEvent damage) => damage.HasDamageTriggerStatus;
         public void CompleteLiveCast(FightBattleSkillCastEvent cast, EcEntityIdentifier id, float elapsed)
         { if (!SelectedCasts.Contains(cast)) throw new InvalidOperationException("Wrong completed cast"); Completions++; CompletionElapsed = elapsed; }
-        public void Arrive(int scope) => HitSelectionViewArrived?.Invoke(Cast, Selection, 0,
-            new Pos2d(Selection.EffectCenters[0].X, Selection.EffectCenters[0].Y), scope);
+        public void Arrive(int scope)
+        {
+            void Deliver() => HitSelectionViewArrived?.Invoke(Cast, Selection, 0,
+                new Pos2d(Selection.EffectCenters[0].X, Selection.EffectCenters[0].Y), scope);
+            var target = Selection.Targets.FirstOrDefault(value => value.TargetId == 2);
+            if (Cast.SkillEntityId != 10800 || target == null || scope != (target.HasScopeIndex ? target.ScopeIndex : -1))
+            { Deliver(); return; }
+            HitGraph(Cast, Selection, 0, new GameObject { name="playable_10801_SourceToHit" },
+                new MyPlayable { name="track", myTarget=new GameObject() });
+            if (!Defer(currentSkill, new EcEntityIdentifier(7), Deliver) || OfficialBattleProjectileImpact.Last == null)
+                throw new InvalidOperationException("The fake fireball did not defer its original effect.");
+            OfficialBattleProjectileImpact.Last.Trigger();
+        }
         public void StartGraph(EcEntityIdentifier id, string prefab = null, string leaf = null)
             => SkillGraphPlayableStarted?.Invoke(Cast, id, new GameObject { name = prefab }, new MyPlayable { name = leaf });
     }
@@ -318,9 +339,11 @@ namespace Zjcs.Presentation.Combat
                 Check(outsideRejected && otherCastRejected && otherScopeRejected && otherIdRejected && graphViews.Damages == 0,
                     "An unrelated cast, scope, entity or non-playback call released the graph impact");
                 graphViews.StartGraph(new EcEntityIdentifier(47));
-                Check(graphViews.Damages == 1 && SpinWait.SpinUntil(() => graphSession.IsCompleted, 20000)
+                Check(graphViews.Damages == 1, "The matching original graph callback did not settle in its playback frame");
+                graphViews.Arrive(scope);
+                Check(SpinWait.SpinUntil(() => graphSession.IsCompleted, 20000)
                     && graphViews.Completions == 1 && FightBattleCheckpointSerializer.Save(cp) == committed,
-                    "The matching original graph callback did not settle in its playback frame");
+                    "The fireball did not finish after its original effect.");
             }
 
             var jumpCp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
