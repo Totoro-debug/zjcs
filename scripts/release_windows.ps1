@@ -41,8 +41,8 @@ try {
             $byteMarker = Join-Path $candidate 'byte-preserved-checkout.json'
             if (Test-Path -LiteralPath $byteMarker) {
                 $byteState = Get-Content -LiteralPath $byteMarker -Raw | ConvertFrom-Json
-                if ($byteState.format -ne 1) { throw 'Invalid release checkout marker' }
-                $workspace = $candidate
+                if ($byteState.format -notin @(1,2)) { throw 'Invalid release checkout marker' }
+                if ($byteState.format -eq 2) { $workspace = $candidate }
             }
         }
     }
@@ -78,7 +78,17 @@ try {
         (Get-FileHash -LiteralPath $equipmentRules.FullName -Algorithm SHA256).Hash.ToLowerInvariant() -ne $equipmentManifest.output.sha256) {
         throw 'Release checkout changed the verified equipment rules bytes.'
     }
-    @{format=1} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $workspace 'byte-preserved-checkout.json') -Encoding utf8
+    $uiReceipt = Get-Content -LiteralPath (Join-Path $source 'assets/reference/skill-ui-native-data-source-manifest.json') -Raw | ConvertFrom-Json
+    foreach ($uiInput in $uiReceipt.inputs) {
+        $file = Get-Item -LiteralPath (Join-Path $project $uiInput.path)
+        $meta = $file.FullName + '.meta'
+        if ($file.Length -ne $uiInput.bytes -or
+            (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant() -ne $uiInput.sha256 -or
+            (Get-FileHash -LiteralPath $meta -Algorithm SHA256).Hash.ToLowerInvariant() -ne $uiInput.meta_sha256) {
+            throw "Release checkout changed the verified skill UI input: $($uiInput.path)"
+        }
+    }
+    @{format=2} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $workspace 'byte-preserved-checkout.json') -Encoding utf8
     Write-Output "Release source: $target; persistent cache: $workspace"
     $syncSeconds = $timer.Elapsed.TotalSeconds
     if ($PrepareOnly) { return }
