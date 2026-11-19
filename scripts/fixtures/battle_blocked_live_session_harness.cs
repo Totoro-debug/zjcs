@@ -66,7 +66,7 @@ namespace Zjcs.Presentation.Combat {
  internal sealed class OfficialBattleWindBladeImpact {internal static OfficialBattleWindBladeImpact Last;private Action<int> arrival;internal static OfficialBattleWindBladeImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,FightBattleHitEntity hit,Action<int> a){Last=new OfficialBattleWindBladeImpact{arrival=a};return Last;}internal void Trigger(int index){arrival?.Invoke(index);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleFallingWindImpact {internal static OfficialBattleFallingWindImpact Last;private Action<int> arrival;internal static OfficialBattleFallingWindImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,FightBattleHitRoot root,FightBattleHitEntity hit,Action<int> a){Last=new OfficialBattleFallingWindImpact{arrival=a};return Last;}internal void Trigger(int index){arrival?.Invoke(index);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleSwordWindImpact {internal static OfficialBattleSwordWindImpact Last;private Action<float> arrival;internal static OfficialBattleSwordWindImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,Action<float> a){Last=new OfficialBattleSwordWindImpact{arrival=a};return Last;}internal void Trigger(float delay){arrival?.Invoke(delay);}internal void Detach(){arrival=null;}}
- internal sealed class OfficialBattleIceHitImpact {internal static OfficialBattleIceHitImpact Last;private Action<float> arrival;internal static OfficialBattleIceHitImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,Action<float> a){Last=new OfficialBattleIceHitImpact{arrival=a};return Last;}internal void Trigger(float delay){arrival?.Invoke(delay);}internal void Detach(){arrival=null;}}
+ internal sealed class OfficialBattleTargetParticleImpact {internal static OfficialBattleTargetParticleImpact Last;internal string Particle;private Action<float> arrival;internal static OfficialBattleTargetParticleImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,string particle,Action<float> a){Last=new OfficialBattleTargetParticleImpact{arrival=a,Particle=particle};return Last;}internal void Trigger(float delay){arrival?.Invoke(delay);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleWaterProjectileImpact {internal static OfficialBattleWaterProjectileImpact Last;private Action arrival;internal static OfficialBattleWaterProjectileImpact Attach(MyPlayable leaf,float factor,Action a){if(factor!=.1f)return null;Last=new OfficialBattleWaterProjectileImpact{arrival=a};return Last;}internal void Trigger(){var callback=arrival;arrival=null;callback?.Invoke();}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleMountainWaveImpact {internal static OfficialBattleMountainWaveImpact Last;private Action<int> arrival;internal static OfficialBattleMountainWaveImpact Attach(MyPlayable p,Action<int> a){Last=new OfficialBattleMountainWaveImpact{arrival=a};return Last;}internal void Trigger(int wave){arrival?.Invoke(wave);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleSlashImpact {internal static OfficialBattleSlashImpact Last;internal string Particle;private Action arrival;internal static OfficialBattleSlashImpact Attach(MyPlayable p,string particle,Action a){Last=new OfficialBattleSlashImpact{arrival=a,Particle=particle};return Last;}internal void Trigger(){arrival?.Invoke();}internal void Detach(){arrival=null;}}
@@ -102,12 +102,27 @@ namespace Zjcs.Presentation.Combat {
     }
    }
    {
+    var views=new OfficialBattleSkillEntityPlayback();var cast=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10850,HitSelections=new List<FightBattleHitSelectionSnapshot>()};
+    using(var session=new OfficialBattleLiveImpactSession(new FightBattleCheckpoint(),_=>new FightBattleExecutor(),views,0,1,true)){
+     bool StartInline(FightBattleSkillCastEvent current,out EcEntityIdentifier id){id=new EcEntityIdentifier();views.Graph(current,"playable10850","effect");return true;}
+     OfficialBattleImpactViewBridge.Arrivals.Clear();OfficialBattleTargetParticleImpact.Last=null;
+     FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=cast};session.Pump(0,StartInline);
+     var observer=OfficialBattleTargetParticleImpact.Last;Check(observer!=null&&observer.Particle=="hit (4)","The aura child lost its original hit effect");
+     observer.Trigger(0f);Check(OfficialBattleImpactViewBridge.Arrivals.Count==0,"The aura effect fabricated an unselected hit");
+     var selection=new FightBattleHitSelectionSnapshot{HitEntityId=10851,Delay=0f,Targets=new List<FightBattleHitSelectionSnapshot.TargetOccurrence>{new FightBattleHitSelectionSnapshot.TargetOccurrence{HasScopeIndex=true,ScopeIndex=0}}};
+     cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartInline);
+     Check(OfficialBattleImpactViewBridge.Arrivals.Count==1,"The aura effect did not reach its selected target");
+     observer.Trigger(0f);Check(OfficialBattleImpactViewBridge.Arrivals.Count==1,"The aura effect repeated a hit");
+     session.Dispose();observer.Trigger(0f);Check(OfficialBattleImpactViewBridge.Arrivals.Count==1,"A disposed aura effect repeated a hit");
+    }
+   }
+   {
     var views=new OfficialBattleSkillEntityPlayback();var cast=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=11300,HitSelections=new List<FightBattleHitSelectionSnapshot>()};
     using(var session=new OfficialBattleLiveImpactSession(new FightBattleCheckpoint(),_=>new FightBattleExecutor(),views,0,1,true)){
      bool StartInline(FightBattleSkillCastEvent current,out EcEntityIdentifier id){id=new EcEntityIdentifier();views.Graph(current,"playable11300","effect");return true;}
-     OfficialBattleImpactViewBridge.Arrivals.Clear();OfficialBattleIceHitImpact.Last=null;
+     OfficialBattleImpactViewBridge.Arrivals.Clear();OfficialBattleTargetParticleImpact.Last=null;
      FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=cast};session.Pump(0,StartInline);
-     var observer=OfficialBattleIceHitImpact.Last;Check(observer!=null,"The ice child lost its zero-time original effect");
+     var observer=OfficialBattleTargetParticleImpact.Last;Check(observer!=null&&observer.Particle=="hit_da","The ice child lost its zero-time original effect");
      observer.Trigger(0f);Check(OfficialBattleImpactViewBridge.Arrivals.Count==0,"The ice effect fabricated an unselected hit");
      var selection=new FightBattleHitSelectionSnapshot{HitEntityId=11301,Delay=0f,Targets=new List<FightBattleHitSelectionSnapshot.TargetOccurrence>{new FightBattleHitSelectionSnapshot.TargetOccurrence{HasScopeIndex=true,ScopeIndex=0}}};
      cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartInline);

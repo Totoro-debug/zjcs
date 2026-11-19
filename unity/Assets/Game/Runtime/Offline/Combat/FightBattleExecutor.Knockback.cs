@@ -19,7 +19,8 @@ namespace Zjcs.Combat.Official
         {
             bool mountain = hit.EntityId == 11121 && hit.DamageId == 11122 && move.MoveBehaviourId == 11123;
             bool windBlade = hit.EntityId == 10641 && hit.DamageId == 10642 && move.MoveBehaviourId == 10643;
-            if ((!mountain && !windBlade) || move.Distance != 1
+            bool unstableAura = hit.EntityId == 10851 && hit.DamageId == 10852 && move.MoveBehaviourId == 10853;
+            if ((!mountain && !windBlade && !unstableAura) || move.Distance != 1
                 || move.OffsetX != 0 || move.OffsetY != 0 || statusCatalog == null || checkpoint.Grid == null
                 || movementStartContext == null) return false;
             bool diagonal = stepX != 0 && stepY != 0;
@@ -34,9 +35,10 @@ namespace Zjcs.Combat.Official
                     ApplyMovementAction(movements, index, move, parent, originDelay: hitDelay);
                 return true;
             }
-            if (!(ImpactGate is IFightBattleBlockedMovementObserver movementObserver)
-                || !movementObserver.ObservesBlockedMovements
-                || !(ImpactGate is IFightBattleBlockedImpactObserver impactObserver)) return diagonal;
+            var movementObserver = ImpactGate as IFightBattleBlockedMovementObserver;
+            var impactObserver = ImpactGate as IFightBattleBlockedImpactObserver;
+            bool observesContact = movementObserver != null && movementObserver.ObservesBlockedMovements && impactObserver != null;
+            if (!observesContact && (!unstableAura || ImpactGate != null)) return diagonal;
 
             var movement = new FightBattleMovementEvent { UnitId = target.Id,
                 HasDirection = true, Direction = target.Direction };
@@ -59,7 +61,7 @@ namespace Zjcs.Combat.Official
             ApplyMovementAction(movements, movementIndex, move, parent, originDelay: hitDelay,
                 blockedPosition: collision.BlockedPosition);
             if (collisionDeferred) return true;
-            movementObserver.AwaitBlockedContact(movement);
+            if (observesContact) movementObserver.AwaitBlockedContact(movement);
             ResolveCollision();
             return true;
         }
@@ -79,7 +81,7 @@ namespace Zjcs.Combat.Official
             cast.TargetIds.Add(victim.Id);
             checkpoint.Statistics.RecordCast(actor.Id, skill.EntityId, skill.ItemId);
             context.Casts.Add(cast);
-            impactObserver.BindBlockedImpact(movement, cast, victim.Id);
+            impactObserver?.BindBlockedImpact(movement, cast, victim.Id);
             var previous = blockedCollision;
             blockedCollision = new BlockedCollisionContext { Skill = skill, TargetId = victim.Id };
             try

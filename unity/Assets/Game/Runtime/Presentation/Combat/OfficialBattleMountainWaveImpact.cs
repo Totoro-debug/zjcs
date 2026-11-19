@@ -283,39 +283,39 @@ namespace Zjcs.Presentation.Combat
         internal void Detach() { arrival = null; }
     }
 
-    // The ice passive's target effect starts at the original child hit's zero-time boundary.
-    internal sealed class OfficialBattleIceHitImpact : MonoBehaviour
+    // Observe an original target particle at the child hit's configured boundary.
+    internal sealed class OfficialBattleTargetParticleImpact : MonoBehaviour
     {
-        private ParticleSystem ice;
+        private ParticleSystem targetParticle;
         private float hitDelay;
         private float emissionStart;
         private Action<float> arrival;
 
-        internal static OfficialBattleIceHitImpact Attach(GameObject prefab, MyPlayable playable, Action<float> arrival)
+        internal static OfficialBattleTargetParticleImpact Attach(GameObject prefab, MyPlayable playable, string particleName, Action<float> arrival)
         {
-            if (!prefab || !playable || !playable.myApplyComponent || arrival == null) return null;
+            if (!prefab || !playable || !playable.myApplyComponent || string.IsNullOrEmpty(particleName) || arrival == null) return null;
             var sequence = prefab.GetComponent<MyPlayableSequence>();
             if (!sequence || sequence.myPlayables == null) return null;
             float effectStart = -1f; int effects = 0;
             foreach (var entry in sequence.myPlayables)
                 if (entry?.myPlayable && entry.myPlayable.name == "effect") { effectStart = entry.myTime; effects++; }
             if (effects != 1 || effectStart < 0f) return null;
-            ParticleSystem ice = null;
+            ParticleSystem targetParticle = null;
             foreach (var particle in playable.myApplyComponent.GetComponentsInChildren<ParticleSystem>(true))
-                if (particle.name == "hit_da") { if (ice) return null; ice = particle; }
-            if (!ice) return null;
-            var main = ice.main;
+                if (particle.name == particleName) { if (targetParticle) return null; targetParticle = particle; }
+            if (!targetParticle) return null;
+            var main = targetParticle.main;
             if (main.startDelay.mode != ParticleSystemCurveMode.Constant || main.useUnscaledTime
                 || Math.Abs(main.simulationSpeed - 1f) > .00001f || main.startDelay.constant < 0f) return null;
-            var observer = playable.gameObject.AddComponent<OfficialBattleIceHitImpact>();
-            observer.ice = ice; observer.emissionStart = main.startDelay.constant;
+            var observer = playable.gameObject.AddComponent<OfficialBattleTargetParticleImpact>();
+            observer.targetParticle = targetParticle; observer.emissionStart = main.startDelay.constant;
             observer.hitDelay = effectStart + observer.emissionStart; observer.arrival = arrival;
             return observer;
         }
 
         private void LateUpdate()
         {
-            if (arrival == null || !ice || ice.particleCount <= 0 && (ice.isPaused || ice.time <= emissionStart)) return;
+            if (arrival == null || !targetParticle || targetParticle.particleCount <= 0 && (targetParticle.isPaused || targetParticle.time <= emissionStart)) return;
             var callback = arrival; arrival = null; callback(hitDelay);
         }
 

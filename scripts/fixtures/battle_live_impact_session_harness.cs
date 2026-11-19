@@ -34,9 +34,9 @@ namespace Zjcs.Presentation.Combat
         internal static OfficialBattleSwordWindImpact Attach(GameObject prefab, MyPlayable playable, Action<float> arrival) => null;
         internal void Detach() { }
     }
-    internal sealed class OfficialBattleIceHitImpact
+    internal sealed class OfficialBattleTargetParticleImpact
     {
-        internal static OfficialBattleIceHitImpact Attach(GameObject prefab, MyPlayable playable, Action<float> arrival) => null;
+        internal static OfficialBattleTargetParticleImpact Attach(GameObject prefab, MyPlayable playable, string particleName, Action<float> arrival) => null;
         internal void Detach() { }
     }
     internal sealed class OfficialBattleWaterProjectileImpact

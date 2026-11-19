@@ -72,7 +72,12 @@ namespace Zjcs.Presentation.Combat
         private readonly Dictionary<FightBattleSkillCastEvent, float> reachedIceHits = new Dictionary<FightBattleSkillCastEvent, float>();
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> sentIceHits =
             new HashSet<(FightBattleHitSelectionSnapshot, int)>();
-        private readonly List<OfficialBattleIceHitImpact> iceHitEffects = new List<OfficialBattleIceHitImpact>();
+        private readonly List<OfficialBattleTargetParticleImpact> iceHitEffects = new List<OfficialBattleTargetParticleImpact>();
+        private readonly HashSet<FightBattleSkillCastEvent> observedAuraHits = new HashSet<FightBattleSkillCastEvent>();
+        private readonly Dictionary<FightBattleSkillCastEvent, float> reachedAuraHits = new Dictionary<FightBattleSkillCastEvent, float>();
+        private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> sentAuraHits =
+            new HashSet<(FightBattleHitSelectionSnapshot, int)>();
+        private readonly List<OfficialBattleTargetParticleImpact> auraHitEffects = new List<OfficialBattleTargetParticleImpact>();
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> observedWaterProjectiles =
             new HashSet<(FightBattleHitSelectionSnapshot, int)>();
         private readonly List<OfficialBattleWaterProjectileImpact> waterProjectiles = new List<OfficialBattleWaterProjectileImpact>();
@@ -387,6 +392,8 @@ namespace Zjcs.Presentation.Combat
                             RouteSwordWindImpact(selectedCast, active.Id, swordWindDelay);
                         if (reachedIceHits.TryGetValue(selectedCast, out float iceDelay))
                             RouteIceHitImpact(selectedCast, active.Id, iceDelay);
+                        if (reachedAuraHits.TryGetValue(selectedCast, out float auraDelay))
+                            RouteAuraHitImpact(selectedCast, active.Id, auraDelay);
                         if (reachedComboEffects.TryGetValue(selectedCast, out int comboReached))
                             for (int index = 0; index < 3; index++)
                                 if ((comboReached & (1 << index)) != 0) RouteComboImpact(selectedCast, active.Id, index);
@@ -522,8 +529,41 @@ namespace Zjcs.Presentation.Combat
                     AttachSlashImpact(cast, id, prefab, playable); AttachComboImpact(cast, id, prefab, playable);
                     AttachCrossImpact(cast, id, prefab, playable); AttachWindBladeImpact(cast, id, prefab, playable);
                     AttachFallingWindImpact(cast, id, prefab, playable); AttachSwordWindImpact(cast, id, prefab, playable);
-                    AttachIceHitImpact(cast, id, prefab, playable); }
+                    AttachIceHitImpact(cast, id, prefab, playable); AttachAuraHitImpact(cast, id, prefab, playable); }
                 finally { currentGraphCast = previousCast; currentGraphSkillId = previousId; }
+            }
+        }
+
+        private void AttachAuraHitImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
+            GameObject prefab, MyPlayable playable)
+        {
+            if (cast?.SkillEntityId != 10850 || prefab == null || prefab.name != "playable10850"
+                || playable == null || playable.name != "effect" || observedAuraHits.Contains(cast)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            var observer = OfficialBattleTargetParticleImpact.Attach(prefab, playable, "hit (4)",
+                delay => RouteAuraHitImpact(cast, id, delay));
+            if (observer == null) return;
+            observedAuraHits.Add(cast); auraHitEffects.Add(observer);
+        }
+
+        private void RouteAuraHitImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id, float hitDelay)
+        {
+            if (disposed || transferred || !observedAuraHits.Contains(cast)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            reachedAuraHits[cast] = hitDelay;
+            if (cast.HitSelections == null) return;
+            foreach (var hit in new List<FightBattleHitSelectionSnapshot>(cast.HitSelections))
+            {
+                if (hit?.HitEntityId != 10851 || !selectedHits.Contains(hit) || hit.Targets == null
+                    || Math.Abs(hit.Delay - hitDelay) > .00001f) continue;
+                foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
+                {
+                    if (!casts.ContainsKey(cast)) return;
+                    if (target == null || target.EffectCenterIndex != 0 || !target.HasScopeIndex
+                        || target.ScopeIndex != 0 || target.ScopeDelay != 0f
+                        || !sentAuraHits.Add((hit, target.EffectCenterIndex))) continue;
+                    bridge.RecordArrival(cast, hit, target.EffectCenterIndex, 0);
+                }
             }
         }
 
@@ -533,7 +573,7 @@ namespace Zjcs.Presentation.Combat
             if (cast?.SkillEntityId != 11300 || prefab == null || prefab.name != "playable11300"
                 || playable == null || playable.name != "effect" || observedIceHits.Contains(cast)
                 || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
-            var observer = OfficialBattleIceHitImpact.Attach(prefab, playable,
+            var observer = OfficialBattleTargetParticleImpact.Attach(prefab, playable, "hit_da",
                 delay => RouteIceHitImpact(cast, id, delay));
             if (observer == null) return;
             observedIceHits.Add(cast); iceHitEffects.Add(observer);
@@ -886,6 +926,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in fallingWindEffects) if (observer != null) observer.Detach();
             foreach (var observer in swordWindEffects) if (observer != null) observer.Detach();
             foreach (var observer in iceHitEffects) if (observer != null) observer.Detach();
+            foreach (var observer in auraHitEffects) if (observer != null) observer.Detach();
             foreach (var observer in waterProjectiles) if (observer != null) observer.Detach();
             transferred = true;
             return true;
@@ -905,6 +946,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in fallingWindEffects) if (observer != null) observer.Detach();
             foreach (var observer in swordWindEffects) if (observer != null) observer.Detach();
             foreach (var observer in iceHitEffects) if (observer != null) observer.Detach();
+            foreach (var observer in auraHitEffects) if (observer != null) observer.Detach();
             foreach (var observer in waterProjectiles) if (observer != null) observer.Detach();
             step.Dispose();
             casts.Clear(); selectedHits.Clear(); jumpSlashScopes.Clear(); mountainScopes.Clear(); crossScopes.Clear();
@@ -915,6 +957,7 @@ namespace Zjcs.Presentation.Combat
             sentFallingWindHits.Clear(); fallingWindEffects.Clear();
             observedSwordWind.Clear(); reachedSwordWind.Clear(); sentSwordWindHits.Clear(); swordWindEffects.Clear();
             observedIceHits.Clear(); reachedIceHits.Clear(); sentIceHits.Clear(); iceHitEffects.Clear();
+            observedAuraHits.Clear(); reachedAuraHits.Clear(); sentAuraHits.Clear(); auraHitEffects.Clear();
             observedWaterProjectiles.Clear(); waterProjectiles.Clear();
             slashCasters.Clear(); heavyCasters.Clear(); comboCasters.Clear(); observedComboEffects.Clear();
             reachedComboEffects.Clear(); sentComboHits.Clear(); observedSlashes.Clear(); reachedSlashes.Clear(); sentSlashes.Clear(); slashEffects.Clear();

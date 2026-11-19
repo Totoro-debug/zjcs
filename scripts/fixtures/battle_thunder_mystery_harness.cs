@@ -149,6 +149,47 @@ public static class BattleThunderMysteryHarness
             Check(applied>0&&skipped>0,"Original probabilistic secondary effect did not produce both outcomes: "
                 +passive.Item1+" applied="+applied+" skipped="+skipped);
         }
-        return "Hit passives passed: damage, shield absorption, dodge, blinding, immunity and checkpoint restore.";
+        foreach (string obstacle in new[] { "terrain", "enemy", "ally" })
+        {
+            bool collided=false; string lastAuraProbe="";
+            for (int i=0;i<64 && !collided;i++)
+            {
+                var cp=new FightBattleCheckpoint {StageId=1001,MaxRound=5,RandomSeed=73+i*1234567,
+                    Grid=new FightBattleGrid {Width=12,Height=12,DefaultGroundType=2}};
+                var actor=Unit(1,formula);var target=Unit(2,formula);
+                actor.MoveMask=target.MoveMask=5;
+                foreach(var unit in new[]{actor,target})
+                    foreach(string property in new[]{"BaseEffectRate","BaseEffectDodge"})
+                        unit.Properties.Add(new FightPropertyValue {Id=formula.PropertyId(property),Value=10000});
+                actor.Properties.Add(new FightPropertyValue {Id=formula.PropertyId("EffectRateValue"),Value=20000});
+                var status=catalog.CreateStatus(25005,1,1,1,25005,10512,2,20,5);
+                status.Components.HitSkill.Rate=1f;actor.Statuses.Add(status);
+                var skill=catalog.CreateSkill(10500,0,10000,2,20,5,catalog.CalculateSkillProps(10500,2,20,5)
+                    .Select(value=>new FightPropertyValue {Id=value.Key,Value=value.Value}).ToList());
+                skill.LimitedTimes=1;actor.Skills.Add(skill);actor.SkillState.Slots.Add(catalog.CreateSkillSlot(skill,0));
+                cp.Units.AddRange(new[]{actor,target});var wave=new FightBattleWaveState();wave.UnitIds.Add(2);
+                if(obstacle=="terrain") cp.Grid.BlockedPositions.Add(new FightGridPoint(5,7));
+                else {
+                    var blocker=Unit(3,formula);blocker.Side=obstacle=="enemy"?2:1;blocker.Y=7;blocker.MoveMask=5;
+                    cp.Units.Add(blocker);if(blocker.Side==2)wave.UnitIds.Add(3);
+                }
+                cp.Waves.Add(wave);var executor=FightBattleExecutor.Begin(cp,formula,new FightDamageSettlement(),catalog,items);
+                var result=executor.Step(0,1);var hits=result.Event.DamageEvents.Where(value=>value.SkillEntityId==10100).ToArray();
+                lastAuraProbe="position="+target.X+","+target.Y+" moves="+string.Join(",",result.Event.Movements.Select(value=>value.UnitId+":"+value.MoveBehaviourId))
+                    +" damage="+string.Join(",",result.Event.DamageEvents.Select(value=>value.SkillEntityId+":"+value.TargetId));
+                if(hits.Length==0)continue;
+                int[] expected=obstacle=="enemy"?new[]{2,3}:new[]{2};
+                Check(hits.Select(value=>value.TargetId).OrderBy(value=>value).SequenceEqual(expected)
+                    && hits.All(value=>value.TrueDamage && value.Damage==-600)
+                    && result.Event.Movements.Any(value=>value.UnitId==2 && value.MoveBehaviourId==10853)
+                    && target.X==5 && target.Y==6,"Aura collision differs for "+obstacle);
+                string saved=FightBattleCheckpointSerializer.Save(cp);
+                Check(executor.Step(0,1).Replayed && saved==FightBattleCheckpointSerializer.Save(cp),
+                    "Aura collision repeated on replay for "+obstacle);
+                collided=true;
+            }
+            Check(collided,"Aura did not resolve a collision for "+obstacle+" "+lastAuraProbe);
+        }
+        return "Hit passives passed: damage, shield absorption, dodge, blinding, immunity, aura collision and checkpoint restore.";
     }
 }

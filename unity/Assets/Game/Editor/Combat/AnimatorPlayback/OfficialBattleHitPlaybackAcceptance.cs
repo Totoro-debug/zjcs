@@ -2663,6 +2663,143 @@ namespace Zjcs.Editor.Combat
                 iceScope.Dispose(); iceAppearance?.Dispose(); iceTargetAppearance?.Dispose(); Destroy(iceRoot.gameObject);
             }
 
+            // Unstable aura applies its wind hit before the native knockback action.
+            foreach (var scenario in new[] { new[] { 1, 0, 3, 0 }, new[] { -1, 0, 1, 0 },
+                new[] { 0, 1, 2, 0 }, new[] { 0, -1, 0, 0 }, new[] { 1, 0, 3, 1 },
+                new[] { 1, 0, 3, 2 }, new[] { 1, 0, 3, 3 } })
+            {
+                int dx = scenario[0], dy = scenario[1], mode = scenario[3];
+                var auraUnits = new List<FightBattleUnitState> { LiveUnit(1, 1, 5), LiveUnit(2, 2, 5 + dx * 2) };
+                auraUnits[0].Direction = scenario[2]; auraUnits[1].Y = 5 + dy * 2;
+                auraUnits[0].Properties.Add(new FightPropertyValue { Id = formula.PropertyId("EffectRateValue"), Value = 20000 });
+                if (mode == 2)
+                {
+                    var blocker = LiveUnit(3, 2, 5 + dx * 3); blocker.Y = 5 + dy * 3; auraUnits.Add(blocker);
+                }
+                if (mode == 3) auraUnits[1].Statuses.Add(new FightBattleStatusState {
+                    ClassId = 90003, InstanceId = 1, OwnerId = 2, CreatorId = 2,
+                    ShieldKind = FightBattleShieldKind.Persistent, ShieldInitialized = true,
+                    ShieldValue = 100000000, ShieldRemainValue = 100000000 });
+                var auraSkill = liveCatalog.CreateSkill(10500, 0, 10000, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(10500, 2, 20, 1)
+                        .Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+                auraSkill.LimitedTimes = 1; auraUnits[0].Skills.Add(auraSkill);
+                auraUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(auraSkill, 0));
+                var auraStatus = liveCatalog.CreateStatus(25005, 1, 1, 1, 25005, 10512, 2, 20, 1);
+                auraStatus.Components.HitSkill.Rate = 1f; // Original trigger probability is verified by the rule test.
+                auraUnits[0].Statuses.Add(auraStatus);
+                var auraCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                if (mode == 1) auraCheckpoint.Grid.BlockedPositions.Add(new FightGridPoint(5 + dx * 3, 5 + dy * 3));
+                auraCheckpoint.Units.AddRange(auraUnits); var auraWave = new FightBattleWaveState();
+                auraWave.UnitIds.AddRange(auraUnits.Where(unit => unit.Side == 2).Select(unit => unit.Id)); auraCheckpoint.Waves.Add(auraWave);
+                FightBattleExecutor.Begin(auraCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                bool auraSeedFound = false;
+                for (int attempt = 0; attempt < 64; attempt++)
+                {
+                    var reference = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(auraCheckpoint));
+                    reference.RandomSeed = 73 + attempt * 1234567;
+                    var baseline = FightBattleExecutor.Restore(reference, formula, new FightDamageSettlement(),
+                        liveCatalog, combatAssets.LoadSkillItems()).Step(0, 1);
+                    var expectedCollisions = mode == 1 ? new[] { 2 } : mode == 2 ? new[] { 2, 3 } : Array.Empty<int>();
+                    if (!baseline.Event.Movements.Any(value => value.UnitId == 2 && value.MoveBehaviourId == 10853)
+                        || !new HashSet<int>(baseline.Event.DamageEvents.Where(value => value.SkillEntityId == 10100)
+                            .Select(value => value.TargetId)).SetEquals(expectedCollisions)) continue;
+                    auraCheckpoint.RandomSeed = 73 + attempt * 1234567; auraSeedFound = true; break;
+                }
+                Require(auraSeedFound, "Could not select the original aura knockback outcome for mode " + mode);
+                var auraDisplay = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(auraCheckpoint)).Units.ToArray();
+                var auraRoot = new GameObject("Unstable aura acceptance").transform; auraRoot.SetParent(root, false);
+                var auraBodies = new Dictionary<int, Transform>();
+                foreach (var unit in auraUnits)
+                {
+                    var body = new GameObject("Aura unit " + unit.Id).transform; body.SetParent(auraRoot, false);
+                    body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                    var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false;
+                    renderer.sharedMaterials = Array.Empty<Material>();
+                    body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                    auraBodies.Add(unit.Id, body);
+                }
+                var auraAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
+                    ? NativeJumpAppearanceFixture.Create(auraBodies[1].gameObject) : null;
+                var auraTargetAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
+                    ? NativeJumpAppearanceFixture.Create(auraBodies[2].gameObject) : null;
+                var auraScope = new OfflineBattleNativePlayableScope(auraRoot, null);
+                ParticleSystem auraParticle = null; int waterHits = 0, auraHits = 0, auraPausedFrames = 0, contactFrame = -1;
+                bool auraResumed = false; var collisionTargets = new HashSet<int>();
+                auraScope.NativePlayableStarted += (prefab, leaf) => {
+                    if (prefab.name != "playable10850" || leaf.name != "effect" || !leaf.myApplyComponent) return;
+                    foreach (var particle in leaf.myApplyComponent.GetComponentsInChildren<ParticleSystem>(true))
+                        if (particle.name == "hit (4)") { auraParticle = particle; particle.Pause(); }
+                };
+                using (var auraViews = new OfficialBattleSkillEntityPlayback(auraRoot,
+                    new OfficialBattleGridMapper(auraRoot, grid), auraScope,
+                    id => auraDisplay.FirstOrDefault(value => value.Id == id)))
+                using (var auraGraph = new OfficialBattleSkillGraphPlayback(
+                    OfficialBattleSkillGraphCatalog.TryLoadDefault(), auraScope, auraViews))
+                {
+                    auraViews.BindDamageUI(auraRoot, 0);
+                    foreach (var pair in auraBodies) auraViews.EnsureUnit(pair.Key, pair.Value);
+                    Transform AuraBody(int id) => auraBodies.TryGetValue(id, out var value) ? value : null;
+                    void AuraDamage(FightBattleDamageEvent damage, FightBattleUnitState projected)
+                    {
+                        if (damage.SkillEntityId == 10500) { Require(damage.TargetId == 2, "Water hit the wrong aura target."); waterHits++; }
+                        else if (damage.SkillEntityId == 10850)
+                        {
+                            Require(damage.HitEntityId == 10851 && damage.DamageEntityId == 10852
+                                && damage.SkillItemId == 10512 && damage.ElementType == 100 && damage.TargetId == 2
+                                && (mode != 3 || damage.BeforeHp == damage.AfterHp) && waterHits == 1
+                                && auraResumed && auraParticle && auraParticle.particleCount > 0,
+                                "Unstable aura did not settle with its original target effect.");
+                            auraHits++;
+                            if (auraAppearance != null) Capture("unstable-aura-" + dx + "-" + dy + "-" + mode + ".png", false);
+                        }
+                        else
+                            Require(damage.SkillEntityId == 10100 && damage.TrueDamage && damage.Damage == -600
+                                && contactFrame == Time.frameCount && collisionTargets.Add(damage.TargetId),
+                                "Aura collision damage did not match the native contact.");
+                        auraDisplay[Array.FindIndex(auraDisplay, unit => unit.Id == damage.TargetId)] = projected;
+                    }
+                    using (var auraDriver = new OfficialBattleLiveGraphDriver(auraCheckpoint,
+                        copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()),
+                        auraViews, id => id == 10500 || id == 10850 || id == 10100, AuraBody, null, AuraDamage))
+                    {
+                        auraDriver.SecondsStatusChanged += _ => { };
+                        auraDriver.BlockedContact += action => {
+                            Require(action.UnitId == 2 && action.MoveBehaviourId == 10853 && auraHits == 1,
+                                "The aura collision used the wrong original movement.");
+                            contactFrame = Time.frameCount;
+                        };
+                        auraDisplay = auraCheckpoint.Units.Select(unit => auraDriver.DisplayUnit(unit.Id)).ToArray();
+                        float auraDeadline = Time.realtimeSinceStartup + 20f;
+                        while (!auraDriver.IsCompleted && Time.realtimeSinceStartup < auraDeadline)
+                        {
+                            auraDriver.Pump(Time.deltaTime); auraViews.Tick(Time.deltaTime); auraScope.LateTick();
+                            if (auraParticle && !auraResumed && ++auraPausedFrames >= 8)
+                            {
+                                Require(auraParticle.isPaused && waterHits == 1 && auraHits == 0,
+                                    "A paused aura effect settled its child hit.");
+                                auraParticle.Play(); auraResumed = true;
+                            }
+                            yield return null;
+                        }
+                        Require(auraDriver.TryTakeCompleted(out var executor, out var result) && waterHits == 1 && auraHits == 1
+                            && result.Event.SkillCasts.Count(value => value.SkillEntityId == 10850) == 1,
+                            "Unstable aura did not settle its original child exactly once.");
+                        var moved = executor.State.Units.Single(unit => unit.Id == 2);
+                        Require(moved.X == 5 + dx * (mode == 1 || mode == 2 ? 2 : 3)
+                            && moved.Y == 5 + dy * (mode == 1 || mode == 2 ? 2 : 3)
+                            && result.Event.Movements.Any(value => value.UnitId == 2 && value.MoveBehaviourId == 10853)
+                            && collisionTargets.SetEquals(mode == 1 ? new[] { 2 } : mode == 2 ? new[] { 2, 3 } : Array.Empty<int>()),
+                            "Unstable aura did not preserve its original knockback or collision targets: direction="
+                            + dx + "," + dy + " mode=" + mode + " position=" + moved.X + "," + moved.Y
+                            + " collision=" + string.Join(",", collisionTargets)
+                            + " moves=" + string.Join(",", result.Event.Movements.Select(value => value.UnitId + ":" + value.MoveBehaviourId)));
+                    }
+                }
+                auraScope.Dispose(); auraAppearance?.Dispose(); auraTargetAppearance?.Dispose(); Destroy(auraRoot.gameObject);
+            }
+
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(1, 0), Delay = .8f });
