@@ -68,6 +68,9 @@ namespace Zjcs.Presentation.Combat
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> sentSwordWindHits =
             new HashSet<(FightBattleHitSelectionSnapshot, int)>();
         private readonly List<OfficialBattleSwordWindImpact> swordWindEffects = new List<OfficialBattleSwordWindImpact>();
+        private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> observedWaterProjectiles =
+            new HashSet<(FightBattleHitSelectionSnapshot, int)>();
+        private readonly List<OfficialBattleWaterProjectileImpact> waterProjectiles = new List<OfficialBattleWaterProjectileImpact>();
         private readonly HashSet<FightBattleSkillCastEvent> observedCrossEffects = new HashSet<FightBattleSkillCastEvent>();
         private readonly HashSet<FightBattleSkillCastEvent> reachedCrossEffects = new HashSet<FightBattleSkillCastEvent>();
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center, int Scope)> sentCrossHits =
@@ -450,6 +453,15 @@ namespace Zjcs.Presentation.Combat
         private void OnHitGraphPlayableStarted(FightBattleSkillCastEvent cast, FightBattleHitSelectionSnapshot hit,
             int centerIndex, GameObject prefab, MyPlayable playable)
         {
+            if (!disposed && !transferred && cast?.SkillEntityId == 10500 && hit?.HitEntityId == 10501
+                && prefab != null && prefab.name == "playable10501" && playable != null && playable.name == "effect"
+                && selectedHits.Contains(hit) && casts.ContainsKey(cast) && hit.Targets != null
+                && !observedWaterProjectiles.Contains((hit, centerIndex)))
+            {
+                var observer = OfficialBattleWaterProjectileImpact.Attach(playable, hit.DelayDistFactor,
+                    () => RouteWaterProjectileImpact(cast, hit, centerIndex));
+                if (observer != null) { observedWaterProjectiles.Add((hit, centerIndex)); waterProjectiles.Add(observer); }
+            }
             if (disposed || transferred || cast?.SkillEntityId != 10700 || hit?.HitEntityId != 10701
                 || prefab == null || prefab.name != "playable10701" || playable == null || playable.name != "AtkEffect"
                 || !selectedHits.Contains(hit) || !casts.ContainsKey(cast)
@@ -461,6 +473,21 @@ namespace Zjcs.Presentation.Combat
                     || !scopes.Contains(target.ScopeIndex)
                     || !sentPullHits.Add((hit, centerIndex, target.ScopeIndex))) continue;
                 bridge.RecordArrival(cast, hit, centerIndex, target.ScopeIndex);
+            }
+        }
+
+        private void RouteWaterProjectileImpact(FightBattleSkillCastEvent cast,
+            FightBattleHitSelectionSnapshot hit, int centerIndex)
+        {
+            if (disposed || transferred || !casts.ContainsKey(cast) || !selectedHits.Contains(hit)
+                || !observedWaterProjectiles.Contains((hit, centerIndex)) || hit.Targets == null) return;
+            foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
+            {
+                if (!casts.ContainsKey(cast)) return;
+                if (target == null || target.EffectCenterIndex != centerIndex || !target.HasScopeIndex
+                    || target.ScopeIndex != 0 || target.ScopeDelay != 0f) continue;
+                bridge.RecordArrival(cast, hit, centerIndex, 0);
+                break;
             }
         }
 
@@ -817,6 +844,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in windBlades) if (observer != null) observer.Detach();
             foreach (var observer in fallingWindEffects) if (observer != null) observer.Detach();
             foreach (var observer in swordWindEffects) if (observer != null) observer.Detach();
+            foreach (var observer in waterProjectiles) if (observer != null) observer.Detach();
             transferred = true;
             return true;
         }
@@ -834,6 +862,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in windBlades) if (observer != null) observer.Detach();
             foreach (var observer in fallingWindEffects) if (observer != null) observer.Detach();
             foreach (var observer in swordWindEffects) if (observer != null) observer.Detach();
+            foreach (var observer in waterProjectiles) if (observer != null) observer.Detach();
             step.Dispose();
             casts.Clear(); selectedHits.Clear(); jumpSlashScopes.Clear(); mountainScopes.Clear(); crossScopes.Clear();
             observedCrossEffects.Clear(); reachedCrossEffects.Clear(); sentCrossHits.Clear(); observedMountains.Clear(); reachedMountainWaves.Clear(); mountainWaves.Clear();
@@ -842,6 +871,7 @@ namespace Zjcs.Presentation.Combat
             fallingWindDefinitions.Clear(); observedFallingWind.Clear(); reachedFallingWind.Clear();
             sentFallingWindHits.Clear(); fallingWindEffects.Clear();
             observedSwordWind.Clear(); reachedSwordWind.Clear(); sentSwordWindHits.Clear(); swordWindEffects.Clear();
+            observedWaterProjectiles.Clear(); waterProjectiles.Clear();
             slashCasters.Clear(); heavyCasters.Clear(); comboCasters.Clear(); observedComboEffects.Clear();
             reachedComboEffects.Clear(); sentComboHits.Clear(); observedSlashes.Clear(); reachedSlashes.Clear(); sentSlashes.Clear(); slashEffects.Clear();
             resolvingStatuses.Clear();

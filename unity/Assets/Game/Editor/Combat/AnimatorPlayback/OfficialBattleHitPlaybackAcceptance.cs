@@ -2433,6 +2433,110 @@ namespace Zjcs.Editor.Combat
                 swordWindScope.Dispose(); swordWindAppearance?.Dispose(); swordWindTargetAppearance?.Dispose(); Destroy(swordWindRoot.gameObject);
             }
 
+            // Water's native track must reach its target before the hit is released.
+            foreach (var direction in new[] { new[] { 1, 0, 3, 3, 0 }, new[] { -1, 0, 1, 1, 0 },
+                new[] { 0, 1, 2, 4, 0 }, new[] { 0, -1, 0, 2, 0 }, new[] { 1, 0, 3, 3, 1 },
+                new[] { 1, 0, 3, 3, 2 } })
+            {
+                int dx = direction[0], dy = direction[1], distance = direction[3]; bool cancel = direction[4] != 0;
+                var waterUnits = new[] { LiveUnit(1, 1, 5), LiveUnit(2, 2, 5 + dx * distance) };
+                waterUnits[0].Direction = direction[2]; waterUnits[1].Y = 5 + dy * distance;
+                var waterSkill = liveCatalog.CreateSkill(10500, 0, 10000, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(10500, 2, 20, 1)
+                        .Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+                waterSkill.LimitedTimes = 1; waterUnits[0].Skills.Add(waterSkill);
+                waterUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(waterSkill, 0));
+                var waterCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                waterCheckpoint.Units.AddRange(waterUnits);
+                var waterWave = new FightBattleWaveState(); waterWave.UnitIds.Add(2); waterCheckpoint.Waves.Add(waterWave);
+                FightBattleExecutor.Begin(waterCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                var waterDisplay = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(waterCheckpoint)).Units.ToArray();
+                var waterRoot = new GameObject("Water projectile acceptance").transform; waterRoot.SetParent(root, false);
+                var waterBodies = new Dictionary<int, Transform>();
+                foreach (var unit in waterUnits)
+                {
+                    var body = new GameObject("Water unit " + unit.Id).transform; body.SetParent(waterRoot, false);
+                    body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                    var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false;
+                    renderer.sharedMaterials = Array.Empty<Material>();
+                    body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                    waterBodies.Add(unit.Id, body);
+                }
+                var waterAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
+                    ? NativeJumpAppearanceFixture.Create(waterBodies[1].gameObject) : null;
+                var waterTargetAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
+                    ? NativeJumpAppearanceFixture.Create(waterBodies[2].gameObject) : null;
+                var waterScope = new OfflineBattleNativePlayableScope(waterRoot, null);
+                Zjcs.Official.BattleTrackPlayables.MyPlayableTrack waterTrack = null;
+                int waterHits = 0, waterPausedFrames = 0; bool waterResumed = false, waterStopped = false;
+                waterScope.NativePlayableStarted += (prefab, leaf) => {
+                    if (prefab.name == "playable10501" && leaf.name == "effect")
+                    {
+                        waterTrack = leaf as Zjcs.Official.BattleTrackPlayables.MyPlayableTrack;
+                        if (!cancel) Time.timeScale = 0f;
+                    }
+                };
+                using (var waterViews = new OfficialBattleSkillEntityPlayback(waterRoot,
+                    new OfficialBattleGridMapper(waterRoot, grid), waterScope,
+                    id => waterDisplay.FirstOrDefault(value => value.Id == id)))
+                using (var waterGraph = new OfficialBattleSkillGraphPlayback(
+                    OfficialBattleSkillGraphCatalog.TryLoadDefault(), waterScope, waterViews))
+                {
+                    waterViews.BindDamageUI(waterRoot, 0);
+                    foreach (var pair in waterBodies) waterViews.EnsureUnit(pair.Key, pair.Value);
+                    Transform WaterBody(int id) => waterBodies.TryGetValue(id, out var value) ? value : null;
+                    void WaterDamage(FightBattleDamageEvent damage, FightBattleUnitState projected)
+                    {
+                        Require(!cancel && waterResumed && waterTrack && waterTrack.myApplyComponent && waterTrack.myTarget
+                            && Vector3.Distance(waterTrack.myApplyComponent.transform.position, waterTrack.myTarget.transform.position) < .01f
+                            && damage.SkillEntityId == 10500 && damage.HitEntityId == 10501 && damage.DamageEntityId == 10502
+                            && damage.TargetId == 2 && damage.ElementType == 101,
+                            "Water damage did not coincide with the native projectile reaching its target.");
+                        waterHits++;
+                        if (waterAppearance != null) Capture("water-impact-" + dx + "-" + dy + ".png", false);
+                        waterDisplay[Array.FindIndex(waterDisplay, unit => unit.Id == damage.TargetId)] = projected;
+                    }
+                    using (var waterDriver = new OfficialBattleLiveGraphDriver(waterCheckpoint,
+                        copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()),
+                        waterViews, id => id == 10500, WaterBody, null, WaterDamage))
+                    {
+                        waterDriver.SecondsStatusChanged += _ => { };
+                        waterDisplay = waterCheckpoint.Units.Select(unit => waterDriver.DisplayUnit(unit.Id)).ToArray();
+                        float waterDeadline = Time.realtimeSinceStartup + 15f;
+                        while (!waterDriver.IsCompleted && Time.realtimeSinceStartup < waterDeadline)
+                        {
+                            waterDriver.Pump(Time.deltaTime); waterViews.Tick(Time.deltaTime); waterScope.LateTick();
+                            if (waterTrack && !cancel && !waterResumed && ++waterPausedFrames >= 8)
+                            {
+                                Require(waterHits == 0 && waterTrack.Time == 0f, "Paused water projectile dealt damage or moved.");
+                                Time.timeScale = 1f; waterResumed = true;
+                            }
+                            if (waterTrack && cancel && !waterStopped && waterTrack.Time > 0f)
+                            {
+                                Require(waterTrack.Time < waterTrack.GetDuration(), "Water projectile already reached its target.");
+                                if (direction[4] == 2)
+                                {
+                                    Require(Vector3.Distance(waterTrack.myApplyComponent.transform.position,
+                                        waterTrack.myTarget.transform.position) > .01f, "Water projectile already reached its target.");
+                                    typeof(MyPlayable).GetProperty("Time").SetValue(waterTrack, waterTrack.GetDuration());
+                                }
+                                waterTrack.StopBeforeResetData(); waterTrack.Stop(true); waterStopped = true;
+                            }
+                            if (waterStopped && ++waterPausedFrames >= 8) break;
+                            yield return null;
+                        }
+                        if (cancel) Require(waterStopped && waterHits == 0 && !waterDriver.IsCompleted,
+                            "Cancelled water projectile settled its hit.");
+                        else Require(waterDriver.TryTakeCompleted(out _, out _) && waterHits == 1 && waterResumed,
+                            "Water projectile did not settle exactly once.");
+                    }
+                    Require(!waterTrack || waterTrack.myTrackTriggerList.Count == 0,
+                        "Water projectile retained its temporary hit observer.");
+                }
+                Time.timeScale = 1f; waterScope.Dispose(); waterAppearance?.Dispose(); waterTargetAppearance?.Dispose(); Destroy(waterRoot.gameObject);
+            }
+
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(1, 0), Delay = .8f });

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Zjcs.Combat.Official;
+using Zjcs.Official.BattleTrackPlayables;
 using Zjcs.Official.StoryPlayables;
 
 namespace Zjcs.Presentation.Combat
@@ -280,5 +281,45 @@ namespace Zjcs.Presentation.Combat
         }
 
         internal void Detach() { arrival = null; }
+    }
+
+    // The original track calls its trigger after moving the projectile to its endpoint.
+    internal sealed class OfficialBattleWaterProjectileImpact : MyPlayableTrigger
+    {
+        private MyPlayableTrack track;
+        private MyPlayableTriggerTimeCfg trigger;
+        private Action arrival;
+
+        internal static OfficialBattleWaterProjectileImpact Attach(MyPlayable playable, float delayDistFactor, Action arrival)
+        {
+            if (!(playable is MyPlayableTrack track) || !track.myApplyComponent || !track.myTarget
+                || track.myFixDuration || track.myTrackEndStopTime != 0f || track.myTrackTriggerList == null
+                || track.myTrackTriggerList.Count != 0 || arrival == null) return null;
+            track.CalcInitialDurationSpd(out _, out float speed);
+            if (speed <= 0f || float.IsNaN(delayDistFactor) || float.IsInfinity(delayDistFactor)
+                || Math.Abs(1f / speed - delayDistFactor) > .00001f) return null;
+            var observer = track.gameObject.AddComponent<OfficialBattleWaterProjectileImpact>();
+            observer.track = track; observer.arrival = arrival;
+            observer.trigger = new MyPlayableTriggerTimeCfg { myTime = 1f, myTrigger = observer };
+            track.myTrackTriggerList.Add(observer.trigger);
+            return observer;
+        }
+
+        public override void Play(MyPlayable playable)
+        {
+            if (arrival == null || !track || !ReferenceEquals(playable, track)) return;
+            float duration = track.GetDuration();
+            if (duration <= 0f || track.Time < duration || !track.myApplyComponent || !track.myTarget
+                || Vector3.Distance(track.myApplyComponent.transform.position, track.myTarget.transform.position) > .01f) return;
+            var callback = arrival; arrival = null; callback();
+        }
+
+        internal void Detach()
+        {
+            arrival = null;
+            if (track && track.myTrackTriggerList != null) track.myTrackTriggerList.Remove(trigger);
+            track = null; trigger = null;
+            Destroy(this);
+        }
     }
 }
