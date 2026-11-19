@@ -65,6 +65,7 @@ namespace Zjcs.Combat.Official {
 namespace Zjcs.Presentation.Combat {
  internal sealed class OfficialBattleWindBladeImpact {internal static OfficialBattleWindBladeImpact Last;private Action<int> arrival;internal static OfficialBattleWindBladeImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,FightBattleHitEntity hit,Action<int> a){Last=new OfficialBattleWindBladeImpact{arrival=a};return Last;}internal void Trigger(int index){arrival?.Invoke(index);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleFallingWindImpact {internal static OfficialBattleFallingWindImpact Last;private Action<int> arrival;internal static OfficialBattleFallingWindImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,FightBattleHitRoot root,FightBattleHitEntity hit,Action<int> a){Last=new OfficialBattleFallingWindImpact{arrival=a};return Last;}internal void Trigger(int index){arrival?.Invoke(index);}internal void Detach(){arrival=null;}}
+ internal sealed class OfficialBattleFireRingImpact {internal static OfficialBattleFireRingImpact Last;private Action<int> arrival;internal static OfficialBattleFireRingImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,FightBattleHitRoot root,FightBattleHitEntity hit,Action<int> a){Last=new OfficialBattleFireRingImpact{arrival=a};return Last;}internal void Trigger(int index){arrival?.Invoke(index);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleSwordWindImpact {internal static OfficialBattleSwordWindImpact Last;private Action<float> arrival;internal static OfficialBattleSwordWindImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,Action<float> a){Last=new OfficialBattleSwordWindImpact{arrival=a};return Last;}internal void Trigger(float delay){arrival?.Invoke(delay);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleTargetParticleImpact {internal static OfficialBattleTargetParticleImpact Last;internal string Particle;private Action<float> arrival;internal static OfficialBattleTargetParticleImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,string particle,Action<float> a){Last=new OfficialBattleTargetParticleImpact{arrival=a,Particle=particle};return Last;}internal void Trigger(float delay){arrival?.Invoke(delay);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleProjectileImpact {internal static OfficialBattleProjectileImpact Last;private Action arrival;internal static OfficialBattleProjectileImpact Attach(MyPlayable leaf,float factor,Action a){if(factor!=.1f&&factor!=.125f)return null;Last=new OfficialBattleProjectileImpact{arrival=a};return Last;}internal void Trigger(){var callback=arrival;arrival=null;callback?.Invoke();}internal void Detach(){arrival=null;}}
@@ -221,6 +222,24 @@ namespace Zjcs.Presentation.Combat {
      cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartCast);
      Check(OfficialBattleImpactViewBridge.Arrivals.Count==1&&OfficialBattleImpactViewBridge.Arrivals[0]==0,"The landed sword did not reach its centre scope");
      observer.Trigger(1);observer.Trigger(1);Check(OfficialBattleImpactViewBridge.Arrivals.Count==5,"The ground effect did not reach the four outer scopes once");
+    }
+   }
+   {
+    var hit=new FightBattleHitEntity{EntityId=10831,ScopeEntries=new List<FightBattleHitScopeEntry>()};
+    for(int x=-2;x<=2;x++)for(int y=-2;y<=2;y++)if(Math.Abs(x)+Math.Abs(y)<=2)
+     hit.ScopeEntries.Add(new FightBattleHitScopeEntry{Position=new FightGridPoint(x,y),Delay=.05f*(Math.Abs(x)+Math.Abs(y)+1)});
+    var skill=new FightBattleSkillDefinition{EntityId=10830,HitGraphEntities=new List<FightBattleHitEntity>{hit},HitGraphRoots=new List<FightBattleHitRoot>{new FightBattleHitRoot{EntityId=10831,Delay=.5f}}};
+    var cp=new FightBattleCheckpoint{Units=new List<FightBattleUnitState>{new FightBattleUnitState{Id=1,Skills=new List<FightBattleSkillDefinition>{skill}}}};
+    var views=new OfficialBattleSkillEntityPlayback();var cast=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10830,HitSelections=new List<FightBattleHitSelectionSnapshot>()};
+    using(var session=new OfficialBattleLiveImpactSession(cp,_=>new FightBattleExecutor(),views,0,1,true)){
+     OfficialBattleImpactViewBridge.Arrivals.Clear();FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=cast};session.Pump(0,StartCast);
+     views.Graph(cast,"playable10830");var observer=OfficialBattleFireRingImpact.Last;Check(observer!=null,"The original fire ring was not observed");
+     observer.Trigger(0);observer.Trigger(1);Check(OfficialBattleImpactViewBridge.Arrivals.Count==0,"The fire ring fabricated unselected hits");
+     var selection=new FightBattleHitSelectionSnapshot{HitEntityId=10831,Targets=new List<FightBattleHitSelectionSnapshot.TargetOccurrence>()};
+     for(int index=0;index<13;index++)selection.Targets.Add(new FightBattleHitSelectionSnapshot.TargetOccurrence{HasScopeIndex=true,ScopeIndex=index});
+     cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartCast);
+     Check(OfficialBattleImpactViewBridge.Arrivals.Count==5,"Previously reached centre and near scopes must be delivered once selected");
+     observer.Trigger(2);observer.Trigger(2);Check(OfficialBattleImpactViewBridge.Arrivals.Count==13,"The fire ring must reach all eight outer scopes once");
     }
    }
    {

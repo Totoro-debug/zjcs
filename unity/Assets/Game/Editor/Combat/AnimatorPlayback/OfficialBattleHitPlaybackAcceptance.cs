@@ -475,6 +475,102 @@ namespace Zjcs.Editor.Combat
                 value.Properties.Add(new FightPropertyValue { Id = formula.PropertyId("CritAvoidPercent"), Value = 10000 });
                 return value;
             }
+            // The original fire ring expands through separate near and outer scopes.
+            for (int ringDirection = 0; ringDirection < 4; ringDirection++)
+            {
+                var ringUnits = new List<FightBattleUnitState> { LiveUnit(1, 1, 7) };
+                ringUnits[0].Y = 7; ringUnits[0].Profession = 10; ringUnits[0].Direction = ringDirection;
+                for (int x = -2; x <= 2; x++) for (int y = -2; y <= 2; y++)
+                    if (Math.Abs(x) + Math.Abs(y) > 0 && Math.Abs(x) + Math.Abs(y) <= 2)
+                    { var unit = LiveUnit(ringUnits.Count + 1, 2, 7 + x); unit.Y = 7 + y; ringUnits.Add(unit); }
+                var ringSkill = liveCatalog.CreateSkill(10830, 0, 10031, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(10830, 2, 20, 1).Select(value =>
+                        new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
+                ringSkill.LimitedTimes = 1; ringUnits[0].Skills.Add(ringSkill);
+                ringUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(ringSkill, 0));
+                var ringCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                ringCheckpoint.Units.AddRange(ringUnits);
+                var ringWave = new FightBattleWaveState(); ringWave.UnitIds.AddRange(ringUnits.Skip(1).Select(value => value.Id));
+                ringCheckpoint.Waves.Add(ringWave);
+                FightBattleExecutor.Begin(ringCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                var ringDisplay = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(ringCheckpoint)).Units.ToArray();
+                var ringRoot = new GameObject("Isolated fire ring " + ringDirection).transform; ringRoot.SetParent(root, false);
+                var ringBodies = new Dictionary<int, Transform>();
+                foreach (var unit in ringUnits)
+                {
+                    var body = new GameObject("Fire ring unit " + unit.Id).transform; body.SetParent(ringRoot, false);
+                    body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                    var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
+                    body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                    ringBodies.Add(unit.Id, body);
+                }
+                var ringAppearance = NativeJumpAppearanceFixture.Create(ringBodies[1].gameObject, 10);
+                var ringTargetAppearance = NativeJumpAppearanceFixture.Create(ringBodies[8].gameObject);
+                var ringScope = new OfflineBattleNativePlayableScope(ringRoot, null);
+                ParticleSystem fireRing = null; int pauseFrames = 0; bool resumed = false;
+                ringScope.NativePlayableStarted += (prefab, leaf) => {
+                    if (prefab.name != "playable10830" || leaf.name != "effect" || !leaf.myApplyComponent) return;
+                    fireRing = leaf.myApplyComponent.GetComponentsInChildren<ParticleSystem>(true).Single(value => value.name == "difeng (3)");
+                    fireRing.Pause(false);
+                };
+                var ringDamage = new List<(int Target, int Frame, float Age)>();
+                bool capturedRing = false;
+                cameraView.transform.position = new Vector3(7, 7, -20);
+                using (var ringViews = new OfficialBattleSkillEntityPlayback(ringRoot, new OfficialBattleGridMapper(ringRoot, grid),
+                    ringScope, id => ringDisplay.FirstOrDefault(value => value.Id == id)))
+                using (var ringGraph = new OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog.TryLoadDefault(), ringScope, ringViews))
+                {
+                    ringViews.BindDamageUI(ringRoot, 0);
+                    foreach (var pair in ringBodies) ringViews.EnsureUnit(pair.Key, pair.Value);
+                    Transform RingBody(int id) => ringBodies.TryGetValue(id, out var body) ? body : null;
+                    void RingDamage(FightBattleDamageEvent damage, FightBattleUnitState projected)
+                    {
+                        var buffer = new ParticleSystem.Particle[fireRing.main.maxParticles];
+                        int count = fireRing.GetParticles(buffer);
+                        Require(count > 0, "Fire ring damage must wait for the original visible particle.");
+                        float age = buffer[0].startLifetime - buffer[0].remainingLifetime;
+                        ringDamage.Add((damage.TargetId, Time.frameCount, age));
+                        var floats = ringRoot.GetComponentsInChildren<Zjcs.Official.BattleDamageUI.CharacterDamageUI>(true);
+                        Require(floats.Any(ui => ui.EntityId == new EcEntityIdentifier(1, damage.TargetId)
+                            && ui.GetComponentsInChildren<TextMesh>(true).Any(text => text.text == Math.Abs(damage.DamageValue).ToString())),
+                            "Fire ring damage number must start on its target in the impact frame.");
+                        ringDisplay[Array.FindIndex(ringDisplay, value => value.Id == damage.TargetId)] = projected;
+                    }
+                    using (var ringDriver = new OfficialBattleLiveGraphDriver(ringCheckpoint, copy => FightBattleExecutor.Restore(copy,
+                        formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()), ringViews,
+                        id => id == 10830, RingBody, null, RingDamage))
+                    {
+                        ringDriver.SecondsStatusChanged += _ => { };
+                        ringDisplay = ringCheckpoint.Units.Select(value => ringDriver.DisplayUnit(value.Id)).ToArray();
+                        float ringDeadline = Time.realtimeSinceStartup + 10f;
+                        while (!ringDriver.IsCompleted && Time.realtimeSinceStartup < ringDeadline)
+                        {
+                            ringDriver.Pump(Time.deltaTime); ringViews.Tick(Time.deltaTime); ringScope.LateTick();
+                            if (fireRing && !resumed)
+                            {
+                                Require(ringDamage.Count == 0, "A paused original fire ring cannot settle damage.");
+                                if (++pauseFrames == 8) { fireRing.Play(false); resumed = true; }
+                            }
+                            if (ringDirection == 0 && !capturedRing && ringDamage.Count > 0)
+                            { Capture("fire-ring-native-impact.png", false); capturedRing = true; }
+                            yield return null;
+                        }
+                        Require(ringDriver.IsCompleted && resumed && pauseFrames == 8 && ringDamage.Count == 12,
+                            "The official fire ring must complete after all twelve selected enemies are hit.");
+                        var near = ringDamage.Where(value => Math.Abs(ringUnits[value.Target - 1].X - 7)
+                            + Math.Abs(ringUnits[value.Target - 1].Y - 7) == 1).ToArray();
+                        var outer = ringDamage.Where(value => Math.Abs(ringUnits[value.Target - 1].X - 7)
+                            + Math.Abs(ringUnits[value.Target - 1].Y - 7) == 2).ToArray();
+                        Require(near.Length == 4 && outer.Length == 8 && near.Select(value => value.Frame).Distinct().Count() == 1
+                            && outer.Select(value => value.Frame).Distinct().Count() == 1 && near[0].Frame < outer[0].Frame
+                            && near.All(value => value.Age >= .05f - .0001f) && outer.All(value => value.Age >= .1f - .0001f),
+                            "Near and outer enemies must settle once, together, at the original expanding ring.");
+                    }
+                }
+                ringScope.Dispose(); ringTargetAppearance.Dispose(); ringAppearance.Dispose(); Destroy(ringRoot.gameObject);
+                cameraView.transform.position = new Vector3(5, 5, -20);
+            }
             var fireUnits = new[] { LiveUnit(1, 1, 2), LiveUnit(2, 2, 5) };
             var fireRoot = new GameObject("Isolated fireball scene").transform;
             fireRoot.SetParent(root, false);

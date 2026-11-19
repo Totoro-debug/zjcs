@@ -25,7 +25,7 @@ namespace Zjcs.Presentation.Combat
             public float Started;
         }
 
-        private sealed class FallingWindDefinition
+        private sealed class AreaRingDefinition
         {
             public FightBattleHitRoot Root;
             public FightBattleHitEntity Hit;
@@ -66,12 +66,18 @@ namespace Zjcs.Presentation.Combat
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center, int Scope)> sentWindHits =
             new HashSet<(FightBattleHitSelectionSnapshot, int, int)>();
         private readonly List<OfficialBattleWindBladeImpact> windBlades = new List<OfficialBattleWindBladeImpact>();
-        private readonly Dictionary<int, FallingWindDefinition> fallingWindDefinitions = new Dictionary<int, FallingWindDefinition>();
+        private readonly Dictionary<int, AreaRingDefinition> fallingWindDefinitions = new Dictionary<int, AreaRingDefinition>();
         private readonly HashSet<FightBattleSkillCastEvent> observedFallingWind = new HashSet<FightBattleSkillCastEvent>();
         private readonly Dictionary<FightBattleSkillCastEvent, int> reachedFallingWind = new Dictionary<FightBattleSkillCastEvent, int>();
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center, int Scope)> sentFallingWindHits =
             new HashSet<(FightBattleHitSelectionSnapshot, int, int)>();
         private readonly List<OfficialBattleFallingWindImpact> fallingWindEffects = new List<OfficialBattleFallingWindImpact>();
+        private readonly Dictionary<int, AreaRingDefinition> fireRingDefinitions = new Dictionary<int, AreaRingDefinition>();
+        private readonly HashSet<FightBattleSkillCastEvent> observedFireRings = new HashSet<FightBattleSkillCastEvent>();
+        private readonly Dictionary<FightBattleSkillCastEvent, int> reachedFireRings = new Dictionary<FightBattleSkillCastEvent, int>();
+        private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center, int Scope)> sentFireRingHits =
+            new HashSet<(FightBattleHitSelectionSnapshot, int, int)>();
+        private readonly List<OfficialBattleFireRingImpact> fireRingEffects = new List<OfficialBattleFireRingImpact>();
         private readonly HashSet<FightBattleSkillCastEvent> observedSwordWind = new HashSet<FightBattleSkillCastEvent>();
         private readonly Dictionary<FightBattleSkillCastEvent, float> reachedSwordWind = new Dictionary<FightBattleSkillCastEvent, float>();
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> sentSwordWindHits =
@@ -252,7 +258,24 @@ namespace Zjcs.Presentation.Combat
                                     rings[(int)distance].Add(index);
                             }
                             if (rings[0].Count == 1 && rings[1].Count == 4)
-                                fallingWindDefinitions[unit.Id] = new FallingWindDefinition {
+                                fallingWindDefinitions[unit.Id] = new AreaRingDefinition {
+                                    Root = skill.HitGraphRoots[0], Hit = hit, Scopes = rings };
+                        }
+                        if (skill.EntityId == 10830 && hit.EntityId == 10831 && hit.ScopeEntries.Count == 13
+                            && skill.HitGraphRoots != null && skill.HitGraphRoots.Count == 1
+                            && skill.HitGraphRoots[0]?.EntityId == 10831)
+                        {
+                            var rings = new[] { new HashSet<int>(), new HashSet<int>(), new HashSet<int>() };
+                            var positions = new HashSet<FightGridPoint>();
+                            for (int index = 0; index < hit.ScopeEntries.Count; index++)
+                            {
+                                var entry = hit.ScopeEntries[index];
+                                if (entry == null || !positions.Add(entry.Position)) continue;
+                                long distance = Math.Abs((long)entry.Position.X) + Math.Abs((long)entry.Position.Y);
+                                if (distance <= 2) rings[(int)distance].Add(index);
+                            }
+                            if (rings[0].Count == 1 && rings[1].Count == 4 && rings[2].Count == 8)
+                                fireRingDefinitions[unit.Id] = new AreaRingDefinition {
                                     Root = skill.HitGraphRoots[0], Hit = hit, Scopes = rings };
                         }
                     }
@@ -413,6 +436,9 @@ namespace Zjcs.Presentation.Combat
                         if (reachedFallingWind.TryGetValue(selectedCast, out int fallingReached))
                             for (int index = 0; index < 2; index++)
                                 if ((fallingReached & (1 << index)) != 0) RouteFallingWindImpact(selectedCast, active.Id, index);
+                        if (reachedFireRings.TryGetValue(selectedCast, out int fireRingReached))
+                            for (int index = 0; index < 3; index++)
+                                if ((fireRingReached & (1 << index)) != 0) RouteFireRingImpact(selectedCast, active.Id, index);
                         if (reachedSwordWind.TryGetValue(selectedCast, out float swordWindDelay))
                             RouteSwordWindImpact(selectedCast, active.Id, swordWindDelay);
                         if (reachedIceHits.TryGetValue(selectedCast, out float iceDelay))
@@ -598,7 +624,8 @@ namespace Zjcs.Presentation.Combat
                 try { RouteJumpSlashImpact(cast, prefab, playable); AttachMountainWaves(cast, id, prefab, playable);
                     AttachSlashImpact(cast, id, prefab, playable); AttachComboImpact(cast, id, prefab, playable);
                     AttachCrossImpact(cast, id, prefab, playable); AttachWindBladeImpact(cast, id, prefab, playable);
-                    AttachFallingWindImpact(cast, id, prefab, playable); AttachSwordWindImpact(cast, id, prefab, playable);
+                    AttachFallingWindImpact(cast, id, prefab, playable); AttachFireRingImpact(cast, id, prefab, playable);
+                    AttachSwordWindImpact(cast, id, prefab, playable);
                     AttachIceHitImpact(cast, id, prefab, playable); AttachAuraHitImpact(cast, id, prefab, playable); }
                 finally { currentGraphCast = previousCast; currentGraphSkillId = previousId; }
             }
@@ -699,6 +726,40 @@ namespace Zjcs.Presentation.Combat
                         || target.ScopeIndex != 0 || target.ScopeDelay != 0f
                         || !sentSwordWindHits.Add((hit, target.EffectCenterIndex))) continue;
                     bridge.RecordArrival(cast, hit, target.EffectCenterIndex, 0);
+                }
+            }
+        }
+
+        private void AttachFireRingImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
+            GameObject prefab, MyPlayable playable)
+        {
+            if (cast?.SkillEntityId != 10830 || prefab == null || prefab.name != "playable10830"
+                || playable == null || playable.name != "effect" || observedFireRings.Contains(cast)
+                || !fireRingDefinitions.TryGetValue(cast.ActorId, out var definition)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            var observer = OfficialBattleFireRingImpact.Attach(prefab, playable, definition.Root, definition.Hit,
+                index => RouteFireRingImpact(cast, id, index));
+            if (observer == null) return;
+            observedFireRings.Add(cast); fireRingEffects.Add(observer);
+        }
+
+        private void RouteFireRingImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id, int ring)
+        {
+            if (disposed || transferred || ring < 0 || ring > 2 || !observedFireRings.Contains(cast)
+                || !fireRingDefinitions.TryGetValue(cast.ActorId, out var definition)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            reachedFireRings.TryGetValue(cast, out int reached);
+            reachedFireRings[cast] = reached | (1 << ring);
+            if (cast.HitSelections == null) return;
+            foreach (var hit in new List<FightBattleHitSelectionSnapshot>(cast.HitSelections))
+            {
+                if (hit?.HitEntityId != 10831 || !selectedHits.Contains(hit) || hit.Targets == null) continue;
+                foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
+                {
+                    if (!casts.ContainsKey(cast)) return;
+                    if (target == null || !target.HasScopeIndex || !definition.Scopes[ring].Contains(target.ScopeIndex)
+                        || !sentFireRingHits.Add((hit, target.EffectCenterIndex, target.ScopeIndex))) continue;
+                    bridge.RecordArrival(cast, hit, target.EffectCenterIndex, target.ScopeIndex);
                 }
             }
         }
@@ -995,6 +1056,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in slashEffects) if (observer != null) observer.Detach();
             foreach (var observer in windBlades) if (observer != null) observer.Detach();
             foreach (var observer in fallingWindEffects) if (observer != null) observer.Detach();
+            foreach (var observer in fireRingEffects) if (observer != null) observer.Detach();
             foreach (var observer in swordWindEffects) if (observer != null) observer.Detach();
             foreach (var observer in iceHitEffects) if (observer != null) observer.Detach();
             foreach (var observer in auraHitEffects) if (observer != null) observer.Detach();
@@ -1017,6 +1079,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in slashEffects) if (observer != null) observer.Detach();
             foreach (var observer in windBlades) if (observer != null) observer.Detach();
             foreach (var observer in fallingWindEffects) if (observer != null) observer.Detach();
+            foreach (var observer in fireRingEffects) if (observer != null) observer.Detach();
             foreach (var observer in swordWindEffects) if (observer != null) observer.Detach();
             foreach (var observer in iceHitEffects) if (observer != null) observer.Detach();
             foreach (var observer in auraHitEffects) if (observer != null) observer.Detach();
@@ -1029,6 +1092,8 @@ namespace Zjcs.Presentation.Combat
             pullScopes.Clear(); sentPullHits.Clear();
             fallingWindDefinitions.Clear(); observedFallingWind.Clear(); reachedFallingWind.Clear();
             sentFallingWindHits.Clear(); fallingWindEffects.Clear();
+            fireRingDefinitions.Clear(); observedFireRings.Clear(); reachedFireRings.Clear();
+            sentFireRingHits.Clear(); fireRingEffects.Clear();
             observedSwordWind.Clear(); reachedSwordWind.Clear(); sentSwordWindHits.Clear(); swordWindEffects.Clear();
             observedIceHits.Clear(); reachedIceHits.Clear(); sentIceHits.Clear(); iceHitEffects.Clear();
             observedAuraHits.Clear(); reachedAuraHits.Clear(); sentAuraHits.Clear(); auraHitEffects.Clear();

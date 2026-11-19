@@ -32,7 +32,7 @@ namespace Zjcs.Editor.Combat
         internal ProfessionNativeSceneRenderer Native { get; private set; }
         internal Animator Animator { get; private set; }
 
-        internal static NativeJumpAppearanceFixture Create(GameObject root)
+        internal static NativeJumpAppearanceFixture Create(GameObject root, int profession = 1)
         {
             var fixture = new NativeJumpAppearanceFixture();
             fixture.catalog = Resources.Load<ProfessionNativeSceneAppearanceResources>("Combat/SceneCharacters/appearance-resources");
@@ -44,9 +44,9 @@ namespace Zjcs.Editor.Combat
             var resolver = new ProfessionAppearanceResolver(tables);
             var defaults = new ProfessionAppearanceSkinDefaults(tables, Resources.Load<TextAsset>("Combat/SceneAppearance/skin-defaults").text,
                 message => throw new InvalidOperationException(message));
-            var data = resolver.BuildDefaultAppearanceData(config, Sex.Male, (Profession)1);
-            var profile = new OfflinePlayerProgress { InitialWeaponType = 200 };
-            profile.Wardrobe.Sex = (int)Sex.Male; profile.Wardrobe.Profession = 1;
+            var data = resolver.BuildDefaultAppearanceData(config, Sex.Male, (Profession)profession);
+            var profile = new OfflinePlayerProgress { InitialWeaponType = profession == 1 ? 200 : 201 };
+            profile.Wardrobe.Sex = (int)Sex.Male; profile.Wardrobe.Profession = profession;
             foreach (var pair in data.SkinMap)
                 profile.Wardrobe.BaseSkins.Add(new OfflineAppearanceSkin { Type = (int)pair.Key, Id = pair.Value.SkinId });
             foreach (var pair in data.DyeMap)

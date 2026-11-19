@@ -246,6 +246,95 @@ namespace Zjcs.Presentation.Combat
         internal void Detach() { arrival = null; }
     }
 
+    // Observe the expanding original fire ring at the positions of its configured scopes.
+    internal sealed class OfficialBattleFireRingImpact : MonoBehaviour
+    {
+        private ParticleSystem ring;
+        private ParticleSystem.Particle[] particles;
+        private float[] ages, sizes;
+        private uint seed;
+        private bool hasParticle;
+        private int next;
+        private Action<int> arrival;
+
+        internal static OfficialBattleFireRingImpact Attach(GameObject prefab, MyPlayable playable,
+            FightBattleHitRoot root, FightBattleHitEntity hit, Action<int> arrival)
+        {
+            if (!prefab || !playable || !playable.myApplyComponent || root == null || root.EntityId != 10831
+                || hit?.ScopeEntries == null || hit.ScopeEntries.Count != 13 || arrival == null) return null;
+            var sequence = prefab.GetComponent<MyPlayableSequence>();
+            if (!sequence || sequence.myPlayables == null) return null;
+            float effectStart = -1f; int effects = 0;
+            foreach (var entry in sequence.myPlayables)
+                if (entry?.myPlayable && entry.myPlayable.name == "effect") { effectStart = entry.myTime; effects++; }
+            if (effects != 1 || effectStart < 0f) return null;
+            var offsets = new System.Collections.Generic.HashSet<FightGridPoint>();
+            var delays = new[] { -1f, -1f, -1f }; var counts = new int[3];
+            foreach (var scope in hit.ScopeEntries)
+            {
+                if (scope == null || !offsets.Add(scope.Position)) return null;
+                long distance = Math.Abs((long)scope.Position.X) + Math.Abs((long)scope.Position.Y);
+                if (distance > 2 || float.IsNaN(scope.Delay) || float.IsInfinity(scope.Delay)) return null;
+                int index = (int)distance;
+                if (delays[index] >= 0f && Math.Abs(delays[index] - scope.Delay) > .00001f) return null;
+                delays[index] = scope.Delay; counts[index]++;
+            }
+            if (counts[0] != 1 || counts[1] != 4 || counts[2] != 8) return null;
+            ParticleSystem ring = null;
+            foreach (var particle in playable.myApplyComponent.GetComponentsInChildren<ParticleSystem>(true))
+                if (particle.name == "difeng (3)") { if (ring) return null; ring = particle; }
+            if (!ring) return null;
+            var main = ring.main; var size = ring.sizeOverLifetime;
+            if (main.startDelay.mode != ParticleSystemCurveMode.Constant || main.useUnscaledTime
+                || Math.Abs(main.simulationSpeed - 1f) > .00001f || !size.enabled || size.separateAxes
+                || size.size.mode != ParticleSystemCurveMode.Curve || main.maxParticles <= 0) return null;
+            var ages = new float[3];
+            for (int index = 0; index < ages.Length; index++)
+            {
+                ages[index] = root.Delay + delays[index] - effectStart - main.startDelay.constant;
+                if (float.IsNaN(ages[index]) || float.IsInfinity(ages[index]) || ages[index] < -.00001f
+                    || index > 0 && ages[index] <= ages[index - 1]) return null;
+                ages[index] = Mathf.Max(0f, ages[index]);
+            }
+            var observer = playable.gameObject.AddComponent<OfficialBattleFireRingImpact>();
+            observer.ring = ring; observer.particles = new ParticleSystem.Particle[main.maxParticles];
+            observer.ages = ages; observer.sizes = new float[ages.Length]; observer.arrival = arrival;
+            return observer;
+        }
+
+        private void LateUpdate()
+        {
+            if (arrival == null || !ring || ring.particleCount <= 0) return;
+            int count = ring.GetParticles(particles);
+            for (int index = 0; index < count; index++)
+            {
+                var particle = particles[index];
+                if (!hasParticle)
+                {
+                    if (particle.startLifetime <= ages[ages.Length - 1]) continue;
+                    var curve = ring.sizeOverLifetime.size;
+                    float previous = curve.Evaluate(0f);
+                    for (int sample = 1; sample <= 32; sample++)
+                    {
+                        float value = curve.Evaluate(ages[ages.Length - 1] / particle.startLifetime * sample / 32f);
+                        if (value + .00001f < previous) return;
+                        previous = value;
+                    }
+                    for (int phase = 0; phase < ages.Length; phase++)
+                        sizes[phase] = particle.startSize * curve.Evaluate(ages[phase] / particle.startLifetime);
+                    if (sizes[1] <= sizes[0] || sizes[2] <= sizes[1]) return;
+                    seed = particle.randomSeed; hasParticle = true;
+                }
+                if (particle.randomSeed != seed) continue;
+                float currentSize = particle.GetCurrentSize(ring);
+                while (arrival != null && next < sizes.Length && currentSize + .00001f >= sizes[next]) arrival(next++);
+                return;
+            }
+        }
+
+        internal void Detach() { arrival = null; }
+    }
+
     // The passive's original target effect emits this ring at its configured hit boundary.
     internal sealed class OfficialBattleSwordWindImpact : MonoBehaviour
     {
