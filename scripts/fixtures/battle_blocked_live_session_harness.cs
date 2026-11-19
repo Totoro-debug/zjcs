@@ -17,7 +17,7 @@ namespace Zjcs.Combat.Official {
  public class FightBattleHitScopeEntry {public float Delay;public FightGridPoint Position;}
  public class FightBattleSkillCastPresentation {public float Duration;}
  public class FightBattleSkillCastEvent {public int SkillEntityId,ActorId;public FightBattleSkillCastPresentation Presentation;public List<FightBattleHitSelectionSnapshot> HitSelections;}
- public class FightBattleHitSelectionSnapshot {public int HitEntityId;public List<TargetOccurrence> Targets;public class TargetOccurrence {public int EffectCenterIndex,ScopeIndex;public bool HasScopeIndex;}}
+ public class FightBattleHitSelectionSnapshot {public int HitEntityId;public float Delay;public List<TargetOccurrence> Targets;public class TargetOccurrence {public int EffectCenterIndex,ScopeIndex;public float ScopeDelay;public bool HasScopeIndex;}}
  public class FightBattleMovementEvent {public int UnitId;}
  public class FightBattleDamageEvent {public bool HasDamageTriggerStatus;}
  public class FightBattleExecutionResult {}
@@ -65,6 +65,7 @@ namespace Zjcs.Combat.Official {
 namespace Zjcs.Presentation.Combat {
  internal sealed class OfficialBattleWindBladeImpact {internal static OfficialBattleWindBladeImpact Last;private Action<int> arrival;internal static OfficialBattleWindBladeImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,FightBattleHitEntity hit,Action<int> a){Last=new OfficialBattleWindBladeImpact{arrival=a};return Last;}internal void Trigger(int index){arrival?.Invoke(index);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleFallingWindImpact {internal static OfficialBattleFallingWindImpact Last;private Action<int> arrival;internal static OfficialBattleFallingWindImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,FightBattleHitRoot root,FightBattleHitEntity hit,Action<int> a){Last=new OfficialBattleFallingWindImpact{arrival=a};return Last;}internal void Trigger(int index){arrival?.Invoke(index);}internal void Detach(){arrival=null;}}
+ internal sealed class OfficialBattleSwordWindImpact {internal static OfficialBattleSwordWindImpact Last;private Action<float> arrival;internal static OfficialBattleSwordWindImpact Attach(UnityEngine.GameObject p,MyPlayable leaf,Action<float> a){Last=new OfficialBattleSwordWindImpact{arrival=a};return Last;}internal void Trigger(float delay){arrival?.Invoke(delay);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleMountainWaveImpact {internal static OfficialBattleMountainWaveImpact Last;private Action<int> arrival;internal static OfficialBattleMountainWaveImpact Attach(MyPlayable p,Action<int> a){Last=new OfficialBattleMountainWaveImpact{arrival=a};return Last;}internal void Trigger(int wave){arrival?.Invoke(wave);}internal void Detach(){arrival=null;}}
  internal sealed class OfficialBattleSlashImpact {internal static OfficialBattleSlashImpact Last;internal string Particle;private Action arrival;internal static OfficialBattleSlashImpact Attach(MyPlayable p,string particle,Action a){Last=new OfficialBattleSlashImpact{arrival=a,Particle=particle};return Last;}internal void Trigger(){arrival?.Invoke();}internal void Detach(){arrival=null;}}
  public class OfficialBattleSkillEntityPlayback {public event Action<FightBattleSkillCastEvent,EcEntityIdentifier,GameObject,MyPlayable> SkillGraphPlayableStarted;public event Action<FightBattleSkillCastEvent,FightBattleHitSelectionSnapshot,int,GameObject,MyPlayable> HitGraphPlayableStarted;public void CompleteLiveCast(FightBattleSkillCastEvent c,EcEntityIdentifier id,float t){} public void Graph(FightBattleSkillCastEvent c,string prefab="playable11120",string leaf="effect"){SkillGraphPlayableStarted?.Invoke(c,new EcEntityIdentifier(),new GameObject{name=prefab},new MyPlayable{name=leaf});}public void HitGraph(FightBattleSkillCastEvent c,FightBattleHitSelectionSnapshot hit,int center,string leaf){HitGraphPlayableStarted?.Invoke(c,hit,center,new GameObject{name="playable10701"},new MyPlayable{name=leaf});} }
@@ -86,6 +87,37 @@ namespace Zjcs.Presentation.Combat {
   private static OfficialBattleLiveImpactSession NewSession(){return new OfficialBattleLiveImpactSession(new FightBattleCheckpoint(),_=>new FightBattleExecutor(),new OfficialBattleSkillEntityPlayback(),0,1,true);}
   private static FightBattleMovementEvent Prepare(){var move=new FightBattleMovementEvent{UnitId=4};FightBattleImpactLatch.Last.Pending=new FightBattlePreparedMovement{Movement=move,HasBlockedPosition=true,BlockedPosition=new FightGridPoint(6,7)};return move;}
   public static void Run(){
+   {
+    var views=new OfficialBattleSkillEntityPlayback();var cast=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=11290,HitSelections=new List<FightBattleHitSelectionSnapshot>()};
+    using(var session=new OfficialBattleLiveImpactSession(new FightBattleCheckpoint(),_=>new FightBattleExecutor(),views,0,1,true)){
+     bool StartInline(FightBattleSkillCastEvent current,out EcEntityIdentifier id){id=new EcEntityIdentifier();views.Graph(current,"playable11290","effect");return true;}
+     OfficialBattleImpactViewBridge.Arrivals.Clear();OfficialBattleSwordWindImpact.Last=null;
+     FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=cast};session.Pump(0,StartInline);
+     var observer=OfficialBattleSwordWindImpact.Last;Check(observer!=null,"The triggered child lost its zero-time original effect");
+     observer.Trigger(.1f);Check(OfficialBattleImpactViewBridge.Arrivals.Count==0,"The passive fabricated an unselected hit");
+     var selection=new FightBattleHitSelectionSnapshot{HitEntityId=11291,Delay=.1f,Targets=new List<FightBattleHitSelectionSnapshot.TargetOccurrence>{new FightBattleHitSelectionSnapshot.TargetOccurrence{HasScopeIndex=true,ScopeIndex=0}}};
+     cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartInline);
+     Check(OfficialBattleImpactViewBridge.Arrivals.Count==1,"The original passive ring did not reach its selected target");
+     observer.Trigger(.1f);Check(OfficialBattleImpactViewBridge.Arrivals.Count==1,"The passive ring repeated a hit");
+    }
+   }
+   {
+    var hit=new FightBattleHitEntity{EntityId=10601,ScopeEntries=new List<FightBattleHitScopeEntry>{new FightBattleHitScopeEntry{Position=new FightGridPoint(0,1)}}};
+    var skill=new FightBattleSkillDefinition{EntityId=10600,HitGraphEntities=new List<FightBattleHitEntity>{hit}};
+    var cp=new FightBattleCheckpoint{Units=new List<FightBattleUnitState>{new FightBattleUnitState{Id=1,Skills=new List<FightBattleSkillDefinition>{skill}}}};
+    var views=new OfficialBattleSkillEntityPlayback();var cast=new FightBattleSkillCastEvent{ActorId=1,SkillEntityId=10600,HitSelections=new List<FightBattleHitSelectionSnapshot>()};
+    using(var session=new OfficialBattleLiveImpactSession(cp,_=>new FightBattleExecutor(),views,0,1,true)){
+     int graphEvents=0;session.SkillGraphPlayableStarted+=(c,id,p,l)=>{if(ReferenceEquals(c,cast)&&l.name=="effect")graphEvents++;};
+     bool StartInline(FightBattleSkillCastEvent current,out EcEntityIdentifier id){id=new EcEntityIdentifier();views.Graph(current,"playable10600","effect");return true;}
+     OfficialBattleImpactViewBridge.Arrivals.Clear();OfficialBattleSlashImpact.Last=null;
+     FightBattleImpactLatch.Last.PendingCast=new FightBattlePreparedCast{Cast=cast};session.Pump(0,StartInline);
+     var observer=OfficialBattleSlashImpact.Last;
+     Check(observer!=null&&graphEvents==1,"A zero-time original graph leaf must attach exactly once during cast creation");
+     var selection=new FightBattleHitSelectionSnapshot{HitEntityId=10601,Targets=new List<FightBattleHitSelectionSnapshot.TargetOccurrence>{new FightBattleHitSelectionSnapshot.TargetOccurrence{HasScopeIndex=true,ScopeIndex=0}}};
+     cast.HitSelections.Add(selection);FightBattleImpactLatch.Last.PendingSelection=new FightBattleSelectedHit{Cast=cast,Selection=selection};session.Pump(0,StartInline);
+     observer.Trigger();Check(OfficialBattleImpactViewBridge.Arrivals.Count==1,"The zero-time graph leaf did not retain its selected hit");
+    }
+   }
    {
     var hit=new FightBattleHitEntity{EntityId=10591,ScopeEntries=new List<FightBattleHitScopeEntry>{
      new FightBattleHitScopeEntry{Position=new FightGridPoint(0,0)},new FightBattleHitScopeEntry{Position=new FightGridPoint(-1,0),Delay=.1f},

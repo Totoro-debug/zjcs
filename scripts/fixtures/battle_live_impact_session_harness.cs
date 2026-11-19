@@ -29,6 +29,11 @@ namespace Zjcs.Presentation.Combat
         internal static OfficialBattleFallingWindImpact Attach(GameObject prefab, MyPlayable playable, FightBattleHitRoot root, FightBattleHitEntity hit, Action<int> arrival) => null;
         internal void Detach() { }
     }
+    internal sealed class OfficialBattleSwordWindImpact
+    {
+        internal static OfficialBattleSwordWindImpact Attach(GameObject prefab, MyPlayable playable, Action<float> arrival) => null;
+        internal void Detach() { }
+    }
     internal sealed class OfficialBattleMountainWaveImpact
     {
         internal static OfficialBattleMountainWaveImpact Attach(MyPlayable playable, Action<int> arrival) => null;

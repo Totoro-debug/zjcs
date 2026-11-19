@@ -2330,6 +2330,109 @@ namespace Zjcs.Editor.Combat
                 fallScope.Dispose(); fallAppearance?.Dispose(); fallTargetAppearance?.Dispose(); Destroy(fallRoot.gameObject);
             }
 
+            // A hit-triggered passive creates its own zero-time native effect and later wind hit.
+            foreach (var direction in new[] { new[] { 1, 0, 3, 0 }, new[] { -1, 0, 1, 0 },
+                new[] { 0, 1, 2, 0 }, new[] { 0, -1, 0, 0 }, new[] { 1, 0, 3, 1 } })
+            {
+                int dx = direction[0], dy = direction[1]; bool shielded = direction[3] != 0;
+                var swordWindUnits = new[] { LiveUnit(1, 1, 5), LiveUnit(2, 2, 5 + dx) };
+                swordWindUnits[0].Direction = direction[2]; swordWindUnits[1].Y = 5 + dy;
+                var swordWindSkill = liveCatalog.CreateSkill(10600, 0, 10008, 2, 20, 1,
+                    liveCatalog.CalculateSkillProps(10600, 2, 20, 1)
+                        .Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+                swordWindSkill.LimitedTimes = 1; swordWindUnits[0].Skills.Add(swordWindSkill);
+                swordWindUnits[0].SkillState.Slots.Add(liveCatalog.CreateSkillSlot(swordWindSkill, 0));
+                var swordWindStatus = liveCatalog.CreateStatus(25025, 1, 1, 1, 25025, 10562, 2, 20, 1);
+                swordWindStatus.Components.HitSkill.Rate = 1f; // Deterministic trigger; its original rate is tested separately.
+                swordWindUnits[0].Statuses.Add(swordWindStatus);
+                if (shielded) swordWindUnits[1].Statuses.Add(new FightBattleStatusState {
+                    ClassId = 90003, InstanceId = 1, OwnerId = 2, CreatorId = 2,
+                    ShieldKind = FightBattleShieldKind.Persistent, ShieldInitialized = true,
+                    ShieldValue = 100000000, ShieldRemainValue = 100000000 });
+                var swordWindCheckpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                swordWindCheckpoint.Units.AddRange(swordWindUnits);
+                var swordWindWave = new FightBattleWaveState(); swordWindWave.UnitIds.Add(2);
+                swordWindCheckpoint.Waves.Add(swordWindWave);
+                FightBattleExecutor.Begin(swordWindCheckpoint, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems());
+                var swordWindDisplay = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(swordWindCheckpoint)).Units.ToArray();
+                var swordWindRoot = new GameObject("Sword wind acceptance").transform; swordWindRoot.SetParent(root, false);
+                var swordWindBodies = new Dictionary<int, Transform>();
+                foreach (var unit in swordWindUnits)
+                {
+                    var body = new GameObject("Sword wind unit " + unit.Id).transform; body.SetParent(swordWindRoot, false);
+                    body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                    var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false;
+                    renderer.sharedMaterials = Array.Empty<Material>();
+                    body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                    swordWindBodies.Add(unit.Id, body);
+                }
+                var swordWindAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
+                    ? NativeJumpAppearanceFixture.Create(swordWindBodies[1].gameObject) : null;
+                var swordWindTargetAppearance = OfficialBattleHitPlaybackAcceptance.PlayerJump
+                    ? NativeJumpAppearanceFixture.Create(swordWindBodies[2].gameObject) : null;
+                var swordWindScope = new OfflineBattleNativePlayableScope(swordWindRoot, null);
+                ParticleSystem swordWindRing = null; int baseHits = 0, passiveHits = 0, frozenFrames = 0, graphLeafCount = 0;
+                bool swordWindResumed = false;
+                swordWindScope.NativePlayableStarted += (prefab, leaf) => {
+                    if (prefab.name != "playable11290" || leaf.name != "effect" || !leaf.myApplyComponent) return;
+                    foreach (var particle in leaf.myApplyComponent.GetComponentsInChildren<ParticleSystem>(true))
+                        if (particle.name == "yuanquan (1)") { swordWindRing = particle; particle.Pause(); }
+                };
+                using (var swordWindViews = new OfficialBattleSkillEntityPlayback(swordWindRoot,
+                    new OfficialBattleGridMapper(swordWindRoot, grid), swordWindScope,
+                    id => swordWindDisplay.FirstOrDefault(value => value.Id == id)))
+                using (var swordWindGraph = new OfficialBattleSkillGraphPlayback(
+                    OfficialBattleSkillGraphCatalog.TryLoadDefault(), swordWindScope, swordWindViews))
+                {
+                    swordWindViews.BindDamageUI(swordWindRoot, 0);
+                    foreach (var pair in swordWindBodies) swordWindViews.EnsureUnit(pair.Key, pair.Value);
+                    Transform SwordWindBody(int id) => swordWindBodies.TryGetValue(id, out var value) ? value : null;
+                    void SwordWindDamage(FightBattleDamageEvent damage, FightBattleUnitState projected)
+                    {
+                        Require(damage.TargetId == 2 && (!shielded || damage.BeforeHp == damage.AfterHp),
+                            "Sword wind hit the wrong target or bypassed its shield.");
+                        if (damage.SkillEntityId == 10600) baseHits++;
+                        else
+                        {
+                            Require(damage.SkillEntityId == 11290 && damage.HitEntityId == 11291
+                                && damage.DamageEntityId == 11292 && damage.ElementType == 100 && baseHits == 1
+                                && swordWindResumed && swordWindRing && swordWindRing.particleCount > 0,
+                                "Sword wind did not settle with its original target effect.");
+                            passiveHits++;
+                            if (swordWindAppearance != null) Capture("sword-wind-damage-" + dx + "-" + dy + "-" + direction[3] + ".png", false);
+                        }
+                        swordWindDisplay[Array.FindIndex(swordWindDisplay, unit => unit.Id == damage.TargetId)] = projected;
+                    }
+                    using (var swordWindDriver = new OfficialBattleLiveGraphDriver(swordWindCheckpoint,
+                        copy => FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), liveCatalog, combatAssets.LoadSkillItems()),
+                        swordWindViews, id => id == 10600 || id == 11290, SwordWindBody, null, SwordWindDamage))
+                    {
+                        swordWindDriver.SecondsStatusChanged += _ => { };
+                        swordWindDriver.SkillGraphPlayableStarted += (cast, id, prefab, leaf) => {
+                            if (cast.SkillEntityId == 11290 && prefab.name == "playable11290" && leaf.name == "effect") graphLeafCount++;
+                        };
+                        swordWindDisplay = swordWindCheckpoint.Units.Select(unit => swordWindDriver.DisplayUnit(unit.Id)).ToArray();
+                        float swordWindDeadline = Time.realtimeSinceStartup + 15f;
+                        while (!swordWindDriver.IsCompleted && Time.realtimeSinceStartup < swordWindDeadline)
+                        {
+                            swordWindDriver.Pump(Time.deltaTime); swordWindViews.Tick(Time.deltaTime); swordWindScope.LateTick();
+                            if (swordWindRing && !swordWindResumed && ++frozenFrames >= 8)
+                            {
+                                Require(swordWindRing.isPaused && baseHits == 1 && passiveHits == 0,
+                                    "A frozen sword-wind effect settled its passive hit.");
+                                swordWindRing.Play(); swordWindResumed = true;
+                            }
+                            yield return null;
+                        }
+                        Require(swordWindDriver.TryTakeCompleted(out _, out var result) && baseHits == 1 && passiveHits == 1 && graphLeafCount == 1
+                            && result.Event.SkillCasts.Count(value => value.SkillEntityId == 11290) == 1,
+                            "The hit passive did not settle its original child exactly once.");
+                    }
+                }
+                swordWindScope.Dispose(); swordWindAppearance?.Dispose(); swordWindTargetAppearance?.Dispose(); Destroy(swordWindRoot.gameObject);
+            }
+
             var interruptedArea = CreateFixed(10721, skillEntity.Id, views, 5, 5);
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(0, 0), Delay = .05f });
             interruptedArea.State.Scopes.Add(new HitScopCfg { Pos = new Pos2d(1, 0), Delay = .8f });

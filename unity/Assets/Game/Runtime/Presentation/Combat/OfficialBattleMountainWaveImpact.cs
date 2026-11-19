@@ -244,4 +244,41 @@ namespace Zjcs.Presentation.Combat
 
         internal void Detach() { arrival = null; }
     }
+
+    // The passive's original target effect emits this ring at its configured hit boundary.
+    internal sealed class OfficialBattleSwordWindImpact : MonoBehaviour
+    {
+        private ParticleSystem ring;
+        private float hitDelay;
+        private Action<float> arrival;
+
+        internal static OfficialBattleSwordWindImpact Attach(GameObject prefab, MyPlayable playable, Action<float> arrival)
+        {
+            if (!prefab || !playable || !playable.myApplyComponent || arrival == null) return null;
+            var sequence = prefab.GetComponent<MyPlayableSequence>();
+            if (!sequence || sequence.myPlayables == null) return null;
+            float effectStart = -1f; int effects = 0;
+            foreach (var entry in sequence.myPlayables)
+                if (entry?.myPlayable && entry.myPlayable.name == "effect") { effectStart = entry.myTime; effects++; }
+            if (effects != 1 || effectStart < 0f) return null;
+            ParticleSystem ring = null;
+            foreach (var particle in playable.myApplyComponent.GetComponentsInChildren<ParticleSystem>(true))
+                if (particle.name == "yuanquan (1)") { if (ring) return null; ring = particle; }
+            if (!ring) return null;
+            var main = ring.main;
+            if (main.startDelay.mode != ParticleSystemCurveMode.Constant || main.useUnscaledTime
+                || Math.Abs(main.simulationSpeed - 1f) > .00001f || main.startDelay.constant < 0f) return null;
+            var observer = playable.gameObject.AddComponent<OfficialBattleSwordWindImpact>();
+            observer.ring = ring; observer.hitDelay = effectStart + main.startDelay.constant; observer.arrival = arrival;
+            return observer;
+        }
+
+        private void LateUpdate()
+        {
+            if (arrival == null || !ring || ring.particleCount <= 0) return;
+            var callback = arrival; arrival = null; callback(hitDelay);
+        }
+
+        internal void Detach() { arrival = null; }
+    }
 }

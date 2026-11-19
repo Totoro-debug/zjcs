@@ -32,6 +32,13 @@ namespace Zjcs.Presentation.Combat
             public HashSet<int>[] Scopes;
         }
 
+        private sealed class StartingGraphLeaf
+        {
+            public EcEntityIdentifier Id;
+            public GameObject Prefab;
+            public MyPlayable Playable;
+        }
+
         private readonly FightBattleIsolatedStep step;
         private readonly OfficialBattleSkillEntityPlayback views;
         private readonly OfficialBattleImpactViewBridge bridge;
@@ -56,6 +63,11 @@ namespace Zjcs.Presentation.Combat
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center, int Scope)> sentFallingWindHits =
             new HashSet<(FightBattleHitSelectionSnapshot, int, int)>();
         private readonly List<OfficialBattleFallingWindImpact> fallingWindEffects = new List<OfficialBattleFallingWindImpact>();
+        private readonly HashSet<FightBattleSkillCastEvent> observedSwordWind = new HashSet<FightBattleSkillCastEvent>();
+        private readonly Dictionary<FightBattleSkillCastEvent, float> reachedSwordWind = new Dictionary<FightBattleSkillCastEvent, float>();
+        private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> sentSwordWindHits =
+            new HashSet<(FightBattleHitSelectionSnapshot, int)>();
+        private readonly List<OfficialBattleSwordWindImpact> swordWindEffects = new List<OfficialBattleSwordWindImpact>();
         private readonly HashSet<FightBattleSkillCastEvent> observedCrossEffects = new HashSet<FightBattleSkillCastEvent>();
         private readonly HashSet<FightBattleSkillCastEvent> reachedCrossEffects = new HashSet<FightBattleSkillCastEvent>();
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center, int Scope)> sentCrossHits =
@@ -99,6 +111,8 @@ namespace Zjcs.Presentation.Combat
         private Func<FightBattleDamageEvent, bool> lastCanStartDamage;
         private FightBattleSkillCastEvent currentGraphCast;
         private EcEntityIdentifier currentGraphSkillId;
+        private FightBattleSkillCastEvent startingCast;
+        private List<StartingGraphLeaf> startingGraphLeaves;
 
         public bool IsCompleted => step.IsCompleted;
         public FightBattleSettledImpact PendingSettlement => settlement ?? (resolvingStatuses.Count > 0 ? resolvingStatuses.Peek() : null);
@@ -282,8 +296,25 @@ namespace Zjcs.Presentation.Combat
                         () => step.Latch.TryTakePreparation(out var value) ? value : null);
                     if (preparation != null && ReferenceEquals(current, preparation))
                     {
-                        if (!startCast(preparation.Cast, out var id)) return progressed;
+                        var castBeingStarted = preparation.Cast;
+                        var earlyLeaves = new List<StartingGraphLeaf>();
+                        bool started;
+                        EcEntityIdentifier id;
+                        startingCast = castBeingStarted; startingGraphLeaves = earlyLeaves;
+                        try { started = startCast(castBeingStarted, out id); }
+                        finally { startingCast = null; startingGraphLeaves = null; }
+                        if (!started)
+                        {
+                            if (earlyLeaves.Count != 0)
+                                throw new InvalidOperationException("A declined cast started original graph leaves.");
+                            return progressed;
+                        }
                         casts.Add(preparation.Cast, new ActiveCast { Id = id, Started = clock });
+                        foreach (var leaf in earlyLeaves)
+                        {
+                            if (!leaf.Id.Equals(id)) throw new InvalidOperationException("A starting graph leaf belongs to another skill entity.");
+                            DispatchSkillGraphPlayableStarted(castBeingStarted, id, leaf.Prefab, leaf.Playable);
+                        }
                         step.Latch.CompletePreparation(preparation, out long revision);
                         ReleaseHandoff(ref preparation, suspendedPreparations);
                         progressed = true;
@@ -344,6 +375,8 @@ namespace Zjcs.Presentation.Combat
                         if (reachedFallingWind.TryGetValue(selectedCast, out int fallingReached))
                             for (int index = 0; index < 2; index++)
                                 if ((fallingReached & (1 << index)) != 0) RouteFallingWindImpact(selectedCast, active.Id, index);
+                        if (reachedSwordWind.TryGetValue(selectedCast, out float swordWindDelay))
+                            RouteSwordWindImpact(selectedCast, active.Id, swordWindDelay);
                         if (reachedComboEffects.TryGetValue(selectedCast, out int comboReached))
                             for (int index = 0; index < 3; index++)
                                 if ((comboReached & (1 << index)) != 0) RouteComboImpact(selectedCast, active.Id, index);
@@ -434,6 +467,17 @@ namespace Zjcs.Presentation.Combat
         private void OnSkillGraphPlayableStarted(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
             GameObject prefab, MyPlayable playable)
         {
+            if (ReferenceEquals(startingCast, cast) && startingGraphLeaves != null)
+            {
+                startingGraphLeaves.Add(new StartingGraphLeaf { Id = id, Prefab = prefab, Playable = playable });
+                return;
+            }
+            DispatchSkillGraphPlayableStarted(cast, id, prefab, playable);
+        }
+
+        private void DispatchSkillGraphPlayableStarted(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
+            GameObject prefab, MyPlayable playable)
+        {
             var previousCast = currentGraphCast;
             var previousId = currentGraphSkillId;
             currentGraphCast = cast; currentGraphSkillId = id;
@@ -443,8 +487,41 @@ namespace Zjcs.Presentation.Combat
                 try { RouteJumpSlashImpact(cast, prefab, playable); AttachMountainWaves(cast, id, prefab, playable);
                     AttachSlashImpact(cast, id, prefab, playable); AttachComboImpact(cast, id, prefab, playable);
                     AttachCrossImpact(cast, id, prefab, playable); AttachWindBladeImpact(cast, id, prefab, playable);
-                    AttachFallingWindImpact(cast, id, prefab, playable); }
+                    AttachFallingWindImpact(cast, id, prefab, playable); AttachSwordWindImpact(cast, id, prefab, playable); }
                 finally { currentGraphCast = previousCast; currentGraphSkillId = previousId; }
+            }
+        }
+
+        private void AttachSwordWindImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
+            GameObject prefab, MyPlayable playable)
+        {
+            if (cast?.SkillEntityId != 11290 || prefab == null || prefab.name != "playable11290"
+                || playable == null || playable.name != "effect" || observedSwordWind.Contains(cast)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            var observer = OfficialBattleSwordWindImpact.Attach(prefab, playable,
+                delay => RouteSwordWindImpact(cast, id, delay));
+            if (observer == null) return;
+            observedSwordWind.Add(cast); swordWindEffects.Add(observer);
+        }
+
+        private void RouteSwordWindImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id, float hitDelay)
+        {
+            if (disposed || transferred || !observedSwordWind.Contains(cast)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            reachedSwordWind[cast] = hitDelay;
+            if (cast.HitSelections == null) return;
+            foreach (var hit in new List<FightBattleHitSelectionSnapshot>(cast.HitSelections))
+            {
+                if (hit?.HitEntityId != 11291 || !selectedHits.Contains(hit) || hit.Targets == null
+                    || Math.Abs(hit.Delay - hitDelay) > .00001f) continue;
+                foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
+                {
+                    if (!casts.ContainsKey(cast)) return;
+                    if (target == null || target.EffectCenterIndex != 0 || !target.HasScopeIndex
+                        || target.ScopeIndex != 0 || target.ScopeDelay != 0f
+                        || !sentSwordWindHits.Add((hit, target.EffectCenterIndex))) continue;
+                    bridge.RecordArrival(cast, hit, target.EffectCenterIndex, 0);
+                }
             }
         }
 
@@ -739,6 +816,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in slashEffects) if (observer != null) observer.Detach();
             foreach (var observer in windBlades) if (observer != null) observer.Detach();
             foreach (var observer in fallingWindEffects) if (observer != null) observer.Detach();
+            foreach (var observer in swordWindEffects) if (observer != null) observer.Detach();
             transferred = true;
             return true;
         }
@@ -755,6 +833,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in slashEffects) if (observer != null) observer.Detach();
             foreach (var observer in windBlades) if (observer != null) observer.Detach();
             foreach (var observer in fallingWindEffects) if (observer != null) observer.Detach();
+            foreach (var observer in swordWindEffects) if (observer != null) observer.Detach();
             step.Dispose();
             casts.Clear(); selectedHits.Clear(); jumpSlashScopes.Clear(); mountainScopes.Clear(); crossScopes.Clear();
             observedCrossEffects.Clear(); reachedCrossEffects.Clear(); sentCrossHits.Clear(); observedMountains.Clear(); reachedMountainWaves.Clear(); mountainWaves.Clear();
@@ -762,6 +841,7 @@ namespace Zjcs.Presentation.Combat
             pullScopes.Clear(); sentPullHits.Clear();
             fallingWindDefinitions.Clear(); observedFallingWind.Clear(); reachedFallingWind.Clear();
             sentFallingWindHits.Clear(); fallingWindEffects.Clear();
+            observedSwordWind.Clear(); reachedSwordWind.Clear(); sentSwordWindHits.Clear(); swordWindEffects.Clear();
             slashCasters.Clear(); heavyCasters.Clear(); comboCasters.Clear(); observedComboEffects.Clear();
             reachedComboEffects.Clear(); sentComboHits.Clear(); observedSlashes.Clear(); reachedSlashes.Clear(); sentSlashes.Clear(); slashEffects.Clear();
             resolvingStatuses.Clear();
