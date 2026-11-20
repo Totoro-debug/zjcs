@@ -3,7 +3,7 @@ param(
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
     [Parameter(Mandatory)][string]$Profile,
-    [ValidateSet(10520,10521,10522,10550,10555,10583,10559,10554,10578)][int]$SecretId = 10520
+    [ValidateSet(10520,10521,10522,10550,10555,10583,10559,10554,10578,10524)][int]$SecretId = 10520
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')

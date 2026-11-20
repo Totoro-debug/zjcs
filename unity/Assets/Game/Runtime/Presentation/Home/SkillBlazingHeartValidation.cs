@@ -29,9 +29,9 @@ namespace Zjcs.Presentation.Home
             bool equipped = Environment.GetEnvironmentVariable("ZJCS_BLAZING_HEART_EQUIPPED") == "1";
             string requestedSecret = Environment.GetEnvironmentVariable("ZJCS_AFFINITY_SECRET_ID");
             int secretId = string.IsNullOrEmpty(requestedSecret) ? 10520 : int.Parse(requestedSecret);
-            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578, "Unexpected property secret.");
-            int activeId = secretId == 10521 ? 10000 : secretId == 10522 ? 10001 : secretId == 10559 ? 10005 : 10028;
-            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 ? "MaxHp" : secretId == 10555 ? "ElementMaster" : secretId == 10583 ? "ElementResistance" : secretId == 10559 ? "EffectRate" : secretId == 10554 ? "CritRatePercent" : "StatusDmgAddPer";
+            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578 || secretId == 10524, "Unexpected property secret.");
+            int activeId = secretId == 10524 ? 10008 : secretId == 10521 ? 10000 : secretId == 10522 ? 10001 : secretId == 10559 ? 10005 : 10028;
+            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 ? "MaxHp" : secretId == 10555 ? "ElementMaster" : secretId == 10583 ? "ElementResistance" : secretId == 10559 ? "EffectRate" : secretId == 10554 ? "CritRatePercent" : secretId == 10524 ? "Attack" : "StatusDmgAddPer";
             Require(!string.IsNullOrEmpty(sourcePath) && File.Exists(sourcePath), "Missing acquired secret profile.");
             var save = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(sourcePath));
             var profile = save.Player;
@@ -56,7 +56,9 @@ namespace Zjcs.Presentation.Home
             if (!profile.Skills.Skills.Any(value => value.ClassId == activeId))
                 profile.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = activeId, Rank = 1 });
             profile.Skills.Plans[profile.Skills.SelectedPlan].ActiveSkills = new[] { activeId, 0, 0, 0 };
-            profile.InitialWeaponType = Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType;
+            profile.InitialWeaponType = secretId == 10524
+                ? Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.SwordInitialWeaponType
+                : Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType;
             profile.SeasonRank = 0;
             string originalSkills = JsonUtility.ToJson(profile.Skills);
             string saveRoot = Path.Combine(output, "save-" + Guid.NewGuid().ToString("N"));
@@ -85,7 +87,7 @@ namespace Zjcs.Presentation.Home
             });
             var player = checkpoint.Units.Single(value => value.Id == 1);
             Require(player.Skills.Any(value => value.ItemId == activeId), "The actual battle omitted the saved elemental skill.");
-            int elementAffinity = combat.PropertyType(affinityName);
+            int elementAffinity = secretId == 10524 ? 1 : combat.PropertyType(affinityName);
             long affinity = PropertyOrResonance(player, elementAffinity, secretId);
             int critValueProperty = combat.PropertyType("CritRatePercentValue");
             long secondary = secretId == 10554 ? player.Properties.Where(value => value.Id == critValueProperty).Sum(value => value.Value) : 0;
@@ -99,7 +101,7 @@ namespace Zjcs.Presentation.Home
             checkpoint.MaxRound = 5; checkpoint.IsPlayerRoundLimit = false; checkpoint.PlayerRoundLimit = 0;
             // The original boss occupies five cells across; keep its body clear of
             // the player while retaining the real stage and a target within the original skill range.
-            enemy.X = player.X + 5; enemy.Y = player.Y;
+            enemy.X = player.X + (secretId == 10524 ? 3 : 5); enemy.Y = player.Y;
             if (secretId == 10578)
             {
                 foreach (var value in new[] { new[] { 24020, 900001 }, new[] { 24215, 900002 } })
