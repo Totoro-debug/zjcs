@@ -1,0 +1,289 @@
+"""Verify each migrated third-rank skill against the selected APK/CDN inputs.
+
+Historical runtime payloads retain their own identities. Reuse is permitted only
+after comparing the current item, EC fields, property inputs and native bundles.
+"""
+import argparse
+import copy
+import hashlib
+import json
+import re
+import struct
+from pathlib import Path
+import xxhash
+
+from official_apk import Apk, ROOT, canonical_bundle_name
+from official_ec_codec import Formats
+from official_map_codec import unpack
+from official_source import OfficialSource
+from official_tables import Constructors
+from prepare_unity_character_catalog import decode_level_props
+
+
+SKILLS = {
+    10017: dict(entities=[10690, 10691, 10692, 10970, 10971, 10972, 10973, 24266],
+                code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo', 'FightDamageComponentInfo',
+                      'FightSKillMoveCfg', 'FightStatusComponentInfo', 'BattleFormulaHandler']),
+}
+COMBAT = ROOT / 'unity/Assets/Official/Combat'
+
+
+def identity(path):
+    return dict(path=path.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+
+
+def build(item_id):
+    spec = SKILLS[item_id]
+    rules = json.loads((COMBAT / 'rules.json').read_bytes())
+    skill_rules = json.loads((COMBAT / 'skill-rules.json').read_bytes())
+    installed = next(row for row in rules['skill'] if row['ClassId'] == item_id)
+    entities, locations = {}, {}
+    for name in ('skill-rules', 'battle-rules'):
+        source = json.loads((COMBAT / (name + '-source-manifest.json')).read_bytes())
+        for key, row in source.get('selected', source.get('entities', {}).get('selected', {})).items():
+            locations[key] = row['path']
+        for key, row in json.loads((COMBAT / (name + '.json')).read_bytes())['entities'].items():
+            entities.setdefault(key, {}).update(row)
+    definitions = {str(key): copy.deepcopy(entities[str(key)]) for key in spec['entities']}
+    defaults = []
+    for key, components in definitions.items():
+        disperse = components.get('FightDamageComponent', {}).get('DisperseStatus')
+        if disperse is not None and 'ExcludeCharacterTypes' not in disperse:
+            disperse['ExcludeCharacterTypes'] = []
+            defaults.append(key + '/FightDamageComponent/DisperseStatus/ExcludeCharacterTypes')
+
+    with Apk.current() as apk:
+        code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
+        constructors, formats = Constructors(code), Formats(code)
+        table_proofs = []
+
+        def table(name, cls):
+            obj = apk.asset('config_luban', '/' + name + '.g.bytes')
+            raw = obj.read().m_Script.encode('utf8', 'surrogateescape')
+            table_proofs.append(dict(name=name, source=apk.provenance(obj),
+                                     payload_sha256=hashlib.sha256(raw).hexdigest()))
+            return json.loads(json.dumps(constructors.table(raw, cls)))
+
+        current = next(row for row in table('skill', 'TbSkillInfo') if row['ClassId'] == item_id)
+        assert current == installed, ('Current skill item changed', item_id, installed, current)
+        owner = next(row for row in table('profession_base', 'TbProfessionBaseInfo')
+                     if row['Profession'] in (3, 7, 12, 16) and item_id in row['Skills'])
+        assert owner == next(row for row in rules['profession_base'] if row['Profession'] == owner['Profession'])
+        mappings = {name: cls for cls, name in re.findall(
+            r'new (Tb\w+)\(loader\("([^"]+)"\)\)', constructors.source('Tables'))}
+        properties = [row for row in table('entity_prop', mappings['entity_prop']) if row['EntityId'] in spec['entities']]
+        expected_properties = [row for row in skill_rules['tables']['entity_prop'] if row['EntityId'] in spec['entities']]
+        assert sorted(properties, key=lambda row: row['EntityId']) == sorted(expected_properties, key=lambda row: row['EntityId']), 'Current entity cultivation properties changed'
+        group_ids = {row['GroupLevelPropId'] for row in properties} | {current['PassiveGroupLevelPropId']}
+        groups = [row for row in table('entity_prop_group_level', mappings['entity_prop_group_level']) if row['GroupId'] in group_ids]
+        expected_groups = [row for row in skill_rules['tables']['entity_prop_group_level'] if row['GroupId'] in group_ids]
+        assert sorted(groups, key=lambda row: (row['GroupId'],row['SubRank'])) == sorted(expected_groups, key=lambda row: (row['GroupId'],row['SubRank'])), 'Current cultivation groups changed'
+        prop_ids = {row['LevelPropId'] for row in groups}
+        prop_ids.update(row[key] for row in properties for key in ('RankPropId','SubRankPropId'))
+        prop_ids.update(current[key] for key in ('PassiveRankPropId','PassiveRankFactorId'))
+        prop_ids.discard(0)
+        verified_props = apk.reader.read('WwiseBnk', 'wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile')
+        prop_rows = decode_level_props(verified_props.data, prop_ids)
+        assert all(skill_rules['props'][key] == value for key,value in prop_rows.items()), 'Current level/rank numeric rows changed'
+        numeric = dict(entities=properties, groups=groups, props=prop_rows,
+                       source=dict(verified_props.provenance),
+                       sha256=hashlib.sha256(verified_props.data).hexdigest())
+        language = apk.reader.read('WwiseBnk', 'wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile')
+        raw = language.data
+        count, = struct.unpack_from('<i', raw)
+        start = 4 + count * 12
+        keys = {xxhash.xxh64_intdigest(key.encode()): key for key in
+                (f'item_{item_id}_name', f'item_{item_id}_func_desc')}
+        texts = {}
+        for index in range(count):
+            text_id, offset = struct.unpack_from('<Qi', raw, 4 + index * 12)
+            if text_id in keys:
+                size, = struct.unpack_from('<H', raw, start + offset)
+                texts[keys[text_id]] = raw[start+offset+2:start+offset+2+size].decode('utf8')
+        fidelity = json.loads((ROOT / 'unity/Assets/Official/Skills/fidelity-texts.json').read_bytes())
+        assert len(texts) == len(keys) and all(fidelity[key] == value for key,value in texts.items()), 'Current original skill wording changed'
+        wording = dict(source=dict(language.provenance), sha256=hashlib.sha256(raw).hexdigest(), texts=texts)
+        fragments, groups = [], {}
+        for key in definitions:
+            groups.setdefault(locations[key], set()).add(key)
+        for path, wanted in sorted(groups.items()):
+            obj = apk.asset('config_ec', '/' + Path(path).name)
+            raw = obj.read().m_Script.encode('utf8', 'surrogateescape')
+            try:
+                rows, prefix = unpack(raw)[0], False
+            except Exception:
+                rows, prefix = unpack(raw[2:])[0], True
+            matched = {}
+            for parent, entity_id, components in rows:
+                key = str(entity_id)
+                if key not in wanted:
+                    continue
+                assert key not in matched, ('Duplicate current EC entity', key)
+                original = {}
+                for component, payload in components:
+                    short = component.removeprefix('Common.')
+                    if short in definitions[key]:
+                        original[short] = formats.component(component, payload[2:] if prefix and payload else payload)
+                original = json.loads(json.dumps(original))
+                assert original == definitions[key], ('Current EC component changed', key, original, definitions[key])
+                matched[key] = dict(parent=parent, components=original)
+            assert set(matched) == wanted, ('Missing current EC entities', path, wanted - set(matched))
+            fragments.append(dict(path=path, source=apk.provenance(obj), legacy_prefix=prefix,
+                                  payload_sha256=hashlib.sha256(raw).hexdigest(), entities=matched))
+
+        # Manifest dependency IDs are opaque. Follow serialized CAB externals;
+        # unchanged prefab bytes alone do not prove identical referenced assets.
+        graph_path = ROOT / 'assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json'
+        graph = json.loads(graph_path.read_bytes())
+        historical = OfficialSource(graph['manifest']).manifest('DefaultPackage')['bundles']
+        current_bundles = apk.source.manifest('DefaultPackage')['bundles']
+        old_by_name = {row['name']: row for row in historical}
+        new_by_name = {row['name']: row for row in current_bundles}
+        roots = {row['shared_dependency_bundle'] for row in graph['originals']
+                 if row['id'].split(':')[1].isdigit() and int(row['id'].split(':')[1]) in spec['entities']}
+        assert roots, 'No original native graph roots'
+        pending, visited, native = list(sorted(roots)), set(), []
+        shader_bundle_changed = False
+        changed_event_bundle = None
+        shared_objects = []
+        materials = []
+        while pending:
+            name = pending.pop()
+            if name in visited:
+                continue
+            visited.add(name)
+            old, new = old_by_name[name], new_by_name[name]
+            if name == 'defaultpackage_unityshaders.bundle' and old['hash'] != new['hash']:
+                shader_bundle_changed = True
+                continue
+            if name == 'defaultpackage_assets_wwise_scriptableobjects_event.bundle' and old['hash'] != new['hash']:
+                changed_event_bundle = name
+                continue
+            verified = apk.reader.read('DefaultPackage', name)
+            loaded = apk.load(name)
+            if (old['hash'], old['size']) != (new['hash'], new['size']):
+                with Apk(graph['manifest']) as prior:
+                    previous = prior.load(name)
+                    current_objects = {obj.path_id: obj for asset in loaded.files.values()
+                                       for obj in getattr(asset, 'objects', {}).values()}
+                    for asset in previous.files.values():
+                        for obj in getattr(asset, 'objects', {}).values():
+                            if obj.type.name == 'AssetBundle':
+                                continue  # Container inventory changes when unrelated objects are added.
+                            selected = current_objects[obj.path_id]
+                            old_raw, new_raw = obj.get_raw_data(), selected.get_raw_data()
+                            metadata = []
+                            if old_raw != new_raw and obj.type.name == 'Texture2D':
+                                old_tree, new_tree = obj.read_typetree(), selected.read_typetree()
+                                # Unity's import usage marker is not a sampler,
+                                # color-space, texture-format or pixel change.
+                                for key in ('m_LightmapFormat',):
+                                    if old_tree[key] != new_tree[key]:
+                                        metadata.append(dict(field=key, historical=old_tree.pop(key), current=new_tree.pop(key)))
+                                assert old_tree == new_tree and obj.read().get_image_data() == selected.read().get_image_data(), ('Current native texture changed', name, obj.path_id)
+                            else:
+                                assert old_raw == new_raw, ('Current native object changed', name, obj.path_id, obj.type.name)
+                            shared_objects.append(dict(bundle=name, path_id=str(obj.path_id), type=obj.type.name,
+                                                       historical_sha256=hashlib.sha256(old_raw).hexdigest(),
+                                                       current_sha256=hashlib.sha256(new_raw).hexdigest(),
+                                                       import_metadata_differences=metadata))
+            new_deps, builtin = set(), set()
+            for asset in loaded.files.values():
+                materials.extend(obj for obj in getattr(asset, 'objects', {}).values() if obj.type.name == 'Material')
+                for external in getattr(asset, 'externals', []):
+                    cab = external.path.rsplit('/', 1)[-1].lower()
+                    if cab in ('unity_builtin_extra', 'unity default resources'):
+                        builtin.add(cab)
+                    else:
+                        assert cab in apk.cabs, ('Unresolved native CAB dependency', name, cab)
+                        new_deps.add(canonical_bundle_name(apk.cabs[cab], apk.index))
+            native.append(dict(bundle=name, source=dict(verified.provenance),
+                               sha256=hashlib.sha256(verified.data).hexdigest(), dependencies=sorted(new_deps),
+                               engine_dependencies=sorted(builtin)))
+            pending.extend(sorted(new_deps - visited))
+        shader_objects = []
+        reused_events = None
+        if changed_event_bundle:
+            name = changed_event_bundle
+            verified = apk.reader.read('DefaultPackage', name)
+            loaded = apk.load(name)
+            current_objects = {obj.path_id: obj for asset in loaded.files.values()
+                               for obj in getattr(asset, 'objects', {}).values()}
+            with Apk(graph['manifest']) as prior:
+                previous = prior.load(name)
+                checked = []
+                for asset in previous.files.values():
+                    for obj in getattr(asset, 'objects', {}).values():
+                        if obj.type.name == 'AssetBundle':
+                            continue
+                        raw = obj.get_raw_data()
+                        assert obj.path_id in current_objects and raw == current_objects[obj.path_id].get_raw_data(), ('Current original sound object changed', obj.path_id)
+                        checked.append((str(obj.path_id), hashlib.sha256(raw).hexdigest()))
+                reused_events = dict(bundle=name, source=dict(verified.provenance),
+                                     original_object_count=len(checked),
+                                     object_identities_sha256=hashlib.sha256(json.dumps(sorted(checked)).encode()).hexdigest())
+        if shader_bundle_changed:
+            # A shared shader bundle may change for unrelated materials. Prove
+            # each actually referenced shader object, preserving both bundles.
+            with Apk(graph['manifest']) as prior:
+                previous = prior.load('defaultpackage_unityshaders.bundle')
+                previous_objects = {obj.path_id: obj for asset in previous.files.values()
+                                    for obj in getattr(asset, 'objects', {}).values()}
+                seen_shaders = set()
+                for obj in materials:
+                    shader = obj.read().m_Shader.deref()
+                    if shader.path_id in seen_shaders:
+                        continue
+                    seen_shaders.add(shader.path_id)
+                    old_shader = previous_objects[shader.path_id]
+                    raw, old_raw = shader.get_raw_data(), old_shader.get_raw_data()
+                    assert raw == old_raw, ('Current referenced shader object changed', shader.path_id)
+                    shader_objects.append(dict(path_id=str(shader.path_id), sha256=hashlib.sha256(raw).hexdigest()))
+                assert shader_objects, 'Changed shader bundle has no verified referenced shaders'
+        inputs = [identity(code / 'common-source/Common' / (name + '.cs')) for name in spec['code']]
+        inputs += [identity(code / 'client-source' / (name + '.cs')) for name in
+                   ('MyFightSkill', 'MyFightHitFixed', 'MyFightActionSkillMove')]
+        sound_proof_path = ROOT / 'assets/reference/battle-animation/native-sound-sources-source-manifest.json'
+        sound_proof = json.loads(sound_proof_path.read_bytes())
+        sound_events = [row for row in sound_proof['events'] if row['name'] == f'Skill_{item_id}']
+        sound_banks = []
+        prior_banks = {row['name']: row for row in OfficialSource(graph['manifest']).manifest('WwiseBnk')['bundles']}
+        current_banks = {row['name']: row for row in apk.source.manifest('WwiseBnk')['bundles']}
+        for bank in sorted({name for event in sound_events for name in event['banks']}):
+            name = 'wwisebnk_assets_wwisedata_android_' + bank.lower() + '_pck.rawfile'
+            old, new = prior_banks[name], current_banks[name]
+            assert (old['hash'],old['size']) == (new['hash'],new['size']), ('Current skill sound bank changed',name)
+            verified = apk.reader.read('WwiseBnk',name)
+            sound_banks.append(dict(name=name,source=dict(verified.provenance),sha256=hashlib.sha256(verified.data).hexdigest()))
+        result = dict(manifest=apk.version, item_id=item_id, profession=owner['Profession'],
+                      skill_item=current, table_inputs=table_proofs, fragments=fragments,
+                      numeric_inputs=numeric,
+                      wording=wording, sound_events=sound_events, sound_banks=sound_banks,
+                      omitted_empty_defaults=defaults, official_code=inputs,
+                      native_bundles=sorted(native, key=lambda row: row['bundle']),
+                      reused_shader_objects=sorted(shader_objects, key=lambda row: row['path_id']),
+                      reused_sound_objects=reused_events,
+                      reused_shared_objects=shared_objects,
+                      reused_native_conversion=identity(graph_path),
+                      formatters=[identity(path) for path in sorted(set(formats.sources.values()))],
+                      constructors=[identity(code / 'common-source' / ('Common' if (code / 'common-source/Common' / (name + '.cs')).is_file() else 'Common.LubanGen') / (name + '.cs')) for name in sorted(constructors.sources)],
+                      generator=identity(Path(__file__)))
+    return result
+
+
+def main():
+    parser = argparse.ArgumentParser(__doc__)
+    parser.add_argument('--item', type=int, choices=SKILLS, required=True)
+    parser.add_argument('--write', action='store_true')
+    args = parser.parse_args()
+    result = build(args.item)
+    target = ROOT / f'assets/reference/battle-rules/third-profession-{args.item}-source-manifest.json'
+    if args.write:
+        target.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', 'utf8')
+    else:
+        assert json.loads(target.read_bytes()) == result, 'Third-profession source receipt changed'
+    print(f'Current official source verified: {args.item}, {len(result["fragments"])} EC fragments, {len(result["native_bundles"])} native dependency bundles')
+
+
+if __name__ == '__main__':
+    main()

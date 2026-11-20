@@ -164,10 +164,10 @@ namespace Zjcs.Presentation.Combat
         private static FirstPromotionProfession ReadFirstPromotionProfession(FirstPromotionProfession[] rows,
             FightOfficialSkillItemCatalog items, int itemId)
         {
-            var profession = rows.SingleOrDefault(row => new[] { 1, 2, 6, 10, 11, 15 }.Contains(row.Profession)
+            var profession = rows.SingleOrDefault(row => new[] { 1, 2, 3, 6, 7, 10, 11, 12, 15, 16 }.Contains(row.Profession)
                 && row.Skills.Concat(row.FightUsedSkills).Contains(itemId));
             Require(profession != null && items.ItemTypeFor(itemId) == 100,
-                "The requested item is outside the six-profession active scope.");
+                "The requested item is outside the first three profession ranks' active scope.");
             return profession;
         }
 
@@ -212,7 +212,7 @@ namespace Zjcs.Presentation.Combat
             // The fifth cell is the dash's empty landing; enemies belong to its intermediate hit strip.
             if (itemId == 10016) distance = 2;
             // Exercise point-target skills at range and leave an approach path for the pull.
-            if (itemId == 10018 || itemId == 10043) distance = 3;
+            if (itemId == 10017 || itemId == 10018 || itemId == 10043) distance = 3;
             // Keep every cardinal probe on its requested axis while the ordinary
             // AI chooses its landing. Adjacent placement can attract an equally
             // valid landing on another side before the actual cast.
@@ -251,7 +251,7 @@ namespace Zjcs.Presentation.Combat
                     // Isolate the authored facing of the adjacent-target probes. Ordinary landing AI
                     // may otherwise relocate around this already adjacent target.
                     if ((itemId == 10026 || itemId == 10042 || itemId == 10053 || itemId == 10061
-                            || itemId == 10008 || itemId == 10011 || itemId == 10012 || itemId == 10013 || itemId == 10014 || itemId == 10018 || itemId == 10043) && unit == player
+                            || itemId == 10008 || itemId == 10011 || itemId == 10012 || itemId == 10013 || itemId == 10014 || itemId == 10017 || itemId == 10018 || itemId == 10043) && unit == player
                         && (prop.Id == catalog.PropertyType("MoveDist")
                             || prop.Id == catalog.PropertyType("FixedMoveDist"))) prop.Value = 0;
                 }
@@ -360,6 +360,7 @@ namespace Zjcs.Presentation.Combat
             probe.ConfigurePortableFlameDiagnostic(checkpoint);
             if (itemId == 10053) probe.firstPromotionCaptureAfter = 1.7f;
             if (itemId == 10026) probe.firstPromotionCaptureAfter = 1f;
+            if (itemId == 10017) probe.firstPromotionCaptureAfter = 1.4f;
             // Preserve short authored particle/action phases across cold-loading frames.
             probe.previousCaptureFramerate = Time.captureFramerate;
             Time.captureFramerate = 60;
@@ -403,6 +404,24 @@ namespace Zjcs.Presentation.Combat
                 + cast.SkillItemId + "/" + firstPromotionItemId + "; entity=" + cast.SkillEntityId + "/" + skillId
                 + "; facing=" + cast.Presentation?.FacingIndex + "/" + firstPromotionFacingIndex
                 + "; releases=" + player.SkillState.Slots[0].ReleasedTimes);
+            if (firstPromotionItemId == 10017)
+            {
+                var child = step.SkillCasts.Single(value => value.SkillEntityId == 10970);
+                var hit = step.DamageEvents.Single(value => value.SkillEntityId == 10970);
+                var movement = step.Movements.Single(value => value.UnitId == hit.TargetId && value.MoveBehaviourId == 10973);
+                var target = checkpoint.Units.Single(value => value.Id == hit.TargetId);
+                Require(child.ActorId == player.Id && child.Slot == -1
+                    && hit.HitEntityId == 10971 && hit.DamageEntityId == 10972
+                    && hit.ElementType == 101 && hit.Damage < 0 && !hit.TrueDamage
+                    && Math.Abs(hit.Delay - cast.Delay - .4f) < .0001f
+                    && movement.Path.Count > 1 && Math.Abs(movement.Delay - hit.Delay - .3f) < .0001f
+                    && Math.Abs(target.X - player.X) + Math.Abs(target.Y - player.Y) == 1,
+                    "Original water-thread child, water damage or delayed pull differs.");
+                string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+                Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
+                    "Water-thread child or cold checkpoint changed after reload.");
+                Debug.Log("[Water thread] Original 10690 -> 10970/10971/10972, water damage, 10973 pull and checkpoint passed.");
+            }
             if (firstPromotionItemId == 10012 && Environment.GetEnvironmentVariable("ZJCS_WIND_BLADE_KNOCKBACK") == "1")
             {
                 var hit = step.DamageEvents.Single(value => value.SkillEntityId == 10640 && value.HitEntityId == 10641);

@@ -2,6 +2,7 @@ param(
     [Parameter(Mandatory)][string]$Player,
     [Parameter(Mandatory)][string]$Workspace,
     [int[]]$ItemIds = @(),
+    [switch]$ThirdProfession,
     [ValidateSet('up','down','left','right')][string[]]$Directions = @('up','down','left','right'),
     [switch]$AirCombo,
     [switch]$ActionInvisible,
@@ -33,11 +34,13 @@ if ([IO.Path]::GetDirectoryName($workspacePath) -ne (Get-ZjcsValidationRoot).Tri
 $marker = Get-Content -LiteralPath (Join-Path $workspacePath '.zjcs-validation.json') -Raw | ConvertFrom-Json
 if ($marker.format -ne 1 -or $marker.repository -ne $repository) { throw 'Wrong validation workspace repository.' }
 $rules = Get-Content -LiteralPath (Join-Path $repository 'unity/Assets/Official/Combat/rules.json') -Raw | ConvertFrom-Json
-$scope = @($rules.profession_base | Where-Object Profession -in @(1,2,6,10,11,15) |
+$professionIds = if ($ThirdProfession) { @(3,7,12,16) } else { @(1,2,6,10,11,15) }
+$scope = @($rules.profession_base | Where-Object Profession -in $professionIds |
     ForEach-Object { $_.Skills; $_.FightUsedSkills }) | Sort-Object -Unique
 $active = @($rules.item | Where-Object { $_.ClassId -in $scope -and $_.ItemType -eq 100 } |
     Select-Object -ExpandProperty ClassId | Sort-Object)
-if ($scope.Count -ne 104 -or $active.Count -ne 57) { throw 'Review the original six-profession skill scope.' }
+if ((-not $ThirdProfession -and ($scope.Count -ne 104 -or $active.Count -ne 57)) -or
+    ($ThirdProfession -and ($scope.Count -ne 40 -or $active.Count -ne 20))) { throw 'Review the original profession skill scope.' }
 if (@($AirCombo,$ActionInvisible,$SummonLife,$DarkStatus,$MoveScopeColdScene,$HitScopeColdScene,$PortableFlameLife,$SunsetSwordSound,$FighterHpSecrets | Where-Object { $_ }).Count -gt 1) { throw 'Select one isolated status diagnostic.' }
 if ($AllStatusViews -and -not $DarkStatus) { throw 'All original status views require the isolated dark-status host.' }
 if ($ColdStatusScene -and (-not $DarkStatus -or $AllStatusViews)) { throw 'Cold status scene requires the isolated dark-status lifecycle without the all-view probe.' }
@@ -131,6 +134,9 @@ try {
         while (-not $process.WaitForExit(30000)) { Write-Output "Running $item $direction : $run" }
         $result = Get-Content -LiteralPath (Join-Path $run 'result.json') -Raw | ConvertFrom-Json
         if ($process.ExitCode -ne 0 -or -not $result.passed) { throw "Player failed for $item $direction : $($result.error) ($run)" }
+        if ($item -eq 10017 -and -not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Water thread] Original 10690 -> 10970/10971/10972, water damage, 10973 pull and checkpoint passed.')) {
+            throw "Original 10017 child damage/pull/checkpoint assertions did not complete: $run"
+        }
         if ($item -eq 10016) {
             & python -B (Join-Path $PSScriptRoot 'verify_lightning_dash_receipt.py') (Join-Path $run 'summon-final.json')
             if ($LASTEXITCODE -ne 0) { throw "Original 10016 dash/hit receipt validation failed: $run" }
