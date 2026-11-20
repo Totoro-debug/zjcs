@@ -29,8 +29,8 @@ namespace Zjcs.Presentation.Home
             bool equipped = Environment.GetEnvironmentVariable("ZJCS_BLAZING_HEART_EQUIPPED") == "1";
             string requestedSecret = Environment.GetEnvironmentVariable("ZJCS_AFFINITY_SECRET_ID");
             int secretId = string.IsNullOrEmpty(requestedSecret) ? 10520 : int.Parse(requestedSecret);
-            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578 || secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510 || secretId == 10501 || secretId == 10500 || secretId == 10507, "Unexpected property secret.");
-            bool warrior = secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510 || secretId == 10501 || secretId == 10500 || secretId == 10507;
+            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578 || secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510 || secretId == 10501 || secretId == 10500 || secretId == 10507 || secretId == 10516, "Unexpected property secret.");
+            bool warrior = secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510 || secretId == 10501 || secretId == 10500 || secretId == 10507 || secretId == 10516;
             bool criticalSecret = secretId == 10554 || secretId == 10500;
             bool blockSecret = secretId == 10507;
             int activeId = warrior ? 10008 : secretId == 10521 ? 10000 : secretId == 10522 ? 10001 : secretId == 10559 ? 10005 : 10028;
@@ -91,7 +91,7 @@ namespace Zjcs.Presentation.Home
             });
             var player = checkpoint.Units.Single(value => value.Id == 1);
             Require(player.Skills.Any(value => value.ItemId == activeId), "The actual battle omitted the saved elemental skill.");
-            int elementAffinity = secretId == 10524 ? 1 : combat.PropertyType(affinityName);
+            int elementAffinity = secretId == 10524 ? 1 : secretId == 10516 ? 73 : combat.PropertyType(affinityName);
             long affinity = PropertyOrResonance(player, elementAffinity, secretId);
             int secondaryProperty = combat.PropertyType(blockSecret ? "BlockPercentValue" : "CritRatePercentValue");
             long secondary = criticalSecret || blockSecret ? player.Properties.Where(value => value.Id == secondaryProperty).Sum(value => value.Value) : 0;
@@ -129,6 +129,12 @@ namespace Zjcs.Presentation.Home
                     status.DurationRound = 5;
                     enemy.Statuses.Add(status);
                 }
+            }
+            if (secretId == 10516)
+            {
+                var status = combat.CreateStatus(24020, enemy.Id, player.Id, 900001);
+                status.DurationRound = 5;
+                enemy.Statuses.Add(status);
             }
             if (secretId == 10583 || secretId == 10501 || blockSecret)
             {
