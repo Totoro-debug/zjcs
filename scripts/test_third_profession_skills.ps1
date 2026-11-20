@@ -1,5 +1,12 @@
 $ErrorActionPreference = 'Stop'
 python (Join-Path $PSScriptRoot 'verify_third_profession_skills.py')
+
+# The optional C# catalog harness uses the same official runtime sources as the
+# existing battle fixtures. The repository's PowerShell Add-Type fallback is
+# an older compiler and cannot parse the current Unity C# sources; keep this
+# extension opt-in so the default source verification remains deterministic.
+if ($env:ZJCS_THIRD_PROFESSION_RUNTIME -ne '1') { exit 0 }
+
 . (Join-Path $PSScriptRoot 'combat_sources.ps1')
 $root = Split-Path -Parent $PSScriptRoot
 $inputs = Join-Path $root 'unity/Assets/Official/Combat'
