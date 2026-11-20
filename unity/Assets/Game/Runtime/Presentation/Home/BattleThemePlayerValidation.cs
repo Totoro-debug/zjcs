@@ -106,7 +106,8 @@ namespace Zjcs.Presentation.Home
                     var rules = assets.Load();
                     var state = new FightBattleCheckpoint { StageId = 1001, RandomSeed = 43,
                         Grid = new FightBattleGrid { Width = 8, Height = 8 }, ResultRules = new FightBattleResultRules() };
-                    var actor = Unit(1, 1, 2, 2, 100);
+                    var actor = Unit(11, 1, 2, 2, 100);
+                    actor.MonsterType = rules.MonsterType(actor.MonsterId);
                     actor.Properties.Add(new FightPropertyValue { Id = rules.PropertyType("MoveDist"), Value = 4 });
                     int item = rules.MonsterActiveSkillItems(3206, 0).Single();
                     int entity = assets.LoadSkillItems().Required(item).EntityId;
@@ -120,8 +121,8 @@ namespace Zjcs.Presentation.Home
                     if (theme == 1)
                     {
                         target.MonsterId = target.MonsterTemplateId = target.RoleEntityId = 3803;
-                        target.MonsterType = rules.MonsterType(target.MonsterId);
                     }
+                    target.MonsterType = rules.MonsterType(target.MonsterId);
                     state.Units.Add(actor); state.Units.Add(target);
                     string checkpointPath = Path.Combine(output, "battle-" + theme + "-checkpoint.json");
                     File.WriteAllText(checkpointPath, FightBattleCheckpointSerializer.Save(state));
