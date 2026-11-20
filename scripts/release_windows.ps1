@@ -117,7 +117,7 @@ try {
         '-executeMethod','Zjcs.Editor.ProjectTools.BuildWindowsGame','-logFile',('"'+$log+'"'))
     while (-not $build.WaitForExit(5000)) {
         $memory = Get-CimInstance Win32_OperatingSystem
-        if ($memory.FreePhysicalMemory -lt 8388608 -or $memory.FreeVirtualMemory -lt 10485760) {
+        if ($memory.FreePhysicalMemory -lt 6291456 -or $memory.FreeVirtualMemory -lt 8388608) {
             $build.Refresh()
             if (-not $build.HasExited) {
                 $build.Kill()
