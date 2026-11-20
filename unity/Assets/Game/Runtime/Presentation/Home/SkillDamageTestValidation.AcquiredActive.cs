@@ -210,6 +210,7 @@ namespace Zjcs.Presentation.Home
             Require(active.ItemId == skillId && active.Rank == cultivatedRank && active.Level == 2
                 && active.SubRank == progression.Player.SubRank && actor.Profession == profession,
                 "Production battle assembly lost the actual saved skill/profession/cultivation.");
+            if (skillId == 10049) yield return MoveChallengeIntoRange(battle.Controller);
             if (skillId == 10066)
             {
                 var combat = OfficialCombatAssetCatalog.LoadDefault().Load();
@@ -365,6 +366,40 @@ namespace Zjcs.Presentation.Home
             yield return new WaitForEndOfFrame();
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "acquired-active-ui-" + phase + ".png"));
             yield return null;
+        }
+
+        private static IEnumerator MoveChallengeIntoRange(OfficialBattleRuntimeController controller)
+        {
+            var checkpoint = controller.Checkpoint;
+            var actor = checkpoint.Units.Single(value => value.Id == 1);
+            var enemy = checkpoint.Units.First(value => value.Side != actor.Side && value.Hp > 0);
+            int distance = Math.Abs(actor.X - enemy.X) + Math.Abs(actor.Y - enemy.Y);
+            if (distance <= 3) yield break;
+            var target = actor.X != enemy.X
+                ? new FightGridPoint(actor.X + Math.Sign(enemy.X - actor.X), actor.Y)
+                : new FightGridPoint(actor.X, actor.Y + Math.Sign(enemy.Y - actor.Y));
+            var pointer = FindObjectsOfType<BoxCollider>().FirstOrDefault(value => value.transform.parent != null
+                && value.transform.parent.name.StartsWith("PrepareBattlePlayerPointer", StringComparison.Ordinal));
+            Require(pointer != null && Camera.main != null, "The original preparation drag surface is missing.");
+            var mapper = new OfficialBattleGridMapper(pointer.transform.parent.parent, checkpoint.Grid);
+            var frame = new OfficialBattlePointerFrame {
+                Position = Camera.main.WorldToScreenPoint(pointer.transform.TransformPoint(pointer.center)), Down = true, Held = true };
+            controller.PreparationPointerProvider = () => frame;
+            try
+            {
+                yield return null;
+                frame.Down = false;
+                frame.Position = Camera.main.WorldToScreenPoint(mapper.GridToWorld(target));
+                yield return new WaitForSecondsRealtime(.15f);
+                frame.Held = false; frame.Up = true;
+                yield return null;
+                frame.Up = false;
+                yield return null;
+                Require(actor.X == target.X && actor.Y == target.Y
+                    && Math.Abs(actor.X - enemy.X) + Math.Abs(actor.Y - enemy.Y) <= 3,
+                    "The original preparation drag did not put the enemy inside challenge range.");
+            }
+            finally { controller.PreparationPointerProvider = null; }
         }
     }
 }
