@@ -3,7 +3,7 @@ param(
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
     [Parameter(Mandatory)][string]$Profile,
-    [ValidateSet(10520,10521,10522,10550,10555,10583,10559,10554,10578,10524,10535,10505,10510,10501,10500)][int]$SecretId = 10520
+    [ValidateSet(10520,10521,10522,10550,10555,10583,10559,10554,10578,10524,10535,10505,10510,10501,10500,10507)][int]$SecretId = 10520
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -100,8 +100,8 @@ try {
         Write-Output "Blazing heart actual battle passed: equipped=$equipped / $run"
     }
     if ($evidence['True'].affinity -le $evidence['False'].affinity -or
-        ($SecretId -notin @(10550,10505,10510,10583,10501,10559,10554,10500) -and $evidence['True'].damage -le $evidence['False'].damage) -or
-        ($SecretId -in @(10554,10500) -and $evidence['True'].secondary -le $evidence['False'].secondary) -or
+        ($SecretId -notin @(10550,10505,10510,10583,10501,10559,10554,10500,10507) -and $evidence['True'].damage -le $evidence['False'].damage) -or
+        ($SecretId -in @(10554,10500,10507) -and $evidence['True'].secondary -le $evidence['False'].secondary) -or
         ($SecretId -eq 10559 -and ($evidence['True'].effectRate -le $evidence['False'].effectRate -or
             $evidence['True'].damage -ne $evidence['False'].damage)) -or
         ($SecretId -in @(10583,10501) -and $evidence['True'].damage -ge $evidence['False'].damage) -or
@@ -110,6 +110,7 @@ try {
         throw 'Equipping the acquired secret produced unexpected battle properties or damage.'
     }
     if ($SecretId -in @(10554,10500)) { Write-Output "Actual critical value: $($evidence['False'].secondary) -> $($evidence['True'].secondary)." }
+    if ($SecretId -eq 10507) { Write-Output "Actual block value: $($evidence['False'].secondary) -> $($evidence['True'].secondary)." }
     if ($SecretId -eq 10559) { Write-Output "Actual effect rate: $($evidence['False'].effectRate) -> $($evidence['True'].effectRate)." }
     Write-Output "Actual property for $SecretId : $($evidence['False'].affinity) -> $($evidence['True'].affinity)."
     Write-Output "Actual skill damage for $SecretId : $($evidence['False'].damage) -> $($evidence['True'].damage)."
