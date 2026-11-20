@@ -50,6 +50,7 @@ namespace Zjcs.Presentation.Home
                     VerifyOriginalWish(output, save, skillId);
                 foreach (int skillId in new[] { 10502, 10556, 10569, 10576, 10602 })
                     VerifyOriginalWish(output, save, skillId, 11, 2);
+                VerifyOriginalWish(output, save, 10516, 2, 2);
                 foreach (int skillId in new[] { 10500, 10501, 10505, 10507, 10510, 10524, 10535,
                     10537, 10539, 10544, 10546, 10571 })
                     VerifyOriginalWish(output, save, skillId, 1);
