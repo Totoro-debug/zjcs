@@ -142,6 +142,9 @@ namespace Zjcs.Presentation.Combat
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> observedWaterProjectiles =
             new HashSet<(FightBattleHitSelectionSnapshot, int)>();
         private readonly List<OfficialBattleProjectileImpact> waterProjectiles = new List<OfficialBattleProjectileImpact>();
+        private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center)> observedShieldProjectiles =
+            new HashSet<(FightBattleHitSelectionSnapshot, int)>();
+        private readonly List<OfficialBattleProjectileImpact> shieldProjectiles = new List<OfficialBattleProjectileImpact>();
         private readonly Dictionary<EcEntityIdentifier, FireballFlight> fireballFlights =
             new Dictionary<EcEntityIdentifier, FireballFlight>();
         private readonly List<OfficialBattleProjectileImpact> fireballProjectiles = new List<OfficialBattleProjectileImpact>();
@@ -402,7 +405,8 @@ namespace Zjcs.Presentation.Combat
             step = new FightBattleIsolatedStep(checkpoint, restore, sequence, counter, observeMovements, observeStatusViews, observeUnitLives, observeSummons, observeDisperses, observeGridViews);
             bridge = new OfficialBattleImpactViewBridge(views, step.Latch);
             bridge.IgnoreNativeScopeArrival = (cast, hit, scope) => scope >= 0 &&
-                (cast?.SkillEntityId == 11690 && hit?.HitEntityId == 11691 && flameDefinitions.ContainsKey(cast.ActorId)
+                (cast?.SkillEntityId == 11090 && hit?.HitEntityId >= 11091 && hit.HitEntityId <= 11094
+                || cast?.SkillEntityId == 11690 && hit?.HitEntityId == 11691 && flameDefinitions.ContainsKey(cast.ActorId)
                 || cast?.SkillEntityId == 10570 && hit?.HitEntityId == 10571
                 || cast?.SkillEntityId == 10720 && hit?.HitEntityId == 10721 && healingCasters.Contains(cast.ActorId));
             bridge.WorkerReleasedByArrival += OnWorkerReleasedByArrival;
@@ -796,6 +800,16 @@ namespace Zjcs.Presentation.Combat
                     _ => RouteThornImpact(cast, hit, centerIndex));
                 if (observer != null) { observedThornEffects.Add((hit, centerIndex)); thornEffects.Add(observer); }
             }
+            if (!disposed && !transferred && cast?.SkillEntityId == 11090
+                && hit?.HitEntityId >= 11091 && hit.HitEntityId <= 11094
+                && prefab != null && prefab.name == "playable11090_hit_bone" && playable != null && playable.name == "track"
+                && selectedHits.Contains(hit) && casts.ContainsKey(cast) && hit.Targets != null
+                && !observedShieldProjectiles.Contains((hit, centerIndex)))
+            {
+                var observer = OfficialBattleProjectileImpact.Attach(playable, hit.DelayDistFactor,
+                    () => RouteShieldProjectileImpact(cast, hit, centerIndex), finishBeforeArrival: true);
+                if (observer != null) { observedShieldProjectiles.Add((hit, centerIndex)); shieldProjectiles.Add(observer); }
+            }
             if (!disposed && !transferred && cast?.SkillEntityId == 10800 && hit?.HitEntityId == 10801
                 && prefab != null && prefab.name == "playable_10801_SourceToHit" && playable != null && playable.name == "track"
                 && selectedHits.Contains(hit) && casts.TryGetValue(cast, out var fireballCast)
@@ -899,6 +913,21 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed || transferred || !casts.ContainsKey(cast) || !selectedHits.Contains(hit)
                 || !observedWaterProjectiles.Contains((hit, centerIndex)) || hit.Targets == null) return;
+            foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
+            {
+                if (!casts.ContainsKey(cast)) return;
+                if (target == null || target.EffectCenterIndex != centerIndex || !target.HasScopeIndex
+                    || target.ScopeIndex != 0 || target.ScopeDelay != 0f) continue;
+                bridge.RecordArrival(cast, hit, centerIndex, 0);
+                break;
+            }
+        }
+
+        private void RouteShieldProjectileImpact(FightBattleSkillCastEvent cast,
+            FightBattleHitSelectionSnapshot hit, int centerIndex)
+        {
+            if (disposed || transferred || !casts.ContainsKey(cast) || !selectedHits.Contains(hit)
+                || !observedShieldProjectiles.Contains((hit, centerIndex)) || hit.Targets == null) return;
             foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
             {
                 if (!casts.ContainsKey(cast)) return;
@@ -1490,6 +1519,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in healingEffects) if (observer != null) observer.Detach();
             foreach (var observer in dragonEffects) if (observer != null) observer.Detach();
             foreach (var observer in waterProjectiles) if (observer != null) observer.Detach();
+            foreach (var observer in shieldProjectiles) if (observer != null) observer.Detach();
             foreach (var observer in fireballProjectiles) if (observer != null) observer.Detach();
             transferred = true;
             return true;
@@ -1516,6 +1546,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in auraHitEffects) if (observer != null) observer.Detach();
             foreach (var observer in thornEffects) if (observer != null) observer.Detach();
             foreach (var observer in waterProjectiles) if (observer != null) observer.Detach();
+            foreach (var observer in shieldProjectiles) if (observer != null) observer.Detach();
             foreach (var observer in fireballProjectiles) if (observer != null) observer.Detach();
             step.Dispose();
             flameDefinitions.Clear(); observedFlames.Clear(); reachedFlames.Clear(); sentFlameHits.Clear();
@@ -1536,6 +1567,7 @@ namespace Zjcs.Presentation.Combat
             healingCasters.Clear(); observedHealingEffects.Clear(); expectedHealingHits.Clear(); completedHealingHits.Clear(); healingEffects.Clear();
             dragonRoots.Clear(); observedDragonWaves.Clear(); reachedDragonWaves.Clear(); expectedDragonWaves.Clear(); sentDragonHits.Clear(); dragonEffects.Clear();
             observedWaterProjectiles.Clear(); waterProjectiles.Clear();
+            observedShieldProjectiles.Clear(); shieldProjectiles.Clear();
             fireballFlights.Clear(); fireballProjectiles.Clear();
             expectedFireballHits.Clear(); completedFireballHits.Clear();
             slashCasters.Clear(); heavyCasters.Clear(); stunStrikeCasters.Clear(); comboCasters.Clear(); observedComboEffects.Clear();

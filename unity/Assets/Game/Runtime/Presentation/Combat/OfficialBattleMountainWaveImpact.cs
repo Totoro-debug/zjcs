@@ -545,8 +545,10 @@ namespace Zjcs.Presentation.Combat
         private MyPlayableTrack track;
         private MyPlayableTriggerTimeCfg trigger;
         private Action arrival;
+        private bool finishBeforeArrival, reached;
 
-        internal static OfficialBattleProjectileImpact Attach(MyPlayable playable, float delayDistFactor, Action arrival)
+        internal static OfficialBattleProjectileImpact Attach(MyPlayable playable, float delayDistFactor, Action arrival,
+            bool finishBeforeArrival = false)
         {
             if (!(playable is MyPlayableTrack track) || !track.myApplyComponent || !track.myTarget
                 || track.myFixDuration || track.myTrackEndStopTime != 0f || track.myTrackTriggerList == null
@@ -555,9 +557,10 @@ namespace Zjcs.Presentation.Combat
             if (speed <= 0f || float.IsNaN(delayDistFactor) || float.IsInfinity(delayDistFactor)
                 || Math.Abs(1f / speed - delayDistFactor) > .00001f) return null;
             var observer = track.gameObject.AddComponent<OfficialBattleProjectileImpact>();
-            observer.track = track; observer.arrival = arrival;
+            observer.track = track; observer.arrival = arrival; observer.finishBeforeArrival = finishBeforeArrival;
             observer.trigger = new MyPlayableTriggerTimeCfg { myTime = 1f, myTrigger = observer };
             track.myTrackTriggerList.Add(observer.trigger);
+            if (finishBeforeArrival) track.OnStop += new Action<MyPlayable>(observer.OnTrackStopped);
             return observer;
         }
 
@@ -567,12 +570,33 @@ namespace Zjcs.Presentation.Combat
             float duration = track.GetDuration();
             if (duration <= 0f || track.Time < duration || !track.myApplyComponent || !track.myTarget
                 || Vector3.Distance(track.myApplyComponent.transform.position, track.myTarget.transform.position) > .01f) return;
-            var callback = arrival; arrival = null; callback();
+            if (finishBeforeArrival) { reached = true; return; }
+            Deliver();
+        }
+
+        private void OnTrackStopped(MyPlayable playable)
+        {
+            if (reached && ReferenceEquals(playable, track)) Deliver();
+        }
+
+        private void Deliver()
+        {
+            if (arrival == null || !track) return;
+            var callback = arrival; arrival = null;
+            if (finishBeforeArrival)
+            {
+                // Chained projectiles can reuse the same pooled track in this step.
+                if (track.myTrackTriggerList != null) track.myTrackTriggerList.Remove(trigger);
+                trigger = null;
+                track.OnStop -= new Action<MyPlayable>(OnTrackStopped);
+            }
+            callback();
         }
 
         internal void Detach()
         {
             arrival = null;
+            if (track && finishBeforeArrival) track.OnStop -= new Action<MyPlayable>(OnTrackStopped);
             if (track && track.myTrackTriggerList != null) track.myTrackTriggerList.Remove(trigger);
             track = null; trigger = null;
             Destroy(this);

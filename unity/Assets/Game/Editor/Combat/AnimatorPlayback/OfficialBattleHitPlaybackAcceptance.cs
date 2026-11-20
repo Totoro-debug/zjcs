@@ -12,6 +12,7 @@ using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.BattleNativePlayables;
 using Zjcs.Official.BattleSkillPlayables;
+using Zjcs.Official.BattleTrackPlayables;
 using Zjcs.Official.EntityLifecycle;
 using Zjcs.Official.EntityViews;
 using Zjcs.Official.EntityTransformViews;
@@ -272,6 +273,12 @@ namespace Zjcs.Editor.Combat
             if (Environment.GetEnvironmentVariable("ZJCS_STUN_STRIKE_ACCEPTANCE") == "1")
             {
                 yield return CheckStunStrike(root, grid);
+                yield break;
+            }
+            if (Environment.GetEnvironmentVariable("ZJCS_BOUNCING_SHIELD_IMPACT_ACCEPTANCE") == "1")
+            {
+                yield return CheckBouncingShieldImpact(root, grid, false);
+                yield return CheckBouncingShieldImpact(root, grid, true);
                 yield break;
             }
             if (Environment.GetEnvironmentVariable("ZJCS_FLAME_SPRAY_ACCEPTANCE") == "1")
@@ -3852,6 +3859,103 @@ namespace Zjcs.Editor.Combat
                 }
                 Destroy(holder.gameObject); yield return null;
             }
+        }
+
+        private IEnumerator CheckBouncingShieldImpact(Transform root, FightBattleGrid grid, bool multipleTargets)
+        {
+            var assets = OfficialCombatAssetCatalog.LoadDefault();
+            var catalog = assets.Load(); var formula = assets.LoadDamageFormula(); var items = assets.LoadSkillItems();
+            FightBattleUnitState LiveUnit(int id, int side, int x)
+            {
+                var unit = new FightBattleUnitState { Id = id, Side = side, CharacterType = 1, Profession = 2,
+                    Level = 50, SubRank = 5, X = x, Y = 5, Direction = 3, Hp = 1000000, MaxHp = 1000000,
+                    LastMaxHp = 1000000, MoveDist = 0, MoveMask = 5 };
+                unit.Turn.Id = id; unit.Turn.Hp = unit.Hp; unit.Turn.Speed = id == 1 ? 1000 : 10;
+                foreach (var prop in new Dictionary<int, long> { { 1, 1000 }, { 2, 10 }, { 3, unit.MaxHp }, { 4, unit.Turn.Speed } })
+                    unit.Properties.Add(new FightPropertyValue { Id = prop.Key, Value = prop.Value });
+                foreach (string name in new[] { "BaseBlockPercentValue", "BaseBlockAvoidPercentValue", "BaseCritRatePercentValue",
+                    "BaseCritAvoidPercentValue", "BaseEffectRate", "BaseEffectDodge" })
+                    unit.Properties.Add(new FightPropertyValue { Id = formula.PropertyId(name), Value = 10000 });
+                return unit;
+            }
+            var units = multipleTargets
+                ? new[] { LiveUnit(1, 1, 5), LiveUnit(2, 2, 7), LiveUnit(3, 2, 9) }
+                : new[] { LiveUnit(1, 1, 5), LiveUnit(2, 2, 7) };
+            var skill = catalog.CreateSkill(11090, 0, 10048, 2, 20, 1,
+                catalog.CalculateSkillProps(11090, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+            skill.LimitedTimes = 1; units[0].Skills.Add(skill); units[0].SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
+            var checkpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 17,
+                Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+            checkpoint.Units.AddRange(units); var wave = new FightBattleWaveState(); wave.UnitIds.AddRange(units.Skip(1).Select(value => value.Id)); checkpoint.Waves.Add(wave);
+            FightBattleExecutor.Begin(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+            string committed = FightBattleCheckpointSerializer.Save(checkpoint);
+            var display = FightBattleCheckpointSerializer.Load(committed).Units.ToArray();
+            var holder = new GameObject("Live bouncing shield").transform; holder.SetParent(root, false);
+            var bodies = new Dictionary<int, Transform>();
+            foreach (var unit in units)
+            {
+                var body = new GameObject("Shield unit " + unit.Id).transform; body.SetParent(holder, false);
+                body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
+                body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                bodies.Add(unit.Id, body);
+            }
+            var attachAgent = bodies[1].gameObject.AddComponent<Zjcs.Official.StoryAttachment.AttachAgent>();
+            foreach (string bone in new[] { "body", "shenti_1", "sWeapon_01" })
+            {
+                var attachment = new GameObject(bone).transform; attachment.SetParent(bodies[1], false);
+                attachAgent.AddBoneNode(bone, attachment);
+            }
+            var nativeScope = new OfflineBattleNativePlayableScope(holder, null);
+            using (var nativeViews = new OfficialBattleSkillEntityPlayback(holder, new OfficialBattleGridMapper(holder, grid),
+                nativeScope, id => display.FirstOrDefault(value => value.Id == id)))
+            using (var session = new OfficialBattleLiveImpactSession(checkpoint, copy => FightBattleExecutor.Restore(copy,
+                formula, new FightDamageSettlement(), catalog, items), nativeViews, 0, 1))
+            {
+                nativeViews.BindDamageUI(holder, 0);
+                var speedSetter = typeof(MyPlayable).GetProperty("Speed").GetSetMethod(true);
+                MyPlayableTrack track = null; int pausedFrames = 0, pausedHits = 0; bool paused = false, resumed = false, captured = false;
+                var targets = new List<int>(); var tracks = new List<string>();
+                nativeViews.HitGraphPlayableStarted += (cast, hit, center, prefab, leaf) => {
+                    if (cast.SkillEntityId != 11090 || prefab.name != "playable11090_hit_bone" || leaf.name != "track") return;
+                    track = (MyPlayableTrack)leaf; paused = true; resumed = false; pausedFrames = 0; pausedHits = targets.Count;
+                    tracks.Add(hit.HitEntityId + ":triggers=" + track.myTrackTriggerList.Count + ":duration=" + track.GetDuration()
+                        + ":target=" + (track.myTarget ? track.myTarget.name : "null"));
+                    speedSetter.Invoke(track, new object[] { 0f });
+                };
+                bool Start(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = nativeViews.Start(cast, bodies[cast.ActorId], bodies[cast.Presentation.TargetId]); return true; }
+                void Damage(FightBattleDamageEvent damage)
+                {
+                    Require(track && resumed && track.myApplyComponent && track.myTarget
+                        && Vector3.Distance(track.myApplyComponent.transform.position, track.myTarget.transform.position) <= .01f,
+                        "Shield damage did not coincide with the original projectile endpoint.");
+                    targets.Add(damage.TargetId);
+                }
+                float deadline = Time.realtimeSinceStartup + 30f;
+                while (!session.IsCompleted && Time.realtimeSinceStartup < deadline)
+                {
+                    session.Pump(Time.deltaTime, Start, Damage);
+                    if (paused && !resumed)
+                    {
+                        Require(track && targets.Count == pausedHits && FightBattleCheckpointSerializer.Save(checkpoint) == committed,
+                            "A paused shield flight cannot settle damage or mutate the committed checkpoint.");
+                        if (++pausedFrames == 5) { resumed = true; speedSetter.Invoke(track, new object[] { 1f }); }
+                    }
+                    if (!captured && targets.Count > 0) { Capture("bouncing-shield-impact-" + multipleTargets + ".png", false); captured = true; }
+                    nativeViews.Tick(Time.deltaTime); nativeScope.LateTick(); yield return null;
+                }
+                if (!captured && targets.Count > 0) { Capture("bouncing-shield-impact-" + multipleTargets + ".png", false); captured = true; }
+                int[] expectedTargets = multipleTargets ? new[] { 2, 3, 2, 3 } : new[] { 2 };
+                Require(captured && tracks.Count == expectedTargets.Length && targets.SequenceEqual(expectedTargets)
+                    && session.TryTakeCompleted(out _, out _)
+                    && FightBattleCheckpointSerializer.Save(checkpoint) == committed,
+                    "Shield impacts must follow their original projectile arrivals: targets=" + string.Join(",", targets)
+                    + " tracks=" + string.Join(",", tracks) + " completed=" + session.IsCompleted
+                    + " paused=" + paused + " resumed=" + resumed + " time=" + (track ? track.Time : -1)
+                    + " status=" + (track ? track.myStatus.ToString() : "missing") + " speed=" + (track ? track.Speed : -1));
+            }
+            Destroy(holder.gameObject); yield return null;
         }
 
         private IEnumerator ValidateRandomReceipts(Transform root, Transform source, Transform target)
