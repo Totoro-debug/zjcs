@@ -94,9 +94,49 @@ namespace Zjcs.Combat.Official
                 {
                     // A single authored cell still delays its damage/status occurrence.
                     // Keeping entity-level selection here must not drop HitScopCfg.Delay.
-                    float delay = hit.Scope.Count == 1 ? ScopeDelay(hit, 0) : 0f;
+                    if (hit.Scope.Count == 1 || hit.IsSummon)
+                    {
+                        float delay = hit.Scope.Count == 1 ? ScopeDelay(hit, 0) : 0f;
+                        foreach (var target in candidates)
+                            result.Add(new FightHitOccurrence(target, delay: delay,
+                                scopeIndex: hit.Scope.Count == 1 ? 0 : -1));
+                        return result;
+                    }
+                    var entityCenter = FightHitAnchorExtensions.ResolveCenter(hit.Anchor,
+                        context.Source, context.Primary, context.Cast);
+                    var entityScope = FightBattleTargeting.TransformScope(hit.Scope,
+                        hit.ScopeTransform, context.Source, context.Cast);
+                    bool allIdentified = true;
                     foreach (var target in candidates)
-                        result.Add(new FightHitOccurrence(target, delay: delay, scopeIndex: hit.Scope.Count == 1 ? 0 : -1));
+                    {
+                        int found = -1;
+                        FightGridPoint foundCell = default;
+                        for (int index = 0; index < entityScope.Count; index++)
+                        {
+                            var cell = new FightGridPoint(entityCenter.X + entityScope[index].X,
+                                entityCenter.Y + entityScope[index].Y);
+                            if (!Occupies(target, cell)) continue;
+                            if (found >= 0) { found = -1; break; }
+                            found = index; foundCell = cell;
+                        }
+                        if (found < 0)
+                        {
+                            allIdentified = false;
+                            result.Add(new FightHitOccurrence(target));
+                        }
+                        else result.Add(new FightHitOccurrence(target, true, foundCell,
+                            ScopeDelay(hit, found), scopeIndex: found));
+                    }
+                    // Scope entries already use the original hit's playback order. Preserve
+                    // candidate order for ties and do not guess where an ambiguous body lands.
+                    if (allIdentified)
+                        for (int index = 1; index < result.Count; index++)
+                        {
+                            var occurrence = result[index]; int position = index;
+                            while (position > 0 && result[position - 1].ScopeIndex > occurrence.ScopeIndex)
+                            { result[position] = result[position - 1]; position--; }
+                            result[position] = occurrence;
+                        }
                     return result;
                 }
                 var center = FightHitAnchorExtensions.ResolveCenter(hit.Anchor,

@@ -66,3 +66,33 @@ foreach($direction in 0..3) {
 }
 }
 Write-Output 'Original 10066 -> 11550 -> 11552 passed 56 self/friendly and four-direction cases across seven character types: only 3/7 excluded, original area buff retained once per friendly despite a multi-cell body, enemy/out-of-scope filtered, one release, notifications, receipt replay and identical cold checkpoints.'
+
+# The original 11551 area has distinct scope delays. Single-cell recipients
+# must retain their own scope identity so an actual effect arrival can release
+# the corresponding local status settlement in the same frame.
+$cp=[Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+$cp.StageId=1; $cp.MaxRound=10; $cp.RandomSeed=73
+$cp.Grid=[Zjcs.Combat.Official.FightBattleGrid]@{Width=12;Height=12;DefaultGroundType=2}
+$actor=Unit 1 1 1 4 1000
+$far=Unit 2 1 1 6 1
+$near=Unit 3 1 1 5 1
+$enemy=Unit 4 2 2 10 1
+$skill=$catalog.CreateSkill(11550,0,10066,2,20,1,$null)
+$actor.Skills.Add($skill); $actor.SkillState.Slots.Add($catalog.CreateSkillSlot($skill,0))
+foreach($u in @($actor,$far,$near,$enemy)) { $cp.Units.Add($u) }
+$wave=[Zjcs.Combat.Official.FightBattleWaveState]::new(); $wave.UnitIds.Add(4); $cp.Waves.Add($wave)
+$executor=[Zjcs.Combat.Official.FightBattleExecutor]::Begin($cp,$formula,[Zjcs.Combat.Official.FightDamageSettlement]::new(),$catalog,$items)
+$step=$executor.Step(0,1)
+$cast=@($step.Event.SkillCasts | Where-Object SkillEntityId -eq 11550)[0]
+$selection=@($cast.HitSelections | Where-Object HitEntityId -eq 11551)[0]
+Check ($selection.Targets.Count -eq 3 -and ($selection.Targets.TargetId -join ',') -eq '1,3,2') 'Original status area recipients were not ordered by their scope arrivals.'
+foreach($expected in @(@(1,4,0.04),@(3,5,0.08),@(2,6,0.13))) {
+    $target=@($selection.Targets | Where-Object TargetId -eq $expected[0])[0]
+    $event=@($step.Event.DamageEvents | Where-Object { $_.HitEntityId -eq 11551 -and $_.TargetId -eq $expected[0] })[0]
+    Check ($target.HasScopeIndex -and $target.HasGridPosition -and $target.GridX -eq $expected[1] -and $target.GridY -eq 4 -and [Math]::Abs($target.ScopeDelay-$expected[2]) -lt 0.0001) 'Original status area target lost its selected scope cell or delay.'
+    Check ($null -ne $event -and [Math]::Abs($event.Delay-(0.56+$expected[2])) -lt 0.0001) 'Original status area settlement lost its authored scope delay.'
+}
+$saved=[Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($cp))
+$savedSelection=@($saved.Receipts[0].Event.SkillCasts | Where-Object SkillEntityId -eq 11550)[0].HitSelections[0]
+Check ($savedSelection.Targets.Count -eq 3 -and @($savedSelection.Targets | Where-Object { !$_.HasScopeIndex }).Count -eq 0) 'Checkpoint lost original status area scope identities.'
+Write-Output 'Original 10066 single-cell recipients preserve their actual cell identities, scope order, settlement metadata and checkpoint.'

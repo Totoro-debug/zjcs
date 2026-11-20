@@ -31,6 +31,19 @@ $context.SelectedByRandomParent=$true
 Assert-Pattern ($area.Plan($context).Count -eq 4) 'An already-selected random anchor limited its area victims again.'
 $context.SelectedByRandomParent=$false;$hit.TargetMode=1;$hit.ActionType=5
 Assert-Pattern ($area.Plan($context).Count -eq 2) 'Attack-cell multiplication was applied to healing.'
+$healingPlan=$area.Plan($context)
+Assert-Pattern ($healingPlan[0].Target.Id -eq 2 -and $healingPlan[0].ScopeIndex -eq -1) 'A multi-cell target received an invented single healing cell.'
+Assert-Pattern ($healingPlan[1].Target.Id -eq 3 -and $healingPlan[1].ScopeIndex -eq 3 -and [Math]::Abs($healingPlan[1].Delay-0.3) -lt 0.0001) 'A uniquely occupied healing cell lost its authored scope identity and delay.'
+$near=New-PatternUnit 4 2 2 1
+[void]$units.Remove($boss);$units.Add($near)
+foreach($action in @(0,5)) {
+ $hit.ActionType=$action;$plan=$area.Plan($context)
+ Assert-Pattern ($plan.Count -eq 2 -and $plan[0].Target.Id -eq 4 -and $plan[0].ScopeIndex -eq 1 -and $plan[1].Target.Id -eq 3 -and $plan[1].ScopeIndex -eq 3) 'Single-cell status/healing targets did not follow the original scope order.'
+}
+$hit.IsSummon=$true;$summonPlan=$area.Plan($context)
+Assert-Pattern ($summonPlan.Count -eq 2 -and @($summonPlan | Where-Object ScopeIndex -ne -1).Count -eq 0) 'Status-cell association changed the original summon selection.'
+$hit.IsSummon=$false
+[void]$units.Remove($near);$units.Insert(1,$boss)
 $hit.ActionType=4;$skill.SkillType=3
 Assert-Pattern ($area.Plan($context).Count -eq 2) 'Skill-level healing inherited attack-cell multiplication.'
 $skill.SkillType=0

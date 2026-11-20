@@ -796,6 +796,54 @@ public static class BattleImpactGateHarness
         {
             var cp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
                 Grid = new FightBattleGrid { Width = 24, Height = 24, DefaultGroundType = 2 } };
+            var actor = Unit(1, 1, 10, 10, formula);
+            var far = Unit(2, 1, 12, 10, formula);
+            var near = Unit(3, 1, 11, 10, formula);
+            var enemy = Unit(4, 2, 18, 10, formula);
+            var skill = catalog.CreateSkill(11550, 0, 10066, 2, 20, 1,
+                catalog.CalculateSkillProps(11550, 2, 20, 1).Select(p => new FightPropertyValue { Id = p.Key, Value = p.Value }).ToList());
+            skill.LimitedTimes = 1; actor.Skills.Add(skill); actor.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
+            cp.Units.AddRange(new[] { actor, far, near, enemy });
+            var wave = new FightBattleWaveState(); wave.UnitIds.Add(enemy.Id); cp.Waves.Add(wave);
+            var executor = FightBattleExecutor.Begin(cp, formula, new FightDamageSettlement(), catalog, items);
+            using var latch = new FightBattleImpactLatch();
+            executor.ImpactGate = latch; var task = Task.Run(() => executor.Step(0, 1));
+            FightBattlePreparedCast prepared = null;
+            Check(SpinWait.SpinUntil(() => latch.TryTakePreparation(out prepared), 20000)
+                && prepared.Cast.SkillItemId == 10066, "Opening encouragement cast was not prepared");
+            latch.CompletePreparation(prepared);
+            FightBattleSelectedHit selected = null;
+            Check(SpinWait.SpinUntil(() => latch.TryTakeSelection(out selected), 20000)
+                && selected.Selection.HitEntityId == 11551 && selected.Selection.Targets.Count == 3,
+                "Opening encouragement lost its original three-cell selection");
+            latch.CompleteSelection(selected);
+            int[] expected = { actor.Id, near.Id, far.Id };
+            for (int index = 0; index < expected.Length; index++)
+            {
+                FightBattlePendingImpact impact = null;
+                Check(SpinWait.SpinUntil(() => latch.TryTake(out impact), 20000)
+                    && impact.TargetId == expected[index] && impact.HasScopeIndex
+                    && !impact.ScopeIdentityUnresolved, "Status impact lost its actual scope identity or order");
+                var recipient = cp.Units.Single(unit => unit.Id == impact.TargetId);
+                Check(!recipient.Statuses.Any(status => status.ClassId == 24237),
+                    "The area status was applied before its own scope arrived");
+                Check(latch.RecordArrival(impact.Cast, impact.HitSelection, impact.EffectCenterIndex, impact.ScopeIndex),
+                    "The actual status scope arrival was not accepted");
+                FightBattleSettledImpact settlement = null;
+                Check(SpinWait.SpinUntil(() => latch.TryTakeSettlement(out settlement), 20000)
+                    && ReferenceEquals(settlement.Impact, impact), "The status settlement did not follow its scope arrival");
+                latch.CompleteSettlement(settlement);
+            }
+            FightBattleCompletedCast completed = null;
+            Check(SpinWait.SpinUntil(() => latch.TryTakeCastCompletion(out completed), 20000)
+                && expected.All(id => cp.Units.Single(unit => unit.Id == id).Statuses.Any(status => status.ClassId == 24237)),
+                "The three status applications did not finish after their arrivals");
+            latch.CompleteCast(completed);
+            Check(task.Wait(TimeSpan.FromSeconds(20)), "The status area action did not complete");
+        }
+        {
+            var cp = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                Grid = new FightBattleGrid { Width = 24, Height = 24, DefaultGroundType = 2 } };
             var actor = Unit(1, 1, 10, 10, formula); actor.Direction = 3;
             var skill = catalog.CreateSkill(10590, 0, 10043, 2, 20, 1,
                 catalog.CalculateSkillProps(10590, 2, 20, 1).Select(p => new FightPropertyValue { Id = p.Key, Value = p.Value }).ToList());
