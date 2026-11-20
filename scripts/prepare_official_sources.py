@@ -7,11 +7,36 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import struct
 import subprocess
 import sys
 import zipfile
 
 from official_apk import Apk, ROOT, CACHE, UnityPy
+
+
+def decode_assembly(raw, layout):
+    """Mirror the selected Launch.HCC.A; never execute the decoded assembly."""
+    from Crypto.Cipher import AES
+    from Crypto.Util.Padding import unpad
+    if raw.startswith(b'MZ'):
+        return raw
+    key = bytes(v-7 for v in [40,49,83,108,112,123,112,117,110,44,84,63,63,42,133,40])
+    if layout == 'length-prefixed':
+        if len(raw) < 4:
+            raise ValueError('Assembly size error')
+        length, = struct.unpack_from('<i', raw)
+        if length <= 0 or length > len(raw)-4:
+            raise ValueError('Assembly encrypted length error')
+        encrypted, tail = raw[4:4+length], raw[4+length:]
+    elif layout == 'whole':
+        encrypted, tail = raw, b''
+    else:
+        raise ValueError('Unsupported official assembly encryption layout')
+    decoded = unpad(AES.new(key, AES.MODE_CBC, key[::-1]).decrypt(encrypted), 16) + tail
+    if not decoded.startswith(b'MZ'):
+        raise ValueError('Invalid decoded assembly PE header')
+    return decoded
 
 
 def extract_native(destination):
@@ -80,8 +105,6 @@ def activate_prepared(destination):
 
 
 def build(dotnet, ilspy, client=False, manifest=None, output_root=None):
-    from Crypto.Cipher import AES
-    from Crypto.Util.Padding import unpad
     apk = Apk(manifest=manifest)
     destination = Path(output_root).resolve() if output_root else CACHE
     code = destination/'official-code'
@@ -90,9 +113,8 @@ def build(dotnet, ilspy, client=False, manifest=None, output_root=None):
     metadata = apk.archive.read('assets/bin/Data/Managed/Metadata/global-metadata.dat')
     (code/'global-metadata.dat').write_bytes(metadata)
     entries = apk.source.manifest('HybridCLR', apk.archive)['bundles']
-    # Launch.dll/HCC.B contains this key derivation and reversed-key CBC IV.
-    key = bytes(v-7 for v in [40,49,83,108,112,123,112,117,110,44,84,63,63,42,133,40])
     evidence = {}
+    assembly_bytes = {}
     for bundle in entries:
         name,digest = bundle['name'],bundle['hash']
         path = f'assets/yoo/HybridCLR/{bundle["file"]}'
@@ -104,13 +126,30 @@ def build(dotnet, ilspy, client=False, manifest=None, output_root=None):
             text = obj.read()
             if not text.m_Name.endswith('.dll'):continue
             raw = text.m_Script.encode('utf8','surrogateescape')
-            decoded = raw if raw.startswith(b'MZ') else unpad(AES.new(key,AES.MODE_CBC,key[::-1]).decrypt(raw),16)
-            if not decoded.startswith(b'MZ'):raise ValueError('Invalid decoded assembly: '+text.m_Name)
-            (managed/text.m_Name).write_bytes(decoded)
+            if text.m_Name in assembly_bytes:
+                raise ValueError('Duplicate official assembly: ' + text.m_Name)
+            assembly_bytes[text.m_Name] = raw
             evidence[text.m_Name]={'bundle':name,'bundle_hash':digest,'path_id':str(obj.path_id),'source':source,
-                'text_asset_sha256':hashlib.sha256(raw).hexdigest(),'decoded_sha256':hashlib.sha256(decoded).hexdigest()}
+                'text_asset_sha256':hashlib.sha256(raw).hexdigest()}
+    launch = assembly_bytes['Launch.dll']
+    if not launch.startswith(b'MZ'):
+        raise ValueError('The official bootstrap must be readable before selecting its decryptor')
+    (managed/'Launch.dll').write_bytes(launch)
+    subprocess.run([dotnet,str(ilspy),'-p',str(managed/'Launch.dll'),'-o',str(code/'launch-source')],check=True)
+    decryptor = code/'launch-source/Launch/HCC.cs'
+    decryptor_text = decryptor.read_text(encoding='utf8')
+    if 'BitConverter.ToInt32(bytes, 0)' in decryptor_text and 'Buffer.BlockCopy(bytes, num + num2' in decryptor_text:
+        layout = 'length-prefixed'
+    elif 'TransformFinalBlock(bytes, 0, bytes.Length)' in decryptor_text:
+        layout = 'whole'
+    else:
+        raise ValueError('Inspect the selected official Launch.HCC.A encryption layout')
+    for name, raw in assembly_bytes.items():
+        decoded = decode_assembly(raw, layout)
+        (managed/name).write_bytes(decoded)
+        evidence[name]['decoded_sha256'] = hashlib.sha256(decoded).hexdigest()
     wanted = [('Console.dll','common-source'),('Framework.dll','framework-source'),
-              ('Launch.dll','launch-source'),('Framework.FirstPass.Runtime.dll','framework-firstpass-source')]
+              ('Framework.FirstPass.Runtime.dll','framework-firstpass-source')]
     if client:wanted += [('Assembly-CSharp.dll','client-source')]
     for name,folder in wanted:
         subprocess.run([dotnet,str(ilspy),'-p',str(managed/name),'-o',str(code/folder)],check=True)
@@ -125,7 +164,10 @@ def build(dotnet, ilspy, client=False, manifest=None, output_root=None):
     reference.mkdir(exist_ok=True)
     from fetch_official_assets import SHA256
     (reference/'code-manifest.json').write_text(json.dumps({'manifest':apk.version,'apk_sha256':SHA256,'assemblies':evidence,
-        'metadata_sha256':hashlib.sha256(metadata).hexdigest(),'operation':'Static IL decompilation; no game assembly execution'},indent=2),encoding='utf8')
+        'metadata_sha256':hashlib.sha256(metadata).hexdigest(),
+        'assembly_encryption':dict(layout=layout,source=decryptor.relative_to(ROOT).as_posix(),
+            sha256=hashlib.sha256(decryptor.read_bytes()).hexdigest()),
+        'operation':'Static IL decompilation; no game assembly execution'},indent=2),encoding='utf8')
     print('Prepared',len(evidence),'assemblies and packaged Luban TextAssets')
 
 

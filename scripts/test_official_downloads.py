@@ -9,6 +9,7 @@ from unittest.mock import MagicMock, patch
 import fetch_official_cloud_assets as cloud
 from fetch_official_runtime_assets import read_url
 from fetch_latest_official_sources import acquire_bundle
+import fetch_latest_official_sources as latest
 from validation_workspace import validation_directory
 
 
@@ -22,6 +23,27 @@ def response(data, headers=None, status=200):
 
 
 class LiveConfigurationTests(unittest.TestCase):
+    def test_reused_official_filename_preserves_recorded_input(self):
+        with tempfile.TemporaryDirectory(prefix='apk-history-', dir=validation_directory()) as directory:
+            root = Path(directory)
+            cache = root / '.tools/source-packages'
+            cache.mkdir(parents=True)
+            raw = b'previous official APK input'
+            apk = cache / 'zjcs_M509085.apk'
+            apk.write_bytes(raw)
+            old = dict(path=apk.relative_to(root).as_posix(), size=len(raw),
+                       md5=hashlib.md5(raw).hexdigest(), sha256=hashlib.sha256(raw).hexdigest())
+            selection = root / 'official-source.json'
+            selection.write_text(json.dumps(dict(active='previous', profiles={'previous': {'apk': old}})))
+            with patch.object(latest, 'ROOT', root), patch.object(latest, 'CACHE', cache):
+                latest.preserve_selected_apks('new-input-md5')
+            result = json.loads(selection.read_bytes())
+            self.assertEqual(result['active'], 'previous')
+            saved = root / result['profiles']['previous']['apk']['path']
+            self.assertEqual(saved.read_bytes(), raw)
+            self.assertEqual(apk.read_bytes(), raw)
+            self.assertNotEqual(saved, apk)
+
     def test_apk_build_selects_only_its_current_resource_directory(self):
         config = {'42': {'ResVersion': '123456',
                          'ReserveJson': json.dumps({'PredownloadConfig': {'ResVersion': '999999'}}),

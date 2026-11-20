@@ -26,6 +26,34 @@ def write_json(path, value):
     temporary.replace(path)
 
 
+def preserve_selected_apks(replacement_md5):
+    """Keep each recorded input readable when the official filename is reused."""
+    configuration_path = ROOT / 'official-source.json'
+    configuration = json.loads(configuration_path.read_bytes())
+    changed = False
+    for profile in configuration['profiles'].values():
+        apk = profile['apk']
+        source = ROOT / apk['path']
+        if source != CACHE / 'zjcs_M509085.apk' or apk['md5'] == replacement_md5:
+            continue
+        if source.stat().st_size != apk['size']:
+            raise ValueError('Recorded historical APK size differs')
+        with source.open('rb') as stream:
+            if hashlib.file_digest(stream, 'sha256').hexdigest() != apk['sha256']:
+                raise ValueError('Recorded historical APK SHA256 differs')
+        target = CACHE / 'live' / apk['md5'] / source.name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if not target.exists():
+            shutil.copyfile(source, target)
+        with target.open('rb') as stream:
+            if hashlib.file_digest(stream, 'sha256').hexdigest() != apk['sha256']:
+                raise ValueError('Historical APK snapshot SHA256 differs')
+        apk['path'] = target.relative_to(ROOT).as_posix()
+        changed = True
+    if changed:
+        write_json(configuration_path, configuration)
+
+
 def acquire_bundle(bundle, roots, receipts):
     key = bundle['package'] + '/' + bundle['file']
     target = cloud.DESTINATION / key
@@ -84,6 +112,7 @@ def latest_apk():
         headers = dict(response.headers)
         if response.read(2) != b'P':
             raise ValueError('Official APK does not have a ZIP header')
+    preserve_selected_apks(etag)
     target = CACHE / 'zjcs_M509085.apk'
     candidates = [target, CACHE / 'live' / etag / target.name]
     for candidate in candidates:
@@ -226,7 +255,11 @@ def main():
     profile = dict(apk=apk, resource_version=version,
                    cloud_cache=destination.relative_to(ROOT).as_posix(), cloud_cache_retained=True,
                    manifests=manifests)
-    write_json(ROOT / 'official-source.json', dict(format=1, active=active, profiles={active: profile}))
+    configuration_path = ROOT / 'official-source.json'
+    configuration = json.loads(configuration_path.read_bytes())
+    configuration['profiles'][active] = profile
+    configuration['active'] = active
+    write_json(configuration_path, configuration)
     print('Selected latest official source:', active, version, flush=True)
 
 
