@@ -29,10 +29,10 @@ namespace Zjcs.Presentation.Home
             bool equipped = Environment.GetEnvironmentVariable("ZJCS_BLAZING_HEART_EQUIPPED") == "1";
             string requestedSecret = Environment.GetEnvironmentVariable("ZJCS_AFFINITY_SECRET_ID");
             int secretId = string.IsNullOrEmpty(requestedSecret) ? 10520 : int.Parse(requestedSecret);
-            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578 || secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510, "Unexpected property secret.");
-            bool warrior = secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510;
+            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578 || secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510 || secretId == 10501, "Unexpected property secret.");
+            bool warrior = secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510 || secretId == 10501;
             int activeId = warrior ? 10008 : secretId == 10521 ? 10000 : secretId == 10522 ? 10001 : secretId == 10559 ? 10005 : 10028;
-            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 || secretId == 10505 ? "MaxHp" : secretId == 10555 ? "ElementMaster" : secretId == 10583 ? "ElementResistance" : secretId == 10559 ? "EffectRate" : secretId == 10554 ? "CritRatePercent" : secretId == 10524 ? "Attack" : secretId == 10535 ? "KongFuMaster" : secretId == 10510 ? "Speed" : "StatusDmgAddPer";
+            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 || secretId == 10505 ? "MaxHp" : secretId == 10555 ? "ElementMaster" : secretId == 10583 ? "ElementResistance" : secretId == 10559 ? "EffectRate" : secretId == 10554 ? "CritRatePercent" : secretId == 10524 ? "Attack" : secretId == 10535 ? "KongFuMaster" : secretId == 10510 ? "Speed" : secretId == 10501 ? "Defence" : "StatusDmgAddPer";
             Require(!string.IsNullOrEmpty(sourcePath) && File.Exists(sourcePath), "Missing acquired secret profile.");
             var save = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(sourcePath));
             var profile = save.Player;
@@ -127,7 +127,7 @@ namespace Zjcs.Presentation.Home
                     enemy.Statuses.Add(status);
                 }
             }
-            if (secretId == 10583)
+            if (secretId == 10583 || secretId == 10501)
             {
                 // Exercise the original elemental formula against an incoming fireball
                 // while retaining the native weekly stage and battle flow.
@@ -139,7 +139,7 @@ namespace Zjcs.Presentation.Home
             }
             foreach (var unit in checkpoint.Units)
             {
-                var props = new Dictionary<int, long> { { 1, 1000 }, { 2, 10 }, { 3, 1000000 },
+                var props = new Dictionary<int, long> { { 1, secretId == 10501 && unit.Id == enemy.Id ? 10000 : 1000 }, { 2, 10 }, { 3, 1000000 },
                     { 4, unit.Id == 1 ? 1000 : enemySpeed }, { combat.PropertyType("BaseElementAdd"), 10000 },
                     { combat.PropertyType("BaseElementReduce"), 10000 }, { combat.PropertyType("BaseElementMaster"), 10000 },
                     { combat.PropertyType("BaseElementResistance"), 10000 }, { combat.PropertyType("BaseKongFuMaster"), 10000 },
@@ -169,7 +169,7 @@ namespace Zjcs.Presentation.Home
                 if (secretId == 10510 && firstActor == 0 && step.Event.ActorRound > 0)
                     firstActor = step.Event.ActorId;
                 var hit = step.Event.DamageEvents.FirstOrDefault(value => !value.IsCure && value.Damage < 0
-                    && (secretId == 10583
+                    && (secretId == 10583 || secretId == 10501
                         ? value.SourceId == enemy.Id && value.TargetId == player.Id && value.SkillItemId == 10028
                         : value.SourceId == player.Id && value.TargetId == enemy.Id && value.SkillItemId == activeId));
                 if (hit != null && damage == 0) damage = Math.Abs(hit.Damage);
