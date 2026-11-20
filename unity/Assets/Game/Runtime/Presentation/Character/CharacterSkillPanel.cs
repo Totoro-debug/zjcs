@@ -623,8 +623,13 @@ namespace Zjcs.Presentation.Character
                 RefreshPieceList();
                 return;
             }
+            // A migrated profile can contain the same skill item more than once
+            // when inherited profession skills are merged into the local list.
+            // The original panel presents one row per item; retain the highest
+            // owned rank instead of allowing a duplicate key to abort refresh.
             var owned = profile.Skills.Where(skill => skill != null && skill.ClassId > 0)
-                .ToDictionary(skill => skill.ClassId, skill => skill.Rank);
+                .GroupBy(skill => skill.ClassId)
+                .ToDictionary(group => group.Key, group => group.Max(skill => skill.Rank));
             var mergeable = new List<int>();
             var collected = new List<int>();
             var uncollected = new List<int>();
