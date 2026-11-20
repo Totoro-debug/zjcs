@@ -171,8 +171,13 @@ namespace Zjcs.Presentation.Home
                     Require(canvas.transform.Find(slotPath) == null, "Original HUD delay was skipped.");
                     for (int frame = 0; frame < 180 && canvas.transform.Find(slotPath) == null; frame++)
                     { controller.Tick(Time.deltaTime); yield return null; }
+                    // The native theme binding destroys its staging parent at the end of the mount frame.
+                    yield return Capture(theme == 0 ? "normal-hud-mounted" : "theme-hud-mounted");
                     Transform slot = canvas.transform.Find(slotPath);
-                    Require(slot != null && slot.childCount == theme, "Original theme selection did not match its HUD child.");
+                    Require(slot != null && slot.childCount == theme,
+                        "Original theme selection did not match its HUD child: theme=" + theme
+                        + ", children=" + (slot == null ? "missing slot" : string.Join(",",
+                            slot.Cast<Transform>().Select(child => child.name))) + ".");
                     var targetHud = world.GetComponentsInChildren<Transform>(true)
                         .Single(node => node.name == "OfficialBattleUnitHud_2");
                     Require((targetHud.Find("HpBar") == null) == (theme == 1)
