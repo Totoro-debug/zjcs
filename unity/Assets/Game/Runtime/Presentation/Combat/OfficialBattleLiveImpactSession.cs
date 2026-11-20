@@ -73,6 +73,12 @@ namespace Zjcs.Presentation.Combat
         private readonly Dictionary<int, HashSet<int>> jumpSlashScopes = new Dictionary<int, HashSet<int>>();
         private readonly Dictionary<int, HashSet<int>[]> mountainScopes = new Dictionary<int, HashSet<int>[]>();
         private readonly Dictionary<int, HashSet<int>> crossScopes = new Dictionary<int, HashSet<int>>();
+        private readonly Dictionary<int, HashSet<int>> frostFlowerScopes = new Dictionary<int, HashSet<int>>();
+        private readonly HashSet<FightBattleSkillCastEvent> observedFrostFlowers = new HashSet<FightBattleSkillCastEvent>();
+        private readonly Dictionary<FightBattleSkillCastEvent, float> reachedFrostFlowers = new Dictionary<FightBattleSkillCastEvent, float>();
+        private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center, int Scope)> sentFrostFlowerHits =
+            new HashSet<(FightBattleHitSelectionSnapshot, int, int)>();
+        private readonly List<OfficialBattleTargetParticleImpact> frostFlowerEffects = new List<OfficialBattleTargetParticleImpact>();
         private readonly Dictionary<int, FightBattleHitEntity> windBladeScopes = new Dictionary<int, FightBattleHitEntity>();
         private readonly Dictionary<int, HashSet<int>> pullScopes = new Dictionary<int, HashSet<int>>();
         private readonly HashSet<(FightBattleHitSelectionSnapshot Hit, int Center, int Scope)> sentPullHits =
@@ -289,6 +295,18 @@ namespace Zjcs.Presentation.Combat
                             && hit.ScopeEntries[0] != null && hit.ScopeEntries[0].Delay == 0f
                             && hit.ScopeEntries[0].Position.X == 0 && hit.ScopeEntries[0].Position.Y == 1)
                             heavyCasters.Add(unit.Id);
+                        if (skill.EntityId == 10750 && hit.EntityId == 10751 && hit.ScopeEntries.Count == 8)
+                        {
+                            var positions = new HashSet<FightGridPoint>(); var scopes = new HashSet<int>();
+                            for (int index = 0; index < hit.ScopeEntries.Count; index++)
+                            {
+                                var entry = hit.ScopeEntries[index];
+                                if (entry != null && entry.Delay == 0f && Math.Abs(entry.Position.X) <= 1
+                                    && Math.Abs(entry.Position.Y) <= 1 && (entry.Position.X != 0 || entry.Position.Y != 0)
+                                    && positions.Add(entry.Position)) scopes.Add(index);
+                            }
+                            if (scopes.Count == 8) frostFlowerScopes[unit.Id] = scopes;
+                        }
                         if (skill.EntityId == 10620 && hit.EntityId == 10621 && hit.ScopeEntries.Count == 1
                             && hit.ScopeEntries[0] != null && hit.ScopeEntries[0].Delay == 0f
                             && hit.ScopeEntries[0].Position.X == 0 && hit.ScopeEntries[0].Position.Y == 0)
@@ -643,6 +661,8 @@ namespace Zjcs.Presentation.Combat
                         }
                         if (reachedSlashes.Contains(selectedCast)) RouteSlashImpact(selectedCast, active.Id);
                         if (reachedCrossEffects.Contains(selectedCast)) RouteCrossImpact(selectedCast, active.Id);
+                        if (reachedFrostFlowers.TryGetValue(selectedCast, out float frostDelay))
+                            RouteFrostFlowerImpact(selectedCast, active.Id, frostDelay);
                         if (reachedWindBlades.TryGetValue(selectedCast, out int windReached))
                             for (int index = 0; index < 4; index++)
                                 if ((windReached & (1 << index)) != 0) RouteWindBladeImpact(selectedCast, active.Id, index);
@@ -961,6 +981,7 @@ namespace Zjcs.Presentation.Combat
                 try { RouteJumpSlashImpact(cast, prefab, playable); AttachMountainWaves(cast, id, prefab, playable);
                     AttachSlashImpact(cast, id, prefab, playable); AttachComboImpact(cast, id, prefab, playable);
                     AttachCrossImpact(cast, id, prefab, playable); AttachWindBladeImpact(cast, id, prefab, playable);
+                    AttachFrostFlowerImpact(cast, id, prefab, playable);
                     AttachIceConeImpact(cast, id, prefab, playable); AttachDragonWave(cast, id, prefab, playable);
                     AttachFallingWindImpact(cast, id, prefab, playable); AttachFireRingImpact(cast, id, prefab, playable);
                     AttachSwordWindImpact(cast, id, prefab, playable);
@@ -1282,6 +1303,39 @@ namespace Zjcs.Presentation.Combat
             }
         }
 
+        private void AttachFrostFlowerImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
+            GameObject prefab, MyPlayable playable)
+        {
+            if (cast?.SkillEntityId != 10750 || prefab == null || prefab.name != "playable10750"
+                || playable == null || playable.name != "effect" || !frostFlowerScopes.ContainsKey(cast.ActorId)
+                || observedFrostFlowers.Contains(cast) || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            var observer = OfficialBattleTargetParticleImpact.Attach(prefab, playable, "shanguang_lizi",
+                delay => RouteFrostFlowerImpact(cast, id, delay));
+            if (observer == null) return;
+            observedFrostFlowers.Add(cast); frostFlowerEffects.Add(observer);
+        }
+
+        private void RouteFrostFlowerImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id, float hitDelay)
+        {
+            if (disposed || transferred || !observedFrostFlowers.Contains(cast)
+                || !frostFlowerScopes.TryGetValue(cast.ActorId, out var scopes)
+                || !casts.TryGetValue(cast, out var active) || !active.Id.Equals(id)) return;
+            reachedFrostFlowers[cast] = hitDelay;
+            if (cast.HitSelections == null) return;
+            foreach (var hit in new List<FightBattleHitSelectionSnapshot>(cast.HitSelections))
+            {
+                if (hit?.HitEntityId != 10751 || !selectedHits.Contains(hit) || hit.Targets == null
+                    || Math.Abs(hit.Delay - hitDelay) > .00001f) continue;
+                foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
+                {
+                    if (!casts.ContainsKey(cast)) return;
+                    if (target == null || !target.HasScopeIndex || !scopes.Contains(target.ScopeIndex)
+                        || !sentFrostFlowerHits.Add((hit, target.EffectCenterIndex, target.ScopeIndex))) continue;
+                    bridge.RecordArrival(cast, hit, target.EffectCenterIndex, target.ScopeIndex);
+                }
+            }
+        }
+
         private void AttachCrossImpact(FightBattleSkillCastEvent cast, EcEntityIdentifier id,
             GameObject prefab, MyPlayable playable)
         {
@@ -1515,6 +1569,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in swordWindEffects) if (observer != null) observer.Detach();
             foreach (var observer in iceHitEffects) if (observer != null) observer.Detach();
             foreach (var observer in auraHitEffects) if (observer != null) observer.Detach();
+            foreach (var observer in frostFlowerEffects) if (observer != null) observer.Detach();
             foreach (var observer in thornEffects) if (observer != null) observer.Detach();
             foreach (var observer in healingEffects) if (observer != null) observer.Detach();
             foreach (var observer in dragonEffects) if (observer != null) observer.Detach();
@@ -1544,6 +1599,7 @@ namespace Zjcs.Presentation.Combat
             foreach (var observer in swordWindEffects) if (observer != null) observer.Detach();
             foreach (var observer in iceHitEffects) if (observer != null) observer.Detach();
             foreach (var observer in auraHitEffects) if (observer != null) observer.Detach();
+            foreach (var observer in frostFlowerEffects) if (observer != null) observer.Detach();
             foreach (var observer in thornEffects) if (observer != null) observer.Detach();
             foreach (var observer in waterProjectiles) if (observer != null) observer.Detach();
             foreach (var observer in shieldProjectiles) if (observer != null) observer.Detach();
@@ -1563,6 +1619,7 @@ namespace Zjcs.Presentation.Combat
             observedSwordWind.Clear(); reachedSwordWind.Clear(); sentSwordWindHits.Clear(); swordWindEffects.Clear();
             observedIceHits.Clear(); reachedIceHits.Clear(); sentIceHits.Clear(); iceHitEffects.Clear();
             observedAuraHits.Clear(); reachedAuraHits.Clear(); sentAuraHits.Clear(); auraHitEffects.Clear();
+            frostFlowerScopes.Clear(); observedFrostFlowers.Clear(); reachedFrostFlowers.Clear(); sentFrostFlowerHits.Clear(); frostFlowerEffects.Clear();
             thornScopes.Clear(); observedThornEffects.Clear(); expectedThornHits.Clear(); completedThornHits.Clear(); thornEffects.Clear();
             healingCasters.Clear(); observedHealingEffects.Clear(); expectedHealingHits.Clear(); completedHealingHits.Clear(); healingEffects.Clear();
             dragonRoots.Clear(); observedDragonWaves.Clear(); reachedDragonWaves.Clear(); expectedDragonWaves.Clear(); sentDragonHits.Clear(); dragonEffects.Clear();

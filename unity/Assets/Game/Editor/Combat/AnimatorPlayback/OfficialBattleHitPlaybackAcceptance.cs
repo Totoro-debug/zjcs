@@ -281,6 +281,11 @@ namespace Zjcs.Editor.Combat
                 yield return CheckBouncingShieldImpact(root, grid, true);
                 yield break;
             }
+            if (Environment.GetEnvironmentVariable("ZJCS_FROST_FLOWER_IMPACT_ACCEPTANCE") == "1")
+            {
+                yield return CheckFrostFlowerImpact(root, grid);
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_FLAME_SPRAY_ACCEPTANCE") == "1")
             {
                 yield return CheckFlameSpray(root, grid);
@@ -3916,6 +3921,12 @@ namespace Zjcs.Editor.Combat
                 var speedSetter = typeof(MyPlayable).GetProperty("Speed").GetSetMethod(true);
                 MyPlayableTrack track = null; int pausedFrames = 0, pausedHits = 0; bool paused = false, resumed = false, captured = false;
                 var targets = new List<int>(); var tracks = new List<string>();
+                var shown = new List<(int Target, int Frame)>();
+                foreach (var unit in units)
+                {
+                    var role = nativeViews.EnsureUnit(unit.Id, bodies[unit.Id]).GetComponent<MyFightRoleFight>();
+                    if (unit.Id != 1) role.OnDamage += (_, __) => shown.Add((unit.Id, Time.frameCount));
+                }
                 nativeViews.HitGraphPlayableStarted += (cast, hit, center, prefab, leaf) => {
                     if (cast.SkillEntityId != 11090 || prefab.name != "playable11090_hit_bone" || leaf.name != "track") return;
                     track = (MyPlayableTrack)leaf; paused = true; resumed = false; pausedFrames = 0; pausedHits = targets.Count;
@@ -3930,6 +3941,9 @@ namespace Zjcs.Editor.Combat
                     Require(track && resumed && track.myApplyComponent && track.myTarget
                         && Vector3.Distance(track.myApplyComponent.transform.position, track.myTarget.transform.position) <= .01f,
                         "Shield damage did not coincide with the original projectile endpoint.");
+                    Require(shown.Count == targets.Count + 1 && shown[shown.Count - 1].Target == damage.TargetId
+                        && shown[shown.Count - 1].Frame == Time.frameCount,
+                        "The original shield damage view did not start on the projectile arrival frame.");
                     targets.Add(damage.TargetId);
                 }
                 float deadline = Time.realtimeSinceStartup + 30f;
@@ -3954,6 +3968,99 @@ namespace Zjcs.Editor.Combat
                     + " tracks=" + string.Join(",", tracks) + " completed=" + session.IsCompleted
                     + " paused=" + paused + " resumed=" + resumed + " time=" + (track ? track.Time : -1)
                     + " status=" + (track ? track.myStatus.ToString() : "missing") + " speed=" + (track ? track.Speed : -1));
+            }
+            Destroy(holder.gameObject); yield return null;
+        }
+
+        private IEnumerator CheckFrostFlowerImpact(Transform root, FightBattleGrid grid)
+        {
+            var assets = OfficialCombatAssetCatalog.LoadDefault();
+            var catalog = assets.Load(); var formula = assets.LoadDamageFormula(); var items = assets.LoadSkillItems();
+            FightBattleUnitState LiveUnit(int id, int side, int x, int y)
+            {
+                var unit = new FightBattleUnitState { Id = id, Side = side, CharacterType = 1, Profession = 2,
+                    Level = 50, SubRank = 5, X = x, Y = y, Direction = 3, Hp = 1000000, MaxHp = 1000000,
+                    LastMaxHp = 1000000, MoveDist = 0, MoveMask = 5 };
+                unit.Turn.Id = id; unit.Turn.Hp = unit.Hp; unit.Turn.Speed = id == 1 ? 1000 : 10;
+                foreach (var prop in new Dictionary<int, long> { { 1, 1000 }, { 2, 10 }, { 3, unit.MaxHp }, { 4, unit.Turn.Speed } })
+                    unit.Properties.Add(new FightPropertyValue { Id = prop.Key, Value = prop.Value });
+                foreach (string name in new[] { "BaseBlockPercentValue", "BaseBlockAvoidPercentValue", "BaseCritRatePercentValue",
+                    "BaseCritAvoidPercentValue", "BaseElementAdd", "BaseElementReduce", "BaseElementMaster", "BaseElementResistance" })
+                    unit.Properties.Add(new FightPropertyValue { Id = formula.PropertyId(name), Value = 10000 });
+                return unit;
+            }
+            var units = new List<FightBattleUnitState> { LiveUnit(1, 1, 7, 7) };
+            for (int x = -1; x <= 1; x++) for (int y = -1; y <= 1; y++)
+                if (x != 0 || y != 0) units.Add(LiveUnit(units.Count + 1, 2, 7 + x, 7 + y));
+            var skill = catalog.CreateSkill(10750, 0, 10044, 2, 20, 1,
+                catalog.CalculateSkillProps(10750, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+            skill.LimitedTimes = 1; units[0].Skills.Add(skill); units[0].SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
+            var checkpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 17,
+                Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+            checkpoint.Units.AddRange(units); var wave = new FightBattleWaveState(); wave.UnitIds.AddRange(units.Skip(1).Select(value => value.Id)); checkpoint.Waves.Add(wave);
+            FightBattleExecutor.Begin(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+            string committed = FightBattleCheckpointSerializer.Save(checkpoint);
+            var display = FightBattleCheckpointSerializer.Load(committed).Units.ToArray();
+            var holder = new GameObject("Live frost flower").transform; holder.SetParent(root, false);
+            cameraView.transform.position = holder.TransformPoint(new Vector3(7, 7, -20));
+            var bodies = new Dictionary<int, Transform>();
+            foreach (var unit in units)
+            {
+                var body = new GameObject("Frost unit " + unit.Id).transform; body.SetParent(holder, false);
+                body.localPosition = new Vector3(unit.X, unit.Y, 0); body.gameObject.AddComponent<MyTransform>();
+                var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
+                body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                bodies.Add(unit.Id, body);
+            }
+            var nativeScope = new OfflineBattleNativePlayableScope(holder, null);
+            using (var nativeViews = new OfficialBattleSkillEntityPlayback(holder, new OfficialBattleGridMapper(holder, grid),
+                nativeScope, id => display.FirstOrDefault(value => value.Id == id)))
+            using (var session = new OfficialBattleLiveImpactSession(checkpoint, copy => FightBattleExecutor.Restore(copy,
+                formula, new FightDamageSettlement(), catalog, items), nativeViews, 0, 1))
+            {
+                nativeViews.BindDamageUI(holder, 0);
+                ParticleSystem flash = null; bool paused = false, resumed = false, captured = false; int frames = 0, damageFrame = -1;
+                var targets = new HashSet<int>();
+                var shown = new Dictionary<int, int>();
+                foreach (var unit in units)
+                {
+                    var role = nativeViews.EnsureUnit(unit.Id, bodies[unit.Id]).GetComponent<MyFightRoleFight>();
+                    if (unit.Id != 1) role.OnDamage += (_, __) => shown.Add(unit.Id, Time.frameCount);
+                }
+                session.SkillGraphPlayableStarted += (cast, id, prefab, leaf) => {
+                    if (cast.SkillEntityId != 10750 || prefab.name != "playable10750" || leaf.name != "effect") return;
+                    flash = leaf.GetComponentsInChildren<ParticleSystem>(true).Single(value => value.name == "shanguang_lizi");
+                    flash.Pause(); paused = true;
+                };
+                bool Start(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                { id = nativeViews.Start(cast, bodies[cast.ActorId], null); return true; }
+                void Damage(FightBattleDamageEvent damage)
+                {
+                    Require(flash && flash.particleCount > 0 && resumed && damage.ElementType == 101,
+                        "Frost damage preceded its original flash or lost its water element.");
+                    Require(shown.TryGetValue(damage.TargetId, out int viewFrame) && viewFrame == Time.frameCount,
+                        "The original frost damage view did not start on the flash frame.");
+                    if (damageFrame < 0) damageFrame = Time.frameCount;
+                    Require(damageFrame == Time.frameCount && targets.Add(damage.TargetId),
+                        "Simultaneous frost scope cells did not settle once on the flash frame.");
+                }
+                float deadline = Time.realtimeSinceStartup + 20f;
+                while (!session.IsCompleted && Time.realtimeSinceStartup < deadline)
+                {
+                    session.Pump(Time.deltaTime, Start, Damage);
+                    if (paused && !resumed)
+                    {
+                        Require(flash.particleCount == 0 && targets.Count == 0 && FightBattleCheckpointSerializer.Save(checkpoint) == committed,
+                            "A paused frost flash cannot settle damage or mutate the committed checkpoint.");
+                        if (++frames == 5) { resumed = true; flash.Play(); }
+                    }
+                    if (!captured && targets.Count > 0) { Capture("frost-flower-impact.png", false); captured = true; }
+                    nativeViews.Tick(Time.deltaTime); nativeScope.LateTick(); yield return null;
+                }
+                if (!captured && targets.Count > 0) { Capture("frost-flower-impact.png", false); captured = true; }
+                Require(paused && resumed && captured && targets.SetEquals(Enumerable.Range(2, 8))
+                    && session.TryTakeCompleted(out _, out _) && FightBattleCheckpointSerializer.Save(checkpoint) == committed,
+                    "All eight frost impacts must follow their original flash: " + string.Join(",", targets));
             }
             Destroy(holder.gameObject); yield return null;
         }
