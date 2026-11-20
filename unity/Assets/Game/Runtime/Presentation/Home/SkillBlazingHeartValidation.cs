@@ -29,8 +29,8 @@ namespace Zjcs.Presentation.Home
             bool equipped = Environment.GetEnvironmentVariable("ZJCS_BLAZING_HEART_EQUIPPED") == "1";
             string requestedSecret = Environment.GetEnvironmentVariable("ZJCS_AFFINITY_SECRET_ID");
             int secretId = string.IsNullOrEmpty(requestedSecret) ? 10520 : int.Parse(requestedSecret);
-            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578 || secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510 || secretId == 10501 || secretId == 10500 || secretId == 10507 || secretId == 10516, "Unexpected property secret.");
-            bool warrior = secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510 || secretId == 10501 || secretId == 10500 || secretId == 10507 || secretId == 10516;
+            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578 || secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510 || secretId == 10501 || secretId == 10500 || secretId == 10507 || secretId == 10516 || secretId == 10540, "Unexpected property secret.");
+            bool warrior = secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510 || secretId == 10501 || secretId == 10500 || secretId == 10507 || secretId == 10516 || secretId == 10540;
             bool criticalSecret = secretId == 10554 || secretId == 10500;
             bool blockSecret = secretId == 10507;
             int activeId = warrior ? 10008 : secretId == 10521 ? 10000 : secretId == 10522 ? 10001 : secretId == 10559 ? 10005 : 10028;
@@ -50,7 +50,8 @@ namespace Zjcs.Presentation.Home
                     VerifyOriginalWish(output, save, skillId);
                 foreach (int skillId in new[] { 10502, 10556, 10569, 10576, 10602 })
                     VerifyOriginalWish(output, save, skillId, 11, 2);
-                VerifyOriginalWish(output, save, 10516, 2, 2);
+                foreach (int skillId in new[] { 10516, 10540 })
+                    VerifyOriginalWish(output, save, skillId, 2, 2);
                 foreach (int skillId in new[] { 10500, 10501, 10505, 10507, 10510, 10524, 10535,
                     10537, 10539, 10544, 10546, 10571 })
                     VerifyOriginalWish(output, save, skillId, 1);
@@ -91,7 +92,7 @@ namespace Zjcs.Presentation.Home
             });
             var player = checkpoint.Units.Single(value => value.Id == 1);
             Require(player.Skills.Any(value => value.ItemId == activeId), "The actual battle omitted the saved elemental skill.");
-            int elementAffinity = secretId == 10524 ? 1 : secretId == 10516 ? 73 : combat.PropertyType(affinityName);
+            int elementAffinity = secretId == 10524 || secretId == 10540 ? 1 : secretId == 10516 ? 73 : combat.PropertyType(affinityName);
             long affinity = PropertyOrResonance(player, elementAffinity, secretId);
             int secondaryProperty = combat.PropertyType(blockSecret ? "BlockPercentValue" : "CritRatePercentValue");
             long secondary = criticalSecret || blockSecret ? player.Properties.Where(value => value.Id == secondaryProperty).Sum(value => value.Value) : 0;
@@ -136,6 +137,13 @@ namespace Zjcs.Presentation.Home
                 status.DurationRound = 5;
                 enemy.Statuses.Add(status);
             }
+            if (secretId == 10540)
+            {
+                var shield = combat.CreateStatus(24435, player.Id, player.Id, 900003, customShieldValue: 100000000);
+                shield.ShieldInitialized = true; shield.ShieldRemainValue = 100000000;
+                shield.DurationRound = shield.CurDurationRound = 5;
+                player.Statuses.Add(shield);
+            }
             if (secretId == 10583 || secretId == 10501 || blockSecret)
             {
                 // Exercise the original elemental formula against an incoming fireball
@@ -167,7 +175,7 @@ namespace Zjcs.Presentation.Home
             FightBattleCheckpoint settled = null;
             var runner = home.StartWeeklyChallengeBattle(4800, value => settled = value);
             var controller = runner.Controller;
-            if (secretId == 10578)
+            if (secretId == 10578 || secretId == 10540)
                 affinity = PropertyOrResonance(controller.Checkpoint.Units.Single(value => value.Id == player.Id), elementAffinity, secretId);
             long damage = 0;
             int firstActor = 0;
