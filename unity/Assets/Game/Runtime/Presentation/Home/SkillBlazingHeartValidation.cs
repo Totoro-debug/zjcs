@@ -19,7 +19,7 @@ namespace Zjcs.Presentation.Home
     public static class SkillBlazingHeartValidation
     {
         [Serializable]
-        private sealed class Evidence { public bool equipped; public long affinity; public long secondary; public long damage; public double effectRate; public int diskChecks; }
+        private sealed class Evidence { public bool equipped; public long affinity; public long secondary; public long damage; public double effectRate; public int diskChecks; public int firstActor; }
 
         public static IEnumerator Exercise(string output, Func<string, IEnumerator> capture,
             Func<Selectable, IEnumerator> click)
@@ -29,10 +29,10 @@ namespace Zjcs.Presentation.Home
             bool equipped = Environment.GetEnvironmentVariable("ZJCS_BLAZING_HEART_EQUIPPED") == "1";
             string requestedSecret = Environment.GetEnvironmentVariable("ZJCS_AFFINITY_SECRET_ID");
             int secretId = string.IsNullOrEmpty(requestedSecret) ? 10520 : int.Parse(requestedSecret);
-            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578 || secretId == 10524 || secretId == 10535 || secretId == 10505, "Unexpected property secret.");
-            bool warrior = secretId == 10524 || secretId == 10535 || secretId == 10505;
+            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578 || secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510, "Unexpected property secret.");
+            bool warrior = secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510;
             int activeId = warrior ? 10008 : secretId == 10521 ? 10000 : secretId == 10522 ? 10001 : secretId == 10559 ? 10005 : 10028;
-            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 || secretId == 10505 ? "MaxHp" : secretId == 10555 ? "ElementMaster" : secretId == 10583 ? "ElementResistance" : secretId == 10559 ? "EffectRate" : secretId == 10554 ? "CritRatePercent" : secretId == 10524 ? "Attack" : secretId == 10535 ? "KongFuMaster" : "StatusDmgAddPer";
+            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 || secretId == 10505 ? "MaxHp" : secretId == 10555 ? "ElementMaster" : secretId == 10583 ? "ElementResistance" : secretId == 10559 ? "EffectRate" : secretId == 10554 ? "CritRatePercent" : secretId == 10524 ? "Attack" : secretId == 10535 ? "KongFuMaster" : secretId == 10510 ? "Speed" : "StatusDmgAddPer";
             Require(!string.IsNullOrEmpty(sourcePath) && File.Exists(sourcePath), "Missing acquired secret profile.");
             var save = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(sourcePath));
             var profile = save.Player;
@@ -96,6 +96,21 @@ namespace Zjcs.Presentation.Home
                 Require(affinity > 0 && player.MaxHp == affinity && player.Hp == affinity,
                     "The actual battle did not initialize health from the equipped secret.");
             var enemy = checkpoint.Units.First(value => value.Side != player.Side && value.Wave == 0);
+            long enemySpeed = 900;
+            if (secretId == 10510)
+            {
+                var item = combatAssets.LoadSkillItems().Required(secretId);
+                int rank = OfflineSkillProgression.OwnedRank(profile.Skills, secretId);
+                int level = progression.SkillProgression.SlotLevel(profile.Skills, 101, 0, profile.SeasonRank);
+                var additions = combat.CalculatePassiveSkillProps(item.PassiveRankPropId, item.PassiveGroupLevelPropId,
+                    item.PassiveRankFactorId, item.PassivePropFactors, rank, level, profile.SubRank);
+                Require(additions.TryGetValue(elementAffinity, out long speedBonus) && speedBonus >= 2,
+                    "The original speed secret cannot create a turn-order boundary.");
+                long baseline = affinity - (equipped ? speedBonus : 0);
+                enemySpeed = baseline + speedBonus / 2;
+                player.Turn.RankSpeedScale = 1;
+                enemy.Turn.RankSpeedScale = 1;
+            }
             checkpoint.Units.RemoveAll(value => value != player && value != enemy);
             checkpoint.Waves.Clear();
             checkpoint.Waves.Add(new FightBattleWaveState { Index = 0, Spawned = true, UnitIds = new List<int> { enemy.Id } });
@@ -125,7 +140,7 @@ namespace Zjcs.Presentation.Home
             foreach (var unit in checkpoint.Units)
             {
                 var props = new Dictionary<int, long> { { 1, 1000 }, { 2, 10 }, { 3, 1000000 },
-                    { 4, unit.Id == 1 ? 1000 : 900 }, { combat.PropertyType("BaseElementAdd"), 10000 },
+                    { 4, unit.Id == 1 ? 1000 : enemySpeed }, { combat.PropertyType("BaseElementAdd"), 10000 },
                     { combat.PropertyType("BaseElementReduce"), 10000 }, { combat.PropertyType("BaseElementMaster"), 10000 },
                     { combat.PropertyType("BaseElementResistance"), 10000 }, { combat.PropertyType("BaseKongFuMaster"), 10000 },
                     { combat.PropertyType("BaseKongFuResistance"), 10000 }, { combat.PropertyType("BaseEffectRate"), 10000 },
@@ -146,10 +161,13 @@ namespace Zjcs.Presentation.Home
             if (secretId == 10578)
                 affinity = PropertyOrResonance(controller.Checkpoint.Units.Single(value => value.Id == player.Id), elementAffinity, secretId);
             long damage = 0;
+            int firstActor = 0;
             int diskChecks = 0;
             FightBattleCheckpoint pendingDisk = null;
             controller.StepCompleted += step =>
             {
+                if (secretId == 10510 && firstActor == 0 && step.Event.ActorRound > 0)
+                    firstActor = step.Event.ActorId;
                 var hit = step.Event.DamageEvents.FirstOrDefault(value => !value.IsCure && value.Damage < 0
                     && (secretId == 10583
                         ? value.SourceId == enemy.Id && value.TargetId == player.Id && value.SkillItemId == 10028
@@ -204,10 +222,12 @@ namespace Zjcs.Presentation.Home
             }
             Require(damage > 0 && captured && resultCaptured && diskChecks > 0,
                 "The actual battle did not cast, save, render and finish.");
+            if (secretId == 10510)
+                Require(firstActor == (equipped ? player.Id : enemy.Id), "The speed secret did not change the first turn.");
             var reloaded = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(slots.GetProgressPath(slot)));
             Require(JsonUtility.ToJson(reloaded.Player.Skills) == originalSkills, "Battle changed the saved skill plan.");
             File.WriteAllText(Path.Combine(output, "blazing-heart-battle.json"),
-                JsonUtility.ToJson(new Evidence { equipped = equipped, affinity = affinity, secondary = secondary, damage = damage, effectRate = effectRate, diskChecks = diskChecks }, true));
+                JsonUtility.ToJson(new Evidence { equipped = equipped, affinity = affinity, secondary = secondary, damage = damage, effectRate = effectRate, diskChecks = diskChecks, firstActor = firstActor }, true));
             yield return capture("blazing-heart-return");
             home.CloseForNavigation();
             Debug.Log("[Blazing heart battle] equipped=" + equipped + " affinity=" + affinity
