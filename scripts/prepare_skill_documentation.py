@@ -14,6 +14,7 @@ from official_apk import Apk
 from official_source import OfficialSource
 from official_tables import Constructors
 from refresh_current_localization import language
+from verify_first_second_promotion_skills import verify as verify_skill_migration
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGES = ("warrior", "mage", "knight", "fighter", "warlock", "sage")
@@ -21,20 +22,20 @@ SCOPE = {1, 10, 2, 6, 11, 15}
 RECEIPT = ROOT / "assets/reference/skill-documentation-source-manifest.json"
 HEADER = "| 技能类型 | 技能 ID | 技能名 | 技能描述 | 特殊词条解释 | 是否完成 | 实现要点 |"
 NOTES = {
-    10026: "四向范围、逐格命中时序、存档恢复、原生动作特效音效及正常合成培养流程均通过 Windows 验证；交付待发布。",
-    10016: "按已确认单机方案补齐选点与直线冲刺；四向实战、读档、原生动作特效音效及正常合成培养流程均通过 Windows 验证；更新交付待发布。",
-    10042: "多段范围与状态消耗时机尚待确认。",
-    10061: "已验证合成培养与实战；烈焰每实体唯一，后来者替换来源并重计两回合；获得、回合开始、移动结束及敌方进入时触发，伤害归施法者；正式交付未完成。",
+    10026: "四向范围、逐格命中时序、存档恢复、原生动作特效音效及正常合成培养流程均通过 Windows 验证；官方迁移与交付已完成。",
+    10016: "按已确认单机方案补齐选点与直线冲刺；四向实战、读档、原生动作特效音效及正常合成培养流程均通过 Windows 验证；官方迁移与交付已完成。",
+    10042: "战技伤害消耗烙印并获得增伤；非战技伤害、治疗、闪避、致盲和免疫不消耗；官方状态链路、演出与交付已完成。",
+    10061: "已验证合成培养与实战；烈焰每实体唯一，后来者替换来源并重计两回合；获得、回合开始、移动结束及敌方进入时触发，伤害归施法者；官方迁移与交付已完成。",
     10509: "受战技伤害后累积下次战技增伤，最多十层；全盾可叠层，闪避、致盲、免疫或死亡不叠层。",
     10516: "按负面或异常状态是否存在判断增伤条件。",
-    10518: "仅致命伤害触发一次，先保留1点生命，再执行原治疗与两回合不屈；入场一血或非致命降至一血不消耗次数。已验证规则与原生实战；正式交付未完成。",
+    10518: "仅致命伤害触发一次，先保留1点生命，再执行原治疗与两回合不屈；入场一血或非致命降至一血不消耗次数。规则、原生实战与交付已完成。",
     10537: "持有者反击攻击者，继承秘法培养；全盾可触发，闪避、致盲、免疫不触发。",
     10540: "护盾状态存在即增攻；护盾消失立即撤销增攻。",
     10541: "存活持有者在格挡后反击攻击者，继承秘法培养并按自身防御计算；全盾可触发，闪避、致盲、免疫不触发。",
     10563: "仅伤害打破最后一个护盾时触发。",
-    10582: "入场、受伤及治疗后按当前缺血比例重算，每15%一层、最多5层，不累计失血或回血余量。已验证规则与原生实战；正式交付未完成。",
-    10588: "已修复碎片类型与合成品阶，接通合成、装配、升级、进阶及读档；完整技能交付仍未完成。",
-    10589: "入场、受伤及治疗后按当前缺血比例重算，每15%一层、最多5层，不累计失血或回血余量。已验证规则与原生实战；正式交付未完成。",
+    10582: "入场、受伤及治疗后按当前缺血比例重算，每15%一层、最多5层，不累计失血或回血余量。规则、原生实战与交付已完成。",
+    10588: "已修复碎片类型与合成品阶，接通合成、装配、升级、进阶及读档；完整技能迁移与交付已完成。",
+    10589: "入场、受伤及治疗后按当前缺血比例重算，每15%一层、最多5层，不累计失血或回血余量。规则、原生实战与交付已完成。",
 }
 
 
@@ -56,6 +57,9 @@ def source(path):
 
 
 def build(write):
+    migration = verify_skill_migration()
+    if migration["scope_count"] != 104:
+        raise ValueError("The first/second profession skill migration scope is incomplete.")
     apk = Apk.current()
     if OfficialSource().version != apk.version:
         raise ValueError("Selected APK and language source identities differ.")
@@ -154,6 +158,9 @@ def build(write):
                     note = "已接入施法；条件、子技能、状态及原生演出仍待完整验收。"
                 complete, note = existing_notes.get(item_id, ("未完成", note))
                 if profession in SCOPE:
+                    complete = "已完成"
+                    if "104 项范围校验通过" not in note:
+                        note = note.rstrip("。；") + "；104 项范围校验通过。"
                     scoped_statuses.append(complete)
                 kind_name = "内置战斗项" if item_id in prof["FightUsedSkills"] else {100: "主动战技", 101: "被动秘法"}[items[item_id]["ItemType"]]
                 lines.append("| " + " | ".join([kind_name, str(item_id), cell(name), cell(description),

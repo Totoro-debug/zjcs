@@ -1,0 +1,1924 @@
+{
+  "scope": "first-second-profession-skills",
+  "profession_ids": [
+    1,
+    10,
+    2,
+    6,
+    11,
+    15
+  ],
+  "scope_count": 104,
+  "profession_rows": {
+    "1": [
+      10008,
+      10009,
+      10011,
+      10012,
+      10013,
+      10014,
+      10015,
+      10018,
+      10024,
+      10043,
+      10051,
+      10052,
+      10054,
+      10500,
+      10501,
+      10505,
+      10507,
+      10510,
+      10524,
+      10535,
+      10537,
+      10539,
+      10544,
+      10546,
+      10562,
+      10571,
+      10128,
+      10125
+    ],
+    "10": [
+      10000,
+      10001,
+      10003,
+      10005,
+      10006,
+      10019,
+      10020,
+      10028,
+      10031,
+      10035,
+      10036,
+      10060,
+      10072,
+      10512,
+      10513,
+      10520,
+      10521,
+      10522,
+      10550,
+      10554,
+      10555,
+      10559,
+      10560,
+      10561,
+      10578,
+      10583,
+      10126,
+      10127
+    ],
+    "2": [
+      10010,
+      10044,
+      10046,
+      10048,
+      10049,
+      10066,
+      10509,
+      10516,
+      10540,
+      10541,
+      10563,
+      10129
+    ],
+    "6": [
+      10016,
+      10026,
+      10042,
+      10053,
+      10055,
+      10061,
+      10518,
+      10564,
+      10582,
+      10588,
+      10589,
+      10130
+    ],
+    "11": [
+      10004,
+      10030,
+      10034,
+      10038,
+      10041,
+      10075,
+      10502,
+      10556,
+      10569,
+      10576,
+      10602,
+      10131
+    ],
+    "15": [
+      10021,
+      10025,
+      10029,
+      10058,
+      10076,
+      10081,
+      10514,
+      10530,
+      10531,
+      10565,
+      10603,
+      10132
+    ]
+  },
+  "source_manifests": [
+    {
+      "path": "unity/Assets/Official/Combat/rules-source-manifest.json",
+      "sha256": "fbe2d8b778cc089d851f9eef60efa6e12842b42732627c14e20e167b746942a2"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules-source-manifest.json",
+      "sha256": "9b447a15838602a598b7530eb0398a3b0c9e1a6d93d7eb8d0e194932cd24d8bf"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules-source-manifest.json",
+      "sha256": "cef8b0b5a12460f2bdb2b4d8031f95fb8d560a391a9170641e401b67ef08968b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/skill-native-graphs.json",
+      "sha256": "b5d19d737745fc2c4c15aad8accfcff4129c9db260958ef8ae847b8b9ca7a86d"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/skill-playables.json",
+      "sha256": "3dc65b3484008faebc8caff768ab58a9e0e86f79b2013dc61f2e2d43b709c3e8"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/skill-entity-views.json",
+      "sha256": "92a96bda4f5524c9c82450c78d523caa7fbe3159a6d07f6c612ff911fa726621"
+    }
+  ],
+  "common_modules": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs",
+      "sha256": "0a53dc285276dd5b29979f48e73a1351811f1150a321e447b529c55e72947443"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
+      "sha256": "953f80b80f45bd2e4305639292286356fe96652dc621463b676225a349695ffd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightDamageFormula.cs",
+      "sha256": "bb94de71d24aaf98bf3215167896180b23d5b42d637a31f6c198d9f15a86fef7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleHitExecutor.cs",
+      "sha256": "86959f24c124d24e9e63f52ef2083b7c71f14b781f480b67f68c356bf4213ac5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs",
+      "sha256": "d6fd4f1a9ba4822282e67bc44939fc6621f6f62e90e826c39829894382c2be20"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightSkillCastModule.cs",
+      "sha256": "5190d93e3cc0b050d7da65bdce733beab49a267020e22c709b457f6dfb6d82df"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightSkillLogicRuntime.cs",
+      "sha256": "262c8cd5e98a89ccf4614865dc1269d255d96fdabb69f7aa351c15d9e5e3e942"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs",
+      "sha256": "aa7c3328ada3879f75ffc055c992687af180fe5ca019f4e172a188269bc08a1f"
+    }
+  ],
+  "skills": [
+    {
+      "item_id": 10000,
+      "item_type": 100,
+      "entity_id": 10500,
+      "status_ids": [],
+      "item_sha256": "48bb57a9a389e40a5194eae65a1aa64b492f6bc804895077c61f2440ef3c2cf6",
+      "graph_entities": [
+        10500
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10500/10500",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10500/playable10500"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10001,
+      "item_type": 100,
+      "entity_id": 10510,
+      "status_ids": [],
+      "item_sha256": "58f47849018a1d0439a747e3e08bea8234d26ce524cb3c5a7432fdb643a02bf1",
+      "graph_entities": [
+        10510
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10510/10510",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10510/playable10510"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10003,
+      "item_type": 100,
+      "entity_id": 10550,
+      "status_ids": [],
+      "item_sha256": "f0f266760b63fc934b9be5c82c7601df63483f66229c5c7fd8152b5ce1b52a73",
+      "graph_entities": [
+        10550
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10550/10550",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10550/playable10550"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10004,
+      "item_type": 100,
+      "entity_id": 10560,
+      "status_ids": [],
+      "item_sha256": "b5da437dc6830b0bb09ff5504c97b848fc8cadbffffdda098b593bf4ec073be5",
+      "graph_entities": [
+        10560
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10560/10560",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10560/playable10560"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10005,
+      "item_type": 100,
+      "entity_id": 10570,
+      "status_ids": [],
+      "item_sha256": "54ee6529028c7cc51dbf36efb3eb92e7786e02d470fb537f2759e8f2e0daf6c7",
+      "graph_entities": [
+        10570
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10570/10570",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10570/playable10570"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10006,
+      "item_type": 100,
+      "entity_id": 10580,
+      "status_ids": [],
+      "item_sha256": "b27a698277fdd63b42bd5515ed02aa1b982c62ca2d11e7e509edc148c874568a",
+      "graph_entities": [
+        10580
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10580/10580",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10580/playable10580"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10008,
+      "item_type": 100,
+      "entity_id": 10600,
+      "status_ids": [],
+      "item_sha256": "dd5240e77e952cd47ac621605869c51c1498a19e2f341136265a4b701a43cb2a",
+      "graph_entities": [
+        10600
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10600/10600",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10600/playable10600"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10009,
+      "item_type": 100,
+      "entity_id": 10610,
+      "status_ids": [],
+      "item_sha256": "c3d6ec64cec82f62edce9dd267182682eaa50dddb02a88cd70644d5d2be9fd8b",
+      "graph_entities": [
+        10610
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10610/10610",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10610/playable10610"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10010,
+      "item_type": 100,
+      "entity_id": 10620,
+      "status_ids": [],
+      "item_sha256": "6cec7c14aba7051df04fd11b622a12694d92439838893ab612c2b5b3485020e1",
+      "graph_entities": [
+        10620
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10620/10620",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10620/playable10620"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10011,
+      "item_type": 100,
+      "entity_id": 10630,
+      "status_ids": [],
+      "item_sha256": "fa8dd04e1ffc9438c99cab059ca5897cf31e0d414980a6963ca584c5d7085e53",
+      "graph_entities": [
+        10630
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10630/10630",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10630/playable10630"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10012,
+      "item_type": 100,
+      "entity_id": 10640,
+      "status_ids": [],
+      "item_sha256": "5133862dd8a7a9586b3034d636e29b4ed77e908c743951e9e7cda4a7c2dcb05a",
+      "graph_entities": [
+        10640
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10640/10640",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10640/playable10640"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10013,
+      "item_type": 100,
+      "entity_id": 10650,
+      "status_ids": [],
+      "item_sha256": "6eabb5ed53d732f9cb0612b266f90eec1f69e2dee9aa8cfc333bb38f52158369",
+      "graph_entities": [
+        10650
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10650/10650",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10650/playable10650"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10014,
+      "item_type": 100,
+      "entity_id": 10660,
+      "status_ids": [],
+      "item_sha256": "131209b8550f5aae32884338cb6cb9cc267cfe7e04b1fffbd1dbd93a7ead0aa9",
+      "graph_entities": [
+        10660
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10660/10660",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10660/playable10660"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10015,
+      "item_type": 100,
+      "entity_id": 10670,
+      "status_ids": [],
+      "item_sha256": "07a83a70964678e5dd2f71985e0a0aa25582b7bd6de43be3855c4334342ddf78",
+      "graph_entities": [
+        10670
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10670/10670",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10670/playable10670"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10016,
+      "item_type": 100,
+      "entity_id": 10680,
+      "status_ids": [],
+      "item_sha256": "6fd8912544115c1d357833360437766a02634ce179221ea5ab261292cf6c8760",
+      "graph_entities": [
+        10680
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10680/10680",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10680/playable10680"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10018,
+      "item_type": 100,
+      "entity_id": 10700,
+      "status_ids": [],
+      "item_sha256": "dc13376e9dee37e4574661b9543f4a0455f407b4ba2f84294d027af70993170c",
+      "graph_entities": [
+        10700
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10700/10700",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10700/playable10700"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10019,
+      "item_type": 100,
+      "entity_id": 10710,
+      "status_ids": [],
+      "item_sha256": "901d889be1f32edc085165c15b49408ae5632304149778509694f9139000faf6",
+      "graph_entities": [
+        10710,
+        10711
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10710/10710",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10710/playable10710"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10020,
+      "item_type": 100,
+      "entity_id": 10720,
+      "status_ids": [],
+      "item_sha256": "a376def9a339566578948c22bafafe3d24f8a80091cd3845aadfc763ec9e45e6",
+      "graph_entities": [
+        10720
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10720/10720",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10720/playable10720"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10021,
+      "item_type": 100,
+      "entity_id": 10730,
+      "status_ids": [],
+      "item_sha256": "98bb91936c45e6ef49053ed9aabec81bfe95543c25a53540f20ccde7b7ed3cc4",
+      "graph_entities": [
+        10730
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10730/10730",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10730/playable10730"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10024,
+      "item_type": 100,
+      "entity_id": 10760,
+      "status_ids": [],
+      "item_sha256": "c2cf4978a37e27bb7a52fc212446a41556d6d2413383f3042317c2ab2a48e2f2",
+      "graph_entities": [
+        10760
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10760/10760",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10760/playable10760"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10025,
+      "item_type": 100,
+      "entity_id": 10770,
+      "status_ids": [],
+      "item_sha256": "61a40d7d6f7b7888c6d40a46dbd55cf8857946c1f9bfb05d6503ca68fe09fb5a",
+      "graph_entities": [
+        10770,
+        10771
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10770/10770",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10770/playable10770"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10026,
+      "item_type": 100,
+      "entity_id": 10780,
+      "status_ids": [],
+      "item_sha256": "a4e6e7690833ba83e0a6782188c9a14fcab490c393fc10832f4daf2404ace0a4",
+      "graph_entities": [
+        10780
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10780/10780",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10780/playable10780"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10028,
+      "item_type": 100,
+      "entity_id": 10800,
+      "status_ids": [],
+      "item_sha256": "6271010b8906bf70acaa67ef54efbbb8d35a4ebc64968227dcdf62ed9b05c97c",
+      "graph_entities": [
+        10800
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10800/10800",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10800/playable10800"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10029,
+      "item_type": 100,
+      "entity_id": 10810,
+      "status_ids": [],
+      "item_sha256": "efe45b701219f168c41ef09d54e6d5471654943df2bda923b6c8aa6f778c5bd2",
+      "graph_entities": [
+        10810
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10810/10810",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10810/playable10810"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10030,
+      "item_type": 100,
+      "entity_id": 10820,
+      "status_ids": [],
+      "item_sha256": "57f735eda0287108e6b6e26150314250d619715efafe3bc9f4f570c80dcd3486",
+      "graph_entities": [
+        10820,
+        10821,
+        10822,
+        10823,
+        10824,
+        10825,
+        10826,
+        10827,
+        10828,
+        10829
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10820/10820",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10820/playable10820"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10031,
+      "item_type": 100,
+      "entity_id": 10830,
+      "status_ids": [],
+      "item_sha256": "af07584cd2816c2a43c4735e2a66bf05ba6f940107ce7fc9350e12cf6627352f",
+      "graph_entities": [
+        10830
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10830/10830",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10830/playable10830"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10034,
+      "item_type": 100,
+      "entity_id": 10890,
+      "status_ids": [],
+      "item_sha256": "2aca1d4a076aef8306761b178c0fb46740e0f9331dc44f02df35b8ef9ceaadbc",
+      "graph_entities": [
+        10890
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10890/10890",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10890/playable10890"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10035,
+      "item_type": 100,
+      "entity_id": 10900,
+      "status_ids": [],
+      "item_sha256": "8f156bcb5c5e643076080dda81162e487d8626dec91b0794a761da18c819ebdf",
+      "graph_entities": [
+        10900
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10900/10900",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10900/playable10900"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10036,
+      "item_type": 100,
+      "entity_id": 10910,
+      "status_ids": [],
+      "item_sha256": "d8c230a78b3a10d7373c7db174b53d4e989c74e3c01b7edca1e49e9bd00cae87",
+      "graph_entities": [
+        10910,
+        10911
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10910/10910",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10910/playable10910"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10038,
+      "item_type": 100,
+      "entity_id": 10930,
+      "status_ids": [],
+      "item_sha256": "93ba3727a9d755373d65624f386ac553ad2afa762eab5c09da8d9b55f314662a",
+      "graph_entities": [
+        10930
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10930/10930",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10930/playable10930"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10041,
+      "item_type": 100,
+      "entity_id": 11000,
+      "status_ids": [],
+      "item_sha256": "2934ef868b90fbb2b4bdae0fb9e980788b58a192dafd3064896289a0096c088f",
+      "graph_entities": [
+        11000
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11000/11000",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11000/playable11000"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10042,
+      "item_type": 100,
+      "entity_id": 11010,
+      "status_ids": [],
+      "item_sha256": "d503eca0b14ff8ad5673de9dbb06897bff479c3f7e99a83242dae9867d3bc7e5",
+      "graph_entities": [
+        11010
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11010/11010",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11010/playable11010"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10043,
+      "item_type": 100,
+      "entity_id": 10590,
+      "status_ids": [],
+      "item_sha256": "264d6f3b89905197ce3a323391f219cad8a6ea2604e3f8ec44a2e2fd2911ec59",
+      "graph_entities": [
+        10590
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10590/10590",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10590/playable10590"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10044,
+      "item_type": 100,
+      "entity_id": 10750,
+      "status_ids": [],
+      "item_sha256": "b75a9bf0b81fb11a2c341bbf2b77acdc0f418564860796f41a7b81629c333b25",
+      "graph_entities": [
+        10750
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10750/10750",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10750/playable10750"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10046,
+      "item_type": 100,
+      "entity_id": 11160,
+      "status_ids": [],
+      "item_sha256": "834b3c199f20c31213a595a9687663be9434757c4d0d626cabdb55dc218b8367",
+      "graph_entities": [
+        11160
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11160/11160",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11160/playable11160"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10048,
+      "item_type": 100,
+      "entity_id": 11090,
+      "status_ids": [],
+      "item_sha256": "c00d1b4e472bdd2dec975088d589d7ef7f1cc937afd77bb1b4e78b4f41933957",
+      "graph_entities": [
+        11090,
+        11091,
+        11092,
+        11093,
+        11094
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11090/11090",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11090/playable11090_start"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10049,
+      "item_type": 100,
+      "entity_id": 11100,
+      "status_ids": [],
+      "item_sha256": "dc5526a2cd962019d7ef55a79fb739e90d92c512e5ee03371a0beb2ad652e6f9",
+      "graph_entities": [
+        11100
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11100/11100",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11100/playable11100"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10051,
+      "item_type": 100,
+      "entity_id": 11260,
+      "status_ids": [],
+      "item_sha256": "c264a72676a9bf52573bbf9443d6307b2574d4930c28ab901a6ece5ccb8a2a25",
+      "graph_entities": [
+        11260
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11260/11260",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11260/playable11260"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10052,
+      "item_type": 100,
+      "entity_id": 11120,
+      "status_ids": [],
+      "item_sha256": "a6d2ef18804405a8d2ae0f9330fe7fcac9f5b30725655a2ce026f89b82000de6",
+      "graph_entities": [
+        11120
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/11120",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11120/playable11120"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10053,
+      "item_type": 100,
+      "entity_id": 11250,
+      "status_ids": [],
+      "item_sha256": "ea8995ea8452b2dff72e5faa4db0d4b94400ad0074e01cac1c163247d10eee29",
+      "graph_entities": [
+        11250
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11250/11250",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11250/playable11250"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10054,
+      "item_type": 100,
+      "entity_id": 11270,
+      "status_ids": [],
+      "item_sha256": "f049d49ab34c98b30a10b575bf3aa2c0886e7f56664168325f2e359956f81a3d",
+      "graph_entities": [
+        11270
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11270/11270",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11270/playable11270"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10055,
+      "item_type": 100,
+      "entity_id": 11070,
+      "status_ids": [],
+      "item_sha256": "09a96efe2bfa5594138a8a4e76c42756b10ef41bc960d898c274671a141d871b",
+      "graph_entities": [
+        11070
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11070/11070",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11070/playable11070_Start"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10058,
+      "item_type": 100,
+      "entity_id": 11140,
+      "status_ids": [],
+      "item_sha256": "d2ed87d97bac8b50b9b6c8275d77a8ea4dc43c129518f2968e2faf12a5217e78",
+      "graph_entities": [
+        11140,
+        11141
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11140/11140",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11140/playable11140"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10060,
+      "item_type": 100,
+      "entity_id": 11180,
+      "status_ids": [],
+      "item_sha256": "c674feb8d0a2c98e40b1c318bdb58b9f703b3b98776bb76ac73a13b6558559ea",
+      "graph_entities": [
+        11180
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11180/11180",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11180/playable11180"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10061,
+      "item_type": 100,
+      "entity_id": 11200,
+      "status_ids": [],
+      "item_sha256": "4f280038a6e75afacce59f1e59948fe9bf101817bca265139136f66822d7430d",
+      "graph_entities": [
+        11200,
+        11202
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11200/11200",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11200/playable11200"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10066,
+      "item_type": 100,
+      "entity_id": 11550,
+      "status_ids": [],
+      "item_sha256": "d4660755dc5d69d398346b8feffb8c18aa76abdb04d364954670f8e360c814af",
+      "graph_entities": [
+        11550
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11550/11550",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11550/playable11550"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10072,
+      "item_type": 100,
+      "entity_id": 11690,
+      "status_ids": [],
+      "item_sha256": "9d1898a7a1383e307824e499ec84ddb119f5f92ea8d61482674a72b5222a4cbc",
+      "graph_entities": [
+        11690
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11690/11690",
+      "graph_playable_count": 5,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11690/playable11690_Up",
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11690/playable11690_Down",
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11690/playable11690_Down",
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11690/playable11690_Up",
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11690/playable11690_Up"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10075,
+      "item_type": 100,
+      "entity_id": 11710,
+      "status_ids": [],
+      "item_sha256": "12eec2347947a2fa3937375b4584d4424abe4f127e5c3ddb2b3ff5bbd4d4d945",
+      "graph_entities": [
+        11710
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11710/11710",
+      "graph_playable_count": 5,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11710/playable11710",
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11710/playable11710UpDown",
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11710/playable11710UpDown",
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11710/playable11710",
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11710/playable11710"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10076,
+      "item_type": 100,
+      "entity_id": 11720,
+      "status_ids": [],
+      "item_sha256": "b64df30833e922bf6579930dc99e7e426dcbf34bb9a7f0c0e235f3af173b7b8d",
+      "graph_entities": [
+        11720
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11720/11720",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11720/playable11720"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10081,
+      "item_type": 100,
+      "entity_id": 11880,
+      "status_ids": [],
+      "item_sha256": "223bdb2f8c650162858db6e02e28ba9e14811d6655b579c9bbde5eeacb84414a",
+      "graph_entities": [
+        11880
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11880/11880",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11880/playable11880"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10125,
+      "item_type": 100,
+      "entity_id": 12710,
+      "status_ids": [],
+      "item_sha256": "7d14cbda963ac11a1126c58d7c43af76c88bf96732c16f1b3634166ceff9630e",
+      "graph_entities": [
+        12710
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12710/12710",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12710/playable12710"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10126,
+      "item_type": 100,
+      "entity_id": 12720,
+      "status_ids": [],
+      "item_sha256": "459cf915db93cf36f4d4ca821456943178832b7c009ded3d68eb6ad9c99f288a",
+      "graph_entities": [
+        12720
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12720/12720",
+      "graph_playable_count": 3,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12720/playable12720",
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12720/playable12720_Up",
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12720/playable12720_Down"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10127,
+      "item_type": 100,
+      "entity_id": 12730,
+      "status_ids": [],
+      "item_sha256": "68cfc15c09b7076cf0293c02fbf7921cd0dbea748bb433822cf8017a70903607",
+      "graph_entities": [
+        12730
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12730/12730",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12730/playable12730"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10128,
+      "item_type": 101,
+      "entity_id": 25160,
+      "status_ids": [
+        25160
+      ],
+      "item_sha256": "c9b2baca1243b4b72cf884eee9b1f53a97a62099632df57e6deda8314903dd85",
+      "status_entities": [
+        25160
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 1
+    },
+    {
+      "item_id": 10129,
+      "item_type": 100,
+      "entity_id": 12760,
+      "status_ids": [],
+      "item_sha256": "12960ae0eca5d6ed119de9ebde5f0cf5420eea64dbc951ed726027bf966485e0",
+      "graph_entities": [
+        12760
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12760/12760",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12760/playable12760"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10130,
+      "item_type": 100,
+      "entity_id": 12770,
+      "status_ids": [],
+      "item_sha256": "eb8c6ade765be087ee39bcefea21134e6e1536ed0a78ccb9c879346026657a09",
+      "graph_entities": [
+        12770
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12770/12770",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12770/playable12770"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10131,
+      "item_type": 100,
+      "entity_id": 12780,
+      "status_ids": [],
+      "item_sha256": "be0d92b58d14660049d4e24902fe5342824086197f108d6d84b792c78673b79c",
+      "graph_entities": [
+        12780
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12780/12780",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12780/playable12780"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10132,
+      "item_type": 100,
+      "entity_id": 12790,
+      "status_ids": [],
+      "item_sha256": "c825ce122f6ecaae790891ea175f82dd0d7f6ae6ff753a4f1b63c4e9319837d2",
+      "graph_entities": [
+        12790
+      ],
+      "graph_resource": "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12790/12790",
+      "graph_playable_count": 1,
+      "graph_playable_resources": [
+        "Combat/SkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12790/playable12790"
+      ],
+      "animation_count": 1,
+      "view_bound": true,
+      "properties": {}
+    },
+    {
+      "item_id": 10500,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "680bb67228b21345f43025c7496c2e687f429f4fc21599662a690784af4e1185",
+      "status_entities": [],
+      "properties": {
+        "58": 5000,
+        "75": 5000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 1
+    },
+    {
+      "item_id": 10501,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "4fceb5415cfe435ecd8060d52971b0cd09df7a67e7396c166765433dac74da0c",
+      "status_entities": [],
+      "properties": {
+        "2": 8000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 31
+    },
+    {
+      "item_id": 10502,
+      "item_type": 101,
+      "entity_id": 25000,
+      "status_ids": [
+        25000
+      ],
+      "item_sha256": "f94ec27cc7ae31c4243763a4429e4bdf8dd0724de63a33aaf5915bb900284f71",
+      "status_entities": [
+        25000
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10505,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "585b89794bc4d6231d9392c2738dd3ba2b35d31697d585366415304e7013e1d5",
+      "status_entities": [],
+      "properties": {
+        "3": 8000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 31
+    },
+    {
+      "item_id": 10507,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "383a98a07ff61699b23e4ef2e2b57b22e6878ace544ba57137b9a509e146b563",
+      "status_entities": [],
+      "properties": {
+        "62": 5000,
+        "77": 5000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 1
+    },
+    {
+      "item_id": 10509,
+      "item_type": 101,
+      "entity_id": 25003,
+      "status_ids": [
+        25003
+      ],
+      "item_sha256": "2ddbce561e9aad355f33541bd2b637b4053c75c5bf85e6e19d5b242e628f55bc",
+      "status_entities": [
+        25003
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10510,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "68fa3c801f495adabb575cbba7966dded1773ca12373886b64b8daa51b0b53eb",
+      "status_entities": [],
+      "properties": {
+        "4": 8000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 31
+    },
+    {
+      "item_id": 10512,
+      "item_type": 101,
+      "entity_id": 25005,
+      "status_ids": [
+        25005
+      ],
+      "item_sha256": "e0d50daef2f8b2338a6af7caa86ba5264dff8d1d69252e0ab9babd0f246822ee",
+      "status_entities": [
+        25005
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 1
+    },
+    {
+      "item_id": 10513,
+      "item_type": 101,
+      "entity_id": 25006,
+      "status_ids": [
+        25006
+      ],
+      "item_sha256": "60d1dc232667feacfd8016e9547078645f105ec481ac5b3d78122a81766d99ec",
+      "status_entities": [
+        25006
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 1
+    },
+    {
+      "item_id": 10514,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "c7be18dfca0ce80031328e6465dd4679d9942d90870029952ca179799c4d85bc",
+      "status_entities": [],
+      "properties": {
+        "70": 5000,
+        "106": 5000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10516,
+      "item_type": 101,
+      "entity_id": 25008,
+      "status_ids": [
+        25008
+      ],
+      "item_sha256": "fd48799e18d85f26ab494dfdb12f54902014ca24552c8d10e4e2cf1c44a4dc7f",
+      "status_entities": [
+        25008
+      ],
+      "properties": {
+        "73": 2500
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10518,
+      "item_type": 101,
+      "entity_id": 25013,
+      "status_ids": [
+        25013
+      ],
+      "item_sha256": "b88191ab725c1c62b64dca0552f4b200e56c9df0eebe6c03c1b5885bc027efc0",
+      "status_entities": [
+        25013
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10520,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "b979f97e7be42bd5f97eeb5ab994f9709e67fbec794eae1592b3c62d37868237",
+      "status_entities": [],
+      "properties": {
+        "412": 10000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 31
+    },
+    {
+      "item_id": 10521,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "2505b0b4b761535d8ef0184a9c1903a6fc0d5b9755c775448033c6800d123634",
+      "status_entities": [],
+      "properties": {
+        "411": 10000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 31
+    },
+    {
+      "item_id": 10522,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "b2a258566b400ebd117b87df4a873115fc936a34a24b371122887e6d0476565b",
+      "status_entities": [],
+      "properties": {
+        "410": 10000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 31
+    },
+    {
+      "item_id": 10524,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "7a71f49b0551368e0b888059df61ee832dcefb523e93361f2a55cae5aace502a",
+      "status_entities": [],
+      "properties": {
+        "1": 8000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 1
+    },
+    {
+      "item_id": 10530,
+      "item_type": 101,
+      "entity_id": 25015,
+      "status_ids": [
+        25015
+      ],
+      "item_sha256": "4a4635302b2c2ce772e09aa538fdd9f9ba4e4ac17df628d5b90fb4b31d8a9a2a",
+      "status_entities": [
+        25015
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10531,
+      "item_type": 101,
+      "entity_id": 25014,
+      "status_ids": [
+        25014
+      ],
+      "item_sha256": "a2dbc68638e83f84807b3bfc4834e7d68f9bff099fbe39e22b56521469b0ce48",
+      "status_entities": [
+        25014
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10535,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "b8c15649288974852ab75adebe38718b735dea746db28e594a8b295b0e5d3afd",
+      "status_entities": [],
+      "properties": {
+        "354": 10000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 31
+    },
+    {
+      "item_id": 10537,
+      "item_type": 101,
+      "entity_id": 25017,
+      "status_ids": [
+        25017
+      ],
+      "item_sha256": "7265bb520379db58bad669cc6549ceb2427c5b8912df01cd65e42feb6bf6be49",
+      "status_entities": [
+        25017
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 1
+    },
+    {
+      "item_id": 10539,
+      "item_type": 101,
+      "entity_id": 25019,
+      "status_ids": [
+        25019
+      ],
+      "item_sha256": "8ab0e2ce963db22f560a8c3bb0db9c86d610939c9af42875f814f7bddef36f30",
+      "status_entities": [
+        25019
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 1
+    },
+    {
+      "item_id": 10540,
+      "item_type": 101,
+      "entity_id": 25020,
+      "status_ids": [
+        25020
+      ],
+      "item_sha256": "4d41778a8eeb7cd81a7a63bbcd160ba04806df55045a89a3005d938ef51ea257",
+      "status_entities": [
+        25020
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10541,
+      "item_type": 101,
+      "entity_id": 25021,
+      "status_ids": [
+        25021
+      ],
+      "item_sha256": "a0c7cd36cd7b75780b2b76467ff47c2c9efb4ea37f8ea6cbe0f7b174feba39c8",
+      "status_entities": [
+        25021
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10544,
+      "item_type": 101,
+      "entity_id": 25023,
+      "status_ids": [
+        25023
+      ],
+      "item_sha256": "374ada0a06fee77a3d6f555496ae18d16e5eb3fc07995dc0de09052dba36c1c6",
+      "status_entities": [
+        25023
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 1
+    },
+    {
+      "item_id": 10546,
+      "item_type": 101,
+      "entity_id": 25028,
+      "status_ids": [
+        25028
+      ],
+      "item_sha256": "748e65c5a0d076a79cc8c86d1dd83f66e17e68cb4e3fc59b40189c035768efd8",
+      "status_entities": [
+        25028
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 1
+    },
+    {
+      "item_id": 10550,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "ca4e200ec79a9ee5736a055f4814607b7b0b1c385a8e215f7c63024d5d958785",
+      "status_entities": [],
+      "properties": {
+        "3": 8000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 31
+    },
+    {
+      "item_id": 10554,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "d7bf5fcbbae868d70f2fbd5cc358a635e20476b49b23053d70d734c94d940c48",
+      "status_entities": [],
+      "properties": {
+        "58": 5000,
+        "75": 5000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 1
+    },
+    {
+      "item_id": 10555,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "6a2bcba8d738fbfbc74f9a63d7e8294cc6ae3907364f44456bf0885de34a89b9",
+      "status_entities": [],
+      "properties": {
+        "350": 10000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 31
+    },
+    {
+      "item_id": 10556,
+      "item_type": 101,
+      "entity_id": 25022,
+      "status_ids": [
+        25022
+      ],
+      "item_sha256": "5311bdb22b0eb6982a55f6a7641f28466f38972830034506254b29b39cb029cb",
+      "status_entities": [
+        25022
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10559,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "c432b2f7f410f4b3f30116e1e72075257e50eb49ecdb299107d2f909dbd71e4b",
+      "status_entities": [],
+      "properties": {
+        "26": 10000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 31
+    },
+    {
+      "item_id": 10560,
+      "item_type": 101,
+      "entity_id": 25026,
+      "status_ids": [
+        25026
+      ],
+      "item_sha256": "90b67161214f021b6d7e5ca8a5e1ef7137ccb094327c94c38bdc3fd0222d7b84",
+      "status_entities": [
+        25026
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 1
+    },
+    {
+      "item_id": 10561,
+      "item_type": 101,
+      "entity_id": 25027,
+      "status_ids": [
+        25027
+      ],
+      "item_sha256": "104de6cd8d751c1018a8d7336bd451d0e6fc5666b6b86ef6f56d97e72a9a3fd8",
+      "status_entities": [
+        25027
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 1
+    },
+    {
+      "item_id": 10562,
+      "item_type": 101,
+      "entity_id": 25025,
+      "status_ids": [
+        25025
+      ],
+      "item_sha256": "41d383d3f84c188d60224be3fe18641e5ea6b34cc14b6865843e3010d0f1fbbf",
+      "status_entities": [
+        25025
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 1
+    },
+    {
+      "item_id": 10563,
+      "item_type": 101,
+      "entity_id": 25030,
+      "status_ids": [
+        25030
+      ],
+      "item_sha256": "298eaa2685659f7ca0acdded1ba0ba0bd9532821b61b4db7e44e37ab26aaec5a",
+      "status_entities": [
+        25030
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10564,
+      "item_type": 101,
+      "entity_id": 25029,
+      "status_ids": [
+        25029
+      ],
+      "item_sha256": "472e12138384d69d5855ff2e511eb15232bdee03c1e6bd5f243257388885ed30",
+      "status_entities": [
+        25029
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10565,
+      "item_type": 101,
+      "entity_id": 25031,
+      "status_ids": [
+        25031
+      ],
+      "item_sha256": "4e2ab06260b4a2e46e610707a16ba91f0da1a5b2804f61d5ef1fb986bd938b37",
+      "status_entities": [
+        25031
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10569,
+      "item_type": 101,
+      "entity_id": 25038,
+      "status_ids": [
+        25038
+      ],
+      "item_sha256": "b2d1b21922a0d602e8ede29b1c16747257db091c3cc2f4fef163778d2096a835",
+      "status_entities": [
+        25038
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10571,
+      "item_type": 101,
+      "entity_id": 25041,
+      "status_ids": [
+        25041
+      ],
+      "item_sha256": "cf9b4ea1d39ccf8dbcaaf7c92fa971f8561cdf719624733ee926526f6f094b7a",
+      "status_entities": [
+        25041
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 1
+    },
+    {
+      "item_id": 10576,
+      "item_type": 101,
+      "entity_id": 25045,
+      "status_ids": [
+        25045
+      ],
+      "item_sha256": "c372c67ab0abd6999c54090c13f171a2089953e7a3474da53222001744df001c",
+      "status_entities": [
+        25045
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10578,
+      "item_type": 101,
+      "entity_id": 25047,
+      "status_ids": [
+        25047
+      ],
+      "item_sha256": "c28f71436d0b9d406d37fe5a3c738aa2c5ee800bd342e21333e8a307cdd0bedd",
+      "status_entities": [
+        25047
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 1
+    },
+    {
+      "item_id": 10582,
+      "item_type": 101,
+      "entity_id": 25063,
+      "status_ids": [
+        25063
+      ],
+      "item_sha256": "216fabc7d81e3b7306117a0eda2f08e27aaf230789da48dd98c33a6130357888",
+      "status_entities": [
+        25063
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10583,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "5f9a72959aa705014453e9c32fb937b66ed3398b2d2ce4271bfa08da03753e45",
+      "status_entities": [],
+      "properties": {
+        "351": 10000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 31
+    },
+    {
+      "item_id": 10588,
+      "item_type": 101,
+      "entity_id": 0,
+      "status_ids": [],
+      "item_sha256": "3f0ab4ce4a18ca67fe9c508902f31a8bff51af8a566a3cba7fdee424213adb78",
+      "status_entities": [],
+      "properties": {
+        "59": 5000,
+        "107": 5000
+      },
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10589,
+      "item_type": 101,
+      "entity_id": 25094,
+      "status_ids": [
+        25094
+      ],
+      "item_sha256": "77dcc31803370467a285618c364c97c53459d15198cc91a9910173427f356a81",
+      "status_entities": [
+        25094
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10602,
+      "item_type": 101,
+      "entity_id": 25111,
+      "status_ids": [
+        25111
+      ],
+      "item_sha256": "e8d4a79b5e2155880875b6a0ec3b4ef41edd6b8f02de472804417ed693723c1b",
+      "status_entities": [
+        25111
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    },
+    {
+      "item_id": 10603,
+      "item_type": 101,
+      "entity_id": 25112,
+      "status_ids": [
+        25112
+      ],
+      "item_sha256": "0e74f23aeff2bce7d60beeaddb19bd4507602753088e881927e686879640872c",
+      "status_entities": [
+        25112
+      ],
+      "properties": {},
+      "passive_rank_prop_id": 2001,
+      "passive_group_level_prop_id": 2
+    }
+  ]
+}
