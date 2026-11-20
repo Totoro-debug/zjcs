@@ -333,7 +333,15 @@ namespace Zjcs.Presentation.Home
             {
                 if (!captured && hits > 0)
                 {
-                    yield return new WaitForSecondsRealtime(.7f);
+                    if (skillId == 10028)
+                    {
+                        bool explosionVisible = FindObjectsOfType<ParticleSystem>().Any(particle =>
+                            particle.name == "fire" && particle.particleCount > 0
+                            && particle.GetComponentsInParent<Transform>().Any(parent =>
+                                parent.name.StartsWith("playable10801", StringComparison.Ordinal)));
+                        if (!explosionVisible) { yield return null; continue; }
+                    }
+                    else yield return new WaitForSecondsRealtime(.7f);
                     yield return CaptureAcquiredActive(output, "battle"); captured = true;
                 }
                 yield return null;
