@@ -29,9 +29,10 @@ namespace Zjcs.Presentation.Home
             bool equipped = Environment.GetEnvironmentVariable("ZJCS_BLAZING_HEART_EQUIPPED") == "1";
             string requestedSecret = Environment.GetEnvironmentVariable("ZJCS_AFFINITY_SECRET_ID");
             int secretId = string.IsNullOrEmpty(requestedSecret) ? 10520 : int.Parse(requestedSecret);
-            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578 || secretId == 10524, "Unexpected property secret.");
-            int activeId = secretId == 10524 ? 10008 : secretId == 10521 ? 10000 : secretId == 10522 ? 10001 : secretId == 10559 ? 10005 : 10028;
-            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 ? "MaxHp" : secretId == 10555 ? "ElementMaster" : secretId == 10583 ? "ElementResistance" : secretId == 10559 ? "EffectRate" : secretId == 10554 ? "CritRatePercent" : secretId == 10524 ? "Attack" : "StatusDmgAddPer";
+            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578 || secretId == 10524 || secretId == 10535, "Unexpected property secret.");
+            bool warrior = secretId == 10524 || secretId == 10535;
+            int activeId = warrior ? 10008 : secretId == 10521 ? 10000 : secretId == 10522 ? 10001 : secretId == 10559 ? 10005 : 10028;
+            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 ? "MaxHp" : secretId == 10555 ? "ElementMaster" : secretId == 10583 ? "ElementResistance" : secretId == 10559 ? "EffectRate" : secretId == 10554 ? "CritRatePercent" : secretId == 10524 ? "Attack" : secretId == 10535 ? "KongFuMaster" : "StatusDmgAddPer";
             Require(!string.IsNullOrEmpty(sourcePath) && File.Exists(sourcePath), "Missing acquired secret profile.");
             var save = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(sourcePath));
             var profile = save.Player;
@@ -56,7 +57,7 @@ namespace Zjcs.Presentation.Home
             if (!profile.Skills.Skills.Any(value => value.ClassId == activeId))
                 profile.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = activeId, Rank = 1 });
             profile.Skills.Plans[profile.Skills.SelectedPlan].ActiveSkills = new[] { activeId, 0, 0, 0 };
-            profile.InitialWeaponType = secretId == 10524
+            profile.InitialWeaponType = warrior
                 ? Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.SwordInitialWeaponType
                 : Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType;
             profile.SeasonRank = 0;
@@ -101,7 +102,7 @@ namespace Zjcs.Presentation.Home
             checkpoint.MaxRound = 5; checkpoint.IsPlayerRoundLimit = false; checkpoint.PlayerRoundLimit = 0;
             // The original boss occupies five cells across; keep its body clear of
             // the player while retaining the real stage and a target within the original skill range.
-            enemy.X = player.X + (secretId == 10524 ? 3 : 5); enemy.Y = player.Y;
+            enemy.X = player.X + (warrior ? 3 : 5); enemy.Y = player.Y;
             if (secretId == 10578)
             {
                 foreach (var value in new[] { new[] { 24020, 900001 }, new[] { 24215, 900002 } })
@@ -126,7 +127,8 @@ namespace Zjcs.Presentation.Home
                 var props = new Dictionary<int, long> { { 1, 1000 }, { 2, 10 }, { 3, 1000000 },
                     { 4, unit.Id == 1 ? 1000 : 900 }, { combat.PropertyType("BaseElementAdd"), 10000 },
                     { combat.PropertyType("BaseElementReduce"), 10000 }, { combat.PropertyType("BaseElementMaster"), 10000 },
-                    { combat.PropertyType("BaseElementResistance"), 10000 }, { combat.PropertyType("BaseEffectRate"), 10000 },
+                    { combat.PropertyType("BaseElementResistance"), 10000 }, { combat.PropertyType("BaseKongFuMaster"), 10000 },
+                    { combat.PropertyType("BaseKongFuResistance"), 10000 }, { combat.PropertyType("BaseEffectRate"), 10000 },
                     { combat.PropertyType("BaseEffectDodge"), 10000 }, { combat.PropertyType("BaseCritRatePercentValue"), 10000 },
                     { combat.PropertyType("BaseCritAvoidPercentValue"), 10000 }, { combat.PropertyType("BaseBlockPercentValue"), 10000 },
                     { combat.PropertyType("BaseBlockAvoidPercentValue"), 10000 } };
