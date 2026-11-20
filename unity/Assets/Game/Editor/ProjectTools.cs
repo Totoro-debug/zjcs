@@ -170,13 +170,6 @@ namespace Zjcs.Editor
             string destination = Environment.GetEnvironmentVariable("ZJCS_WINDOWS_RELEASE_EXE");
             if (string.IsNullOrEmpty(destination)) destination = "D:/Desktop/ZjcsGame/Zjcs.exe";
             RequireAsciiBuildPath(destination);
-            bool scriptsOnly = Environment.GetEnvironmentVariable("ZJCS_WINDOWS_SCRIPTS_ONLY") == "1";
-            if (scriptsOnly && (Environment.GetEnvironmentVariable("ZJCS_CLEAN_BUILD_CACHE") == "1"
-                || !File.Exists(destination)
-                || !Directory.Exists(Path.Combine(Path.GetDirectoryName(destination), "Zjcs_Data"))
-                || !File.Exists("Library/PlayerDataCache/Win64/ScriptsOnlyCache.yaml")
-                || !File.Exists("Library/PlayerDataCache/Win64/DataBuildDirtyInfo.json")))
-                throw new BuildFailedException("A scripts-only game build requires a complete staged Player and asset cache. Unity must validate unchanged build inputs.");
             Directory.CreateDirectory(Path.GetDirectoryName(destination));
             int errors = 0;
             string firstError = null;
@@ -201,8 +194,7 @@ namespace Zjcs.Editor
                     scenes = scenes,
                     locationPathName = destination,
                     target = BuildTarget.StandaloneWindows64,
-                    options = scriptsOnly ? BuildOptions.BuildScriptsOnly
-                        : Environment.GetEnvironmentVariable("ZJCS_CLEAN_BUILD_CACHE") == "1"
+                    options = Environment.GetEnvironmentVariable("ZJCS_CLEAN_BUILD_CACHE") == "1"
                         ? BuildOptions.CleanBuildCache : BuildOptions.None
                 });
                 if (uiPack != null && report != null && report.summary.result == BuildResult.Succeeded)
