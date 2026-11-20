@@ -116,7 +116,16 @@ namespace Zjcs.Presentation.Home
                     actor.Skills.Add(skill);
                     actor.SkillState.Slots.Add(rules.CreateSkillSlot(skill,
                         rules.CalculateSkillCooldown(entity, 1, 1, 1, actor.Properties.ToDictionary(p => p.Id, p => p.Value))));
-                    state.Units.Add(actor); state.Units.Add(Unit(2, 2, 4, 2, 1));
+                    var target = Unit(2, 2, 4, 2, 1);
+                    if (theme == 1)
+                    {
+                        target.MonsterId = target.MonsterTemplateId = target.RoleEntityId = 3803;
+                        target.MonsterType = rules.MonsterType(target.MonsterId);
+                    }
+                    state.Units.Add(actor); state.Units.Add(target);
+                    string checkpointPath = Path.Combine(output, "battle-" + theme + "-checkpoint.json");
+                    File.WriteAllText(checkpointPath, FightBattleCheckpointSerializer.Save(state));
+                    state = FightBattleCheckpointSerializer.Load(File.ReadAllText(checkpointPath));
                     controller.Begin(new OfficialBattleRequest { Checkpoint = state, WorldRoot = world.transform,
                         HudParent = canvas.transform, CombatAssets = assets, InitialStepDelay = 0, FightThemeId = theme,
                         EnvironmentGameId = 1000, HostPresentation = new OfficialBattleHostPresentation(camera, world.transform, null),
@@ -127,6 +136,15 @@ namespace Zjcs.Presentation.Home
                     { controller.Tick(Time.deltaTime); yield return null; }
                     Transform slot = canvas.transform.Find(slotPath);
                     Require(slot != null && slot.childCount == theme, "Original theme selection did not match its HUD child.");
+                    var targetHud = world.GetComponentsInChildren<Transform>(true)
+                        .Single(node => node.name == "OfficialBattleUnitHud_2");
+                    Require((targetHud.Find("HpBar") == null) == (theme == 1)
+                        && targetHud.Find("StatusLayout") != null,
+                        "Restored bosses must omit small HP bars and retain status layouts; ordinary monsters keep their bars.");
+                    if (theme == 1)
+                        Require(canvas.GetComponentsInChildren<Transform>(true)
+                            .Single(node => node.name == "FightMainPanelBossUI").gameObject.activeInHierarchy,
+                            "The restored boss must retain its dedicated top HP bar.");
                     if (theme == 1)
                     {
                         var label = slot.GetComponentInChildren<WorldMultiLanguageText>();

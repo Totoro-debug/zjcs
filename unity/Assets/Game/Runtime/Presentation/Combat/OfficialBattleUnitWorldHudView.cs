@@ -101,8 +101,10 @@ namespace Zjcs.Presentation.Combat
             RectTransform canvasRect = (RectTransform)root.transform;
             canvasRect.sizeDelta = new Vector2(100f, 100f);
 
-            foreach (BattleUnitBarPart part in OrderedParts(binding.parts))
-                CreateBar(part);
+            // Bosses use the dedicated top HUD; retain their world status layout.
+            if (unit.MonsterId <= 0 || unit.MonsterType < 3 || unit.MonsterType > 5)
+                foreach (BattleUnitBarPart part in OrderedParts(binding.parts))
+                    CreateBar(part);
             statusRoot = CreateStatusRoot(binding.statusLayout);
             Refresh(unit);
         }

@@ -90,6 +90,7 @@ namespace Zjcs.Validation.Combat
                 var monster = Unit(2, 2, 2, 6, 4, monsterActs ? 100 : 1);
                 monster.MonsterId = monster.MonsterTemplateId = trainingMonster ? 3204 : specialAppearance ? 3803 : 3206;
                 monster.RoleEntityId = monster.MonsterId;
+                monster.MonsterType = rules.MonsterType(monster.MonsterId);
                 if (partnerAppearance)
                 {
                     monster.MonsterId = monster.MonsterTemplateId = 0;
@@ -203,6 +204,27 @@ namespace Zjcs.Validation.Combat
                     CheckNativeMusic();
                 }
                 Require(controller.Phase == FightBattlePhase.Preparing, "Preparation was skipped.");
+                CheckUnitBars(world.transform, canvasObject.transform, player, false);
+                CheckUnitBars(world.transform, canvasObject.transform, monster, specialAppearance);
+                string checkpointPath = Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"),
+                    prefix + "-checkpoint.json");
+                File.WriteAllText(checkpointPath, FightBattleCheckpointSerializer.Save(state));
+                var restoredMonster = FightBattleCheckpointSerializer.Load(File.ReadAllText(checkpointPath))
+                    .Units.Single(unit => unit.Id == monster.Id);
+                var restoredBody = new GameObject("Restored unit HUD fixture");
+                try
+                {
+                    using (var restoredHud = OfficialBattleUnitWorldHudView.Create(
+                        OfficialBattleHudCatalog.LoadDefault(), restoredMonster, restoredBody.transform))
+                    {
+                        Require(restoredHud != null, "Restored unit HUD is missing.");
+                        Require((restoredHud.Root.Find("HpBar") == null) == specialAppearance,
+                            "Checkpoint restore changed the boss/ordinary small HP bar visibility.");
+                        Require(restoredHud.Root.Find("StatusLayout") != null,
+                            "Checkpoint restore removed the unit status layout.");
+                    }
+                }
+                finally { UnityEngine.Object.Destroy(restoredBody); }
                 var start = canvasObject.transform.Find(OfficialBattleHudView.StartButtonPath.TrimStart('/'))
                     ?.GetComponent<Button>();
                 Require(start != null && start.IsInteractable(), "Original start button is unavailable.");
@@ -559,6 +581,20 @@ namespace Zjcs.Validation.Combat
                     "Disposing the public battle must release scene music and retain the shared engine.");
                 Debug.Log("PUBLIC_BATTLE_NATIVE_SOUND_PASSED original music and skill playing IDs, hidden return, pause, pointer input, damage and disposal");
             }
+        }
+
+        private static void CheckUnitBars(Transform world, Transform canvas,
+            FightBattleUnitState unit, bool boss)
+        {
+            var hud = world.GetComponentsInChildren<Transform>(true)
+                .Single(node => node.name == "OfficialBattleUnitHud_" + unit.Id);
+            Require((hud.Find("HpBar") == null) == boss,
+                "Only bosses must omit the small unit HP bar.");
+            Require(hud.Find("StatusLayout") != null, "Unit status layout must remain available.");
+            if (boss)
+                Require(canvas.GetComponentsInChildren<Transform>(true)
+                    .Single(node => node.name == "FightMainPanelBossUI").gameObject.activeInHierarchy,
+                    "The dedicated boss HP HUD must remain visible.");
         }
 
         private static FightBattleUnitState Unit(int id, int side, int type, int x, int y, int speed)
