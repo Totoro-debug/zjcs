@@ -180,6 +180,58 @@ public static class BattleAutoStartSkillHarness
             cooldown.RunSkill(0);
             Check(cooldown.LeftCooldown(0) == 4, "Skill did not enter cooldown after release: " + itemId);
         }
-        return "Opening skills passed: passive order, speed, cooldown, missing target and checkpoint.";
+        CheckChallengeTargets(catalog, formula, items);
+        return "Opening skills passed: passive order, speed, cooldown, missing target, challenge targets and checkpoint.";
+    }
+
+    private static void CheckChallengeTargets(FightOfficialCombatCatalog catalog, FightDamageFormula formula,
+        FightOfficialSkillItemCatalog items)
+    {
+        foreach (int itemId in new[] { 10049, 10129 })
+        foreach (int type in new[] { 1, 2, 3, 7 })
+        {
+            int taunts = 0;
+            foreach (int seed in Enumerable.Range(1, 64))
+            {
+                var owner = Unit(1, 1, 5, 1000);
+                var target = Unit(2, 2, 6, 10); target.CharacterType = type;
+                var ally = Unit(3, 1, 5, 5); ally.Y = 6;
+                var outside = Unit(4, 2, 9, 5); outside.CharacterType = type;
+                var item = items.Required(itemId);
+                var skill = catalog.CreateSkill(item.EntityId, 0, itemId, 2, 20, 1,
+                    catalog.CalculateSkillProps(item.EntityId, 2, 20, 1)
+                        .Select(prop => new FightPropertyValue { Id = prop.Key, Value = prop.Value }).ToList());
+                var application = skill.HitGraphEntities.Single(hit => hit.EntityId == (itemId == 10049 ? 11101 : 12761))
+                    .AppliedStatuses.Single(status => status.StatusId == 24216);
+                Check(Math.Abs(application.Chance - .85f) < .00001f && !application.AffectedByProp
+                    && application.CharacterTypeRateOverrides.Count == 3
+                    && application.CharacterTypeRateOverrides.All(entry => new[] { 2, 3, 7 }.Contains(entry.CharacterType)
+                        && entry.Rate == 1f && !entry.AffectedByProp), "Challenge taunt configuration differs.");
+                owner.Skills.Add(skill); owner.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 4));
+                var checkpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 5, RandomSeed = seed,
+                    Grid = new FightBattleGrid { Width = 20, Height = 20 } };
+                checkpoint.Units.AddRange(new[] { owner, target, ally, outside });
+                var wave = new FightBattleWaveState(); wave.UnitIds.AddRange(new[] { 2, 4 }); checkpoint.Waves.Add(wave);
+                var executor = FightBattleExecutor.Begin(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+                var restoredState = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+                var restored = FightBattleExecutor.Restore(restoredState, formula, new FightDamageSettlement(), catalog, items);
+                var step = executor.Step(0, 1).Event; restored.Step(0, 1);
+                Check(FightBattleCheckpointSerializer.Save(checkpoint) == FightBattleCheckpointSerializer.Save(restoredState),
+                    "Challenge target or taunt differed after checkpoint restore.");
+                var hits = step.DamageEvents.Where(hit => hit.SkillEntityId == item.EntityId).ToArray();
+                Check(hits.Length == 1 && hits[0].TargetId == target.Id,
+                    "Challenge hit a friendly or out-of-range target: " + itemId + "/" + type + "/" + seed);
+                var taunt = target.Statuses.SingleOrDefault(status => status.ClassId == 24216);
+                Check(!ally.Statuses.Any(status => status.ClassId == 24216)
+                    && !outside.Statuses.Any(status => status.ClassId == 24216), "Challenge taunted an excluded target.");
+                if (taunt != null)
+                {
+                    taunts++;
+                    Check(taunt.CreatorId == owner.Id && taunt.DurationRound == 1, "Challenge taunt source or duration differs.");
+                }
+                if (type != 1) Check(taunt != null, "Challenge failed its guaranteed non-character taunt: " + type);
+            }
+            if (type == 1) Check(taunts > 0 && taunts < 64, "Challenge character taunt did not use its configured chance.");
+        }
     }
 }
