@@ -25,9 +25,9 @@ namespace Zjcs.Presentation.Home
         {
             AudioListener.volume = 0f;
             Action<Selectable> click = Click;
-            Require(skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10043 || skillId == 10046 || skillId == 10051 || skillId == 10053,
+            Require(skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10051 || skillId == 10053,
                 "Select an implemented active-skill acquisition diagnostic.");
-            int profession = skillId == 10010 || skillId == 10046 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = skillId == 10010 || skillId == 10044 || skillId == 10046 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -51,7 +51,7 @@ namespace Zjcs.Presentation.Home
             player.Level = 50; player.Rank = 2; player.SubRank = 5; player.MaxProfessionRank = 2;
             player.Experience = assets.Load().CumulativeLevelExperience[50];
             player.InitialWeaponType = 200; player.Wardrobe.Profession = profession;
-            if (skillId == 10010 || skillId == 10046) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId, 2, 2);
+            if (skillId == 10010 || skillId == 10044 || skillId == 10046) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId, 2, 2);
             int mergeCount = assets.Load().SkillMergePiece(skillId);
             Require(mergeCount > 0 && definition.AvailableProfessions.Contains(profession), "Original acquisition inputs missing.");
             void Supply(int item, long count)
@@ -230,6 +230,7 @@ namespace Zjcs.Presentation.Home
                         : skillId == 10018 ? cast.SkillEntityId == 10700
                         : skillId == 10024 ? cast.SkillEntityId == 10760
                         : skillId == 10043 ? cast.SkillEntityId == 10590
+                        : skillId == 10044 ? cast.SkillEntityId == 10750
                         : skillId == 10046 ? cast.SkillEntityId == 11160
                         : skillId == 10051 ? cast.SkillEntityId == 11260
                         : skillId == 10053 ? cast.SkillEntityId == 11250
@@ -289,13 +290,13 @@ namespace Zjcs.Presentation.Home
                     foreach (var hit in damageEvents)
                     {
                         if (skillId == 10024 || skillId == 10046 || skillId == 10051) continue;
-                        int damage = skillId == 10009 ? 10612 : skillId == 10010 ? 10622 : skillId == 10012 ? 10642 : skillId == 10014 ? (hit.HitEntityId == 10661 ? 10022 : 10663) : skillId == 10015 ? 10673 : skillId == 10016 ? 10026 : skillId == 10018 ? 10702 : skillId == 10043 ? 10592 : skillId == 10008 || skillId == 10011 || skillId == 10013 || skillId == 10053 ? 10022
+                        int damage = skillId == 10009 ? 10612 : skillId == 10010 ? 10622 : skillId == 10012 ? 10642 : skillId == 10014 ? (hit.HitEntityId == 10661 ? 10022 : 10663) : skillId == 10015 ? 10673 : skillId == 10016 ? 10026 : skillId == 10018 ? 10702 : skillId == 10043 ? 10592 : skillId == 10044 ? 10752 : skillId == 10008 || skillId == 10011 || skillId == 10013 || skillId == 10053 ? 10022
                             : cast.SkillEntityId == 11660 ? 10007 : 10023;
                         Require(hit.TargetId != 1 && (skillId == 10011 ? hit.HitEntityId >= 10631 && hit.HitEntityId <= 10633
                                 : skillId == 10014 ? hit.HitEntityId == 10661 || hit.HitEntityId == 10662
                                 : hit.HitEntityId == cast.SkillEntityId + 1)
-                            && hit.DamageEntityId == damage && hit.Damage < 0 && hit.TrueDamage == (skillId != 10008 && skillId != 10009 && skillId != 10010 && skillId != 10011 && skillId != 10012 && skillId != 10013 && skillId != 10014 && skillId != 10015 && skillId != 10018 && skillId != 10043 && skillId != 10053)
-                            && hit.ElementType == (skillId == 10026 ? 102 : skillId == 10012 || skillId == 10018 || skillId == 10043 ? 100 : 0),
+                            && hit.DamageEntityId == damage && hit.Damage < 0 && hit.TrueDamage == (skillId != 10008 && skillId != 10009 && skillId != 10010 && skillId != 10011 && skillId != 10012 && skillId != 10013 && skillId != 10014 && skillId != 10015 && skillId != 10018 && skillId != 10043 && skillId != 10044 && skillId != 10053)
+                            && hit.ElementType == (skillId == 10026 ? 102 : skillId == 10044 ? 101 : skillId == 10012 || skillId == 10018 || skillId == 10043 ? 100 : 0),
                             "The acquired active skill lost its original caster-owned damage.");
                         hits++;
                     }
