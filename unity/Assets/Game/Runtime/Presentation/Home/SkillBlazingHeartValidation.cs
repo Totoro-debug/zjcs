@@ -29,8 +29,8 @@ namespace Zjcs.Presentation.Home
             bool equipped = Environment.GetEnvironmentVariable("ZJCS_BLAZING_HEART_EQUIPPED") == "1";
             string requestedSecret = Environment.GetEnvironmentVariable("ZJCS_AFFINITY_SECRET_ID");
             int secretId = string.IsNullOrEmpty(requestedSecret) ? 10520 : int.Parse(requestedSecret);
-            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578 || secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510 || secretId == 10501 || secretId == 10500 || secretId == 10507 || secretId == 10516 || secretId == 10540, "Unexpected property secret.");
-            bool warrior = secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510 || secretId == 10501 || secretId == 10500 || secretId == 10507 || secretId == 10516 || secretId == 10540;
+            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578 || secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510 || secretId == 10501 || secretId == 10500 || secretId == 10507 || secretId == 10516 || secretId == 10540 || secretId == 10509, "Unexpected property secret.");
+            bool warrior = secretId == 10524 || secretId == 10535 || secretId == 10505 || secretId == 10510 || secretId == 10501 || secretId == 10500 || secretId == 10507 || secretId == 10516 || secretId == 10540 || secretId == 10509;
             bool criticalSecret = secretId == 10554 || secretId == 10500;
             bool blockSecret = secretId == 10507;
             int activeId = warrior ? 10008 : secretId == 10521 ? 10000 : secretId == 10522 ? 10001 : secretId == 10559 ? 10005 : 10028;
@@ -50,7 +50,7 @@ namespace Zjcs.Presentation.Home
                     VerifyOriginalWish(output, save, skillId);
                 foreach (int skillId in new[] { 10502, 10556, 10569, 10576, 10602 })
                     VerifyOriginalWish(output, save, skillId, 11, 2);
-                foreach (int skillId in new[] { 10516, 10540 })
+                foreach (int skillId in new[] { 10509, 10516, 10540 })
                     VerifyOriginalWish(output, save, skillId, 2, 2);
                 foreach (int skillId in new[] { 10500, 10501, 10505, 10507, 10510, 10524, 10535,
                     10537, 10539, 10544, 10546, 10571 })
@@ -115,6 +115,11 @@ namespace Zjcs.Presentation.Home
                 player.Turn.RankSpeedScale = 1;
                 enemy.Turn.RankSpeedScale = 1;
             }
+            if (secretId == 10509)
+            {
+                enemySpeed = 1100;
+                player.Turn.RankSpeedScale = enemy.Turn.RankSpeedScale = 1;
+            }
             checkpoint.Units.RemoveAll(value => value != player && value != enemy);
             checkpoint.Waves.Clear();
             checkpoint.Waves.Add(new FightBattleWaveState { Index = 0, Spawned = true, UnitIds = new List<int> { enemy.Id } });
@@ -144,7 +149,7 @@ namespace Zjcs.Presentation.Home
                 shield.DurationRound = shield.CurDurationRound = 5;
                 player.Statuses.Add(shield);
             }
-            if (secretId == 10583 || secretId == 10501 || blockSecret)
+            if (secretId == 10583 || secretId == 10501 || blockSecret || secretId == 10509)
             {
                 // Exercise the original elemental formula against an incoming fireball
                 // while retaining the native weekly stage and battle flow.
@@ -183,7 +188,7 @@ namespace Zjcs.Presentation.Home
             FightBattleCheckpoint pendingDisk = null;
             controller.StepCompleted += step =>
             {
-                if (secretId == 10510 && firstActor == 0 && step.Event.ActorRound > 0)
+                if ((secretId == 10510 || secretId == 10509) && firstActor == 0 && step.Event.ActorRound > 0)
                     firstActor = step.Event.ActorId;
                 var hit = step.Event.DamageEvents.FirstOrDefault(value => !value.IsCure && value.Damage < 0
                     && (secretId == 10583 || secretId == 10501 || blockSecret
@@ -216,9 +221,10 @@ namespace Zjcs.Presentation.Home
                     long savedSecondary = criticalSecret || blockSecret ? restored.Units.Single(value => value.Id == player.Id).Properties
                         .Where(value => value.Id == secondaryProperty).Sum(value => value.Value) : 0;
                     Require(restored.Sequence == pendingDisk.Sequence && restored.Counter == pendingDisk.Counter
-                        && savedAffinity == expectedAffinity && (diskChecks != 0 || savedAffinity == affinity)
+                        && savedAffinity == expectedAffinity && (secretId == 10509 || diskChecks != 0 || savedAffinity == affinity)
                         && (!(criticalSecret || blockSecret) || savedSecondary == secondary),
                         "Battle checkpoint lost its receipt or elemental affinity.");
+                    if (secretId == 10509) affinity = Math.Max(affinity, savedAffinity);
                     pendingDisk = null;
                     diskChecks++;
                 }
@@ -241,6 +247,9 @@ namespace Zjcs.Presentation.Home
                 "The actual battle did not cast, save, render and finish.");
             if (secretId == 10510)
                 Require(firstActor == (equipped ? player.Id : enemy.Id), "The speed secret did not change the first turn.");
+            if (secretId == 10509)
+                Require(firstActor == enemy.Id && affinity == (equipped ? 1 : 0),
+                    "The incoming skill did not create the expected saved return-strike stack.");
             var reloaded = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(slots.GetProgressPath(slot)));
             Require(JsonUtility.ToJson(reloaded.Player.Skills) == originalSkills, "Battle changed the saved skill plan.");
             File.WriteAllText(Path.Combine(output, "blazing-heart-battle.json"),
@@ -253,6 +262,7 @@ namespace Zjcs.Presentation.Home
 
         private static long PropertyOrResonance(FightBattleUnitState unit, int propertyId, int secretId)
         {
+            if (secretId == 10509) return unit.Statuses.Where(value => value.ClassId == 24268).Sum(value => value.StackCount);
             if (secretId != 10578) return unit.Properties.Where(value => value.Id == propertyId).Sum(value => value.Value);
             return unit.Statuses.Where(value => value.ClassId == 25047 && value.StatusProperties != null)
                 .SelectMany(value => value.StatusProperties).Where(value => value.Id == propertyId).Sum(value => value.Value);
