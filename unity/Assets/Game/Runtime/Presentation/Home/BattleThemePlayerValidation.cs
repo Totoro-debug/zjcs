@@ -212,13 +212,27 @@ namespace Zjcs.Presentation.Home
                         yield return VerifyAudioLifecycle(controller);
                     bool hit = false;
                     controller.StepCompleted += result => { if (result.Event.DamageEvents.Count > 0) hit = true; };
-                    var start = canvas.transform.Find(OfficialBattleHudView.StartButtonPath.TrimStart('/')).GetComponent<Button>();
-                    Canvas.ForceUpdateCanvases();
-                    var pointer = new PointerEventData(events) { position = RectTransformUtility.WorldToScreenPoint(null,
-                        start.transform.TransformPoint(((RectTransform)start.transform).rect.center)), button = PointerEventData.InputButton.Left };
-                    var hits = new List<RaycastResult>(); events.RaycastAll(pointer, hits);
-                    Require(hits.Count > 0 && ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject) == start.gameObject,
-                        "Original start button is obstructed.");
+                    var start = canvas.transform.Find(OfficialBattleHudView.StartButtonPath.TrimStart('/'))?.GetComponent<Button>();
+                    Require(start != null, "Original start button is missing.");
+                    var pointer = new PointerEventData(events) { button = PointerEventData.InputButton.Left };
+                    var hits = new List<RaycastResult>();
+                    bool startReady = false;
+                    for (int frame = 0; frame < 180 && !startReady; frame++)
+                    {
+                        controller.Tick(Time.deltaTime);
+                        yield return null;
+                        Canvas.ForceUpdateCanvases();
+                        pointer.position = RectTransformUtility.WorldToScreenPoint(null,
+                            start.transform.TransformPoint(((RectTransform)start.transform).rect.center));
+                        hits.Clear();
+                        events.RaycastAll(pointer, hits);
+                        startReady = start.gameObject.activeInHierarchy && start.IsInteractable()
+                            && hits.Count > 0
+                            && ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject) == start.gameObject;
+                    }
+                    yield return Capture(theme == 0 ? "normal-preparing" : "theme-preparing");
+                    Require(startReady, "Original start button is obstructed at " + pointer.position
+                        + "; top raycast: " + (hits.Count == 0 ? "none" : hits[0].gameObject.name) + ".");
                     pointer.pointerCurrentRaycast = hits[0];
                     ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerDownHandler); yield return null;
                     ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerUpHandler);
