@@ -59,6 +59,7 @@ namespace Zjcs.Presentation.Combat
     internal sealed class OfficialBattleFireRingImpact
     {
         internal static OfficialBattleFireRingImpact Attach(GameObject prefab, MyPlayable playable, FightBattleHitRoot root, FightBattleHitEntity hit, Action<int> arrival) => null;
+        internal static OfficialBattleFireRingImpact AttachEncouragement(GameObject prefab, MyPlayable playable, FightBattleHitRoot root, FightBattleHitEntity hit, Action<int> arrival) => null;
         internal void Detach() { }
     }
     internal sealed class OfficialBattleSwordWindImpact
@@ -76,7 +77,7 @@ namespace Zjcs.Presentation.Combat
     {
         internal static OfficialBattleProjectileImpact Last;
         private Action arrival;
-        internal static OfficialBattleProjectileImpact Attach(MyPlayable playable, float factor, Action arrival)
+        internal static OfficialBattleProjectileImpact Attach(MyPlayable playable, float factor, Action arrival, bool finishBeforeArrival = false)
         { if (factor != .125f) return null; Last = new OfficialBattleProjectileImpact { arrival = arrival }; return Last; }
         internal void Trigger() { var value = arrival; arrival = null; value?.Invoke(); }
         internal void Detach() { arrival = null; }

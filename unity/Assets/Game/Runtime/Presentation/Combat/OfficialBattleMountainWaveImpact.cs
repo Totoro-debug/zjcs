@@ -365,9 +365,18 @@ namespace Zjcs.Presentation.Combat
 
         internal static OfficialBattleFireRingImpact Attach(GameObject prefab, MyPlayable playable,
             FightBattleHitRoot root, FightBattleHitEntity hit, Action<int> arrival)
+            => AttachRing(prefab, playable, root, hit, 10831, 13, 3, "difeng (3)", arrival);
+
+        internal static OfficialBattleFireRingImpact AttachEncouragement(GameObject prefab, MyPlayable playable,
+            FightBattleHitRoot root, FightBattleHitEntity hit, Action<int> arrival)
+            => AttachRing(prefab, playable, root, hit, 11551, 61, 6, "kuosan_huan", arrival);
+
+        private static OfficialBattleFireRingImpact AttachRing(GameObject prefab, MyPlayable playable,
+            FightBattleHitRoot root, FightBattleHitEntity hit, int hitId, int scopeCount, int ringCount,
+            string particleName, Action<int> arrival)
         {
-            if (!prefab || !playable || !playable.myApplyComponent || root == null || root.EntityId != 10831
-                || hit?.ScopeEntries == null || hit.ScopeEntries.Count != 13 || arrival == null) return null;
+            if (!prefab || !playable || !playable.myApplyComponent || root == null || root.EntityId != hitId
+                || hit?.ScopeEntries == null || hit.ScopeEntries.Count != scopeCount || arrival == null) return null;
             var sequence = prefab.GetComponent<MyPlayableSequence>();
             if (!sequence || sequence.myPlayables == null) return null;
             float effectStart = -1f; int effects = 0;
@@ -375,26 +384,28 @@ namespace Zjcs.Presentation.Combat
                 if (entry?.myPlayable && entry.myPlayable.name == "effect") { effectStart = entry.myTime; effects++; }
             if (effects != 1 || effectStart < 0f) return null;
             var offsets = new System.Collections.Generic.HashSet<FightGridPoint>();
-            var delays = new[] { -1f, -1f, -1f }; var counts = new int[3];
+            var delays = new float[ringCount]; var counts = new int[ringCount];
+            for (int index = 0; index < delays.Length; index++) delays[index] = -1f;
             foreach (var scope in hit.ScopeEntries)
             {
                 if (scope == null || !offsets.Add(scope.Position)) return null;
                 long distance = Math.Abs((long)scope.Position.X) + Math.Abs((long)scope.Position.Y);
-                if (distance > 2 || float.IsNaN(scope.Delay) || float.IsInfinity(scope.Delay)) return null;
+                if (distance >= ringCount || float.IsNaN(scope.Delay) || float.IsInfinity(scope.Delay)) return null;
                 int index = (int)distance;
                 if (delays[index] >= 0f && Math.Abs(delays[index] - scope.Delay) > .00001f) return null;
                 delays[index] = scope.Delay; counts[index]++;
             }
-            if (counts[0] != 1 || counts[1] != 4 || counts[2] != 8) return null;
+            for (int index = 0; index < counts.Length; index++)
+                if (counts[index] != (index == 0 ? 1 : 4 * index)) return null;
             ParticleSystem ring = null;
             foreach (var particle in playable.myApplyComponent.GetComponentsInChildren<ParticleSystem>(true))
-                if (particle.name == "difeng (3)") { if (ring) return null; ring = particle; }
+                if (particle.name == particleName) { if (ring) return null; ring = particle; }
             if (!ring) return null;
             var main = ring.main; var size = ring.sizeOverLifetime;
             if (main.startDelay.mode != ParticleSystemCurveMode.Constant || main.useUnscaledTime
                 || Math.Abs(main.simulationSpeed - 1f) > .00001f || !size.enabled || size.separateAxes
                 || size.size.mode != ParticleSystemCurveMode.Curve || main.maxParticles <= 0) return null;
-            var ages = new float[3];
+            var ages = new float[ringCount];
             for (int index = 0; index < ages.Length; index++)
             {
                 ages[index] = root.Delay + delays[index] - effectStart - main.startDelay.constant;
@@ -428,7 +439,8 @@ namespace Zjcs.Presentation.Combat
                     }
                     for (int phase = 0; phase < ages.Length; phase++)
                         sizes[phase] = particle.startSize * curve.Evaluate(ages[phase] / particle.startLifetime);
-                    if (sizes[1] <= sizes[0] || sizes[2] <= sizes[1]) return;
+                    for (int phase = 1; phase < sizes.Length; phase++)
+                        if (sizes[phase] <= sizes[phase - 1]) return;
                     seed = particle.randomSeed; hasParticle = true;
                 }
                 if (particle.randomSeed != seed) continue;

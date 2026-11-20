@@ -286,6 +286,11 @@ namespace Zjcs.Editor.Combat
                 yield return CheckFrostFlowerImpact(root, grid);
                 yield break;
             }
+            if (Environment.GetEnvironmentVariable("ZJCS_ENCOURAGEMENT_IMPACT_ACCEPTANCE") == "1")
+            {
+                yield return CheckEncouragementImpact(root, grid);
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_FLAME_SPRAY_ACCEPTANCE") == "1")
             {
                 yield return CheckFlameSpray(root, grid);
