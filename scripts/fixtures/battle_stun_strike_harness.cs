@@ -7,6 +7,11 @@ public static class BattleStunStrikeHarness
 {
     static void Check(bool value, string text) { if (!value) throw new InvalidOperationException("Stun strike: " + text); }
     public static string Run(FightOfficialCombatCatalog c, FightDamageFormula f, FightOfficialSkillItemCatalog items)
+        => RunSkill(c, f, items, 10010, 10620, .4f) + "; "
+            + RunSkill(c, f, items, 10048, 11090, .3f);
+
+    private static string RunSkill(FightOfficialCombatCatalog c, FightDamageFormula f,
+        FightOfficialSkillItemCatalog items, int itemId, int entityId, float baseChance)
     {
         int neutral = 0, forced = 0, resisted = 0, saved = 0;
         foreach (string mode in new[] { "neutral", "forced", "resisted" })
@@ -17,21 +22,29 @@ public static class BattleStunStrikeHarness
             var actor = Unit(1, f); var target = Unit(2, f); cp.Units.AddRange(new[] { actor, target });
             if (mode == "forced") actor.Properties.Add(new FightPropertyValue { Id = f.PropertyId("EffectRateValue"), Value = 10000 });
             if (mode == "resisted") target.Properties.Add(new FightPropertyValue { Id = f.PropertyId("EffectDodgeValue"), Value = 10000 });
-            var skill = Skill(c, 10620, 10010); skill.LimitedTimes = 1;
-            var definition = FightBattleHitCollector.CollectAll(skill).Single();
-            var application = definition.AppliedStatuses.Single();
-            Check(definition.EntityId == 10621 && definition.DamageId == 10622 && definition.ActionType == 4
-                && application.StatusId == 24010 && application.TargetType == 2 && application.AffectedByProp
-                && Math.Abs(application.Chance - .4f) < .000001f, "official stun hit configuration differs");
+            var skill = Skill(c, entityId, itemId); skill.LimitedTimes = 1;
+            var definitions = FightBattleHitCollector.CollectAll(skill);
+            int firstHit = itemId == 10010 ? 10621 : 11091;
+            int damageId = itemId == 10010 ? 10622 : 11099;
+            int hitCount = itemId == 10010 ? 1 : 4;
+            Check(definitions.Count == hitCount && definitions.Select(x => x.EntityId)
+                .SequenceEqual(Enumerable.Range(firstHit, hitCount)), "official stun hit graph differs");
+            foreach (var definition in definitions)
+            {
+                var application = definition.AppliedStatuses.Single();
+                Check(definition.DamageId == damageId && definition.ActionType == 4
+                    && application.StatusId == 24010 && application.TargetType == 2 && application.AffectedByProp
+                    && Math.Abs(application.Chance - baseChance) < .000001f, "official stun hit configuration differs");
+            }
             actor.Skills.Add(skill); actor.SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = 1 });
             var slash = Skill(c, 10600, 10008);
             target.Skills.Add(slash); target.SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, Cooldown = 4, LastRound = 0, HasInitializedLastRound = true });
             var executor = FightBattleExecutor.Begin(cp, f, new FightDamageSettlement(), c, items);
-            double rate = c.CalculateStatusApplicationRate(actor, target, 24010, .4, true, f);
-            Check(mode == "neutral" ? Math.Abs(rate - .4) < .000001 : mode == "forced" ? rate >= 1 : rate <= 0,
+            double rate = c.CalculateStatusApplicationRate(actor, target, 24010, baseChance, true, f);
+            Check(mode == "neutral" ? Math.Abs(rate - baseChance) < .000001 : mode == "forced" ? rate >= 1 : rate <= 0,
                 "original base chance or effect-stat boundary differs: " + mode + "=" + rate);
             var first = executor.Step(cp.Sequence, cp.Counter + 1).Event;
-            var hit = first.DamageEvents.Single(x => x.SkillEntityId == 10620 && x.SourceId == 1 && x.TargetId == 2);
+            var hit = first.DamageEvents.Single(x => x.SkillEntityId == entityId && x.SourceId == 1 && x.TargetId == 2);
             Check(hit.Damage < 0, "official physical hit did not damage its target");
             var stun = target.Statuses.SingleOrDefault(x => x.ClassId == 24010);
             bool applied = stun != null;
@@ -54,8 +67,8 @@ public static class BattleStunStrikeHarness
             Check(FightBattleCheckpointSerializer.Save(cp) == FightBattleCheckpointSerializer.Save(copy), "restored stun turn diverged");
             saved++;
         }
-        Check(neutral > 8 && neutral < 56, "the base chance did not produce both successes and failures");
-        return "Stun strike: neutral=" + neutral + "/64 forced=" + forced + " resisted=" + resisted + " restored=" + saved;
+        Check(neutral > 5 && neutral < 56, "the base chance did not produce both successes and failures");
+        return itemId + ": neutral=" + neutral + "/64 forced=" + forced + " resisted=" + resisted + " restored=" + saved;
     }
     static FightBattleSkillDefinition Skill(FightOfficialCombatCatalog c, int entity, int item)
         => c.CreateSkill(entity, 0, item, 2, 20, 5, c.CalculateSkillProps(entity, 2, 20, 5)
