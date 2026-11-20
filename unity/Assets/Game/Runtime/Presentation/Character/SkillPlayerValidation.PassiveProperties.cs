@@ -17,7 +17,7 @@ namespace Zjcs.Presentation.Character
     {
         private IEnumerator RunPassivePropertyFlow()
         {
-            deadline = Time.realtimeSinceStartup + 240f;
+            deadline = Time.realtimeSinceStartup + 600f;
             AudioListener.volume = 0f;
             int itemId = int.Parse(Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_ITEM") ?? "10500");
             int profession = int.Parse(Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_PROFESSION") ?? "1");
