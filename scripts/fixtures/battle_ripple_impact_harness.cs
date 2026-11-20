@@ -49,6 +49,11 @@ public static class BattleRippleImpactHarness
             nearby.BodyOffsets.Clear();nearby.BodyOffsets.Add(new FightGridPoint(0,0));nearby.BodyOffsets.Add(new FightGridPoint(1,0));cp.Units.Add(nearby);
             var outside=Unit(4,9,5,f);outside.Side=1;outside.Turn.Speed=100;cp.Units.Add(outside);
         }
+        if(mode=="area-rings") {
+            foreach(var point in new[]{new[]{3,8,5},new[]{4,7,6},new[]{5,6,6},new[]{6,9,5}}) {
+                var target=Unit(point[0],point[1],point[2],f);target.Side=1;target.Turn.Speed=100;cp.Units.Add(target);
+            }
+        }
         return cp;
     }
     public static string Run(FightOfficialCombatCatalog c,FightDamageFormula f,FightOfficialSkillItemCatalog items)
@@ -62,7 +67,7 @@ public static class BattleRippleImpactHarness
             long exact=-controlExecutor.Step(control.Sequence,control.Counter+1).Event.DamageEvents.Single(d=>d.SkillEntityId==10600).Damage;
             foreach(string mode in new[]{"break","exact","multi-break","intact","remaining","remaining-forbidden",
                 "dodge","blinding","immunity","lethal","secret-forbidden","child-denied","child-whitelist",
-                "no-shield","manual-remove","expiry","area"})
+                "no-shield","manual-remove","expiry","area","area-rings"})
             {
                 try {
                 var cp=Input(c,f,seed,growth,mode,exact);
@@ -71,7 +76,7 @@ public static class BattleRippleImpactHarness
                 var restored=FightBattleExecutor.Restore(copy,f,new FightDamageSettlement(),c,items);
                 var step=executor.Step(cp.Sequence,cp.Counter+1).Event;restored.Step(copy.Sequence,copy.Counter+1);
                 Check(FightBattleCheckpointSerializer.Save(cp)==FightBattleCheckpointSerializer.Save(copy),"restored break diverged: "+mode);
-                bool triggers=new[]{"break","exact","multi-break","child-whitelist","area"}.Contains(mode);
+                bool triggers=new[]{"break","exact","multi-break","child-whitelist","area","area-rings"}.Contains(mode);
                 var casts=step.SkillCasts.Where(v=>v.SkillEntityId==11330).ToArray();
                 Check(casts.Length==(triggers?1:0),"last-shield break gate differs: "+mode);
                 var holder=cp.Units.Single(u=>u.Id==2);var secret=holder.Statuses.Single(s=>s.ClassId==25030);
@@ -83,7 +88,14 @@ public static class BattleRippleImpactHarness
                 if(triggers) {
                     Check(casts.Single().ActorId==2&&casts.Single().SkillItemId==10563&&casts.Single().Slot==-1,"child consumed slot or lost secret source");
                     var hits=step.DamageEvents.Where(d=>d.SkillEntityId==11330).ToArray();
-                    Check(hits.Length==(mode=="area"?3:1)&&hits.All(d=>d.SourceId==2&&d.TargetId!=2&&d.Damage<0&&d.ElementType==101),"original water scope/body-cell occurrences differ");
+                    Check(hits.Length==(mode=="area"?3:mode=="area-rings"?4:1)&&hits.All(d=>d.SourceId==2&&d.TargetId!=2&&d.Damage<0&&d.ElementType==101),"original water scope/body-cell occurrences differ");
+                    if(mode=="area-rings") {
+                        var targets=hits.Select(d=>d.TargetId).ToArray();
+                        Check(targets.Take(2).OrderBy(id=>id).SequenceEqual(new[]{1,5})
+                            &&targets.Skip(2).OrderBy(id=>id).SequenceEqual(new[]{3,4}),
+                            "scope rings did not resolve in the original near-to-far order: "+string.Join(",",targets));
+                        Check(!cp.Units.Single(u=>u.Id==6).Statuses.Any(s=>s.ClassId==24266),"out-of-range ring target received cold");
+                    }
                     foreach(var damaged in hits) {
                         var target=cp.Units.Single(u=>u.Id==damaged.TargetId);
                         var cold=target.Statuses.SingleOrDefault(s=>s.ClassId==24266);
