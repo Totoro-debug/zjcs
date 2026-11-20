@@ -2,6 +2,7 @@ param(
     [string]$Commit = 'HEAD',
     [switch]$PrepareOnly,
     [switch]$BuildOnly,
+    [switch]$ScriptsOnly,
     [switch]$CleanBuildCache
 )
 $ErrorActionPreference = 'Stop'
@@ -19,7 +20,7 @@ function Invoke-ReleaseGit([string[]]$GitArguments) {
 $output = Join-Path $repository 'output'
 New-Item -ItemType Directory -Path $output -Force | Out-Null
 $lock = [IO.File]::Open((Join-Path $output 'windows-release.lock'), 'OpenOrCreate', 'ReadWrite', 'None')
-$environmentNames = @('ZJCS_VALIDATION_DIR','ZJCS_REPOSITORY_ROOT','ZJCS_WINDOWS_RELEASE_EXE','ZJCS_CLEAN_BUILD_CACHE')
+$environmentNames = @('ZJCS_VALIDATION_DIR','ZJCS_REPOSITORY_ROOT','ZJCS_WINDOWS_RELEASE_EXE','ZJCS_CLEAN_BUILD_CACHE','ZJCS_WINDOWS_SCRIPTS_ONLY')
 $previousEnvironment = @{}
 foreach ($name in $environmentNames) { $previousEnvironment[$name] = [Environment]::GetEnvironmentVariable($name) }
 try {
@@ -102,6 +103,8 @@ try {
     $env:ZJCS_REPOSITORY_ROOT = $source
     $env:ZJCS_WINDOWS_RELEASE_EXE = Join-Path $workspace 'Player/Zjcs.exe'
     $env:ZJCS_CLEAN_BUILD_CACHE = if ($CleanBuildCache) { '1' } else { $null }
+    if ($ScriptsOnly -and $CleanBuildCache) { throw 'A scripts-only build requires the existing Player cache.' }
+    $env:ZJCS_WINDOWS_SCRIPTS_ONLY = if ($ScriptsOnly) { '1' } else { $null }
     $log = Join-Path $workspace 'build.log'
     $build = Start-UnityOnInternalDisplay -Editor $editor -ArgumentList @(
         '-batchmode','-quit','-projectPath',('"'+$project+'"'),
