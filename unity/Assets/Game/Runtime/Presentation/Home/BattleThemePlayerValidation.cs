@@ -10,7 +10,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.PartnersUI;
+using Zjcs.Offline.Progression;
+using Zjcs.Offline.ProfessionUI;
+using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.WorldUI;
+using Zjcs.Presentation.Character;
+using Zjcs.Presentation.CharacterCreation;
 using Zjcs.Presentation.Combat;
 
 namespace Zjcs.Presentation.Home
@@ -98,18 +103,46 @@ namespace Zjcs.Presentation.Home
             scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
             var events = root.AddComponent<EventSystem>();
             var controller = world.AddComponent<OfficialBattleRuntimeController>();
+            Texture2D head = null;
+            Sprite portrait = null;
             try
             {
+                var appearance = Resources.Load<AppearanceConfig>("Combat/SceneAppearance/AppearanceConfig");
+                var resolver = new ProfessionAppearanceResolver(ProfessionAppearanceTables.Load(
+                    Resources.Load<TextAsset>("Combat/SceneAppearance/appearance-tables").text));
+                var profile = new OfflinePlayerProgress { InitialWeaponType = 200 };
+                profile.Wardrobe.Sex = (int)Sex.Male;
+                profile.Wardrobe.Profession = 1;
+                foreach (var skin in resolver.BuildDefaultAppearanceData(appearance, Sex.Male, (Profession)1).SkinMap)
+                    profile.Wardrobe.BaseSkins.Add(new OfflineAppearanceSkin { Type = (int)skin.Key, Id = skin.Value.SkinId });
+                var photography = CharacterPortraitPhotography.LoadBattleHead();
+                var portraitModel = CharacterCreationNativeModelFactory.CreateArenaGuardModel(0, 1, null, photography.excludes);
+                try
+                {
+                    portraitModel.transform.position = new Vector3(-1024, -1024, -1024);
+                    Require(OfficialBattleCharacterAnimationCatalog.TryResolve(
+                        portraitModel.GetComponent<Animator>().runtimeAnimatorController, photography.animation,
+                        out string pose), "Original head photography pose is unavailable.");
+                    head = CharacterNativePortraitCapture.Capture(portraitModel, photography, pose);
+                    Require(head.width == 100 && head.height == 120
+                        && head.GetPixels32().Count(pixel => pixel.a > 128) > 1000,
+                        "Original player head photograph is empty or incorrectly sized.");
+                    portrait = Sprite.Create(head, new Rect(0, 0, 100, 120), new Vector2(.5f, .5f), 100);
+                }
+                finally { Destroy(portraitModel); }
                 for (int theme = 0; theme <= 1; theme++)
                 {
                     var assets = OfficialCombatAssetCatalog.LoadDefault();
                     var rules = assets.Load();
                     var state = new FightBattleCheckpoint { StageId = 1001, RandomSeed = 43,
                         Grid = new FightBattleGrid { Width = 8, Height = 8 }, ResultRules = new FightBattleResultRules() };
-                    var actor = Unit(11, 1, 2, 2, 100);
-                    actor.MonsterType = rules.MonsterType(actor.MonsterId);
+                    var actor = Unit(1, 1, 2, 2, 100);
+                    actor.CharacterType = 1;
+                    actor.MonsterId = actor.MonsterTemplateId = 0;
+                    actor.RoleEntityId = 3100;
+                    actor.Profession = 1;
                     actor.Properties.Add(new FightPropertyValue { Id = rules.PropertyType("MoveDist"), Value = 4 });
-                    int item = rules.MonsterActiveSkillItems(3206, 0).Single();
+                    int item = 10011;
                     int entity = assets.LoadSkillItems().Required(item).EntityId;
                     var props = rules.CalculateSkillProps(entity, 1, 1, 1)
                         .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList();
@@ -129,6 +162,9 @@ namespace Zjcs.Presentation.Home
                     state = FightBattleCheckpointSerializer.Load(File.ReadAllText(checkpointPath));
                     controller.Begin(new OfficialBattleRequest { Checkpoint = state, WorldRoot = world.transform,
                         HudParent = canvas.transform, CombatAssets = assets, InitialStepDelay = 0, FightThemeId = theme,
+                        TimelinePortrait = unit => unit.Id == actor.Id ? portrait : null,
+                        PlayerAppearance = new OfficialBattlePlayerAppearanceSource(1, 17, () => profile,
+                            _ => profile.InitialWeaponType),
                         EnvironmentGameId = 1000, HostPresentation = new OfficialBattleHostPresentation(camera, world.transform, null),
                         Options = new OfficialBattleSessionOptions { SkipPrepareStatus = false, ShowMainPanelDelay = .05f } });
                     const string slotPath = "FightMainPanel/Content/ThemeNpcSlot";
@@ -196,7 +232,13 @@ namespace Zjcs.Presentation.Home
                     Require(canvas.transform.Find(slotPath) == null, "The original theme HUD survived disposal.");
                 }
             }
-            finally { controller.DisposeSession(); Destroy(root); Time.timeScale = 1; }
+            finally
+            {
+                controller.DisposeSession(); Destroy(root);
+                if (portrait != null) Destroy(portrait);
+                if (head != null) Destroy(head);
+                Time.timeScale = 1;
+            }
         }
 
         private IEnumerator Capture(string name)
