@@ -77,6 +77,32 @@ try {
     $untracked = @(Invoke-ReleaseGit -GitArguments @('-C',$source,'ls-files','--others','--exclude-standard','--','unity/Assets','unity/Packages','unity/ProjectSettings'))
     if ($untracked.Count) { throw "Unexpected untracked release inputs: $($untracked -join ', ')" }
     Invoke-ReleaseGit -GitArguments @('-C',$source,'checkout','--detach',$target)
+    # This generated JSON is recorded with CRLF bytes, while Git stores its text
+    # as LF. Reconstruct it only if the result exactly matches the source receipt.
+    $skillSource = Get-Content -LiteralPath (Join-Path $project 'Assets/Official/Skills/source-manifest.json') -Raw | ConvertFrom-Json
+    $gradient = @($skillSource.files | Where-Object { $_.path -eq 'Assets/Official/Skills/skill-quality-gradient.json' })
+    if ($gradient.Count -ne 1) { throw 'The verified skill gradient receipt is missing or ambiguous.' }
+    $gradientPath = Join-Path $project $gradient[0].path
+    $gradientFile = Get-Item -LiteralPath $gradientPath
+    if ($gradientFile.Length -ne $gradient[0].bytes -or
+        (Get-FileHash -LiteralPath $gradientPath -Algorithm SHA256).Hash.ToLowerInvariant() -ne $gradient[0].sha256) {
+        $inputBytes = [IO.File]::ReadAllBytes($gradientPath)
+        $output = [IO.MemoryStream]::new()
+        try {
+            for ($i = 0; $i -lt $inputBytes.Length; $i++) {
+                if ($inputBytes[$i] -eq 10 -and ($i -eq 0 -or $inputBytes[$i - 1] -ne 13)) { $output.WriteByte(13) }
+                $output.WriteByte($inputBytes[$i])
+            }
+            $recovered = $output.ToArray()
+        } finally { $output.Dispose() }
+        $sha = [Security.Cryptography.SHA256]::Create()
+        try { $recoveredHash = [BitConverter]::ToString($sha.ComputeHash($recovered)).Replace('-', '').ToLowerInvariant() }
+        finally { $sha.Dispose() }
+        if ($recovered.Length -ne $gradient[0].bytes -or $recoveredHash -ne $gradient[0].sha256) {
+            throw 'The isolated skill gradient cannot be recovered to its verified source bytes.'
+        }
+        [IO.File]::WriteAllBytes($gradientPath, $recovered)
+    }
     # Detect checkout conversion before importing any assets; keep the runtime
     # source manifest and its byte-for-byte verification unchanged.
     $equipmentDirectory = Join-Path $project 'Assets/Official/Equipment/Runtime'
