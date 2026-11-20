@@ -181,7 +181,59 @@ public static class BattleAutoStartSkillHarness
             Check(cooldown.LeftCooldown(0) == 4, "Skill did not enter cooldown after release: " + itemId);
         }
         CheckChallengeTargets(catalog, formula, items);
-        return "Opening skills passed: passive order, speed, cooldown, missing target, challenge targets and checkpoint.";
+        CheckEncouragementDispel(catalog, formula, items);
+        return "Opening skills passed: passive order, cooldown, challenge targets, random dispel and checkpoint.";
+    }
+
+    private static void CheckEncouragementDispel(FightOfficialCombatCatalog catalog, FightDamageFormula formula,
+        FightOfficialSkillItemCatalog items)
+    {
+        var negativeIds = new[] { 24010, 24266, 24216 };
+        foreach (int count in new[] { 1, 2 })
+        {
+            var removedCounts = negativeIds.ToDictionary(id => id, id => 0);
+            foreach (int seed in Enumerable.Range(0, 64).Select(index => 1 + index * 100000))
+            {
+                var owner = Unit(1, 1, 5, 1000);
+                var ally = Unit(2, 1, 6, 10);
+                var enemy = Unit(3, 2, 5, 5); enemy.Y = 6;
+                var outside = Unit(4, 1, 11, 5);
+                foreach (int statusId in negativeIds)
+                    ally.Statuses.Add(catalog.CreateStatus(statusId, ally.Id, enemy.Id, 700000 + statusId));
+                var item = items.Required(10066);
+                var skill = catalog.CreateSkill(item.EntityId, 0, 10066, 2, 20, 1,
+                    catalog.CalculateSkillProps(item.EntityId, 2, 20, 1)
+                        .Select(prop => new FightPropertyValue { Id = prop.Key, Value = prop.Value }).ToList());
+                var hit = skill.HitGraphEntities.Single(value => value.EntityId == 11551);
+                Check(hit.DisperseCount == 1 && hit.DisperseRandom && hit.DisperseChance == 1f
+                    && !hit.DisperseAffectedByProp && hit.DisperseStatusTypes.OrderBy(value => value).SequenceEqual(new[] { 2, 3 }),
+                    "Encouragement dispel configuration differs.");
+                // Two removals exercise the shared random-subset path used by other configured skills.
+                hit.DisperseCount = count;
+                owner.Skills.Add(skill); owner.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 4));
+                var checkpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 5, RandomSeed = seed,
+                    Grid = new FightBattleGrid { Width = 20, Height = 20 } };
+                checkpoint.Units.AddRange(new[] { owner, ally, enemy, outside });
+                var wave = new FightBattleWaveState(); wave.UnitIds.Add(enemy.Id); checkpoint.Waves.Add(wave);
+                var executor = FightBattleExecutor.Begin(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+                var restoredState = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+                var restored = FightBattleExecutor.Restore(restoredState, formula, new FightDamageSettlement(), catalog, items);
+                var step = executor.Step(0, 1).Event; restored.Step(0, 1);
+                Check(FightBattleCheckpointSerializer.Save(checkpoint) == FightBattleCheckpointSerializer.Save(restoredState),
+                    "Encouragement dispel differed after checkpoint restore.");
+                var buff = ally.Statuses.SingleOrDefault(status => status.ClassId == 24237);
+                Check(buff != null && buff.CreatorId == owner.Id && buff.DurationRound == 2
+                    && owner.Statuses.Any(status => status.ClassId == 24237)
+                    && !enemy.Statuses.Any(status => status.ClassId == 24237)
+                    && !outside.Statuses.Any(status => status.ClassId == 24237), "Encouragement target or damage buff differs.");
+                int[] removed = negativeIds.Where(id => !ally.Statuses.Any(status => status.ClassId == id)).ToArray();
+                Check(removed.Length == count && step.DispersedUnitIds.Count(id => id == ally.Id) == 1,
+                    "Encouragement did not remove the requested number of distinct effects with one notification.");
+                foreach (int id in removed) removedCounts[id]++;
+            }
+            Check(removedCounts.Values.All(value => value > 0 && value < 64),
+                "Random dispel did not select every eligible effect across the seeded trials.");
+        }
     }
 
     private static void CheckChallengeTargets(FightOfficialCombatCatalog catalog, FightDamageFormula formula,

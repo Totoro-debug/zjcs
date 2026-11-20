@@ -2627,10 +2627,10 @@ namespace Zjcs.Combat.Official
             {
                 for (int i = 0; i < count; i++)
                 {
-                    int index = Math.Min((int)(random.Next() * candidates.Count), candidates.Count - 1);
-                    candidates[i] = candidates[index];
-                    candidates[index] = candidates[candidates.Count - 1];
-                    candidates.RemoveAt(candidates.Count - 1);
+                    int index = i + Math.Min((int)(random.Next() * (candidates.Count - i)), candidates.Count - i - 1);
+                    FightBattleStatusState selected = candidates[index];
+                    candidates[index] = candidates[i];
+                    candidates[i] = selected;
                 }
             }
             for (int i = 0; i < count; i++) FightStatusLifecycle.End(target, candidates[i]);
