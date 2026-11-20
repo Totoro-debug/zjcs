@@ -312,7 +312,7 @@ namespace Zjcs.Presentation.Home
                 .SelectMany(value => value.StatusProperties).Where(value => value.Id == propertyId).Sum(value => value.Value);
         }
 
-        private static void VerifyOriginalWish(string output, OfflineMainlineSave source, int skillId,
+        internal static void VerifyOriginalWish(string output, OfflineMainlineSave source, int skillId,
             int profession = 10, int professionRank = 1)
         {
             var rules = Resources.Load<TextAsset>("Wishes/wishes-runtime");

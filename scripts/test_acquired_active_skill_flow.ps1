@@ -69,6 +69,9 @@ try {
     if (-not (Select-String -LiteralPath $log -Pattern ('\[Skill UI data\] Verified (embedded TextAsset|native Windows pack): ' + $expectedUi))) {
         throw "The runtime skill UI did not verify its current payload identity: $run"
     }
+    if ($SkillId -eq 10010 -and -not (Select-String -LiteralPath $log -SimpleMatch '[Passive affinity wish] item=10010 granted')) {
+        throw "The original knight wish pool did not grant stun strike: $run"
+    }
     # PowerShell's JSON conversion of the complete official combat tables is
     # disproportionately expensive; read only the selected item and ranks.
     $rankQuery = "import json,sys; c=json.load(open(sys.argv[1],encoding='utf-8')); s=json.load(open(sys.argv[2],encoding='utf-8')); rows=[x for x in c['item'] if x['ClassId']==int(sys.argv[3])]; assert len(rows)==1; print(min(x['Rank'] for x in s['RankDisplays'] if x['Quality']==rows[0]['Quality'])+1)"

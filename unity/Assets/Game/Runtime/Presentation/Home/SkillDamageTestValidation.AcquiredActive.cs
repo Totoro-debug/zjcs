@@ -51,6 +51,7 @@ namespace Zjcs.Presentation.Home
             player.Level = 50; player.Rank = 2; player.SubRank = 5; player.MaxProfessionRank = 2;
             player.Experience = assets.Load().CumulativeLevelExperience[50];
             player.InitialWeaponType = 200; player.Wardrobe.Profession = profession;
+            if (skillId == 10010) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId, 2, 2);
             int mergeCount = assets.Load().SkillMergePiece(skillId);
             Require(mergeCount > 0 && definition.AvailableProfessions.Contains(profession), "Original acquisition inputs missing.");
             void Supply(int item, long count)
