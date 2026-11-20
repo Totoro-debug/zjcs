@@ -19,6 +19,7 @@ function Invoke-ReleaseGit([string[]]$GitArguments) {
 $output = Join-Path $repository 'output'
 New-Item -ItemType Directory -Path $output -Force | Out-Null
 $lock = [IO.File]::Open((Join-Path $output 'windows-release.lock'), 'OpenOrCreate', 'ReadWrite', 'None')
+$workspaceLease = $null
 $environmentNames = @('ZJCS_VALIDATION_DIR','ZJCS_REPOSITORY_ROOT','ZJCS_WINDOWS_RELEASE_EXE','ZJCS_CLEAN_BUILD_CACHE')
 $previousEnvironment = @{}
 foreach ($name in $environmentNames) { $previousEnvironment[$name] = [Environment]::GetEnvironmentVariable($name) }
@@ -50,6 +51,13 @@ try {
         $workspace = New-ZjcsValidationWorkspace -Name 'windows-release'
         @{workspace=$workspace} | ConvertTo-Json | Set-Content -LiteralPath $pointer -Encoding utf8
     }
+    # A reused cache belongs to the current build while its process is alive.
+    # Keep its marker readable, but prevent deletion during import and delivery.
+    $workspaceMarker = Join-Path $workspace '.zjcs-validation.json'
+    $workspaceState = Get-Content -LiteralPath $workspaceMarker -Raw | ConvertFrom-Json
+    $workspaceState.ownerPid = $PID
+    $workspaceState | ConvertTo-Json | Set-Content -LiteralPath $workspaceMarker -Encoding utf8
+    $workspaceLease = [IO.File]::Open($workspaceMarker, 'Open', 'Read', 'Read')
     $source = Join-Path $workspace 'source'
     $project = Join-Path $source 'unity'
     $normalizedProject = $project.Replace('\','/')
@@ -121,5 +129,6 @@ try {
     Write-Output "Published $target to D:/Desktop/ZjcsGame/Zjcs.exe"
 } finally {
     foreach ($name in $environmentNames) { [Environment]::SetEnvironmentVariable($name, $previousEnvironment[$name]) }
+    if ($workspaceLease) { $workspaceLease.Dispose() }
     $lock.Dispose()
 }
