@@ -65,6 +65,22 @@ namespace Zjcs.Combat.Official
 
             Dictionary<int, long> sourceProps = Properties(actor.Properties);
             Dictionary<int, long> targetProps = Properties(target.Properties);
+            // Original 24052 FightStatusPropBySkillComponent applies its vulnerability
+            // only to ActionType.Skill and ActionType.SkillMove. RebuildAll keeps the
+            // status contribution on the owner, so exclude it from other hit calculations.
+            if (skill == null || skill.ActionType != 2 && skill.ActionType != 6)
+            {
+                int vulnerability = formula.PropertyId("StatusDmgVulnerablePer");
+                foreach (FightBattleStatusState status in target.Statuses ?? new List<FightBattleStatusState>())
+                {
+                    if (status == null || status.ClassId != 24052 || status.ForbiddenType != 0
+                        || !status.HasPropertyComponent || status.ResolvedProperties == null) continue;
+                    foreach (FightPropertyValue property in status.ResolvedProperties)
+                        if (property != null && property.Id == vulnerability
+                            && targetProps.TryGetValue(vulnerability, out long value))
+                            targetProps[vulnerability] = value - property.Value;
+                }
+            }
             if (skill != null) AddProperties(sourceProps, skill.Properties);
             FightEntityState sourceEntity = actor.EntityState();
             FightEntityState targetEntity = target.EntityState();

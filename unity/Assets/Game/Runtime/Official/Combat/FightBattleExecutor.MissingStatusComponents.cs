@@ -41,15 +41,19 @@ namespace Zjcs.Combat.Official
         private void ApplyMissingStatusComponentsOnHit(FightBattleUnitState actor,
             FightBattleUnitState target, FightBattleSkillDefinition skill,
             FightBattleHitDefinition hit, FightBattleHitResult resolved, long actualHpLoss,
-            List<FightBattleStatusSkillInvocation> invocations)
+            List<FightBattleStatusSkillInvocation> invocations,
+            bool processDamage = true, bool processOther = true)
         {
             if (statusCatalog == null || actor == null || target == null || invocations == null)
                 return;
-            FightStatusHitScope.Collect(actor, target, skill, resolved,
-                movementStartContext?.StatusStartTime ?? 0f, invocations, random);
-            ApplyDarkHitStatuses(actor, target, skill, resolved);
-            CollectHitCustomCures(actor, target, skill, hit, resolved,
-                movementStartContext?.StatusStartTime ?? 0f, invocations);
+            if (processOther)
+            {
+                FightStatusHitScope.Collect(actor, target, skill, resolved,
+                    movementStartContext?.StatusStartTime ?? 0f, invocations, random);
+                ApplyDarkHitStatuses(actor, target, skill, resolved);
+                CollectHitCustomCures(actor, target, skill, hit, resolved,
+                    movementStartContext?.StatusStartTime ?? 0f, invocations);
+            }
             var owners = new List<FightBattleUnitState> { actor };
             if (!ReferenceEquals(actor, target)) owners.Add(target);
             foreach (FightBattleUnitState owner in owners)
@@ -60,8 +64,9 @@ namespace Zjcs.Combat.Official
                     if (status == null || !owner.Statuses.Contains(status)
                         || !FightSkillTriggerPolicy.AllowsStatus(skill, status)) continue;
                     FightBattleStatusHitSkillComponentState hitSkill = status.Components?.HitSkill;
-                    if (hitSkill != null && HitSourceMatches(status, hitSkill.HitSourceType, actor)
-                        && (status.ClassId != 25000 && status.ClassId != 25005 && status.ClassId != 25025 && status.ClassId != 25026 && status.ClassId != 25038 || status.ForbiddenType == 0 && resolved != null
+                    if (processOther && hitSkill != null && HitSourceMatches(status, hitSkill.HitSourceType, actor)
+                        && (status.ClassId != 25000 && status.ClassId != 25005 && status.ClassId != 25025
+                            && status.ClassId != 25026 && status.ClassId != 25038 || status.ForbiddenType == 0 && resolved != null
                             && !resolved.Type.Dodge && !resolved.Type.Blinding && !resolved.Type.Immunity)
                         && HitRuleMatches(hitSkill.Rate, hitSkill.Block, hitSkill.Crit,
                             hitSkill.Damage, hitSkill.Cure, hitSkill.IsTrueDamage,
@@ -92,12 +97,20 @@ namespace Zjcs.Combat.Official
                             FightStatusLifecycle.End(owner, status);
                     }
 
+                    // The branded target consumes its existing mark before this hit can
+                    // apply a replacement. Other damage listeners retain their prior order.
+                    if (status.ClassId == 24052 ? !processDamage : !processOther) continue;
                     if (TryApplyReturnStrikeStatus(status, owner, target, skill, hit, resolved)) continue;
                     FightBattleStatusDamageSkillComponentState damageSkill = status.Components?.DamageSkill;
                     if (damageSkill != null && status.Components.Seconds == null && resolved != null
                         && (resolved.Formula != null || resolved.Cure != null || resolved.Settlement != null)
-                        && HitSourceMatches(status,
-                            damageSkill.IsAttackerTarget ? 0 : 2, actor)
+                        // Confirmed solo rule: non-skill damage leaves the mark for
+                        // the next Skill or SkillMove hit.
+                        && (status.ClassId != 24052 || skill != null
+                            && (skill.ActionType == 2 || skill.ActionType == 6) && !resolved.IsCure
+                            && !resolved.Type.Dodge && !resolved.Type.Blinding && !resolved.Type.Immunity)
+                        && (status.ClassId == 24052 ? ReferenceEquals(owner, target)
+                            : HitSourceMatches(status, damageSkill.IsAttackerTarget ? 0 : 2, actor))
                         && HitRuleMatches(damageSkill.Rate, damageSkill.Block, damageSkill.Crit,
                             damageSkill.Damage, damageSkill.Cure, false, null,
                             damageSkill.ElementTypes, null, null, skill, hit, resolved, target)

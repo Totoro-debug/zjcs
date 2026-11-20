@@ -65,6 +65,75 @@ public static class BattleBreakingBrandHarness
             Check(executor.Step(0,1).Replayed&&FightBattleCheckpointSerializer.Save(cp)==saved,"Receipt replay repeated the hit or mark");
             cases++;
         }
-        return "Breaking brand passed: "+cases+" original single-cell/large-body/zero-delay damage, mark timing, cultivation and cold/replay flows.";
+        CheckConsumption(catalog,formula,items);
+        return "Breaking brand passed: "+cases+" original hit and checkpoint cases; next-hit bonus/consumption, reapplication, healing and miss gates, status events and restoration.";
+    }
+
+    static void CheckConsumption(FightOfficialCombatCatalog catalog,FightDamageFormula formula,FightOfficialSkillItemCatalog items)
+    {
+        long plain=NextHit(catalog,formula,items,false,false);
+        long branded=NextHit(catalog,formula,items,true,false);
+        Check(Math.Abs(branded-plain*1.6)<=2,"Mark did not increase the next skill damage by 60%: "+plain+" / "+branded);
+        NextHit(catalog,formula,items,true,true);
+        NextHit(catalog,formula,items,true,false,true);
+        foreach(var miss in new[]{"dodge","blinding","immunity"})
+            NextHit(catalog,formula,items,true,false,false,miss);
+        long otherPlain=NextHit(catalog,formula,items,false,false,false,null,10);
+        long otherMarked=NextHit(catalog,formula,items,true,false,false,null,10);
+        Check(otherPlain==otherMarked,"Mark increased damage outside its configured skill actions: "+otherPlain+" / "+otherMarked);
+        long movePlain=NextHit(catalog,formula,items,false,false,false,null,6);
+        long moveMarked=NextHit(catalog,formula,items,true,false,false,null,6);
+        Check(Math.Abs(moveMarked-movePlain*1.6)<=2,"Mark did not increase configured SkillMove damage: "+movePlain+" / "+moveMarked);
+    }
+    static long NextHit(FightOfficialCombatCatalog catalog,FightDamageFormula formula,FightOfficialSkillItemCatalog items,bool branded,bool reapply,bool cure=false,string miss=null,int action=2)
+    {
+        var cp=new FightBattleCheckpoint{StageId=1001,MaxRound=5,RandomSeed=91,
+            Grid=new FightBattleGrid{Width=12,Height=12}};
+        var actor=Unit(1,5,5,formula);var target=Unit(2,5,6,formula);
+        var props=catalog.CalculateSkillProps(11010,2,20,1)
+            .Select(value=>new FightPropertyValue{Id=value.Key,Value=value.Value}).ToList();
+        if(branded) target.Statuses.Add(catalog.CreateStatus(24052,2,1,1,11010,10042,2,20,1,props));
+        var skill=catalog.CreateSkill(11010,0,10042,2,20,1,props);
+        skill.ActionType=action;
+        if(!reapply) skill.HitGraphEntities.Single(hit=>hit.EntityId==11011).AppliedStatuses.Clear();
+        if(cure) { target.Hp=target.Turn.Hp=500000; skill.HitGraphEntities.Single(hit=>hit.EntityId==11011).ActionType=5; }
+        if(miss=="dodge") target.Properties.Add(new FightPropertyValue{Id=formula.PropertyId("DodgePercent"),Value=10000});
+        if(miss=="blinding") actor.Properties.Add(new FightPropertyValue{Id=formula.PropertyId("BlindingPercent"),Value=10000});
+        if(miss=="immunity") target.Statuses.Add(catalog.CreateStatus(24007,2,2,724007));
+        skill.LimitedTimes=1;actor.Skills.Add(skill);actor.SkillState.Slots.Add(catalog.CreateSkillSlot(skill,0));
+        cp.Units.AddRange(new[]{actor,target});var wave=new FightBattleWaveState();wave.UnitIds.Add(2);cp.Waves.Add(wave);
+        var executor=FightBattleExecutor.Begin(cp,formula,new FightDamageSettlement(),catalog,items);
+        var restored=FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(cp));
+        var resume=FightBattleExecutor.Restore(restored,formula,new FightDamageSettlement(),catalog,items);
+        var step=executor.Step(0,1).Event;
+        resume.Step(0,1);
+        Check(FightBattleCheckpointSerializer.Save(cp)==FightBattleCheckpointSerializer.Save(restored),
+            "Mark consumption diverged after checkpoint restoration");
+        if(cure) {
+            Check(step.DamageEvents.Single().IsCure&&target.Statuses.Any(status=>status.ClassId==24052),
+                "Healing consumed the mark before damage");
+            return 0;
+        }
+        if(miss!=null) {
+            var result=step.DamageEvents.Single();
+            Check((miss=="dodge"?result.Dodge:miss=="blinding"?result.Blinding:result.Immunity)
+                &&target.Statuses.Any(status=>status.ClassId==24052),miss+" consumed the mark without damage");
+            return 0;
+        }
+        Check(step.DamageEvents.Single().Damage<0,"Next skill did not deal damage");
+        if(action==10) {
+            Check(target.Statuses.Any(status=>status.ClassId==24052)==branded,
+                "Non-skill damage consumed the mark before the next skill");
+            Check(!step.StatusViewEvents.Any(view=>view.Kind==FightBattleStatusViewEventKind.End
+                &&view.Status.ClassId==24052),"Non-skill damage ended the mark's view");
+            return -step.DamageEvents.Single().Damage;
+        }
+        Check(target.Statuses.Count(status=>status.ClassId==24052)==(reapply?1:0),
+            reapply?"A new mark was lost when consuming the old mark":"Mark survived the next damaging skill");
+        if(branded) Check(step.StatusViewEvents.Any(view=>view.Kind==FightBattleStatusViewEventKind.End
+            &&view.Status.ClassId==24052),"Consumed mark did not emit its status end");
+        if(reapply) Check(step.StatusViewEvents.Any(view=>view.Kind==FightBattleStatusViewEventKind.Start
+            &&view.Status.ClassId==24052),"Replacement mark did not emit its status start");
+        return -step.DamageEvents.Single().Damage;
     }
 }

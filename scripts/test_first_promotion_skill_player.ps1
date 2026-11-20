@@ -125,7 +125,7 @@ try {
         $env:ZJCS_VALIDATION_DIR = $run
         # The fixture mutes only its isolated save and injects input inside the Player.
         $process = Start-UnityOnInternalDisplay -Editor $executable -ArgumentList @(
-            '-screen-fullscreen','0','-screen-width','675','-screen-height','1463',
+            '-screen-fullscreen','0','-screen-width','675','-screen-height','1463','-muteAudio',
             '-logFile', ('"' + (Join-Path $run 'player.log') + '"'), '--zjcs-validate-skills', ('"' + $run + '"'))
         $process.PriorityClass = 'BelowNormal'
         while (-not $process.WaitForExit(30000)) { Write-Output "Running $item $direction : $run" }

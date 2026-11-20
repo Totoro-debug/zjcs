@@ -23,6 +23,7 @@ namespace Zjcs.Presentation.Home
         private Exception failure;
         private float deadline;
         private bool waitForStartup;
+        private string hitPassiveBatchRoot;
         [Serializable] private sealed class Result { public bool passed; public string error; }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -71,7 +72,7 @@ namespace Zjcs.Presentation.Home
                     foreach (var controller in FindObjectsOfType<OfficialBattleRuntimeController>())
                         if (controller.Checkpoint != null)
                             File.WriteAllText(Path.Combine(output,"failure-checkpoint.json"),JsonUtility.ToJson(controller.Checkpoint,true));
-                    File.WriteAllText(Path.Combine(output,"result.json"),JsonUtility.ToJson(new Result {error=error.ToString()},true));
+                    File.WriteAllText(Path.Combine(hitPassiveBatchRoot ?? output,"result.json"),JsonUtility.ToJson(new Result {error=error.ToString()},true));
                     Debug.LogException(error);Application.Quit(1);yield break;
                 }
                 yield return next;
@@ -80,6 +81,12 @@ namespace Zjcs.Presentation.Home
         private IEnumerator Run()
         {
             while(waitForStartup && GameObject.Find("OfficialSaveSelectionPanel")==null) yield return null;
+            waitForStartup = false;
+            if (hitPassiveBatchRoot == null && Environment.GetEnvironmentVariable("ZJCS_HIT_PASSIVE_BATCH") == "1")
+            {
+                yield return RunHitPassiveBatch();
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_ACTIVE_LOADOUT_ACCEPTANCE") == "1")
             {
                 if (Environment.GetEnvironmentVariable("ZJCS_RIPPLE_IMPACT_ACCEPTANCE") == "1")
@@ -448,7 +455,45 @@ namespace Zjcs.Presentation.Home
             Require(!FindObjectOfType<DemonResultWindow>(),"Native weekly result remained after simulated leave.");
             yield return new WaitForEndOfFrame();Capture("summon-return");
             File.WriteAllText(Path.Combine(output,"result.json"),JsonUtility.ToJson(new Result {passed=true},true));
-            Destroy(home.gameObject);Application.Quit(0);
+            Destroy(home.gameObject);
+            if (hitPassiveBatchRoot == null) Application.Quit(0);
+        }
+
+        private IEnumerator RunHitPassiveBatch()
+        {
+            hitPassiveBatchRoot = output;
+            var originalItem = Environment.GetEnvironmentVariable("ZJCS_HIT_PASSIVE_ITEM");
+            var originalMode = Environment.GetEnvironmentVariable("ZJCS_HIT_PASSIVE_MODE");
+            var originalActive = Environment.GetEnvironmentVariable("ZJCS_FIRST_PROMOTION_SKILL");
+            var cases = (Environment.GetEnvironmentVariable("ZJCS_HIT_PASSIVE_CASES") ?? "").Split(',');
+            Require(cases.Length >= 1 && cases.Length <= 2, "A hit passive batch must contain one or two cases.");
+            foreach (string caseName in cases)
+            {
+                var parts = caseName.Split('/');
+                Require(parts.Length == 2 && int.TryParse(parts[0], out _) &&
+                    new[] { "10512", "10560", "10562" }.Contains(parts[0]) &&
+                    new[] { "damage", "shield", "dodge", "blinding", "immunity" }.Contains(parts[1]),
+                    "Invalid hit passive batch case: " + caseName);
+                int item = int.Parse(parts[0]); string mode = parts[1];
+                Environment.SetEnvironmentVariable("ZJCS_HIT_PASSIVE_ITEM", item.ToString());
+                Environment.SetEnvironmentVariable("ZJCS_HIT_PASSIVE_MODE", mode);
+                Environment.SetEnvironmentVariable("ZJCS_FIRST_PROMOTION_SKILL", item == 10562 ? "10008" : "10000");
+                output = Path.Combine(hitPassiveBatchRoot, item + "-" + mode);
+                Directory.CreateDirectory(output);
+                yield return Run();
+                yield return null;
+                var result = JsonUtility.FromJson<Result>(File.ReadAllText(Path.Combine(output, "result.json")));
+                Require(result != null && result.passed, "Hit passive batch case failed: " + item + "/" + mode);
+                yield return Resources.UnloadUnusedAssets();
+                GC.Collect();
+            }
+            Environment.SetEnvironmentVariable("ZJCS_HIT_PASSIVE_ITEM", originalItem);
+            Environment.SetEnvironmentVariable("ZJCS_HIT_PASSIVE_MODE", originalMode);
+            Environment.SetEnvironmentVariable("ZJCS_FIRST_PROMOTION_SKILL", originalActive);
+            output = hitPassiveBatchRoot;
+            File.WriteAllText(Path.Combine(output, "result.json"), JsonUtility.ToJson(new Result { passed = true }, true));
+            Debug.Log("[Hit passive batch] Original battle cases completed: " + string.Join(",", cases));
+            Application.Quit(0);
         }
         private static void Click(Button control)
         {

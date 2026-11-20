@@ -60,6 +60,7 @@ namespace Zjcs.Presentation.Combat
             if (ValidateChargedBurst) return ConfigureChargedBurst(checkpoint);
             if (ValidateElementHarmony) return ConfigureElementHarmony(checkpoint);
             if (ValidateWindShadow) return ConfigureWindShadow(checkpoint);
+            if (ValidateHitPassive) return ConfigureHitPassive(checkpoint);
             if (Environment.GetEnvironmentVariable("ZJCS_VOID_MIRAGE_ACCEPTANCE") == "1")
                 return ConfigureVoidMirage(checkpoint);
             if (Environment.GetEnvironmentVariable("ZJCS_FIGHTER_HP_SECRETS") == "1")
@@ -194,6 +195,7 @@ namespace Zjcs.Presentation.Combat
                 forcedTargetRotation = controller.TryGetUnitTransform(forcedTargetId).localRotation;
             entities.CastStarted += cast => {
                 ObserveWindShadowCast(cast);
+                ObserveHitPassiveCast(cast);
                 ObserveReflectionArmorCast(cast, controller);
                 ObserveNativeHitCustomCure(cast);
                 ObserveNativeShieldExpiry(cast);
@@ -392,6 +394,7 @@ namespace Zjcs.Presentation.Combat
             ObserveFirstPromotionGeneration(controller);
             if (CaptureElementHarmonyFrame(controller)) return;
             if (CaptureWindShadowFrame()) return;
+            if (CaptureHitPassiveFrame()) return;
             if (Environment.GetEnvironmentVariable("ZJCS_THUNDER_MYSTERY_ACCEPTANCE") == "1"
                 && thunderNativeCasts > 0 && !thunderCaptured && Time.time - thunderNativeClock >= .35f)
             { thunderCaptured = true; CaptureName = "thunder-mystery-native"; return; }
@@ -540,6 +543,7 @@ namespace Zjcs.Presentation.Combat
             if (ValidateChargedBurst) { VerifyChargedBurst(checkpoint); return; }
             VerifyElementHarmony();
             VerifyWindShadow();
+            VerifyHitPassive();
             if (ValidateVoidMirage) { VerifyVoidMirage(checkpoint); return; }
             if (Environment.GetEnvironmentVariable("ZJCS_THUNDER_MYSTERY_ACCEPTANCE") == "1")
                 Require(thunderNativeCasts == 1 && thunderCaptured,

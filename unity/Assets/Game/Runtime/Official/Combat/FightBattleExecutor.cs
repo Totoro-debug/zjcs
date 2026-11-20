@@ -1164,6 +1164,8 @@ namespace Zjcs.Combat.Official
                     CollectUnflinchingActions(target, actualHpLoss, skill, damage.DamageId);
                     FightStatusTriggerRuntime.ApplyAccumulatedDamage(target,
                         actualHpLoss, statusCatalog, random, configuredTriggerSkills, skill);
+                    ApplyMissingStatusComponentsOnHit(actor, target, skill, hit, resolved,
+                        actualHpLoss, configuredComponentInvocations, processOther: false);
                     damage.IsDamageTriggerStatus = ApplyHitStatuses(actor, target, skill, hit, random, skillCostHp,
                         actualHpLoss, damage);
                     damage.HasDamageTriggerStatus = true;
@@ -1172,7 +1174,7 @@ namespace Zjcs.Combat.Official
                     CollectHitTriggerSkill(actor, target, skill, hit, configuredComponentInvocations,
                         hitOrigin, castHit, hitDelay);
                     ApplyMissingStatusComponentsOnHit(actor, target, skill, hit, resolved,
-                        actualHpLoss, configuredComponentInvocations);
+                        actualHpLoss, configuredComponentInvocations, processDamage: false);
                     foreach (FightBattleUnitState logicOwner in new[] { actor, target })
                     {
                         if (logicOwner == null || logicOwner.Statuses == null) continue;

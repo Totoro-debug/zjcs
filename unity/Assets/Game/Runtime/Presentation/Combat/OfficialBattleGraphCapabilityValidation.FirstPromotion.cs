@@ -368,8 +368,21 @@ namespace Zjcs.Presentation.Combat
         {
             ObserveElementHarmonyStep(checkpoint, step);
             ObserveWindShadowStep(step);
+            ObserveHitPassiveStep(checkpoint, step);
             var player = checkpoint.Units.Single(unit => unit.Id == 1);
             var cast = step.SkillCasts.Single(value => value.ActorId == player.Id && value.Slot == 0);
+            if (Environment.GetEnvironmentVariable("ZJCS_AUTO_START_ACTIVE") == "1")
+            {
+                var slot = player.SkillState.Slots.Single(value => value.Slot == 0);
+                Require(player.SkillState.Round == 0 && slot.AutoStartChecked && slot.ReleasedTimes == 1
+                    && (slot.Cooldown <= 0 || new FightSkillState(player.SkillState).LeftCooldown(slot.Slot) > 0)
+                    && cast.SkillItemId == firstPromotionItemId,
+                    "Opening skill did not run once before the first personal turn.");
+                string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+                Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
+                    "Opening skill checkpoint changed after reload.");
+                Debug.Log("[Opening skill] Original pre-battle cast, cooldown and checkpoint passed: " + firstPromotionItemId);
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_THUNDER_MYSTERY_ACCEPTANCE") == "1")
             {
                 var lightning = step.SkillCasts.Single(value => value.SkillEntityId == 10530);

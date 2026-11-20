@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -41,6 +41,36 @@ namespace Zjcs.Editor.Skills
         private static bool reloadLocked;
         private static Exception runtimeFailure;
         [Serializable] private sealed class RuntimeDiagnosticResult { public bool passed; public string error; }
+        [Serializable] private sealed class OpeningPreflightReceipt { public string token; public string project; public string stage; }
+
+        public static void ValidateOpeningAssets()
+        {
+            string token = Environment.GetEnvironmentVariable("ZJCS_SKILLS_PREFLIGHT_TOKEN");
+            string receipt = Environment.GetEnvironmentVariable("ZJCS_SKILLS_PREFLIGHT_RECEIPT");
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(receipt))
+                throw new InvalidOperationException("Opening preflight requires its current invocation receipt.");
+            string stage = Environment.GetEnvironmentVariable("ZJCS_SKILLS_PREFLIGHT_STAGE");
+            if (stage == "project") ProjectTools.Validate();
+            else if (stage == "skills") OfficialSkillAssetTools.Validate();
+            else throw new InvalidOperationException("Unknown opening preflight stage.");
+            File.WriteAllText(receipt + "." + stage, JsonUtility.ToJson(new OpeningPreflightReceipt {
+                token = token, project = Path.GetFullPath(Application.dataPath), stage = stage }));
+        }
+
+        private static bool HasCurrentOpeningPreflight()
+        {
+            string path = Environment.GetEnvironmentVariable("ZJCS_SKILLS_PREFLIGHT_RECEIPT");
+            string token = Environment.GetEnvironmentVariable("ZJCS_SKILLS_PREFLIGHT_TOKEN");
+            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(token)) return false;
+            foreach (string stage in new[] { "project", "skills" })
+            {
+                var receipt = JsonUtility.FromJson<OpeningPreflightReceipt>(File.ReadAllText(path + "." + stage));
+                if (receipt == null || receipt.token != token || receipt.stage != stage
+                    || receipt.project != Path.GetFullPath(Application.dataPath))
+                    throw new InvalidOperationException("Opening preflight receipt does not match this invocation/project.");
+            }
+            return true;
+        }
         [InitializeOnLoadMethod]
         private static void AutoRunInWindowedEditor()
         {
@@ -121,15 +151,16 @@ namespace Zjcs.Editor.Skills
             // A previous acceptance may have left an empty, unsaved scene.
             // Restore its startup scene; isolated battle mode supplies its own profile.
             EditorSceneManager.OpenScene("Assets/Game/Scenes/Bootstrap.unity", OpenSceneMode.Single);
-            if (Environment.GetEnvironmentVariable("ZJCS_PLAYER_COMBO_ACCEPTANCE") == "1"
+            bool prevalidated = HasCurrentOpeningPreflight();
+            if (!prevalidated && (Environment.GetEnvironmentVariable("ZJCS_PLAYER_COMBO_ACCEPTANCE") == "1"
                 || Environment.GetEnvironmentVariable("ZJCS_SKILL_STACK_ACCEPTANCE") == "1"
                 || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_EXPLICIT_GRAPH_ACCEPTANCE"))
                 || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_GRAPH_CAPABILITY_ACCEPTANCE"))
                 || Environment.GetEnvironmentVariable("ZJCS_HIT_FINISH_ACCEPTANCE") == "1"
                 || Environment.GetEnvironmentVariable("ZJCS_MASTER_CHILD_ACCEPTANCE") == "1"
-                || Environment.GetEnvironmentVariable("ZJCS_RANDOM_HIT_ACCEPTANCE") == "1")
+                || Environment.GetEnvironmentVariable("ZJCS_RANDOM_HIT_ACCEPTANCE") == "1"))
                 ProjectTools.Validate();
-            OfficialSkillAssetTools.Validate();
+            if (!prevalidated) OfficialSkillAssetTools.Validate();
             if ((Application.isBatchMode || Environment.GetEnvironmentVariable("ZJCS_SKILLS_AUTORUN") == "1")
                 && Environment.GetEnvironmentVariable("ZJCS_SKILLS_PET_UI_ONLY") != "1"
                 && Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_FLOW") != "1"
@@ -292,7 +323,8 @@ namespace Zjcs.Editor.Skills
                     Zjcs.Presentation.Home.SkillSummonPlayerValidation.StartDiagnostic(ValidationDirectory, false);
                 else
                     Zjcs.Presentation.Character.SkillPlayerValidation.StartPassivePropertyDiagnostic(ValidationDirectory);
-                float deadline = Time.realtimeSinceStartup + 600f;
+                float deadline = Time.realtimeSinceStartup
+                    + (Environment.GetEnvironmentVariable("ZJCS_HIT_PASSIVE_BATCH") == "1" ? 1800f : 600f);
                 while (!File.Exists(resultPath))
                 {
                     Require(Time.realtimeSinceStartup < deadline, "Passive property Play Mode diagnostic timed out.");
@@ -313,8 +345,8 @@ namespace Zjcs.Editor.Skills
                 || Environment.GetEnvironmentVariable("ZJCS_PLAYER_CLONE_ACCEPTANCE") == "1")
             {
                 string resultPath = Path.Combine(ValidationDirectory, "result.json");
-                Zjcs.Presentation.Home.SkillSummonPlayerValidation.StartDiagnostic(ValidationDirectory, false);
                 if (File.Exists(resultPath)) File.Delete(resultPath);
+                Zjcs.Presentation.Home.SkillSummonPlayerValidation.StartDiagnostic(ValidationDirectory, false);
                 float deadline = Time.realtimeSinceStartup + 2760f;
                 while (!File.Exists(resultPath))
                 {
