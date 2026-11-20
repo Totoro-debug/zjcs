@@ -269,6 +269,11 @@ namespace Zjcs.Editor.Combat
             views.HitSelectionViewArrived += (owner, selection, center, position, index) =>
                 selectionArrivals.Add(new SelectionArrival { Cast = owner, Selection = selection,
                     CenterIndex = center, Position = position, ScopeIndex = index });
+            if (Environment.GetEnvironmentVariable("ZJCS_STUN_STRIKE_ACCEPTANCE") == "1")
+            {
+                yield return CheckStunStrike(root, grid);
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_FLAME_SPRAY_ACCEPTANCE") == "1")
             {
                 yield return CheckFlameSpray(root, grid);
@@ -3751,6 +3756,102 @@ namespace Zjcs.Editor.Combat
                 x.name.StartsWith("ChainedHit_") || x.name == "tmp_scope_obj"
                     || x.name == "Battle native hit entities"),
                 "Battle disposal releases the original hit pool and its sibling anchors.");
+        }
+
+        private IEnumerator CheckStunStrike(Transform root, FightBattleGrid grid)
+        {
+            var assets = OfficialCombatAssetCatalog.LoadDefault();
+            var catalog = assets.Load(); var formula = assets.LoadDamageFormula(); var items = assets.LoadSkillItems();
+            foreach (var direction in new[] { new Vector2Int(1, 0), new Vector2Int(-1, 0),
+                new Vector2Int(0, 1), new Vector2Int(0, -1) })
+            {
+                FightBattleUnitState LiveUnit(int id, int side, int x, int y)
+                {
+                    var unit = new FightBattleUnitState { Id = id, Side = side, CharacterType = 1, Profession = 1,
+                        Level = 50, SubRank = 5, X = x, Y = y, Direction = 3, Hp = 1000000, MaxHp = 1000000,
+                        LastMaxHp = 1000000, MoveDist = 0, MoveMask = 5 };
+                    unit.Turn.Id = id; unit.Turn.Hp = unit.Hp; unit.Turn.Speed = id == 1 ? 1000 : 10;
+                    foreach (var prop in new Dictionary<int, long> { { 1, 1000 }, { 2, 10 }, { 3, unit.MaxHp }, { 4, unit.Turn.Speed } })
+                        unit.Properties.Add(new FightPropertyValue { Id = prop.Key, Value = prop.Value });
+                    foreach (string name in new[] { "BaseBlockPercentValue", "BaseBlockAvoidPercentValue", "BaseCritRatePercentValue",
+                        "BaseCritAvoidPercentValue", "BaseEffectRate", "BaseEffectDodge" })
+                        unit.Properties.Add(new FightPropertyValue { Id = formula.PropertyId(name), Value = 10000 });
+                    if (id == 1) unit.Properties.Add(new FightPropertyValue { Id = formula.PropertyId("EffectRateValue"), Value = 10000 });
+                    return unit;
+                }
+                var units = new[] { LiveUnit(1, 1, 5, 5), LiveUnit(2, 2, 5 + direction.x, 5 + direction.y) };
+                var skill = catalog.CreateSkill(10620, 0, 10010, 2, 20, 1,
+                    catalog.CalculateSkillProps(10620, 2, 20, 1).Select(x => new FightPropertyValue { Id = x.Key, Value = x.Value }).ToList());
+                skill.LimitedTimes = 1; units[0].Skills.Add(skill); units[0].SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
+                var checkpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 8, RandomSeed = 1012348,
+                    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+                checkpoint.Units.AddRange(units); var wave = new FightBattleWaveState(); wave.UnitIds.Add(2); checkpoint.Waves.Add(wave);
+                FightBattleExecutor.Begin(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+                string committed = FightBattleCheckpointSerializer.Save(checkpoint);
+                var display = FightBattleCheckpointSerializer.Load(committed).Units.ToArray();
+                var holder = new GameObject("Live stun strike").transform; holder.SetParent(root, false);
+                var source = new GameObject("Stun source").transform; source.SetParent(holder, false); source.localPosition = new Vector3(5, 5, 0);
+                var target = new GameObject("Stun target").transform; target.SetParent(holder, false); target.localPosition = new Vector3(5 + direction.x, 5 + direction.y, 0);
+                foreach (var body in new[] { source, target })
+                {
+                    body.gameObject.AddComponent<MyTransform>();
+                    var renderer = body.gameObject.AddComponent<MeshRenderer>(); renderer.enabled = false; renderer.sharedMaterials = Array.Empty<Material>();
+                    body.gameObject.AddComponent<Zjcs.Official.BattleMaterialPlayables.MeshMaterialProperty>().MeshRenderer = renderer;
+                }
+                var nativeScope = new OfflineBattleNativePlayableScope(holder, null);
+                using (var nativeViews = new OfficialBattleSkillEntityPlayback(holder, new OfficialBattleGridMapper(holder, grid),
+                    nativeScope, id => display.FirstOrDefault(value => value.Id == id)))
+                using (var session = new OfficialBattleLiveImpactSession(checkpoint, copy => FightBattleExecutor.Restore(copy,
+                    formula, new FightDamageSettlement(), catalog, items), nativeViews, 0, 1))
+                {
+                    nativeViews.BindDamageUI(holder, 0);
+                    ParticleSystem impact = null; bool paused = false, resumed = false, captured = false; int frames = 0, damageFrame = -1;
+                    session.SkillGraphPlayableStarted += (cast, id, prefab, leaf) => {
+                        if (cast.SkillEntityId != 10620 || prefab.name != "playable10620" || leaf.name != "effect") return;
+                        impact = leaf.GetComponentsInChildren<ParticleSystem>(true).Single(value => value.name == "glow (5)");
+                        impact.Pause(); paused = true;
+                    };
+                    bool Start(FightBattleSkillCastEvent cast, out EcEntityIdentifier id)
+                    { id = nativeViews.Start(cast, source, target); return true; }
+                    void Damage(FightBattleDamageEvent damage)
+                    {
+                        Require(impact && impact.particleCount > 0 && resumed, "Stun strike settled before its original impact particle.");
+                        damageFrame = Time.frameCount;
+                    }
+                    float deadline = Time.realtimeSinceStartup + 20f;
+                    while (!session.IsCompleted && Time.realtimeSinceStartup < deadline)
+                    {
+                        session.Pump(Time.deltaTime, Start, Damage);
+                        if (paused && !resumed)
+                        {
+                            Require(impact.particleCount == 0 && damageFrame < 0 && FightBattleCheckpointSerializer.Save(checkpoint) == committed,
+                                "A paused original impact cannot settle damage or mutate the committed checkpoint.");
+                            if (++frames == 5) { resumed = true; impact.Play(); }
+                        }
+                        if (!captured && damageFrame >= 0)
+                        {
+                            Capture("stun-strike-impact-" + direction.x + "-" + direction.y + ".png", false);
+                            captured = true;
+                        }
+                        nativeViews.Tick(Time.deltaTime); nativeScope.LateTick(); yield return null;
+                    }
+                    if (!captured && damageFrame >= 0)
+                    {
+                        Capture("stun-strike-impact-" + direction.x + "-" + direction.y + ".png", false);
+                        captured = true;
+                    }
+                    Require(paused && resumed && captured && damageFrame >= 0,
+                        "Stun impact did not reach damage: paused=" + paused + " resumed=" + resumed + " captured=" + captured
+                        + " frame=" + damageFrame + " particles=" + (impact ? impact.particleCount : -1)
+                        + " active=" + (impact && impact.gameObject.activeInHierarchy) + " playing=" + (impact && impact.isPlaying)
+                        + " completed=" + session.IsCompleted);
+                    Require(session.TryTakeCompleted(out _, out var result)
+                        && result.Checkpoint.Units.Single(value => value.Id == 2).Statuses.Any(value => value.ClassId == 24010)
+                        && FightBattleCheckpointSerializer.Save(checkpoint) == committed,
+                        "Stun damage and status must follow the visible original impact.");
+                }
+                Destroy(holder.gameObject); yield return null;
+            }
         }
 
         private IEnumerator ValidateRandomReceipts(Transform root, Transform source, Transform target)

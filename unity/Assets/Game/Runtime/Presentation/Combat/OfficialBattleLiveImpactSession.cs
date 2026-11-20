@@ -158,6 +158,7 @@ namespace Zjcs.Presentation.Combat
         private readonly List<OfficialBattleMountainWaveImpact> mountainWaves = new List<OfficialBattleMountainWaveImpact>();
         private readonly HashSet<int> slashCasters = new HashSet<int>();
         private readonly HashSet<int> heavyCasters = new HashSet<int>();
+        private readonly HashSet<int> stunStrikeCasters = new HashSet<int>();
         private readonly HashSet<int> comboCasters = new HashSet<int>();
         private readonly HashSet<(FightBattleSkillCastEvent Cast, int Index)> observedComboEffects =
             new HashSet<(FightBattleSkillCastEvent, int)>();
@@ -285,6 +286,10 @@ namespace Zjcs.Presentation.Combat
                             && hit.ScopeEntries[0] != null && hit.ScopeEntries[0].Delay == 0f
                             && hit.ScopeEntries[0].Position.X == 0 && hit.ScopeEntries[0].Position.Y == 1)
                             heavyCasters.Add(unit.Id);
+                        if (skill.EntityId == 10620 && hit.EntityId == 10621 && hit.ScopeEntries.Count == 1
+                            && hit.ScopeEntries[0] != null && hit.ScopeEntries[0].Delay == 0f
+                            && hit.ScopeEntries[0].Position.X == 0 && hit.ScopeEntries[0].Position.Y == 0)
+                            stunStrikeCasters.Add(unit.Id);
                         if (skill.EntityId == 11690 && hit.EntityId == 11691 && skill.HitGraphRoots != null
                             && skill.HitGraphRoots.Count == 3 && skill.HitGraphRoots.TrueForAll(root => root != null && root.EntityId == 11691)
                             && hit.ScopeEntries.Count == 3)
@@ -1323,11 +1328,13 @@ namespace Zjcs.Presentation.Combat
                 && playable.name == "effect" && slashCasters.Contains(cast.ActorId);
             bool heavy = cast.SkillEntityId == 10610 && prefab.name == "playable10610"
                 && playable.name == "effect (2)" && heavyCasters.Contains(cast.ActorId);
-            if (!slash && !heavy) return;
-            // The second heavy-chop effect's ground ring starts at the authored
-            // hit boundary; observe that original particle rather than a timer.
+            bool stunStrike = cast.SkillEntityId == 10620 && prefab.name == "playable10620"
+                && playable.name == "effect" && stunStrikeCasters.Contains(cast.ActorId);
+            if (!slash && !heavy && !stunStrike) return;
+            // These original effects contain the visible strike; the hit waits
+            // until its corresponding particle appears.
             var observer = OfficialBattleSlashImpact.Attach(playable,
-                heavy ? "dimian_guangyun_an" : "daoguang da (23)", () => RouteSlashImpact(cast, id));
+                heavy ? "dimian_guangyun_an" : stunStrike ? "glow (5)" : "daoguang da (23)", () => RouteSlashImpact(cast, id));
             if (observer == null) return;
             observedSlashes.Add(cast); slashEffects.Add(observer);
         }
@@ -1340,7 +1347,7 @@ namespace Zjcs.Presentation.Combat
             if (cast.HitSelections == null) return;
             foreach (var hit in new List<FightBattleHitSelectionSnapshot>(cast.HitSelections))
             {
-                int hitEntityId = cast.SkillEntityId == 10610 ? 10611 : 10601;
+                int hitEntityId = cast.SkillEntityId == 10610 ? 10611 : cast.SkillEntityId == 10620 ? 10621 : 10601;
                 if (hit?.HitEntityId != hitEntityId || !selectedHits.Contains(hit) || hit.Targets == null) continue;
                 var sent = new HashSet<int>();
                 foreach (var target in new List<FightBattleHitSelectionSnapshot.TargetOccurrence>(hit.Targets))
@@ -1531,7 +1538,7 @@ namespace Zjcs.Presentation.Combat
             observedWaterProjectiles.Clear(); waterProjectiles.Clear();
             fireballFlights.Clear(); fireballProjectiles.Clear();
             expectedFireballHits.Clear(); completedFireballHits.Clear();
-            slashCasters.Clear(); heavyCasters.Clear(); comboCasters.Clear(); observedComboEffects.Clear();
+            slashCasters.Clear(); heavyCasters.Clear(); stunStrikeCasters.Clear(); comboCasters.Clear(); observedComboEffects.Clear();
             reachedComboEffects.Clear(); sentComboHits.Clear(); observedSlashes.Clear(); reachedSlashes.Clear(); sentSlashes.Clear(); slashEffects.Clear();
             resolvingStatuses.Clear();
             suspendedPreparations.Clear();
