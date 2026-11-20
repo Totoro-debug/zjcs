@@ -43,6 +43,12 @@ namespace Zjcs.Presentation.Home
             {
                 foreach (int skillId in new[] { 10520, 10521, 10522, 10550, 10555, 10583, 10559, 10554, 10578 })
                     VerifyOriginalWish(output, save, skillId);
+                foreach (int skillId in new[] { 10513, 10561 })
+                    VerifyOriginalWish(output, save, skillId);
+                foreach (int skillId in new[] { 10502, 10556, 10569, 10576, 10602 })
+                    VerifyOriginalWish(output, save, skillId, 11, 2);
+                foreach (int skillId in new[] { 10539, 10544, 10546 })
+                    VerifyOriginalWish(output, save, skillId, 1);
             }
             if (!equipped)
                 profile.Skills.Plans[profile.Skills.SelectedPlan].PassiveSkills = new int[4];
@@ -210,14 +216,15 @@ namespace Zjcs.Presentation.Home
                 .SelectMany(value => value.StatusProperties).Where(value => value.Id == propertyId).Sum(value => value.Value);
         }
 
-        private static void VerifyOriginalWish(string output, OfflineMainlineSave source, int skillId)
+        private static void VerifyOriginalWish(string output, OfflineMainlineSave source, int skillId,
+            int profession = 10, int professionRank = 1)
         {
             var rules = Resources.Load<TextAsset>("Wishes/wishes-runtime");
             Require(rules != null, "The original skill wish catalog is missing.");
             var catalog = WishRuntimeCatalog.Parse(rules.text);
-            Require(catalog.SkillAvailable(skillId, 10), "The original mage wish pool excludes secret " + skillId + ".");
+            Require(catalog.SkillAvailable(skillId, profession), "The original profession wish pool excludes secret " + skillId + ".");
             var save = JsonUtility.FromJson<OfflineMainlineSave>(JsonUtility.ToJson(source));
-            save.Player.MaxProfessionRank = 1;
+            save.Player.MaxProfessionRank = professionRank;
             save.Player.Skills.Skills.RemoveAll(value => value.ClassId == skillId);
             foreach (var plan in save.Player.Skills.Plans)
                 for (int index = 0; index < plan.PassiveSkills.Length; index++)
@@ -231,13 +238,13 @@ namespace Zjcs.Presentation.Home
             File.WriteAllText(slots.GetProgressPath(slot), JsonUtility.ToJson(save, true));
             var session = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
             var wish = new OfflineWishService(session, catalog);
-            Require(wish.AvailableDrawProfessions(0, 10).Contains(10), "The original mage wish pool is not selectable.");
+            Require(wish.AvailableDrawProfessions(0, profession).Contains(profession), "The original profession wish pool is not selectable.");
             long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             int draws = 0;
             bool received = false;
             while (!received && draws < 2000)
             {
-                var result = wish.Draw(0, 100, 10, "passive-affinity-wish-" + skillId + "-" + draws, now, true);
+                var result = wish.Draw(0, 100, profession, "passive-affinity-wish-" + skillId + "-" + draws, now, true);
                 Require(result.IsApplied && result.Awards.Count == 100, "The original skill wish transaction failed: " + result.Message);
                 draws += 100;
                 received = result.Awards.Any(value => value.OriginItemId == skillId && value.ConvertedItemId == 0);
