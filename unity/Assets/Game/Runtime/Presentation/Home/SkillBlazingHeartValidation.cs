@@ -29,10 +29,10 @@ namespace Zjcs.Presentation.Home
             bool equipped = Environment.GetEnvironmentVariable("ZJCS_BLAZING_HEART_EQUIPPED") == "1";
             string requestedSecret = Environment.GetEnvironmentVariable("ZJCS_AFFINITY_SECRET_ID");
             int secretId = string.IsNullOrEmpty(requestedSecret) ? 10520 : int.Parse(requestedSecret);
-            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578 || secretId == 10524 || secretId == 10535, "Unexpected property secret.");
-            bool warrior = secretId == 10524 || secretId == 10535;
+            Require(secretId == 10520 || secretId == 10521 || secretId == 10522 || secretId == 10550 || secretId == 10555 || secretId == 10583 || secretId == 10559 || secretId == 10554 || secretId == 10578 || secretId == 10524 || secretId == 10535 || secretId == 10505, "Unexpected property secret.");
+            bool warrior = secretId == 10524 || secretId == 10535 || secretId == 10505;
             int activeId = warrior ? 10008 : secretId == 10521 ? 10000 : secretId == 10522 ? 10001 : secretId == 10559 ? 10005 : 10028;
-            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 ? "MaxHp" : secretId == 10555 ? "ElementMaster" : secretId == 10583 ? "ElementResistance" : secretId == 10559 ? "EffectRate" : secretId == 10554 ? "CritRatePercent" : secretId == 10524 ? "Attack" : secretId == 10535 ? "KongFuMaster" : "StatusDmgAddPer";
+            string affinityName = secretId == 10520 ? "FireDamageAdd" : secretId == 10521 ? "WaterDamageAdd" : secretId == 10522 ? "WindDamageAdd" : secretId == 10550 || secretId == 10505 ? "MaxHp" : secretId == 10555 ? "ElementMaster" : secretId == 10583 ? "ElementResistance" : secretId == 10559 ? "EffectRate" : secretId == 10554 ? "CritRatePercent" : secretId == 10524 ? "Attack" : secretId == 10535 ? "KongFuMaster" : "StatusDmgAddPer";
             Require(!string.IsNullOrEmpty(sourcePath) && File.Exists(sourcePath), "Missing acquired secret profile.");
             var save = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(sourcePath));
             var profile = save.Player;
@@ -92,7 +92,7 @@ namespace Zjcs.Presentation.Home
             long affinity = PropertyOrResonance(player, elementAffinity, secretId);
             int critValueProperty = combat.PropertyType("CritRatePercentValue");
             long secondary = secretId == 10554 ? player.Properties.Where(value => value.Id == critValueProperty).Sum(value => value.Value) : 0;
-            if (secretId == 10550)
+            if (secretId == 10550 || secretId == 10505)
                 Require(affinity > 0 && player.MaxHp == affinity && player.Hp == affinity,
                     "The actual battle did not initialize health from the equipped secret.");
             var enemy = checkpoint.Units.First(value => value.Side != player.Side && value.Wave == 0);
