@@ -12,6 +12,7 @@ namespace Zjcs.Presentation.Combat
         private int firstPromotionDispelAllyId;
         private int[] firstPromotionHitScopeTargetIds = Array.Empty<int>();
         private int firstPromotionFacingIndex;
+        private bool firstPromotionHasDirectionalEntity;
         private float firstPromotionCastClock;
         private int firstPromotionFrameCount;
         private float firstPromotionCaptureAfter = .85f;
@@ -195,7 +196,8 @@ namespace Zjcs.Presentation.Combat
             var enemy = checkpoint.Units.First(unit => unit.Side != player.Side);
             var probe = new OfficialBattleGraphCapabilityValidation(catalog, player.Skills.First(value => value.Slot == 0),
                 entityId, cue.animation) { firstPromotionItemId = itemId,
-                    firstPromotionFacingIndex = new[] { 2, 0, 1, 3 }[direction] };
+                    firstPromotionFacingIndex = new[] { 2, 0, 1, 3 }[direction],
+                    firstPromotionHasDirectionalEntity = binding.DirectionEntityIds.Count > 0 };
             enemy.MonsterId = 3331; enemy.MonsterGroupNo = 0;
             enemy.CharacterType = catalog.MonsterCharacterType(3331);
             enemy.MonsterType = catalog.MonsterType(3331); enemy.AiType = catalog.MonsterAiType(3331);
@@ -393,7 +395,7 @@ namespace Zjcs.Presentation.Combat
                 Debug.Log("[Thunder mystery] Original passive lightning source and damage passed.");
             }
             Require(cast.SkillItemId == firstPromotionItemId && cast.SkillEntityId == skillId
-                && cast.Presentation != null && (firstPromotionItemId == 10015
+                && cast.Presentation != null && (!firstPromotionHasDirectionalEntity || firstPromotionItemId == 10015
                     ? cast.Presentation.FacingIndex >= 0 && cast.Presentation.FacingIndex <= 3
                     : cast.Presentation.FacingIndex == firstPromotionFacingIndex)
                 && player.SkillState.Slots[0].ReleasedTimes == 1,
