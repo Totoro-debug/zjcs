@@ -2,7 +2,7 @@ param(
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [int[]]$SkillIds=@(10500,10501,10505,10507,10510,10513,10514,10516,10520,10521,10522,10524,10535,10550,10554,10555,10559,10561,10576,10578,10583,10588,10602),
+    [int[]]$SkillIds=@(10500,10501,10502,10505,10507,10510,10513,10514,10516,10520,10521,10522,10524,10535,10550,10554,10555,10559,10561,10576,10578,10583,10588,10602),
     [ValidateSet(0,1,2,6,10,11,15)][int]$Profession=0,
     [switch]$AcquireFromPieces
 )
