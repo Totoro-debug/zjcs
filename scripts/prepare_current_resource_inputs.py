@@ -11,7 +11,7 @@ import json
 from pathlib import Path
 import zipfile
 
-from official_apk import Apk, ROOT
+from official_apk import Apk, ROOT, canonical_bundle_name
 from official_source import OfficialSource
 from official_bundle_reader import OfficialBundleReader, verify_payload
 from official_manifest import read_manifest, read_asset_manifest
@@ -34,7 +34,30 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def prepare(destination):
+def dependency_bundles(roots):
+    """Resolve a selected DefaultPackage export through actual CAB externals."""
+    visited, pending = set(), list(roots)
+    with Apk() as apk:
+        while pending:
+            name = pending.pop()
+            if name in visited:
+                continue
+            if name not in apk.index:
+                raise ValueError('Selected native bundle is absent: ' + name)
+            loaded = apk.load(name)
+            visited.add(name)
+            for asset in loaded.files.values():
+                for external in getattr(asset, 'externals', ()):
+                    cab = external.path.rsplit('/', 1)[-1].lower()
+                    if cab in ('unity_builtin_extra', 'unity default resources'):
+                        continue
+                    if cab not in apk.cabs:
+                        raise ValueError('Unresolved selected native CAB dependency: ' + cab)
+                    pending.append(canonical_bundle_name(apk.cabs[cab], apk.index))
+    return visited
+
+
+def prepare(destination, bundle_roots=None):
     source = OfficialSource()
     destination = destination.resolve()
     allowed = (ROOT / '.tools/source-packages/current' / source.version).resolve()
@@ -43,10 +66,13 @@ def prepare(destination):
     destination.mkdir(parents=True, exist_ok=True)
     inputs = destination / 'inputs'
     inputs.mkdir(exist_ok=True)
+    selection = dependency_bundles(bundle_roots) if bundle_roots else None
     bundles, catalogs, unavailable = [], {}, []
     with OfficialBundleReader(source) as reader:
         archive, available = reader.archive, reader.available
         for package in source.manifests:
+            if selection is not None and package != 'DefaultPackage':
+                continue
             apk_entry = f'assets/yoo/{package}/PackageManifest_{package}_{source.apk_version}.v3.bytes'
             original_bytes = archive.read(apk_entry)
             current_bytes = source.manifest_bytes(package, archive)
@@ -54,11 +80,14 @@ def prepare(destination):
             original = [dict(b, package=package, source_manifest=source.apk_version) for b in old['bundles']]
             current = [dict(b, package=package, source_manifest=source.version) for b in new['bundles']]
             selected = union(original, current, lambda b: (b['package'], b['name']))
+            if selection is not None:
+                selected = [b for b in selected if b['name'] in selection]
             catalogs[package] = dict(
                 apk_manifest_sha256=sha(original_bytes), current_manifest_sha256=sha(current_bytes),
                 apk=read_asset_manifest(original_bytes), current=read_asset_manifest(current_bytes),
                 merged=union(read_asset_manifest(original_bytes), read_asset_manifest(current_bytes), lambda a: (a['path'], a['address'])),
-                apk_bundles=len(original), current_bundles=len(current), retained_apk_only=len(selected)-len(current))
+                apk_bundles=len(original), current_bundles=len(current),
+                retained_apk_only=sum(b['source_manifest'] != source.version for b in selected))
             for record in selected:
                 entry = f'assets/yoo/{package}/{record["file"]}'
                 if record['source_manifest'] == source.version:
@@ -84,7 +113,7 @@ def prepare(destination):
                 bundles.append(dict(record, source=provenance, raw_sha256=sha(raw),
                                     decoded_sha256=sha(decoded), output=relative.as_posix(),
                                     format='UnityFS' if decoded.startswith(b'UnityFS') else 'original'))
-            print(package, len(selected), 'retained APK-only', len(selected)-len(current), flush=True)
+            print(package, len(selected), 'retained APK-only', catalogs[package]['retained_apk_only'], flush=True)
         # The built-in serialized files supply engine and shader dependencies.
         for entry in ('assets/bin/Data/data.unity3d', 'assets/bin/Data/unity default resources'):
             raw = archive.read(entry)
@@ -96,6 +125,9 @@ def prepare(destination):
     result = dict(format=1, manifest=source.version, apk_manifest=source.apk_version,
                   apk_sha256=source.apk_sha256, generator_sha256=sha(Path(__file__).read_bytes()),
                   operation=__doc__, inputs=bundles, catalogs=catalogs, unavailable_original_bundles=unavailable)
+    if selection is not None:
+        result['selection'] = dict(package='DefaultPackage', roots=sorted(set(bundle_roots)),
+                                   dependency_bundles=sorted(selection), dependency_rule='Serialized CAB externals')
     (destination / 'source-manifest.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', 'utf8')
     return result
 
@@ -103,4 +135,6 @@ def prepare(destination):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--destination', type=Path, required=True)
-    print('Verified converter inputs:', len(prepare(parser.parse_args().destination)['inputs']))
+    parser.add_argument('--bundle', action='append', dest='bundle_roots')
+    args = parser.parse_args()
+    print('Verified converter inputs:', len(prepare(args.destination, args.bundle_roots)['inputs']))

@@ -53,7 +53,32 @@ def parser_view(raw):
     return result
 
 
-def prepare(image):
+def inspect_loader_boundary(raw):
+    # Inspected ARM64 loader sequence: store the decoded relocation tables in
+    # X19, call the unpacker, then test its result before import initialization.
+    # Its instructions are identical in the inspected APKs; its address is not.
+    signature = bytes.fromhex(
+        '680e00f9e81340f968a600f9e82340f9681200f9e82740f9681a00f9'
+        'e083c53c6026803de083c63c602a803de83f40f9682200f9e84340f9'
+        '682600f987feff97f5031faa600d0036e00313aa77000094e16340f9'
+        'e00313aacd0000946842453908010037e00313aaca020094f5031faa'
+        '000c0036685241b908010032685201b9')
+    offset = raw.find(signature)
+    if offset < 0 or raw.find(signature, offset + 1) >= 0:
+        raise ValueError('Inspect the different or ambiguous ARM64 loader first')
+    if raw[:7] != b'\x7fELF\x02\x01\x01' or struct.unpack_from('<H', raw, 18)[0] != 183:
+        raise ValueError('Expected the original AArch64 ELF')
+    phoff = struct.unpack_from('<Q', raw, 32)[0]
+    count = struct.unpack_from('<H', raw, 56)[0]
+    segments = [struct.unpack_from('<IIQQQQQQ', raw, phoff + i * 56) for i in range(count)]
+    matches = [s for s in segments if s[0] == 1 and s[1] & 1
+               and s[2] <= offset and offset + len(signature) <= s[2] + s[5]]
+    if len(matches) != 1:
+        raise ValueError('The inspected loader is not in one executable load segment')
+    return matches[0][3] + offset - matches[0][2] + 64, hashlib.sha256(signature).hexdigest()
+
+
+def prepare(image, recovery_log):
     source = OfficialSource()
     base = ROOT/'.tools/source-packages/current'/source.version
     output = base/'official-code/aot-metadata'
@@ -64,9 +89,16 @@ def prepare(image):
     library = next(row for row in manifest['native_libraries'] if row['apk_entry'] == 'lib/arm64-v8a/libil2cpp.so')
     if record(original)['sha256'] != library['sha256']:
         raise ValueError('Original ARM64 input differs from extracted APK')
-    if library['sha256'] != 'a4037bf096a4e95c5dd713f30532c73fc4a047d3197c422f4fd6e6caee4b619b':
-        raise ValueError('Inspect the loader boundary for this different ARM64 source first')
+    boundary, boundary_signature = inspect_loader_boundary(original.read_bytes())
+    recovery = recovery_log.read_text('utf-8-sig')
+    relocations = re.findall(r'^Internal relative relocations (\d+)\s*$', recovery, re.M)
+    images = re.findall(r'^Recovered native virtual image .+ bytes (\d+)\s*$', recovery, re.M)
+    if (f'Reached requested original-code boundary {hex(boundary)}' not in recovery
+            or len(relocations) != 1 or not 0 < int(relocations[0]) <= 5_000_000
+            or len(images) != 1 or int(images[0]) != image.stat().st_size):
+        raise ValueError('Recovery did not reach the inspected loader boundary and restore its relocations')
     output.mkdir(parents=True)
+    shutil.copyfile(recovery_log, output/'recovery.log')
     shutil.copyfile(image, output/'native-image.so')
     (output/'analysis-elf.so').write_bytes(parser_view(image.read_bytes()))
     metadata = base/'official-code/global-metadata.dat'
@@ -95,7 +127,8 @@ def prepare(image):
                   metadata=record(metadata), generator=record(Path(__file__)),
                   recovery_generator=record(ROOT/'scripts/recover_official_native.py'),
                   dumper=record(tool/'Il2CppDumper.dll'), dumper_config=config,
-                  loader_boundary='0x209c63c8', relative_relocations=2286862,
+                  loader_boundary=hex(boundary), loader_signature_sha256=boundary_signature,
+                  relative_relocations=int(relocations[0]), recovery_log=record(output/'recovery.log'),
                   boundary_scope='Inspected unpack-complete call site in selected ARM64 loader; before import/thread initialization.',
                   parser_changes='ELF header and program headers only; native code bytes unchanged.',
                   recovered_types=count, metadata_images=headers[43]//40,
@@ -108,4 +141,6 @@ def prepare(image):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--recovered-image', type=Path, required=True)
-    prepare(parser.parse_args().recovered_image.resolve())
+    parser.add_argument('--recovery-log', type=Path, required=True)
+    args = parser.parse_args()
+    prepare(args.recovered_image.resolve(), args.recovery_log.resolve())
