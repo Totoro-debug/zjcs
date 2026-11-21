@@ -32,7 +32,8 @@ namespace Zjcs.Presentation.Home
             bool surgingTide = skillId == 10047;
             bool waterBlade = skillId == 10082;
             bool lightSwordArray = skillId == 10083;
-            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray;
+            bool diversionHarassment = skillId == 10084;
+            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
@@ -279,6 +280,7 @@ namespace Zjcs.Presentation.Home
                         : surgingTide ? cast.SkillEntityId == 10880
                         : waterBlade ? cast.SkillEntityId == 11980 || cast.SkillEntityId == 11983 || cast.SkillEntityId == 11984
                         : lightSwordArray ? cast.SkillEntityId == 11990
+                        : diversionHarassment ? cast.SkillEntityId == 11890
                         : skillId == 10048 ? cast.SkillEntityId == 11090
                         : skillId == 10049 ? cast.SkillEntityId == 11100
                         : skillId == 10051 ? cast.SkillEntityId == 11260
@@ -413,6 +415,18 @@ namespace Zjcs.Presentation.Home
                         hits++;
                         continue;
                     }
+                    if (diversionHarassment)
+                    {
+                        Require(damageEvents.Length > 0 && damageEvents.All(value => value.TargetId != actor.Id
+                            && value.HitEntityId == 11891 && value.DamageEntityId == 11892 && value.DamageType == 1
+                            && value.ElementType == 103 && value.Damage < 0 && !value.TrueDamage && !value.IsCure
+                            && value.Delay > cast.Delay + .4f
+                            && checkpoint.Units.Single(unit => unit.Id == value.TargetId).Statuses.Any(status =>
+                                status.ClassId == 24216 && status.CreatorId == actor.Id && status.DurationRound == 1)),
+                            "The acquired diversion harassment lost its light area hit or guaranteed non-character taunt.");
+                        hits += damageEvents.Length;
+                        continue;
+                    }
                     foreach (var hit in damageEvents)
                     {
                         if (statusSkill) continue;
@@ -453,6 +467,13 @@ namespace Zjcs.Presentation.Home
                             && particle.GetComponentsInParent<Transform>().Any(parent =>
                                 parent.name.StartsWith("playable10801", StringComparison.Ordinal)));
                         if (!explosionVisible) { yield return null; continue; }
+                    }
+                    else if (diversionHarassment)
+                    {
+                        bool impactVisible = FindObjectsOfType<ParticleSystem>().Any(particle =>
+                            particle.particleCount > 0 && particle.GetComponentsInParent<Transform>().Any(parent =>
+                                parent.name == "playable11891" || parent.name.StartsWith("playable11891(", StringComparison.Ordinal)));
+                        if (!impactVisible) { yield return null; continue; }
                     }
                     else yield return new WaitForSecondsRealtime(crisisGuard || starShatteringSlash ? 1.45f
                         : shieldCharge ? 1.1f : .7f);

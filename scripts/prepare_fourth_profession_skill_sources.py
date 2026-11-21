@@ -30,6 +30,10 @@ SKILLS = {
                       'FightHandleCfgNewIntInBB', 'EntityHasActionTypeByEntityKeyFilter', 'LogicFilter',
                       'LogicNotFilter', 'IteratingAgentStatusClassIdFilter', 'StatusTriggerTarget',
                       'FightStatusTriggerSkillCfg', 'EFightBlackBoardKeyValue', 'FightPort', 'DamageResultType']),
+    10084: dict(entities=[11890, 11891, 11892, 24216],
+                code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo', 'FightDamageComponentInfo',
+                      'FightStatusComponentInfo', 'DamageStatusCfg', 'StatusAutoRemoveComponentInfo',
+                      'SkillAiCfg', 'AiPriorityType', 'BattleFormulaHandler']),
 }
 
 
