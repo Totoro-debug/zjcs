@@ -24,6 +24,7 @@ namespace Zjcs.Presentation.Combat
         private static readonly float[] FirstPromotionFrameTimes = { .1f, .25f, .45f, .7f };
         private static readonly float[] SunsetSwordFrameTimes = { .78f, 1.02f, 1.2f, 1.45f };
         private static readonly float[] FireSlashFrameTimes = { .4f, .6f, .75f, .85f };
+        private static readonly float[] CrisisGuardFrameTimes = { .25f, .8f, 1.3f, 1.55f };
         private bool ValidateSummonDeath => firstPromotionItemId != 0
             && Environment.GetEnvironmentVariable("ZJCS_SUMMON_DEATH_ACCEPTANCE") == "1";
         private bool summonDeathArmed, summonDeathComplete;
@@ -136,8 +137,12 @@ namespace Zjcs.Presentation.Combat
 
         private bool CaptureFirstPromotionFrame()
         {
-            var frameTimes = firstPromotionItemId == 10053 ? SunsetSwordFrameTimes
-                : firstPromotionItemId == 10026 ? FireSlashFrameTimes : FirstPromotionFrameTimes;
+            var frameTimes = firstPromotionItemId switch {
+                10053 => SunsetSwordFrameTimes,
+                10026 => FireSlashFrameTimes,
+                10032 => CrisisGuardFrameTimes,
+                _ => FirstPromotionFrameTimes
+            };
             if (firstPromotionItemId == 0 || nativeCasts == 0 || finisherScheduled
                 || firstPromotionFrameCount >= frameTimes.Length
                 || Time.time - firstPromotionCastClock < frameTimes[firstPromotionFrameCount]) return false;
@@ -283,6 +288,20 @@ namespace Zjcs.Presentation.Combat
                 player.Statuses.Add(passive);
             }
             if (skill.SkillType == 3) player.Hp = player.Turn.Hp = player.MaxHp / 2;
+            if (itemId == 10032)
+            {
+                var ally = JsonUtility.FromJson<FightBattleUnitState>(JsonUtility.ToJson(enemy));
+                ally.Id = checkpoint.Units.Max(unit => unit.Id) + 1;
+                ally.Turn.Id = ally.Id;
+                ally.Side = player.Side;
+                ally.X = player.X + dy;
+                ally.Y = player.Y - dx;
+                // The ally has more current HP and a lower HP percentage.
+                player.Hp = player.Turn.Hp = 100;
+                ally.Hp = ally.Turn.Hp = 200;
+                checkpoint.Units.Add(ally);
+                probe.firstPromotionCaptureAfter = 1.7f;
+            }
             if (itemId == 10066)
             {
                 var ally = JsonUtility.FromJson<FightBattleUnitState>(JsonUtility.ToJson(enemy));
@@ -434,6 +453,19 @@ namespace Zjcs.Presentation.Combat
                 Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
                     "Water-thread child or cold checkpoint changed after reload.");
                 Debug.Log("[Water thread] Original 10690 -> 10970/10971/10972, water damage, 10973 pull and checkpoint passed.");
+            }
+            if (firstPromotionItemId == 10032)
+            {
+                var ally = checkpoint.Units.Single(value => value.Id != player.Id && value.Side == player.Side);
+                var shield = ally.Statuses.SingleOrDefault(value => value.ClassId == 24180);
+                var applied = step.StatusViewEvents.SingleOrDefault(value =>
+                    value.Kind == FightBattleStatusViewEventKind.Start && value.Status.ClassId == 24180);
+                Require(shield != null && shield.CreatorId == player.Id && shield.DurationRound == 3
+                    && shield.ShieldRemainValue > 0 && applied != null && applied.OwnerId == ally.Id
+                    && applied.Status.ShieldRemaining == shield.ShieldRemainValue
+                    && Math.Abs(applied.Delay - cast.Delay - 1.2f) < .0001f,
+                    "Crisis Guard did not apply the original three-round shield to the lower-percentage ally.");
+                Debug.Log("[Crisis Guard] Original 11170 -> 11171, lowest-percentage ally and shield 24180 passed.");
             }
             if (firstPromotionItemId == 10012 && Environment.GetEnvironmentVariable("ZJCS_WIND_BLADE_KNOCKBACK") == "1")
             {
