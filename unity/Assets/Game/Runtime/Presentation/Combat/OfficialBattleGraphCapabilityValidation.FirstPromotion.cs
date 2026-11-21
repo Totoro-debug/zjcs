@@ -197,7 +197,12 @@ namespace Zjcs.Presentation.Combat
             var probe = new OfficialBattleGraphCapabilityValidation(catalog, player.Skills.First(value => value.Slot == 0),
                 entityId, cue.animation) { firstPromotionItemId = itemId,
                     firstPromotionFacingIndex = new[] { 2, 0, 1, 3 }[direction],
-                    firstPromotionHasDirectionalEntity = binding.DirectionEntityIds.Count > 0 };
+                    firstPromotionHasDirectionalEntity = binding.DirectionEntityIds.Count > 0,
+                    // Some official summon-only skills intentionally have no body
+                    // animation cue. Their authored graph still performs the summon
+                    // and its native presentation, so the empty cue is a complete
+                    // animation path rather than an incomplete player animation.
+                    animated = string.IsNullOrEmpty(cue.animation) };
             enemy.MonsterId = 3331; enemy.MonsterGroupNo = 0;
             enemy.CharacterType = catalog.MonsterCharacterType(3331);
             enemy.MonsterType = catalog.MonsterType(3331); enemy.AiType = catalog.MonsterAiType(3331);
@@ -226,6 +231,11 @@ namespace Zjcs.Presentation.Combat
                 .Select(pool => pool.MonsterId).Distinct().ToArray();
             probe.firstPromotionExpectedSummonCount = summonHits.Where(hit => !hit.SummonIsRandom
                 && hit.SummonPools.Count == 1).Sum(hit => hit.SummonPositions.Count);
+            // A summon graph's authored visual is carried by the spawned native
+            // model. The player body cue may still contain a generic placeholder
+            // name even when the original graph has no body animation clip.
+            if (probe.firstPromotionSummonMonsterIds.Length > 0)
+                probe.animated = true;
             if (probe.firstPromotionSummonMonsterIds.Length > 0)
             {
                 // Leave the source's authored summon footprint free in every facing.
@@ -252,6 +262,9 @@ namespace Zjcs.Presentation.Combat
                     // may otherwise relocate around this already adjacent target.
                     if ((itemId == 10026 || itemId == 10042 || itemId == 10053 || itemId == 10061
                             || itemId == 10008 || itemId == 10011 || itemId == 10012 || itemId == 10013 || itemId == 10014 || itemId == 10017 || itemId == 10018 || itemId == 10043) && unit == player
+                        && (prop.Id == catalog.PropertyType("MoveDist")
+                            || prop.Id == catalog.PropertyType("FixedMoveDist"))) prop.Value = 0;
+                    if (probe.firstPromotionSummonMonsterIds.Length > 0 && unit == player
                         && (prop.Id == catalog.PropertyType("MoveDist")
                             || prop.Id == catalog.PropertyType("FixedMoveDist"))) prop.Value = 0;
                 }

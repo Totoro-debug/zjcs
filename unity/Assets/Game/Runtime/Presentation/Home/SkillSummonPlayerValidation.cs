@@ -296,6 +296,12 @@ namespace Zjcs.Presentation.Home
                 if(nativeResult && nativeResult.IsReady)
                 {
                     Require(settled!=null && settled.Finished,"Native result opened before settlement.");
+                    if(!captured && graphCapabilityProbe != null && graphCapabilityProbe.AcceptResultFrame)
+                    {
+                        yield return new WaitForEndOfFrame();
+                        Capture(graphCapabilityProbe.ResultFrameCaptureName);
+                        captured = true;
+                    }
                     yield return new WaitForEndOfFrame();Capture("summon-result");
                     resultCaptured=true;
                     Click(nativeResult.Panel.GetComponent<Zjcs.Official.BattleResultUI.GameEndPanelDemonKing>().LeaveGameBtn);

@@ -45,6 +45,10 @@ namespace Zjcs.Presentation.Combat
         private bool ValidateApproach => ValidateMovement
             && Environment.GetEnvironmentVariable("ZJCS_NATIVE_MOVEMENT_APPROACH") == "1";
         public string CaptureName { get; private set; }
+        // A summon-only skill can have no authored player body clip. Its native
+        // result frame is the complete presentation checkpoint for this probe.
+        public bool AcceptResultFrame => firstPromotionItemId != 0 && firstPromotionSummonMonsterIds.Length > 0;
+        public string ResultFrameCaptureName => "graph-capability-" + skillId;
 
         private OfficialBattleGraphCapabilityValidation(FightOfficialCombatCatalog catalog,
             FightBattleSkillDefinition finisher, int skillId, string clipName)
