@@ -121,7 +121,7 @@ class PartnerGiftPreferencesBinding(PartnerGiftBinding):
         for npc in data['tables']['npc']:
             for item in npc.get('GiftPreferenceDict') or {}:
                 # User-confirmed paused collaborations, documented in
-                # docs/features/offline-access.md. Keep their table rows intact.
+                # docs/common/offline-access.md. Keep their table rows intact.
                 target = deferred if 11015 <= npc['Id'] <= 11022 else preferences
                 target.setdefault(int(item), []).append(npc['Id'])
         items = {row['ClassId']: row for row in data['tables']['item']}

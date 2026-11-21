@@ -8,14 +8,26 @@
 
 ## 功能导航
 
+### 启动
+
 | 名称 | 状态 |
 | --- | --- |
-| [登录前启动画面](features/startup.md) | 未完成 |
-| [战斗执行](features/battle-execution.md) | 未完成 |
-| [NPC邀请、站位与战前准备](features/npc-assistance.md) | 未完成 |
-| [离线开放条件与单机范围](features/offline-access.md) | 未完成 |
-| [共用界面、文字与资源运行](features/shared-ui.md) | 未完成 |
-| [Unity 工程与启动流程](features/unity-project.md) | 未完成 |
+| [登录前启动画面](startup/startup.md) | 未完成 |
+
+### 战斗与助战
+
+| 名称 | 状态 |
+| --- | --- |
+| [战斗执行](combat/battle-execution.md) | 未完成 |
+| [NPC邀请、站位与战前准备](combat/npc-assistance.md) | 未完成 |
+
+### 共用规则、界面与工程
+
+| 名称 | 状态 |
+| --- | --- |
+| [离线开放条件与单机范围](common/offline-access.md) | 未完成 |
+| [共用界面、文字与资源运行](common/shared-ui.md) | 未完成 |
+| [Unity 工程与启动流程](common/unity-project.md) | 未完成 |
 
 ### 角色与角色相关功能
 

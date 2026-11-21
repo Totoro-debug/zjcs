@@ -84,7 +84,7 @@ class HomeHudBinding(HomeBottomBarBinding):
         def visit(go,path='',remove=False):
             obj=docs[go]['GameObject'];path+='/'+obj['m_Name']
             if not remove and obj['m_Name'] in closed:
-                closures.append(dict(native_game_object=go,path=path,policy='Confirmed removal of real-player teams and chat; docs/features/offline-access.md and docs/settings/settings-and-save.md.'))
+                closures.append(dict(native_game_object=go,path=path,policy='Confirmed removal of real-player teams and chat; docs/common/offline-access.md and docs/settings/settings-and-save.md.'))
                 remove=True
             target=removed if remove else selected
             target.add(go);target.update(c['component']['fileID'] for c in obj['m_Component'])
@@ -118,7 +118,7 @@ class HomeHudBinding(HomeBottomBarBinding):
             adaptation='Retain original HomeUI geometry/components/animations; remove only confirmed offline team/chat subtrees. External task template retained in full.')
         for source,_,_,_ in self.recovery.outputs:
             for path in (source,Path(str(source)+'.meta')):self.inputs[path.relative_to(ROOT).as_posix()]=sha(path.read_bytes())
-        for name in ('features/offline-access.md','settings/settings-and-save.md'):
+        for name in ('common/offline-access.md','settings/settings-and-save.md'):
             path=ROOT/'docs'/name;self.inputs[path.relative_to(ROOT).as_posix()]=sha(path.read_bytes())
         cache=self.recovery.proof['component_cache'];self.inputs[cache['path']]=cache['sha256']
         task=self.recovery.outputs[1][2]
