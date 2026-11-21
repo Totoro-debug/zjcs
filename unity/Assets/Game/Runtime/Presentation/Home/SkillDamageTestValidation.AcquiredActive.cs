@@ -581,11 +581,10 @@ namespace Zjcs.Presentation.Home
                 + (statusSkill ? "status" : "damage") + "/result/return and unchanged save passed.");
             Require(home.Hud.TryHandleBack() && !home.Hud.CharacterPageOpen,
                 "The completed diagnostic did not close its original character page.");
-            // Both native canvases live outside the Home hierarchy. Release
-            // this diagnostic's own frames before mounting the next profile.
+            // Both native canvases live outside Home. Use its full disposal
+            // path to release their bindings before mounting the next profile.
             var hudCanvas = home.Hud.CanvasTransform;
-            Destroy(pageCanvas.gameObject);
-            Destroy(hudCanvas.gameObject);
+            home.Hud.Dispose();
             Destroy(home.gameObject);
             yield return null;
             Require(!pageCanvas && !hudCanvas && !home,
