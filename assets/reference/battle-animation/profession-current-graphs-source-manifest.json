@@ -100,6 +100,26 @@
         "bundle_size": 1000,
         "bundle_sha256": "b4179b4ccca74efd2023db25dc300fa74d7d202a64756460d7e7f6ee1e4c19e4"
       }
+    },
+    {
+      "id": 25115,
+      "shared_dependency_bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_25115.bundle",
+      "native_export_meta": {
+        "path": ".tools/source-packages/current/903_156948/guardian-passives/native-export/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/25115/25115.prefab.meta",
+        "sha256": "5646499f200603fdfe312edc8b73233702dc4bac236baae7df86c7d43703dc39"
+      },
+      "original_game_object_name": "25115",
+      "original_game_object_sha256": "f6255c84b354f44824030f001010da50f62a21326035698e521e1da954871c43",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_25115.bundle",
+        "bundle_hash": "92773cb45a0cf2b27e2929aa7b05c33b",
+        "path_id": "7812899019080656027",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/92773cb45a0cf2b27e2929aa7b05c33b.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 993,
+        "bundle_sha256": "32cd533e0bab9908ff1a491c3b18ee338e52852709d820c9ed1d437389246cf6"
+      }
     }
   ],
   "native_export_receipt": {
@@ -634,6 +654,14 @@
     {
       "path": ".tools/source-packages/current/903_156948/guardian-passives/native-export/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/25108/25108.prefab.meta",
       "sha256": "79e651a6c16da4bcd1e15e096351a4bb05f62cabb804fc60c9f941bfe8f39bcf"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/guardian-passives/native-export/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/25115/25115.prefab",
+      "sha256": "4ab8dbe856daadc16982b468dd8805416a62dc33c770e0fc50913f486afdc60c"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/guardian-passives/native-export/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/25115/25115.prefab.meta",
+      "sha256": "5646499f200603fdfe312edc8b73233702dc4bac236baae7df86c7d43703dc39"
     },
     {
       "path": ".tools/source-packages/current/903_156948/guardian-passives/native-export/ExportedProject/Assets/Shaders/Effect/Noise_Mask_Pro.asset",
@@ -5127,6 +5155,22 @@
       "verified_current_runtime_methods": {}
     },
     {
+      "file_id": -1931582627,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightStatusHitSkill.cs",
+        "sha256": "7835fcb0ce3efb0a55efb174efe41507a19c719ffc2a9e885f4307b686268925"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusHitSkill.cs",
+        "sha256": "287a89392c64c9ec3c2c50bc8a61842355dadb46ed381173649022cc45bd746c"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusHitSkill.cs.meta",
+        "sha256": "e8388868653faea6d277c85dbdb918719596e3be17531337e3b5e3ba5e231d60"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
       "file_id": -822603460,
       "original": {
         "path": ".tools/source-packages/current/903_156948/official-code/game-framework-source/GameFramework/ApplyBySource.cs",
@@ -5256,7 +5300,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_profession_current_graphs.py",
-    "sha256": "07c3bcf322953305f9fa7f92cffef336ceb2a6c9388e73a5f1b84729f8e7e213"
+    "sha256": "4647e4b073ce06e36128b1877f2774d9c106a8eb6edf4e8d1e7489ed425bf99d"
   },
   "graph_asset_adapter": {
     "path": "scripts/prepare_battle_status_orbit_assets.py",
@@ -5265,7 +5309,7 @@
   "outputs": [
     {
       "path": "unity/Assets/Game/Resources/Combat/profession-current-graphs.json",
-      "sha256": "ea5663d1672dc91ee17ffd75f016bd2dc02b2e2e1fcda1fae18d94213caae6b1"
+      "sha256": "a433e075fec7352b859d083918840bad20b19ba739a2a8a7cb89b35f7f1479a4"
     },
     {
       "path": "unity/Assets/Game/Resources/Combat/profession-current-graphs.json.meta",
@@ -5874,6 +5918,18 @@
     {
       "path": "unity/Assets/Official/Combat/ProfessionGraphs/Resources/Combat/ProfessionGraphs/Prefabs/EcEntity/Fight/FightSkill/25108.meta",
       "sha256": "e9340895fb03e3a602a3aecea2472b44e4857168408e4311c241dd274fe7137d"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/ProfessionGraphs/Resources/Combat/ProfessionGraphs/Prefabs/EcEntity/Fight/FightSkill/25115/25115.prefab",
+      "sha256": "8db53e688d318ba8b904c7eb778fc5a96ecb48b66c2f11b3d5e975283eea180f"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/ProfessionGraphs/Resources/Combat/ProfessionGraphs/Prefabs/EcEntity/Fight/FightSkill/25115/25115.prefab.meta",
+      "sha256": "80bb5c836962522a9bfce3f6954ac98b8c9840f223ae78a65426a4145ee6ce9b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/ProfessionGraphs/Resources/Combat/ProfessionGraphs/Prefabs/EcEntity/Fight/FightSkill/25115.meta",
+      "sha256": "2fafd625812e7562feba532e8d50e63a83c652ce86af4e077a950b3b8450a749"
     },
     {
       "path": "unity/Assets/Official/Combat/ProfessionGraphs/Resources/Combat/ProfessionGraphs/Prefabs/EcEntity/Fight/FightSkill.meta",

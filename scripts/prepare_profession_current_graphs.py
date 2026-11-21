@@ -19,6 +19,7 @@ def main():
                    1598787400: ('BattleGridItemEntities', 'MyFightStatusShieldPersistent'),
                    -2102852653: ('BattleGridItemEntities', 'MyFightStatusRoundStart'),
                    921933769: ('BattleGridItemEntities', 'MyFightStatusDamageProcess'),
+                   -1931582627: ('BattleGridItemEntities', 'MyFightStatusHitSkill'),
                    -822603460: ('StoryPlayables', 'ApplyBySource'),
                    -94696243: ('StoryAnimation', 'MyPlayableOverrideAnimator'),
                    1640720687: ('StorySounds', 'MyPlayableSound')})
@@ -30,7 +31,7 @@ def main():
     build(DEST=ROOT / 'unity/Assets/Official/Combat/ProfessionGraphs/Resources/Combat/ProfessionGraphs',
           DATA=data, RECEIPT=receipt,
           ROOTS={}, graph_roots={key: f'Prefabs/EcEntity/Fight/FightSkill/{key}/{key}.prefab'
-                                 for key in (11570, 24239, 24489, 25042, 25108)},
+                                 for key in (11570, 24239, 24489, 25042, 25108, 25115)},
           MAPPED=mapped, family='ProfessionGraphs', shader_prefix='ProfessionGraph_',
           reference_scripts={-210918009: dict(name='WwiseEventReference',
               native_asset='Wwise/ScriptableObjects/Event/0FF7086B-C85E-4769-8F7B-DED235C89952.asset',

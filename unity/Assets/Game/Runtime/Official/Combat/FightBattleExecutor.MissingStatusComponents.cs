@@ -65,8 +65,8 @@ namespace Zjcs.Combat.Official
                         || !FightSkillTriggerPolicy.AllowsStatus(skill, status)) continue;
                     FightBattleStatusHitSkillComponentState hitSkill = status.Components?.HitSkill;
                     if (processOther && hitSkill != null && HitSourceMatches(status, hitSkill.HitSourceType, actor)
-                        && (status.ClassId != 25000 && status.ClassId != 25005 && status.ClassId != 25025
-                            && status.ClassId != 25026 && status.ClassId != 25038 || status.ForbiddenType == 0 && resolved != null
+                        && status.ForbiddenType == 0
+                        && (!hitSkill.Damage || resolved != null
                             && !resolved.Type.Dodge && !resolved.Type.Blinding && !resolved.Type.Immunity)
                         && HitRuleMatches(hitSkill.Rate, hitSkill.Block, hitSkill.Crit,
                             hitSkill.Damage, hitSkill.Cure, hitSkill.IsTrueDamage,
@@ -250,10 +250,28 @@ namespace Zjcs.Combat.Official
             if (triggers == null) return;
             foreach (FightBattleStatusStateTrigger trigger in triggers)
             {
-                if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
-                    || !RollComponent(trigger.BasePercent)) continue;
+                if (trigger == null || trigger.EntityId <= 0) continue;
                 FightBattleUnitState destination = trigger.ApplyTarget == 1 ? actor
                     : trigger.ApplyTarget == 3 ? ResolveUnit(source.CreatorId) : target;
+                if (trigger.AffectedByProp)
+                {
+                    // Property-based target selection has its own query path;
+                    // never approximate it with the current hit target.
+                    if (trigger.PropTarget != null && trigger.PropTarget.PropertyId != 0) continue;
+                    switch (trigger.ApplyTarget)
+                    {
+                        case 1: destination = actor; break;
+                        case 2: destination = ResolveUnit(source.OwnerId); break;
+                        case 3: destination = ResolveUnit(source.CreatorId); break;
+                        case 5: destination = target; break;
+                        default: continue;
+                    }
+                    if (destination == null) continue;
+                    double rate = statusCatalog.CalculateStatusApplicationRate(actor, destination,
+                        trigger.EntityId, trigger.BasePercent, true, formula);
+                    if (!(random.Next() <= rate)) continue;
+                }
+                else if (!RollComponent(trigger.BasePercent)) continue;
                 ApplyComponentStatus(source, trigger.EntityId, destination, null,
                     trigger.StatusReplacementProperties, customParam);
             }

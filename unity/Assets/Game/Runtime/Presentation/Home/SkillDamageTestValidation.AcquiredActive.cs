@@ -90,6 +90,7 @@ namespace Zjcs.Presentation.Home
             player.Experience = assets.Load().CumulativeLevelExperience[player.Level];
             player.InitialWeaponType = profession == 10 ? Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType : 200;
             player.Wardrobe.Profession = profession;
+            bool coldCompanion = LoadAcquiredPassiveCompanion(player, skillId, output);
             if (skillId == 10000 || skillId == 10028 || skillId == 10035) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId);
             if (skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId, 2, 2);
             if (skillId == 10017) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId, 3, 3);
@@ -255,6 +256,7 @@ namespace Zjcs.Presentation.Home
             var checkpoint = battle.Controller.Checkpoint;
             var actor = checkpoint.Units.Single(value => value.Id == 1);
             var active = actor.Skills.Single(value => value.Slot == 0);
+            if (coldCompanion) VerifyAcquiredPassiveAssembly(actor, progression);
             Require(active.ItemId == skillId && active.Rank == cultivatedRank && active.Level == 2
                 && active.SubRank == progression.Player.SubRank && actor.Profession == profession,
                 "Production battle assembly lost the actual saved skill/profession/cultivation.");
@@ -265,8 +267,9 @@ namespace Zjcs.Presentation.Home
                 actor.Statuses.Add(combat.CreateStatus(24040, 1, 1, 724040));
                 actor.Statuses.Add(combat.CreateStatus(24041, 1, 1, 724041));
             }
-            int casts = 0, hits = 0, vortexMovements = 0;
+            int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0;
             battle.Controller.StepCompleted += step => {
+                if (coldCompanion) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, ref coldHits);
                 var skillCasts = step.Event.SkillCasts.Where(value => value.ActorId == 1 && value.Slot == 0
                     && value.SkillItemId == skillId).ToArray();
                 casts += skillCasts.Length;
@@ -559,6 +562,7 @@ namespace Zjcs.Presentation.Home
             Require(!lightSwordArray || capturedOpening, "The four original opening swords were not captured.");
             Require(!vortexSurge || vortexMovements > 0,
                 "The original vortex surge never exercised its inward knockback in the rendered battle.");
+            Require(!coldCompanion || coldHits > 0, "The cultivated cold-glint secret never applied cold in the rendered battle.");
             File.WriteAllText(Path.Combine(output, "acquired-active-ui-checkpoint.json"), FightBattleCheckpointSerializer.Save(checkpoint));
             yield return new WaitForSecondsRealtime(.8f);
             yield return CaptureAcquiredActive(output, "result");

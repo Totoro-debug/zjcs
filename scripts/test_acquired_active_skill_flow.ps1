@@ -4,7 +4,8 @@ param(
     [Parameter(Mandatory)][string]$Workspace,
     [ValidateSet(10000,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10066,10073,10079,10082,10083,10084,10085,10099)][int]$SkillId = 10026,
     [Parameter(ParameterSetName='Player')]
-    [ValidateSet(10000,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10066,10073,10079,10082,10083,10084,10085,10099)][int[]]$AdditionalSkillIds = @()
+    [ValidateSet(10000,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10066,10073,10079,10082,10083,10084,10085,10099)][int[]]$AdditionalSkillIds = @(),
+    [string]$PassiveSave
 )
 $ErrorActionPreference = 'Stop'
 $requestedSkills = @(@($SkillId) + $AdditionalSkillIds | Select-Object -Unique)
@@ -17,6 +18,13 @@ if ([IO.Path]::GetDirectoryName($workspacePath) -ne (Get-ZjcsValidationRoot).Tri
 }
 $marker = Get-Content -LiteralPath (Join-Path $workspacePath '.zjcs-validation.json') -Raw | ConvertFrom-Json
 if ($marker.format -ne 1 -or $marker.repository -ne $repository) { throw 'Wrong validation repository.' }
+if ($PassiveSave) {
+    $PassiveSave = (Get-Item -LiteralPath $PassiveSave).FullName
+    if (-not $PassiveSave.StartsWith($workspacePath + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
+        $SkillId -ne 10047 -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated cold-glint cultivation save with surging tide.' }
+    $passiveResult = Get-Content -LiteralPath (Join-Path (Split-Path -Parent $PassiveSave) 'result.json') -Raw | ConvertFrom-Json
+    if (-not $passiveResult.passed) { throw 'The original passive cultivation flow has not passed.' }
+}
 if ($PSCmdlet.ParameterSetName -eq 'Play') {
     $projectPath = (Get-Item -LiteralPath $Project).FullName
     $executable = 'D:/Tool/Unity/Editor/Unity.exe'
@@ -32,6 +40,7 @@ try {
     $env:ZJCS_REPOSITORY_ROOT = $repository
     $env:ZJCS_VALIDATION_DIR = $run
     $env:ZJCS_SKILLS_ACQUIRED_ACTIVE = [string]$SkillId
+    if ($PassiveSave) { $env:ZJCS_SKILLS_ACQUIRED_PASSIVE_SAVE = $PassiveSave }
     if ($requestedSkills.Count -gt 1) {
         $env:ZJCS_SKILLS_ACQUIRED_ACTIVE_SEQUENCE = $requestedSkills -join ','
     }

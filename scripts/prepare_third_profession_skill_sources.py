@@ -155,12 +155,19 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
         roots = {row['shared_dependency_bundle'] for row in graph['originals']
                  if row['id'].split(':')[1].isdigit() and int(row['id'].split(':')[1]) in spec['entities']}
         additional_conversions = []
-        for relative in spec.get('native_receipts', ()):
+        for entry in spec.get('native_receipts', ()):
+            relative = entry['path'] if isinstance(entry, dict) else entry
             path = ROOT / relative
             conversion = json.loads(path.read_bytes())
             assert conversion['manifest'] == graph['manifest'], 'Conversion sources differ'
-            roots.update(row['shared_dependency_bundle'] for row in conversion['originals'])
+            originals = conversion['originals']
+            if isinstance(entry, dict):
+                originals = [row for row in originals if row['id'] in entry['ids']]
+                assert {row['id'] for row in originals} == set(entry['ids']), 'Missing selected native conversion roots'
+            roots.update(row['shared_dependency_bundle'] for row in originals)
             additional_conversions.append(identity(path))
+        legacy_roots = set(roots)
+        current_roots = set()
         current_conversions, current_native = [], {}
         for relative in spec.get('current_native_receipts', ()):
             path = ROOT / relative
@@ -183,8 +190,38 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
                 digest = row['raw_sha256']
                 assert row['name'] not in current_native or current_native[row['name']] == digest
                 current_native[row['name']] = digest
-            roots.update(row['shared_dependency_bundle'] for row in conversion['originals'])
+            current_roots.update(row['shared_dependency_bundle'] for row in conversion['originals'])
             current_conversions.append(identity(path))
+        roots.update(current_roots)
+
+        def dependencies(loaded):
+            bundles, builtin = set(), set()
+            for asset in loaded.files.values():
+                for external in getattr(asset, 'externals', []):
+                    cab = external.path.rsplit('/', 1)[-1].lower()
+                    if cab in ('unity_builtin_extra', 'unity default resources'):
+                        builtin.add(cab)
+                    else:
+                        assert cab in apk.cabs, ('Unresolved native CAB dependency', cab)
+                        bundles.add(canonical_bundle_name(apk.cabs[cab], apk.index))
+            return bundles, builtin
+
+        def closure(selected_roots):
+            visited, pending = set(), list(selected_roots)
+            while pending:
+                name = pending.pop()
+                if name in visited:
+                    continue
+                visited.add(name)
+                next_bundles, _ = dependencies(apk.load(name))
+                pending.extend(next_bundles - visited)
+            return visited
+
+        # Reusing a shared dependency still requires equivalence, even when
+        # another newly converted graph uses the current copy of that bundle.
+        legacy_bundles = closure(legacy_roots - current_roots)
+        fresh_bundles = closure(current_roots)
+        assert fresh_bundles <= current_native.keys(), 'Current conversion omitted a native dependency'
         assert roots, 'No original native graph roots'
         pending, visited, native = list(sorted(roots)), set(), []
         shader_bundle_changed = False
@@ -198,18 +235,18 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
             visited.add(name)
             new = new_by_name[name]
             old = old_by_name.get(name)
-            fresh = name in current_native
-            if not fresh and name == 'defaultpackage_unityshaders.bundle' and old['hash'] != new['hash']:
-                shader_bundle_changed = True
-                continue
-            if not fresh and name == 'defaultpackage_assets_wwise_scriptableobjects_event.bundle' and old['hash'] != new['hash']:
-                changed_event_bundle = name
-                continue
+            fresh, reused = name in fresh_bundles, name in legacy_bundles
             verified = apk.reader.read('DefaultPackage', name)
-            loaded = apk.load(name)
             if fresh:
                 assert hashlib.sha256(verified.data).hexdigest() == current_native[name], ('Current native conversion input changed', name)
-            elif (old['hash'], old['size']) != (new['hash'], new['size']):
+            if reused and name == 'defaultpackage_unityshaders.bundle' and old['hash'] != new['hash']:
+                shader_bundle_changed = True
+                continue
+            if reused and name == 'defaultpackage_assets_wwise_scriptableobjects_event.bundle' and old['hash'] != new['hash']:
+                changed_event_bundle = name
+                continue
+            loaded = apk.load(name)
+            if reused and (old['hash'], old['size']) != (new['hash'], new['size']):
                 with Apk(graph['manifest']) as prior:
                     previous = prior.load(name)
                     current_objects = {obj.path_id: obj for asset in loaded.files.values()
@@ -235,16 +272,10 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
                                                        historical_sha256=hashlib.sha256(old_raw).hexdigest(),
                                                        current_sha256=hashlib.sha256(new_raw).hexdigest(),
                                                        import_metadata_differences=metadata))
-            new_deps, builtin = set(), set()
-            for asset in loaded.files.values():
-                materials.extend(obj for obj in getattr(asset, 'objects', {}).values() if obj.type.name == 'Material')
-                for external in getattr(asset, 'externals', []):
-                    cab = external.path.rsplit('/', 1)[-1].lower()
-                    if cab in ('unity_builtin_extra', 'unity default resources'):
-                        builtin.add(cab)
-                    else:
-                        assert cab in apk.cabs, ('Unresolved native CAB dependency', name, cab)
-                        new_deps.add(canonical_bundle_name(apk.cabs[cab], apk.index))
+            new_deps, builtin = dependencies(loaded)
+            if reused:
+                for asset in loaded.files.values():
+                    materials.extend(obj for obj in getattr(asset, 'objects', {}).values() if obj.type.name == 'Material')
             native.append(dict(bundle=name, source=dict(verified.provenance),
                                sha256=hashlib.sha256(verified.data).hexdigest(), dependencies=sorted(new_deps),
                                engine_dependencies=sorted(builtin)))
@@ -295,6 +326,12 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
                    for name in spec.get('client_code', ())]
         inputs += [identity(code / 'game-framework-source/GameFramework' / (name + '.cs'))
                    for name in spec.get('framework_code', ())]
+        reused_client = []
+        for name in spec.get('reused_client_code', ()):
+            prior = ROOT / '.tools/source-packages/current' / graph['manifest'] / 'official-code/client-source' / (name + '.cs')
+            selected = code / 'client-source' / (name + '.cs')
+            assert prior.read_bytes() == selected.read_bytes(), ('Current reused client implementation changed', name)
+            reused_client.append(dict(historical=identity(prior), current=identity(selected)))
         sound_proof_path = ROOT / 'assets/reference/battle-animation/native-sound-sources-source-manifest.json'
         sound_proof = json.loads(sound_proof_path.read_bytes())
         sound_events = [row for row in sound_proof['events'] if row['name'] == f'Skill_{item_id}']
@@ -324,6 +361,8 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
             result['additional_native_conversions'] = additional_conversions
         if current_conversions:
             result['current_native_conversions'] = current_conversions
+        if reused_client:
+            result['reused_client_implementations'] = reused_client
     return result
 
 
