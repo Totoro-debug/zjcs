@@ -14,35 +14,40 @@
 | [成长成就与积分奖励](features/achievements.md) | 未完成 |
 | [成长试炼与活动小游戏](features/activity-minigames.md) | 未完成 |
 | [战斗执行](features/battle-execution.md) | 未完成 |
-| [新建存档与角色创建](features/character-creation.md) | 未完成 |
-| [人物属性、经验、位阶与衣柜](features/character.md) | 未完成 |
 | [图鉴分类、筛选与只读详情](features/codex.md) | 未完成 |
 | [商城、代金券与礼包](features/commerce.md) | 未完成 |
-| [装备、强化、继承与星石](features/equipment.md) | 未完成 |
 | [单人公会领地](features/guild.md) | 未完成 |
-| [行囊、物品与宝箱](features/inventory.md) | 未完成 |
 | [世界阶段手动推进](features/manual-world-stage.md) | 未完成 |
 | [月卡与星眷累计奖励](features/monthly-card.md) | 未完成 |
 | [NPC邀请、站位与战前准备](features/npc-assistance.md) | 未完成 |
 | [离线开放条件与单机范围](features/offline-access.md) | 未完成 |
-| [幻兽编队、养成与改名](features/pets.md) | 未完成 |
-| [职业、晋升与自由转职](features/professions.md) | 未完成 |
-| [古遗物收藏、任务与培养](features/relics.md) | 未完成 |
-| [赛季记录、赐福与装备柜](features/seasons.md) | 未完成 |
 | [设置、拍照与本地存档](features/settings-and-save.md) | 未完成 |
 | [共用界面、文字与资源运行](features/shared-ui.md) | 未完成 |
 | [主题签到与长期活动入口](features/sign-ins.md) | 未完成 |
-| [技能目录（一至三阶）](features/skills.md) | 已完成 |
-| [战士职业技能详情（一阶）](features/skills-warrior.md) | 已完成 |
-| [法师职业技能详情（一阶）](features/skills-mage.md) | 已完成 |
-| [骑士路线职业技能详情（二、三阶）](features/skills-knight.md) | 已完成 |
-| [斗士路线职业技能详情（二、三阶）](features/skills-fighter.md) | 已完成 |
-| [术士路线职业技能详情（二、三阶）](features/skills-warlock.md) | 已完成 |
-| [贤者路线职业技能详情（二、三阶）](features/skills-sage.md) | 已完成 |
 | [主线任务进度](features/tasks.md) | 未完成 |
 | [主线剧情公共模块](features/story.md) | 未完成 |
 | [Unity 工程与启动流程](features/unity-project.md) | 未完成 |
 | [世界地图与主线公共模块](features/world-map.md) | 未完成 |
+
+### 角色与角色相关功能
+
+| 名称 | 状态 |
+| --- | --- |
+| [人物属性、经验、位阶与衣柜](features/character/character.md) | 未完成 |
+| [新建存档与角色创建](features/character/character-creation.md) | 未完成 |
+| [职业、晋升与自由转职](features/character/professions.md) | 未完成 |
+| [装备、强化、继承与星石](features/character/equipment.md) | 未完成 |
+| [行囊、物品与宝箱](features/character/inventory.md) | 未完成 |
+| [技能目录（一至三阶）](features/character/skills.md) | 已完成 |
+| [战士职业技能详情（一阶）](features/character/skills-warrior.md) | 已完成 |
+| [法师职业技能详情（一阶）](features/character/skills-mage.md) | 已完成 |
+| [骑士路线职业技能详情（二、三阶）](features/character/skills-knight.md) | 已完成 |
+| [斗士路线职业技能详情（二、三阶）](features/character/skills-fighter.md) | 已完成 |
+| [术士路线职业技能详情（二、三阶）](features/character/skills-warlock.md) | 已完成 |
+| [贤者路线职业技能详情（二、三阶）](features/character/skills-sage.md) | 已完成 |
+| [幻兽编队、养成与改名](features/character/pets.md) | 未完成 |
+| [古遗物收藏、任务与培养](features/character/relics.md) | 未完成 |
+| [赛季记录、赐福与装备柜](features/character/seasons.md) | 未完成 |
 
 ### 主城与主城建筑
 

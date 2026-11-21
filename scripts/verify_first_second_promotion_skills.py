@@ -113,7 +113,7 @@ def verify(require_complete: bool = False) -> dict[str, Any]:
     view_by_id = {row["skillEntityId"]: row for row in views["skills"]}
     docs: dict[int, tuple[str, str]] = {}
     for profession in PROFESSIONS:
-        page = ROOT / f"docs/features/skills-{PAGES[profession]}.md"
+        page = ROOT / f"docs/features/character/skills-{PAGES[profession]}.md"
         for line in page.read_text(encoding="utf-8-sig").splitlines():
             fields = [value.strip() for value in line.strip("|").split("|")]
             if len(fields) == 7 and fields[1].isdigit():

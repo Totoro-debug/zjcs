@@ -38,7 +38,7 @@ def main():
         selected_runtime_adapter='24083/FightStatusComponent/ForbiddenOnApplicatorDie=true in FightOfficialCombatCatalog.CreateStatus',
         generator=identity(Path(__file__)),
         operation='APK-first exact field verification. Server scheduling and dead-character ordering '
-        'are user-confirmed offline decisions maintained in docs/features/skills.md.')
+        'are user-confirmed offline decisions maintained in docs/features/character/skills.md.')
     (ROOT / 'assets/reference/battle-rules/passive-revival-source-manifest.json').write_text(
         json.dumps(record, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
     print('Verified original 10531 -> 25014 -> 11470/11490 and revival/protection dependencies.')

@@ -44,7 +44,7 @@ def main():
         verifier=identity(Path(__file__)),
         operation='APK-first exact verification of absorption hit filters and the original self-cure '
                   'skill chain. The independently verified SuckHp formula is recorded separately; '
-                  'confirmed offline event timing and damage basis are maintained in docs/features/skills.md.')
+                  'confirmed offline event timing and damage basis are maintained in docs/features/character/skills.md.')
     (ROOT / 'assets/reference/battle-rules/hit-custom-cure-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
     print('Verified original 25023/10520/10521/10028 definitions and five code inputs.')

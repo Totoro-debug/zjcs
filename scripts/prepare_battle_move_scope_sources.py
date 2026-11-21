@@ -22,7 +22,7 @@ def main():
         'common-source/Common/FightRoleCharacterComponentInfo.cs')]
     proof = dict(manifest='884_156692', configuration=configuration, original_code=originals,
         verifier=identity(Path(__file__)),
-        operation='APK-first exact verification of move scopes, original per-cell probability, terrain/status chain, independent round-start skill and original small-jump role binding. Confirmed offline event timing is maintained in docs/features/skills.md.')
+        operation='APK-first exact verification of move scopes, original per-cell probability, terrain/status chain, independent round-start skill and original small-jump role binding. Confirmed offline event timing is maintained in docs/features/character/skills.md.')
     (ROOT / 'assets/reference/battle-rules/move-scope-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2)+'\n', encoding='utf8')
     print('Verified original 25027 movement-burning terrain, independent round-start chain and four code inputs.')

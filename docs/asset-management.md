@@ -35,7 +35,7 @@
 
 ## Spine 角色动画迁移决策
 
-角色动画沿用[角色创建中的免费原生迁移方案](features/character-creation.md#spine-迁移决策)，共享调用方引用同一决定。
+角色动画沿用[角色创建中的免费原生迁移方案](features/character/character-creation.md#spine-迁移决策)，共享调用方引用同一决定。
 
 ## Windows 发布
 

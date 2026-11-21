@@ -107,7 +107,7 @@ def visuals(apk, obj, component):
         if original is None:
             if name != "pet_1619":
                 raise ValueError("Original pet portrait reference is absent: " + name)
-            # Existing user decision is maintained in docs/features/pets.md.
+            # Existing user decision is maintained in docs/features/character/pets.md.
             rows.append(row)
             continue
         data = original.read()

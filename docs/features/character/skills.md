@@ -1,6 +1,6 @@
 # 技能目录
 
-[总索引](../README.md)
+[总索引](../../README.md)
 
 状态：已完成
 
@@ -28,7 +28,7 @@
 
 装配仅使用已持有且职业可用的技能；空战技方案允许进入战斗，正常结算回合与被动，不自动补战技。
 
-连锁攻击遵循已确认的[单机目标选择规则](battle-execution.md#自定义实现)。
+连锁攻击遵循已确认的[单机目标选择规则](../battle-execution.md#自定义实现)。
 
 三阶技能继续使用官方数据驱动的共享链路：`FightOfficialCombatCatalog` 负责技能与数值配置，`FightBattleHitCollector` 负责命中图和子技能展开，`FightDamageFormula` 负责伤害计算，`FightStatusTriggerRuntime` 与 `FightSkillLogicRuntime` 负责通用状态、增益/减益、治疗、护盾、召唤和触发效果。完整 40 项三阶职业技能由 `scripts/verify_third_profession_skills.py` 对官方来源载荷、职业绑定和实体图进行校验。
 

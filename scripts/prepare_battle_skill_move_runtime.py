@@ -218,7 +218,7 @@ using Zjcs.Official.World.NativeTerrain.Common;
             'For these settled paths without collision data, action lifetime is original total movement duration plus DelayDestroyTime, then original End/Remove and pooling. Path eligibility, probability, resistance and landing retain their existing configured rules; missing paths or collision information are not inferred.',
             'When a caller supplies an actual blocked cell and DelayDestroyTime is zero, retain the original action until its blocked playable ends before End/Remove; the view does not infer collision targets or damage.',
             'Only the 22 original ordinary movement skills use earliest nonnegative fixed/AllEnded/AllRelevantEnded entity and action timers independently; AllEnded starts at movement End including DelayDestroyTime. The native skill is created before its action with a negative slot and calls original MyFightSkill.OnRemove; graphs finish naturally. Current approach/retreat entry points carry creation snapshots; remaining special entry points and shared rule start/end reactions are not claimed complete.'],
-        implementation_document='docs/features/skills.md'), ensure_ascii=False, indent=2) + '\n')
+        implementation_document='docs/features/character/skills.md'), ensure_ascii=False, indent=2) + '\n')
     print('Prepared original movement client, action base, configuration and timing methods:', len(outputs))
 
 

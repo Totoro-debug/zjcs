@@ -1,12 +1,12 @@
 # 古遗物收藏、任务与培养
 
-[总索引](../README.md)
+[总索引](../../README.md)
 
 状态：未完成
 
 ## 功能简介
 
-维护古遗物收藏、任务和培养；取得见[古遗物扭蛋](city-and-home/treasure-gacha.md)。
+维护古遗物收藏、任务和培养；取得见[古遗物扭蛋](../city-and-home/treasure-gacha.md)。
 
 ## 自定义实现
 

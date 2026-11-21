@@ -10,7 +10,7 @@
 
 ## 工程约定
 
-工程与依赖版本由工程配置和现有启动工具确定，文档不重复登记。启动、存档选择和创角分别见[启动页](startup.md)、[设置与存档](settings-and-save.md)和[角色创建](character-creation.md)。
+工程与依赖版本由工程配置和现有启动工具确定，文档不重复登记。启动、存档选择和创角分别见[启动页](startup.md)、[设置与存档](settings-and-save.md)和[角色创建](character/character-creation.md)。
 
 ## 验证约定
 

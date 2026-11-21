@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RULES = ROOT / "unity/Assets/Official/Combat/rules.json"
 SKILL_RULES = ROOT / "unity/Assets/Official/Combat/skill-rules.json"
 BATTLE_RULES = ROOT / "unity/Assets/Official/Combat/battle-rules.json"
-DOCS = ROOT / "docs/features"
+DOCS = ROOT / "docs/features/character"
 MANIFEST = ROOT / "assets/reference/battle-rules/third-profession-skill-migration-source-manifest.json"
 
 PROFESSION_FILES = {

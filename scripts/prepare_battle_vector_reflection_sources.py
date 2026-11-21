@@ -80,7 +80,7 @@ def main():
         operation='APK-first exact verification of 10541 -> 25021 -> 11230 -> 11231 -> 11232, '
             'blocked-hit graph, original defence-based damage and existing native bindings. '
             'Server execution is absent. Offline decisions and verification limits '
-            'belong to docs/features/skills-knight.md.')
+            'belong to docs/features/character/skills-knight.md.')
     (ROOT / 'assets/reference/battle-rules/vector-reflection-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print('Verified original 10541/25021/11230 blocked-hit graph, code and native bindings.')
