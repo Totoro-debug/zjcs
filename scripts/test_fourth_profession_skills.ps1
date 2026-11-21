@@ -1,0 +1,22 @@
+$ErrorActionPreference = 'Stop'
+python (Join-Path $PSScriptRoot 'verify_fourth_profession_skills.py')
+
+# The optional C# catalog harness uses the same official runtime sources as
+# the existing battle fixtures.  Keep it opt-in because the repository's
+# PowerShell Add-Type fallback is an older compiler on some machines.
+if ($env:ZJCS_FOURTH_PROFESSION_RUNTIME -ne '1') { exit 0 }
+
+. (Join-Path $PSScriptRoot 'combat_sources.ps1')
+$root = Split-Path -Parent $PSScriptRoot
+$inputs = Join-Path $root 'unity/Assets/Official/Combat'
+Add-Type -Path (@(Get-FightCombatSources) +
+    (Join-Path $PSScriptRoot 'fixtures/fourth_profession_skill_catalog_harness.cs'))
+$sp = Get-Content (Join-Path $inputs 'skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
+$bp = Get-Content (Join-Path $inputs 'battle-rules-source-manifest.json') -Raw | ConvertFrom-Json
+$rp = Get-Content (Join-Path $inputs 'rules-source-manifest.json') -Raw | ConvertFrom-Json
+$catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
+    [IO.File]::ReadAllText((Join-Path $inputs 'skill-rules.json')), $sp.output_sha256, $sp.manifest,
+    [IO.File]::ReadAllText((Join-Path $inputs 'battle-rules.json')), $bp.output_sha256, $bp.manifest)
+$items = [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load(
+    [IO.File]::ReadAllText((Join-Path $inputs 'rules.json')), $rp.output_sha256, $rp.manifest)
+[FourthProfessionSkillCatalogHarness]::Run($catalog, $items)

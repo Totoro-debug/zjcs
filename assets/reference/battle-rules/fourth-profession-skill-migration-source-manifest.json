@@ -1,0 +1,1515 @@
+{
+  "manifest": "854_156383",
+  "scope": "fourth-promotion-skills",
+  "profession_ids": [
+    4,
+    8,
+    13,
+    17
+  ],
+  "built_in_skill_ids": [
+    10184,
+    10185
+  ],
+  "skill_count": 50,
+  "source_files": [
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    }
+  ],
+  "skills": [
+    {
+      "item_id": 10047,
+      "entity_id": 10880,
+      "roots": [
+        10880
+      ],
+      "graph_entities": [
+        10880,
+        10881
+      ],
+      "graph_count": 2,
+      "elements": [
+        101
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 4,
+      "rank": 4
+    },
+    {
+      "item_id": 10082,
+      "entity_id": 11980,
+      "roots": [
+        11980
+      ],
+      "graph_entities": [
+        11980,
+        11981
+      ],
+      "graph_count": 2,
+      "elements": [
+        101
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 4,
+      "rank": 4
+    },
+    {
+      "item_id": 10083,
+      "entity_id": 11990,
+      "roots": [
+        11990,
+        12000
+      ],
+      "graph_entities": [
+        11990,
+        11991,
+        12000,
+        12001
+      ],
+      "graph_count": 4,
+      "elements": [
+        103
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 4,
+      "rank": 4
+    },
+    {
+      "item_id": 10084,
+      "entity_id": 11890,
+      "roots": [
+        11890
+      ],
+      "graph_entities": [
+        11890,
+        11891
+      ],
+      "graph_count": 2,
+      "elements": [
+        103
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 4,
+      "rank": 4
+    },
+    {
+      "item_id": 10085,
+      "entity_id": 11900,
+      "roots": [
+        11900
+      ],
+      "graph_entities": [
+        11900,
+        11901,
+        11902,
+        11903
+      ],
+      "graph_count": 4,
+      "elements": [
+        103
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 4,
+      "rank": 4
+    },
+    {
+      "item_id": 10099,
+      "entity_id": 12080,
+      "roots": [
+        12080
+      ],
+      "graph_entities": [
+        12080,
+        12081
+      ],
+      "graph_count": 2,
+      "elements": [
+        101
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 4,
+      "rank": 4
+    },
+    {
+      "item_id": 10575,
+      "entity_id": 25042,
+      "roots": [
+        24489,
+        25042
+      ],
+      "graph_entities": [
+        11570,
+        11571,
+        24489,
+        25042
+      ],
+      "graph_count": 4,
+      "elements": [
+        0,
+        104
+      ],
+      "damage_types": [
+        0
+      ],
+      "status_ids": [
+        24489,
+        25042
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 4,
+      "rank": 4
+    },
+    {
+      "item_id": 10580,
+      "entity_id": 25074,
+      "roots": [
+        24304,
+        25074
+      ],
+      "graph_entities": [
+        11780,
+        11781,
+        11790,
+        11791,
+        24304,
+        25074
+      ],
+      "graph_count": 6,
+      "elements": [
+        0,
+        104
+      ],
+      "damage_types": [
+        0,
+        2
+      ],
+      "status_ids": [
+        24304,
+        25074
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 4,
+      "rank": 4
+    },
+    {
+      "item_id": 10592,
+      "entity_id": 25108,
+      "roots": [
+        25108
+      ],
+      "graph_entities": [
+        25108
+      ],
+      "graph_count": 1,
+      "elements": [
+        0
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [
+        25108
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 4,
+      "rank": 4
+    },
+    {
+      "item_id": 10593,
+      "entity_id": 25109,
+      "roots": [
+        25109
+      ],
+      "graph_entities": [
+        25109
+      ],
+      "graph_count": 1,
+      "elements": [
+        0
+      ],
+      "damage_types": [],
+      "status_ids": [
+        25109
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [
+        2
+      ],
+      "has_passive_property": true,
+      "profession": 4,
+      "rank": 4
+    },
+    {
+      "item_id": 10606,
+      "entity_id": 25115,
+      "roots": [
+        25115
+      ],
+      "graph_entities": [
+        25115
+      ],
+      "graph_count": 1,
+      "elements": [
+        0
+      ],
+      "damage_types": [],
+      "status_ids": [
+        25115
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [
+        411
+      ],
+      "has_passive_property": true,
+      "profession": 4,
+      "rank": 4
+    },
+    {
+      "item_id": 10607,
+      "entity_id": 25116,
+      "roots": [
+        12170,
+        25116
+      ],
+      "graph_entities": [
+        12170,
+        12171,
+        25116
+      ],
+      "graph_count": 3,
+      "elements": [
+        0,
+        101
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [
+        25116
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 4,
+      "rank": 4
+    },
+    {
+      "item_id": 10184,
+      "entity_id": 13580,
+      "roots": [
+        11980,
+        13580
+      ],
+      "graph_entities": [
+        11980,
+        11981,
+        13580,
+        13581
+      ],
+      "graph_count": 4,
+      "elements": [
+        101
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 4,
+      "rank": 4
+    },
+    {
+      "item_id": 10068,
+      "entity_id": 11520,
+      "roots": [
+        11520,
+        11700
+      ],
+      "graph_entities": [
+        11520,
+        11521,
+        11700,
+        11701
+      ],
+      "graph_count": 4,
+      "elements": [
+        0
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 8,
+      "rank": 4
+    },
+    {
+      "item_id": 10088,
+      "entity_id": 11910,
+      "roots": [
+        11910
+      ],
+      "graph_entities": [
+        11910,
+        11911,
+        11913
+      ],
+      "graph_count": 3,
+      "elements": [
+        100
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 8,
+      "rank": 4
+    },
+    {
+      "item_id": 10089,
+      "entity_id": 11920,
+      "roots": [
+        11920
+      ],
+      "graph_entities": [
+        11920,
+        11921
+      ],
+      "graph_count": 2,
+      "elements": [
+        104
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 8,
+      "rank": 4
+    },
+    {
+      "item_id": 10100,
+      "entity_id": 12090,
+      "roots": [
+        12090
+      ],
+      "graph_entities": [
+        12090,
+        12091
+      ],
+      "graph_count": 2,
+      "elements": [
+        102
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 8,
+      "rank": 4
+    },
+    {
+      "item_id": 10101,
+      "entity_id": 12100,
+      "roots": [
+        12100
+      ],
+      "graph_entities": [
+        12100,
+        12102
+      ],
+      "graph_count": 2,
+      "elements": [
+        102
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 8,
+      "rank": 4
+    },
+    {
+      "item_id": 10104,
+      "entity_id": 12130,
+      "roots": [
+        12130
+      ],
+      "graph_entities": [
+        12130,
+        12131
+      ],
+      "graph_count": 2,
+      "elements": [
+        104
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 8,
+      "rank": 4
+    },
+    {
+      "item_id": 10543,
+      "entity_id": 25010,
+      "roots": [
+        11150,
+        25010
+      ],
+      "graph_entities": [
+        11150,
+        11151,
+        25010
+      ],
+      "graph_count": 3,
+      "elements": [
+        0,
+        102
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [
+        25010
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 8,
+      "rank": 4
+    },
+    {
+      "item_id": 10568,
+      "entity_id": 25081,
+      "roots": [
+        25081
+      ],
+      "graph_entities": [
+        25081
+      ],
+      "graph_count": 1,
+      "elements": [
+        0
+      ],
+      "damage_types": [],
+      "status_ids": [
+        25081
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 8,
+      "rank": 4
+    },
+    {
+      "item_id": 10594,
+      "entity_id": 25095,
+      "roots": [
+        25095
+      ],
+      "graph_entities": [
+        25095
+      ],
+      "graph_count": 1,
+      "elements": [
+        0
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [
+        25095
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 8,
+      "rank": 4
+    },
+    {
+      "item_id": 10595,
+      "entity_id": 25096,
+      "roots": [
+        12030,
+        25096
+      ],
+      "graph_entities": [
+        12030,
+        12031,
+        25096
+      ],
+      "graph_count": 3,
+      "elements": [
+        0,
+        100
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [
+        25096
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 8,
+      "rank": 4
+    },
+    {
+      "item_id": 10608,
+      "entity_id": 25117,
+      "roots": [
+        24392,
+        25117
+      ],
+      "graph_entities": [
+        24392,
+        25117
+      ],
+      "graph_count": 2,
+      "elements": [
+        0
+      ],
+      "damage_types": [],
+      "status_ids": [
+        24392,
+        25117
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 8,
+      "rank": 4
+    },
+    {
+      "item_id": 10609,
+      "entity_id": 25118,
+      "roots": [
+        24393,
+        24394,
+        25118
+      ],
+      "graph_entities": [
+        24393,
+        24394,
+        25118
+      ],
+      "graph_count": 3,
+      "elements": [
+        0
+      ],
+      "damage_types": [],
+      "status_ids": [
+        24393,
+        24394,
+        25118
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 8,
+      "rank": 4
+    },
+    {
+      "item_id": 10185,
+      "entity_id": 13590,
+      "roots": [
+        12090,
+        13590
+      ],
+      "graph_entities": [
+        12090,
+        12091,
+        13590,
+        13591
+      ],
+      "graph_count": 4,
+      "elements": [
+        102
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 8,
+      "rank": 4
+    },
+    {
+      "item_id": 10002,
+      "entity_id": 11450,
+      "roots": [
+        11450
+      ],
+      "graph_entities": [
+        11450,
+        11451
+      ],
+      "graph_count": 2,
+      "elements": [
+        103
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 13,
+      "rank": 4
+    },
+    {
+      "item_id": 10056,
+      "entity_id": 11080,
+      "roots": [
+        11080
+      ],
+      "graph_entities": [
+        11080,
+        11081
+      ],
+      "graph_count": 2,
+      "elements": [
+        101
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 13,
+      "rank": 4
+    },
+    {
+      "item_id": 10091,
+      "entity_id": 11960,
+      "roots": [
+        11950,
+        11960
+      ],
+      "graph_entities": [
+        11950,
+        11951,
+        11960,
+        11961
+      ],
+      "graph_count": 4,
+      "elements": [
+        100
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 13,
+      "rank": 4
+    },
+    {
+      "item_id": 10092,
+      "entity_id": 12010,
+      "roots": [
+        12010,
+        24192
+      ],
+      "graph_entities": [
+        12010,
+        12011,
+        24192
+      ],
+      "graph_count": 3,
+      "elements": [
+        0
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [
+        24192
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 13,
+      "rank": 4
+    },
+    {
+      "item_id": 10093,
+      "entity_id": 11970,
+      "roots": [
+        11970
+      ],
+      "graph_entities": [
+        11970,
+        11971
+      ],
+      "graph_count": 2,
+      "elements": [
+        103
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 13,
+      "rank": 4
+    },
+    {
+      "item_id": 10102,
+      "entity_id": 12110,
+      "roots": [
+        12110,
+        24201
+      ],
+      "graph_entities": [
+        12110,
+        12111,
+        24201
+      ],
+      "graph_count": 3,
+      "elements": [
+        0
+      ],
+      "damage_types": [
+        0
+      ],
+      "status_ids": [
+        24201
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 13,
+      "rank": 4
+    },
+    {
+      "item_id": 10503,
+      "entity_id": 25001,
+      "roots": [
+        10540,
+        25001
+      ],
+      "graph_entities": [
+        10540,
+        10541,
+        25001
+      ],
+      "graph_count": 3,
+      "elements": [
+        0,
+        102
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [
+        25001
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 13,
+      "rank": 4
+    },
+    {
+      "item_id": 10557,
+      "entity_id": 25037,
+      "roots": [
+        11410,
+        25037
+      ],
+      "graph_entities": [
+        11410,
+        11411,
+        25037
+      ],
+      "graph_count": 3,
+      "elements": [
+        0,
+        101
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [
+        25037
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 13,
+      "rank": 4
+    },
+    {
+      "item_id": 10573,
+      "entity_id": 25043,
+      "roots": [
+        24240,
+        25043
+      ],
+      "graph_entities": [
+        24240,
+        25043
+      ],
+      "graph_count": 2,
+      "elements": [
+        0
+      ],
+      "damage_types": [],
+      "status_ids": [
+        24240,
+        25043
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 13,
+      "rank": 4
+    },
+    {
+      "item_id": 10597,
+      "entity_id": 25098,
+      "roots": [
+        12040,
+        25098
+      ],
+      "graph_entities": [
+        12040,
+        12041,
+        25098
+      ],
+      "graph_count": 3,
+      "elements": [
+        0
+      ],
+      "damage_types": [
+        1,
+        2
+      ],
+      "status_ids": [
+        25098
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 13,
+      "rank": 4
+    },
+    {
+      "item_id": 10598,
+      "entity_id": 25099,
+      "roots": [
+        12660,
+        25099
+      ],
+      "graph_entities": [
+        12660,
+        12661,
+        25099
+      ],
+      "graph_count": 3,
+      "elements": [
+        0,
+        100
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [
+        25099
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [
+        410
+      ],
+      "has_passive_property": true,
+      "profession": 13,
+      "rank": 4
+    },
+    {
+      "item_id": 10599,
+      "entity_id": 25103,
+      "roots": [
+        24386,
+        25103
+      ],
+      "graph_entities": [
+        24386,
+        25103
+      ],
+      "graph_count": 2,
+      "elements": [
+        0
+      ],
+      "damage_types": [],
+      "status_ids": [
+        24386,
+        25103
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 13,
+      "rank": 4
+    },
+    {
+      "item_id": 10059,
+      "entity_id": 11380,
+      "roots": [
+        11380
+      ],
+      "graph_entities": [
+        11380,
+        11381
+      ],
+      "graph_count": 2,
+      "elements": [
+        104
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 17,
+      "rank": 4
+    },
+    {
+      "item_id": 10077,
+      "entity_id": 11760,
+      "roots": [
+        11760,
+        24181
+      ],
+      "graph_entities": [
+        11760,
+        11761,
+        24181
+      ],
+      "graph_count": 3,
+      "elements": [
+        0
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [
+        24181
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 17,
+      "rank": 4
+    },
+    {
+      "item_id": 10095,
+      "entity_id": 12140,
+      "roots": [
+        12140,
+        12141,
+        12142
+      ],
+      "graph_entities": [
+        12140,
+        12141,
+        12142
+      ],
+      "graph_count": 3,
+      "elements": [
+        0
+      ],
+      "damage_types": [
+        0
+      ],
+      "status_ids": [
+        12142
+      ],
+      "movement_entities": [],
+      "summon_ids": [
+        3196
+      ],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 17,
+      "rank": 4
+    },
+    {
+      "item_id": 10096,
+      "entity_id": 12020,
+      "roots": [
+        12020
+      ],
+      "graph_entities": [
+        12020,
+        12021
+      ],
+      "graph_count": 2,
+      "elements": [
+        0
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 17,
+      "rank": 4
+    },
+    {
+      "item_id": 10097,
+      "entity_id": 12200,
+      "roots": [
+        12200,
+        12201,
+        12202
+      ],
+      "graph_entities": [
+        12200,
+        12201,
+        12202,
+        12203
+      ],
+      "graph_count": 4,
+      "elements": [
+        0
+      ],
+      "damage_types": [
+        0
+      ],
+      "status_ids": [
+        12202
+      ],
+      "movement_entities": [],
+      "summon_ids": [
+        4600
+      ],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 17,
+      "rank": 4
+    },
+    {
+      "item_id": 10103,
+      "entity_id": 12120,
+      "roots": [
+        12120
+      ],
+      "graph_entities": [
+        12120,
+        12121
+      ],
+      "graph_count": 2,
+      "elements": [
+        104
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": false,
+      "profession": 17,
+      "rank": 4
+    },
+    {
+      "item_id": 10579,
+      "entity_id": 25048,
+      "roots": [
+        25048
+      ],
+      "graph_entities": [
+        25048
+      ],
+      "graph_count": 1,
+      "elements": [
+        0
+      ],
+      "damage_types": [],
+      "status_ids": [
+        25048
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 17,
+      "rank": 4
+    },
+    {
+      "item_id": 10591,
+      "entity_id": 25104,
+      "roots": [
+        24133,
+        25104
+      ],
+      "graph_entities": [
+        24133,
+        25104
+      ],
+      "graph_count": 2,
+      "elements": [
+        0
+      ],
+      "damage_types": [],
+      "status_ids": [
+        24133,
+        25104
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 17,
+      "rank": 4
+    },
+    {
+      "item_id": 10600,
+      "entity_id": 25105,
+      "roots": [
+        12050,
+        25105
+      ],
+      "graph_entities": [
+        12050,
+        12051,
+        25105
+      ],
+      "graph_count": 3,
+      "elements": [
+        0
+      ],
+      "damage_types": [
+        1
+      ],
+      "status_ids": [
+        25105
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 17,
+      "rank": 4
+    },
+    {
+      "item_id": 10601,
+      "entity_id": 25106,
+      "roots": [
+        25106
+      ],
+      "graph_entities": [
+        25106
+      ],
+      "graph_count": 1,
+      "elements": [
+        0
+      ],
+      "damage_types": [],
+      "status_ids": [
+        25106
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [
+        70,
+        106
+      ],
+      "has_passive_property": true,
+      "profession": 17,
+      "rank": 4
+    },
+    {
+      "item_id": 10610,
+      "entity_id": 25119,
+      "roots": [
+        24395,
+        25119
+      ],
+      "graph_entities": [
+        12180,
+        12181,
+        24395,
+        25119
+      ],
+      "graph_count": 4,
+      "elements": [
+        0
+      ],
+      "damage_types": [
+        0
+      ],
+      "status_ids": [
+        24395,
+        25119
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 17,
+      "rank": 4
+    },
+    {
+      "item_id": 10611,
+      "entity_id": 25120,
+      "roots": [
+        24396,
+        24398,
+        24399,
+        25120
+      ],
+      "graph_entities": [
+        24396,
+        24398,
+        24399,
+        25120
+      ],
+      "graph_count": 4,
+      "elements": [
+        0
+      ],
+      "damage_types": [],
+      "status_ids": [
+        24396,
+        24398,
+        24399,
+        25120
+      ],
+      "movement_entities": [],
+      "summon_ids": [],
+      "cure_components": 0,
+      "shield_components": 0,
+      "passive_property_ids": [],
+      "has_passive_property": true,
+      "profession": 17,
+      "rank": 4
+    }
+  ]
+}
