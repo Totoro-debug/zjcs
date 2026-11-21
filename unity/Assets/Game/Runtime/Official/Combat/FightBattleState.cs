@@ -1730,6 +1730,7 @@ namespace Zjcs.Combat.Official
         public bool SkillCostHp;
         public float DamageCostHpPer = -1f;
         public long CustomShieldValue;
+        public FightBattleValueLimit CustomValueLimit;
     }
 
     [Serializable]

@@ -2334,7 +2334,8 @@ namespace Zjcs.Combat.Official
                     CharacterTypeRateOverrides = ParseStatusRateOverrides(row),
                     LessThanHpPer = Float(row, "LessThanHpPer", -1f),
                     SkillCostHp = Bool(row, "SkillCostHp"),
-                    DamageCostHpPer = Float(row, "DamageCostHpPer", -1f)
+                    DamageCostHpPer = Float(row, "DamageCostHpPer", -1f),
+                    CustomValueLimit = ReadDamageStatusValueLimit(damageId, components)
                 });
             }
         }

@@ -13,7 +13,8 @@ $inputs = Join-Path $root 'unity/Assets/Official/Combat'
 Add-Type -Path (@(Get-FightCombatSources) +
     (Join-Path $PSScriptRoot 'fixtures/fourth_profession_skill_catalog_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/fourth_profession_battle_harness.cs') +
-    (Join-Path $PSScriptRoot 'fixtures/battle_surging_tide_harness.cs'))
+    (Join-Path $PSScriptRoot 'fixtures/battle_surging_tide_harness.cs') +
+    (Join-Path $PSScriptRoot 'fixtures/battle_water_blade_harness.cs'))
 $sp = Get-Content (Join-Path $inputs 'skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $bp = Get-Content (Join-Path $inputs 'battle-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $rp = Get-Content (Join-Path $inputs 'rules-source-manifest.json') -Raw | ConvertFrom-Json
@@ -27,3 +28,4 @@ $formula = $catalog.CreateDamageFormula(
     [IO.File]::ReadAllText((Join-Path $inputs 'rules.json')), $rp.output_sha256, $rp.manifest)
 [FourthProfessionBattleHarness]::Run($catalog, $formula, $items)
 [BattleSurgingTideHarness]::Run($catalog, $formula, $items)
+[BattleWaterBladeHarness]::Run($catalog, $formula, $items)

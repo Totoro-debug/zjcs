@@ -30,11 +30,13 @@ namespace Zjcs.Presentation.Home
             bool shieldCharge = skillId == 10073;
             bool holyPurification = skillId == 10079;
             bool surgingTide = skillId == 10047;
+            bool waterBlade = skillId == 10082;
+            bool fourthPromotion = surgingTide || waterBlade;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
-            Require(thirdPromotion || surgingTide || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
+            Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
-            int profession = surgingTide ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -55,9 +57,9 @@ namespace Zjcs.Presentation.Home
             var player = save.Player;
             OfflineItemAutoIncrease.InitializeNewCharacter(player, DateTime.UtcNow);
             player.CharacterCreated = true; player.CharacterName = skillName + "\u9a8c\u8bc1";
-            player.Rank = surgingTide ? 4 : thirdPromotion ? 3 : 2;
-            player.SubRank = surgingTide ? 8 : 5; player.MaxProfessionRank = player.Rank;
-            player.Level = surgingTide ? rules.LevelLimits.Where(value => value.SubRank == player.SubRank
+            player.Rank = fourthPromotion ? 4 : thirdPromotion ? 3 : 2;
+            player.SubRank = fourthPromotion ? 8 : 5; player.MaxProfessionRank = player.Rank;
+            player.Level = fourthPromotion ? rules.LevelLimits.Where(value => value.SubRank == player.SubRank
                 && value.PlayerBlessLevel == 0 && value.SkillLevel >= 2).Min(value => value.PlayerLevel) : 50;
             player.Experience = assets.Load().CumulativeLevelExperience[player.Level];
             player.InitialWeaponType = profession == 10 ? Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType : 200;
@@ -210,7 +212,8 @@ namespace Zjcs.Presentation.Home
                 var choice = settings.GetComponentsInChildren<Toggle>().Single(value =>
                     value.transform.parent.name == "ToggleText" && value.GetComponentsInParent<Transform>()
                         .Any(parent => parent.name == setting));
-                if (!choice.isOn) click(choice);
+                bool selected = setting != "MonsterHp" || !waterBlade;
+                if (choice.isOn != selected) click(choice);
             }
             yield return CaptureAcquiredActive(output, "settings");
             click(settings.GetComponentsInChildren<Button>().Single(value => value.name == "StartTest"));
@@ -259,6 +262,7 @@ namespace Zjcs.Presentation.Home
                         : skillId == 10044 ? cast.SkillEntityId == 10750
                         : skillId == 10046 ? cast.SkillEntityId == 11160
                         : surgingTide ? cast.SkillEntityId == 10880
+                        : waterBlade ? cast.SkillEntityId == 11980 || cast.SkillEntityId == 11983 || cast.SkillEntityId == 11984
                         : skillId == 10048 ? cast.SkillEntityId == 11090
                         : skillId == 10049 ? cast.SkillEntityId == 11100
                         : skillId == 10051 ? cast.SkillEntityId == 11260
@@ -368,6 +372,21 @@ namespace Zjcs.Presentation.Home
                             && Math.Abs(value.Delay - cast.Delay - .3f) < .0001f),
                             "The acquired surging tide lost its original water area hit.");
                         hits += damageEvents.Length;
+                        continue;
+                    }
+                    if (waterBlade)
+                    {
+                        Require(damageEvents.Length == 1, "Water blade must hit one enemy.");
+                        var hit = damageEvents[0];
+                        float delay = cast.SkillEntityId == 11983 ? .57f : cast.SkillEntityId == 11984 ? .72f : .55f;
+                        long shieldValue = Math.Min((long)((hit.BeforeHp - hit.AfterHp) * (double).2f), actor.MaxHp / 2);
+                        Require(hit.TargetId != actor.Id && hit.HitEntityId == 11981 && hit.DamageEntityId == 11982
+                            && hit.DamageType == 1 && hit.ElementType == 101 && hit.Damage < 0 && !hit.TrueDamage && !hit.IsCure
+                            && Math.Abs(hit.Delay - cast.Delay - delay) < .0001f && shieldValue > 0
+                            && actor.Statuses.Any(value => value.ClassId == 24377 && value.CreatorId == actor.Id
+                                && value.DurationRound == 2 && value.ShieldRemainValue == shieldValue),
+                            "The acquired water blade lost its water damage or capped HP-only shield conversion.");
+                        hits++;
                         continue;
                     }
                     foreach (var hit in damageEvents)

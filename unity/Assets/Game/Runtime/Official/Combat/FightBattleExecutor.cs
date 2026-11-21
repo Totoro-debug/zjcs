@@ -2722,7 +2722,7 @@ namespace Zjcs.Combat.Official
                 if (existing != null && existing.InstanceId >= instanceId)
                     instanceId = existing.InstanceId + 1;
             long customStatusValue = ResolveStatusCustomValue(application, skillCostHp,
-                actualHpLoss);
+                actualHpLoss, actor, target);
             FightBattleStatusState template = statusCatalog.CreateStatus(application.StatusId,
                 owner.Id, actor.Id, instanceId, skill == null ? 0
                     : skill.RootEntityId > 0 ? skill.RootEntityId : skill.EntityId,
@@ -2764,15 +2764,16 @@ namespace Zjcs.Combat.Official
                 skill.BlessPropertyScales);
         }
 
-        private static long ResolveStatusCustomValue(FightBattleStatusApplication application,
-            long skillCostHp, long actualHpLoss)
+        private long ResolveStatusCustomValue(FightBattleStatusApplication application,
+            long skillCostHp, long actualHpLoss, FightBattleUnitState actor, FightBattleUnitState target)
         {
             if (application.SkillCostHp) return Math.Max(0L, skillCostHp);
             if (application.DamageCostHpPer < 0f)
                 return Math.Max(0L, application.CustomShieldValue);
             double rate = Math.Max(0.0, Math.Min(1.0, application.DamageCostHpPer));
             double value = Math.Max(0L, actualHpLoss) * rate;
-            return value >= long.MaxValue ? long.MaxValue : (long)value;
+            long converted = value >= long.MaxValue ? long.MaxValue : (long)value;
+            return FightDamageStatusValueLimit.Apply(converted, application.CustomValueLimit, actor, target, formula);
         }
 
         /// <summary>
