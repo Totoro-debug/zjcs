@@ -212,8 +212,10 @@ namespace Zjcs.Presentation.Home
                 var choice = settings.GetComponentsInChildren<Toggle>().Single(value =>
                     value.transform.parent.name == "ToggleText" && value.GetComponentsInParent<Transform>()
                         .Any(parent => parent.name == setting));
-                bool selected = setting != "MonsterHp" || !waterBlade;
-                if (choice.isOn != selected) click(choice);
+                if (setting == "MonsterHp" && waterBlade)
+                    choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
+                        && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
+                if (!choice.isOn) click(choice);
             }
             yield return CaptureAcquiredActive(output, "settings");
             click(settings.GetComponentsInChildren<Button>().Single(value => value.name == "StartTest"));
