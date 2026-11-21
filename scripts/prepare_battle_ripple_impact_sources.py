@@ -78,7 +78,7 @@ def main():
         operation='APK-first exact verification of 10563 -> 25030 -> 11330 -> 11331 -> 11332, '
             'last-shield action-end configuration, original water damage and three cold applications and existing native bindings. '
             'Server execution is absent. Offline decisions and verification limits '
-            'belong to docs/features/character/skills-knight.md.')
+            'belong to docs/character/skills-knight.md.')
     (ROOT / 'assets/reference/battle-rules/ripple-impact-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print('Verified original 10563/25030/11330 last-shield action-end configuration, code and native bindings.')

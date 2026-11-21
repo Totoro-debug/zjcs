@@ -66,7 +66,7 @@ def main():
         operation='APK-first exact verification of Fighter 10582/10589 original HP-unit '
             'components, five-layer statuses and healing stack-reduction entities with '
             'existing native assets. Runtime inputs are unchanged. Missing server threshold '
-            'semantics and current validation limits belong to docs/features/character/skills-fighter.md.')
+            'semantics and current validation limits belong to docs/character/skills-fighter.md.')
     (ROOT / 'assets/reference/battle-rules/fighter-hp-stacks-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print('Verified original 10582/10589 HP-unit components, six entities and 18 native bindings.')

@@ -40,7 +40,7 @@ def main():
             'sequence order, zero-delay animator leaf, floating trigger and 1.5-second graph duration. '
             'Remap only migrated script GUIDs and resource paths. The 0.7/0.8-second status clock is separate.',
         limits=['Complete native original status prefabs and animation graph resources. The runtime binding '
-            'and its actual battle Play Mode/Windows Player verification are maintained in docs/features/character/skills.md.'])
+            'and its actual battle Play Mode/Windows Player verification are maintained in docs/character/skills.md.'])
 
 
 if __name__ == '__main__':

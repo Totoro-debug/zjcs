@@ -65,7 +65,7 @@ def main():
             'unity/Assets/Official/Combat/rules.json', 'unity/Assets/Game/Resources/Combat/skill-playables.json')],
         verifier=identity(Path(__file__)),
         operation='APK-first exact verification of 10061 recipient graph, 24210 proximity conditions and original 10860 child. '
-            'Historical runtime inputs retained. Behavior and missing server rules belong to docs/features/character/skills-fighter.md.')
+            'Historical runtime inputs retained. Behavior and missing server rules belong to docs/character/skills-fighter.md.')
     (ROOT / 'assets/reference/battle-rules/portable-flame-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print('Verified original 10061 eight entities, twelve code inputs and eighteen native inputs/outputs.')

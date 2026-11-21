@@ -30,7 +30,7 @@ def main():
         verifier=identity(Path(__file__)),
         operation='APK-first exact verification of dark-hit filters, original probability, '
                   'target status and empty client handler. Confirmed offline event timing is '
-                  'maintained in docs/features/character/skills.md; verification alone does not implement it.')
+                  'maintained in docs/character/skills.md; verification alone does not implement it.')
     (ROOT / 'assets/reference/battle-rules/dark-hit-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
     print('Verified original 25031/24222 definitions and five code inputs.')

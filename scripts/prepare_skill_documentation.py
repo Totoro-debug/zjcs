@@ -89,7 +89,7 @@ def build(write):
     titles = {}
     existing_notes = {}
     for page in PAGES:
-        path = ROOT / f"docs/features/character/skills-{page}.md"
+        path = ROOT / f"docs/character/skills-{page}.md"
         old = path.read_text(encoding="utf-8-sig")
         titles[page] = old.splitlines()[0]
         routes[page] = [(int(rank), int(profession), title) for title, rank, profession in re.findall(
@@ -113,7 +113,7 @@ def build(write):
     documents = {}
     page_complete = {}
     for page in PAGES:
-        lines = [titles[page], "", "[总索引](../../README.md) · [技能目录](skills.md)", "", "状态：未完成", ""]
+        lines = [titles[page], "", "[总索引](../README.md) · [技能目录](skills.md)", "", "状态：未完成", ""]
         glossary = {}
         scoped_statuses = []
         for rank, profession, title in routes[page]:
@@ -176,8 +176,8 @@ def build(write):
             raise ValueError("No requested skills routed to " + page)
         page_complete[page] = all(status == "已完成" for status in scoped_statuses)
         lines[4] = "状态：" + ("已完成" if page_complete[page] else "未完成")
-        documents[f"docs/features/character/skills-{page}.md"] = "\n".join(lines).encode("utf8")
-    common = ["# 技能目录", "", "[总索引](../../README.md)", "", "状态：未完成", "",
+        documents[f"docs/character/skills-{page}.md"] = "\n".join(lines).encode("utf8")
+    common = ["# 技能目录", "", "[总索引](../README.md)", "", "状态：未完成", "",
               "本次迁移范围：一阶初始职业与二阶首次转职的全部技能，共 104 项；转职后继承前置职业技能。", "",
               "技能记录仅包含技能类型、技能 ID、技能名、官方描述、特殊词条解释、是否完成与实现要点。", "",
               "| 职业技能 | 是否完成 |", "| --- | --- |"]
@@ -192,10 +192,10 @@ def build(write):
         "按官方描述迁移主动战技、被动秘法、被动与触发效果、子技能、增益与减益、动画及人物动作；已确认的单机边界只在对应技能的实现要点中简述。", "",
         "合成、装配、升级、进阶与存档使用公共培养及界面流程，技能差异由官方配置驱动。", "",
         "装配仅使用已持有且职业可用的技能；空战技方案允许进入战斗，正常结算回合与被动，不自动补战技。", "",
-        "连锁攻击遵循已确认的[单机目标选择规则](../battle-execution.md#自定义实现)。", "",
+        "连锁攻击遵循已确认的[单机目标选择规则](../features/battle-execution.md#自定义实现)。", "",
         "高阶职业仅保留既有技能说明，不计入本次完成范围。" if all(page_complete.values()) else
         "完整技能流程、原生表现与 Windows 发布仍未完成。高阶职业仅保留既有技能说明，不计入本次完成范围。", ""])
-    documents["docs/features/character/skills.md"] = "\n".join(common).encode("utf8")
+    documents["docs/character/skills.md"] = "\n".join(common).encode("utf8")
     for name, payload in documents.items():
         path = ROOT / name
         if write:

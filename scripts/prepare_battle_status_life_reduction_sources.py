@@ -23,7 +23,7 @@ def main():
         verifier=identity(Path(__file__)),
         operation='APK-first exact verification of original reduction count, tag filter, summon trigger '
                   'and lifetime/end components. Server scheduling is absent; the confirmed offline '
-                  'timing and persistence rules are maintained in docs/features/character/skills.md.')
+                  'timing and persistence rules are maintained in docs/character/skills.md.')
     (ROOT / 'assets/reference/battle-rules/status-life-reduction-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
     print('Verified selected 24072/25112/10712/11142 definitions and four original code inputs.')

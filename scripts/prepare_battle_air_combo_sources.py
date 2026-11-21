@@ -98,7 +98,7 @@ def main():
     proof = dict(manifest='884_156692', configuration=verify_selected_components(definitions),
         original_code=[identity(code / path) for path in paths], verifier=identity(Path(__file__)),
         original_visuals=visual_inputs(code),
-        operation='APK-first exact verification of three launch hits, action types, block-damage conjunction, non-displacement reset and original second-based successor timers. User-confirmed offline scheduling is maintained in docs/features/character/skills.md.')
+        operation='APK-first exact verification of three launch hits, action types, block-damage conjunction, non-displacement reset and original second-based successor timers. User-confirmed offline scheduling is maintained in docs/character/skills.md.')
     output = ROOT / 'assets/reference/battle-rules/air-combo-source-manifest.json'
     output.write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
     print('Verified three original launch hits, airborne/recovery states, nine rule code inputs and complete original visual prefab objects.')

@@ -69,7 +69,7 @@ def main():
         operation='APK-first exact verification of 10516 -> 25008, target status-type 2/3 condition, '
             'unscaled original increments, passive resilience factor and native bindings. '
             'Server execution is unavailable; offline decisions and verification limits '
-            'belong to docs/features/character/skills-knight.md.')
+            'belong to docs/character/skills-knight.md.')
     (ROOT / 'assets/reference/battle-rules/pursuit-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print('Verified original 10516/25008 configuration, code and native status bindings.')

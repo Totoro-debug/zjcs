@@ -85,7 +85,7 @@ def main():
         operation='APK-first exact verification of 10016/10680 point targeting, original '
             '10682 movement and 10681/10026 damage, retaining historical runtime input identity. '
             'Server AI point selection/path generation is absent. Implementation decisions '
-            'and current validation limits belong to docs/features/character/skills-fighter.md.')
+            'and current validation limits belong to docs/character/skills-fighter.md.')
     (ROOT / 'assets/reference/battle-rules/lightning-dash-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     print('Verified original 10016/10680 point-target dash, damage and 12 native graph bindings.')

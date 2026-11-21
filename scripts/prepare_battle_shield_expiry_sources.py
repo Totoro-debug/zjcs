@@ -39,7 +39,7 @@ def main():
             effect='Empty excluded-character filter on disabled zero-count, zero-probability dispel; input unchanged.'),
         verifier=identity(Path(__file__)),
         operation='APK-first exact verification of 24435 and the 12750/12751/12752 chain. '
-                  'The user-confirmed offline enablement and expiry amount are maintained in docs/features/character/skills.md; '
+                  'The user-confirmed offline enablement and expiry amount are maintained in docs/character/skills.md; '
                   'they are not claimed as recovered server code.')
     (ROOT / 'assets/reference/battle-rules/shield-expiry-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf8')

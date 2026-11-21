@@ -10,4 +10,4 @@
 
 ## 自定义实现
 
-浏览不发奖、不改变随机状态；专项详细规则分别见[技能](character/skills.md)和[古遗物](character/relics.md)。
+浏览不发奖、不改变随机状态；专项详细规则分别见[技能](../character/skills.md)和[古遗物](../character/relics.md)。

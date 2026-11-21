@@ -22,7 +22,7 @@ def main():
         verifier=identity(Path(__file__)),
         operation='APK-first exact verification of original fire element, condition threshold, probability, '
                   'trigger skill and burning-ground dependencies. Server scheduling is absent; confirmed '
-                  'offline hit timing and checkpoint rules are maintained in docs/features/character/skills.md.')
+                  'offline hit timing and checkpoint rules are maintained in docs/character/skills.md.')
     (ROOT / 'assets/reference/battle-rules/status-hit-scope-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
     print('Verified selected 25045/11580/11581/11582 definitions and three original code inputs.')

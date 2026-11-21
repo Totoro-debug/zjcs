@@ -74,7 +74,7 @@ def main():
         operation='APK-first exact verification of 10540 -> 25020 -> 24212, action-60 presence '
             'condition, original status properties and native bindings. The shared/client '
             'action-presence classes do not contain server execution. Offline decisions and '
-            'verification limits belong to docs/features/character/skills-knight.md.')
+            'verification limits belong to docs/character/skills-knight.md.')
     (ROOT / 'assets/reference/battle-rules/shield-attack-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print('Verified original 10540/25020/24212 configuration, code and native status bindings.')

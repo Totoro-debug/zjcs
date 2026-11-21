@@ -33,49 +33,49 @@
 
 | 名称 | 状态 |
 | --- | --- |
-| [人物属性、经验、位阶与衣柜](features/character/character.md) | 未完成 |
-| [新建存档与角色创建](features/character/character-creation.md) | 未完成 |
-| [职业、晋升与自由转职](features/character/professions.md) | 未完成 |
-| [装备、强化、继承与星石](features/character/equipment.md) | 未完成 |
-| [行囊、物品与宝箱](features/character/inventory.md) | 未完成 |
-| [技能目录（一至三阶）](features/character/skills.md) | 已完成 |
-| [战士职业技能详情（一阶）](features/character/skills-warrior.md) | 已完成 |
-| [法师职业技能详情（一阶）](features/character/skills-mage.md) | 已完成 |
-| [骑士路线职业技能详情（二、三阶）](features/character/skills-knight.md) | 已完成 |
-| [斗士路线职业技能详情（二、三阶）](features/character/skills-fighter.md) | 已完成 |
-| [术士路线职业技能详情（二、三阶）](features/character/skills-warlock.md) | 已完成 |
-| [贤者路线职业技能详情（二、三阶）](features/character/skills-sage.md) | 已完成 |
-| [幻兽编队、养成与改名](features/character/pets.md) | 未完成 |
-| [古遗物收藏、任务与培养](features/character/relics.md) | 未完成 |
-| [赛季记录、赐福与装备柜](features/character/seasons.md) | 未完成 |
+| [人物属性、经验、位阶与衣柜](character/character.md) | 未完成 |
+| [新建存档与角色创建](character/character-creation.md) | 未完成 |
+| [职业、晋升与自由转职](character/professions.md) | 未完成 |
+| [装备、强化、继承与星石](character/equipment.md) | 未完成 |
+| [行囊、物品与宝箱](character/inventory.md) | 未完成 |
+| [技能目录（一至三阶）](character/skills.md) | 已完成 |
+| [战士职业技能详情（一阶）](character/skills-warrior.md) | 已完成 |
+| [法师职业技能详情（一阶）](character/skills-mage.md) | 已完成 |
+| [骑士路线职业技能详情（二、三阶）](character/skills-knight.md) | 已完成 |
+| [斗士路线职业技能详情（二、三阶）](character/skills-fighter.md) | 已完成 |
+| [术士路线职业技能详情（二、三阶）](character/skills-warlock.md) | 已完成 |
+| [贤者路线职业技能详情（二、三阶）](character/skills-sage.md) | 已完成 |
+| [幻兽编队、养成与改名](character/pets.md) | 未完成 |
+| [古遗物收藏、任务与培养](character/relics.md) | 未完成 |
+| [赛季记录、赐福与装备柜](character/seasons.md) | 未完成 |
 
 ### 主城与主城建筑
 
 | 名称 | 状态 |
 | --- | --- |
-| [主城、家园与离线产出](features/city-and-home/city-and-home.md) | 未完成 |
-| [星命契约与累计属性](features/city-and-home/astrological.md) | 未完成 |
-| [炼金炉、料理、合成与分解](features/city-and-home/cooking.md) | 未完成 |
-| [果树生产与领取](features/city-and-home/fruit-tree.md) | 未完成 |
-| [宝石合成与机械师熔炉](features/city-and-home/gem-forge.md) | 未完成 |
-| [主城售货机与馈赠](features/city-and-home/home-shop.md) | 未完成 |
-| [技能祈愿、材料购买与兑换](features/city-and-home/wishes.md) | 未完成 |
-| [幻兽结缘与兑换](features/city-and-home/pet-gacha.md) | 未完成 |
-| [古遗物扭蛋与女神牌](features/city-and-home/treasure-gacha.md) | 未完成 |
-| [NPC伙伴、好感与餐桌通话](features/city-and-home/partners.md) | 未完成 |
+| [主城、家园与离线产出](city-and-home/city-and-home.md) | 未完成 |
+| [星命契约与累计属性](city-and-home/astrological.md) | 未完成 |
+| [炼金炉、料理、合成与分解](city-and-home/cooking.md) | 未完成 |
+| [果树生产与领取](city-and-home/fruit-tree.md) | 未完成 |
+| [宝石合成与机械师熔炉](city-and-home/gem-forge.md) | 未完成 |
+| [主城售货机与馈赠](city-and-home/home-shop.md) | 未完成 |
+| [技能祈愿、材料购买与兑换](city-and-home/wishes.md) | 未完成 |
+| [幻兽结缘与兑换](city-and-home/pet-gacha.md) | 未完成 |
+| [古遗物扭蛋与女神牌](city-and-home/treasure-gacha.md) | 未完成 |
+| [NPC伙伴、好感与餐桌通话](city-and-home/partners.md) | 未完成 |
 
 ### 笔记与笔记内功能
 
 | 名称 | 状态 |
 | --- | --- |
-| [游记入口与日常副本](features/travel-notes/dungeons.md) | 未完成 |
-| [圣兽试炼与双影幻境](features/travel-notes/daily-challenges.md) | 未完成 |
-| [虚空裂隙与混沌侵袭](features/travel-notes/weekly-challenges.md) | 未完成 |
-| [幻想阶梯与历程回响](features/travel-notes/fantasy-tower.md) | 未完成 |
-| [羁绊冒险](features/travel-notes/bond-adventure.md) | 部分完成 |
-| [素材秘境与快速采集](features/travel-notes/material-gathering.md) | 未完成 |
-| [命运果实探寻](features/travel-notes/world-exploration.md) | 未完成 |
-| [伙伴旅行、品质与保底](features/travel-notes/partner-travel.md) | 未完成 |
+| [游记入口与日常副本](travel-notes/dungeons.md) | 未完成 |
+| [圣兽试炼与双影幻境](travel-notes/daily-challenges.md) | 未完成 |
+| [虚空裂隙与混沌侵袭](travel-notes/weekly-challenges.md) | 未完成 |
+| [幻想阶梯与历程回响](travel-notes/fantasy-tower.md) | 未完成 |
+| [羁绊冒险](travel-notes/bond-adventure.md) | 部分完成 |
+| [素材秘境与快速采集](travel-notes/material-gathering.md) | 未完成 |
+| [命运果实探寻](travel-notes/world-exploration.md) | 未完成 |
+| [伙伴旅行、品质与保底](travel-notes/partner-travel.md) | 未完成 |
 
 ## 地图导航
 

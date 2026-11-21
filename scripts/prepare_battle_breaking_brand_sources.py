@@ -75,7 +75,7 @@ def main():
         operation='APK-first exact verification of 10042/11010/11011/11012 damage and '
             '24052 mark with existing native graph/status bindings. Runtime historical '
             'input bytes are retained. Behavior and validation limits belong to '
-            'docs/features/character/skills-fighter.md.')
+            'docs/character/skills-fighter.md.')
     (ROOT / 'assets/reference/battle-rules/breaking-brand-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print('Verified original 10042/11010 damage, 24052 mark and 12 native bindings.')

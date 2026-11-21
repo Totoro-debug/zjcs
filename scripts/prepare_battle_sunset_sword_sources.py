@@ -105,7 +105,7 @@ def main():
             for name in ('skill-rules', 'battle-rules', 'rules')],
         verifier=identity(Path(__file__)),
         operation='APK-first verification of original 10053 five-hit area graph and existing Windows native assets. '
-            'Historical runtime inputs are retained; behavior and validation limits belong to docs/features/character/skills-fighter.md.')
+            'Historical runtime inputs are retained; behavior and validation limits belong to docs/character/skills-fighter.md.')
     (ROOT / 'assets/reference/battle-rules/sunset-sword-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print('Verified original 10053/11250 five-hit scope, three authored sound events, 10022 damage, fourteen native inputs and eight graph outputs.')

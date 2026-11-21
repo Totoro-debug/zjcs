@@ -39,7 +39,7 @@
     "sha256": "abedbdde2a0948d26ccc3538c5ede4adb22e31c148e3353b1c008f318cc377e3"
   },
   "adaptation": "Preserve MainEntity as a unit binding. MainStatus and DamageEntity retain their original distinct types; absent or unbound event/graph ports cannot be reinterpreted as a unit. Triggered statuses receive the executor checkpoint status serial, with a max-active-instance fallback for isolated rule harnesses; unsupported removal conditions stop the flow before mutation.",
-  "implementation_document": "docs/features/character/skills.md",
+  "implementation_document": "docs/character/skills.md",
   "generator": {
     "path": "scripts/record_battle_status_entity_port_sources.py",
     "sha256": "c3975e280a5f47e82d86fde01b5cbae29a2a153e6e96eacd14174953327284c8"

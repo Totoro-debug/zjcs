@@ -21,7 +21,7 @@ def main():
     record = dict(manifest='884_156692', configuration=verified, official_code=inputs,
         generator=identity(Path(__file__)),
         operation='APK-first exact field verification. The legacy StatusEntClassId recipient and '
-        'counter behavior are user-confirmed offline decisions maintained in docs/features/character/skills.md.')
+        'counter behavior are user-confirmed offline decisions maintained in docs/character/skills.md.')
     (ROOT / 'assets/reference/battle-rules/skill-end-source-manifest.json').write_text(
         json.dumps(record, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
     print('Verified original 10564 -> 25029 -> 24221 and shared skill-end input code.')

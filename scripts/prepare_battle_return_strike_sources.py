@@ -83,7 +83,7 @@ def main():
         verifier=identity(Path(__file__)),
         operation='APK-first exact verification of 10509 -> 25003 -> 24268, received-damage '
             'configuration, stack limits and conditional cast duration. Server execution is absent; '
-            'confirmed offline hit gates and implementation scope are maintained in docs/features/character/skills-knight.md.')
+            'confirmed offline hit gates and implementation scope are maintained in docs/character/skills-knight.md.')
     (ROOT / 'assets/reference/battle-rules/return-strike-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
     print('Verified original 10509/25003/24268 configuration and nine code inputs.')

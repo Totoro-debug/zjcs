@@ -80,7 +80,7 @@ def main():
         operation='APK-first exact verification of 10518/25013, original 10990 healing graph '
             'and two-round 24082 absolute damage reduction with existing native bindings. '
             'Server fatal-hit execution is absent; offline decisions and validation limits '
-            'belong to docs/features/character/skills-fighter.md.')
+            'belong to docs/character/skills-fighter.md.')
     (ROOT / 'assets/reference/battle-rules/indomitable-source-manifest.json').write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print('Verified original 10518/25013/10990 fatal-hit survival configuration, code and native bindings.')
