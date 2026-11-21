@@ -304,6 +304,11 @@ namespace Zjcs.Presentation.Combat
                 checkpoint.Units.Add(ally);
                 probe.firstPromotionCaptureAfter = 1.7f;
             }
+            if (itemId == 10079)
+            {
+                enemy.Statuses.Add(catalog.CreateStatus(24237, enemy.Id, enemy.Id, 924237));
+                enemy.Statuses.Add(catalog.CreateStatus(24040, enemy.Id, player.Id, 924040));
+            }
             if (itemId == 10066)
             {
                 var ally = JsonUtility.FromJson<FightBattleUnitState>(JsonUtility.ToJson(enemy));
@@ -482,6 +487,19 @@ namespace Zjcs.Presentation.Combat
                     && push.Path.Count == 2 && Math.Abs(push.Delay - hit.Delay) < .0001f,
                     "Shield charge lost its five-cell movement, original physical hit or side push.");
                 Debug.Log("[Shield charge] Original 11732 travel, 11731/11733 hit and 11734 side push passed.");
+            }
+            if (firstPromotionItemId == 10079)
+            {
+                var hit = step.DamageEvents.Single(value => value.SkillEntityId == 11860);
+                var enemy = checkpoint.Units.Single(value => value.Id == hit.TargetId);
+                Require(hit.HitEntityId == 11861 && hit.DamageEntityId == 11862 && hit.DamageType == 1
+                    && hit.ElementType == 103 && hit.Damage < 0 && hit.TrueDamage
+                    && Math.Abs(hit.Delay - cast.Delay - .4f) < .0001f
+                    && step.DispersedUnitIds.SequenceEqual(new[] { enemy.Id })
+                    && !enemy.Statuses.Any(value => value.ClassId == 24237)
+                    && enemy.Statuses.Any(value => value.ClassId == 24040),
+                    "Holy purification changed the original light destruction or positive dispel.");
+                Debug.Log("[Holy purification] Original 11861/11862 light destruction and positive dispel passed.");
             }
             if (firstPromotionItemId == 10012 && Environment.GetEnvironmentVariable("ZJCS_WIND_BLADE_KNOCKBACK") == "1")
             {

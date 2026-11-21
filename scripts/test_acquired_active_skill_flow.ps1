@@ -2,7 +2,7 @@
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet(10000,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10048,10049,10051,10053,10066,10073)][int]$SkillId = 10026
+    [ValidateSet(10000,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10048,10049,10051,10053,10066,10073,10079)][int]$SkillId = 10026
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -92,8 +92,8 @@ try {
     if (-not (Test-Path -LiteralPath (Join-Path $run 'acquired-active-ui-checkpoint.json'))) {
         throw "The completed skill-page battle checkpoint is absent: $run"
     }
-    if ($SkillId -in @(10032,10039,10073)) {
-        # The Player asserts the official shield or physical strike for each equipped cast.
+    if ($SkillId -in @(10032,10039,10073,10079)) {
+        # The Player asserts the original effects for each equipped cast.
         Write-Output "Acquired active skill-page flow passed: $run"
         return
     }

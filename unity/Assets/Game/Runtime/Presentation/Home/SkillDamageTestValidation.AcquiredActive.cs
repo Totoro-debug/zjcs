@@ -28,8 +28,9 @@ namespace Zjcs.Presentation.Home
             bool crisisGuard = skillId == 10032;
             bool starShatteringSlash = skillId == 10039;
             bool shieldCharge = skillId == 10073;
+            bool holyPurification = skillId == 10079;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066;
-            bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || skillId == 10017;
+            bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
             int profession = thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
@@ -259,6 +260,7 @@ namespace Zjcs.Presentation.Home
                         : skillId == 10053 ? cast.SkillEntityId == 11250
                         : skillId == 10066 ? cast.SkillEntityId == 11550
                         : shieldCharge ? cast.SkillEntityId == 11730
+                        : holyPurification ? cast.SkillEntityId == 11860
                         : cast.SkillEntityId == 10780 || cast.SkillEntityId == 11640 || cast.SkillEntityId == 11650 || cast.SkillEntityId == 11660,
                         "The acquired active skill selected a foreign entity: " + cast.SkillEntityId);
                     var damageEvents = step.Event.DamageEvents.Where(value => value.SourceId == 1
@@ -340,6 +342,16 @@ namespace Zjcs.Presentation.Home
                                 && value.HitEntityId == 11731 && value.DamageEntityId == 11733 && value.DamageType == 1
                                 && value.ElementType == 0 && value.Damage < 0 && !value.TrueDamage && !value.IsCure),
                             "The acquired shield charge lost its original path or physical damage.");
+                        hits += damageEvents.Length;
+                        continue;
+                    }
+                    if (holyPurification)
+                    {
+                        Require(damageEvents.Length > 0 && damageEvents.All(value => value.TargetId != actor.Id
+                            && value.HitEntityId == 11861 && value.DamageEntityId == 11862 && value.DamageType == 1
+                            && value.ElementType == 103 && value.Damage < 0 && value.TrueDamage && !value.IsCure
+                            && Math.Abs(value.Delay - cast.Delay - .4f) < .0001f),
+                            "The acquired purification lost its original light destruction hit.");
                         hits += damageEvents.Length;
                         continue;
                     }
