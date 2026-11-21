@@ -33,12 +33,21 @@ if ([IO.Path]::GetDirectoryName($workspacePath) -ne (Get-ZjcsValidationRoot).Tri
 }
 $marker = Get-Content -LiteralPath (Join-Path $workspacePath '.zjcs-validation.json') -Raw | ConvertFrom-Json
 if ($marker.format -ne 1 -or $marker.repository -ne $repository) { throw 'Wrong validation workspace repository.' }
-$rules = Get-Content -LiteralPath (Join-Path $repository 'unity/Assets/Official/Combat/rules.json') -Raw | ConvertFrom-Json
 $professionIds = if ($ThirdProfession) { @(3,7,12,16) } else { @(1,2,6,10,11,15) }
-$scope = @($rules.profession_base | Where-Object Profession -in $professionIds |
-    ForEach-Object { $_.Skills; $_.FightUsedSkills }) | Sort-Object -Unique
-$active = @($rules.item | Where-Object { $_.ClassId -in $scope -and $_.ItemType -eq 100 } |
-    Select-Object -ExpandProperty ClassId | Sort-Object)
+if ($ThirdProfession) {
+    # The third-promotion scope is already projected from the verified official
+    # payload. Keep this player test independent of the 37 MB raw rules JSON.
+    $manifest = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/battle-rules/third-profession-skill-migration-source-manifest.json') -Raw | ConvertFrom-Json
+    $scope = @($manifest.skills | Select-Object -ExpandProperty item_id | Sort-Object -Unique)
+    $active = @($manifest.skills | Where-Object { $_.item_id -lt 10500 -and $_.entity_id -gt 0 } |
+        Select-Object -ExpandProperty item_id | Sort-Object -Unique)
+} else {
+    $rules = Get-Content -LiteralPath (Join-Path $repository 'unity/Assets/Official/Combat/rules.json') -Raw | ConvertFrom-Json
+    $scope = @($rules.profession_base | Where-Object Profession -in $professionIds |
+        ForEach-Object { $_.Skills; $_.FightUsedSkills }) | Sort-Object -Unique
+    $active = @($rules.item | Where-Object { $_.ClassId -in $scope -and $_.ItemType -eq 100 } |
+        Select-Object -ExpandProperty ClassId | Sort-Object)
+}
 if ((-not $ThirdProfession -and ($scope.Count -ne 104 -or $active.Count -ne 57)) -or
     ($ThirdProfession -and ($scope.Count -ne 40 -or $active.Count -ne 20))) { throw 'Review the original profession skill scope.' }
 if (@($AirCombo,$ActionInvisible,$SummonLife,$DarkStatus,$MoveScopeColdScene,$HitScopeColdScene,$PortableFlameLife,$SunsetSwordSound,$FighterHpSecrets | Where-Object { $_ }).Count -gt 1) { throw 'Select one isolated status diagnostic.' }
