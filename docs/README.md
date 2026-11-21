@@ -11,18 +11,11 @@
 | 名称 | 状态 |
 | --- | --- |
 | [登录前启动画面](features/startup.md) | 未完成 |
-| [成长成就与积分奖励](features/achievements.md) | 未完成 |
-| [成长试炼与活动小游戏](features/activity-minigames.md) | 未完成 |
 | [战斗执行](features/battle-execution.md) | 未完成 |
-| [图鉴分类、筛选与只读详情](features/codex.md) | 未完成 |
-| [商城、代金券与礼包](features/commerce.md) | 未完成 |
 | [单人公会领地](features/guild.md) | 未完成 |
-| [月卡与星眷累计奖励](features/monthly-card.md) | 未完成 |
 | [NPC邀请、站位与战前准备](features/npc-assistance.md) | 未完成 |
 | [离线开放条件与单机范围](features/offline-access.md) | 未完成 |
-| [设置、拍照与本地存档](features/settings-and-save.md) | 未完成 |
 | [共用界面、文字与资源运行](features/shared-ui.md) | 未完成 |
-| [主题签到与长期活动入口](features/sign-ins.md) | 未完成 |
 | [Unity 工程与启动流程](features/unity-project.md) | 未完成 |
 
 ### 角色与角色相关功能
@@ -72,6 +65,25 @@
 | [素材秘境与快速采集](travel-notes/material-gathering.md) | 未完成 |
 | [命运果实探寻](travel-notes/world-exploration.md) | 未完成 |
 | [伙伴旅行、品质与保底](travel-notes/partner-travel.md) | 未完成 |
+
+### 设置与相关功能
+
+| 名称 | 状态 |
+| --- | --- |
+| [设置、拍照与本地存档](settings/settings-and-save.md) | 未完成 |
+| [成长成就与积分奖励](settings/achievements.md) | 未完成 |
+| [图鉴分类、筛选与只读详情](settings/codex.md) | 未完成 |
+| [主题签到与长期活动入口](settings/sign-ins.md) | 未完成 |
+| [成长试炼与活动小游戏](settings/activity-minigames.md) | 未完成 |
+
+#### 商城
+
+| 名称 | 状态 |
+| --- | --- |
+| [商城、代金券与礼包](settings/commerce/commerce.md) | 未完成 |
+| [月卡与星眷累计奖励](settings/commerce/monthly-card.md) | 未完成 |
+
+[礼包清单](settings/commerce/gift-catalog.md)
 
 ## 地图导航
 
