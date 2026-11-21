@@ -61,12 +61,13 @@ namespace Zjcs.Presentation.Home
             bool heavenlyLightBlades = skillId == 10085;
             bool vortexSurge = skillId == 10099;
             bool hellfire = skillId == 10068;
-            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire;
+            bool swordWindDance = skillId == 10088;
+            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
-            int profession = hellfire ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = hellfire || swordWindDance ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -329,6 +330,7 @@ namespace Zjcs.Presentation.Home
                         : heavenlyLightBlades ? cast.SkillEntityId == 11900
                         : vortexSurge ? cast.SkillEntityId == 12080
                         : hellfire ? cast.SkillEntityId == 11520
+                        : swordWindDance ? cast.SkillEntityId == 11910
                         : skillId == 10048 ? cast.SkillEntityId == 11090
                         : skillId == 10049 ? cast.SkillEntityId == 11100
                         : skillId == 10051 ? cast.SkillEntityId == 11260
@@ -496,6 +498,25 @@ namespace Zjcs.Presentation.Home
                         hits += damageEvents.Length;
                         continue;
                     }
+                    if (swordWindDance)
+                    {
+                        Require(damageEvents.Length > 0 && damageEvents.All(value => value.TargetId != actor.Id
+                            && value.ElementType == 100 && value.DamageType == 1 && value.Damage < 0
+                            && !value.TrueDamage && !value.IsCure), "The acquired sword wind dance lost its wind damage.");
+                        foreach (var target in damageEvents.GroupBy(value => value.TargetId))
+                        {
+                            var strikes = target.OrderBy(value => value.Delay).ToArray();
+                            Require(strikes.Length == 3 && strikes[0].HitEntityId == 11911 && strikes[1].HitEntityId == 11911
+                                && strikes[2].HitEntityId == 11913 && strikes[0].DamageEntityId == 10004
+                                && strikes[1].DamageEntityId == 10004 && strikes[2].DamageEntityId == 11912
+                                && Math.Abs(strikes[1].Delay - strikes[0].Delay - .16f) < .0001f
+                                && strikes[0].Delay >= cast.Delay + .4499f && strikes[0].Delay <= cast.Delay + .5601f
+                                && strikes[2].Delay >= cast.Delay + 1.1299f && strikes[2].Delay <= cast.Delay + 1.2001f,
+                                "The acquired sword wind dance lost its three authored strikes or row timing.");
+                        }
+                        hits += damageEvents.Length;
+                        continue;
+                    }
                     if (vortexSurge)
                     {
                         Require(damageEvents.Length > 0 && damageEvents.All(value => value.TargetId != actor.Id
@@ -588,11 +609,11 @@ namespace Zjcs.Presentation.Home
                     else yield return new WaitForSecondsRealtime(hellfire ? .2f : crisisGuard || starShatteringSlash ? 1.45f
                         : shieldCharge ? 1.1f : .7f);
                     yield return CaptureAcquiredActive(output, "battle"); captured = true;
-                    if (heavenlyLightBlades || frostSong)
+                    if (heavenlyLightBlades || frostSong || swordWindDance)
                         for (int frame = 1; frame <= 4; frame++)
                         {
                             yield return new WaitForSecondsRealtime(.18f);
-                            yield return CaptureAcquiredActive(output, (frostSong ? "skin-hit-" : "blade-") + frame);
+                            yield return CaptureAcquiredActive(output, (frostSong ? "skin-hit-" : swordWindDance ? "wind-hit-" : "blade-") + frame);
                         }
                 }
                 yield return null;
