@@ -56,11 +56,11 @@
   "runtime": [
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
-      "sha256": "c4443912e093de3aabf47736190b1546f6c8390985a0eee92de968235aede81c"
+      "sha256": "72543ea097805343abc440d8b82c730da4c5ef6dd6e632d153c5ebb75b008dbf"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs",
-      "sha256": "2df5875c74f8b34e777502423a6685b7822c5781e3a902339e041e6d3b826526"
+      "sha256": "5635e8e74ea829916b7ee5424f78909bac3144a16ef1aa00c4c9c0572ec3c9c2"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
@@ -92,7 +92,7 @@
     },
     {
       "path": "scripts/test_battle_damage_display.ps1",
-      "sha256": "686689c478826a9ef0d79e67c102828997d32e5e4b7fe7f87ee2572de5570ac0"
+      "sha256": "51ec363e6d152930efa85af7a3d55e76c219ac72660ad275402058e6b840b86a"
     }
   ],
   "operation": "Preserve the original DamageResultParameter.DamageValue separately from RealDamageValue. CharacterDamageUIManager displays DamageValue minus ShieldValue, including full shield absorption, overkill and overhealing; actual HP changes remain the basis of local statistics and magic-mark contribution. Reuse the original number prefabs and animation/format/color paths.",

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Zjcs.Combat.Official;
 
@@ -43,9 +44,25 @@ namespace Zjcs.Presentation.Combat
             if (monsterHpPlies == null)
                 throw new InvalidOperationException("Official monster HP plies TextAsset is not bound.");
 
-            loadedCatalog = FightOfficialCombatCatalog.Load(skillRules.text, skillSource.OutputSha256,
+            var combat = FightOfficialCombatCatalog.Load(skillRules.text, skillSource.OutputSha256,
                 skillSource.Manifest, battleRules.text, battleSource.OutputSha256, battleSource.Manifest,
                 monsterHpPlies.text, hpPliesSource.OutputSha256, hpPliesSource.Manifest);
+            TextAsset packIndex = Resources.Load<TextAsset>("Combat/skill-rule-packs");
+            if (packIndex == null) throw new InvalidOperationException("Official skill rule pack index is missing.");
+            var index = JsonUtility.FromJson<SkillRulePackIndex>(packIndex.text);
+            if (index == null || index.resources == null)
+                throw new InvalidOperationException("Official skill rule pack index is invalid.");
+            var packs = new List<TextAsset>();
+            foreach (string path in index.resources)
+            {
+                TextAsset pack = Resources.Load<TextAsset>(path);
+                var source = ReadManifest(Resources.Load<TextAsset>(path + "-source-manifest"), path);
+                if (pack == null) throw new InvalidOperationException("Official skill rule pack is missing: " + path);
+                combat.ApplySkillRulePack(pack.text, source.OutputSha256, source.Manifest);
+                packs.Add(pack);
+            }
+            skillRulePacks = packs.AsReadOnly();
+            loadedCatalog = combat;
             return loadedCatalog;
         }
 
@@ -81,6 +98,9 @@ namespace Zjcs.Presentation.Combat
         }
 
         private FightOfficialCombatCatalog loadedCatalog;
+        private IReadOnlyList<TextAsset> skillRulePacks;
+        public IReadOnlyList<TextAsset> LoadSkillRulePacks() { Load(); return skillRulePacks; }
+        [Serializable] private sealed class SkillRulePackIndex { public string[] resources; }
         private FightDamageFormula loadedFormula;
         private FightOfficialSkillItemCatalog loadedSkillItems;
         private FightBattleReportScoreSettings loadedReportScoreSettings;

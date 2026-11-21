@@ -1,3 +1,4 @@
+param([int]$SkillId = 0)
 $ErrorActionPreference = 'Stop'
 python (Join-Path $PSScriptRoot 'verify_fourth_profession_skills.py')
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
@@ -11,6 +12,7 @@ if ($env:ZJCS_FOURTH_PROFESSION_RUNTIME -ne '1') { exit 0 }
 $root = Split-Path -Parent $PSScriptRoot
 $inputs = Join-Path $root 'unity/Assets/Official/Combat'
 Add-Type -Path (@(Get-FightCombatSources) +
+    (Join-Path $PSScriptRoot 'fixtures/skill_rule_pack_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/fourth_profession_skill_catalog_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/fourth_profession_battle_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_surging_tide_harness.cs') +
@@ -21,7 +23,8 @@ Add-Type -Path (@(Get-FightCombatSources) +
     (Join-Path $PSScriptRoot 'fixtures/battle_vortex_surge_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_steel_faith_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_cold_glint_harness.cs') +
-    (Join-Path $PSScriptRoot 'fixtures/battle_frigid_aura_harness.cs'))
+    (Join-Path $PSScriptRoot 'fixtures/battle_frigid_aura_harness.cs') +
+    (Join-Path $PSScriptRoot 'fixtures/battle_hellfire_resurgence_harness.cs'))
 $sp = Get-Content (Join-Path $inputs 'skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $bp = Get-Content (Join-Path $inputs 'battle-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $rp = Get-Content (Join-Path $inputs 'rules-source-manifest.json') -Raw | ConvertFrom-Json
@@ -30,9 +33,22 @@ $catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
     [IO.File]::ReadAllText((Join-Path $inputs 'battle-rules.json')), $bp.output_sha256, $bp.manifest)
 $items = [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load(
     [IO.File]::ReadAllText((Join-Path $inputs 'rules.json')), $rp.output_sha256, $rp.manifest)
+$packRoot = Join-Path $root 'unity/Assets/Game/Resources'
+$packIndex = Get-Content (Join-Path $packRoot 'Combat/skill-rule-packs.json') -Raw | ConvertFrom-Json
+foreach ($resource in $packIndex.resources) {
+    $pack = Join-Path $packRoot ($resource + '.json')
+    $source = Get-Content (Join-Path $packRoot ($resource + '-source-manifest.json')) -Raw | ConvertFrom-Json
+    [SkillRulePackHarness]::Apply($catalog, [IO.File]::ReadAllText($pack), $source.output_sha256, $source.manifest)
+}
 [FourthProfessionSkillCatalogHarness]::Run($catalog, $items)
 $formula = $catalog.CreateDamageFormula(
     [IO.File]::ReadAllText((Join-Path $inputs 'rules.json')), $rp.output_sha256, $rp.manifest)
+if ($SkillId -ne 0) {
+    switch ($SkillId) {
+        10068 { [BattleHellfireResurgenceHarness]::Run($catalog, $formula, $items); exit 0 }
+        default { throw "No focused fourth-profession fixture: $SkillId" }
+    }
+}
 [FourthProfessionBattleHarness]::Run($catalog, $formula, $items)
 [BattleSurgingTideHarness]::Run($catalog, $formula, $items)
 [BattleWaterBladeHarness]::Run($catalog, $formula, $items)
@@ -43,3 +59,4 @@ $formula = $catalog.CreateDamageFormula(
 [BattleSteelFaithHarness]::Run($catalog, $formula, $items)
 [BattleColdGlintHarness]::Run($catalog, $formula, $items)
 [BattleFrigidAuraHarness]::Run($catalog, $formula, $items)
+[BattleHellfireResurgenceHarness]::Run($catalog, $formula, $items)

@@ -32,6 +32,17 @@ namespace Zjcs.Combat.Official
 
         private void RestoreRoundStartDefinition(FightBattleStatusState status)
         {
+            if (status.HasRoundStartTrigger && statusCatalog.IsSkillRulePackEntity(status.ClassId))
+            {
+                var current = statusCatalog.CreateStatus(status.ClassId, status.OwnerId,
+                    status.CreatorId, status.InstanceId, status.RootSkillId, status.ApplyingSkillItemId,
+                    status.SourceSkillRank, status.SourceSkillLevel, status.SourceSubRank, status.SourceProperties,
+                    replacementProperties: status.ReplacementProperties, blessPropertyScales: status.BlessPropertyScales);
+                // A migrated graph can add or split children. Preserve the saved
+                // invocation clocks/counts while restoring its current definition.
+                status.RoundStartSkills = current.RoundStartSkills;
+                status.RoundStartRulesSupported = current.RoundStartRulesSupported;
+            }
             if (!status.HasRoundStartTrigger
                 || status.RoundStartDefinitionResolved && status.RoundStartTargetRulesResolved
                     && status.RoundStartPropTargetRulesResolved && status.RoundStartMeetRulesResolved

@@ -57,6 +57,24 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
             locations[key] = row['path']
         for key, row in json.loads((COMBAT / (name + '.json')).read_bytes())['entities'].items():
             entities.setdefault(key, {}).update(row)
+    rule_packs = []
+    for relative in spec.get('runtime_rule_packs', ()):
+        path = ROOT / relative
+        pack = json.loads(path.read_bytes())
+        proof_path = path.with_name(path.stem + '-source-manifest.json')
+        proof = json.loads(proof_path.read_bytes())
+        assert identity(path)['sha256'] == proof['output_sha256'], 'Skill rule pack hash changed'
+        for key, expected in pack['previous_entities'].items():
+            assert entities.get(key) == expected, ('Skill rule pack baseline changed', key)
+        entities.update(pack['entities'])
+        locations.update(proof['entity_locations'])
+        for name, rows in pack['tables'].items():
+            keys = ('EntityId',) if name == 'entity_prop' else ('GroupId', 'SubRank')
+            by_key = {tuple(row[key] for key in keys): row for row in skill_rules['tables'][name]}
+            by_key.update({tuple(row[key] for key in keys): row for row in rows})
+            skill_rules['tables'][name] = list(by_key.values())
+        skill_rules['props'].update(pack['props'])
+        rule_packs.append(dict(payload=identity(path), receipt=identity(proof_path), manifest=pack['manifest']))
     definitions = {str(key): copy.deepcopy(entities[str(key)]) for key in spec['entities']}
     defaults = []
     for key, components in definitions.items():
@@ -66,6 +84,7 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
             defaults.append(key + '/FightDamageComponent/DisperseStatus/ExcludeCharacterTypes')
 
     with Apk.current() as apk:
+        assert all(pack['manifest'] == apk.version for pack in rule_packs), 'Skill rule pack source differs'
         code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
         constructors, formats = Constructors(code), Formats(code)
         table_proofs = []
@@ -372,6 +391,8 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
             result['reused_client_implementations'] = reused_client
         if skin_bindings:
             result['skill_skin_bindings'] = skin_bindings
+        if rule_packs:
+            result['current_rule_packs'] = rule_packs
     return result
 
 

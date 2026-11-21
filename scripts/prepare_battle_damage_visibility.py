@@ -44,9 +44,8 @@ def refresh_runtime():
     receipt['runtime']=[dict(path=n,sha256=sha(ROOT/n)) for n in names]
     receipt['output_sha256']=sha(ROOT/OUTPUT)
     receipt['generator_sha256']=sha(__file__)
-    receipt['effect_type_sources']=[dict(path=p.relative_to(ROOT).as_posix(),sha256=sha(p))
-        for p in [ROOT/'.tools/source-packages/official-code/client-source/EffectUIType.cs',
-                  ROOT/'.tools/source-packages/current/871_156598/official-code/client-source/EffectUIType.cs']]
+    # A code-only refresh preserves the original extraction's source identities;
+    # it must not require recreating an unrelated historical source package.
     receipt['legacy_records']='Absent DamageEntityId remains zero and uses original MyFightDamage defaults (hide=false, showZero=true). Do not confuse the runtime damage serial or hit entity identity with the missing damage prefab identity. Positive unbound prefab IDs fail explicitly.'
     save(path,receipt)
     # These existing receipts also pin the touched shared presentation/executor code.

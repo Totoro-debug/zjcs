@@ -32,6 +32,7 @@ namespace Zjcs.Editor
             ["Assets/Game/Runtime/Offline/World/Map12/BuildingPreview.shader"] = 6,
             ["Assets/Official/Partners/UI/Card/Converted/59de19d261370c02.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/Cast_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/ConquerorGraph_Noise_Mask_Pro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/DarkStatus_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/FirstPromotionStatus_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/FirstPromotionStatus_SpriteSequence.shader"] = 4,
@@ -107,12 +108,16 @@ namespace Zjcs.Editor
                 selections.Add(original.Key, selection);
                 stages += selection.PassCount * selection.Programs.Count * 2;
             }
-            if (stages != 58168) throw new BuildFailedException("Original shader stage domain changed: " + stages);
+            if (stages != 59208) throw new BuildFailedException("Original shader stage domain changed: " + stages);
             Debug.Log("Original sparse shader domains validated: " + originalPrograms.Count + " assets / " + stages + " GPU stages.");
         }
 
         [MenuItem("Zjcs/Assets/Validate Original Sparse Shader Programs")]
-        public static void Validate() => ValidatePrograms(originalPrograms, 58168);
+        public static void Validate() => ValidatePrograms(originalPrograms, 59208);
+
+        public static void ValidateConquerorStatus() => ValidatePrograms(originalPrograms.Where(row =>
+            row.Key.StartsWith("Assets/Game/Runtime/Presentation/Combat/Shaders/Conqueror", StringComparison.Ordinal))
+            .ToDictionary(row => row.Key, row => row.Value), 1040);
 
         public static void ValidateProfessionStatus() => ValidatePrograms(originalPrograms.Where(row =>
             row.Key.StartsWith("Assets/Game/Runtime/Presentation/Combat/Shaders/Profession", StringComparison.Ordinal))

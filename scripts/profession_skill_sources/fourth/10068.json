@@ -1,0 +1,13 @@
+{
+  "entities": [11520, 11521, 11522, 24235, 11700, 11701, 11702, 11703, 11704, 11705],
+  "rule_pack_fragments": ["FightSkill_part74.g.bytes", "FightSkill_part85.g.bytes", "FightSkill_part712.g.bytes"],
+  "runtime_rule_packs": ["unity/Assets/Game/Resources/Combat/SkillRules/10068.json"],
+  "visibility_bundles": [11520, 11700],
+  "current_native_receipts": ["assets/reference/battle-animation/conqueror-current-graphs-source-manifest.json"],
+  "client_code": ["MyFightStatusRoundStart"],
+  "code": [
+    "FightSkillComponentInfo", "FightHitFixedComponentInfo", "FightDamageComponentInfo",
+    "FightStatusComponentInfo", "FightStatusRoundStartComponentInfo", "FightStatusTriggerSkillCfg",
+    "DamageDisperseStatusCfg", "BattleFormulaHandler"
+  ]
+}

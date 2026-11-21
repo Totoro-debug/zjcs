@@ -46,6 +46,17 @@ namespace Zjcs.Presentation.Combat
                     throw new FormatException("Invalid original damage visibility identity.");
                 result.damage.Add(row.damage_entity_id, row);
             }
+            foreach (var pack in OfficialCombatAssetCatalog.LoadDefault().LoadSkillRulePacks())
+            {
+                var migrated = JsonUtility.FromJson<OfficialBattleDamageVisibilityData>(pack.text);
+                if (migrated.damage == null) throw new FormatException("Migrated damage visibility bindings are missing.");
+                foreach (var row in migrated.damage)
+                {
+                    if (row == null || row.damage_entity_id <= 0)
+                        throw new FormatException("Invalid migrated damage visibility identity.");
+                    result.damage[row.damage_entity_id] = row;
+                }
+            }
             foreach (var row in data.roles)
             {
                 if (row == null) throw new FormatException("Missing original role filter record.");
