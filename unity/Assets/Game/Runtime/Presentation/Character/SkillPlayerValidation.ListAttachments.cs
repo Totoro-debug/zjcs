@@ -37,7 +37,8 @@ namespace Zjcs.Presentation.Character
             // Isolated fixture only: add an incompatible owned skill to inspect
             // the original all-skills filter and profession attachment in Player.
             int mismatch = progression.SkillRules.Skills.First(value => value.ItemType == 100
-                && !OfflineSkillProgression.IsAvailableFor(value, progression.SkillContext())).ClassId;
+                && !OfflineSkillProgression.IsAvailableFor(value, progression.SkillContext())
+                && !progression.Player.Skills.Skills.Any(owned => owned != null && owned.ClassId == value.ClassId)).ClassId;
             progression.Player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = mismatch, Rank = 1 });
             panel.ReloadProfile();
             yield return null;
