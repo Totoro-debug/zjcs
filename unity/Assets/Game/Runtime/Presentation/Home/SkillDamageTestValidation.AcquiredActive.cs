@@ -25,9 +25,12 @@ namespace Zjcs.Presentation.Home
         {
             AudioListener.volume = 0f;
             Action<Selectable> click = Click;
-            Require(skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10017 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
+            bool crisisGuard = skillId == 10032;
+            bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066;
+            bool thirdPromotion = crisisGuard || skillId == 10017;
+            Require(skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10017 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || crisisGuard || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
-            int profession = skillId == 10017 ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -48,7 +51,7 @@ namespace Zjcs.Presentation.Home
             var player = save.Player;
             OfflineItemAutoIncrease.InitializeNewCharacter(player, DateTime.UtcNow);
             player.CharacterCreated = true; player.CharacterName = skillName + "\u9a8c\u8bc1";
-            player.Level = 50; player.Rank = skillId == 10017 ? 3 : 2; player.SubRank = 5; player.MaxProfessionRank = player.Rank;
+            player.Level = 50; player.Rank = thirdPromotion ? 3 : 2; player.SubRank = 5; player.MaxProfessionRank = player.Rank;
             player.Experience = assets.Load().CumulativeLevelExperience[50];
             player.InitialWeaponType = profession == 10 ? Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType : 200;
             player.Wardrobe.Profession = profession;
@@ -242,6 +245,7 @@ namespace Zjcs.Presentation.Home
                         : skillId == 10018 ? cast.SkillEntityId == 10700
                         : skillId == 10024 ? cast.SkillEntityId == 10760
                         : skillId == 10028 ? cast.SkillEntityId == 10800
+                        : crisisGuard ? cast.SkillEntityId == 11170
                         : skillId == 10035 ? cast.SkillEntityId == 10900
                         : skillId == 10043 ? cast.SkillEntityId == 10590
                         : skillId == 10044 ? cast.SkillEntityId == 10750
@@ -257,18 +261,18 @@ namespace Zjcs.Presentation.Home
                         && value.SkillEntityId == (skillId == 10017 ? 10970 : cast.SkillEntityId)).ToArray();
                     if (skillId == 10049 && casts == 1)
                         Require(step.Event.ActorRound == 0, "The first challenge did not occur before the actor's first turn.");
-                    if (skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066)
+                    if (statusSkill)
                     {
                         bool spirit = skillId == 10051;
                         bool guard = skillId == 10046;
                         bool encouragement = skillId == 10066;
-                        int statusId = spirit ? 24214 : guard ? 24170 : encouragement ? 24237 : 24030;
-                        int skillEntityId = spirit ? 11260 : guard ? 11160 : encouragement ? 11550 : 10760;
-                        float statusDelay = spirit ? .25f : guard ? .44f : .2f;
+                        int statusId = crisisGuard ? 24180 : spirit ? 24214 : guard ? 24170 : encouragement ? 24237 : 24030;
+                        int skillEntityId = cast.SkillEntityId;
+                        float statusDelay = crisisGuard ? 1.2f : spirit ? .25f : guard ? .44f : .2f;
                         var started = step.Event.StatusViewEvents.Where(value => value.Kind == FightBattleStatusViewEventKind.Start
                             && value.OwnerId == 1 && value.Status.ClassId == statusId && value.Status.CreatorId == 1
                             && (encouragement || Math.Abs(value.Delay - cast.Delay - statusDelay) < .0001f)).ToArray();
-                        Require((started.Length == 1 || (guard || encouragement) && started.Length == 0) && damageEvents.Length == 1
+                        Require((started.Length == 1 || (crisisGuard || guard || encouragement) && started.Length == 0) && damageEvents.Length == 1
                             && damageEvents[0].TargetId == 1 && damageEvents[0].HitEntityId == skillEntityId + 1
                             && damageEvents[0].DamageEntityId == skillEntityId + 2 && damageEvents[0].Damage == 0,
                             "The acquired skill lost its original self-status or timing.");
@@ -278,7 +282,7 @@ namespace Zjcs.Presentation.Home
                         Require(status.ApplyingSkillItemId == skillId && status.RootSkillId == skillEntityId
                             && status.SourceSkillRank == cultivatedRank && status.SourceSkillLevel == 2
                             && status.DurationRound == (spirit ? 4 : guard || encouragement ? 2 : 3)
-                            && (guard ? status.ShieldKind != 0 && status.ShieldValue > 0 : status.ShieldKind == 0),
+                            && (crisisGuard || guard ? status.ShieldKind != 0 && status.ShieldValue > 0 : status.ShieldKind == 0),
                             "The acquired skill lost its saved cultivation or original property status.");
                         if (encouragement && casts == 1)
                             Require(step.Event.ActorRound == 0
@@ -314,7 +318,7 @@ namespace Zjcs.Presentation.Home
                     }
                     foreach (var hit in damageEvents)
                     {
-                        if (skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066) continue;
+                        if (statusSkill) continue;
                         int damage = skillId == 10017 ? 10972 : skillId == 10035 ? 10902 : skillId == 10000 ? 10502 : skillId == 10009 ? 10612 : skillId == 10010 ? 10622 : skillId == 10012 ? 10642 : skillId == 10014 ? (hit.HitEntityId == 10661 ? 10022 : 10663) : skillId == 10015 ? 10673 : skillId == 10016 ? 10026 : skillId == 10018 ? 10702 : skillId == 10043 ? 10592 : skillId == 10044 ? 10752 : skillId == 10048 ? 11099 : skillId == 10049 ? 11102 : skillId == 10008 || skillId == 10011 || skillId == 10013 || skillId == 10053 ? 10022
                             : cast.SkillEntityId == 11660 ? 10007 : 10023;
                         Require(hit.TargetId != 1 && (skillId == 10011 ? hit.HitEntityId >= 10631 && hit.HitEntityId <= 10633
@@ -344,7 +348,7 @@ namespace Zjcs.Presentation.Home
                                 parent.name.StartsWith("playable10801", StringComparison.Ordinal)));
                         if (!explosionVisible) { yield return null; continue; }
                     }
-                    else yield return new WaitForSecondsRealtime(.7f);
+                    else yield return new WaitForSecondsRealtime(crisisGuard ? 1.35f : .7f);
                     yield return CaptureAcquiredActive(output, "battle"); captured = true;
                 }
                 yield return null;
@@ -356,7 +360,7 @@ namespace Zjcs.Presentation.Home
             yield return CaptureAcquiredActive(output, "result");
             var result = FindObjectsOfType<Transform>().Single(value => value.name == "damage_test_result");
             var report = result.GetComponent<OfficialBattleResultReport>();
-            Require(report != null && report.FinalReport != null && (skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || report.FinalReport.TotalDamageDealt > 0),
+            Require(report != null && report.FinalReport != null && (statusSkill || report.FinalReport.TotalDamageDealt > 0),
                 "Original damage-test result omitted actual active-skill damage.");
             click(result.GetComponentsInChildren<Button>().Single(value => value.name == "Setting"));
             yield return new WaitForSecondsRealtime(.5f);
@@ -370,7 +374,7 @@ namespace Zjcs.Presentation.Home
                 "Damage test changed the persisted cultivation, equipped plan or material counts.");
             yield return CaptureAcquiredActive(output, "return");
             Debug.Log("[Acquired active UI] " + skillId + " saved rank=" + cultivatedRank + " level=2, original "
-                + (skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 ? "status" : "damage") + "/result/return and unchanged save passed.");
+                + (statusSkill ? "status" : "damage") + "/result/return and unchanged save passed.");
             File.WriteAllText(Path.Combine(output, "result.json"), JsonUtility.ToJson(new Result { passed = true }, true));
             Destroy(home.gameObject);
             yield return null;

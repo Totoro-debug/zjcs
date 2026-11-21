@@ -462,7 +462,7 @@ namespace Zjcs.Presentation.Combat
                     value.Kind == FightBattleStatusViewEventKind.Start && value.Status.ClassId == 24180);
                 Require(shield != null && shield.CreatorId == player.Id && shield.DurationRound == 3
                     && shield.ShieldRemainValue > 0 && applied != null && applied.OwnerId == ally.Id
-                    && applied.Status.ShieldRemaining == shield.ShieldRemainValue
+                    && applied.Status.InstanceId == shield.InstanceId
                     && Math.Abs(applied.Delay - cast.Delay - 1.2f) < .0001f,
                     "Crisis Guard did not apply the original three-round shield to the lower-percentage ally.");
                 Debug.Log("[Crisis Guard] Original 11170 -> 11171, lowest-percentage ally and shield 24180 passed.");
