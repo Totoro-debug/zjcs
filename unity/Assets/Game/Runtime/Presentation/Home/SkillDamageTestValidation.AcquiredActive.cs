@@ -55,9 +55,11 @@ namespace Zjcs.Presentation.Home
             var player = save.Player;
             OfflineItemAutoIncrease.InitializeNewCharacter(player, DateTime.UtcNow);
             player.CharacterCreated = true; player.CharacterName = skillName + "\u9a8c\u8bc1";
-            player.Level = 50; player.Rank = surgingTide ? 4 : thirdPromotion ? 3 : 2;
+            player.Rank = surgingTide ? 4 : thirdPromotion ? 3 : 2;
             player.SubRank = surgingTide ? 8 : 5; player.MaxProfessionRank = player.Rank;
-            player.Experience = assets.Load().CumulativeLevelExperience[50];
+            player.Level = surgingTide ? rules.LevelLimits.Where(value => value.SubRank == player.SubRank
+                && value.PlayerBlessLevel == 0 && value.SkillLevel >= 2).Min(value => value.PlayerLevel) : 50;
+            player.Experience = assets.Load().CumulativeLevelExperience[player.Level];
             player.InitialWeaponType = profession == 10 ? Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType : 200;
             player.Wardrobe.Profession = profession;
             if (skillId == 10000 || skillId == 10028 || skillId == 10035) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId);
