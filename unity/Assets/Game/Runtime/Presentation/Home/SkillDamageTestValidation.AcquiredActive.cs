@@ -579,9 +579,15 @@ namespace Zjcs.Presentation.Home
             yield return CaptureAcquiredActive(output, "return");
             Debug.Log("[Acquired active UI] " + skillId + " saved rank=" + cultivatedRank + " level=2, original "
                 + (statusSkill ? "status" : "damage") + "/result/return and unchanged save passed.");
-            File.WriteAllText(Path.Combine(output, "result.json"), JsonUtility.ToJson(new Result { passed = true }, true));
+            Require(home.Hud.TryHandleBack() && !home.Hud.CharacterPageOpen,
+                "The completed diagnostic did not close its original character page.");
+            // Home's character canvas deliberately lives outside the Home
+            // hierarchy to retain its native Expand scaler. Release this
+            // diagnostic's own canvas before mounting the next isolated profile.
+            Destroy(pageCanvas.gameObject);
             Destroy(home.gameObject);
             yield return null;
+            File.WriteAllText(Path.Combine(output, "result.json"), JsonUtility.ToJson(new Result { passed = true }, true));
         }
 
         private static IEnumerator CaptureAcquiredActive(string output, string phase)
