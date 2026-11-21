@@ -57,7 +57,7 @@
 | 被动秘法 | 10600 | 灵契疗愈 | 当自己召唤物死亡或消失时，自身受到1次治疗。 | [治疗](#term-0-59) | 已完成 | 已接入官方根实体 25105 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
 | 被动秘法 | 10601 | 幻光秘策 | 提升自身治疗效果。每次释放战技造成治疗效果溢出时，将溢出部分的100%转化为目标的护盾，持续2回合。 | [护盾](#term-0-11) | 已完成 | 已接入官方根实体 25106 与 1 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
 | 被动秘法 | 10610 | 真言祝福 | 自身回合开始时，祝福攻击最高的友方角色，为其施加伤害加成效果，该效果持续至自身下个回合开始，不可被驱散。 | [祝福](#term-0-105)、[角色](#term-0-8) | 已完成 | 已接入官方根实体 25119 与 4 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10611 | 暗星降临 | 自身回合开始时，随机获得1个增益效果，持续至自身下个回合开始。 | 无 | 未完成 | 保留官方说明；不纳入本次一、二阶迁移完成范围。 |
+| 被动秘法 | 10611 | 暗星降临 | 自身回合开始时，随机获得1个增益效果，持续至自身下个回合开始。 | 无 | 已完成 | 已接入官方根实体 25120 与 4 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
 
 <a id="rank-5"></a>
 
