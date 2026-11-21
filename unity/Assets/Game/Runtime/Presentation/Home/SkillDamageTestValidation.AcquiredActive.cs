@@ -26,9 +26,10 @@ namespace Zjcs.Presentation.Home
             AudioListener.volume = 0f;
             Action<Selectable> click = Click;
             bool crisisGuard = skillId == 10032;
+            bool starShatteringSlash = skillId == 10039;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066;
-            bool thirdPromotion = crisisGuard || skillId == 10017;
-            Require(skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10017 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || crisisGuard || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
+            bool thirdPromotion = crisisGuard || starShatteringSlash || skillId == 10017;
+            Require(thirdPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
             int profession = thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
@@ -247,6 +248,7 @@ namespace Zjcs.Presentation.Home
                         : skillId == 10028 ? cast.SkillEntityId == 10800
                         : crisisGuard ? cast.SkillEntityId == 11170
                         : skillId == 10035 ? cast.SkillEntityId == 10900
+                        : starShatteringSlash ? cast.SkillEntityId == 10940
                         : skillId == 10043 ? cast.SkillEntityId == 10590
                         : skillId == 10044 ? cast.SkillEntityId == 10750
                         : skillId == 10046 ? cast.SkillEntityId == 11160
@@ -316,6 +318,17 @@ namespace Zjcs.Presentation.Home
                                     "Sunset sword changed its original hit timing.");
                         }
                     }
+                    if (starShatteringSlash)
+                    {
+                        Require(damageEvents.Length == 1, "Star-shattering slash must hit exactly one target.");
+                        var strike = damageEvents[0];
+                        Require(strike.TargetId != 1 && strike.HitEntityId == 10941 && strike.DamageEntityId == 10015
+                            && strike.ElementType == 0 && strike.DamageType == 1 && strike.Damage < 0
+                            && !strike.TrueDamage && !strike.IsCure && Math.Abs(strike.Delay - cast.Delay - 1.35f) < .0001f,
+                            "The acquired star-shattering slash changed its original physical hit.");
+                        hits++;
+                        continue;
+                    }
                     foreach (var hit in damageEvents)
                     {
                         if (statusSkill) continue;
@@ -348,7 +361,7 @@ namespace Zjcs.Presentation.Home
                                 parent.name.StartsWith("playable10801", StringComparison.Ordinal)));
                         if (!explosionVisible) { yield return null; continue; }
                     }
-                    else yield return new WaitForSecondsRealtime(crisisGuard ? 1.35f : .7f);
+                    else yield return new WaitForSecondsRealtime(crisisGuard || starShatteringSlash ? 1.45f : .7f);
                     yield return CaptureAcquiredActive(output, "battle"); captured = true;
                 }
                 yield return null;

@@ -12,7 +12,8 @@ $root = Split-Path -Parent $PSScriptRoot
 $inputs = Join-Path $root 'unity/Assets/Official/Combat'
 Add-Type -Path (@(Get-FightCombatSources) +
     (Join-Path $PSScriptRoot 'fixtures/third_profession_skill_catalog_harness.cs') +
-    (Join-Path $PSScriptRoot 'fixtures/battle_crisis_guard_harness.cs'))
+    (Join-Path $PSScriptRoot 'fixtures/battle_crisis_guard_harness.cs') +
+    (Join-Path $PSScriptRoot 'fixtures/battle_star_shattering_slash_harness.cs'))
 $sp = Get-Content (Join-Path $inputs 'skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $bp = Get-Content (Join-Path $inputs 'battle-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $rp = Get-Content (Join-Path $inputs 'rules-source-manifest.json') -Raw | ConvertFrom-Json
@@ -25,3 +26,4 @@ $items = [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load(
 $formula = $catalog.CreateDamageFormula(
     [IO.File]::ReadAllText((Join-Path $inputs 'rules.json')), $rp.output_sha256, $rp.manifest)
 [BattleCrisisGuardHarness]::Run($catalog, $formula, $items)
+[BattleStarShatteringSlashHarness]::Run($catalog, $formula, $items)

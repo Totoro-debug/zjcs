@@ -28,6 +28,9 @@ SKILLS = {
                 code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo', 'FightDamageComponentInfo',
                       'FightStatusComponentInfo', 'FightStatusShieldPersistentComponentInfo',
                       'BattleFormulaHandler', 'AiPriorityType', 'SkillAiCfg']),
+    10039: dict(entities=[10940, 10941, 10015],
+                code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo', 'FightDamageComponentInfo',
+                      'BattleFormulaHandler', 'AiPriorityType', 'SkillAiCfg']),
 }
 COMBAT = ROOT / 'unity/Assets/Official/Combat'
 
