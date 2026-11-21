@@ -199,7 +199,8 @@ namespace Zjcs.Presentation.Combat
                 return target;
             }
             statusViews = new OfficialBattleStatusPlayback(executor, root, scope, StatusBody, hasStatusIcon,
-                "Combat/first-promotion-statuses", "Combat/additional-statuses", "Combat/profession-statuses");
+                "Combat/first-promotion-statuses", "Combat/additional-statuses", "Combat/profession-statuses",
+                "Combat/profession-current-graphs");
             statusViews.Restore();
         }
 

@@ -161,6 +161,30 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
             assert conversion['manifest'] == graph['manifest'], 'Conversion sources differ'
             roots.update(row['shared_dependency_bundle'] for row in conversion['originals'])
             additional_conversions.append(identity(path))
+        current_conversions, current_native = [], {}
+        for relative in spec.get('current_native_receipts', ()):
+            path = ROOT / relative
+            conversion = json.loads(path.read_bytes())
+            assert conversion['manifest'] == apk.version, 'Current native conversion source differs'
+            for output in conversion['outputs']:
+                assert identity(ROOT / output['path']) == output, ('Current converted native output changed', output['path'])
+            export_record = conversion['native_export_receipt']
+            export_path = ROOT / export_record['path']
+            assert identity(export_path) == export_record, 'Current native exporter receipt changed'
+            exported = json.loads(export_path.read_bytes())
+            input_path = export_path.parent / 'source-manifest.json'
+            assert exported['completed'] and exported['manifest'] == apk.version
+            assert hashlib.sha256(input_path.read_bytes()).hexdigest() == exported['input_manifest_sha256']
+            inputs = json.loads(input_path.read_bytes())
+            assert inputs['manifest'] == apk.version and inputs['apk_sha256'] == apk.source.apk_sha256
+            for row in inputs['inputs']:
+                if row.get('package') != 'DefaultPackage':
+                    continue
+                digest = row['raw_sha256']
+                assert row['name'] not in current_native or current_native[row['name']] == digest
+                current_native[row['name']] = digest
+            roots.update(row['shared_dependency_bundle'] for row in conversion['originals'])
+            current_conversions.append(identity(path))
         assert roots, 'No original native graph roots'
         pending, visited, native = list(sorted(roots)), set(), []
         shader_bundle_changed = False
@@ -172,16 +196,20 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
             if name in visited:
                 continue
             visited.add(name)
-            old, new = old_by_name[name], new_by_name[name]
-            if name == 'defaultpackage_unityshaders.bundle' and old['hash'] != new['hash']:
+            new = new_by_name[name]
+            old = old_by_name.get(name)
+            fresh = name in current_native
+            if not fresh and name == 'defaultpackage_unityshaders.bundle' and old['hash'] != new['hash']:
                 shader_bundle_changed = True
                 continue
-            if name == 'defaultpackage_assets_wwise_scriptableobjects_event.bundle' and old['hash'] != new['hash']:
+            if not fresh and name == 'defaultpackage_assets_wwise_scriptableobjects_event.bundle' and old['hash'] != new['hash']:
                 changed_event_bundle = name
                 continue
             verified = apk.reader.read('DefaultPackage', name)
             loaded = apk.load(name)
-            if (old['hash'], old['size']) != (new['hash'], new['size']):
+            if fresh:
+                assert hashlib.sha256(verified.data).hexdigest() == current_native[name], ('Current native conversion input changed', name)
+            elif (old['hash'], old['size']) != (new['hash'], new['size']):
                 with Apk(graph['manifest']) as prior:
                     previous = prior.load(name)
                     current_objects = {obj.path_id: obj for asset in loaded.files.values()
@@ -294,6 +322,8 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
                       generator=identity(Path(__file__)))
         if additional_conversions:
             result['additional_native_conversions'] = additional_conversions
+        if current_conversions:
+            result['current_native_conversions'] = current_conversions
     return result
 
 

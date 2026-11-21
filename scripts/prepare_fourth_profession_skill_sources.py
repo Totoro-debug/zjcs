@@ -40,6 +40,11 @@ SKILLS = {
     10099: dict(entities=[12080, 12081, 12082, 12083, 10100, 10101, 10006],
                 code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo', 'FightDamageComponentInfo',
                       'FightSKillMoveCfg', 'FightActionSkillMoveComponentInfo', 'BattleFormulaHandler']),
+    10592: dict(entities=[25108],
+                current_native_receipts=['assets/reference/battle-animation/profession-current-graphs-source-manifest.json'],
+                client_code=['MyFightStatus', 'MyFightStatusDamageProcess'],
+                code=['FightStatusComponentInfo', 'FightStatusDamageProcessComponentInfo',
+                      'FightStatusDamageProcessComponent', 'BattleFormulaHandler']),
 }
 
 

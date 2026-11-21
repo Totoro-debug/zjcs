@@ -44,6 +44,7 @@ namespace Zjcs.Editor
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/PetTransfer_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/PlayerEffect_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/ProfessionStatus_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/ProfessionGraph_Noise_Mask_Pro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/SkillGraph_FullScreen-Polar.shader"] = 3,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/SkillGraph_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/SkillGraph_Spine-SkeletonEffect-URP-2D.shader"] = 768,
@@ -106,16 +107,16 @@ namespace Zjcs.Editor
                 selections.Add(original.Key, selection);
                 stages += selection.PassCount * selection.Programs.Count * 2;
             }
-            if (stages != 57128) throw new BuildFailedException("Original shader stage domain changed: " + stages);
+            if (stages != 58168) throw new BuildFailedException("Original shader stage domain changed: " + stages);
             Debug.Log("Original sparse shader domains validated: " + originalPrograms.Count + " assets / " + stages + " GPU stages.");
         }
 
         [MenuItem("Zjcs/Assets/Validate Original Sparse Shader Programs")]
-        public static void Validate() => ValidatePrograms(originalPrograms, 57128);
+        public static void Validate() => ValidatePrograms(originalPrograms, 58168);
 
         public static void ValidateProfessionStatus() => ValidatePrograms(originalPrograms.Where(row =>
-            row.Key.StartsWith("Assets/Game/Runtime/Presentation/Combat/Shaders/ProfessionStatus_", StringComparison.Ordinal))
-            .ToDictionary(row => row.Key, row => row.Value), 1040);
+            row.Key.StartsWith("Assets/Game/Runtime/Presentation/Combat/Shaders/Profession", StringComparison.Ordinal))
+            .ToDictionary(row => row.Key, row => row.Value), 2080);
 
         public static void ValidateBattleThemeUi()
         {

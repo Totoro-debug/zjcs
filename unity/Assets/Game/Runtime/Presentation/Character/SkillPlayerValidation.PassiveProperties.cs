@@ -21,7 +21,8 @@ namespace Zjcs.Presentation.Character
             AudioListener.volume = 0f;
             int itemId = int.Parse(Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_ITEM") ?? "10500");
             int profession = int.Parse(Environment.GetEnvironmentVariable("ZJCS_SKILLS_PASSIVE_PROFESSION") ?? "1");
-            Require(new[] { 1, 2, 6, 10, 11, 15 }.Contains(profession), "Passive fixture profession is outside the requested scope.");
+            Require(new[] { 1, 2, 3, 4, 6, 7, 8, 10, 11, 12, 13, 15, 16, 17 }.Contains(profession),
+                "Passive fixture profession is outside the requested scope.");
             while (GameObject.Find("OfficialSaveSelectionPanel") == null) yield return null;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var skillRules = assets.LoadSkillRules();
@@ -32,14 +33,18 @@ namespace Zjcs.Presentation.Character
             var slots = new ProfileSlotCatalog(saveRoot);
             string slot = slots.CreateSlot();
             var save = new OfflineMainlineSave();
+            bool fourthPromotion = new[] { 4, 8, 13, 17 }.Contains(profession);
+            int promotion = fourthPromotion ? 4 : new[] { 3, 7, 12, 16 }.Contains(profession) ? 3 : 2;
             save.Player.CharacterCreated = true;
             save.Player.CharacterName = "秘法验证";
-            save.Player.Level = 50;
-            save.Player.Rank = 2;
-            save.Player.SubRank = 5;
-            save.Player.MaxProfessionRank = 2;
+            save.Player.SubRank = fourthPromotion ? 8 : 5;
+            save.Player.Level = fourthPromotion ? skillRules.LevelLimits.Where(value =>
+                value.SubRank == save.Player.SubRank && value.PlayerBlessLevel == 0 && value.SkillLevel >= 2)
+                .Min(value => value.PlayerLevel) : 50;
+            save.Player.Rank = promotion;
+            save.Player.MaxProfessionRank = promotion;
             save.Player.Wardrobe.Profession = profession;
-            save.Player.Experience = assets.Load().CumulativeLevelExperience[50];
+            save.Player.Experience = assets.Load().CumulativeLevelExperience[save.Player.Level];
             if (fromPieces) SupplyPassivePieceFixture(save, assets, definition, rank);
             else save.Player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = itemId, Rank = rank });
             foreach (var cost in skillRules.SlotLevelCosts.Single(value => value.Level == 2).Items)

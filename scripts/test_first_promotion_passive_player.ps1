@@ -3,7 +3,7 @@ param(
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
     [int[]]$SkillIds=@(10500,10501,10502,10505,10507,10509,10510,10513,10514,10516,10520,10521,10522,10524,10535,10537,10539,10540,10541,10544,10546,10550,10554,10555,10556,10559,10561,10563,10569,10571,10576,10578,10583,10588,10602),
-    [ValidateSet(0,1,2,6,10,11,15)][int]$Profession=0,
+    [ValidateSet(0,1,2,3,4,6,7,8,10,11,12,13,15,16,17)][int]$Profession=0,
     [switch]$AcquireFromPieces
 )
 $ErrorActionPreference='Stop'
@@ -16,14 +16,21 @@ $marker=Get-Content -LiteralPath (Join-Path $workspacePath '.zjcs-validation.jso
 if($marker.format -ne 1 -or $marker.repository -ne $repository){throw 'Wrong validation workspace.'}
 if($PSCmdlet.ParameterSetName -eq 'Play'){
     $projectPath=(Get-Item -LiteralPath $Project).FullName
-    if(-not $projectPath.StartsWith($workspacePath+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)){
-        throw 'The isolated Unity project must be inside the marked workspace.'
+    $mainProject=[IO.Path]::GetFullPath((Join-Path $repository 'unity'))
+    if(-not $projectPath.StartsWith($workspacePath+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase) -and
+        -not $projectPath.Equals($mainProject,[StringComparison]::OrdinalIgnoreCase)){
+        throw 'Use the repository Unity project or an isolated project inside the marked workspace.'
     }
+    $normalizedProject=$projectPath.Replace('\','/')
+    $projectUsers=@(Get-CimInstance Win32_Process | Where-Object {
+        $_.Name -eq 'Unity.exe' -and $_.CommandLine -and $_.CommandLine.Replace('\','/').Contains($normalizedProject)
+    })
+    if($projectUsers.Count){throw 'The selected passive validation project is already in use.'}
     $config=Get-Content -LiteralPath (Join-Path $repository 'unity-tools.json') -Raw|ConvertFrom-Json
     $executable=$config.editorExecutable
 }else{$executable=(Get-Item -LiteralPath $Player).FullName}
 $rules=Get-Content (Join-Path $repository 'unity/Assets/Official/Combat/rules.json') -Raw|ConvertFrom-Json
-$professions=@($rules.profession_base|Where-Object {$_.Profession -in @(1,2,6,10,11,15)}|Sort-Object Profession)
+$professions=@($rules.profession_base|Where-Object {$_.Profession -in @(1,2,3,4,6,7,8,10,11,12,13,15,16,17)}|Sort-Object Profession)
 $previous=@{}
 Get-ChildItem Env:ZJCS_*|ForEach-Object {$previous[$_.Name]=$_.Value}
 try {
