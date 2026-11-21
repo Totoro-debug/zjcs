@@ -2805,8 +2805,9 @@ namespace Zjcs.Combat.Official
                 Dictionary<string, object> trigger = Object(item, "round end trigger skill");
                 Dictionary<string, object> custom = Component(trigger, "CustomDamageInfo");
                 Dictionary<string, object> propTarget = Component(trigger, "PropTarget");
-                if (Bool(trigger, "AffectedByProp") || Int(trigger, "Source") != 2
-                    || Int(trigger, "Target") != (burningGround ? 2 : 5) || Bool(trigger, "UseAI")
+                int source = Int(trigger, "Source"), target = Int(trigger, "Target");
+                if (Bool(trigger, "AffectedByProp") || source != 2 && source != 3
+                    || target != (source == 3 || burningGround ? 2 : 5) || Bool(trigger, "UseAI")
                     || Bool(trigger, "StackedCountToDamageFactor")
                     || Int(trigger, "TargetPos") != 1
                     || Float(trigger, "BasePercent", 1f) < 0f

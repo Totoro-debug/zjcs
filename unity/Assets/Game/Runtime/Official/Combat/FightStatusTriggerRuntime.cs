@@ -205,7 +205,8 @@ namespace Zjcs.Combat.Official
 
         public static List<FightBattleStatusSkillInvocation> CollectRoundEndSkills(
             FightBattleUnitState listener, IReadOnlyList<FightBattleUnitState> units,
-            FightRandomStream random, IReadOnlyList<FightBattleGridItemState> gridItems = null)
+            FightRandomStream random, IReadOnlyList<FightBattleGridItemState> gridItems = null,
+            Action<FightBattleUnitState, FightBattleStatusState> onInvoked = null)
         {
             var result = new List<FightBattleStatusSkillInvocation>();
             if (listener == null || units == null || !FightBattleTargeting.IsSelectable(listener))
@@ -216,7 +217,7 @@ namespace Zjcs.Combat.Official
                     || statusOwner.Statuses == null) continue;
                 foreach (FightBattleStatusState status in statusOwner.Statuses)
                 {
-                    if (status == null || !status.HasRoundEndTrigger
+                    if (status == null || !status.HasRoundEndTrigger || status.ForbiddenType != 0
                         || !status.RoundEndRulesSupported
                         || (status.RoundEndMaxCount >= 0
                             && status.RoundEndTriggeredCount >= status.RoundEndMaxCount)
@@ -229,20 +230,30 @@ namespace Zjcs.Combat.Official
                     foreach (FightBattleStatusStateTrigger trigger in status.RoundEndSkills)
                     {
                         if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
-                            || trigger.Source != 2 || (trigger.Target != 5
-                                && !(status.ClassId==25098 && trigger.Target==2)) || trigger.UseAI
+                            || !(trigger.Source == 3 && trigger.Target == 2
+                                || trigger.Source == 2 && (trigger.Target == 5
+                                    || status.ClassId == 25098 && trigger.Target == 2)) || trigger.UseAI
                             || trigger.TargetPos != 1 || trigger.StackedCountToDamageFactor
                             || !Roll(trigger.BasePercent, random)) continue;
+                        var caster = trigger.Source == 3 ? FindUnit(units, status.CreatorId) : statusOwner;
+                        bool allowDeadSource = trigger.Source == 3 && caster != null && (caster.Hp <= 0 || caster.Ended);
+                        if (!FightBattleTargeting.IsSelectable(caster) && !allowDeadSource) continue;
+                        var target = trigger.Source == 3 ? statusOwner : listener;
                         result.Add(new FightBattleStatusSkillInvocation
                         {
                             Trigger = trigger.WithSource(status),
-                            SourceUnitId = status.OwnerId,
-                            TargetUnitId = listener.Id,
-                            TargetPositionUnitId = listener.Id
+                            SourceUnitId = caster.Id,
+                            TargetUnitId = target.Id,
+                            TargetPositionUnitId = target.Id,
+                            AllowDeadSource = allowDeadSource
                         });
                         added++;
                     }
-                    if (added > 0) status.RoundEndTriggeredCount++;
+                    if (added > 0)
+                    {
+                        status.RoundEndTriggeredCount++;
+                        onInvoked?.Invoke(statusOwner, status);
+                    }
                 }
             }
             return result;
@@ -1117,6 +1128,11 @@ namespace Zjcs.Combat.Official
             {
                 if (status == null || !status.HasMoveRange || !status.MoveRangeRulesSupported)
                     continue;
+                if (status.ForbiddenType != 0 || source.Ended)
+                {
+                    RemoveMoveRangeChildren(source, status, units);
+                    continue;
+                }
                 if (roundCheck && status.MoveRangeHandleType == 1 && !status.MoveRangeCheckEveryRound)
                     continue;
                 var candidates = new List<FightBattleUnitState>();
@@ -1129,7 +1145,7 @@ namespace Zjcs.Combat.Official
                         || status.MoveRangeFilterClassIds.Count > 0
                             && !status.MoveRangeFilterClassIds.Contains(MoveRangeClassId(candidate))
                         || !status.MoveRangeUnlimited
-                            && !IsMoveNearInRange(source, candidate, status.MoveRangeOffsets))
+                            && !IsBodyInMoveRange(source, candidate, status.MoveRangeOffsets))
                         continue;
                     candidates.Add(candidate);
                 }
@@ -1186,6 +1202,26 @@ namespace Zjcs.Combat.Official
                 }
             }
             return applied;
+        }
+
+        public static void RemoveMoveRangeChildren(FightBattleUnitState source, FightBattleStatusState status,
+            IReadOnlyList<FightBattleUnitState> units)
+        {
+            if (source == null || status == null || units == null || !status.HasMoveRange
+                || !status.MoveRangeRulesSupported || status.MoveRangeHandleType != 1) return;
+            RemoveMoveRangeStatuses(units, source.Id, FightBattleStatusOrigin.Resolve(status), status.MoveRangeCloseStatuses);
+            status.MoveRangeInsideUnitIds.Clear();
+        }
+
+        private static bool IsBodyInMoveRange(FightBattleUnitState source, FightBattleUnitState target,
+            List<FightGridPoint> range)
+        {
+            if (IsMoveNearInRange(source.X, source.Y, target.X, target.Y, range)) return true;
+            // The confirmed common targeting rule selects a large target when
+            // any body cell overlaps, without expanding the caster's own range.
+            foreach (var body in target.BodyOffsets ?? new List<FightGridPoint>())
+                if (IsMoveNearInRange(source.X, source.Y, target.X + body.X, target.Y + body.Y, range)) return true;
+            return false;
         }
 
         private static bool MoveRangeTargetMatches(FightBattleUnitState source,

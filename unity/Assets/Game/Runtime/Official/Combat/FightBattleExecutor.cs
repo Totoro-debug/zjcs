@@ -85,6 +85,7 @@ namespace Zjcs.Combat.Official
                             status.HasCreatorDamageBoost = statusCatalog.StatusHasCreatorDamageBoost(status.ClassId);
                             RestoreHpChangeStackDefinition(status);
                             RestoreRoundStartDefinition(status);
+                            RestoreRoundEndDefinition(status);
                             RestoreConditionalHitDefinition(status);
                             statusCatalog.RestoreCureReduceDefinition(status);
                             statusCatalog.RestoreShieldExpiryDefinition(status);
@@ -456,7 +457,8 @@ namespace Zjcs.Combat.Official
             if (statusCatalog != null)
             {
                 List<FightBattleStatusSkillInvocation> roundEndSkills =
-                    FightStatusTriggerRuntime.CollectRoundEndSkills(actor, units, random, checkpoint.GridItems);
+                    FightStatusTriggerRuntime.CollectRoundEndSkills(actor, units, random, checkpoint.GridItems,
+                        (owner, status) => RecordStatusView(owner, status, FightBattleStatusViewEventKind.Invoke));
                 foreach (FightBattleUnitState logicOwner in new List<FightBattleUnitState>(units))
                 {
                     if (logicOwner == null || logicOwner.Statuses == null) continue;

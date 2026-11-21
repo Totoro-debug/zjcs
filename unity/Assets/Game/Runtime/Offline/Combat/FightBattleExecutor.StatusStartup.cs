@@ -44,6 +44,12 @@ namespace Zjcs.Combat.Official
                 BeginStatusActionEvents();
                 BeginStatusSecondsHits();
                 CleanupGridItems();
+                if (sequence == checkpoint.Sequence && counter == checkpoint.Counter + 1
+                    && !checkpoint.Finished && statusCatalog != null)
+                    foreach (var source in new System.Collections.Generic.List<FightBattleUnitState>(units))
+                        if (source.Statuses.Exists(status => status != null && status.HasMoveRange
+                            && status.MoveRangeHandleType == 1))
+                            FightStatusTriggerRuntime.ApplyMoveRange(source, units, statusCatalog, random, false);
                 var result = StepCore(sequence, counter);
                 if (!result.Replayed)
                 {
@@ -91,6 +97,7 @@ namespace Zjcs.Combat.Official
             RecordStatusView(owner, ended, FightBattleStatusViewEventKind.End);
             if (ended != null) ended.StackChanged = null;
             statusMutex.Remove(owner, ended);
+            FightStatusTriggerRuntime.RemoveMoveRangeChildren(owner, ended, units);
             if (statusCatalog != null && ended != null && ended.HasPropertyComponent)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             RefreshShieldAttackPresence(owner, ended);

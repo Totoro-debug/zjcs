@@ -90,7 +90,7 @@ namespace Zjcs.Presentation.Home
             player.Experience = assets.Load().CumulativeLevelExperience[player.Level];
             player.InitialWeaponType = profession == 10 ? Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType : 200;
             player.Wardrobe.Profession = profession;
-            bool coldCompanion = LoadAcquiredPassiveCompanion(player, skillId, output);
+            int passiveCompanion = LoadAcquiredPassiveCompanion(player, skillId, output);
             if (skillId == 10000 || skillId == 10028 || skillId == 10035) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId);
             if (skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId, 2, 2);
             if (skillId == 10017) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId, 3, 3);
@@ -242,7 +242,7 @@ namespace Zjcs.Presentation.Home
                 if (setting == "MonsterHp" && waterBlade)
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
-                if (setting == "Round" && vortexSurge)
+                if (setting == "Round" && (vortexSurge || passiveCompanion == 10607))
                     choice = settings.GetComponentsInChildren<Toggle>().Where(value =>
                         value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting))
                         .OrderBy(value => value.transform.parent.GetSiblingIndex()).Last();
@@ -256,7 +256,7 @@ namespace Zjcs.Presentation.Home
             var checkpoint = battle.Controller.Checkpoint;
             var actor = checkpoint.Units.Single(value => value.Id == 1);
             var active = actor.Skills.Single(value => value.Slot == 0);
-            if (coldCompanion) VerifyAcquiredPassiveAssembly(actor, progression);
+            if (passiveCompanion > 0) VerifyAcquiredPassiveAssembly(actor, progression, passiveCompanion);
             Require(active.ItemId == skillId && active.Rank == cultivatedRank && active.Level == 2
                 && active.SubRank == progression.Player.SubRank && actor.Profession == profession,
                 "Production battle assembly lost the actual saved skill/profession/cultivation.");
@@ -267,9 +267,9 @@ namespace Zjcs.Presentation.Home
                 actor.Statuses.Add(combat.CreateStatus(24040, 1, 1, 724040));
                 actor.Statuses.Add(combat.CreateStatus(24041, 1, 1, 724041));
             }
-            int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0;
+            int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0;
             battle.Controller.StepCompleted += step => {
-                if (coldCompanion) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, ref coldHits);
+                if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits);
                 var skillCasts = step.Event.SkillCasts.Where(value => value.ActorId == 1 && value.Slot == 0
                     && value.SkillItemId == skillId).ToArray();
                 casts += skillCasts.Length;
@@ -507,9 +507,18 @@ namespace Zjcs.Presentation.Home
             yield return CaptureAcquiredActive(output, "preparation");
             click(FlameFlowButton(value => value.name == "Btn" && value.GetComponentsInParent<Transform>()
                 .Any(parent => parent.name == "StartBtn")));
-            bool captured = false, capturedOpening = false;
+            bool captured = false, capturedOpening = false, capturedPassive = false;
             while (battle != null)
             {
+                if (passiveCompanion == 10607 && !capturedPassive && auraHits > 0 && coldHits > 0
+                    && FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
+                        && particle.GetComponentsInParent<Transform>().Any(parent => parent.name.StartsWith(
+                            "Eff_Skill_Paladin04_ExtremeColdField01", StringComparison.Ordinal))))
+                {
+                    yield return new WaitForSecondsRealtime(.12f);
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    capturedPassive = true;
+                }
                 if (lightSwordArray && !capturedOpening && casts > 0 && hits == 0)
                 {
                     yield return new WaitForSecondsRealtime(1.05f);
@@ -568,7 +577,9 @@ namespace Zjcs.Presentation.Home
             Require(!lightSwordArray || capturedOpening, "The four original opening swords were not captured.");
             Require(!vortexSurge || vortexMovements > 0,
                 "The original vortex surge never exercised its inward knockback in the rendered battle.");
-            Require(!coldCompanion || coldHits > 0, "The cultivated cold-glint secret never applied cold in the rendered battle.");
+            Require(passiveCompanion == 0 || coldHits > 0, "The cultivated passive never applied cold in the rendered battle.");
+            Require(passiveCompanion != 10607 || auraHits > 0, "The cultivated frigid aura never struck at the enemy's turn end.");
+            Require(passiveCompanion != 10607 || capturedPassive, "The original frigid-aura effect was never rendered.");
             File.WriteAllText(Path.Combine(output, "acquired-active-ui-checkpoint.json"), FightBattleCheckpointSerializer.Save(checkpoint));
             yield return new WaitForSecondsRealtime(.8f);
             yield return CaptureAcquiredActive(output, "result");

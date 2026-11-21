@@ -53,6 +53,16 @@ SKILLS = {
                 reused_client_code=['MyFightStatusProp', 'MyFightStatusBase', 'MyFightStatus', 'MyAction', 'MyEntity'],
                 code=['FightStatusComponentInfo', 'FightStatusHitSkillComponentInfo', 'FightStatusHitSkillComponent',
                       'FightStatusPropComponentInfo', 'FightStatusTriggerStatusCfg', 'BattleFormulaHandler']),
+    10607: dict(entities=[25116, 24391, 12170, 12171, 12172, 24266],
+                current_native_receipts=['assets/reference/battle-animation/profession-current-graphs-source-manifest.json'],
+                native_receipts=[dict(path='assets/reference/battle-animation/first-promotion-status-assets-source-manifest.json',
+                                      ids=[24266])],
+                client_code=['MyFightStatusMoveRange', 'MyFightStatusRoundEnd', 'MyFightStatusProp'],
+                reused_client_code=['MyFightStatusProp', 'MyFightStatusBase', 'MyFightStatus', 'MyAction', 'MyEntity'],
+                code=['FightStatusComponentInfo', 'FightStatusMoveRangeComponentInfo',
+                      'TargetCloseTriggerApplyStatusSetting', 'FightStatusRoundEndComponentInfo',
+                      'FightSkillComponentInfo', 'FightHitFixedComponentInfo', 'FightDamageComponentInfo',
+                      'FightStatusTriggerSkillCfg', 'FightStatusTriggerStatusCfg', 'BattleFormulaHandler']),
 }
 
 

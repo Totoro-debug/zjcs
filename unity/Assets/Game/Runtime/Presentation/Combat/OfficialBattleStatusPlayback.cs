@@ -284,6 +284,7 @@ namespace Zjcs.Presentation.Combat
             }
             foreach (var shield in go.GetComponents<MyFightStatusShieldPersistent>()) shield.mMyPlayableManager = scope;
             foreach (var absolute in go.GetComponents<MyFightStatusDamageReduceAbsolute>()) absolute.mMyPlayableManager = scope;
+            foreach (var roundEnd in go.GetComponents<MyFightStatusRoundEnd>()) roundEnd.mMyPlayableManager = scope;
             entity.Bind(container, new EntityData { Status = state, Action = new ActionData { Owner = owner } }, fresh);
             leases.Add(key, new Lease { Entity = entity, View = view, State = state, Context = context });
             go.transform.SetParent(root, false);

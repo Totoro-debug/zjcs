@@ -21,9 +21,11 @@ if ($marker.format -ne 1 -or $marker.repository -ne $repository) { throw 'Wrong 
 if ($PassiveSave) {
     $PassiveSave = (Get-Item -LiteralPath $PassiveSave).FullName
     if (-not $PassiveSave.StartsWith($workspacePath + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
-        $SkillId -ne 10047 -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated cold-glint cultivation save with surging tide.' }
+        $SkillId -ne 10047 -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated guardian passive cultivation save with surging tide.' }
     $passiveResult = Get-Content -LiteralPath (Join-Path (Split-Path -Parent $PassiveSave) 'result.json') -Raw | ConvertFrom-Json
     if (-not $passiveResult.passed) { throw 'The original passive cultivation flow has not passed.' }
+    $passiveProfile = Get-Content -LiteralPath $PassiveSave -Raw | ConvertFrom-Json
+    $passiveId = $passiveProfile.Player.Skills.Plans[$passiveProfile.Player.Skills.SelectedPlan].PassiveSkills[0]
 }
 if ($PSCmdlet.ParameterSetName -eq 'Play') {
     $projectPath = (Get-Item -LiteralPath $Project).FullName
@@ -78,6 +80,11 @@ try {
     }
     $result = Get-Content -LiteralPath (Join-Path $run 'result.json') -Raw | ConvertFrom-Json
     if ($process.ExitCode -ne 0 -or -not $result.passed) { throw "Skill-page flow failed: $($result.error) ($run)" }
+    if ($PassiveSave) {
+        if (-not (Select-String -LiteralPath $log -SimpleMatch "[Acquired passive combat] $passiveId cultivated") -or
+            -not (Test-Path -LiteralPath (Join-Path $run 'companion-cold-checkpoint.json'))) { throw 'The cultivated secret did not exercise its original cold path.' }
+        if ($passiveId -eq 10607 -and -not (Test-Path -LiteralPath (Join-Path $run 'acquired-active-ui-passive-battle.png'))) { throw 'The original frigid-aura effect was not captured.' }
+    }
     $identity = Get-Content -LiteralPath (Join-Path $repository 'unity/Assets/Game/Runtime/Offline/SkillAssets/OfficialSkillUiData.Identity.cs') -Raw
     if ($identity -notmatch 'LayoutSha256 = "([0-9a-f]{64})"') { throw 'The compiled skill UI identity is absent.' }
     $expectedUi = $Matches[1]
