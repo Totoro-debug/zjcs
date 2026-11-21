@@ -119,8 +119,24 @@ $restored = [Zjcs.Combat.Official.FightBattleExecutor]::Restore(
     $loaded, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new())
 $replay = $restored.Step(0, 1)
 Assert-Persist ($replay.Replayed -and $replay.Event.ActorId -eq 1 -and $loaded.Units[0].Hp -eq 1000) 'Restored checkpoint replay did not reproduce the recorded step'
-$next = $restored.Step(0, 2)
-Assert-Persist ($next.Checkpoint.Counter -eq 2 -and $next.Event.DamageEvents.Count -ge 0) 'Restored checkpoint did not continue the battle'
+Assert-Persist ([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($loaded) -ceq $json) 'Replaying a recorded step changed the loaded checkpoint'
+
+$continuedHit = $false
+for ($counter = 2; $counter -le 12; $counter++) {
+    $expected = $executor.Step(0, $counter)
+    $actual = $restored.Step(0, $counter)
+    Assert-Persist ($actual.Checkpoint.Counter -eq $counter -and -not $actual.Replayed) "Restored battle did not execute step $counter"
+    $expectedJson = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($expected.Checkpoint)
+    $actualJson = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($actual.Checkpoint)
+    Assert-Persist ($actualJson -ceq $expectedJson) "Restored battle diverged from uninterrupted play at step $counter"
+    foreach ($event in $actual.Event.DamageEvents) {
+        if ($event.SourceId -eq 1 -and $event.SkillEntityId -eq 900 -and $event.AfterHp -lt $event.BeforeHp) {
+            $continuedHit = $true
+        }
+    }
+    if ($continuedHit -or $actual.Checkpoint.Finished) { break }
+}
+Assert-Persist $continuedHit 'Continuation did not exercise a new hit after the skill cooled down'
 
 $badVersion = $false
 try { [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load('{"version":2,"checkpoint":{}}') } catch { $badVersion = $true }
@@ -129,4 +145,4 @@ $emptyRejected = $false
 try { [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load('') } catch { $emptyRejected = $true }
 Assert-Persist $emptyRejected 'Checkpoint serializer accepted an empty payload'
 
-Write-Output 'Battle checkpoint persistence checks passed: versioned payload, full field round trip, stable re-save, restore replay and continuation, and invalid payload rejection.'
+Write-Output 'Battle checkpoint persistence passed: field round trip, immutable replay, continuation through a new hit, and invalid payload rejection.'
