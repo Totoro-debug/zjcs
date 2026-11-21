@@ -581,12 +581,15 @@ namespace Zjcs.Presentation.Home
                 + (statusSkill ? "status" : "damage") + "/result/return and unchanged save passed.");
             Require(home.Hud.TryHandleBack() && !home.Hud.CharacterPageOpen,
                 "The completed diagnostic did not close its original character page.");
-            // Home's character canvas deliberately lives outside the Home
-            // hierarchy to retain its native Expand scaler. Release this
-            // diagnostic's own canvas before mounting the next isolated profile.
+            // Both native canvases live outside the Home hierarchy. Release
+            // this diagnostic's own frames before mounting the next profile.
+            var hudCanvas = home.Hud.CanvasTransform;
             Destroy(pageCanvas.gameObject);
+            Destroy(hudCanvas.gameObject);
             Destroy(home.gameObject);
             yield return null;
+            Require(!pageCanvas && !hudCanvas && !home,
+                "The completed skill diagnostic retained its native UI or Home instance.");
             File.WriteAllText(Path.Combine(output, "result.json"), JsonUtility.ToJson(new Result { passed = true }, true));
         }
 
