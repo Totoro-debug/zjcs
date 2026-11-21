@@ -175,20 +175,24 @@ def convert(manifest=None, sex='male', output=None, *, model_bundle=None, skelet
         raise ValueError('Skeleton binary was not fully consumed')
     strings = reader.inp.strings
     seen = set()
-    for obj in apk.objects(split):
-        if obj.type.name != 'TextAsset':
-            continue
-        raw = text_asset(obj, 'split')
-        reader.inp = binary_input(raw)
-        reader.inp.strings = strings
-        name = reader.inp.read_string()
-        if not name or name in seen:
-            raise ValueError('Empty or duplicate split animation name: ' + str(name))
-        seen.add(name)
-        data.setdefault('animations', {})[name] = reader._read_animation()
-        if reader.inp.index != len(raw):
-            raise ValueError('Split animation binary was not fully consumed: ' + name)
-        records[-1]['animation'] = name
+    # Some official summon bundles embed all animations in the base skeleton
+    # and have no companion splitanimations bundle. Preserve that authored
+    # layout; character bundles still take the strict split animation path.
+    if split in apk.index:
+        for obj in apk.objects(split):
+            if obj.type.name != 'TextAsset':
+                continue
+            raw = text_asset(obj, 'split')
+            reader.inp = binary_input(raw)
+            reader.inp.strings = strings
+            name = reader.inp.read_string()
+            if not name or name in seen:
+                raise ValueError('Empty or duplicate split animation name: ' + str(name))
+            seen.add(name)
+            data.setdefault('animations', {})[name] = reader._read_animation()
+            if reader.inp.index != len(raw):
+                raise ValueError('Split animation binary was not fully consumed: ' + name)
+            records[-1]['animation'] = name
     payload = json.dumps(data, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode('utf8')
     (destination / 'skeleton.json').write_bytes(payload)
     source = {'manifest': apk.source.version, 'modelBundle': model, 'skeletonName': expected_name,
