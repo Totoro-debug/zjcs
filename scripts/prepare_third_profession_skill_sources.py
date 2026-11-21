@@ -24,6 +24,10 @@ SKILLS = {
     10017: dict(entities=[10690, 10691, 10692, 10970, 10971, 10972, 10973, 24266],
                 code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo', 'FightDamageComponentInfo',
                       'FightSKillMoveCfg', 'FightStatusComponentInfo', 'BattleFormulaHandler']),
+    10032: dict(entities=[11170, 11171, 11172, 24180],
+                code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo', 'FightDamageComponentInfo',
+                      'FightStatusComponentInfo', 'FightStatusShieldPersistentComponentInfo',
+                      'BattleFormulaHandler', 'AiPriorityType', 'SkillAiCfg']),
 }
 COMBAT = ROOT / 'unity/Assets/Official/Combat'
 
@@ -271,12 +275,36 @@ def build(item_id):
     return result
 
 
+def compact_receipt(result):
+    def digest(value):
+        return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':'),
+                                         ensure_ascii=False).encode('utf8')).hexdigest()
+
+    # The comparison above re-decodes and checks these inputs. Their values
+    # already live in the runtime payloads and native receipts.
+    return {
+        **result,
+        'numeric_inputs': {
+            'source': result['numeric_inputs']['source'],
+            'sha256': result['numeric_inputs']['sha256'],
+            'verified_rows_sha256': digest({key: result['numeric_inputs'][key]
+                                            for key in ('entities', 'groups', 'props')}),
+        },
+        'reused_shared_objects': {
+            'count': len(result['reused_shared_objects']),
+            'sha256': digest(result['reused_shared_objects']),
+        },
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument('--item', type=int, choices=SKILLS, required=True)
     parser.add_argument('--write', action='store_true')
     args = parser.parse_args()
     result = build(args.item)
+    if args.item != 10017:
+        result = compact_receipt(result)
     target = ROOT / f'assets/reference/battle-rules/third-profession-{args.item}-source-manifest.json'
     if args.write:
         target.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', 'utf8')

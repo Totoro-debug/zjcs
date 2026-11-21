@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 
 namespace Zjcs.Combat.Official
 {
@@ -60,8 +59,8 @@ namespace Zjcs.Combat.Official
                         MaxHp = unit.MaxHp, Order = i });
                 }
                 selected.Sort((left, right) => {
-                    int comparison = ((BigInteger)left.Hp * right.MaxHp)
-                        .CompareTo((BigInteger)right.Hp * left.MaxHp);
+                    int comparison = FightBattleTargeting.CompareHealthPercentage(
+                        left.Hp, left.MaxHp, right.Hp, right.MaxHp);
                     return comparison != 0 ? comparison : left.Order.CompareTo(right.Order);
                 });
                 for (int i = 0; i < selected.Count && i < 2; i++)

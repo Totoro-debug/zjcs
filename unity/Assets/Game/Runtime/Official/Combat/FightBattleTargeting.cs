@@ -675,7 +675,7 @@ namespace Zjcs.Combat.Official
                     // Compare the fractions exactly, before the normal range-order tie breaker.
                     if (skill.EntityId == 10720 && left.MaxHp > 0 && right.MaxHp > 0)
                     {
-                        int health = ((BigInteger)left.Hp * right.MaxHp).CompareTo((BigInteger)right.Hp * left.MaxHp);
+                        int health = CompareHealthPercentage(left.Hp, left.MaxHp, right.Hp, right.MaxHp);
                         if (health != 0) return health;
                     }
                     if (leftIndex != rightIndex) return leftIndex.CompareTo(rightIndex);
@@ -702,6 +702,9 @@ namespace Zjcs.Combat.Official
             return skill.AiPriorityTypes == null ? Array.Empty<int>() : skill.AiPriorityTypes;
         }
 
+        internal static int CompareHealthPercentage(long leftHp, long leftMaxHp, long rightHp, long rightMaxHp)
+            => ((BigInteger)leftHp * rightMaxHp).CompareTo((BigInteger)rightHp * leftMaxHp);
+
         private static int ComparePriority(int type, FightBattleUnitState actor,
             FightBattleUnitState left, FightBattleUnitState right,
             IReadOnlyList<FightBattleUnitState> units, FightBattleSkillDefinition skill,
@@ -720,6 +723,9 @@ namespace Zjcs.Combat.Official
                     int leftFiltered = Contains(skill.HpLowerCharacterTypeFilter, left.CharacterType) ? 1 : 0;
                     int rightFiltered = Contains(skill.HpLowerCharacterTypeFilter, right.CharacterType) ? 1 : 0;
                     if (leftFiltered != rightFiltered) return leftFiltered.CompareTo(rightFiltered);
+                    // The official description of 11170 specifies the lowest HP percentage.
+                    if (skill.EntityId == 11170 && left.MaxHp > 0 && right.MaxHp > 0)
+                        return CompareHealthPercentage(left.Hp, left.MaxHp, right.Hp, right.MaxHp);
                     return left.Hp.CompareTo(right.Hp);
                 case 3: // SaferPos (local approximation)
                     return CompareSaferPositions(actor, left, right, units, skill);
