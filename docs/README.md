@@ -13,32 +13,23 @@
 | [登录前启动画面](features/startup.md) | 未完成 |
 | [成长成就与积分奖励](features/achievements.md) | 未完成 |
 | [成长试炼与活动小游戏](features/activity-minigames.md) | 未完成 |
-| [星命契约与累计属性](features/astrological.md) | 未完成 |
 | [战斗执行](features/battle-execution.md) | 未完成 |
 | [羁绊冒险](features/bond-adventure.md) | 部分完成 |
 | [新建存档与角色创建](features/character-creation.md) | 未完成 |
 | [人物属性、经验、位阶与衣柜](features/character.md) | 未完成 |
-| [主城、家园与离线产出](features/city-and-home.md) | 未完成 |
 | [图鉴分类、筛选与只读详情](features/codex.md) | 未完成 |
 | [商城、代金券与礼包](features/commerce.md) | 未完成 |
-| [炼金炉、料理、合成与分解](features/cooking.md) | 未完成 |
 | [圣兽试炼与双影幻境](features/daily-challenges.md) | 未完成 |
 | [游记入口与日常副本](features/dungeons.md) | 未完成 |
 | [装备、强化、继承与星石](features/equipment.md) | 未完成 |
 | [幻想阶梯与历程回响](features/fantasy-tower.md) | 未完成 |
-| [果树生产与领取](features/fruit-tree.md) | 未完成 |
-| [宝石合成与机械师熔炉](features/gem-forge.md) | 未完成 |
 | [单人公会领地](features/guild.md) | 未完成 |
-| [主城售货机与馈赠](features/home-shop.md) | 未完成 |
 | [行囊、物品与宝箱](features/inventory.md) | 未完成 |
 | [世界阶段手动推进](features/manual-world-stage.md) | 未完成 |
 | [素材秘境与快速采集](features/material-gathering.md) | 未完成 |
 | [月卡与星眷累计奖励](features/monthly-card.md) | 未完成 |
 | [NPC邀请、站位与战前准备](features/npc-assistance.md) | 未完成 |
 | [离线开放条件与单机范围](features/offline-access.md) | 未完成 |
-| [伙伴旅行、品质与保底](features/partner-travel.md) | 未完成 |
-| [NPC伙伴、好感与餐桌通话](features/partners.md) | 未完成 |
-| [幻兽结缘与兑换](features/pet-gacha.md) | 未完成 |
 | [幻兽编队、养成与改名](features/pets.md) | 未完成 |
 | [职业、晋升与自由转职](features/professions.md) | 未完成 |
 | [古遗物收藏、任务与培养](features/relics.md) | 未完成 |
@@ -55,12 +46,26 @@
 | [贤者路线职业技能详情（二、三阶）](features/skills-sage.md) | 已完成 |
 | [主线任务进度](features/tasks.md) | 未完成 |
 | [主线剧情公共模块](features/story.md) | 未完成 |
-| [古遗物扭蛋与女神牌](features/treasure-gacha.md) | 未完成 |
 | [Unity 工程与启动流程](features/unity-project.md) | 未完成 |
 | [虚空裂隙与混沌侵袭](features/weekly-challenges.md) | 未完成 |
-| [技能祈愿、材料购买与兑换](features/wishes.md) | 未完成 |
 | [命运果实探寻](features/world-exploration.md) | 未完成 |
 | [世界地图与主线公共模块](features/world-map.md) | 未完成 |
+
+### 主城与主城建筑
+
+| 名称 | 状态 |
+| --- | --- |
+| [主城、家园与离线产出](features/city-and-home/city-and-home.md) | 未完成 |
+| [星命契约与累计属性](features/city-and-home/astrological.md) | 未完成 |
+| [炼金炉、料理、合成与分解](features/city-and-home/cooking.md) | 未完成 |
+| [果树生产与领取](features/city-and-home/fruit-tree.md) | 未完成 |
+| [宝石合成与机械师熔炉](features/city-and-home/gem-forge.md) | 未完成 |
+| [主城售货机与馈赠](features/city-and-home/home-shop.md) | 未完成 |
+| [技能祈愿、材料购买与兑换](features/city-and-home/wishes.md) | 未完成 |
+| [幻兽结缘与兑换](features/city-and-home/pet-gacha.md) | 未完成 |
+| [古遗物扭蛋与女神牌](features/city-and-home/treasure-gacha.md) | 未完成 |
+| [伙伴旅行、品质与保底](features/city-and-home/partner-travel.md) | 未完成 |
+| [NPC伙伴、好感与餐桌通话](features/city-and-home/partners.md) | 未完成 |
 
 ## 地图导航
 

@@ -6,7 +6,7 @@
 
 ## 功能简介
 
-维护古遗物收藏、任务和培养；取得见[古遗物扭蛋](treasure-gacha.md)。
+维护古遗物收藏、任务和培养；取得见[古遗物扭蛋](city-and-home/treasure-gacha.md)。
 
 ## 自定义实现
 
