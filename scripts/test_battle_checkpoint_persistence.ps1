@@ -61,6 +61,11 @@ $status.HpAccTriggerSkills.Add([Zjcs.Combat.Official.FightBattleStatusStateTrigg
 })
 $player.Statuses.Add($status)
 $enemy = New-Unit 2 2 1 0 500 50
+$enemy.Statuses.Add([Zjcs.Combat.Official.FightBattleStatusState]@{
+    InstanceId = 2; ClassId = 99998; DurationRound = -1
+    ShieldKind = [Zjcs.Combat.Official.FightBattleShieldKind]::Persistent
+    ShieldValue = 35; ShieldRemainValue = 35; ShieldInitialized = $true
+})
 $checkpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
 $checkpoint.StageId = 22001; $checkpoint.StageType = 3; $checkpoint.IsPvp = $true
 $checkpoint.Mode = 1; $checkpoint.MaxRound = 12; $checkpoint.RandomSeed = 48271
@@ -81,6 +86,7 @@ $executor = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
     $checkpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new())
 $result = $executor.Step(0, 1)
 Assert-Persist ($result.Checkpoint.Counter -eq 1 -and $result.Checkpoint.Receipts.Count -eq 1) 'Battle did not record the step before persistence'
+Assert-Persist ($result.Event.DamageEvents[0].ShieldDamage -eq 25 -and $enemy.Hp -eq 500) 'The first hit must consume shield without reducing HP'
 
 $json = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($checkpoint)
 Assert-Persist ($json.Length -gt 100 -and $json.StartsWith('{"version":1,"checkpoint":')) 'Checkpoint payload header mismatch'
@@ -97,9 +103,10 @@ Assert-Persist ($loaded.Units[0].Statuses.Count -eq 1 -and $loaded.Units[0].Stat
 Assert-Persist ($loaded.Grid.Width -eq 6 -and $loaded.Grid.Height -eq 7 -and [Math]::Abs($loaded.Grid.OriginY + 2.25) -lt 0.0001) 'Checkpoint grid did not survive the round trip'
 Assert-Persist ($loaded.Grid.Cells.Count -eq 1 -and $loaded.Grid.Cells[0].Height -eq 3 -and $loaded.Grid.BlockedPositions[0].X -eq 5) 'Checkpoint grid cells did not survive the round trip'
 Assert-Persist ($loaded.Timeline.Entries.Count -eq $checkpoint.Timeline.Entries.Count -and $loaded.Timeline.Round -eq $checkpoint.Timeline.Round) 'Checkpoint timeline did not survive the round trip'
-Assert-Persist ($loaded.Statistics.Units.Count -eq $checkpoint.Statistics.Units.Count -and $loaded.Statistics.Skill(1, 900, 901).Damage -eq 25) 'Checkpoint statistics did not survive the round trip'
+Assert-Persist ($loaded.Statistics.Units.Count -eq $checkpoint.Statistics.Units.Count -and $loaded.Statistics.Skill(1, 900, 901).Damage -eq 0) 'Checkpoint statistics counted shield absorption as HP damage'
+Assert-Persist ($loaded.Units[1].Statuses.Count -eq 1 -and $loaded.Units[1].Statuses[0].ShieldRemainValue -eq 10) 'Checkpoint lost the partially consumed shield'
 Assert-Persist ($loaded.Receipts[0].Event.DamageEvents.Count -eq 1 -and $loaded.Receipts[0].Event.DamageEvents[0].TargetId -eq 2) 'Checkpoint receipt damage events did not survive the round trip'
-Assert-Persist ($loaded.Receipts[0].Event.DamageEvents[0].ElementType -eq 101) 'Checkpoint damage element did not survive the round trip'
+Assert-Persist ($loaded.Receipts[0].Event.DamageEvents[0].ElementType -eq 101 -and $loaded.Receipts[0].Event.DamageEvents[0].ShieldDamage -eq 25) 'Checkpoint lost the element or absorbed amount from the first hit'
 Assert-Persist ($loaded.Units[0].Statuses[0].HpTriggerPer -eq 0.25 -and $loaded.Units[0].Statuses[0].HpTriggerMaxCount -eq 2 -and $loaded.Units[0].Statuses[0].HpTriggerAtStart) 'Checkpoint HP trigger fields did not survive the round trip'
 Assert-Persist ($loaded.Units[0].Statuses[0].HpTriggerStatuses[0] -eq 24078 -and $loaded.Units[0].Statuses[0].HpTriggerSkills[0] -eq 50010) 'Checkpoint HP trigger lists did not survive the round trip'
 $loadedAcc = $loaded.Units[0].Statuses[0]
@@ -130,7 +137,9 @@ for ($counter = 2; $counter -le 12; $counter++) {
     $actualJson = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($actual.Checkpoint)
     Assert-Persist ($actualJson -ceq $expectedJson) "Restored battle diverged from uninterrupted play at step $counter"
     foreach ($event in $actual.Event.DamageEvents) {
-        if ($event.SourceId -eq 1 -and $event.SkillEntityId -eq 900 -and $event.AfterHp -lt $event.BeforeHp) {
+        if ($event.SourceId -eq 1 -and $event.TargetId -eq 2 -and $event.SkillEntityId -eq 900) {
+            Assert-Persist ($event.ShieldDamage -eq 10 -and $event.BeforeHp -eq 500 -and $event.AfterHp -eq 485 -and $loaded.Units[1].Statuses.Count -eq 0) 'The second hit must consume only the remaining shield and deduct 15 HP'
+            Assert-Persist ($loaded.Statistics.Skill(1, 900, 901).Damage -eq 15) 'The second hit must credit only the HP lost as damage'
             $continuedHit = $true
         }
     }
@@ -145,4 +154,4 @@ $emptyRejected = $false
 try { [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load('') } catch { $emptyRejected = $true }
 Assert-Persist $emptyRejected 'Checkpoint serializer accepted an empty payload'
 
-Write-Output 'Battle checkpoint persistence passed: field round trip, immutable replay, continuation through a new hit, and invalid payload rejection.'
+Write-Output 'Battle checkpoint persistence passed: field round trip, immutable replay, continuation through shield depletion, and invalid payload rejection.'
