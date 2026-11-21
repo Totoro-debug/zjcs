@@ -1,5 +1,6 @@
 $ErrorActionPreference = 'Stop'
 python (Join-Path $PSScriptRoot 'verify_fourth_profession_skills.py')
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 # The optional C# catalog harness uses the same official runtime sources as
 # the existing battle fixtures.  Keep it opt-in because the repository's
