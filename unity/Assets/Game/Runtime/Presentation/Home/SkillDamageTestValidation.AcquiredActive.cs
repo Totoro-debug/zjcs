@@ -31,7 +31,8 @@ namespace Zjcs.Presentation.Home
             bool holyPurification = skillId == 10079;
             bool surgingTide = skillId == 10047;
             bool waterBlade = skillId == 10082;
-            bool fourthPromotion = surgingTide || waterBlade;
+            bool lightSwordArray = skillId == 10083;
+            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
@@ -240,6 +241,18 @@ namespace Zjcs.Presentation.Home
                 var skillCasts = step.Event.SkillCasts.Where(value => value.ActorId == 1 && value.Slot == 0
                     && value.SkillItemId == skillId).ToArray();
                 casts += skillCasts.Length;
+                if (lightSwordArray)
+                    foreach (var counter in step.Event.SkillCasts.Where(value => value.ActorId == actor.Id
+                        && value.SkillEntityId == 12000 && value.SkillItemId == skillId))
+                    {
+                        var counterHits = step.Event.DamageEvents.Where(value => value.SourceId == actor.Id
+                            && value.SkillEntityId == 12000).ToArray();
+                        Require(counter.Slot < 0 && counterHits.Length > 0 && counterHits.All(value =>
+                            value.TargetId != actor.Id && value.HitEntityId == 12001 && value.DamageEntityId == 10026
+                            && value.ElementType == 103 && value.DamageType == 1 && value.Damage < 0
+                            && !value.TrueDamage && !value.IsCure), "The original light sword counter lost its owner or light damage.");
+                        hits += counterHits.Length;
+                    }
                 foreach (var cast in skillCasts)
                 {
                     File.WriteAllText(Path.Combine(output, "acquired-active-ui-latest.json"), FightBattleCheckpointSerializer.Save(checkpoint));
@@ -265,6 +278,7 @@ namespace Zjcs.Presentation.Home
                         : skillId == 10046 ? cast.SkillEntityId == 11160
                         : surgingTide ? cast.SkillEntityId == 10880
                         : waterBlade ? cast.SkillEntityId == 11980 || cast.SkillEntityId == 11983 || cast.SkillEntityId == 11984
+                        : lightSwordArray ? cast.SkillEntityId == 11990
                         : skillId == 10048 ? cast.SkillEntityId == 11090
                         : skillId == 10049 ? cast.SkillEntityId == 11100
                         : skillId == 10051 ? cast.SkillEntityId == 11260
@@ -276,6 +290,14 @@ namespace Zjcs.Presentation.Home
                         "The acquired active skill selected a foreign entity: " + cast.SkillEntityId);
                     var damageEvents = step.Event.DamageEvents.Where(value => value.SourceId == 1
                         && value.SkillEntityId == (skillId == 10017 ? 10970 : cast.SkillEntityId)).ToArray();
+                    if (lightSwordArray)
+                    {
+                        Require((casts != 1 || step.Event.ActorRound == 0)
+                            && actor.Statuses.Any(value => value.ClassId == 24378 && value.CreatorId == actor.Id
+                                && value.StackCount == 4 && value.MaxStackedCount == 4 && !value.CanDispersed),
+                            "The acquired light sword array did not start with four original swords.");
+                        continue;
+                    }
                     if (skillId == 10049 && casts == 1)
                         Require(step.Event.ActorRound == 0, "The first challenge did not occur before the actor's first turn.");
                     if (statusSkill)
@@ -410,9 +432,18 @@ namespace Zjcs.Presentation.Home
             yield return CaptureAcquiredActive(output, "preparation");
             click(FlameFlowButton(value => value.name == "Btn" && value.GetComponentsInParent<Transform>()
                 .Any(parent => parent.name == "StartBtn")));
-            bool captured = false;
+            bool captured = false, capturedOpening = false;
             while (battle != null)
             {
+                if (lightSwordArray && !capturedOpening && casts > 0 && hits == 0)
+                {
+                    yield return new WaitForSecondsRealtime(1.05f);
+                    Require(FindObjectsOfType<Transform>().Count(value => value.name.StartsWith(
+                        "Eff_Skill_Paladin04_SwordArray03", StringComparison.Ordinal)
+                        && value.GetComponentsInParent<Zjcs.Official.BattleStatusPlayables.MyPlayableOrbitMovement>().Length > 0) == 4,
+                        "The original status prefab did not render all four opening orbiters.");
+                    yield return CaptureAcquiredActive(output, "opening"); capturedOpening = true;
+                }
                 if (!captured && hits > 0)
                 {
                     if (skillId == 10028)
@@ -431,6 +462,7 @@ namespace Zjcs.Presentation.Home
             }
             Require(checkpoint.Finished && casts > 0 && hits > 0 && captured,
                 "The acquired/cultivated active skill did not finish its damage battle.");
+            Require(!lightSwordArray || capturedOpening, "The four original opening swords were not captured.");
             File.WriteAllText(Path.Combine(output, "acquired-active-ui-checkpoint.json"), FightBattleCheckpointSerializer.Save(checkpoint));
             yield return new WaitForSecondsRealtime(.8f);
             yield return CaptureAcquiredActive(output, "result");

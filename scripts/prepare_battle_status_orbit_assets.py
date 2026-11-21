@@ -38,11 +38,12 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
           generator=None, limits=None, graph_roots=None, reference_scripts=None,
           external_scripts=None, source_scripts=None, native_transform=None,
           external_assets=None, native_scripts=None, operation=None, native_preprocess=None,
-          graph_originals=None):
+          graph_originals=None, native_manifest=None):
     work = Path(os.environ['ZJCS_VALIDATION_DIR']).resolve()
     assert work.parent == (ROOT/'output/validation').resolve() and (work/'.zjcs-validation.json').is_file()
     export_receipt = CACHE/'native-export-all-source-manifest.json'
     proof = json.loads(export_receipt.read_bytes())
+    export_manifest = proof['manifest']
     assert proof['manifest'] == '884_156692'
     assert proof['code_manifest_sha256'] == sha((CACHE.parent/'code-manifest.json').read_bytes())
     verified = {r['path']: r['sha256'] for r in proof['outputs']}
@@ -216,9 +217,9 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
              for file_id, count in sorted(unmapped_scripts.items())}))
 
     print(f"{family}: dependency closure {len(found)} assets", flush=True)
-    apk = Apk.current()
+    apk = Apk(native_manifest) if native_manifest else Apk.current()
     try:
-        assert apk.version == '884_156692'
+        assert apk.version == export_manifest, 'Native export and selected conversion source differ'
         # Shared graph roots resolve through verified native metadata, so they
         # do not need the full address manifest alongside the exporter lookup.
         manifest = (read_asset_manifest(apk.source.manifest_bytes('DefaultPackage', apk.archive))

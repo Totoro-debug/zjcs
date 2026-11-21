@@ -154,6 +154,13 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
         new_by_name = {row['name']: row for row in current_bundles}
         roots = {row['shared_dependency_bundle'] for row in graph['originals']
                  if row['id'].split(':')[1].isdigit() and int(row['id'].split(':')[1]) in spec['entities']}
+        additional_conversions = []
+        for relative in spec.get('native_receipts', ()):
+            path = ROOT / relative
+            conversion = json.loads(path.read_bytes())
+            assert conversion['manifest'] == graph['manifest'], 'Conversion sources differ'
+            roots.update(row['shared_dependency_bundle'] for row in conversion['originals'])
+            additional_conversions.append(identity(path))
         assert roots, 'No original native graph roots'
         pending, visited, native = list(sorted(roots)), set(), []
         shader_bundle_changed = False
@@ -256,6 +263,10 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
         inputs = [identity(code / 'common-source/Common' / (name + '.cs')) for name in spec['code']]
         inputs += [identity(code / 'client-source' / (name + '.cs')) for name in
                    ('MyFightSkill', 'MyFightHitFixed', 'MyFightActionSkillMove')]
+        inputs += [identity(code / 'client-source' / (name + '.cs'))
+                   for name in spec.get('client_code', ())]
+        inputs += [identity(code / 'game-framework-source/GameFramework' / (name + '.cs'))
+                   for name in spec.get('framework_code', ())]
         sound_proof_path = ROOT / 'assets/reference/battle-animation/native-sound-sources-source-manifest.json'
         sound_proof = json.loads(sound_proof_path.read_bytes())
         sound_events = [row for row in sound_proof['events'] if row['name'] == f'Skill_{item_id}']
@@ -281,6 +292,8 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
                       formatters=[identity(path) for path in sorted(set(formats.sources.values()))],
                       constructors=[identity(code / 'common-source' / ('Common' if (code / 'common-source/Common' / (name + '.cs')).is_file() else 'Common.LubanGen') / (name + '.cs')) for name in sorted(constructors.sources)],
                       generator=identity(Path(__file__)))
+        if additional_conversions:
+            result['additional_native_conversions'] = additional_conversions
     return result
 
 

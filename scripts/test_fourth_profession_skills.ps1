@@ -14,7 +14,8 @@ Add-Type -Path (@(Get-FightCombatSources) +
     (Join-Path $PSScriptRoot 'fixtures/fourth_profession_skill_catalog_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/fourth_profession_battle_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_surging_tide_harness.cs') +
-    (Join-Path $PSScriptRoot 'fixtures/battle_water_blade_harness.cs'))
+    (Join-Path $PSScriptRoot 'fixtures/battle_water_blade_harness.cs') +
+    (Join-Path $PSScriptRoot 'fixtures/battle_light_sword_array_harness.cs'))
 $sp = Get-Content (Join-Path $inputs 'skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $bp = Get-Content (Join-Path $inputs 'battle-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $rp = Get-Content (Join-Path $inputs 'rules-source-manifest.json') -Raw | ConvertFrom-Json
@@ -29,3 +30,4 @@ $formula = $catalog.CreateDamageFormula(
 [FourthProfessionBattleHarness]::Run($catalog, $formula, $items)
 [BattleSurgingTideHarness]::Run($catalog, $formula, $items)
 [BattleWaterBladeHarness]::Run($catalog, $formula, $items)
+[BattleLightSwordArrayHarness]::Run($catalog, $formula, $items)

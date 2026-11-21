@@ -17,7 +17,9 @@ namespace Zjcs.Combat.Official
         {
             if (skill == null || skill.Slot < 0 || skillItems == null) return false;
             int itemId = skill.UseItemId > 0 ? skill.UseItemId : skill.ItemId;
-            if (!skillItems.TryGet(itemId, out FightOfficialSkillItem item) || (item.TryAtStartType & 2) == 0)
+            // Common.ESkillTryAtStartType also defines self-targeted opening
+            // actives (1), such as the original light sword array.
+            if (!skillItems.TryGet(itemId, out FightOfficialSkillItem item) || (item.TryAtStartType & 3) == 0)
                 return false;
             var slot = owner.SkillState.Slots.Find(value => value != null && value.Slot == skill.Slot);
             return slot != null && !slot.AutoStartChecked;

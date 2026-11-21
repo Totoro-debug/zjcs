@@ -15,6 +15,21 @@ SKILLS = {
                       'FightDamageComponentInfo', 'FightDamageLimitComponentInfo',
                       'DamageStatusCfg', 'FightStatusComponentInfo',
                       'FightStatusShieldPersistentComponentInfo', 'BattleFormulaHandler']),
+    10083: dict(entities=[11990, 11991, 11992, 24378, 12000, 12001, 10026],
+                native_receipts=['assets/reference/battle-animation/profession-status-assets-source-manifest.json'],
+                client_code=['MyEntity', 'MyAction', 'MyFightStatus', 'MyFightStatusLogic',
+                             'MyPlayableOrbitMovement', 'ApplyByStatusStackCount', 'MyPlayableFollowBone',
+                             'ApplyByGroundType', 'ApplyOnStopFadeOut'],
+                framework_code=['MyPlayableSequence', 'ApplyEnableOnPlay'],
+                code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo', 'FightDamageComponentInfo',
+                      'FightStatusComponentInfo', 'FightStatusLogicComponentInfo',
+                      'FightOnAfterBeDamageTriggerCfg', 'FightHandleCfgTriggerSkills',
+                      'FightHandleCfgChangeStatusStack', 'DamageResultTypeFilter',
+                      'DamageSkillCanTriggerStatusFilter', 'ESkillTryAtStartType', 'BattleFormulaHandler',
+                      'FightHandleCfgBBEcId2EcEntityAndStore', 'FightHandleCfgFireTriggerStatus',
+                      'FightHandleCfgNewIntInBB', 'EntityHasActionTypeByEntityKeyFilter', 'LogicFilter',
+                      'LogicNotFilter', 'IteratingAgentStatusClassIdFilter', 'StatusTriggerTarget',
+                      'FightStatusTriggerSkillCfg', 'EFightBlackBoardKeyValue', 'FightPort', 'DamageResultType']),
 }
 
 

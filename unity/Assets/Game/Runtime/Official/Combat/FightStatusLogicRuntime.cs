@@ -52,6 +52,9 @@ namespace Zjcs.Combat.Official
                     damageEvent, triggers, formula);
             // User-confirmed offline rule: one Runtime board per event, shared by its flows.
             var runtime = new Dictionary<int, FightBattleLogicBlackboardValue>();
+            var afterDamage = eventKind == FightStatusLogicEvent.AfterBeDamage && damageEvent != null
+                ? new AfterDamageContext { Owner = owner, Status = status, Source = actor, Target = target,
+                    Skill = skill, Hit = hit, Damage = damageEvent, Units = units } : null;
             foreach (object raw in triggers)
             {
                 if (!(raw is Dictionary<string, object> trigger)) continue;
@@ -59,9 +62,10 @@ namespace Zjcs.Combat.Official
                 if (!MatchesEvent(triggerType, eventKind)) continue;
                 Dictionary<string, object> flow = Object(trigger, "Flow");
                 if (flow == null) continue;
+                var damageFlow = afterDamage != null && SupportsAfterDamageFlow(flow, afterDamage) ? afterDamage : null;
                 bool supported;
                 bool matched = MatchesFilter(Object(flow, "FilterCondition"), owner, status, actor, target,
-                    skill, hit, units, random, out supported, runtime: runtime);
+                    skill, hit, units, random, out supported, runtime: runtime, afterDamage: damageFlow);
                 if (!supported || !matched)
                 {
                     if (!supported) status.LogicRulesSupported = false;
@@ -73,7 +77,7 @@ namespace Zjcs.Combat.Official
                 {
                     if (!(rawHandle is Dictionary<string, object> handle)) continue;
                     if (!ApplyHandle(handle, owner, status, actor, target, skill, hit, units,
-                        catalog, random, result, runtime, nextStatusInstanceId))
+                        catalog, random, result, runtime, nextStatusInstanceId, damageFlow))
                     {
                         status.LogicRulesSupported = false;
                         // A later handle may depend on the missing handle's blackboard outputs.
@@ -109,7 +113,7 @@ namespace Zjcs.Combat.Official
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
             IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
             out bool supported, StatusIteration iteration = null,
-            Dictionary<int, FightBattleLogicBlackboardValue> runtime = null)
+            Dictionary<int, FightBattleLogicBlackboardValue> runtime = null, AfterDamageContext afterDamage = null)
         {
             supported = true;
             if (filter == null) return true;
@@ -129,7 +133,7 @@ namespace Zjcs.Combat.Official
                         continue;
                     }
                     bool child = MatchesFilter(childFilter, owner, status, actor,
-                        target, skill, hit, units, random, out childSupported, iteration, runtime);
+                        target, skill, hit, units, random, out childSupported, iteration, runtime, afterDamage);
                     supported &= childSupported;
                     value = logicType == 1 ? value || child : value && child;
                 }
@@ -142,10 +146,12 @@ namespace Zjcs.Combat.Official
                 if (nested == null) { supported = false; return false; }
                 bool childSupported;
                 bool child = MatchesFilter(nested, owner, status, actor, target, skill, hit,
-                    units, random, out childSupported, iteration, runtime);
+                    units, random, out childSupported, iteration, runtime, afterDamage);
                 supported = childSupported;
                 return supported && !child;
             }
+            if (afterDamage != null && MatchAfterDamageFilter(filter, afterDamage, out bool damageMatched, out supported))
+                return damageMatched;
             if (type == "RateFilter") return random == null || random.Next() < Double(filter, "Rate", 1d);
             if (type == "SkillClassIdByEcIdKeyFilter")
             {
@@ -232,9 +238,11 @@ namespace Zjcs.Combat.Official
             IReadOnlyList<FightBattleUnitState> units, FightOfficialCombatCatalog catalog,
             FightRandomStream random, List<FightBattleStatusSkillInvocation> output,
             Dictionary<int, FightBattleLogicBlackboardValue> runtime,
-            System.Func<int> nextStatusInstanceId)
+            System.Func<int> nextStatusInstanceId, AfterDamageContext afterDamage = null)
         {
             string type = StringField(handle, "_type");
+            if (afterDamage != null && ApplyAfterDamageHandle(handle, afterDamage, random, runtime, output, out bool damageSupported))
+                return damageSupported;
             if (type == "FightHandleCfgCounterAdd")
             {
                 SetBlackboard(status, Object(handle, "CounterBBKey"), runtime,
