@@ -23,6 +23,28 @@ namespace Zjcs.Presentation.Home
         // equipment, cultivation and combat all use their normal production paths.
         private static IEnumerator ExerciseAcquiredActive(string slot, string root, string output, int skillId)
         {
+            string sequence = Environment.GetEnvironmentVariable("ZJCS_SKILLS_ACQUIRED_ACTIVE_SEQUENCE");
+            if (string.IsNullOrWhiteSpace(sequence))
+            {
+                yield return ExerciseAcquiredActiveCore(slot, root, output, skillId);
+                yield break;
+            }
+            int[] skills = sequence.Split(',').Select(value => int.Parse(value.Trim())).ToArray();
+            Require(skills.Length > 0 && skills.Length <= 32 && skills[0] == skillId
+                && skills.Distinct().Count() == skills.Length, "Invalid acquired-active diagnostic sequence.");
+            var runner = FindObjectsOfType<SkillDamageTestValidation>().Single();
+            runner.deadline += 600f * (skills.Length - 1);
+            var slots = new ProfileSlotCatalog(root);
+            foreach (int nextSkill in skills)
+            {
+                string directory = Path.Combine(output, "skill-" + nextSkill);
+                Directory.CreateDirectory(directory);
+                yield return ExerciseAcquiredActiveCore(slots.CreateSlot(), root, directory, nextSkill);
+            }
+        }
+
+        private static IEnumerator ExerciseAcquiredActiveCore(string slot, string root, string output, int skillId)
+        {
             AudioListener.volume = 0f;
             Action<Selectable> click = Click;
             bool crisisGuard = skillId == 10032;
