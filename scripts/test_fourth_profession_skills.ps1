@@ -25,7 +25,8 @@ Add-Type -Path (@(Get-FightCombatSources) +
     (Join-Path $PSScriptRoot 'fixtures/battle_cold_glint_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_frigid_aura_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_hellfire_resurgence_harness.cs') +
-    (Join-Path $PSScriptRoot 'fixtures/battle_sword_wind_dance_harness.cs'))
+    (Join-Path $PSScriptRoot 'fixtures/battle_sword_wind_dance_harness.cs') +
+    (Join-Path $PSScriptRoot 'fixtures/battle_soul_piercer_harness.cs'))
 $sp = Get-Content (Join-Path $inputs 'skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $bp = Get-Content (Join-Path $inputs 'battle-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $rp = Get-Content (Join-Path $inputs 'rules-source-manifest.json') -Raw | ConvertFrom-Json
@@ -48,6 +49,7 @@ if ($SkillId -ne 0) {
     switch ($SkillId) {
         10068 { [BattleHellfireResurgenceHarness]::Run($catalog, $formula, $items); exit 0 }
         10088 { [BattleSwordWindDanceHarness]::Run($catalog, $formula, $items); exit 0 }
+        10089 { [BattleSoulPiercerHarness]::Run($catalog, $formula, $items); exit 0 }
         default { throw "No focused fourth-profession fixture: $SkillId" }
     }
 }
@@ -64,3 +66,4 @@ if ($SkillId -ne 0) {
 [BattleHellfireResurgenceHarness]::Run($catalog, $formula, $items)
 
 [BattleSwordWindDanceHarness]::Run($catalog, $formula, $items)
+[BattleSoulPiercerHarness]::Run($catalog, $formula, $items)

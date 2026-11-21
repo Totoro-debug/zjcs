@@ -21,6 +21,13 @@ namespace Zjcs.Combat.Official
             // before any status response, sharing, revival or subsequent hit changes HP.
             long removedHp = Math.Max(0L, applied.BeforeHp - applied.AfterHp);
             long property = GetProperty(actor, hit.HemophagiaProperty);
+            // Hit source properties combine the caster and the current skill,
+            // as in the ordinary hit formula. Skill-owned lifesteal must take
+            // part without adding it permanently to the caster's attributes.
+            if (sourceSkill.Properties != null)
+                foreach (var value in sourceSkill.Properties)
+                    if (value != null && value.Id == hit.HemophagiaProperty)
+                        property = unchecked(property + value.Value);
             if (removedHp <= 0 || property <= 0) return;
             decimal rate = property / 10000m;
             long cure = removedHp >= long.MaxValue / rate ? long.MaxValue

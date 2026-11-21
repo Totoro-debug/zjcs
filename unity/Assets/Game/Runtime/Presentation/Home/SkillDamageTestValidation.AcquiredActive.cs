@@ -62,12 +62,13 @@ namespace Zjcs.Presentation.Home
             bool vortexSurge = skillId == 10099;
             bool hellfire = skillId == 10068;
             bool swordWindDance = skillId == 10088;
-            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance;
+            bool soulPiercer = skillId == 10089;
+            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
-            int profession = hellfire || swordWindDance ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = hellfire || swordWindDance || soulPiercer ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -249,7 +250,7 @@ namespace Zjcs.Presentation.Home
                 var choice = settings.GetComponentsInChildren<Toggle>().Single(value =>
                     value.transform.parent.name == "ToggleText" && value.GetComponentsInParent<Transform>()
                         .Any(parent => parent.name == setting));
-                if (setting == "MonsterHp" && waterBlade)
+                if (setting == "MonsterHp" && (waterBlade || soulPiercer))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
                 if (setting == "Round" && (vortexSurge || passiveCompanion == 10607))
@@ -280,7 +281,8 @@ namespace Zjcs.Presentation.Home
                 actor.Statuses.Add(combat.CreateStatus(24041, 1, 1, 724041));
             }
             if (hellfire) PrepareAcquiredHellfire(actor);
-            int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, hellfireCures = 0;
+            if (soulPiercer) { actor.Hp = actor.MaxHp / 2; actor.Turn.Hp = actor.Hp; }
+            int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, hellfireCures = 0, lifestealCures = 0;
             battle.Controller.StepCompleted += step => {
                 if (hellfire) VerifyAcquiredHellfireStep(step.Event, actor, ref hellfireCures, ref hits);
                 if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits);
@@ -331,6 +333,7 @@ namespace Zjcs.Presentation.Home
                         : vortexSurge ? cast.SkillEntityId == 12080
                         : hellfire ? cast.SkillEntityId == 11520
                         : swordWindDance ? cast.SkillEntityId == 11910
+                        : soulPiercer ? cast.SkillEntityId == 11920
                         : skillId == 10048 ? cast.SkillEntityId == 11090
                         : skillId == 10049 ? cast.SkillEntityId == 11100
                         : skillId == 10051 ? cast.SkillEntityId == 11260
@@ -498,6 +501,12 @@ namespace Zjcs.Presentation.Home
                         hits += damageEvents.Length;
                         continue;
                     }
+                    if (soulPiercer)
+                    {
+                        VerifyAcquiredSoulPiercer(step.Event, damageEvents, actor, cast.Delay, ref lifestealCures);
+                        hits += damageEvents.Length;
+                        continue;
+                    }
                     if (swordWindDance)
                     {
                         Require(damageEvents.Length > 0 && damageEvents.All(value => value.TargetId != actor.Id
@@ -609,11 +618,11 @@ namespace Zjcs.Presentation.Home
                     else yield return new WaitForSecondsRealtime(hellfire ? .2f : crisisGuard || starShatteringSlash ? 1.45f
                         : shieldCharge ? 1.1f : .7f);
                     yield return CaptureAcquiredActive(output, "battle"); captured = true;
-                    if (heavenlyLightBlades || frostSong || swordWindDance)
+                    if (heavenlyLightBlades || frostSong || swordWindDance || soulPiercer)
                         for (int frame = 1; frame <= 4; frame++)
                         {
                             yield return new WaitForSecondsRealtime(.18f);
-                            yield return CaptureAcquiredActive(output, (frostSong ? "skin-hit-" : swordWindDance ? "wind-hit-" : "blade-") + frame);
+                            yield return CaptureAcquiredActive(output, (frostSong ? "skin-hit-" : swordWindDance ? "wind-hit-" : soulPiercer ? "soul-hit-" : "blade-") + frame);
                         }
                 }
                 yield return null;
@@ -622,6 +631,7 @@ namespace Zjcs.Presentation.Home
                 "The acquired/cultivated active skill did not finish its damage battle.");
             Require(!lightSwordArray || capturedOpening, "The four original opening swords were not captured.");
             Require(!hellfire || hellfireCures >= 2, "The acquired hellfire did not heal on both subsequent turns.");
+            Require(!soulPiercer || lifestealCures > 0, "The acquired soul piercer never restored actual HP.");
             Require(!vortexSurge || vortexMovements > 0,
                 "The original vortex surge never exercised its inward knockback in the rendered battle.");
             Require(passiveCompanion == 0 || coldHits > 0, "The cultivated passive never applied cold in the rendered battle.");
