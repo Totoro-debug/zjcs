@@ -34,6 +34,9 @@ SKILLS = {
                 code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo', 'FightDamageComponentInfo',
                       'FightStatusComponentInfo', 'DamageStatusCfg', 'StatusAutoRemoveComponentInfo',
                       'SkillAiCfg', 'AiPriorityType', 'BattleFormulaHandler']),
+    10085: dict(entities=[11900, 11901, 11902, 11903, 10026],
+                code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo',
+                      'FightDamageComponentInfo', 'BattleFormulaHandler']),
 }
 
 

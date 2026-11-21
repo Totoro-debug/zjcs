@@ -33,7 +33,8 @@ namespace Zjcs.Presentation.Home
             bool waterBlade = skillId == 10082;
             bool lightSwordArray = skillId == 10083;
             bool diversionHarassment = skillId == 10084;
-            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment;
+            bool heavenlyLightBlades = skillId == 10085;
+            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
@@ -281,6 +282,7 @@ namespace Zjcs.Presentation.Home
                         : waterBlade ? cast.SkillEntityId == 11980 || cast.SkillEntityId == 11983 || cast.SkillEntityId == 11984
                         : lightSwordArray ? cast.SkillEntityId == 11990
                         : diversionHarassment ? cast.SkillEntityId == 11890
+                        : heavenlyLightBlades ? cast.SkillEntityId == 11900
                         : skillId == 10048 ? cast.SkillEntityId == 11090
                         : skillId == 10049 ? cast.SkillEntityId == 11100
                         : skillId == 10051 ? cast.SkillEntityId == 11260
@@ -427,6 +429,17 @@ namespace Zjcs.Presentation.Home
                         hits += damageEvents.Length;
                         continue;
                     }
+                    if (heavenlyLightBlades)
+                    {
+                        Require(damageEvents.Length > 0 && damageEvents.All(value => value.TargetId != actor.Id
+                            && value.HitEntityId >= 11901 && value.HitEntityId <= 11903 && value.DamageEntityId == 10026
+                            && value.DamageType == 1 && value.ElementType == 103 && value.Damage < 0
+                            && !value.TrueDamage && !value.IsCure && value.Delay >= cast.Delay + .7599f
+                            && value.Delay <= cast.Delay + .8801f),
+                            "The acquired heavenly light blades lost the original light columns or row timing.");
+                        hits += damageEvents.Length;
+                        continue;
+                    }
                     foreach (var hit in damageEvents)
                     {
                         if (statusSkill) continue;
@@ -474,6 +487,13 @@ namespace Zjcs.Presentation.Home
                             particle.particleCount > 0 && particle.GetComponentsInParent<Transform>().Any(parent =>
                                 parent.name == "playable11891" || parent.name.StartsWith("playable11891(", StringComparison.Ordinal)));
                         if (!impactVisible) { yield return null; continue; }
+                    }
+                    else if (heavenlyLightBlades)
+                    {
+                        bool bladesVisible = FindObjectsOfType<ParticleSystem>().Any(particle =>
+                            particle.particleCount > 0 && particle.GetComponentsInParent<Transform>().Any(parent =>
+                                parent.name.StartsWith("Eff_Skill_Paladin04_SkylightPhantomBlade02", StringComparison.Ordinal)));
+                        if (!bladesVisible) { yield return null; continue; }
                     }
                     else yield return new WaitForSecondsRealtime(crisisGuard || starShatteringSlash ? 1.45f
                         : shieldCharge ? 1.1f : .7f);
