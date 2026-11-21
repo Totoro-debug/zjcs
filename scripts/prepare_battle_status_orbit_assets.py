@@ -38,14 +38,18 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
           generator=None, limits=None, graph_roots=None, reference_scripts=None,
           external_scripts=None, source_scripts=None, native_transform=None,
           external_assets=None, native_scripts=None, operation=None, native_preprocess=None,
-          graph_originals=None, native_manifest=None):
+          graph_originals=None, native_manifest=None, native_cache=None,
+          native_export_name='native-export-all'):
+    cache = Path(native_cache).resolve() if native_cache else CACHE
+    exported = cache/native_export_name/'ExportedProject/Assets'
+    code = cache.parent/'official-code' if native_cache else CODE
     work = Path(os.environ['ZJCS_VALIDATION_DIR']).resolve()
     assert work.parent == (ROOT/'output/validation').resolve() and (work/'.zjcs-validation.json').is_file()
-    export_receipt = CACHE/'native-export-all-source-manifest.json'
+    export_receipt = cache/(native_export_name+'-source-manifest.json')
     proof = json.loads(export_receipt.read_bytes())
     export_manifest = proof['manifest']
-    assert proof['manifest'] == '884_156692'
-    assert proof['code_manifest_sha256'] == sha((CACHE.parent/'code-manifest.json').read_bytes())
+    assert not native_manifest or proof['manifest'] == native_manifest
+    assert proof['code_manifest_sha256'] == sha((cache.parent/'code-manifest.json').read_bytes())
     verified = {r['path']: r['sha256'] for r in proof['outputs']}
     del proof  # Keep the digest lookup, release the full exporter receipt rows.
     inputs, index = {}, {}
@@ -53,11 +57,11 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
     def read(path):
         raw = path.read_bytes()
         digest = sha(raw)
-        assert digest == verified[path.relative_to(CACHE/'native-export-all').as_posix()], path
+        assert digest == verified[path.relative_to(cache/native_export_name).as_posix()], path
         inputs[path.as_posix()] = dict(path=path.relative_to(ROOT).as_posix(), sha256=digest)
         return raw
 
-    index_path = work/'status-orbit-guid-index.json'
+    index_path = work/('status-orbit-guid-index-'+sha(export_receipt.read_bytes())[:16]+'.json')
     if index_path.exists(): index = json.loads(index_path.read_bytes())
     complete_index_built = False
 
@@ -69,9 +73,9 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                              'AppearanceAssets', 'Wwise', 'UIEffect', 'Sprite'):
                 flag = '@' + category
                 if flag in index: continue
-                for path in (EXPORTED/category).rglob('*.meta'):
+                for path in (exported/category).rglob('*.meta'):
                     match = GUID.search(path.read_text(encoding='utf-8-sig'))
-                    if match: index[match[1]] = path.relative_to(EXPORTED).as_posix()[:-5]
+                    if match: index[match[1]] = path.relative_to(exported).as_posix()[:-5]
                 index[flag] = True
                 index_path.write_bytes(json.dumps(index).encode())
                 if guid in index: break
@@ -82,26 +86,26 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
             if shutil.which('rg'):
                 scan = subprocess.run(['rg', '--hidden', '--no-ignore', '--with-filename',
                     '--no-heading', '--color', 'never', '--max-count', '1', '--glob', '*.meta',
-                    r'^guid: [a-f0-9]{32}\r?$', str(EXPORTED)],
+                    r'^guid: [a-f0-9]{32}\r?$', str(exported)],
                     capture_output=True, text=True, encoding='utf-8', check=True)
                 for line in scan.stdout.splitlines():
                     filename, value = line.rsplit(':guid: ', 1)
-                    index[value.strip()] = Path(filename).relative_to(EXPORTED).as_posix()[:-5]
+                    index[value.strip()] = Path(filename).relative_to(exported).as_posix()[:-5]
             else:
-                for path in EXPORTED.rglob('*.meta'):
+                for path in exported.rglob('*.meta'):
                     match = GUID.search(path.read_text(encoding='utf-8-sig'))
-                    if match: index[match[1]] = path.relative_to(EXPORTED).as_posix()[:-5]
+                    if match: index[match[1]] = path.relative_to(exported).as_posix()[:-5]
             index_path.write_bytes(json.dumps(index).encode())
             complete_index_built = True
         assert guid in index, ('Unresolved native orbit reference', guid)
-        return EXPORTED/index[guid]
+        return exported/index[guid]
 
     script_guids, script_records = {}, []
     for file_id, (folder, name) in MAPPED.items():
         target = ROOT/'unity/Assets/Game/Runtime/Official'/folder/(name+'.cs')
         script_guids[file_id] = GUID.search(target.with_name(target.name+'.meta').read_text(encoding='utf-8-sig'))[1]
-        originals = [path for path in (CODE/'client-source'/(name+'.cs'),
-            CODE/'game-framework-source/GameFramework'/(name+'.cs')) if path.is_file()]
+        originals = [path for path in (code/'client-source'/(name+'.cs'),
+            code/'game-framework-source/GameFramework'/(name+'.cs')) if path.is_file()]
         assert len(originals) == 1, (name, originals)
         original_text = originals[0].read_text(encoding='utf-8-sig')
         namespace = re.search(r'(?m)^namespace ([\w.]+)', original_text)
@@ -113,7 +117,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
     for file_id, binding in (reference_scripts or {}).items():
         # SDK reference assets have no managed client method body. Verify the
         # original serialized type and retain the existing typed field bridge.
-        original = EXPORTED/binding['native_asset']
+        original = exported/binding['native_asset']
         text = read(original).decode('utf-8-sig')
         read(Path(str(original)+'.meta'))
         assert any(int(match[1]) == file_id for match in SCRIPT.finditer(text))
@@ -124,7 +128,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
             migrated=identity(target), migrated_meta=identity(Path(str(target)+'.meta')),
             field_bridge_receipt=identity(ROOT/binding['receipt'])))
     for file_id, binding in (external_scripts or {}).items():
-        original = EXPORTED/binding['native_meta']
+        original = exported/binding['native_meta']
         read(original)
         target = ROOT/binding['runtime']
         target_meta = Path(str(target)+'.meta')
@@ -144,7 +148,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
             verification='namespace, type name, original native plugin reference'+
                 (' and source script ID hash' if binding.get('verify_file_id_hash') else '')))
     for file_id, binding in (source_scripts or {}).items():
-        original = CODE/binding.get('source_root', 'client-source')/binding['source']
+        original = code/binding.get('source_root', 'client-source')/binding['source']
         original_text = original.read_text(encoding='utf-8-sig')
         namespace = re.search(r'(?m)^namespace ([\w.]+)', original_text)
         actual_namespace = namespace[1] if namespace else ''
@@ -169,7 +173,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         native_script_records.append(dict(script=identity(target), meta=identity(sidecar)))
     external_replacements, external_records = {}, []
     for original_guid, binding in (external_assets or {}).items():
-        original, target = EXPORTED/binding['source'], ROOT/binding['target']
+        original, target = exported/binding['source'], ROOT/binding['target']
         read(original)
         source_meta = Path(str(original)+'.meta')
         assert GUID.search(read(source_meta).decode('utf-8-sig'))[1] == original_guid
@@ -187,7 +191,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
             file_id = int(match[1])
             if file_id not in script_guids:
                 unmapped_scripts[file_id] = unmapped_scripts.get(file_id, 0) + 1
-                unmapped_script_samples.setdefault(file_id, set()).add(path.relative_to(EXPORTED).as_posix())
+                unmapped_script_samples.setdefault(file_id, set()).add(path.relative_to(exported).as_posix())
                 return match[0]
             return 'm_Script: {fileID: 11500000, guid: '+script_guids[file_id]+', type: 3}'
         text = SCRIPT.sub(script, text)
@@ -195,7 +199,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
 
     graph_paths = {key: f'Prefabs/EcEntity/Fight/FightSkill/{key}/{name}.prefab' for key, name in ROOTS.items()}
     graph_paths.update(graph_roots or {})
-    selected = [EXPORTED/path for path in graph_paths.values()]
+    selected = [exported/path for path in graph_paths.values()]
     found, pending = set(), list(selected)
     while pending:
         path = pending.pop()
@@ -231,7 +235,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
             if key in (graph_roots or {}):
                 # Shared dependency prefabs have no independent address entry.
                 # The verified native exporter preserves their original bundle.
-                source_meta = Path(str(EXPORTED/path)+'.meta')
+                source_meta = Path(str(exported/path)+'.meta')
                 original_binding = (graph_originals or {}).get(key)
                 bundle = (original_binding['source']['bundle'] if original_binding else
                     re.search(r'(?m)^  assetBundleName: (.+)$', read(source_meta).decode())[1]+'.bundle')
@@ -289,7 +293,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                     value = obj.read()
                     name = value.m_ParsedForm.m_Name if obj.type.name == 'Shader' else value.m_Name
                     native.setdefault((obj.type.name, name), {})[sha(obj.get_raw_data())] = (obj, value)
-        texture_receipt = CACHE/'all-assets/windows-textures/source-manifest.json'
+        texture_receipt = cache/'all-assets/windows-textures/source-manifest.json'
         texture_proof = json.loads(texture_receipt.read_bytes())
         assert texture_proof['manifest'] == apk.version and texture_proof['completed']
         texture_records = {row['source']['object_sha256']: row for row in texture_proof['textures']}
@@ -305,7 +309,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         def converted_pixels(object_sha):
             record = texture_records[object_sha]
             if record['native_format'] not in (3, 4): return None
-            converted = CACHE/'all-assets/windows-textures'/next(
+            converted = cache/'all-assets/windows-textures'/next(
                 row['path'] for row in record['outputs'] if row['path'].endswith('.asset'))
             raw = converted.read_bytes()
             pixels = bytes.fromhex(re.search(rb'(?m)^  _typelessdata: ([a-fA-F0-9]+)', raw)[1].decode())
@@ -347,7 +351,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                     if value.m_Name in (name, base) or (related and value.m_Name.startswith(base+'_')):
                         candidates[object_sha] = (obj, value)
             return candidates
-        shader_cache = CACHE/'all-assets/windows-shaders'
+        shader_cache = cache/'all-assets/windows-shaders'
         shader_records = {}
         for path in (shader_cache/'Records').glob('*.json'):
             row = json.loads(path.read_bytes())
@@ -366,7 +370,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         for ordinal, path in enumerate(sorted(found), 1):
             if ordinal % 2000 == 0:
                 print(f"{family}: mapping output identities {ordinal}/{len(found)}", flush=True)
-            target = DEST/path.relative_to(EXPORTED)
+            target = DEST/path.relative_to(exported)
             if path.suffix == '.png': target = target.with_name(target.stem+'.texture.asset')
             elif '/Shaders/' in path.as_posix():
                 target = ROOT/'unity/Assets/Game/Runtime/Presentation/Combat/Shaders'/(shader_prefix+path.stem+'.shader')
@@ -454,7 +458,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                         start = mip['source_face_offset'] + mip['astc_offset']
                         size, expected_mip = mip['astc_size'], mip['astc_sha256']
                     assert sha(image_data[start:start+size]) == expected_mip
-                converted = CACHE/'all-assets/windows-textures'/next(row['path'] for row in record['outputs'] if row['path'].endswith('.asset'))
+                converted = cache/'all-assets/windows-textures'/next(row['path'] for row in record['outputs'] if row['path'].endswith('.asset'))
                 expected = next(row['sha256'] for row in record['outputs'] if row['path'].endswith('.asset'))
                 raw = converted.read_bytes(); assert sha(raw) == expected
                 rgba = bytes.fromhex(re.search(rb'(?m)^  _typelessdata: ([a-fA-F0-9]+)', raw)[1].decode())
