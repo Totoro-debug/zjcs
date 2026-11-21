@@ -93,7 +93,9 @@ try {
         throw "The completed skill-page battle checkpoint is absent: $run"
     }
     $receiptVerifier = if ($SkillId -eq 10000) { 'verify_water_bullet_receipt.py' } elseif ($SkillId -eq 10008) { 'verify_warrior_slash_receipt.py' } elseif ($SkillId -eq 10009) { 'verify_heavy_strike_receipt.py' } elseif ($SkillId -eq 10010) { 'verify_stun_strike_receipt.py' } elseif ($SkillId -eq 10011) { 'verify_lion_combo_receipt.py' } elseif ($SkillId -eq 10012) { 'verify_wind_blade_receipt.py' } elseif ($SkillId -eq 10013) { 'verify_four_way_slash_receipt.py' } elseif ($SkillId -eq 10014) { 'verify_whirlwind_slash_receipt.py' } elseif ($SkillId -eq 10015) { 'verify_jump_slash_receipt.py' } elseif ($SkillId -eq 10016) { 'verify_lightning_dash_receipt.py' } elseif ($SkillId -eq 10017) { 'verify_water_thread_receipt.py' } elseif ($SkillId -eq 10018) { 'verify_pull_skill_receipt.py' } elseif ($SkillId -eq 10024) { 'verify_arc_shield_receipt.py' } elseif ($SkillId -eq 10028) { 'verify_fireball_receipt.py' } elseif ($SkillId -eq 10035) { 'verify_ice_cone_receipt.py' } elseif ($SkillId -eq 10043) { 'verify_falling_wind_receipt.py' } elseif ($SkillId -eq 10044) { 'verify_frost_flower_receipt.py' } elseif ($SkillId -eq 10046) { 'verify_guard_shield_receipt.py' } elseif ($SkillId -eq 10048) { 'verify_bouncing_shield_receipt.py' } elseif ($SkillId -eq 10049) { 'verify_challenge_receipt.py' } elseif ($SkillId -eq 10051) { 'verify_battle_spirit_receipt.py' } elseif ($SkillId -eq 10053) { 'verify_sunset_sword_receipt.py' } elseif ($SkillId -eq 10066) { 'verify_encouragement_receipt.py' } else { 'verify_fire_slash_receipt.py' }
-    & python -B (Join-Path $PSScriptRoot $receiptVerifier) (Join-Path $run 'acquired-active-ui-checkpoint.json')
+    $receiptArgs = @((Join-Path $run 'acquired-active-ui-checkpoint.json'))
+    if ($SkillId -eq 10017) { $receiptArgs += '--require-cold' }
+    & python -B (Join-Path $PSScriptRoot $receiptVerifier) @receiptArgs
     if ($LASTEXITCODE -ne 0) { throw "The acquired skill's original battle receipts failed: $run" }
     Write-Output "Acquired active skill-page flow passed: $run"
 }

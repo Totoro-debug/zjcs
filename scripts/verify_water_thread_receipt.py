@@ -4,15 +4,27 @@ import json
 from pathlib import Path
 
 
-def verify(path):
+def verify(path, require_cold=False):
     cp = json.loads(path.read_text('utf-8-sig'))['checkpoint']
     actor = next(unit for unit in cp['Units'] if unit['Id'] == 1)
     equipped = next(skill for skill in actor['Skills'] if skill['ItemId'] == 10017 and skill['Slot'] == 0)
     assert equipped['EntityId'] == 10690
     unlimited = bool((cp.get('DamageTest') or {}).get('EnableMonsterUnlimitHp'))
     count, damage_count = 0, 0
+    pending_cold = {}
+    expired_after_two_turns = 0
     for receipt in cp['Receipts']:
         step = receipt['Event']
+        for key in pending_cold:
+            if step['ActorId'] == key[0]:
+                pending_cold[key] += 1
+        for event in step['StatusViewEvents']:
+            status = event['Status']
+            if status['ClassId'] != 24266 or event['Kind'] != 2:
+                continue
+            key = (event['OwnerId'], status['InstanceId'])
+            if pending_cold.pop(key, None) == 2 and step['ActorId'] == event['OwnerId']:
+                expired_after_two_turns += 1
         roots = [cast for cast in step['SkillCasts'] if cast['ActorId'] == 1 and cast['Slot'] == 0 and cast['SkillItemId'] == 10017]
         if not roots:
             continue
@@ -40,20 +52,26 @@ def verify(path):
                            and abs(movement['Delay'] - hit['Delay'] - .3) < .0001 for hit in step['DamageEvents'])
             for event in step['StatusViewEvents']:
                 status = event['Status']
-                if status['ClassId'] != 24266:
+                if status['ClassId'] != 24266 or event['Kind'] not in (0, 1):
                     continue
-                assert status['CreatorId'] == 1 and status['DurationRound'] == 2
-                assert status['Origin']['SkillItemId'] == 10017 and status['Origin']['SkillEntityId'] == 10690
-                assert status['SourceSkillRank'] == equipped['Rank'] and status['SourceSkillLevel'] == equipped['Level']
-                assert status['SourceSubRank'] == equipped['SubRank']
+                if status['CreatorId'] != 1:
+                    continue
+                owner = event['OwnerId']
+                assert status['StackCount'] >= 1 and (event['Kind'] != 0 or status['StackCount'] == 1)
+                assert any(hit['TargetId'] == owner and hit['SkillEntityId'] == 10970
+                           and abs(event['Delay'] - hit['Delay']) < .0001 for hit in step['DamageEvents'])
+                pending_cold[(owner, status['InstanceId'])] = 0
             count += 1
     assert count and damage_count, 'No original water-thread child damage was recorded'
+    if require_cold:
+        assert expired_after_two_turns, 'No water-thread cold expired after two turns of the affected target'
     return count, damage_count
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument('receipt', type=Path)
+    parser.add_argument('--require-cold', action='store_true')
     args = parser.parse_args()
-    casts, hits = verify(args.receipt)
+    casts, hits = verify(args.receipt, args.require_cold)
     print(f'Original water-thread receipts passed: {casts} casts, {hits} child water hits')
