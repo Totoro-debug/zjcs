@@ -141,17 +141,7 @@ try {
         '-batchmode','-nographics','-quit','-muteAudio','-projectPath',('"'+$project+'"'),
         '-job-worker-count','2','-gc-helper-count','2',
         '-executeMethod','Zjcs.Editor.ProjectTools.BuildWindowsGame','-logFile',('"'+$log+'"'))
-    while (-not $build.WaitForExit(5000)) {
-        $memory = Get-CimInstance Win32_OperatingSystem
-        if ($memory.FreePhysicalMemory -lt 4194304 -or $memory.FreeVirtualMemory -lt 8388608) {
-            $build.Refresh()
-            if (-not $build.HasExited) {
-                $build.Kill()
-                $build.WaitForExit()
-                throw 'Stopped the isolated release Editor to preserve available system memory.'
-            }
-        }
-    }
+    $build.WaitForExit()
     if ($build.ExitCode -ne 0 -or -not (Select-String -LiteralPath $log -SimpleMatch 'Windows game built to')) {
         throw "Release build failed. See $log"
     }

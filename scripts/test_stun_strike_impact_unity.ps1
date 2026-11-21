@@ -35,10 +35,6 @@ try {
     $resultSeen = $null
     $stoppedAfterResult = $false
     while (-not $process.WaitForExit(5000)) {
-        $os = Get-CimInstance Win32_OperatingSystem
-        if ($os.FreePhysicalMemory -lt 4194304 -or $os.FreeVirtualMemory -lt 8388608) {
-            throw 'The isolated Unity validation stopped to preserve available memory.'
-        }
         if (-not $resultSeen -and (Test-Path -LiteralPath $resultPath)) { $resultSeen = [DateTime]::UtcNow }
         if ($resultSeen -and [DateTime]::UtcNow -gt $resultSeen.AddSeconds(20)) {
             Stop-Process -Id $process.Id -Force

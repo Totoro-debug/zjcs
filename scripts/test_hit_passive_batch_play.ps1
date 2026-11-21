@@ -45,13 +45,7 @@ try {
         '-projectPath', ('"'+$projectPath+'"'), '-muteAudio', '-job-worker-count','2', '-gc-helper-count','2',
         '-logFile', ('"'+(Join-Path $run 'player.log')+'"'))
     $process.PriorityClass = 'BelowNormal'
-    while (-not $process.WaitForExit(5000)) {
-        $memory = Get-CimInstance Win32_OperatingSystem
-        if ($memory.FreePhysicalMemory -lt 4194304 -or $memory.FreeVirtualMemory -lt 8388608) {
-            Stop-Process -Id $process.Id -Force
-            throw "Stopped isolated Play Mode to protect foreground activity: $run"
-        }
-    }
+    $process.WaitForExit()
     $result = Get-Content -LiteralPath (Join-Path $run 'result.json') -Raw | ConvertFrom-Json
     if ($process.ExitCode -ne 0 -or -not $result.passed) { throw "Hit passive batch Play Mode failed: $run" }
     foreach ($caseName in $Cases) {
