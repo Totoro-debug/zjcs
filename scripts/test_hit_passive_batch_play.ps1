@@ -21,7 +21,7 @@ foreach ($caseName in $Cases) {
     }
 }
 $memory = Get-CimInstance Win32_OperatingSystem
-if ($memory.FreePhysicalMemory -lt 5242880 -or $memory.FreeVirtualMemory -lt 8388608) {
+if ($memory.FreePhysicalMemory -lt 4194304 -or $memory.FreeVirtualMemory -lt 8388608) {
     throw 'Available memory is too low to start isolated skill validation.'
 }
 $run = Join-Path $workspacePath ('b'+[guid]::NewGuid().ToString('N').Substring(0,8))
@@ -47,7 +47,7 @@ try {
     $process.PriorityClass = 'BelowNormal'
     while (-not $process.WaitForExit(5000)) {
         $memory = Get-CimInstance Win32_OperatingSystem
-        if ($memory.FreePhysicalMemory -lt 5242880 -or $memory.FreeVirtualMemory -lt 8388608) {
+        if ($memory.FreePhysicalMemory -lt 4194304 -or $memory.FreeVirtualMemory -lt 8388608) {
             Stop-Process -Id $process.Id -Force
             throw "Stopped isolated Play Mode to protect foreground activity: $run"
         }
