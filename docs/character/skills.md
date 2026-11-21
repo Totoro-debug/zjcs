@@ -30,6 +30,6 @@
 
 连锁攻击遵循已确认的[单机目标选择规则](../combat/battle-execution.md#自定义实现)。
 
-三阶、四阶技能继续使用官方数据驱动的共享链路：`FightOfficialCombatCatalog` 负责技能与数值配置，`FightBattleHitCollector` 负责命中图和子技能展开，`FightDamageFormula` 负责伤害计算，`FightStatusTriggerRuntime` 与 `FightSkillLogicRuntime` 负责通用状态、增益/减益、治疗、护盾、召唤和触发效果，`OfficialBattleSkillGraphPlayback` 负责原生技能图演出。完整 40 项三阶职业技能由 `scripts/verify_third_profession_skills.py` 校验，完整 50 项四阶职业技能由 `scripts/verify_fourth_profession_skills.py` 校验官方来源载荷、职业绑定、引用实体图及原生演出绑定。
+三阶、四阶技能继续使用官方数据驱动的共享链路：`FightOfficialCombatCatalog` 负责技能与数值配置，`FightBattleHitCollector` 负责命中图和子技能展开，`FightDamageFormula` 负责伤害计算，`FightStatusTriggerRuntime` 与 `FightSkillLogicRuntime` 负责通用状态、增益/减益、治疗、护盾、召唤和触发效果，`OfficialBattleSkillGraphPlayback` 负责原生技能图演出。完整 40 项三阶职业技能由 `scripts/verify_third_profession_skills.py` 校验，完整 50 项四阶职业技能由 `scripts/verify_fourth_profession_skills.py` 校验官方来源载荷、职业绑定、引用实体图及原生演出绑定；`scripts/test_fourth_profession_skills.ps1` 进一步通过同一战斗执行器验证四阶主动及内置战技的选取、施放和结算。
 
 五阶及以上职业仅保留既有技能说明，不计入本次完成范围。
