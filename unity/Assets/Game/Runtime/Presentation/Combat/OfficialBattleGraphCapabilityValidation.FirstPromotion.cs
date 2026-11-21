@@ -25,6 +25,7 @@ namespace Zjcs.Presentation.Combat
         private static readonly float[] SunsetSwordFrameTimes = { .78f, 1.02f, 1.2f, 1.45f };
         private static readonly float[] FireSlashFrameTimes = { .4f, .6f, .75f, .85f };
         private static readonly float[] CrisisGuardFrameTimes = { .25f, .8f, 1.3f, 1.55f };
+        private static readonly float[] ShieldChargeFrameTimes = { .65f, .86f, 1.02f, 1.15f };
         private bool ValidateSummonDeath => firstPromotionItemId != 0
             && Environment.GetEnvironmentVariable("ZJCS_SUMMON_DEATH_ACCEPTANCE") == "1";
         private bool summonDeathArmed, summonDeathComplete;
@@ -141,6 +142,7 @@ namespace Zjcs.Presentation.Combat
                 10053 => SunsetSwordFrameTimes,
                 10026 => FireSlashFrameTimes,
                 10032 => CrisisGuardFrameTimes,
+                10073 => ShieldChargeFrameTimes,
                 _ => FirstPromotionFrameTimes
             };
             if (firstPromotionItemId == 0 || nativeCasts == 0 || finisherScheduled
@@ -220,7 +222,7 @@ namespace Zjcs.Presentation.Combat
                 && point.X * dx + point.Y * dy > 0).Select(point => Math.Abs(point.X) + Math.Abs(point.Y))
                 .DefaultIfEmpty(1).Min();
             // The fifth cell is the dash's empty landing; enemies belong to its intermediate hit strip.
-            if (itemId == 10016) distance = 2;
+            if (itemId == 10016 || itemId == 10073) distance = 2;
             // Exercise point-target skills at range and leave an approach path for the pull.
             if (itemId == 10017 || itemId == 10018 || itemId == 10043) distance = 3;
             // Keep every cardinal probe on its requested axis while the ordinary
@@ -393,6 +395,7 @@ namespace Zjcs.Presentation.Combat
             if (itemId == 10053) probe.firstPromotionCaptureAfter = 1.7f;
             if (itemId == 10026) probe.firstPromotionCaptureAfter = 1f;
             if (itemId == 10017) probe.firstPromotionCaptureAfter = 1.4f;
+            if (itemId == 10073) probe.firstPromotionCaptureAfter = 1.3f;
             // Preserve short authored particle/action phases across cold-loading frames.
             probe.previousCaptureFramerate = Time.captureFramerate;
             Time.captureFramerate = 60;
@@ -466,6 +469,19 @@ namespace Zjcs.Presentation.Combat
                     && Math.Abs(applied.Delay - cast.Delay - 1.2f) < .0001f,
                     "Crisis Guard did not apply the original three-round shield to the lower-percentage ally.");
                 Debug.Log("[Crisis Guard] Original 11170 -> 11171, lowest-percentage ally and shield 24180 passed.");
+            }
+            if (firstPromotionItemId == 10073)
+            {
+                var charge = step.Movements.Single(value => value.UnitId == player.Id && value.MoveBehaviourId == 11732);
+                var hit = step.DamageEvents.Single(value => value.SkillEntityId == 11730);
+                var push = step.Movements.Single(value => value.UnitId == hit.TargetId && value.MoveBehaviourId == 11734);
+                Require(charge.Path.Count == 6 && Math.Abs(charge.Delay - cast.Delay - .82f) < .0001f
+                    && hit.HitEntityId == 11731 && hit.DamageEntityId == 11733 && hit.DamageType == 1
+                    && hit.ElementType == 0 && hit.Damage < 0 && !hit.TrueDamage
+                    && Math.Abs(hit.Delay - cast.Delay - .98f) < .0001f
+                    && push.Path.Count == 2 && Math.Abs(push.Delay - hit.Delay) < .0001f,
+                    "Shield charge lost its five-cell movement, original physical hit or side push.");
+                Debug.Log("[Shield charge] Original 11732 travel, 11731/11733 hit and 11734 side push passed.");
             }
             if (firstPromotionItemId == 10012 && Environment.GetEnvironmentVariable("ZJCS_WIND_BLADE_KNOCKBACK") == "1")
             {

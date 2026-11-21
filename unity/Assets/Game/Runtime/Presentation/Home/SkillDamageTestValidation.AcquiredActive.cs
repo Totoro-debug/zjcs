@@ -27,8 +27,9 @@ namespace Zjcs.Presentation.Home
             Action<Selectable> click = Click;
             bool crisisGuard = skillId == 10032;
             bool starShatteringSlash = skillId == 10039;
+            bool shieldCharge = skillId == 10073;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066;
-            bool thirdPromotion = crisisGuard || starShatteringSlash || skillId == 10017;
+            bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || skillId == 10017;
             Require(thirdPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
             int profession = thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
@@ -257,6 +258,7 @@ namespace Zjcs.Presentation.Home
                         : skillId == 10051 ? cast.SkillEntityId == 11260
                         : skillId == 10053 ? cast.SkillEntityId == 11250
                         : skillId == 10066 ? cast.SkillEntityId == 11550
+                        : shieldCharge ? cast.SkillEntityId == 11730
                         : cast.SkillEntityId == 10780 || cast.SkillEntityId == 11640 || cast.SkillEntityId == 11650 || cast.SkillEntityId == 11660,
                         "The acquired active skill selected a foreign entity: " + cast.SkillEntityId);
                     var damageEvents = step.Event.DamageEvents.Where(value => value.SourceId == 1
@@ -329,6 +331,18 @@ namespace Zjcs.Presentation.Home
                         hits++;
                         continue;
                     }
+                    if (shieldCharge)
+                    {
+                        var charge = step.Event.Movements.Single(value => value.UnitId == actor.Id
+                            && value.MoveBehaviourId == 11732);
+                        Require(charge.Path.Count == 6 && Math.Abs(charge.Delay - cast.Delay - .82f) < .0001f
+                            && damageEvents.Length > 0 && damageEvents.All(value => value.TargetId != actor.Id
+                                && value.HitEntityId == 11731 && value.DamageEntityId == 11733 && value.DamageType == 1
+                                && value.ElementType == 0 && value.Damage < 0 && !value.TrueDamage && !value.IsCure),
+                            "The acquired shield charge lost its original path or physical damage.");
+                        hits += damageEvents.Length;
+                        continue;
+                    }
                     foreach (var hit in damageEvents)
                     {
                         if (statusSkill) continue;
@@ -361,7 +375,8 @@ namespace Zjcs.Presentation.Home
                                 parent.name.StartsWith("playable10801", StringComparison.Ordinal)));
                         if (!explosionVisible) { yield return null; continue; }
                     }
-                    else yield return new WaitForSecondsRealtime(crisisGuard || starShatteringSlash ? 1.45f : .7f);
+                    else yield return new WaitForSecondsRealtime(crisisGuard || starShatteringSlash ? 1.45f
+                        : shieldCharge ? 1.1f : .7f);
                     yield return CaptureAcquiredActive(output, "battle"); captured = true;
                 }
                 yield return null;

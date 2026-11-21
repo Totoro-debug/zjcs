@@ -10,7 +10,13 @@ namespace Zjcs.Combat.Official
         private static bool IsLightningDash(FightBattleSkillDefinition skill)
             => skill != null && skill.EntityId == 10680 && skill.ItemId == 10016;
 
-        private bool TryPlanLightningDash(FightBattleUnitState actor, FightBattleSkillDefinition skill,
+        private static bool IsShieldCharge(FightBattleSkillDefinition skill)
+            => skill != null && skill.EntityId == 11730 && skill.ItemId == 10073;
+
+        private static bool IsStraightDash(FightBattleSkillDefinition skill)
+            => IsLightningDash(skill) || IsShieldCharge(skill);
+
+        private bool TryPlanStraightDash(FightBattleUnitState actor, FightBattleSkillDefinition skill,
             out FightBattleUnitState position, out List<FightBattleUnitState> targets)
         {
             position = null;
@@ -18,11 +24,25 @@ namespace Zjcs.Combat.Official
             if (checkpoint.Grid == null || statusCatalog == null) return false;
             var eligible = units.Where(unit => FightBattleTargeting.Select(actor,
                 new[] { unit }, skill.TargetType, skill: skill).Count > 0).ToList();
+            int moveId = skill.SourceMoves[0].MoveBehaviourId;
+            var chargeHit = IsShieldCharge(skill)
+                ? FightBattleHitCollector.CollectAll(skill).Single(hit => hit.EntityId == 11731) : null;
             foreach (var offset in skill.Range)
             {
                 var landing = new FightGridPoint(actor.X + offset.X, actor.Y + offset.Y);
-                if (!TryLightningDashPath(actor, landing, out var path)) continue;
-                var covered = eligible.Where(unit => path.Skip(1).Take(path.Count - 2)
+                if (!TryStraightDashPath(actor, landing, moveId, out var path)) continue;
+                IEnumerable<FightGridPoint> hitCells = path.Skip(1).Take(path.Count - 2);
+                if (chargeHit != null)
+                {
+                    var facing = new FightBattleSkillCastPresentation {
+                        FacingIndex = offset.X < 0 ? 1 : offset.X > 0 ? 3 : offset.Y > 0 ? 2 : 0,
+                        FlipX = offset.X == 0 ? actor.FlipX : offset.X < 0
+                    };
+                    var start = path[0];
+                    hitCells = FightBattleTargeting.TransformScope(chargeHit.Scope,
+                        chargeHit.ScopeTransform, actor, facing).Select(cell => start + cell);
+                }
+                var covered = eligible.Where(unit => hitCells
                     .Any(point => FightBattleTargeting.OccupiesPosition(unit, point))).ToList();
                 // Stable official range order breaks ties; probing consumes no combat random draws.
                 if (covered.Count <= targets.Count) continue;
@@ -32,8 +52,8 @@ namespace Zjcs.Combat.Official
             return position != null;
         }
 
-        private bool TryLightningDashPath(FightBattleUnitState actor, FightGridPoint landing,
-            out List<FightGridPoint> path)
+        private bool TryStraightDashPath(FightBattleUnitState actor, FightGridPoint landing,
+            int moveId, out List<FightGridPoint> path)
         {
             path = new List<FightGridPoint> { new FightGridPoint(actor.X, actor.Y) };
             var grid = checkpoint.Grid;
@@ -44,7 +64,7 @@ namespace Zjcs.Combat.Official
                 ? new List<FightGridPoint> { new FightGridPoint() } : actor.BodyOffsets;
             foreach (var offset in body)
                 if (!grid.CanStand(landing + offset, actor.MoveMask, occupied)) return false;
-            int passHeight = statusCatalog.LightningDashPassHeight();
+            int passHeight = statusCatalog.SkillMovePassHeight(moveId);
             for (int i = 1; i <= 5; i++)
             {
                 var point = new FightGridPoint(actor.X + Math.Sign(dx) * i, actor.Y + Math.Sign(dy) * i);
@@ -70,7 +90,7 @@ namespace Zjcs.Combat.Official
 
     public sealed partial class FightOfficialCombatCatalog
     {
-        internal int LightningDashPassHeight()
-            => Int(Component(RequiredEntity(10682), "FightActionSkillMoveComponent"), "PassHeight");
+        internal int SkillMovePassHeight(int moveId)
+            => Int(Component(RequiredEntity(moveId), "FightActionSkillMoveComponent"), "PassHeight");
     }
 }

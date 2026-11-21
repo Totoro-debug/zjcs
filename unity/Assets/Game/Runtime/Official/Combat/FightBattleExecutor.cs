@@ -364,8 +364,8 @@ namespace Zjcs.Combat.Official
                     checkedSlots.Add(skill.Slot);
                     continue;
                 }
-                if (IsLightningDash(skill)
-                    && !TryPlanLightningDash(actor, skill, out dashPosition, out targets))
+                if (IsStraightDash(skill)
+                    && !TryPlanStraightDash(actor, skill, out dashPosition, out targets))
                 {
                     checkedSlots.Add(skill.Slot);
                     continue;
@@ -1714,10 +1714,10 @@ namespace Zjcs.Combat.Official
                 if (move.Distance < 0)
                 {
                     int movementIndex = movements.Count;
-                    if (IsLightningDash(skill))
+                    if (IsStraightDash(skill))
                     {
-                        if (targetPosition != null && TryLightningDashPath(actor,
-                            new FightGridPoint(targetPosition.X, targetPosition.Y), out var dashPath))
+                        if (targetPosition != null && TryStraightDashPath(actor,
+                            new FightGridPoint(targetPosition.X, targetPosition.Y), move.MoveBehaviourId, out var dashPath))
                         {
                             ApplyMovementPath(actor, dashPath, dashPath.Count - 1, movements);
                             ApplyMovementAction(movements, movementIndex, move, skill, true);
@@ -2417,7 +2417,9 @@ namespace Zjcs.Combat.Official
             {
                 if (FightHitMovementRules.UsesConfirmedSideMove(hit))
                 {
-                    ApplyConfirmedHitSideMove(target, actor, skillTarget, move, movements, skill, hitDelay);
+                    var lineSource = IsShieldCharge(skill) && cast != null
+                        ? actor.ProbeAt(new FightGridPoint(cast.SourceX, cast.SourceY)) : actor;
+                    ApplyConfirmedHitSideMove(target, lineSource, skillTarget, move, movements, skill, hitDelay);
                     return;
                 }
                 ApplyPathSideMove(target, actor, target, move, movements, skill, originDelay: hitDelay);
@@ -2902,7 +2904,7 @@ namespace Zjcs.Combat.Official
         {
             if (skill.EntityId == 10670 && skill.ItemId == 10015
                 && FightBattleTargeting.TryPlanJumpSlash(actor, units, skill, checkpoint.Grid, out _, out _)) return false;
-            if (IsLightningDash(skill) && TryPlanLightningDash(actor, skill, out _, out _)) return false;
+            if (IsStraightDash(skill) && TryPlanStraightDash(actor, skill, out _, out _)) return false;
             FightBattleGrid grid = checkpoint.Grid;
             if (grid == null || actor.MoveDist <= 0 || skill.Range == null || skill.Range.Count == 0
                 || statusCatalog != null && !statusCatalog.CanStartAction(actor,

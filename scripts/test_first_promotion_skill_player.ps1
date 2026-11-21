@@ -166,6 +166,9 @@ try {
         if ($item -eq 10032 -and -not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Crisis Guard] Original 11170 -> 11171, lowest-percentage ally and shield 24180 passed.')) {
             throw "Original 10032 lowest-percentage ally and shield assertions did not complete: $run"
         }
+        if ($item -eq 10073 -and -not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch '[Shield charge] Original 11732 travel, 11731/11733 hit and 11734 side push passed.')) {
+            throw "Original 10073 charge, impact and side push assertions did not complete: $run"
+        }
         if ($item -eq 10016) {
             & python -B (Join-Path $PSScriptRoot 'verify_lightning_dash_receipt.py') (Join-Path $run 'summon-final.json')
             if ($LASTEXITCODE -ne 0) { throw "Original 10016 dash/hit receipt validation failed: $run" }
