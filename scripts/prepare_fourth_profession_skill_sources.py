@@ -6,69 +6,9 @@ from official_apk import ROOT
 from prepare_third_profession_skill_sources import build, compact_receipt, identity
 
 
-SKILLS = {
-    10047: dict(entities=[10880, 10881, 10024],
-                code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo',
-                      'FightDamageComponentInfo', 'BattleFormulaHandler']),
-    10082: dict(entities=[11980, 11981, 11982, 11983, 11984, 24377, 13580, 13581, 13582, 24659],
-                code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo',
-                      'FightDamageComponentInfo', 'FightDamageLimitComponentInfo',
-                      'DamageStatusCfg', 'FightStatusComponentInfo',
-                      'FightStatusShieldPersistentComponentInfo', 'BattleFormulaHandler']),
-    10184: dict(entities=[13580, 13581, 13582, 24659], base_item=10082,
-                code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo',
-                      'FightDamageComponentInfo', 'FightDamageLimitComponentInfo',
-                      'DamageStatusCfg', 'FightStatusComponentInfo',
-                      'FightStatusShieldPersistentComponentInfo', 'BattleFormulaHandler']),
-    10083: dict(entities=[11990, 11991, 11992, 24378, 12000, 12001, 10026],
-                native_receipts=['assets/reference/battle-animation/profession-status-assets-source-manifest.json'],
-                client_code=['MyEntity', 'MyAction', 'MyFightStatus', 'MyFightStatusLogic',
-                             'MyPlayableOrbitMovement', 'ApplyByStatusStackCount', 'MyPlayableFollowBone',
-                             'ApplyByGroundType', 'ApplyOnStopFadeOut'],
-                framework_code=['MyPlayableSequence', 'ApplyEnableOnPlay'],
-                code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo', 'FightDamageComponentInfo',
-                      'FightStatusComponentInfo', 'FightStatusLogicComponentInfo',
-                      'FightOnAfterBeDamageTriggerCfg', 'FightHandleCfgTriggerSkills',
-                      'FightHandleCfgChangeStatusStack', 'DamageResultTypeFilter',
-                      'DamageSkillCanTriggerStatusFilter', 'ESkillTryAtStartType', 'BattleFormulaHandler',
-                      'FightHandleCfgBBEcId2EcEntityAndStore', 'FightHandleCfgFireTriggerStatus',
-                      'FightHandleCfgNewIntInBB', 'EntityHasActionTypeByEntityKeyFilter', 'LogicFilter',
-                      'LogicNotFilter', 'IteratingAgentStatusClassIdFilter', 'StatusTriggerTarget',
-                      'FightStatusTriggerSkillCfg', 'EFightBlackBoardKeyValue', 'FightPort', 'DamageResultType']),
-    10084: dict(entities=[11890, 11891, 11892, 24216],
-                code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo', 'FightDamageComponentInfo',
-                      'FightStatusComponentInfo', 'DamageStatusCfg', 'StatusAutoRemoveComponentInfo',
-                      'SkillAiCfg', 'AiPriorityType', 'BattleFormulaHandler']),
-    10085: dict(entities=[11900, 11901, 11902, 11903, 10026],
-                code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo',
-                      'FightDamageComponentInfo', 'BattleFormulaHandler']),
-    10099: dict(entities=[12080, 12081, 12082, 12083, 10100, 10101, 10006],
-                code=['FightSkillComponentInfo', 'FightHitFixedComponentInfo', 'FightDamageComponentInfo',
-                      'FightSKillMoveCfg', 'FightActionSkillMoveComponentInfo', 'BattleFormulaHandler']),
-    10592: dict(entities=[25108],
-                current_native_receipts=['assets/reference/battle-animation/profession-current-graphs-source-manifest.json'],
-                client_code=['MyFightStatus', 'MyFightStatusDamageProcess'],
-                code=['FightStatusComponentInfo', 'FightStatusDamageProcessComponentInfo',
-                      'FightStatusDamageProcessComponent', 'BattleFormulaHandler']),
-    10606: dict(entities=[25115, 24266],
-                current_native_receipts=['assets/reference/battle-animation/profession-current-graphs-source-manifest.json'],
-                native_receipts=[dict(path='assets/reference/battle-animation/first-promotion-status-assets-source-manifest.json',
-                                      ids=[24266])],
-                client_code=['MyFightStatusHitSkill', 'MyFightStatusProp'],
-                reused_client_code=['MyFightStatusProp', 'MyFightStatusBase', 'MyFightStatus', 'MyAction', 'MyEntity'],
-                code=['FightStatusComponentInfo', 'FightStatusHitSkillComponentInfo', 'FightStatusHitSkillComponent',
-                      'FightStatusPropComponentInfo', 'FightStatusTriggerStatusCfg', 'BattleFormulaHandler']),
-    10607: dict(entities=[25116, 24391, 12170, 12171, 12172, 24266],
-                current_native_receipts=['assets/reference/battle-animation/profession-current-graphs-source-manifest.json'],
-                native_receipts=[dict(path='assets/reference/battle-animation/first-promotion-status-assets-source-manifest.json',
-                                      ids=[24266])],
-                client_code=['MyFightStatusMoveRange', 'MyFightStatusRoundEnd', 'MyFightStatusProp'],
-                reused_client_code=['MyFightStatusProp', 'MyFightStatusBase', 'MyFightStatus', 'MyAction', 'MyEntity'],
-                code=['FightStatusComponentInfo', 'FightStatusMoveRangeComponentInfo',
-                      'TargetCloseTriggerApplyStatusSetting', 'FightStatusRoundEndComponentInfo',
-                      'FightSkillComponentInfo', 'FightHitFixedComponentInfo', 'FightDamageComponentInfo',
-                      'FightStatusTriggerSkillCfg', 'FightStatusTriggerStatusCfg', 'BattleFormulaHandler']),
-}
+SPEC_DIRECTORY = ROOT / 'scripts/profession_skill_sources/fourth'
+SPEC_FILES = {int(path.stem): path for path in sorted(SPEC_DIRECTORY.glob('*.json'))}
+SKILLS = {item: json.loads(path.read_bytes()) for item, path in SPEC_FILES.items()}
 
 
 def main():
@@ -78,6 +18,7 @@ def main():
     args = parser.parse_args()
     result = compact_receipt(build(args.item, SKILLS[args.item], (4, 8, 13, 17)))
     result['entry_generator'] = identity(ROOT / 'scripts/prepare_fourth_profession_skill_sources.py')
+    result['source_spec'] = identity(SPEC_FILES[args.item])
     target = ROOT / f'assets/reference/battle-rules/fourth-profession-{args.item}-source-manifest.json'
     if args.write:
         target.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', 'utf8')
