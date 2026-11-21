@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RULES = ROOT / "unity/Assets/Official/Combat/rules.json"
 SKILL_RULES = ROOT / "unity/Assets/Official/Combat/skill-rules.json"
 BATTLE_RULES = ROOT / "unity/Assets/Official/Combat/battle-rules.json"
+ANIMATION_MANIFEST = ROOT / "assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json"
 DOCS = ROOT / "docs/character"
 MANIFEST = ROOT / "assets/reference/battle-rules/fourth-profession-skill-migration-source-manifest.json"
 
@@ -65,6 +66,11 @@ def verify(write: bool = False) -> dict[str, Any]:
     rules = read_json(RULES)
     skill_rules = read_json(SKILL_RULES)
     battle_rules = read_json(BATTLE_RULES)
+    animation_manifest = read_json(ANIMATION_MANIFEST)
+    animation_bindings = {
+        int(row["skill_id"]): row
+        for row in animation_manifest["official_entity_binding_source"]["skills"]
+    }
     entities = dict(skill_rules["entities"])
     entities.update(battle_rules["entities"])
     by_item = {int(row["ClassId"]): row for row in rules["skill"]}
@@ -96,6 +102,10 @@ def verify(write: bool = False) -> dict[str, Any]:
                 raise AssertionError(f"skill {item_id} has no reachable official graph")
             item["profession"] = profession
             item["rank"] = 4
+            if item["entity_id"] > 0 and item_id < 10500:
+                binding = animation_bindings.get(item["entity_id"])
+                if not binding or not binding.get("entity_prefab") or not binding.get("playables"):
+                    raise AssertionError(f"skill {item_id} has no official animation binding: {item['entity_id']}")
             skills.append(item)
 
     result = {
@@ -108,6 +118,7 @@ def verify(write: bool = False) -> dict[str, Any]:
             {"path": RULES.relative_to(ROOT).as_posix(), "sha256": sha256(RULES)},
             {"path": SKILL_RULES.relative_to(ROOT).as_posix(), "sha256": sha256(SKILL_RULES)},
             {"path": BATTLE_RULES.relative_to(ROOT).as_posix(), "sha256": sha256(BATTLE_RULES)},
+            {"path": ANIMATION_MANIFEST.relative_to(ROOT).as_posix(), "sha256": sha256(ANIMATION_MANIFEST)},
         ],
         "skills": skills,
     }
