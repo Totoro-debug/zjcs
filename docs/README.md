@@ -4,7 +4,7 @@
 
 本页仅提供功能、地图及概括状态导航；必要约定与已确认的单机决策归所属页面。技能、装备等确需查阅的详细内容按需保留，其余可查询信息不重复登记。
 
-共用约定：[素材管理](asset-management.md) · [官方来源](../assets/reference/SOURCES.md) · [项目协作约定](../AGENTS.md)。
+共用约定：[素材管理](asset-management.md) · [全模块刷新时刻](common/refresh-time.md) · [官方来源](../assets/reference/SOURCES.md) · [项目协作约定](../AGENTS.md)。
 
 ## 功能导航
 
@@ -49,20 +49,11 @@
 | [古遗物收藏、任务与培养](character/relics.md) | 未完成 |
 | [赛季记录、赐福与装备柜](character/seasons.md) | 未完成 |
 
-### 主城与主城建筑
+### 主城与建筑
 
 | 名称 | 状态 |
 | --- | --- |
-| [主城、家园与离线产出](city-and-home/city-and-home.md) | 未完成 |
-| [星命契约与累计属性](city-and-home/astrological.md) | 未完成 |
-| [炼金炉、料理、合成与分解](city-and-home/cooking.md) | 未完成 |
-| [果树生产与领取](city-and-home/fruit-tree.md) | 未完成 |
-| [宝石合成与机械师熔炉](city-and-home/gem-forge.md) | 未完成 |
-| [主城售货机与馈赠](city-and-home/home-shop.md) | 未完成 |
-| [技能祈愿、材料购买与兑换](city-and-home/wishes.md) | 未完成 |
-| [幻兽结缘与兑换](city-and-home/pet-gacha.md) | 未完成 |
-| [古遗物扭蛋与女神牌](city-and-home/treasure-gacha.md) | 未完成 |
-| [NPC伙伴、好感与餐桌通话](city-and-home/partners.md) | 未完成 |
+| [主城与建筑索引（按主城、建筑、功能分类）](city-and-home/city-and-home.md) | 部分完成 |
 
 ### 笔记与笔记内功能
 

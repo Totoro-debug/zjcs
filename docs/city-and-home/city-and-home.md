@@ -1,21 +1,44 @@
-# 主城、家园与离线产出
+# 主城与建筑索引
 
 [总索引](../README.md)
 
-状态：未完成
+状态：部分完成
 
-## 功能简介
+主城场景和共用交互见主城页，设施本体与管理见建筑页，独立玩法及跨设施规则见功能页。
 
-家园承载设施、离线收益、邮箱和各玩法入口；各设施专属规则归所属页。
+## 主城
 
-## 自定义实现
+| 名称 | 状态 |
+| --- | --- |
+| [主城场景、环境与角色](city/scene.md) | 部分完成 |
+| [主城界面与功能入口](city/interface.md) | 部分完成 |
 
-- 新档初始体力为 300；初心者初始化见[角色创建](../character/character-creation.md)。家园时间以角色创建时间为起点，使用官方时间倍率。
-- 普通领取使用客户端未结算预览结果；时间结晶加速的普通产物留在设施内，可超容量，须手动领取。活动加成只来自实际活动记录，新档不虚构加成或邮件。
-- 动物与落叶分别按 8～9 小时、16～18 小时刷新；每周期在合法空槽生成一个原表奖励，离线补刷分别至 9 个、6 个，满额不积攒欠账。
-- 本地收益按时间累计，负时间差归零，领取失败回滚。世界阶段独立手动推进，不随个人突破自动变化，见[阶段推进](../maps/manual-world-stage.md)。
-- 社交与公会范围见[离线政策](../common/offline-access.md)；动画方案见[角色创建](../character/character-creation.md#spine-迁移决策)。
+## 建筑
 
-## 全模块刷新时刻
+| 名称 | 状态 |
+| --- | --- |
+| [建筑修复、解锁、升级与装潢](buildings/management.md) | 部分完成 |
+| [床与小推车](buildings/bed-and-cart.md) | 部分完成 |
+| [果树生产与领取](buildings/fruit-tree.md) | 部分完成 |
+| [炼金炉料理](buildings/cooking.md) | 部分完成 |
+| [宝石合成与机械师熔炉](buildings/gem-forge.md) | 部分完成 |
+| [主城售货机与馈赠](buildings/home-shop.md) | 部分完成 |
+| [命运星象、星命契约与累计属性](buildings/astrological.md) | 部分完成 |
 
-用户确认原 08:00 的日／周刷新统一提前至 06:00，保留已有周期标识和领奖回执。使用电脑本地时区的功能沿本地时区处理，伙伴通话的 UTC+8 边界独立保留；时间回拨不重复刷新或领奖。
+## 功能
+
+| 名称 | 状态 |
+| --- | --- |
+| [离线产出、领取与时间结晶](functions/offline-income.md) | 部分完成 |
+| [动物与落叶拾取](functions/random-rewards.md) | 部分完成 |
+| [邮箱与附件](functions/mail.md) | 部分完成 |
+| [技能祈愿、材料购买与兑换](functions/wishes.md) | 部分完成 |
+| [幻兽结缘与兑换](functions/pet-gacha.md) | 部分完成 |
+| [古遗物扭蛋与女神牌](functions/treasure-gacha.md) | 部分完成 |
+| [NPC伙伴、好感与餐桌通话](functions/partners.md) | 部分完成 |
+
+## 状态口径与共用约定
+
+各页的“当前完成详情”记录代码和资源中已接入的行为、已知缺口及待验证流程。主城、本地产出及多项设施玩法已有实现，整体仍有界面、入口和规则待补齐。完整可玩与交付按工程约定核实，包括真实运行、渲染、存档恢复和 Windows Player 验证。见[工程验证和发布约定](../common/unity-project.md)。
+
+[全模块刷新时刻](../common/refresh-time.md) · [离线开放与社交范围](../common/offline-access.md) · [本地存档](../settings/settings-and-save.md) · [世界阶段推进](../maps/manual-world-stage.md)。
