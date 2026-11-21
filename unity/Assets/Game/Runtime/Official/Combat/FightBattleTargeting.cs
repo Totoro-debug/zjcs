@@ -70,6 +70,7 @@ namespace Zjcs.Combat.Official
                 candidates, skill, random);
             candidates.Sort((left, right) => CompareCandidates(actor, left, right, skill,
                 units, randomPriorities));
+            DeprioritizeFearSources(actor, candidates, targetType);
             PrioritizeRidiculeSource(candidates, targetType, ridiculeTargetId);
             if (!keepAllCandidates && (targetType == 1 || targetType == 2 || targetType == 3
                 || targetType == 8 || targetType == 9))

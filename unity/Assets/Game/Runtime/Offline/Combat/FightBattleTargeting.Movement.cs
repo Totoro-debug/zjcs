@@ -30,6 +30,7 @@ namespace Zjcs.Combat.Official
             List<FightBattleUnitState> targets = SelectCandidates(actor, units, skill.TargetType,
                 skill: skill, keepAllCandidates: attack);
             RestrictForcedTarget(actor, targets, skill);
+            RestrictFearSources(actor, targets, skill.TargetType);
             if (targets.Count == 0) return start;
             int priorityClass = AttackPriorityClass(actor, targets, skill);
             // Only legal full-body casting positions can attract an approach jump.
@@ -135,6 +136,7 @@ namespace Zjcs.Combat.Official
             if (actor == null || units == null || skill == null || grid == null || skill.Range == null) return false;
             var eligible = SelectCandidates(actor, units, skill.TargetType, skill: skill, keepAllCandidates: true);
             RestrictForcedTarget(actor, eligible, skill);
+            RestrictFearSources(actor, eligible, skill.TargetType);
             int priorityClass = AttackPriorityClass(actor, eligible, skill);
             var occupied = new HashSet<FightGridPoint>();
             foreach (FightBattleUnitState unit in units)
@@ -223,6 +225,7 @@ namespace Zjcs.Combat.Official
             if (HasActionStatus(actor, ConfusionActionType)) return true;
             var targets = SelectCandidates(actor, units, skill.TargetType, skill: skill, keepAllCandidates: true);
             RestrictForcedTarget(actor, targets, skill);
+            RestrictFearSources(actor, targets, skill.TargetType);
             int priorityClass = AttackPriorityClass(actor, targets, skill);
             if (priorityClass == 0) return true;
             foreach (FightBattleUnitState target in targets)
@@ -238,6 +241,11 @@ namespace Zjcs.Combat.Official
             if (!UsesEnemyAttackPriority(skill) || confused || HasActionStatus(actor, ConfusionActionType)) return;
             var targets = SelectCandidates(actor, units, skill.TargetType, skill: skill, keepAllCandidates: true);
             RestrictForcedTarget(actor, targets, skill, ridiculeTargetId);
+            candidates.RemoveAll(target => !targets.Exists(value => value.Id == target.Id));
+            int beforeFear = candidates.Count;
+            RestrictFearSources(actor, candidates, skill.TargetType);
+            if (candidates.Count != beforeFear)
+                RestrictFearSources(actor, targets, skill.TargetType);
             int priorityClass = AttackPriorityClass(actor, targets, skill);
             var scores = new Dictionary<int, LandingScore>();
             foreach (FightBattleUnitState target in candidates)
