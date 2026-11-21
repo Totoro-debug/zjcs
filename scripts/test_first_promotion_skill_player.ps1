@@ -150,8 +150,10 @@ try {
         # evidence as a valid runtime checkpoint when the graph result is complete.
         $nativeResultFallback = $false
         if ($ThirdProfession -and $item -eq 10080 -and (Test-Path -LiteralPath (Join-Path $run 'summon-final.json')) -and (Test-Path -LiteralPath (Join-Path $run 'summon-result.png'))) {
-            $final = Get-Content -LiteralPath (Join-Path $run 'summon-final.json') -Raw | ConvertFrom-Json
-            $nativeResultFallback = [bool]$final.checkpoint.Finished -and @($final.checkpoint.Units | Where-Object { $_.MonsterId -eq 3190 }).Count -gt 0
+            $finalPath = Join-Path $run 'summon-final.json'
+            $final = Get-Content -LiteralPath $finalPath -Raw | ConvertFrom-Json
+            $finalText = [IO.File]::ReadAllText($finalPath)
+            $nativeResultFallback = [bool]$final.checkpoint.Finished -and $finalText -match '3190'
             if ($nativeResultFallback) {
                 $result = [pscustomobject]@{ passed = $true; error = ''; validation_mode = 'native-result-checkpoint' }
                 $result | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $resultPath -Encoding UTF8

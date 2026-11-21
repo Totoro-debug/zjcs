@@ -14,19 +14,14 @@
 | [成长成就与积分奖励](features/achievements.md) | 未完成 |
 | [成长试炼与活动小游戏](features/activity-minigames.md) | 未完成 |
 | [战斗执行](features/battle-execution.md) | 未完成 |
-| [羁绊冒险](features/bond-adventure.md) | 部分完成 |
 | [新建存档与角色创建](features/character-creation.md) | 未完成 |
 | [人物属性、经验、位阶与衣柜](features/character.md) | 未完成 |
 | [图鉴分类、筛选与只读详情](features/codex.md) | 未完成 |
 | [商城、代金券与礼包](features/commerce.md) | 未完成 |
-| [圣兽试炼与双影幻境](features/daily-challenges.md) | 未完成 |
-| [游记入口与日常副本](features/dungeons.md) | 未完成 |
 | [装备、强化、继承与星石](features/equipment.md) | 未完成 |
-| [幻想阶梯与历程回响](features/fantasy-tower.md) | 未完成 |
 | [单人公会领地](features/guild.md) | 未完成 |
 | [行囊、物品与宝箱](features/inventory.md) | 未完成 |
 | [世界阶段手动推进](features/manual-world-stage.md) | 未完成 |
-| [素材秘境与快速采集](features/material-gathering.md) | 未完成 |
 | [月卡与星眷累计奖励](features/monthly-card.md) | 未完成 |
 | [NPC邀请、站位与战前准备](features/npc-assistance.md) | 未完成 |
 | [离线开放条件与单机范围](features/offline-access.md) | 未完成 |
@@ -47,8 +42,6 @@
 | [主线任务进度](features/tasks.md) | 未完成 |
 | [主线剧情公共模块](features/story.md) | 未完成 |
 | [Unity 工程与启动流程](features/unity-project.md) | 未完成 |
-| [虚空裂隙与混沌侵袭](features/weekly-challenges.md) | 未完成 |
-| [命运果实探寻](features/world-exploration.md) | 未完成 |
 | [世界地图与主线公共模块](features/world-map.md) | 未完成 |
 
 ### 主城与主城建筑
@@ -64,8 +57,20 @@
 | [技能祈愿、材料购买与兑换](features/city-and-home/wishes.md) | 未完成 |
 | [幻兽结缘与兑换](features/city-and-home/pet-gacha.md) | 未完成 |
 | [古遗物扭蛋与女神牌](features/city-and-home/treasure-gacha.md) | 未完成 |
-| [伙伴旅行、品质与保底](features/city-and-home/partner-travel.md) | 未完成 |
 | [NPC伙伴、好感与餐桌通话](features/city-and-home/partners.md) | 未完成 |
+
+### 笔记与笔记内功能
+
+| 名称 | 状态 |
+| --- | --- |
+| [游记入口与日常副本](features/travel-notes/dungeons.md) | 未完成 |
+| [圣兽试炼与双影幻境](features/travel-notes/daily-challenges.md) | 未完成 |
+| [虚空裂隙与混沌侵袭](features/travel-notes/weekly-challenges.md) | 未完成 |
+| [幻想阶梯与历程回响](features/travel-notes/fantasy-tower.md) | 未完成 |
+| [羁绊冒险](features/travel-notes/bond-adventure.md) | 部分完成 |
+| [素材秘境与快速采集](features/travel-notes/material-gathering.md) | 未完成 |
+| [命运果实探寻](features/travel-notes/world-exploration.md) | 未完成 |
+| [伙伴旅行、品质与保底](features/travel-notes/partner-travel.md) | 未完成 |
 
 ## 地图导航
 
