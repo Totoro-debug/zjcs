@@ -12,7 +12,6 @@
 | --- | --- |
 | [登录前启动画面](features/startup.md) | 未完成 |
 | [战斗执行](features/battle-execution.md) | 未完成 |
-| [单人公会领地](features/guild.md) | 未完成 |
 | [NPC邀请、站位与战前准备](features/npc-assistance.md) | 未完成 |
 | [离线开放条件与单机范围](features/offline-access.md) | 未完成 |
 | [共用界面、文字与资源运行](features/shared-ui.md) | 未完成 |
@@ -65,6 +64,12 @@
 | [素材秘境与快速采集](travel-notes/material-gathering.md) | 未完成 |
 | [命运果实探寻](travel-notes/world-exploration.md) | 未完成 |
 | [伙伴旅行、品质与保底](travel-notes/partner-travel.md) | 未完成 |
+
+### 公会
+
+| 名称 | 状态 |
+| --- | --- |
+| [单人公会领地](guild/guild.md) | 未完成 |
 
 ### 设置与相关功能
 
