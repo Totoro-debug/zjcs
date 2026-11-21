@@ -45,8 +45,8 @@ def identity(path):
     return dict(path=path.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(path.read_bytes()).hexdigest())
 
 
-def build(item_id):
-    spec = SKILLS[item_id]
+def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
+    spec = SKILLS[item_id] if spec is None else spec
     rules = json.loads((COMBAT / 'rules.json').read_bytes())
     skill_rules = json.loads((COMBAT / 'skill-rules.json').read_bytes())
     installed = next(row for row in rules['skill'] if row['ClassId'] == item_id)
@@ -80,7 +80,7 @@ def build(item_id):
         current = next(row for row in table('skill', 'TbSkillInfo') if row['ClassId'] == item_id)
         assert current == installed, ('Current skill item changed', item_id, installed, current)
         owner = next(row for row in table('profession_base', 'TbProfessionBaseInfo')
-                     if row['Profession'] in (3, 7, 12, 16) and item_id in row['Skills'])
+                     if row['Profession'] in profession_ids and item_id in row['Skills'])
         assert owner == next(row for row in rules['profession_base'] if row['Profession'] == owner['Profession'])
         mappings = {name: cls for cls, name in re.findall(
             r'new (Tb\w+)\(loader\("([^"]+)"\)\)', constructors.source('Tables'))}

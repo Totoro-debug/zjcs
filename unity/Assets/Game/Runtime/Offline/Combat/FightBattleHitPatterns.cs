@@ -143,12 +143,15 @@ namespace Zjcs.Combat.Official
                     context.Source, context.Primary, context.Cast);
                 var scope = FightBattleTargeting.TransformScope(hit.Scope,
                     hit.ScopeTransform, context.Source, context.Cast);
+                var settled = FightSkillHitPolicy.OncePerTarget(context.Skill, hit)
+                    ? new HashSet<int>() : null;
                 for (int index = 0; index < scope.Count; index++)
                 {
                     var cell = new FightGridPoint(center.X + scope[index].X, center.Y + scope[index].Y);
                     float delay = ScopeDelay(hit, index);
                     foreach (var target in candidates)
-                        if (Occupies(target, cell)) result.Add(new FightHitOccurrence(target, true, cell, delay, scopeIndex: index));
+                        if (Occupies(target, cell) && (settled == null || settled.Add(target.Id)))
+                            result.Add(new FightHitOccurrence(target, true, cell, delay, scopeIndex: index));
                 }
                 return result;
             }

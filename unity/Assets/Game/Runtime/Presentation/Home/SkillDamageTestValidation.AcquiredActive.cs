@@ -29,11 +29,12 @@ namespace Zjcs.Presentation.Home
             bool starShatteringSlash = skillId == 10039;
             bool shieldCharge = skillId == 10073;
             bool holyPurification = skillId == 10079;
+            bool surgingTide = skillId == 10047;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
-            Require(thirdPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
+            Require(thirdPromotion || surgingTide || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
-            int profession = thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = surgingTide ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -54,7 +55,8 @@ namespace Zjcs.Presentation.Home
             var player = save.Player;
             OfflineItemAutoIncrease.InitializeNewCharacter(player, DateTime.UtcNow);
             player.CharacterCreated = true; player.CharacterName = skillName + "\u9a8c\u8bc1";
-            player.Level = 50; player.Rank = thirdPromotion ? 3 : 2; player.SubRank = 5; player.MaxProfessionRank = player.Rank;
+            player.Level = 50; player.Rank = surgingTide ? 4 : thirdPromotion ? 3 : 2;
+            player.SubRank = surgingTide ? 8 : 5; player.MaxProfessionRank = player.Rank;
             player.Experience = assets.Load().CumulativeLevelExperience[50];
             player.InitialWeaponType = profession == 10 ? Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType : 200;
             player.Wardrobe.Profession = profession;
@@ -254,6 +256,7 @@ namespace Zjcs.Presentation.Home
                         : skillId == 10043 ? cast.SkillEntityId == 10590
                         : skillId == 10044 ? cast.SkillEntityId == 10750
                         : skillId == 10046 ? cast.SkillEntityId == 11160
+                        : surgingTide ? cast.SkillEntityId == 10880
                         : skillId == 10048 ? cast.SkillEntityId == 11090
                         : skillId == 10049 ? cast.SkillEntityId == 11100
                         : skillId == 10051 ? cast.SkillEntityId == 11260
@@ -352,6 +355,16 @@ namespace Zjcs.Presentation.Home
                             && value.ElementType == 103 && value.Damage < 0 && value.TrueDamage && !value.IsCure
                             && Math.Abs(value.Delay - cast.Delay - .4f) < .0001f),
                             "The acquired purification lost its original light destruction hit.");
+                        hits += damageEvents.Length;
+                        continue;
+                    }
+                    if (surgingTide)
+                    {
+                        Require(damageEvents.Length > 0 && damageEvents.All(value => value.TargetId != actor.Id
+                            && value.HitEntityId == 10881 && value.DamageEntityId == 10024 && value.DamageType == 1
+                            && value.ElementType == 101 && value.Damage < 0 && !value.TrueDamage && !value.IsCure
+                            && Math.Abs(value.Delay - cast.Delay - .3f) < .0001f),
+                            "The acquired surging tide lost its original water area hit.");
                         hits += damageEvents.Length;
                         continue;
                     }
