@@ -17,17 +17,13 @@
 | [图鉴分类、筛选与只读详情](features/codex.md) | 未完成 |
 | [商城、代金券与礼包](features/commerce.md) | 未完成 |
 | [单人公会领地](features/guild.md) | 未完成 |
-| [世界阶段手动推进](features/manual-world-stage.md) | 未完成 |
 | [月卡与星眷累计奖励](features/monthly-card.md) | 未完成 |
 | [NPC邀请、站位与战前准备](features/npc-assistance.md) | 未完成 |
 | [离线开放条件与单机范围](features/offline-access.md) | 未完成 |
 | [设置、拍照与本地存档](features/settings-and-save.md) | 未完成 |
 | [共用界面、文字与资源运行](features/shared-ui.md) | 未完成 |
 | [主题签到与长期活动入口](features/sign-ins.md) | 未完成 |
-| [主线任务进度](features/tasks.md) | 未完成 |
-| [主线剧情公共模块](features/story.md) | 未完成 |
 | [Unity 工程与启动流程](features/unity-project.md) | 未完成 |
-| [世界地图与主线公共模块](features/world-map.md) | 未完成 |
 
 ### 角色与角色相关功能
 
@@ -78,6 +74,15 @@
 | [伙伴旅行、品质与保底](travel-notes/partner-travel.md) | 未完成 |
 
 ## 地图导航
+
+### 地图公共模块
+
+| 名称 | 状态 |
+| --- | --- |
+| [世界地图与主线公共模块](maps/world-map.md) | 未完成 |
+| [世界阶段手动推进](maps/manual-world-stage.md) | 未完成 |
+| [主线剧情公共模块](maps/story.md) | 未完成 |
+| [主线任务进度](maps/tasks.md) | 未完成 |
 
 ### 坎斯汀大陆
 

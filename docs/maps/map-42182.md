@@ -4,4 +4,4 @@
 
 状态：未完成
 
-共用地图迁移及活动保存规则见[世界地图](../features/world-map.md)，开放范围见[离线政策](../features/offline-access.md)。
+共用地图迁移及活动保存规则见[世界地图](world-map.md)，开放范围见[离线政策](../features/offline-access.md)。
