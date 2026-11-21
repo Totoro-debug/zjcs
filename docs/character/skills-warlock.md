@@ -57,7 +57,7 @@
 | 被动秘法 | 10573 | 过载保护 | 一回合内自身每累计减少超过最大生命15%的生命，为自己施加1个基于自身最大生命的护盾，持续2回合。 | [护盾](#term-0-11) | 已完成 | 已接入官方根实体 25043 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
 | 被动秘法 | 10597 | 火炎生息 | 自身回合结束时，若自身2格范围内有灼烧的地块，则对自身进行1次治疗，且范围内每多1个灼烧的地块，治疗量提升10%，至多叠加5层。 | [治疗](#term-0-59)、[灼烧](#term-0-9) | 已完成 | 已接入官方根实体 25098 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
 | 被动秘法 | 10598 | 飓风之殇 | 提升自身风元素亲和。每次释放战技对敌方目标造成风元素伤害时，有35%基准概率附加撕裂，持续1回合。 | [基准概率](#term-0-58)、[撕裂（飓风之殇）](#term-0-24488) | 已完成 | 已接入官方根实体 25099 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10599 | 爆炎烈魂 | 每释放1次造成火元素伤害的战技，提升自身会心率，至多叠加8层，持续2回合。 | 无 | 未完成 | 保留官方说明；不纳入本次一、二阶迁移完成范围。 |
+| 被动秘法 | 10599 | 爆炎烈魂 | 每释放1次造成火元素伤害的战技，提升自身会心率，至多叠加8层，持续2回合。 | 无 | 已完成 | 已接入官方根实体 25103 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
 
 <a id="rank-5"></a>
 
