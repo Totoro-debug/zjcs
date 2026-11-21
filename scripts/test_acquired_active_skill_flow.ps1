@@ -5,7 +5,8 @@ param(
     [ValidateSet(10000,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10066,10073,10079,10082,10083,10084,10085,10099)][int]$SkillId = 10026,
     [Parameter(ParameterSetName='Player')]
     [ValidateSet(10000,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10066,10073,10079,10082,10083,10084,10085,10099)][int[]]$AdditionalSkillIds = @(),
-    [string]$PassiveSave
+    [string]$PassiveSave,
+    [ValidateSet(0,39521)][int]$SkillSkinId = 0
 )
 $ErrorActionPreference = 'Stop'
 $requestedSkills = @(@($SkillId) + $AdditionalSkillIds | Select-Object -Unique)
@@ -18,6 +19,7 @@ if ([IO.Path]::GetDirectoryName($workspacePath) -ne (Get-ZjcsValidationRoot).Tri
 }
 $marker = Get-Content -LiteralPath (Join-Path $workspacePath '.zjcs-validation.json') -Raw | ConvertFrom-Json
 if ($marker.format -ne 1 -or $marker.repository -ne $repository) { throw 'Wrong validation repository.' }
+if ($SkillSkinId -gt 0 -and ($SkillId -ne 10082 -or $AdditionalSkillIds.Count -gt 0 -or $PassiveSave)) { throw 'Use the original water-blade skin with its base active skill.' }
 if ($PassiveSave) {
     $PassiveSave = (Get-Item -LiteralPath $PassiveSave).FullName
     if (-not $PassiveSave.StartsWith($workspacePath + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
@@ -42,6 +44,7 @@ try {
     $env:ZJCS_REPOSITORY_ROOT = $repository
     $env:ZJCS_VALIDATION_DIR = $run
     $env:ZJCS_SKILLS_ACQUIRED_ACTIVE = [string]$SkillId
+    if ($SkillSkinId -gt 0) { $env:ZJCS_SKILLS_ACQUIRED_SKIN = [string]$SkillSkinId }
     if ($PassiveSave) { $env:ZJCS_SKILLS_ACQUIRED_PASSIVE_SAVE = $PassiveSave }
     if ($requestedSkills.Count -gt 1) {
         $env:ZJCS_SKILLS_ACQUIRED_ACTIVE_SEQUENCE = $requestedSkills -join ','
@@ -80,6 +83,12 @@ try {
     }
     $result = Get-Content -LiteralPath (Join-Path $run 'result.json') -Raw | ConvertFrom-Json
     if ($process.ExitCode -ne 0 -or -not $result.passed) { throw "Skill-page flow failed: $($result.error) ($run)" }
+    if ($SkillSkinId -gt 0) {
+        foreach ($phase in @('skin-selection','skin-equipped')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $run "acquired-active-ui-$phase.png"))) { throw 'The original skin selection flow was not captured.' }
+        }
+        if (-not (Select-String -LiteralPath $log -SimpleMatch '[Acquired active skin] 39521 selected, equipped and persisted through original input.')) { throw 'The original skill skin did not persist.' }
+    }
     if ($PassiveSave) {
         if (-not (Select-String -LiteralPath $log -SimpleMatch "[Acquired passive combat] $passiveId cultivated") -or
             -not (Test-Path -LiteralPath (Join-Path $run 'companion-cold-checkpoint.json'))) { throw 'The cultivated secret did not exercise its original cold path.' }

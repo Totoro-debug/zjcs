@@ -53,6 +53,9 @@ namespace Zjcs.Presentation.Home
             bool holyPurification = skillId == 10079;
             bool surgingTide = skillId == 10047;
             bool waterBlade = skillId == 10082;
+            int skillSkinId = int.Parse(Environment.GetEnvironmentVariable("ZJCS_SKILLS_ACQUIRED_SKIN") ?? "0");
+            bool frostSong = waterBlade && skillSkinId == 39521;
+            Require(skillSkinId == 0 || frostSong, "Unsupported original acquired-skill skin diagnostic.");
             bool lightSwordArray = skillId == 10083;
             bool diversionHarassment = skillId == 10084;
             bool heavenlyLightBlades = skillId == 10085;
@@ -103,6 +106,7 @@ namespace Zjcs.Presentation.Home
                 else stack.Count += count;
             }
             Supply(definition.PieceItemId, mergeCount);
+            if (frostSong) Supply(skillSkinId, 1);
             foreach (var cost in rankCost.Items) Supply(cost.ItemId, cost.Count);
             foreach (var cost in rules.SlotLevelCosts.Single(value => value.Level == 2).Items) Supply(cost.ItemId, cost.Count);
             File.WriteAllText(slots.GetProgressPath(slot), JsonUtility.ToJson(save, true));
@@ -184,6 +188,7 @@ namespace Zjcs.Presentation.Home
             click(FlameFlowButton(value => value.name == "SkillListItem_" + skillId));
             yield return new WaitForSecondsRealtime(.5f);
             yield return CaptureAcquiredActive(output, "acquired-detail");
+            if (frostSong) yield return SelectAcquiredSkillSkin(progression, skillSkinId, output);
             click(FlameFlowButton(value => value.name == "EquipBtn"));
             yield return new WaitForSecondsRealtime(.4f);
             var group = FindObjectsOfType<RectTransform>().Single(value =>
@@ -227,6 +232,9 @@ namespace Zjcs.Presentation.Home
                 && disk.Player.Skills.ActiveSlotLevels[0] == 2,
                 "Original acquisition, equipment or cultivation changed during disk reload.");
             yield return CaptureAcquiredActive(output, "reloaded");
+            if (frostSong) Require(progression.EquippedSkillSkinId(skillId) == skillSkinId
+                && disk.Player.Wardrobe.SkillSkins.Any(value => value.SkillId == skillId && value.SkillSkinId == skillSkinId),
+                "The original skill skin changed after disk reload.");
             Debug.Log("[Acquired active UI] " + skillId + " fragment acquisition, original slot input, level/rank cultivation and disk reload passed.");
             string expectedSkills = JsonUtility.ToJson(disk.Player.Skills);
             long[] inventory = disk.Player.Inventory.OrderBy(value => value.ItemId)
@@ -260,6 +268,8 @@ namespace Zjcs.Presentation.Home
             Require(active.ItemId == skillId && active.Rank == cultivatedRank && active.Level == 2
                 && active.SubRank == progression.Player.SubRank && actor.Profession == profession,
                 "Production battle assembly lost the actual saved skill/profession/cultivation.");
+            if (frostSong) Require(active.UseItemId == 10184 && active.SkillSkinId == skillSkinId && active.EntityId == 13580,
+                "The production battle assembler lost the saved original frost-song variant.");
             if (skillId == 10049) yield return MoveChallengeIntoRange(battle.Controller);
             if (skillId == 10066)
             {
@@ -309,7 +319,8 @@ namespace Zjcs.Presentation.Home
                         : skillId == 10044 ? cast.SkillEntityId == 10750
                         : skillId == 10046 ? cast.SkillEntityId == 11160
                         : surgingTide ? cast.SkillEntityId == 10880
-                        : waterBlade ? cast.SkillEntityId == 11980 || cast.SkillEntityId == 11983 || cast.SkillEntityId == 11984
+                        : waterBlade ? frostSong ? cast.SkillEntityId == 13580
+                            : cast.SkillEntityId == 11980 || cast.SkillEntityId == 11983 || cast.SkillEntityId == 11984
                         : lightSwordArray ? cast.SkillEntityId == 11990
                         : diversionHarassment ? cast.SkillEntityId == 11890
                         : heavenlyLightBlades ? cast.SkillEntityId == 11900
@@ -437,12 +448,13 @@ namespace Zjcs.Presentation.Home
                     {
                         Require(damageEvents.Length == 1, "Water blade must hit one enemy.");
                         var hit = damageEvents[0];
-                        float delay = cast.SkillEntityId == 11983 ? .57f : cast.SkillEntityId == 11984 ? .72f : .55f;
+                        float delay = frostSong ? .5833f : cast.SkillEntityId == 11983 ? .57f : cast.SkillEntityId == 11984 ? .72f : .55f;
                         long shieldValue = Math.Min((long)((hit.BeforeHp - hit.AfterHp) * (double).2f), actor.MaxHp / 2);
-                        Require(hit.TargetId != actor.Id && hit.HitEntityId == 11981 && hit.DamageEntityId == 11982
+                        Require(hit.TargetId != actor.Id && hit.HitEntityId == (frostSong ? 13581 : 11981)
+                            && hit.DamageEntityId == (frostSong ? 13582 : 11982)
                             && hit.DamageType == 1 && hit.ElementType == 101 && hit.Damage < 0 && !hit.TrueDamage && !hit.IsCure
                             && Math.Abs(hit.Delay - cast.Delay - delay) < .0001f && shieldValue > 0
-                            && actor.Statuses.Any(value => value.ClassId == 24377 && value.CreatorId == actor.Id
+                            && actor.Statuses.Any(value => value.ClassId == (frostSong ? 24659 : 24377) && value.CreatorId == actor.Id
                                 && value.DurationRound == 2 && value.ShieldRemainValue == shieldValue),
                             "The acquired water blade lost its water damage or capped HP-only shield conversion.");
                         hits++;
@@ -563,11 +575,11 @@ namespace Zjcs.Presentation.Home
                     else yield return new WaitForSecondsRealtime(crisisGuard || starShatteringSlash ? 1.45f
                         : shieldCharge ? 1.1f : .7f);
                     yield return CaptureAcquiredActive(output, "battle"); captured = true;
-                    if (heavenlyLightBlades)
+                    if (heavenlyLightBlades || frostSong)
                         for (int frame = 1; frame <= 4; frame++)
                         {
                             yield return new WaitForSecondsRealtime(.18f);
-                            yield return CaptureAcquiredActive(output, "blade-" + frame);
+                            yield return CaptureAcquiredActive(output, (frostSong ? "skin-hit-" : "blade-") + frame);
                         }
                 }
                 yield return null;
@@ -597,6 +609,8 @@ namespace Zjcs.Presentation.Home
             Require(JsonUtility.ToJson(disk.Player.Skills) == expectedSkills && inventory.SequenceEqual(disk.Player.Inventory
                 .OrderBy(value => value.ItemId).SelectMany(value => new[] { (long)value.ItemId, value.Count })),
                 "Damage test changed the persisted cultivation, equipped plan or material counts.");
+            if (frostSong) Require(disk.Player.Wardrobe.SkillSkins.Any(value => value.SkillId == skillId && value.SkillSkinId == skillSkinId),
+                "The original battle/result flow changed the saved skill appearance.");
             yield return CaptureAcquiredActive(output, "return");
             Debug.Log("[Acquired active UI] " + skillId + " saved rank=" + cultivatedRank + " level=2, original "
                 + (statusSkill ? "status" : "damage") + "/result/return and unchanged save passed.");

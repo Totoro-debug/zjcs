@@ -80,10 +80,17 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
         current = next(row for row in table('skill', 'TbSkillInfo') if row['ClassId'] == item_id)
         assert current == installed, ('Current skill item changed', item_id, installed, current)
         owner = next(row for row in table('profession_base', 'TbProfessionBaseInfo')
-                     if row['Profession'] in profession_ids and item_id in row['Skills'])
+                     if row['Profession'] in profession_ids and item_id in row['Skills'] + row.get('FightUsedSkills', []))
         assert owner == next(row for row in rules['profession_base'] if row['Profession'] == owner['Profession'])
         mappings = {name: cls for cls, name in re.findall(
             r'new (Tb\w+)\(loader\("([^"]+)"\)\)', constructors.source('Tables'))}
+        skin_bindings = []
+        if spec.get('base_item'):
+            skin_bindings = [row for row in table('skill_skin', mappings['skill_skin'])
+                             if row['EffectSkillId'] == item_id]
+            assert len(skin_bindings) == 1 and skin_bindings[0]['SkillId'] == spec['base_item']
+            assert skin_bindings == [row for row in rules['skill_skin'] if row['EffectSkillId'] == item_id], 'Current skill skin mapping changed'
+            assert spec['base_item'] in owner['Skills'], 'Built-in variant has no owned profession base skill'
         properties = [row for row in table('entity_prop', mappings['entity_prop']) if row['EntityId'] in spec['entities']]
         expected_properties = [row for row in skill_rules['tables']['entity_prop'] if row['EntityId'] in spec['entities']]
         assert sorted(properties, key=lambda row: row['EntityId']) == sorted(expected_properties, key=lambda row: row['EntityId']), 'Current entity cultivation properties changed'
@@ -363,6 +370,8 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
             result['current_native_conversions'] = current_conversions
         if reused_client:
             result['reused_client_implementations'] = reused_client
+        if skin_bindings:
+            result['skill_skin_bindings'] = skin_bindings
     return result
 
 
