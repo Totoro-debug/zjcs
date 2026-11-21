@@ -37,7 +37,9 @@ namespace Zjcs.Presentation.Home
             runner.dungeonEntry = entry;
             runner.output = Path.GetFullPath(args[at + 1]);
             Directory.CreateDirectory(runner.output);
-            runner.deadline = Time.realtimeSinceStartup + 300f;
+            // The full Player can load the character and battle asset sets on
+            // the same cold run. Leave time for both loads before timing out.
+            runner.deadline = Time.realtimeSinceStartup + 600f;
             Application.logMessageReceived += runner.CaptureFailure;
             runner.StartCoroutine(runner.Guard(runner.Run()));
         }
