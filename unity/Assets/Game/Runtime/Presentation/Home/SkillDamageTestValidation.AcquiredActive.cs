@@ -554,6 +554,12 @@ namespace Zjcs.Presentation.Home
                     else yield return new WaitForSecondsRealtime(crisisGuard || starShatteringSlash ? 1.45f
                         : shieldCharge ? 1.1f : .7f);
                     yield return CaptureAcquiredActive(output, "battle"); captured = true;
+                    if (heavenlyLightBlades)
+                        for (int frame = 1; frame <= 4; frame++)
+                        {
+                            yield return new WaitForSecondsRealtime(.18f);
+                            yield return CaptureAcquiredActive(output, "blade-" + frame);
+                        }
                 }
                 yield return null;
             }
