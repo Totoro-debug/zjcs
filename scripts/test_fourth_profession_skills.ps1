@@ -17,7 +17,8 @@ Add-Type -Path (@(Get-FightCombatSources) +
     (Join-Path $PSScriptRoot 'fixtures/battle_water_blade_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_light_sword_array_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_diversion_harassment_harness.cs') +
-    (Join-Path $PSScriptRoot 'fixtures/battle_heavenly_light_blades_harness.cs'))
+    (Join-Path $PSScriptRoot 'fixtures/battle_heavenly_light_blades_harness.cs') +
+    (Join-Path $PSScriptRoot 'fixtures/battle_vortex_surge_harness.cs'))
 $sp = Get-Content (Join-Path $inputs 'skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $bp = Get-Content (Join-Path $inputs 'battle-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $rp = Get-Content (Join-Path $inputs 'rules-source-manifest.json') -Raw | ConvertFrom-Json
@@ -35,3 +36,4 @@ $formula = $catalog.CreateDamageFormula(
 [BattleLightSwordArrayHarness]::Run($catalog, $formula, $items)
 [BattleDiversionHarassmentHarness]::Run($catalog, $formula, $items)
 [BattleHeavenlyLightBladesHarness]::Run($catalog, $formula, $items)
+[BattleVortexSurgeHarness]::Run($catalog, $formula, $items)

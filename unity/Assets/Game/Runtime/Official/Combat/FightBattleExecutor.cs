@@ -2444,7 +2444,7 @@ namespace Zjcs.Combat.Official
                 }
             }
             if (stepX == 0 && stepY == 0) return;
-            if (TryApplyBlockedMountainPush(actor, target, skill, hit, move, movements, stepX, stepY, hitDelay)) return;
+            if (TryApplyBlockedKnockback(actor, target, skill, hit, move, movements, stepX, stepY, hitDelay)) return;
             for (int distance = move.Distance; distance > 0; distance--)
             {
                 var desired = new FightGridPoint(target.X + stepX * distance + move.OffsetX,

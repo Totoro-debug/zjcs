@@ -34,7 +34,8 @@ namespace Zjcs.Presentation.Home
             bool lightSwordArray = skillId == 10083;
             bool diversionHarassment = skillId == 10084;
             bool heavenlyLightBlades = skillId == 10085;
-            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades;
+            bool vortexSurge = skillId == 10099;
+            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
@@ -218,6 +219,10 @@ namespace Zjcs.Presentation.Home
                 if (setting == "MonsterHp" && waterBlade)
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
+                if (setting == "Round" && vortexSurge)
+                    choice = settings.GetComponentsInChildren<Toggle>().Where(value =>
+                        value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting))
+                        .OrderBy(value => value.transform.parent.GetSiblingIndex()).Last();
                 if (!choice.isOn) click(choice);
             }
             yield return CaptureAcquiredActive(output, "settings");
@@ -238,7 +243,7 @@ namespace Zjcs.Presentation.Home
                 actor.Statuses.Add(combat.CreateStatus(24040, 1, 1, 724040));
                 actor.Statuses.Add(combat.CreateStatus(24041, 1, 1, 724041));
             }
-            int casts = 0, hits = 0;
+            int casts = 0, hits = 0, vortexMovements = 0;
             battle.Controller.StepCompleted += step => {
                 var skillCasts = step.Event.SkillCasts.Where(value => value.ActorId == 1 && value.Slot == 0
                     && value.SkillItemId == skillId).ToArray();
@@ -283,6 +288,7 @@ namespace Zjcs.Presentation.Home
                         : lightSwordArray ? cast.SkillEntityId == 11990
                         : diversionHarassment ? cast.SkillEntityId == 11890
                         : heavenlyLightBlades ? cast.SkillEntityId == 11900
+                        : vortexSurge ? cast.SkillEntityId == 12080
                         : skillId == 10048 ? cast.SkillEntityId == 11090
                         : skillId == 10049 ? cast.SkillEntityId == 11100
                         : skillId == 10051 ? cast.SkillEntityId == 11260
@@ -440,6 +446,23 @@ namespace Zjcs.Presentation.Home
                         hits += damageEvents.Length;
                         continue;
                     }
+                    if (vortexSurge)
+                    {
+                        Require(damageEvents.Length > 0 && damageEvents.All(value => value.TargetId != actor.Id
+                            && value.HitEntityId == 12081 && value.DamageEntityId == 12082 && value.DamageType == 1
+                            && value.ElementType == 101 && value.Damage < 0 && !value.TrueDamage && !value.IsCure
+                            && value.Delay >= cast.Delay + .5749f && value.Delay <= cast.Delay + .7201f),
+                            "The acquired vortex surge lost its original water rings or damage timing.");
+                        foreach (var movement in step.Event.Movements.Where(value => value.MoveBehaviourId == 12083))
+                        {
+                            Require(movement.UnitId != actor.Id && movement.Path.Count == 2
+                                && movement.MoveDuration == -1f && Math.Abs(movement.MoveSpeed - 2.5f) < .0001f,
+                                "The original one-cell inward knockback lost its action or speed.");
+                            vortexMovements++;
+                        }
+                        hits += damageEvents.Length;
+                        continue;
+                    }
                     foreach (var hit in damageEvents)
                     {
                         if (statusSkill) continue;
@@ -495,6 +518,14 @@ namespace Zjcs.Presentation.Home
                                 parent.name.StartsWith("Eff_Skill_Paladin04_SkylightPhantomBlade02", StringComparison.Ordinal)));
                         if (!bladesVisible) { yield return null; continue; }
                     }
+                    else if (vortexSurge)
+                    {
+                        bool vortexVisible = FindObjectsOfType<ParticleSystem>().Any(particle =>
+                            particle.particleCount > 0 && particle.name == "xuanwo"
+                            && particle.GetComponentsInParent<Transform>().Any(parent =>
+                                parent.name.StartsWith("Eff_Skill_Paladin04_WhirlpoolRagingWaves", StringComparison.Ordinal)));
+                        if (!vortexVisible) { yield return null; continue; }
+                    }
                     else yield return new WaitForSecondsRealtime(crisisGuard || starShatteringSlash ? 1.45f
                         : shieldCharge ? 1.1f : .7f);
                     yield return CaptureAcquiredActive(output, "battle"); captured = true;
@@ -504,6 +535,8 @@ namespace Zjcs.Presentation.Home
             Require(checkpoint.Finished && casts > 0 && hits > 0 && captured,
                 "The acquired/cultivated active skill did not finish its damage battle.");
             Require(!lightSwordArray || capturedOpening, "The four original opening swords were not captured.");
+            Require(!vortexSurge || vortexMovements > 0,
+                "The original vortex surge never exercised its inward knockback in the rendered battle.");
             File.WriteAllText(Path.Combine(output, "acquired-active-ui-checkpoint.json"), FightBattleCheckpointSerializer.Save(checkpoint));
             yield return new WaitForSecondsRealtime(.8f);
             yield return CaptureAcquiredActive(output, "result");
