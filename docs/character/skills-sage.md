@@ -2,7 +2,7 @@
 
 [总索引](../README.md) · [技能目录](skills.md)
 
-状态：已完成
+状态：部分完成
 
 <a id="rank-2"></a>
 
@@ -46,18 +46,18 @@
 
 | 技能类型 | 技能 ID | 技能名 | 技能描述 | 特殊词条解释 | 是否完成 | 实现要点 |
 | --- | --- | --- | --- | --- | --- | --- |
-| 主动战技 | 10059 | 混沌秘文 | 对自身3格范围内的1个敌方目标造成1次暗元素伤害，并有40%基准概率附加狂乱，持续1回合。 | [狂乱【异常状态】](#term-0-24217)、[基准概率](#term-0-58) | 已完成 | 已接入官方根实体 11380 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10077 | 灵能庇护 | 为自身5格范围内生命比例最低的友方角色施加1个灵能印记。 | [灵能印记](#term-0-24181)、[角色](#term-0-8) | 已完成 | 已接入官方根实体 11760 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10095 | 唤灵:岩帝 | 在身前召唤1只岩帝，召唤物按一定比例继承角色属性。（该战技每场战斗限释放1次） | [召唤物](#term-0-15)、[岩帝](#term-1-3196) | 已完成 | 已接入官方根实体 12140 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10096 | 回天雨滴 | 对自身7格范围内生命百分比最低的友方目标进行1次治疗，若目标生命低于50%，本次治疗效果提升20%。 | [治疗](#term-0-59) | 已完成 | 已接入官方根实体 12020 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10097 | 映射替身 | 在身前召唤1个替身连接1个敌方目标，当替身的生命降低时，被连接的目标会扣除等值的生命（真实伤害）。替身存在3回合，继承目标60%的防御和一定比例的其它属性，且会被友方优先选为攻击目标。（初始冷却完成） | [选目标逻辑的补充说明](#term-0-103)、[优先选为攻击目标](#term-0-16)、[初始冷却完成](#term-0-106)、[替身](#term-0-10)、[真实伤害](#term-0-3) | 已完成 | 已接入官方根实体 12200 与 4 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10103 | 黯星爆裂 | 对自身4格范围内的1个敌方目标造成3次暗元素伤害。 | 无 | 已完成 | 已接入官方根实体 12120 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10579 | 异化效应 | 受到伤害时，若攻击者拥有异常状态或负面效果，自身受到的伤害降低。 | [异常状态](#term-0-76)、[负面效果](#term-0-78) | 已完成 | 已接入官方根实体 25048 与 1 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10591 | 灵契共鸣 | 场上有自己的召唤物存在时，额外提升自身攻击。 | 无 | 已完成 | 已接入官方根实体 25104 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10600 | 灵契疗愈 | 当自己召唤物死亡或消失时，自身受到1次治疗。 | [治疗](#term-0-59) | 已完成 | 已接入官方根实体 25105 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10601 | 幻光秘策 | 提升自身治疗效果。每次释放战技造成治疗效果溢出时，将溢出部分的100%转化为目标的护盾，持续2回合。 | [护盾](#term-0-11) | 已完成 | 已接入官方根实体 25106 与 1 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10610 | 真言祝福 | 自身回合开始时，祝福攻击最高的友方角色，为其施加伤害加成效果，该效果持续至自身下个回合开始，不可被驱散。 | [祝福](#term-0-105)、[角色](#term-0-8) | 已完成 | 已接入官方根实体 25119 与 4 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10611 | 暗星降临 | 自身回合开始时，随机获得1个增益效果，持续至自身下个回合开始。 | 无 | 已完成 | 已接入官方根实体 25120 与 4 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
+| 主动战技 | 10059 | 混沌秘文 | 对自身3格范围内的1个敌方目标造成1次暗元素伤害，并有40%基准概率附加狂乱，持续1回合。 | [狂乱【异常状态】](#term-0-24217)、[基准概率](#term-0-58) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10077 | 灵能庇护 | 为自身5格范围内生命比例最低的友方角色施加1个灵能印记。 | [灵能印记](#term-0-24181)、[角色](#term-0-8) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10095 | 唤灵:岩帝 | 在身前召唤1只岩帝，召唤物按一定比例继承角色属性。（该战技每场战斗限释放1次） | [召唤物](#term-0-15)、[岩帝](#term-1-3196) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10096 | 回天雨滴 | 对自身7格范围内生命百分比最低的友方目标进行1次治疗，若目标生命低于50%，本次治疗效果提升20%。 | [治疗](#term-0-59) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10097 | 映射替身 | 在身前召唤1个替身连接1个敌方目标，当替身的生命降低时，被连接的目标会扣除等值的生命（真实伤害）。替身存在3回合，继承目标60%的防御和一定比例的其它属性，且会被友方优先选为攻击目标。（初始冷却完成） | [选目标逻辑的补充说明](#term-0-103)、[优先选为攻击目标](#term-0-16)、[初始冷却完成](#term-0-106)、[替身](#term-0-10)、[真实伤害](#term-0-3) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10103 | 黯星爆裂 | 对自身4格范围内的1个敌方目标造成3次暗元素伤害。 | 无 | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10579 | 异化效应 | 受到伤害时，若攻击者拥有异常状态或负面效果，自身受到的伤害降低。 | [异常状态](#term-0-76)、[负面效果](#term-0-78) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10591 | 灵契共鸣 | 场上有自己的召唤物存在时，额外提升自身攻击。 | 无 | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10600 | 灵契疗愈 | 当自己召唤物死亡或消失时，自身受到1次治疗。 | [治疗](#term-0-59) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10601 | 幻光秘策 | 提升自身治疗效果。每次释放战技造成治疗效果溢出时，将溢出部分的100%转化为目标的护盾，持续2回合。 | [护盾](#term-0-11) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10610 | 真言祝福 | 自身回合开始时，祝福攻击最高的友方角色，为其施加伤害加成效果，该效果持续至自身下个回合开始，不可被驱散。 | [祝福](#term-0-105)、[角色](#term-0-8) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10611 | 暗星降临 | 自身回合开始时，随机获得1个增益效果，持续至自身下个回合开始。 | 无 | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
 
 <a id="rank-5"></a>
 

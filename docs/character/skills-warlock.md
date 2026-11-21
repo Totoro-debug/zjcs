@@ -2,7 +2,7 @@
 
 [总索引](../README.md) · [技能目录](skills.md)
 
-状态：已完成
+状态：部分完成
 
 <a id="rank-2"></a>
 
@@ -46,18 +46,18 @@
 
 | 技能类型 | 技能 ID | 技能名 | 技能描述 | 特殊词条解释 | 是否完成 | 实现要点 |
 | --- | --- | --- | --- | --- | --- | --- |
-| 主动战技 | 10002 | 星辉爆发 | 在自身5格范围内选取1个地块，对其2格范围内的所有敌方目标造成1次光元素伤害，并有30%基准概率附加炫目。 | [炫目](#term-0-24234)、[基准概率](#term-0-58) | 已完成 | 已接入官方根实体 11450 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10056 | 末日洪流 | 对身前3x5格范围内的所有敌方目标造成3次水元素伤害，并有50%基准概率将其击退1格。 | [基准概率](#term-0-58)、[击退](#term-0-12) | 已完成 | 已接入官方根实体 11080 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10091 | 螺旋风刃 | 在自身3格范围内选取1个地块，对其1格方形范围内的所有敌方目标造成3次风元素伤害，并有40%基准概率附加撕裂，持续1回合。 | [基准概率](#term-0-58)、[撕裂（螺旋风刃）](#term-0-24376) | 已完成 | 已接入官方根实体 11960 与 4 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10092 | 破阵之意 | 提升自身3格范围内的所有友方角色的攻击，效果为施加者自身攻击的一定比例，持续2回合，该效果唯一。并有50%概率使友方角色行动提前20%。（初始冷却完成） | [行动提前](#term-0-100)、[效果唯一](#term-0-104)、[初始冷却完成](#term-0-106)、[角色](#term-0-8) | 已完成 | 已接入官方根实体 12010 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10093 | 审判轰雷 | 对自身5格范围内的1个敌方目标造成3次光元素伤害。（优先攻击大体型目标） | [选目标逻辑的补充说明](#term-0-122) | 已完成 | 已接入官方根实体 11970 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10102 | 护身魔纹 | 使自身受到的战技造成的直接伤害降低，受到的其它伤害的降低效果额外提升20%，持续3回合。（初始冷却完成） | [初始冷却完成](#term-0-106) | 已完成 | 已接入官方根实体 12110 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10503 | 火核爆裂 | 每次释放战技对敌方目标造成火元素会心伤害时，对其2格范围内的所有敌方目标额外造成1次火元素伤害。 | 无 | 已完成 | 已接入官方根实体 25001 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10557 | 冰晶碎裂 | 当被自己冰冻的敌方目标解除冰冻状态时，对其额外造成1次水元素伤害。 | [冰冻【异常状态】](#term-0-24215) | 已完成 | 已接入官方根实体 25037 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10573 | 过载保护 | 一回合内自身每累计减少超过最大生命15%的生命，为自己施加1个基于自身最大生命的护盾，持续2回合。 | [护盾](#term-0-11) | 已完成 | 已接入官方根实体 25043 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10597 | 火炎生息 | 自身回合结束时，若自身2格范围内有灼烧的地块，则对自身进行1次治疗，且范围内每多1个灼烧的地块，治疗量提升10%，至多叠加5层。 | [治疗](#term-0-59)、[灼烧](#term-0-9) | 已完成 | 已接入官方根实体 25098 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10598 | 飓风之殇 | 提升自身风元素亲和。每次释放战技对敌方目标造成风元素伤害时，有35%基准概率附加撕裂，持续1回合。 | [基准概率](#term-0-58)、[撕裂（飓风之殇）](#term-0-24488) | 已完成 | 已接入官方根实体 25099 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10599 | 爆炎烈魂 | 每释放1次造成火元素伤害的战技，提升自身会心率，至多叠加8层，持续2回合。 | 无 | 已完成 | 已接入官方根实体 25103 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
+| 主动战技 | 10002 | 星辉爆发 | 在自身5格范围内选取1个地块，对其2格范围内的所有敌方目标造成1次光元素伤害，并有30%基准概率附加炫目。 | [炫目](#term-0-24234)、[基准概率](#term-0-58) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10056 | 末日洪流 | 对身前3x5格范围内的所有敌方目标造成3次水元素伤害，并有50%基准概率将其击退1格。 | [基准概率](#term-0-58)、[击退](#term-0-12) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10091 | 螺旋风刃 | 在自身3格范围内选取1个地块，对其1格方形范围内的所有敌方目标造成3次风元素伤害，并有40%基准概率附加撕裂，持续1回合。 | [基准概率](#term-0-58)、[撕裂（螺旋风刃）](#term-0-24376) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10092 | 破阵之意 | 提升自身3格范围内的所有友方角色的攻击，效果为施加者自身攻击的一定比例，持续2回合，该效果唯一。并有50%概率使友方角色行动提前20%。（初始冷却完成） | [行动提前](#term-0-100)、[效果唯一](#term-0-104)、[初始冷却完成](#term-0-106)、[角色](#term-0-8) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10093 | 审判轰雷 | 对自身5格范围内的1个敌方目标造成3次光元素伤害。（优先攻击大体型目标） | [选目标逻辑的补充说明](#term-0-122) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10102 | 护身魔纹 | 使自身受到的战技造成的直接伤害降低，受到的其它伤害的降低效果额外提升20%，持续3回合。（初始冷却完成） | [初始冷却完成](#term-0-106) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10503 | 火核爆裂 | 每次释放战技对敌方目标造成火元素会心伤害时，对其2格范围内的所有敌方目标额外造成1次火元素伤害。 | 无 | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10557 | 冰晶碎裂 | 当被自己冰冻的敌方目标解除冰冻状态时，对其额外造成1次水元素伤害。 | [冰冻【异常状态】](#term-0-24215) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10573 | 过载保护 | 一回合内自身每累计减少超过最大生命15%的生命，为自己施加1个基于自身最大生命的护盾，持续2回合。 | [护盾](#term-0-11) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10597 | 火炎生息 | 自身回合结束时，若自身2格范围内有灼烧的地块，则对自身进行1次治疗，且范围内每多1个灼烧的地块，治疗量提升10%，至多叠加5层。 | [治疗](#term-0-59)、[灼烧](#term-0-9) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10598 | 飓风之殇 | 提升自身风元素亲和。每次释放战技对敌方目标造成风元素伤害时，有35%基准概率附加撕裂，持续1回合。 | [基准概率](#term-0-58)、[撕裂（飓风之殇）](#term-0-24488) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10599 | 爆炎烈魂 | 每释放1次造成火元素伤害的战技，提升自身会心率，至多叠加8层，持续2回合。 | 无 | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
 
 <a id="rank-5"></a>
 

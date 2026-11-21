@@ -2,7 +2,7 @@
 
 [总索引](../README.md) · [技能目录](skills.md)
 
-状态：已完成
+状态：部分完成
 
 <a id="rank-2"></a>
 
@@ -46,19 +46,19 @@
 
 | 技能类型 | 技能 ID | 技能名 | 技能描述 | 特殊词条解释 | 是否完成 | 实现要点 |
 | --- | --- | --- | --- | --- | --- | --- |
-| 主动战技 | 10068 | 业火绝命 | 在后续2回合内，每回合开始时，对自身进行1次治疗，并随机驱散2个异常状态或负面效果。 | [治疗](#term-0-59)、[异常状态](#term-0-76)、[负面效果](#term-0-78) | 已完成 | 已接入官方根实体 11520 与 4 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10088 | 剑风乱舞 | 对身前1x4格范围内的所有敌方目标造成3次风元素伤害。 | 无 | 已完成 | 已接入官方根实体 11910 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10089 | 噬魂贯穿 | 对身前3x2格范围内的所有敌方目标造成1次暗元素伤害，并附带10%的生命汲取效果。 | [生命汲取](#term-0-25) | 已完成 | 已接入官方根实体 11920 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10100 | 流刃火舞 | 对自身1格范围内的1个敌方目标造成1次火元素伤害，若目标未被击败，则有60%概率再次释放该技能，每回合最多额外释放2次。 | 无 | 已完成 | 已接入官方根实体 12090 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10101 | 瞬炎突袭 | 跳落至距自身2格距离的1个敌方目标身旁空地，并对其造成1次火元素伤害。（初始冷却完成） | [初始冷却完成](#term-0-106) | 已完成 | 已接入官方根实体 12100 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10104 | 恐惧黯影 | 对自身2格范围内的所有敌方目标造成1次暗元素伤害，并有60%基准概率附加恐惧，持续2回合。 | [基准概率](#term-0-58)、[恐惧](#term-0-24194) | 已完成 | 已接入官方根实体 12130 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10543 | 烈焰气势 | 每次释放战技对敌方目标造成会心伤害时，对战技伤害位置1格范围内的所有敌方目标额外造成1次火元素伤害。 | 无 | 已完成 | 已接入官方根实体 25010 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10568 | 强袭破甲 | 每次释放战技对敌方目标造成伤害时，无视目标部分防御，且自身每拥有1个增益状态，效果提升10%，至多叠加3层。 | 无 | 已完成 | 已接入官方根实体 25081 与 1 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10594 | 破魂绝刃 | 目标生命每降低15%，对其造成的伤害提升，至多叠加5层。 | 无 | 已完成 | 已接入官方根实体 25095 与 1 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10595 | 战刃飞翎 | 每次释放战技对敌方目标造成伤害时，有40%概率身旁凝聚1个风球。 | [风球](#term-0-113) | 已完成 | 已接入官方根实体 25096 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10608 | 陷阵斗魂 | 自身回合内受到的伤害降低。 | 无 | 已完成 | 已接入官方根实体 25117 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10609 | 战术应变 | 自身2格范围内，敌方目标≤3个时，自身造成的伤害提升；敌方目标＞3个时，自身受到的伤害降低。 | 无 | 已完成 | 已接入官方根实体 25118 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 内置战斗项 | 10185 | 流刃火舞·焚狱魔君 | 对自身1格范围内的1个敌方目标造成1次火元素伤害，若目标未被击败，则有60%概率再次释放该技能，每回合最多额外释放2次。 | 无 | 已完成 | 已接入官方根实体 13590 与 4 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
+| 主动战技 | 10068 | 业火绝命 | 在后续2回合内，每回合开始时，对自身进行1次治疗，并随机驱散2个异常状态或负面效果。 | [治疗](#term-0-59)、[异常状态](#term-0-76)、[负面效果](#term-0-78) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10088 | 剑风乱舞 | 对身前1x4格范围内的所有敌方目标造成3次风元素伤害。 | 无 | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10089 | 噬魂贯穿 | 对身前3x2格范围内的所有敌方目标造成1次暗元素伤害，并附带10%的生命汲取效果。 | [生命汲取](#term-0-25) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10100 | 流刃火舞 | 对自身1格范围内的1个敌方目标造成1次火元素伤害，若目标未被击败，则有60%概率再次释放该技能，每回合最多额外释放2次。 | 无 | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10101 | 瞬炎突袭 | 跳落至距自身2格距离的1个敌方目标身旁空地，并对其造成1次火元素伤害。（初始冷却完成） | [初始冷却完成](#term-0-106) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10104 | 恐惧黯影 | 对自身2格范围内的所有敌方目标造成1次暗元素伤害，并有60%基准概率附加恐惧，持续2回合。 | [基准概率](#term-0-58)、[恐惧](#term-0-24194) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10543 | 烈焰气势 | 每次释放战技对敌方目标造成会心伤害时，对战技伤害位置1格范围内的所有敌方目标额外造成1次火元素伤害。 | 无 | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10568 | 强袭破甲 | 每次释放战技对敌方目标造成伤害时，无视目标部分防御，且自身每拥有1个增益状态，效果提升10%，至多叠加3层。 | 无 | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10594 | 破魂绝刃 | 目标生命每降低15%，对其造成的伤害提升，至多叠加5层。 | 无 | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10595 | 战刃飞翎 | 每次释放战技对敌方目标造成伤害时，有40%概率身旁凝聚1个风球。 | [风球](#term-0-113) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10608 | 陷阵斗魂 | 自身回合内受到的伤害降低。 | 无 | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10609 | 战术应变 | 自身2格范围内，敌方目标≤3个时，自身造成的伤害提升；敌方目标＞3个时，自身受到的伤害降低。 | 无 | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 内置战斗项 | 10185 | 流刃火舞·焚狱魔君 | 对自身1格范围内的1个敌方目标造成1次火元素伤害，若目标未被击败，则有60%概率再次释放该技能，每回合最多额外释放2次。 | 无 | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
 
 <a id="rank-5"></a>
 

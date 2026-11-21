@@ -3,8 +3,8 @@
 Fourth-promotion skills use the same official graph pipeline as the lower
 promotions.  This verifier keeps the scope explicit, checks that the four
 profession rows and the detail pages agree, then follows every EC reference
-from each skill item so a missing hit, status, child skill or passive property
-cannot be mistaken for a migrated skill.
+from each skill item. This is a static configuration projection, not evidence
+that the runtime implements every effect or that a skill is complete.
 """
 from __future__ import annotations
 
@@ -83,8 +83,6 @@ def verify(write: bool = False) -> dict[str, Any]:
         statuses = rank_four_statuses(path)
         if len(ids) != len(statuses):
             raise AssertionError(f"{file_name}: malformed rank-four table")
-        if any(status != "已完成" for status in statuses) and not write:
-            raise AssertionError(f"{file_name}: every fourth-promotion row must be 已完成")
         expected = list(professions[profession]["Skills"])
         official = expected + [item for item, owner in BUILT_IN.items() if owner == profession]
         if ids != official:
@@ -136,7 +134,7 @@ def main() -> None:
     parser.add_argument("--write", action="store_true")
     args = parser.parse_args()
     result = verify(args.write)
-    print(f"Fourth-promotion skills verified: {result['skill_count']} skills, "
+    print(f"Fourth-promotion configuration checked: {result['skill_count']} skills, "
           f"{len(result['source_files'])} official payloads")
 
 

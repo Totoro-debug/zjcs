@@ -2,9 +2,9 @@
 
 [总索引](../README.md)
 
-状态：已完成
+状态：部分完成
 
-本次迁移范围：一阶初始职业、二阶首次转职及四条路线的三阶、四阶职业技能；当前已完成 194 项（原 104 项、40 项三阶技能及 50 项四阶技能）。
+技能范围包含一至四阶。此前一至三阶记录维持原范围；四阶按职业逐技能核对并验证，当前四阶尚无满足全部验证要求的完成项。
 
 技能记录仅包含技能类型、技能 ID、技能名、官方描述、特殊词条解释、是否完成与实现要点。
 
@@ -12,10 +12,10 @@
 | --- | --- |
 | [战士（一阶）](skills-warrior.md) | 已完成 |
 | [法师（一阶）](skills-mage.md) | 已完成 |
-| [骑士路线（二至四阶）](skills-knight.md) | 已完成 |
-| [斗士路线（二至四阶）](skills-fighter.md) | 已完成 |
-| [术士路线（二至四阶）](skills-warlock.md) | 已完成 |
-| [贤者路线（二至四阶）](skills-sage.md) | 已完成 |
+| [骑士路线（二至四阶）](skills-knight.md) | 部分完成 |
+| [斗士路线（二至四阶）](skills-fighter.md) | 部分完成 |
+| [术士路线（二至四阶）](skills-warlock.md) | 部分完成 |
+| [贤者路线（二至四阶）](skills-sage.md) | 部分完成 |
 
 <a id="自定义实现"></a>
 <a id="尚未实现"></a>
@@ -30,6 +30,8 @@
 
 连锁攻击遵循已确认的[单机目标选择规则](../combat/battle-execution.md#自定义实现)。
 
-三阶、四阶技能继续使用官方数据驱动的共享链路：`FightOfficialCombatCatalog` 负责技能与数值配置，`FightBattleHitCollector` 负责命中图和子技能展开，`FightDamageFormula` 负责伤害计算，`FightStatusTriggerRuntime` 与 `FightSkillLogicRuntime` 负责通用状态、增益/减益、治疗、护盾、召唤和触发效果，`OfficialBattleSkillGraphPlayback` 负责原生技能图演出。完整 40 项三阶职业技能由 `scripts/verify_third_profession_skills.py` 校验，完整 50 项四阶职业技能由 `scripts/verify_fourth_profession_skills.py` 校验官方来源载荷、职业绑定、引用实体图及原生演出绑定；`scripts/test_fourth_profession_skills.ps1` 进一步通过同一战斗执行器验证四阶主动及内置战技的选取、施放和结算。
+共享战斗模块负责读取数值配置、展开命中图、计算伤害、处理状态与触发，以及播放原生技能图。四阶配置校验覆盖职业绑定、实体引用和主动战技的演出绑定。战斗冒烟测试覆盖主动及内置战技的选取和施放。具体效果和动画仍需逐项验证。
 
 五阶及以上职业仅保留既有技能说明，不计入本次完成范围。
+
+四阶技能须逐项验证描述、数值、全部适用效果及分支、原生演出、存档恢复和 Windows Player 中的受影响流程，全部通过后标为已完成。

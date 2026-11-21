@@ -2,7 +2,7 @@
 
 [总索引](../README.md) · [技能目录](skills.md)
 
-状态：已完成
+状态：部分完成
 
 <a id="rank-2"></a>
 
@@ -46,19 +46,19 @@
 
 | 技能类型 | 技能 ID | 技能名 | 技能描述 | 特殊词条解释 | 是否完成 | 实现要点 |
 | --- | --- | --- | --- | --- | --- | --- |
-| 主动战技 | 10047 | 震荡怒潮 | 对自身2格范围内的所有敌方目标造成1次水元素伤害。 | 无 | 已完成 | 已接入官方根实体 10880 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10082 | 水舞流刃 | 对自身1格范围内的1个敌方目标造成1次水元素伤害，并将对目标生命造成伤害的20%转化为自身护盾，且最大不超过自身最大生命的50%，持续2回合。 | [护盾](#term-0-11) | 已完成 | 已接入官方根实体 11980 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10083 | 光明剑阵 | 在身旁凝聚4把光剑，每次受到战技伤害时消耗1把光剑发动反击，对攻击者1格范围内的所有敌方目标造成1次光元素伤害。（战斗开始前释放，光剑伤害视为释放战技造成的伤害） | [战斗开始前](#term-0-80) | 已完成 | 已接入官方根实体 11990 与 4 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10084 | 牵制袭扰 | 在自身4格范围内选取1个地块，对其2格范围内的所有敌方目标造成1次光元素伤害，并有85%基准概率附加嘲讽，持续1回合，对非角色目标嘲讽概率提升至100%。 | [基准概率](#term-0-58)、[嘲讽](#term-0-24216)、[非角色目标](#term-0-83) | 已完成 | 已接入官方根实体 11890 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10085 | 天光幻刃 | 对身前3x4格范围内的所有敌方目标造成1次光元素伤害。（可对大体型目标造成多次伤害） | 无 | 已完成 | 已接入官方根实体 11900 与 4 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 主动战技 | 10099 | 涡流怒涛 | 对自身3格范围内的所有敌方目标造成1次水元素伤害，并有40%基准概率将其向自身方向击退1格。 | [基准概率](#term-0-58)、[击退](#term-0-12) | 已完成 | 已接入官方根实体 12080 与 2 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10575 | 命魂守护 | 在战斗开始前，将自身50%当前生命转化为护盾。战斗胜利时，将按该护盾剩余护盾量的比例返还生命。 | [战斗开始前](#term-0-80) | 已完成 | 已接入官方根实体 25042 与 4 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10580 | 庇护之誓 | 自身回合开始时，庇护生命百分比最低的友方冒险者，替其承受50%受到的伤害，自身承受此伤害降低，且自身防御每高于被庇护单位1%，伤害额外降低1%，该效果不可被驱散。 | [庇护](#term-0-82)、[冒险者](#term-0-7) | 已完成 | 已接入官方根实体 25074 与 6 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10592 | 钢铁信念 | 被嘲讽的敌方目标对自身造成的伤害降低。 | [嘲讽](#term-0-24216) | 已完成 | 已接入官方根实体 25108 与 1 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10593 | 圣灵加护 | 提升自身防御。提升自身施加的基于自身防御计算的护盾效果。 | 无 | 已完成 | 已接入官方根实体 25109 与 1 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10606 | 冷冽寒芒 | 提升自身水元素亲和。每次释放战技对敌方目标造成水元素伤害时，有100%基准概率附加1层寒冷，持续2回合。 | [寒冷](#term-0-24266)、[基准概率](#term-0-58) | 已完成 | 已接入官方根实体 25115 与 1 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 被动秘法 | 10607 | 极寒气场 | 自身2格范围内的敌方目标回合结束时，有100%概率触发极寒气场，对其造成1次水元素伤害，并有50%基准概率附加1层寒冷，持续2回合。 | [寒冷](#term-0-24266)、[基准概率](#term-0-58) | 已完成 | 已接入官方根实体 25116 与 3 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
-| 内置战斗项 | 10184 | 水舞流刃·霜歌圣使 | 对自身1格范围内的1个敌方目标造成1次水元素伤害，并将对目标生命造成伤害的20%转化为自身护盾，且最大不超过自身最大生命的50%，持续2回合。 | [护盾](#term-0-11) | 已完成 | 已接入官方根实体 13580 与 4 个引用实体，沿官方 ViewPropEntities 原生演出绑定及 FightOfficialCombatCatalog、FightBattleHitCollector、FightDamageFormula、FightStatusTriggerRuntime、FightSkillLogicRuntime 通用链路执行伤害、元素、状态、增益/减益、护盾、治疗、召唤与触发；四阶来源、职业绑定、数值投影及技能图已由 scripts/verify_fourth_profession_skills.py 校验。 |
+| 主动战技 | 10047 | 震荡怒潮 | 对自身2格范围内的所有敌方目标造成1次水元素伤害。 | 无 | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10082 | 水舞流刃 | 对自身1格范围内的1个敌方目标造成1次水元素伤害，并将对目标生命造成伤害的20%转化为自身护盾，且最大不超过自身最大生命的50%，持续2回合。 | [护盾](#term-0-11) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10083 | 光明剑阵 | 在身旁凝聚4把光剑，每次受到战技伤害时消耗1把光剑发动反击，对攻击者1格范围内的所有敌方目标造成1次光元素伤害。（战斗开始前释放，光剑伤害视为释放战技造成的伤害） | [战斗开始前](#term-0-80) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10084 | 牵制袭扰 | 在自身4格范围内选取1个地块，对其2格范围内的所有敌方目标造成1次光元素伤害，并有85%基准概率附加嘲讽，持续1回合，对非角色目标嘲讽概率提升至100%。 | [基准概率](#term-0-58)、[嘲讽](#term-0-24216)、[非角色目标](#term-0-83) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10085 | 天光幻刃 | 对身前3x4格范围内的所有敌方目标造成1次光元素伤害。（可对大体型目标造成多次伤害） | 无 | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 主动战技 | 10099 | 涡流怒涛 | 对自身3格范围内的所有敌方目标造成1次水元素伤害，并有40%基准概率将其向自身方向击退1格。 | [基准概率](#term-0-58)、[击退](#term-0-12) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10575 | 命魂守护 | 在战斗开始前，将自身50%当前生命转化为护盾。战斗胜利时，将按该护盾剩余护盾量的比例返还生命。 | [战斗开始前](#term-0-80) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10580 | 庇护之誓 | 自身回合开始时，庇护生命百分比最低的友方冒险者，替其承受50%受到的伤害，自身承受此伤害降低，且自身防御每高于被庇护单位1%，伤害额外降低1%，该效果不可被驱散。 | [庇护](#term-0-82)、[冒险者](#term-0-7) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10592 | 钢铁信念 | 被嘲讽的敌方目标对自身造成的伤害降低。 | [嘲讽](#term-0-24216) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10593 | 圣灵加护 | 提升自身防御。提升自身施加的基于自身防御计算的护盾效果。 | 无 | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10606 | 冷冽寒芒 | 提升自身水元素亲和。每次释放战技对敌方目标造成水元素伤害时，有100%基准概率附加1层寒冷，持续2回合。 | [寒冷](#term-0-24266)、[基准概率](#term-0-58) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 被动秘法 | 10607 | 极寒气场 | 自身2格范围内的敌方目标回合结束时，有100%概率触发极寒气场，对其造成1次水元素伤害，并有50%基准概率附加1层寒冷，持续2回合。 | [寒冷](#term-0-24266)、[基准概率](#term-0-58) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
+| 内置战斗项 | 10184 | 水舞流刃·霜歌圣使 | 对自身1格范围内的1个敌方目标造成1次水元素伤害，并将对目标生命造成伤害的20%转化为自身护盾，且最大不超过自身最大生命的50%，持续2回合。 | [护盾](#term-0-11) | 未完成 | 已有配置记录，实际效果、原生演出、存档恢复及 Windows Player 仍待逐项验证。 |
 
 <a id="rank-5"></a>
 
