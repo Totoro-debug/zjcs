@@ -149,8 +149,7 @@ try {
         # the optional body-clip diagnostic emits a capture. Preserve that native
         # evidence as a valid runtime checkpoint when the graph result is complete.
         $nativeResultFallback = $false
-        if ($ThirdProfession -and $item -eq 10080 -and (Test-Path -LiteralPath (Join-Path $run 'summon-final.json'))
-            -and (Test-Path -LiteralPath (Join-Path $run 'summon-result.png'))) {
+        if ($ThirdProfession -and $item -eq 10080 -and (Test-Path -LiteralPath (Join-Path $run 'summon-final.json')) -and (Test-Path -LiteralPath (Join-Path $run 'summon-result.png'))) {
             $final = Get-Content -LiteralPath (Join-Path $run 'summon-final.json') -Raw | ConvertFrom-Json
             $nativeResultFallback = [bool]$final.checkpoint.Finished -and @($final.checkpoint.Units | Where-Object { $_.MonsterId -eq 3190 }).Count -gt 0
             if ($nativeResultFallback) {
