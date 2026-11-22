@@ -79,6 +79,13 @@ namespace Zjcs.Official.StoryGroundEffects
 }
 namespace Zjcs.Presentation.Combat
 {
+    // Source integrity and scoped catalogs are covered separately; this fixture
+    // isolates dispatch and its original entity-lifecycle seam.
+    internal static class OfficialBattleNativeGraphSources
+    {
+        internal static IReadOnlyList<TextAsset> LoadAll() =>
+            new[] { Resources.Load<TextAsset>("Combat/skill-native-graphs") };
+    }
     public sealed class OfficialBattleLiveGraphDriver : IDisposable
     {
         public readonly Func<int, bool> HasSkill; public readonly Func<int, Transform> Body;

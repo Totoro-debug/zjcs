@@ -1,0 +1,101 @@
+{
+  "inputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/skill-native-graphs.json",
+      "sha256": "b5d19d737745fc2c4c15aad8accfcff4129c9db260958ef8ae847b8b9ca7a86d"
+    },
+    {
+      "path": "assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json",
+      "sha256": "cdd9985436816a9e37c4c6d6788d4f95b974b016533ce9cbcfa125c61d9de069"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/hit-native-settings.json",
+      "sha256": "ab33509bae76bb3053acd4468a2fb704be1fc96b4a24c354efb59b74844ab2a2"
+    },
+    {
+      "path": "assets/reference/battle-animation/hit-view-runtime-source-manifest.json",
+      "sha256": "671d1714512f688dd1ce6b52457d0d9cd3f32c7fa13b3334047f8f2b10df7413"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/skill-entity-views.json",
+      "sha256": "92a96bda4f5524c9c82450c78d523caa7fbe3159a6d07f6c612ff911fa726621"
+    },
+    {
+      "path": "assets/reference/battle-animation/skill-entity-views-source-manifest.json",
+      "sha256": "f31579e4e6c17b2ed52bca6041fa7406b613f8294e760a9ebe599f76c54aa4bc"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/conqueror-current-skill-graphs.json",
+      "sha256": "c7b263077e4595ee48fe2444dca07a905bad4bae2e9ae9690ce3c1ebdf3ea4f2"
+    },
+    {
+      "path": "assets/reference/battle-animation/conqueror-current-skill-graphs-source-manifest.json",
+      "sha256": "1abdaf09b9bf97ca61541dece242aae53cdf9ece5d6fb8ff260a0f3ff19af548"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/skill-native-graphs-source-manifest.json",
+      "sha256": "489685d3a6adb6bf4144593a0a2d4b981d541e919f88097f56cf176776862893"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/skill-native-graphs-source-manifest.json.meta",
+      "sha256": "102419ff8c08149beea04d972c27b1a8367e7f807bc5286a6ea092838ec2edc3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/hit-native-settings-source-manifest.json",
+      "sha256": "71c20ab5dfd312fefa61a7f058d74bb31422a05a013024466da0bdff94122d17"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/hit-native-settings-source-manifest.json.meta",
+      "sha256": "01aa303b2df380e7b278ea9f4b4fa8c14fc044e5434eb2bbeaed0278e95d19a1"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/skill-entity-views-source-manifest.json",
+      "sha256": "9ade411c59fe9a4afc23a0edbdcb05f87cf0300d2af98a10c3769c2d946e317d"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/skill-entity-views-source-manifest.json.meta",
+      "sha256": "10e9acc1b1621c4bf0f725d14e88ad3c33af354c03a91dea5a29845b3b2fdc19"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/conqueror-current-skill-graphs-source-manifest.json",
+      "sha256": "1718517629efc58f434464408b68856c2349166ed0d37c43764f04a391e2bd1d"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/conqueror-current-skill-graphs-source-manifest.json.meta",
+      "sha256": "79373b384f527653706f184ffbc8b4ea3d3ca40a10c22f0e4fcfd2e2893c3dbd"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/skill-native-graph-sources.json",
+      "sha256": "579a075cb788449723ec69a130790ce5a0e99e80943fb2577302413b721f2bae"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/skill-native-graph-sources.json.meta",
+      "sha256": "402a5de83a48e124a1fb4589660796e5ea252c309ec4ed2ce7619176d7241320"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_native_graph_sources.py",
+    "sha256": "19369cc053ebe610feb7524aa5ea9d1e3cb12c5356a3f35679de1b1f332fbcb3"
+  },
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeGraphSources.cs",
+      "sha256": "742446bb1c83aea83eadb35cfbee1e31cfd18b63db70546244c2a66796df862e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs",
+      "sha256": "7e5947335c66eab951339db38ae51b229b3bf467cd371734eab47eb35b99075d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphCatalog.cs",
+      "sha256": "5717ebfac15b9fc98c7ef2d78dfd72c8e839d06743522a89daf9ab55a3936824"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityViewCatalog.cs",
+      "sha256": "de87563218817080f619bc9281c59a7052f94bd8fcc5c850297988bbefb9746f"
+    }
+  ],
+  "operation": "Verify each original native payload against its existing conversion receipt; load source-consistent SHA256-verified catalogs and replace only declared migrated entities. Reject duplicate sources and overlapping migrations without a source-version feature gate."
+}

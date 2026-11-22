@@ -35,7 +35,7 @@ namespace Zjcs.Presentation.Combat
 
         private OfficialBattleSkillGraphCatalog(OfficialBattleSkillGraphCatalogData data)
         {
-            if (data == null || data.manifest != "884_156692" || data.skills == null)
+            if (data == null || string.IsNullOrEmpty(data.manifest) || data.skills == null)
                 throw new InvalidOperationException("Official battle skill graph catalog has the wrong source.");
             foreach (OfficialBattleSkillGraphRecord record in data.skills)
             {
@@ -53,9 +53,21 @@ namespace Zjcs.Presentation.Combat
         {
             TextAsset asset = Resources.Load<TextAsset>(ResourcePath);
             if (asset == null) return null;
-            OfficialBattleSkillGraphCatalogData data =
-                JsonUtility.FromJson<OfficialBattleSkillGraphCatalogData>(asset.text);
-            return new OfficialBattleSkillGraphCatalog(data);
+            OfficialBattleSkillGraphCatalog result = null;
+            var migrated = new HashSet<int>();
+            foreach (var source in OfficialBattleNativeGraphSources.LoadAll())
+            {
+                var data = JsonUtility.FromJson<OfficialBattleSkillGraphCatalogData>(source.text);
+                var next = new OfficialBattleSkillGraphCatalog(data);
+                if (result == null) { result = next; continue; }
+                foreach (var row in next.records)
+                {
+                    if (!migrated.Add(row.Key))
+                        throw new InvalidOperationException("Migrated native skill graphs overlap: " + row.Key);
+                    result.records[row.Key] = row.Value;
+                }
+            }
+            return result;
         }
 
         public GameObject Find(int skillEntityId, string direction)

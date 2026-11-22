@@ -26,10 +26,10 @@ namespace Zjcs.Presentation.Combat
 
         public static OfficialBattleSkillEntityViewCatalog Load()
         {
-            var asset = Resources.Load<TextAsset>("Combat/skill-entity-views");
+            var asset = OfficialBattleNativeGraphSources.LoadVerified("Combat/skill-entity-views");
             if (asset == null) throw new InvalidOperationException("Original MyFightSkill view configuration is missing.");
             var data = JsonUtility.FromJson<OfficialBattleSkillEntityViewData>(asset.text);
-            if (data == null || data.manifest != "884_156692" || data.skills == null)
+            if (data == null || data.skills == null)
                 throw new InvalidOperationException("Original MyFightSkill view configuration has the wrong source.");
             var result = new OfficialBattleSkillEntityViewCatalog();
             foreach (var record in data.skills)

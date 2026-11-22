@@ -139,27 +139,35 @@ namespace Zjcs.Presentation.Combat
             this.scope = scope ?? throw new ArgumentNullException(nameof(scope));
             this.prepareInstance = prepareInstance;
             this.prepareBound = prepareBound;
-            var asset = Resources.Load<TextAsset>("Combat/skill-native-graphs");
-            var catalog = asset ? JsonUtility.FromJson<Catalog>(asset.text) : null;
-            var settingsAsset = Resources.Load<TextAsset>("Combat/hit-native-settings");
+            var settingsAsset = OfficialBattleNativeGraphSources.LoadVerified("Combat/hit-native-settings");
             var settings = settingsAsset ? JsonUtility.FromJson<Settings>(settingsAsset.text) : null;
-            if (catalog == null || catalog.manifest != "884_156692" || catalog.hits == null
-                || settings == null || settings.manifest != "884_156692")
+            if (settings == null)
                 throw new InvalidOperationException("Original native entity catalog/settings are unavailable.");
-            var rows = kind == OfficialBattleNativeEntityKind.Skill ? catalog.skills
-                : kind == OfficialBattleNativeEntityKind.Hit ? catalog.hits
-                : kind == OfficialBattleNativeEntityKind.Damage ? catalog.damages : catalog.moves;
-            if (rows == null) throw new InvalidOperationException("Original native entity catalog is unavailable.");
-            foreach (var binding in rows)
+            var migrated = new HashSet<int>();
+            bool baseline = true;
+            foreach (var asset in OfficialBattleNativeGraphSources.LoadAll())
             {
-                int classId = binding == null ? 0 : kind == OfficialBattleNativeEntityKind.Skill
-                    ? binding.skill_entity_id : kind == OfficialBattleNativeEntityKind.Hit
-                    ? binding.hit_entity_id : kind == OfficialBattleNativeEntityKind.Damage
-                    ? binding.damage_entity_id : binding.action_entity_id;
-                if (classId <= 0
-                    || string.IsNullOrEmpty(binding.entity_resource) || resources.ContainsKey(classId))
-                    throw new InvalidOperationException("Original native entity catalog contains an invalid binding.");
-                resources.Add(classId, binding.entity_resource);
+                var catalog = JsonUtility.FromJson<Catalog>(asset.text);
+                if (catalog == null || string.IsNullOrEmpty(catalog.manifest))
+                    throw new InvalidOperationException("Original native entity catalog is invalid.");
+                var rows = kind == OfficialBattleNativeEntityKind.Skill ? catalog.skills
+                    : kind == OfficialBattleNativeEntityKind.Hit ? catalog.hits
+                    : kind == OfficialBattleNativeEntityKind.Damage ? catalog.damages : catalog.moves;
+                if (rows == null) throw new InvalidOperationException("Original native entity catalog is unavailable.");
+                var seen = new HashSet<int>();
+                foreach (var binding in rows)
+                {
+                    int classId = binding == null ? 0 : kind == OfficialBattleNativeEntityKind.Skill
+                        ? binding.skill_entity_id : kind == OfficialBattleNativeEntityKind.Hit
+                        ? binding.hit_entity_id : kind == OfficialBattleNativeEntityKind.Damage
+                        ? binding.damage_entity_id : binding.action_entity_id;
+                    if (classId <= 0
+                        || string.IsNullOrEmpty(binding.entity_resource) || !seen.Add(classId)
+                        || !baseline && !migrated.Add(classId))
+                        throw new InvalidOperationException("Original native entity catalog contains an invalid binding.");
+                    resources[classId] = binding.entity_resource;
+                }
+                baseline = false;
             }
             usePool = settings.ECIsUseGameObjectPool;
             entityRoot = new GameObject(kind == OfficialBattleNativeEntityKind.Skill ? "Battle native skill entities"
