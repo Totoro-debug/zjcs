@@ -68,12 +68,13 @@ namespace Zjcs.Presentation.Home
             bool doomTorrent = skillId == 10056;
             bool spiralWindBlade = skillId == 10091;
             bool battlecry = skillId == 10092;
-            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || starBurst || doomTorrent || spiralWindBlade || battlecry;
+            bool judgmentThunder = skillId == 10093;
+            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
-            int profession = starBurst || doomTorrent || spiralWindBlade || battlecry ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -375,6 +376,7 @@ namespace Zjcs.Presentation.Home
                         : doomTorrent ? cast.SkillEntityId == 11080
                         : spiralWindBlade ? cast.SkillEntityId == 11960
                         : battlecry ? cast.SkillEntityId == 12010
+                        : judgmentThunder ? cast.SkillEntityId == 11970
                         : skillId == 10048 ? cast.SkillEntityId == 11090
                         : skillId == 10049 ? cast.SkillEntityId == 11100
                         : skillId == 10051 ? cast.SkillEntityId == 11260
@@ -386,6 +388,12 @@ namespace Zjcs.Presentation.Home
                         "The acquired active skill selected a foreign entity: " + cast.SkillEntityId);
                     var damageEvents = step.Event.DamageEvents.Where(value => value.SourceId == 1
                         && value.SkillEntityId == (skillId == 10017 ? 10970 : cast.SkillEntityId)).ToArray();
+                    if (judgmentThunder)
+                    {
+                        VerifyAcquiredJudgmentThunder(cast, damageEvents);
+                        hits += damageEvents.Length;
+                        continue;
+                    }
                     if (battlecry)
                     {
                         VerifyAcquiredBattlecry(step.Event, checkpoint, output, ref battlecryAdvances);
@@ -765,6 +773,12 @@ namespace Zjcs.Presentation.Home
                                 parent.name.StartsWith("Eff_Skill_Paladin04_WhirlpoolRagingWaves", StringComparison.Ordinal)));
                         if (!vortexVisible) { yield return null; continue; }
                     }
+                    else if (judgmentThunder)
+                    {
+                        if (!FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
+                            && particle.GetComponentsInParent<Transform>().Any(parent => parent.name.StartsWith("playable11970", StringComparison.Ordinal))))
+                        { yield return null; continue; }
+                    }
                     else if (battlecry)
                     {
                         if (!FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
@@ -786,7 +800,7 @@ namespace Zjcs.Presentation.Home
                     else yield return new WaitForSecondsRealtime(hellfire ? .2f : crisisGuard || starShatteringSlash ? 1.45f
                         : shieldCharge ? 1.1f : .7f);
                     yield return CaptureAcquiredActive(output, "battle"); captured = true;
-                    if (heavenlyLightBlades || frostSong || swordWindDance || soulPiercer || doomTorrent || spiralWindBlade)
+                    if (heavenlyLightBlades || frostSong || swordWindDance || soulPiercer || doomTorrent || spiralWindBlade || judgmentThunder)
                         for (int frame = 1; frame <= 4; frame++)
                         {
                             yield return new WaitForSecondsRealtime(.18f);
