@@ -246,7 +246,8 @@
     "Preserve different original child-time handling between group display and property-value queries; do not normalize boundary behavior.",
     "New-game activity records are empty by the user-selected offline policy; these methods do not schedule or invent activities.",
     "The user-confirmed offline settlement policy selects parent and individual property records only during their active intervals, including the start and excluding the end. A copied snapshot then calls the unchanged original selectors and extra-count/capacity formulas. Original display/query methods retain their differing time handling; this adapter does not schedule activities or grant rewards.",
-    "Local activity production is the difference of the ordinary preview value at each active boundary, using the original level/elapsed argument order before its integer cast. The original float percentage conversion is retained; fractional additions are exposed for the durable ledger rather than truncated at each checkpoint. This projection does not grant rewards or enforce capacity."
+    "Local activity production is the difference of the ordinary preview value at each active boundary, using the original level/elapsed argument order before its integer cast. The original float percentage conversion is retained; fractional additions are exposed for the durable ledger rather than truncated at each checkpoint. This projection does not grant rewards or enforce capacity.",
+    "The local activity ledger keeps separate ordinary and extra integer counts, retaining earned fractions. It reuses the fruit-tree policy of stopping production while full and preserving mature overflow and earned fractions after capacity expiry. A fixed production-time and constant-rate anchor makes results independent of online checkpoint frequency. Inventory grants and durable transactions remain owned by the home session."
   ],
   "runtime_bindings": {
     "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "11dd84aae76ed2e3df562c1a037ed3f6bbd24f7b68923100bd7948fbff2c1775",
@@ -258,8 +259,10 @@
     "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeIncomeAdditionSnapshot.cs": "f9349cb1c510155700c86f9e4a1cb274e665e03452245dbb134e7a8b73bdcda7",
     "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeIncomeAdditionSnapshot.cs.meta": "3bd04c4b6c3bb758735829a1c006ee0dc0d0e23dc84cfd8ab6921f870e6a0399",
     "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncome.cs": "99d33dec5cb133ca7205fafcc134ef5f1f570cccb4cc4a90e0c61bf2344b6426",
-    "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncomeAddition.cs": "1bc8314c4bbb22bb9600e5675f175982a90bbfd78ad66c026e63e47555475158",
-    "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncomeAddition.cs.meta": "6d13227d0151b2af72f008c29a30f1688913e2cd4ca21ac0f565c31b429bbb52"
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncomeAddition.cs": "6de592a4bcc18e77b93b7b571d73fc7e406299bdac09e1c63785980923901572",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncomeAddition.cs.meta": "6d13227d0151b2af72f008c29a30f1688913e2cd4ca21ac0f565c31b429bbb52",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeActivityLedger.cs": "2b5a310331fe9717888eac616463954fb2f43ae8bccb7a465d2f20b7467f0fe8",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeActivityLedger.cs.meta": "fdb03026d65ec76fc3c1add9bd39334fc0bfebc03831baf81639c92282c32828"
   },
   "validation_inputs": {
     "scripts/prepare_home_output_addition_validation.py": "8800464a349432659339632161d1ee41fcbb41f705e24274c0a1ad943d12ef96",
@@ -286,12 +289,14 @@
     }
   },
   "income_snapshot_inputs": {
-    "scripts/prepare_home_income_addition_snapshot.py": "655a1be714644f8c93ee3afe35401dad274aac674ec1c88a99bf1540342e858e",
-    "scripts/prepare_home_output_addition_validation.py": "bbfbfff18d940da3aef9fd9d61e3c074a93b2bf90084398a1f02cf59ff37621c",
+    "scripts/prepare_home_income_addition_snapshot.py": "e3719b360135c92b1a2d7e0701429a652187a11a62ea52c94e081e6e9e501172",
+    "scripts/prepare_home_output_addition_validation.py": "aa078ef34f0b0c8cd6cbfa199384fb2916e2923a250d75537b2bb94527001edb",
     "scripts/test_home_income_addition_snapshot.ps1": "37ff5e793a56df81e864725464921ea5bea4aee1bb93e338eb1912ddd114dece",
     "scripts/fixtures/home_income_addition_snapshot_harness.cs": "01fbac9c19150b05025c2aeb0442cb979879fa03eef8c5a5aaa809702a249d8d",
     "scripts/test_home_income_addition_intervals.ps1": "7d5deaf1793f6853254691126081ef73b666aedd5a57953b5b9740bb8abd46ec",
     "scripts/fixtures/home_income_addition_intervals_harness.cs": "f3dc3032faeb31855f125e2868729fbe7b6da8992dc8caf00fb36ff6cf786b53",
+    "scripts/test_home_income_activity_ledger.ps1": "311a29053636d4a83a86efc6f83d136da8aa9e687e1e4c2f6df4adba7942ee79",
+    "scripts/fixtures/home_income_activity_ledger_harness.cs": "64aa632af91bd721fb73fc3e6bfb02413fa870ad16385c58056a33ee73f9af81",
     "assets/reference/home-income-formula-source-manifest.json": "35af2509fad9211d56dc3b79eb6ab04a105f51fc21b7422a4e2c7b22dddc0349"
   },
   "income_projection_original_ports": {

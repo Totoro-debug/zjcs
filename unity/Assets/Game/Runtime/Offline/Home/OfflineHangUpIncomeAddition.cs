@@ -25,17 +25,25 @@ namespace Zjcs.Offline.Home
                 if (percent <= 0) continue;
                 double before = storedSeconds + (segment.Start - fromUtcTicks) / (double)TimeSpan.TicksPerSecond;
                 double after = storedSeconds + (segment.End - fromUtcTicks) / (double)TimeSpan.TicksPerSecond;
-                double produced = OfflineHangUpIncome.UnsettledRewardValue(rule, properties, floatPropertyIds, after)
-                    - OfflineHangUpIncome.UnsettledRewardValue(rule, properties, floatPropertyIds, before);
-                // Original Formula.Int2Float uses float division before the
-                // double multiplication. Keep that conversion and defer only
-                // the integer cast until the ledger has carried the fraction.
-                double value = Math.Max(0, produced) * (double)((float)percent / 10000f);
+                double value = ValueForProductionChange(rule, properties, floatPropertyIds, percent, before, after);
                 if (double.IsNaN(value) || value <= 0) continue;
                 result += value;
                 if (double.IsInfinity(result) || result >= long.MaxValue) return long.MaxValue;
             }
             return result;
+        }
+
+        public static double ValueForProductionChange(HangUpIncomeRule rule,
+            IReadOnlyDictionary<int, long> properties, ISet<int> floatPropertyIds, int percent,
+            double beforeSeconds, double afterSeconds)
+        {
+            if (percent <= 0 || afterSeconds <= beforeSeconds) return 0;
+            double produced = OfflineHangUpIncome.UnsettledRewardValue(rule, properties, floatPropertyIds, afterSeconds)
+                - OfflineHangUpIncome.UnsettledRewardValue(rule, properties, floatPropertyIds, beforeSeconds);
+            // Original Formula.Int2Float converts through float before the
+            // double multiplication; the ledger owns the final integer cast.
+            double value = Math.Max(0, produced) * (double)((float)percent / 10000f);
+            return double.IsNaN(value) || value <= 0 ? 0 : Math.Min(long.MaxValue, value);
         }
     }
 }

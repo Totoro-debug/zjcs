@@ -16,6 +16,8 @@ FILES = (
     'unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncome.cs',
     'unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncomeAddition.cs',
     'unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncomeAddition.cs.meta',
+    'unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeActivityLedger.cs',
+    'unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeActivityLedger.cs.meta',
 )
 
 
@@ -73,6 +75,12 @@ def prepare():
         'each checkpoint. This projection does not grant rewards or enforce capacity.')
     if projection not in receipt['adaptations']:
         receipt['adaptations'].append(projection)
+    ledger = ('The local activity ledger keeps separate ordinary and extra integer counts, retaining earned fractions. '
+        'It reuses the fruit-tree policy of stopping production while full and preserving mature overflow and '
+        'earned fractions after capacity expiry. A fixed production-time and constant-rate anchor makes results '
+        'independent of online checkpoint frequency. Inventory grants and durable transactions remain owned by the home session.')
+    if ledger not in receipt['adaptations']:
+        receipt['adaptations'].append(ledger)
     receipt['income_snapshot_inputs'] = {name: digest((ROOT / name).read_bytes()) for name in (
         'scripts/prepare_home_income_addition_snapshot.py',
         'scripts/prepare_home_output_addition_validation.py',
@@ -80,6 +88,8 @@ def prepare():
         'scripts/fixtures/home_income_addition_snapshot_harness.cs',
         'scripts/test_home_income_addition_intervals.ps1',
         'scripts/fixtures/home_income_addition_intervals_harness.cs',
+        'scripts/test_home_income_activity_ledger.ps1',
+        'scripts/fixtures/home_income_activity_ledger_harness.cs',
         'assets/reference/home-income-formula-source-manifest.json')}
     RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
     print('HOME_INCOME_ADDITION_BINDINGS_PASSED: official outputs unchanged; local snapshot bindings recorded.')
