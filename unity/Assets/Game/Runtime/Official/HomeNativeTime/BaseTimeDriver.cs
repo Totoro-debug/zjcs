@@ -25,7 +25,7 @@ public abstract class BaseTimeDriver : HomeEnvDrive, IHomeEnvDriveUpdatable, IHo
 	private float mTimeScale;
 
 	private bool mIsActive;
-	
+
 	public IHomeTimeDriveEvents HomeTimeDriveSkeletonSubscriber { get; set; }
 	public IHomeTimeDriveEvents HomeTimeDriveAnimatorSubscriber { get; set; }
 	public IHomeTimeDriveEvents HomeTimeDriveAnimationSubscriber { get; set; }

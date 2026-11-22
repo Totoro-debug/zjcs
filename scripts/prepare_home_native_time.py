@@ -75,6 +75,7 @@ def prepare():
                 'if (mDisposable != null) { foreach (var subscription in mDisposable) subscription.Dispose(); mDisposable = null; }')
         text = '// Original client home animation clock; local message boundaries only.\n' + (
             'namespace Zjcs.Official.HomeNativeTime\n{\nusing Object = UnityEngine.Object;\n' + text + '\n}\n')
+        text = '\n'.join(line.rstrip() for line in text.split('\n'))
         target = DEST / (name + '.cs')
         write(target, text.encode('utf8'))
         meta(target)
