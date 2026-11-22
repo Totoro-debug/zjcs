@@ -26,6 +26,7 @@ public abstract class ClickableHomeObj : MonoBehaviour
 
 	private void TryCollectClickGos()
 	{
+		if (mTouchList == null) mTouchList = new List<GameObject>();
 		if (mTouchList.Count == 0)
 		{
 			Collider[] componentsInChildren = GetComponentsInChildren<Collider>(includeInactive: true);

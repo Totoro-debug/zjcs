@@ -504,7 +504,7 @@
     "unity/Assets/Game/Runtime/Official/HomeSceneInput/GameObjectInputOperationBase.cs.meta": "2b0c5ca46757c5014a52d7bcebd1d38e877a275331feb6a889c3a50f94569387",
     "unity/Assets/Game/Runtime/Official/HomeSceneInput/GameObjectClickOperation.cs": "834cc02cffd83f048c32b0ac62bb32439139a2bbb08390b30c40163970020e43",
     "unity/Assets/Game/Runtime/Official/HomeSceneInput/GameObjectClickOperation.cs.meta": "c0eae9377c7788c955c7778831e82b23d9c95e5516588de4c1eb1f2ddcff34d1",
-    "unity/Assets/Game/Runtime/Official/HomeSceneInput/ClickableHomeObj.cs": "88c5fc891325a47342aa54156133f7c4da570e11e55533f370f0f94a1bff6fc8",
+    "unity/Assets/Game/Runtime/Official/HomeSceneInput/ClickableHomeObj.cs": "2ab7a2e3d378cd66e60e1378b0ff9b03ae097961a031ca690d1ec9e5c1884ca8",
     "unity/Assets/Game/Runtime/Official/HomeSceneInput/ClickableHomeObj.cs.meta": "c34a35a0ae5f08a01907f7d652181e6fd254a3b797e8ed6f8719e0d778f4d633",
     "unity/Assets/Game/Runtime/Official/HomeSceneInput/HomeSceneInputPorts.cs": "48cdaaf031332ab579e1ececacd58bdc40b91dc1c8f93230e8b360b1ecef73d6",
     "unity/Assets/Game/Runtime/Official/HomeSceneInput/HomeSceneInputPorts.cs.meta": "204142a66e0ba6b10b18658731bb02cc83b0f3360323976854eb8a237d0ffd75",
@@ -526,12 +526,13 @@
     "unity/Assets/Game/Runtime/Offline/HomeSceneInput/Zjcs.Offline.HomeSceneInput.asmdef": "b434c060a21a8be778384fdf9f8a29c78e171f02e96648dede11004aca1a9cc8",
     "unity/Assets/Game/Runtime/Offline/HomeSceneInput/Zjcs.Offline.HomeSceneInput.asmdef.meta": "3d9cf39e68a3d6601efd51ea8339dbf9e01c470ed6a17681a09799f0a68300cb"
   },
-  "generator_sha256": "3da09cc10feac78a390256031bab8111f5dd741a24217f00844d78d10ae9eca7",
+  "generator_sha256": "9fc78f93f1f59edd0936cd2411a8844c716d848b7a019b61b85d258871e7ddbc",
   "adaptations": [
     "Existing original input dispatcher, inclusive screen bounds, pointer-down operation and SafeAction are reused.",
     "Mouse-up, main camera, EventSystem raycast and own-home/window state are supplied by explicit local owners.",
     "Original 20-pixel drag exclusion, saved down-screen position, target identity recheck, UI occlusion, 1000-unit Physics raycast, and press-time result are retained.",
     "Original collider collection, click callback before valid action, eligibility branches and destruction unhook are retained.",
+    "Offline actors with no serialized list receive the original inactive-child collider fallback lazily.",
     "Decompiler backing fields, implicit vector casts and out-parameter syntax repaired for Unity C#."
   ],
   "scope": "Shared original native furniture input and clickable base. Native model/actor binding, Unity runtime validation and Windows delivery remain separate."

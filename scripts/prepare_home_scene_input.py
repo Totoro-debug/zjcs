@@ -167,6 +167,8 @@ using Object = UnityEngine.Object;
         'public IInputOperationModule InputOperationModule { get; set; }')
     text = text.replace('IHomeData', 'IHomeSceneClickContext').replace('private IHomeSceneClickContext HomeData', 'public IHomeSceneClickContext HomeData')
     text = text.replace('StoryUtils.IsAllNoTipWinClosed()', 'HomeData.AllNoTipWindowsClosed')
+    text = text.replace('private void TryCollectClickGos()\n\t{\n\t\tif (mTouchList.Count == 0)',
+        'private void TryCollectClickGos()\n\t{\n\t\tif (mTouchList == null) mTouchList = new List<GameObject>();\n\t\tif (mTouchList.Count == 0)')
     emit('ClickableHomeObj', text)
 
     emit('HomeSceneInputPorts', '''public interface IHomeSceneClickPointer : IHomePointerSnapshot
@@ -212,6 +214,7 @@ public interface IHomeSceneClickContext
             'Mouse-up, main camera, EventSystem raycast and own-home/window state are supplied by explicit local owners.',
             'Original 20-pixel drag exclusion, saved down-screen position, target identity recheck, UI occlusion, 1000-unit Physics raycast, and press-time result are retained.',
             'Original collider collection, click callback before valid action, eligibility branches and destruction unhook are retained.',
+            'Offline actors with no serialized list receive the original inactive-child collider fallback lazily.',
             'Decompiler backing fields, implicit vector casts and out-parameter syntax repaired for Unity C#.'
         ], scope='Shared original native furniture input and clickable base. Native model/actor binding, Unity runtime validation and Windows delivery remain separate.')
     RECEIPT.write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')

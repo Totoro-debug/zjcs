@@ -45,6 +45,7 @@ namespace Zjcs.Presentation.Home
             new Dictionary<string, List<GameObject>>(StringComparer.Ordinal);
         private readonly Dictionary<string, string> fruitTreeSceneSpriteByPath = new Dictionary<string, string>(StringComparer.Ordinal);
         private readonly Dictionary<int, List<HomeQuad>> clickRegions = new Dictionary<int, List<HomeQuad>>();
+        private readonly List<NativeHomeBedActor> nativeBedActors = new List<NativeHomeBedActor>();
         private readonly Dictionary<string, Material> materials = new Dictionary<string, Material>(StringComparer.Ordinal);
         private readonly Dictionary<string, Texture2D> moonTextures = new Dictionary<string, Texture2D>(StringComparer.Ordinal);
         private readonly Dictionary<string, MoonLayerView> moonLayers = new Dictionary<string, MoonLayerView>(StringComparer.Ordinal);
@@ -79,6 +80,7 @@ namespace Zjcs.Presentation.Home
 
         public GameObject Root { get; }
         public Camera Camera { get; private set; }
+        public IReadOnlyList<NativeHomeBedActor> NativeBedActors => nativeBedActors;
         public Vector3 Position => Camera == null ? Vector3.zero : Camera.transform.position;
         public float OrthographicSize => camera.orthographic_size <= 0 ? 7.111f : camera.orthographic_size;
         public float DragSensitivity => camera.drag_sensitivity <= 0 ? 1.3f : camera.drag_sensitivity;
@@ -143,6 +145,14 @@ namespace Zjcs.Presentation.Home
                 unrepairedRoot.transform.SetParent(Root.transform, false);
                 repairedRoot.SetActive(false);
                 unrepairedRoot.SetActive(false);
+                if (furniture.type == 0)
+                {
+                    CreateNativeBed(furniture, repairedRoot.transform, true);
+                    CreateNativeBed(furniture, unrepairedRoot.transform, false);
+                    repaired[furniture.type] = repairedRoot;
+                    unrepaired[furniture.type] = unrepairedRoot;
+                    continue;
+                }
                 foreach (HomeSceneLayer layer in furniture.layers ?? Array.Empty<HomeSceneLayer>())
                 {
                     if (layer == null || layer.vertices == null || layer.vertices.Length < 8) continue;
@@ -163,6 +173,7 @@ namespace Zjcs.Presentation.Home
                 if (region == null || region.vertices == null || region.vertices.Length < 8) continue;
                 string group = RootGroup(region.path);
                 if (!FurnitureRoots.TryGetValue(group, out int type)) continue;
+                if (type == 0) continue;
                 if (group == "FruitTree" && (region.path ?? string.Empty).Contains("/HomeFruitTreePet/"))
                     type = 11;
                 if (!clickRegions.TryGetValue(type, out List<HomeQuad> list))
@@ -215,6 +226,20 @@ namespace Zjcs.Presentation.Home
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             renderer.receiveShadows = false;
             return go;
+        }
+
+        private void CreateNativeBed(HomeFurnitureScene furniture, Transform parent, bool repairedState)
+        {
+            GameObject prefab = Resources.Load<GameObject>("Home/NativeHomeBed");
+            if (!prefab) throw new InvalidOperationException("The official 903 native bed prefab is unavailable.");
+            GameObject instance = UnityEngine.Object.Instantiate(prefab, parent, false);
+            instance.name = repairedState ? "NativeBed_Repaired" : "NativeBed_Unrepair";
+            instance.transform.localPosition = SlotPosition(furniture.slot);
+            Transform repairedLayer = instance.transform.Find("Repaired");
+            Transform unrepairedLayer = instance.transform.Find("Unrepair");
+            if (repairedLayer) repairedLayer.gameObject.SetActive(repairedState);
+            if (unrepairedLayer) unrepairedLayer.gameObject.SetActive(!repairedState);
+            nativeBedActors.Add(instance.AddComponent<NativeHomeBedActor>());
         }
 
         private void BuildFruitTree()

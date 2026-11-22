@@ -9,6 +9,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using Zjcs.Offline.CharacterCreation;
 using Zjcs.Offline.Equipment;
 using Zjcs.Offline.Home;
@@ -29,6 +30,8 @@ using Zjcs.Offline.PartnersUI;
 using Zjcs.Official.Partners;
 using Zjcs.Official.PartnersUI;
 using Zjcs.Official.ProfessionUI;
+using Zjcs.Official.HomeSceneInput;
+using Zjcs.Offline.HomeSceneInput;
 using Zjcs.Official.World.NativeLabelUI.Framework;
 
 namespace Zjcs.Presentation.Home
@@ -90,6 +93,7 @@ namespace Zjcs.Presentation.Home
         private HomeSceneView scene;
         private HomePlayerActorView homePlayer;
         private HomeInputController input;
+        private OfflineHomeSceneInput nativeSceneInput;
         private HomeEnvironmentView environment;
         private Zjcs.Offline.HomeEnvironmentTime.OfflineHomeNaturalTimeLimit naturalTimeLimit;
         private HomeMeteorView meteorView;
@@ -696,6 +700,13 @@ namespace Zjcs.Presentation.Home
             session = OpenSession();
             lastAdvanceUnix = openedAt;
             scene = new HomeSceneView(catalog, transform);
+            nativeSceneInput = new OfflineHomeSceneInput(() => scene?.Camera,
+                () => EventSystem.current, new HomeSceneClickContext(this));
+            foreach (NativeHomeBedActor actor in scene.NativeBedActors)
+            {
+                actor.Clicked += OnNativeBedClicked;
+                nativeSceneInput.Bind(actor);
+            }
             BuildHomePlayer();
             naturalTimeLimit = new Zjcs.Offline.HomeEnvironmentTime.OfflineHomeNaturalTimeLimit(
                 profile, selectedHomeRules, partnerCatalog.Conditions, type => session.OwnsFurniture(type));
@@ -1185,6 +1196,16 @@ namespace Zjcs.Presentation.Home
             hud?.RefreshAll();
             return 1;
         }
+        private sealed class HomeSceneClickContext : IHomeSceneClickContext
+        {
+            readonly HomeFeatureRuntime owner;
+            internal HomeSceneClickContext(HomeFeatureRuntime owner) => this.owner = owner;
+            public bool InMyHome => true;
+            public bool AllNoTipWindowsClosed => owner.hud == null || !owner.hud.AnyModalOpen;
+        }
+
+        private void OnNativeBedClicked() => OnFurnitureClicked(0);
+
         private void OnFurnitureClicked(int type)
         {
             FurnitureClickedForTutorial?.Invoke(type);
@@ -1913,6 +1934,8 @@ namespace Zjcs.Presentation.Home
             // The damage-test scene owns input and presentation until its battle ends.
             // Home income catches up from its existing timestamp on return.
             if (activeBattlePresentations > 0 || hud != null && hud.SkillDamageTestRunning) return;
+            nativeSceneInput?.Tick();
+            nativeSceneInput?.LateTick();
             input?.Update();
             TickAstrologicalCharge();
             naturalTimeLimit?.RefreshCommittedProfile();
@@ -1954,6 +1977,11 @@ namespace Zjcs.Presentation.Home
 
         private void OnDestroy()
         {
+            if (scene != null)
+                foreach (NativeHomeBedActor actor in scene.NativeBedActors)
+                    if (actor != null) actor.Clicked -= OnNativeBedClicked;
+            nativeSceneInput?.Dispose();
+            nativeSceneInput = null;
             DisposeHangUpHud();
             partnerUiBinding?.Dispose(); partnerUiBinding = null;
             EndAstrologicalCharge();
