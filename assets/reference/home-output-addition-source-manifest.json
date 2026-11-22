@@ -244,13 +244,18 @@
     "Original individual hang-up add-percent/max-store mappings and extra-count/extra-capacity formulas retain their float conversions and integer casts.",
     "Data wrappers retain the original fields consumed by these methods; transport, online identity and database plumbing are excluded.",
     "Preserve different original child-time handling between group display and property-value queries; do not normalize boundary behavior.",
-    "New-game activity records are empty by the user-selected offline policy; these methods do not schedule or invent activities."
+    "New-game activity records are empty by the user-selected offline policy; these methods do not schedule or invent activities.",
+    "The user-confirmed offline settlement policy selects parent and individual property records only during their active intervals, including the start and excluding the end. A copied snapshot then calls the unchanged original selectors and extra-count/capacity formulas. Original display/query methods retain their differing time handling; this adapter does not schedule activities or grant rewards."
   ],
   "runtime_bindings": {
     "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "11dd84aae76ed2e3df562c1a037ed3f6bbd24f7b68923100bd7948fbff2c1775",
-    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeOutputAddition.cs": "3c221270cf09462fd8a2a98be2933378c5272f2d88254c6b1a2c047fc0827290",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeOutputAddition.cs": "94fe5e6065783d6ab8b31250d15b5f52922eb4b24b0dd9bb22f50130df382f22",
     "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeOutputAddition.cs.meta": "1f714559205537180805c4893ff92c4f1f519c6b55bfe152dc14f9de7b350e04",
-    "unity/Assets/Game/Runtime/Offline/HomeUI/Zjcs.Offline.HomeUI.asmdef": "023b6b807a7659bbc180c78d026b24a7166b8174560d88ddbf33c2f2dd5bb6f0"
+    "unity/Assets/Game/Runtime/Offline/HomeUI/Zjcs.Offline.HomeUI.asmdef": "023b6b807a7659bbc180c78d026b24a7166b8174560d88ddbf33c2f2dd5bb6f0",
+    "unity/Assets/Game/Runtime/Offline/Home/IHomeIncomeAdditionSnapshot.cs": "250c65c9642aa8b7332aebc2c3ff4865c388e6ffc93d1b6597b85dc5f510ec09",
+    "unity/Assets/Game/Runtime/Offline/Home/IHomeIncomeAdditionSnapshot.cs.meta": "98f3f7df389048780f8d34499e8f16a1d2926480606780a0c9ea18c9cd658437",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeIncomeAdditionSnapshot.cs": "f9349cb1c510155700c86f9e4a1cb274e665e03452245dbb134e7a8b73bdcda7",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeIncomeAdditionSnapshot.cs.meta": "3bd04c4b6c3bb758735829a1c006ee0dc0d0e23dc84cfd8ab6921f870e6a0399"
   },
   "validation_inputs": {
     "scripts/prepare_home_output_addition_validation.py": "8800464a349432659339632161d1ee41fcbb41f705e24274c0a1ad943d12ef96",
@@ -267,5 +272,19 @@
     "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineCurrentHomeFurniture.cs": "b27a75ca6696f5a2d83634407187c3faeb093956177391dab930fd0ded7e56d9",
     "unity/Assets/Game/Runtime/Official/HomeConditions/HomeConditionRules.cs": "14cfa3fd7cd7a24ccc99d4857103f0dac8449a182dd0734514b42bcbe5a18d4f",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "7c2f057963f207b46140fb41e7bb72520f096dc2862ab2552b40aac14fd20cea"
+  },
+  "runtime_binding_ancestry": {
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeOutputAddition.cs": {
+      "recorded_revision": "9c154f636340db911f10cc37ca70998c48089f08",
+      "recorded_sha256": "3c221270cf09462fd8a2a98be2933378c5272f2d88254c6b1a2c047fc0827290",
+      "baseline_revision": "06e1a78df752db54d74f6530ee0d0c5f7811a213",
+      "baseline_sha256": "fd99f779264aac4e0978e989f156bc9534ecf5c782edb526edac8644dfe194bc"
+    }
+  },
+  "income_snapshot_inputs": {
+    "scripts/prepare_home_income_addition_snapshot.py": "dc921a5e6419ede2ed3ae496a371c266bcaca00bd4b0b0c72460cf6e94380eb7",
+    "scripts/prepare_home_output_addition_validation.py": "bbfbfff18d940da3aef9fd9d61e3c074a93b2bf90084398a1f02cf59ff37621c",
+    "scripts/test_home_income_addition_snapshot.ps1": "37ff5e793a56df81e864725464921ea5bea4aee1bb93e338eb1912ddd114dece",
+    "scripts/fixtures/home_income_addition_snapshot_harness.cs": "01fbac9c19150b05025c2aeb0442cb979879fa03eef8c5a5aaa809702a249d8d"
   }
 }

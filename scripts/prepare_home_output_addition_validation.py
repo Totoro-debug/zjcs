@@ -41,6 +41,10 @@ def prepare():
         'unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs',
         'unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeOutputAddition.cs',
         'unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeOutputAddition.cs.meta',
+        'unity/Assets/Game/Runtime/Offline/Home/IHomeIncomeAdditionSnapshot.cs',
+        'unity/Assets/Game/Runtime/Offline/Home/IHomeIncomeAdditionSnapshot.cs.meta',
+        'unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeIncomeAdditionSnapshot.cs',
+        'unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeIncomeAdditionSnapshot.cs.meta',
         'unity/Assets/Game/Runtime/Offline/HomeUI/Zjcs.Offline.HomeUI.asmdef'):
         raw = (ROOT / name).read_bytes()
         if raw != (work / name).read_bytes():

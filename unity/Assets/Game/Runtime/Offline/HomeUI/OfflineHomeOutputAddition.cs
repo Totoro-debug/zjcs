@@ -45,15 +45,23 @@ namespace Zjcs.Offline.HomeUI
 
         // New games deliberately have no activity records. Missing state is read
         // without writing, changing a timer or silently creating an activity.
-        public State ReadState()
+        public State ReadState() => ReadState(session.Save.OutputAdditionStateJson);
+
+        static State ReadState(string json)
         {
-            var json = session.Save.OutputAdditionStateJson;
             var state = string.IsNullOrEmpty(json) ? new State() : JsonConvert.DeserializeObject<State>(json);
             if (state?.Records == null || state.Records.Any(record => record == null || record.OutputAdditionPropDict == null
                 || record.OutputAdditionPropDict.Values.Any(value => value == null))
                 || state.Records.Select(record => record.Id).Distinct().Count() != state.Records.Count)
                 throw new InvalidOperationException("Invalid local output-addition records.");
             return state;
+        }
+
+        public IHomeIncomeAdditionSnapshot CaptureIncomeSnapshot(OfflineHomeSave save)
+        {
+            if (save == null) throw new ArgumentNullException(nameof(save));
+            return new OfflineHomeIncomeAdditionSnapshot(ReadState(save.OutputAdditionStateJson).Records,
+                configuration.rows, configuration.settings, disabled);
         }
 
         private HomeOutputAdditionPlayer Player()
