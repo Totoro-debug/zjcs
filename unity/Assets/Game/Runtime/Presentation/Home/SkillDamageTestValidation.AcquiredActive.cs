@@ -283,10 +283,10 @@ namespace Zjcs.Presentation.Home
             }
             if (hellfire) PrepareAcquiredHellfire(actor);
             if (soulPiercer) { actor.Hp = actor.MaxHp / 2; actor.Turn.Hp = actor.Hp; }
-            int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
+            int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, standfastTurns = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
             battle.Controller.StepCompleted += step => {
                 if (hellfire) VerifyAcquiredHellfireStep(step.Event, actor, ref hellfireCures, ref hits);
-                if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits);
+                if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits, ref standfastTurns);
                 var skillCasts = step.Event.SkillCasts.Where(value => value.ActorId == 1 && value.Slot == 0
                     && value.SkillItemId == skillId).ToArray();
                 casts += skillCasts.Length;
@@ -589,6 +589,16 @@ namespace Zjcs.Presentation.Home
             bool captured = false, capturedOpening = false, capturedPassive = false, capturedFear = false;
             while (battle != null)
             {
+                if (passiveCompanion == 10608 && standfastTurns > 0 && !capturedPassive
+                    && FindObjectsOfType<Transform>().Any(value => value.name == "24392"
+                        || value.name.StartsWith("24392(", StringComparison.Ordinal))
+                    && FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
+                        && particle.GetComponentsInParent<Transform>().Any(parent =>
+                            parent.name.StartsWith("playable24392", StringComparison.Ordinal))))
+                {
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    capturedPassive = true;
+                }
                 var fearEntity = dreadShadow && fearApplications > 0 && !capturedFear && captured
                     ? FindObjectsOfType<Transform>().FirstOrDefault(value => (value.name == "24194"
                         || value.name.StartsWith("24194(", StringComparison.Ordinal)))
@@ -669,7 +679,10 @@ namespace Zjcs.Presentation.Home
             Require(!dreadShadow || fearApplications > 0 && capturedFear, "The acquired fear was never applied and rendered.");
             Require(!vortexSurge || vortexMovements > 0,
                 "The original vortex surge never exercised its inward knockback in the rendered battle.");
-            Require(passiveCompanion == 0 || coldHits > 0, "The cultivated passive never applied cold in the rendered battle.");
+            Require(passiveCompanion != 10606 && passiveCompanion != 10607 || coldHits > 0,
+                "The cultivated passive never applied cold in the rendered battle.");
+            Require(passiveCompanion != 10608 || standfastTurns > 0 && capturedPassive,
+                "The cultivated standfast soul never applied and rendered its turn-bound protection.");
             Require(passiveCompanion != 10607 || auraHits > 0, "The cultivated frigid aura never struck at the enemy's turn end.");
             Require(passiveCompanion != 10607 || capturedPassive, "The original frigid-aura effect was never rendered.");
             File.WriteAllText(Path.Combine(output, "acquired-active-ui-checkpoint.json"), FightBattleCheckpointSerializer.Save(checkpoint));

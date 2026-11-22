@@ -8,6 +8,23 @@ param(
     [string]$PassiveSave,
     [ValidateSet(0,39521)][int]$SkillSkinId = 0
 )
+function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
+    $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
+    if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
+    $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -in @(10606,10607)) {
+        if (-not (Select-String -LiteralPath $runtimeLog -SimpleMatch "[Acquired passive combat] $PassiveId cultivated") -or
+            -not (Test-Path -LiteralPath (Join-Path $Run 'companion-cold-checkpoint.json'))) { throw 'The cultivated secret did not exercise its original cold path.' }
+    } elseif ($PassiveId -eq 10608) {
+        $source = Get-Content -LiteralPath (Join-Path $Run 'companion-cultivated-save.json') -Raw | ConvertFrom-Json
+        if ($source.Player.Skills.Plans[$source.Player.Skills.SelectedPlan].PassiveSkills[0] -ne $PassiveId) {
+            throw 'The turn-bound protection used another cultivated secret.'
+        }
+    } else { throw 'Unsupported acquired passive evidence.' }
+    if ($PassiveId -in @(10607,10608) -and -not (Test-Path -LiteralPath (Join-Path $Run 'acquired-active-ui-passive-battle.png'))) {
+        throw 'The original cultivated passive effect was not captured.'
+    }
+}
 $ErrorActionPreference = 'Stop'
 $requestedSkills = @(@($SkillId) + $AdditionalSkillIds | Select-Object -Unique)
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -23,7 +40,7 @@ if ($SkillSkinId -gt 0 -and ($SkillId -ne 10082 -or $AdditionalSkillIds.Count -g
 if ($PassiveSave) {
     $PassiveSave = (Get-Item -LiteralPath $PassiveSave).FullName
     if (-not $PassiveSave.StartsWith($workspacePath + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
-        $SkillId -ne 10047 -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated guardian passive cultivation save with surging tide.' }
+        $SkillId -notin @(10047,10088) -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated passive cultivation save with its corresponding active skill.' }
     $passiveResult = Get-Content -LiteralPath (Join-Path (Split-Path -Parent $PassiveSave) 'result.json') -Raw | ConvertFrom-Json
     if (-not $passiveResult.passed) { throw 'The original passive cultivation flow has not passed.' }
     $passiveProfile = Get-Content -LiteralPath $PassiveSave -Raw | ConvertFrom-Json
@@ -90,9 +107,7 @@ try {
         if (-not (Select-String -LiteralPath $log -SimpleMatch '[Acquired active skin] 39521 selected, equipped and persisted through original input.')) { throw 'The original skill skin did not persist.' }
     }
     if ($PassiveSave) {
-        if (-not (Select-String -LiteralPath $log -SimpleMatch "[Acquired passive combat] $passiveId cultivated") -or
-            -not (Test-Path -LiteralPath (Join-Path $run 'companion-cold-checkpoint.json'))) { throw 'The cultivated secret did not exercise its original cold path.' }
-        if ($passiveId -eq 10607 -and -not (Test-Path -LiteralPath (Join-Path $run 'acquired-active-ui-passive-battle.png'))) { throw 'The original frigid-aura effect was not captured.' }
+        Assert-AcquiredPassiveFlowEvidence $run $passiveId
     }
     $identity = Get-Content -LiteralPath (Join-Path $repository 'unity/Assets/Game/Runtime/Offline/SkillAssets/OfficialSkillUiData.Identity.cs') -Raw
     if ($identity -notmatch 'LayoutSha256 = "([0-9a-f]{64})"') { throw 'The compiled skill UI identity is absent.' }

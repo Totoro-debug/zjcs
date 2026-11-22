@@ -20,13 +20,15 @@ namespace Zjcs.Presentation.Home
             var source = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(path));
             var plan = source.Player.Skills.Plans[source.Player.Skills.SelectedPlan];
             int itemId = plan.PassiveSkills[0];
-            Require(active == 10047 && player.Wardrobe.Profession == 4 && source.Player.Wardrobe.Profession == 4
+            bool supported = active == 10047 && player.Wardrobe.Profession == 4 && (itemId == 10606 || itemId == 10607)
+                || active == 10088 && player.Wardrobe.Profession == 8 && itemId == 10608;
+            Require(supported && source.Player.Wardrobe.Profession == player.Wardrobe.Profession
                 && source.Player.Level == player.Level && source.Player.SubRank == player.SubRank
-                && plan.ActiveSkills.All(id => id == 0) && (itemId == 10606 || itemId == 10607)
+                && plan.ActiveSkills.All(id => id == 0)
                 && plan.PassiveSkills.Count(id => id > 0) == 1
                 && OfflineSkillProgression.OwnedRank(source.Player.Skills, itemId) > 1
                 && source.Player.Skills.PassiveSlotLevels[0] == 2,
-                "The companion must be an actual isolated cold-glint or frigid-aura acquisition/cultivation save.");
+                "The companion must be an actual isolated acquisition/cultivation save for the selected profession.");
             player.Skills = source.Player.Skills;
             File.WriteAllText(Path.Combine(output, "companion-cultivated-save.json"), JsonUtility.ToJson(source, true));
             return itemId;
@@ -48,12 +50,27 @@ namespace Zjcs.Presentation.Home
             foreach (var pair in bonus)
                 Require(actor.Properties.Single(value => value.Id == pair.Key).Value
                     == (baseline.TryGetValue(pair.Key, out long value) ? value : 0) + pair.Value,
-                    "The real battle omitted or duplicated cold-glint water affinity.");
+                    "The real battle omitted or duplicated the cultivated passive properties.");
         }
 
         private static void VerifyAcquiredPassiveStep(FightBattleStepEvent step, FightBattleCheckpoint checkpoint,
-            string output, int itemId, ref int coldHits, ref int auraHits)
+            string output, int itemId, ref int coldHits, ref int auraHits, ref int standfastTurns)
         {
+            if (itemId == 10608)
+            {
+                var starts = step.StatusViewEvents.Where(view => view.Status.ClassId == 24392
+                    && view.Kind == FightBattleStatusViewEventKind.Start).ToArray();
+                foreach (var start in starts)
+                    Require(step.ActorId == 1 && start.OwnerId == 1 && start.Status.CreatorId == 1
+                        && step.StatusViewEvents.Any(end => end.Kind == FightBattleStatusViewEventKind.End
+                            && end.OwnerId == 1 && end.Status.InstanceId == start.Status.InstanceId
+                            && end.Delay >= start.Delay),
+                        "The real standfast soul escaped its owner's turn boundaries.");
+                Require(!checkpoint.Units.Single(unit => unit.Id == 1).Statuses.Any(status => status.ClassId == 24392),
+                    "The real standfast soul remained after its owner's turn ended.");
+                standfastTurns += starts.Length;
+                return;
+            }
             if (itemId == 10607)
             {
                 var hits = step.DamageEvents.Where(hit => hit.SkillEntityId == 12170).ToArray();
