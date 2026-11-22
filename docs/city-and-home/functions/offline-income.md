@@ -6,7 +6,7 @@
 
 ## 功能简介
 
-维护设施收益的本地时间累计、容量、预览、领取、加成和时间结晶加速。设施页面见[床与小推车](../buildings/bed-and-cart.md)，果树独立结算见[果树](../buildings/fruit-tree.md)。
+维护设施收益的本地时间累计、容量、预览、领取、加成和时间结晶加速。设施页面见[床](../buildings/bed.md)和[小推车](../buildings/cart.md)，果树独立结算见[果树](../buildings/fruit-tree.md)。
 
 ## 当前完成详情
 

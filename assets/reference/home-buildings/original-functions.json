@@ -1,0 +1,883 @@
+{
+  "buildings": [
+    {
+      "enum": "Bed",
+      "name": "床",
+      "description": "普通而温馨的床，一觉醒来可以收获许多资源。",
+      "description_key": "item_4000_desc",
+      "furniture": {
+        "ClassId": 4000,
+        "FurnitureType": 0,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Level": 3,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "RepairNoticeCondition": {
+          "Jumpable": null,
+          "Level": 1,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "AutoRepairCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "RepairCost": {},
+        "AdditionalRepairList": [],
+        "RepairStoryName": "",
+        "CanLevelUp": false
+      },
+      "hang_ups": [
+        {
+          "Id": 1,
+          "BindFurniture": 0,
+          "SortOrder": -1,
+          "LevelRuleId": 2,
+          "UnlockCondition": {
+            "Jumpable": null,
+            "_type": "NoneCondition"
+          },
+          "NoticeCondition": {
+            "Jumpable": null,
+            "_type": "NoneCondition"
+          },
+          "CanLevelUp": false,
+          "UseBlessingLevel": true,
+          "NeedRecordData": true,
+          "RewardType": 0,
+          "RewardId": 1,
+          "FastHangUpId": 1,
+          "EffectPercentPropType": 1001,
+          "EffectFixedPropType": 1000,
+          "MaxStorePropType": 1018,
+          "FinallyEffectPercentPropType": 6004,
+          "InitAutoUnlock": true,
+          "InitialExtraRewardSeconds": 0,
+          "Icon": "ItemIcon/Money/Money_50_Exp"
+        },
+        {
+          "Id": 101,
+          "BindFurniture": 0,
+          "SortOrder": -1,
+          "LevelRuleId": -1,
+          "UnlockCondition": null,
+          "NoticeCondition": null,
+          "CanLevelUp": false,
+          "UseBlessingLevel": false,
+          "NeedRecordData": false,
+          "RewardType": 2,
+          "RewardId": 101,
+          "FastHangUpId": -1,
+          "EffectPercentPropType": 1016,
+          "EffectFixedPropType": 1014,
+          "MaxStorePropType": 0,
+          "FinallyEffectPercentPropType": 0,
+          "InitAutoUnlock": false,
+          "InitialExtraRewardSeconds": 0,
+          "Icon": ""
+        },
+        {
+          "Id": 102,
+          "BindFurniture": 0,
+          "SortOrder": -1,
+          "LevelRuleId": -1,
+          "UnlockCondition": null,
+          "NoticeCondition": null,
+          "CanLevelUp": false,
+          "UseBlessingLevel": false,
+          "NeedRecordData": false,
+          "RewardType": 3,
+          "RewardId": -1,
+          "FastHangUpId": -1,
+          "EffectPercentPropType": 0,
+          "EffectFixedPropType": 0,
+          "MaxStorePropType": 0,
+          "FinallyEffectPercentPropType": 0,
+          "InitAutoUnlock": false,
+          "InitialExtraRewardSeconds": 0,
+          "Icon": ""
+        }
+      ]
+    },
+    {
+      "enum": "Desk",
+      "name": "工作台",
+      "description": "旁边放置保险柜的工作台，可以在此研究古遗物的奥秘。",
+      "description_key": "item_4001_desc",
+      "furniture": {
+        "ClassId": 4001,
+        "FurnitureType": 1,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Ids": [
+            7000,
+            3030
+          ],
+          "_type": "CompositeOrCondition"
+        },
+        "RepairNoticeCondition": {
+          "Jumpable": null,
+          "Ids": [
+            3018,
+            111
+          ],
+          "_type": "CompositeAndCondition"
+        },
+        "AutoRepairCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "RepairCost": {},
+        "AdditionalRepairList": [],
+        "RepairStoryName": "",
+        "CanLevelUp": false
+      },
+      "hang_ups": []
+    },
+    {
+      "enum": "DiningTable",
+      "name": "餐桌电话",
+      "description": "餐桌上放着一个电话，似乎可以与伙伴进行通讯。",
+      "description_key": "item_4009_desc",
+      "furniture": {
+        "ClassId": 4009,
+        "FurnitureType": 2,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Ids": [
+            14,
+            3038
+          ],
+          "_type": "CompositeOrCondition"
+        },
+        "RepairNoticeCondition": {
+          "Jumpable": null,
+          "Ids": [
+            14,
+            3031
+          ],
+          "_type": "CompositeOrCondition"
+        },
+        "AutoRepairCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "RepairCost": {},
+        "AdditionalRepairList": [],
+        "RepairStoryName": "UnlockCommunication",
+        "CanLevelUp": false
+      },
+      "hang_ups": []
+    },
+    {
+      "enum": "Danlu",
+      "name": "炼金炉",
+      "description": "既能分解熔化装备，也能……烹饪食材的万能好锅。",
+      "description_key": "item_4015_desc",
+      "furniture": {
+        "ClassId": 4015,
+        "FurnitureType": 3,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Level": 7,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "RepairNoticeCondition": {
+          "Jumpable": null,
+          "Level": 4,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "AutoRepairCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "RepairCost": {},
+        "AdditionalRepairList": [],
+        "RepairStoryName": "",
+        "CanLevelUp": false
+      },
+      "hang_ups": []
+    },
+    {
+      "enum": "FruitTree",
+      "name": "命运之树",
+      "description": "结满命运果实的神树，使用命运果实可以在地图中探寻命运。",
+      "description_key": "item_4016_desc",
+      "furniture": {
+        "ClassId": 4016,
+        "FurnitureType": 4,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Ids": [
+            40,
+            3031
+          ],
+          "_type": "CompositeAndCondition"
+        },
+        "RepairNoticeCondition": {
+          "Jumpable": null,
+          "Ids": [
+            3030,
+            40
+          ],
+          "_type": "CompositeAndCondition"
+        },
+        "AutoRepairCondition": {
+          "Jumpable": null,
+          "Ids": [
+            40,
+            3038
+          ],
+          "_type": "CompositeAndCondition"
+        },
+        "RepairCost": {},
+        "AdditionalRepairList": [],
+        "RepairStoryName": "FruitTreeUnlock1",
+        "CanLevelUp": false
+      },
+      "hang_ups": [
+        {
+          "Id": 100,
+          "BindFurniture": 4,
+          "SortOrder": -1,
+          "LevelRuleId": -1,
+          "UnlockCondition": null,
+          "NoticeCondition": null,
+          "CanLevelUp": false,
+          "UseBlessingLevel": false,
+          "NeedRecordData": false,
+          "RewardType": 2,
+          "RewardId": 100,
+          "FastHangUpId": -1,
+          "EffectPercentPropType": 1030,
+          "EffectFixedPropType": 1029,
+          "MaxStorePropType": 0,
+          "FinallyEffectPercentPropType": 0,
+          "InitAutoUnlock": false,
+          "InitialExtraRewardSeconds": 144000,
+          "Icon": ""
+        }
+      ]
+    },
+    {
+      "enum": "StatueOfGod",
+      "name": "女神像",
+      "description": null,
+      "description_key": "item_4004_desc",
+      "furniture": {
+        "ClassId": 4004,
+        "FurnitureType": 5,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Rank": 1,
+          "Op": ">=",
+          "_type": "MaxProfessionRankCondition"
+        },
+        "RepairNoticeCondition": {
+          "Jumpable": null,
+          "Level": 7,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "AutoRepairCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "RepairCost": {},
+        "AdditionalRepairList": [],
+        "RepairStoryName": "",
+        "CanLevelUp": false
+      },
+      "hang_ups": []
+    },
+    {
+      "enum": "StorageBox",
+      "name": "储物箱",
+      "description": "一个形似宝箱的箱子，是冒险者的储物箱。",
+      "description_key": "item_4018_desc",
+      "furniture": {
+        "ClassId": 4018,
+        "FurnitureType": 7,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "RepairNoticeCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "AutoRepairCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "RepairCost": {},
+        "AdditionalRepairList": [],
+        "RepairStoryName": "",
+        "CanLevelUp": false
+      },
+      "hang_ups": []
+    },
+    {
+      "enum": "VendingMachine",
+      "name": "售货车",
+      "description": "森森的售货车常驻家园啦！出售各种各样的好东西。",
+      "description_key": "item_4013_desc",
+      "furniture": {
+        "ClassId": 4013,
+        "FurnitureType": 8,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Ids": [
+            3018,
+            4003
+          ],
+          "_type": "CompositeAndCondition"
+        },
+        "RepairNoticeCondition": {
+          "Jumpable": null,
+          "Ids": [
+            3011,
+            4003
+          ],
+          "_type": "CompositeAndCondition"
+        },
+        "AutoRepairCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "RepairCost": {},
+        "AdditionalRepairList": [],
+        "RepairStoryName": "SenSenHomeStore",
+        "CanLevelUp": false
+      },
+      "hang_ups": []
+    },
+    {
+      "enum": "GachaChest",
+      "name": "时光扭蛋机",
+      "description": null,
+      "description_key": "item_4007_desc",
+      "furniture": {
+        "ClassId": 4007,
+        "FurnitureType": 9,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Ids": [
+            3030,
+            111
+          ],
+          "_type": "CompositeAndCondition"
+        },
+        "RepairNoticeCondition": {
+          "Jumpable": null,
+          "Ids": [
+            3018,
+            111
+          ],
+          "_type": "CompositeAndCondition"
+        },
+        "AutoRepairCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "RepairCost": {},
+        "AdditionalRepairList": [],
+        "RepairStoryName": "",
+        "CanLevelUp": false
+      },
+      "hang_ups": []
+    },
+    {
+      "enum": "Cart",
+      "name": "小推车",
+      "description": null,
+      "description_key": "item_4011_desc",
+      "furniture": {
+        "ClassId": 4011,
+        "FurnitureType": 10,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "RepairNoticeCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "AutoRepairCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "RepairCost": {},
+        "AdditionalRepairList": [],
+        "RepairStoryName": "",
+        "CanLevelUp": false
+      },
+      "hang_ups": [
+        {
+          "Id": 2,
+          "BindFurniture": 10,
+          "SortOrder": 6,
+          "LevelRuleId": 1,
+          "UnlockCondition": {
+            "Jumpable": null,
+            "Level": 15,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          },
+          "NoticeCondition": {
+            "Jumpable": null,
+            "Level": 3,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          },
+          "CanLevelUp": false,
+          "UseBlessingLevel": false,
+          "NeedRecordData": true,
+          "RewardType": 1,
+          "RewardId": 2,
+          "FastHangUpId": -1,
+          "EffectPercentPropType": 1013,
+          "EffectFixedPropType": 1012,
+          "MaxStorePropType": 1023,
+          "FinallyEffectPercentPropType": 0,
+          "InitAutoUnlock": false,
+          "InitialExtraRewardSeconds": 3600,
+          "Icon": "ItemIcon/Box/item_50400"
+        },
+        {
+          "Id": 3,
+          "BindFurniture": 10,
+          "SortOrder": 2,
+          "LevelRuleId": 1,
+          "UnlockCondition": {
+            "Jumpable": null,
+            "Level": 1,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          },
+          "NoticeCondition": {
+            "Jumpable": null,
+            "Level": 1,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          },
+          "CanLevelUp": true,
+          "UseBlessingLevel": false,
+          "NeedRecordData": true,
+          "RewardType": 0,
+          "RewardId": 3,
+          "FastHangUpId": -1,
+          "EffectPercentPropType": 1009,
+          "EffectFixedPropType": 1008,
+          "MaxStorePropType": 1021,
+          "FinallyEffectPercentPropType": 0,
+          "InitAutoUnlock": false,
+          "InitialExtraRewardSeconds": 3600,
+          "Icon": "ItemIcon/Materials/item_42001"
+        },
+        {
+          "Id": 4,
+          "BindFurniture": 10,
+          "SortOrder": 3,
+          "LevelRuleId": 1,
+          "UnlockCondition": {
+            "Jumpable": null,
+            "Level": 1,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          },
+          "NoticeCondition": {
+            "Jumpable": null,
+            "Level": 1,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          },
+          "CanLevelUp": true,
+          "UseBlessingLevel": false,
+          "NeedRecordData": true,
+          "RewardType": 0,
+          "RewardId": 4,
+          "FastHangUpId": -1,
+          "EffectPercentPropType": 1011,
+          "EffectFixedPropType": 1010,
+          "MaxStorePropType": 1022,
+          "FinallyEffectPercentPropType": 0,
+          "InitAutoUnlock": false,
+          "InitialExtraRewardSeconds": 3600,
+          "Icon": "ItemIcon/Materials/item_42000"
+        },
+        {
+          "Id": 5,
+          "BindFurniture": 10,
+          "SortOrder": 1,
+          "LevelRuleId": 1,
+          "UnlockCondition": {
+            "Jumpable": null,
+            "Level": 1,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          },
+          "NoticeCondition": {
+            "Jumpable": null,
+            "Level": 1,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          },
+          "CanLevelUp": true,
+          "UseBlessingLevel": false,
+          "NeedRecordData": true,
+          "RewardType": 0,
+          "RewardId": 5,
+          "FastHangUpId": -1,
+          "EffectPercentPropType": 1005,
+          "EffectFixedPropType": 1004,
+          "MaxStorePropType": 1019,
+          "FinallyEffectPercentPropType": 0,
+          "InitAutoUnlock": false,
+          "InitialExtraRewardSeconds": 3600,
+          "Icon": "ItemIcon/Money/Money_1"
+        },
+        {
+          "Id": 6,
+          "BindFurniture": 10,
+          "SortOrder": 4,
+          "LevelRuleId": 1,
+          "UnlockCondition": {
+            "Jumpable": null,
+            "Level": 3,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          },
+          "NoticeCondition": {
+            "Jumpable": null,
+            "Level": 1,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          },
+          "CanLevelUp": true,
+          "UseBlessingLevel": false,
+          "NeedRecordData": true,
+          "RewardType": 0,
+          "RewardId": 6,
+          "FastHangUpId": -1,
+          "EffectPercentPropType": 1032,
+          "EffectFixedPropType": 1031,
+          "MaxStorePropType": 1033,
+          "FinallyEffectPercentPropType": 0,
+          "InitAutoUnlock": false,
+          "InitialExtraRewardSeconds": 3600,
+          "Icon": "ItemIcon/Materials/item_41300"
+        },
+        {
+          "Id": 7,
+          "BindFurniture": 10,
+          "SortOrder": 7,
+          "LevelRuleId": 1,
+          "UnlockCondition": {
+            "Jumpable": null,
+            "Level": 24,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          },
+          "NoticeCondition": {
+            "Jumpable": null,
+            "Level": 15,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          },
+          "CanLevelUp": true,
+          "UseBlessingLevel": false,
+          "NeedRecordData": true,
+          "RewardType": 0,
+          "RewardId": 7,
+          "FastHangUpId": -1,
+          "EffectPercentPropType": 1007,
+          "EffectFixedPropType": 1006,
+          "MaxStorePropType": 1020,
+          "FinallyEffectPercentPropType": 0,
+          "InitAutoUnlock": false,
+          "InitialExtraRewardSeconds": 3600,
+          "Icon": "ItemIcon/Materials/item_41400"
+        },
+        {
+          "Id": 8,
+          "BindFurniture": 10,
+          "SortOrder": 5,
+          "LevelRuleId": 1,
+          "UnlockCondition": {
+            "Jumpable": null,
+            "Level": 3,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          },
+          "NoticeCondition": {
+            "Jumpable": null,
+            "Level": 1,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          },
+          "CanLevelUp": true,
+          "UseBlessingLevel": false,
+          "NeedRecordData": true,
+          "RewardType": 0,
+          "RewardId": 8,
+          "FastHangUpId": -1,
+          "EffectPercentPropType": 1017,
+          "EffectFixedPropType": 1015,
+          "MaxStorePropType": 1025,
+          "FinallyEffectPercentPropType": 0,
+          "InitAutoUnlock": false,
+          "InitialExtraRewardSeconds": 3600,
+          "Icon": "ItemIcon/Materials/item_42200"
+        },
+        {
+          "Id": 9,
+          "BindFurniture": 10,
+          "SortOrder": 8,
+          "LevelRuleId": 1,
+          "UnlockCondition": {
+            "Jumpable": null,
+            "Level": 45,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          },
+          "NoticeCondition": {
+            "Jumpable": null,
+            "Level": 24,
+            "Op": ">=",
+            "_type": "LevelCondition"
+          },
+          "CanLevelUp": true,
+          "UseBlessingLevel": false,
+          "NeedRecordData": true,
+          "RewardType": 0,
+          "RewardId": 9,
+          "FastHangUpId": -1,
+          "EffectPercentPropType": 1026,
+          "EffectFixedPropType": 1027,
+          "MaxStorePropType": 1028,
+          "FinallyEffectPercentPropType": 0,
+          "InitAutoUnlock": false,
+          "InitialExtraRewardSeconds": 3600,
+          "Icon": "ItemIcon/Pet/item_1500"
+        }
+      ]
+    },
+    {
+      "enum": "FruitTree2",
+      "name": "命运之树·结缘",
+      "description": "挂满结缘绳的命运之树，联结与幻兽之间的羁绊之缘。",
+      "description_key": "item_4017_desc",
+      "furniture": {
+        "ClassId": 4017,
+        "FurnitureType": 11,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Level": 50,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "RepairNoticeCondition": {
+          "Jumpable": null,
+          "Level": 40,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "AutoRepairCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "RepairCost": {},
+        "AdditionalRepairList": [
+          4016
+        ],
+        "RepairStoryName": "FruitTreeUnlock2",
+        "CanLevelUp": false
+      },
+      "hang_ups": []
+    },
+    {
+      "enum": "AstrologicalDestiny",
+      "name": "命运星象",
+      "description": "一个形似宝箱的箱子，是冒险者的储物箱。",
+      "description_key": "item_4019_desc",
+      "furniture": {
+        "ClassId": 4019,
+        "FurnitureType": 12,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Rank": 4,
+          "Op": ">=",
+          "_type": "RankCondition"
+        },
+        "RepairNoticeCondition": {
+          "Jumpable": null,
+          "Level": 60,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "AutoRepairCondition": {
+          "Jumpable": null,
+          "_type": "NoneCondition"
+        },
+        "RepairCost": {},
+        "AdditionalRepairList": [],
+        "RepairStoryName": "",
+        "CanLevelUp": false
+      },
+      "hang_ups": []
+    },
+    {
+      "enum": "Airship",
+      "name": "飞艇",
+      "description": "一个形似宝箱的箱子，是冒险者的储物箱。",
+      "description_key": "item_4020_desc",
+      "furniture": {
+        "ClassId": 4020,
+        "FurnitureType": 13,
+        "UnlockCondition": {
+          "Jumpable": null,
+          "Level": 40,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "RepairNoticeCondition": {
+          "Jumpable": null,
+          "Ids": [
+            3035,
+            4178
+          ],
+          "_type": "CompositeAndCondition"
+        },
+        "AutoRepairCondition": {
+          "Jumpable": null,
+          "Level": 40,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        },
+        "RepairCost": {},
+        "AdditionalRepairList": [],
+        "RepairStoryName": "",
+        "CanLevelUp": false
+      },
+      "hang_ups": []
+    }
+  ],
+  "enum_without_furniture": [
+    {
+      "type": 6,
+      "enum": "PostBox"
+    }
+  ],
+  "conditions": [
+    {
+      "ClassId": 14,
+      "Condition": {
+        "Jumpable": null,
+        "_type": "HasManualMeetNpcCondition"
+      }
+    },
+    {
+      "ClassId": 40,
+      "Condition": {
+        "Jumpable": null,
+        "_type": "AnyMapGoddessActivedCondition"
+      }
+    },
+    {
+      "ClassId": 111,
+      "Condition": {
+        "Jumpable": null,
+        "MapClassId": 11,
+        "_type": "MapUnlockCondition"
+      }
+    },
+    {
+      "ClassId": 3011,
+      "Condition": {
+        "Jumpable": null,
+        "Level": 11,
+        "Op": ">=",
+        "_type": "LevelCondition"
+      }
+    },
+    {
+      "ClassId": 3018,
+      "Condition": {
+        "Jumpable": null,
+        "Level": 18,
+        "Op": ">=",
+        "_type": "LevelCondition"
+      }
+    },
+    {
+      "ClassId": 3030,
+      "Condition": {
+        "Jumpable": null,
+        "Level": 30,
+        "Op": ">=",
+        "_type": "LevelCondition"
+      }
+    },
+    {
+      "ClassId": 3031,
+      "Condition": {
+        "Jumpable": null,
+        "Level": 31,
+        "Op": ">=",
+        "_type": "LevelCondition"
+      }
+    },
+    {
+      "ClassId": 3035,
+      "Condition": {
+        "Jumpable": null,
+        "Level": 35,
+        "Op": ">=",
+        "_type": "LevelCondition"
+      }
+    },
+    {
+      "ClassId": 3038,
+      "Condition": {
+        "Jumpable": null,
+        "Level": 38,
+        "Op": ">=",
+        "_type": "LevelCondition"
+      }
+    },
+    {
+      "ClassId": 4003,
+      "Condition": {
+        "Jumpable": null,
+        "StoryKey": "SenSenThanks",
+        "Count": 1,
+        "Op": ">=",
+        "_type": "StoryCountCondition"
+      }
+    },
+    {
+      "ClassId": 4178,
+      "Condition": {
+        "Jumpable": null,
+        "StoryKey": "NationShop_1",
+        "Count": 1,
+        "Op": ">=",
+        "_type": "StoryCountCondition"
+      }
+    },
+    {
+      "ClassId": 7000,
+      "Condition": {
+        "Jumpable": null,
+        "ItemType": 305,
+        "Count": 1,
+        "_type": "HasItemTypeCondition"
+      }
+    }
+  ]
+}

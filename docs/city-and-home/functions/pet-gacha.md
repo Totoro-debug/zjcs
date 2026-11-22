@@ -6,7 +6,7 @@
 
 ## 功能简介
 
-维护结缘果树进入的幻兽结缘、兑换及抽取演出；设施本体见[果树](../buildings/fruit-tree.md)，养成见[幻兽](../../character/pets.md)。
+维护结缘果树进入的幻兽结缘、兑换及抽取演出；设施本体见[命运之树·结缘](../buildings/pet-tree.md)，养成见[幻兽](../../character/pets.md)。
 
 ## 当前完成详情
 
