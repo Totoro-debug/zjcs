@@ -695,9 +695,7 @@ namespace Zjcs.Presentation.Home
                 if (flameSoul && !capturedPassive
                     && File.Exists(Path.Combine(output, "companion-flame-soul-checkpoint.json"))
                     && checkpoint.Units.Single(unit => unit.Id == 1).Statuses.Any(status => status.ClassId == 24386)
-                    && FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
-                        && particle.GetComponentsInParent<Transform>().Any(parent =>
-                            parent.name.StartsWith("playable24386_", StringComparison.Ordinal))))
+                    && IsFlameSoulVisible())
                 {
                     yield return CaptureAcquiredActive(output, "passive-battle");
                     capturedPassive = true;

@@ -19,6 +19,22 @@ namespace Zjcs.Presentation.Home
             return save.Player.Skills.Plans[save.Player.Skills.SelectedPlan].PassiveSkills[0] == 10599;
         }
 
+        private static bool IsFlameSoulVisible()
+        {
+            var camera = Camera.main;
+            if (!camera) return false;
+            foreach (var particle in FindObjectsOfType<ParticleSystem>())
+            {
+                if (particle.particleCount == 0 || (camera.cullingMask & (1 << particle.gameObject.layer)) == 0
+                    || !particle.GetComponentsInParent<Transform>().Any(parent =>
+                        parent.name.StartsWith("playable24386_", StringComparison.Ordinal))) continue;
+                Vector3 point = camera.WorldToViewportPoint(particle.transform.position);
+                if (point.z > 0 && point.x > .08f && point.x < .92f && point.y > .15f && point.y < .85f)
+                    return true;
+            }
+            return false;
+        }
+
         private static void VerifyAcquiredFlameSoul(FightBattleStepEvent step,
             FightBattleCheckpoint checkpoint, string output)
         {

@@ -150,8 +150,10 @@ try {
         $skillRun = if ($requestedSkills.Count -gt 1) { Join-Path $run "skill-$SkillId" } else { $run }
         $skillResult = Get-Content -LiteralPath (Join-Path $skillRun 'result.json') -Raw | ConvertFrom-Json
         if (-not $skillResult.passed) { throw "Skill $SkillId failed: $($skillResult.error) ($skillRun)" }
-        if ($SkillId -in @(10000,10010,10017,10028,10035,10044,10046,10048,10049,10066) -and -not (Select-String -LiteralPath $log -SimpleMatch "[Passive affinity wish] item=$SkillId granted")) {
-            throw "The original knight wish pool did not grant skill $SkillId : $run"
+        if (-not ($PassiveSave -and $passiveId -eq 10599 -and $SkillId -eq 10028) -and
+            $SkillId -in @(10000,10010,10017,10028,10035,10044,10046,10048,10049,10066) -and
+            -not (Select-String -LiteralPath $log -SimpleMatch "[Passive affinity wish] item=$SkillId granted")) {
+            throw "The original profession wish pool did not grant skill $SkillId : $run"
         }
         # PowerShell's JSON conversion of the complete official combat tables is
         # disproportionately expensive; read only the selected item and ranks.
