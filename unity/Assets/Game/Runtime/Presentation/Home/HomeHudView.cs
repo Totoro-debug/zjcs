@@ -243,6 +243,7 @@ namespace Zjcs.Presentation.Home
             rect.sizeDelta = new Vector2(760, 90);
             Image background = noticeRoot.AddComponent<Image>();
             background.color = new Color(0, 0, 0, 0.72f);
+            background.raycastTarget = false;
             toast = CreateLabel(noticeRoot.transform, "ToastText", 26, new Vector2(16, -10),
                 TextAlignmentOptions.Center);
             RectTransform textRect = (RectTransform)toast.transform;
@@ -251,6 +252,7 @@ namespace Zjcs.Presentation.Home
             textRect.offsetMin = new Vector2(12, 8);
             textRect.offsetMax = new Vector2(-12, -8);
             toast.enableWordWrapping = true;
+            toast.raycastTarget = false;
             noticeRoot.SetActive(false);
         }
 
@@ -946,10 +948,17 @@ namespace Zjcs.Presentation.Home
         private void RefreshCart()
         {
             if (activeDialogRenderer == null || !cartOpen) return;
-            Transform content = Find(activeDialog != null ? activeDialog.transform : null, "Content");
+            Transform panel = activeDialog == null ? null : activeDialog.transform;
+            Transform scroll = Find(panel, "HangUpScrollRect");
+            Transform content = scroll == null ? null : Find(scroll, "Content");
+            if (content == null) content = Find(panel, "Content");
             if (content == null) return;
             for (int index = content.childCount - 1; index >= 0; index--)
-                UnityEngine.Object.Destroy(content.GetChild(index).gameObject);
+            {
+                Transform row = content.GetChild(index);
+                if (row.name == "CartHangUpItem")
+                    UnityEngine.Object.Destroy(row.gameObject);
+            }
             BuildCartRows(activeDialogRenderer, activeDialog);
         }
 
