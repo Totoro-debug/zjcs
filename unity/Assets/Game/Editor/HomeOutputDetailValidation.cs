@@ -10,6 +10,7 @@ namespace Zjcs.Editor
     {
         public static void Play()
         {
+            ValidationGameView.Portrait();
             Validate();
             UnityEditor.SceneManagement.EditorSceneManager.NewScene(
                 UnityEditor.SceneManagement.NewSceneSetup.EmptyScene, UnityEditor.SceneManagement.NewSceneMode.Single);
@@ -18,6 +19,7 @@ namespace Zjcs.Editor
 
         public static void Validate()
         {
+            if (Application.isBatchMode) HomeNativeTimeValidation.Run();
             var assets = OfficialHomeOutputDetailAssets.LoadDefault();
             var popup = assets.popup.GetComponent<PopTipOutputAddition>();
             if (!popup) throw new InvalidOperationException("Original output-detail controller did not import.");
