@@ -68,6 +68,7 @@ namespace Zjcs.Offline.Home
         public int HangUpId;
         public double StoredSeconds;
         public long SettledCount;
+        public HomeIncomeActivityState Activity;
     }
 
     [Serializable]
@@ -249,6 +250,7 @@ namespace Zjcs.Offline.Home
             // before advancing the checkpoint, otherwise the offline interval is lost.
             configureBeforeAdvance?.Invoke(session);
             session.AdvanceTo(nowUnixSeconds);
+            session.incomeOpened = true;
             return session;
         }
 
@@ -329,13 +331,19 @@ namespace Zjcs.Offline.Home
         {
             OfflineHomeIncomeDefinition definition = FindDefinition(hangUpId);
             OfflineHomeIncomeEntry entry = FindEntry(Save, hangUpId);
-            return OfflineHangUpIncome.Preview(ToRecord(entry), definition.Rule, properties, floatPropertyIds);
+            return IncomePreview(Save, entry, definition, CheckpointTicks(Save));
         }
 
         public bool AdvanceTo(long nowUnixSeconds)
+            => AdvanceTo(nowUnixSeconds, 0);
+
+        public bool AdvanceTo(DateTimeOffset now)
+            => AdvanceTo(now.ToUnixTimeSeconds(), Subsecond(now));
+
+        bool AdvanceTo(long nowUnixSeconds, double subsecond)
         {
             OfflineHomeSave next = Clone(Save);
-            AdvanceIncome(next, nowUnixSeconds, 0);
+            AdvanceIncome(next, nowUnixSeconds, subsecond);
             if (JsonUtility.ToJson(next) == JsonUtility.ToJson(Save)) return false;
             return Commit(next);
         }
@@ -350,6 +358,7 @@ namespace Zjcs.Offline.Home
         void AdvanceIncome(OfflineHomeSave next, long nowUnixSeconds, double subsecond)
         {
             long previousCheckpoint = next.LastLocalUnixSeconds;
+            long fromTicks = CheckpointTicks(next);
             double elapsed = OfflineHangUpIncome.AdvanceCheckpoint(ref next.LastLocalUnixSeconds, nowUnixSeconds);
             if (next.LastLocalUnixSeconds > previousCheckpoint)
             {
@@ -361,15 +370,14 @@ namespace Zjcs.Offline.Home
                 elapsed = subsecond - next.LastIncomeSubsecond;
                 next.LastIncomeSubsecond = subsecond;
             }
+            var additions = incomeAdditionFactory?.Invoke(next);
             if (elapsed > 0)
             {
                 foreach (OfflineHomeIncomeDefinition definition in definitions)
                 {
                     if (!definition.Unlocked) continue;
                     OfflineHomeIncomeEntry entry = FindOrCreate(next, definition.HangUpId);
-                    double capacitySeconds = Math.Max(0, definition.Rule.MaxStoreHours) * 3600.0;
-                    entry.StoredSeconds = Math.Min(capacitySeconds,
-                        Math.Max(0, entry.StoredSeconds) + elapsed);
+                    AdvanceIncomeEntry(entry, definition, additions, fromTicks, CheckpointTicks(next), elapsed);
                 }
             }
             AdvanceRandomRewards(next, next.LastLocalUnixSeconds);
@@ -591,11 +599,21 @@ namespace Zjcs.Offline.Home
         public void Reconfigure(IEnumerable<OfflineHomeIncomeDefinition> catalog,
             IReadOnlyDictionary<int, long> playerProperties, ISet<int> floatPropertyIds,
             IEnumerable<OfflineHomeRandomRewardDefinition> randomRewards)
+            => Reconfigure(catalog, playerProperties, floatPropertyIds, randomRewards, null);
+
+        public void Reconfigure(IEnumerable<OfflineHomeIncomeDefinition> catalog,
+            IReadOnlyDictionary<int, long> playerProperties, ISet<int> floatPropertyIds,
+            IEnumerable<OfflineHomeRandomRewardDefinition> randomRewards, DateTimeOffset? effectiveAt)
         {
             OfflineHomeIncomeDefinition[] definitionsNext = (catalog ?? throw new ArgumentNullException(nameof(catalog))).ToArray();
             ValidateCatalog(definitionsNext);
             OfflineHomeRandomRewardDefinition[] rewardsNext = (randomRewards ?? throw new ArgumentNullException(nameof(randomRewards))).ToArray();
             ValidateRewardCatalog(rewardsNext);
+            if (incomeOpened)
+            {
+                if (effectiveAt.HasValue) AdvanceTo(effectiveAt.Value);
+                RebaseChangedActivityRules(definitionsNext, playerProperties, floatPropertyIds);
+            }
             definitions = definitionsNext;
             randomRewardDefinitions = rewardsNext;
             properties = playerProperties ?? new Dictionary<int, long>();
@@ -617,7 +635,8 @@ namespace Zjcs.Offline.Home
                 AdvanceIncome(next, collectedAt.Value.ToUnixTimeSeconds(), Subsecond(collectedAt.Value));
             OfflineHomeIncomeEntry entry = FindOrCreate(next, hangUpId);
             HangUpIncomeRecord record = ToRecord(entry);
-            long count = OfflineHangUpIncome.Collect(record, definition.Rule, properties, floatPropertyIds);
+            long count = OfflineHomeIncomeActivityLedger.Collect(record, entry.Activity, hangUpId, definition.Rule,
+                properties, floatPropertyIds, incomeAdditionFactory?.Invoke(next), CheckpointTicks(next));
             if (count <= 0) return null;
             entry.StoredSeconds = record.StoredSeconds;
             entry.SettledCount = record.SettledCount;
@@ -761,7 +780,7 @@ namespace Zjcs.Offline.Home
             return rewards;
         }
 
-        static bool StoreFastForwardOutput(OfflineHomeSave next, OfflineHomeIncomeDefinition definition,
+        bool StoreFastForwardOutput(OfflineHomeSave next, OfflineHomeIncomeDefinition definition,
             long count, IReadOnlyDictionary<int, long> outputProperties, ISet<int> floatFlags)
         {
             var entry = FindOrCreate(next, definition.HangUpId);
@@ -769,7 +788,8 @@ namespace Zjcs.Offline.Home
             // Settle the existing ordinary interval before adding the separately
             // calculated acceleration output. The original settled-count preview
             // preserves values above capacity; no inventory receipt is created.
-            long existing = OfflineHangUpIncome.Collect(record, definition.Rule, outputProperties, floatFlags);
+            long existing = OfflineHomeIncomeActivityLedger.Collect(record, entry.Activity, definition.HangUpId,
+                definition.Rule, outputProperties, floatFlags, incomeAdditionFactory?.Invoke(next), CheckpointTicks(next));
             if (existing > long.MaxValue - count) return false;
             entry.StoredSeconds = record.StoredSeconds;
             entry.SettledCount = existing + count;
@@ -1057,7 +1077,8 @@ namespace Zjcs.Offline.Home
             var hangUpIds = new HashSet<int>();
             foreach (OfflineHomeIncomeEntry entry in save.Income)
                 if (entry == null || entry.HangUpId <= 0 || !hangUpIds.Add(entry.HangUpId)
-                    || !IsFinite(entry.StoredSeconds) || entry.StoredSeconds < 0 || entry.SettledCount < 0) return false;
+                    || !IsFinite(entry.StoredSeconds) || entry.StoredSeconds < 0 || entry.SettledCount < 0
+                    || entry.Activity != null && !entry.Activity.IsValid) return false;
             var itemIds = new HashSet<int>();
             var serials = new HashSet<long>();
             foreach (OfflineHomeItemStack entry in save.Inventory)

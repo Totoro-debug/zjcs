@@ -247,11 +247,12 @@
     "New-game activity records are empty by the user-selected offline policy; these methods do not schedule or invent activities.",
     "The user-confirmed offline settlement policy selects parent and individual property records only during their active intervals, including the start and excluding the end. A copied snapshot then calls the unchanged original selectors and extra-count/capacity formulas. Original display/query methods retain their differing time handling; this adapter does not schedule activities or grant rewards.",
     "Local activity production is the difference of the ordinary preview value at each active boundary, using the original level/elapsed argument order before its integer cast. The original float percentage conversion is retained; fractional additions are exposed for the durable ledger rather than truncated at each checkpoint. This projection does not grant rewards or enforce capacity.",
-    "The local activity ledger keeps separate ordinary and extra integer counts, retaining earned fractions. It reuses the fruit-tree policy of stopping production while full and preserving mature overflow and earned fractions after capacity expiry. A fixed production-time and constant-rate anchor makes results independent of online checkpoint frequency. Inventory grants and durable transactions remain owned by the home session."
+    "The local activity ledger keeps separate ordinary and extra integer counts, retaining earned fractions. It reuses the fruit-tree policy of stopping production while full and preserving mature overflow and earned fractions after capacity expiry. A fixed production-time and constant-rate anchor makes results independent of online checkpoint frequency. Inventory grants and durable transactions remain owned by the home session.",
+    "The home session saves optional activity state in its existing atomic ledger. Live previews project an isolated entry without writes; claims advance the old activity snapshot inside the grant transaction. An activity replacement first settles its previous saved interval, and actual rule/property changes rebase future activity production while keeping already earned counts and fractions. Empty inline objects produced by Unity JSON remain disabled and do not create activity records."
   ],
   "runtime_bindings": {
-    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "11dd84aae76ed2e3df562c1a037ed3f6bbd24f7b68923100bd7948fbff2c1775",
-    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeOutputAddition.cs": "94fe5e6065783d6ab8b31250d15b5f52922eb4b24b0dd9bb22f50130df382f22",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "2cab3c07b85c51d428be609a47dde8fc0de5c9ec3ccb0afb0540549ce35d7db9",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeOutputAddition.cs": "ac1159a0ffe63c1f6517ed937329b9e4a255fc138477de6e1cb3a0a817c7ae56",
     "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeOutputAddition.cs.meta": "1f714559205537180805c4893ff92c4f1f519c6b55bfe152dc14f9de7b350e04",
     "unity/Assets/Game/Runtime/Offline/HomeUI/Zjcs.Offline.HomeUI.asmdef": "023b6b807a7659bbc180c78d026b24a7166b8174560d88ddbf33c2f2dd5bb6f0",
     "unity/Assets/Game/Runtime/Offline/Home/IHomeIncomeAdditionSnapshot.cs": "250c65c9642aa8b7332aebc2c3ff4865c388e6ffc93d1b6597b85dc5f510ec09",
@@ -262,7 +263,9 @@
     "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncomeAddition.cs": "6de592a4bcc18e77b93b7b571d73fc7e406299bdac09e1c63785980923901572",
     "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncomeAddition.cs.meta": "6d13227d0151b2af72f008c29a30f1688913e2cd4ca21ac0f565c31b429bbb52",
     "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeActivityLedger.cs": "2b5a310331fe9717888eac616463954fb2f43ae8bccb7a465d2f20b7467f0fe8",
-    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeActivityLedger.cs.meta": "fdb03026d65ec76fc3c1add9bd39334fc0bfebc03831baf81639c92282c32828"
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeActivityLedger.cs.meta": "fdb03026d65ec76fc3c1add9bd39334fc0bfebc03831baf81639c92282c32828",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.Activities.cs": "c1df497ed80c7b905da9f4d621d7fa72b021b005fefc6702d57252b61f05a9a2",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.Activities.cs.meta": "fe5146528b1b94df4d3f240a8223179e8c71de66f90018a8ff238ee0c46b4c49"
   },
   "validation_inputs": {
     "scripts/prepare_home_output_addition_validation.py": "8800464a349432659339632161d1ee41fcbb41f705e24274c0a1ad943d12ef96",
@@ -289,7 +292,7 @@
     }
   },
   "income_snapshot_inputs": {
-    "scripts/prepare_home_income_addition_snapshot.py": "e3719b360135c92b1a2d7e0701429a652187a11a62ea52c94e081e6e9e501172",
+    "scripts/prepare_home_income_addition_snapshot.py": "36e0b28b3901285e75746e80fb2c6fa4533ee3dcfcf4edda2ae2906a5dadfb8d",
     "scripts/prepare_home_output_addition_validation.py": "aa078ef34f0b0c8cd6cbfa199384fb2916e2923a250d75537b2bb94527001edb",
     "scripts/test_home_income_addition_snapshot.ps1": "37ff5e793a56df81e864725464921ea5bea4aee1bb93e338eb1912ddd114dece",
     "scripts/fixtures/home_income_addition_snapshot_harness.cs": "01fbac9c19150b05025c2aeb0442cb979879fa03eef8c5a5aaa809702a249d8d",
@@ -297,6 +300,8 @@
     "scripts/fixtures/home_income_addition_intervals_harness.cs": "f3dc3032faeb31855f125e2868729fbe7b6da8992dc8caf00fb36ff6cf786b53",
     "scripts/test_home_income_activity_ledger.ps1": "311a29053636d4a83a86efc6f83d136da8aa9e687e1e4c2f6df4adba7942ee79",
     "scripts/fixtures/home_income_activity_ledger_harness.cs": "64aa632af91bd721fb73fc3e6bfb02413fa870ad16385c58056a33ee73f9af81",
+    "unity/Assets/Game/Validation/HomeIncomeActivity/HomeIncomeActivitySessionValidation.cs": "b7158e00c9857fe922172a1fee0c4aaa289b9868a706e6b7f445f285b4a9d8db",
+    "unity/Assets/Game/Validation/HomeIncomeActivity/Zjcs.Validation.HomeIncomeActivity.asmdef": "f4a38b35a720536fb5ed2a50cc776d4c22989eed41f302e761cac394e70069c2",
     "assets/reference/home-income-formula-source-manifest.json": "35af2509fad9211d56dc3b79eb6ab04a105f51fc21b7422a4e2c7b22dddc0349"
   },
   "income_projection_original_ports": {

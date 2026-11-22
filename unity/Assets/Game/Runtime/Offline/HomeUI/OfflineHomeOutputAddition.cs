@@ -26,6 +26,8 @@ namespace Zjcs.Offline.HomeUI
         private readonly Configuration configuration;
         private readonly Func<DateTime> now;
         private readonly Func<int?, bool> disabled;
+        string cachedIncomeJson;
+        IHomeIncomeAdditionSnapshot cachedIncomeSnapshot;
         public event Action Changed;
 
         public OfflineHomeOutputAddition(OfflineHomeIncomeSession session, Func<DateTime> now,
@@ -60,8 +62,13 @@ namespace Zjcs.Offline.HomeUI
         public IHomeIncomeAdditionSnapshot CaptureIncomeSnapshot(OfflineHomeSave save)
         {
             if (save == null) throw new ArgumentNullException(nameof(save));
-            return new OfflineHomeIncomeAdditionSnapshot(ReadState(save.OutputAdditionStateJson).Records,
-                configuration.rows, configuration.settings, disabled);
+            if (cachedIncomeSnapshot == null || cachedIncomeJson != save.OutputAdditionStateJson)
+            {
+                cachedIncomeSnapshot = new OfflineHomeIncomeAdditionSnapshot(ReadState(save.OutputAdditionStateJson).Records,
+                    configuration.rows, configuration.settings, disabled);
+                cachedIncomeJson = save.OutputAdditionStateJson;
+            }
+            return cachedIncomeSnapshot;
         }
 
         private HomeOutputAdditionPlayer Player()
@@ -84,7 +91,8 @@ namespace Zjcs.Offline.HomeUI
             var index = state.Records.FindIndex(value => value.Id == record.Id);
             if (index < 0) state.Records.Add(record); else state.Records[index] = record;
             var json = JsonConvert.SerializeObject(state);
-            bool committed = session.Mutate(receipt, save => save.OutputAdditionStateJson = json);
+            bool committed = session.MutateAt(receipt, new DateTimeOffset(now().ToUniversalTime()),
+                save => save.OutputAdditionStateJson = json);
             if (committed) Changed?.Invoke();
             return committed;
         }

@@ -18,6 +18,9 @@ FILES = (
     'unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncomeAddition.cs.meta',
     'unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeActivityLedger.cs',
     'unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeActivityLedger.cs.meta',
+    'unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs',
+    'unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.Activities.cs',
+    'unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.Activities.cs.meta',
 )
 
 
@@ -81,6 +84,13 @@ def prepare():
         'independent of online checkpoint frequency. Inventory grants and durable transactions remain owned by the home session.')
     if ledger not in receipt['adaptations']:
         receipt['adaptations'].append(ledger)
+    transactions = ('The home session saves optional activity state in its existing atomic ledger. Live previews '
+        'project an isolated entry without writes; claims advance the old activity snapshot inside the grant '
+        'transaction. An activity replacement first settles its previous saved interval, and actual rule/property '
+        'changes rebase future activity production while keeping already earned counts and fractions. Empty inline '
+        'objects produced by Unity JSON remain disabled and do not create activity records.')
+    if transactions not in receipt['adaptations']:
+        receipt['adaptations'].append(transactions)
     receipt['income_snapshot_inputs'] = {name: digest((ROOT / name).read_bytes()) for name in (
         'scripts/prepare_home_income_addition_snapshot.py',
         'scripts/prepare_home_output_addition_validation.py',
@@ -90,6 +100,8 @@ def prepare():
         'scripts/fixtures/home_income_addition_intervals_harness.cs',
         'scripts/test_home_income_activity_ledger.ps1',
         'scripts/fixtures/home_income_activity_ledger_harness.cs',
+        'unity/Assets/Game/Validation/HomeIncomeActivity/HomeIncomeActivitySessionValidation.cs',
+        'unity/Assets/Game/Validation/HomeIncomeActivity/Zjcs.Validation.HomeIncomeActivity.asmdef',
         'assets/reference/home-income-formula-source-manifest.json')}
     RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
     print('HOME_INCOME_ADDITION_BINDINGS_PASSED: official outputs unchanged; local snapshot bindings recorded.')
