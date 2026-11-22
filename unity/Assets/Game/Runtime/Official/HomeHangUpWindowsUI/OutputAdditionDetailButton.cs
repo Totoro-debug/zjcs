@@ -61,6 +61,7 @@ public class OutputAdditionDetailButton : UIBase
 		mDisposableBag?.Dispose();
 		mDisposableBag = new HomeWindowResourceBag();
 		mDisposableBag.Add(Services.SubscribeNewDay(OnNewDay));
+		Services.Player.OnAddOutputAdditionData += OnNewDay;
 		InitContent();
 	}
 
@@ -72,6 +73,7 @@ public class OutputAdditionDetailButton : UIBase
 
 	protected override void OnDisableAndInited()
 	{
+		Services.Player.OnAddOutputAdditionData -= OnNewDay;
 		mDisposableBag?.Dispose();
 		base.OnDisableAndInited();
 	}

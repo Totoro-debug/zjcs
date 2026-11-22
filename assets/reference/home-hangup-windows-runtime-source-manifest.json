@@ -1,6 +1,6 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "c9875eb0b5ddc75f75a57129a521ef09b436f5d8c0a78f3dc43db1cdc9d2d881",
+  "generator_sha256": "7237211e54d1e7d05053d1cbd6628b1241ca5851179d8ff37da77bb93d86415f",
   "inputs": {
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/EPropHandleType.cs": "8dc76aca8b42057adbdb1139fa168b987d2ae956cfc10c142a83c57b62fdef00",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/OutputGroupType.cs": "2e91a08aa91d55931013fb403d025cee1fbb512e1d36eb5d90c59043462d02e0",
@@ -518,7 +518,7 @@
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/FurnitureBedDialog.cs.meta": "ccaab203bf64432a296b5fcc49e95cd28daf62ea4c4fcaa4dd504b662df728a9",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/BlessingRuleBtn.cs": "8c5c920ac7e4f8a07e7e329775e648189f5a052d2d8fe6f55cc1cb89e38b29be",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/BlessingRuleBtn.cs.meta": "a7f10629d998fe2b60052ba8883a7dbe69fa6c325540542ecaadc5cbca44f73b",
-    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OutputAdditionDetailButton.cs": "77fd086d5bccbaa6760a4033b7c9c656b405d4ac28914435a197ba1fa9188a2f",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OutputAdditionDetailButton.cs": "f894c6d09ce84d56905e37a94a7941320f73689a75ed4b89ef2f826cd0852a3f",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OutputAdditionDetailButton.cs.meta": "296d73d6bc9147570ce36fbf36b514017928eaddf3880ab4716f4f3c4650f250",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/BlessingLevelRuleDialog.cs": "11d7a723f8d7a7e3046390d75b9e2b49389e05e9022c5a3a78baf445ceff0588",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/BlessingLevelRuleDialog.cs.meta": "be59f4141acca9fd38acdefa73680af23bcf603c3cb36f2add56f9d41ccb65d8",
@@ -539,6 +539,10 @@
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI.meta": "eea0eb30c1993bdafd10c0be5730c79629d3cfbe3ac7035cc5a402b8ed4be41f"
   },
   "scope": "Original bed window, output source/upgrade preview, quick-receive and blessing-rule controllers. Explicit typed player, property, transaction and presentation owners; native assets, real local binding and Player validation are separate.",
+  "local_activity_refresh": {
+    "original_controller_sha256": "77fd086d5bccbaa6760a4033b7c9c656b405d4ac28914435a197ba1fa9188a2f",
+    "adaptation": "While enabled, the original detail button also observes the existing local activity-data notification. The original Refresh method, group filtering, percentage formatting and native asset bindings are unchanged; disabling releases this subscription."
+  },
   "source_reuse": {
     "code_prefix": ".tools/source-packages/current/884_156692/official-code",
     "binding_ancestry": {
@@ -561,7 +565,7 @@
     "validation_inputs": {
       "unity/Assets/Game/Validation/HomeOutputDetail/HomeOutputDetailVerification.cs": "4396310e28d47ef22298fe4cbc86063a955ce79006aeb48ada9e93b0a7bebefb",
       "unity/Assets/Game/Validation/HomeOutputDetail/HomeOutputDetailVerification.Income.cs": "52ca3a47e82569bf651a8caa3bcaab114759610902bbcc57d026df4be82d7dc0",
-      "unity/Assets/Game/Validation/HomeOutputDetail/HomeOutputDetailVerification.Income.cs.meta": "7f90183a46f22f2389378f09d5b467bf7995fe7e943028d732bd3de1c0e6a24d"
+      "unity/Assets/Game/Validation/HomeOutputDetail/HomeOutputDetailVerification.Income.cs.meta": "f58f9b4724413aaa56272d88035e60256207ef2164cee5f0b2e940a482ade58a"
     }
   }
 }

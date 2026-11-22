@@ -32,6 +32,9 @@ LOCAL_INCOME_PREVIEW = '''
         }
 '''
 
+LOCAL_ADDITION_SUBSCRIBE = '\n\t\tServices.Player.OnAddOutputAdditionData += OnNewDay;'
+LOCAL_ADDITION_UNSUBSCRIBE = '\n\t\tServices.Player.OnAddOutputAdditionData -= OnNewDay;'
+
 
 def original_controller_bytes(name, raw):
     if name.endswith('/FurnitureBedDialog.cs'):
@@ -39,6 +42,12 @@ def original_controller_bytes(name, raw):
         if raw.count(insertion) > 1:
             raise ValueError('The local income boundary is duplicated.')
         return raw.replace(insertion, b'')
+    if name.endswith('/OutputAdditionDetailButton.cs'):
+        for insertion in (LOCAL_ADDITION_SUBSCRIBE, LOCAL_ADDITION_UNSUBSCRIBE):
+            encoded = insertion.encode('utf8')
+            if raw.count(encoded) > 1:
+                raise ValueError('The local activity refresh boundary is duplicated.')
+            raw = raw.replace(encoded, b'')
     return raw
 
 
@@ -243,6 +252,10 @@ namespace Zjcs.Official.HomeHangUpWindowsUI
     text = replace(text, 'if (ServerInfoManager.Instance != null)\n\t\t{\n\t\t\tServerInfoManager.Instance.OnFunctionDisabledUpdate -= OnFunctionDisabledUpdate;\n\t\t}', 'functionStateSubscription?.Dispose();')
     text = text.replace('mDisposableBag.Dispose();', 'mDisposableBag?.Dispose();').replace('mDisposableBag = default;', 'mDisposableBag = new HomeWindowResourceBag();')
     text = replace(text, 'mEnterNewDaySubscriber.Subscribe(OnNewDay).AddTo(ref mDisposableBag);', 'mDisposableBag.Add(Services.SubscribeNewDay(OnNewDay));')
+    text = replace(text, 'mDisposableBag.Add(Services.SubscribeNewDay(OnNewDay));',
+        'mDisposableBag.Add(Services.SubscribeNewDay(OnNewDay));' + LOCAL_ADDITION_SUBSCRIBE)
+    text = replace(text, 'protected override void OnDisableAndInited()\n\t{',
+        'protected override void OnDisableAndInited()\n\t{' + LOCAL_ADDITION_UNSUBSCRIBE)
     text = replace_method(text, 'private void OnFunctionDisabledUpdate(ServerFunctionType type, bool arg2, HashSet<FunctionsDisabledKeyBase> set)', '''private void OnFunctionDisabledUpdate()
     {
         // The port subscribes only to the original OutputAddition function.
@@ -305,6 +318,10 @@ namespace Zjcs.Official.HomeHangUpWindowsUI
                 raise ValueError('Reproduction changed the existing window output: ' + name)
     proof = dict(manifest=code.parent.name, generator_sha256=sha(Path(__file__)), inputs=inputs, outputs=outputs,
         scope='Original bed window, output source/upgrade preview, quick-receive and blessing-rule controllers. Explicit typed player, property, transaction and presentation owners; native assets, real local binding and Player validation are separate.')
+    addition = DEST/'OutputAdditionDetailButton.cs'
+    proof['local_activity_refresh'] = dict(
+        original_controller_sha256=hashlib.sha256(original_controller_bytes(addition.as_posix(), addition.read_bytes())).hexdigest(),
+        adaptation='While enabled, the original detail button also observes the existing local activity-data notification. The original Refresh method, group filtering, percentage formatting and native asset bindings are unchanged; disabling releases this subscription.')
     if selected:
         proof['source_reuse'] = dict(code_prefix=code.relative_to(source_root).as_posix(), binding_ancestry=ancestry)
     controller = DEST/'FurnitureBedDialog.cs'
