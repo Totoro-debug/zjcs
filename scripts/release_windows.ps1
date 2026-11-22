@@ -85,51 +85,9 @@ try {
     if ($untracked.Count) { throw "Unexpected untracked release inputs: $($untracked -join ', ')" }
     Invoke-ReleaseGit -GitArguments @('-C',$source,'checkout','--detach',$target)
     }
-    # This generated JSON is recorded with CRLF bytes, while Git stores its text
-    # as LF. Reconstruct it only if the result exactly matches the source receipt.
-    $skillSource = Get-Content -LiteralPath (Join-Path $project 'Assets/Official/Skills/source-manifest.json') -Raw | ConvertFrom-Json
-    $gradient = @($skillSource.files | Where-Object { $_.path -eq 'Assets/Official/Skills/skill-quality-gradient.json' })
-    if ($gradient.Count -ne 1) { throw 'The verified skill gradient receipt is missing or ambiguous.' }
-    $gradientPath = Join-Path $project $gradient[0].path
-    $gradientFile = Get-Item -LiteralPath $gradientPath
-    if ($gradientFile.Length -ne $gradient[0].bytes -or
-        (Get-FileHash -LiteralPath $gradientPath -Algorithm SHA256).Hash.ToLowerInvariant() -ne $gradient[0].sha256) {
-        $inputBytes = [IO.File]::ReadAllBytes($gradientPath)
-        $output = [IO.MemoryStream]::new()
-        try {
-            for ($i = 0; $i -lt $inputBytes.Length; $i++) {
-                if ($inputBytes[$i] -eq 10 -and ($i -eq 0 -or $inputBytes[$i - 1] -ne 13)) { $output.WriteByte(13) }
-                $output.WriteByte($inputBytes[$i])
-            }
-            $recovered = $output.ToArray()
-        } finally { $output.Dispose() }
-        $sha = [Security.Cryptography.SHA256]::Create()
-        try { $recoveredHash = [BitConverter]::ToString($sha.ComputeHash($recovered)).Replace('-', '').ToLowerInvariant() }
-        finally { $sha.Dispose() }
-        if ($recovered.Length -ne $gradient[0].bytes -or $recoveredHash -ne $gradient[0].sha256) {
-            throw 'The isolated skill gradient cannot be recovered to its verified source bytes.'
-        }
-        [IO.File]::WriteAllBytes($gradientPath, $recovered)
-    }
-    # Detect checkout conversion before importing any assets; keep the runtime
-    # source manifest and its byte-for-byte verification unchanged.
-    $equipmentDirectory = Join-Path $project 'Assets/Official/Equipment/Runtime'
-    $equipmentManifest = Get-Content -LiteralPath (Join-Path $equipmentDirectory 'source-manifest.json') -Raw | ConvertFrom-Json
-    $equipmentRules = Get-Item -LiteralPath (Join-Path $equipmentDirectory 'equipment-runtime-rules.json')
-    if ($equipmentRules.Length -ne $equipmentManifest.output.bytes -or
-        (Get-FileHash -LiteralPath $equipmentRules.FullName -Algorithm SHA256).Hash.ToLowerInvariant() -ne $equipmentManifest.output.sha256) {
-        throw 'Release checkout changed the verified equipment rules bytes.'
-    }
-    $uiReceipt = Get-Content -LiteralPath (Join-Path $source 'assets/reference/skill-ui-native-data-source-manifest.json') -Raw | ConvertFrom-Json
-    foreach ($uiInput in $uiReceipt.inputs) {
-        $file = Get-Item -LiteralPath (Join-Path $project $uiInput.path)
-        $meta = $file.FullName + '.meta'
-        if ($file.Length -ne $uiInput.bytes -or
-            (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant() -ne $uiInput.sha256 -or
-            (Get-FileHash -LiteralPath $meta -Algorithm SHA256).Hash.ToLowerInvariant() -ne $uiInput.meta_sha256) {
-            throw "Release checkout changed the verified skill UI input: $($uiInput.path)"
-        }
-    }
+    # Restore text encodings only to exact provenance hashes, including .meta.
+    & python -B (Join-Path $PSScriptRoot 'release_source_bytes.py') --source $source
+    if ($LASTEXITCODE -ne 0) { throw 'Release source byte verification failed' }
     @{format=2} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $workspace 'byte-preserved-checkout.json') -Encoding utf8
     Write-Output "Release source: $target; persistent cache: $workspace"
     $syncSeconds = $timer.Elapsed.TotalSeconds

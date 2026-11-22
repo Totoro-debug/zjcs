@@ -8,6 +8,7 @@ import subprocess
 import unittest
 
 from publish_windows import publish
+from release_source_bytes import restore
 from validation_workspace import temporary_validation_directory
 
 
@@ -52,7 +53,7 @@ class ReleaseTests(unittest.TestCase):
         scripts = repository/'scripts'
         scripts.mkdir()
         for name in ('release_windows.ps1', 'unity_internal_display.ps1', 'validation_workspace.ps1',
-                     'committed_unity_snapshot.py'):
+                     'committed_unity_snapshot.py', 'release_source_bytes.py'):
             shutil.copyfile(Path(__file__).parent/name, scripts/name)
         (repository/'unity/Assets').mkdir(parents=True)
         (repository/'assets/reference').mkdir(parents=True)
@@ -69,7 +70,14 @@ class ReleaseTests(unittest.TestCase):
         (equipment/'equipment-runtime-rules.json').write_bytes(b'{}\n')
         (equipment/'source-manifest.json').write_text(json.dumps({'output': {
             'bytes': 3, 'sha256': hashlib.sha256(b'{}\n').hexdigest()}}))
-        (repository/'assets/reference/skill-ui-native-data-source-manifest.json').write_text('{"inputs":[]}')
+        ui = gradient.parent/'skill-ui.json'
+        ui.write_bytes(b'{"native":true}\n')
+        meta = Path(str(ui) + '.meta')
+        meta.write_bytes(b'fileFormatVersion: 2\nguid: 0123456789abcdef0123456789abcdef\n')
+        expected_ui, expected_meta = ui.read_bytes().replace(b'\n', b'\r\n'), meta.read_bytes().replace(b'\n', b'\r\n')
+        (repository/'assets/reference/skill-ui-native-data-source-manifest.json').write_text(json.dumps({'inputs': [{
+            'path': 'Assets/Official/Skills/skill-ui.json', 'bytes': len(expected_ui),
+            'sha256': hashlib.sha256(expected_ui).hexdigest(), 'meta_sha256': hashlib.sha256(expected_meta).hexdigest()}]}))
         asset = repository/'unity/Assets/source.txt'
         asset.write_text('committed')
         git('add', '.')
@@ -89,12 +97,17 @@ class ReleaseTests(unittest.TestCase):
         self.assertEqual(git('worktree', 'list', '--porcelain').count('worktree '), 1)
         copied = workspace/'source/unity/Assets/source.txt'
         self.assertEqual(copied.read_text(), 'committed')
+        copied_ui = workspace/'source/unity/Assets/Official/Skills/skill-ui.json'
+        self.assertEqual(copied_ui.read_bytes(), expected_ui)
+        self.assertEqual(Path(str(copied_ui)+'.meta').read_bytes(), expected_meta)
+        ui_stamp = copied_ui.stat().st_mtime_ns
         stamp = copied.stat().st_mtime_ns
         cache = workspace/'source/unity/Library/cache'
         cache.parent.mkdir()
         cache.write_text('retained')
         prepare()
         self.assertEqual(copied.stat().st_mtime_ns, stamp)
+        self.assertEqual(copied_ui.stat().st_mtime_ns, ui_stamp)
         asset.write_text('next commit')
         git('add', '.')
         git('commit', '-qm', 'next')
@@ -113,6 +126,18 @@ class ReleaseTests(unittest.TestCase):
                 prepare(ok=False)
             finally:
                 msvcrt.locking(lock.fileno(), msvcrt.LK_UNLCK, 1)
+
+    def test_source_corruption_cannot_change_expected_hash(self):
+        asset = self.root/'rules.json'
+        expected = b'{"official":true}\r\n'
+        digest = hashlib.sha256(expected).hexdigest()
+        asset.write_bytes(expected.replace(b'\r\n', b'\n'))
+        self.assertTrue(restore(asset, digest, len(expected)))
+        self.assertEqual(asset.read_bytes(), expected)
+        asset.write_bytes(b'{"official":false}\n')
+        with self.assertRaisesRegex(ValueError, 'verified receipt'):
+            restore(asset, digest, len(expected))
+        self.assertEqual(asset.read_bytes(), b'{"official":false}\n')
 
 
 if __name__ == '__main__':
