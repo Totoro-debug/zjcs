@@ -169,6 +169,32 @@
         "bundle_sha256": "b87533144cd1777aa13ac24e283d12bafab338b7d4e66a3ea20361504caf795f"
       },
       "payload_sha256": "4801238ea494037e00c01e215d959db37d38a01bfff308f452a8dc863ab03721"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "4838b38a3b272ae4bd23e89d77cd3b90",
+        "path_id": "1398458758611605706",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/4838b38a3b272ae4bd23e89d77cd3b90.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 2210171,
+        "bundle_sha256": "b87533144cd1777aa13ac24e283d12bafab338b7d4e66a3ea20361504caf795f"
+      },
+      "payload_sha256": "499ad6e1e820e204c0d549790bd498f6d2d26f392a7735881f87fbc4fdbe9a56"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "4838b38a3b272ae4bd23e89d77cd3b90",
+        "path_id": "3644532119292667704",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/4838b38a3b272ae4bd23e89d77cd3b90.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 2210171,
+        "bundle_sha256": "b87533144cd1777aa13ac24e283d12bafab338b7d4e66a3ea20361504caf795f"
+      },
+      "payload_sha256": "c3cb97f697da5750ee40894d8e6e2d0062df70ea5f22e7f9cae75e94c98f491e"
     }
   ],
   "entity_locations": {
@@ -183,7 +209,7 @@
   },
   "generator": {
     "path": "scripts/prepare_flame_momentum_rules.py",
-    "sha256": "88aa1004ab40c76b63fc6e3cb64a3a1c4f201bc3c44db8feb762cc11834f4297"
+    "sha256": "5f6852b7dba14178ac30c0e62756aced7793c3edb62e11fc95b38617d2e1d937"
   },
   "baseline": [
     {
@@ -664,6 +690,14 @@
     404,
     423
   ],
+  "verified_reused_skill_catalog": {
+    "input": {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+    },
+    "compared_entities": 1856,
+    "entity_types_sha256": "4390ea588ed669cef67146140a926c26f1a748ced9b4265737a672883c7af546"
+  },
   "report_parent_constructors": [
     {
       "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/ActivePaySetting.cs",
@@ -930,6 +964,26 @@
       "sha256": "fd283d37373de23a14ddbf077816b49421dd5f30ec807f17021f2ddd0329e052"
     },
     {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/ItemEffect.cs",
+      "sha256": "bad642dadc92e47e31a231691b3739dfe066f9cda973432decf492b637c19ea6"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/ItemEffectAutoIncrease.cs",
+      "sha256": "a13e64a337dac83fd309fc312f58adba1a0f955fc043e97f13b611c661557a8c"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/ItemEffectWrapItem.cs",
+      "sha256": "b411505be181c04a3c47d309866e28621588fc9f8aaff1a761ff4181f4fe8fc5"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/ItemInfo.cs",
+      "sha256": "33a0ac813b6e402c07999fdfc2b889d0b3f3d039df7ee0d0be493e2c16da20a6"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/ItemPartInfo.cs",
+      "sha256": "685012dc0b4db06adf6b1b5f4d37e04ac1197b2391763694badfdbf1ae278cea"
+    },
+    {
       "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/ItemSwapSettings.cs",
       "sha256": "7899e7919b2d42bbb9a681b1688c957d3e0904ea5e1d022f0dbe26153341ade2"
     },
@@ -1178,6 +1232,10 @@
       "sha256": "36dbf94fb67c661e23584d056aace4ef808ecbf9c4f5bd0bbddc0d3493e58d48"
     },
     {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/SkillInfo.cs",
+      "sha256": "b403f503798af59fe02a307c8f4d6fbfd1dfb94d11431d17d007a68f5945745d"
+    },
+    {
       "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/SkillPieceChestSetting.cs",
       "sha256": "c5df20d27afc828e4ee679171ba3602136d955d90d2d73805b8b8d4a83717e0a"
     },
@@ -1216,6 +1274,14 @@
     {
       "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/TbGameSettings.cs",
       "sha256": "7280796133ab9a6ecc090fdc51e40b3e05bf331bd74f8815d3e67fe24c46099c"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/TbItemInfo.cs",
+      "sha256": "b93d21bb8d57aea59fbfee28c3f7bb789835be6ca8f7d0ec6b6e8f25cfcf90d5"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/TbSkillInfo.cs",
+      "sha256": "b2322998e0b8972434132a2d9f744e3a3a8f63c3ab244c1d982b8f47d75521f8"
     },
     {
       "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/TeamChallengeSetting.cs",
