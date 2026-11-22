@@ -69,12 +69,13 @@ namespace Zjcs.Presentation.Home
             bool spiralWindBlade = skillId == 10091;
             bool battlecry = skillId == 10092;
             bool judgmentThunder = skillId == 10093;
-            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder;
-            bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry;
+            bool protectiveRunes = skillId == 10102;
+            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder || protectiveRunes;
+            bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry || protectiveRunes;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
-            int profession = starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder || protectiveRunes ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -377,6 +378,7 @@ namespace Zjcs.Presentation.Home
                         : spiralWindBlade ? cast.SkillEntityId == 11960
                         : battlecry ? cast.SkillEntityId == 12010
                         : judgmentThunder ? cast.SkillEntityId == 11970
+                        : protectiveRunes ? cast.SkillEntityId == 12110
                         : skillId == 10048 ? cast.SkillEntityId == 11090
                         : skillId == 10049 ? cast.SkillEntityId == 11100
                         : skillId == 10051 ? cast.SkillEntityId == 11260
@@ -388,6 +390,12 @@ namespace Zjcs.Presentation.Home
                         "The acquired active skill selected a foreign entity: " + cast.SkillEntityId);
                     var damageEvents = step.Event.DamageEvents.Where(value => value.SourceId == 1
                         && value.SkillEntityId == (skillId == 10017 ? 10970 : cast.SkillEntityId)).ToArray();
+                    if (protectiveRunes)
+                    {
+                        VerifyAcquiredProtectiveRunes(checkpoint, output);
+                        hits++;
+                        continue;
+                    }
                     if (judgmentThunder)
                     {
                         VerifyAcquiredJudgmentThunder(cast, damageEvents);
@@ -773,6 +781,12 @@ namespace Zjcs.Presentation.Home
                                 parent.name.StartsWith("Eff_Skill_Paladin04_WhirlpoolRagingWaves", StringComparison.Ordinal)));
                         if (!vortexVisible) { yield return null; continue; }
                     }
+                    else if (protectiveRunes)
+                    {
+                        if (!FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
+                            && particle.GetComponentsInParent<Transform>().Any(parent => parent.name.StartsWith("playable24201", StringComparison.Ordinal))))
+                        { yield return null; continue; }
+                    }
                     else if (judgmentThunder)
                     {
                         if (!FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
@@ -819,6 +833,8 @@ namespace Zjcs.Presentation.Home
                 "The acquired star burst never applied, rendered and consumed its original blinding status.");
             Require(!doomTorrent || doomPushes > 0, "The acquired doom torrent never exercised its original outward knockback.");
             Require(!battlecry || battlecryAdvances > 0, "The acquired Battlecry never immediately advanced its next action.");
+            Require(!protectiveRunes || File.Exists(Path.Combine(output, "acquired-protective-runes-checkpoint.json")),
+                "The acquired protective runes never reduced an actual configured enemy hit.");
             Require(!spiralWindBlade || tearApplications > 0 && tearEnds > 0 && tearHits > 0 && capturedTear,
                 "The acquired spiral wind blade never applied, rendered, triggered and expired its original movement laceration.");
             Require(!vortexSurge || vortexMovements > 0,

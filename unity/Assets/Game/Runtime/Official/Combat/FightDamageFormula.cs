@@ -114,11 +114,26 @@ namespace Zjcs.Combat.Official
         private const int PetEntity = 7;
         private readonly FightDamagePropertySchema schema;
         private readonly FightDamageFormulaConfig config;
+        private readonly FightOfficialSkillItemCatalog skillItems;
 
         public FightDamageFormula(FightDamagePropertySchema schema, FightDamageFormulaConfig config)
+            : this(schema, config, null)
+        {
+        }
+
+        public FightDamageFormula(FightDamagePropertySchema schema, FightDamageFormulaConfig config,
+            FightOfficialSkillItemCatalog skillItems)
         {
             this.schema = schema ?? throw new ArgumentNullException(nameof(schema));
             this.config = config ?? throw new ArgumentNullException(nameof(config));
+            this.skillItems = skillItems;
+        }
+
+        public bool IsActiveSkillEntity(int entityId)
+        {
+            if (skillItems == null)
+                throw new InvalidOperationException("Official skill-item classification is not bound to this formula.");
+            return skillItems.IsActiveSkillEntity(entityId);
         }
 
         public double ReadProperty(IDictionary<int, long> values, int propertyId)

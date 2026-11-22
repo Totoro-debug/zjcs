@@ -119,7 +119,10 @@ namespace Zjcs.Combat.Official
 
                 double scale;
                 if (!TryGetReduction(status, info, source, target, random, out scale)) continue;
-                scale *= skill != null && skill.SkillType == 0
+                // Confirmed offline rule: only the direct official active entity uses
+                // the ordinary scale. A report-parent override does not promote a child.
+                scale *= info.ActiveSkillScale == info.NotActiveSkillScale
+                    || skill != null && formula.IsActiveSkillEntity(skill.EntityId)
                     ? info.ActiveSkillScale : info.NotActiveSkillScale;
                 var properties = new Dictionary<int, long>();
                 foreach (var value in status.StatusProperties ?? status.ResolvedProperties

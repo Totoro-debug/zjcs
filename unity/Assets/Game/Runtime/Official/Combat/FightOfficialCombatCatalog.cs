@@ -618,7 +618,7 @@ namespace Zjcs.Combat.Official
             AddTable(config.RankOffsetDamage, battleTables, "fight_rank_offset_damage", "Rank", "DamageScale");
             AddTable(config.DemonRankOffsetDamage, battleTables, "demon_battlefield_fight_rank_offset_damage", "Rank", "DamageScale");
             AddTable(config.MonsterSpecialProps, battleTables, "monster_special_prop_type", "MonsterId", "DmgAdd");
-            return new FightDamageFormula(schema, config);
+            return new FightDamageFormula(schema, config, FightOfficialSkillItemCatalog.FromVerifiedRules(rules));
         }
 
         public FightBattleSkillDefinition CreateSkill(int entityId, int slot, int itemId,

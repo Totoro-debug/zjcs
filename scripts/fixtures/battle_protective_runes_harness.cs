@@ -15,7 +15,8 @@ public static class BattleProtectiveRunesHarness
         foreach (int rank in new[] { 1, 7 })
         foreach (int level in new[] { 1, 2 })
         foreach (int sourceType in new[] { 1, 2 })
-        foreach (int skillType in new[] { 0, 1 })
+        foreach (int incomingEntity in new[] { 11970, 10540, 12822 })
+        foreach (int graphType in new[] { 0, 1 })
         foreach (int damageType in new[] { 1, 8 })
         foreach (bool shielded in new[] { false, true })
         {
@@ -31,7 +32,11 @@ public static class BattleProtectiveRunesHarness
             if (shielded) actor.Statuses.Add(new FightBattleStatusState { ClassId = 99001, InstanceId = 99001,
                 OwnerId = 1, CreatorId = 1, DurationRound = 99, CurDurationRound = 99, StackCount = 1,
                 ShieldKind = FightBattleShieldKind.Persistent, ShieldInitialized = true, ShieldRemainValue = 2000000 });
-            var incoming = new FightBattleSkillDefinition { EntityId = 99010, Slot = 0, SkillType = skillType,
+            bool direct = incomingEntity == 11970;
+            Check(items.IsActiveSkillEntity(incomingEntity) == direct, "the official direct-entity classification changed");
+            if (incomingEntity == 12822) Check(catalog.ReportParentSkillId(incomingEntity) == 12800
+                && items.IsActiveSkillEntity(12800), "the report-parent child fixture is no longer an active-parent override");
+            var incoming = new FightBattleSkillDefinition { EntityId = incomingEntity, Slot = 0, SkillType = graphType,
                 ActionType = 2, TargetType = 1, ElementType = 102,
                 Properties = new List<FightPropertyValue> { new FightPropertyValue { Id = 200, Value = 10000 } } };
             incoming.Range.Add(new FightGridPoint(-1, 0));
@@ -52,15 +57,15 @@ public static class BattleProtectiveRunesHarness
             var step = runner.Step(cp.Sequence, cp.Counter + 1).Event;
             restored.Step(saved.Sequence, saved.Counter + 1);
             Check(FightBattleCheckpointSerializer.Save(cp) == FightBattleCheckpointSerializer.Save(saved), "conditional reduction or shield diverged after restore");
-            var damage = step.DamageEvents.Single(value => value.SkillEntityId == 99010);
+            var damage = step.DamageEvents.Single(value => value.SkillEntityId == incomingEntity);
             var props = catalog.CalculateSkillProps(24201, rank, level, 8);
-            double factor = skillType == 0 ? 1.0 : (double)1.2f;
+            double factor = direct ? 1.0 : (double)1.2f;
             double percent = (long)(props[232] * factor) / 10000.0;
             double fixedValue = (long)(props[236] * factor);
             long expected = (long)(Math.Max(0.0, 1000000 - fixedValue) / (1.0 + percent));
             Check(shielded ? damage.Damage == 0 && damage.ShieldDamage == expected : damage.Damage == -expected,
                 "cultivated fixed/percentage reduction or the extra 20% did not precede shields: "
-                    + rank + "/" + level + "/" + skillType + "/" + damageType + ": " + damage.Damage + "/" + damage.ShieldDamage + " expected -" + expected);
+                    + rank + "/" + level + "/" + incomingEntity + "/" + graphType + "/" + damageType + ": " + damage.Damage + "/" + damage.ShieldDamage + " expected -" + expected);
             string after = FightBattleCheckpointSerializer.Save(cp);
             Check(runner.Step(cp.Sequence, cp.Counter).Replayed && FightBattleCheckpointSerializer.Save(cp) == after,
                 "replay consumed the conditional reduction twice");

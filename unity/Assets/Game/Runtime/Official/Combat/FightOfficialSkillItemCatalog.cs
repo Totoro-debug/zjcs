@@ -67,6 +67,12 @@ namespace Zjcs.Combat.Official
                 rulesManifest);
             Dictionary<string, object> rules = FightOfficialCombatCatalog.ParseObject(rulesJson,
                 "rules.json");
+            return FromVerifiedRules(rules);
+        }
+
+        // Reuse the same parsed payload after the combat catalog has verified its digest.
+        internal static FightOfficialSkillItemCatalog FromVerifiedRules(Dictionary<string, object> rules)
+        {
             var catalog = new FightOfficialSkillItemCatalog();
             foreach (object row in FightOfficialCombatCatalog.ParseArray(
                 FightOfficialCombatCatalog.RequiredField(rules, "item"), "rules.item"))

@@ -134,6 +134,23 @@ namespace Zjcs.Editor
             OfficialSparseShaderVariants.ValidateBattlecry();
         }
 
+        public static void ValidateProtectiveRunes()
+        {
+            var asset = Resources.Load<TextAsset>("Combat/protective-runes-current-graphs");
+            var data = asset == null ? null : JsonUtility.FromJson<StatusData>(asset.text);
+            if (data?.graphs == null || data.graphs.Length != 1 || data.graphs[0].id != 24201)
+                throw new InvalidOperationException("Current protective-runes status binding is missing.");
+            var entity = Resources.Load<GameObject>(data.graphs[0].resource);
+            if (!entity || !entity.GetComponent<MyEntity>() || !entity.GetComponent<MyFightStatus>()
+                || !entity.GetComponent<MyFightStatusDamageReducePer>())
+                throw new InvalidOperationException("Current protective-runes status lost its original components.");
+            var prefabs = new HashSet<GameObject> { entity };
+            entity.GetComponent<MyFightStatus>().TryGetPlayables(ref prefabs);
+            CheckMissing(prefabs);
+            Debug.Log("Current protective-runes native status, conditional-reduction marker and playable bindings passed.");
+            OfficialSparseShaderVariants.ValidateProtectiveRunes();
+        }
+
         private static void ValidateFamily(string resource, string family)
         {
             // Loading the effective catalog verifies every declared source hash.
