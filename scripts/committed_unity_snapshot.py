@@ -109,14 +109,15 @@ def snapshot(repository, workspace, commit='HEAD'):
     for relative in INPUTS:
         directory = checked_path(root, relative, verified)
         for folder, directories, names in os.walk(directory, followlinks=False):
-            for name in directories + names:
-                path = Path(folder) / name
-                checked_path(root, path.relative_to(root).as_posix(), verified)
+            relative_folder = Path(folder).relative_to(root).as_posix()
+            for name in directories:
+                checked_path(root, relative_folder + '/' + name, verified)
             for name in names:
-                path = Path(folder) / name
-                relative_name = path.relative_to(root).as_posix()
+                relative_name = relative_folder + '/' + name
+                path = checked_path(root, relative_name, verified)
                 if relative_name not in old_files and relative_name not in files:
                     raise ValueError('Unexpected snapshot input: ' + str(path))
+    print('Committed source inventory verified; comparing cached file bytes.', flush=True)
     changed = [] if previous else list(files)
     for name, oid in (files.items() if previous else ()):
         path = checked_path(root, name, verified)
