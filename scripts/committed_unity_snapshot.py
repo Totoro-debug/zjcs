@@ -104,7 +104,8 @@ def snapshot(repository, workspace, commit='HEAD'):
                 checked_path(root, path.relative_to(root).as_posix(), verified)
             for name in names:
                 path = Path(folder) / name
-                if path.relative_to(root).as_posix() not in old_files:
+                relative_name = path.relative_to(root).as_posix()
+                if relative_name not in old_files and relative_name not in files:
                     raise ValueError('Unexpected snapshot input: ' + str(path))
     changed = [] if previous else list(files)
     for name, oid in (files.items() if previous else ()):
@@ -183,6 +184,7 @@ def snapshot(repository, workspace, commit='HEAD'):
             if process.poll() is None:
                 process.terminate()
                 process.wait()
+            process.stdin.close()
             process.stdout.close()
     for name in old_files.keys() - files.keys():
         checked_path(root, name, verified).unlink(missing_ok=True)

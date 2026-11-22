@@ -4,6 +4,7 @@ import hashlib
 from pathlib import Path
 import subprocess
 import unittest
+from unittest.mock import patch
 
 from committed_unity_snapshot import checked_path, snapshot
 from validation_workspace import temporary_validation_directory
@@ -96,6 +97,18 @@ class SnapshotTests(unittest.TestCase):
         self.assertEqual((root / self.asset.relative_to(self.repository)).read_bytes(),
                          b'// original\nclass Test {}\n')
         self.assertEqual((root / asset.relative_to(self.repository)).read_bytes(), payload)
+
+    def test_resume_interrupted_incremental_export(self):
+        root = snapshot(self.repository, self.workspace)
+        added = self.asset.with_name('Added.cs')
+        added.write_bytes(b'class Added {}\n')
+        commit = self.commit('add source')
+        with patch('committed_unity_snapshot.restore_lfs', side_effect=RuntimeError('interrupted')):
+            with self.assertRaisesRegex(RuntimeError, 'interrupted'):
+                snapshot(self.repository, self.workspace, commit)
+        self.assertTrue((root / added.relative_to(self.repository)).exists())
+        snapshot(self.repository, self.workspace, commit)
+        self.assertEqual((root / added.relative_to(self.repository)).read_bytes(), b'class Added {}\n')
 
 
 if __name__ == '__main__':
