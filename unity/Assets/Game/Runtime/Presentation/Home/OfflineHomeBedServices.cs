@@ -25,7 +25,8 @@ namespace Zjcs.Presentation.Home
 {
     // The original controller consumes the real home/profile owners through this
     // local request/response boundary. Presentation never grants a second reward.
-    public sealed partial class OfflineHomeBedServices : IHomeHangUpWindowServices, IHomeHangUpWindowPlayer, IHomeBlessingRuleServices, IDisposable
+    public sealed partial class OfflineHomeBedServices : IHomeHangUpWindowServices, IHomeHangUpWindowPlayer,
+        IHomeBlessingRuleServices, IHomeIncomeWindowPreview, IDisposable
     {
         sealed class Response : IHomeWindowAwardMessage
         {
@@ -93,7 +94,8 @@ namespace Zjcs.Presentation.Home
             Output = new OfflineHomeFurnitureOutput(home.Rules, home.HomeIncomeProperties,
                 GetHangUpLevel, home.FormatTopBarCurrency, outputText);
             Output.Refresh();
-            OutputAddition = new OfflineHomeOutputAddition(home.Session, () => DateTime.UtcNow, outputDisabled);
+            OutputAddition = new OfflineHomeOutputAddition(home.Session, () => new DateTime(
+                home.Session.IncomeProjectionTicks(DateTimeOffset.UtcNow), DateTimeKind.Utc), outputDisabled);
             OutputAddition.Changed += OnOutputChanged;
             imageCatalog = ScriptableObject.CreateInstance<OfflineProfessionImageCatalog>();
             imageCatalog.Entries = new[] {
@@ -109,6 +111,7 @@ namespace Zjcs.Presentation.Home
         }
         public void Tick()
         {
+            OutputAddition.PollIncomeChanges();
             if (disposed || Time.unscaledTime < nextPoll) return;
             nextPoll = Time.unscaledTime + .2f;
             if (observedLevel != Level)
@@ -145,7 +148,7 @@ namespace Zjcs.Presentation.Home
         public bool CanGetExp() => home.CanGetHangUpExperience(experience);
         public bool IsFunctionLimit(int id) => home.Rules.IsFunctionLimited(id);
         public bool GetHangUpQuickReceiveState(EFurniture type) => home.GetHangUpQuickReceiveState(type);
-        public int GetOutputAdditionPropValue(int type) => OutputAddition.PropertyValue((OutputProp)type);
+        public int GetOutputAdditionPropValue(int type) => OutputAddition.IncomePropertyValue((OutputProp)type);
         public bool IsMapRegionPublic(int classId, int region)
             => mapPublic(classId, region);
         public event Action<int> OnFastHangUp;
@@ -197,15 +200,30 @@ namespace Zjcs.Presentation.Home
             return Output.GetUnsettledRewardCount(id, elapsed, saved?.StoredSeconds ?? 0, 0, out remainder);
         }
         public long GetHangUpAwardCount(int id, out double seconds)
-            => Zjcs.Official.HomeIncomeRules.HangUpUtils.ClampAwardCount(
+        {
+            if (TryGetIncomePreview(id, out long count, out _)) { seconds = 0; return count; }
+            return Zjcs.Official.HomeIncomeRules.HangUpUtils.ClampAwardCount(
                 home.Session.Save.Income.FirstOrDefault(value => value.HangUpId == id)?.SettledCount ?? 0,
                 Unsettled(id, out seconds), GetHangUpMaxRewardStore(id));
-        public long CalcOutputAdditionExtStore(int id, long capacity) => OutputAddition.ExtraCapacity(id, capacity);
+        }
+        public bool TryGetIncomePreview(int id, out long count, out long capacity)
+        {
+            count = capacity = 0;
+            if (!home.Session.Definitions.Any(value => value.HangUpId == id) || !home.Session.HasActivityIncome(id)) return false;
+            var preview = home.Session.PreviewAt(id, DateTimeOffset.UtcNow);
+            count = preview.Count; capacity = preview.Capacity;
+            return true;
+        }
+        public long CalcOutputAdditionExtStore(int id, long capacity) => OutputAddition.IncomeExtraCapacity(id, capacity);
         public long CalcOutputAdditionUnsettleExtRewardCount(int id)
-        { long count = Unsettled(id, out _); return count <= 0 ? 0 : OutputAddition.ExtraCount(id, count); }
-        public double CalcOutputAdditionExtCount(int id, double count) => OutputAddition.ExtraCount(id, count);
+        {
+            if (home.Session.HasActivityIncome(id)) return 0;
+            long count = Unsettled(id, out _); return count <= 0 ? 0 : OutputAddition.IncomeExtraCount(id, count);
+        }
+        public double CalcOutputAdditionExtCount(int id, double count) => OutputAddition.IncomeExtraCount(id, count);
         public bool CanGetHangUpReward(int id) => home.Session.Definitions.Any(value => value.HangUpId == id && value.Unlocked)
-            && ((home.Session.Save.Income.FirstOrDefault(value => value.HangUpId == id)?.SettledCount ?? 0) > 0 || Unsettled(id, out _) > 0);
+            && (home.Session.HasActivityIncome(id) ? home.Session.PreviewAt(id, DateTimeOffset.UtcNow).Count > 0
+                : (home.Session.Save.Income.FirstOrDefault(value => value.HangUpId == id)?.SettledCount ?? 0) > 0 || Unsettled(id, out _) > 0);
         public HomeWindowItemInfo GetHangUpRewardItem(int id)
             => id == 1 ? new HomeWindowItemInfo { Icon = assets.bedRewardImagePath }
                 : throw new NotSupportedException("Bind the selected cart item before opening it from the bed services.");

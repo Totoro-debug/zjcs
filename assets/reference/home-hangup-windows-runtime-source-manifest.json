@@ -1,6 +1,6 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "34c4a4f29101a25e1c4b8e93e418e167d3f04a8c03fe6ad5938e857d9e4120ec",
+  "generator_sha256": "c9875eb0b5ddc75f75a57129a521ef09b436f5d8c0a78f3dc43db1cdc9d2d881",
   "inputs": {
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/EPropHandleType.cs": "8dc76aca8b42057adbdb1139fa168b987d2ae956cfc10c142a83c57b62fdef00",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/OutputGroupType.cs": "2e91a08aa91d55931013fb403d025cee1fbb512e1d36eb5d90c59043462d02e0",
@@ -514,7 +514,7 @@
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/FurnitureOutputInfo.cs.meta": "110a0cbcee64daf9efd8f2008d5efa06ab5d6bf7af6f6746992ee886a7f0e552",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/FurnitureHangUpQuickReceive.cs": "34ab0943f488b0f871a97b7a7d243ab1a72d216b25691eab5211b423f2ea5003",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/FurnitureHangUpQuickReceive.cs.meta": "206f8eaf84d67d136326b2466796cc8b5cade77ca25303437abf21075798a262",
-    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/FurnitureBedDialog.cs": "0df9e1c7a5b36da0a16ba3805a0ceb7fedf9d2fb384dd4e733af6fd6f5c1be06",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/FurnitureBedDialog.cs": "8e9dae4beb2364b86e6caf61d8703e4d2a05774902b1271f2ee759a394484cd6",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/FurnitureBedDialog.cs.meta": "ccaab203bf64432a296b5fcc49e95cd28daf62ea4c4fcaa4dd504b662df728a9",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/BlessingRuleBtn.cs": "8c5c920ac7e4f8a07e7e329775e648189f5a052d2d8fe6f55cc1cb89e38b29be",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/BlessingRuleBtn.cs.meta": "a7f10629d998fe2b60052ba8883a7dbe69fa6c325540542ecaadc5cbca44f73b",
@@ -532,6 +532,8 @@
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/HomeBlessingRuleServices.cs.meta": "01ad3f7dc00a98b914a8717fd59dc865c93c468fdc253fd265d246c7863aae55",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OfficialHomeHangUpWindowAssetCatalog.cs": "3d9cdcf31fc1de7c5d7de6a4cdea231e2f0f14580108ca1eb639af016eaef09a",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OfficialHomeHangUpWindowAssetCatalog.cs.meta": "c9bc66c36c076b16d15a2a3fe57128b20af413cf4ada8be8d6a0fff861b155af",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/IHomeIncomeWindowPreview.cs": "0049c53e81111d2f4341dc961d6114c43baa7444cfa20e342eba68d580c3085a",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/IHomeIncomeWindowPreview.cs.meta": "74620bfe4a4839cf54afe2cd5f0d382e9a1a5166e185693d8f17c0e0ede047e2",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/Zjcs.Official.HomeHangUpWindowsUI.asmdef": "b4ca91c83a13fd75e5a3159c50a7de188ee1e6ad5b6a6a8d0d9480821c68ee67",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/Zjcs.Official.HomeHangUpWindowsUI.asmdef.meta": "f3f2953815dbec20009012e2d76c4df1e3a4113c663d40a24296e096961d2ccf",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI.meta": "eea0eb30c1993bdafd10c0be5730c79629d3cfbe3ac7035cc5a402b8ed4be41f"
@@ -546,6 +548,20 @@
         "baseline_revision": "83dc60a8bb7a7c0eb22fb247e7c3e01ab9646ed0",
         "baseline_sha256": "3d9cdcf31fc1de7c5d7de6a4cdea231e2f0f14580108ca1eb639af016eaef09a"
       }
+    }
+  },
+  "local_income_preview": {
+    "interface": "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/IHomeIncomeWindowPreview.cs",
+    "original_controller_sha256": "0df9e1c7a5b36da0a16ba3805a0ceb7fedf9d2fb384dd4e733af6fd6f5c1be06",
+    "adaptation": "An optional local data owner supplies the earned count and effective capacity to the original label and progress image. It refreshes through activity expiry even while full. The original timer remains the fallback and no native hierarchy or asset changes.",
+    "runtime_bindings": {
+      "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "faeb29ffd0758b04b6b69206a4b4e1dc546a2c4ae9dd30d9bc5bb7774e23d30c",
+      "unity/Assets/Game/Runtime/Presentation/Home/OfflineHomeBedServices.cs": "585690629b1369dc5c63d877fad6fd27d98a2f8dc57d8e41f10b3377688f0d21"
+    },
+    "validation_inputs": {
+      "unity/Assets/Game/Validation/HomeOutputDetail/HomeOutputDetailVerification.cs": "4396310e28d47ef22298fe4cbc86063a955ce79006aeb48ada9e93b0a7bebefb",
+      "unity/Assets/Game/Validation/HomeOutputDetail/HomeOutputDetailVerification.Income.cs": "52ca3a47e82569bf651a8caa3bcaab114759610902bbcc57d026df4be82d7dc0",
+      "unity/Assets/Game/Validation/HomeOutputDetail/HomeOutputDetailVerification.Income.cs.meta": "7f90183a46f22f2389378f09d5b467bf7995fe7e943028d732bd3de1c0e6a24d"
     }
   }
 }

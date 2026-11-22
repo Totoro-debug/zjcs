@@ -937,6 +937,9 @@ namespace Zjcs.Presentation.Home
                 properties, FloatPropertyIds(), Array.Empty<OfflineHomeRandomRewardDefinition>(), Now(), restored =>
                 {
                     session = restored;
+                    var additions = new OfflineHomeOutputAddition(restored, () => new DateTime(
+                        restored.IncomeProjectionTicks(DateTimeOffset.UtcNow), DateTimeKind.Utc), _ => false);
+                    restored.SetIncomeAdditionSource(additions.CaptureIncomeSnapshot);
                     OfflineHomeIncomeDefinition[] definitions = homeProgression.BuildIncomeDefinitions(
                         restored, context, BlessingLevel);
                     OfflineHomeRandomRewardDefinition[] rewards = homeProgression.BuildRandomRewardDefinitions(restored, context);
@@ -1029,7 +1032,7 @@ namespace Zjcs.Presentation.Home
         {
             OfflineHomeIncomeDefinition[] definitions = homeProgression.BuildIncomeDefinitions(session, context, BlessingLevel);
             OfflineHomeRandomRewardDefinition[] rewards = homeProgression.BuildRandomRewardDefinitions(session, context);
-            session.Reconfigure(definitions, PlayerProperties(), FloatPropertyIds(), rewards);
+            session.Reconfigure(definitions, PlayerProperties(), FloatPropertyIds(), rewards, DateTimeOffset.UtcNow);
         }
 
         private void ApplyFurnitureStates()

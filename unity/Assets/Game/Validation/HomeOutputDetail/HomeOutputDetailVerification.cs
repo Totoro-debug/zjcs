@@ -29,7 +29,7 @@ namespace Zjcs.Validation.HomeOutputDetail
     // Explicit diagnostic only; all records, input and files belong to its own
     // validation directory. The normal game never creates these test records.
     [UnityEngine.Scripting.Preserve]
-    public sealed class HomeOutputDetailVerification : MonoBehaviour
+    public sealed partial class HomeOutputDetailVerification : MonoBehaviour
     {
         const string Argument = "--zjcs-validate-home-output-detail";
         sealed class Pointer : IHomePointerSnapshot
@@ -193,6 +193,8 @@ namespace Zjcs.Validation.HomeOutputDetail
             yield return CheckBedCollection();
             yield return CheckBedFreeAcceleration();
             yield return CheckBedItemAcceleration();
+            yield return CheckBedActivityIncome();
+            yield return CheckBedCapacityExpiry();
             Require(errors.Count == 0, "no runtime error or assertion");
         }
 
@@ -206,9 +208,8 @@ namespace Zjcs.Validation.HomeOutputDetail
                 Require(source.ApplyRecord(record, "bed:fixture:expire:" + record.Id), "ordinary bed fixture expires activity records");
             }
             Require(home.Session.Mutate("bed:fixture:stored", save => {
-                var entry = save.Income.SingleOrDefault(value => value.HangUpId == 1);
-                if (entry == null) save.Income.Add(entry = new OfflineHomeIncomeEntry { HangUpId = 1 });
-                entry.StoredSeconds = 0; entry.SettledCount = 1;
+                save.Income.RemoveAll(value => value.HangUpId == 1);
+                save.Income.Add(new OfflineHomeIncomeEntry { HangUpId = 1, SettledCount = 1 });
             }), "isolated settled bed income");
             long before = home.Profile.Save.Player.Experience;
             long collected = 0; int published = 0;

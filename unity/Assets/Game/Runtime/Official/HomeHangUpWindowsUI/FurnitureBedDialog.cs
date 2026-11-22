@@ -361,6 +361,22 @@ public class FurnitureBedDialog : UIBase
 
 	private IEnumerator HangUpTimer()
 	{
+        // Local activity settlement owns fractions and expiry. Keep the native
+        // label/progress controls and request one consistent ledger projection.
+        if (Services is IHomeIncomeWindowPreview localIncome
+            && localIncome.TryGetIncomePreview(HangUpId, out long localCount, out long localCapacity))
+        {
+            do
+            {
+                SetOutputCountTxt(localCount, localCapacity);
+                if (HangUpProgress != null)
+                    HangUpProgress.fillAmount = localCapacity > 0 ? (float)localCount / localCapacity : 0;
+                yield return null;
+            }
+            while (localIncome.TryGetIncomePreview(HangUpId, out localCount, out localCapacity));
+            yield break;
+        }
+
 		Player mainPlayer = Services.Player;
 		int hangUpId = HangUpId;
 		long rewardPoolCount = Services.GetHangUpAwardCount(hangUpId, out var hangUpSeconds);

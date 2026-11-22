@@ -14,6 +14,33 @@ from prepare_home_auto_increase_runtime import ROOT, CODE, metadata, method, sha
 
 DEST = ROOT/'unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI'
 
+LOCAL_INCOME_PREVIEW = '''
+        // Local activity settlement owns fractions and expiry. Keep the native
+        // label/progress controls and request one consistent ledger projection.
+        if (Services is IHomeIncomeWindowPreview localIncome
+            && localIncome.TryGetIncomePreview(HangUpId, out long localCount, out long localCapacity))
+        {
+            do
+            {
+                SetOutputCountTxt(localCount, localCapacity);
+                if (HangUpProgress != null)
+                    HangUpProgress.fillAmount = localCapacity > 0 ? (float)localCount / localCapacity : 0;
+                yield return null;
+            }
+            while (localIncome.TryGetIncomePreview(HangUpId, out localCount, out localCapacity));
+            yield break;
+        }
+'''
+
+
+def original_controller_bytes(name, raw):
+    if name.endswith('/FurnitureBedDialog.cs'):
+        insertion = LOCAL_INCOME_PREVIEW.encode('utf8')
+        if raw.count(insertion) > 1:
+            raise ValueError('The local income boundary is duplicated.')
+        return raw.replace(insertion, b'')
+    return raw
+
 
 def build(source_root=None, reuse_selected=False):
     inputs, outputs = {}, {}
@@ -201,6 +228,9 @@ namespace Zjcs.Official.HomeHangUpWindowsUI
     text = text.replace('ResourceLoader.LoadSprite(hangUpRewardItem.Icon).AddTo(ref mDisposableBag).Result', 'mDisposableBag.Add(Services.Resources.LoadAsset<Sprite>(hangUpRewardItem.Icon)).Result')
     text = text.replace('mainPlayer.CalcOutputAdditionExtStore(', 'Services.CalcOutputAdditionExtStore(')
     text = text.replace('TimeUtils.SecondToHour(hangUpSeconds)', '(hangUpSeconds / 3600.0)')
+    timer = method(text, 'private IEnumerator HangUpTimer()')
+    opening = timer.index('{') + 1
+    text = replace(text, timer, timer[:opening] + LOCAL_INCOME_PREVIEW + timer[opening:])
     emit('FurnitureBedDialog', text)
 
     text = clean(read('BlessingRuleBtn'))
@@ -247,7 +277,8 @@ namespace Zjcs.Official.HomeHangUpWindowsUI
     text = text.replace('    public IHomeHangUpWindowServices Services { protected get; set; }', '')
     emit('RuleTipNumer', text)
 
-    for name in ('HomeHangUpWindowServices', 'HomeBlessingRuleServices', 'OfficialHomeHangUpWindowAssetCatalog'):
+    for name in ('HomeHangUpWindowServices', 'HomeBlessingRuleServices', 'OfficialHomeHangUpWindowAssetCatalog',
+                 'IHomeIncomeWindowPreview'):
         path = DEST/(name+'.cs')
         for item in (path, metadata(path)): outputs[item.relative_to(ROOT).as_posix()] = sha(item)
     path = DEST/'Zjcs.Official.HomeHangUpWindowsUI.asmdef'
@@ -270,12 +301,25 @@ namespace Zjcs.Official.HomeHangUpWindowsUI
         inputs[path.relative_to(ROOT).as_posix()] = sha(path)
     if selected:
         for name, previous in previous_outputs.items():
-            if (ROOT/name).read_bytes() != previous:
+            if original_controller_bytes(name, (ROOT/name).read_bytes()) != original_controller_bytes(name, previous):
                 raise ValueError('Reproduction changed the existing window output: ' + name)
     proof = dict(manifest=code.parent.name, generator_sha256=sha(Path(__file__)), inputs=inputs, outputs=outputs,
         scope='Original bed window, output source/upgrade preview, quick-receive and blessing-rule controllers. Explicit typed player, property, transaction and presentation owners; native assets, real local binding and Player validation are separate.')
     if selected:
         proof['source_reuse'] = dict(code_prefix=code.relative_to(source_root).as_posix(), binding_ancestry=ancestry)
+    controller = DEST/'FurnitureBedDialog.cs'
+    proof['local_income_preview'] = dict(
+        interface='unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/IHomeIncomeWindowPreview.cs',
+        original_controller_sha256=hashlib.sha256(original_controller_bytes(controller.as_posix(), controller.read_bytes())).hexdigest(),
+        adaptation='An optional local data owner supplies the earned count and effective capacity to the original label and progress image. '
+            'It refreshes through activity expiry even while full. The original timer remains the fallback and no native hierarchy or asset changes.')
+    proof['local_income_preview']['runtime_bindings'] = {name: sha(ROOT/name) for name in (
+        'unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs',
+        'unity/Assets/Game/Runtime/Presentation/Home/OfflineHomeBedServices.cs')}
+    proof['local_income_preview']['validation_inputs'] = {name: sha(ROOT/name) for name in (
+        'unity/Assets/Game/Validation/HomeOutputDetail/HomeOutputDetailVerification.cs',
+        'unity/Assets/Game/Validation/HomeOutputDetail/HomeOutputDetailVerification.Income.cs',
+        'unity/Assets/Game/Validation/HomeOutputDetail/HomeOutputDetailVerification.Income.cs.meta')}
     receipt_path.write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
     return proof
 
