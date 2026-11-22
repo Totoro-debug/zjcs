@@ -1,6 +1,7 @@
 """Source isolation and cache reuse tests for the worktree-free Unity exporter."""
 import json
 import hashlib
+import io
 from pathlib import Path
 import subprocess
 import unittest
@@ -81,6 +82,44 @@ class SnapshotTests(unittest.TestCase):
             dict(format=1, repository=str(self.workspace))), 'utf8')
         with self.assertRaisesRegex(ValueError, 'another repository'):
             snapshot(self.repository, self.workspace)
+
+    def test_first_archive_drains_padding_before_waiting_for_git(self):
+        archive = subprocess.check_output(['git', '-C', str(self.repository), 'archive', 'HEAD', '--', 'unity/Assets'])
+        payload = archive + bytes(64 * 1024)
+
+        class PaddedArchive:
+            def __init__(self):
+                self.stdout = io.BytesIO(payload)
+                self.returncode = None
+
+            def wait(self):
+                if self.returncode is None:
+                    # A Windows pipe writer can still be blocked on this tail
+                    # after tarfile has recognized the archive terminator.
+                    if self.stdout.tell() != len(payload):
+                        raise AssertionError('Git archive output was not drained before waiting')
+                    self.returncode = 0
+                return self.returncode
+
+            def poll(self):
+                return self.returncode
+
+            def terminate(self):
+                self.returncode = -1
+
+        process = PaddedArchive()
+        original_popen = subprocess.Popen
+
+        def start(arguments, *args, **kwargs):
+            if 'archive' in arguments:
+                return process
+            return original_popen(arguments, *args, **kwargs)
+
+        with patch('committed_unity_snapshot.subprocess.Popen', side_effect=start):
+            root = snapshot(self.repository, self.workspace)
+        self.assertEqual(process.returncode, 0)
+        self.assertTrue(process.stdout.closed)
+        self.assertEqual((root / self.asset.relative_to(self.repository)).read_bytes(), b'// original\nclass Test {}\n')
 
     def test_explicit_line_endings_and_lfs_payload(self):
         (self.repository / '.gitattributes').write_text('*.cs text eol=crlf\n')

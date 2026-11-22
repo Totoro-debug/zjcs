@@ -157,6 +157,11 @@ def snapshot(repository, workspace, commit='HEAD'):
                         restore_lfs(repository, path)
                     else:
                         raise ValueError('Unexpected archived input: ' + member.name)
+            # tarfile stops at the archive terminator, before Git's padded
+            # output necessarily fits in a Windows anonymous pipe. Drain the
+            # remaining bytes before waiting for the writer to exit.
+            while process.stdout.read(1024 * 1024):
+                pass
             if process.wait() != 0:
                 raise RuntimeError('Committed source export failed')
         finally:
