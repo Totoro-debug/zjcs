@@ -48,6 +48,8 @@
 
 ## 状态口径与共用约定
 
+主城功能在独立工程副本和隔离存档中验证，共用主工程留给其他会话使用。
+
 各建筑页分别记录原始功能描述、完成概要和单机适配实现；共用口径见[建筑管理](buildings/management.md#原始描述与完成口径)。主城、本地产出及多项设施玩法已有实现，整体仍有界面、入口和规则待补齐。完整可玩与交付按工程约定核实，包括真实运行、渲染、存档恢复和 Windows Player 验证。见[工程验证和发布约定](../common/unity-project.md)。
 
 [全模块刷新时刻](../common/refresh-time.md) · [离线开放与社交范围](../common/offline-access.md) · [本地存档](../settings/settings-and-save.md) · [世界阶段推进](../maps/manual-world-stage.md)。
