@@ -8,6 +8,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from official_apk import Apk, ROOT
+from official_source import OfficialSource
 from official_ec_codec import Formats
 from official_map_codec import unpack
 
@@ -20,10 +21,13 @@ def sha(path):
 
 
 def build(runtime_ref=None):
+    source = OfficialSource()
+    code = ROOT / '.tools/source-packages/current' / source.version / 'official-code'
+    formats = Formats(code)
     payload_path = ROOT / 'unity/Assets/Official/Combat/battle-rules.json'
     payload = json.loads(payload_path.read_text('utf8'))
     versions = []
-    for version in ('854_156383', '871_156598'):
+    for version in (source.version,):
         apk = Apk(manifest=version)
         found, sources, status_ai, damage_process, status_end = {}, [], None, None, None
         for path, pointer in apk.container('config_ec'):
@@ -43,22 +47,22 @@ def build(runtime_ref=None):
                     continue
                 for typ, value in components:
                     if identity == 24062 and typ.removeprefix('Common.') == 'FightStatusComponent':
-                        decoded = Formats().component(typ, value)
+                        decoded = formats.component(typ, value)
                         if decoded != payload['entities']['24062']['FightStatusComponent']:
                             raise ValueError('Official status/AI configuration differs from runtime: '+version)
                         status_ai = decoded['AI']
                     if identity == 24062 and typ.removeprefix('Common.') == 'FightStatusDamageProcessComponent':
-                        decoded = Formats().component(typ, value)
+                        decoded = formats.component(typ, value)
                         if decoded != payload['entities']['24062']['FightStatusDamageProcessComponent']:
                             raise ValueError('Official damage-process configuration differs from runtime: '+version)
                         damage_process = decoded
                     if identity == 24062 and typ.removeprefix('Common.') == 'StatusEndComponent':
-                        decoded = Formats().component(typ, value)
+                        decoded = formats.component(typ, value)
                         if decoded != payload['entities']['24062']['StatusEndComponent']:
                             raise ValueError('Official status-end configuration differs from runtime: '+version)
                         status_end = decoded
                     if typ.removeprefix('Common.') == WANTED[identity]:
-                        decoded = Formats().component(typ, value)
+                        decoded = formats.component(typ, value)
                         if decoded != payload['entities'][str(identity)][WANTED[identity]]:
                             raise ValueError(f'Official {version} configuration differs from runtime: {identity}')
                         found[str(identity)] = {'parent': parent, 'component': WANTED[identity], 'value': decoded}
@@ -72,17 +76,17 @@ def build(runtime_ref=None):
     source_paths = [
         'unity/Assets/Official/Combat/battle-rules.json', 'unity/Assets/Official/Combat/battle-texts.json',
         'unity/Assets/Official/Combat/skill-rules.json',
-        '.tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusAccDmgAndCastCustomDamageComponentInfo.cs',
-        '.tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusTriggerSkillCfg.cs',
-        '.tools/source-packages/current/871_156598/official-code/common-source/Common/HitDamageType.cs',
-        '.tools/source-packages/current/871_156598/official-code/common-source/Common/DamageResultType.cs',
-        '.tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusUtilsHandler.cs',
-        '.tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusAiCfg.cs',
-        '.tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusDamageProcessComponentInfo.cs',
-        '.tools/source-packages/current/871_156598/official-code/common-source/Common/StatusEndComponentInfo.cs',
-        '.tools/source-packages/current/871_156598/official-code/common-source/Common/StatusTriggerTarget.cs',
-        '.tools/source-packages/current/871_156598/official-code/common-source/Common/DamageProcessPhase.cs',
-        '.tools/source-packages/current/871_156598/official-code/common-source/Common/BattleFormulaHandler.cs']
+        f'.tools/source-packages/current/{source.version}/official-code/common-source/Common/FightStatusAccDmgAndCastCustomDamageComponentInfo.cs',
+        f'.tools/source-packages/current/{source.version}/official-code/common-source/Common/FightStatusTriggerSkillCfg.cs',
+        f'.tools/source-packages/current/{source.version}/official-code/common-source/Common/HitDamageType.cs',
+        f'.tools/source-packages/current/{source.version}/official-code/common-source/Common/DamageResultType.cs',
+        f'.tools/source-packages/current/{source.version}/official-code/common-source/Common/FightStatusUtilsHandler.cs',
+        f'.tools/source-packages/current/{source.version}/official-code/common-source/Common/FightStatusAiCfg.cs',
+        f'.tools/source-packages/current/{source.version}/official-code/common-source/Common/FightStatusDamageProcessComponentInfo.cs',
+        f'.tools/source-packages/current/{source.version}/official-code/common-source/Common/StatusEndComponentInfo.cs',
+        f'.tools/source-packages/current/{source.version}/official-code/common-source/Common/StatusTriggerTarget.cs',
+        f'.tools/source-packages/current/{source.version}/official-code/common-source/Common/DamageProcessPhase.cs',
+        f'.tools/source-packages/current/{source.version}/official-code/common-source/Common/BattleFormulaHandler.cs']
     runtime_revision = subprocess.check_output(['git', 'rev-parse', '--verify', runtime_ref + '^{commit}'],
         cwd=ROOT, text=True).strip() if runtime_ref else None
 
@@ -97,9 +101,11 @@ def build(runtime_ref=None):
         'FightOfficialCombatCatalog.cs', 'FightStatusLifecycle.cs', 'FightBattleState.cs',
         'FightStatusCreatorDamageBoostRuntime.cs', 'FightBattleHitExecutor.cs', 'FightStatusPropertyRuntime.cs')]
     runtime_paths.append('unity/Assets/Game/Runtime/Offline/Combat/FightStatusPropertyPairs.cs')
-    receipt = {'config_manifest': '854_156383', 'code_manifest': '871_156598',
+    numeric_source = json.loads((ROOT / 'unity/Assets/Official/Combat/skill-rules-source-manifest.json').read_bytes())
+    receipt = {'config_manifest': source.version, 'code_manifest': source.version,
+               'runtime_numeric_manifest': numeric_source['manifest'],
                'language_manifest': texts['language_manifest'], 'versions': versions,
-               'runtime_config_identical_in_both_versions': True,
+               'runtime_component_config_matches_current_input': True,
                'description': description,
                'inputs': [{'path': path, 'sha256': sha(ROOT / path)} for path in source_paths],
                'generator_sha256': sha(__file__),
@@ -116,7 +122,7 @@ def build(runtime_ref=None):
                'scope': 'Official configuration, descriptions and the integer distribution helper are available. The server allocation, MoreHit comparator and damage-process hook are absent; their wiring follows the user-confirmed offline rules.'}
     target = ROOT / 'assets/reference/battle-rules/accumulated-damage-source-manifest.json'
     target.write_bytes((json.dumps(receipt, ensure_ascii=False, indent=2) + '\n').encode('utf8'))
-    print('Verified official 24062 -> 13148 -> 13149 in both manifests; runtime configuration is identical.')
+    print('Verified current official 24062 -> 13148 -> 13149 component configuration; retained numeric source is identified separately.')
 
 
 if __name__ == '__main__':

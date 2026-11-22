@@ -1,279 +1,37 @@
 {
-  "config_manifest": "854_156383",
-  "code_manifest": "871_156598",
+  "config_manifest": "903_156948",
+  "code_manifest": "903_156948",
+  "runtime_numeric_manifest": "854_156383",
   "language_manifest": "871_156598",
   "versions": [
     {
-      "manifest": "854_156383",
+      "manifest": "903_156948",
       "inputs": [
         {
           "bundle": "defaultpackage_assets_config_ec.bundle",
-          "bundle_hash": "807603736d511bb29adf0d607a139d95",
+          "bundle_hash": "aa0cc702699dec89dc3440b1bd85e4f5",
           "path_id": "694607564633613521",
           "origin": "apk_zip",
-          "manifest": "854_156383",
-          "apk_manifest": "854_156383",
-          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-          "apk_entry": "assets/yoo/DefaultPackage/807603736d511bb29adf0d607a139d95.bundle",
-          "raw_size": 6901264,
-          "raw_sha256": "0fff321f5f2382947543b8b4cfa027dfef7716d3510219a6b185a9b7158b7e74",
+          "manifest": "903_156948",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+          "apk_entry": "assets/yoo/DefaultPackage/aa0cc702699dec89dc3440b1bd85e4f5.bundle",
+          "raw_size": 6879371,
+          "raw_sha256": "4ac3d96c533455cd6c1af8f2c64a3276f4fc21d95764c118f2e4c6fb2de03578",
           "file": "Assets/Config/EC/FightSkill_part157.g.bytes",
-          "payload_sha256": "f62def9bc6b1640d2c8f684db9cb64d21eb70642c766192f0e857e562ce9356b"
+          "payload_sha256": "93d2ea57e55bb176be08031ab0da40dd5b880e126b3c1e2950e5419ef861eb12"
         },
         {
           "bundle": "defaultpackage_assets_config_ec.bundle",
-          "bundle_hash": "807603736d511bb29adf0d607a139d95",
+          "bundle_hash": "aa0cc702699dec89dc3440b1bd85e4f5",
           "path_id": "-6459378756665213338",
           "origin": "apk_zip",
-          "manifest": "854_156383",
-          "apk_manifest": "854_156383",
-          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-          "apk_entry": "assets/yoo/DefaultPackage/807603736d511bb29adf0d607a139d95.bundle",
-          "raw_size": 6901264,
-          "raw_sha256": "0fff321f5f2382947543b8b4cfa027dfef7716d3510219a6b185a9b7158b7e74",
-          "file": "Assets/Config/EC/FightSkill_part703.g.bytes",
-          "payload_sha256": "3f2e4fd64dced6438a17dbbb714a208d661012300897e03b6c0e56a4996131b2"
-        }
-      ],
-      "entities": {
-        "13148": {
-          "parent": 0,
-          "component": "FightSkillComponent",
-          "value": {
-            "SkillType": 0,
-            "CostType": 0,
-            "SkillTargetType": 1,
-            "TargetType": 1,
-            "HitTargetActionType": 0,
-            "ElementType": 0,
-            "RangeType": 1,
-            "Range": [],
-            "HitList": [
-              {
-                "ClassId": 13149,
-                "Delay": 0.0,
-                "ActOnSouce": 0,
-                "IgnoreAICount": false
-              }
-            ],
-            "SourceMoveList": [],
-            "ActionDuration": 1.0,
-            "AllEndedActionDuration": -1.0,
-            "AllRelevantEndedActionDuration": -1.0,
-            "Duration": 1.0,
-            "AllEndedDuration": -1.0,
-            "AllRelevantEndedDuration": -1.0,
-            "LimitedTimes": -1,
-            "ResetCDAtStart": false,
-            "ExtSkill": [],
-            "Replay": {
-              "Rate": 0.0,
-              "ReplaceSkillArrayOnReplay": []
-            },
-            "ReplayMaxCountEachRound": -1,
-            "CanTriggerChild": false,
-            "CanTriggerStatusEntityIds": [
-              24203
-            ],
-            "Ai": {
-              "DontKeepDistance": false,
-              "AiPriorityTypes": [],
-              "LastAIPriorityTypes": [],
-              "IgnoreStatusArray": [],
-              "AIPriroityCharacterType": 8,
-              "ReleaseWhileRidicule": false,
-              "ReleaseWhileConfusion": false,
-              "IsReleaseSkillAfterMove": false,
-              "IsFixSkillDirection": false,
-              "FixedDirection": 0,
-              "MoveByTeleport": false,
-              "AIPriorityHpLowerCharacterTypeFilter": [],
-              "AiPriorityPropType": 0,
-              "AiPriorityFindMax": true,
-              "AIPriorityCharacterTypeGroups": []
-            },
-            "ActionType": 0,
-            "FlipSource": false,
-            "NeedConditionStatusMeetToRelease": false,
-            "MustHaveValidCost": false,
-            "IsFixedProp": false,
-            "ResetReleasedTimeOnNextWave": false
-          }
-        },
-        "13149": {
-          "parent": 0,
-          "component": "FightHitFixedComponent",
-          "value": {
-            "DamageId": 13147,
-            "DamageType": 8,
-            "DamageBasicProp": 1,
-            "DamageProp": 200,
-            "FixedDamageProp": 190,
-            "DamageParam": 10000,
-            "DamageActionType": 4,
-            "DelayDistFactor": 0.0,
-            "Offset": [
-              0.0,
-              0.0,
-              0.0
-            ],
-            "TargetOffset": [
-              0.0,
-              0.0,
-              0.0
-            ],
-            "IsUseCenterRotation": false,
-            "RotateCenterOffset": [
-              0.0,
-              0.0,
-              0.0
-            ],
-            "UseDamageFactor": false,
-            "DamageIgnoreShield": false,
-            "IsTrueDamage": false,
-            "AirCombo": {
-              "AirComboStatusId": 0,
-              "BasePercent": 0.0,
-              "AffectedByProp": false
-            },
-            "DestroyDelay": 0.10000000149011612,
-            "IsBreakResilience": false,
-            "Scope": [
-              {
-                "Pos": {
-                  "X": 0,
-                  "Y": 0
-                },
-                "Delay": 0.0,
-                "DamageOffset": [
-                  0.0,
-                  0.0,
-                  0.0
-                ],
-                "DamageRotation": [
-                  0.0,
-                  0.0,
-                  0.0,
-                  1.0
-                ],
-                "DamageRotZOffset": 0.0,
-                "FlipBySourceX": true,
-                "FlipByTargetY": true
-              }
-            ]
-          }
-        },
-        "24062": {
-          "parent": 0,
-          "component": "FightStatusAccDmgAndCastCustomDamageComponent",
-          "value": {
-            "StatusReplacePropertyValues": [],
-            "StatusTriggerSkillCfg": {
-              "SkillId": 13148,
-              "BasePercent": 1.0,
-              "AffectedByProp": false,
-              "Source": 3,
-              "UseAI": false,
-              "PropTarget": {
-                "IsEnemy": false,
-                "RoleType": [],
-                "IncludeApplicator": false,
-                "PropType": 0,
-                "Heighest": false,
-                "SupportCustomFilter": false
-              },
-              "Target": 2,
-              "TargetPos": 1,
-              "StackedCountToDamageFactor": false,
-              "CustomDamageInfo": {
-                "TargetType": 0,
-                "BaseProp": 0,
-                "BaseCurrentHp": false,
-                "DamageProp": 0,
-                "UpperLimitTarget": 0,
-                "UpperLimitPropType": 0,
-                "UpperLimitPercent": 0
-              },
-              "StatusReplacePropertyValues": [],
-              "TargetWithoutStatusIds": []
-            },
-            "AccumulationDamagePer": 3000,
-            "DamageType": 1,
-            "HitDamageTypes": [
-              1,
-              2,
-              3,
-              4,
-              5,
-              6,
-              7
-            ],
-            "OnlyAccDmgByStatusCreator": false,
-            "TriggerDamageAddToDamageSource": true
-          }
-        }
-      },
-      "status_ai": {
-        "MoreHit": true
-      },
-      "damage_process": {
-        "StatusReplacePropertyValues": [],
-        "Target": 2,
-        "ProcessPhase": 0,
-        "DamageType": 1,
-        "SourceActionTypes": [],
-        "ReducePercentPropType": 0,
-        "AddPercentPropType": 231,
-        "TriggerOnlyDamageFromApplicator": true,
-        "UseHitEventToApplicator": true,
-        "TriggerOnlyDamageFromCreatorAndSummons": false,
-        "CheckSourceIsEnemy": false
-      },
-      "status_end": {
-        "StatusReplacePropertyValues": [],
-        "NotStatusMutex": false,
-        "StatusTriggerSkillCfgs": [],
-        "StatusTriggerStatusCfgs": [],
-        "RemoveApplyEntity": false,
-        "AutoRemove": {
-          "ResetTimerWhenInvoke": false,
-          "Duration": -1.0,
-          "MaxCount": -1,
-          "RemoveStatusCfgs": [],
-          "RemoveTarget": 0
-        },
-        "ForbiddenStatus": {
-          "Target": 0,
-          "StatusEntityClassId": 0,
-          "Forbidden": false
-        },
-        "CheckApplyAlive": false
-      }
-    },
-    {
-      "manifest": "871_156598",
-      "inputs": [
-        {
-          "bundle": "defaultpackage_assets_config_ec.bundle",
-          "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
-          "path_id": "694607564633613521",
-          "origin": "official_cdn",
-          "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
-          "manifest": "871_156598",
-          "bundle_size": 6898815,
-          "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595",
-          "file": "Assets/Config/EC/FightSkill_part157.g.bytes",
-          "payload_sha256": "f62def9bc6b1640d2c8f684db9cb64d21eb70642c766192f0e857e562ce9356b"
-        },
-        {
-          "bundle": "defaultpackage_assets_config_ec.bundle",
-          "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
-          "path_id": "-6459378756665213338",
-          "origin": "official_cdn",
-          "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
-          "manifest": "871_156598",
-          "bundle_size": 6898815,
-          "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595",
+          "manifest": "903_156948",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+          "apk_entry": "assets/yoo/DefaultPackage/aa0cc702699dec89dc3440b1bd85e4f5.bundle",
+          "raw_size": 6879371,
+          "raw_sha256": "4ac3d96c533455cd6c1af8f2c64a3276f4fc21d95764c118f2e4c6fb2de03578",
           "file": "Assets/Config/EC/FightSkill_part703.g.bytes",
           "payload_sha256": "3f2e4fd64dced6438a17dbbb714a208d661012300897e03b6c0e56a4996131b2"
         }
@@ -494,7 +252,7 @@
       }
     }
   ],
-  "runtime_config_identical_in_both_versions": true,
+  "runtime_component_config_matches_current_input": true,
   "description": {
     "key": "entry_24062_desc",
     "text": "承受状态施加者造成的伤害增加，且会被优先选择为攻击目标，魔印消失时，额外受到1次物理伤害，伤害量为期间除真实伤害之外对其生命造成伤害的30%。"
@@ -513,99 +271,106 @@
       "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
     },
     {
-      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusAccDmgAndCastCustomDamageComponentInfo.cs",
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/FightStatusAccDmgAndCastCustomDamageComponentInfo.cs",
       "sha256": "3e3863e11aa8f87968ec38d8d34d74876450713c23319a0a1c016afe688a1f4c"
     },
     {
-      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusTriggerSkillCfg.cs",
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/FightStatusTriggerSkillCfg.cs",
       "sha256": "690c2b807601c00d473c7ab054d75ed8e4ffd14362b5f21efccadfe60fcd4e32"
     },
     {
-      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/HitDamageType.cs",
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/HitDamageType.cs",
       "sha256": "757e60cd3e1a05da9a008326e0b7c5d96c3757dc86ec8acb350e3adc155098f0"
     },
     {
-      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/DamageResultType.cs",
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/DamageResultType.cs",
       "sha256": "916ee63a1c4d71e365a4638d774764ed7f3903acbb480f627899e925f5fa72d4"
     },
     {
-      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusUtilsHandler.cs",
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/FightStatusUtilsHandler.cs",
       "sha256": "7ac28ba04c74cf5908f4014f41505282e28168857dc73d75d1b2093469d09421"
     },
     {
-      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusAiCfg.cs",
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/FightStatusAiCfg.cs",
       "sha256": "ec20e05fdbefe4347942476732955971d3933ae279e6b3de871e533cde491db1"
     },
     {
-      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusDamageProcessComponentInfo.cs",
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/FightStatusDamageProcessComponentInfo.cs",
       "sha256": "0e8140db86d71ad5bfef0b830809401eaa3c0aa1320f76a918c761759d534c9e"
     },
     {
-      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StatusEndComponentInfo.cs",
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/StatusEndComponentInfo.cs",
       "sha256": "d2e6bc5feb33cd17310b757ef0fce1ad6259d6a373707e82385d5f53c18e5732"
     },
     {
-      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StatusTriggerTarget.cs",
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/StatusTriggerTarget.cs",
       "sha256": "820889e1c2ece988f8a08843ff9b1801e46a624a208cb6c64e4ec3d4971fe652"
     },
     {
-      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/DamageProcessPhase.cs",
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/DamageProcessPhase.cs",
       "sha256": "c7670a30c83c2805eb22666cf83eb4e2d35c21954965ddbf80c7cd54d299a1de"
     },
     {
-      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/BattleFormulaHandler.cs",
-      "sha256": "d464f1f70a436185e946194eb37419685d3fca441f35d829789654281e4e17da"
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/BattleFormulaHandler.cs",
+      "sha256": "2cb7cd93c66502a4c935b63f8e52200014ae5e6da8eec84302f274391f1e667c"
     }
   ],
-  "generator_sha256": "1bf791df9c96f003b966e0c1466d5d19781bfda9348edee03b66100da198f13a",
+  "generator_sha256": "b6a572dfe4db1160b6f5a112f2d11ceb0faf812c159b8414018110142edf3ee5",
+  "runtime_reference": {
+    "git_commit": "9dcb448a76974d7ee84a565f64f6f8c3f3d2b7d3"
+  },
   "runtime": [
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusAccumulatedDamageRuntime.cs",
-      "sha256": "3b0e23ad5d1aac16ab42d259c8be37aca582f9c5f9b5fcfb17fb076f6b68e733"
+      "sha256": "6f683c852411a7a1dc2c8e17b6eee9af15b185c92ded96cbc0777634142729de"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.AccumulatedDamage.cs",
-      "sha256": "d892b6ed9c4b5148994742477eec97ad695b2acb1667e337d6bf51207399298e"
+      "sha256": "881523bd2b06daff3390271408b25c76d05727ae8315478fb410fb984188c484"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs",
-      "sha256": "2df5875c74f8b34e777502423a6685b7822c5781e3a902339e041e6d3b826526"
+      "sha256": "5635e8e74ea829916b7ee5424f78909bac3144a16ef1aa00c4c9c0572ec3c9c2"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportBuilder.cs",
-      "sha256": "74627ff21e4bf70d8b2806be230d723ee2a4fe9bf7114fd9b4704a43cce13184"
+      "sha256": "7206b664c8ed5158a38541f8ea014b68177fa8f55aa4cbe19b28ae2315c6e3f6"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleTargeting.cs",
-      "sha256": "665e0b383093a3f17bfc134abd5999691bdb539fbaa96aac503c6536a168360e"
+      "sha256": "f82772856dfaaf5663de737632a32163d2941b593c175475b7ded47eace64d1a"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
-      "sha256": "c4443912e093de3aabf47736190b1546f6c8390985a0eee92de968235aede81c"
+      "sha256": "72543ea097805343abc440d8b82c730da4c5ef6dd6e632d153c5ebb75b008dbf"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs",
-      "sha256": "ce104333eb39d85e55c7389d99d46a4fecfee525a2c3263123d54c397b75bc3a"
+      "sha256": "fac82cc9d35e8a4be9fae9bced46312c645d9a2a78325aae09c00a684602698f"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs",
-      "sha256": "82ac2bfba9e409401573e24378df20ab975b5eba62885861331e13c5945ab00a"
+      "sha256": "7bd61622f4b60abab9c10d6142065883dcc7fcaef8fe3b667971a8fc2d7ae117"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
-      "sha256": "56c363bffbe5dba2ef30b5aed2a2774f799d6a053f31c4ab9ce5e845f7809a89"
+      "sha256": "7ef37128d2aa2c62474fe7081876f6aa5790f002b28a6e1109b1e332df3291e6"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusCreatorDamageBoostRuntime.cs",
-      "sha256": "0009eaf68b390f338384abd7d3eae2525d4a8c93d9f48c81788ca0890a2d9503"
+      "sha256": "db2aaf1bf20b0a4b11e646591cf7166e2a723a78abe38afa04bfb7ccd666f1e5"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleHitExecutor.cs",
-      "sha256": "4c066aef5a0693361c2571329ee5f02ce98ca3bda06c7e2200157ecc547a01cd"
+      "sha256": "86959f24c124d24e9e63f52ef2083b7c71f14b781f480b67f68c356bf4213ac5"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusPropertyRuntime.cs",
-      "sha256": "debd16a5cfb92cece29aed7a897867c2509d70a70fecd1a7d8b60815a3a4997d"
+      "sha256": "2f4c97a9732aeb9c83ad6463cd68625a83d8747f5c23dd4a3dbc8e9926f539d2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightStatusPropertyPairs.cs",
+      "sha256": "8aa00877a7e87899651604012148c2aeca2e3aa147325e086708503edcc9e381"
     }
   ],
   "status_property_inputs": {
@@ -631,7 +396,7 @@
   },
   "confirmed_offline_rules": {
     "dead_creator_expiration": "If the mark creator has died while the battle continues and the marked target remains alive, expiration still triggers the original damage chain and retains the original creator attribution. Do not revive the creator or admit ordinary dead-unit attacks.",
-    "creator_damage_boost": "For damage from the mark creator, multiply pre-shield damage by one plus resolved status property 231, then directly add fixed property 235. Other actors and creator summons do not receive the bonus; healing is unchanged.",
+    "creator_damage_boost": "For damage from the mark creator, add fixed property 235 to pre-shield damage, then multiply by one plus resolved status property 231. This follows the shared user-confirmed fixed-before-percent rule. Other actors and creator summons do not receive the bonus; healing is unchanged.",
     "additional_source_credit": "Allocate triggered actual HP loss proportionally to original actual HP contributions by source and skill; retain the independent mark hit. Exclude shield and overkill. Use the original DistributeLongProportional rounding/remainder helper.",
     "more_hit_priority": "Retain eligible targets and forced taunt/confusion constraints; prefer MoreHit marked attack targets before existing coverage/distance priorities."
   },
