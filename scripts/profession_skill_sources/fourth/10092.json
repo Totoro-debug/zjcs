@@ -1,0 +1,42 @@
+{
+  "entities": [
+    12010,
+    12011,
+    12012,
+    24192,
+    24384
+  ],
+  "reused_client_code": [
+    "MyFightStatus",
+    "MyAction",
+    "MyEntity",
+    "MyFightSkill",
+    "MyFightHitFixed",
+    "MyFightDamage"
+  ],
+  "code": [
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "FightStatusComponentInfo",
+    "BattleFormulaHandler",
+    "ActionType",
+    "SkillAiCfg",
+    "FightStatusRoundIntervalComponentInfo",
+    "FightStatusPropComponentInfo"
+  ],
+  "rule_pack_fragments": [
+    "FightSkill_part101.g.bytes",
+    "FightSkill_part709.g.bytes",
+    "FightSkill_part720.g.bytes"
+  ],
+  "visibility_bundles": [
+    12010
+  ],
+  "runtime_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10092.json"
+  ],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/battlecry-current-graphs-source-manifest.json"
+  ]
+}

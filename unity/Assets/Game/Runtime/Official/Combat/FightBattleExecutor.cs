@@ -2710,6 +2710,7 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState owner = application.TargetType == 1 ? actor : target;
             if (owner == null || (owner.Hp <= 0
                 && !statusCatalog.HasBackToLifeComponent(application.StatusId))) return false;
+            if (!AllowsRoleBuffRecipient(skill, owner)) return false;
             if (application.LessThanHpPer >= 0f
                 && owner.Hp / (double)Math.Max(1L, owner.MaxHp) >= application.LessThanHpPer) return false;
             double chance = application.Chance;
@@ -2749,6 +2750,7 @@ namespace Zjcs.Combat.Official
             try { applied = FightStatusLifecycle.Apply(owner, template, -1, instanceId, random); }
             finally { statusApplicationDamage = previousDamage; }
             if (applied == null) return false;
+            ApplyImmediateRoundInterval(owner, applied);
             FightDamageFalloff.RecordApplyingHit(actor, target, skill, hit, applied, sourceDamage);
             pendingBefore.TryGetValue(applied, out int previousPending);
             int added = Math.Max(0, applied.SkillCooldownActionPendingCount - previousPending);

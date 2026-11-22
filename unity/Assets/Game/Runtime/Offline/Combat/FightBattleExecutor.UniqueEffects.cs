@@ -7,10 +7,9 @@ namespace Zjcs.Combat.Official
         internal bool TryGetUniquePropertyEffect(int classId, out int propertyId)
         {
             propertyId = 0;
-            // First/second promotion's unique property effects: Void Blessing and
-            // Golden Fortress. Other unique components require their own defined rule.
-            if (classId != 24190 && classId != 24200
-                || !entities.TryGetValue(classId, out var components)) return false;
+            // The original component marks a single converted property as unique.
+            // Compare its resolved value, including the caster snapshot and cultivation.
+            if (!entities.TryGetValue(classId, out var components)) return false;
             var properties = Component(components, "FightStatusPropComponent");
             if (properties == null || !Bool(properties, "MutexByBetter")) return false;
             var transitions = FieldArray(properties, "TransitionPropCfgs");

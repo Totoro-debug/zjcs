@@ -366,7 +366,7 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleStatusState status in new List<FightBattleStatusState>(owner.Statuses))
             {
                 FightBattleStatusRoundIntervalComponentState component = status?.Components?.RoundInterval;
-                if (component == null || component.HasUnsupportedFilter
+                if (component == null || AdvancesOnApplication(status) || component.HasUnsupportedFilter
                     || FightStatusLifecycle.ResolveTargetUnitId(status, units) != listener?.Id)
                     continue;
                 if (component.ExcludedApplyCharacterTypes != null

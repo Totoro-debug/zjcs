@@ -112,6 +112,28 @@ namespace Zjcs.Editor
             OfficialSparseShaderVariants.ValidateSpiralWindBlade();
         }
 
+        public static void ValidateBattlecry()
+        {
+            var asset = Resources.Load<TextAsset>("Combat/battlecry-current-graphs");
+            var data = asset == null ? null : JsonUtility.FromJson<StatusData>(asset.text);
+            if (data?.graphs == null || data.graphs.Length != 2)
+                throw new InvalidOperationException("Current Battlecry status bindings are missing.");
+            var prefabs = new HashSet<GameObject>();
+            foreach (var row in data.graphs)
+            {
+                var entity = Resources.Load<GameObject>(row.resource);
+                if (!entity || !entity.GetComponent<MyEntity>() || !entity.GetComponent<MyFightStatus>()
+                    || row.id == 24192 && !entity.GetComponent<MyFightStatusProp>()
+                    || row.id == 24384 && !entity.GetComponent<MyFightStatusRoundInterval>())
+                    throw new InvalidOperationException("Current Battlecry status lost its original components.");
+                prefabs.Add(entity);
+                entity.GetComponent<MyFightStatus>().TryGetPlayables(ref prefabs);
+            }
+            CheckMissing(prefabs);
+            Debug.Log("Current Battlecry native attack, action-advance and playable bindings passed.");
+            OfficialSparseShaderVariants.ValidateBattlecry();
+        }
+
         private static void ValidateFamily(string resource, string family)
         {
             // Loading the effective catalog verifies every declared source hash.
