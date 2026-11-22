@@ -65,12 +65,13 @@ namespace Zjcs.Presentation.Home
             bool soulPiercer = skillId == 10089;
             bool dreadShadow = skillId == 10104;
             bool starBurst = skillId == 10002;
-            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || starBurst;
+            bool doomTorrent = skillId == 10056;
+            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || starBurst || doomTorrent;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
-            int profession = starBurst ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = starBurst || doomTorrent ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -305,6 +306,7 @@ namespace Zjcs.Presentation.Home
             if (soulPiercer) { actor.Hp = actor.MaxHp / 2; actor.Turn.Hp = actor.Hp; }
             int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, standfastTurns = 0, assaultHits = 0, soulBreakHits = 0, windHits = 0, flameHits = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
             int starBlindApplications = 0, starBlindEnds = 0;
+            int doomPushes = 0;
             battle.Controller.StepCompleted += step => {
                 if (starBurst) starBlindEnds += step.Event.StatusViewEvents.Count(view => view.Status.ClassId == 24234
                     && view.Status.CreatorId == 1 && view.Kind == FightBattleStatusViewEventKind.End);
@@ -360,6 +362,7 @@ namespace Zjcs.Presentation.Home
                         : soulPiercer ? cast.SkillEntityId == 11920
                         : dreadShadow ? cast.SkillEntityId == 12130
                         : starBurst ? cast.SkillEntityId == 11450
+                        : doomTorrent ? cast.SkillEntityId == 11080
                         : skillId == 10048 ? cast.SkillEntityId == 11090
                         : skillId == 10049 ? cast.SkillEntityId == 11100
                         : skillId == 10051 ? cast.SkillEntityId == 11260
@@ -374,6 +377,12 @@ namespace Zjcs.Presentation.Home
                     if (starBurst)
                     {
                         VerifyAcquiredStarBurst(step.Event, cast, damageEvents, checkpoint, output, ref starBlindApplications);
+                        hits += damageEvents.Length;
+                        continue;
+                    }
+                    if (doomTorrent)
+                    {
+                        VerifyAcquiredDoomTorrent(step.Event, cast, damageEvents, ref doomPushes);
                         hits += damageEvents.Length;
                         continue;
                     }
@@ -725,10 +734,16 @@ namespace Zjcs.Presentation.Home
                                 parent.name.StartsWith("Eff_Skill_Paladin04_WhirlpoolRagingWaves", StringComparison.Ordinal)));
                         if (!vortexVisible) { yield return null; continue; }
                     }
+                    else if (doomTorrent)
+                    {
+                        if (!FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
+                            && particle.GetComponentsInParent<Transform>().Any(parent => parent.name.StartsWith("playable11080", StringComparison.Ordinal))))
+                        { yield return null; continue; }
+                    }
                     else yield return new WaitForSecondsRealtime(hellfire ? .2f : crisisGuard || starShatteringSlash ? 1.45f
                         : shieldCharge ? 1.1f : .7f);
                     yield return CaptureAcquiredActive(output, "battle"); captured = true;
-                    if (heavenlyLightBlades || frostSong || swordWindDance || soulPiercer)
+                    if (heavenlyLightBlades || frostSong || swordWindDance || soulPiercer || doomTorrent)
                         for (int frame = 1; frame <= 4; frame++)
                         {
                             yield return new WaitForSecondsRealtime(.18f);
@@ -745,6 +760,7 @@ namespace Zjcs.Presentation.Home
             Require(!dreadShadow || fearApplications > 0 && capturedFear, "The acquired fear was never applied and rendered.");
             Require(!starBurst || starBlindApplications > 0 && starBlindEnds > 0 && capturedStarBlind,
                 "The acquired star burst never applied, rendered and consumed its original blinding status.");
+            Require(!doomTorrent || doomPushes > 0, "The acquired doom torrent never exercised its original outward knockback.");
             Require(!vortexSurge || vortexMovements > 0,
                 "The original vortex surge never exercised its inward knockback in the rendered battle.");
             Require(passiveCompanion != 10606 && passiveCompanion != 10607 || coldHits > 0,
