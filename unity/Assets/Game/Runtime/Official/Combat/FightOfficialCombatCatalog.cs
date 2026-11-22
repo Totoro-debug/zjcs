@@ -1210,7 +1210,7 @@ namespace Zjcs.Combat.Official
                 RoundStartRemoveWhenNotEnoughTimes = roundStart != null
                     && Bool(roundStart, "RemoveWhenNotEnoughTimes"),
                 HasRoundEndTrigger = roundEnd != null,
-                RoundEndRulesSupported = roundEnd != null && SupportsRoundEnd(roundEnd, classId == 25098),
+                RoundEndRulesSupported = roundEnd != null && SupportsRoundEnd(roundEnd),
                 RoundEndEntityCount = roundEnd == null ? null : ParseEntityCount(Component(roundEnd, "EntityCount")),
                 RoundEndListenTarget = roundEnd == null ? 0
                     : Int(roundEnd, "ListenTargetType"),
@@ -2784,10 +2784,12 @@ namespace Zjcs.Combat.Official
                 || Bool(target, "SupportCustomFilter"));
         }
 
-        private static bool SupportsRoundEnd(Dictionary<string, object> component, bool burningGround = false)
+        private static bool SupportsRoundEnd(Dictionary<string, object> component)
         {
             int listener = Int(component, "ListenTargetType");
             Dictionary<string, object> entityCount = Component(component, "EntityCount");
+            bool burningGround = entityCount != null && Int(entityCount, "EntityClassId") == 3051
+                && ArrayCount(entityCount, "Range") > 0;
             if (listener < 1 || listener > 4
                 || Int(component, "MaxCount", -1) < -1
                 || Bool(component, "AutoRemove")
@@ -2806,8 +2808,9 @@ namespace Zjcs.Combat.Official
                 Dictionary<string, object> custom = Component(trigger, "CustomDamageInfo");
                 Dictionary<string, object> propTarget = Component(trigger, "PropTarget");
                 int source = Int(trigger, "Source"), target = Int(trigger, "Target");
-                if (Bool(trigger, "AffectedByProp") || source != 2 && source != 3
-                    || target != (source == 3 || burningGround ? 2 : 5) || Bool(trigger, "UseAI")
+                bool supportedTarget = source == 3 && target == 2
+                    || source == 2 && (target == 5 || target == 2 && listener == 2);
+                if (Bool(trigger, "AffectedByProp") || !supportedTarget || Bool(trigger, "UseAI")
                     || Bool(trigger, "StackedCountToDamageFactor")
                     || Int(trigger, "TargetPos") != 1
                     || Float(trigger, "BasePercent", 1f) < 0f

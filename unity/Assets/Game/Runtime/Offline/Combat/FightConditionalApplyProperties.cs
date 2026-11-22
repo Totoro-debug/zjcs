@@ -107,4 +107,15 @@ namespace Zjcs.Combat.Official
             return Math.Max(0,count+rule.ResultOffset);
         }
     }
+
+    public sealed partial class FightOfficialCombatCatalog
+    {
+        public bool HasRoundEndEntityCountDefinition(int classId)
+        {
+            if (!entities.TryGetValue(classId, out var definition)) return false;
+            var roundEnd = Component(definition, "FightStatusRoundEndComponent");
+            return roundEnd != null && SupportsRoundEnd(roundEnd)
+                && ParseEntityCount(Component(roundEnd, "EntityCount")) != null;
+        }
+    }
 }

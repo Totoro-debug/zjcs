@@ -9,7 +9,8 @@ namespace Zjcs.Combat.Official
             bool restoreHit=previous!=null && !previous.DefinitionResolved;
             bool restoreApply=apply!=null && (!apply.DefinitionResolved
                 || apply.HasEntityCountScale && apply.EntityCountScale==null);
-            bool restoreRound=status?.ClassId==25098 && status.RoundEndEntityCount==null;
+            bool restoreRound=status!=null && status.RoundEndEntityCount==null
+                && statusCatalog?.HasRoundEndEntityCountDefinition(status.ClassId)==true;
             bool restoreBeforeEnd=status!=null && status.Components?.RoundBeforeEnd==null
                 && statusCatalog?.HasRoundBeforeEndDefinition(status.ClassId)==true;
             if((!restoreHit && !restoreApply && !restoreRound && !restoreBeforeEnd) || statusCatalog==null) return;

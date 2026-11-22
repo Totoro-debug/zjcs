@@ -229,7 +229,8 @@ namespace Zjcs.Combat.Official
                         if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
                             || !(trigger.Source == 3 && trigger.Target == 2
                                 || trigger.Source == 2 && (trigger.Target == 5
-                                    || status.ClassId == 25098 && trigger.Target == 2)) || trigger.UseAI
+                                    || status.RoundEndListenTarget == FightStatusLifecycle.TargetApplicator
+                                        && trigger.Target == 2)) || trigger.UseAI
                             || trigger.TargetPos != 1 || trigger.StackedCountToDamageFactor
                             || !Roll(trigger.BasePercent, random)) continue;
                         var caster = trigger.Source == 3 ? FindUnit(units, status.CreatorId) : statusOwner;
