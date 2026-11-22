@@ -99,8 +99,8 @@ namespace Zjcs.Combat.Official
                 result.IsCure = true;
                 conditionalProperties?.Merge(target, hit, result.Type, true, random, sourceProps);
                 custom = CustomDamage(actor, target, skill, hit, sourceProps, targetProps);
-                double reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
-                    skill, result.Type, true, random);
+                var reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
+                    skill, result.Type, true, random, formula);
                 long? customCure = skill.HasCustomCure ? (long?)skill.CustomCure : custom;
                 result.Cure = formula.CalculateCure(sourceProps, targetProps,
                     hit.DamageProperty, hit.FixedDamageProperty, customCure);
@@ -108,12 +108,8 @@ namespace Zjcs.Combat.Official
                     result.Cure.Cure, formula, 2);
                 result.Cure.AbsoluteCure = FightStatusDamageProcessRuntime.BeforeShield(actor, target,
                     result.Cure.AbsoluteCure, formula, 2);
-                if (reduction != 0.0)
-                {
-                    double scale = 1.0 / Math.Max(1.0 + reduction, 0.1);
-                    result.Cure.Cure = (long)(result.Cure.Cure * scale);
-                    result.Cure.AbsoluteCure = (long)(result.Cure.AbsoluteCure * scale);
-                }
+                result.Cure.Cure = reduction.Apply(result.Cure.Cure);
+                result.Cure.AbsoluteCure = reduction.Apply(result.Cure.AbsoluteCure);
                 ProcessTransient(result.Type, ref result.Cure.Cure, ref result.Cure.AbsoluteCure,
                     true, onTransient, onTransientDamage);
                 beforeCureSettlement?.Invoke(result.Cure);
@@ -139,9 +135,9 @@ namespace Zjcs.Combat.Official
                 conditionalProperties?.Merge(target, hit, result.Type, false, random, sourceProps);
                 if (result.Type.Blinding || result.Type.Dodge || result.Type.Immunity)
                     direct = 0;
-                double reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
-                    skill, result.Type, false, random);
-                direct = (long)(direct / Math.Max(1.0 + reduction, 0.1));
+                var reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
+                    skill, result.Type, false, random, formula);
+                direct = reduction.Apply(direct);
                 direct = FightDamageFalloff.Apply(random, actor, target, skill, hit,
                     direct, processedFalloffStatuses);
                 direct = FightStatusDamageProcessRuntime.BeforeShield(actor, target, direct, formula, 1);
@@ -190,9 +186,10 @@ namespace Zjcs.Combat.Official
                     skill == null ? 0 : skill.ElementType, result.Type, random);
                 conditionalProperties?.Merge(target, hit, result.Type, false, random, sourceProps);
                 custom = CustomDamage(actor, target, skill, hit, sourceProps, targetProps);
-                double reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
-                    skill, result.Type, false, random);
-                formula.AddPropertyValue(targetProps, "StatusDmgReducePer", reduction);
+                var reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
+                    skill, result.Type, false, random, formula);
+                formula.AddPropertyValue(targetProps, "StatusDmgReducePer", reduction.Percent);
+                formula.AddPropertyValue(targetProps, "FixedStatusDmgReduce", reduction.Fixed);
                 Func<double, double> customProps = skill != null && skill.CostType == 2
                     && hit.DamageType == 6 ? null
                     : amount => ApplyDamageCustomProps(random, target, targetProps, skill, amount);

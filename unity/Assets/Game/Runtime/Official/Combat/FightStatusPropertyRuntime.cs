@@ -56,6 +56,14 @@ namespace Zjcs.Combat.Official
                     continue;
                 }
                 Dictionary<int, long> resolved = Map(status.ResolvedProperties);
+                if (status.DamageReducePer != null)
+                {
+                    // This component owns the conditional pair. Merge it only for
+                    // an eligible incoming hit, alongside the component's counters.
+                    int percent = formula.PropertyId("StatusDmgReducePer");
+                    resolved.Remove(percent);
+                    resolved.Remove(FightStatusPropertyPairs.FixedProperty(percent));
+                }
                 int shieldId = formula.PropertyId("Shield");
                 if (status.ShieldKind != FightBattleShieldKind.None
                     && status.ShieldInitialized && resolved.ContainsKey(shieldId))

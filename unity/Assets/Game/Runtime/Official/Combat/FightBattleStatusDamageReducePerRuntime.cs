@@ -83,42 +83,79 @@ namespace Zjcs.Combat.Official
         }
     }
 
+    public struct FightBattleDamageReduction
+    {
+        public double Percent;
+        public double Fixed;
+
+        public long Apply(long value)
+        {
+            if (value == 0 || Percent == 0.0 && Fixed == 0.0) return value;
+            double amount = Math.Max(0.0, Math.Abs((double)value) - Fixed)
+                / Math.Max(1.0 + Percent, 0.1);
+            long result = amount >= long.MaxValue ? long.MaxValue : (long)amount;
+            return value < 0 ? -result : result;
+        }
+    }
+
     public static class FightBattleStatusDamageReducePerRuntime
     {
-        public static double Resolve(FightBattleUnitState source, FightBattleUnitState target,
+        public static FightBattleDamageReduction Resolve(FightBattleUnitState source, FightBattleUnitState target,
             FightBattleSkillDefinition skill, FightDamageTypeData damageType, bool isCure,
-            FightRandomStream random)
+            FightRandomStream random, FightDamageFormula formula)
         {
-            if (target == null || target.Statuses == null) return 0.0;
+            if (target == null || target.Statuses == null) return default;
             var remove = new List<FightBattleStatusState>();
-            double additive = 0.0;
-            double bestMutex = 0.0;
+            var additive = new FightBattleDamageReduction();
+            var bestMutex = new FightBattleDamageReduction();
             bool hasMutex = false;
             foreach (FightBattleStatusState status in target.Statuses)
             {
                 FightBattleStatusDamageReducePerInfo info = status == null ? null : status.DamageReducePer;
-                if (!FightSkillTriggerPolicy.AllowsStatus(skill, status)
+                if (status == null || status.ForbiddenType != 0 || !FightSkillTriggerPolicy.AllowsStatus(skill, status)
                     || info == null || !info.Supported || !Eligible(info, source, target, skill,
                     damageType, isCure) || info.MaxCount >= 0 && info.TriggeredCount >= info.MaxCount)
                     continue;
 
-                double reduction;
-                if (!TryGetReduction(status, info, source, target, random, out reduction)) continue;
-                reduction *= skill != null && skill.SkillType == 0
+                double scale;
+                if (!TryGetReduction(status, info, source, target, random, out scale)) continue;
+                scale *= skill != null && skill.SkillType == 0
                     ? info.ActiveSkillScale : info.NotActiveSkillScale;
+                var properties = new Dictionary<int, long>();
+                foreach (var value in status.StatusProperties ?? status.ResolvedProperties
+                    ?? new List<FightPropertyValue>())
+                    // Official status properties retain long storage when scaled.
+                    if (value != null) properties[value.Id] = (long)(value.Value * scale);
+                int percentId = formula.PropertyId("StatusDmgReducePer");
+                var reduction = new FightBattleDamageReduction {
+                    Percent = formula.ReadProperty(properties, percentId),
+                    Fixed = formula.ReadProperty(properties, FightStatusPropertyPairs.FixedProperty(percentId))
+                };
                 if (info.IsMutexByBetter)
                 {
-                    if (!hasMutex || reduction > bestMutex) bestMutex = reduction;
+                    // Preserve both channels from one winning effect.
+                    if (!hasMutex || reduction.Percent > bestMutex.Percent
+                        || reduction.Percent == bestMutex.Percent && reduction.Fixed > bestMutex.Fixed)
+                        bestMutex = reduction;
                     hasMutex = true;
                 }
-                else additive += reduction;
+                else
+                {
+                    additive.Percent += reduction.Percent;
+                    additive.Fixed += reduction.Fixed;
+                }
 
                 if (info.AutoDestroy && info.MaxCount >= 0
                     && info.TriggeredCount >= info.MaxCount)
                     remove.Add(status);
             }
             foreach (FightBattleStatusState status in remove) target.Statuses.Remove(status);
-            return additive + (hasMutex ? bestMutex : 0.0);
+            if (hasMutex)
+            {
+                additive.Percent += bestMutex.Percent;
+                additive.Fixed += bestMutex.Fixed;
+            }
+            return additive;
         }
 
         private static bool Eligible(FightBattleStatusDamageReducePerInfo info,
