@@ -301,10 +301,10 @@ namespace Zjcs.Presentation.Home
             }
             if (hellfire) PrepareAcquiredHellfire(actor);
             if (soulPiercer) { actor.Hp = actor.MaxHp / 2; actor.Turn.Hp = actor.Hp; }
-            int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, standfastTurns = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
+            int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, standfastTurns = 0, assaultHits = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
             battle.Controller.StepCompleted += step => {
                 if (hellfire) VerifyAcquiredHellfireStep(step.Event, actor, ref hellfireCures, ref hits);
-                if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits, ref standfastTurns);
+                if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits, ref standfastTurns, ref assaultHits);
                 var skillCasts = step.Event.SkillCasts.Where(value => value.ActorId == 1 && value.Slot == 0
                     && value.SkillItemId == skillId).ToArray();
                 casts += skillCasts.Length;
@@ -714,6 +714,7 @@ namespace Zjcs.Presentation.Home
                 "The cultivated passive never applied cold in the rendered battle.");
             Require(passiveCompanion != 10608 || standfastTurns > 0 && capturedPassive,
                 "The cultivated standfast soul never applied and rendered its turn-bound protection.");
+            Require(passiveCompanion != 10568 || assaultHits > 0, "The cultivated defence ignore never affected a successful hit.");
             Require(passiveCompanion != 10609 || capturedTacticalAttack && capturedTacticalDefence
                 && File.Exists(Path.Combine(output, "companion-tactical-24394.json"))
                 && File.Exists(Path.Combine(output, "companion-tactical-24393.json")),

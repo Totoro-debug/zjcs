@@ -15,7 +15,7 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     if ($PassiveId -in @(10606,10607)) {
         if (-not (Select-String -LiteralPath $runtimeLog -SimpleMatch "[Acquired passive combat] $PassiveId cultivated") -or
             -not (Test-Path -LiteralPath (Join-Path $Run 'companion-cold-checkpoint.json'))) { throw 'The cultivated secret did not exercise its original cold path.' }
-    } elseif ($PassiveId -in @(10608,10609)) {
+    } elseif ($PassiveId -in @(10568,10608,10609)) {
         $source = Get-Content -LiteralPath (Join-Path $Run 'companion-cultivated-save.json') -Raw | ConvertFrom-Json
         if ($source.Player.Skills.Plans[$source.Player.Skills.SelectedPlan].PassiveSkills[0] -ne $PassiveId) {
             throw 'The battle used another cultivated secret.'
@@ -31,6 +31,9 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
                 throw 'The original tactical threshold state/effect was not captured.'
             }
         }
+    }
+    if ($PassiveId -eq 10568 -and -not (Test-Path -LiteralPath (Join-Path $Run 'companion-assault-checkpoint.json'))) {
+        throw 'The original cultivated defence ignore was not exercised.'
     }
 }
 $ErrorActionPreference = 'Stop'

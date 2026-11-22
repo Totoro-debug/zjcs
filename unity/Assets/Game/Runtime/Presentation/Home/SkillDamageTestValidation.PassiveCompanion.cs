@@ -21,7 +21,7 @@ namespace Zjcs.Presentation.Home
             var plan = source.Player.Skills.Plans[source.Player.Skills.SelectedPlan];
             int itemId = plan.PassiveSkills[0];
             bool supported = active == 10047 && player.Wardrobe.Profession == 4 && (itemId == 10606 || itemId == 10607)
-                || active == 10088 && player.Wardrobe.Profession == 8 && itemId == 10608
+                || active == 10088 && player.Wardrobe.Profession == 8 && (itemId == 10608 || itemId == 10568)
                 || active == 10068 && player.Wardrobe.Profession == 8 && itemId == 10609;
             Require(supported && source.Player.Wardrobe.Profession == player.Wardrobe.Profession
                 && source.Player.Level == player.Level && source.Player.SubRank == player.SubRank
@@ -55,8 +55,20 @@ namespace Zjcs.Presentation.Home
         }
 
         private static void VerifyAcquiredPassiveStep(FightBattleStepEvent step, FightBattleCheckpoint checkpoint,
-            string output, int itemId, ref int coldHits, ref int auraHits, ref int standfastTurns)
+            string output, int itemId, ref int coldHits, ref int auraHits, ref int standfastTurns, ref int assaultHits)
         {
+            if (itemId == 10568)
+            {
+                var owner = checkpoint.Units.Single(unit => unit.Id == 1);
+                var passive = owner.Statuses.Single(status => status.ClassId == 25081);
+                assaultHits += step.DamageEvents.Count(hit => hit.SourceId == 1 && !hit.IsCure
+                    && !hit.Dodge && !hit.Blinding && !hit.Immunity && (hit.Damage < 0 || hit.ShieldDamage > 0));
+                Require(passive.Components.HitDmgAddPer.InvokeCount == assaultHits,
+                    "The original defence-ignore component did not follow each successful cultivated hit.");
+                if (assaultHits > 0) File.WriteAllText(Path.Combine(output, "companion-assault-checkpoint.json"),
+                    FightBattleCheckpointSerializer.Save(checkpoint));
+                return;
+            }
             if (itemId == 10609)
             {
                 var actor = checkpoint.Units.Single(unit => unit.Id == 1);

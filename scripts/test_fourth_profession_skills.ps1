@@ -31,7 +31,8 @@ Add-Type -Path (@(Get-FightCombatSources) +
     (Join-Path $PSScriptRoot 'fixtures/battle_dread_shadow_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_standfast_soul_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_round_forbidden_harness.cs') +
-    (Join-Path $PSScriptRoot 'fixtures/battle_tactical_adaptation_harness.cs'))
+    (Join-Path $PSScriptRoot 'fixtures/battle_tactical_adaptation_harness.cs') +
+    (Join-Path $PSScriptRoot 'fixtures/battle_assault_piercing_harness.cs'))
 $sp = Get-Content (Join-Path $inputs 'skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $bp = Get-Content (Join-Path $inputs 'battle-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $rp = Get-Content (Join-Path $inputs 'rules-source-manifest.json') -Raw | ConvertFrom-Json
@@ -52,6 +53,7 @@ $formula = $catalog.CreateDamageFormula(
     [IO.File]::ReadAllText((Join-Path $inputs 'rules.json')), $rp.output_sha256, $rp.manifest)
 if ($SkillId -ne 0) {
     switch ($SkillId) {
+        10568 { [BattleAssaultPiercingHarness]::Run($catalog, $formula, $items); exit 0 }
         10068 { [BattleHellfireResurgenceHarness]::Run($catalog, $formula, $items); exit 0 }
         10088 { [BattleSwordWindDanceHarness]::Run($catalog, $formula, $items); exit 0 }
         10089 { [BattleSoulPiercerHarness]::Run($catalog, $formula, $items); exit 0 }
@@ -82,3 +84,4 @@ if ($SkillId -ne 0) {
 [BattleStandfastSoulHarness]::Run($catalog, $formula, $items)
 [BattleRoundForbiddenRegression]::Run($catalog, $formula, $items)
 [BattleTacticalAdaptationHarness]::Run($catalog, $formula, $items)
+[BattleAssaultPiercingHarness]::Run($catalog, $formula, $items)
