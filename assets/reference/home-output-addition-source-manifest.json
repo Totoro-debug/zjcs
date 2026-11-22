@@ -245,7 +245,8 @@
     "Data wrappers retain the original fields consumed by these methods; transport, online identity and database plumbing are excluded.",
     "Preserve different original child-time handling between group display and property-value queries; do not normalize boundary behavior.",
     "New-game activity records are empty by the user-selected offline policy; these methods do not schedule or invent activities.",
-    "The user-confirmed offline settlement policy selects parent and individual property records only during their active intervals, including the start and excluding the end. A copied snapshot then calls the unchanged original selectors and extra-count/capacity formulas. Original display/query methods retain their differing time handling; this adapter does not schedule activities or grant rewards."
+    "The user-confirmed offline settlement policy selects parent and individual property records only during their active intervals, including the start and excluding the end. A copied snapshot then calls the unchanged original selectors and extra-count/capacity formulas. Original display/query methods retain their differing time handling; this adapter does not schedule activities or grant rewards.",
+    "Local activity production is the difference of the ordinary preview value at each active boundary, using the original level/elapsed argument order before its integer cast. The original float percentage conversion is retained; fractional additions are exposed for the durable ledger rather than truncated at each checkpoint. This projection does not grant rewards or enforce capacity."
   ],
   "runtime_bindings": {
     "unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs": "11dd84aae76ed2e3df562c1a037ed3f6bbd24f7b68923100bd7948fbff2c1775",
@@ -255,7 +256,10 @@
     "unity/Assets/Game/Runtime/Offline/Home/IHomeIncomeAdditionSnapshot.cs": "250c65c9642aa8b7332aebc2c3ff4865c388e6ffc93d1b6597b85dc5f510ec09",
     "unity/Assets/Game/Runtime/Offline/Home/IHomeIncomeAdditionSnapshot.cs.meta": "98f3f7df389048780f8d34499e8f16a1d2926480606780a0c9ea18c9cd658437",
     "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeIncomeAdditionSnapshot.cs": "f9349cb1c510155700c86f9e4a1cb274e665e03452245dbb134e7a8b73bdcda7",
-    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeIncomeAdditionSnapshot.cs.meta": "3bd04c4b6c3bb758735829a1c006ee0dc0d0e23dc84cfd8ab6921f870e6a0399"
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeIncomeAdditionSnapshot.cs.meta": "3bd04c4b6c3bb758735829a1c006ee0dc0d0e23dc84cfd8ab6921f870e6a0399",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncome.cs": "99d33dec5cb133ca7205fafcc134ef5f1f570cccb4cc4a90e0c61bf2344b6426",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncomeAddition.cs": "1bc8314c4bbb22bb9600e5675f175982a90bbfd78ad66c026e63e47555475158",
+    "unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncomeAddition.cs.meta": "6d13227d0151b2af72f008c29a30f1688913e2cd4ca21ac0f565c31b429bbb52"
   },
   "validation_inputs": {
     "scripts/prepare_home_output_addition_validation.py": "8800464a349432659339632161d1ee41fcbb41f705e24274c0a1ad943d12ef96",
@@ -282,9 +286,28 @@
     }
   },
   "income_snapshot_inputs": {
-    "scripts/prepare_home_income_addition_snapshot.py": "dc921a5e6419ede2ed3ae496a371c266bcaca00bd4b0b0c72460cf6e94380eb7",
+    "scripts/prepare_home_income_addition_snapshot.py": "655a1be714644f8c93ee3afe35401dad274aac674ec1c88a99bf1540342e858e",
     "scripts/prepare_home_output_addition_validation.py": "bbfbfff18d940da3aef9fd9d61e3c074a93b2bf90084398a1f02cf59ff37621c",
     "scripts/test_home_income_addition_snapshot.ps1": "37ff5e793a56df81e864725464921ea5bea4aee1bb93e338eb1912ddd114dece",
-    "scripts/fixtures/home_income_addition_snapshot_harness.cs": "01fbac9c19150b05025c2aeb0442cb979879fa03eef8c5a5aaa809702a249d8d"
+    "scripts/fixtures/home_income_addition_snapshot_harness.cs": "01fbac9c19150b05025c2aeb0442cb979879fa03eef8c5a5aaa809702a249d8d",
+    "scripts/test_home_income_addition_intervals.ps1": "7d5deaf1793f6853254691126081ef73b666aedd5a57953b5b9740bb8abd46ec",
+    "scripts/fixtures/home_income_addition_intervals_harness.cs": "f3dc3032faeb31855f125e2868729fbe7b6da8992dc8caf00fb36ff6cf786b53",
+    "assets/reference/home-income-formula-source-manifest.json": "35af2509fad9211d56dc3b79eb6ab04a105f51fc21b7422a4e2c7b22dddc0349"
+  },
+  "income_projection_original_ports": {
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/PropType.cs": "1813ad74c60ad245324a147c827a9da3b7ed6c751e7397ce56c5b4b40e090ace",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/PropType.cs.meta": "39deb22711a76befadafef9b615782bf443b3265876c523f2d4527a28ac3c97c",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/EFurniture.cs": "2f362440fcd5d944c7c0a41bbf930c9f32f51bc419b24512f83eb924b04e92aa",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/EFurniture.cs.meta": "23e712cea91a0b90d489e13ad567cc80deffc6e1ccf1a9434a0bae2874af832b",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HomeIncomeModels.cs": "a061fe47b5be63cbb2db6098edc4fe8f3e3c79b9087fade9a47f2ea21de9827a",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HomeIncomeModels.cs.meta": "3e9cb572c84bd51ecca92315f3b683d9146e078d537b23f6f172885150ee4efc",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/BattleFormulaHandler.cs": "eea1cb00675b73bf082d220b1b5be7e4ecf46a0b76700ae5293fc11a51c81651",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/BattleFormulaHandler.cs.meta": "070c59ee43582f203dc1e04046aa9048019e5823174c441c63d2301d0672d663",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HangUpUtils.cs": "4d8ee8b006e4aadad2ec22ae64020379dd556284a917a16ffb3a87407403d5c6",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HangUpUtils.cs.meta": "b3fa7d3996deb6b1eb29fd7cd00d51b2b4c3bdfdeb2a760ca21f0c0b5dbea557",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HomeIncomePropertyCatalog.cs": "79365247129ddc07bb1d01b9bdc15f1b761069c19d3a4921dd02b7936255ba62",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/HomeIncomePropertyCatalog.cs.meta": "7a7479c796c168ec68452a0b0ac7099f31985d3dc89cf173eaea2b4ed3b573cf",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/Zjcs.Official.HomeIncomeRules.asmdef": "37a866c227a98fb363e85bb0572dd85ecba7f13d398730ffe8e2e3262d134c2e",
+    "unity/Assets/Game/Runtime/Official/HomeIncomeRules/Zjcs.Official.HomeIncomeRules.asmdef.meta": "2278206c646b997165c3bd61335b4bc342eea3c0c7ecbb7b9f17c9ee862efee8"
   }
 }

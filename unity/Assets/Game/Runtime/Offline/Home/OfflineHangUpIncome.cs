@@ -47,8 +47,17 @@ namespace Zjcs.Offline.Home
             ISet<int> floatPropertyIds, double seconds, out double remainderSeconds)
             => WholeCount(Calculate(rule, properties, floatPropertyIds, seconds, true, out remainderSeconds));
 
+        // The ordinary preview passes level and elapsed hours in this order to
+        // CalcRewardCount. Expose its value before the integer cast so activity
+        // boundaries can divide production without discarding fractional output.
+        public static double UnsettledRewardValue(HangUpIncomeRule rule, IReadOnlyDictionary<int, long> properties,
+            ISet<int> floatPropertyIds, double seconds)
+            => !IsFinite(seconds) || seconds <= 0 ? 0
+                : Calculate(rule, properties, floatPropertyIds, seconds, true, out _, true);
+
         private static double Calculate(HangUpIncomeRule rule, IReadOnlyDictionary<int, long> properties,
-            ISet<int> floatPropertyIds, double duration, bool unsettled, out double remainderSeconds)
+            ISet<int> floatPropertyIds, double duration, bool unsettled, out double remainderSeconds,
+            bool beforeIntegerCast = false)
         {
             if (rule == null) throw new ArgumentNullException(nameof(rule));
             remainderSeconds = 0;
@@ -63,6 +72,8 @@ namespace Zjcs.Offline.Home
             var formula = new BattleFormulaHandler(type => HomeIncomePropertyCatalog.Get(type) == null ? null
                 : floatPropertyIds != null && floatPropertyIds.Contains((int)type) ? FloatingProperty : IntegerProperty);
             var reward = new HangUpRewardInfo { HourlyOutput = (float)rule.HourlyOutput };
+            if (beforeIntegerCast)
+                return HangUpUtils.CalcRewardCount(info, reward, formula, properties, rule.LevelNum, duration / 3600.0);
             if (unsettled)
                 return HangUpUtils.CalcUnsettledRewardCount(info, reward, formula, properties,
                     rule.LevelNum, 0, duration, 0, out remainderSeconds);

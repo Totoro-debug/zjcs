@@ -13,6 +13,9 @@ FILES = (
     'unity/Assets/Game/Runtime/Offline/Home/IHomeIncomeAdditionSnapshot.cs.meta',
     'unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeIncomeAdditionSnapshot.cs',
     'unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeIncomeAdditionSnapshot.cs.meta',
+    'unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncome.cs',
+    'unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncomeAddition.cs',
+    'unity/Assets/Game/Runtime/Offline/Home/OfflineHangUpIncomeAddition.cs.meta',
 )
 
 
@@ -29,6 +32,15 @@ def prepare():
     for name, expected in receipt['outputs'].items():
         if digest((ROOT / name).read_bytes()) != expected:
             raise ValueError('Original migrated output differs: ' + name)
+    formula_receipt = ROOT / 'assets/reference/home-income-formula-source-manifest.json'
+    formula_ports = {name: expected for name, expected in json.loads(formula_receipt.read_bytes())['outputs'].items()
+        if name.startswith('unity/Assets/Game/Runtime/Official/HomeIncomeRules/')}
+    if not formula_ports:
+        raise ValueError('The original income formula proof is empty.')
+    for name, expected in formula_ports.items():
+        if digest((ROOT / name).read_bytes()) != expected:
+            raise ValueError('Original income formula port differs: ' + name)
+    receipt['income_projection_original_ports'] = formula_ports
     expected = receipt['runtime_bindings'][READER]
     if digest((ROOT / READER).read_bytes()) != expected:
         baseline = git('show', 'HEAD:' + READER)
@@ -55,11 +67,20 @@ def prepare():
         'methods retain their differing time handling; this adapter does not schedule activities or grant rewards.')
     if adaptation not in receipt['adaptations']:
         receipt['adaptations'].append(adaptation)
+    projection = ('Local activity production is the difference of the ordinary preview value at each active boundary, '
+        'using the original level/elapsed argument order before its integer cast. The original float percentage '
+        'conversion is retained; fractional additions are exposed for the durable ledger rather than truncated at '
+        'each checkpoint. This projection does not grant rewards or enforce capacity.')
+    if projection not in receipt['adaptations']:
+        receipt['adaptations'].append(projection)
     receipt['income_snapshot_inputs'] = {name: digest((ROOT / name).read_bytes()) for name in (
         'scripts/prepare_home_income_addition_snapshot.py',
         'scripts/prepare_home_output_addition_validation.py',
         'scripts/test_home_income_addition_snapshot.ps1',
-        'scripts/fixtures/home_income_addition_snapshot_harness.cs')}
+        'scripts/fixtures/home_income_addition_snapshot_harness.cs',
+        'scripts/test_home_income_addition_intervals.ps1',
+        'scripts/fixtures/home_income_addition_intervals_harness.cs',
+        'assets/reference/home-income-formula-source-manifest.json')}
     RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
     print('HOME_INCOME_ADDITION_BINDINGS_PASSED: official outputs unchanged; local snapshot bindings recorded.')
 
