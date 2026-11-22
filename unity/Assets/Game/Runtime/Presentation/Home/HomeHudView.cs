@@ -698,6 +698,7 @@ namespace Zjcs.Presentation.Home
             TickNativePlayerPanel();
             nativeCurrencyPeriodic?.Update(Time.time);
             nativeBedServices?.Tick();
+            nativeBedWindows?.Tick();
             host.SetFantasyTowerBackgroundExecution(AnyModalOpen);
             UpdatePartnerDetailRuntime();
             TickPetIntroduction();

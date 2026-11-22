@@ -12,6 +12,9 @@ using Zjcs.Official.HomeScreenUI;
 using Zjcs.Official.HomeUI;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.WorldUI;
+using Zjcs.Official.HomeOutputDetailUI;
+using Zjcs.Official.HomeMainUiControls;
+using DetailGroup = Zjcs.Official.HomeOutputAddition.OutputGroupType;
 using Object = UnityEngine.Object;
 
 namespace Zjcs.Presentation.Home
@@ -44,6 +47,22 @@ namespace Zjcs.Presentation.Home
         public event Action<GameObject> WindowOpened;
         public FurnitureBedDialog Bed { get; private set; }
         public FurnitureFastHangUpDialog FastSelection { get; private set; }
+        public OfflineHomeOutputDetailServices OutputDetails { get; private set; }
+
+        public void BindOutputDetails(OfflineHomeOutputAddition addition, IHomePointerSnapshot pointer = null, Func<DateTime> now = null)
+        {
+            if (OutputDetails != null) throw new InvalidOperationException("Output-detail services are already bound.");
+            OutputDetails = new OfflineHomeOutputDetailServices(addition, (prefab, parent) => Clone(prefab, parent), Close, services.Text, pointer, now);
+        }
+
+        public void Tick() => OutputDetails?.Tick();
+
+        public void ShowOutputAddition(DetailGroup type)
+        {
+            if (OutputDetails == null) throw new InvalidOperationException("The saved output-addition owner is unbound.");
+            Create(OfficialHomeOutputDetailAssets.LoadDefault().popup,
+                root => root.GetComponent<PopTipOutputAddition>().Init(type), false);
+        }
 
         public OfflineHomeHangUpWindows(Canvas canvas, MonoBehaviour host,
             GameObject blurPrefab, IWorldWindowBlurManager blur, IScreenAdaptService screen,
@@ -106,7 +125,7 @@ namespace Zjcs.Presentation.Home
             foreach (var text in root.GetComponentsInChildren<TMP_Text>(true))
                 if (text.font) fonts.SetupFont(text.font);
             foreach (var text in root.GetComponentsInChildren<WorldMultiLanguageText>(true))
-                text.Localizer = services.Text;
+                text.Localizer = OutputDetails != null ? OutputDetails.Text : services.Text;
             foreach (var area in root.GetComponentsInChildren<SafeArea>(true))
                 area.ScreenAdaptService = screen;
             foreach (var button in root.GetComponentsInChildren<WorldButtonSound>(true)) button.Post = sound;
@@ -121,11 +140,16 @@ namespace Zjcs.Presentation.Home
             foreach (var info in root.GetComponentsInChildren<FurnitureOutputInfo>(true)) info.OutputServices = output;
             foreach (var rule in root.GetComponentsInChildren<BlessingLevelRuleDialog>(true)) rule.Services = (IHomeBlessingRuleServices)services;
             foreach (var row in root.GetComponentsInChildren<BlessingLevelRuleItem>(true)) row.Services = (IHomeBlessingRuleServices)services;
+            foreach (var popup in root.GetComponentsInChildren<PopTipOutputAddition>(true)) popup.Services = OutputDetails;
+            foreach (var row in root.GetComponentsInChildren<OutputAdditionItem>(true)) row.Services = OutputDetails;
+            foreach (var row in root.GetComponentsInChildren<OutputAdditionPropItem>(true)) row.Services = OutputDetails;
+            if (OutputDetails != null)
+                foreach (var timer in root.GetComponentsInChildren<ShowRemainTimeInfo>(true)) timer.Bind(OutputDetails);
             root.transform.SetParent(parent, keepWorld);
             return root;
         }
 
-        void Create(GameObject prefab, Action<GameObject> initialize)
+        void Create(GameObject prefab, Action<GameObject> initialize, bool useBlur = true)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfflineHomeHangUpWindows));
             var window = new Window();
@@ -137,12 +161,18 @@ namespace Zjcs.Presentation.Home
                 foreach (var text in window.Root.GetComponentsInChildren<TMP_Text>(true))
                     if (text.font) { originalFont = text.font; break; }
                 window.Binding = OfflineUiBindingModule.Register(window.Root.transform, new OfflineUiBindings {
-                    Localize = services.Text, Font = () => originalFont,
+                    Localize = OutputDetails != null ? OutputDetails.Text : services.Text, Font = () => originalFont,
                     Images = _ => services.Resources,
                     Pool = (_, template, parent, world) => Clone(template, parent, world) });
                 initialize(window.Root);
                 var popup = window.Root.GetComponent<WorldPopupWindow>();
                 popup.SetMaskClickAction(() => Close(window.Root));
+                if (!useBlur)
+                {
+                    ActiveWindowChanged?.Invoke(window.Root);
+                    ShowPrepared(window, popup, null);
+                    return;
+                }
                 window.Mask = Clone(blurPrefab, canvas.transform);
                 var mask = window.Mask.GetComponent<WorldWindowBlurMask>();
                 if (!mask || mask.MaskType != 3)
@@ -159,6 +189,11 @@ namespace Zjcs.Presentation.Home
         {
             yield return mask.Prepare(popup, false);
             if (!windows.Contains(window)) yield break;
+            ShowPrepared(window, popup, mask);
+        }
+
+        void ShowPrepared(Window window, WorldPopupWindow popup, WorldWindowBlurMask mask)
+        {
             window.Root.SetActive(true);
             foreach (var close in window.Root.GetComponentsInChildren<CloseWindowBtn>(true)) close.Init(this);
             Action<WorldPopupWindow> showing = null;
@@ -169,7 +204,7 @@ namespace Zjcs.Presentation.Home
                     if (current != window && current.Root && !current.Closing)
                         order = Math.Max(order, current.Root.GetComponent<WorldPopupWindow>().Canvas.sortingOrder);
                 shown.SetCanvasSortingOrder(order + 10);
-                mask.AttachToWindow(shown);
+                if (mask) mask.AttachToWindow(shown);
             };
             popup.OnShowing += showing;
             popup.Show();

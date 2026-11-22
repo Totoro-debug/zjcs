@@ -53,7 +53,9 @@ namespace Zjcs.Presentation.Home
                 nativeBedServices.FastOperation = (id, autoReceive, cost, completed) =>
                     Zjcs.Official.HomeFastHangUpUI.HangUpUIUtils.OperFastHangUp(nativeBedServices,
                         id, autoReceive, cost, completed);
-                nativeBedServices.OpenOutputWindow = _ => throw new NotSupportedException("The original activity output-detail owner is not installed.");
+                nativeBedWindows.BindOutputDetails(nativeBedServices.OutputAddition);
+                nativeBedServices.OpenOutputWindow = type => nativeBedWindows.ShowOutputAddition(
+                    (Zjcs.Official.HomeOutputAddition.OutputGroupType)type);
                 nativeBedServices.OpenBlessingWindow = nativeBedWindows.ShowBlessingRule;
                 nativeBedWindows.ActiveWindowChanged += root => {
                     activeDialog = root;
