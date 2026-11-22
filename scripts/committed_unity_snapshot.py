@@ -20,14 +20,24 @@ def checked_path(root, name, verified=None):
     if path.is_absolute() or '..' in path.parts or '\\' in name or ':' in name:
         raise ValueError('Invalid snapshot path: ' + name)
     target = root / name
-    for ancestor in (root, *target.relative_to(root).parents):
-        candidate = ancestor if ancestor == root else root / ancestor
+    # A verified parent already covers its ancestors. Most inputs share a
+    # parent, so avoid constructing the entire chain for every file twice.
+    pending = []
+    candidate = target.parent if target != root else root
+    while candidate != root:
         if verified is not None and candidate in verified:
-            continue
+            break
+        pending.append(candidate)
+        candidate = candidate.parent
+    if verified is None or root not in verified:
+        pending.append(root)
+    for candidate in reversed(pending):
         if candidate.is_symlink() or candidate.is_junction():
             raise ValueError('Linked snapshot path: ' + str(candidate))
         if verified is not None:
             verified.add(candidate)
+    # The target itself is rechecked on every operation, including when its
+    # parent was verified during the inventory pass.
     if target.is_symlink() or target.is_junction():
         raise ValueError('Linked snapshot path: ' + str(target))
     return target

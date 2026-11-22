@@ -98,6 +98,26 @@ class SnapshotTests(unittest.TestCase):
                          b'// original\nclass Test {}\n')
         self.assertEqual((root / asset.relative_to(self.repository)).read_bytes(), payload)
 
+    def test_links_are_rejected_with_cached_parents(self):
+        root = self.workspace
+        verified = set()
+        name = 'source/unity/Assets/Native/asset.cs'
+        target = checked_path(root, name, verified)
+        # Inventory may already have checked the parent when a source file is
+        # replaced by a link. Each subsequent read/write must still refuse it.
+        for predicate in ('is_symlink', 'is_junction'):
+            with self.subTest(predicate=predicate):
+                with patch.object(type(root), predicate, new=lambda path: path == target):
+                    with self.assertRaisesRegex(ValueError, 'Linked snapshot path'):
+                        checked_path(root, name, verified)
+                # A new subtree below a verified directory needs its own check.
+                linked = target.parent / 'linked'
+                with patch.object(type(root), predicate, new=lambda path: path == linked):
+                    with self.assertRaisesRegex(ValueError, 'Linked snapshot path'):
+                        checked_path(root, 'source/unity/Assets/Native/linked/asset.cs', verified)
+        for name in ('', '.', 'source/unity/Assets/Native/other.cs'):
+            self.assertEqual(checked_path(root, name, verified), root / name)
+
     def test_resume_interrupted_incremental_export(self):
         root = snapshot(self.repository, self.workspace)
         added = self.asset.with_name('Added.cs')
