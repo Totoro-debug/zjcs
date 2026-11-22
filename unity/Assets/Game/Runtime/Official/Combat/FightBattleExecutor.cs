@@ -852,6 +852,7 @@ namespace Zjcs.Combat.Official
             if (presentationCast != null && ImpactGate is IFightBattleCastPreparationObserver castObserver)
                 castObserver.CastPrepared(presentationCast);
 
+            if (FightSkillStartStatuses.Apply(actor, skill, statusCatalog, random)) RebuildBattleProperties();
             var skillLogic = FightSkillLogicRuntime.Create(actor, skill, units, statusCatalog, random, checkpoint.GridItems);
             if (skillLogic != null && skillLogic.OnSkillStart()) RebuildBattleProperties();
             if (skillLogic != null && skillLogic.OnConfiguredSkillStart(

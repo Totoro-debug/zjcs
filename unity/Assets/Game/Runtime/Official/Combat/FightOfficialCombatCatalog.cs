@@ -2832,6 +2832,7 @@ namespace Zjcs.Combat.Official
 
         private static bool SupportsSkillStart(Dictionary<string, object> component)
         {
+            if (ParseSkillStartStatusRule(component) != null) return true;
             if (Int(component, "SkillStartSource") != 2
                 || Int(component, "CD") != 0 || Bool(component, "ResetCDAtStart")
                 || Int(component, "MaxCount", -1) < -1

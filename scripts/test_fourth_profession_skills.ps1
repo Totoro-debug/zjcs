@@ -43,7 +43,8 @@ Add-Type -Path (@(Get-FightCombatSources) +
     (Join-Path $PSScriptRoot 'fixtures/battle_spiral_wind_blade_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_battlecry_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_judgment_thunder_harness.cs') +
-    (Join-Path $PSScriptRoot 'fixtures/battle_protective_runes_harness.cs'))
+    (Join-Path $PSScriptRoot 'fixtures/battle_protective_runes_harness.cs') +
+    (Join-Path $PSScriptRoot 'fixtures/battle_flame_soul_harness.cs'))
 $sp = Get-Content (Join-Path $inputs 'skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $bp = Get-Content (Join-Path $inputs 'battle-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $rp = Get-Content (Join-Path $inputs 'rules-source-manifest.json') -Raw | ConvertFrom-Json
@@ -70,6 +71,7 @@ if ($SkillId -ne 0) {
         10092 { [BattleBattlecryHarness]::Run($catalog, $formula, $items); exit 0 }
         10093 { [BattleJudgmentThunderHarness]::Run($catalog, $formula, $items); exit 0 }
         10102 { [BattleProtectiveRunesHarness]::Run($catalog, $formula, $items); exit 0 }
+        10599 { [BattleFlameSoulHarness]::Run($catalog, $formula, $items); exit 0 }
         10543 { [BattleFlameMomentumHarness]::Run($catalog, $formula, $items); exit 0 }
         10595 { [BattleWindOrbHarness]::Run($catalog, $formula, $items); [BattleBladeFeatherHarness]::Run($catalog, $formula, $items); exit 0 }
         10592 { [BattleFixedPercentHarness]::Run($formula); [BattleSteelFaithHarness]::Run($catalog, $formula, $items); exit 0 }
@@ -119,3 +121,4 @@ if ($SkillId -ne 0) {
 [BattleBattlecryHarness]::Run($catalog, $formula, $items)
 [BattleJudgmentThunderHarness]::Run($catalog, $formula, $items)
 [BattleProtectiveRunesHarness]::Run($catalog, $formula, $items)
+[BattleFlameSoulHarness]::Run($catalog, $formula, $items)
