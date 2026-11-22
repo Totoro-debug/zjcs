@@ -1,27 +1,72 @@
-"""Migrate the selected original bed/output/quick-receive window controllers."""
+"""Generate native home window ports, with optional reproduction of their recorded source.
+
+An isolated checkout can read the original input cache through --source-root;
+--reuse-selected-source preserves the already migrated controller source set.
+"""
+import argparse
+import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 
 from prepare_home_auto_increase_runtime import ROOT, CODE, metadata, method, sha
 
 DEST = ROOT/'unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI'
 
 
-def build():
+def build(source_root=None, reuse_selected=False):
     inputs, outputs = {}, {}
+    source_root = Path(source_root or ROOT).resolve()
+    code = source_root / CODE.relative_to(ROOT)
+    receipt_path = ROOT/'assets/reference/home-hangup-windows-runtime-source-manifest.json'
+    selected = json.loads(receipt_path.read_bytes()) if reuse_selected else None
+    previous_outputs, ancestry = {}, {}
+    if selected:
+        prefixes = {name.split('/official-code/')[0] + '/official-code' for name in selected['inputs']
+                    if '/official-code/' in name}
+        if len(prefixes) != 1:
+            raise ValueError('The selected original controller source must have one verified code prefix.')
+        code = source_root / prefixes.pop()
+        # Reproducing existing ports reads their recorded inputs. It does not
+        # change the active official source or download/update an old migration.
+        for name, expected in selected['inputs'].items():
+            if name.startswith('.tools/') and sha(source_root/name) != expected:
+                raise ValueError('Selected original window input differs: ' + name)
+        ancestry = selected.get('source_reuse', {}).get('binding_ancestry', {}).copy()
+        for name, expected in selected['outputs'].items():
+            path = ROOT/name
+            previous_outputs[name] = path.read_bytes()
+            actual = sha(path)
+            if actual == expected:
+                continue
+            # Some older receipts precede committed local resource-owner fixes.
+            # Identify the exact recorded and current blobs before regenerating;
+            # never replace an original input hash to admit a different source.
+            current = subprocess.check_output(['git', '-C', str(ROOT), 'show', 'HEAD:' + name])
+            if hashlib.sha256(current).hexdigest() != actual:
+                raise ValueError('Uncommitted selected window output differs: ' + name)
+            for revision in subprocess.check_output(['git', '-C', str(ROOT), 'log', '--format=%H', '--', name]).decode().splitlines():
+                recorded = subprocess.check_output(['git', '-C', str(ROOT), 'show', revision + ':' + name])
+                if hashlib.sha256(recorded).hexdigest() == expected:
+                    ancestry[name] = dict(recorded_revision=revision, recorded_sha256=expected,
+                        baseline_revision=subprocess.check_output(['git', '-C', str(ROOT), 'log', '-1', '--format=%H', '--', name]).decode().strip(),
+                        baseline_sha256=actual)
+                    break
+            else:
+                raise ValueError('Recorded window output has no matching committed source: ' + name)
 
     def read(name, folder='client-source-resolved'):
-        path = CODE/folder/(name+'.cs')
-        inputs[path.relative_to(ROOT).as_posix()] = sha(path)
+        path = code/folder/(name+'.cs')
+        inputs[path.relative_to(source_root).as_posix()] = sha(path)
         if folder == 'client-source-resolved':
             receipt = path.with_suffix('.decompilation.json')
             proof = json.loads(receipt.read_bytes())
             assert proof['sha256'] == sha(path), name
             for relative, digest in proof['inputs'].items():
-                assert sha(ROOT/relative) == digest, relative
+                assert sha((source_root if relative.startswith('.tools/') else ROOT)/relative) == digest, relative
                 inputs[relative] = digest
-            inputs[receipt.relative_to(ROOT).as_posix()] = sha(receipt)
+            inputs[receipt.relative_to(source_root).as_posix()] = sha(receipt)
         return path.read_text('utf-8-sig').replace('\r\n', '\n')
 
     def replace(text, old, new):
@@ -213,7 +258,7 @@ namespace Zjcs.Official.HomeHangUpWindowsUI
     for relative in ('client-source/NumberDisplayRuleUtils.cs', 'common-source/Common/FunctionType.cs',
                      'common-source/Common/PropType.cs', 'common-source/Common/OutputAdditionUtils.cs',
                      'common-source/Common/Formula.cs', 'framework-firstpass-source/UIBase.cs'):
-        path = CODE/relative; inputs[path.relative_to(ROOT).as_posix()] = sha(path)
+        path = code/relative; inputs[path.relative_to(source_root).as_posix()] = sha(path)
     # Retain explicit dependency identity when reusing the original shared code.
     for relative in ('ProfessionUI/UIBase.cs', 'ProfessionUI/ProfessionPlayerPropItem.cs',
                      'ProfessionUI/ProfessionPropertyType.cs', 'ProfessionUI/PropUpgradeEffectAgent.cs',
@@ -223,11 +268,21 @@ namespace Zjcs.Official.HomeHangUpWindowsUI
     for name in ('HomeHangUpWindowServices', 'IHomeFurnitureOutputServices'):
         path = DEST/(name+'.cs')
         inputs[path.relative_to(ROOT).as_posix()] = sha(path)
-    proof = dict(manifest='884_156692', generator_sha256=sha(Path(__file__)), inputs=inputs, outputs=outputs,
+    if selected:
+        for name, previous in previous_outputs.items():
+            if (ROOT/name).read_bytes() != previous:
+                raise ValueError('Reproduction changed the existing window output: ' + name)
+    proof = dict(manifest=code.parent.name, generator_sha256=sha(Path(__file__)), inputs=inputs, outputs=outputs,
         scope='Original bed window, output source/upgrade preview, quick-receive and blessing-rule controllers. Explicit typed player, property, transaction and presentation owners; native assets, real local binding and Player validation are separate.')
-    (ROOT/'assets/reference/home-hangup-windows-runtime-source-manifest.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
+    if selected:
+        proof['source_reuse'] = dict(code_prefix=code.relative_to(source_root).as_posix(), binding_ancestry=ancestry)
+    receipt_path.write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
     return proof
 
 
 if __name__ == '__main__':
-    build()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--source-root', type=Path, default=ROOT, help='Read-only official input repository; outputs stay in this checkout.')
+    parser.add_argument('--reuse-selected-source', action='store_true', help='Reproduce the existing verified controller source without updating its migration.')
+    arguments = parser.parse_args()
+    build(arguments.source_root, arguments.reuse_selected_source)

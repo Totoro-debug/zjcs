@@ -1,6 +1,6 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "1cf74d0d44b4289db5174cc2fc9f1dab880a7bd0e321befdc61dec0f42508457",
+  "generator_sha256": "34c4a4f29101a25e1c4b8e93e418e167d3f04a8c03fe6ad5938e857d9e4120ec",
   "inputs": {
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/EPropHandleType.cs": "8dc76aca8b42057adbdb1139fa168b987d2ae956cfc10c142a83c57b62fdef00",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/OutputGroupType.cs": "2e91a08aa91d55931013fb403d025cee1fbb512e1d36eb5d90c59043462d02e0",
@@ -530,11 +530,22 @@
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/HomeHangUpWindowServices.cs.meta": "cc9776c3d6d1523dd3c0c05591cd0e291fd457394518ffb5af9ab79a30565658",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/HomeBlessingRuleServices.cs": "1d82f8e820af0000aff027c28221ce327c7b12e49166ad76d2f512dd3b430232",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/HomeBlessingRuleServices.cs.meta": "01ad3f7dc00a98b914a8717fd59dc865c93c468fdc253fd265d246c7863aae55",
-    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OfficialHomeHangUpWindowAssetCatalog.cs": "fd66d3f6df4940cb98b97f6b9108012203076215ed4d4e02b791d863759e717a",
+    "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OfficialHomeHangUpWindowAssetCatalog.cs": "3d9cdcf31fc1de7c5d7de6a4cdea231e2f0f14580108ca1eb639af016eaef09a",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OfficialHomeHangUpWindowAssetCatalog.cs.meta": "c9bc66c36c076b16d15a2a3fe57128b20af413cf4ada8be8d6a0fff861b155af",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/Zjcs.Official.HomeHangUpWindowsUI.asmdef": "b4ca91c83a13fd75e5a3159c50a7de188ee1e6ad5b6a6a8d0d9480821c68ee67",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/Zjcs.Official.HomeHangUpWindowsUI.asmdef.meta": "f3f2953815dbec20009012e2d76c4df1e3a4113c663d40a24296e096961d2ccf",
     "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI.meta": "eea0eb30c1993bdafd10c0be5730c79629d3cfbe3ac7035cc5a402b8ed4be41f"
   },
-  "scope": "Original bed window, output source/upgrade preview, quick-receive and blessing-rule controllers. Explicit typed player, property, transaction and presentation owners; native assets, real local binding and Player validation are separate."
+  "scope": "Original bed window, output source/upgrade preview, quick-receive and blessing-rule controllers. Explicit typed player, property, transaction and presentation owners; native assets, real local binding and Player validation are separate.",
+  "source_reuse": {
+    "code_prefix": ".tools/source-packages/current/884_156692/official-code",
+    "binding_ancestry": {
+      "unity/Assets/Game/Runtime/Official/HomeHangUpWindowsUI/OfficialHomeHangUpWindowAssetCatalog.cs": {
+        "recorded_revision": "f01b8a560822117bcf0728ee414aee1582affe5c",
+        "recorded_sha256": "fd66d3f6df4940cb98b97f6b9108012203076215ed4d4e02b791d863759e717a",
+        "baseline_revision": "83dc60a8bb7a7c0eb22fb247e7c3e01ab9646ed0",
+        "baseline_sha256": "3d9cdcf31fc1de7c5d7de6a4cdea231e2f0f14580108ca1eb639af016eaef09a"
+      }
+    }
+  }
 }
