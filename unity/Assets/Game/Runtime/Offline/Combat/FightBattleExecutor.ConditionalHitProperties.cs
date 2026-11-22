@@ -10,13 +10,20 @@ namespace Zjcs.Combat.Official
             bool restoreApply=apply!=null && (!apply.DefinitionResolved
                 || apply.HasEntityCountScale && apply.EntityCountScale==null);
             bool restoreRound=status?.ClassId==25098 && status.RoundEndEntityCount==null;
-            if((!restoreHit && !restoreApply && !restoreRound) || statusCatalog==null) return;
+            bool restoreBeforeEnd=status!=null && status.Components?.RoundBeforeEnd==null
+                && statusCatalog?.HasRoundBeforeEndDefinition(status.ClassId)==true;
+            if((!restoreHit && !restoreApply && !restoreRound && !restoreBeforeEnd) || statusCatalog==null) return;
             var template=statusCatalog.CreateStatus(status.ClassId,status.OwnerId,status.CreatorId,
                 status.InstanceId,status.RootSkillId,status.ApplyingSkillItemId,status.SourceSkillRank,
                 status.SourceSkillLevel,status.SourceSubRank,status.SourceProperties,
                 replacementProperties:status.ReplacementProperties,
                 blessPropertyScales:status.BlessPropertyScales);
             var components=template.Components;
+            if(restoreBeforeEnd)
+            {
+                if(status.Components==null) status.Components=new FightBattleStatusComponentState();
+                status.Components.RoundBeforeEnd=components.RoundBeforeEnd;
+            }
             if(restoreRound)
             {
                 status.RoundEndEntityCount=template.RoundEndEntityCount;

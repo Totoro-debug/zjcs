@@ -18,6 +18,7 @@ namespace Zjcs.Combat.Official
             result.Seconds = ParseStatusSeconds(components);
             result.LifeReduction = ParseLifeReduction(Component(components, "FightStatusReduceStatusLifeComponent"));
             result.CureReduce = ParseCureReduce(Component(components, "FightStatusCureReduceComponent"));
+            result.RoundBeforeEnd = ParseRoundBeforeEnd(Component(components, "FightStatusRoundBeforeEndComponent"));
             Dictionary<string, object> hitSkill = Component(components, "FightStatusHitSkillComponent");
             if (hitSkill != null)
             {

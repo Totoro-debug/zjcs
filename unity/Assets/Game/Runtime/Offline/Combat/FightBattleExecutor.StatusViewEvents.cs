@@ -24,7 +24,7 @@ namespace Zjcs.Combat.Official
             foreach (var owner in units)
                 foreach (var status in owner.Statuses)
                     if (status != null && status.Components?.Seconds?.DefinitionResolved != true)
-                        statusViewSnapshots[StatusViewKey(owner.Id, status.InstanceId)] = FightBattleStatusViewState.Capture(status);
+                        statusViewSnapshots[StatusViewKey(owner.Id, status.InstanceId)] = FightBattleStatusViewState.Capture(status, owner);
         }
 
         private void ClearStatusViewEvents()
@@ -41,7 +41,7 @@ namespace Zjcs.Combat.Official
             if (statusViewEvents == null || owner == null || owner.CharacterType == 6
                 || status == null || status.Components?.Seconds?.DefinitionResolved == true) return;
             long key = StatusViewKey(owner.Id, status.InstanceId);
-            var snapshot = FightBattleStatusViewState.Capture(status);
+            var snapshot = FightBattleStatusViewState.Capture(status, owner);
             if (kind == FightBattleStatusViewEventKind.Update
                 && (!statusViewSnapshots.TryGetValue(key, out var previous) || snapshot.SameView(previous))) return;
             if (kind == FightBattleStatusViewEventKind.End) statusViewSnapshots.Remove(key);

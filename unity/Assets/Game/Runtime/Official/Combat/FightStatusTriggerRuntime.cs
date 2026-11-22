@@ -1499,26 +1499,7 @@ namespace Zjcs.Combat.Official
         {
             // FightStatusHpLessThanComponentInfo: TriggerSource is the applicator;
             // TriggerTarget is the character whose HP changed.
-            switch (targetType)
-            {
-                case 0: case 1: case 2: return owner.Id;
-                case 3: return status.CreatorId;
-                case 5: return changed.Id;
-                case 8: return owner.MasterId;
-                case 4:
-                    return units == null ? 0 : units.Where(value => value != null
-                        && value.Id != owner.Id && value.Side == owner.Side
-                        && FightBattleTargeting.IsSelectable(value))
-                        .OrderBy(value => Math.Abs(value.X - owner.X) + Math.Abs(value.Y - owner.Y))
-                        .Select(value => value.Id).FirstOrDefault();
-                case 7:
-                    return units == null ? 0 : units.Where(value => value != null
-                        && value.Id != owner.Id && value.Side == owner.Side && value.CharacterType == 1
-                        && FightBattleTargeting.IsSelectable(value))
-                        .OrderBy(value => value.Hp / (double)Math.Max(1L, value.MaxHp))
-                        .Select(value => value.Id).FirstOrDefault();
-                default: return 0;
-            }
+            return FightStatusTriggerTargets.Resolve(status, owner, owner, changed, targetType, units, owner)?.Id ?? 0;
         }
 
         private static bool HasForbiddenTriggerStatus(FightBattleUnitState unit)

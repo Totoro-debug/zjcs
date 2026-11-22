@@ -21,7 +21,7 @@ namespace Zjcs.Presentation.Home
             var plan = source.Player.Skills.Plans[source.Player.Skills.SelectedPlan];
             int itemId = plan.PassiveSkills[0];
             bool supported = active == 10047 && player.Wardrobe.Profession == 4 && (itemId == 10606 || itemId == 10607)
-                || active == 10088 && player.Wardrobe.Profession == 8 && (itemId == 10608 || itemId == 10568)
+                || active == 10088 && player.Wardrobe.Profession == 8 && (itemId == 10608 || itemId == 10568 || itemId == 10595)
                 || active == 10068 && player.Wardrobe.Profession == 8 && itemId == 10609;
             supported |= active == 10089 && player.Wardrobe.Profession == 8 && itemId == 10594;
             Require(supported && source.Player.Wardrobe.Profession == player.Wardrobe.Profession
@@ -56,8 +56,28 @@ namespace Zjcs.Presentation.Home
         }
 
         private static void VerifyAcquiredPassiveStep(FightBattleStepEvent step, FightBattleCheckpoint checkpoint,
-            string output, int itemId, ref int coldHits, ref int auraHits, ref int standfastTurns, ref int assaultHits, ref int soulBreakHits)
+            string output, int itemId, ref int coldHits, ref int auraHits, ref int standfastTurns, ref int assaultHits, ref int soulBreakHits, ref int windHits)
         {
+            if (itemId == 10595)
+            {
+                foreach (var hit in step.DamageEvents.Where(value => value.SkillEntityId == 12030))
+                {
+                    Require(hit.SourceId == 1 && hit.SkillItemId == itemId && hit.HitEntityId == 12031
+                        && hit.DamageEntityId == 12032 && hit.ElementType == 100 && hit.DamageType == 1
+                        && hit.Damage < 0 && !hit.TrueDamage && !hit.IsCure,
+                        "The cultivated wind orb lost its original child damage or source.");
+                    windHits++;
+                }
+                foreach (var view in step.StatusViewEvents.Where(value => value.Status.ClassId == 24385))
+                    Require(view.OwnerId == 1 && view.Status.CreatorId == 1
+                        && view.Status.StackCount >= 0 && view.Status.StackCount <= 10
+                        && checkpoint.Units.Single(unit => unit.Id == 1).Statuses.Any(status => status.ClassId == 24385
+                            && status.ApplyingSkillItemId == itemId && status.SourceSkillLevel == 2),
+                        "The cultivated wind orb lost its holder, cultivation or shared stack limit.");
+                if (windHits > 0) File.WriteAllText(Path.Combine(output, "companion-wind-orb-checkpoint.json"),
+                    FightBattleCheckpointSerializer.Save(checkpoint));
+                return;
+            }
             if (itemId == 10594)
             {
                 foreach (var hit in step.DamageEvents.Where(hit => hit.SourceId == 1 && hit.SkillItemId == 10089

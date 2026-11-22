@@ -221,8 +221,7 @@ namespace Zjcs.Combat.Official
             FightBattleStatusStateTrigger copy = trigger.WithSource(status);
             int sourceId = ResolveComponentUnitId(status, trigger.Source, actor, target, true);
             int targetId = ResolveComponentUnitId(status, trigger.Target, actor, target, false);
-            if (sourceId <= 0) sourceId = actor.Id;
-            if (targetId <= 0) targetId = target.Id;
+            if (sourceId == 0 || targetId == 0) return;
             output.Add(new FightBattleStatusSkillInvocation
             {
                 Trigger = copy,
@@ -237,10 +236,8 @@ namespace Zjcs.Combat.Official
         private int ResolveComponentUnitId(FightBattleStatusState status, int targetType,
             FightBattleUnitState actor, FightBattleUnitState target, bool source)
         {
-            if (targetType == 0) return source ? actor.Id : target.Id;
-            if (targetType == 5) return target.Id;
-            int resolved = FightStatusLifecycle.ResolveTargetUnitId(status, targetType, units);
-            return resolved > 0 ? resolved : source ? actor.Id : target.Id;
+            return FightStatusTriggerTargets.Resolve(status, ResolveUnit(status.OwnerId), actor, target,
+                targetType, units, source ? actor : target)?.Id ?? 0;
         }
 
         private void ApplyComponentStatuses(FightBattleStatusState source,
@@ -251,22 +248,16 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleStatusStateTrigger trigger in triggers)
             {
                 if (trigger == null || trigger.EntityId <= 0) continue;
-                FightBattleUnitState destination = trigger.ApplyTarget == 1 ? actor
-                    : trigger.ApplyTarget == 3 ? ResolveUnit(source.CreatorId) : target;
+                FightBattleUnitState destination = FightStatusTriggerTargets.Resolve(source, ResolveUnit(source.OwnerId),
+                    actor, target, trigger.ApplyTarget, units, target);
+                if (destination == null) continue;
                 if (trigger.AffectedByProp)
                 {
                     // Property-based target selection has its own query path;
                     // never approximate it with the current hit target.
                     if (trigger.PropTarget != null && trigger.PropTarget.PropertyId != 0) continue;
-                    switch (trigger.ApplyTarget)
-                    {
-                        case 1: destination = actor; break;
-                        case 2: destination = ResolveUnit(source.OwnerId); break;
-                        case 3: destination = ResolveUnit(source.CreatorId); break;
-                        case 5: destination = target; break;
-                        default: continue;
-                    }
-                    if (destination == null) continue;
+                    if (trigger.ApplyTarget != 1 && trigger.ApplyTarget != 2
+                        && trigger.ApplyTarget != 3 && trigger.ApplyTarget != 5) continue;
                     double rate = statusCatalog.CalculateStatusApplicationRate(actor, destination,
                         trigger.EntityId, trigger.BasePercent, true, formula);
                     if (!(random.Next() <= rate)) continue;

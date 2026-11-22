@@ -1,0 +1,164 @@
+{
+  "manifest": "903_156948",
+  "skills": [
+    {
+      "skill_entity_id": 11150,
+      "entity_resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11150/11150",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11150/playable11150"
+        }
+      ]
+    },
+    {
+      "skill_entity_id": 12030,
+      "entity_resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12030/12030",
+      "playables": []
+    },
+    {
+      "skill_entity_id": 13170,
+      "entity_resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/13170/13170",
+      "playables": []
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11151,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [
+        {
+          "field": "myPlayable",
+          "resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11150/playable11150"
+        }
+      ],
+      "entity_resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11150/11151"
+    },
+    {
+      "hit_entity_id": 12031,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [
+        {
+          "field": "SourceToMePlayable",
+          "resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12030/playable12031"
+        }
+      ],
+      "entity_resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12030/12031"
+    },
+    {
+      "hit_entity_id": 13171,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/13170/13171"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 12032,
+      "entity_prefab": "12030/12032.prefab",
+      "entity_prefab_sha256": "c9ea93c4b24be6f9496a444664e876ef516a07efca92d5dbec42a2ff63847b11",
+      "component_file_id": 114703437598541787,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12030/playable_damage_12032"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12030/12032"
+    },
+    {
+      "damage_entity_id": 13172,
+      "entity_prefab": "13170/13172.prefab",
+      "entity_prefab_sha256": "98121792faa19093c2506269c17f64dbe620df8d1d61badf50e8d8bf28d96216",
+      "component_file_id": 114703437598541787,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": false,
+        "myHideDamage": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/13170/13172"
+    },
+    {
+      "damage_entity_id": 10023,
+      "entity_prefab": "Global/10023.prefab",
+      "entity_prefab_sha256": "35684cc524ef215b8e883a903f93e82626d7d07d6279eff40e2648483e0d1734",
+      "component_file_id": 114703437598541787,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage_fire_HitEffect"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/ConquerorPassiveSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/Global/10023"
+    }
+  ]
+}

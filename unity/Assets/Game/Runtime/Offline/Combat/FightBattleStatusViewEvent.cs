@@ -21,14 +21,19 @@ namespace Zjcs.Combat.Official
         public int InstanceId, ClassId, CreatorId, StackCount, RoundStartRemainingCount;
         public bool CanStack, Forbidden, HasRoundStart;
         public int ShareId;
+        public bool HasSharedStackCount;
+        public int SharedStackCount;
         public long ShieldMaximum, ShieldRemaining;
         public int AbsoluteMaximumCount, AbsoluteTriggerCount;
 
-        public static FightBattleStatusViewState Capture(FightBattleStatusState status)
+        public static FightBattleStatusViewState Capture(FightBattleStatusState status, FightBattleUnitState owner = null)
             => new FightBattleStatusViewState {
                 InstanceId = status.InstanceId, ClassId = status.ClassId, CreatorId = status.CreatorId,
                 StackCount = status.StackCount, CanStack = status.IsOpenStack,
                 Forbidden = status.ForbiddenType != 0, ShareId = status.SharedStackId,
+                HasSharedStackCount = owner != null && status.SharedStackId > 0,
+                SharedStackCount = owner != null && status.SharedStackId > 0
+                    ? FightStatusSharedStacks.Total(owner, status.SharedStackId) : 0,
                 HasRoundStart = status.HasRoundStartTrigger,
                 RoundStartRemainingCount = FightStatusLifecycle.RoundStartRemainingCount(status),
                 ShieldMaximum = status.ShieldValue,
@@ -40,6 +45,7 @@ namespace Zjcs.Combat.Official
         internal bool SameView(FightBattleStatusViewState other) => other != null
             && ClassId == other.ClassId && CreatorId == other.CreatorId && StackCount == other.StackCount
             && CanStack == other.CanStack && Forbidden == other.Forbidden && ShareId == other.ShareId
+            && HasSharedStackCount == other.HasSharedStackCount && SharedStackCount == other.SharedStackCount
             && HasRoundStart == other.HasRoundStart && RoundStartRemainingCount == other.RoundStartRemainingCount
             && ShieldMaximum == other.ShieldMaximum && ShieldRemaining == other.ShieldRemaining
             && AbsoluteMaximumCount == other.AbsoluteMaximumCount && AbsoluteTriggerCount == other.AbsoluteTriggerCount;

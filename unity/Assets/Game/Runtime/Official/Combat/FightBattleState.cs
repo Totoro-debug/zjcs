@@ -264,6 +264,7 @@ namespace Zjcs.Combat.Official
         public int SourceRootSkillId;
         // Legacy threshold SkillId/SkillList without explicit source/target uses the skill AI.
         public bool SelectTargets;
+        public bool SelectTargetsInSkillRange;
         public bool UseTargetPositionWithSelection;
         // Capture at trigger time; later stacking must not change an already collected cast.
         public double DamageFactor = 1.0;
@@ -349,6 +350,7 @@ namespace Zjcs.Combat.Official
         public FightBattleStatusStartComponentState Start;
         public FightBattleStatusStackChangeComponentState StackChange;
         public FightBattleStatusHitSummonComponentState HitSummon;
+        public FightBattleStatusRoundBeforeEndComponentState RoundBeforeEnd;
 
         public FightBattleStatusComponentState Copy()
         {
@@ -375,7 +377,8 @@ namespace Zjcs.Combat.Official
                 RoundInterval = RoundInterval?.Copy(),
                 Start = Start?.Copy(),
                 StackChange = StackChange?.Copy(),
-                HitSummon = HitSummon?.Copy()
+                HitSummon = HitSummon?.Copy(),
+                RoundBeforeEnd = RoundBeforeEnd?.Copy()
             };
         }
     }

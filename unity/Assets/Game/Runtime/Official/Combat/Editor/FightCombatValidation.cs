@@ -345,17 +345,26 @@ namespace Zjcs.Combat.Official.EditorTools
             wave.UnitIds.Add(enemy.Id);
             checkpoint.Waves.Add(wave);
 
+            // The authored attached self skill 12670 creates its zero-valued damage entity
+            // before the first chain hit; it changes neither HP nor the next-hop range rule.
             FightBattleExecutor executor = assets.BeginBattle(checkpoint);
             FightBattleExecutionResult result = executor.Step(0, 1);
             if (result.Event.ActorId != player.Id || result.Event.SkillEntityId != 12860
                 || enemy.Hp != 136 || checkpoint.Finished
                 || result.Event.HpChanges.Count != 1 || result.Event.HpChanges[0].Before != 236
-                || result.Event.HpChanges[0].After != 136 || checkpoint.DamageEventSerial != 1)
+                || result.Event.HpChanges[0].After != 136 || checkpoint.DamageEventSerial != 2
+                || result.Event.DamageEvents.Count != 2
+                || result.Event.DamageEvents[0].SkillEntityId != 12670
+                || result.Event.DamageEvents[0].SourceId != player.Id
+                || result.Event.DamageEvents[0].TargetId != player.Id
+                || result.Event.DamageEvents[0].Damage != 0
+                || result.Event.DamageEvents[1].SkillEntityId != 12860
+                || result.Event.DamageEvents[1].TargetId != enemy.Id)
                 throw new InvalidOperationException("Official 12860 chain must stop after one hit when its next-hop Range has no target.");
 
             FightBattleExecutionResult replay = assets.RestoreBattle(checkpoint).Step(0, 1);
             if (!replay.Replayed || replay.Event.ActorId != player.Id || enemy.Hp != 136
-                || checkpoint.DamageEventSerial != 1)
+                || checkpoint.DamageEventSerial != 2)
                 throw new InvalidOperationException("Official configuration checkpoint replay changed the resolved battle.");
         }
 

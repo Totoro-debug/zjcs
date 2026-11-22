@@ -33,7 +33,7 @@ namespace Zjcs.Presentation.Combat
             public void Update(FightBattleStatusViewState value)
             {
                 var previous = Value; Value = value;
-                if (previous.StackCount != value.StackCount)
+                if (previous.StackCount != value.StackCount || previous.SharedStackCount != value.SharedStackCount)
                     OnStatusStackUpdate?.Invoke(this, previous.StackCount, value.StackCount);
                 if (previous.Forbidden != value.Forbidden) OnForbiddenChanged?.Invoke(this, previous.Forbidden);
                 if (previous.RoundStartRemainingCount != value.RoundStartRemainingCount) NotifyRemainCountUpdate();
@@ -43,6 +43,7 @@ namespace Zjcs.Presentation.Combat
                     Absolute?.NotifyTriggerCount(value.AbsoluteTriggerCount);
             }
             public void Invoke() => OnInvoked?.Invoke(this);
+            public void SharedStackChanged() => OnStatusStackUpdate?.Invoke(this, Value.StackCount, Value.StackCount);
         }
         private sealed class Context : IFightStatusPlayableContext, IMyActionEntityLookup
         {
@@ -166,7 +167,7 @@ namespace Zjcs.Presentation.Combat
                 foreach (var status in owner.Statuses)
                     if (owner.CharacterType != 6 && status.Components?.Seconds?.DefinitionResolved != true
                         && prefabs.ContainsKey(status.ClassId))
-                        Start(owner.Id, FightBattleStatusViewState.Capture(status), false);
+                        Start(owner.Id, FightBattleStatusViewState.Capture(status, owner), false);
         }
 
         public void Enqueue(FightBattleStepEvent step)
@@ -210,6 +211,7 @@ namespace Zjcs.Presentation.Combat
                         if (leases.TryGetValue(key, out var lease))
                         {
                             lease.Context.Creator = Body(value.Status.CreatorId);
+                            SupplySharedStack(lease.Context.Agent, value.Status);
                             scope.Dispatch(() => lease.State.Update(value.Status));
                         }
                         else if (deferred.TryGetValue(key, out var waiting)) waiting.Status = value.Status;
@@ -217,7 +219,14 @@ namespace Zjcs.Presentation.Combat
                     case FightBattleStatusViewEventKind.Invoke:
                         if (leases.TryGetValue(key, out var invoked)) scope.Dispatch(invoked.State.Invoke);
                         break;
-                    case FightBattleStatusViewEventKind.End: End(key); break;
+                    case FightBattleStatusViewEventKind.End:
+                        if (leases.TryGetValue(key, out var ending)) SupplySharedStack(ending.Context.Agent, value.Status);
+                        End(key);
+                        foreach (var remaining in leases.Values)
+                            if (remaining.Context.OwnerId == value.OwnerId && value.Status.ShareId > 0
+                                && remaining.State.Value.ShareId == value.Status.ShareId)
+                                scope.Dispatch(remaining.State.SharedStackChanged);
+                        break;
                     default: throw new ArgumentOutOfRangeException(nameof(value.Kind));
                 }
             }
@@ -264,6 +273,7 @@ namespace Zjcs.Presentation.Combat
             deferred.Remove(key);
             var agent = target.GetComponent<MyFightStatusAgent>();
             if (!agent) { agent = target.AddComponent<MyFightStatusAgent>(); ownedAgents.Add(agent); }
+            SupplySharedStack(agent, snapshot);
             var go = UnityEngine.Object.Instantiate(prefabs[snapshot.ClassId], staging.transform, false);
             var entity = go.GetComponent<MyEntity>(); var view = go.GetComponent<MyFightStatus>();
             var state = new State { Value = snapshot };
@@ -291,6 +301,14 @@ namespace Zjcs.Presentation.Combat
             // MyFightStatus was originally a MyComponent before the counter component
             // in this prefab. Its adapted MonoBehaviour still starts in that order.
             scope.Dispatch(() => { view.OnStart(fresh); entity.MyStart(); });
+        }
+
+        private static void SupplySharedStack(MyFightStatusAgent agent, FightBattleStatusViewState snapshot)
+        {
+            // The count comes from the rule transition, before later consumption;
+            // the native client view only chooses its authored stack playable.
+            if (snapshot.HasSharedStackCount && snapshot.ShareId > 0)
+                agent.StatusToShareStack[snapshot.ShareId] = snapshot.SharedStackCount;
         }
 
         private void End(long key)

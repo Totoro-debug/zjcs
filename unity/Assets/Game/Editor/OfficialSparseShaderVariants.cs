@@ -34,6 +34,7 @@ namespace Zjcs.Editor
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/Cast_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/ConquerorGraph_Noise_Mask_Pro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/ConquerorSkillGraph_Noise_Mask_Pro.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/ConquerorPassiveSkillGraph_Noise_Mask_Pro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/DarkStatus_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/FearGraph_Noise_Mask_Pro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/FirstPromotionStatus_Noise_Mask_Pro_0.shader"] = 260,
@@ -58,6 +59,7 @@ namespace Zjcs.Editor
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/StatusSpineFollower_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/StandfastSoulGraph_Noise_Mask_Pro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/TacticalAdaptationGraph_Noise_Mask_Pro.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/WindOrbGraph_Noise_Mask_Pro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/SummonRoleViews_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/Track_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/WeaponPrefab_Noise_Mask_Pro_0.shader"] = 260,
@@ -112,12 +114,17 @@ namespace Zjcs.Editor
                 selections.Add(original.Key, selection);
                 stages += selection.PassCount * selection.Programs.Count * 2;
             }
-            if (stages != 63368) throw new BuildFailedException("Original shader stage domain changed: " + stages);
+            if (stages != 65448) throw new BuildFailedException("Original shader stage domain changed: " + stages);
             Debug.Log("Original sparse shader domains validated: " + originalPrograms.Count + " assets / " + stages + " GPU stages.");
         }
 
         [MenuItem("Zjcs/Assets/Validate Original Sparse Shader Programs")]
-        public static void Validate() => ValidatePrograms(originalPrograms, 63368);
+        public static void Validate() => ValidatePrograms(originalPrograms, 65448);
+
+        public static void ValidateWindOrbs() => ValidatePrograms(originalPrograms.Where(row =>
+            row.Key.StartsWith("Assets/Game/Runtime/Presentation/Combat/Shaders/WindOrbGraph_", StringComparison.Ordinal)
+            || row.Key.StartsWith("Assets/Game/Runtime/Presentation/Combat/Shaders/ConquerorPassiveSkillGraph_", StringComparison.Ordinal))
+            .ToDictionary(row => row.Key, row => row.Value), 2080);
 
         public static void ValidateTacticalAdaptation() => ValidatePrograms(originalPrograms.Where(row =>
             row.Key.StartsWith("Assets/Game/Runtime/Presentation/Combat/Shaders/TacticalAdaptationGraph_", StringComparison.Ordinal))

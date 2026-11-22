@@ -17,6 +17,7 @@ def main():
         'hit-native-settings': 'hit-view-runtime-source-manifest',
         'skill-entity-views': 'skill-entity-views-source-manifest',
         'conqueror-current-skill-graphs': 'conqueror-current-skill-graphs-source-manifest',
+        'conqueror-passive-current-skill-graphs': 'conqueror-passive-current-skill-graphs-source-manifest',
     }
     inputs, outputs = [], []
     for name, receipt in receipts.items():
@@ -35,7 +36,8 @@ def main():
         else:
             assert json.loads(target.read_bytes()) == expected, 'Native catalog source metadata changed: ' + name
         outputs.extend((identity(target), identity(Path(str(target) + '.meta'))))
-    index = dict(resources=['Combat/skill-native-graphs', 'Combat/conqueror-current-skill-graphs'])
+    index = dict(resources=['Combat/skill-native-graphs', 'Combat/conqueror-current-skill-graphs',
+                            'Combat/conqueror-passive-current-skill-graphs'])
     path = directory / 'skill-native-graph-sources.json'
     if args.write:
         write_changed(path, json.dumps(index, indent=2) + '\n')

@@ -301,10 +301,10 @@ namespace Zjcs.Presentation.Home
             }
             if (hellfire) PrepareAcquiredHellfire(actor);
             if (soulPiercer) { actor.Hp = actor.MaxHp / 2; actor.Turn.Hp = actor.Hp; }
-            int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, standfastTurns = 0, assaultHits = 0, soulBreakHits = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
+            int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, standfastTurns = 0, assaultHits = 0, soulBreakHits = 0, windHits = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
             battle.Controller.StepCompleted += step => {
                 if (hellfire) VerifyAcquiredHellfireStep(step.Event, actor, ref hellfireCures, ref hits);
-                if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits, ref standfastTurns, ref assaultHits, ref soulBreakHits);
+                if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits, ref standfastTurns, ref assaultHits, ref soulBreakHits, ref windHits);
                 var skillCasts = step.Event.SkillCasts.Where(value => value.ActorId == 1 && value.Slot == 0
                     && value.SkillItemId == skillId).ToArray();
                 casts += skillCasts.Length;
@@ -608,6 +608,14 @@ namespace Zjcs.Presentation.Home
             bool capturedTacticalAttack = false, capturedTacticalDefence = false;
             while (battle != null)
             {
+                if (passiveCompanion == 10595 && !capturedPassive
+                    && FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
+                        && particle.GetComponentsInParent<Transform>().Any(parent =>
+                            parent.name.StartsWith("playable24385_", StringComparison.Ordinal))))
+                {
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    capturedPassive = true;
+                }
                 if (passiveCompanion == 10609)
                     foreach (int statusId in new[] { 24394, 24393 })
                     {
@@ -716,6 +724,8 @@ namespace Zjcs.Presentation.Home
                 "The cultivated standfast soul never applied and rendered its turn-bound protection.");
             Require(passiveCompanion != 10568 || assaultHits > 0, "The cultivated defence ignore never affected a successful hit.");
             Require(passiveCompanion != 10594 || soulBreakHits > 0, "The cultivated target missing-health bonus never affected a successful hit.");
+            Require(passiveCompanion != 10595 || windHits > 0 && capturedPassive,
+                "The cultivated wind orb never rendered and struck at the owner's turn end.");
             Require(passiveCompanion != 10609 || capturedTacticalAttack && capturedTacticalDefence
                 && File.Exists(Path.Combine(output, "companion-tactical-24394.json"))
                 && File.Exists(Path.Combine(output, "companion-tactical-24393.json")),

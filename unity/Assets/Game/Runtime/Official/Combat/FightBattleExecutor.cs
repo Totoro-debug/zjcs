@@ -319,6 +319,7 @@ namespace Zjcs.Combat.Official
                 && actor.Resilience <= 0)
                 checkedSlots.Add(chaosInvasionPhaseSkillSlot);
             int ordinaryCastStart = casts.Count;
+            FightBattleSkillDefinition eventSkill = null;
             int ordinaryDamageStart = damageEvents.Count, ordinaryMovementStart = movements.Count;
             float approachEnd = 0f;
             while (true)
@@ -395,6 +396,7 @@ namespace Zjcs.Combat.Official
                 var preparedCast = SkillCasts.Prepare(actor, skill, targets, comboTargetPosition);
                 skill = preparedCast.Skill;
                 var cast = preparedCast.Cast;
+                if (eventSkill == null) eventSkill = skill;
                 int skillCastStart = casts.Count, skillDamageStart = damageEvents.Count;
                 int skillMovementStart = movements.Count;
                 skillState.RunSkill(skill.Slot);
@@ -430,9 +432,6 @@ namespace Zjcs.Combat.Official
             CompleteChaosInvasionPhaseSkillAttempt(actor, chaosInvasionPhaseSkillSlot, skillState);
             OffsetSkillEvents(casts, ordinaryCastStart, damageEvents, ordinaryDamageStart,
                 movements, ordinaryMovementStart, petSupportDuration);
-            FightBattleSkillDefinition eventSkill = null;
-            if (casts.Count > ordinaryCastStart)
-                eventSkill = FindSkillBySlot(actor, casts[ordinaryCastStart].Slot);
             // Unavailable skills never cause an unconditional retreat from their targets.
 
             if (statusCatalog != null)
@@ -454,6 +453,7 @@ namespace Zjcs.Combat.Official
                         damageEvents, movements, ref stepDuration, ref stepActionDuration);
                 }
 
+            ExecuteRoundBeforeEndSkills(actor, casts, damageEvents, movements, ref stepDuration, ref stepActionDuration);
             if (statusCatalog != null)
             {
                 List<FightBattleStatusSkillInvocation> roundEndSkills =
@@ -889,6 +889,9 @@ namespace Zjcs.Combat.Official
                     lastDelay = Math.Max(lastDelay, triggerDelay);
                 }
             }
+
+            ExecuteAttachedSelfSkills(actor, skill, casts, damageEvents, movements, ref lastDelay,
+                ref statusTriggerDuration, ref statusTriggerActionDuration);
 
             // Start triggers settle synchronously and may kill the actor. Preserve the explicit
             // death-trigger exception; ordinary hits require a living source.
@@ -2207,7 +2210,9 @@ namespace Zjcs.Combat.Official
                         || FightBattleTargeting.IsActionBlockedByStatus(target, skill.BlockingTargetActionTypes))) continue;
 
                 var targets = invocation.SelectTargets
-                    ? FightBattleTargeting.Select(source, units, skill.TargetType, 0, false, false, skill, random)
+                    ? invocation.SelectTargetsInSkillRange
+                        ? FightBattleTargeting.SelectInSkillRange(source, units, skill, random: random)
+                        : FightBattleTargeting.Select(source, units, skill.TargetType, 0, false, false, skill, random)
                     : new List<FightBattleUnitState> { target };
                 if (targets.Count == 0 && skill.TargetType != 5
                     && !FightBattleTargeting.HasCasterAreaTargets(source, units, skill)) continue;
@@ -2847,14 +2852,19 @@ namespace Zjcs.Combat.Official
             }
             float duration = Math.Max(skillDuration, movementSeconds);
             if (duration <= 0f) duration = DefaultStepSeconds;
+            // An attached self operation can settle before its parent. Keep the
+            // actor's actual selected cast as the step summary in that case.
+            var summaryCast = skill == null ? null : casts.FirstOrDefault(cast => cast.ActorId == actor.Id
+                && cast.SkillEntityId == skill.EntityId && cast.Slot == skill.Slot);
+            summaryCast = summaryCast ?? casts.FirstOrDefault();
             var result = new FightBattleStepEvent
             {
                 ActorId = actor.Id,
                 ActorRound = actor.SkillState.Round,
                 GlobalRound = globalRound,
                 Wave = checkpoint.WaveIndex + 1,
-                SkillEntityId = casts.Count > 0 ? casts[0].SkillEntityId : skill == null ? 0 : skill.EntityId,
-                SkillItemId = casts.Count > 0 ? casts[0].SkillItemId : skill == null ? 0 : skill.ItemId,
+                SkillEntityId = summaryCast != null ? summaryCast.SkillEntityId : skill == null ? 0 : skill.EntityId,
+                SkillItemId = summaryCast != null ? summaryCast.SkillItemId : skill == null ? 0 : skill.ItemId,
                 Kind = targets.Count == 0 ? 0 : casts.Count == 0 && skill == null ? 1 : 2,
                 ActionDuration = actionDuration,
                 Duration = Math.Max(0.2f, duration),
