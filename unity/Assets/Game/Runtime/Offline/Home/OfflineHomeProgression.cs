@@ -182,7 +182,8 @@ namespace Zjcs.Offline.Home
                 bool autoUnlocked = record.initAutoUnlock || record.unlock == null
                     || record.unlock._type == "NoneCondition" || record.unlock._type == "AlwaysCondition";
                 bool unlocked = (session.IsHangUpUnlocked(record.id) || autoUnlocked) && rules.IsMet(record.unlock, context);
-                if (record.bindFurniture >= 0 && !session.OwnsFurniture(record.bindFurniture)) unlocked = false;
+                if (record.bindFurniture >= 0 && !rules.HasFurniture(record.bindFurniture,
+                    session.OwnsFurniture(record.bindFurniture))) unlocked = false;
                 HomeFastHangUpRecord fast = rules.FastHangUp(record.fastHangUpId);
                 result.Add(new OfflineHomeIncomeDefinition
                 {

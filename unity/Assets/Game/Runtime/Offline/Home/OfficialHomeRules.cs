@@ -325,8 +325,20 @@ namespace Zjcs.Offline.Home
             hasSelectedFurniture = hasFurniture;
         }
 
-        public bool HasFurniture(int type, bool savedOwnership) => hasSelectedFurniture != null
-            ? hasSelectedFurniture(type) : savedOwnership;
+        public bool IsDefaultFurniture(int type)
+        {
+            HomeFurnitureRecord record = FurnitureOf(type);
+            return record != null
+                && IsOpenCondition(record.unlock)
+                && IsOpenCondition(record.repairNotice)
+                && (record.repairCost == null || record.repairCost.Length == 0);
+        }
+
+        public bool HasFurniture(int type, bool savedOwnership) => (hasSelectedFurniture != null
+            ? hasSelectedFurniture(type) : savedOwnership) || IsDefaultFurniture(type);
+
+        private static bool IsOpenCondition(HomeConditionNode node) => node == null
+            || node._type == "NoneCondition" || node._type == "AlwaysCondition";
 
         public HomeRulesData Data { get; }
         public HomeRewardTypesData Rewards { get; }

@@ -235,7 +235,7 @@ namespace Zjcs.Presentation.Home
                 return profile != null && profile.Save.Player.FruitTree.ProductionRepaired;
             if (type == OfflineFruitTreeService.PetFurnitureType)
                 return profile != null && profile.Save.Player.FruitTree.PetFacilityRepaired;
-            return session != null && session.OwnsFurniture(type);
+            return session != null && rules.HasFurniture(type, session.OwnsFurniture(type));
         }
 
         public void RefreshRewards() => rewards?.Refresh();
