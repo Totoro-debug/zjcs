@@ -189,6 +189,7 @@ namespace Zjcs.Editor
                 Skills.OfficialSkillRuntimeShaderBuild.Prepare();
                 string workspace = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
                 byte[] uiPack = string.IsNullOrEmpty(workspace) ? null : Skills.OfficialSkillUiPackBuild.PrepareForDelivery(workspace);
+                OfficialBattleWwisePackageBuild.Validate();
                 report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
                 {
                     scenes = scenes,
@@ -199,6 +200,8 @@ namespace Zjcs.Editor
                 });
                 if (uiPack != null && report != null && report.summary.result == BuildResult.Succeeded)
                     Skills.OfficialSkillUiPackBuild.Deliver(uiPack, destination);
+                if (report != null && report.summary.result == BuildResult.Succeeded)
+                    OfficialBattleWwisePackageBuild.Deliver(destination);
             }
             finally
             {

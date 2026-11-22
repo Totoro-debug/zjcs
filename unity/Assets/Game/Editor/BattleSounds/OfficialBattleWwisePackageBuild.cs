@@ -29,7 +29,14 @@ namespace Zjcs.Editor
         public void OnPostprocessBuild(BuildReport report)
         {
             if (report.summary.platform != BuildTarget.StandaloneWindows64) return;
-            string player = Path.GetFullPath(report.summary.outputPath);
+            Deliver(report.summary.outputPath);
+        }
+
+        public static void Validate() => ValidatePackages();
+
+        public static void Deliver(string executable)
+        {
+            string player = Path.GetFullPath(executable);
             string destination = Path.Combine(Path.GetDirectoryName(player),
                 Path.GetFileNameWithoutExtension(player) + "_Data", "StreamingAssets",
                 OfflineBattleWwisePackages.StreamingDirectory);
