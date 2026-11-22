@@ -51,6 +51,7 @@ $ErrorActionPreference = 'Stop'
 $requestedSkills = @(@($SkillId) + $AdditionalSkillIds | Select-Object -Unique)
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
 . (Join-Path $PSScriptRoot 'validation_workspace.ps1')
+. (Join-Path $PSScriptRoot 'windows_player_snapshot.ps1')
 $repository = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $workspacePath = (Get-Item -LiteralPath $Workspace).FullName.TrimEnd('\','/')
 if ([IO.Path]::GetDirectoryName($workspacePath) -ne (Get-ZjcsValidationRoot).TrimEnd('\','/')) {
@@ -72,7 +73,7 @@ if ($PSCmdlet.ParameterSetName -eq 'Play') {
     $projectPath = (Get-Item -LiteralPath $Project).FullName
     $executable = 'D:/Tool/Unity/Editor/Unity.exe'
     if (-not (Test-Path -LiteralPath $executable)) { throw 'Configured Unity Editor is absent.' }
-} else { $executable = (Get-Item -LiteralPath $Player).FullName }
+} else { $executable = Resolve-ZjcsWindowsPlayerSnapshot -PlayerPath $Player -Workspace $workspacePath -Repository $repository }
 $run = Join-Path $workspacePath ('aa-' + $SkillId + '-' + [guid]::NewGuid().ToString('N').Substring(0, 12))
 New-Item -ItemType Directory -Path $run | Out-Null
 $log = Join-Path $run 'runtime.log'
