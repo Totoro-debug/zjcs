@@ -182,8 +182,47 @@ function Get-UnityInternalDisplay {
     return $display[0]
 }
 
+function Enter-UnityProjectLaunch {
+    param([Parameter(Mandatory)][string[]]$ArgumentList)
+    $index = [Array]::IndexOf($ArgumentList, '-projectPath')
+    if ($index -lt 0 -or $index + 1 -ge $ArgumentList.Length) { return $null }
+    $project = [IO.Path]::GetFullPath($ArgumentList[$index + 1].Trim('"')).Replace('\', '/').TrimEnd('/')
+    $hash = [Security.Cryptography.SHA256]::Create()
+    try { $key = [BitConverter]::ToString($hash.ComputeHash([Text.Encoding]::UTF8.GetBytes($project.ToUpperInvariant()))).Replace('-', '') }
+    finally { $hash.Dispose() }
+    $mutex = [Threading.Mutex]::new($false, ('Local\Zjcs.UnityProjectLaunch.' + $key))
+    $acquired = $false
+    try {
+        while (-not $acquired) {
+            try { $acquired = $mutex.WaitOne(30000) }
+            catch [Threading.AbandonedMutexException] { $acquired = $true }
+            if (-not $acquired) { Write-Host "Waiting for another Unity launch: $project" }
+        }
+        $pattern = '(?i)-projectPath\s+"?' + [regex]::Escape($project) + '(?:\s|"|$)'
+        while ($true) {
+            $editors = @(Get-CimInstance Win32_Process -Filter "Name = 'Unity.exe'" -ErrorAction Stop |
+                Where-Object { $_.CommandLine -and $_.CommandLine.Replace('\', '/') -match $pattern })
+            if ($editors.Count -eq 0) { return $mutex }
+            Write-Host "Waiting for the running Unity project: $project"
+            $existing = Get-Process -Id $editors[0].ProcessId -ErrorAction SilentlyContinue
+            if ($existing) {
+                try { [void]$existing.WaitForExit(30000) }
+                finally { $existing.Dispose() }
+            }
+        }
+    } catch {
+        if ($acquired) { $mutex.ReleaseMutex() }
+        $mutex.Dispose()
+        throw
+    }
+}
+
 function Start-UnityOnInternalDisplay {
     param([Parameter(Mandatory)][string]$Editor, [Parameter(Mandatory)][string[]]$ArgumentList)
+    # Serialize discovery and launch across validation sessions. Keep the lock
+    # until the new process is discoverable, before another launcher checks it.
+    $projectLaunch = Enter-UnityProjectLaunch -ArgumentList $ArgumentList
+    try {
     $display = Get-UnityInternalDisplay
     # Launch the native executable directly. Preserve the existing argument
     # quoting contract and keep the window hidden until the display watcher places it.
@@ -205,6 +244,9 @@ function Start-UnityOnInternalDisplay {
     Start-Process -FilePath $engine -ArgumentList $watchArguments -WindowStyle Hidden | Out-Null
     Write-Host "Unity process $($process.Id) targets internal display $($display.Device) ($($display.HardwareId))."
     return $process
+    } finally {
+        if ($projectLaunch) { $projectLaunch.ReleaseMutex(); $projectLaunch.Dispose() }
+    }
 }
 
 if ($WatchProjectRoot) {
