@@ -1190,7 +1190,8 @@ namespace Zjcs.Combat.Official
                                 logicStatus, ReferenceEquals(logicOwner, actor)
                                     ? FightStatusLogicEvent.DoDamage : FightStatusLogicEvent.BeDamage,
                                 actor, target, skill, hit, units, statusCatalog, random,
-                                nextStatusInstanceId: NextStatusInstanceId));
+                                damageEvent: damage, formula: formula, nextStatusInstanceId: NextStatusInstanceId,
+                                skillItems: skillItems));
                         }
                     }
                     ApplyResilienceHit(actor, target, skill, hit, resolved, casts,

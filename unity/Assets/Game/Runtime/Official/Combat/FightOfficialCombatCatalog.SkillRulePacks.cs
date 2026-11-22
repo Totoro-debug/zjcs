@@ -6,6 +6,7 @@ namespace Zjcs.Combat.Official
     public sealed partial class FightOfficialCombatCatalog
     {
         private readonly HashSet<int> skillRulePackEntities = new HashSet<int>();
+        private readonly HashSet<int> skillRulePackItems = new HashSet<int>();
 
         public bool IsSkillRulePackEntity(int entityId) => skillRulePackEntities.Contains(entityId);
 
@@ -14,6 +15,10 @@ namespace Zjcs.Combat.Official
         {
             VerifyPayload("skill rule pack", json, sha256, manifest);
             var pack = Object(OfficialJson.Parse(json), "skill rule pack");
+            int itemId = Int(pack, "item_id");
+            if (itemId <= 0) throw new FormatException("Skill rule pack has no item identity.");
+            if (skillRulePackItems.Contains(itemId))
+                throw new InvalidOperationException("Skill rule pack is already installed: " + itemId);
             if (string.IsNullOrEmpty(manifest) || !string.Equals(
                 Convert.ToString(Required(pack, "manifest")), manifest, StringComparison.Ordinal))
                 throw new InvalidOperationException("Skill rule pack source metadata differs from its manifest.");
@@ -32,12 +37,15 @@ namespace Zjcs.Combat.Official
                     throw new InvalidOperationException("Skill rule pack baseline differs for entity " + id);
                 replacements.Add(id, Object(pair.Value, "pack entity " + id));
             }
+            var reportParents = ReadReportSkillParentOverrides(pack);
             ParseSkillPropertyTables(pack);
             foreach (var pair in replacements)
             {
                 entities[pair.Key] = pair.Value;
                 skillRulePackEntities.Add(pair.Key);
             }
+            foreach (var pair in reportParents) reportSkillParents[pair.Key] = pair.Value;
+            skillRulePackItems.Add(itemId);
         }
     }
 }

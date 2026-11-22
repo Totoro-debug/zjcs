@@ -40,6 +40,8 @@ namespace Zjcs.Combat.Official
         private readonly Dictionary<int, FightOfficialSkillItem> items =
             new Dictionary<int, FightOfficialSkillItem>();
         private readonly Dictionary<int, int> itemTypes = new Dictionary<int, int>();
+        private readonly Dictionary<int, int> itemByEntity = new Dictionary<int, int>();
+        private readonly HashSet<int> activeSkillTypes = new HashSet<int>();
         private readonly Dictionary<int, int> skinEffectSkills = new Dictionary<int, int>();
         private readonly Dictionary<int, int> initialSkillByWeaponType =
             new Dictionary<int, int>();
@@ -104,6 +106,13 @@ namespace Zjcs.Combat.Official
                     PassivePropFactors = FightOfficialCombatCatalog.ReadLongMap(skill,
                         "PassivePropFactors")
                 };
+                // SkillInfo.InitEntityClassIds / SkillInfoParser.PostParse preserve
+                // the first table row for shared, random and directional entities.
+                var entityIds = new List<int> { entityId };
+                entityIds.AddRange(FightOfficialCombatCatalog.ReadIntArray(skill, "RandomSkillEntityId"));
+                entityIds.AddRange(catalog.items[itemId].DirectionEntityIds.Values);
+                foreach (int id in entityIds)
+                    if (id > 0 && !catalog.itemByEntity.ContainsKey(id)) catalog.itemByEntity.Add(id, itemId);
             }
             foreach (object row in FightOfficialCombatCatalog.ParseArray(
                 FightOfficialCombatCatalog.RequiredField(rules, "skill_skin"), "rules.skill_skin"))
@@ -151,6 +160,8 @@ namespace Zjcs.Combat.Official
                 settings = FightOfficialCombatCatalog.ParseObject(rawSettings, "game_settings");
             if (settings != null)
             {
+                foreach (int type in FightOfficialCombatCatalog.ReadIntArray(settings, "ActiveSkillTypes"))
+                    catalog.activeSkillTypes.Add(type);
                 int sword = FirstId(settings, "SkillOptionsWhenChooseSword");
                 int wand = FirstId(settings, "SkillOptionsWhenChooseWand");
                 if (sword > 0) catalog.initialSkillByWeaponType[SwordInitialWeaponType] = sword;
@@ -215,6 +226,9 @@ namespace Zjcs.Combat.Official
         {
             return itemTypes.TryGetValue(itemId, out int itemType) ? itemType : 0;
         }
+
+        public bool IsActiveSkillEntity(int entityId) => itemByEntity.TryGetValue(entityId, out int itemId)
+            && activeSkillTypes.Contains(ItemTypeFor(itemId));
 
         /// <summary>
         /// Official initial active skill for the chosen starting weapon

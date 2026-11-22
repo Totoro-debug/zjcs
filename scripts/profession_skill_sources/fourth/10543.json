@@ -1,0 +1,58 @@
+{
+  "entities": [
+    25010,
+    11150,
+    11151,
+    10023
+  ],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/flame-momentum-current-graphs-source-manifest.json",
+    "assets/reference/battle-animation/conqueror-passive-current-skill-graphs-source-manifest.json"
+  ],
+  "runtime_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10543.json"
+  ],
+  "rule_pack_fragments": [
+    "FightSkill_part751.g.bytes",
+    "FightSkill_part55.g.bytes",
+    "FightSkill_part58.g.bytes",
+    "FightSkill_part1.g.bytes"
+  ],
+  "visibility_bundles": [
+    "global_10023"
+  ],
+  "reused_client_code": [
+    "MyFightStatusLogic",
+    "MyFightStatus",
+    "MyAction",
+    "MyEntity",
+    "MyFightSkill",
+    "MyFightHitFixed",
+    "MyFightDamage"
+  ],
+  "code": [
+    "FightStatusComponentInfo",
+    "FightStatusLogicComponentInfo",
+    "FightOnDoDamageTriggerCfg",
+    "DamageTypeFilter",
+    "BBLongLessFilter",
+    "BBLongCompareFilter",
+    "SkillOverrideParentActiveByEcIdFilter",
+    "SkillOverrideParentActiveBaseFilter",
+    "LogicFilter",
+    "LogicNotFilter",
+    "SameFactionByEcIdKeyFilter",
+    "FightHandleCfgBBEcId2EcEntityAndStore",
+    "FightHandleCfgTriggerSkills",
+    "FightStatusTriggerSkillCfg",
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "BattleFormulaHandler",
+    "BattleReportSkillOverrideInfo",
+    "BattleReportSkillOverrideInfoParser",
+    "SkillInfoParser",
+    "SkillInfo",
+    "ItemType"
+  ]
+}

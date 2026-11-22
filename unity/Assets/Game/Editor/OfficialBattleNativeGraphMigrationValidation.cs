@@ -56,6 +56,25 @@ namespace Zjcs.Editor
             OfficialSparseShaderVariants.ValidateWindOrbs();
         }
 
+        public static void ValidateFlameMomentum()
+        {
+            ValidateFamily("Combat/conqueror-passive-current-skill-graphs", "ConquerorPassiveSkillGraphs");
+            var asset = Resources.Load<TextAsset>("Combat/flame-momentum-current-graphs");
+            var data = asset == null ? null : JsonUtility.FromJson<StatusData>(asset.text);
+            if (data?.graphs == null || data.graphs.Length != 1 || data.graphs[0].id != 25010)
+                throw new InvalidOperationException("Current flame-momentum status binding is missing.");
+            var entity = Resources.Load<GameObject>(data.graphs[0].resource);
+            if (!entity || !entity.GetComponent<MyEntity>() || !entity.GetComponent<MyFightStatus>()
+                || !entity.GetComponent<MyFightStatusLogic>()
+                || !AssetDatabase.GetAssetPath(entity).StartsWith("Assets/Official/Combat/FlameMomentumGraphs/", StringComparison.Ordinal))
+                throw new InvalidOperationException("Current flame-momentum listener resolved to another entity or family.");
+            var prefabs = new HashSet<GameObject> { entity };
+            entity.GetComponent<MyFightStatus>().TryGetPlayables(ref prefabs);
+            CheckMissing(prefabs);
+            Debug.Log("Current flame-momentum listener and shared fire child bindings passed.");
+            ProjectTools.Validate();
+        }
+
         private static void ValidateFamily(string resource, string family)
         {
             // Loading the effective catalog verifies every declared source hash.

@@ -102,13 +102,20 @@ public static class FourthProfessionBattleHarness
                     observed.AddRange(result.Event.SkillCasts.Select(cast =>
                         cast.ActorId + ":" + cast.SkillEntityId + "/" + cast.SkillItemId));
                 if (result?.Event?.SkillCasts != null && result.Event.SkillCasts.Any(cast =>
-                    cast.ActorId == actor.Id && (cast.SkillEntityId == test.Entity || cast.SkillItemId == test.Item)))
+                    cast.ActorId == actor.Id && cast.Slot == skill.Slot
+                        && (cast.SkillEntityId == test.Entity || cast.SkillItemId == test.Item)))
                     selected = result;
             }
             Check(selected != null, "skill was not cast: item " + test.Item + ", entity " + test.Entity
                 + "; observed [" + string.Join(",", observed) + "]");
-            casts += selected.Event.SkillCasts.Count(cast => cast.ActorId == actor.Id
-                && (cast.SkillEntityId == test.Entity || cast.SkillItemId == test.Item));
+            // Random/directional root variants keep the equipped slot; attached
+            // children inherit the item but use a separate trigger slot.
+            int roots = selected.Event.SkillCasts.Count(cast => cast.ActorId == actor.Id
+                && cast.Slot == skill.Slot
+                    && (cast.SkillEntityId == test.Entity || cast.SkillItemId == test.Item));
+            Check(roots == 1, "active root was duplicated or replaced: " + test.Item + "/" + roots
+                + "; observed [" + string.Join(",", observed) + "]");
+            casts += roots;
             damageEvents += selected.Event.DamageEvents.Count;
             movementEvents += selected.Event.Movements.Count;
         }

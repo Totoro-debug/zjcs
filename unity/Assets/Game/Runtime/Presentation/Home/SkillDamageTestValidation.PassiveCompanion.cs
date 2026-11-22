@@ -21,7 +21,7 @@ namespace Zjcs.Presentation.Home
             var plan = source.Player.Skills.Plans[source.Player.Skills.SelectedPlan];
             int itemId = plan.PassiveSkills[0];
             bool supported = active == 10047 && player.Wardrobe.Profession == 4 && (itemId == 10606 || itemId == 10607)
-                || active == 10088 && player.Wardrobe.Profession == 8 && (itemId == 10608 || itemId == 10568 || itemId == 10595)
+                || active == 10088 && player.Wardrobe.Profession == 8 && (itemId == 10608 || itemId == 10568 || itemId == 10595 || itemId == 10543)
                 || active == 10068 && player.Wardrobe.Profession == 8 && itemId == 10609;
             supported |= active == 10089 && player.Wardrobe.Profession == 8 && itemId == 10594;
             Require(supported && source.Player.Wardrobe.Profession == player.Wardrobe.Profession
@@ -56,8 +56,30 @@ namespace Zjcs.Presentation.Home
         }
 
         private static void VerifyAcquiredPassiveStep(FightBattleStepEvent step, FightBattleCheckpoint checkpoint,
-            string output, int itemId, ref int coldHits, ref int auraHits, ref int standfastTurns, ref int assaultHits, ref int soulBreakHits, ref int windHits)
+            string output, int itemId, ref int coldHits, ref int auraHits, ref int standfastTurns, ref int assaultHits, ref int soulBreakHits, ref int windHits, ref int flameHits)
         {
+            if (itemId == 10543)
+            {
+                var primary = step.DamageEvents.Where(hit => hit.SourceId == 1 && hit.SkillEntityId == 11910
+                    && hit.Critical && hit.HasDamageValue && hit.DamageValue < 0).ToArray();
+                var children = step.SkillCasts.Where(cast => cast.ActorId == 1 && cast.SkillEntityId == 11150).ToArray();
+                Require(children.Length == primary.Length && children.All(cast => cast.SkillItemId == itemId
+                    && cast.Presentation.HasEntityPosition && primary.Any(hit => hit.HasDamagePosition
+                        && hit.DamageX == cast.Presentation.EntityX && hit.DamageY == cast.Presentation.EntityY
+                        && Math.Abs(hit.Delay - cast.Delay) < .0001f)),
+                    "The cultivated critical blast lost its original damage centre or trigger count.");
+                foreach (var hit in step.DamageEvents.Where(value => value.SkillEntityId == 11150))
+                {
+                    Require(hit.SourceId == 1 && hit.SkillItemId == itemId && hit.HitEntityId == 11151
+                        && hit.DamageEntityId == 10023 && hit.ElementType == 102 && hit.DamageType == 1
+                        && hit.Damage < 0 && !hit.TrueDamage && !hit.IsCure,
+                        "The cultivated critical blast lost its original fire damage or source.");
+                    flameHits++;
+                }
+                if (flameHits > 0) File.WriteAllText(Path.Combine(output, "companion-flame-momentum-checkpoint.json"),
+                    FightBattleCheckpointSerializer.Save(checkpoint));
+                return;
+            }
             if (itemId == 10595)
             {
                 foreach (var hit in step.DamageEvents.Where(value => value.SkillEntityId == 12030))

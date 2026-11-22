@@ -13,10 +13,14 @@ namespace Zjcs.Combat.Official
             public FightBattleHitDefinition Hit;
             public FightBattleDamageEvent Damage;
             public IReadOnlyList<FightBattleUnitState> Units;
+            public FightStatusLogicEvent EventKind;
+            public FightOfficialCombatCatalog Catalog;
+            public FightOfficialSkillItemCatalog SkillItems;
         }
 
         private static bool SupportsAfterDamageFlow(Dictionary<string, object> flow, AfterDamageContext context)
         {
+            if (context.EventKind == FightStatusLogicEvent.DoDamage) return SupportsDoDamageFlow(flow, context);
             var condition = Object(flow, "FilterCondition");
             var filters = Array(condition, "SubFilters").OfType<Dictionary<string, object>>().ToArray();
             var handles = Array(flow, "HandleCfgs").OfType<Dictionary<string, object>>().ToArray();
@@ -66,6 +70,8 @@ namespace Zjcs.Combat.Official
         {
             string type = StringField(filter, "_type");
             matched = false; supported = true;
+            if (context.EventKind == FightStatusLogicEvent.DoDamage)
+                return MatchDoDamageFilter(filter, context, out matched, out supported);
             if (type == "DamageResultTypeFilter")
             {
                 supported = KeyId(filter, "DamageEntityKey") == 1023 && Int(filter, "ResultType") == 1;
@@ -125,6 +131,8 @@ namespace Zjcs.Combat.Official
         {
             string type = StringField(handle, "_type");
             supported = true;
+            if (context.EventKind == FightStatusLogicEvent.DoDamage)
+                return ApplyDoDamageHandle(handle, context, random, runtime, output, out supported);
             if (type == "FightHandleCfgBBEcId2EcEntityAndStore")
             {
                 var storage = Object(handle, "StorageBBKey");

@@ -28,7 +28,7 @@ namespace Zjcs.Combat.Official
             FightBattleHitDefinition hit, IReadOnlyList<FightBattleUnitState> units,
             FightOfficialCombatCatalog catalog, FightRandomStream random,
             FightBattleDamageEvent damageEvent = null, FightDamageFormula formula = null,
-            System.Func<int> nextStatusInstanceId = null)
+            System.Func<int> nextStatusInstanceId = null, FightOfficialSkillItemCatalog skillItems = null)
         {
             var result = new List<FightBattleStatusSkillInvocation>();
             if (owner == null || status == null || !status.HasLogicComponent
@@ -52,9 +52,11 @@ namespace Zjcs.Combat.Official
                     damageEvent, triggers, formula);
             // User-confirmed offline rule: one Runtime board per event, shared by its flows.
             var runtime = new Dictionary<int, FightBattleLogicBlackboardValue>();
-            var afterDamage = eventKind == FightStatusLogicEvent.AfterBeDamage && damageEvent != null
+            var afterDamage = (eventKind == FightStatusLogicEvent.AfterBeDamage || eventKind == FightStatusLogicEvent.DoDamage)
+                && damageEvent != null
                 ? new AfterDamageContext { Owner = owner, Status = status, Source = actor, Target = target,
-                    Skill = skill, Hit = hit, Damage = damageEvent, Units = units } : null;
+                    Skill = skill, Hit = hit, Damage = damageEvent, Units = units, EventKind = eventKind,
+                    Catalog = catalog, SkillItems = skillItems } : null;
             foreach (object raw in triggers)
             {
                 if (!(raw is Dictionary<string, object> trigger)) continue;

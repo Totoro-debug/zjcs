@@ -15,7 +15,7 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     if ($PassiveId -in @(10606,10607)) {
         if (-not (Select-String -LiteralPath $runtimeLog -SimpleMatch "[Acquired passive combat] $PassiveId cultivated") -or
             -not (Test-Path -LiteralPath (Join-Path $Run 'companion-cold-checkpoint.json'))) { throw 'The cultivated secret did not exercise its original cold path.' }
-    } elseif ($PassiveId -in @(10568,10594,10595,10608,10609)) {
+    } elseif ($PassiveId -in @(10543,10568,10594,10595,10608,10609)) {
         $source = Get-Content -LiteralPath (Join-Path $Run 'companion-cultivated-save.json') -Raw | ConvertFrom-Json
         if ($source.Player.Skills.Plans[$source.Player.Skills.SelectedPlan].PassiveSkills[0] -ne $PassiveId) {
             throw 'The battle used another cultivated secret.'
@@ -41,6 +41,10 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     if ($PassiveId -eq 10595 -and (-not (Test-Path -LiteralPath (Join-Path $Run 'companion-wind-orb-checkpoint.json')) -or
         -not (Test-Path -LiteralPath (Join-Path $Run 'acquired-active-ui-passive-battle.png')))) {
         throw 'The cultivated wind orb was not rendered and released.'
+    }
+    if ($PassiveId -eq 10543 -and (-not (Test-Path -LiteralPath (Join-Path $Run 'companion-flame-momentum-checkpoint.json')) -or
+        -not (Test-Path -LiteralPath (Join-Path $Run 'acquired-active-ui-passive-battle.png')))) {
+        throw 'The cultivated critical fire blast was not rendered and settled.'
     }
 }
 $ErrorActionPreference = 'Stop'
