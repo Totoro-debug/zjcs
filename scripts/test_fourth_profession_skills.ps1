@@ -37,7 +37,8 @@ Add-Type -Path (@(Get-FightCombatSources) +
     (Join-Path $PSScriptRoot 'fixtures/battle_fixed_percent_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_wind_orb_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_blade_feather_harness.cs') +
-    (Join-Path $PSScriptRoot 'fixtures/battle_flame_momentum_harness.cs'))
+    (Join-Path $PSScriptRoot 'fixtures/battle_flame_momentum_harness.cs') +
+    (Join-Path $PSScriptRoot 'fixtures/battle_star_burst_harness.cs'))
 $sp = Get-Content (Join-Path $inputs 'skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $bp = Get-Content (Join-Path $inputs 'battle-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $rp = Get-Content (Join-Path $inputs 'rules-source-manifest.json') -Raw | ConvertFrom-Json
@@ -58,6 +59,7 @@ $formula = $catalog.CreateDamageFormula(
     [IO.File]::ReadAllText((Join-Path $inputs 'rules.json')), $rp.output_sha256, $rp.manifest)
 if ($SkillId -ne 0) {
     switch ($SkillId) {
+        10002 { [BattleStarBurstHarness]::Run($catalog, $formula, $items); exit 0 }
         10543 { [BattleFlameMomentumHarness]::Run($catalog, $formula, $items); exit 0 }
         10595 { [BattleWindOrbHarness]::Run($catalog, $formula, $items); [BattleBladeFeatherHarness]::Run($catalog, $formula, $items); exit 0 }
         10592 { [BattleFixedPercentHarness]::Run($formula); [BattleSteelFaithHarness]::Run($catalog, $formula, $items); exit 0 }
@@ -101,3 +103,4 @@ if ($SkillId -ne 0) {
 [BattleBladeFeatherHarness]::Run($catalog, $formula, $items)
 
 [BattleFlameMomentumHarness]::Run($catalog, $formula, $items)
+[BattleStarBurstHarness]::Run($catalog, $formula, $items)

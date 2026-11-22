@@ -203,7 +203,7 @@ namespace Zjcs.Presentation.Combat
                 "Combat/profession-current-graphs", "Combat/conqueror-current-graphs", "Combat/fear-current-graphs",
                 "Combat/standfast-soul-current-graphs", "Combat/tactical-adaptation-current-graphs",
                 "Combat/assault-piercing-current-graphs", "Combat/soul-breaker-current-graphs",
-                "Combat/wind-orb-current-graphs", "Combat/flame-momentum-current-graphs");
+                "Combat/wind-orb-current-graphs", "Combat/flame-momentum-current-graphs", "Combat/star-burst-current-graphs");
             statusViews.Restore();
         }
 

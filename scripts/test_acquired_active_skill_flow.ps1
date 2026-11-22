@@ -2,9 +2,9 @@ param(
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet(10000,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10066,10068,10073,10079,10082,10083,10084,10085,10088,10089,10099,10104)][int]$SkillId = 10026,
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10066,10068,10073,10079,10082,10083,10084,10085,10088,10089,10099,10104)][int]$SkillId = 10026,
     [Parameter(ParameterSetName='Player')]
-    [ValidateSet(10000,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10066,10068,10073,10079,10082,10083,10084,10085,10088,10089,10099,10104)][int[]]$AdditionalSkillIds = @(),
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10066,10068,10073,10079,10082,10083,10084,10085,10088,10089,10099,10104)][int[]]$AdditionalSkillIds = @(),
     [string]$PassiveSave,
     [ValidateSet(0,39521)][int]$SkillSkinId = 0
 )
@@ -169,10 +169,12 @@ try {
         if (-not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-active-ui-checkpoint.json'))) {
             throw "The completed skill-page battle checkpoint is absent: $run"
         }
+        if ($SkillId -eq 10002 -and (-not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-active-ui-blinding.png')) -or
+            -not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-star-burst-blinding-checkpoint.json')))) { throw 'The original cultivated blinding was not rendered and persisted.' }
         if ($SkillId -eq 10083 -and -not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-active-ui-opening.png'))) {
             throw "The original four opening swords were not rendered: $run"
         }
-        if ($SkillId -in @(10032,10039,10047,10068,10073,10079,10082,10083,10084,10085,10088,10089,10099,10104)) {
+        if ($SkillId -in @(10002,10032,10039,10047,10068,10073,10079,10082,10083,10084,10085,10088,10089,10099,10104)) {
             # The Player asserts the original effects for each equipped cast.
             Write-Output "Acquired active skill-page flow passed: $skillRun"
             continue

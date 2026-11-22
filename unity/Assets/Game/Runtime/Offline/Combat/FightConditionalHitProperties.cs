@@ -14,10 +14,44 @@ namespace Zjcs.Combat.Official
         private readonly IReadOnlyList<FightBattleGridItemState> gridItems;
         private readonly HashSet<FightBattleStatusState> invoked = new HashSet<FightBattleStatusState>();
         private readonly HashSet<FightBattleStatusState> seen = new HashSet<FightBattleStatusState>();
+        private readonly HashSet<FightBattleStatusState> typeProperties = new HashSet<FightBattleStatusState>();
+        private int typePropertyId;
         public FightConditionalHitProperties(FightBattleUnitState actor, FightBattleSkillDefinition skill,
             FightOfficialSkillItemCatalog items = null, IReadOnlyList<FightBattleUnitState> units = null,
             FightOfficialCombatCatalog catalog = null, IReadOnlyList<FightBattleGridItemState> gridItems = null)
         { this.actor=actor; this.skill=skill; this.items=items; this.units=units; this.catalog=catalog; this.gridItems=gridItems; }
+
+        public void MergeTypeProperty(FightBattleUnitState target, FightBattleHitDefinition hit,
+            int propertyId, Dictionary<int, long> properties)
+        {
+            typeProperties.Clear(); typePropertyId=propertyId;
+            if(actor?.Statuses==null || target==null || skill==null || propertyId<=0
+                || hit==null || hit.DamageType!=1 && hit.DamageType!=2 && hit.DamageType!=6) return;
+            // DamageGetType reads BlindingPercent before damage is calculated.
+            // Preview only deterministic definitions whose conditions do not
+            // depend on the result of that very roll; consumption stays in EndCast.
+            foreach(var status in actor.Statuses)
+            {
+                var c=status?.Components?.HitDmgAddPer;
+                if(c==null || !c.DefinitionResolved || c.HitSourceType!=2 || c.HasUnsupportedStatusLogicTags
+                    || status.ForbiddenType!=0 || c.DurationSkillCount==0 || !c.Damage
+                    || c.Rate!=1f || c.ConditionCount!=1 || c.Block || c.Crit || c.IsTrueDamage
+                    || c.IsApplyOneHit || c.MaxInvokeCount>=0 || c.ConsumeStatusId>0 || c.RoundResetCount>0
+                    || c.ScalePropByStatusTypeCount || c.StatusFilter!=null && c.StatusFilter.Target!=0
+                    || c.TargetActionTypes.Count>0 || c.TargetHpPercent>=0f
+                    || !Matches(c.HitSkillElementTypes,skill.ElementType)
+                    || !Matches(c.HitSkillEntityClassIds,skill.EntityId) || !SkillSortMatches(c.HitSkillTypes)
+                    || c.DurationSkillCount>=0 && (!Matches(c.OnlySkillActions,skill.ActionType)
+                        || skill.SkillType!=c.OnlySkillType)) continue;
+                foreach(var property in status.StatusProperties ?? status.ResolvedProperties ?? new List<FightPropertyValue>())
+                {
+                    if(property==null || property.Id!=propertyId) continue;
+                    properties.TryGetValue(propertyId,out long previous);
+                    properties[propertyId]=previous+FightReturnStrikeStatus.HitProperty(status,property,1.0);
+                    typeProperties.Add(status);
+                }
+            }
+        }
 
         public void Merge(FightBattleUnitState target, FightBattleHitDefinition hit,
             FightDamageTypeData type, bool cure, FightRandomStream random, Dictionary<int,long> properties)
@@ -73,12 +107,14 @@ namespace Zjcs.Combat.Official
                 foreach(var property in status.StatusProperties ?? status.ResolvedProperties ?? new List<FightPropertyValue>())
                 {
                     if(property==null || property.Id<=0) continue;
+                    if(property.Id==typePropertyId && typeProperties.Contains(status)) continue;
                     properties.TryGetValue(property.Id,out long previous);
                     properties[property.Id]=previous+FightReturnStrikeStatus.HitProperty(status,property,scale);
                 }
                 if(c.AutoRemove && c.MaxInvokeCount>=0 && c.InvokeCount>=c.MaxInvokeCount)
                     FightStatusLifecycle.End(actor,status);
             }
+            typeProperties.Clear();
         }
 
         public void EndCast()

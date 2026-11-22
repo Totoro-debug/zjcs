@@ -72,7 +72,26 @@ namespace Zjcs.Editor
             entity.GetComponent<MyFightStatus>().TryGetPlayables(ref prefabs);
             CheckMissing(prefabs);
             Debug.Log("Current flame-momentum listener and shared fire child bindings passed.");
+            if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
+                throw new InvalidOperationException("Full native validation renders HUD pixels; run this method with graphics enabled.");
             ProjectTools.Validate();
+        }
+
+        public static void ValidateStarBurst()
+        {
+            var asset = Resources.Load<TextAsset>("Combat/star-burst-current-graphs");
+            var data = asset == null ? null : JsonUtility.FromJson<StatusData>(asset.text);
+            if (data?.graphs == null || data.graphs.Length != 1 || data.graphs[0].id != 24234)
+                throw new InvalidOperationException("Current blinding status binding is missing.");
+            var entity = Resources.Load<GameObject>(data.graphs[0].resource);
+            if (!entity || !entity.GetComponent<MyEntity>() || !entity.GetComponent<MyFightStatus>()
+                || !entity.GetComponent<MyFightStatusHitDmgAddPer>())
+                throw new InvalidOperationException("Current blinding status lost its original components.");
+            var prefabs = new HashSet<GameObject> { entity };
+            entity.GetComponent<MyFightStatus>().TryGetPlayables(ref prefabs);
+            CheckMissing(prefabs);
+            Debug.Log("Current blinding native status, sound and playable bindings passed.");
+            OfficialSparseShaderVariants.ValidateStarBurst();
         }
 
         private static void ValidateFamily(string resource, string family)

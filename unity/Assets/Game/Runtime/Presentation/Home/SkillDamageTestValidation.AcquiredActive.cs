@@ -64,12 +64,13 @@ namespace Zjcs.Presentation.Home
             bool swordWindDance = skillId == 10088;
             bool soulPiercer = skillId == 10089;
             bool dreadShadow = skillId == 10104;
-            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow;
+            bool starBurst = skillId == 10002;
+            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || starBurst;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
-            int profession = hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = starBurst ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -95,10 +96,11 @@ namespace Zjcs.Presentation.Home
             player.Level = fourthPromotion ? rules.LevelLimits.Where(value => value.SubRank == player.SubRank
                 && value.PlayerBlessLevel == 0 && value.SkillLevel >= 2).Min(value => value.PlayerLevel) : 50;
             player.Experience = assets.Load().CumulativeLevelExperience[player.Level];
-            player.InitialWeaponType = profession == 10 ? Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType : 200;
+            player.InitialWeaponType = profession == 10 || profession == 13 || profession == 17
+                ? Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType : 200;
             player.Wardrobe.Profession = profession;
             int passiveCompanion = LoadAcquiredPassiveCompanion(player, skillId, output);
-            if (passiveCompanion == 10609 || passiveCompanion == 10594 || passiveCompanion == 10543)
+            if (passiveCompanion == 10609 || passiveCompanion == 10594 || passiveCompanion == 10543 || starBurst)
             {
                 var validationRunner = FindObjectsOfType<SkillDamageTestValidation>().FirstOrDefault();
                 if (validationRunner != null) validationRunner.deadline += 600f;
@@ -272,7 +274,7 @@ namespace Zjcs.Presentation.Home
                 if (setting == "MonsterHp" && (waterBlade || soulPiercer))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
-                if (setting == "Round" && (vortexSurge || passiveCompanion == 10607 || passiveCompanion == 10594 || passiveCompanion == 10543 || dreadShadow))
+                if (setting == "Round" && (vortexSurge || passiveCompanion == 10607 || passiveCompanion == 10594 || passiveCompanion == 10543 || dreadShadow || starBurst))
                     choice = settings.GetComponentsInChildren<Toggle>().Where(value =>
                         value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting))
                         .OrderBy(value => value.transform.parent.GetSiblingIndex()).Last();
@@ -302,7 +304,10 @@ namespace Zjcs.Presentation.Home
             if (hellfire) PrepareAcquiredHellfire(actor);
             if (soulPiercer) { actor.Hp = actor.MaxHp / 2; actor.Turn.Hp = actor.Hp; }
             int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, standfastTurns = 0, assaultHits = 0, soulBreakHits = 0, windHits = 0, flameHits = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
+            int starBlindApplications = 0, starBlindEnds = 0;
             battle.Controller.StepCompleted += step => {
+                if (starBurst) starBlindEnds += step.Event.StatusViewEvents.Count(view => view.Status.ClassId == 24234
+                    && view.Status.CreatorId == 1 && view.Kind == FightBattleStatusViewEventKind.End);
                 if (hellfire) VerifyAcquiredHellfireStep(step.Event, actor, ref hellfireCures, ref hits);
                 if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits, ref standfastTurns, ref assaultHits, ref soulBreakHits, ref windHits, ref flameHits);
                 var skillCasts = step.Event.SkillCasts.Where(value => value.ActorId == 1 && value.Slot == 0
@@ -354,6 +359,7 @@ namespace Zjcs.Presentation.Home
                         : swordWindDance ? cast.SkillEntityId == 11910
                         : soulPiercer ? cast.SkillEntityId == 11920
                         : dreadShadow ? cast.SkillEntityId == 12130
+                        : starBurst ? cast.SkillEntityId == 11450
                         : skillId == 10048 ? cast.SkillEntityId == 11090
                         : skillId == 10049 ? cast.SkillEntityId == 11100
                         : skillId == 10051 ? cast.SkillEntityId == 11260
@@ -365,6 +371,12 @@ namespace Zjcs.Presentation.Home
                         "The acquired active skill selected a foreign entity: " + cast.SkillEntityId);
                     var damageEvents = step.Event.DamageEvents.Where(value => value.SourceId == 1
                         && value.SkillEntityId == (skillId == 10017 ? 10970 : cast.SkillEntityId)).ToArray();
+                    if (starBurst)
+                    {
+                        VerifyAcquiredStarBurst(step.Event, cast, damageEvents, checkpoint, output, ref starBlindApplications);
+                        hits += damageEvents.Length;
+                        continue;
+                    }
                     if (lightSwordArray)
                     {
                         Require((casts != 1 || step.Event.ActorRound == 0)
@@ -605,9 +617,16 @@ namespace Zjcs.Presentation.Home
             click(FlameFlowButton(value => value.name == "Btn" && value.GetComponentsInParent<Transform>()
                 .Any(parent => parent.name == "StartBtn")));
             bool captured = false, capturedOpening = false, capturedPassive = false, capturedFear = false;
+            bool capturedStarBlind = false;
             bool capturedTacticalAttack = false, capturedTacticalDefence = false;
             while (battle != null)
             {
+                if (starBurst && !capturedStarBlind && FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
+                    && particle.GetComponentsInParent<Transform>().Any(parent => parent.name.StartsWith("playable24234", StringComparison.Ordinal))))
+                {
+                    yield return CaptureAcquiredActive(output, "blinding");
+                    capturedStarBlind = true;
+                }
                 if (passiveCompanion == 10543 && !capturedPassive
                     && FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
                         && particle.GetComponentsInParent<Transform>().Any(parent =>
@@ -724,6 +743,8 @@ namespace Zjcs.Presentation.Home
             Require(!hellfire || hellfireCures >= 2, "The acquired hellfire did not heal on both subsequent turns.");
             Require(!soulPiercer || lifestealCures > 0, "The acquired soul piercer never restored actual HP.");
             Require(!dreadShadow || fearApplications > 0 && capturedFear, "The acquired fear was never applied and rendered.");
+            Require(!starBurst || starBlindApplications > 0 && starBlindEnds > 0 && capturedStarBlind,
+                "The acquired star burst never applied, rendered and consumed its original blinding status.");
             Require(!vortexSurge || vortexMovements > 0,
                 "The original vortex surge never exercised its inward knockback in the rendered battle.");
             Require(passiveCompanion != 10606 && passiveCompanion != 10607 || coldHits > 0,

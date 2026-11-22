@@ -184,6 +184,7 @@ namespace Zjcs.Combat.Official
                     StageType = stageType,
                     IsPvp = isPvp
                 };
+                conditionalProperties?.MergeTypeProperty(target, hit, formula.PropertyId("BlindingPercent"), sourceProps);
                 result.Type = formula.CalculateDamageType(random, sourceProps, targetProps, hit.DamageType);
                 result.Type = FightBattleHitComponentRuntime.ApplyDamageGetType(target, skill,
                     skill == null ? 0 : skill.ElementType, result.Type, random);
