@@ -18,7 +18,7 @@ function Catalog($battleText) {
 $catalog = Catalog $battleJson
 $rules = Read-Rule 'rules'
 $formula = $catalog.CreateDamageFormula($rules, (Hash-Text $rules), '854_156383')
-function Battle($stackCount, $selectedCatalog, $restore = $false, $enableFactor = $true, $actorHp = 100000) {
+function Battle($stackCount, $selectedCatalog, $restore = $false, $enableFactor = $true, $actorHp = 100000, $creatorState = 'alive') {
     $cp = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
     $cp.StageId = 1; $cp.MaxRound = 10; $cp.RandomSeed = 23
     $cp.Grid = [Zjcs.Combat.Official.FightBattleGrid]::new()
@@ -46,8 +46,18 @@ function Battle($stackCount, $selectedCatalog, $restore = $false, $enableFactor 
     $cp.Units[0].Statuses.Add($status)
     $wave = [Zjcs.Combat.Official.FightBattleWaveState]::new()
     $wave.Index = 0; $wave.UnitIds.Add(2); $cp.Waves.Add($wave)
+    if ($creatorState -ne 'alive') {
+        # Keep the battle active after the applied effect's creator dies/leaves.
+        $ally = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+        $ally.Id = $ally.Turn.Id = 3; $ally.Side = 2; $ally.CharacterType = 1
+        $ally.X = 4; $ally.Hp = $ally.MaxHp = $ally.Turn.Hp = 100000
+        $ally.Level = $ally.SubRank = 1; $ally.Turn.Speed = 1
+        $cp.Units.Add($ally); $wave.UnitIds.Add(3)
+    }
     $runner = [Zjcs.Combat.Official.FightBattleExecutor]::Begin($cp, $formula,
         [Zjcs.Combat.Official.FightDamageSettlement]::new(), $selectedCatalog)
+    if ($creatorState -eq 'dead') { $cp.Units[1].Hp = $cp.Units[1].Turn.Hp = 0; $cp.Units[1].Targetable = $false }
+    if ($creatorState -eq 'departed') { $cp.Units[1].Ended = $true; $cp.Units[1].Targetable = $false }
     if ($restore) {
         $cp = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
             [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($cp))
@@ -82,6 +92,18 @@ Assert-ActionStart ($disabled.Damage -eq $one.Damage) 'Stack scaling applied wit
 $restored = Battle 3 $catalog $true
 Assert-ActionStart ([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($restored.Result.Checkpoint) -eq
     [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($three.Result.Checkpoint)) 'Stacked trigger changed after checkpoint restore'
+foreach ($creatorState in 'dead', 'departed') {
+    $retained = Battle 3 $catalog $false $true 100000 $creatorState
+    $cold = Battle 3 $catalog $true $true 100000 $creatorState
+    Assert-ActionStart ($retained.Damage -eq $three.Damage) "The $creatorState creator lost its retained properties or cultivation"
+    Assert-ActionStart ([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($cold.Result.Checkpoint) -eq
+        [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($retained.Result.Checkpoint)) "The $creatorState creator changed after cold restoration"
+}
+$owner = [Zjcs.Combat.Official.FightBattleUnitState]@{ Id = 1; Hp = 100000; MaxHp = 100000 }
+$orphan = $catalog.CreateStatus(24346, 1, 2, 10); $owner.Statuses.Add($orphan)
+$missing = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectActionStartSkills($owner, 6,
+    [Zjcs.Combat.Official.FightBattleUnitState[]]@($owner), [Zjcs.Combat.Official.FightRandomStream]::new(23))
+Assert-ActionStart ($missing.Count -eq 0 -and $orphan.ActionStartTriggeredCount -eq 0) 'A missing creator was synthesized or consumed a trigger count'
 
 # The official switches are independent: a hit can opt out even when its status sends a factor.
 $fixture = $battleJson | ConvertFrom-Json -AsHashtable
@@ -101,7 +123,7 @@ $trigger.CustomDamageInfo.BaseCurrentHp = $false
 $trigger.TargetWithoutStatusIds = @(26004)
 $unsupported = Catalog ($fixture | ConvertTo-Json -Depth 100 -Compress)
 Assert-ActionStart (-not $unsupported.CreateStatus(24346, 1, 2, 10).ActionStartRulesSupported) 'Unsupported target-status exclusions were silently ignored'
-Write-Output "Battle action-start checks passed: original 24346 -> 58980, damage $($one.Damage) -> $($three.Damage), independent hit/status switches, cultivation, deterministic restore and unsupported-field checks."
+Write-Output "Battle action-start checks passed: original 24346 -> 58980, damage $($one.Damage) -> $($three.Damage), retained dead/departed creators, missing creator, independent hit/status switches, cultivation, deterministic restore and unsupported-field checks."
 
 function Movement-Battle($kind, $canTrigger = $true, $whitelist = $false, $restore = $false,
     $blocked = $false, $lethal = $false, $nested = $false) {
@@ -146,7 +168,7 @@ function Movement-Battle($kind, $canTrigger = $true, $whitelist = $false, $resto
         Assert-ActionStart ($catalog.EntityActionType($hit.HitMove.MoveBehaviourId) -eq $kind) 'Movement action type was not taken from its original entity'
         if ($kind -eq 7) { $cp.Units[1].X = 4 }
     } elseif ($kind -eq 9) {
-        # No skill is ready: the existing offline retreat action must notify as Move, too.
+        # Confirmed movement rule: no ready skill keeps the actor in place.
         $cp.Units[0].MoveDist = 2
     }
     if ($cp.Units[0].MoveDist -gt 0) {
@@ -185,9 +207,10 @@ function Movement-Battle($kind, $canTrigger = $true, $whitelist = $false, $resto
         return $result
     }
     $triggerHits = @($result.Event.DamageEvents | Where-Object SkillEntityId -eq 58980)
-    $expected = $(if ($blocked -or (($kind -ne 1 -and $kind -ne 9) -and -not $canTrigger -and -not $whitelist)) { 0 } else { 1 })
+    $expected = $(if ($blocked -or $kind -eq 9 -or ($kind -ne 1 -and -not $canTrigger -and -not $whitelist)) { 0 } else { 1 })
     Assert-ActionStart ($triggerHits.Count -eq $expected) "Movement $kind triggered $($triggerHits.Count) times, expected $expected; paths=$($result.Event.Movements.Count), moveDist=$($cp.Units[0].MoveDist), position=$($cp.Units[0].X),$($cp.Units[0].Y)"
-    Assert-ActionStart ($result.Event.Movements.Count -eq $(if ($blocked) { 0 } else { 1 })) 'The passive gate changed the directly configured movement'
+    Assert-ActionStart ($result.Event.Movements.Count -eq $(if ($blocked -or $kind -eq 9) { 0 } else { 1 })) 'The passive gate changed the directly configured movement'
+    if ($kind -eq 9) { Assert-ActionStart ($cp.Units[0].X -eq 3 -and $cp.Units[0].Y -eq 2) 'Unavailable skills caused an unconditional retreat' }
     if ($kind -ne 9 -and -not $lethal) {
         Assert-ActionStart (@($result.Event.DamageEvents | Where-Object {
             $_.SkillEntityId -eq 9900001 -and $_.TargetId -eq 2 -and $_.Damage -eq -7
@@ -215,4 +238,4 @@ Assert-ActionStart ([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save
 $movementLethal = Movement-Battle 1 $true $false $false $false $true
 Assert-ActionStart ($movementLethal.Checkpoint.Units[0].Hp -eq 0 -and
     @($movementLethal.Event.SkillCasts | Where-Object SkillEntityId -eq 9900001).Count -eq 0) 'Actor killed on movement start released its waiting skill'
-Write-Output 'Movement action-start checks passed: automatic movement, retreat, original skill movement / knockback / drag, whitelist, blocked path, nested timing, delayed damage, lethal movement and checkpoint restore.'
+Write-Output 'Movement action-start checks passed: automatic movement, unavailable-skill standstill, original skill movement / knockback / drag, whitelist, blocked path, nested timing, delayed damage, lethal movement and checkpoint restore.'

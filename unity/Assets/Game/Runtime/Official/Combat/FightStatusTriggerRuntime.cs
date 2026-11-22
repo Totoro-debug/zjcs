@@ -65,10 +65,7 @@ namespace Zjcs.Combat.Official
                         || !Roll(trigger.BasePercent, random)) continue;
                     var caster = trigger.Source == 2 ? source
                         : FindUnit(units, status.CreatorId);
-                    // User-confirmed offline rule: an applied creator-sourced effect
-                    // keeps settling from its retained creator after death or departure.
-                    bool allowDeadSource = trigger.Source == 3 && caster != null
-                        && (caster.Hp <= 0 || caster.Ended);
+                    bool allowDeadSource = CanUseRetainedCreator(trigger.Source, caster);
                     if (!FightBattleTargeting.IsSelectable(caster) && !allowDeadSource) continue;
                     var target = hasPropertyTarget
                         ? ResolveRoundStartPropertyTarget(source, status, trigger, units, catalog)
@@ -236,7 +233,7 @@ namespace Zjcs.Combat.Official
                             || trigger.TargetPos != 1 || trigger.StackedCountToDamageFactor
                             || !Roll(trigger.BasePercent, random)) continue;
                         var caster = trigger.Source == 3 ? FindUnit(units, status.CreatorId) : statusOwner;
-                        bool allowDeadSource = trigger.Source == 3 && caster != null && (caster.Hp <= 0 || caster.Ended);
+                        bool allowDeadSource = CanUseRetainedCreator(trigger.Source, caster);
                         if (!FightBattleTargeting.IsSelectable(caster) && !allowDeadSource) continue;
                         var target = trigger.Source == 3 ? statusOwner : listener;
                         result.Add(new FightBattleStatusSkillInvocation
@@ -542,12 +539,16 @@ namespace Zjcs.Combat.Official
                         ? FightStatusLifecycle.ResolveTargetUnitId(status,
                             FightStatusLifecycle.TargetCreator, units) : status.OwnerId;
                     if (sourceId <= 0) continue;
+                    var caster = FindUnit(units, sourceId);
+                    bool allowDeadSource = CanUseRetainedCreator(trigger.Source, caster);
+                    if (!FightBattleTargeting.IsSelectable(caster) && !allowDeadSource) continue;
                     result.Add(new FightBattleStatusSkillInvocation
                     {
                         Trigger = trigger.WithSource(status),
                         SourceUnitId = sourceId,
                         TargetUnitId = status.OwnerId,
                         TargetPositionUnitId = actor.Id,
+                        AllowDeadSource = allowDeadSource,
                         DamageFactor = trigger.StackedCountToDamageFactor ? status.StackCount : 1.0
                     });
                     added++;
