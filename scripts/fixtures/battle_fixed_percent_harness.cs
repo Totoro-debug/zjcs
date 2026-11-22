@@ -26,6 +26,17 @@ public static class BattleFixedPercentHarness
             SourceLevel = 70, TargetLevel = 70, SourceSubRank = 8, TargetSubRank = 8, SourceElementType = 102 };
         Check(formula.Calculate(request, new FightDamageTypeData()).Damage == -10000,
             "50% attack + 5000 no longer equals 10000 at 10000 attack");
+        Target("PlayerSkillDmgReduceScale", 10000); Target("PetSkillDmgReduceScale", 10000);
+        foreach (int type in new[] { 1, 4, 5, 7, 2 })
+        {
+            request.SourceType = type;
+            Check(formula.Calculate(request, new FightDamageTypeData()).Damage == (type == 2 ? -10000 : -5000),
+                "character/pet skill reduction did not apply to the complete fixed-plus-percentage base: " + type);
+        }
+        request.SourceType = 5; request.SourceMasterType = 1;
+        Check(formula.Calculate(request, new FightDamageTypeData()).Damage == -2500,
+            "the owned pet did not apply both original reductions after combining its base terms");
+        request.SourceType = 1; request.SourceMasterType = 0; target.Clear();
         Source("FixedStatusDmgAdd", 1000); Source("StatusDmgAddPer", 2000);
         Target("StatusDmgReducePer", 1000);
         Source("BaseElementAdd", 10000); Source("FireDamageAdd", 2000);

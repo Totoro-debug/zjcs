@@ -230,12 +230,14 @@ namespace Zjcs.Combat.Official
                 double coefficient = Prop(source, request.SkillDamagePropType);
                 amount = customDamage.HasValue ? customDamage.Value : basic * coefficient;
                 absolute = amount;
-                if (sourceCharacter) amount /= OneAdd(target, "PlayerSkillDmgReduceScale", 1.0);
-                if (request.SourceType == Pet || request.SourceType == PetEntity)
-                    amount /= OneAdd(target, "PetSkillDmgReduceScale", 1.0);
                 double fixedDamage = Prop(source, request.SkillDamageFixedPropType);
                 amount += fixedDamage;
                 absolute += fixedDamage;
+                // The confirmed offline rule combines both base terms before
+                // applying character/pet skill damage reduction as well.
+                if (sourceCharacter) amount /= OneAdd(target, "PlayerSkillDmgReduceScale", 1.0);
+                if (request.SourceType == Pet || request.SourceType == PetEntity)
+                    amount /= OneAdd(target, "PetSkillDmgReduceScale", 1.0);
                 amount *= attack / (attack + defence);
                 if (beforeFixedDamageReduce != null)
                     amount = beforeFixedDamageReduce(amount);
