@@ -589,12 +589,13 @@ namespace Zjcs.Presentation.Home
             bool captured = false, capturedOpening = false, capturedPassive = false, capturedFear = false;
             while (battle != null)
             {
-                if (dreadShadow && fearApplications > 0 && !capturedFear && captured)
+                var fearEntity = dreadShadow && fearApplications > 0 && !capturedFear && captured
+                    ? FindObjectsOfType<Transform>().FirstOrDefault(value => (value.name == "24194"
+                        || value.name.StartsWith("24194(", StringComparison.Ordinal)))
+                    : null;
+                if (fearEntity != null && FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
+                    && particle.GetComponentsInParent<Transform>().Any(parent => parent.name.StartsWith("playable24194", StringComparison.Ordinal))))
                 {
-                    yield return new WaitForSecondsRealtime(.7f);
-                    Require(FindObjectsOfType<Transform>().Any(value => value.name == "24194"
-                        || value.name.StartsWith("24194(", StringComparison.Ordinal)),
-                        "The original fear status entity was not instantiated.");
                     yield return CaptureAcquiredActive(output, "fear-battle");
                     capturedFear = true;
                 }
