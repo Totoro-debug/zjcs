@@ -2,7 +2,9 @@
   "manifest": "903_156948",
   "inputs": {
     ".tools/source-packages/current/903_156948/home-bed-native/native-export-source-manifest.json": "5a9b58b50e6b1f24e5f0b60db6c251a3b4bfe8b4a3ab6100aa047d3376efdf37",
-    "scripts/prepare_home_bed_native.py": "0785003e071e6cd015031c35f21f3caf80eb4b2ceed9e86cebb5a58e532e0007",
+    "scripts/prepare_home_bed_native.py": "80cc1b18fc6912704620380f89c5e1c04c2e1255b1dcc0e4f7860f74c6eb28eb",
+    "unity/Assets/Game/Runtime/Presentation/Home/NativeHomeBedOfficialComponentAdapter.cs": "f064e38bd8aa3cb384a4a4f8931edcbbe3eee7596cc2b8d1f85cebd7c6ce27e2",
+    "unity/Assets/Game/Runtime/Presentation/Home/NativeHomeBedOfficialComponentAdapter.cs.meta": "3a1e2a050ca87813502b4a7d5372f3e73f433ba492881f5b130aac1b49e942f6",
     ".tools/source-packages/current/903_156948/official-code/client-source-resolved/FurnitureBase.cs": "a74c3d8a971f3994b137a830186b61a14fe236c32a33836dbfec9fb5e03e61fa",
     ".tools/source-packages/current/903_156948/official-code/client-source-resolved/BaseHangUpFurniture.cs": "293e6c596fd72a38428ac50d5416403c662fd4730bdfc94741fa5a42d62cef90",
     ".tools/source-packages/current/903_156948/official-code/client-source-resolved/BedFurniture.cs": "c99791f69431fec864f2c1ccba86d22ec99c0637d67426de44975ed5289d8ca8",
@@ -301,8 +303,10 @@
     "unity/Assets/Official/Home/Native903/Bed/Dependencies/Texture2D/sactx-1-256x128-ASTC 6x6-Common_Atlas-ba059036.png.meta": "947f394c8518fbaa6b69c66bccdebcccf6e7f17951e8d799eac1cab820edf63b",
     "unity/Assets/Official/Home/Native903/Bed/Dependencies/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3.asset": "af030280ed9c2bee89b5e4cf22ab10e5851d8999c3bfd14d0551124db69a0368",
     "unity/Assets/Official/Home/Native903/Bed/Dependencies/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3.asset.meta": "e716d0b3cf60cf9c576091d69d84799a4dd5855a66d14723682ce8da29949951",
-    "unity/Assets/Game/Resources/Home/NativeHomeBed.prefab": "0ccfa0e4f61e3b1f4b59d199f824181245a020f66d492b8c8d6ba8ba2028cbc7",
+    "unity/Assets/Game/Resources/Home/NativeHomeBed.prefab": "498ce9d0c56c467a25aa990944b35cee2e0d3d8665103875e9d6d78846e469dc",
     "unity/Assets/Game/Resources/Home/NativeHomeBed.prefab.meta": "358556d86233518ca6421a1b0906b600b2992479c9365a088ff3e67f39f07610",
+    "unity/Assets/Game/Runtime/Presentation/Home/NativeHomeBedOfficialComponentAdapter.cs": "f064e38bd8aa3cb384a4a4f8931edcbbe3eee7596cc2b8d1f85cebd7c6ce27e2",
+    "unity/Assets/Game/Runtime/Presentation/Home/NativeHomeBedOfficialComponentAdapter.cs.meta": "3a1e2a050ca87813502b4a7d5372f3e73f433ba492881f5b130aac1b49e942f6",
     "unity/Assets/Official/Home/Native903/Bed.meta": "1285291162e422f7d7fa1058b8928fb100e4de94036d66107381c9d0d107e726",
     "unity/Assets/Official/Home/Native903/Bed/Dependencies/AnimationClip.meta": "ede4cd7fdda845cbaeefaa8707f2ac980629a2e96e8280fa01b8c7a64ab8d498",
     "unity/Assets/Official/Home/Native903/Bed/Dependencies/AnimatorController.meta": "df8fd284a2e14beb93b110c2c546cdd5c5e6a7dfee8f0fcc5ff4f3464ef291bd",
@@ -367,6 +371,6 @@
     "source_sha256": "0ccfa0e4f61e3b1f4b59d199f824181245a020f66d492b8c8d6ba8ba2028cbc7",
     "closure_count": 73
   },
-  "generator_sha256": "0785003e071e6cd015031c35f21f3caf80eb4b2ceed9e86cebb5a58e532e0007",
-  "scope": "903 native Bed prefab and exact serialized dependency closure; offline actor binding is separate."
+  "generator_sha256": "80cc1b18fc6912704620380f89c5e1c04c2e1255b1dcc0e4f7860f74c6eb28eb",
+  "scope": "903 native Bed prefab and exact serialized dependency closure; unavailable original plugin scripts are rebound to an explicit offline adapter; actor binding is separate."
 }

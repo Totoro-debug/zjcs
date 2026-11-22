@@ -10,6 +10,15 @@ from official_source import OfficialSource
 ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / "unity/Assets/Official/Home/Native903/Bed"
 RECEIPT = ROOT / "assets/reference/home-bed-native-source-manifest.json"
+ADAPTER = ROOT / "unity/Assets/Game/Runtime/Presentation/Home/NativeHomeBedOfficialComponentAdapter.cs"
+ADAPTER_META = Path(str(ADAPTER) + ".meta")
+ORIGINAL_PLUGIN_GUIDS = {
+    "06dd3d5416bf43ea368cc39ff96e6d5a",
+    "67dfb1fdfb2b407222eda8e23ac8b724",
+    "7aa338e2f5263348de25eb85a28aad0d",
+    "c88ab7b37c4f350242674d2efd621c19",
+    "ebe353a9e51fc6708625f16edcb81e06",
+}
 
 
 def sha(path: Path) -> str:
@@ -88,6 +97,10 @@ def build() -> None:
     inputs = {export_receipt.relative_to(ROOT).as_posix(): sha(export_receipt),
               (ROOT / "scripts/prepare_home_bed_native.py").relative_to(ROOT).as_posix():
                   sha(ROOT / "scripts/prepare_home_bed_native.py")}
+    if not ADAPTER.is_file() or not ADAPTER_META.is_file():
+        raise FileNotFoundError("Native bed component adapter is missing")
+    inputs[ADAPTER.relative_to(ROOT).as_posix()] = sha(ADAPTER)
+    inputs[ADAPTER_META.relative_to(ROOT).as_posix()] = sha(ADAPTER_META)
     for name in ("FurnitureBase.cs", "BaseHangUpFurniture.cs", "BedFurniture.cs"):
         path = code / "client-source-resolved" / name
         if not path.is_file():
@@ -113,13 +126,29 @@ def build() -> None:
     resource_prefab = ROOT / "unity/Assets/Game/Resources/Home/NativeHomeBed.prefab"
     resource_meta = Path(str(resource_prefab) + ".meta")
     resource_prefab.parent.mkdir(parents=True, exist_ok=True)
-    resource_prefab.write_bytes(source_prefab.read_bytes())
+    # The exported prefab references the original Assembly-CSharp plugin.
+    # Rebind every unavailable plugin script to one local lifecycle adapter;
+    # the official closure above remains byte-for-byte preserved for provenance.
+    adapter_guid = guid(ADAPTER_META)
+    resource_text = source_prefab.read_text("utf8")
+    pattern = re.compile(
+        r"m_Script: \{fileID: -?\d+, guid: (?:" +
+        "|".join(sorted(ORIGINAL_PLUGIN_GUIDS)) +
+        r"), type: 3\}")
+    resource_text, replacements = pattern.subn(
+        "m_Script: {fileID: 11500000, guid: " + adapter_guid + ", type: 3}",
+        resource_text)
+    if replacements == 0:
+        raise ValueError("Native bed prefab has no original plugin script references")
+    resource_prefab.write_text(resource_text, "utf8", newline="\n")
     prefab_guid = hashlib.md5(b"zjcs:home-native-bed-prefab-903").hexdigest()
     resource_meta.write_text(
         "fileFormatVersion: 2\nguid: " + prefab_guid +
         "\nPrefabImporter:\n  externalObjects: {}\n", "utf8", newline="\n")
     outputs[resource_prefab.relative_to(ROOT).as_posix()] = sha(resource_prefab)
     outputs[resource_meta.relative_to(ROOT).as_posix()] = sha(resource_meta)
+    outputs[ADAPTER.relative_to(ROOT).as_posix()] = sha(ADAPTER)
+    outputs[ADAPTER_META.relative_to(ROOT).as_posix()] = sha(ADAPTER_META)
     inputs[source_prefab.relative_to(ROOT).as_posix()] = sha(source_prefab)
     for directory in sorted((path for path in DEST.rglob("*") if path.is_dir())):
         folder_meta(directory)
@@ -135,7 +164,7 @@ def build() -> None:
                     "source": prefab.relative_to(ROOT).as_posix(),
                     "source_sha256": sha(prefab), "closure_count": len(closure)},
         "generator_sha256": sha(ROOT / "scripts/prepare_home_bed_native.py"),
-        "scope": "903 native Bed prefab and exact serialized dependency closure; offline actor binding is separate.",
+        "scope": "903 native Bed prefab and exact serialized dependency closure; unavailable original plugin scripts are rebound to an explicit offline adapter; actor binding is separate.",
     }
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", "utf8", newline="\n")
