@@ -1,5 +1,6 @@
 """Release isolation, incremental reuse, ownership and save protection checks."""
 import json
+import hashlib
 import os
 from pathlib import Path
 import shutil
@@ -50,18 +51,32 @@ class ReleaseTests(unittest.TestCase):
         (repository/'.gitignore').write_text('/output/\n/unity/Library/\n')
         scripts = repository/'scripts'
         scripts.mkdir()
-        for name in ('release_windows.ps1', 'unity_internal_display.ps1', 'validation_workspace.ps1'):
+        for name in ('release_windows.ps1', 'unity_internal_display.ps1', 'validation_workspace.ps1',
+                     'committed_unity_snapshot.py'):
             shutil.copyfile(Path(__file__).parent/name, scripts/name)
         (repository/'unity/Assets').mkdir(parents=True)
         (repository/'assets/reference').mkdir(parents=True)
         (repository/'assets/reference/receipt.json').write_text('{}')
+        # The real entry checks these provenance receipts even in prepare mode.
+        gradient = repository/'unity/Assets/Official/Skills/skill-quality-gradient.json'
+        gradient.parent.mkdir(parents=True)
+        gradient.write_bytes(b'{}\n')
+        (gradient.parent/'source-manifest.json').write_text(json.dumps({'files': [{
+            'path': 'Assets/Official/Skills/skill-quality-gradient.json', 'bytes': 3,
+            'sha256': hashlib.sha256(b'{}\n').hexdigest()}]}))
+        equipment = repository/'unity/Assets/Official/Equipment/Runtime'
+        equipment.mkdir(parents=True)
+        (equipment/'equipment-runtime-rules.json').write_bytes(b'{}\n')
+        (equipment/'source-manifest.json').write_text(json.dumps({'output': {
+            'bytes': 3, 'sha256': hashlib.sha256(b'{}\n').hexdigest()}}))
+        (repository/'assets/reference/skill-ui-native-data-source-manifest.json').write_text('{"inputs":[]}')
         asset = repository/'unity/Assets/source.txt'
         asset.write_text('committed')
         git('add', '.')
         git('commit', '-qm', 'fixture')
         shell = shutil.which('pwsh') or 'powershell'
         def prepare(ok=True):
-            result = subprocess.run([shell, '-NoProfile', '-File', str(scripts/'release_windows.ps1'), '-PrepareOnly'],
+            result = subprocess.run([shell, '-NoProfile', '-File', str(scripts/'release_windows.ps1'), '-PrepareOnly', '-SourceSnapshot'],
                                     capture_output=True, text=True, encoding='utf-8', errors='replace')
             if ok:
                 self.assertEqual(result.returncode, 0, result.stdout+result.stderr)
@@ -69,7 +84,9 @@ class ReleaseTests(unittest.TestCase):
                 self.assertNotEqual(result.returncode, 0)
         asset.write_text('uncommitted')
         prepare()
-        workspace = Path(json.loads((repository/'output/windows-release.json').read_text(encoding='utf-8-sig'))['workspace'])
+        workspace = Path(json.loads((repository/'output/windows-release-snapshot.json').read_text(encoding='utf-8-sig'))['workspace'])
+        self.assertFalse((workspace/'source/.git').exists())
+        self.assertEqual(git('worktree', 'list', '--porcelain').count('worktree '), 1)
         copied = workspace/'source/unity/Assets/source.txt'
         self.assertEqual(copied.read_text(), 'committed')
         stamp = copied.stat().st_mtime_ns

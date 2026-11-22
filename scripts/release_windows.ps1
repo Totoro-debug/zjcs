@@ -2,6 +2,7 @@ param(
     [string]$Commit = 'HEAD',
     [switch]$PrepareOnly,
     [switch]$BuildOnly,
+    [switch]$SourceSnapshot,
     [switch]$CleanBuildCache
 )
 $ErrorActionPreference = 'Stop'
@@ -26,7 +27,7 @@ foreach ($name in $environmentNames) { $previousEnvironment[$name] = [Environmen
 try {
     $timer = [Diagnostics.Stopwatch]::StartNew()
     $target = Invoke-ReleaseGit -GitArguments @('-C', $repository, 'rev-parse', '--verify', ($Commit+'^{commit}'))
-    $pointer = Join-Path $output 'windows-release.json'
+    $pointer = Join-Path $output $(if ($SourceSnapshot) { 'windows-release-snapshot.json' } else { 'windows-release.json' })
     $workspace = $null
     if (Test-Path -LiteralPath $pointer) {
         $candidate = (Get-Content -LiteralPath $pointer -Raw | ConvertFrom-Json).workspace
@@ -39,11 +40,13 @@ try {
             if ($marker.repository -ne $repository) { throw 'Release workspace belongs to another repository' }
             # Worktrees created before byte-preserving checkout can contain CRLF
             # files that Git considers clean. Keep those caches untouched.
-            $byteMarker = Join-Path $candidate 'byte-preserved-checkout.json'
+            $byteMarker = Join-Path $candidate $(if ($SourceSnapshot) { 'committed-source-snapshot.json' } else { 'byte-preserved-checkout.json' })
             if (Test-Path -LiteralPath $byteMarker) {
+                if ($SourceSnapshot) { $workspace = $candidate } else {
                 $byteState = Get-Content -LiteralPath $byteMarker -Raw | ConvertFrom-Json
                 if ($byteState.format -notin @(1,2)) { throw 'Invalid release checkout marker' }
                 if ($byteState.format -eq 2) { $workspace = $candidate }
+                }
             }
         }
     }
@@ -66,6 +69,10 @@ try {
         $_.CommandLine.Replace('\','/').Contains($normalizedProject)
     })
     if ($users.Count) { throw 'The release Unity project is already in use; wait for that build to exit.' }
+    if ($SourceSnapshot) {
+        & python -B (Join-Path $PSScriptRoot 'committed_unity_snapshot.py') --repository $repository --workspace $workspace --commit $target
+        if ($LASTEXITCODE -ne 0) { throw 'Committed Unity source snapshot failed' }
+    } else {
     if (-not (Test-Path -LiteralPath (Join-Path $source '.git'))) {
         Invoke-ReleaseGit -GitArguments @('-C',$repository,'worktree','add','--detach','--no-checkout',$source,$target)
         Invoke-ReleaseGit -GitArguments @('-C',$source,'sparse-checkout','set','unity','assets/reference')
@@ -77,6 +84,7 @@ try {
     $untracked = @(Invoke-ReleaseGit -GitArguments @('-C',$source,'ls-files','--others','--exclude-standard','--','unity/Assets','unity/Packages','unity/ProjectSettings'))
     if ($untracked.Count) { throw "Unexpected untracked release inputs: $($untracked -join ', ')" }
     Invoke-ReleaseGit -GitArguments @('-C',$source,'checkout','--detach',$target)
+    }
     # This generated JSON is recorded with CRLF bytes, while Git stores its text
     # as LF. Reconstruct it only if the result exactly matches the source receipt.
     $skillSource = Get-Content -LiteralPath (Join-Path $project 'Assets/Official/Skills/source-manifest.json') -Raw | ConvertFrom-Json
