@@ -18,6 +18,7 @@ using Zjcs.Official.HomeHangUpWindowsUI;
 using Zjcs.Official.HomeMainUiControls;
 using Zjcs.Official.HomeOutputAddition;
 using Zjcs.Official.HomeOutputDetailUI;
+using Zjcs.Official.WorldUI;
 using Zjcs.Presentation.Home;
 using Object = UnityEngine.Object;
 using Group = Zjcs.Official.HomeOutputAddition.OutputGroupType;
@@ -189,6 +190,7 @@ namespace Zjcs.Validation.HomeOutputDetail
                 "expired records are filtered and original single-group background is hidden");
             yield return Capture("detail-single.png");
             yield return CheckBedCollection();
+            yield return CheckBedFreeAcceleration();
             Require(errors.Count == 0, "no runtime error or assertion");
         }
 
@@ -231,6 +233,48 @@ namespace Zjcs.Validation.HomeOutputDetail
             Open(); yield return new WaitForSecondsRealtime(.8f);
             Require(home.Profile.Save.Player.Experience == before + collected && home.Session.Preview(1).Count == 0,
                 "cold reopen preserves granted experience and consumed bed income");
+        }
+
+        IEnumerator CheckBedFreeAcceleration()
+        {
+            home.Hud.ShowBed(); yield return new WaitForSecondsRealtime(.8f);
+            var services = Field<OfflineHomeBedServices>(home.Hud, "nativeBedServices");
+            var progress = Field<OfflineHomeFastHangUpProgress>(home.Hud, "nativeFastProgress");
+            int id = home.Rules.HangUp(1).fastHangUpId;
+            var fast = home.Rules.FastHangUp(id);
+            int used = home.Session.GetTodayFreeFastForwardCount(id);
+            long before = home.Profile.Save.Player.Experience;
+            long expected = (long)services.GetHangUpReward(1, fast.freeHours);
+            Require(expected > 0 && home.Session.CanFreeFastForward(id), "actual configured free bed acceleration is available");
+            yield return WaitForButton(Windows.Bed.FastHangUpBtn); Click(Windows.Bed.FastHangUpBtn);
+            yield return null;
+            var confirm = Object.FindObjectOfType<WorldConfirmDialog>();
+            if (confirm)
+            {
+                yield return WaitForButton(confirm.ConfirmBtn); Click(confirm.ConfirmBtn);
+            }
+            Require(progress.IsOpen, "native free bed button opens the original acceleration animation");
+            Require(home.Session.GetTodayFreeFastForwardCount(id) == used + 1,
+                "free acceleration commits its daily use once");
+            Require(home.Profile.Save.Player.Experience == before,
+                "free acceleration holds the experience receipt until the original animation finishes");
+            Require(home.Hud.CanvasTransform.Find("Content/Main").GetComponent<CanvasGroup>().alpha == 0,
+                "original acceleration hides the owned home HUD");
+            yield return new WaitForSecondsRealtime(.6f);
+            yield return Capture("bed-free-progress.png");
+            float deadline = Time.realtimeSinceStartup + 30;
+            while (progress.IsOpen && Time.realtimeSinceStartup < deadline) yield return null;
+            Require(!progress.IsOpen, "original animation event closes acceleration without a forced callback");
+            Require(home.Hud.CanvasTransform.Find("Content/Main").GetComponent<CanvasGroup>().alpha == 1,
+                "original acceleration completion restores the home HUD");
+            Require(home.Profile.Save.Player.Experience == before + expected,
+                "free acceleration applies exactly the configured experience after its animation");
+            yield return Capture("bed-free-complete.png");
+            home.Close(); home = null; yield return null;
+            Open(); yield return new WaitForSecondsRealtime(.8f);
+            Require(home.Session.GetTodayFreeFastForwardCount(id) == used + 1
+                && home.Profile.Save.Player.Experience == before + expected,
+                "cold reopen restores the consumed daily use and granted acceleration experience");
         }
 
         static PlayerOutputAdditionDataWrap Record(int id, JToken row, DateTime end)
@@ -284,7 +328,8 @@ namespace Zjcs.Validation.HomeOutputDetail
         {
             // A camera capture must emulate overlay canvases being above world
             // renderers. Preserve every production sorting value after capture.
-            var canvases = home.Hud.CanvasTransform.GetComponentsInChildren<Canvas>(true);
+            var canvases = home.Hud.CanvasTransform.GetComponentsInChildren<Canvas>(true)
+                .Concat(Object.FindObjectsOfType<Canvas>(true).Where(value => value.worldCamera == home.Scene.Camera)).Distinct().ToArray();
             var layers = canvases.Select(value => value.sortingLayerID).ToArray();
             var orders = canvases.Select(value => value.sortingOrder).ToArray();
             try
