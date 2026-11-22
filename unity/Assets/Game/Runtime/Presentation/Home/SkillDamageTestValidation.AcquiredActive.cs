@@ -66,12 +66,13 @@ namespace Zjcs.Presentation.Home
             bool dreadShadow = skillId == 10104;
             bool starBurst = skillId == 10002;
             bool doomTorrent = skillId == 10056;
-            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || starBurst || doomTorrent;
+            bool spiralWindBlade = skillId == 10091;
+            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || starBurst || doomTorrent || spiralWindBlade;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
-            int profession = starBurst || doomTorrent ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = starBurst || doomTorrent || spiralWindBlade ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -101,7 +102,7 @@ namespace Zjcs.Presentation.Home
                 ? Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType : 200;
             player.Wardrobe.Profession = profession;
             int passiveCompanion = LoadAcquiredPassiveCompanion(player, skillId, output);
-            if (passiveCompanion == 10609 || passiveCompanion == 10594 || passiveCompanion == 10543 || starBurst)
+            if (passiveCompanion == 10609 || passiveCompanion == 10594 || passiveCompanion == 10543 || starBurst || spiralWindBlade)
             {
                 var validationRunner = FindObjectsOfType<SkillDamageTestValidation>().FirstOrDefault();
                 if (validationRunner != null) validationRunner.deadline += 600f;
@@ -275,7 +276,7 @@ namespace Zjcs.Presentation.Home
                 if (setting == "MonsterHp" && (waterBlade || soulPiercer))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
-                if (setting == "Round" && (vortexSurge || passiveCompanion == 10607 || passiveCompanion == 10594 || passiveCompanion == 10543 || dreadShadow || starBurst))
+                if (setting == "Round" && (vortexSurge || passiveCompanion == 10607 || passiveCompanion == 10594 || passiveCompanion == 10543 || dreadShadow || starBurst || spiralWindBlade))
                     choice = settings.GetComponentsInChildren<Toggle>().Where(value =>
                         value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting))
                         .OrderBy(value => value.transform.parent.GetSiblingIndex()).Last();
@@ -307,7 +308,14 @@ namespace Zjcs.Presentation.Home
             int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, standfastTurns = 0, assaultHits = 0, soulBreakHits = 0, windHits = 0, flameHits = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
             int starBlindApplications = 0, starBlindEnds = 0;
             int doomPushes = 0;
+            int tearApplications = 0, tearEnds = 0, tearHits = 0;
             battle.Controller.StepCompleted += step => {
+                if (spiralWindBlade)
+                {
+                    tearEnds += step.Event.StatusViewEvents.Count(view => view.Status.ClassId == 24376
+                        && view.Status.CreatorId == 1 && view.Kind == FightBattleStatusViewEventKind.End);
+                    VerifyAcquiredLacerationHits(step.Event, ref tearHits);
+                }
                 if (starBurst) starBlindEnds += step.Event.StatusViewEvents.Count(view => view.Status.ClassId == 24234
                     && view.Status.CreatorId == 1 && view.Kind == FightBattleStatusViewEventKind.End);
                 if (hellfire) VerifyAcquiredHellfireStep(step.Event, actor, ref hellfireCures, ref hits);
@@ -363,6 +371,7 @@ namespace Zjcs.Presentation.Home
                         : dreadShadow ? cast.SkillEntityId == 12130
                         : starBurst ? cast.SkillEntityId == 11450
                         : doomTorrent ? cast.SkillEntityId == 11080
+                        : spiralWindBlade ? cast.SkillEntityId == 11960
                         : skillId == 10048 ? cast.SkillEntityId == 11090
                         : skillId == 10049 ? cast.SkillEntityId == 11100
                         : skillId == 10051 ? cast.SkillEntityId == 11260
@@ -383,6 +392,12 @@ namespace Zjcs.Presentation.Home
                     if (doomTorrent)
                     {
                         VerifyAcquiredDoomTorrent(step.Event, cast, damageEvents, ref doomPushes);
+                        hits += damageEvents.Length;
+                        continue;
+                    }
+                    if (spiralWindBlade)
+                    {
+                        VerifyAcquiredSpiralWindBlade(step.Event, cast, damageEvents, checkpoint, output, ref tearApplications);
                         hits += damageEvents.Length;
                         continue;
                     }
@@ -627,9 +642,16 @@ namespace Zjcs.Presentation.Home
                 .Any(parent => parent.name == "StartBtn")));
             bool captured = false, capturedOpening = false, capturedPassive = false, capturedFear = false;
             bool capturedStarBlind = false;
+            bool capturedTear = false;
             bool capturedTacticalAttack = false, capturedTacticalDefence = false;
             while (battle != null)
             {
+                if (spiralWindBlade && !capturedTear && FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
+                    && particle.GetComponentsInParent<Transform>().Any(parent => parent.name.StartsWith("playable24376", StringComparison.Ordinal))))
+                {
+                    yield return CaptureAcquiredActive(output, "laceration");
+                    capturedTear = true;
+                }
                 if (starBurst && !capturedStarBlind && FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
                     && particle.GetComponentsInParent<Transform>().Any(parent => parent.name.StartsWith("playable24234", StringComparison.Ordinal))))
                 {
@@ -740,10 +762,16 @@ namespace Zjcs.Presentation.Home
                             && particle.GetComponentsInParent<Transform>().Any(parent => parent.name.StartsWith("playable11080", StringComparison.Ordinal))))
                         { yield return null; continue; }
                     }
+                    else if (spiralWindBlade)
+                    {
+                        if (!FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
+                            && particle.GetComponentsInParent<Transform>().Any(parent => parent.name.StartsWith("playable11960", StringComparison.Ordinal))))
+                        { yield return null; continue; }
+                    }
                     else yield return new WaitForSecondsRealtime(hellfire ? .2f : crisisGuard || starShatteringSlash ? 1.45f
                         : shieldCharge ? 1.1f : .7f);
                     yield return CaptureAcquiredActive(output, "battle"); captured = true;
-                    if (heavenlyLightBlades || frostSong || swordWindDance || soulPiercer || doomTorrent)
+                    if (heavenlyLightBlades || frostSong || swordWindDance || soulPiercer || doomTorrent || spiralWindBlade)
                         for (int frame = 1; frame <= 4; frame++)
                         {
                             yield return new WaitForSecondsRealtime(.18f);
@@ -761,6 +789,8 @@ namespace Zjcs.Presentation.Home
             Require(!starBurst || starBlindApplications > 0 && starBlindEnds > 0 && capturedStarBlind,
                 "The acquired star burst never applied, rendered and consumed its original blinding status.");
             Require(!doomTorrent || doomPushes > 0, "The acquired doom torrent never exercised its original outward knockback.");
+            Require(!spiralWindBlade || tearApplications > 0 && tearEnds > 0 && tearHits > 0 && capturedTear,
+                "The acquired spiral wind blade never applied, rendered, triggered and expired its original movement laceration.");
             Require(!vortexSurge || vortexMovements > 0,
                 "The original vortex surge never exercised its inward knockback in the rendered battle.");
             Require(passiveCompanion != 10606 && passiveCompanion != 10607 || coldHits > 0,
