@@ -34,6 +34,39 @@ namespace Zjcs.Editor.Skills
 
         public static string Prepare(string workspace) => Prepare(workspace, false);
 
+        public static byte[] PrepareForDelivery(string workspace)
+        {
+            byte[] bytes = File.ReadAllBytes(Prepare(workspace));
+            string repository = Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT");
+            var expected = JsonUtility.FromJson<Receipt>(File.ReadAllText(Path.Combine(repository, ReceiptPath)));
+            if (expected?.output == null || bytes.LongLength != expected.output.bytes || Digest(bytes) != expected.output.sha256)
+                throw new BuildFailedException("The captured native UI pack differs from its recorded hash.");
+            return bytes;
+        }
+
+        public static void ValidateDeliveryLifetime()
+        {
+            string workspace = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+            if (string.IsNullOrWhiteSpace(workspace) || !Path.IsPathRooted(workspace))
+                throw new BuildFailedException("Use an absolute validation workspace.");
+            string test = Path.Combine(workspace, "skill-ui-delivery-" + Guid.NewGuid().ToString("N"));
+            byte[] bytes = PrepareForDelivery(test);
+            string original = Path.Combine(test, "SkillUiBundle", OfficialSkillUiData.BundleFileName);
+            File.Delete(original);
+            string executable = Path.Combine(test, "Player", "Zjcs.exe");
+            Deliver(bytes, executable);
+            string target = DeliveryTarget(executable);
+            var bundle = AssetBundle.LoadFromFile(target);
+            if (bundle == null) throw new BuildFailedException("The captured UI delivery is not a loadable native bundle.");
+            try
+            {
+                if (bundle.GetAllAssetNames().Length != 2 || File.Exists(original))
+                    throw new BuildFailedException("The native UI delivery lifetime scenario did not exercise source removal.");
+            }
+            finally { bundle.Unload(true); }
+            Debug.Log("[Skills] Captured native UI delivery passed after removing its temporary source bundle.");
+        }
+
         private static string Prepare(string workspace, bool record)
         {
             if (Application.unityVersion != UnityVersion || string.IsNullOrEmpty(workspace) || !Path.IsPathRooted(workspace))
@@ -95,14 +128,19 @@ namespace Zjcs.Editor.Skills
             return bundlePath;
         }
 
-        public static void Deliver(string bundlePath, string executable)
-        {
-            string target = Path.Combine(Path.GetDirectoryName(executable), Path.GetFileNameWithoutExtension(executable)
+        private static string DeliveryTarget(string executable)
+            => Path.Combine(Path.GetDirectoryName(executable), Path.GetFileNameWithoutExtension(executable)
                 + "_Data", "StreamingAssets", "Skills", OfficialSkillUiData.BundleFileName);
+
+        public static void Deliver(string bundlePath, string executable) => Deliver(File.ReadAllBytes(bundlePath), executable);
+
+        public static void Deliver(byte[] bytes, string executable)
+        {
+            if (bytes == null || bytes.Length == 0) throw new ArgumentException("A captured native UI pack is required.", nameof(bytes));
+            string target = DeliveryTarget(executable);
             Directory.CreateDirectory(Path.GetDirectoryName(target));
-            File.Copy(bundlePath, target, true);
-            if (new FileInfo(bundlePath).Length != new FileInfo(target).Length
-                || Digest(File.ReadAllBytes(bundlePath)) != Digest(File.ReadAllBytes(target)))
+            File.WriteAllBytes(target, bytes);
+            if (bytes.LongLength != new FileInfo(target).Length || Digest(bytes) != Digest(File.ReadAllBytes(target)))
                 throw new BuildFailedException("The delivered native skill UI pack is truncated or changed.");
             Debug.Log("[Skills] Delivered matching native UI pack: " + target);
         }

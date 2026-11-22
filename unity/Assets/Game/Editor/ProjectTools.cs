@@ -188,7 +188,7 @@ namespace Zjcs.Editor
                 OfficialSparseShaderVariants.ValidateProgramDomains();
                 Skills.OfficialSkillRuntimeShaderBuild.Prepare();
                 string workspace = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
-                string uiPack = string.IsNullOrEmpty(workspace) ? null : Skills.OfficialSkillUiPackBuild.Prepare(workspace);
+                byte[] uiPack = string.IsNullOrEmpty(workspace) ? null : Skills.OfficialSkillUiPackBuild.PrepareForDelivery(workspace);
                 report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
                 {
                     scenes = scenes,
