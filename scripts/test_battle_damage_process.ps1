@@ -1,15 +1,18 @@
-. (Join-Path $PSScriptRoot 'combat_sources.ps1')
+﻿. (Join-Path $PSScriptRoot 'combat_sources.ps1')
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $combat = Join-Path $root 'unity/Assets/Game/Runtime/Official/Combat'
 Add-Type -Path (Get-FightCombatSources)
 function Require($condition, $message) { if (-not $condition) { throw $message } }
 function Read-Source($name) { [IO.File]::ReadAllText((Join-Path $root "unity/Assets/Official/Combat/$name.json")) }
-function Hash-Source($name) { [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([IO.File]::ReadAllBytes((Join-Path $root "unity/Assets/Official/Combat/$name.json")))).ToLowerInvariant() }
+function Proof-Source($name) { Get-Content (Join-Path $root "unity/Assets/Official/Combat/$name-source-manifest.json") -Raw | ConvertFrom-Json }
+$skillSource = Proof-Source 'skill-rules'
+$battleSource = Proof-Source 'battle-rules'
+$ruleSource = Proof-Source 'rules'
 $catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
-    (Read-Source 'skill-rules'), (Hash-Source 'skill-rules'), '854_156383',
-    (Read-Source 'battle-rules'), (Hash-Source 'battle-rules'), '854_156383')
-$formula = $catalog.CreateDamageFormula((Read-Source 'rules'), (Hash-Source 'rules'), '854_156383')
+    (Read-Source 'skill-rules'), $skillSource.output_sha256, $skillSource.manifest,
+    (Read-Source 'battle-rules'), $battleSource.output_sha256, $battleSource.manifest)
+$formula = $catalog.CreateDamageFormula((Read-Source 'rules'), $ruleSource.output_sha256, $ruleSource.manifest)
 function Set-StatusProperty($status, [int]$id, [long]$value) {
     $status.ResolvedProperties=[System.Collections.Generic.List[Zjcs.Combat.Official.FightPropertyValue]]::new()
     $status.ResolvedProperties.Add([Zjcs.Combat.Official.FightPropertyValue]@{Id=$id;Value=$value})
@@ -64,10 +67,10 @@ $props=@{};foreach($p in $f.Mark.ResolvedProperties){$props[$p.Id]=$p.Value}
 Require ($props[231] -eq 2000 -and $props[235] -eq 4789) 'Official rank/level/default/factor property calculation changed'
 Require (-not ($f.Target.Properties | Where-Object { $_.Id -eq 231 -or $_.Id -eq 235 })) 'Conditional mark damage properties leaked into global target properties'
 $result=Hit $f
-Require ($f.Target.Hp -eq 95091 -and $result.Formula.AbsoluteDamage -eq -4909) 'Original status values did not produce 100 * 1.2 + 4789 before shielding'
+Require ($f.Target.Hp -eq 94134 -and $result.Formula.AbsoluteDamage -eq -5866) 'Original status values did not produce (100 + 4789) * 1.2 before shielding'
 $f=New-Fixture 1 $true 100
 $result=Hit $f
-Require ($result.ShieldDamage -eq 100 -and $f.Target.Hp -eq 99965) 'Fixed addition ran before percentage, or damage boost ran after shields'
+Require ($result.ShieldDamage -eq 100 -and $f.Target.Hp -eq 99963) 'Fixed addition did not precede percentage, or damage boost ran after shields'
 $f=New-Fixture 3 $true
 $f.Source.MasterId=1
 $result=Hit $f
@@ -134,14 +137,14 @@ $checkpoint.Grid.Width=8; $checkpoint.Grid.Height=8; $checkpoint.Grid.DefaultGro
 foreach($unit in $f.Units){$checkpoint.Units.Add($unit)}
 $runner=[Zjcs.Combat.Official.FightBattleExecutor]::Begin($checkpoint,$formula,[Zjcs.Combat.Official.FightDamageSettlement]::new(),$catalog)
 $first=$runner.Step(0,1)
-Require ($first.Event.DamageEvents[0].Damage -eq -35 -and $first.Event.DamageEvents[0].ShieldDamage -eq 100 -and
-    $f.Mark.AccumulatedDamage.HpDamage -eq 35) 'Complete executor did not accumulate actual boosted HP damage after shield absorption'
+Require ($first.Event.DamageEvents[0].Damage -eq -37 -and $first.Event.DamageEvents[0].ShieldDamage -eq 100 -and
+    $f.Mark.AccumulatedDamage.HpDamage -eq 37) 'Complete executor did not accumulate actual boosted HP damage after shield absorption'
 $saved=[Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($runner.State))
 $saved.Units[1].Statuses[0].HasCreatorDamageBoost=$false
 $restored=[Zjcs.Combat.Official.FightBattleExecutor]::Restore($saved,$formula,[Zjcs.Combat.Official.FightDamageSettlement]::new(),$catalog)
 Require ($saved.Units[1].Statuses[0].HasCreatorDamageBoost) 'Old checkpoint did not restore the damage-process component from official config'
 $end=$runner.Step(0,2);$replay=$restored.Step(0,2)
-Require ($end.Event.DamageEvents[0].SkillEntityId -eq 13148 -and $end.Event.DamageEvents[0].Damage -eq -10 -and
-    $replay.Event.DamageEvents[0].Damage -eq -10 -and $f.Target.Hp -eq 99955 -and
-    $end.Checkpoint.Statistics.Skill(1,90001,90101).AdditionalAttributedDamage -eq 10) 'Status expiration, source credit or restoration reapplied the removed mark bonus'
-Write-Output 'Battle damage-process checks passed: official 20% + 4789, percent-before-fixed, BeforeShield, creator filter, no-independent aggregation, no global property leakage, healing/no-action, accumulated expiry and checkpoint replay.'
+Require ($end.Event.DamageEvents[0].SkillEntityId -eq 13148 -and $end.Event.DamageEvents[0].Damage -eq -11 -and
+    $replay.Event.DamageEvents[0].Damage -eq -11 -and $f.Target.Hp -eq 99952 -and
+    $end.Checkpoint.Statistics.Skill(1,90001,90101).AdditionalAttributedDamage -eq 11) 'Status expiration, source credit or restoration reapplied the removed mark bonus'
+Write-Output 'Battle damage-process checks passed: official 20% + 4789, fixed-before-percent, BeforeShield, creator filter, no-independent aggregation, no global property leakage, healing/no-action, accumulated expiry and checkpoint replay.'

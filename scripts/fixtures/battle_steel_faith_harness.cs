@@ -12,7 +12,7 @@ public static class BattleSteelFaithHarness
         FightOfficialSkillItemCatalog items)
     {
         int cases = 0;
-        foreach (int rank in new[] { 1, 2, 4, 5 })
+        foreach (int rank in new[] { 1, 2, 4, 5, 6, 7 })
         foreach (int level in new[] { 1, 2 })
         foreach (bool taunted in new[] { false, true })
         foreach (bool shielded in new[] { false, true })
@@ -72,7 +72,8 @@ public static class BattleSteelFaithHarness
             double reduce = formula.ReadProperty(raw, formula.PropertyId("StatusDmgReducePer"));
             Check(reduce > 0, "the original cultivation data contains no reduction");
             long baseAmount = -original.Damage + original.ShieldDamage;
-            long expected = taunted ? (long)(baseAmount / (1.0 + reduce)) : baseAmount;
+            double fixedReduce = formula.ReadProperty(raw, formula.PropertyId("FixedStatusDmgReduce"));
+            long expected = taunted ? (long)(Math.Max(0, baseAmount - fixedReduce) / (1.0 + reduce)) : baseAmount;
             Check(-hit.Damage + hit.ShieldDamage == expected
                 && hit.ShieldDamage == (shielded ? Math.Min(100, expected) : 0)
                 && hit.BeforeHp - hit.AfterHp == Math.Max(0, expected - hit.ShieldDamage),
@@ -116,13 +117,16 @@ public static class BattleSteelFaithHarness
         var result = resolver.Apply(new FightRandomStream(91), 1, source, target, skill, hit, 1, false);
         resolver.Apply(new FightRandomStream(91), 1, copy.Units[1], copy.Units[0], skill, hit, 1, false);
         var raw = catalog.CalculateSkillProps(25108, rank, level, 8).ToDictionary(p => p.Key, p => p.Value);
-        long expected = (long)(1000 / (1.0 + formula.ReadProperty(raw, formula.PropertyId("StatusDmgReducePer"))));
+        double fixedReduce = formula.ReadProperty(raw, formula.PropertyId("FixedStatusDmgReduce"));
+        long expected = (long)(Math.Max(0, 1000 - fixedReduce) / (1.0 + formula.ReadProperty(raw, formula.PropertyId("StatusDmgReducePer"))));
         Check(expected > 0 && expected < 1000
             && -result.Settlement.RealDamageValue + result.ShieldDamage == expected
             && result.ShieldDamage == (shielded ? Math.Min(100, expected) : 0),
             "triggered damage from a taunted enemy did not reduce before shield absorption");
         Check(FightBattleCheckpointSerializer.Save(state) == FightBattleCheckpointSerializer.Save(copy),
             "restoration changed the taunt-dependent triggered hit");
+        Check(FightStatusDamageProcessRuntime.BeforeShield(source, target, -1, formula, 1) == 0,
+            "fixed reduction turned an absorbed hit into healing or retained damage");
         Check(FightStatusDamageProcessRuntime.BeforeShield(source, target, 1000, formula, 2) == 1000,
             "taunt-dependent damage reduction also changed healing");
         source.Side = target.Side;

@@ -1,6 +1,8 @@
 """Verify the official 24062 -> 13148 -> 13149 accumulated-damage dependency chain."""
 import hashlib
 import json
+import argparse
+import subprocess
 from pathlib import Path
 import sys
 
@@ -17,7 +19,7 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def build():
+def build(runtime_ref=None):
     payload_path = ROOT / 'unity/Assets/Official/Combat/battle-rules.json'
     payload = json.loads(payload_path.read_text('utf8'))
     versions = []
@@ -81,24 +83,34 @@ def build():
         '.tools/source-packages/current/871_156598/official-code/common-source/Common/StatusTriggerTarget.cs',
         '.tools/source-packages/current/871_156598/official-code/common-source/Common/DamageProcessPhase.cs',
         '.tools/source-packages/current/871_156598/official-code/common-source/Common/BattleFormulaHandler.cs']
+    runtime_revision = subprocess.check_output(['git', 'rev-parse', '--verify', runtime_ref + '^{commit}'],
+        cwd=ROOT, text=True).strip() if runtime_ref else None
+
+    def runtime_sha(relative):
+        raw = subprocess.check_output(['git', 'show', runtime_revision + ':' + relative], cwd=ROOT) \
+            if runtime_revision else (ROOT / relative).read_bytes()
+        return hashlib.sha256(raw).hexdigest()
+
+    runtime_paths = ['unity/Assets/Game/Runtime/Official/Combat/' + name for name in (
+        'FightStatusAccumulatedDamageRuntime.cs', 'FightBattleExecutor.AccumulatedDamage.cs',
+        'FightBattleStatistics.cs', 'FightBattleReportBuilder.cs', 'FightBattleTargeting.cs', 'FightBattleExecutor.cs',
+        'FightOfficialCombatCatalog.cs', 'FightStatusLifecycle.cs', 'FightBattleState.cs',
+        'FightStatusCreatorDamageBoostRuntime.cs', 'FightBattleHitExecutor.cs', 'FightStatusPropertyRuntime.cs')]
+    runtime_paths.append('unity/Assets/Game/Runtime/Offline/Combat/FightStatusPropertyPairs.cs')
     receipt = {'config_manifest': '854_156383', 'code_manifest': '871_156598',
                'language_manifest': texts['language_manifest'], 'versions': versions,
                'runtime_config_identical_in_both_versions': True,
                'description': description,
                'inputs': [{'path': path, 'sha256': sha(ROOT / path)} for path in source_paths],
                'generator_sha256': sha(__file__),
-               'runtime': [{'path': 'unity/Assets/Game/Runtime/Official/Combat/'+name,
-                            'sha256': sha(ROOT/'unity/Assets/Game/Runtime/Official/Combat'/name)} for name in (
-                   'FightStatusAccumulatedDamageRuntime.cs','FightBattleExecutor.AccumulatedDamage.cs',
-                   'FightBattleStatistics.cs','FightBattleReportBuilder.cs','FightBattleTargeting.cs','FightBattleExecutor.cs',
-                   'FightOfficialCombatCatalog.cs','FightStatusLifecycle.cs','FightBattleState.cs',
-                   'FightStatusCreatorDamageBoostRuntime.cs','FightBattleHitExecutor.cs','FightStatusPropertyRuntime.cs')],
+               'runtime_reference': {'git_commit': runtime_revision} if runtime_revision else 'working_tree',
+               'runtime': [{'path': relative, 'sha256': runtime_sha(relative)} for relative in runtime_paths],
                'status_property_inputs': {
                    'entity_prop': next(row for row in json.loads((ROOT/'unity/Assets/Official/Combat/skill-rules.json').read_bytes())['tables']['entity_prop'] if row['EntityId']==24062),
                    'rank_level_example': {'rank':1,'level':1,'sub_rank':1,'percent_231':2000,'fixed_235':4789}},
                'confirmed_offline_rules': {
                    'dead_creator_expiration': 'If the mark creator has died while the battle continues and the marked target remains alive, expiration still triggers the original damage chain and retains the original creator attribution. Do not revive the creator or admit ordinary dead-unit attacks.',
-                   'creator_damage_boost': 'For damage from the mark creator, multiply pre-shield damage by one plus resolved status property 231, then directly add fixed property 235. Other actors and creator summons do not receive the bonus; healing is unchanged.',
+                   'creator_damage_boost': 'For damage from the mark creator, add fixed property 235 to pre-shield damage, then multiply by one plus resolved status property 231. This follows the shared user-confirmed fixed-before-percent rule. Other actors and creator summons do not receive the bonus; healing is unchanged.',
                    'additional_source_credit': 'Allocate triggered actual HP loss proportionally to original actual HP contributions by source and skill; retain the independent mark hit. Exclude shield and overkill. Use the original DistributeLongProportional rounding/remainder helper.',
                    'more_hit_priority': 'Retain eligible targets and forced taunt/confusion constraints; prefer MoreHit marked attack targets before existing coverage/distance priorities.'},
                'scope': 'Official configuration, descriptions and the integer distribution helper are available. The server allocation, MoreHit comparator and damage-process hook are absent; their wiring follows the user-confirmed offline rules.'}
@@ -108,4 +120,6 @@ def build():
 
 
 if __name__ == '__main__':
-    build()
+    parser = argparse.ArgumentParser(__doc__)
+    parser.add_argument('--runtime-ref', help='Fingerprint runtime sources from this committed Git revision.')
+    build(parser.parse_args().runtime_ref)

@@ -66,8 +66,8 @@ namespace Zjcs.Combat.Official
                 foreach(var property in status.StatusProperties ?? status.ResolvedProperties ?? new List<FightPropertyValue>())
                 {
                     if(property==null || property.Id<=0) continue;
-                    int sign=(property.Id==c.AddPercentPropertyId ? 1 : 0)
-                        -(property.Id==c.ReducePercentPropertyId ? 1 : 0);
+                    int sign=(FightStatusPropertyPairs.Matches(property.Id,c.AddPercentPropertyId) ? 1 : 0)
+                        -(FightStatusPropertyPairs.Matches(property.Id,c.ReducePercentPropertyId) ? 1 : 0);
                     if(sign==0) continue;
                     properties.TryGetValue(property.Id,out long previous);
                     properties[property.Id]=previous+(long)(property.Value*scale)*sign;

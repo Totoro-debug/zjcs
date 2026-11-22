@@ -23,6 +23,7 @@ namespace Zjcs.Presentation.Home
             bool supported = active == 10047 && player.Wardrobe.Profession == 4 && (itemId == 10606 || itemId == 10607)
                 || active == 10088 && player.Wardrobe.Profession == 8 && (itemId == 10608 || itemId == 10568)
                 || active == 10068 && player.Wardrobe.Profession == 8 && itemId == 10609;
+            supported |= active == 10089 && player.Wardrobe.Profession == 8 && itemId == 10594;
             Require(supported && source.Player.Wardrobe.Profession == player.Wardrobe.Profession
                 && source.Player.Level == player.Level && source.Player.SubRank == player.SubRank
                 && plan.ActiveSkills.All(id => id == 0)
@@ -55,8 +56,20 @@ namespace Zjcs.Presentation.Home
         }
 
         private static void VerifyAcquiredPassiveStep(FightBattleStepEvent step, FightBattleCheckpoint checkpoint,
-            string output, int itemId, ref int coldHits, ref int auraHits, ref int standfastTurns, ref int assaultHits)
+            string output, int itemId, ref int coldHits, ref int auraHits, ref int standfastTurns, ref int assaultHits, ref int soulBreakHits)
         {
+            if (itemId == 10594)
+            {
+                foreach (var hit in step.DamageEvents.Where(hit => hit.SourceId == 1 && hit.SkillItemId == 10089
+                    && hit.Damage < 0 && !hit.IsCure && !hit.Dodge && !hit.Blinding && !hit.Immunity))
+                {
+                    var target = checkpoint.Units.Single(unit => unit.Id == hit.TargetId);
+                    if (target.MaxHp - hit.BeforeHp >= target.MaxHp * .15m) soulBreakHits++;
+                }
+                if (soulBreakHits > 0) File.WriteAllText(Path.Combine(output, "companion-soul-breaker-checkpoint.json"),
+                    FightBattleCheckpointSerializer.Save(checkpoint));
+                return;
+            }
             if (itemId == 10568)
             {
                 var owner = checkpoint.Units.Single(unit => unit.Id == 1);

@@ -98,7 +98,7 @@ namespace Zjcs.Presentation.Home
             player.InitialWeaponType = profession == 10 ? Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType : 200;
             player.Wardrobe.Profession = profession;
             int passiveCompanion = LoadAcquiredPassiveCompanion(player, skillId, output);
-            if (passiveCompanion == 10609)
+            if (passiveCompanion == 10609 || passiveCompanion == 10594)
             {
                 var validationRunner = FindObjectsOfType<SkillDamageTestValidation>().FirstOrDefault();
                 if (validationRunner != null) validationRunner.deadline += 600f;
@@ -272,7 +272,7 @@ namespace Zjcs.Presentation.Home
                 if (setting == "MonsterHp" && (waterBlade || soulPiercer))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
-                if (setting == "Round" && (vortexSurge || passiveCompanion == 10607 || dreadShadow))
+                if (setting == "Round" && (vortexSurge || passiveCompanion == 10607 || passiveCompanion == 10594 || dreadShadow))
                     choice = settings.GetComponentsInChildren<Toggle>().Where(value =>
                         value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting))
                         .OrderBy(value => value.transform.parent.GetSiblingIndex()).Last();
@@ -301,10 +301,10 @@ namespace Zjcs.Presentation.Home
             }
             if (hellfire) PrepareAcquiredHellfire(actor);
             if (soulPiercer) { actor.Hp = actor.MaxHp / 2; actor.Turn.Hp = actor.Hp; }
-            int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, standfastTurns = 0, assaultHits = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
+            int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, standfastTurns = 0, assaultHits = 0, soulBreakHits = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
             battle.Controller.StepCompleted += step => {
                 if (hellfire) VerifyAcquiredHellfireStep(step.Event, actor, ref hellfireCures, ref hits);
-                if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits, ref standfastTurns, ref assaultHits);
+                if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits, ref standfastTurns, ref assaultHits, ref soulBreakHits);
                 var skillCasts = step.Event.SkillCasts.Where(value => value.ActorId == 1 && value.Slot == 0
                     && value.SkillItemId == skillId).ToArray();
                 casts += skillCasts.Length;
@@ -715,6 +715,7 @@ namespace Zjcs.Presentation.Home
             Require(passiveCompanion != 10608 || standfastTurns > 0 && capturedPassive,
                 "The cultivated standfast soul never applied and rendered its turn-bound protection.");
             Require(passiveCompanion != 10568 || assaultHits > 0, "The cultivated defence ignore never affected a successful hit.");
+            Require(passiveCompanion != 10594 || soulBreakHits > 0, "The cultivated target missing-health bonus never affected a successful hit.");
             Require(passiveCompanion != 10609 || capturedTacticalAttack && capturedTacticalDefence
                 && File.Exists(Path.Combine(output, "companion-tactical-24394.json"))
                 && File.Exists(Path.Combine(output, "companion-tactical-24393.json")),

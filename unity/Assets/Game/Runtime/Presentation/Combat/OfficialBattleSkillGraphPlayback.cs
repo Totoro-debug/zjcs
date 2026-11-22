@@ -202,7 +202,7 @@ namespace Zjcs.Presentation.Combat
                 "Combat/first-promotion-statuses", "Combat/additional-statuses", "Combat/profession-statuses",
                 "Combat/profession-current-graphs", "Combat/conqueror-current-graphs", "Combat/fear-current-graphs",
                 "Combat/standfast-soul-current-graphs", "Combat/tactical-adaptation-current-graphs",
-                "Combat/assault-piercing-current-graphs");
+                "Combat/assault-piercing-current-graphs", "Combat/soul-breaker-current-graphs");
             statusViews.Restore();
         }
 
