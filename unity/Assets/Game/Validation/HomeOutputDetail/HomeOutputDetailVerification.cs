@@ -18,6 +18,7 @@ using Zjcs.Official.HomeHangUpWindowsUI;
 using Zjcs.Official.HomeMainUiControls;
 using Zjcs.Official.HomeOutputAddition;
 using Zjcs.Official.HomeOutputDetailUI;
+using Zjcs.Official.HomeFastHangUpUI;
 using Zjcs.Official.WorldUI;
 using Zjcs.Presentation.Home;
 using Object = UnityEngine.Object;
@@ -191,6 +192,7 @@ namespace Zjcs.Validation.HomeOutputDetail
             yield return Capture("detail-single.png");
             yield return CheckBedCollection();
             yield return CheckBedFreeAcceleration();
+            yield return CheckBedItemAcceleration();
             Require(errors.Count == 0, "no runtime error or assertion");
         }
 
@@ -277,6 +279,65 @@ namespace Zjcs.Validation.HomeOutputDetail
                 "cold reopen restores the consumed daily use and granted acceleration experience");
         }
 
+        IEnumerator CheckBedItemAcceleration()
+        {
+            int id = home.Rules.HangUp(1).fastHangUpId;
+            var fast = home.Rules.FastHangUp(id);
+            while (home.Session.CanFreeFastForward(id))
+                Require(home.TryFastForward(1) > 0, "consume remaining configured free uses for the item branch");
+            var item = fast.items.OrderBy(value => value.hours).First();
+            Require(home.Profile.ApplyInventoryTransaction("bed:item:fixture", save => {
+                if (!OfflineInventoryOperations.Grant(save.Player, item.itemId, 2, DateTimeOffset.UtcNow.ToUnixTimeSeconds()).IsApplied)
+                    throw new InvalidOperationException("Cannot prepare isolated acceleration items.");
+            }).IsApplied, "grant configured acceleration items only to the isolated profile");
+            long capacity = home.Session.Preview(1).Capacity;
+            Require(home.Session.Mutate("bed:item:stored", save => {
+                var entry = save.Income.Single(value => value.HangUpId == 1);
+                entry.StoredSeconds = 0; entry.SettledCount = capacity - 1;
+            }), "prepare near-capacity bed income");
+            home.Hud.ShowBed(); yield return new WaitForSecondsRealtime(.8f);
+            var services = Field<OfflineHomeBedServices>(home.Hud, "nativeBedServices");
+            var progress = Field<OfflineHomeFastHangUpProgress>(home.Hud, "nativeFastProgress");
+            long before = home.Profile.Save.Player.Experience;
+            long itemsBefore = home.Profile.InventoryCount(item.itemId);
+            yield return WaitForButton(Windows.Bed.FastHangUpBtn); Click(Windows.Bed.FastHangUpBtn);
+            yield return new WaitForSecondsRealtime(.5f);
+            var confirm = Object.FindObjectOfType<WorldConfirmDialog>();
+            if (confirm) { yield return WaitForButton(confirm.ConfirmBtn); Click(confirm.ConfirmBtn); }
+            yield return new WaitForSecondsRealtime(.5f);
+            var selection = Windows.FastSelection;
+            Require(selection, "exhausted free uses open the original item acceleration window");
+            var row = selection.GetComponentsInChildren<FurnitureUseItemSliderGroup>().Single(value => value.ItemId == item.itemId);
+            var slider = Field<SetUseCountSlider>(row, "mSlider");
+            while (row.UseCount > 1) { yield return WaitForButton(slider.MinusBtn); Click(slider.MinusBtn); }
+            yield return WaitForButton(slider.AddBtn); Click(slider.AddBtn);
+            Require(row.UseCount == 2, "native item quantity buttons update the selected count");
+            long expected = (long)services.GetHangUpReward(1, item.hours * row.UseCount);
+            yield return Capture("bed-item-selection.png");
+            yield return WaitForButton(selection.FastBtn); Click(selection.FastBtn);
+            yield return null;
+            confirm = Object.FindObjectOfType<WorldConfirmDialog>();
+            Require(confirm, "near-capacity item acceleration uses its original overflow confirmation");
+            yield return WaitForButton(confirm.ConfirmBtn); Click(confirm.ConfirmBtn);
+            Require(progress.IsOpen && home.Profile.InventoryCount(item.itemId) == itemsBefore - 2,
+                "confirmed item acceleration consumes exactly the selected cost and opens the original animation");
+            Require(home.Profile.Save.Player.Experience == before && home.Session.Preview(1).Count >= capacity - 1 + expected,
+                "item acceleration stores its configured output in the bed without granting experience");
+            yield return new WaitForSecondsRealtime(.6f);
+            yield return Capture("bed-item-progress.png");
+            float deadline = Time.realtimeSinceStartup + 30;
+            while (progress.IsOpen && Time.realtimeSinceStartup < deadline) yield return null;
+            Require(!progress.IsOpen && home.Profile.Save.Player.Experience == before,
+                "item animation ends naturally and leaves its output for manual collection");
+            long stored = home.Session.Preview(1).Count;
+            Require(stored > capacity, "item acceleration retains settled output above ordinary capacity");
+            home.Close(); home = null; yield return null;
+            Open(); yield return new WaitForSecondsRealtime(.8f);
+            Require(home.Profile.InventoryCount(item.itemId) == itemsBefore - 2
+                && home.Profile.Save.Player.Experience == before && home.Session.Preview(1).Count == stored,
+                "cold reopen retains item cost and overflow output without auto-collecting experience");
+        }
+
         static PlayerOutputAdditionDataWrap Record(int id, JToken row, DateTime end)
         {
             var type = (OutputAdditionPropType)(int)row["OutputAdditionPropType"];
@@ -353,7 +414,8 @@ namespace Zjcs.Validation.HomeOutputDetail
             finally
             {
                 for (int index = 0; index < canvases.Length; index++)
-                { canvases[index].sortingLayerID = layers[index]; canvases[index].sortingOrder = orders[index]; }
+                    if (canvases[index])
+                    { canvases[index].sortingLayerID = layers[index]; canvases[index].sortingOrder = orders[index]; }
             }
         }
         static T Field<T>(object owner, string name) => (T)owner.GetType().GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(owner);
