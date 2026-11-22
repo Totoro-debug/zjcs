@@ -201,7 +201,7 @@ namespace Zjcs.Presentation.Combat
             statusViews = new OfficialBattleStatusPlayback(executor, root, scope, StatusBody, hasStatusIcon,
                 "Combat/first-promotion-statuses", "Combat/additional-statuses", "Combat/profession-statuses",
                 "Combat/profession-current-graphs", "Combat/conqueror-current-graphs", "Combat/fear-current-graphs",
-                "Combat/standfast-soul-current-graphs");
+                "Combat/standfast-soul-current-graphs", "Combat/tactical-adaptation-current-graphs");
             statusViews.Restore();
         }
 

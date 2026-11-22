@@ -21,7 +21,8 @@ namespace Zjcs.Presentation.Home
             var plan = source.Player.Skills.Plans[source.Player.Skills.SelectedPlan];
             int itemId = plan.PassiveSkills[0];
             bool supported = active == 10047 && player.Wardrobe.Profession == 4 && (itemId == 10606 || itemId == 10607)
-                || active == 10088 && player.Wardrobe.Profession == 8 && itemId == 10608;
+                || active == 10088 && player.Wardrobe.Profession == 8 && itemId == 10608
+                || active == 10068 && player.Wardrobe.Profession == 8 && itemId == 10609;
             Require(supported && source.Player.Wardrobe.Profession == player.Wardrobe.Profession
                 && source.Player.Level == player.Level && source.Player.SubRank == player.SubRank
                 && plan.ActiveSkills.All(id => id == 0)
@@ -56,6 +57,21 @@ namespace Zjcs.Presentation.Home
         private static void VerifyAcquiredPassiveStep(FightBattleStepEvent step, FightBattleCheckpoint checkpoint,
             string output, int itemId, ref int coldHits, ref int auraHits, ref int standfastTurns)
         {
+            if (itemId == 10609)
+            {
+                var actor = checkpoint.Units.Single(unit => unit.Id == 1);
+                var listener = actor.Statuses.Single(status => status.ClassId == 25118);
+                var children = actor.Statuses.Where(status => status.ClassId == 24393 || status.ClassId == 24394).ToArray();
+                Require(children.Length == 1 && children[0].ClassId == (listener.MoveRangeLastTargetCount <= 3 ? 24394 : 24393)
+                    && children[0].ApplyingSkillItemId == itemId && children[0].CreatorId == actor.Id
+                    && children[0].OwnerId == actor.Id && children[0].SourceSkillRank == listener.SourceSkillRank
+                    && children[0].SourceSkillLevel == 2 && children[0].SourceSubRank == actor.SubRank
+                    && children[0].DurationRound == -1 && !children[0].CanDispersed,
+                    "The real tactical adaptation lost its exclusive threshold effect or cultivated source.");
+                File.WriteAllText(Path.Combine(output, "companion-tactical-" + children[0].ClassId + ".json"),
+                    FightBattleCheckpointSerializer.Save(checkpoint));
+                return;
+            }
             if (itemId == 10608)
             {
                 var starts = step.StatusViewEvents.Where(view => view.Status.ClassId == 24392

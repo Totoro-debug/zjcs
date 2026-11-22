@@ -1208,7 +1208,16 @@ namespace Zjcs.Combat.Official
             IReadOnlyList<FightBattleUnitState> units)
         {
             if (source == null || status == null || units == null || !status.HasMoveRange
-                || !status.MoveRangeRulesSupported || status.MoveRangeHandleType != 1) return;
+                || !status.MoveRangeRulesSupported) return;
+            if (status.MoveRangeHandleType == 2)
+            {
+                var origin = FightBattleStatusOrigin.Resolve(status);
+                RemoveMoveRangeStatuses(new[] { source }, source.Id, origin, status.MoveRangeMeetStatuses);
+                RemoveMoveRangeStatuses(new[] { source }, source.Id, origin, status.MoveRangeNotMeetStatuses);
+                status.MoveRangeLastTargetCount = -1;
+                return;
+            }
+            if (status.MoveRangeHandleType != 1) return;
             RemoveMoveRangeStatuses(units, source.Id, FightBattleStatusOrigin.Resolve(status), status.MoveRangeCloseStatuses);
             status.MoveRangeInsideUnitIds.Clear();
         }
@@ -1227,7 +1236,7 @@ namespace Zjcs.Combat.Official
         private static bool MoveRangeTargetMatches(FightBattleUnitState source,
             FightBattleUnitState candidate, int targetType)
         {
-            if (source == null || candidate == null || candidate.Id == source.Id) return false;
+            if (source == null || candidate == null || candidate.Ended || candidate.Id == source.Id) return false;
             switch (targetType)
             {
                 case 0: return false;

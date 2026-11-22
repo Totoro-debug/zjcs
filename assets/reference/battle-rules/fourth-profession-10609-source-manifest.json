@@ -1,0 +1,1732 @@
+{
+  "manifest": "903_156948",
+  "item_id": 10609,
+  "profession": 8,
+  "skill_item": {
+    "ClassId": 10609,
+    "EcEntityId": 25118,
+    "DirectionEcEntityId": {},
+    "RandomSkillWeightList": [],
+    "RandomSkillEntityId": [],
+    "TryAtStartType": 0,
+    "UpgradeMaterialId": 12001,
+    "Tags": [
+      7
+    ],
+    "SkillSortTypes": null,
+    "OuterTag": 0,
+    "PassiveRankPropId": 2001,
+    "PassiveGroupLevelPropId": 4,
+    "PassiveRankFactorId": 2050,
+    "PassivePropFactors": {},
+    "PassiveStatusIdList": [
+      25118
+    ],
+    "InitEnergy": 0,
+    "TriggerNeedEnergy": 0,
+    "ViewPropEntities": [
+      24393,
+      24394
+    ],
+    "ViewPropBlackList": [],
+    "HyperLinkTypes": [],
+    "HyperLinkDatas": [],
+    "UserType": 1,
+    "Invisible": false,
+    "MaxRankLimit": 0,
+    "AiPriorityId": -1,
+    "LastAiPriorityId": -1
+  },
+  "table_inputs": [
+    {
+      "name": "skill",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "4838b38a3b272ae4bd23e89d77cd3b90",
+        "path_id": "1398458758611605706",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/4838b38a3b272ae4bd23e89d77cd3b90.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 2210171,
+        "bundle_sha256": "b87533144cd1777aa13ac24e283d12bafab338b7d4e66a3ea20361504caf795f"
+      },
+      "payload_sha256": "499ad6e1e820e204c0d549790bd498f6d2d26f392a7735881f87fbc4fdbe9a56"
+    },
+    {
+      "name": "profession_base",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "4838b38a3b272ae4bd23e89d77cd3b90",
+        "path_id": "-5402877092816210485",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/4838b38a3b272ae4bd23e89d77cd3b90.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 2210171,
+        "bundle_sha256": "b87533144cd1777aa13ac24e283d12bafab338b7d4e66a3ea20361504caf795f"
+      },
+      "payload_sha256": "d657cce6d216a109be7239ad3a5a998707a81cd10579eee742aa938efb634a72"
+    },
+    {
+      "name": "entity_prop",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "4838b38a3b272ae4bd23e89d77cd3b90",
+        "path_id": "-838135068252522671",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/4838b38a3b272ae4bd23e89d77cd3b90.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 2210171,
+        "bundle_sha256": "b87533144cd1777aa13ac24e283d12bafab338b7d4e66a3ea20361504caf795f"
+      },
+      "payload_sha256": "151c78465db07bee43eb8113da423b2efd5f9be6e51e15bb275916925584bb0c"
+    },
+    {
+      "name": "entity_prop_group_level",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "4838b38a3b272ae4bd23e89d77cd3b90",
+        "path_id": "7464518659288171045",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/4838b38a3b272ae4bd23e89d77cd3b90.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 2210171,
+        "bundle_sha256": "b87533144cd1777aa13ac24e283d12bafab338b7d4e66a3ea20361504caf795f"
+      },
+      "payload_sha256": "edefac87ee6014d53b97cf6235c6d73581b1199a65fb5cfd796d1cd2e5fecd27"
+    }
+  ],
+  "fragments": [
+    {
+      "path": "Assets/Config/EC/FightSkill_part720.g.bytes",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "aa0cc702699dec89dc3440b1bd85e4f5",
+        "path_id": "-2555063893439902391",
+        "origin": "apk_zip",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "apk_entry": "assets/yoo/DefaultPackage/aa0cc702699dec89dc3440b1bd85e4f5.bundle",
+        "raw_size": 6879371,
+        "raw_sha256": "4ac3d96c533455cd6c1af8f2c64a3276f4fc21d95764c118f2e4c6fb2de03578"
+      },
+      "legacy_prefix": false,
+      "payload_sha256": "bac7ce9efe6c9d3669645f7984c51f6702847a8aa806b40d102d653e7c6f5ffc",
+      "entities": {
+        "24393": {
+          "parent": 0,
+          "components": {
+            "ActionComponent": {
+              "ActionType": 0
+            },
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 1,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": true,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": true,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "FightStatusPropComponent": {
+              "StatusReplacePropertyValues": [],
+              "TransitionPropCfgs": [],
+              "MutexByBetter": false
+            }
+          }
+        },
+        "24394": {
+          "parent": 0,
+          "components": {
+            "ActionComponent": {
+              "ActionType": 0
+            },
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 1,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": true,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": true,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "FightStatusPropComponent": {
+              "StatusReplacePropertyValues": [],
+              "TransitionPropCfgs": [],
+              "MutexByBetter": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": "Assets/Config/EC/FightSkill_part756.g.bytes",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "aa0cc702699dec89dc3440b1bd85e4f5",
+        "path_id": "206126000672071481",
+        "origin": "apk_zip",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "apk_entry": "assets/yoo/DefaultPackage/aa0cc702699dec89dc3440b1bd85e4f5.bundle",
+        "raw_size": 6879371,
+        "raw_sha256": "4ac3d96c533455cd6c1af8f2c64a3276f4fc21d95764c118f2e4c6fb2de03578"
+      },
+      "legacy_prefix": false,
+      "payload_sha256": "08854a710715bf97d6b55b632c4ba02807732524afc1e7f761b7b10e6e6190c2",
+      "entities": {
+        "25118": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": true,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusMoveRangeComponent": {
+              "StatusReplacePropertyValues": [],
+              "Range": [
+                {
+                  "X": 0,
+                  "Y": 0
+                },
+                {
+                  "X": 1,
+                  "Y": 0
+                },
+                {
+                  "X": -1,
+                  "Y": 0
+                },
+                {
+                  "X": 0,
+                  "Y": 1
+                },
+                {
+                  "X": 0,
+                  "Y": -1
+                },
+                {
+                  "X": 1,
+                  "Y": 1
+                },
+                {
+                  "X": 1,
+                  "Y": -1
+                },
+                {
+                  "X": -1,
+                  "Y": 1
+                },
+                {
+                  "X": -1,
+                  "Y": -1
+                },
+                {
+                  "X": 2,
+                  "Y": 0
+                },
+                {
+                  "X": -2,
+                  "Y": 0
+                },
+                {
+                  "X": 0,
+                  "Y": 2
+                },
+                {
+                  "X": 0,
+                  "Y": -2
+                }
+              ],
+              "TargetType": 1,
+              "IsExcludeDieTarget": true,
+              "MoveRangeSetting": {
+                "HanldeType": 2,
+                "TargetCount": 3,
+                "MeetConditionTriggerStatusCfgs": [
+                  {
+                    "StatusId": 24394,
+                    "BasePercent": 1.0,
+                    "AffectedByProp": false,
+                    "PropTarget": {
+                      "IsEnemy": false,
+                      "RoleType": [],
+                      "IncludeApplicator": false,
+                      "PropType": 0,
+                      "Heighest": false,
+                      "SupportCustomFilter": false
+                    },
+                    "ApplyTarget": 3,
+                    "StatusReplacePropertyValues": []
+                  }
+                ],
+                "NotMeetConditionTriggerStatusCfgs": [
+                  {
+                    "StatusId": 24393,
+                    "BasePercent": 1.0,
+                    "AffectedByProp": false,
+                    "PropTarget": {
+                      "IsEnemy": false,
+                      "RoleType": [],
+                      "IncludeApplicator": false,
+                      "PropType": 0,
+                      "Heighest": false,
+                      "SupportCustomFilter": false
+                    },
+                    "ApplyTarget": 3,
+                    "StatusReplacePropertyValues": []
+                  }
+                ],
+                "_type": "TargetCountAffectStatusOwnerSetting"
+              },
+              "GameCharacterTypes": [
+                1,
+                2,
+                3,
+                4,
+                7,
+                8,
+                9
+              ],
+              "IsFindAllInCell": false,
+              "FilterClassIds": [],
+              "InRangeCondition": null,
+              "CheckGridItem": false
+            }
+          }
+        }
+      }
+    }
+  ],
+  "numeric_inputs": {
+    "source": {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/WwiseBnk/5fc0c8548d6a66ff34e6da2b1e20416f.rawfile",
+      "manifest": "903_156948",
+      "size": 9266437,
+      "sha256": "e4745515576e9016e101ddcf869ac06440c6165b91168e4f3f567deba96a01b0"
+    },
+    "sha256": "e4745515576e9016e101ddcf869ac06440c6165b91168e4f3f567deba96a01b0",
+    "verified_rows_sha256": "f92dd9ab301bb26293fc82c5d696134e3b5b60ac4d40a8cbeecdb93739a28656"
+  },
+  "wording": {
+    "source": {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/WwiseBnk/f23fb0025bc48d2d8a1f5aa18bbe27d7.rawfile",
+      "manifest": "903_156948",
+      "apk_manifest": "895_156822",
+      "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+      "raw_size": 5479066,
+      "raw_sha256": "cc2a501b150960f2ff3b7e3d80e04c42b30374aeb540971203e483ec7a5cb4df"
+    },
+    "sha256": "cc2a501b150960f2ff3b7e3d80e04c42b30374aeb540971203e483ec7a5cb4df",
+    "texts": {
+      "item_10609_name": "战术应变",
+      "item_10609_func_desc": "自身2格范围内，敌方目标≤3个时，自身造成的伤害提升；敌方目标＞3个时，自身受到的伤害降低。"
+    }
+  },
+  "sound_events": [],
+  "sound_banks": [],
+  "omitted_empty_defaults": [],
+  "official_code": [
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/FightStatusComponentInfo.cs",
+      "sha256": "4ed2632fc593377db4196dcd018c7123d94ace78198c32115a5c8d9544e6b77f"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/FightStatusMoveRangeComponentInfo.cs",
+      "sha256": "dd27927ed145155678a4f50d40df9d241b61ac6458eb4728fc1fa4153040e432"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/TargetCountAffectStatusOwnerSetting.cs",
+      "sha256": "92eefab642d7cbc3d2ecbd26467ff799f2e62970aaba41a7c70a1ded8cf7a335"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/FightStatusPropComponentInfo.cs",
+      "sha256": "f7910e49724b054e05309e077433eb819c306352f459ba881e2389b7de1247f2"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/FightStatusTriggerStatusCfg.cs",
+      "sha256": "2394f48c55b6a3d86893acc59d39dbd2c779680711d7bba8cd3de7981a147fc2"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/BattleFormulaHandler.cs",
+      "sha256": "2cb7cd93c66502a4c935b63f8e52200014ae5e6da8eec84302f274391f1e667c"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightSkill.cs",
+      "sha256": "9c6035e4ef62e7a7acd5c4346cd2e52bbc6a7e058bee59010ca048bee2fd92af"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightHitFixed.cs",
+      "sha256": "0ca7fd1d15c9892617490bbfcd624dc94f8755a9dbee122c36ee5603d7db82a6"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightActionSkillMove.cs",
+      "sha256": "87b1e139b0c6fde0e55fc3e35dcef835d60e2339d8276a7d74de8686899b7069"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightStatusMoveRange.cs",
+      "sha256": "2de1c3acf4f372102a0959c6ec808163a70e659225b4a3630797ce247b7f83b6"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightStatusProp.cs",
+      "sha256": "cf5c69df7ccdc0aa14d18841153d5f6e3ccda5e9096400b5b818b8d6f5ce6d2c"
+    }
+  ],
+  "native_bundles": [
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24393.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/21eecef639c1c50b61dfcd2551185b7e.bundle",
+        "manifest": "903_156948",
+        "size": 14993,
+        "sha256": "a324d6e2b8b4dc916d893ccf41408c5e8735f58f0d02d341755b8aa2ed45cb0b"
+      },
+      "sha256": "a324d6e2b8b4dc916d893ccf41408c5e8735f58f0d02d341755b8aa2ed45cb0b",
+      "dependencies": [
+        "defaultpackage_assets_wwise_scriptableobjects_event.bundle",
+        "defaultpackage_share_04b114c8ee64fa5702464fe6212b31dd.bundle",
+        "defaultpackage_share_109de6fe5a27363247b6243f48faefe0.bundle",
+        "defaultpackage_share_10b967cb081d8dcf4d1725fa72181c46.bundle",
+        "defaultpackage_share_19389fc5ee1425f7a45ccadffb87136f.bundle",
+        "defaultpackage_share_2a2a12e5fda217307f9b76f052b6b5b9.bundle",
+        "defaultpackage_share_3ca2682d1379756810a9b5613971cb2b.bundle",
+        "defaultpackage_share_557b835a3f964306c344a18186d48da9.bundle",
+        "defaultpackage_share_69a195ad9a40136a75ce5a973832f927.bundle",
+        "defaultpackage_share_7343c0f51b8c14c9d68be210c253e64f.bundle",
+        "defaultpackage_share_7cf74e373ad35fd3b124e0fbeb33e344.bundle",
+        "defaultpackage_share_87a10a8784b04126c14161bbda157f7a.bundle",
+        "defaultpackage_share_89764f0689b13f069fe6aadc1bb8f03f.bundle",
+        "defaultpackage_share_8aef6808bed5ec560560d31add6c287b.bundle",
+        "defaultpackage_share_959bf642bd725a6b2b250f1b5f5ad495.bundle",
+        "defaultpackage_share_9e05b56c40e5c275dc685393b2c19a9a.bundle",
+        "defaultpackage_share_9fbb6d4dfd638e4bc5e6c4fedd44673e.bundle",
+        "defaultpackage_share_a5a6025f3f65b6fdbb82919af92ec071.bundle",
+        "defaultpackage_share_bd637ba032bde2afc07ce55f1680f239.bundle",
+        "defaultpackage_share_bed1615adda064525be2d38d560bbc12.bundle",
+        "defaultpackage_share_bf90661b7cc0401f24b5f1208e0471ea.bundle",
+        "defaultpackage_share_cb72920a60242304331e22207f4f7df5.bundle",
+        "defaultpackage_share_ceb5cff6da8e22886304ef1979d4d7ff.bundle",
+        "defaultpackage_share_e2a0d0f002e1d70b3285167d51c0d0d8.bundle",
+        "defaultpackage_share_e403f230bf070fe6c6f9a85cf63908d9.bundle",
+        "defaultpackage_share_e7f44ce9b2ba6bdc71f858cd4c833f85.bundle",
+        "defaultpackage_share_e8f8152dd7ae1fb47b2f40d87a074081.bundle",
+        "defaultpackage_share_ee843247d4fc0456557d31491b8aacec.bundle",
+        "defaultpackage_share_ee983a0e2501a28c8aa5520821104486.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_24394.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/d258f31709a319eca9f99fbbf856a50e.bundle",
+        "manifest": "903_156948",
+        "size": 19286,
+        "sha256": "2933eeb74119870ae2d2d9308192fd32ceb955660d9e52f5b995c4e96eb71001"
+      },
+      "sha256": "2933eeb74119870ae2d2d9308192fd32ceb955660d9e52f5b995c4e96eb71001",
+      "dependencies": [
+        "defaultpackage_assets_wwise_scriptableobjects_event.bundle",
+        "defaultpackage_share_10b967cb081d8dcf4d1725fa72181c46.bundle",
+        "defaultpackage_share_19389fc5ee1425f7a45ccadffb87136f.bundle",
+        "defaultpackage_share_2a2a12e5fda217307f9b76f052b6b5b9.bundle",
+        "defaultpackage_share_35242dc53f577cd2e6b706ca4a09eec0.bundle",
+        "defaultpackage_share_3ca2682d1379756810a9b5613971cb2b.bundle",
+        "defaultpackage_share_416850fc13dba800da5ac7c3d4f17414.bundle",
+        "defaultpackage_share_44ac874c26471596e60c52f0fe3bf4d3.bundle",
+        "defaultpackage_share_459911b4a934491f24bbeaaef957f1d1.bundle",
+        "defaultpackage_share_497c6c920d9e6787adc264492dfb00fa.bundle",
+        "defaultpackage_share_5282eab7216f8e4e6695a03f69a16d13.bundle",
+        "defaultpackage_share_557b835a3f964306c344a18186d48da9.bundle",
+        "defaultpackage_share_69a195ad9a40136a75ce5a973832f927.bundle",
+        "defaultpackage_share_7343c0f51b8c14c9d68be210c253e64f.bundle",
+        "defaultpackage_share_7b9c1f79a817641b3a96bfa4a5432194.bundle",
+        "defaultpackage_share_7cf74e373ad35fd3b124e0fbeb33e344.bundle",
+        "defaultpackage_share_838ed62c8bc73452aa9c228afb1c9816.bundle",
+        "defaultpackage_share_87a10a8784b04126c14161bbda157f7a.bundle",
+        "defaultpackage_share_986486242401d175c4f3cb73c321ae85.bundle",
+        "defaultpackage_share_9fbb6d4dfd638e4bc5e6c4fedd44673e.bundle",
+        "defaultpackage_share_a5a6025f3f65b6fdbb82919af92ec071.bundle",
+        "defaultpackage_share_aa3d51d76e5a026985b92967ab2fa4f2.bundle",
+        "defaultpackage_share_bd637ba032bde2afc07ce55f1680f239.bundle",
+        "defaultpackage_share_bed1615adda064525be2d38d560bbc12.bundle",
+        "defaultpackage_share_bf90661b7cc0401f24b5f1208e0471ea.bundle",
+        "defaultpackage_share_cb72920a60242304331e22207f4f7df5.bundle",
+        "defaultpackage_share_cc1f8935f74744e12a687775a56281bd.bundle",
+        "defaultpackage_share_e2a0d0f002e1d70b3285167d51c0d0d8.bundle",
+        "defaultpackage_share_e403f230bf070fe6c6f9a85cf63908d9.bundle",
+        "defaultpackage_share_e86a19a9a501f2b8cd930b272863183b.bundle",
+        "defaultpackage_share_e9ed6d5a7c983c201f512df67661792f.bundle",
+        "defaultpackage_share_ee843247d4fc0456557d31491b8aacec.bundle",
+        "defaultpackage_share_f3a4f8dd226a99f369355d6cfd05c413.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_25118.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/bb6defcac2fb297dfaee346f34c022f7.bundle",
+        "manifest": "903_156948",
+        "size": 1000,
+        "sha256": "bc8b03a523cfcf3608d7087756330b0ef3958cccf9c5d68982e688090c0d829b"
+      },
+      "sha256": "bc8b03a523cfcf3608d7087756330b0ef3958cccf9c5d68982e688090c0d829b",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_assets_wwise_scriptableobjects_event.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/0a9513478c7488bd6405425138ab87ee.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 444739,
+        "raw_sha256": "509a4d9477471cc6c3da7e1d42c5cbb37741dcb280ed68d3b8190e4dc0b8fdab"
+      },
+      "sha256": "509a4d9477471cc6c3da7e1d42c5cbb37741dcb280ed68d3b8190e4dc0b8fdab",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_04b114c8ee64fa5702464fe6212b31dd.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/38e1792c38134b6bd4bec8a7d20493a4.bundle",
+        "manifest": "903_156948",
+        "size": 138288,
+        "sha256": "024f8e49f4011b23bdecfbc29a6c973b9fa1eccaaa77c18d1f2e2cebe9ecc599"
+      },
+      "sha256": "024f8e49f4011b23bdecfbc29a6c973b9fa1eccaaa77c18d1f2e2cebe9ecc599",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_109de6fe5a27363247b6243f48faefe0.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/d5cd4eff42c73bce7c840a1bd6a0b11f.bundle",
+        "manifest": "903_156948",
+        "size": 21514,
+        "sha256": "8ee896e799db3f0cee0eac3d070bc0fb06a749573709125253b7efe7975ca387"
+      },
+      "sha256": "8ee896e799db3f0cee0eac3d070bc0fb06a749573709125253b7efe7975ca387",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_10b967cb081d8dcf4d1725fa72181c46.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/24219a034179ec17c799ce417b09e2bb.bundle",
+        "manifest": "903_156948",
+        "size": 1556,
+        "sha256": "8c5f69e5f89a33e8c6e7630e7bd1cc06b971c5fb539d198a0867275b8fb979b5"
+      },
+      "sha256": "8c5f69e5f89a33e8c6e7630e7bd1cc06b971c5fb539d198a0867275b8fb979b5",
+      "dependencies": [
+        "defaultpackage_share_fe783419351834c214bbad66457da70e.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_14db92081dfa7bb0a20d96d5db2086b8.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/a22b2ed077274440608bf5d7cdf035cb.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 3147,
+        "raw_sha256": "62b0605c253462cdc4f6f8ff58bdd6b7f26c79befcf42c2c1d07cb5729ff6dd8"
+      },
+      "sha256": "62b0605c253462cdc4f6f8ff58bdd6b7f26c79befcf42c2c1d07cb5729ff6dd8",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_19389fc5ee1425f7a45ccadffb87136f.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/252a721fb0617df856502f881cf90b73.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 887,
+        "raw_sha256": "9a468a90be556316985739f3bdfbf74187607f2dc13e3a509273d46884ef2c55"
+      },
+      "sha256": "9a468a90be556316985739f3bdfbf74187607f2dc13e3a509273d46884ef2c55",
+      "dependencies": [
+        "defaultpackage_share_5c7dd369ea4acf0b5b9a522d0ab52d69.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_2a2a12e5fda217307f9b76f052b6b5b9.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/0f9f96b3dfc398c6ac4ababc640c0dfc.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 1564,
+        "raw_sha256": "34da9ee29047b0c57a797c7122b24372ce8ede89a4e711815b1b1ac579073e15"
+      },
+      "sha256": "34da9ee29047b0c57a797c7122b24372ce8ede89a4e711815b1b1ac579073e15",
+      "dependencies": [
+        "defaultpackage_share_63a2adcf08da5c3de2ce707e008beaef.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_325589c9ea0d625f08e80ff0f50491aa.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/dcdfdbec0bd8fe6bfdab48b4269e8a68.bundle",
+        "manifest": "903_156948",
+        "size": 6459,
+        "sha256": "8ebea8ae0f568a935a8910bf68477d5208aa870600e308a38513ee68bad953cb"
+      },
+      "sha256": "8ebea8ae0f568a935a8910bf68477d5208aa870600e308a38513ee68bad953cb",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_35242dc53f577cd2e6b706ca4a09eec0.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/808bc458e8a751d29ac251f8dc5b8a45.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 1504,
+        "raw_sha256": "ea1db37077fe424d41e96fd6480a9fb5be19cdc3b5aae4f136c43fedc7a73157"
+      },
+      "sha256": "ea1db37077fe424d41e96fd6480a9fb5be19cdc3b5aae4f136c43fedc7a73157",
+      "dependencies": [
+        "defaultpackage_share_14db92081dfa7bb0a20d96d5db2086b8.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_36f0d59aa9ea014d1ac1ec2527abcd98.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/75852150d9415a439239f585157fc5e2.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 17477,
+        "raw_sha256": "9ce6bb9999383e54a1a2a03235cf286770c4bd26100e390d69dee0e8a852d717"
+      },
+      "sha256": "9ce6bb9999383e54a1a2a03235cf286770c4bd26100e390d69dee0e8a852d717",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_3ca2682d1379756810a9b5613971cb2b.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/a6a9587c8c8322554484a01cb646fe47.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 1488,
+        "raw_sha256": "db0fa4e26b495d4758b6d9b4fa1fececdad5951d46b134842346fe249661c08e"
+      },
+      "sha256": "db0fa4e26b495d4758b6d9b4fa1fececdad5951d46b134842346fe249661c08e",
+      "dependencies": [
+        "defaultpackage_share_d7a1fdb0ccf150d4505d38e4587175a3.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_416850fc13dba800da5ac7c3d4f17414.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/20f3551d75225088eed3eefb552c78c6.bundle",
+        "manifest": "903_156948",
+        "size": 27116,
+        "sha256": "72026996752a3be0d2bacecaf94a27df814f12ceb1a6fa8bb5f1acc635b5a9c6"
+      },
+      "sha256": "72026996752a3be0d2bacecaf94a27df814f12ceb1a6fa8bb5f1acc635b5a9c6",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_44ac874c26471596e60c52f0fe3bf4d3.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/75bf730f68eee5998e4fe595462175ac.bundle",
+        "manifest": "903_156948",
+        "size": 28210,
+        "sha256": "2ac0b5f8a2b5ad7d48315844a68d4f952193d82825aa7677029915b189a71a1d"
+      },
+      "sha256": "2ac0b5f8a2b5ad7d48315844a68d4f952193d82825aa7677029915b189a71a1d",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_459911b4a934491f24bbeaaef957f1d1.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/158b98e021d2dcddd408430d034f3acf.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 1706,
+        "raw_sha256": "e3fd9492a70ea2d07fe773792f413d9713cecaccc31e7ef7e9af7cca959049a1"
+      },
+      "sha256": "e3fd9492a70ea2d07fe773792f413d9713cecaccc31e7ef7e9af7cca959049a1",
+      "dependencies": [
+        "defaultpackage_share_5c7dd369ea4acf0b5b9a522d0ab52d69.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_4825079c15f04922e493dea89d468c47.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/b60fbcb5c909109277a378b9aa423735.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 71463,
+        "raw_sha256": "5523a8bb83b8a59ddbd35ddad9abf6228461237100d526a3d8a182a02117de0a"
+      },
+      "sha256": "5523a8bb83b8a59ddbd35ddad9abf6228461237100d526a3d8a182a02117de0a",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_497c6c920d9e6787adc264492dfb00fa.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/5cb2d4a03627db755d7b8cdfc7f86e61.bundle",
+        "manifest": "903_156948",
+        "size": 1503,
+        "sha256": "82116c69c0d9797a9ce2fde1d3cac7a9f77504e3d08afe70efce26910ec46f46"
+      },
+      "sha256": "82116c69c0d9797a9ce2fde1d3cac7a9f77504e3d08afe70efce26910ec46f46",
+      "dependencies": [
+        "defaultpackage_share_ce590faf8e96d06a7bef14b18f2af0e2.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_5282eab7216f8e4e6695a03f69a16d13.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/d62ec3a9e43fc09709383950e463157b.bundle",
+        "manifest": "903_156948",
+        "size": 11079,
+        "sha256": "7b1c9ceff4a731a901c7e79073a13a6c297c23c4e277c62b55650cfa6d34ef97"
+      },
+      "sha256": "7b1c9ceff4a731a901c7e79073a13a6c297c23c4e277c62b55650cfa6d34ef97",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_557b835a3f964306c344a18186d48da9.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/3f7f76fd413f2f9ada5534903f958503.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 1559,
+        "raw_sha256": "a0439c8eb02e7735ac508f1211ce8bac49c43b43527c4afe82e775eccfdd5d70"
+      },
+      "sha256": "a0439c8eb02e7735ac508f1211ce8bac49c43b43527c4afe82e775eccfdd5d70",
+      "dependencies": [
+        "defaultpackage_share_5851e4221aae6790dc844f79ba00e8fc.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_5851e4221aae6790dc844f79ba00e8fc.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/7eb2d263a0205dd2128eccee0fc8f758.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 28125,
+        "raw_sha256": "347c15e2cbb1261d21f115d8b915ccfc2765f04d34400443691e14ea32f58908"
+      },
+      "sha256": "347c15e2cbb1261d21f115d8b915ccfc2765f04d34400443691e14ea32f58908",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_5c7dd369ea4acf0b5b9a522d0ab52d69.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/59a4c6285c52752a0d4b483c0aa5a45c.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 1273,
+        "raw_sha256": "d49957bbd89445635673918689c4d5807734a23f6329b963fc1e852d54c01a95"
+      },
+      "sha256": "d49957bbd89445635673918689c4d5807734a23f6329b963fc1e852d54c01a95",
+      "dependencies": [
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_63a2adcf08da5c3de2ce707e008beaef.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/62ac7645287f1bd2e2e729f7baa384d9.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 21293,
+        "raw_sha256": "7b8b1bfcbcdc719fe37312fb8aa717524a701b71d26f13423ff6a37209a166dd"
+      },
+      "sha256": "7b8b1bfcbcdc719fe37312fb8aa717524a701b71d26f13423ff6a37209a166dd",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_69a195ad9a40136a75ce5a973832f927.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/92b1c4e4e7277a9768177dda4b3b6301.bundle",
+        "manifest": "903_156948",
+        "size": 6807,
+        "sha256": "793758bdbaf48726f1e4759ec0d57254903181e0bc9bcc8c9f7019ec0e8abfaa"
+      },
+      "sha256": "793758bdbaf48726f1e4759ec0d57254903181e0bc9bcc8c9f7019ec0e8abfaa",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_7343c0f51b8c14c9d68be210c253e64f.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/65eebda34c633f3d5bb0e14dcf4ddbe5.bundle",
+        "manifest": "903_156948",
+        "size": 1508,
+        "sha256": "ec0b197cb377773a586c0c805702f7d8516a07baa4fb533cccecf7e3e0f875dc"
+      },
+      "sha256": "ec0b197cb377773a586c0c805702f7d8516a07baa4fb533cccecf7e3e0f875dc",
+      "dependencies": [
+        "defaultpackage_share_36f0d59aa9ea014d1ac1ec2527abcd98.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_7492ea22d88ccae026110ec74c68f622.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/5fdcec2e64767ead44d773f4a870611b.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 52023,
+        "raw_sha256": "9c0500f38e50122844b9ae1bd37090bb3f020135f1966b0c9909650c7639c149"
+      },
+      "sha256": "9c0500f38e50122844b9ae1bd37090bb3f020135f1966b0c9909650c7639c149",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_7b9c1f79a817641b3a96bfa4a5432194.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/5a602045e26bef34be8470bfc9660a55.bundle",
+        "manifest": "903_156948",
+        "size": 1766,
+        "sha256": "0ba5ec7fdb28612403585eded661c86695a9672bfc5f9b33e269395d40df6104"
+      },
+      "sha256": "0ba5ec7fdb28612403585eded661c86695a9672bfc5f9b33e269395d40df6104",
+      "dependencies": [
+        "defaultpackage_share_44ac874c26471596e60c52f0fe3bf4d3.bundle",
+        "defaultpackage_share_838ed62c8bc73452aa9c228afb1c9816.bundle",
+        "defaultpackage_share_cc1f8935f74744e12a687775a56281bd.bundle",
+        "defaultpackage_share_e86a19a9a501f2b8cd930b272863183b.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_7cf74e373ad35fd3b124e0fbeb33e344.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/94a580fde081cb4fc70936715946705a.bundle",
+        "manifest": "903_156948",
+        "size": 1594,
+        "sha256": "da3c8adf1375dd885dd66501a03322d694f54d6d2f36a4af96a1d05a2dcbb4d2"
+      },
+      "sha256": "da3c8adf1375dd885dd66501a03322d694f54d6d2f36a4af96a1d05a2dcbb4d2",
+      "dependencies": [
+        "defaultpackage_share_325589c9ea0d625f08e80ff0f50491aa.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_838ed62c8bc73452aa9c228afb1c9816.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/52aa4f6f5f8d02b00ea93b94c5483ba8.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 10689,
+        "raw_sha256": "7ddd65a767012fcf0a6d2d2b4cd5f5bf1b54369b0bded801134ccd836716d6bf"
+      },
+      "sha256": "7ddd65a767012fcf0a6d2d2b4cd5f5bf1b54369b0bded801134ccd836716d6bf",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_87a10a8784b04126c14161bbda157f7a.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/ea0aa03a4da3d6f0688a49f4cd8f62df.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 5517,
+        "raw_sha256": "4c76ef4f30948289098ba6fdcbe10b12211d894c86627c66e837ae60c4ad06cd"
+      },
+      "sha256": "4c76ef4f30948289098ba6fdcbe10b12211d894c86627c66e837ae60c4ad06cd",
+      "dependencies": [
+        "defaultpackage_share_5c7dd369ea4acf0b5b9a522d0ab52d69.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_89764f0689b13f069fe6aadc1bb8f03f.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/9afa20aa3d1097c813dcd499065967d2.bundle",
+        "manifest": "903_156948",
+        "size": 1558,
+        "sha256": "f1114217f162c5fea97db70365ddb316d6d119483a01e95f28a2493ccd73b259"
+      },
+      "sha256": "f1114217f162c5fea97db70365ddb316d6d119483a01e95f28a2493ccd73b259",
+      "dependencies": [
+        "defaultpackage_share_d5c4315b93286595892b9c3f588ea601.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_8aef6808bed5ec560560d31add6c287b.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/d4499e33b6c3f08da441fc46d80f6955.bundle",
+        "manifest": "903_156948",
+        "size": 1546,
+        "sha256": "5bf83362ce5fbd24c2abd9dcd349680ce8271e44d063871f97b65c9a6e4416a7"
+      },
+      "sha256": "5bf83362ce5fbd24c2abd9dcd349680ce8271e44d063871f97b65c9a6e4416a7",
+      "dependencies": [
+        "defaultpackage_share_d5c4315b93286595892b9c3f588ea601.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_959bf642bd725a6b2b250f1b5f5ad495.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/d50b7cdfe0fc0c2edec4a3d1ce5aadc6.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 35319,
+        "raw_sha256": "c4ed31d647f9ad612733777e1572b76c67c202e8c93412ba9ce36a0ba71f0919"
+      },
+      "sha256": "c4ed31d647f9ad612733777e1572b76c67c202e8c93412ba9ce36a0ba71f0919",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_986486242401d175c4f3cb73c321ae85.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/65c418c88b67d0beb53ce65afe58d1b1.bundle",
+        "manifest": "903_156948",
+        "size": 1514,
+        "sha256": "5c1e55a95360df1a7553ada005b49070a9c5a2c3379534189ff835be2907711b"
+      },
+      "sha256": "5c1e55a95360df1a7553ada005b49070a9c5a2c3379534189ff835be2907711b",
+      "dependencies": [
+        "defaultpackage_share_ce590faf8e96d06a7bef14b18f2af0e2.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_9e05b56c40e5c275dc685393b2c19a9a.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/70962a70337e09f1cad87c29d9520fe8.bundle",
+        "manifest": "903_156948",
+        "size": 32101,
+        "sha256": "fe75b23e1e7c2e5e37052e8dc4eaa35a70499e65409bd8806645ae74a671628d"
+      },
+      "sha256": "fe75b23e1e7c2e5e37052e8dc4eaa35a70499e65409bd8806645ae74a671628d",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_9fbb6d4dfd638e4bc5e6c4fedd44673e.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/841eb6c1219dd433113d735b2c83b36f.bundle",
+        "manifest": "903_156948",
+        "size": 1552,
+        "sha256": "eb755acc7dc00ed51009aff5fa4a796cab3ba2fdf650b8d98e9ef74b9c86035b"
+      },
+      "sha256": "eb755acc7dc00ed51009aff5fa4a796cab3ba2fdf650b8d98e9ef74b9c86035b",
+      "dependencies": [
+        "defaultpackage_share_fe783419351834c214bbad66457da70e.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_a5a6025f3f65b6fdbb82919af92ec071.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/26707f9e8bf9ee0a6fd299c2646141e5.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 860,
+        "raw_sha256": "e284a159c426c9782e920edecbb4c13b444485519f679c2320381cf5ebac7ed0"
+      },
+      "sha256": "e284a159c426c9782e920edecbb4c13b444485519f679c2320381cf5ebac7ed0",
+      "dependencies": [
+        "defaultpackage_share_5c7dd369ea4acf0b5b9a522d0ab52d69.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_aa3d51d76e5a026985b92967ab2fa4f2.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/ca9b9bf2b5bb74958da71c31b14f3973.bundle",
+        "manifest": "903_156948",
+        "size": 1578,
+        "sha256": "236586bb04e65cddd08f53f388acc5d488f5a04170a2260ff79bf60c9ef33104"
+      },
+      "sha256": "236586bb04e65cddd08f53f388acc5d488f5a04170a2260ff79bf60c9ef33104",
+      "dependencies": [
+        "defaultpackage_share_7492ea22d88ccae026110ec74c68f622.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_b5a298119acbb18ab8a1d40c8e028989.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/ffc2656d505a04d6b650cd5860a3f00b.bundle",
+        "manifest": "903_156948",
+        "size": 4409,
+        "sha256": "3e2589c1fe2d67afd16f9b2e5a8da0651a845c6cd6156f0b7a4e91d3ab477148"
+      },
+      "sha256": "3e2589c1fe2d67afd16f9b2e5a8da0651a845c6cd6156f0b7a4e91d3ab477148",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_bd637ba032bde2afc07ce55f1680f239.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/a6f9d6efa7b16098d8052b9ff99ec634.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 1505,
+        "raw_sha256": "120e2d75588053f8721da87571dd7062176f10054d7b8349369997cd4b198d00"
+      },
+      "sha256": "120e2d75588053f8721da87571dd7062176f10054d7b8349369997cd4b198d00",
+      "dependencies": [
+        "defaultpackage_share_7492ea22d88ccae026110ec74c68f622.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_bed1615adda064525be2d38d560bbc12.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/63851254687288072d73c9714c891a5d.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 1522,
+        "raw_sha256": "a10b7b3a1fbe5ed82a4e1de4126e3de8b64afffd1f5ec7e5531925f97e81a9af"
+      },
+      "sha256": "a10b7b3a1fbe5ed82a4e1de4126e3de8b64afffd1f5ec7e5531925f97e81a9af",
+      "dependencies": [
+        "defaultpackage_share_36f0d59aa9ea014d1ac1ec2527abcd98.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_bf90661b7cc0401f24b5f1208e0471ea.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/ca8a161e98ba7575b6958b11c26181fb.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 1500,
+        "raw_sha256": "83c9f68c4fc6d3277751a14acb3dcca6fb8bba8db18a7c676ddd336858baa879"
+      },
+      "sha256": "83c9f68c4fc6d3277751a14acb3dcca6fb8bba8db18a7c676ddd336858baa879",
+      "dependencies": [
+        "defaultpackage_share_f1d328369cb56529afd0e981f3f288fa.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_c17030f53f41732b893285f8850fb2f2.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/6fdd2d8c62d50850934ac520de427b51.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 24494,
+        "raw_sha256": "25108568b9673470cc921017a820614ddeb61cfdfb7ad51b9a6e8fa4b5052351"
+      },
+      "sha256": "25108568b9673470cc921017a820614ddeb61cfdfb7ad51b9a6e8fa4b5052351",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_cb72920a60242304331e22207f4f7df5.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/ef68c2637201e2faddda0d6c5ea5925e.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 1518,
+        "raw_sha256": "84a9d26d268f9eb270aad802ab95be8f588deb568a7ae1b4e68c57eeab165054"
+      },
+      "sha256": "84a9d26d268f9eb270aad802ab95be8f588deb568a7ae1b4e68c57eeab165054",
+      "dependencies": [
+        "defaultpackage_share_36f0d59aa9ea014d1ac1ec2527abcd98.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_cc1f8935f74744e12a687775a56281bd.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/df022d869349e2eab003dc2f0bb0d451.bundle",
+        "manifest": "903_156948",
+        "size": 7086,
+        "sha256": "925f89eeddc6a6e1391d3b6a05057d618d475ab357ef5e6563a8094d0a8e3ae4"
+      },
+      "sha256": "925f89eeddc6a6e1391d3b6a05057d618d475ab357ef5e6563a8094d0a8e3ae4",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_ce590faf8e96d06a7bef14b18f2af0e2.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/4c6ce0f165d03c559729ad06857a9b3f.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 14872,
+        "raw_sha256": "fcd2a20063a7d59b2c949a8ed3f7524d68aed8537a2650ac73bb6cc2199c1a17"
+      },
+      "sha256": "fcd2a20063a7d59b2c949a8ed3f7524d68aed8537a2650ac73bb6cc2199c1a17",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_ceb5cff6da8e22886304ef1979d4d7ff.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/be1307c9630201c0db8a77af5179bfe8.bundle",
+        "manifest": "903_156948",
+        "size": 1718,
+        "sha256": "1dff97ddfc53769ef32478e2df7a7173e58fa65417f63e2e7748b02f3498f382"
+      },
+      "sha256": "1dff97ddfc53769ef32478e2df7a7173e58fa65417f63e2e7748b02f3498f382",
+      "dependencies": [
+        "defaultpackage_share_b5a298119acbb18ab8a1d40c8e028989.bundle",
+        "defaultpackage_share_e2a0d0f002e1d70b3285167d51c0d0d8.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_d5c4315b93286595892b9c3f588ea601.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/321f2fb50cd9403eb25f3841fc5ee19a.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 15087,
+        "raw_sha256": "c300b45a6f15e9d8f5f51e02c8780a1d3561bdc7aed8d59e55e950f2beee21ec"
+      },
+      "sha256": "c300b45a6f15e9d8f5f51e02c8780a1d3561bdc7aed8d59e55e950f2beee21ec",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_d7a1fdb0ccf150d4505d38e4587175a3.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/838968cc9d53aa0f0f79964c6b297eec.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 87005,
+        "raw_sha256": "749970e2dd68100a3db646cfac1439db0a02400f69150ca1e5acefd75e336d94"
+      },
+      "sha256": "749970e2dd68100a3db646cfac1439db0a02400f69150ca1e5acefd75e336d94",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_e2a0d0f002e1d70b3285167d51c0d0d8.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/1114f14cc457a680083e1dc9eb1fc0e3.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 103976,
+        "raw_sha256": "a8008ddd4ca8f7568bfbd1db0280cce9f6292ecdc56c45a15dd5077078e7905f"
+      },
+      "sha256": "a8008ddd4ca8f7568bfbd1db0280cce9f6292ecdc56c45a15dd5077078e7905f",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_e403f230bf070fe6c6f9a85cf63908d9.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/15dec73ede342ba29abc1ece19e6032d.bundle",
+        "manifest": "903_156948",
+        "size": 1661,
+        "sha256": "b7b1fac0e492dd430eece9c479f1550295b528ee7fe725628d67b417303b2ab8"
+      },
+      "sha256": "b7b1fac0e492dd430eece9c479f1550295b528ee7fe725628d67b417303b2ab8",
+      "dependencies": [
+        "defaultpackage_share_959bf642bd725a6b2b250f1b5f5ad495.bundle",
+        "defaultpackage_share_c17030f53f41732b893285f8850fb2f2.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_e7f44ce9b2ba6bdc71f858cd4c833f85.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/5ad463a45c50808c252ceec6cb5c39f1.bundle",
+        "manifest": "903_156948",
+        "size": 7450,
+        "sha256": "5b407ade557debcc3540198db796fefcf88ea79a948130ca5dc813d749283956"
+      },
+      "sha256": "5b407ade557debcc3540198db796fefcf88ea79a948130ca5dc813d749283956",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_e86a19a9a501f2b8cd930b272863183b.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/7cf53ee7fbec09d0ed65fdca5302dd5f.bundle",
+        "manifest": "903_156948",
+        "size": 10063,
+        "sha256": "e781db1699c3e8f41329be2586be074d62188671b0c23ac9480d92ecd9994be1"
+      },
+      "sha256": "e781db1699c3e8f41329be2586be074d62188671b0c23ac9480d92ecd9994be1",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_e8f8152dd7ae1fb47b2f40d87a074081.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/bcd6205114ed36973949563322f93bb8.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 1509,
+        "raw_sha256": "007a5f0bcc087ba7d68906ec81c7ece91136e4ad510d2bde52dd2adabfe8451c"
+      },
+      "sha256": "007a5f0bcc087ba7d68906ec81c7ece91136e4ad510d2bde52dd2adabfe8451c",
+      "dependencies": [
+        "defaultpackage_share_4825079c15f04922e493dea89d468c47.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_e9ed6d5a7c983c201f512df67661792f.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/116e0a35e8a198db547e1176770eaa7d.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 102543,
+        "raw_sha256": "0949146f976fe9e9bfcf697c02f00b243caebcce101b876767ad655a73f27743"
+      },
+      "sha256": "0949146f976fe9e9bfcf697c02f00b243caebcce101b876767ad655a73f27743",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_ee843247d4fc0456557d31491b8aacec.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/6e52edd0662c379e0c34d5232e7e0c07.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 3846,
+        "raw_sha256": "26718f4e880d1ec4d4493c7d52512996ebc2f0f45e7e3d800fad99ad11c16ec8"
+      },
+      "sha256": "26718f4e880d1ec4d4493c7d52512996ebc2f0f45e7e3d800fad99ad11c16ec8",
+      "dependencies": [
+        "defaultpackage_share_5c7dd369ea4acf0b5b9a522d0ab52d69.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_ee983a0e2501a28c8aa5520821104486.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/d71bb80a1d63a8edf117c87095754857.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 1504,
+        "raw_sha256": "dfffd27dcba5d5354c622f2de53123485d613cf44f81e6e1a8c0275515b97682"
+      },
+      "sha256": "dfffd27dcba5d5354c622f2de53123485d613cf44f81e6e1a8c0275515b97682",
+      "dependencies": [
+        "defaultpackage_share_4825079c15f04922e493dea89d468c47.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_f1d328369cb56529afd0e981f3f288fa.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/5a053d2eca9283fd50772e41352342b6.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 7731,
+        "raw_sha256": "954ef1d850afe349ee514c4493ba5f5e05a60300f4a39957ceb734efedee8a14"
+      },
+      "sha256": "954ef1d850afe349ee514c4493ba5f5e05a60300f4a39957ceb734efedee8a14",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_f3a4f8dd226a99f369355d6cfd05c413.bundle",
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/1753c8eff262cd1d002fad0957ecc5c5.bundle",
+        "manifest": "903_156948",
+        "size": 1578,
+        "sha256": "7a348787677357ea762c9613a9cbc7422b43cde2c33786d793e88a554c465ff7"
+      },
+      "sha256": "7a348787677357ea762c9613a9cbc7422b43cde2c33786d793e88a554c465ff7",
+      "dependencies": [
+        "defaultpackage_share_7492ea22d88ccae026110ec74c68f622.bundle",
+        "defaultpackage_unityshaders.bundle"
+      ],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_share_fe783419351834c214bbad66457da70e.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/ca7c022890bddfee488607871431de76.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 5357,
+        "raw_sha256": "1c85bfe01dc6b3f37a558350be4dca2215ba285fba778a857b388151c7fcdacd"
+      },
+      "sha256": "1c85bfe01dc6b3f37a558350be4dca2215ba285fba778a857b388151c7fcdacd",
+      "dependencies": [],
+      "engine_dependencies": []
+    },
+    {
+      "bundle": "defaultpackage_unityshaders.bundle",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/DefaultPackage/04c568cd691a6f8274280e0412e9159d.bundle",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "raw_size": 2912207,
+        "raw_sha256": "ce8ca955261cee18799efe2f46d0a20f2706806f72a57c10ad404b894824d5c4"
+      },
+      "sha256": "ce8ca955261cee18799efe2f46d0a20f2706806f72a57c10ad404b894824d5c4",
+      "dependencies": [],
+      "engine_dependencies": [
+        "unity default resources"
+      ]
+    }
+  ],
+  "reused_shader_objects": [],
+  "reused_sound_objects": null,
+  "reused_shared_objects": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "reused_native_conversion": {
+    "path": "assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json",
+    "sha256": "cdd9985436816a9e37c4c6d6788d4f95b974b016533ce9cbcfa125c61d9de069"
+  },
+  "formatters": [
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/ActionComponent.cs",
+      "sha256": "574e476645f5e9f86b9f5015ed794a2aac103df4be65f9beef9fd762107cc1c7"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/FightStatusComponent.cs",
+      "sha256": "4f9b0133c6404da6ddcea3ed192fc760fc927f914a1276b987ee894872ecf68c"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/FightStatusMoveRangeComponent.cs",
+      "sha256": "fda20d26ca226bd355a5d84c268533ac139f9306c008ccdcd6d7c9ad35459479"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/FightStatusPropComponent.cs",
+      "sha256": "f07d2e86fa0d736d53bc7c6b2a931a9cc47b2ad3086786a199016a87b004783d"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/ActionBehaviourFormatter.cs",
+      "sha256": "29ee6c3e26000f043690ea14983a8b1f1a93927e9f43bdc45976cb823f15b9ca"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/ActionComponentInfoFormatter.cs",
+      "sha256": "411f5e5de63ab3d144412a003d547b89fc387104aa19e665236786fe805a3d7b"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/ActionTypeFormatter.cs",
+      "sha256": "186c98deb85a7221c8dd1c3474f9ded798c356cdf8cab3130dd4adf990980c7d"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/ElementTypeFormatter.cs",
+      "sha256": "78b8ed62cb6acc289a886758b602f8b271d1bbae983ae547ad36ec5437a43df0"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/EStatusSourceTypeFormatter.cs",
+      "sha256": "9d242dc34328fd05d1cfa83930f6c9d879a32eb9d6fab5a0df9a292bc415f999"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/FightStatusAiCfgFormatter.cs",
+      "sha256": "9c8be1891e61f412fe4f09156321ed87eb59a76cb7074b5c86be20790caebd04"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/FightStatusComponentInfoFormatter.cs",
+      "sha256": "921aa99e7c3f221071c6c1b237e7ee9d2ff7f4258743060ad2c0958ab7fd9b85"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/FightStatusMoveRangeComponentInfoFormatter.cs",
+      "sha256": "bb104bed8b7a74eaafd5fa9537a017fdddda686aaa1376a384906636b6ee6ae2"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/FightStatusPropComponentInfoFormatter.cs",
+      "sha256": "59c3bf195efc8124f58e7076081833230eea1fbccc251fe4c0aad7baa24959de"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/FightStatusTriggerPropTargetCfgFormatter.cs",
+      "sha256": "363d8faceb99db24833681d2013d862a0eee6ed1a6d517a40a1bd8d4a71dc175"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/FightStatusTriggerStatusCfgFormatter.cs",
+      "sha256": "ee903342f8708d58ca84b4f44fb0440d5dbc72036584a180fa69a2c034f5a3fe"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/GameCharacterTypeFormatter.cs",
+      "sha256": "4f0cfe2340b1331caf498f7fcc95eb58b783abfcce2905815d2a04d2fd12e722"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/HitTargetTypeFormatter.cs",
+      "sha256": "f26070c6d1ad7e7dd2f26519990fbc2298dcbb0d3bc6461319d5cb8049dacd7d"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/MoveRangeHandleTypeFormatter.cs",
+      "sha256": "48dd333db9d8493a745e1800cabf367dadb11860791c3d0d623fb588f05c5cb7"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/Pos2dFormatter.cs",
+      "sha256": "7625a36013d02ba1732aa27c15ad8b131f41b56ffff72095b93781fe47d3fd4c"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/PropTypeFormatter.cs",
+      "sha256": "139c97ed0ff65c426fd6d7e1bc4a85186275b0c0eb58fafff9f3ece905d946ec"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/StatusTargetTypeFormatter.cs",
+      "sha256": "83e4146589973f5ce9eca37926a399185b861603c2722ca89ef0bf966b6c56f0"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/StatusTriggerTargetFormatter.cs",
+      "sha256": "6a95c1bf25fb3ab84270b40a6360216ebcde328bb03ba736f57bf00ad1c29e59"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/StatusTypeFormatter.cs",
+      "sha256": "f3f6a835bbe4d8fceeed282c9ae3a1e6c846cc962af77b680c60ca55e08d8c86"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/TargetCountAffectStatusOwnerSettingFormatter.cs",
+      "sha256": "7295cdc1b43e75a310392b325d613cf1136d3d12b5e9a78e2286f5c9bd4c66bb"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Resolvers/GeneratedStaticGSerializableFormatterResolver.cs",
+      "sha256": "3686d5c301d4dec650b2a306466200eef022870ed9209ec759eba683adf57596"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Properties/AssemblyInfo.cs",
+      "sha256": "8e6743f52871c8b7ca1bff73bf014f660b23a2af7cae20b7d6060805b4a0cf24"
+    }
+  ],
+  "constructors": [
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/EntityProp.cs",
+      "sha256": "bd36ae3a545136c967228d3d748d8f05f563bfbfe48dcd35342adbf99aa13c92"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/EntityPropGroupLevelInfo.cs",
+      "sha256": "c60e1e8e33eab5d16d68c2281ebd42b121427e4f72eb2b6362aefce234db3b55"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/GroupLevelPropCfg.cs",
+      "sha256": "19b79728f56838d7284bce87994742a4121db823f82bc03d4bd4149453588ee9"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/ICondition.cs",
+      "sha256": "12a4005edaf53df080240808b91e6e3e55fc08bceb91fd154e6c3993cdc704ff"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/ItemPartInfo.cs",
+      "sha256": "685012dc0b4db06adf6b1b5f4d37e04ac1197b2391763694badfdbf1ae278cea"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/ProfessionBaseInfo.cs",
+      "sha256": "8e157ce33784b5e550847106566581ab83d3d5b6b4635efa6bd7938f541490f2"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/ProfessionPromotePrerequisitesCondition.cs",
+      "sha256": "7b4e5c2a3572d1c0d97d2132dd5c780ef251e7785dadb0252ec36bbc2a0e30bb"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/PropCfg.cs",
+      "sha256": "2de175abcc1f5d046d14814f2e194ee520b38b5435ab2e944c3f3d4fafbd9dfd"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/SkillInfo.cs",
+      "sha256": "b403f503798af59fe02a307c8f4d6fbfd1dfb94d11431d17d007a68f5945745d"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/Tables.cs",
+      "sha256": "0e4882f1ad41958e5ec017543447e17f5196c5453f8168c685926ea2c134c9bc"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/TbEntityProp.cs",
+      "sha256": "4a8d042377406399b58780593eec18bc55cc3b292f9715242ffad064c831be64"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/TbEntityPropGroupLevelInfo.cs",
+      "sha256": "b5a5d65925ef12a9e408d824c403d2af26b19ab5e23cca7513e7b72008586c84"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/TbProfessionBaseInfo.cs",
+      "sha256": "38276d28eb58824e4a00eaaddd1ac4a42c7d7a263ea13adce9882b6c7b24c5b6"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/official-code/common-source/Common/TbSkillInfo.cs",
+      "sha256": "b2322998e0b8972434132a2d9f744e3a3a8f63c3ab244c1d982b8f47d75521f8"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_third_profession_skill_sources.py",
+    "sha256": "9c813af99fe228e1ec65273a815cc58eed685aa30dc381aa64c9659831bbd4e8"
+  },
+  "current_native_conversions": [
+    {
+      "path": "assets/reference/battle-animation/tactical-adaptation-current-graphs-source-manifest.json",
+      "sha256": "4a7df3dc2cef5ba50ba1d5f976bfa08eb8a0cadfee653494e3459b47e21285b1"
+    }
+  ],
+  "reused_client_implementations": [
+    {
+      "historical": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusProp.cs",
+        "sha256": "cf5c69df7ccdc0aa14d18841153d5f6e3ccda5e9096400b5b818b8d6f5ce6d2c"
+      },
+      "current": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightStatusProp.cs",
+        "sha256": "cf5c69df7ccdc0aa14d18841153d5f6e3ccda5e9096400b5b818b8d6f5ce6d2c"
+      }
+    },
+    {
+      "historical": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusBase.cs",
+        "sha256": "a9f09e63f27b288122261418314a11fb471893e51e2bbaa29347d1f6c77c938c"
+      },
+      "current": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightStatusBase.cs",
+        "sha256": "a9f09e63f27b288122261418314a11fb471893e51e2bbaa29347d1f6c77c938c"
+      }
+    },
+    {
+      "historical": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatus.cs",
+        "sha256": "6703467530851893a67bd76e3d6a2d15253cf336d3c6abe23b6a1a104ddace1d"
+      },
+      "current": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightStatus.cs",
+        "sha256": "6703467530851893a67bd76e3d6a2d15253cf336d3c6abe23b6a1a104ddace1d"
+      }
+    },
+    {
+      "historical": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyAction.cs",
+        "sha256": "6adf75aa0f477aab0ada42d10bd0b3ea7e8b3a77b111e02206faa7aa15e9a140"
+      },
+      "current": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyAction.cs",
+        "sha256": "6adf75aa0f477aab0ada42d10bd0b3ea7e8b3a77b111e02206faa7aa15e9a140"
+      }
+    },
+    {
+      "historical": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntity.cs",
+        "sha256": "1d3cb29ee8e21bb2e8717aa95c8922434f1a20bf90fafb941b5ffcbf26bd2ae1"
+      },
+      "current": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyEntity.cs",
+        "sha256": "1d3cb29ee8e21bb2e8717aa95c8922434f1a20bf90fafb941b5ffcbf26bd2ae1"
+      }
+    }
+  ],
+  "entry_generator": {
+    "path": "scripts/prepare_fourth_profession_skill_sources.py",
+    "sha256": "5b2b735a98ee4f566e94117e0f78f7d916fd9b523ae07d7346f3dce29ec8d4e4"
+  },
+  "source_spec": {
+    "path": "scripts/profession_skill_sources/fourth/10609.json",
+    "sha256": "ef60054e2028f52e713de2edf4f61c3ab5b4653a6604c14a3d694945cf3a74b0"
+  }
+}

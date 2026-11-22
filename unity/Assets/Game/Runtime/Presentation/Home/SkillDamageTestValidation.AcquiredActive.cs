@@ -98,6 +98,11 @@ namespace Zjcs.Presentation.Home
             player.InitialWeaponType = profession == 10 ? Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType : 200;
             player.Wardrobe.Profession = profession;
             int passiveCompanion = LoadAcquiredPassiveCompanion(player, skillId, output);
+            if (passiveCompanion == 10609)
+            {
+                var validationRunner = FindObjectsOfType<SkillDamageTestValidation>().FirstOrDefault();
+                if (validationRunner != null) validationRunner.deadline += 600f;
+            }
             if (skillId == 10000 || skillId == 10028 || skillId == 10035) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId);
             if (skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId, 2, 2);
             if (skillId == 10017) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId, 3, 3);
@@ -246,6 +251,19 @@ namespace Zjcs.Presentation.Home
             click(FlameFlowButton(value => value.name == "StageDamageTestBtn"));
             yield return new WaitForSecondsRealtime(.5f);
             var settings = FindObjectsOfType<Transform>().Single(value => value.name == "damage_test");
+            if (passiveCompanion == 10609)
+            {
+                var dropdown = settings.GetComponentsInChildren<Zjcs.Official.WorldUI.WorldUIDropdown>().Single();
+                Require(dropdown.ItemsKey.Count > 3, "The original group formation is missing.");
+                click(dropdown.DropdownButton);
+                yield return new WaitForSecondsRealtime(.4f);
+                var row = FindObjectsOfType<Zjcs.Official.WorldUI.WorldDropdownItem>().Single(value =>
+                    value.Texts.Any(text => text.GetComponent<TMP_Text>().text == dropdown.ItemsKey[3]));
+                click(row.Button);
+                yield return new WaitForSecondsRealtime(.4f);
+                Require(dropdown.SelectedItemIndex == 3, "Original formation input did not select the second monster group.");
+                yield return CaptureAcquiredActive(output, "tactical-formation");
+            }
             foreach (string setting in new[] { "Round", "MonsterHp", "MonsterHurt" })
             {
                 var choice = settings.GetComponentsInChildren<Toggle>().Single(value =>
@@ -587,8 +605,21 @@ namespace Zjcs.Presentation.Home
             click(FlameFlowButton(value => value.name == "Btn" && value.GetComponentsInParent<Transform>()
                 .Any(parent => parent.name == "StartBtn")));
             bool captured = false, capturedOpening = false, capturedPassive = false, capturedFear = false;
+            bool capturedTacticalAttack = false, capturedTacticalDefence = false;
             while (battle != null)
             {
+                if (passiveCompanion == 10609)
+                    foreach (int statusId in new[] { 24394, 24393 })
+                    {
+                        if (statusId == 24394 ? capturedTacticalAttack : capturedTacticalDefence) continue;
+                        if (!FindObjectsOfType<Transform>().Any(value => value.name == statusId.ToString()
+                                || value.name.StartsWith(statusId + "(", StringComparison.Ordinal))
+                            || !FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
+                                && particle.GetComponentsInParent<Transform>().Any(parent =>
+                                    parent.name.StartsWith("playable" + statusId, StringComparison.Ordinal)))) continue;
+                        yield return CaptureAcquiredActive(output, "tactical-" + statusId);
+                        if (statusId == 24394) capturedTacticalAttack = true; else capturedTacticalDefence = true;
+                    }
                 if (passiveCompanion == 10608 && standfastTurns > 0 && !capturedPassive
                     && FindObjectsOfType<Transform>().Any(value => value.name == "24392"
                         || value.name.StartsWith("24392(", StringComparison.Ordinal))
@@ -683,6 +714,10 @@ namespace Zjcs.Presentation.Home
                 "The cultivated passive never applied cold in the rendered battle.");
             Require(passiveCompanion != 10608 || standfastTurns > 0 && capturedPassive,
                 "The cultivated standfast soul never applied and rendered its turn-bound protection.");
+            Require(passiveCompanion != 10609 || capturedTacticalAttack && capturedTacticalDefence
+                && File.Exists(Path.Combine(output, "companion-tactical-24394.json"))
+                && File.Exists(Path.Combine(output, "companion-tactical-24393.json")),
+                "The cultivated tactical adaptation never applied and rendered both threshold effects.");
             Require(passiveCompanion != 10607 || auraHits > 0, "The cultivated frigid aura never struck at the enemy's turn end.");
             Require(passiveCompanion != 10607 || capturedPassive, "The original frigid-aura effect was never rendered.");
             File.WriteAllText(Path.Combine(output, "acquired-active-ui-checkpoint.json"), FightBattleCheckpointSerializer.Save(checkpoint));

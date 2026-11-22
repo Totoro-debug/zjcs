@@ -15,14 +15,22 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     if ($PassiveId -in @(10606,10607)) {
         if (-not (Select-String -LiteralPath $runtimeLog -SimpleMatch "[Acquired passive combat] $PassiveId cultivated") -or
             -not (Test-Path -LiteralPath (Join-Path $Run 'companion-cold-checkpoint.json'))) { throw 'The cultivated secret did not exercise its original cold path.' }
-    } elseif ($PassiveId -eq 10608) {
+    } elseif ($PassiveId -in @(10608,10609)) {
         $source = Get-Content -LiteralPath (Join-Path $Run 'companion-cultivated-save.json') -Raw | ConvertFrom-Json
         if ($source.Player.Skills.Plans[$source.Player.Skills.SelectedPlan].PassiveSkills[0] -ne $PassiveId) {
-            throw 'The turn-bound protection used another cultivated secret.'
+            throw 'The battle used another cultivated secret.'
         }
     } else { throw 'Unsupported acquired passive evidence.' }
     if ($PassiveId -in @(10607,10608) -and -not (Test-Path -LiteralPath (Join-Path $Run 'acquired-active-ui-passive-battle.png'))) {
         throw 'The original cultivated passive effect was not captured.'
+    }
+    if ($PassiveId -eq 10609) {
+        foreach ($status in @(24394,24393)) {
+            if (-not (Test-Path -LiteralPath (Join-Path $Run "acquired-active-ui-tactical-$status.png")) -or
+                -not (Test-Path -LiteralPath (Join-Path $Run "companion-tactical-$status.json"))) {
+                throw 'The original tactical threshold state/effect was not captured.'
+            }
+        }
     }
 }
 $ErrorActionPreference = 'Stop'
@@ -40,7 +48,7 @@ if ($SkillSkinId -gt 0 -and ($SkillId -ne 10082 -or $AdditionalSkillIds.Count -g
 if ($PassiveSave) {
     $PassiveSave = (Get-Item -LiteralPath $PassiveSave).FullName
     if (-not $PassiveSave.StartsWith($workspacePath + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
-        $SkillId -notin @(10047,10088) -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated passive cultivation save with its corresponding active skill.' }
+        $SkillId -notin @(10047,10068,10088) -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated passive cultivation save with its corresponding active skill.' }
     $passiveResult = Get-Content -LiteralPath (Join-Path (Split-Path -Parent $PassiveSave) 'result.json') -Raw | ConvertFrom-Json
     if (-not $passiveResult.passed) { throw 'The original passive cultivation flow has not passed.' }
     $passiveProfile = Get-Content -LiteralPath $PassiveSave -Raw | ConvertFrom-Json

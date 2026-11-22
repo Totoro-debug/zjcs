@@ -30,7 +30,8 @@ Add-Type -Path (@(Get-FightCombatSources) +
     (Join-Path $PSScriptRoot 'fixtures/battle_fear_targeting_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_dread_shadow_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_standfast_soul_harness.cs') +
-    (Join-Path $PSScriptRoot 'fixtures/battle_round_forbidden_harness.cs'))
+    (Join-Path $PSScriptRoot 'fixtures/battle_round_forbidden_harness.cs') +
+    (Join-Path $PSScriptRoot 'fixtures/battle_tactical_adaptation_harness.cs'))
 $sp = Get-Content (Join-Path $inputs 'skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $bp = Get-Content (Join-Path $inputs 'battle-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $rp = Get-Content (Join-Path $inputs 'rules-source-manifest.json') -Raw | ConvertFrom-Json
@@ -56,6 +57,8 @@ if ($SkillId -ne 0) {
         10089 { [BattleSoulPiercerHarness]::Run($catalog, $formula, $items); exit 0 }
         10104 { [BattleFearTargetingHarness]::Run($catalog); [BattleFearTargetingHarness]::RunBattle($catalog, $formula, $items); [BattleDreadShadowHarness]::Run($catalog, $formula, $items); exit 0 }
         10608 { [BattleStandfastSoulHarness]::Run($catalog, $formula, $items); [BattleRoundForbiddenRegression]::Run($catalog, $formula, $items); exit 0 }
+        10609 { [BattleTacticalAdaptationHarness]::Run($catalog, $formula, $items); exit 0 }
+        10607 { [BattleFrigidAuraHarness]::Run($catalog, $formula, $items); exit 0 }
         default { throw "No focused fourth-profession fixture: $SkillId" }
     }
 }
@@ -78,3 +81,4 @@ if ($SkillId -ne 0) {
 [BattleDreadShadowHarness]::Run($catalog, $formula, $items)
 [BattleStandfastSoulHarness]::Run($catalog, $formula, $items)
 [BattleRoundForbiddenRegression]::Run($catalog, $formula, $items)
+[BattleTacticalAdaptationHarness]::Run($catalog, $formula, $items)
