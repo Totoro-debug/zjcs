@@ -25,6 +25,7 @@ namespace Zjcs.Presentation.Home
                 || active == 10068 && player.Wardrobe.Profession == 8 && itemId == 10609;
             supported |= active == 10089 && player.Wardrobe.Profession == 8 && itemId == 10594;
             supported |= active == 10084 && player.Wardrobe.Profession == 4 && itemId == 10592;
+            supported |= active == 10028 && player.Wardrobe.Profession == 13 && itemId == 10599;
             Require(supported && source.Player.Wardrobe.Profession == player.Wardrobe.Profession
                 && source.Player.Level == player.Level && source.Player.SubRank == player.SubRank
                 && plan.ActiveSkills.All(id => id == 0)
@@ -59,6 +60,11 @@ namespace Zjcs.Presentation.Home
         private static void VerifyAcquiredPassiveStep(FightBattleStepEvent step, FightBattleCheckpoint checkpoint,
             string output, int itemId, ref int coldHits, ref int auraHits, ref int standfastTurns, ref int assaultHits, ref int soulBreakHits, ref int windHits, ref int flameHits)
         {
+            if (itemId == 10599)
+            {
+                VerifyAcquiredFlameSoul(step, checkpoint, output);
+                return;
+            }
             if (itemId == 10592)
             {
                 VerifyAcquiredSteelFaith(checkpoint, output);

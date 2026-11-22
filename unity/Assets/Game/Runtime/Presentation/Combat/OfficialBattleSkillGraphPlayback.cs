@@ -205,7 +205,7 @@ namespace Zjcs.Presentation.Combat
                 "Combat/assault-piercing-current-graphs", "Combat/soul-breaker-current-graphs",
                 "Combat/wind-orb-current-graphs", "Combat/flame-momentum-current-graphs", "Combat/star-burst-current-graphs",
                 "Combat/spiral-wind-blade-current-graphs", "Combat/battlecry-current-graphs",
-                "Combat/protective-runes-current-graphs");
+                "Combat/protective-runes-current-graphs", "Combat/flame-soul-current-graphs");
             statusViews.Restore();
         }
 
