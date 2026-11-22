@@ -13,10 +13,10 @@ def main():
     # and importer fields while emitting the same whitespace as generated files.
     for sidecar in [family_root.with_suffix('.meta'), *family_root.rglob('*.meta')]:
         if sidecar.is_file() and sidecar.with_suffix('').is_dir():
-            original = sidecar.read_text(encoding='utf-8')
+            original = sidecar.read_bytes().decode('utf-8')
             normalized = '\n'.join(line.rstrip() for line in original.splitlines()) + '\n'
             if original != normalized:
-                sidecar.write_text(normalized, encoding='utf-8')
+                sidecar.write_bytes(normalized.encode('utf-8'))
     mapped = dict(MAPPED)
     shared = shared_bindings()
     mapped.update({1200213464: ('EntityLifecycle', 'MyEntity'),
