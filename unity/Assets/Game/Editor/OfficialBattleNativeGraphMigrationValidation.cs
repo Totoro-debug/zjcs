@@ -94,6 +94,24 @@ namespace Zjcs.Editor
             OfficialSparseShaderVariants.ValidateStarBurst();
         }
 
+        public static void ValidateSpiralWindBlade()
+        {
+            var asset = Resources.Load<TextAsset>("Combat/spiral-wind-blade-current-graphs");
+            var data = asset == null ? null : JsonUtility.FromJson<StatusData>(asset.text);
+            if (data?.graphs == null || data.graphs.Length != 1 || data.graphs[0].id != 24376)
+                throw new InvalidOperationException("Current laceration status binding is missing.");
+            var entity = Resources.Load<GameObject>(data.graphs[0].resource);
+            if (!entity || !entity.GetComponent<MyEntity>() || !entity.GetComponent<MyFightStatus>()
+                || !entity.GetComponent<MyFightStatusActionStart>())
+                throw new InvalidOperationException("Current laceration status lost its original components.");
+            var prefabs = new HashSet<GameObject> { entity };
+            entity.GetComponent<MyFightStatus>().TryGetPlayables(ref prefabs);
+            CheckMissing(prefabs);
+            Debug.Log("Current laceration native status, action-start marker, sound and playable bindings passed.");
+            Skills.OfficialSkillUiPackBuild.ValidateDeliveryLifetime();
+            OfficialSparseShaderVariants.ValidateSpiralWindBlade();
+        }
+
         private static void ValidateFamily(string resource, string family)
         {
             // Loading the effective catalog verifies every declared source hash.

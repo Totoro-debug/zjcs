@@ -59,6 +59,7 @@ namespace Zjcs.Editor
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/StatusSpineFollower_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/StandfastSoulGraph_Noise_Mask_Pro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/StarBurstGraph_Noise_Mask_Pro.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/SpiralWindBladeGraph_Noise_Mask_Pro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/TacticalAdaptationGraph_Noise_Mask_Pro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/WindOrbGraph_Noise_Mask_Pro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/SummonRoleViews_Noise_Mask_Pro_0.shader"] = 260,
@@ -115,12 +116,16 @@ namespace Zjcs.Editor
                 selections.Add(original.Key, selection);
                 stages += selection.PassCount * selection.Programs.Count * 2;
             }
-            if (stages != 66488) throw new BuildFailedException("Original shader stage domain changed: " + stages);
+            if (stages != 67528) throw new BuildFailedException("Original shader stage domain changed: " + stages);
             Debug.Log("Original sparse shader domains validated: " + originalPrograms.Count + " assets / " + stages + " GPU stages.");
         }
 
         [MenuItem("Zjcs/Assets/Validate Original Sparse Shader Programs")]
-        public static void Validate() => ValidatePrograms(originalPrograms, 66488);
+        public static void Validate() => ValidatePrograms(originalPrograms, 67528);
+
+        public static void ValidateSpiralWindBlade() => ValidatePrograms(originalPrograms.Where(row =>
+            row.Key.StartsWith("Assets/Game/Runtime/Presentation/Combat/Shaders/SpiralWindBladeGraph_", StringComparison.Ordinal))
+            .ToDictionary(row => row.Key, row => row.Value), 1040);
 
         public static void ValidateStarBurst() => ValidatePrograms(originalPrograms.Where(row =>
             row.Key.StartsWith("Assets/Game/Runtime/Presentation/Combat/Shaders/StarBurstGraph_", StringComparison.Ordinal))
