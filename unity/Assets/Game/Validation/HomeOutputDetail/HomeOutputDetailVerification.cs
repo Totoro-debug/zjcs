@@ -125,6 +125,13 @@ namespace Zjcs.Validation.HomeOutputDetail
             button = Windows.Bed.GetComponentInChildren<OutputAdditionDetailButton>(true);
             Require(Field<GameObject>(button, "mContext").activeSelf, "original bonus context observes saved records");
             var open = Field<Button>(button, "mBtn");
+            if (!open.gameObject.activeInHierarchy)
+            {
+                Click(Windows.Bed.OutputFoldoutBtn);
+                yield return new WaitForSecondsRealtime(.5f);
+            }
+            yield return WaitForButton(open);
+            yield return Capture("detail-bed-entry.png");
             pointer.Position = Point(open.transform);
             Click(open); yield return new WaitForSecondsRealtime(.8f);
             var popup = Object.FindObjectOfType<PopTipOutputAddition>();
@@ -133,17 +140,17 @@ namespace Zjcs.Validation.HomeOutputDetail
             Require(scroll.totalCount == 12 && popup.GetComponentsInChildren<OutputAdditionItem>().Length > 0,
                 "original scroll receives all saved groups and binds visible rows");
             Require(Field<Image>(popup, "mBgImage").enabled, "original multi-group background");
+            yield return Capture("detail-groups.png");
             Require(popup.GetComponentsInChildren<TMP_Text>().Any(text => text.text.Contains("%") && !text.text.Contains("{1}")),
                 "original property row formats its configured percentage");
             Require(popup.GetComponentsInChildren<TMP_Text>().Any(text => text.text.Contains("小时") || text.text.Contains("分钟")),
                 "original countdown resolves localized time units");
-            Capture("detail-groups.png");
             float before = scroll.content.anchoredPosition.y;
             var wheel = new PointerEventData(EventSystem.current) { position = Point(scroll.transform), scrollDelta = new Vector2(0, -8) };
             ExecuteEvents.Execute(scroll.gameObject, wheel, ExecuteEvents.scrollHandler);
             yield return new WaitForSecondsRealtime(.4f);
             Require(Mathf.Abs(scroll.content.anchoredPosition.y - before) > .1f, "simulated wheel scrolls the original list");
-            Capture("detail-scrolled.png");
+            yield return Capture("detail-scrolled.png");
             pointer.Position = Point(Field<RectTransform>(popup, "mRect")); pointer.LeftDown = true;
             yield return null; pointer.LeftDown = false; yield return null;
             Require(popup && popup.gameObject.activeInHierarchy, "process-local inside pointer retains popup");
@@ -167,12 +174,19 @@ namespace Zjcs.Validation.HomeOutputDetail
             home.Hud.ShowBed(); yield return new WaitForSecondsRealtime(.8f);
             Windows.OutputDetails.PointerSource = pointer;
             open = Field<Button>(Windows.Bed.GetComponentInChildren<OutputAdditionDetailButton>(true), "mBtn");
+            if (!open.gameObject.activeInHierarchy)
+            {
+                Click(Windows.Bed.OutputFoldoutBtn);
+                yield return new WaitForSecondsRealtime(.5f);
+            }
+            yield return WaitForButton(open);
+            yield return Capture("detail-reopened-entry.png");
             pointer.Position = Point(open.transform); Click(open); yield return new WaitForSecondsRealtime(.8f);
             popup = Object.FindObjectOfType<PopTipOutputAddition>();
             Require(popup && !Field<Image>(popup, "mBgImage").enabled
                 && Field<Zjcs.Official.SkillsUI.LoopVerticalScrollWithMaxHeight>(popup, "mScroll").totalCount == 1,
                 "expired records are filtered and original single-group background is hidden");
-            Capture("detail-single.png");
+            yield return Capture("detail-single.png");
             Require(errors.Count == 0, "no runtime error or assertion");
         }
 
@@ -197,24 +211,62 @@ namespace Zjcs.Validation.HomeOutputDetail
         }
         Vector2 Point(Transform node) => RectTransformUtility.WorldToScreenPoint(home.Scene.Camera,
             node.TransformPoint(((RectTransform)node).rect.center));
+        IEnumerator WaitForButton(Button button)
+        {
+            float deadline = Time.realtimeSinceStartup + 10;
+            while (Time.realtimeSinceStartup < deadline)
+            {
+                Canvas.ForceUpdateCanvases();
+                var data = new PointerEventData(EventSystem.current) { position = Point(button.transform) };
+                var hits = new List<RaycastResult>(); EventSystem.current.RaycastAll(data, hits);
+                if (hits.Count > 0 && (hits[0].gameObject == button.gameObject || hits[0].gameObject.transform.IsChildOf(button.transform)))
+                    yield break;
+                yield return null;
+            }
+            yield return Capture("detail-unreachable-button.png");
+            Click(button);
+        }
         void Click(Button button)
         {
             var data = new PointerEventData(EventSystem.current) { position = Point(button.transform), button = PointerEventData.InputButton.Left };
             var hits = new List<RaycastResult>(); EventSystem.current.RaycastAll(data, hits);
             Require(hits.Count > 0 && (hits[0].gameObject == button.gameObject || hits[0].gameObject.transform.IsChildOf(button.transform)),
-                "simulated pointer reaches the original topmost button");
+                "simulated pointer reaches " + button.name + " at " + data.position + "; active=" + button.gameObject.activeInHierarchy
+                + "; hits=" + string.Join(",", hits.Take(5).Select(value => value.gameObject.name)));
             ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, data, ExecuteEvents.pointerDownHandler);
             ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, data, ExecuteEvents.pointerUpHandler);
             ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, data, ExecuteEvents.pointerClickHandler);
         }
-        void Capture(string name)
+        IEnumerator Capture(string name)
         {
-            Canvas.ForceUpdateCanvases(); home.Scene.Camera.Render();
-            var previous = RenderTexture.active; RenderTexture.active = render;
-            var image = new Texture2D(render.width, render.height, TextureFormat.RGB24, false);
-            image.ReadPixels(new Rect(0, 0, render.width, render.height), 0, 0); image.Apply();
-            File.WriteAllBytes(Path.Combine(output, name), image.EncodeToPNG());
-            RenderTexture.active = previous; Destroy(image);
+            // A camera capture must emulate overlay canvases being above world
+            // renderers. Preserve every production sorting value after capture.
+            var canvases = home.Hud.CanvasTransform.GetComponentsInChildren<Canvas>(true);
+            var layers = canvases.Select(value => value.sortingLayerID).ToArray();
+            var orders = canvases.Select(value => value.sortingOrder).ToArray();
+            try
+            {
+                foreach (var canvas in canvases)
+                {
+                    canvas.sortingLayerID = SortingLayer.layers.Last().id;
+                    if (canvas.sortingOrder < 30000) canvas.sortingOrder += 30000;
+                }
+                Canvas.ForceUpdateCanvases();
+                // SRP submits camera work during the frame; retain the capture
+                // sorting until an actual rendered frame reaches the texture.
+                yield return null;
+                yield return null;
+                var previous = RenderTexture.active; RenderTexture.active = render;
+                var image = new Texture2D(render.width, render.height, TextureFormat.RGB24, false);
+                image.ReadPixels(new Rect(0, 0, render.width, render.height), 0, 0); image.Apply();
+                File.WriteAllBytes(Path.Combine(output, name), image.EncodeToPNG());
+                RenderTexture.active = previous; Destroy(image);
+            }
+            finally
+            {
+                for (int index = 0; index < canvases.Length; index++)
+                { canvases[index].sortingLayerID = layers[index]; canvases[index].sortingOrder = orders[index]; }
+            }
         }
         static T Field<T>(object owner, string name) => (T)owner.GetType().GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(owner);
         void Observe(string message, string stack, LogType type)

@@ -103,6 +103,8 @@ namespace Zjcs.Official.HomeOutputDetailUI
         inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
     for path in (code / 'client-source/UIUtils.cs', code / 'framework-firstpass-source/Framework/ETimeSpanFormatType.cs', Path(__file__)):
         inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
+    pool = ROOT / 'unity/Assets/Game/Runtime/Official/WorldUI/LoopScroll/LoopScrollSinglePrefabSource.cs'
+    inputs[pool.relative_to(ROOT).as_posix()] = sha(pool.read_bytes())
     host_files = [ROOT / 'unity/Assets/Game/Runtime/Presentation/Home' / name for name in (
         'OfflineHomeOutputDetailServices.cs', 'OfflineHomeHangUpWindows.cs', 'HomeHudView.BedWindow.cs',
         'HomeHudView.cs', 'Zjcs.Presentation.Home.asmdef')]

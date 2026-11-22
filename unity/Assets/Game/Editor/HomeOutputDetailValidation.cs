@@ -8,6 +8,14 @@ namespace Zjcs.Editor
 {
     public static class HomeOutputDetailValidation
     {
+        public static void Play()
+        {
+            Validate();
+            UnityEditor.SceneManagement.EditorSceneManager.NewScene(
+                UnityEditor.SceneManagement.NewSceneSetup.EmptyScene, UnityEditor.SceneManagement.NewSceneMode.Single);
+            EditorApplication.EnterPlaymode();
+        }
+
         public static void Validate()
         {
             var assets = OfficialHomeOutputDetailAssets.LoadDefault();

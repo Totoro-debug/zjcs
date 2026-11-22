@@ -10,6 +10,10 @@ public class LoopScrollSinglePrefabSource : LoopScrollPrefabSource
 {
 	public GameObject Prefab;
 
+    // The owning local UI scope can bind services before a borrowed row is
+    // activated. Existing callers retain the original direct-instantiation path.
+    [NonSerialized] public Func<GameObject, Transform, bool, GameObject> InstantiatePrefab;
+
 	private Transform mPoolRoot;
 
 
@@ -38,7 +42,8 @@ public class LoopScrollSinglePrefabSource : LoopScrollPrefabSource
 		{
 			return mPool.Pop();
 		}
-		return Object.Instantiate(Prefab, mPoolRoot, false);
+		return InstantiatePrefab != null ? InstantiatePrefab(Prefab, mPoolRoot, false)
+            : Object.Instantiate(Prefab, mPoolRoot, false);
 	}
 
 	public void ReturnObject(Transform trans, int index)

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Zjcs.Offline.HomeHudUI;
 using Zjcs.Offline.HomeUI;
 using Zjcs.Offline.PartnersUI;
@@ -145,6 +146,9 @@ namespace Zjcs.Presentation.Home
             foreach (var row in root.GetComponentsInChildren<OutputAdditionPropItem>(true)) row.Services = OutputDetails;
             if (OutputDetails != null)
                 foreach (var timer in root.GetComponentsInChildren<ShowRemainTimeInfo>(true)) timer.Bind(OutputDetails);
+            foreach (var scroll in root.GetComponentsInChildren<LoopScrollRect>(true))
+                if (scroll.DefaultPrefabSource != null)
+                    scroll.DefaultPrefabSource.InstantiatePrefab = (template, container, world) => Clone(template, container, world);
             root.transform.SetParent(parent, keepWorld);
             return root;
         }
