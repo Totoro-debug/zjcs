@@ -59,7 +59,7 @@ def rank_four_statuses(path: Path) -> list[str]:
     block = re.search(r"### 四阶职业.*?(?=### 五阶职业|\Z)", text, re.S)
     if not block:
         raise AssertionError(f"missing rank-four section: {path}")
-    return re.findall(r"\|\s*(?:\d+)\s*\|[^\n]*?\|\s*(已完成|未完成)\s*\|", block.group(0))
+    return re.findall(r"\|\s*(?:\d+)\s*\|[^\n]*?\|\s*(已完成|完成|未完成)\s*\|", block.group(0))
 
 
 def verify(write: bool = False) -> dict[str, Any]:
