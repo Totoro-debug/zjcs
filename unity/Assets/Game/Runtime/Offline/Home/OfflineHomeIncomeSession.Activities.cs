@@ -16,13 +16,15 @@ namespace Zjcs.Offline.Home
         public bool HasActivityIncome(int id)
             => FindEntry(Save, id).Activity?.Enabled == true || incomeAdditionFactory?.Invoke(Save)?.HasRecords == true;
 
+        public long IncomeProjectionTicks(DateTimeOffset now) => Math.Max(CheckpointTicks(Save), now.UtcDateTime.Ticks);
+
         public HangUpIncomePreview PreviewAt(int id, DateTimeOffset now)
         {
             var definition = FindDefinition(id);
             var saved = FindEntry(Save, id);
             var entry = new OfflineHomeIncomeEntry { HangUpId = id, StoredSeconds = saved.StoredSeconds,
                 SettledCount = saved.SettledCount, Activity = saved.Activity?.Copy() };
-            long from = CheckpointTicks(Save), until = Math.Max(from, now.UtcDateTime.Ticks);
+            long from = CheckpointTicks(Save), until = IncomeProjectionTicks(now);
             var additions = incomeAdditionFactory?.Invoke(Save);
             if (definition.Unlocked)
                 AdvanceIncomeEntry(entry, definition, additions, from, until, PendingIncomeSeconds(now));

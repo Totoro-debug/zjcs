@@ -46,6 +46,7 @@ namespace Zjcs.Editor
                 CheckFixedPropertyBoundary();
                 CheckItemAcceleration();
                 CheckSubsecondsAndLegacy();
+                CheckIncomeChangeNotifications();
                 result.passed = true;
                 Debug.Log("HOME_INCOME_ACTIVITY_SESSION_PASSED checks=" + checks);
             }
@@ -237,6 +238,34 @@ namespace Zjcs.Editor
             Open("item-acceleration", 3600, definitions);
             Require(session.CollectReward(1, "claim:items", At(3600))?.Count == 400,
                 "ordinary activity and accelerated output cold-open and collect exactly once");
+        }
+
+        static void CheckIncomeChangeNotifications()
+        {
+            Open("notifications", 0, Definitions());
+            int changed = 0; additions.Changed += () => changed++;
+            var row = Row(1);
+            Require(additions.ApplyRecord(Record(1, row, 1, 2), "activity:future"), "future activity notification fixture");
+            Require(changed == 1 && additions.IncomePropertyValue(row.OutputAdditionPropType) == 0,
+                "saving future data notifies once without activating its child property");
+            Require(additions.PropertyValue(row.OutputAdditionPropType) == 10000,
+                "the original property query retains its separate child-time behavior");
+            additions.PollIncomeChanges();
+            Require(changed == 1, "unchanged data does not repeat a native refresh");
+            var otherOwner = new OfflineHomeOutputAddition(session, () => now.UtcDateTime, _ => false);
+            Require(otherOwner.ApplyRecord(Record(2, Row(2), 5, 6), "activity:other-owner"), "second activity owner fixture");
+            additions.PollIncomeChanges();
+            Require(changed == 2, "a native view observes saved changes from another activity owner");
+            now = At(1); additions.PollIncomeChanges();
+            Require(changed == 3 && additions.IncomePropertyValue(row.OutputAdditionPropType) == 10000,
+                "the original view is notified exactly at activity start");
+            now = At(2); additions.PollIncomeChanges(); additions.PollIncomeChanges();
+            Require(changed == 4 && additions.IncomePropertyValue(row.OutputAdditionPropType) == 0,
+                "activity expiry refreshes once, including its exact end boundary");
+            session.AdvanceTo(At(3));
+            now = At(1); additions.PollIncomeChanges();
+            Require(changed == 4 && additions.IncomePropertyValue(row.OutputAdditionPropType) == 0,
+                "clock rollback cannot reactivate an expired income property or notification");
         }
     }
 }

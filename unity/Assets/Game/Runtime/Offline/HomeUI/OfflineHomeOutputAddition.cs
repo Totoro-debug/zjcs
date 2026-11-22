@@ -28,6 +28,8 @@ namespace Zjcs.Offline.HomeUI
         private readonly Func<int?, bool> disabled;
         string cachedIncomeJson;
         IHomeIncomeAdditionSnapshot cachedIncomeSnapshot;
+        string observedIncomeJson;
+        long nextIncomeChangeTicks;
         public event Action Changed;
 
         public OfflineHomeOutputAddition(OfflineHomeIncomeSession session, Func<DateTime> now,
@@ -43,6 +45,7 @@ namespace Zjcs.Offline.HomeUI
                 || configuration.settings?.HomeHangUpAddPercentTypeDict == null
                 || configuration.settings.HomeHangUpMaxStoreTypeDict == null)
                 throw new InvalidOperationException("The selected output-addition configuration is unbound.");
+            ObserveIncomeChanges(false);
         }
 
         // New games deliberately have no activity records. Missing state is read
@@ -93,9 +96,37 @@ namespace Zjcs.Offline.HomeUI
             var json = JsonConvert.SerializeObject(state);
             bool committed = session.MutateAt(receipt, new DateTimeOffset(now().ToUniversalTime()),
                 save => save.OutputAdditionStateJson = json);
-            if (committed) Changed?.Invoke();
+            if (committed) ObserveIncomeChanges(true);
             return committed;
         }
+
+        // Polling the shared saved value also observes changes made by another
+        // activity owner. A time boundary refreshes the original UI once, even
+        // when income is full and its visible count has stopped increasing.
+        public void PollIncomeChanges()
+        {
+            long at = IncomeTimeTicks();
+            if (observedIncomeJson != session.Save.OutputAdditionStateJson || at >= nextIncomeChangeTicks)
+                ObserveIncomeChanges(true);
+        }
+
+        void ObserveIncomeChanges(bool publish)
+        {
+            long at = IncomeTimeTicks();
+            observedIncomeJson = session.Save.OutputAdditionStateJson;
+            nextIncomeChangeTicks = long.MaxValue;
+            foreach (long change in CaptureIncomeSnapshot(session.Save).ChangeTicks)
+                if (change > at) { nextIncomeChangeTicks = change; break; }
+            if (publish) Changed?.Invoke();
+        }
+
+        long IncomeTimeTicks() => session.IncomeProjectionTicks(new DateTimeOffset(now().ToUniversalTime()));
+        public int IncomePropertyValue(OutputAdditionPropType type)
+            => ((OfflineHomeIncomeAdditionSnapshot)CaptureIncomeSnapshot(session.Save)).PropertyValue(type, IncomeTimeTicks());
+        public long IncomeExtraCapacity(int id, long capacity)
+            => CaptureIncomeSnapshot(session.Save).ExtraCapacity(id, capacity, IncomeTimeTicks());
+        public long IncomeExtraCount(int id, double count)
+            => CaptureIncomeSnapshot(session.Save).ExtraCount(id, count, IncomeTimeTicks());
 
         public bool IsDisabled => disabled(null);
         public int PropertyValue(OutputAdditionPropType type) => Player().GetOutputAdditionPropValue(type);

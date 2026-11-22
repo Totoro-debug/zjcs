@@ -64,6 +64,8 @@ namespace Zjcs.Offline.HomeUI
             var player = PlayerAt(utcTicks);
             return Math.Max(0, player.GetOutputAdditionPropValue(player.GetOutputAdditionAddPercentType(hangUpId)));
         }
+        public int PropertyValue(OutputAdditionPropType type, long utcTicks)
+            => PlayerAt(utcTicks).GetOutputAdditionPropValue(type);
         public long ExtraCapacity(int hangUpId, long capacity, long utcTicks)
             => PlayerAt(utcTicks).CalcOutputAdditionExtStore(hangUpId, capacity);
         public long ExtraCount(int hangUpId, double count, long utcTicks)

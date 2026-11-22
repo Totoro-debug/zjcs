@@ -91,6 +91,12 @@ def prepare():
         'objects produced by Unity JSON remain disabled and do not create activity records.')
     if transactions not in receipt['adaptations']:
         receipt['adaptations'].append(transactions)
+    notifications = ('Local income views use the same monotonic saved checkpoint as settlement. '
+        'The activity reader can notify once when another owner changes the saved activity data or when a parent/property '
+        'start or expiry boundary is crossed. Local effective-property queries filter child intervals while the original '
+        'property/group query ports keep their verified differing behavior.')
+    if notifications not in receipt['adaptations']:
+        receipt['adaptations'].append(notifications)
     receipt['income_snapshot_inputs'] = {name: digest((ROOT / name).read_bytes()) for name in (
         'scripts/prepare_home_income_addition_snapshot.py',
         'scripts/prepare_home_output_addition_validation.py',
