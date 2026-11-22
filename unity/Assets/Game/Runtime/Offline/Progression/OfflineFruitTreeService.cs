@@ -224,22 +224,10 @@ namespace Zjcs.Offline.Progression
 
         private static void AdvanceSegments(OfflineFruitTreeProgress state, long from, long until)
         {
-            var boundaries = new SortedSet<long> { from, until };
-            foreach (OfflineFruitTreeOutputAddition addition in state.OutputAdditions)
-            {
-                if (addition.BeginUnixSeconds > from && addition.BeginUnixSeconds < until)
-                    boundaries.Add(addition.BeginUnixSeconds);
-                if (addition.EndUnixSeconds > from && addition.EndUnixSeconds < until)
-                    boundaries.Add(addition.EndUnixSeconds);
-            }
-            long[] points = boundaries.ToArray();
-            for (int index = 0; index + 1 < points.Length; index++)
-            {
-                long segmentStart = points[index];
-                long seconds = points[index + 1] - segmentStart;
-                if (seconds <= 0) continue;
-                ApplySegment(state, segmentStart, seconds / 3600.0);
-            }
+            var changes = state.OutputAdditions.SelectMany(addition => new[] {
+                addition.BeginUnixSeconds, addition.EndUnixSeconds });
+            foreach (var segment in Zjcs.Offline.State.OfflineIncomeTimeSegments.Split(from, until, changes))
+                ApplySegment(state, segment.Start, (segment.End - segment.Start) / 3600.0);
         }
 
         private static void ApplySegment(OfflineFruitTreeProgress state, long unixSeconds, double hours)
