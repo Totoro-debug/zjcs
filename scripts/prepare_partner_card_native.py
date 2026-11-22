@@ -48,11 +48,11 @@ def script_id(namespace, name):
 
 
 class PartnerCardBinding:
-    def __init__(self, work):
+    def __init__(self, work, *, recovery=None):
         if work.parent != ROOT / 'output/validation' or not (work / '.zjcs-validation.json').is_file():
             raise ValueError('Create an owned validation workspace before binding partner assets')
         self.work = work
-        self.recovery = PartnerNativeRecovery()
+        self.recovery = recovery if recovery is not None else PartnerNativeRecovery()
         self.cache = self.recovery.cache
         self.native = self.recovery.native
         self.proof, self.redirects, self.queue = {}, {}, []
@@ -66,7 +66,8 @@ class PartnerCardBinding:
         self.assets = {}
         self.script_sources = {}
         self.by_name = {}
-        receipt_path = self.cache / 'native-export-all-source-manifest.json'
+        export_name = self.recovery.export_name
+        receipt_path = self.cache / (export_name + '-source-manifest.json')
         receipt = json.loads(receipt_path.read_bytes())
         if receipt['manifest'] != self.recovery.apk.version or not receipt['completed']:
             raise ValueError('Native conversion receipt differs')
@@ -75,7 +76,7 @@ class PartnerCardBinding:
         prefix = 'ExportedProject/Assets/'
         for row in receipt['outputs']:
             if row['path'].startswith(prefix) and row['path'].endswith('.meta'):
-                path = self.cache / 'native-export-all' / row['path'][:-5]
+                path = self.cache / export_name / row['path'][:-5]
                 self.by_name.setdefault(self.name_key(path.stem), []).append(path)
         print('Indexed native asset paths:', len(self.by_name), flush=True)
         for kind in ('textures', 'shaders'):
@@ -350,7 +351,7 @@ class PartnerCardBinding:
         else:
             path = self.native_path(source_guid, obj)
             raw = path.read_bytes()
-            receipt_key = path.relative_to(self.cache / 'native-export-all').as_posix()
+            receipt_key = path.relative_to(self.cache / self.recovery.export_name).as_posix()
             meta_raw = Path(str(path) + '.meta').read_bytes()
             if sha(meta_raw) != self.checked[receipt_key + '.meta'] or guid(Path(str(path) + '.meta')) != source_guid:
                 raise ValueError('Native resource metadata changed')

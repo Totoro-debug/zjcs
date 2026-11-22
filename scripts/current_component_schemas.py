@@ -12,7 +12,7 @@ from UnityPy.helpers.TypeTreeGenerator import TypeTreeGenerator
 
 
 class CurrentSchemas(ScriptSchemas):
-    def __init__(self):
+    def __init__(self, managed_directory=None):
         source = OfficialSource()
         base = ROOT/'.tools/source-packages/current'/source.version
         code = json.loads((base/'code-manifest.json').read_bytes())
@@ -36,7 +36,8 @@ class CurrentSchemas(ScriptSchemas):
                     self.ambiguous_engine_types.add(name)
                 self.engine_types[name] = assembly
         self.generator = TypeTreeGenerator('2022.3.57f1', generator='AssetsTools')
-        self.generator.load_local_dll_folder(str(base/'native-conversion/changed-inputs/Managed'))
+        managed = Path(managed_directory) if managed_directory is not None else base/'native-conversion/changed-inputs/Managed'
+        self.generator.load_local_dll_folder(str(managed))
         self.cache, self.records = {}, {}
 
     def tree(self, assembly, name):

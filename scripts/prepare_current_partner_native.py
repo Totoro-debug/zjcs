@@ -67,24 +67,45 @@ def documents(text):
 
 
 class PartnerNativeRecovery:
-    def __init__(self):
+    def __init__(self, *, native_cache=None, export_name='native-export-all', bundle=BUNDLE):
         self.apk = Apk.current()
-        self.cache = ROOT / '.tools/source-packages/current' / self.apk.version / 'native-conversion'
-        self.native = self.cache / 'native-export-all/ExportedProject/Assets'
+        self.cache = Path(native_cache).resolve() if native_cache is not None else ROOT / '.tools/source-packages/current' / self.apk.version / 'native-conversion'
+        self.export_name = export_name
+        self.bundle = bundle
+        self.native = self.cache / export_name / 'ExportedProject/Assets'
         self.field_cache = self.cache / 'component-fields-all'
         manifest_path = self.field_cache / 'source-manifest.json'
-        manifest = json.loads(manifest_path.read_bytes())
-        if manifest['manifest'] != self.apk.version or not manifest['completed']:
-            raise ValueError('Current field recovery cache is not complete')
-        self.cached = {row['cab'].lower() + ':' + row['path_id']: row for row in manifest['objects']}
-        self.objects = self.apk.objects(BUNDLE)
+        self.native_verified = None
+        self.schema_managed = None
+        if native_cache is None or manifest_path.exists():
+            manifest = json.loads(manifest_path.read_bytes())
+            if manifest['manifest'] != self.apk.version or not manifest['completed']:
+                raise ValueError('Current field recovery cache is not complete')
+            self.cached = {row['cab'].lower() + ':' + row['path_id']: row for row in manifest['objects']}
+            component_cache = dict(path=manifest_path.relative_to(ROOT).as_posix(), sha256=digest(manifest_path.read_bytes()))
+        else:
+            allowed = (ROOT / '.tools/source-packages/current' / self.apk.version).resolve()
+            if not self.cache.is_relative_to(allowed) or not re.fullmatch(r'native-export(?:-[a-z0-9]+)?', export_name):
+                raise ValueError('Use a verified selected native export cache')
+            export_receipt = self.cache / (export_name + '-source-manifest.json')
+            manifest = json.loads(export_receipt.read_bytes())
+            if manifest['manifest'] != self.apk.version or not manifest['completed']:
+                raise ValueError('Selected native UI export is incomplete')
+            if manifest['code_manifest_sha256'] != digest((allowed / 'code-manifest.json').read_bytes()):
+                raise ValueError('Selected native UI code source differs')
+            self.native_verified = {row['path']: row['sha256'] for row in manifest['outputs']}
+            self.cached = {}
+            self.schema_managed = self.cache / 'inputs/Managed'
+            component_cache = dict(path=export_receipt.relative_to(ROOT).as_posix(), sha256=digest(export_receipt.read_bytes()),
+                decoding='Original active assembly descriptors; fields decoded on demand')
+        self.objects = self.apk.objects(bundle)
         self.typed = {}
         self.schemas = None
         self.outputs = []
-        self.proof = dict(manifest=self.apk.version, bundle=BUNDLE,
+        self.proof = dict(manifest=self.apk.version, bundle=bundle,
             stage='Recovered original hierarchy/fields only; runtime script and resource binding pending',
             generator_sha256=digest(Path(__file__).read_bytes()),
-            component_cache=dict(path=manifest_path.relative_to(ROOT).as_posix(), sha256=digest(manifest_path.read_bytes())),
+            component_cache=component_cache,
             prefabs=[])
 
     def fields(self, obj):
@@ -104,13 +125,13 @@ class PartnerNativeRecovery:
                     # type trees. Decode their exact active assembly descriptors.
                     if self.schemas is None:
                         from current_component_schemas import CurrentSchemas
-                        self.schemas = CurrentSchemas()
+                        self.schemas = CurrentSchemas(managed_directory=self.schema_managed)
                     self.typed[key] = self.schemas.read(obj)
         return self.typed[key]
 
     def recover(self, name, destination, *, bundle=BUNDLE, native_relative=None,
                 source_root=None, native_root_id=None):
-        objects = self.objects if bundle == BUNDLE else self.apk.objects(bundle)
+        objects = self.objects if bundle == self.bundle else self.apk.objects(bundle)
         if (source_root is None) != (native_root_id is None):
             raise ValueError('Subtree recovery needs both original and native root identities')
         if source_root is None:
@@ -126,6 +147,10 @@ class PartnerNativeRecovery:
             raise ValueError('Recover a prefab or scene subtree within the selected native source directory')
         if path.suffix == '.unity' and source_root is None:
             raise ValueError('Scene recovery requires an explicit original/native subtree root')
+        if self.native_verified is not None:
+            for item in (path, Path(str(path) + '.meta')):
+                if digest(item.read_bytes()) != self.native_verified[item.relative_to(self.cache / self.export_name).as_posix()]:
+                    raise ValueError('Selected native UI export changed: ' + str(item))
         if bundle != BUNDLE and bundle not in self.proof.setdefault('additional_bundles', []):
             self.proof['additional_bundles'].append(bundle)
         text = path.read_text('utf8')
