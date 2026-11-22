@@ -13632,7 +13632,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_conqueror_skill_graphs.py",
-    "sha256": "a9fd484eca93a43575318ca9138c84c13381fcc8f54206ab2cf5b196cb5b662d"
+    "sha256": "518e1e3a4c76e7e52f7eadfff4cdd1d3f107587d1d5524b2de6974cee7b2fe4c"
   },
   "graph_asset_adapter": {
     "path": "scripts/prepare_battle_status_orbit_assets.py",
@@ -15305,6 +15305,10 @@
     }
   ],
   "binding_registry": [
+    {
+      "path": "scripts/current_battle_native_skill_graphs.py",
+      "sha256": "a50503459d194fa4b2bbdd6cbc5ed994adf61ffeb1decf19b20b3d17c87150c5"
+    },
     {
       "path": "scripts/battle_native_script_bindings.py",
       "sha256": "9b5967c5d2a332410814d50c1712e9529decb0b2d0ab27655d8c1b4684da8efc"
