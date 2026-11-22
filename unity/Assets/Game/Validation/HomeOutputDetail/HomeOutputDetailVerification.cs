@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Offline.CharacterCreation;
+using Zjcs.Offline.Home;
 using Zjcs.Offline.HomeUI;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
@@ -187,7 +188,49 @@ namespace Zjcs.Validation.HomeOutputDetail
                 && Field<Zjcs.Official.SkillsUI.LoopVerticalScrollWithMaxHeight>(popup, "mScroll").totalCount == 1,
                 "expired records are filtered and original single-group background is hidden");
             yield return Capture("detail-single.png");
+            yield return CheckBedCollection();
             Require(errors.Count == 0, "no runtime error or assertion");
+        }
+
+        IEnumerator CheckBedCollection()
+        {
+            home.Hud.CloseDialog(); yield return null;
+            var source = new OfflineHomeOutputAddition(home.Session, () => DateTime.UtcNow, _ => false);
+            foreach (var record in source.ReadState().Records)
+            {
+                record.EndTime = DateTime.UtcNow.AddSeconds(-1);
+                Require(source.ApplyRecord(record, "bed:fixture:expire:" + record.Id), "ordinary bed fixture expires activity records");
+            }
+            Require(home.Session.Mutate("bed:fixture:stored", save => {
+                var entry = save.Income.SingleOrDefault(value => value.HangUpId == 1);
+                if (entry == null) save.Income.Add(entry = new OfflineHomeIncomeEntry { HangUpId = 1 });
+                entry.StoredSeconds = 0; entry.SettledCount = 1;
+            }), "isolated settled bed income");
+            long before = home.Profile.Save.Player.Experience;
+            long collected = 0; int published = 0;
+            home.HangUpCollectedForTutorial += (id, count, receipt) => { if (id == 1) { collected += count; published++; } };
+            home.Hud.ShowBed(); yield return new WaitForSecondsRealtime(.8f);
+            var bed = Windows.Bed;
+            yield return WaitForButton(bed.GetHangUpRewardBtn);
+            Require(bed.ImageSlot.childCount == 1 && bed.Name.GetComponent<TMP_Text>().text == "床",
+                "bed displays its original bound model and item name");
+            bool levelFoldout = bed.LevelFoldout;
+            yield return WaitForButton(bed.LevelFoldoutBtn); Click(bed.LevelFoldoutBtn);
+            Require(bed.LevelFoldout != levelFoldout, "native blessing foldout responds to simulated pointer");
+            Click(bed.LevelFoldoutBtn);
+            yield return WaitForButton(bed.GetHangUpRewardBtn); Click(bed.GetHangUpRewardBtn);
+            yield return null;
+            Require(published == 1 && collected == 1, "native collection publishes one committed receipt");
+            Require(home.Profile.Save.Player.Experience == before + collected,
+                "native collection grants exactly the committed experience once");
+            Require(home.Session.Preview(1).Count == 0, "native collection consumes the saved bed income");
+            yield return Capture("bed-collected.png");
+            Require(home.Profile.Save.Player.Experience == before + collected,
+                "original award presentation cannot grant experience again");
+            home.Close(); home = null; yield return null;
+            Open(); yield return new WaitForSecondsRealtime(.8f);
+            Require(home.Profile.Save.Player.Experience == before + collected && home.Session.Preview(1).Count == 0,
+                "cold reopen preserves granted experience and consumed bed income");
         }
 
         static PlayerOutputAdditionDataWrap Record(int id, JToken row, DateTime end)
