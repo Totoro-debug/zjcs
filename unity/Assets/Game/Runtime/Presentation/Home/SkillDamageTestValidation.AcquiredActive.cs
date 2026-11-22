@@ -732,6 +732,8 @@ namespace Zjcs.Presentation.Home
                 "The cultivated standfast soul never applied and rendered its turn-bound protection.");
             Require(passiveCompanion != 10568 || assaultHits > 0, "The cultivated defence ignore never affected a successful hit.");
             Require(passiveCompanion != 10594 || soulBreakHits > 0, "The cultivated target missing-health bonus never affected a successful hit.");
+            Require(passiveCompanion != 10592 || File.Exists(Path.Combine(output, "companion-steel-faith-checkpoint.json")),
+                "The cultivated steel faith never checked an actual taunted enemy's configured hit.");
             Require(passiveCompanion != 10595 || windHits > 0 && capturedPassive,
                 "The cultivated wind orb never rendered and struck at the owner's turn end.");
             Require(passiveCompanion != 10543 || flameHits > 0 && capturedPassive,
