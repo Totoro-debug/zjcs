@@ -1083,6 +1083,9 @@ namespace Zjcs.Presentation.Home
         /// <summary>Walks the official click quadrilaterals in world space.</summary>
         public int HitTest(Vector2 world)
         {
+            if (TryGetNativeBedClickBounds(out Rect nativeBed)
+                && nativeBed.Contains(world))
+                return 0;
             int hitType = -1;
             float hitArea = float.MaxValue;
             foreach (KeyValuePair<int, List<HomeQuad>> pair in clickRegions)
@@ -1113,6 +1116,8 @@ namespace Zjcs.Presentation.Home
         public bool TryGetFurnitureClickBounds(int type, out Rect bounds)
         {
             bounds = default;
+            if (type == 0 && TryGetNativeBedClickBounds(out bounds))
+                return true;
             if (!clickRegions.TryGetValue(type, out List<HomeQuad> regions)) return false;
             float minX = float.MaxValue;
             float minY = float.MaxValue;
@@ -1130,6 +1135,34 @@ namespace Zjcs.Presentation.Home
                     maxY = Mathf.Max(maxY, region.vertices[index + 1]);
                 }
                 found = true;
+            }
+            if (!found) return false;
+            bounds = Rect.MinMaxRect(minX, minY, maxX, maxY);
+            return bounds.width > 0f && bounds.height > 0f;
+        }
+
+        private bool TryGetNativeBedClickBounds(out Rect bounds)
+        {
+            bounds = default;
+            float minX = float.MaxValue;
+            float minY = float.MaxValue;
+            float maxX = float.MinValue;
+            float maxY = float.MinValue;
+            bool found = false;
+            foreach (NativeHomeBedActor actor in nativeBedActors)
+            {
+                if (!actor || !actor.gameObject.activeInHierarchy) continue;
+                foreach (Collider collider in actor.GetComponentsInChildren<Collider>(true))
+                {
+                    if (!collider || !collider.enabled || !collider.gameObject.activeInHierarchy) continue;
+                    Bounds value = collider.bounds;
+                    if (value.size.x <= 0f || value.size.y <= 0f) continue;
+                    minX = Mathf.Min(minX, value.min.x);
+                    minY = Mathf.Min(minY, value.min.y);
+                    maxX = Mathf.Max(maxX, value.max.x);
+                    maxY = Mathf.Max(maxY, value.max.y);
+                    found = true;
+                }
             }
             if (!found) return false;
             bounds = Rect.MinMaxRect(minX, minY, maxX, maxY);
