@@ -43,4 +43,4 @@
 
 ## Windows 发布
 
-逐项交付及保护存档要求见[全局协作约定](../AGENTS.md)，构建与发布缓存约定见[工程页](common/unity-project.md#windows-构建与发布)。
+发布与保护存档要求见[全局协作约定](../AGENTS.md)，构建与发布缓存约定见[工程页](common/unity-project.md#windows-构建与发布)。
