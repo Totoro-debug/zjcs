@@ -231,8 +231,9 @@ namespace Zjcs.Presentation.Inventory
                             ? OfflineInventorySort.GetTime : (OfflineInventorySort?)null;
                 if (!selectedSort.HasValue) continue;
                 sortOptionPaths[path] = selectedSort.Value;
+                Toggle toggle = rect.GetComponent<Toggle>();
                 Button button = rect.GetComponent<Button>();
-                if (button == null)
+                if (button == null && toggle == null)
                 {
                     Graphic graphic = rect.GetComponent<Graphic>();
                     if (graphic == null) graphic = rect.gameObject.AddComponent<Image>();
@@ -241,21 +242,23 @@ namespace Zjcs.Presentation.Inventory
                 }
                 OfflineInventorySort value = selectedSort.Value;
                 string reversePath = path + "/Btn_Sel";
+                Action select = () =>
+                {
+                    sort = value;
+                    sortByTab[currentTab.NameKey] = value;
+                    reverse = false;
+                    RefreshSortOptionStates();
+                    if (nodes.TryGetValue(reversePath, out RectTransform arrow)) SetSortArrow(arrow, false);
+                    Refresh();
+                };
+                if (toggle != null) toggle.onValueChanged.AddListener(isOn => { if (isOn) select(); });
+                else button.onClick.AddListener(() => select());
                 if (nodes.TryGetValue(reversePath, out RectTransform reverseButtonNode))
                 {
                     Button reverseButton = reverseButtonNode.GetComponent<Button>();
                     if (reverseButton != null)
                     {
                         SetSortArrow(reverseButtonNode, false);
-                        button.onClick.AddListener(() =>
-                        {
-                            sort = value;
-                            sortByTab[currentTab.NameKey] = value;
-                            reverse = false;
-                            RefreshSortOptionStates();
-                            SetSortArrow(reverseButtonNode, false);
-                            Refresh();
-                        });
                         reverseButton.onClick.AddListener(() =>
                         {
                             reverse = !reverse;
@@ -264,14 +267,6 @@ namespace Zjcs.Presentation.Inventory
                         });
                     }
                 }
-                else button.onClick.AddListener(() =>
-                {
-                    sort = value;
-                    sortByTab[currentTab.NameKey] = value;
-                    reverse = false;
-                    RefreshSortOptionStates();
-                    Refresh();
-                });
             }
             RefreshSortOptionStates();
         }
@@ -292,7 +287,7 @@ namespace Zjcs.Presentation.Inventory
                 if (selected != null) selected.gameObject.SetActive(option.Value == sort);
                 if (normal != null) normal.gameObject.SetActive(option.Value != sort);
                 Toggle toggle = rect.GetComponent<Toggle>();
-                if (toggle != null) toggle.interactable = false;
+                if (toggle != null) toggle.SetIsOnWithoutNotify(option.Value == sort);
             }
         }
 
@@ -328,16 +323,17 @@ namespace Zjcs.Presentation.Inventory
                 if (label != null) label.text = itemSprite == null ? OfficialItemName(item) : string.Empty;
                 fakeIcon.gameObject.SetActive(itemSprite == null);
             }
-            RectTransform countNode = iconNodes.FirstOrDefault(pair =>
-                pair.Key.EndsWith("/BgCountText/CountText", StringComparison.Ordinal)).Value;
+            KeyValuePair<string, RectTransform> countEntry = iconNodes.FirstOrDefault(pair =>
+                pair.Key.EndsWith("/BgCountText/CountText", StringComparison.Ordinal));
+            RectTransform countNode = countEntry.Value;
             if (countNode != null)
             {
-                Text count = countNode.GetComponent<Text>();
-                if (count != null) count.text = FormatCount(item.Count);
+                SetDetailText(iconNodes, countEntry.Key, FormatCount(item.Count));
                 bool showCount = item.Count > 0 && item.CanOverlap
                     && item.ItemType != 326 && item.ItemType != 334 && item.ItemType != 340 && item.ItemType != 402
                     && (item.DetailKind != OfflineInventoryDetailKind.Equipment || item.IsEquipped);
                 countNode.gameObject.SetActive(showCount);
+                countNode.parent.gameObject.SetActive(showCount);
             }
             ApplyMergeProgress(item, iconNodes);
             AddRedDot(item, iconNodes);
@@ -564,6 +560,13 @@ namespace Zjcs.Presentation.Inventory
             rect.localRotation = Quaternion.Euler(0f, 0f, Number(data, "rotation", 0f));
             instance.SetActive(Boolean(data, "active", true));
             targetNodes[path] = rect;
+            if (HasScript(data, "SafeArea"))
+            {
+                var safeArea = instance.AddComponent<Zjcs.Official.WorldUI.WorldSafeArea>();
+                List<object> padding = Array(data, "safe_area");
+                safeArea.PaddingTop = Number(padding, 0, 0f);
+                safeArea.PaddingBottom = Number(padding, 1, 0f);
+            }
 
             if (data.TryGetValue("image", out object rawImage) && rawImage is Dictionary<string, object> imageData)
             {
@@ -625,7 +628,8 @@ namespace Zjcs.Presentation.Inventory
             if (HasScript(data, "TabItem") || HasScript(data, "Toggle"))
             {
                 Graphic graphic = instance.GetComponent<Graphic>();
-                if (graphic == null) graphic = instance.AddComponent<Image>();
+                if (graphic == null) graphic = instance.AddComponent<Zjcs.Official.WorldUI.NoDrawingRayCast>();
+                graphic.raycastTarget = true;
                 Toggle toggle = instance.AddComponent<Toggle>();
                 toggle.targetGraphic = graphic;
                 toggle.graphic = instance.GetComponentsInChildren<Graphic>(true)
