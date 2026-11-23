@@ -7,6 +7,7 @@ from pathlib import Path
 from prepare_battle_suck_hp_sources import CODE, COMBAT, ROOT, body, identity, reference
 
 MANIFEST = ROOT / 'assets/reference/battle-rules/status-damage-source-manifest.json'
+PINNED_MANIFEST = json.loads(MANIFEST.read_bytes())['manifest']
 
 
 def code_identity(path):
@@ -24,7 +25,7 @@ def main():
         'FightHandleStatusDamageByDamageResultValueAndStore', 'DamageResultParameter', 'DamageResultValueType')]
     inputs = [COMBAT / name for name in ('rules.json', 'skill-rules.json', 'battle-rules.json')]
     helpers = [ROOT / 'scripts/prepare_battle_suck_hp_sources.py', Path(__file__)]
-    record = dict(manifest='884_156692', official_code=[identity(p) for p in originals],
+    record = dict(manifest=PINNED_MANIFEST, official_code=[identity(p) for p in originals],
         runtime_inputs=[identity(p) for p in inputs], generators=[code_identity(p) for p in helpers],
         extracted_methods=['BattleFormulaHandler.StatusDamage'],
         migration=code_identity(ROOT / 'unity/Assets/Game/Runtime/Official/Combat/FightDamageFormula.StatusDamage.cs'),

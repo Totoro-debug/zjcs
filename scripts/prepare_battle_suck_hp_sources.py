@@ -7,9 +7,10 @@ import random
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-CODE = ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common'
 COMBAT = ROOT / 'unity/Assets/Official/Combat'
 MANIFEST = ROOT / 'assets/reference/battle-rules/suck-hp-source-manifest.json'
+PINNED_MANIFEST = json.loads(MANIFEST.read_bytes())['manifest']
+CODE = ROOT / '.tools/source-packages/current' / PINNED_MANIFEST / 'official-code/common-source/Common'
 
 
 def identity(path):
@@ -29,7 +30,7 @@ def body(text, signature):
 
 
 def reference():
-    assert json.loads((ROOT / 'official-source.json').read_bytes())['active'] == '884_156692'
+    assert CODE.is_dir(), 'Pinned official source directory is unavailable: ' + str(CODE)
     original = (CODE / 'BattleFormulaHandler.cs').read_text('utf8')
     signatures = ['private double CalcCureAdd(', 'private double ApplyCureAddSoftCap(',
                   'public long SuckHp(', 'public long SuckHpByOnceHit(']
@@ -123,7 +124,7 @@ def main():
             assert identity(ROOT / entry['path']) == entry, 'Absorption formula source identity changed.'
         print(json.dumps(data))
         return
-    record = dict(manifest='884_156692', official_code=[identity(CODE / (name + '.cs')) for name in
+    record = dict(manifest=PINNED_MANIFEST, official_code=[identity(CODE / (name + '.cs')) for name in
                   ('BattleFormulaHandler', 'BattleFormula', 'PropType', 'GameCharacterType')],
                   runtime_inputs=[identity(COMBAT / name) for name in ('rules.json', 'skill-rules.json')],
                   generator=identity(Path(__file__)),
