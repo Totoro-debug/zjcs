@@ -49,6 +49,7 @@ Add-Type -Path (@(Get-FightCombatSources) +
     (Join-Path $PSScriptRoot 'fixtures/battle_overload_protection_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_chaos_rune_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_heavenly_rain_harness.cs') +
+    (Join-Path $PSScriptRoot 'fixtures/battle_sage_dark_blast_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_flame_soul_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_saint_guard_harness.cs'))
 $sp = Get-Content (Join-Path $inputs 'skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
@@ -82,6 +83,7 @@ if ($SkillId -ne 0) {
         10573 { [BattleOverloadProtectionHarness]::Run($catalog, $formula); exit 0 }
         10059 { [BattleChaosRuneHarness]::Run($catalog, $formula, $items); exit 0 }
         10096 { [BattleHeavenlyRainHarness]::Run($catalog, $formula, $items); exit 0 }
+        10103 { [BattleSageDarkBlastHarness]::Run($catalog, $formula, $items); exit 0 }
         10599 { [BattleFlameSoulHarness]::Run($catalog, $formula, $items); exit 0 }
         10593 { [BattleSaintGuardHarness]::Run($catalog, $formula, $items); exit 0 }
         10543 { [BattleFlameMomentumHarness]::Run($catalog, $formula, $items); exit 0 }
@@ -138,5 +140,6 @@ if ($SkillId -ne 0) {
 [BattleOverloadProtectionHarness]::Run($catalog, $formula)
 [BattleChaosRuneHarness]::Run($catalog, $formula, $items)
 [BattleHeavenlyRainHarness]::Run($catalog, $formula, $items)
+[BattleSageDarkBlastHarness]::Run($catalog, $formula, $items)
 [BattleFlameSoulHarness]::Run($catalog, $formula, $items)
 [BattleSaintGuardHarness]::Run($catalog, $formula, $items)
