@@ -19,6 +19,14 @@ $battlePath = 'unity/Assets/Official/Combat/battle-rules.json'
 $catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
     [System.IO.File]::ReadAllText((Join-Path $root $skillPath)), (Get-Sha $skillPath), '854_156383',
     [System.IO.File]::ReadAllText((Join-Path $root $battlePath)), (Get-Sha $battlePath), '854_156383')
+$rulesPath = 'unity/Assets/Official/Combat/rules.json'
+$rulesManifest = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::ReadSourceManifest(
+    [System.IO.File]::ReadAllText((Join-Path $root 'unity/Assets/Official/Combat/rules-source-manifest.json')))
+$skillItems = [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load(
+    [System.IO.File]::ReadAllText((Join-Path $root $rulesPath)), $rulesManifest.OutputSha256, $rulesManifest.Manifest)
+$activeSkillItem = $skillItems.InitialActiveSkill([Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::SwordInitialWeaponType)
+$activeSkillEntityId = $skillItems.Required($activeSkillItem).EntityId
+Assert-Reduce ($activeSkillEntityId -gt 0 -and $skillItems.IsActiveSkillEntity($activeSkillEntityId)) 'Verified active-skill classification is unavailable'
 
 $schema = [Zjcs.Combat.Official.FightDamagePropertySchema]::new()
 $reduceProperty = $catalog.PropertyType('StatusDmgReducePer')
@@ -33,7 +41,7 @@ foreach ($name in @('BaseCureAdd', 'BaseBeCureAdd')) {
     }
 }
 $formula = [Zjcs.Combat.Official.FightDamageFormula]::new(
-    $schema, [Zjcs.Combat.Official.FightDamageFormulaConfig]::new())
+    $schema, [Zjcs.Combat.Official.FightDamageFormulaConfig]::new(), $skillItems)
 $hitExecutor = [Zjcs.Combat.Official.FightBattleHitExecutor]::new(
     $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new())
 
@@ -55,7 +63,7 @@ function Invoke-Damage($source, $target, $skill) {
 
 function New-Skill([int]$skillType, [int]$targetType) {
     $skill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
-    $skill.SkillType = $skillType; $skill.TargetType = $targetType
+    $skill.SkillType = $skillType; $skill.TargetType = $targetType; $skill.EntityId = $activeSkillEntityId
     return $skill
 }
 
@@ -65,16 +73,23 @@ function Add-StatusType($unit, [int]$id, [int]$statusType) {
     $unit.Statuses.Add($status)
 }
 
+function Set-ReductionProperty($status, [long]$value) {
+    $status.StatusProperties = [System.Collections.Generic.List[Zjcs.Combat.Official.FightPropertyValue]]::new()
+    $status.StatusProperties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $reduceProperty; Value = $value })
+}
+
 $source = New-Unit 1 1 5000 5000
 $target = New-Unit 2 2 5000 5000
 $statusTemplate = $catalog.CreateStatus(24201, $target.Id, $source.Id, 10)
 Assert-Reduce ($null -ne $statusTemplate.DamageReducePer -and $statusTemplate.DamageReducePer.Damage -and -not $statusTemplate.DamageReducePer.Cure -and [Math]::Abs($statusTemplate.DamageReducePer.NotActiveSkillScale - 1.2) -lt 0.0001) 'Official status 24201 damage-reduction fields were not mapped'
+Set-ReductionProperty $statusTemplate 10000
 $applied = [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($target, $statusTemplate, 0, 10)
 $result = Invoke-Damage $source $target (New-Skill 0 4)
 Assert-Reduce ($result.Formula.Damage -eq -500 -and $applied.DamageReducePer.TriggeredCount -eq 1) 'Status 24201 did not halve active-skill damage'
 
 $target = New-Unit 3 2 5000 5000
 $stackReducer = $catalog.CreateStatus(24033, $target.Id, $source.Id, 11)
+Set-ReductionProperty $stackReducer 10000
 $appliedStackReducer = [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($target, $stackReducer, 0, 11)
 $sourceStack = [Zjcs.Combat.Official.FightBattleStatusState]::new()
 $sourceStack.ClassId = 99010; $sourceStack.StatusType = 7
@@ -85,6 +100,7 @@ Assert-Reduce ($stackResult.Formula.Damage -eq -384 -and $appliedStackReducer.Da
 
 $target = New-Unit 4 2 5000 5000
 $limited = $catalog.CreateStatus(24201, $target.Id, $source.Id, 12)
+Set-ReductionProperty $limited 10000
 $appliedLimited = [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($target, $limited, 0, 12)
 $appliedLimited.DamageReducePer.ConditionCount = 2
 $appliedLimited.DamageReducePer.MaxCount = 1
@@ -98,6 +114,7 @@ $source.Statuses.Clear()
 Add-StatusType $source 99020 2
 Add-StatusType $source 99021 3
 $sourceFiltered = $catalog.CreateStatus(25048, $target.Id, $source.Id, 14)
+Set-ReductionProperty $sourceFiltered 10000
 $sourceFilteredApplied = [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($target,
     $sourceFiltered, 0, 14)
 $sourceFilteredResult = Invoke-Damage $source $target (New-Skill 0 1)
@@ -105,6 +122,7 @@ Assert-Reduce ($sourceFilteredResult.Formula.Damage -eq -500 -and $sourceFiltere
 
 $target = New-Unit 8 2 5000 5000
 $targetFiltered = $catalog.CreateStatus(25273, $target.Id, $source.Id, 15)
+Set-ReductionProperty $targetFiltered 10000
 $targetFilteredApplied = [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($target,
     $targetFiltered, 0, 15)
 $targetFilteredApplied.StatusType = 99
@@ -127,6 +145,7 @@ Assert-Reduce ($null -ne $restoredStatus -and $restoredStatus.DamageReducePer.Tr
 $target = New-Unit 5 1 1000 5000
 $cureStatus = $catalog.CreateStatus(24201, $target.Id, $target.Id, 13)
 $cureApplied = [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($target, $cureStatus, 0, 13)
+Set-ReductionProperty $cureApplied 10000
 $cureApplied.DamageReducePer.Cure = $true
 $healer = New-Unit 6 1 5000 5000
 $healer.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{
@@ -136,6 +155,7 @@ $target.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{
     Id = $catalog.PropertyType('BaseBeCureAdd'); Value = 10000
 })
 $healSkill = New-Skill 3 4
+$healSkill.EntityId = 0
 $healSkill.HasCustomCure = $true; $healSkill.CustomCure = 1000
 $healHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
 $healHit.EntityId = 99003; $healHit.DamageId = 99004; $healHit.ActionType = 5
