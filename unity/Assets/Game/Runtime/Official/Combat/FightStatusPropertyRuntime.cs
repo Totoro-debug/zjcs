@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace Zjcs.Combat.Official
 {
@@ -83,8 +84,8 @@ namespace Zjcs.Combat.Official
             {
                 if (oldMaxHp > 0 && oldMaxHp != newMaxHp && unit.Hp > 0)
                 {
-                    double hpRatio = unit.Hp / (double)oldMaxHp;
-                    unit.Hp = Math.Min(newMaxHp, (long)Math.Ceiling(newMaxHp * hpRatio));
+                    BigInteger scaledHp = (BigInteger)Math.Min(unit.Hp, oldMaxHp) * newMaxHp;
+                    unit.Hp = (long)((scaledHp + oldMaxHp - 1) / oldMaxHp);
                 }
                 unit.LastMaxHp = newMaxHp;
                 unit.MaxHp = newMaxHp;

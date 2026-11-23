@@ -67,4 +67,28 @@ Assert-PropertyHp ($unit.Hp -eq 1 -and $unit.MaxHp -eq 1000 -and $updates.Count 
 Assert-PropertyHp ($updates.Count -eq 2) 'An unchanged property rebuild emitted a duplicate HP update.'
 Assert-PropertyHp ($hpField.IsNotSerialized) 'The runtime HP callback can be serialized into a checkpoint.'
 
+$cases = @(
+    @{ Name = 'full HP at the integer limit'; Current = 1000; Before = 1000; After = [long]::MaxValue; Expected = [long]::MaxValue }
+    @{ Name = 'partial HP at the integer limit'; Current = [long]::MaxValue - 2; Before = [long]::MaxValue - 1; After = [long]::MaxValue; Expected = [long]::MaxValue - 1 }
+    @{ Name = 'exact scaled HP'; Current = 14; Before = 100; After = 850; Expected = 119 }
+    @{ Name = 'fractional scaled HP'; Current = 1; Before = 3; After = 5; Expected = 2 }
+    @{ Name = 'zero HP'; Current = 0; Before = 100; After = 200; Expected = 0 }
+)
+foreach ($case in $cases) {
+    $subject = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+    $subject.Id = 1
+    $subject.Hp = $case.Current
+    $subject.MaxHp = $case.Before
+    $subject.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $maxHpId; Value = $case.Before })
+    $modifier = [Zjcs.Combat.Official.FightBattleStatusState]@{
+        ClassId = 999999; OwnerId = 1; CreatorId = 1; PropertyDefinitionResolved = $true; HasPropertyComponent = $true
+    }
+    $modifier.ResolvedProperties = [System.Collections.Generic.List[Zjcs.Combat.Official.FightPropertyValue]]::new()
+    $modifier.ResolvedProperties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $maxHpId; Value = $case.After - $case.Before })
+    $subject.Statuses.Add($modifier)
+    [Zjcs.Combat.Official.FightStatusPropertyRuntime]::Rebuild($subject,
+        [Zjcs.Combat.Official.FightBattleUnitState[]]@($subject), $catalog, $formula)
+    Assert-PropertyHp ($subject.Hp -eq $case.Expected -and $subject.MaxHp -eq $case.After) "Unexpected HP after $($case.Name). HP=$($subject.Hp), maximum=$($subject.MaxHp)."
+}
+
 Write-Output 'Property HP update checks passed: max-HP ratio changes notify after property rebuild, trigger the configured listener once, and ignore unchanged rebuilds.'
