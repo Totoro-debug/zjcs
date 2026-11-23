@@ -1,0 +1,14 @@
+// Selected original home overlap/light relation implementation; see its source receipt.
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using UnityEngine;
+using UnityEngine.Rendering.Universal;
+namespace Zjcs.Official.HomeRelations
+{
+using Object = UnityEngine.Object;
+public abstract class HomeRelation : MonoBehaviour
+{
+	public EHomeRelationGroup RelationGroup;
+}
+}
