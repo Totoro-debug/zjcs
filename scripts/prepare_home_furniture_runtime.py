@@ -1,5 +1,6 @@
 """Migrate the selected FurnitureBase, HomeNotice and storage controller bodies."""
 import hashlib
+import inspect
 import json
 from pathlib import Path
 import re
@@ -79,7 +80,10 @@ using Object = UnityEngine.Object;
         text = re.sub(r'\bConditionHandlerRegistration\b', 'IDisposable', text).replace('IConditionNotice', 'IHomeFurnitureConditionNotice')
         text = re.sub(r'\bICondition\b', 'IHomeFurnitureCondition', text)
         text = text.replace('IStoryPlayContext', 'IHomeFurnitureStoryContext')
-        text = '\n'.join(line.rstrip() for line in (header + text + '\n}\n').split('\n'))
+        source_header = header
+        if 'List<' in text or 'HashSet<' in text:
+            source_header = source_header.replace('using System.Collections;\n', 'using System.Collections;\nusing System.Collections.Generic;\n')
+        text = '\n'.join(line.rstrip() for line in (source_header + text + '\n}\n').split('\n'))
         if any(token in text for token in ('MeManager', 'Parsers.Instance', 'WindowManager', 'AwardManager', 'Framework.', '[Inject]', 'ServiceProvider', 'PlayerPlayState', 'StoryPlayEntry', 'Log.Debug', 'Log.Error')):
             raise ValueError('Unbound furniture service: ' + name)
         path = DEST / (name + '.cs')
@@ -152,10 +156,90 @@ using Object = UnityEngine.Object;
     emit('HomeNotice', text)
     emit('StoreBoxFurniture', read('StoreBoxFurniture').replace('WindowManager.Instance.Popup<PlayerBagPanel>()', 'Services.PopupPlayerBag()'))
 
-    port = TEMPLATES / 'HomeFurnitureServices.cs'
-    inputs[port.relative_to(ROOT).as_posix()] = sha(port.read_bytes())
-    write(DEST / port.name, port.read_bytes())
-    metadata(DEST / port.name)
+    emit('HomeViewMode', read('HomeViewMode'))
+    text = read('HomeViewModeControl')
+    text = replace(text, 'private IHomeData HomeData { get; set; }',
+        'public IHomeFurnitureViewModes ViewModes { get; set; }')
+    text = text.replace('HomeData.OnHomeViewModeChange.Subscribe(', 'ViewModes.Subscribe(')
+    text = text.replace('HomeData.HomeViewMode', 'ViewModes.HomeViewMode')
+    emit('HomeViewModeControl', text)
+
+    text = read('Home.ActorBehaviour/ActionEventData').replace('namespace Home.ActorBehaviour;\n', '')
+    emit('ActionEventData', text)
+    text = read('HomeActionEventHandler')
+    text = replace(text, 'private ISubscriber<ActionEventData> Subscriber { get; set; }',
+        'public IHomeFurnitureActionEvents ActionEvents { get; set; }')
+    text = replace(text, 'SubscriberExtensions.Subscribe<ActionEventData>(Subscriber, (Action<ActionEventData>)OnHandleEvent, Array.Empty<MessageHandlerFilter<ActionEventData>>())',
+        'ActionEvents.Subscribe(OnHandleEvent)')
+    emit('HomeActionEventHandler', text)
+    emit('HomeSwitcherActionEventHandler', read('HomeSwitcherActionEventHandler'))
+
+    text = read('HomeWeaponRack')
+    text = replace(text, 'private DisposableBag mDisposableBag;',
+        'private readonly HomeFurnitureLifetime mDisposableBag = new HomeFurnitureLifetime();')
+    text = replace(text, '''\tprivate IResourceLoader ResourceLoader { get; set; }
+\tprivate IHomeData HomeData { get; set; }
+\tprivate IServiceProvider ServiceProvider { get; set; }''',
+        '    public IHomeWeaponRackServices Services { get; set; }')
+    text = replace(text, '''\t\tmDisposableBag = default;
+\t\tDisposable.AddTo<IDisposable>(HomeData.OnHomeChange.Subscribe(OnHomeChange), ref mDisposableBag);''',
+        '\t\tmDisposableBag.Add(Services.SubscribeHomeChange(OnHomeChange));')
+    text = text.replace('MeManager.MainPlayer', 'Services.MainPlayer')
+    text = text.replace('IHomePlayerData playerData = HomeData.PlayerData;',
+        'IProfessionPlayerAppearanceSource playerData = Services.PlayerData;')
+    text = text.replace('AppearanceData appearanceData = playerData.AppearanceData;',
+        'AppearanceData appearanceData = (AppearanceData)playerData.AppearanceData;')
+    text = text.replace('AppearanceUtils.', 'Services.Appearance.')
+    text = text.replace('playerData.Profession,', '(Profession)playerData.Profession,')
+    text = text.replace('slot.DestroyChildren();',
+        'for (int index = slot.childCount - 1; index >= 0; index--) Object.Destroy(slot.GetChild(index).gameObject);')
+    text = text.replace('Parsers.Instance.SpineSkinInfoParser.Get(', 'Services.Tables.SpineSkinInfoParser.Get(')
+    text = text.replace('AppearanceAddressUtils.GetPlayerPartPrefabRenderer(', 'ProfessionAppearancePartPaths.GetPlayerPartPrefabRenderer(')
+    text = replace(text, 'Disposable.AddTo<AssetOperationHandle<GameObject>>(ResourceLoader.LoadPrefab(playerPartPrefabRenderer), ref mDisposableBag).Result',
+        'mDisposableBag.Add(Services.LoadPrefab(playerPartPrefabRenderer)).Result')
+    text = text.replace('ServiceProviderExtensions.Instantiate(ServiceProvider, result, slot, false)', 'Services.Instantiate(result, slot, false)')
+    text = text.replace('quaternion.op_Implicit(quaternion.identity)', 'Quaternion.identity')
+    emit('HomeWeaponRack', text)
+
+    # Reuse the existing resolver only after proving that the complete method
+    # closure used by this selected rack has the same original bodies.
+    from prepare_unity_profession_appearance_resolver import adapt, method
+    for function in (adapt, method, adapt.__globals__['clean'], adapt.__globals__['log_blocks']):
+        dependency = Path(inspect.getsourcefile(function))
+        inputs[dependency.relative_to(ROOT).as_posix()] = sha(dependency.read_bytes())
+    original_resolver = read('AppearanceSystem.Runtime/AppearanceUtils')
+    resolver_path = ROOT / 'unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceResolver.cs'
+    installed_resolver = resolver_path.read_text('utf-8-sig')
+    resolver_methods = {}
+
+    def normalized(text):
+        return re.sub(r'\s+', '', re.sub(r'//[^\n]*', '', text))
+
+    def implementations(text, name):
+        matches = re.finditer(r'(?m)^\s*(?:public|private|protected)\s+(?:static\s+)?[^\n]+\b' + name + r'\(', text)
+        return [method(text, match[0].lstrip()) for match in matches]
+
+    for name in ('TryGetFinalSkinId', 'TryGetSkinId', 'TryGetAppendSkinId', 'TryGetEquipSkinId',
+                 'IsSkinLimit', 'ResolveAppendAppearanceMutex', 'ResolveEffectiveSkin',
+                 'PropagateAppendSkinState', 'DecideAppendSkinState', 'IsBlocking',
+                 'KillBlockCycle', 'IsInBlockCycle', 'IsFilterSkinId', 'IsFilterSkinInfo'):
+        original = [adapt(value).replace(' static ', ' ').replace('Parsers.Instance.', 'mTables.')
+            .replace('AppendAppearanceInfoParser ', 'ProfessionAppendAppearanceInfoParser ')
+            for value in implementations(original_resolver, name)]
+        installed = implementations(installed_resolver, name)
+        if not original or [normalized(value) for value in original] != [normalized(value) for value in installed]:
+            raise ValueError('Selected weapon-rack resolver closure changed: ' + name)
+        resolver_methods[name] = [sha(normalized(value).encode()) for value in original]
+    original_nested = original_resolver[original_resolver.index('\tprivate enum AppendSkinState'):original_resolver.index('\tprivate static readonly Dictionary<int, string> sIdDict')]
+    installed_nested = installed_resolver[installed_resolver.index('\tprivate enum AppendSkinState'):installed_resolver.index('\tpublic string GetSkinName(')]
+    if normalized(adapt(original_nested)) != normalized(installed_nested):
+        raise ValueError('Selected weapon-rack append-state types changed')
+    resolver_methods['AppendSkinState/AppendSkinEntry'] = [sha(normalized(adapt(original_nested)).encode())]
+
+    for port in sorted(TEMPLATES.glob('*.cs')):
+        inputs[port.relative_to(ROOT).as_posix()] = sha(port.read_bytes())
+        write(DEST / port.name, port.read_bytes())
+        metadata(DEST / port.name)
     definition = DEST / 'Zjcs.Official.HomeFurniture.asmdef'
     write(definition, (json.dumps(dict(name='Zjcs.Official.HomeFurniture', references=[
         'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeSceneInput', 'Zjcs.Official.ProfessionUI',
@@ -163,20 +247,30 @@ using Object = UnityEngine.Object;
     metadata(definition)
     metadata(DEST, True)
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
-    validation = ROOT / 'scripts/fixtures/home_furniture_controller_validation.cs'
+    validations = [ROOT / path for path in (
+        'scripts/fixtures/home_furniture_controller_validation.cs',
+        'scripts/fixtures/home_weapon_rack_controller_validation.cs',
+        'scripts/test_home_furniture_controllers.ps1')]
     shared = [ROOT / path for path in (
         'unity/Assets/Game/Runtime/Official/HomeSceneInput/ClickableHomeObj.cs',
         'unity/Assets/Game/Runtime/Official/ProfessionUI/UIBase.cs',
         'unity/Assets/Game/Runtime/Official/WorldUI/WorldStateSwitcher.cs',
         'unity/Assets/Game/Runtime/Official/WorldUI/WorldMultiLanguageText.cs',
+        'unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceResolver.cs',
+        'unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePartPaths.cs',
+        'unity/Assets/Game/Runtime/Official/ProfessionUI/BaseSkeletonFollower.cs',
         'unity/Assets/Game/Runtime/Official/HomeUI/EFurniture.cs')]
     RECEIPT.write_text(json.dumps(dict(manifest=source.version, inputs=inputs, outputs=outputs,
-        validation_inputs={validation.relative_to(ROOT).as_posix(): sha(validation.read_bytes())},
+        validation_inputs={path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in validations},
         shared_dependencies={path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in shared},
+        reused_appearance_method_closure=resolver_methods,
         generator_sha256=sha(Path(__file__).read_bytes()), adaptations=[
             'Original four-state priority, click branches, condition subscriptions and teardown are retained.',
             'Original notice transitions, time-offset callbacks, notice text keys and arguments are retained.',
             'Original repair effect delays and story-context reuse/disposal are retained.',
+            'Weapon-rack appearance mutex/final-skin resolution and Home-specific part paths reuse the migrated original services.',
+            'Weapon-rack change-only reload, zero/empty skin branches, follower resets and resource lifetime are retained.',
+            'Original owner/visit/photo view-mode and named boolean action-event switches retain subscription lifetimes.',
             'Client globals and injected owners are explicit local ports; no fallback rules or story content are introduced.',
             'Original selected native click dispatcher, state switcher, UI lifecycle and localization component are reused.',
             'Decompiler casts are retained; logging calls use Unity logging instead of the client logging framework.'

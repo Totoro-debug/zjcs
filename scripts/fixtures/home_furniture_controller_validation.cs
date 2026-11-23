@@ -50,7 +50,7 @@ public static class HomeFurnitureControllerValidation
     }
 }
 
-public sealed class HomeFurnitureControllerChecks : MonoBehaviour
+public sealed partial class HomeFurnitureControllerChecks : MonoBehaviour
 {
     readonly List<GameObject> roots = new List<GameObject>();
     Camera viewCamera;
@@ -210,6 +210,7 @@ public sealed class HomeFurnitureControllerChecks : MonoBehaviour
         Destroy(root); yield return null;
         Require(services.ConditionSubscriptions.Count == 0 && services.HomeChanges.Count == 0 && services.Awards.Count == 0, "Destroy disposes original subscriptions and award handler");
         Require(services.PlayerValue.RepairSubscribers == 0 && services.PlayerValue.TimeSubscribers == 0 && services.ContextDisposed == 1, "Destroy releases player callbacks and reused story context");
+        yield return CheckWeaponRack();
         Debug.Log("Furniture controller assertions completed.");
     }
 

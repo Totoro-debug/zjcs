@@ -23,10 +23,22 @@ Copy-Item -LiteralPath ($source + '.meta') -Destination ($destination + '.meta')
 $fixture = Join-Path $project 'Assets/Editor/HomeFurnitureControllerValidation'
 [void](New-Item -ItemType Directory -Path $fixture -Force)
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_furniture_controller_validation.cs') -Destination (Join-Path $fixture 'HomeFurnitureControllerValidation.cs') -Force
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_weapon_rack_controller_validation.cs') -Destination (Join-Path $fixture 'HomeWeaponRackControllerValidation.cs') -Force
+$rack = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/home-storage-weapon-rack-source-manifest.json') -Raw | ConvertFrom-Json
+foreach ($entry in $rack.outputs.PSObject.Properties) {
+    $inputPath = Join-Path $repository $entry.Name
+    if (-not $entry.Name.StartsWith('unity/') -or (Get-FileHash -LiteralPath $inputPath -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.Value) {
+        throw ('Bound rack resource differs: ' + $entry.Name)
+    }
+    $relative = $entry.Name.Substring('unity/'.Length)
+    $target = Join-Path $project $relative
+    [void](New-Item -ItemType Directory -Path (Split-Path $target) -Force)
+    Copy-Item -LiteralPath $inputPath -Destination $target -Force
+}
 @{ name = 'HomeFurnitureControllerValidation'; includePlatforms = @('Editor'); references = @(
     'Zjcs.Official.HomeFurniture', 'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeSceneInput',
     'Zjcs.Official.HomeMainUiControls', 'Zjcs.Offline.HomeSceneInput', 'Zjcs.Official.WorldUI',
-    'Zjcs.Official.ProfessionUI', 'Unity.TextMeshPro', 'Unity.ugui'
+    'Zjcs.Official.ProfessionUI', 'Unity.TextMeshPro', 'Unity.ugui', 'Unity.RenderPipelines.Universal.Runtime'
 ) } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $fixture 'HomeFurnitureControllerValidation.asmdef') -Encoding utf8
 $env:ZJCS_FURNITURE_PROJECT = $project
 $env:ZJCS_FURNITURE_VALIDATION_DIR = $work

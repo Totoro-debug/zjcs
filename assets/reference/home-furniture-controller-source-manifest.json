@@ -6,7 +6,18 @@
     ".tools/source-packages/current/903_156948/official-code/client-source/FurnitureBase.cs": "6d2f169a869341a5fe8e5911e17802c644ad1f16b17fa764d6014981c42263c8",
     ".tools/source-packages/current/903_156948/official-code/client-source/HomeNotice.cs": "7203b67c6e6cd1fafcc6826947edfb90ff759448da16ba2e6917c13fa1b61362",
     ".tools/source-packages/current/903_156948/official-code/client-source/StoreBoxFurniture.cs": "717a238af7e16d86b8b5a66d4f15db5a1b7d5850b99f5f93679295f22d4c5542",
-    "scripts/templates/home_furniture/HomeFurnitureServices.cs": "207a4bbc63176b29b828a10d114bd3a61ef04f8cfae8d0b45a8d2063edcd67c7"
+    ".tools/source-packages/current/903_156948/official-code/client-source/HomeViewMode.cs": "e3d09f7c0bce94df43903262478c7e927e5295a5bafd4f883e9119a05fcaf0e8",
+    ".tools/source-packages/current/903_156948/official-code/client-source/HomeViewModeControl.cs": "1ad8cdce4e6dc34a862b816ea9e00ae303316cc44534db0b086bb0ad14688796",
+    ".tools/source-packages/current/903_156948/official-code/client-source/Home.ActorBehaviour/ActionEventData.cs": "caf7cfaf1f2cf4e5bc5c339b0a9af3f40cc2037ef80869c16cccae242f0b026b",
+    ".tools/source-packages/current/903_156948/official-code/client-source/HomeActionEventHandler.cs": "bbd8be6399f47db36ea8fbae22eda33843c44d65a800744e6625ad031e957748",
+    ".tools/source-packages/current/903_156948/official-code/client-source/HomeSwitcherActionEventHandler.cs": "fc0569a6076b7168c48fde0ff30a7bdd6d65ef3391e9d2876f0a5851421d192c",
+    ".tools/source-packages/current/903_156948/official-code/client-source/HomeWeaponRack.cs": "9c3c0ed1594a37986cd40bf3efab87391b595ee70bdec1a0949444d0027ec235",
+    "scripts/prepare_unity_profession_appearance_resolver.py": "ed0e7b33e74acd7f45fbddcde7c4051d97b3f53ae6f850db378d4f33d68a4c2e",
+    "scripts/prepare_unity_profession_photographer.py": "21b43ad45b60fea01af75928c8213b54045ec4461a54bb8e411a571382c6d282",
+    "scripts/prepare_unity_profession_ui_parts.py": "ecbd7039f9fa4dff5e6453c23ca41dda07b9cf32a732d1bff87fd8659b5b291b",
+    ".tools/source-packages/current/903_156948/official-code/client-source/AppearanceSystem.Runtime/AppearanceUtils.cs": "58e391189da627b3375bad37d74cd9222923c2dd3545c72ae63d11a64a5431e4",
+    "scripts/templates/home_furniture/HomeFurnitureServices.cs": "207a4bbc63176b29b828a10d114bd3a61ef04f8cfae8d0b45a8d2063edcd67c7",
+    "scripts/templates/home_furniture/HomeWeaponRackServices.cs": "6749e1907742a1422981de1323712733c753ceadfcd6fa82d37b47fe8d195d6e"
   },
   "outputs": {
     "unity/Assets/Game/Runtime/Official/HomeFurniture/FurnitureBase.cs": "14171c8854b38c70048d98683c95adf1ef85db430668d0c0b61369eb7ebc967d",
@@ -15,27 +26,97 @@
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeNotice.cs.meta": "63fc4e11817640c00354b7acac473ab42a304e10dde7068616935cd3c0783cff",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/StoreBoxFurniture.cs": "6dc78a9cfdc66e7bf1295efb00dc76e712d40fac5e0f12255edd280f4ed17f93",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/StoreBoxFurniture.cs.meta": "7bb107d239af3400b9c68c330e19e0e2c13a1135587d530f47c3e02e6ee82aa5",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeViewMode.cs": "585ff84440dc485b535724e114557b0e42076de0c116169ba022c1ad3dd83ce3",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeViewMode.cs.meta": "ac6f0149f5a85500427ebb4d854f1e08266478d4411fbd36f9dfcf74e8fba6d7",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeViewModeControl.cs": "28fbde547d99aa466d13d429c526743797923f6c2d976bad87b8fa037f5374a8",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeViewModeControl.cs.meta": "57754fa54d57338f43e90829213ae58125a0b6a4290185c4f779a0af2ab4c860",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/ActionEventData.cs": "59f10e0c6d535b9d832d602d3312e308001de6894899dbe5c662a9a41dcbae93",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/ActionEventData.cs.meta": "5d6cb0e9ba5e94b18b037fc45c06979222bcf827b4a15d21fb2cede628b910cd",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeActionEventHandler.cs": "3fe530476f0dde73624dfe9d16426dd5388a2c8ce9f34dce3b1a8085842f08a1",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeActionEventHandler.cs.meta": "475a579d3e6992238900464455ac7d970480380f046bdaac49c116a7e33b271f",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeSwitcherActionEventHandler.cs": "b8b1d26679b2482220941c59d602e4c2b1cef624a624b624eb49e8938fe4168c",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeSwitcherActionEventHandler.cs.meta": "d55ed6cb50626c4d871033f33b46e9693c848e4308338f9184673d29042b4a56",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponRack.cs": "b3a8de48a340fd39792153821544b9e780a9734c373cd33e893b99c293df0abb",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponRack.cs.meta": "36bd816059695aad43dff33bc70f6f08b81abadbe28e95e4a949fdf60b396121",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeFurnitureServices.cs": "207a4bbc63176b29b828a10d114bd3a61ef04f8cfae8d0b45a8d2063edcd67c7",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeFurnitureServices.cs.meta": "0a4c24493e5b0aeabd392607aea9b94962f03e337a640b7673bb5df656da1675",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponRackServices.cs": "6749e1907742a1422981de1323712733c753ceadfcd6fa82d37b47fe8d195d6e",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponRackServices.cs.meta": "c2ab9867f1ccc673eba0224e9e61fa989962a7f8fcb136f105d81d72f7a9c39f",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/Zjcs.Official.HomeFurniture.asmdef": "37062cb6b5516719a5129e4a556ad191bafd024757bf04592737e8873ee8a108",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/Zjcs.Official.HomeFurniture.asmdef.meta": "b4ba2a3feb40823f56dbd23536b35154a44ae2109b17eefc8437f6bac27fb236",
     "unity/Assets/Game/Runtime/Official/HomeFurniture.meta": "ca9d0edf5f0819afe26b16ff0ef206186ed5c208538799b6feb949246c5d533e"
   },
   "validation_inputs": {
-    "scripts/fixtures/home_furniture_controller_validation.cs": "eb4f4064b8acf5eac601c278f3bfea6dda7d6f352802c63f46433d4c142c13c6"
+    "scripts/fixtures/home_furniture_controller_validation.cs": "c5a4577fabcc711220a2d89bb2ef32a6c8dd562920a035e0eba704b258a1e7be",
+    "scripts/fixtures/home_weapon_rack_controller_validation.cs": "093854cad967060986b586b6cd735e6b2d7f9bd063dbe03728bbf54ba53d952b",
+    "scripts/test_home_furniture_controllers.ps1": "be06a127ce0ee8e5d0e739a91bacdc88b9b2e8f7a2dac65ed5c423badfcc708b"
   },
   "shared_dependencies": {
     "unity/Assets/Game/Runtime/Official/HomeSceneInput/ClickableHomeObj.cs": "2ab7a2e3d378cd66e60e1378b0ff9b03ae097961a031ca690d1ec9e5c1884ca8",
     "unity/Assets/Game/Runtime/Official/ProfessionUI/UIBase.cs": "71904439a92bd0bbe189a95f9a7213defc9bd3d9283c8279fa1fc0b9d09b87d8",
     "unity/Assets/Game/Runtime/Official/WorldUI/WorldStateSwitcher.cs": "e2fd20a63aa5e3b82ab98ec3d17cc8c973c3558bb0b2083ef54a2bf80188a2dc",
     "unity/Assets/Game/Runtime/Official/WorldUI/WorldMultiLanguageText.cs": "99a73c950330a27ca9a3ccce31905c4c8aef70deba9e76c8fd377535aded9cef",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceResolver.cs": "986becf66387d4c54f312a203a77faf59a865125ab4ae2048c0e10d671ccb358",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePartPaths.cs": "d874e4e911bc387a025ebd03bb6440e131925d5d63525fafa9c00b7b34f72124",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/BaseSkeletonFollower.cs": "ba2ef614a29d46fb92d24e1a6a8e8c5876f35190f9957564d8f478cfa1d447e2",
     "unity/Assets/Game/Runtime/Official/HomeUI/EFurniture.cs": "24a4692b1ff6b0fe40cab77181d96e7004324ccb681741c83a0fc3436b059043"
   },
-  "generator_sha256": "9d1f279fb0145b6042fa8b45228c5731cb36b2c0effd9001b813299d6d0de320",
+  "reused_appearance_method_closure": {
+    "TryGetFinalSkinId": [
+      "7570bd46bb22216d28421a1df6499742631234e8ed22583a2b8d853d8a9699c4"
+    ],
+    "TryGetSkinId": [
+      "bd983b4331acba480f71ea5ea24efd8f8e6bfb9b9753d7fbec71d81df1146b5e"
+    ],
+    "TryGetAppendSkinId": [
+      "cd38fe17f4a8c7cd9c312f19cfdfbd5b66679b7fe42065f0d07ac6be0cd26a77"
+    ],
+    "TryGetEquipSkinId": [
+      "240cf804d4f164da8284eec5ca71e1ecc531045ebb9386710e0566f849b2b6ef"
+    ],
+    "IsSkinLimit": [
+      "5a9361ff09ed77172305f6ae6b4bef9c20b38a4ae815cfc4dd2b0cc8e6a29c5f"
+    ],
+    "ResolveAppendAppearanceMutex": [
+      "eeff09754ce0a9f05c60b481d52ce9448c8504731ec53473ded2176513e6a619",
+      "eeff09754ce0a9f05c60b481d52ce9448c8504731ec53473ded2176513e6a619"
+    ],
+    "ResolveEffectiveSkin": [
+      "4af298152c04790dd953da09280a1a87582204d39cf257aad084d6cdd77fc6fc"
+    ],
+    "PropagateAppendSkinState": [
+      "cbad1dc532858efa38560987f67e0de5e5f14d2ce5c6363f21e817d44f2dd8ef"
+    ],
+    "DecideAppendSkinState": [
+      "4f1531d0d33ea44194b205ad85a824ce4f6cfba977a0e8254240f118131c9096"
+    ],
+    "IsBlocking": [
+      "7610b0784f24428089a7daad2868a4a9b104f30541be46871462f955aa48cc14"
+    ],
+    "KillBlockCycle": [
+      "d47b911c322336d3928b72a1433afc81f6a99ee3dd851c32fdd590f73f5da9b3"
+    ],
+    "IsInBlockCycle": [
+      "c6161253b34fa972feea3ee702e11eaa20ae35a875b4797b2cd08c5a1a1f2903"
+    ],
+    "IsFilterSkinId": [
+      "34acbde1b2243e55a2cd9aab29a0a39d05c73a2edff07d509834b59cda861ca7"
+    ],
+    "IsFilterSkinInfo": [
+      "487f44ec41901b13b3cd845f90705f103f16ef360d55a6e44fd9e18f1e173f1f"
+    ],
+    "AppendSkinState/AppendSkinEntry": [
+      "b54377961060f7e5fea71f59deddfdb9b92bfbb3f68f52abe98bbf00b081e701"
+    ]
+  },
+  "generator_sha256": "5747b2c700b938a8113747c4bc19a63c3f0c10b5ee41510cf4011f34c00ccb39",
   "adaptations": [
     "Original four-state priority, click branches, condition subscriptions and teardown are retained.",
     "Original notice transitions, time-offset callbacks, notice text keys and arguments are retained.",
     "Original repair effect delays and story-context reuse/disposal are retained.",
+    "Weapon-rack appearance mutex/final-skin resolution and Home-specific part paths reuse the migrated original services.",
+    "Weapon-rack change-only reload, zero/empty skin branches, follower resets and resource lifetime are retained.",
+    "Original owner/visit/photo view-mode and named boolean action-event switches retain subscription lifetimes.",
     "Client globals and injected owners are explicit local ports; no fallback rules or story content are introduced.",
     "Original selected native click dispatcher, state switcher, UI lifecycle and localization component are reused.",
     "Decompiler casts are retained; logging calls use Unity logging instead of the client logging framework."
