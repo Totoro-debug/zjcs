@@ -81,6 +81,9 @@ using Object = UnityEngine.Object;
         text = re.sub(r'\bICondition\b', 'IHomeFurnitureCondition', text)
         text = text.replace('IStoryPlayContext', 'IHomeFurnitureStoryContext')
         source_header = header
+        if name == 'EntityClickSound':
+            source_header = source_header.replace('using UnityEngine.Serialization;\n',
+                'using UnityEngine.Serialization;\nusing Zjcs.Official.HomeMainUiControls;\n')
         if 'List<' in text or 'HashSet<' in text:
             source_header = source_header.replace('using System.Collections;\n', 'using System.Collections;\nusing System.Collections.Generic;\n')
         if name in ('HomeWeapon', 'AppearancePartSideSwitcher', 'HomeWeaponAnimation'):
@@ -158,6 +161,12 @@ using Object = UnityEngine.Object;
     text = text.replace('BroadcastManager.Instance.SystemMsg(', 'Services.SystemMessage(')
     emit('HomeNotice', text)
     emit('StoreBoxFurniture', read('StoreBoxFurniture').replace('WindowManager.Instance.Popup<PlayerBagPanel>()', 'Services.PopupPlayerBag()'))
+    text = read('EntityClickSound')
+    text = replace(text, 'public Event Sound;', 'public AudioClip Sound;\n    [NonSerialized] public Action<AudioClip, GameObject> Post;')
+    text = text.replace('protected IInputOperationModule InputOperationModule { get; set; }',
+        'public IInputOperationModule InputOperationModule { get; set; }')
+    text = replace(text, 'Sound.Post(((Component)this).gameObject);', 'Post?.Invoke(Sound, ((Component)this).gameObject);')
+    emit('EntityClickSound', text)
 
     emit('HomeViewMode', read('HomeViewMode'))
     text = read('HomeViewModeControl')
@@ -288,7 +297,7 @@ using Object = UnityEngine.Object;
         metadata(DEST / port.name)
     definition = DEST / 'Zjcs.Official.HomeFurniture.asmdef'
     write(definition, (json.dumps(dict(name='Zjcs.Official.HomeFurniture', references=[
-        'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeSceneInput', 'Zjcs.Official.ProfessionUI',
+        'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeSceneInput', 'Zjcs.Official.HomeMainUiControls', 'Zjcs.Official.ProfessionUI',
         'Zjcs.Official.WorldUI', 'spine-unity', 'spine-csharp']), indent=2) + '\n').encode())
     metadata(definition)
     metadata(DEST, True)
@@ -318,6 +327,7 @@ using Object = UnityEngine.Object;
             'Original four-state priority, click branches, condition subscriptions and teardown are retained.',
             'Original notice transitions, time-offset callbacks, notice text keys and arguments are retained.',
             'Original repair effect delays and story-context reuse/disposal are retained.',
+            'Original entity click sound keeps all child collider targets, input enable/disable subscriptions and emitter identity; decoded event audio is supplied by its owner.',
             'Weapon-rack appearance mutex/final-skin resolution and Home-specific part paths reuse the migrated original services.',
             'Weapon-rack change-only reload, zero/empty skin branches, follower resets and resource lifetime are retained.',
             'Original owner/visit/photo view-mode and named boolean action-event switches retain subscription lifetimes.',

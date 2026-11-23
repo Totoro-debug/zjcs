@@ -6,6 +6,7 @@
     ".tools/source-packages/current/903_156948/official-code/client-source/FurnitureBase.cs": "6d2f169a869341a5fe8e5911e17802c644ad1f16b17fa764d6014981c42263c8",
     ".tools/source-packages/current/903_156948/official-code/client-source/HomeNotice.cs": "7203b67c6e6cd1fafcc6826947edfb90ff759448da16ba2e6917c13fa1b61362",
     ".tools/source-packages/current/903_156948/official-code/client-source/StoreBoxFurniture.cs": "717a238af7e16d86b8b5a66d4f15db5a1b7d5850b99f5f93679295f22d4c5542",
+    ".tools/source-packages/current/903_156948/official-code/client-source/EntityClickSound.cs": "b3162ede8186a68078e7e5b5ce12047bfd752bf57236042f228b790c76a3a9fc",
     ".tools/source-packages/current/903_156948/official-code/client-source/HomeViewMode.cs": "e3d09f7c0bce94df43903262478c7e927e5295a5bafd4f883e9119a05fcaf0e8",
     ".tools/source-packages/current/903_156948/official-code/client-source/HomeViewModeControl.cs": "1ad8cdce4e6dc34a862b816ea9e00ae303316cc44534db0b086bb0ad14688796",
     ".tools/source-packages/current/903_156948/official-code/client-source/Home.ActorBehaviour/ActionEventData.cs": "caf7cfaf1f2cf4e5bc5c339b0a9af3f40cc2037ef80869c16cccae242f0b026b",
@@ -33,6 +34,8 @@
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeNotice.cs.meta": "63fc4e11817640c00354b7acac473ab42a304e10dde7068616935cd3c0783cff",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/StoreBoxFurniture.cs": "6dc78a9cfdc66e7bf1295efb00dc76e712d40fac5e0f12255edd280f4ed17f93",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/StoreBoxFurniture.cs.meta": "7bb107d239af3400b9c68c330e19e0e2c13a1135587d530f47c3e02e6ee82aa5",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/EntityClickSound.cs": "70ad61d68660398d3e5e38bb8594eca5103947147552ef8218552ebf7ed0c1ff",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/EntityClickSound.cs.meta": "db91b72af941c3a4e533ebb4e1f222aea2c784d7793b70c1e2d742fd6c2cbad5",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeViewMode.cs": "585ff84440dc485b535724e114557b0e42076de0c116169ba022c1ad3dd83ce3",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeViewMode.cs.meta": "ac6f0149f5a85500427ebb4d854f1e08266478d4411fbd36f9dfcf74e8fba6d7",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeViewModeControl.cs": "28fbde547d99aa466d13d429c526743797923f6c2d976bad87b8fa037f5374a8",
@@ -63,12 +66,12 @@
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponAnimationBindings.cs.meta": "f237817b8d50faa2821d4d4d0f0169bbbb28a018b47a5b13c05d5a071cb45229",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponRackServices.cs": "6749e1907742a1422981de1323712733c753ceadfcd6fa82d37b47fe8d195d6e",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponRackServices.cs.meta": "c2ab9867f1ccc673eba0224e9e61fa989962a7f8fcb136f105d81d72f7a9c39f",
-    "unity/Assets/Game/Runtime/Official/HomeFurniture/Zjcs.Official.HomeFurniture.asmdef": "c511984bdd0a216e289ab1dfd2a32f3959d8b8279660cbcfbe4b3b991d1057fa",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/Zjcs.Official.HomeFurniture.asmdef": "c0f4434695d15e4451c8769b39181902e61d412572053140a9f8de83ef973370",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/Zjcs.Official.HomeFurniture.asmdef.meta": "b4ba2a3feb40823f56dbd23536b35154a44ae2109b17eefc8437f6bac27fb236",
     "unity/Assets/Game/Runtime/Official/HomeFurniture.meta": "ca9d0edf5f0819afe26b16ff0ef206186ed5c208538799b6feb949246c5d533e"
   },
   "validation_inputs": {
-    "scripts/fixtures/home_furniture_controller_validation.cs": "963f8f3a4231297cfc19cb1556f4573564954e9a67c5d12f5badd83455a34fd0",
+    "scripts/fixtures/home_furniture_controller_validation.cs": "7b2fd2b9a33bf91d43e4d639430c2b22fcdce0e13cf1cf01fd944da4fa8ad127",
     "scripts/fixtures/home_weapon_rack_controller_validation.cs": "a60b930eb15c3926ba5431550319711aa9fe97e64eb9e7d4e21824ae034ec2b3",
     "scripts/fixtures/home_native_weapon_validation.cs": "71fa4b943f1bb21e814b2898fa4279c22a0e7548158d1e4d8c4a9eaa197699da",
     "scripts/fixtures/home_native_weapon_controller_validation.cs": "ee7fec772c8de9e594612b3296a0e29092140ca056f35d76d5ac956c714bb030",
@@ -134,11 +137,12 @@
       "b54377961060f7e5fea71f59deddfdb9b92bfbb3f68f52abe98bbf00b081e701"
     ]
   },
-  "generator_sha256": "8005e9bc5f17151ef3ce247014af20606f62340f10db58f346e7d382997f6eb7",
+  "generator_sha256": "3c9e8477c750b0000da40a1168cbbe2772f11f19f5089a4e1adaf31213a2a878",
   "adaptations": [
     "Original four-state priority, click branches, condition subscriptions and teardown are retained.",
     "Original notice transitions, time-offset callbacks, notice text keys and arguments are retained.",
     "Original repair effect delays and story-context reuse/disposal are retained.",
+    "Original entity click sound keeps all child collider targets, input enable/disable subscriptions and emitter identity; decoded event audio is supplied by its owner.",
     "Weapon-rack appearance mutex/final-skin resolution and Home-specific part paths reuse the migrated original services.",
     "Weapon-rack change-only reload, zero/empty skin branches, follower resets and resource lifetime are retained.",
     "Original owner/visit/photo view-mode and named boolean action-event switches retain subscription lifetimes.",

@@ -112,6 +112,18 @@ public sealed partial class HomeFurnitureControllerChecks : MonoBehaviour
         var actor = root.AddComponent<StoreBoxFurniture>();
         actor.Bind(EFurniture.StorageBox, Switch<FurnitureBase.EFurnitureState>(root, states.Select(value => new[] { value }).ToArray(), new[] { 0, 1, 2, 3 }), notice, effect, .6f, 1.5f, services);
         input.Bind(actor);
+        var lateTarget = Child(root, "InactiveOriginalCollider");
+        lateTarget.transform.localPosition = new Vector3(2, 0, 0);
+        lateTarget.AddComponent<BoxCollider>(); lateTarget.SetActive(false);
+        var clickSound = root.AddComponent<EntityClickSound>();
+        clickSound.InputOperationModule = input.InputModule;
+        var clip = AudioClip.Create("ProcessLocalClickFixture", 48, 1, 48000, false);
+        clickSound.Sound = clip;
+        int soundPosts = 0;
+        clickSound.Post = (value, emitter) => {
+            Require(value == clip && emitter == root, "Click audio preserves its clip and original emitter");
+            soundPosts++;
+        };
         int clickCallbacks = 0; actor.OnClickAction.AddListener(() => clickCallbacks++);
         root.SetActive(true);
         yield return null;
@@ -120,6 +132,18 @@ public sealed partial class HomeFurnitureControllerChecks : MonoBehaviour
         yield return Click(target);
         Require(clickCallbacks == 1, "Native pointer dispatcher reached the actor callback");
         Require(services.Calls.Count == 0, "Locked click has no functional action");
+        Require(soundPosts == 1, "Original click sound uses native collider dispatch independently of furniture state");
+        clickSound.enabled = false; yield return Click(target);
+        Require(soundPosts == 1, "Disabling click sound removes its native input subscription");
+        clickSound.enabled = true; yield return Click(target);
+        Require(soundPosts == 2, "Re-enabling click sound subscribes exactly once");
+        lateTarget.SetActive(true); yield return Click(lateTarget);
+        Require(soundPosts == 3, "Original click sound collects initially inactive child colliders");
+        lateTarget.SetActive(false);
+        var outside = New("OtherBuildingCollider"); outside.AddComponent<BoxCollider>();
+        outside.transform.position = new Vector3(-2, 0, 0); yield return Click(outside);
+        Require(soundPosts == 3, "A collider belonging to another building does not post this sound");
+        Destroy(outside);
 
         services.Notice.Met = true; services.TriggerCondition(services.Notice);
         Require(actor.GetState() == FurnitureBase.EFurnitureState.RepairNotice && states[1].activeSelf, "Notice transition callback updates native state switch");
@@ -208,7 +232,12 @@ public sealed partial class HomeFurnitureControllerChecks : MonoBehaviour
         Require(states[3].activeSelf && !effect.activeSelf, "Inactive controller updates immediately without coroutine");
         actor.enabled = true;
 
+        int postsBeforeDestroy = soundPosts;
         Destroy(root); yield return null;
+        var afterDestroy = New("AfterClickSoundDestroy"); afterDestroy.AddComponent<BoxCollider>();
+        yield return Click(afterDestroy);
+        Require(soundPosts == postsBeforeDestroy, "Destroyed click sound leaves no native input callback");
+        Destroy(afterDestroy); Destroy(clip);
         Require(services.ConditionSubscriptions.Count == 0 && services.HomeChanges.Count == 0 && services.Awards.Count == 0, "Destroy disposes original subscriptions and award handler");
         Require(services.PlayerValue.RepairSubscribers == 0 && services.PlayerValue.TimeSubscribers == 0 && services.ContextDisposed == 1, "Destroy releases player callbacks and reused story context");
         yield return CheckWeaponRack();
