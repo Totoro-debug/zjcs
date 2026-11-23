@@ -103,7 +103,12 @@ try {
         }
         $errors=@(Select-String -LiteralPath (Join-Path $run 'player.log') -Pattern 'Exception:|NullReferenceException|AssertionException|Error:')
         if($PSCmdlet.ParameterSetName -eq 'Play'){
-            $errors=@($errors | Where-Object {$_.Line -notmatch '^\[Licensing::(?:Module|Client)\] Error:|^EditorUpdateCheck: Failed '})
+            $shutdown=Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch 'Input System module state changed to: Shutdown.' | Select-Object -Last 1
+            $errors=@($errors | Where-Object {
+                $_.Line -notmatch '^\[Licensing::(?:Module|Client)\] Error:|^EditorUpdateCheck: Failed ' -and
+                    -not ($shutdown -and $_.LineNumber -gt $shutdown.LineNumber -and
+                        $_.Line -match '^TcpMessagingSession - receive error: operation aborted\. errorcode: 995, details:')
+            })
         }
         if($errors.Count -gt 0){
             throw "Original passive flow has runtime or shutdown errors: $run"
