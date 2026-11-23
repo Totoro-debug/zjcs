@@ -38,9 +38,3 @@
 - 同步文档并完成相关检查后及时提交，标题使用 `类型(模块): 中文说明`。
 - 最终共用本地 `master`，必要时通过分支／worktree 隔离；使用 fast-forward 或逐个 cherry-pick 接入，保持单父级线性历史，不使用 merge commit、amend、reset 或强制推送改写历史。
 - HEAD 前进时检查影响并按需重验；提交后核实唯一父提交等于提交前最新 HEAD，自己的修改已提交，其他会话未提交内容完整保留。
-
-<!-- CODEGRAPH_START -->
-## CodeGraph
-
-仓库已有 `.codegraph/` 时，理解或定位代码先使用 CodeGraph，再按需搜索与读取；没有索引时跳过，不自行建立索引。
-<!-- CODEGRAPH_END -->
