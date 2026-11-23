@@ -1,0 +1,132 @@
+{
+  "manifest": "903_156948",
+  "inputs": {
+    ".tools/source-packages/current/903_156948/code-manifest.json": "98672050f03e79d2b815c5f036ee014abea9a5f0333b304047699e224cdc4f8b",
+    ".tools/source-packages/current/903_156948/official-code/managed/decoded/Assembly-CSharp.dll": "0f7a39a453eedb4faa9be717daf7e8ee0c23e78adaba26daf18fb133ad8d1ce9",
+    ".tools/source-packages/current/903_156948/official-code/managed/decoded/Console.dll": "e57c5d8ec74467682059a8dd4720167812d0308311c2f34050a8a8b35b37f4b1",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/EFurniture.cs": "247a13067ec06ff9dc25dfb450866d365815e3c6ac7a99d0325751ab9f54db1f",
+    "unity/Assets/Game/Runtime/Official/HomeUI/EFurniture.cs": "24a4692b1ff6b0fe40cab77181d96e7004324ccb681741c83a0fc3436b059043",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/HomeThemeType.cs": "74f16220167fd542ba73aa25ea79e919a4ed4b2979569df491e5415997d60447",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/HomeEnvironmentType.cs": "c74a4a1dd78906ef9b5b3d4ac5527bd6d5e506678c6c8addca7ac1d8498a2897",
+    ".tools/source-packages/current/903_156948/official-code/client-source/HomeEntity.cs": "f091a772bfb2c9c31e12915443d18583ba64cb1fb93baa584e356b94b93d8e22",
+    ".tools/source-packages/current/903_156948/official-code/client-source/IHomeEntityCreator.cs": "b55a9423f5f6d86064f91018bf38db1d325393c25560987d926126bfcfeb14d5",
+    ".tools/source-packages/current/903_156948/official-code/client-source/BaseHomeEntityCreator.cs": "0ccea6ab933a7fdf0205116d7dbf44b060054ed00564e041252501bbb0045608",
+    ".tools/source-packages/current/903_156948/official-code/client-source/FurnitureEntityCreator.cs": "089c77547d31eb55eebdf2eeb52a9060a84a40fa92188f50ea55de1d4d200edd",
+    ".tools/source-packages/current/903_156948/official-code/client-source/ThemeEntityCreator.cs": "5dd38d9fb6b23e8c119c295a9532ac904b541982addcca044404306a797a6d7f",
+    ".tools/source-packages/current/903_156948/official-code/client-source/IHomeEntityChangeCreateNotify.cs": "a6f160b9194b0b8e83996e52502e06a93ada9f00fcd14bd2dd9e60e722c305c6",
+    ".tools/source-packages/current/903_156948/official-code/client-source/HomeFurnitureChangeData.cs": "d2388aa10ad939d7cb000da6b9f2011efd6a4ccf7fe417ac2638bad406d75757",
+    ".tools/source-packages/current/903_156948/official-code/client-source/Home.ActorBehaviour.Entity.Creator/HomeEntityCreateData.cs": "17c54ba011de99bd1ddc201778fb48e7db50fbb4af43eb24f4539f5fb1c7a527",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/LanguageUtils.cs": "0b7c4808e3cc07bb50e6c9da55e2b07225fbc518192e0b5e731310c6bf459f75",
+    "scripts/templates/home_entity_creation/HomeEntityCreationCatalog.cs": "4a7d3c4d16d1d0b84fbfc5016942855cabfa7204d7b6f23ceda6ebad3567756e",
+    "scripts/templates/home_entity_creation/HomeEntityCreationServices.cs": "684e94e48634351d72ccfd7a0a679a7ad3edbf7c1f36fa9e72a79b0b8536fc97",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/TbFurnitureSkinInfo.cs": "21a82340c775f3b9a5cceea6ff36254d545dc8f667926b3de8894efec8ef91ec",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/FurnitureSkinInfo.cs": "3f1210e8a306e63e137f53dd00fc8378f4a62d64e10998bf89649e92b217a53a",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/ItemPartInfo.cs": "685012dc0b4db06adf6b1b5f4d37e04ac1197b2391763694badfdbf1ae278cea",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/TbHomeThemeSkinInfo.cs": "e398b60fc01f4f1d9ecc6ad3dd1f03222c70431db024e1a85edad995b2f6daec",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/HomeThemeSkinInfo.cs": "3dde9122ff0cebe6e05517c71d29269b0e0a913d06963f70f8896717a4456cb2",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/TbHomeSkinWeatherOverridePrefabInfo.cs": "fde748aaf21ee66eab13d22789a5c9dcc99493168d390c1cf121ba68a6663fdd",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/HomeSkinWeatherOverridePrefabInfo.cs": "d5c28f001a05e74751035469f497a493ece39103bac3f7194e29b94c6e7032ba",
+    "scripts/prepare_home_entity_bindings.py": "8cf6ace0460596bb91fd78648238ddc942fde3e5b12e220738c4c207b4021ba0",
+    "scripts/prepare_unity_profession_appearance_resolver.py": "ed0e7b33e74acd7f45fbddcde7c4051d97b3f53ae6f850db378d4f33d68a4c2e",
+    "scripts/official_tables.py": "77762a9b2aba2d92a6ad3ebd8ce5f7d0bb42a6b4cfc872ae7094c1d10b1e0473",
+    "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
+    "scripts/official_source.py": "e99ac1cb8fbb8122866eb94370c7f3b63f835572130535fbb5ec3a290242f732",
+    "scripts/prepare_home_entity_creation.py": "1bde80ae590ad6b3f417200c993ae7d1c12d7aad88c7dec48d996f5e75933fcd"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeThemeType.cs": "157abade1d1700a9a928845c7f7501777c296c6630afa9af58c58bef1ebcdcaa",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeThemeType.cs.meta": "22a085bcc135aa3eabcc1b7cd663287dbd33c318dc639dd428b8594c1f198fad",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeEnvironmentType.cs": "6f02880f5aaa19691c9b33c78aafdacc6495ef2c4358e0b01695b4cd95168506",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeEnvironmentType.cs.meta": "e37b6c8314429e68759056c98de0973ca55c10f59724c2f63c1dbf62c0d721e0",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeEntity.cs": "b2c7f9f834f89a56987152cf1b9936741ccd36089e17ec3d82592c5d9ddb112d",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeEntity.cs.meta": "d870d2083bbb74bee8af6db2889ee8d33ae241e98bb5c618972c15424077783d",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/IHomeEntityCreator.cs": "3325292412f7b73d1e15b5e1b5c91423eda1613bfb4fc2e88b0fe92ee23fd076",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/IHomeEntityCreator.cs.meta": "d05f091256581cd124faade03c8295c4d8426fe68bc14f9497340875dc5f404a",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/BaseHomeEntityCreator.cs": "44bfdde3f90d9c67eb5eca9f294a61380937472be443c6f12bf9f1db69a287e6",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/BaseHomeEntityCreator.cs.meta": "bfebfd71303f32c493da185587314c902734a5e5c9ddbf13bd49afeb8d8479ce",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/FurnitureEntityCreator.cs": "095d0e83b0421205f0aa806cc153c917a3f313271a879b7d5fa50afc05444bfe",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/FurnitureEntityCreator.cs.meta": "867ba5094649362f742640144b34adf3955a3f93ae2c2d3b8cf43c2dceb353e9",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/ThemeEntityCreator.cs": "f0ef24d9f1bf0a66b154751aca8c66d41ab8b6ef4090e45d4f209a1225812bdf",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/ThemeEntityCreator.cs.meta": "9856b2f47207a6737580c735ff42430ca145497b912a273138692c16c794d3db",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/IHomeEntityChangeCreateNotify.cs": "d20271a80ef228af2127782d8ff9339437b848e720bf18f26eb0c8fcf8c16af8",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/IHomeEntityChangeCreateNotify.cs.meta": "f99fb9af95011890ebd9b3a26462ef5cfec56c5987795617d99de1c2ccb01205",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeFurnitureChangeData.cs": "f9b4fa01e2ae9ba89a11d02ed9de0b360bbf6b41d2ff761e8a5a4bf7226fe81e",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeFurnitureChangeData.cs.meta": "83720767a2822f1f56419a4c8860b1c4fa72edcbe1bdf5d62e4dfa73418db52e",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeEntityCreateData.cs": "82683421d5b170b2bee45c3d973a9b55eb872a2e7e1291c4033038e5ec506f5b",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeEntityCreateData.cs.meta": "9e5600107f63e0b9482aa3687fcaba56a0b43fc450d62e1df9336eb6a8174154",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeEntityPrefabPaths.cs": "c619304f05fad91eb414914fb7c129ad9b54f8646117ef77700514de8e20e37b",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeEntityPrefabPaths.cs.meta": "e3eb4ea4fb7e8cf8ae52dd655e091cfb560d68ebc08d51d3d22286d526921a33",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeEntityCreationCatalog.cs": "4a7d3c4d16d1d0b84fbfc5016942855cabfa7204d7b6f23ceda6ebad3567756e",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeEntityCreationCatalog.cs.meta": "5a4a99b9d69f6493042639f96784dd614466a0589546226e1ea3105e1d35dc40",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeEntityCreationServices.cs": "684e94e48634351d72ccfd7a0a679a7ad3edbf7c1f36fa9e72a79b0b8536fc97",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeEntityCreationServices.cs.meta": "c567cd6f8f2360993f336cb31639b0b6dee536a678405457b3ecfa0f0bf8247a",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/Zjcs.Official.HomeEntityCreation.asmdef": "9a59a2da58d0628a46f9c868a2115b560f9aebe6e14809a3ce0dbed9e4befadf",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation/Zjcs.Official.HomeEntityCreation.asmdef.meta": "52cfba49a7021c76376bb946ec3be7c03a1df9fa19dd6316db27a4af0f0c93b1",
+    "unity/Assets/Game/Runtime/Official/HomeEntityCreation.meta": "87549746963460ccafe59471ce2754503d3cdad8ecba6bedce924e636638ce3e",
+    "unity/Assets/Game/Resources/Home/EntityCreation/catalog.json": "0174a97dd028388535366ab579c7a29f86305bedd67d80854799164c8e41492c",
+    "unity/Assets/Game/Resources/Home/EntityCreation/catalog.json.meta": "bd79bacf2849c953a2f9838a41878454cdc3af2a4e751039d3aa99b9411e273a",
+    "unity/Assets/Game/Resources/Home/EntityCreation.meta": "f674417d003db503e342590cf1bd1686980c23c330a4f26d940b69dab513de4c"
+  },
+  "tables": [
+    {
+      "table": "furniture_skin",
+      "constructor": "TbFurnitureSkinInfo",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "4838b38a3b272ae4bd23e89d77cd3b90",
+        "path_id": "-2721936616167678200",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/4838b38a3b272ae4bd23e89d77cd3b90.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 2210171,
+        "bundle_sha256": "b87533144cd1777aa13ac24e283d12bafab338b7d4e66a3ea20361504caf795f"
+      },
+      "original_sha256": "ec561b302e40c740a7f358939074b670b0b71d62d78c24cefa720ea0dcb8851e",
+      "payload_sha256": "62ff720d0189f789a4b2b6c684d2af4f604f5a1d1f1f5645f48112d37ceecb4a"
+    },
+    {
+      "table": "home_theme_skin",
+      "constructor": "TbHomeThemeSkinInfo",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "4838b38a3b272ae4bd23e89d77cd3b90",
+        "path_id": "5772620059801078827",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/4838b38a3b272ae4bd23e89d77cd3b90.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 2210171,
+        "bundle_sha256": "b87533144cd1777aa13ac24e283d12bafab338b7d4e66a3ea20361504caf795f"
+      },
+      "original_sha256": "fa78f2ba203916055af33ec35edd92c5cde122074e1f19a57bac7bdfd0fb293f",
+      "payload_sha256": "9604e1872e0a9406530cb121847b35c601b1c0a466d1d42081b781f137f05a6d"
+    },
+    {
+      "table": "home_skin_weather_override_prefab",
+      "constructor": "TbHomeSkinWeatherOverridePrefabInfo",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "4838b38a3b272ae4bd23e89d77cd3b90",
+        "path_id": "4774549364130665533",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/4838b38a3b272ae4bd23e89d77cd3b90.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 2210171,
+        "bundle_sha256": "b87533144cd1777aa13ac24e283d12bafab338b7d4e66a3ea20361504caf795f"
+      },
+      "original_sha256": "5823449ade459645a541776c9efd14511409db09fb5e6cc4bf93d2f82fd705df",
+      "payload_sha256": "6c7792186d506432d4d4233ad71e8c98019f3459f4ddcafe0d6f7e87bd707bf7"
+    }
+  ],
+  "validation_inputs": {
+    "scripts/fixtures/home_entity_creation_validation.cs": "2b3c466e1276dbc687397bbb9a59cd6e075c33b23131d72a0fdd8baa68b33cc4",
+    "scripts/test_home_entity_creation.ps1": "972e0e2132f0fa11411811b5027b841071c9fe7274bb4b93f6690b0232b4b81c"
+  },
+  "adaptations": [
+    "Original creator caching, slot lookup, prefab offsets, replacement notification/release/create order and failure branches are retained.",
+    "Original furniture mapping, preview-weather precedence and four address overloads are retained.",
+    "Framework prefab handles and service instantiation are explicit local owner ports; runtime loading uses no source-version gates.",
+    "Selected scalar configuration fields have local DTOs; complete decoded source rows are retained in the resource payload.",
+    "Decompiler ref/out syntax is lowered without changing assignments; diagnostic I/O uses Unity logging."
+  ],
+  "scope": "Shared original prefab creation and selected local configuration. Full entity registration, home-host integration, playable graphs and building verification remain separate."
+}
