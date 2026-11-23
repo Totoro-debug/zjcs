@@ -1,0 +1,74 @@
+{
+  "manifest": "903_156948",
+  "inputs": {
+    ".tools/source-packages/current/903_156948/code-manifest.json": "98672050f03e79d2b815c5f036ee014abea9a5f0333b304047699e224cdc4f8b",
+    ".tools/source-packages/current/903_156948/official-code/managed/decoded/Console.dll": "e57c5d8ec74467682059a8dd4720167812d0308311c2f34050a8a8b35b37f4b1",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/Player.cs": "9633cde173cae13027939b71574e98f3101a93f09dc43c75a613e6a4ee2eb945",
+    "scripts/templates/bag_item_queries/BagItemQueryServices.cs": "122ed1a8a9b7f1676650da0eb807520151d330e1baa69034a92fffee509e941a",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/ItemType.cs": "8a1a33483ed28de00b9bc37dd60899ae0cb2fa7d7bd821b42f6e43cdcb3dbcaf",
+    "unity/Assets/Game/Runtime/Official/BagTipDots/ItemType.cs": "76118573d558b80b555c164aac65c74829daf7d3a3d4107e48aa739c011b44e8",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/RedDotType.cs": "f3092526948c4bbc6c4213645e11a4366e99383813b7a9ce1f8fa78a068d1748",
+    "unity/Assets/Game/Runtime/Official/BagTipDots/RedDotType.cs": "ee313e3c5aa7c7ba0bd24c9c78d4aa89af478fa56e34310016f182916ca3524a",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/PayType.cs": "1bcf25b934a7f0795b787ee377cf0530a8448d85cee6a6aa2c6dba10536fbea9",
+    "scripts/prepare_bag_item_queries.py": "ab411e65bbdf2a820772a8116896de20caf6155c5d0164606eaa40225b275ffe"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/BagItemQueries.meta": "015a8e3601d4c2e75f8cd20c25e509037b191a4b85e438e28af4ef3eaaae1406",
+    "unity/Assets/Game/Runtime/Official/BagItemQueries/BagItemQueryRules.cs": "6fb18c8a6a140ee267ddcc7592384d769fca3352199e2ade5a3ee4f1df275d96",
+    "unity/Assets/Game/Runtime/Official/BagItemQueries/BagItemQueryRules.cs.meta": "697c9f2c5b18fef77846b9f3dde59744b80de19f7d4494ee70ac87de9d26795c",
+    "unity/Assets/Game/Runtime/Official/BagItemQueries/BagItemQueryServices.cs": "122ed1a8a9b7f1676650da0eb807520151d330e1baa69034a92fffee509e941a",
+    "unity/Assets/Game/Runtime/Official/BagItemQueries/BagItemQueryServices.cs.meta": "e78d2f222735550d94980dbfb7dd63f9f7f747e68d57681370d348f473ac69d1",
+    "unity/Assets/Game/Runtime/Official/BagItemQueries/PayType.cs": "a4618edd89839e60ceabfb601b3704bf47fc9749b482c0d6ea0435c42cd72941",
+    "unity/Assets/Game/Runtime/Official/BagItemQueries/PayType.cs.meta": "9cdc9cea390b4e70b353439ba85d704e584117d16c3bda4efb96b7e0c5ba57aa",
+    "unity/Assets/Game/Runtime/Official/BagItemQueries/Zjcs.Official.BagItemQueries.asmdef": "fd9fb758cbec936de0b374a50e8224a0b800c13438f6315bad685f4026f2f732",
+    "unity/Assets/Game/Runtime/Official/BagItemQueries/Zjcs.Official.BagItemQueries.asmdef.meta": "f5ab51df0f1e9a4bea15c2ee42c7f58bca2469e7a28c407b923d5ed1d3e40dea"
+  },
+  "methods": {
+    "ShowBagCanUseItemRedDot": {
+      "original_sha256": "3f7317db211ada9887e0653db5afaf87e57c50fefdad855a79cf081e07938507",
+      "migrated_sha256": "a68c81adaabeaa32e64843898ca644ba8b20fa7291d5b9c1f9818622fecfa872"
+    },
+    "GetCanUseBlueDotCount": {
+      "original_sha256": "a2315f484fc2799a5395ded1967dcace790b7074202b8fdab66dff2595a16b87",
+      "migrated_sha256": "a465ac03ddae528c2cba820dfcae1e54a08d3d92b42140b8fcf8db34c0aaccea"
+    },
+    "CanMergeEquipPiece": {
+      "original_sha256": "9e0882e54968d774c62c18dd5b6b37b4c9b1f2c7471df1c01a0db88c7a488f4c",
+      "migrated_sha256": "440e149ea83fda12db6a4b6b5f674d8812f24dbac8ef4e4f26830cae5baf0666"
+    },
+    "CanMergeItemPiece": {
+      "original_sha256": "06037d56e64fb18f94c901fc89fcca2deaa84d3bcd4f7b65480914abe1161628",
+      "migrated_sha256": "5ac04a8715d381be94fc2b978cb3cd0ade8f39ac53d0dcf87f4f5a1efa8179cf"
+    },
+    "CanMergePetPiece": {
+      "original_sha256": "7cd64b4534e83b37222251311776c4b11f0fc023fe23994850d1bfea667f8d05",
+      "migrated_sha256": "a6f453058d77e2441977040607cc511d8008223275ea0a27042f3de99640676e"
+    },
+    "CanMergeRandomTreasurePiece": {
+      "original_sha256": "2f530fb854d4c617d516683222d2cd1a334712dd730c2e30482b4ac5a37acbcb",
+      "migrated_sha256": "1d5abd82c305b7b40d424ec16aa85d7024d89c5a4ba58079cb68a99b37b0068c"
+    },
+    "CanUsePeriodCardItem": {
+      "original_sha256": "b0b421a6ecbac11b0966f977c62e2201977db74398be50764e5388565bdb9b34",
+      "migrated_sha256": "e167f2a62811e32acaa67cdcda827007956c4a13c73e17cebbd73f247bde158a"
+    },
+    "CanUseCookingFormula": {
+      "original_sha256": "0bc595901a244795d1724a577cc7cf30dbe803731a7eb423a2388d97c9f49918",
+      "migrated_sha256": "2a4306b58be7c2bb66dc35f4a4e86d624bb29092cf35c2837169d305a3f698be"
+    },
+    "CanUseEquipReplaceItem": {
+      "original_sha256": "c4dde9d1f7b50505991ada33039f86b42baba9d1427d935e4da6f196b5b641cf",
+      "migrated_sha256": "02cc3f114757ace2339ab5e1436f93ffbabb1cc4bc9096324cca3b9718f2b234"
+    },
+    "GetItemRedDotType": {
+      "original_sha256": "796d6f9f6436755c18f6e7a3afef4973857562e90b93d3b6a0a4797a1c84b012",
+      "migrated_sha256": "4dfff62c096346182ca7f6e3b7392ef75f6627649245d8a8738293da3e9377c9"
+    }
+  },
+  "validation_inputs": {
+    "scripts/fixtures/bag_item_queries_validation.cs": "fd177fbcaa7b7cb103f97e56f5b908acaa5228fce4b4385a129404c1f3af8045",
+    "scripts/test_bag_item_queries.ps1": "5a3622885707e66349294feb858cafe0f519a250d926bb1f77e5245dbb86692f"
+  },
+  "adaptation": "Complete original Player item-dot query closure. Read-only projections and explicit table/player/time/cooking owners replace global services; branch order, thresholds, counts and failure branches remain original.",
+  "scope": "Shared query component. Local inventory owner binding, storage composition and Player gameplay require separate verification."
+}
