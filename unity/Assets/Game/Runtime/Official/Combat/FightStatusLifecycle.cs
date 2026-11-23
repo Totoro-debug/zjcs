@@ -93,9 +93,9 @@ namespace Zjcs.Combat.Official
         {
             if (status == null || status.DurationRound < 0 || !status.IsAddDurationRound) return;
             int start = status.StartRound < 0 ? round : status.StartRound;
-            int remaining = status.CurDurationRound - (round - start);
-            status.CurDurationRound = Math.Min(status.DurationRound + remaining,
-                status.MaxAddDurationRound);
+            long remaining = status.CurDurationRound - ((long)round - start);
+            long duration = Math.Min(status.DurationRound + remaining, status.MaxAddDurationRound);
+            status.CurDurationRound = (int)Math.Max(int.MinValue, duration);
             status.StartRound = round;
             // FightStatusStackRoundModification always emits OnStackRound, including
             // when the duration cap leaves the resulting duration unchanged.
@@ -136,11 +136,9 @@ namespace Zjcs.Combat.Official
         {
             if (status == null || !status.IsOpenStack || delta == 0) return 0;
             int previous = status.StackCount;
-            long next = previous + (long)delta;
-            if (status.MaxStackedCount > 0) next = Math.Min(next, status.MaxStackedCount);
-            if (next < 0) next = 0;
-            next = previous + FightStatusSharedStacks.Constrain(owner, status, (int)next - previous);
-            status.StackCount = (int)next;
+            int limit = status.MaxStackedCount > 0 ? status.MaxStackedCount : int.MaxValue;
+            int next = (int)Math.Min(limit, Math.Max(0L, previous + (long)delta));
+            status.StackCount = previous + FightStatusSharedStacks.Constrain(owner, status, next - previous);
             FightStatusPropertyRuntime.OnStackChanged(status, previous);
             return status.StackCount - previous;
         }

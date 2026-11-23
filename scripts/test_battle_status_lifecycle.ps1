@@ -45,6 +45,21 @@ $extended.MaxAddDurationRound = 2
 [Zjcs.Combat.Official.FightStatusLifecycle]::ExtendDurationOnStack($extended, 1)
 Assert-Status ($extended.CurDurationRound -eq 2) 'Stack duration extension ignored MaxAddDurationRound'
 
+$longDuration = New-Status 5003 ([int]::MaxValue - 1)
+$longDuration.IsAddDurationRound = $true
+$longDuration.HasRoundStartTrigger = $true
+$longDuration.RoundStartMergeMaxCountOnStackRound = $true
+[Zjcs.Combat.Official.FightStatusLifecycle]::Initialize($longDuration, 0)
+[Zjcs.Combat.Official.FightStatusLifecycle]::ExtendDurationOnStack($longDuration, 1)
+Assert-Status ($longDuration.CurDurationRound -eq 100 -and $longDuration.StartRound -eq 1) 'Stack duration wrapped before reaching its cap'
+[Zjcs.Combat.Official.FightStatusLifecycle]::ExtendDurationOnStack($longDuration, 1)
+Assert-Status ($longDuration.CurDurationRound -eq 100 -and $longDuration.RoundStartStackRoundCount -eq 3) 'Duration capped before recording both stack extensions'
+foreach ($cap in @(0, -1)) {
+    $extended.MaxAddDurationRound = $cap
+    [Zjcs.Combat.Official.FightStatusLifecycle]::ExtendDurationOnStack($extended, 1)
+    Assert-Status ($extended.CurDurationRound -eq $cap) 'Stack duration extension changed the configured nonpositive cap'
+}
+
 $stacked = New-Status 5004 1
 $stacked.IsOpenStack = $true
 $stacked.StackCount = 1
@@ -52,6 +67,17 @@ $stacked.MaxStackedCount = 3
 $added = [Zjcs.Combat.Official.FightStatusLifecycle]::AddStack($stacked, 5)
 Assert-Status ($added -eq 2 -and $stacked.StackCount -eq 3) 'Status stack cap mismatch'
 Assert-Status ([Zjcs.Combat.Official.FightStatusLifecycle]::AddStack($stacked, 1) -eq 0) 'Status exceeded its maximum stacks'
+
+foreach ($cap in @(0, -1)) {
+    $stacked.MaxStackedCount = $cap
+    $stacked.StackCount = [int]::MaxValue - 1
+    $added = [Zjcs.Combat.Official.FightStatusLifecycle]::AddStack($stacked, 2)
+    Assert-Status ($added -eq 1 -and $stacked.StackCount -eq [int]::MaxValue) 'Uncapped status stacks wrapped beyond Int32.MaxValue'
+    $added = [Zjcs.Combat.Official.FightStatusLifecycle]::AddStack($stacked, 1)
+    Assert-Status ($added -eq 0 -and $stacked.StackCount -eq [int]::MaxValue) 'A saturated status reported extra stacks'
+    $removed = [Zjcs.Combat.Official.FightStatusLifecycle]::AddStack($stacked, [int]::MinValue)
+    Assert-Status ($removed -eq -[int]::MaxValue -and $stacked.StackCount -eq 0) 'Removing excess stacks did not stop at zero'
+}
 
 $unit = [Zjcs.Combat.Official.FightBattleUnitState]::new()
 $unit.Id = 1; $unit.Hp = 100; $unit.MaxHp = 100
