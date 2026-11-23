@@ -94,7 +94,13 @@ namespace Zjcs.Combat.Official
             }
             long? custom = CustomDamage(actor, target, skill, hit, sourceProps, targetProps);
 
-            if (hit.ActionType == 5 || (skill != null && skill.SkillType == 3))
+            if (skill != null && skill.ShieldConversionCost)
+            {
+                long cost = Math.Max(0L, skill.CustomDamage);
+                result.Formula = new FightDamageFormulaResult { Damage = -cost, AbsoluteDamage = cost };
+                result.Settlement = settlement.Apply(damageId, sourceEntity, targetEntity, -cost);
+            }
+            else if (hit.ActionType == 5 || (skill != null && skill.SkillType == 3))
             {
                 result.IsCure = true;
                 conditionalProperties?.Merge(target, hit, result.Type, true, random, sourceProps);
@@ -104,6 +110,8 @@ namespace Zjcs.Combat.Official
                 long? customCure = skill.HasCustomCure ? (long?)skill.CustomCure : custom;
                 result.Cure = formula.CalculateCure(sourceProps, targetProps,
                     hit.DamageProperty, hit.FixedDamageProperty, customCure);
+                if (skill == null || !skill.ShieldConversionReturn)
+                {
                 result.Cure.Cure = FightStatusDamageProcessRuntime.BeforeShield(actor, target,
                     result.Cure.Cure, formula, 2);
                 result.Cure.AbsoluteCure = FightStatusDamageProcessRuntime.BeforeShield(actor, target,
@@ -113,6 +121,7 @@ namespace Zjcs.Combat.Official
                 ProcessTransient(result.Type, ref result.Cure.Cure, ref result.Cure.AbsoluteCure,
                     true, onTransient, onTransientDamage);
                 beforeCureSettlement?.Invoke(result.Cure);
+                }
                 sourceEntity = actor.EntityState(); targetEntity = target.EntityState();
                 result.Settlement = settlement.Apply(damageId, sourceEntity, targetEntity,
                     result.Cure.Cure);

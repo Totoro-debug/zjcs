@@ -271,6 +271,8 @@ namespace Zjcs.Combat.Official
         public bool HasCustomDamage;
         public long CustomDamage;
         public bool HasCustomCure;
+        public bool ShieldConversionCost;
+        public bool ShieldConversionReturn;
         public long CustomCure;
         // Runtime-only hit creation snapshot; ordinary status invocations use
         // their existing live unit position references.
@@ -339,6 +341,7 @@ namespace Zjcs.Combat.Official
         public FightBattleStatusSecondsState Seconds;
         public FightBattleStatusCureReduceState CureReduce;
         public FightBattleStatusShieldExpiryState ShieldExpiry;
+        public FightBattleShieldConversionState ShieldConversion;
         public FightBattleStatusHitSkillComponentState HitSkill;
         public FightBattleStatusDamageSkillComponentState DamageSkill;
         public FightBattleStatusHitApplyDamageComponentState HitApplyDamage;
@@ -367,6 +370,7 @@ namespace Zjcs.Combat.Official
                 Seconds = Seconds?.Copy(),
                 CureReduce = CureReduce?.Copy(),
                 ShieldExpiry = ShieldExpiry?.Copy(),
+                ShieldConversion = ShieldConversion?.Copy(),
                 HitSkill = HitSkill?.Copy(),
                 DamageSkill = DamageSkill?.Copy(),
                 HitApplyDamage = HitApplyDamage?.Copy(),
@@ -381,6 +385,19 @@ namespace Zjcs.Combat.Official
                 RoundBeforeEnd = RoundBeforeEnd?.Copy()
             };
         }
+    }
+
+    [Serializable]
+    public sealed class FightBattleShieldConversionState
+    {
+        public int HpSkillId;
+        public int ReturnSkillId;
+        public long ConvertedHp;
+        public bool Started;
+        public bool Returned;
+
+        public FightBattleShieldConversionState Copy() =>
+            (FightBattleShieldConversionState)MemberwiseClone();
     }
 
     [Serializable]
@@ -1420,6 +1437,8 @@ namespace Zjcs.Combat.Official
         public List<List<int>> PriorityCharacterTypeGroups = new List<List<int>>();
         public bool RangeVerified = true;
         public bool HasCustomCure;
+        public bool ShieldConversionCost;
+        public bool ShieldConversionReturn;
         public long CustomCure;
         public List<FightPropertyValue> Properties = new List<FightPropertyValue>();
         public List<FightBattleHitDefinition> Hits = new List<FightBattleHitDefinition>();

@@ -529,6 +529,7 @@ namespace Zjcs.Combat.Official
             }
             CollectStatusCustomActions(statusCustomActions);
             UpdateOutcome(globalRound);
+            ReturnShieldConversions();
             stepDuration = Math.Max(stepDuration, movementStartContext.Duration);
             stepActionDuration = Math.Max(stepActionDuration, movementStartContext.ActionDuration);
             var stepEvent = CreateEvent(actor, eventSkill, performedTargets, before,
@@ -1130,6 +1131,8 @@ namespace Zjcs.Combat.Official
                         MaxHp = target.MaxHp
                     };
                     damageEvents.Add(damage);
+                    if (skill.ShieldConversionCost && target == actor && target.Hp < beforeHp)
+                        ApplyHpChangeTriggers(target, skill);
                     if (presentationCast != null)
                     {
                         if (presentationCast.DamageEventIds == null)
@@ -2199,6 +2202,8 @@ namespace Zjcs.Combat.Official
                 }
                 skill.HasCustomCure = invocation.HasCustomCure;
                 skill.CustomCure = invocation.CustomCure;
+                skill.ShieldConversionCost = invocation.ShieldConversionCost;
+                skill.ShieldConversionReturn = invocation.ShieldConversionReturn;
                 if (invocation.HitOrigin.HasValue)
                     targetPosition = targetPosition.ProbeAt(invocation.HitOrigin.Value);
                 if (invocation.SourceRootSkillId > 0) skill.RootEntityId = invocation.SourceRootSkillId;
@@ -3012,6 +3017,65 @@ namespace Zjcs.Combat.Official
                     if (skill != null && skill.ResetReleasedTimeOnNextWave
                         && FindSlot(unit, skill.Slot) != null)
                         new FightSkillState(unit.SkillState).ResetReleasedTimes(skill.Slot);
+        }
+
+        private void StartShieldConversion(FightBattleUnitState owner, FightBattleStatusState status)
+        {
+            FightBattleShieldConversionState conversion = status?.Components?.ShieldConversion;
+            if (conversion == null || conversion.Started || movementStartContext == null) return;
+            conversion.Started = true;
+            FightStatusPropertyRuntime.ResolveForApplication(status, owner, units, statusCatalog, formula);
+            int shieldProperty = formula.PropertyId("ConvertedCurHpShield");
+            long amount = 0;
+            foreach (FightPropertyValue property in status.ResolvedProperties)
+                if (property.Id == shieldProperty) amount = Math.Max(0L, property.Value);
+            amount = Math.Min(amount, Math.Max(0L, owner.Hp - 1));
+            conversion.ConvertedHp = amount;
+            if (amount > 0) InvokeShieldConversion(owner, status, conversion.HpSkillId, amount, false);
+            status.ShieldUsesCustomValue = true;
+            status.CustomShieldValue = status.ShieldValue = status.ShieldRemainValue = amount;
+            status.ShieldInitialized = true;
+            RebuildBattleProperties();
+        }
+
+        private void ReturnShieldConversions()
+        {
+            if (!checkpoint.Finished || !checkpoint.Outcome.Won || movementStartContext == null) return;
+            foreach (FightBattleUnitState owner in new List<FightBattleUnitState>(units))
+            {
+                if (owner.Side != 1 || owner.Hp <= 0 || owner.Ended) continue;
+                foreach (FightBattleStatusState status in new List<FightBattleStatusState>(owner.Statuses))
+                {
+                    FightBattleShieldConversionState conversion = status?.Components?.ShieldConversion;
+                    if (conversion == null || !conversion.Started || conversion.Returned) continue;
+                    conversion.Returned = true;
+                    long amount = status.ShieldValue == 0 ? 0 : (long)((float)conversion.ConvertedHp
+                        * ((float)status.ShieldRemainValue / (float)status.ShieldValue));
+                    if (amount > 0) InvokeShieldConversion(owner, status,
+                        conversion.ReturnSkillId, amount, true);
+                }
+            }
+            checkpoint.Outcome.PlayerHp = RequiredUnit(1).Hp;
+        }
+
+        private void InvokeShieldConversion(FightBattleUnitState owner, FightBattleStatusState status,
+            int entityId, long amount, bool cure)
+        {
+            if (entityId <= 0) return;
+            var invocation = new FightBattleStatusSkillInvocation
+            {
+                Trigger = new FightBattleStatusStateTrigger { EntityId = entityId }.WithSource(status),
+                SourceUnitId = owner.Id,
+                TargetUnitId = owner.Id,
+                TargetPositionUnitId = owner.Id,
+                HasCustomDamage = !cure,
+                CustomDamage = amount,
+                HasCustomCure = cure,
+                CustomCure = amount,
+                ShieldConversionCost = !cure,
+                ShieldConversionReturn = cure
+            };
+            ExecuteHpStartupSkills(new List<FightBattleStatusSkillInvocation> { invocation });
         }
 
         private void UpdateOutcome(int round)

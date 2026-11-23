@@ -1710,6 +1710,16 @@ namespace Zjcs.Combat.Official
             }
             BindSharedStackDefinition(result, components);
             result.Components = ParseStatusComponents(components);
+            if (shieldPersistent != null && Bool(shieldPersistent, "IsConvertShieldToHp"))
+            {
+                var hpSkill = Component(shieldPersistent, "HpToShieldSkillCfg");
+                var returnSkill = Component(shieldPersistent, "SkillCfg");
+                result.Components.ShieldConversion = new FightBattleShieldConversionState
+                {
+                    HpSkillId = hpSkill == null ? 0 : Int(hpSkill, "SkillId"),
+                    ReturnSkillId = returnSkill == null ? 0 : Int(returnSkill, "SkillId")
+                };
+            }
             result.Components.ShieldExpiry = ParseShieldExpiry(result.ClassId, components);
             return result;
         }

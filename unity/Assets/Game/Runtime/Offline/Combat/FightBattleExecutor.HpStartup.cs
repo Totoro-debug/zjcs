@@ -213,6 +213,7 @@ namespace Zjcs.Combat.Official
                     RefreshTurnUnits();
                     SpawnNextWaveIfCleared();
                     UpdateOutcome(Math.Max(1, turns.GlobalRound()));
+                    ReturnShieldConversions();
                 }
                 bool hpChanged = false;
                 foreach (var unit in units)
