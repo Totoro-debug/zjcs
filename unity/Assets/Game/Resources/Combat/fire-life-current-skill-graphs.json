@@ -1,0 +1,49 @@
+{
+  "manifest": "903_156948",
+  "skills": [
+    {
+      "skill_entity_id": 12040,
+      "entity_resource": "Combat/FireLifeGraphs/Prefabs/EcEntity/Fight/FightSkill/12040/12040",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/FireLifeGraphs/Prefabs/EcEntity/Fight/FightSkill/12040/playable12040"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 12041,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/FireLifeGraphs/Prefabs/EcEntity/Fight/FightSkill/12040/12041"
+    }
+  ],
+  "damages": [
+    {
+      "damage_entity_id": 12042,
+      "entity_prefab": "12040/12042.prefab",
+      "entity_prefab_sha256": "758f61ad49671e986ebed082bec2948df52376ec015c4b723b74d171a5d3c4ee",
+      "component_file_id": 114703437598541787,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/FireLifeGraphs/Prefabs/EcEntity/Fight/FightSkill/12040/12042"
+    }
+  ]
+}

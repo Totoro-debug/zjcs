@@ -112,6 +112,38 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
             assert spec['base_item'] in owner['Skills'], 'Built-in variant has no owned profession base skill'
         properties = [row for row in table('entity_prop', mappings['entity_prop']) if row['EntityId'] in spec['entities']]
         expected_properties = [row for row in skill_rules['tables']['entity_prop'] if row['EntityId'] in spec['entities']]
+        property_overrides = spec.get('entity_prop_overrides', {})
+        expected_by_id = {row['EntityId']: copy.deepcopy(row) for row in expected_properties}
+        current_by_id = {row['EntityId']: row for row in properties}
+        baseline_changes = []
+        for entity_id_text, overrides in property_overrides.items():
+            entity_id = int(entity_id_text)
+            if entity_id not in expected_by_id or entity_id not in current_by_id:
+                raise AssertionError('Entity property override references an unavailable entity: '
+                                     + entity_id_text)
+            previous = expected_by_id[entity_id]
+            current_row = current_by_id[entity_id]
+            baseline_row = next(row for row in expected_properties if row['EntityId'] == entity_id)
+            changes = {}
+            for field, expected_value in overrides.items():
+                if field not in current_row or current_row[field] != expected_value:
+                    raise AssertionError('Declared entity property override differs from current official table: '
+                                         + f'{entity_id}/{field}')
+                if previous[field] != expected_value:
+                    changes[field] = dict(previous=previous[field], current=expected_value)
+                    previous[field] = expected_value
+            if set(current_row) != set(baseline_row):
+                raise AssertionError('Current entity property row shape changed: ' + entity_id_text)
+            actual_changes = {field for field in current_row
+                              if current_row[field] != baseline_row[field]}
+            changed_override_fields = {field for field, value in overrides.items()
+                                       if baseline_row[field] != value}
+            if actual_changes != changed_override_fields:
+                raise AssertionError('Current entity property row has undeclared changes: '
+                                     + f'{entity_id}: {sorted(actual_changes - changed_override_fields)}')
+            if changes:
+                baseline_changes.append(dict(EntityId=entity_id, fields=changes))
+        expected_properties = [expected_by_id[row['EntityId']] for row in expected_properties]
         assert sorted(properties, key=lambda row: row['EntityId']) == sorted(expected_properties, key=lambda row: row['EntityId']), 'Current entity cultivation properties changed'
         group_ids = {row['GroupLevelPropId'] for row in properties} | {current['PassiveGroupLevelPropId']}
         groups = [row for row in table('entity_prop_group_level', mappings['entity_prop_group_level']) if row['GroupId'] in group_ids]
@@ -373,6 +405,7 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
         result = dict(manifest=apk.version, item_id=item_id, profession=owner['Profession'],
                       skill_item=current, table_inputs=table_proofs, fragments=fragments,
                       numeric_inputs=numeric,
+                      entity_prop_baseline_changes=baseline_changes,
                       wording=wording, sound_events=sound_events, sound_banks=sound_banks,
                       omitted_empty_defaults=defaults, official_code=inputs,
                       native_bundles=sorted(native, key=lambda row: row['bundle']),

@@ -1,0 +1,25 @@
+{
+  "entities": [25098, 12040, 12041, 12042],
+  "rule_pack_fragments": [
+    "FightSkill_part755.g.bytes",
+    "FightSkill_part101.g.bytes"
+  ],
+  "visibility_bundles": [12040],
+  "entity_prop_overrides": {
+    "12040": {
+      "PvpPropScale": 5000
+    }
+  },
+  "current_native_receipts": [
+    "assets/reference/battle-animation/fire-life-current-skill-graphs-source-manifest.json"
+  ],
+  "code": [
+    "FightStatusComponentInfo",
+    "FightStatusRoundEndComponentInfo",
+    "FightStatusHitApplyDamageComponentInfo",
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "BattleFormulaHandler"
+  ]
+}
