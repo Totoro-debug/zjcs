@@ -65,5 +65,20 @@ public bool IsTagInAllRegionActived(IBagRecycleQueryPlayer player, string tag)
 		}
 		return true;
 	}
+
+public List<PlayerItemDataWrap> GetCanRecycleGem(IBagRecycleQueryPlayer player)
+	{
+		int planesRank = Services.PlanesRank;
+		IReadOnlyCollection<PlayerItemDataWrap> readOnlyCollection = player.FindItemsByType(ItemType.Gem);
+		List<PlayerItemDataWrap> list = new List<PlayerItemDataWrap>();
+		foreach (PlayerItemDataWrap item in readOnlyCollection)
+		{
+			if ((item.Info.PartInfo as GemPartInfo).Rank < planesRank)
+			{
+				list.Add(item);
+			}
+		}
+		return list;
+	}
 }
 }

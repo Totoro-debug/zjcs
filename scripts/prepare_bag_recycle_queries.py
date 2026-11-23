@@ -54,14 +54,16 @@ def prepare():
         raise ValueError('Verify the actual selected original recycling assembly')
     inputs[assembly.relative_to(ROOT).as_posix()] = sha(assembly.read_bytes())
     original = read(code / 'common-source/Common/PlayerUtils.cs')
+    gem_original = read(code / 'common-source/Common/PlayerGemDataExt.cs')
     bodies = []
     replacements = [('this Player player', 'IBagRecycleQueryPlayer player'), ('Parsers.Instance', 'Services.Tables'),
         ('NpcInfoParser npcInfoParser', 'IBagRecycleNpcTable npcInfoParser'), ('PlayerNpcManager npcManager', 'IBagRecycleNpcManager npcManager'),
         ('NpcFriendshipLevelInfoParser npcFriendshipLevelInfoParser', 'IBagRecycleNpcLevelTable npcFriendshipLevelInfoParser'),
         ('ItemTagInfoParser itemTagInfoParser', 'IBagRecycleItemTagTable itemTagInfoParser'),
-        ('player.IsTagInAllRegionActived(config.Tag)', 'IsTagInAllRegionActived(player, config.Tag)')]
-    for name in ('GetCanRecycleGift', 'GetCanRecycleDoorkey', 'IsTagInAllRegionActived'):
-        raw = member(original, r'^\s*public static [^\n]+\b' + name + r'\(')
+        ('player.IsTagInAllRegionActived(config.Tag)', 'IsTagInAllRegionActived(player, config.Tag)'),
+        ('Rank planesRank', 'int planesRank'), ('PlanesInfoUtils.PlanesRank', 'Services.PlanesRank')]
+    for name in ('GetCanRecycleGift', 'GetCanRecycleDoorkey', 'IsTagInAllRegionActived', 'GetCanRecycleGem'):
+        raw = member(gem_original if name == 'GetCanRecycleGem' else original, r'^\s*public static [^\n]+\b' + name + r'\(')
         body = raw.replace('public static ', 'public ', 1)
         for old, new in replacements: body = body.replace(old, new)
         body = '\n'.join(line.rstrip() for line in body.splitlines()).strip()
@@ -83,7 +85,7 @@ def prepare():
     constructors = Constructors(code)
     mapping = {name.rsplit('/', 1)[-1]: kind for kind, name in re.findall(r'new (Tb\w+)\(loader\("([^"]+)"\)\)', constructors.source('Tables'))}
     manifest = read_asset_manifest(source.manifest_bytes('DefaultPackage'))
-    names = ('npc', 'npc_friendship_level', 'npc_gift', 'item_tag', 'map_world', 'map_region')
+    names = ('npc', 'npc_friendship_level', 'npc_gift', 'item_tag', 'map_world', 'map_region', 'gem', 'item')
     selected = {}
     for name in (*names, 'world_stage_tag_map_info'):
         matches = [row for row in manifest if row['path'].lower().endswith('/' + name + '.g.bytes')]
@@ -108,7 +110,7 @@ def prepare():
         if not path.exists(): path = code / 'common-source/Common.LubanGen' / (name + '.cs')
         if path.exists(): read(path)
         elif name not in ('Vector2', 'Vector3', 'Pos2d'): raise ValueError('Verify original recycling table decoder: ' + name)
-    for name in ('NpcInfoParser', 'NpcFriendshipLevelInfoParser', 'PlayerNpcManager', 'Player', 'PlayerItemManagerExt', 'WorldStageTagMapInfoParser', 'WorldStageTagEntityInfo', 'WorldStageTagMapInfo', 'MapWorldInfo'):
+    for name in ('NpcInfoParser', 'NpcFriendshipLevelInfoParser', 'PlayerNpcManager', 'Player', 'PlayerItemManagerExt', 'WorldStageTagMapInfoParser', 'WorldStageTagEntityInfo', 'WorldStageTagMapInfo', 'MapWorldInfo', 'GemPartInfoParser', 'PlanesInfoUtils', 'Rank'):
         read(code / 'common-source/Common' / (name + '.cs'))
     for name in ('WorldStageTagEntityInfoFormatter', 'WorldStageTagMapInfoFormatter'): read(code / 'common-source/MessagePack.Formatters.Common' / (name + '.cs'))
     world_tags = []
@@ -120,9 +122,13 @@ def prepare():
         Regions=[region['Region'] for region in tables['map_region'] if region['ClassId'] == row['ClassId']]) for row in tables['map_world']]
     if {entity['MapClassId'] for row in world_tags for entity in row['Entities'] or []} - {row['ClassId'] for row in maps}:
         raise ValueError('Bind the actual map-part type for a recycling tag')
+    item_rows = {row['ClassId']: row for row in tables['item']}
+    # GemPartInfoParser.PostParse assigns Rank from ItemInfo.LimitRank,
+    # not ItemInfo.Rank (the gem's enhancement level).
+    gems = [dict(ItemId=row['ClassId'], Rank=item_rows[row['ClassId']]['LimitRank']) for row in tables['gem']]
     payload = dict(Npcs=[dict(Id=row['Id'], ExclusiveGiftIds=row['ExclusiveGiftIds']) for row in tables['npc']],
         FriendshipLevels=[dict(Id=row['Id'], Level=row['Level']) for row in tables['npc_friendship_level']],
-        GiftIds=[row['ClassId'] for row in tables['npc_gift']], ItemTags=tables['item_tag'], WorldTags=world_tags, Maps=maps)
+        GiftIds=[row['ClassId'] for row in tables['npc_gift']], ItemTags=tables['item_tag'], WorldTags=world_tags, Maps=maps, Gems=gems)
     path = ASSETS / 'catalog.json'; write(path, (json.dumps(payload, ensure_ascii=False, separators=(',', ':'), allow_nan=False) + '\n').encode()); metadata(path)
     for name in ('official_apk.py', 'official_source.py', 'official_manifest.py', 'official_tables.py', 'official_metadata.py', 'official_bundle_reader.py', 'prepare_bag_item_queries.py', 'prepare_home_entity_bindings.py'):
         read(ROOT / 'scripts' / name)
@@ -133,11 +139,13 @@ def prepare():
         path = ROOT / name
         if sha(path.read_bytes()) != expected: raise ValueError('The verified Bag item input differs: ' + name)
         read(path)
+    read(ROOT / 'docs/maps/manual-world-stage.md')
+    read(ROOT / 'unity/Assets/Game/Runtime/Offline/HomeExperienceUI/OfflineHomeExperienceEnvironmentSource.cs')
     validations = [ROOT / name for name in ('scripts/test_bag_recycle_queries.ps1', 'scripts/fixtures/bag_recycle_queries_validation.cs')]
     RECEIPT.write_text(json.dumps(dict(manifest=source.version, source_selection_sha256=sha((ROOT/'official-source.json').read_bytes()),
         methods=methods, configuration=configuration, inputs=inputs, outputs=outputs,
         validation_inputs={path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in validations if path.exists()},
-        adaptation='Original gift/key and tag-region queries retain branches, enumeration order and thresholds. Local read-only projections use current inventory, NPC friendship and visited-map defaults/public activation records.',
+        adaptation='Original gift/key/gem and tag-region queries retain branches, enumeration order and thresholds. Local read-only projections use current inventory, NPC friendship, visited-map defaults/public activation records and the existing user-confirmed independent world-content rank. Gem rank comes from ItemInfo.LimitRank through the original GemPartInfoParser post-parse binding.',
         scope='Shared query and local data owners only; recycle transactions, complete Bag graph host and native storage gameplay remain separate.'), ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
     print('Prepared original Bag recycling queries and local configuration')
 

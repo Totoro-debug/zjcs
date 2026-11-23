@@ -13,6 +13,10 @@
     "IsTagInAllRegionActived": {
       "original_sha256": "b70c347f05bd4828ee5e777a07ab873d3166ca40ab1e96197c91157a9d66e7d3",
       "migrated_sha256": "53e99611c6c0dc5eb54791611998923e4b48af09ea60e1d8e1b86df824a948f1"
+    },
+    "GetCanRecycleGem": {
+      "original_sha256": "72f7d8dbebacb6b1800af78647785e0566ee60fda2e431830844460d4fe66921",
+      "migrated_sha256": "93a4402cc0ecffaef6b2759be8b36575d4d932d38daa9982084b699b09ecb753"
     }
   },
   "configuration": {
@@ -80,6 +84,38 @@
       "object_sha256": "f3e847ae0ed9da8a46b3a0604820a6b0893e32df6b1fa04871963b7f84fc59dd",
       "constructor": "TbItemTagInfo"
     },
+    "gem": {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "4838b38a3b272ae4bd23e89d77cd3b90",
+        "path_id": "559752733030173221",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/4838b38a3b272ae4bd23e89d77cd3b90.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 2210171,
+        "bundle_sha256": "b87533144cd1777aa13ac24e283d12bafab338b7d4e66a3ea20361504caf795f"
+      },
+      "asset": "Assets/Config/Luban/gem.g.bytes",
+      "payload_sha256": "fccdcff7e7ebdefb70ce085f73f49126e8572d2535d69a34f9c497b5f1827343",
+      "object_sha256": "1d6a1ca2845f2b4429ee9b714f6607a782f181d68f4ba34d24bf388e410121f3",
+      "constructor": "TbGemPartInfo"
+    },
+    "item": {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "4838b38a3b272ae4bd23e89d77cd3b90",
+        "path_id": "3644532119292667704",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/4838b38a3b272ae4bd23e89d77cd3b90.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 2210171,
+        "bundle_sha256": "b87533144cd1777aa13ac24e283d12bafab338b7d4e66a3ea20361504caf795f"
+      },
+      "asset": "Assets/Config/Luban/item.g.bytes",
+      "payload_sha256": "c3cb97f697da5750ee40894d8e6e2d0062df70ea5f22e7f9cae75e94c98f491e",
+      "object_sha256": "a87aa4ad2e131d9fe1181aabfa1d10a2d86e124846ec45ff87ff0ecdfbf27246",
+      "constructor": "TbItemInfo"
+    },
     "map_world": {
       "source": {
         "bundle": "defaultpackage_assets_config_luban_map.bundle",
@@ -138,9 +174,10 @@
     ".tools/source-packages/current/903_156948/code-manifest.json": "98672050f03e79d2b815c5f036ee014abea9a5f0333b304047699e224cdc4f8b",
     ".tools/source-packages/current/903_156948/official-code/managed/decoded/Console.dll": "e57c5d8ec74467682059a8dd4720167812d0308311c2f34050a8a8b35b37f4b1",
     ".tools/source-packages/current/903_156948/official-code/common-source/Common/PlayerUtils.cs": "d42ecf412164ea390b19f6437235435261fafe37348cc76ac075e1e2119565ba",
-    "scripts/templates/bag_recycle_queries/BagRecycleQueryServices.cs": "912749d941f266ecc65204f9384b7cce2b356f479e5677eacf611c0d6983926a",
-    "unity/Assets/Game/Runtime/Offline/BagRecycleQueries/OfflineBagRecycleCatalog.cs": "e96dea6e433f05d9f60078b72a6f6bd1ff62e67af3e179cd8b60370b507b2d67",
-    "unity/Assets/Game/Runtime/Offline/BagRecycleQueries/OfflineBagRecycleQueries.cs": "cdb7941bad48aedd4e9971ac320e78f802f103ad7815d65afd5171aad19c6f65",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/PlayerGemDataExt.cs": "fa7f8202e942f0d02cf48ca2601c692b25d2acbc63f0e49441b0a3945e4405d1",
+    "scripts/templates/bag_recycle_queries/BagRecycleQueryServices.cs": "64104b8844e8d87c0eacb073079f619b1a22e63c41c7914277323cf1893a7c5e",
+    "unity/Assets/Game/Runtime/Offline/BagRecycleQueries/OfflineBagRecycleCatalog.cs": "ed63b2f6071de5660fce9d1ddec6122fccee2e87c584b2bde76428a10594cd64",
+    "unity/Assets/Game/Runtime/Offline/BagRecycleQueries/OfflineBagRecycleQueries.cs": "51a20158b4f2bc6af93842be5a49dce4e9bfca93f1c2579735388e0dd1b7204a",
     ".tools/source-packages/current/903_156948/official-code/common-source/Common/Tables.cs": "0e4882f1ad41958e5ec017543447e17f5196c5453f8168c685926ea2c134c9bc",
     ".tools/source-packages/current/903_156948/official-code/common-source/Common/TbNpcInfo.cs": "f095e8a5317b17aa4571d2302ead342dc0876a435dafcfcdae708f8bbd2ecf45",
     ".tools/source-packages/current/903_156948/official-code/common-source/Common/NpcInfo.cs": "387c584e748963f1870e9861fee043e68fcc741cf52409fcdeffe294007c6a8d",
@@ -160,6 +197,13 @@
     ".tools/source-packages/current/903_156948/official-code/common-source/Common/ItemPartInfo.cs": "685012dc0b4db06adf6b1b5f4d37e04ac1197b2391763694badfdbf1ae278cea",
     ".tools/source-packages/current/903_156948/official-code/common-source/Common/TbItemTagInfo.cs": "89a525e0a34462dfc8e936f7116619e656c41a68e196f094c729d0535cacf79b",
     ".tools/source-packages/current/903_156948/official-code/common-source/Common/ItemTagInfo.cs": "ddc04940077220af8f14df80ec2750a4070ff6e00f4ab8861fe26b25b699d841",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/TbGemPartInfo.cs": "b8954efa437077e095b902135914c88bc9bae9819449cabb62f52b383e60c9d5",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/GemPartInfo.cs": "7dd9e85465afaad9d35708753bc477c4e320c2d9c01485cab0a00cda34873f7f",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/TbItemInfo.cs": "b93d21bb8d57aea59fbfee28c3f7bb789835be6ca8f7d0ec6b6e8f25cfcf90d5",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/ItemInfo.cs": "33a0ac813b6e402c07999fdfc2b889d0b3f3d039df7ee0d0be493e2c16da20a6",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/ItemEffect.cs": "bad642dadc92e47e31a231691b3739dfe066f9cda973432decf492b637c19ea6",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/ItemEffectWrapItem.cs": "b411505be181c04a3c47d309866e28621588fc9f8aaff1a761ff4181f4fe8fc5",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/ItemEffectAutoIncrease.cs": "a13e64a337dac83fd309fc312f58adba1a0f955fc043e97f13b611c661557a8c",
     ".tools/source-packages/current/903_156948/official-code/common-source/Common/TbMapWorldInfo.cs": "c36d30a01c3b4dd5391668f2f8f0c606396a435dc9af7f2d969e872f51f0ff86",
     ".tools/source-packages/current/903_156948/official-code/common-source/Common/MapWorldInfo.cs": "bbb818e98ec2f7a1798476ac4308aaaa9a2b5e81d882fac4ba10315ccf912118",
     ".tools/source-packages/current/903_156948/official-code/common-source/Common/MapPartInfoBase.cs": "88f4d8137d4f45c6b09f78a9d630f0f60806fb9e87388c1356f03e11c57925aa",
@@ -174,6 +218,9 @@
     ".tools/source-packages/current/903_156948/official-code/common-source/Common/WorldStageTagMapInfoParser.cs": "0e79760a1238ba2e34c41383644a6636da75a8363942a724ae8067acd6226c62",
     ".tools/source-packages/current/903_156948/official-code/common-source/Common/WorldStageTagEntityInfo.cs": "4e075a2acc35dc953210973552603c776e265a05b6fcbf71468b2931d1cb97c0",
     ".tools/source-packages/current/903_156948/official-code/common-source/Common/WorldStageTagMapInfo.cs": "30f282f64d8587ada15dccf209915c3d483bd2256edd290f5e2b00abf2cd062a",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/GemPartInfoParser.cs": "f8443f38dc1c571c53f895e9c15720b6c2bdfd3825ddbc9209510d6107915884",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/PlanesInfoUtils.cs": "4838ebd0a99f8787755f2cc88acbbdc2f573e4e8fe5acf73bcba9bc04cac8642",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/Rank.cs": "1a91cda306404d54e85e4c2731748da101aca3cf14e9ade5871dffb5e83ce3b6",
     ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/WorldStageTagEntityInfoFormatter.cs": "80fd638da87020b2168e9ae39c9af7cd0203de018490ea39274cf767b0761b75",
     ".tools/source-packages/current/903_156948/official-code/common-source/MessagePack.Formatters.Common/WorldStageTagMapInfoFormatter.cs": "eb696a412a8f941db0023cb9670c8746aa591c8162501d2db9581abb6488e61a",
     "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
@@ -184,7 +231,7 @@
     "scripts/official_bundle_reader.py": "29e0015bcef7317e220159e0be13aeed990f94d09397b1ac7814131dc343e477",
     "scripts/prepare_bag_item_queries.py": "ab411e65bbdf2a820772a8116896de20caf6155c5d0164606eaa40225b275ffe",
     "scripts/prepare_home_entity_bindings.py": "8cf6ace0460596bb91fd78648238ddc942fde3e5b12e220738c4c207b4021ba0",
-    "scripts/prepare_bag_recycle_queries.py": "1aa492f4a9efd7d441b5b15900f814368858e2b86d7f72052a2d62baacf9e8a4",
+    "scripts/prepare_bag_recycle_queries.py": "7086b930a951529e96ae3910fe7bb2466f3b198aceaf20f8c0aad41e017c82be",
     "assets/reference/bag-item-query-bindings-source-manifest.json": "2634be8dc348bcc977896c16ebd8ab394a43fe91c11e4510005b637c41fe733d",
     "unity/Assets/Game/Runtime/Offline/BagItemQueries.meta": "29e3451cb4187d60ba0b171a7378754ddab80cab45bd378c4032ca46af339c45",
     "unity/Assets/Game/Resources/Home/BagItemQueries.meta": "1d5a19d6012de56504cfd1443a4f7606f2d4668e9e7e4789d73fdece850c7e2d",
@@ -197,31 +244,33 @@
     "unity/Assets/Game/Runtime/Offline/Progression/IOfflineInventoryItemIndicators.cs": "a5316ff14b6271e3073543f4e5ddb5df6ddfb6c179d90667f2e926ff6bff7e74",
     "unity/Assets/Game/Runtime/Offline/Progression/IOfflineInventoryItemIndicators.cs.meta": "f836424260d60c3d44b33bb56f5d9d5f75dbda303ca1d8ab32200288d691452a",
     "unity/Assets/Game/Resources/Home/BagItemQueries/catalog.json": "1661f36997bccdf9cca628464a188876899d5cef3067722b8eb26666aee2435e",
-    "unity/Assets/Game/Resources/Home/BagItemQueries/catalog.json.meta": "a6416a0ee3e246a3815ca7e147a688d55fafaf47087a85e7cedad4644233e1b7"
+    "unity/Assets/Game/Resources/Home/BagItemQueries/catalog.json.meta": "a6416a0ee3e246a3815ca7e147a688d55fafaf47087a85e7cedad4644233e1b7",
+    "docs/maps/manual-world-stage.md": "421ab4978815e2767c8f7b94a47c96e6a29bcd738fe61566521c8066db0bb1b6",
+    "unity/Assets/Game/Runtime/Offline/HomeExperienceUI/OfflineHomeExperienceEnvironmentSource.cs": "934611ad9df27402ac0f722d724c8346253ea54ddcbd0ac317a5523622917146"
   },
   "outputs": {
     "unity/Assets/Game/Runtime/Official/BagRecycleQueries.meta": "66abac2319ec3cb6beaf52a8c1394c0408ac43ce6e209d556417aae2c92f0e7a",
     "unity/Assets/Game/Runtime/Offline/BagRecycleQueries.meta": "63dddfcf5964a5962fccddb614aeae22c858c2f03343ba29ea043e935314674e",
     "unity/Assets/Game/Resources/Home/BagRecycleQueries.meta": "76748a59b852ea693e3264ee6aede0890d63a3124e9996231b893b8114ac2e8b",
-    "unity/Assets/Game/Runtime/Official/BagRecycleQueries/BagRecycleQueryRules.cs": "105f02a1692155a1cba6d5944894f7f8f1ee8e21e51e37441a374ec58e153833",
+    "unity/Assets/Game/Runtime/Official/BagRecycleQueries/BagRecycleQueryRules.cs": "187d8360034ad061d73fb3c109724bc64881e4e55ab57e08246015fd5cd9ed32",
     "unity/Assets/Game/Runtime/Official/BagRecycleQueries/BagRecycleQueryRules.cs.meta": "a1365b73069537b4ee5d29295d375fb4d11ad6dc54e7e729044e73845e26a6d7",
-    "unity/Assets/Game/Runtime/Official/BagRecycleQueries/BagRecycleQueryServices.cs": "912749d941f266ecc65204f9384b7cce2b356f479e5677eacf611c0d6983926a",
+    "unity/Assets/Game/Runtime/Official/BagRecycleQueries/BagRecycleQueryServices.cs": "64104b8844e8d87c0eacb073079f619b1a22e63c41c7914277323cf1893a7c5e",
     "unity/Assets/Game/Runtime/Official/BagRecycleQueries/BagRecycleQueryServices.cs.meta": "c2e79ab415f74c5599781529d323b8ee22e50e17d2775cca9f45b9c1217ca700",
     "unity/Assets/Game/Runtime/Official/BagRecycleQueries/Zjcs.Official.BagRecycleQueries.asmdef": "9bc0331da2f31b8f9a28b03cba446f57359054d48052765ea1f1f31304df29f6",
     "unity/Assets/Game/Runtime/Official/BagRecycleQueries/Zjcs.Official.BagRecycleQueries.asmdef.meta": "0a797de077e9edabab5d3ffb21ee6145046b9564d09e8505916034da4e601791",
     "unity/Assets/Game/Runtime/Offline/BagRecycleQueries/Zjcs.Offline.BagRecycleQueries.asmdef": "60ba39e81828ccf2b6ac3a259003dbfdc1c3af3f84a37d6b034f215f14fbb63b",
     "unity/Assets/Game/Runtime/Offline/BagRecycleQueries/Zjcs.Offline.BagRecycleQueries.asmdef.meta": "b22b5f234fd4f7f1b12eebd3348c5a33da72021fb728f4c23b081279cb620fe0",
-    "unity/Assets/Game/Runtime/Offline/BagRecycleQueries/OfflineBagRecycleCatalog.cs": "e96dea6e433f05d9f60078b72a6f6bd1ff62e67af3e179cd8b60370b507b2d67",
+    "unity/Assets/Game/Runtime/Offline/BagRecycleQueries/OfflineBagRecycleCatalog.cs": "ed63b2f6071de5660fce9d1ddec6122fccee2e87c584b2bde76428a10594cd64",
     "unity/Assets/Game/Runtime/Offline/BagRecycleQueries/OfflineBagRecycleCatalog.cs.meta": "7f8f09bba7fb4fac1630f62428d5b7b2813241b9098d9fc34780d1d27c99755f",
-    "unity/Assets/Game/Runtime/Offline/BagRecycleQueries/OfflineBagRecycleQueries.cs": "cdb7941bad48aedd4e9971ac320e78f802f103ad7815d65afd5171aad19c6f65",
+    "unity/Assets/Game/Runtime/Offline/BagRecycleQueries/OfflineBagRecycleQueries.cs": "51a20158b4f2bc6af93842be5a49dce4e9bfca93f1c2579735388e0dd1b7204a",
     "unity/Assets/Game/Runtime/Offline/BagRecycleQueries/OfflineBagRecycleQueries.cs.meta": "de118dde7f6d8c432d2c7332d0ee77219628a06056aebe1138a251f5d5596fd5",
-    "unity/Assets/Game/Resources/Home/BagRecycleQueries/catalog.json": "fd5e01fb1042ef058f370a243cb8b6725410b02edf4e0d1692fc5f955872f16f",
+    "unity/Assets/Game/Resources/Home/BagRecycleQueries/catalog.json": "a771a55a845c0673ba02f9a0d2a944f436cbfba69a88b755219212fcdaeb6e10",
     "unity/Assets/Game/Resources/Home/BagRecycleQueries/catalog.json.meta": "4074c9fe8304199641b80d09f09c5a0113c52e1e5b7f45e5031e33f5ed5df0a2"
   },
   "validation_inputs": {
     "scripts/test_bag_recycle_queries.ps1": "228f697c7cb31c0f1cecce4b33dcc1ab2f2e233605df7b446bd6fb6d16782c2c",
-    "scripts/fixtures/bag_recycle_queries_validation.cs": "92f53644357265a911b676074b25acc6961035154bfc818c1bb28d34b17076d9"
+    "scripts/fixtures/bag_recycle_queries_validation.cs": "0ae2899b82d559f0d195760e744f03334887d815607b614f41b4ddc940f1ef5d"
   },
-  "adaptation": "Original gift/key and tag-region queries retain branches, enumeration order and thresholds. Local read-only projections use current inventory, NPC friendship and visited-map defaults/public activation records.",
+  "adaptation": "Original gift/key/gem and tag-region queries retain branches, enumeration order and thresholds. Local read-only projections use current inventory, NPC friendship, visited-map defaults/public activation records and the existing user-confirmed independent world-content rank. Gem rank comes from ItemInfo.LimitRank through the original GemPartInfoParser post-parse binding.",
   "scope": "Shared query and local data owners only; recycle transactions, complete Bag graph host and native storage gameplay remain separate."
 }

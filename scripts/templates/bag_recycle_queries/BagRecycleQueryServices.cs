@@ -4,7 +4,12 @@ using Zjcs.Official.BagTipDots;
 
 namespace Zjcs.Official.BagRecycleQueries
 {
-    public interface IBagRecycleQueryServices { IBagRecycleQueryTables Tables { get; } }
+    public interface IBagRecycleQueryServices
+    {
+        IBagRecycleQueryTables Tables { get; }
+        // Numeric value of the original Rank identity, supplied by its local owner.
+        int PlanesRank { get; }
+    }
     public interface IBagRecycleQueryTables
     {
         object NpcGiftInfoParser { get; }
@@ -17,6 +22,7 @@ namespace Zjcs.Official.BagRecycleQueries
     {
         IBagRecycleNpcManager NpcManager { get; }
         IReadOnlyCollection<PlayerItemDataWrap> FindItemsByItemType(ItemType type);
+        IReadOnlyCollection<PlayerItemDataWrap> FindItemsByType(ItemType type);
         bool RegionIsActived(int mapClassId, int region);
     }
     public interface IBagRecycleNpcManager { PlayerNpcDataWrap GetByNpcClassId(int npcClassId); }
@@ -26,5 +32,6 @@ namespace Zjcs.Official.BagRecycleQueries
     public interface IBagRecycleWorldTagTable { List<WorldStageTagEntityInfo> GetWorldStageTagEntityInfos(string tag); }
     public sealed class PlayerNpcDataWrap { public int NpcClassId, FriendShipLevel; }
     public sealed class ItemTagInfo { public int Id; public string Tag; }
+    public sealed class GemPartInfo { public int Rank; }
     public sealed class WorldStageTagEntityInfo { public int MapClassId, Region, LoEntityId, EntityClassId; }
 }

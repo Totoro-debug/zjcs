@@ -18,6 +18,8 @@ namespace Zjcs.Offline.BagRecycleQueries
         readonly OfflineBagItemQueries items;
         readonly BagRecycleQueryRules rules;
         public IBagRecycleQueryTables Tables => catalog;
+        // Existing independent local world-content rank, never personal rank/season.
+        public int PlanesRank => readSave().Player.CharacterProperties.TreasurePlaneRank;
         public IBagRecycleNpcManager NpcManager => this;
         public OfflineBagRecycleQueries(Func<OfflineMainlineSave> readSave, OfflineBagRecycleCatalog catalog,
             OfflineBagItemQueryCatalog itemCatalog)
@@ -29,8 +31,16 @@ namespace Zjcs.Offline.BagRecycleQueries
         }
         public List<PlayerItemDataWrap> GetCanRecycleGift() => rules.GetCanRecycleGift(this);
         public List<PlayerItemDataWrap> GetCanRecycleDoorkey() => rules.GetCanRecycleDoorkey(this);
+        public List<PlayerItemDataWrap> GetCanRecycleGem() => rules.GetCanRecycleGem(this);
         public bool IsTagInAllRegionActived(string tag) => rules.IsTagInAllRegionActived(this, tag);
-        public IReadOnlyCollection<PlayerItemDataWrap> FindItemsByItemType(ItemType type) => items.FindItemsByType(new[] { type });
+        public IReadOnlyCollection<PlayerItemDataWrap> FindItemsByItemType(ItemType type) => FindItemsByType(type);
+        public IReadOnlyCollection<PlayerItemDataWrap> FindItemsByType(ItemType type)
+        {
+            var values = items.FindItemsByType(new[] { type });
+            if (type == ItemType.Gem)
+                foreach (var value in values) value.Info.PartInfo = catalog.GetGemPartInfo(value.Id);
+            return values;
+        }
         public PlayerNpcDataWrap GetByNpcClassId(int npcClassId)
         {
             var row = readSave().Player.CharacterProperties.NpcFriendships.FirstOrDefault(value => value.NpcClassId == npcClassId);

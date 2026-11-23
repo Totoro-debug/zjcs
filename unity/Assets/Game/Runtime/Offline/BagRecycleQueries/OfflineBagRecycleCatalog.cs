@@ -11,6 +11,7 @@ namespace Zjcs.Offline.BagRecycleQueries
     {
         [Serializable] public sealed class NpcRow { public int Id; public int[] ExclusiveGiftIds; }
         [Serializable] public sealed class LevelRow { public int Id, Level; }
+        [Serializable] public sealed class GemRow { public int ItemId, Rank; }
         [Serializable] public sealed class ItemTagRow { public int Id; public string Tag; }
         [Serializable] public sealed class TagRow { public string Tag; public EntityRow[] Entities; }
         [Serializable] public sealed class EntityRow { public int MapClassId, Region, LoEntityId, EntityClassId; }
@@ -19,6 +20,7 @@ namespace Zjcs.Offline.BagRecycleQueries
         {
             public NpcRow[] Npcs; public LevelRow[] FriendshipLevels; public int[] GiftIds;
             public ItemTagRow[] ItemTags; public TagRow[] WorldTags; public MapRow[] Maps;
+            public GemRow[] Gems;
         }
         readonly Dictionary<int, int> exclusiveGifts = new Dictionary<int, int>();
         readonly Dictionary<int, int> maxLevels;
@@ -27,6 +29,8 @@ namespace Zjcs.Offline.BagRecycleQueries
         readonly Dictionary<int, bool> publicDefaults;
         readonly Dictionary<int, int[]> regionIds;
         readonly int[] giftIds;
+        readonly Dictionary<int, GemPartInfo> gemParts;
+        public IReadOnlyCollection<GemRow> Gems { get; }
         public IReadOnlyDictionary<int, int> ExclusiveGifts => exclusiveGifts;
         public IReadOnlyCollection<ItemTagInfo> ItemTags => itemTags.Values;
         public object NpcGiftInfoParser => giftIds;
@@ -44,7 +48,7 @@ namespace Zjcs.Offline.BagRecycleQueries
         public OfflineBagRecycleCatalog(Payload data)
         {
             if (data?.Npcs == null || data.FriendshipLevels == null || data.GiftIds == null
-                || data.ItemTags == null || data.WorldTags == null || data.Maps == null)
+                || data.ItemTags == null || data.WorldTags == null || data.Maps == null || data.Gems == null)
                 throw new FormatException("Complete original Bag recycling configuration is required.");
             // NpcInfoParser.ProcessNpcExclusiveGift uses ordered Add, including its duplicate failure.
             foreach (var row in data.Npcs)
@@ -53,6 +57,8 @@ namespace Zjcs.Offline.BagRecycleQueries
             maxLevels = data.FriendshipLevels.GroupBy(row => row.Id)
                 .ToDictionary(group => group.Key, group => group.ToDictionary(row => row.Level).Keys.Max());
             giftIds = data.GiftIds;
+            Gems = data.Gems;
+            gemParts = data.Gems.ToDictionary(row => row.ItemId, row => new GemPartInfo { Rank = row.Rank });
             itemTags = data.ItemTags.ToDictionary(row => row.Id, row => new ItemTagInfo { Id = row.Id, Tag = row.Tag });
             worldTags = data.WorldTags.ToDictionary(row => row.Tag, row => row.Entities == null ? null
                 : row.Entities.Select(value => new WorldStageTagEntityInfo { MapClassId = value.MapClassId, Region = value.Region,
@@ -61,6 +67,7 @@ namespace Zjcs.Offline.BagRecycleQueries
             regionIds = data.Maps.ToDictionary(row => row.ClassId, row => row.Regions.OrderBy(id => id).ToArray());
         }
         public bool TryGetNpcByExclusiveGift(int giftId, out int npcId) => exclusiveGifts.TryGetValue(giftId, out npcId);
+        public GemPartInfo GetGemPartInfo(int id) => gemParts.TryGetValue(id, out var value) ? value : null;
         public int GetMaxLevel(int id) => maxLevels.TryGetValue(id, out int value) ? value : 0;
         public bool TryGet(int id, out ItemTagInfo config) => itemTags.TryGetValue(id, out config);
         public List<WorldStageTagEntityInfo> GetWorldStageTagEntityInfos(string tag)
