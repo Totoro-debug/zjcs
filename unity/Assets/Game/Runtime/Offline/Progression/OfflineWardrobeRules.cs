@@ -8,6 +8,7 @@ namespace Zjcs.Offline.Progression
     public sealed class WardrobeSkinDefinition
     {
         public int SkinId;
+        public string SkinName;
         public int Type;
         public int[] BlockedSkinIds = Array.Empty<int>();
         public int[] BindingSkinIds = Array.Empty<int>();
@@ -74,6 +75,7 @@ namespace Zjcs.Offline.Progression
                 || !ItemTypeToSkinType.TryGetValue(item.ItemType, out int expectedType)
                 || !item.SkinBySex.TryGetValue(state.Sex, out int skinId)
                 || !skins.TryGetValue(skinId, out WardrobeSkinDefinition skin)
+                || !OfflineAppearanceAvailability.IsSelectable(skin.SkinName)
                 || skin.Type != expectedType
                 || !allowedSexProfessions.Contains(AllowedKey(state.Sex, state.Profession, skinId))) return false;
             if (skin.Type == 8 && !state.EquippedSkinBySlot.ContainsKey(14)) return false;

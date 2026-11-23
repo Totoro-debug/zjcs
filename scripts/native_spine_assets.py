@@ -218,8 +218,13 @@ class NativeSpineBinding(PartnerCardBinding):
             if script['type'] in ('AppearanceRendererLite', 'SkeletonRendererFollower'):
                 fields = docs[script['nativeFileID']]['MonoBehaviour']
                 original_renderer = fields['SkeletonRenderer']['fileID']
+                if script['type'] == 'SkeletonRendererFollower' and original_renderer == 0:
+                    # The original follower supports an unassigned target:
+                    # InitComponent returns false until InitFollowTarget runs.
+                    continue
                 if original_renderer not in renderers:
-                    raise ValueError('Bind the original application renderer to its native SDK bridge')
+                    raise ValueError('Bind the original application renderer to its native SDK bridge: '
+                        + row['path'] + ' / ' + script['type'] + ' / ' + repr(fields['SkeletonRenderer']))
                 fields['SkeletonRenderer'] = dict(fileID=renderers[original_renderer])
             if script['type'] == 'SkeletonRendererHighTexturePreview':
                 fields = docs[script['nativeFileID']]['MonoBehaviour']

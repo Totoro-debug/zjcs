@@ -38,7 +38,8 @@ public static class HomeFurnitureControllerValidation
         Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
         EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
         SessionState.SetBool(Active, true);
-        SessionState.SetFloat(Active + ".Deadline", (float)EditorApplication.timeSinceStartup + 180);
+        SessionState.SetFloat(Active + ".Deadline", (float)EditorApplication.timeSinceStartup +
+            (Environment.GetEnvironmentVariable("ZJCS_FURNITURE_ALL_WEAPONS") == "1" ? 900 : 180));
         EditorApplication.EnterPlaymode();
     }
     public static void Finish(Exception error)

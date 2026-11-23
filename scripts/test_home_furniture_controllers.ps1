@@ -1,6 +1,7 @@
 param(
     [Parameter(Mandatory)][string]$ProjectPath,
-    [string]$Editor = 'D:/Tool/Unity/Editor/Unity.exe'
+    [string]$Editor = 'D:/Tool/Unity/Editor/Unity.exe',
+    [switch]$AllWeapons
 )
 $ErrorActionPreference = 'Stop'
 $repository = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -29,6 +30,18 @@ Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_furniture_control
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_weapon_rack_controller_validation.cs') -Destination (Join-Path $fixture 'HomeWeaponRackControllerValidation.cs') -Force
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_native_weapon_validation.cs') -Destination (Join-Path $fixture 'HomeNativeWeaponValidation.cs') -Force
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_native_weapon_controller_validation.cs') -Destination (Join-Path $fixture 'HomeNativeWeaponControllerValidation.cs') -Force
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_native_weapon_catalog_validation.cs') -Destination (Join-Path $fixture 'HomeNativeWeaponCatalogValidation.cs') -Force
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_appearance_availability_validation.cs') -Destination (Join-Path $fixture 'HomeAppearanceAvailabilityValidation.cs') -Force
+foreach ($relative in @(
+    'Game/Runtime/Offline/Progression/OfflineAppearanceAvailability.cs',
+    'Game/Runtime/Offline/Progression/OfflineAppearanceAvailability.cs.meta',
+    'Game/Runtime/Offline/Progression/OfflineWardrobeRules.cs',
+    'Game/Runtime/Offline/Progression/OfficialCharacterAssetCatalog.cs',
+    'Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.cs',
+    'Game/Runtime/Presentation/Character/OfficialWardrobePanelView.cs'
+)) {
+    Copy-Item -LiteralPath (Join-Path $repository ('unity/Assets/' + $relative)) -Destination (Join-Path $project ('Assets/' + $relative)) -Force
+}
 $rack = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/home-storage-weapon-rack-source-manifest.json') -Raw | ConvertFrom-Json
 foreach ($entry in $rack.outputs.PSObject.Properties) {
     $inputPath = Join-Path $repository $entry.Name
@@ -42,6 +55,16 @@ foreach ($entry in $rack.outputs.PSObject.Properties) {
     Copy-Item -LiteralPath $inputPath -Destination $target -Force
 }
 $weapon = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/home-weapon-parts-source-manifest.json') -Raw | ConvertFrom-Json
+if ($AllWeapons) {
+    $selectionPath = @($weapon.inputs.PSObject.Properties.Name | Where-Object { $_.EndsWith('/home-weapon-rack/selection.json') })
+    if ($selectionPath.Count -ne 1) { throw 'Resolve the exact official Home weapon selection input.' }
+    $selection = Get-Content -LiteralPath (Join-Path $repository $selectionPath[0]) -Raw | ConvertFrom-Json
+    if ($selection.manifest -ne $weapon.manifest -or
+        (Compare-Object @($selection.weapons.path | Sort-Object) @($weapon.selections.asset.path | Sort-Object))) {
+        throw 'The installed native weapon catalog is not the complete selected official catalog.'
+    }
+    $env:ZJCS_FURNITURE_EXPECTED_PREFABS = [string]$selection.weapons.Count
+}
 foreach ($selection in $weapon.selections) {
     $relative = 'unity/Assets/Official/Home/WeaponParts/' + $selection.asset.path.Substring('Assets/'.Length)
     if (-not $weapon.outputs.PSObject.Properties[$relative] -or -not (Test-Path -LiteralPath (Join-Path $repository $relative))) {
@@ -63,9 +86,12 @@ foreach ($entry in $weapon.outputs.PSObject.Properties) {
     'Zjcs.Official.HomeMainUiControls', 'Zjcs.Offline.HomeSceneInput', 'Zjcs.Official.WorldUI',
     'Zjcs.Official.ProfessionUI', 'Unity.TextMeshPro', 'Unity.ugui', 'Unity.RenderPipelines.Universal.Runtime',
     'Zjcs.Offline.NativeSpine', 'spine-unity', 'spine-csharp'
+    'Zjcs.Offline.Progression', 'Zjcs.Offline.State', 'Zjcs.Presentation.Character'
 ) } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $fixture 'HomeFurnitureControllerValidation.asmdef') -Encoding utf8
 $env:ZJCS_FURNITURE_PROJECT = $project
 $env:ZJCS_FURNITURE_VALIDATION_DIR = $work
+$env:ZJCS_FURNITURE_ALL_WEAPONS = if ($AllWeapons) { '1' } else { '0' }
+$env:ZJCS_FURNITURE_WEAPON_MANIFEST = Join-Path $repository 'assets/reference/home-weapon-parts-source-manifest.json'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
 $log = Join-Path $work 'unity.log'
 $process = Start-UnityOnInternalDisplay -Editor $Editor -ArgumentList @(
@@ -80,5 +106,11 @@ if ($process.ExitCode -ne 0 -or
     -not (Select-String -LiteralPath $log -Pattern '^HOME_NATIVE_WEAPON_PASSED:' -Quiet) -or
     -not (Select-String -LiteralPath $log -Pattern '^HOME_NATIVE_WEAPON_CONTROLLERS_PASSED:' -Quiet)) {
     throw ('Furniture controller runtime validation failed: ' + $log)
+}
+if (-not (Select-String -LiteralPath $log -Pattern '^HOME_APPEARANCE_AVAILABILITY_PASSED:' -Quiet)) {
+    throw ('Closed appearance selection validation failed: ' + $log)
+}
+if ($AllWeapons -and -not (Select-String -LiteralPath $log -Pattern '^HOME_NATIVE_WEAPON_CATALOG_PASSED:' -Quiet)) {
+    throw ('Full native Home weapon catalog validation failed: ' + $log)
 }
 Write-Output 'HOME_FURNITURE_CONTROLLERS_PASSED'

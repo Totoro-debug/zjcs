@@ -11,6 +11,7 @@ from native_spine_assets import NativeSpineBinding
 from official_apk import ROOT
 from official_manifest import read_asset_manifest
 from official_source import OfficialSource
+from official_tables import Constructors
 from prepare_current_partner_native import PartnerNativeRecovery, identity
 from prepare_partner_card_native import guid, sha
 
@@ -37,6 +38,26 @@ def prepare(names=None):
     binding.inputs[selection.relative_to(ROOT).as_posix()] = sha(selection.read_bytes())
     selected = [binding.bind_prefab(row) for row in rows]
     binding.resolve_all()
+    skin_obj = recovery.apk.asset('config_luban', '/spine_skin.g.bytes')
+    skin_payload = skin_obj.read().m_Script
+    if isinstance(skin_payload, str):
+        skin_payload = skin_payload.encode('utf8', 'surrogateescape')
+    constructors = Constructors(ROOT / '.tools/source-packages/current' / source.version / 'official-code')
+    skin_rows = constructors.table(skin_payload, 'TbSpineSkinInfo')
+    for entry in selected:
+        skin_name = Path(entry['asset']['path']).stem.removesuffix('_Home')
+        entry['spine_skin_ids'] = [row['Id'] for row in skin_rows if row['SkinName'] == skin_name]
+    skin_table = dict(source=recovery.apk.provenance(skin_obj),
+        object_sha256=sha(skin_obj.get_raw_data()), payload_sha256=sha(skin_payload),
+        rows=len(skin_rows), parser='TbSpineSkinInfo')
+    for name in constructors.sources:
+        path = constructors.source_root / (name + '.cs')
+        if not path.exists() or name in ('Pos2d', 'Vector2', 'Vector3'):
+            path = constructors.source_root.parent / 'Common.LubanGen' / (name + '.cs')
+        if path.exists():
+            binding.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
+    table_decoder = ROOT / 'scripts/official_tables.py'
+    binding.inputs[table_decoder.relative_to(ROOT).as_posix()] = sha(table_decoder.read_bytes())
     manifest = recovery.apk.source.manifest_bytes('DefaultPackage', recovery.apk.archive)
     records = read_asset_manifest(manifest)
     loaders, textures = [], {}
@@ -134,11 +155,17 @@ def prepare(names=None):
     for filename in ('native_spine_assets.py', 'prepare_home_weapon_parts.py', 'home_native_assets.py', 'prepare_partner_card_native.py'):
         path = ROOT / 'scripts' / filename
         binding.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
-    RECEIPT.write_text(json.dumps(dict(manifest=source.version, asset_manifest_sha256=sha(manifest),
+    receipt_payload = json.dumps(dict(manifest=source.version, asset_manifest_sha256=sha(manifest),
         inputs=binding.inputs, selections=selected, recovery=recovery.proof, native_scripts=binding.script_sources,
         resources=binding.proof, config=config, loaders=loaders, textures=texture_bindings, catalog=catalog, outputs=installed,
-        scope='Selected exact native Home weapon prefabs with real Spine SDK skeletons, animation, atlas, materials and high-resolution texture requests. This does not complete the storage building or the full weapon selection catalog.'),
-        ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
+        spine_skin_table=skin_table,
+        scope='Exact native Home weapon prefabs and current official skin-table references, with real Spine SDK skeletons, animation, atlas, materials and local texture requests. Resource recovery does not complete the storage building or establish gameplay/Player acceptance.'),
+        ensure_ascii=False, indent=2) + '\n'
+    # Keep the old complete receipt if Windows denies a transient in-place
+    # write, and retain the newly computed proof in this isolated work folder.
+    receipt_stage = work / 'bound-source-manifest.json'
+    receipt_stage.write_text(receipt_payload, 'utf8', newline='\n')
+    receipt_stage.replace(RECEIPT)
     print('Bound original native Home weapons:', len(selected), 'prefabs,', len(texture_bindings), 'texture identities,', len(installed), 'files; work', work, flush=True)
 
 

@@ -105,6 +105,8 @@ public sealed partial class HomeFurnitureControllerChecks
         data.Dispose(); bindings.Dispose(); manager.Dispose(); Destroy(managerConfig);
         Debug.Log("HOME_NATIVE_WEAPON_PASSED: authored rack load, real Spine skin/animation/mesh/follower, high textures, light attenuation, animation/side branches and owner teardown. Selected prefab component coverage only.");
         yield return CheckNativeWeaponControllers();
+        if (Environment.GetEnvironmentVariable("ZJCS_FURNITURE_ALL_WEAPONS") == "1") yield return CheckAllNativeWeaponPrefabs();
+        yield return CheckAppearanceAvailability();
     }
 
     void CheckNativeSides(SkeletonAnimation renderer, IHomeWeaponAnimationBindings bindings)

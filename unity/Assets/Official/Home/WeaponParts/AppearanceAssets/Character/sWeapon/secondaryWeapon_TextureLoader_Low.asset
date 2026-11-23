@@ -1,0 +1,3158 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a0e110595a58e7c69027ccc4e0d3dd0, type: 3}
+  m_Name: secondaryWeapon_TextureLoader_Low
+  m_EditorClassIdentifier: null
+  atlasAsset: {fileID: 11400000, guid: 74641a6f969535ecf025981808d317e7, type: 2}
+  skeletonDataAsset: {fileID: 0}
+  maxPlaceholderSize: 32
+  unloadAfterSecondsUnused: 60
+  placeholderMap:
+  - placeholderTexture: {fileID: 2800000, guid: 117089fe0547a0a26fbd0c1190977e88, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 374cbf595a26c784c9c9eff64449f8da}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 05f32dadc41e982b762e4b25f891e475, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7b778799fc8622442a2135086a00e5ff}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 85b56d9c9dea2f8861a604f10493187f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4a131ee92b70acd43a9b8a2a222d18af}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6b0655b3b2b1857c88c9217f9adc2705, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: bf076cf3039388f4ebfc279cdc581075}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 943e1981eeffb52628357b95b0584bd3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5d76a1336c5aaf54ea3002a323b0bfab}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 16afe12288b1faf26fa1b63c9895d87a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: aac186c78848be04984de05033f0b6fd}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8f711c3b5596b5b0a69a568a28752932, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1cf9f57bfc9ab80429c126d59fd4b1ea}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 28392aa4547f9c68714747c90723a2dd, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0b5771e16c552a04196be0e36ee63752}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: eb86872d135020884c9e8e891989969e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1c4614358a660e44097674a55a2914d9}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 163eb6a722c1ac71ca824edd890896b9, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 183ca4c9207d7fb48a8aad5deef537b9}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 43a022ad8ee198249e04016809c75d46, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 85e3048c5c328a94db64f097da22fe73}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d2719f23720ebaef1f791f91f25f38bf, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b667662aa98099e4ba6121bf3ad4f48f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2cb1fc38272f66b361ec34ebab09c596, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ff36a998b1894ae4d9b15ac6c475fa20}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b828a1df62fb9cecdfddc7a19609bc12, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 46b8916444387ab42a6f4fdb909f1213}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5fc12bee4f2f8ad0692bceb25f4d6777, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2ab9eb8623314ce408dd96088a8f695d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e27c938a90733ef6fb9ff035cab70340, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5074cfb72f3327b4c88cf1cd9871a6ea}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9688a564ac02978c915f7ee67486de70, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b03a9289ede0c8b4686e935f669d99b4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 643431b5f9724957bc8898a2e4f9a2b1, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 553da3c0823e3b24990a6c0c88152f62}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 4eeb195d0f1eaee47e87aab1bf1f20b5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e13d0474cfb560b4da12513a8a0037b0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e2d03f9ee43cd4e56badd8e8ffb22fed, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ba0b9e63e61d7b7429d3541600db8799}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 08425fec84dff5fc24ed73818ceffb67, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b920ff5bbd7babb49a32bf2a8f5cbc09}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5b2683bb9c987783f0021a0a694f792b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ae9f9a0a117d4fa47ba4030ef96349ed}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8c8813466081bd761df39caf95007565, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 71644446026011f41ae24770a68c7bfc}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a405b97adc1e9df7e2ac6b04ae599fb9, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d34400eb457bbcc49895dced436303a3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f4f1fbd2145aee0e4c1e65a32e2f35a5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 057fe2f9c474bb14dba7b9ebff1d67ae}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b91baee656fa297daeec21b1320e2271, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 376dd29a05575f34c93947458dcf9c90}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b8fa657ba3558db64492228e6a00380b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 3d2460eb2aecac946af42e0813fcbc65}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 025f5ed221f8ded63aa982c42ca9af79, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: efa0092132320984dba47a12053593d7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ff4c9f1ad44f3973cf9637bb605ac6d8, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a7da2024d6de0bd4d8f4569cd6066362}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 4ca51572c720ef6ee5cd5a88edbcf2a7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c46017dde47ee4a47894c1e592bff3c4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 09ee7b5778cd572684e47542e8e72407, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 3750c22170b468a4a81ff3f5dff4870c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 06499b73ebee3f3980db7c2be7cce107, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4667a48949237614db6011ae785f4a81}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: df1e220a28d073837db7a0e8d8c20813, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 9202dd987ad5ea540bb0a60441961a2d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b54c7b22160888c35a32468dfda3d5b2, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 3182e49ab4c9942029d8736de982f7d4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: fce4e4db2333a392d197a6412efb7f49, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e4957096c0aa9474e81322a3ba3ffc58}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c93c7d4cd176883abc8604e4337556a9, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 41cd3516e18554b4794a8df45b61262e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: aad253f6eb9319bcb81ece5c132d6090, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: fc3777a153c364564a3690fa883ec0f9}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: de7ac4c00c781048b416905bc7a4e08b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 271eca687f6424e859412ab9d8564ea3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1b885c79e5ed4efe0eb77def2549379b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ba10d0f83473d4078978962505d6757c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 652dcab30fbf7b61104216444f4d795a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ce5598d9101394dc184b26dbd818504b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 67ad595b48949c95992632c5ea03c819, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 541052875c86141c0b047d94ab0fefe3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 22985cd609d327eb739f2a050937911a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7cdf9306e848a4e8d9514246afd755c2}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 572cbe0b34c3b4520ce6e3db97fb2963, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 3eb29d150250e43c2840478b974b68ea}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3a02318986a40ea43d45d8fe662f52f5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e544e3d4a795b4c3d8c025595a44f2e1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a794cdeca5df5986495c6b91bccdd709, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 3f1ac56864d864a9397c85eb786d0647}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: bebb02d4f54daeef2f24484c3c72d4db, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e0aa3d5395eb7432cb1bc6337c922e1b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: bdfc2f384815387f8c5150ba5ab8a973, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: bce2a955ccca74ea8ad63eab2ea071ea}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 50b4e86a53a7996b6f5dd999dda64914, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d3fe87dfc6db945a48080a166b61f13c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9356349a6ec02407e15c734bd757ab73, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 44fdd19cbe3bb40c1ad51e19fcd8844e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 73f222c9302f21c65d6cad75fa42cc8e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b7e211d90d36243e49fc398199c761d5}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6f4d95f1d429fe6bcb8cb3dd7bf08ec9, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 525db76f909ea47faaa3009f8c02f2e1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e8700697575f9427aba2f1f6c03452a9, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1bc2ee896f6cb4862b76c8f15c349342}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 4c5f4a55de7d224c3b381a03ac238895, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 42936f9a3e9c7480289ad35a66421a64}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9f878e9ea510719faf0799ed9ce5f43e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f87d62654e073433994f7f93f9511dfe}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7db9ac69ae095e39982279a08b07a7b8, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ec057f06b61be458abe0b5d4c4f0b1f0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 129370038ed6ba179811a1dce59238ce, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7ac094f1ca3ba4489820931e6a288402}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 68a4144d0aaf01c0238251b21625eaaa, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1f03c565d1a240e4782df6557937828d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 617869fd9595de17e875def678259884, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0e8c0a923f1378f4ba756131b8cafe7b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7b2a2cff17c5a365b7feea08f251ca41, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6af4492f882f97e429c249f933d6258a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8bc49c7f97a5cb57ac92c2a7702766db, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 76d6db1473f17454cb3cb274c2ed4bc7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 757e9054df151d08cc10e231f9dab214, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 9a56ec8e249c01447b6477f149deb57f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d22e3526001da6a38b1e9d92e3fdd6a3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: cc88b540436409741ae7fd11ecda6924}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 57e9868bf4bba252b3740ad2aaf8cbe1, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 9a83e9831bf6ad2499a4094ea952b9f7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 817eb0f05dc121bb2bac7a071816a618, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6cad380f3b8c5fd4383b4bcba8303bc3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 836c839d0d87a11d4773399fb278d50b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 22da4b7584b5901459f10204d944ffe4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b2a9b4396792a2d8647dbebdfe7f90d9, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 014ebb0c063e28140a86504a0861b9ac}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: cdfa235a86d5bb47c33b27b0b239a49e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a57b711a0d780b54cbabf4e2bfc2a171}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 34914b6c277eb7654952c53314b89f17, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d8bac3b6d3063ba4397b1d2cba3191f1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 908e397217b6b919237f96b26b4afe7b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a18dfb980511e3b45b8fdd685b47983f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ee58e4b826e6a73ca651b17cafc90be4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 10746fe244d7fc7479ea796794769937}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: fd18a7873316e108b4636e98082f6f24, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2f98335424b31d74d8cc46fb3a91a0bb}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e1bd338be9e4957266f851e1910b7802, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 34e9caa2623128847a77b40c892a32b7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 503514316238b51004ef62121f09cd7d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d8bd496f11f54fb46ac26359991db44c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2ef75e228b3830820f007ff39d0db2b9, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d26e1d8984f400b439f7e0958e55f926}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e93f45209761fa87ceeda8c17a13e657, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4c11f9c4f8aa841409467c25ce1a7aa4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 686f95c6bfe9f209f242d93b2f4dc759, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b24d3b8728ca6dc4f8cd56b69b253be7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 884dbf4701224f50566b154a492735ce, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 780fbe629cab50947a00ab6dc645721b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6bb3ac69009dc894e1103a256b2412b4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 362c066c769fad34889ba23fb1a99b17}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1d549a653c535eb4c1ed20ccfd89dbfc, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: adfec0c90eaea8948b561c7e1836277f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 71aa2fecb323c527715f608d193f7df5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 11bb305d31ceb0d40be9f0b398008768}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a80acb383a44e744c233a721b7630352, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 61c5d3adecfb7f74f9f6e6ecb5170001}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 926814478f9507d072a797a58ecdc0dd, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: bdaf70b2e25780540b08695f401fb55e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c81495cde68a88cf463d9c6059a3d820, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c9577f8e0c88c5d4b8d9b4957efde220}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e4112317497c74f99ac07ccd3dd7102c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 28b189d50dbd59b4eb8806f7bf2ac944}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ff3038cd41ee5bc226d958a44a1886b6, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 297690c8161f20645bbb5692885a651d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 90fcc3b4640342769c211b877e9c9360, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e60e72798b544124f9e72def2ba8e927}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6efaf32a6135296647f478a14ef40ae3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a5c5be919a8851a4c921abd65a9d1ed4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3bf27ebcccbccc5b85943f0b25fa78ee, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 03aecb1e1ddfabd498f19a53cd78c6a1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d7d69d73ca63000765b4b2119c5b4cc6, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7b30bfb1f77207b4f890bd7db96061cf}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 444cb946ef4f72b215a5b5e9742769fb, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 07e3f9c4314feb047ac7910eda6909b0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2a0986107304f4789ebde9d1f16851bf, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b7c779bc0a96cfd4a99986b9d778e4e5}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3b23582ae0a8a5890e3309668ecf7cc1, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 058351d01be8c134bb408125f49fb263}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 897b18410c6feae4472474ad4dc69408, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4aa9d3e4bf19f604a883f44e4ee5b88f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ca09ee860488a1ed8c30c8d7f06dd42c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 948016da0d5fd8d4690021a2072f8340}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6dad4c01ab5e62372f6555e50ab80023, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: dda3c04930d1c3147bc941fde0215920}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7b0c79c2d822074b7c2d5c33788849e9, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 84ecc734641ac2445b0e74eb4f40f9a6}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 07915cc37e639dd38a3fb51b8b12731a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 07c424e89723ad14da3270df83fb37d5}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 011c3f919f94023927ac0c265834f1f0, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d3cb0633162084146956d2dfaefe16e1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2f741ad1b4181e2b5cf56fd2b6456316, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5671f6176d64cd64ab8c8499caa30e6e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9f6dcf9f7591226d6a34e0b1f7c78dd7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6dd7b505431209d4da67bab936c1b13c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e67de73f7693f98fa124f6515c67558c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7bda251a7a438494e9abb75cec41811a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 488afa82a2391cb6133607181640f3f6, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: caa557b4069e2a54e8469b9d0a39781b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: fc1a3e34d1601f2cfaf557942c5bcef6, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f73dda41248e93e4aa659caede3d71c1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 030c54b59a675e8e58f0f8e88f13ebfe, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4ce9cd3366c8d5149bb5ebe8e746757a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8bcc8f5ae758a54f9a3cc3a9f4800f00, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4a8734742947f09458d55a858ec2c451}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6fcdd62726013465a7a4dc068b6d8ce2, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: cd645c29dbc2ede4aa186ca28f4cbd4c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b85e55fa1d42f4f85229281dba492429, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: dd8f7ec103803aa4f89496007e3eb27b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 04d8ef5c9a504b0668883e17907e2029, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 3835a37946413f045922b8b45ff0bd10}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8fc36cecdaa3148b7052971263f65418, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: edd9212d13d4c4356b98fc70ef2ed282}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1557e4c587371a42bab7415551aa5f87, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5fd958507d8384105b80876d1d366dd8}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5595cf4bc46a72b4506abd1e33c2161d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: cafffe5b326953940843d721db52fb3e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 4f8bd6a4bc28b3d964c7728af175a232, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: bd9180ab4a3f83343bfefa5174d25de1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: eee489e03f9933efea2031cba6e3124d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1dd13be13fe25ea49b7ecf6ec759f421}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 37a537d01814bf7c4235227f08250c22, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e863465ffdd67d046bd76f3550d47c40}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c304ef82efec49ed5fb0abc9682f17fd, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 422db4bebfdecd94094d54e19445e199}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: be94dcd1afefbe4be36219477d417e0a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2c61053dc82d6ba438baa23661fa5cef}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9c98734065a5689176f3734114ef2874, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c1c7e4cfe429b3643940d2df084b01f8}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1eb091c13c92e0a7a3f2093f9833a553, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0f38becc0efa5964aa8a6d0ee49793be}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 0c48961325495bd9e31f6c42f4651fef, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 30129ecd8e80e1a41936967c5344e15b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 4273aaf9d3d866d5e73d3228d050a671, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f1308cfb90b786f48979732ed351a329}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2b4100982f50f6331802c1ac2ef5c2d6, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 15c368ce8e5e0664d83db81b3b1328e2}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8d9ea77764842176ab93284f89818a44, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 27ce3c813f4e3fc41ad6cec971a4ba9d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 832334626111412721b9cc02fba5f410, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: aef20e9e9df0e554d9b9056e8a5ed7b9}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 75403e02b2148ea53bfb366e3eabff18, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 868086a02bb592546a7172d82fddea8f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6885aa4951d841f6c2a5178ac9f5952a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d8b3f28cf75f19949b17e0defb09d740}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: afd2974bf5b19923dca74d4af9f9941c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d5f2d1b71c87a694c8a42bce63dd19a7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1a56306dbed3e75c555de4a95c56a79e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b168a471ff1343343a6132d285424715}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 00e499f1df17287b20594abaf7e39fbb, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ed2e28137460e144dad3ee6436ef7ac0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1fb2686f1f99d8711f2c99a455208102, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a05690388abc8ee43b8e797fd7009e28}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 06589c7ee2fe61a0e4c92afb5c803c32, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2febb495f7d93a144a597f422eb1910b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f6cdb074ab74695c15f4a60169c72362, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a20d1b42708e08948b42e4abeee80eb0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 462fdaa6a19867bb9b739545c22ee154, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 07a9846b9496bc0409fa099b3e5addc7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5508656cd6e5b41cb062415e627b0611, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: fd918e4f71d23554a9d6a6617c64849b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 191763e5afa257ec6c4c676b817ad59f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 732846349bdf9894f840a8a8cc958d4c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c0e523f593ac13f92f1a8a0d5bf12e6f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0319ae4c6e6d10343919b5b97305d0d4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e2ed51fe420c82ff350cbd83234bd6cd, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e0203f83e63990d4c94467e2b440d991}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c7e4416a9ab5a1b9a84ef828af90563c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 96418dd6a6ef2bc41ae78777342a3abb}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3484a8c1edaa8323e70e02a0e17eeb79, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ef1106f61f690514ab09268d033c64dc}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 295cc28d7bde7ca8531a8fa5361e7798, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 54270dca8e3ebd74093f8ca4ac5c11bd}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: db152a5abf82da11d71d617b90c6b29a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8f0fad9f3d0863949b29bbb7c3535553}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 74825b19133bd3b6a5fa9dfc51a23d73, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c2f1ca024199be7458f7ca9ae9ffa310}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9e8203120682c60e524c497fb52cbe1f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: af2eddc2942ab36418490dfd3ae5b9aa}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: fa3f2b8ff349ec60375ee8cfa8e0deb0, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: be7dbdf2b57274743af0ac05946bf22a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 424967c0621c90025b3ddc60ca287147, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 33148c15a8fd69741a40a12e198ba92e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c908bb9931a82f146d0417fef1b71262, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: fc5a9de8d99403c4484e6f66db14a124}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 93d3130a66d8ff24a0340cb082aa397e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 675532426ad66954f9953d281ef9197d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 11b145ae1909cc11975f0a8d0356ed5d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 913278d863e01c246919253092f11d68}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c81bd97fa6214d795c36c71b5f3d7ccc, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4a4727de714fd4b429ec08d8523e5678}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2bd7a4b16b6ec07c04be63db6e2ddb14, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0076f302ba33063468c65687f176c252}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5da4dc3cefc96dcc26fff32100abe915, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7e7f498cfbec7d64d98a4ed8d7c78ecd}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c2d665df2c13ff25ca3d7a16b9f8fd67, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 45c540af9a97da247a6e37db806ba3c8}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2fc0e98016ae6ada1d8b5d702ac4e5bc, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5e0dbb0a08fb0e042a5afa47ac6b9a5e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 829679ad8281672f014c1fe51fa26e21, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 34acd17f93194e045b52c911946b7183}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: af86c1b3bd32cbcbc5a4026af6fa4ff0, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 33fcb66fe317f453c809c38364d881ef}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 149b9c76a92418842700121d65220d01, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: bcecb2664dd720b428512c072ec9cc92}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 4754fa0f11c12de8ed93586136ec8d61, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 71499594a74d8434ab703e8a48f7e724}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 799ff8c3a6c5b9083f11d8bda0cde7a4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 23a3e4e307b413049804d6924c0508c6}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 4636404326f63b2588f635d7264ca2ac, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6100540ffad6e5144866c46c16a5cc7c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b7869d88f3abb0d59a6712392af75c94, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5dc81a4b47a12cc4eb3560872279a711}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8f357896675e1549ab316c3bf58f1a01, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1f37cdc7117137d49baad65076a7d64d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d1da7911fc21ec2699a668802f430403, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 147abb7cef6dd1f419fc3d7591137b83}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 16529a2bb4b3074a5ec24b5035cd7487, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6fc4fb7c1659e084b89d23d71cf911f3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 17916a0c9c75579edd5cbedfe823c6fc, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d4fabb7ae58f26d45a7d54ce72023ef7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 997039112dd4a2894ac52067a6fc699a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 35a65d3026f7c8d43ba57a897a9784ff}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: cd17eee668019752ce1359bf741213b4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: fd8491376b4530e438b2beb8b014d54f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3524ab9f87a83a07a5842611919944e1, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 20b537d152c3aba4f96a417f3f936b3d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c74d44cc36d7720faf4c7eeaed4a2488, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 20f7dc05d96dcec4c9a780d3706f6d24}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: dff519786b07b89e432b0df7c43e637c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 23402176b8c598a4da4fd61ce0c34d6f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f3ccdc5a5ce2ffe7d8e4b36c13f3ef8e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 533fd203bbb85fa4f897e1c8a3c86329}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: cabeca2a39d85793c1f51de95266bf39, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a34628bbc77ba8b47bf82986dc05ab66}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 4edba8083d18179cfffe7b0d958b0470, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8c3a51bfdbff2344e9716a9b01afd96d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 97b23fadb301d83f8678ac5f233ef725, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7caf5fabf27e91340b60166013320641}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7eded10be5e0f53c7598328a5ae1b69a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6a9bc3470c1be054aac25ea50ec1f83c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 55cdf2fbb0bf31bdde8658ccbd062a58, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 35d8f083ac608964da6cef1f4591c341}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 4031dfcbb735a5cf63e0cae50371c148, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d1aa437de1d61d04498c8c3129272941}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9b4ce5f5e75d54a102a7a4b044924c5e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0eeec93b113b88a4c8cc64117d3fe0b7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 61c680588ed049182b26fcbbb87ecec6, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d065b66723649c44f90f64b8c3791542}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6c04fd02e2b69d0c0b1432c9a9e77383, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ab3fe4a0f37a2024c887476967392bba}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f2a947e599808c04da78e080d658ccd8, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ae62a22f2ca0b7e41a25d8b5ba9f8a0d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 272392fb9c2d807f833986d5cfbfb4da, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d831110ec1066de4dbb976d9a43bbc13}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e8c9165154796bde5d88e4570abf2373, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 211b32f1d1dd7834f8bd16b03445502c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d66178ec992bad061108755b7ab808b7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: df55b3556d2581c4799e6acf47acbcec}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c313a88849809cd680f2cd385af1c349, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 734c9e533b65cde4cbc718df81ff18d0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b8180d163b5b7a110a13c3d33f318c37, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4e00bc8539cda3947a4322b6b2cc667a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a6ad399b987765eba2ffeb375b46373b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 76397a4910912ac4393d381eb86e328b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 27d16b20c0dc14f954878b9b4a9f9f7b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1995a8df293781040974a0e160787918}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1937ffc865ac976b775290f838261ba5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 94a8b3f56f6456249a519dc053e590ba}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e950f997e9e9d9d30298183144617f60, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6cc2499594f205840b5cfe0cfabed0ff}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2153875a527b2d9f4f0c2ac078af88c2, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 96e126a283bb50a4ea09dde533d4630e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a4ead49dff93ce121513c3cf4a2c6ee7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6dff074378dc51b449101b0c0b78620c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 930b3552714293981effa09c39ab0173, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 770e5b37ed5a1e34f9ca51f99fbbd80b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5fb9e4d5b3001de539da452bc10ab1fd, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8ffc22d76bc6f4735b00ca942cfe373e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: fb4a9ee4ddc78412de4a4c898ba863c3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: fe32492f0af65462b81fff5d420e5ca5}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 0af9fc36492c6ff81eafbd19e542213c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 73286742cfb9340ecac7c8b1da783b3a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d6d8a2a3266411a64f1fb266c5538c45, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 21db218b0f2534db2a385d9f6f6f5a77}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 79a24cc5e06b6638f8180c4e6e7eff6e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 732c2571e775c4d2489ae989950995e3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 295866ea2e7357fdd2e8b1c74c1226d0, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 58f8b8fc656e042879444e8ec7280901}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: bda8327be2b71c10b453ee076cc522d3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1253e9b4fc8294382b2634ce60cf2dd6}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1dd6def0f79231e4d567560dbf7bc678, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 83a2d708878ba40c59bb1cf6fe3d2906}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: fdbfe221497f0852ac81ec5a002ec36d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: edbfd9c231547484da364dbb85c21962}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 22622088e6c335dd5f4d888149388a79, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 505fe4f35b7a9439ca12075287355037}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b31d772cf538844cf0df76bcbbfd1beb, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e092cb14948e84715afc7b4400084cf6}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c0033b6bfe036a4b956006d7317e90c5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 51d31eaad9afe4dfa9ee9e4850d69a2d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e04f56e1a8192f2eb73408b528be702f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a16394a12d417484f82d35f6888418cf}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: afd9e7d607065648bd6d7e40e5414c1c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 41ff0b4a8c70445ad9cfddf60e21fd1f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 0290a8a87ce42068c5afe25e8667015d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 157dc779e65f54893a823a8446cb2f5f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: bf16ade24dcb27ebe10dbfa459549529, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4ab92adac0c944cc5a4bd8b7021a68c3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1c168d99630961d542e6954e91fcbaea, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0b77a9cd93d23451f8bce45a4e6381c9}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f4267fbf0f0e952c7880c6f6aa729f46, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 71dee16f8bf094eba8d4534d530c7b27}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ea8617e8f606158ab5c30cf1269b9117, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: edddef7a02bbc4aeab8d794c584b55a7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ed64f167cfac7f5e5bdd599e655f7db7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: cb46116ef534c4c55b680d8fff240bf9}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2fe31dc4e936a2522ef4a214ab0a15e5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 110f2ba4815ec4d14bb156e30e8f1173}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 01a1b73c5f8fff39d32d408f17df23f6, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d44284cf3de334867b18a953b5c97324}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6d12017e4848c8537691bf7961d96f08, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 18395cb4163d74341a8148366cae9cc0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 740cdc3600a5993ad1236520b1613de2, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 9d56b740195b6334a8b0691809abbac7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3dc977fa0f2e7705881e2d7ea0295630, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1870a209f044dc74588a01fdc229df62}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d42d8d36e1f6927b5aa0655a16a0a2ef, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: bb3c7d284dfcebf438897e0a6d7571dd}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b714b1e80128416480bb07a9ea787d4b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 9d433193b60526c4c995d0830bc33628}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f456cef351d5336fba6d139a5714e20c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c010cd57894086e4b9ff596663394506}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 97feb1991bdd74e9bd5eb5607227697b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 89d9a3da818253e4cbea838f53a1131a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e47de7880862340a2b6f0a4e0e7e8666, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 11ec8e32da8744942a50944ce6929384}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 972e034aee47f446cc54d774b4338f69, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 09b407d4b9132ff41a9dea3d5334ad9a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c5ef81aba9a908c5a2f7665a28ae0345, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: afff0dbe247eaaf4c9cfb1c22a6f9172}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ecd910b6dc1301c1d9613e05d1c3ebf9, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 63b7b0050199e6f44bebfea3e0a6ef66}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 423166e6199ed3ff85eecdf3e2944b0d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b220474186894f942a2398c8e6bb9f6e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 0ae96c6e94b4ba6f3c843839d492fafb, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: bc4931c1833b83a4996904d869f7cb2c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 40a08a7171f1c9f3096e825e24b07ac7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 763e8867a651cd84094ae99be161e631}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ea03abf426d8b9142aaf308302817115, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ad28ac6c4bd81ca4fb19a77f33109f5e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 793c96378135d0cd0c713f326d4c2bac, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: df7b90c7abeefa74c969bdc7e30bbae1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 277f1857392c801bc0d7eac39073acd2, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8f73f50089aec4948ab14d4096799c80}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: eb575f4bba9c4af9e11a6f25defb485e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d8efa024ed5729e428feaed25776d14b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c215c3bb3820a8856791d11dadd44f77, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a10acbf0cf2e2154e87d21929a2d8bff}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8ae8f9e405e0c64dce8f23b069b7d745, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0a3b45f2d9bc82f41b0cdee9124650cd}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c3f87f643bad62e5c61f7abc652e2bc0, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0b85a8d94ad5d224189be0bae61e233b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 021bce8260f9715855a5d8e596e07482, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: cf040fa11fdafac4187c07289ad9b475}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 732337a78a7fb5c37e3b543eabd995c4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 9c702aaa1150eb8428d00908835cd08a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a69d0155242a72f42120854a16d1ea9e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5132317c20b8e6044badca22f2b8e77a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3e0317a86c570565866c94dcaa2fa9dc, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 360efd7875b5be241bc78af743e80780}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 80e4fc60ccc79db8d323333e12d4d115, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5dc46229015563142b5d4cd0e490b3ac}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3c932c67908a666a171b82ae6a409250, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 9af4b1ba8d809d9478d9ceaa7397e795}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c9ec251162ee9b8e5c6c8f3a935c639d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 26d95ef621811b44cb4aad13c9ff0351}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7b46c2c1fd99b974cf3d02f8012a8781, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2806d7ec47e8f494d8e6816dd089689c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 0e1aa1dcec47c232e1bcf5f0847081aa, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2c96f8f1b1095e84d9ba8d0cfceab919}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 818dcb0502a5501e762edf038d91c375, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f9aa690f469501a4cb563b1337dea6ff}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7e2ef42416bbb24905bba6070399d34e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6f3baaa792ea0734bb85a7706d097b5b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 156615658e18b17e9d2183128f47d9e5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b75fd22375b65634a9206b5e21ec3739}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 876c612cde9f4fc15a2482785afdfd0a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 97bbabfefba83db41b41fe7cea74ba77}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: eae06dea5d48a933fb444fcbfee9d976, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c7396311354e4d8429a8206a8194907e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2c189e267b35f877919e5f7e1814b8a1, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5f8618ec67f77144aa3b3b701b2c3d52}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5ffecb4d760a4e5ea6127f828527e705, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 152a048e349954e4ba0416822b2f0156}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d5438a6d3b3daf4d10a394027f1577f2, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 413e95c65e982ea469f8e8d5f96f6d91}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c7735b052aaa9f54923848190d740562, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6358208d1e36fdb4591b4bfac55d259c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 4ded6204a9f6dc12f4cc609d6c7add0b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 148d40508a7e6444ba707f8b1ed862c4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: def457a4bdc11c6e8a76707f5862b6d3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4186ebb8004e823469e54710237c7094}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f24abc1f894976999a9a36a0fcd3099b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b7a4d17a4ec46074b858fad430950dd9}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 31ff04b469ad87e0239d4a1f0344fcfe, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5d4533b18e79ba94fb243a0baebfdb37}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 37d412c7d6f3d1d5e44003ac217165e0, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ec1cf9e3a12d61647bbcad779054aa4c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9ffb54f1e5ea2fd64ab884553ac3adb6, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7f40a548f318c83439edea5a6a615f82}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 093979dcca1fd80fffe539188f570c11, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a3f1a029a41625440830103f8f41f688}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 538501a2a83abbd5ec0252399bd834e2, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f01c81cdb03e21a4f9b9c48edb2fa380}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8514cdcef2461d3ece720daf279182ae, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 436ceabb182af9b469ef954faa5533b4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 30ac872ce22fce720df5f44f2e88735a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e12fe1e00288d3846afb544020312a49}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9b9e6eabd4c9b3a01b9fbdd95c5a8bb7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a7100871f3b967442a1e6dec75c8f942}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 51b1a61a3d491d980bd95000fb513da4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: bb4730ac9f9c2704a82033dd53411eba}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3d7b61dac05d11c3a77aac2f2242d2f4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f6a7f7e69602f4cd2aa829e80cdbc274}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 04a15dc440231ca029ae14d55f8c4dd9, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 72d33bd63aa589142ac4c5ad618ff105}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 21212941b51099b818885857dd039893, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d64eb711eb8491e4382db869c58ac829}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 61cf2873f64430d0a9b9a0904936e7b1, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 73d94f5c5c0ddf34982f3ec730782ef8}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 4fc124a4ff91c0ccfa9fe001a45e5781, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 738724c9a030e0a4e8afbbfd974f4123}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 4b0bcb1c23e2898d5fe126a828f47ec3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4f5256df9bebfd04e940ecce6ac11bfe}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 34d464a12f4c1636cb34dd149cac3a46, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4cc499cceade41f46bbe79fcdc5cce92}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5b967b403ce943d775556dc1f49d5029, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: fb76ea4532facdc42a34b1544723b35e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1e9fe27ac08d1d0614e5c370676e599e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 387c3e87dbe114b48bf5eb2431605fc4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6f264525b7e5b5d8d11c145eebca87d7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ab39d6714aeb84c469a49be15d1ea5a1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e366bb04d267a96b07dac0f5405ae8a4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2736cdf0938a2674abb83bff298ad9d7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3cb0f24016ed7193eab262e94dd0efe3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5d0c4599a43d11044b5e1dc7b4200547}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 69b6d70c70515f478292792724623fa6, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4a8ce1c223d86f548ad1b8b677eb22fb}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1d2a1bb187a7c635ed02cd6cf8674d68, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2dbc93bb2be64734ea5b6c25c01c7da7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d27bcb3176edc2df4f07eff475efe0d4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 98c43508b1faf1a4ca3295d4214a4532}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: da2c835b468b5bf17e7873641c9c847d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 3f7ef2e7c5c562942b7f8ecc36981a81}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 79b4b0ab593e23dc528c5f80fd3a3f50, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 975cf66318eb8e74dbd9232d887b5af4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 91225ac9a3abb0c87499a84943640913, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d20c1fa5cbe42a84f9d17467f77b6629}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 14f5a5984d34b76af28e60c5fc1a6dee, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8c8ae9da52b5ccf4bacf11fd2f4fa795}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c4fa0b47bf24bf5d6197a31abc95ed6e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: adb66e2c660edcf49bb7135c1d48ba89}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 742670d4a1f19343df66f80e3e52827e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 072b614408cb3cf48b255f242c730471}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 149e6239f5b73e03cd4df7ef08e72cde, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e2e6a9668ad117b46a33b7f44914f3f8}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8700b49ae2311c3e3a59495d9a57e1f8, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f06d2b74565089549aa9fa7df1fde52c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a086ae5a44f838097297afd1eb10779a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: cc560e5aa4bd7c94f8432e10500ab010}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8340871074ce011001ddc224eed8c76f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 945e863e1301aa94f81a6e29eb13f50a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 658013a99d3d7e1cabb73159eae7c620, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 99ed7bccf7ff8ac4ea8444fd899a9dc5}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3b847f613c33c2ff7e474a4e16b020b3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7069e0db2aee80541b3e4d9b2b7c6691}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f06d81df88ffdd6be6563b740ecee1b3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 281d50b242f53464a9047661afd55c05}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3d2f43ab031421a80696a955706506a2, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 67335c277b75d464584f10090e64d610}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2d7fd981fe7f19f8619c96b19297f330, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 825f8f2e5be9c0941b6e1e48535459f7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: eac7949a76d8372145396302f5862cc6, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 17b4c2d4353cf1c42892ebff7d780916}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 47f007c51e8aac9422809451f9b7252c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 81fd2ce9618be7049978cea5f2e12c7d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 08c10a6ec4d4fbfc2c17d3cd05451b62, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 49f3318df5cd75a4a89c95ae107f3d13}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8b375dfe8725cacaa636a3f907b6d254, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 10e493b00ce3dcb40a51b95e180c80d0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2c76bcdb7b702a3ba3e7733691a37a79, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1002635c913e50445b7d914248dac157}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9626dbae7d4d4cf3c8afbf6d80efccc2, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6d7a1f03e6ddc4a4696e0fe47f406497}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ec53f5a58ae2b0bd2480e3d916410a51, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: fabc1b9f684c84b46b7d4e990d288ae5}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b3dc9d88fb0edf047f4665bcafc5573a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 46f1e28fbc821f449a5a66370d3d5e66}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d094f61ae1a474090daa467775edaaef, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c64e5b2bc815c9543a2856da35e2a588}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f8d41667fcd197be1f0e2a64d1e0224a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a2a9c0ffd4ad39a4faac05d3a00eaed8}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: bcf5d08e577bb7b11683203b1f3965c0, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6424ded655bffe94ea3b393b55652a4b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: cc5a6e897f0f8bcded4e8a9929cf219b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 703271e01db43fa48a671d25b45cdefc}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: edd5662ba2d92120d1b58bd94f5f54f6, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d713bea8a2e6dff40aed16778ac08ff4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ceee60dd598b5a4fa2eb02b0f9b638e0, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c1e69330f2ddc194caa8714132213dab}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ad12311f2fa259d4bf717be3cd80d995, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7e042630ad1cfae4bb7af46ef3c368d7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 15243b3e6320b5e7fc240dd9f0bb64ae, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d9a06d8ef9e2d334396446dec2b59c73}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 0d84433911adb57716bc7183366a5f8c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2e599d17560b948979a0939d23e77581}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 64786d45760eed5fcdfc7d51800448c5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5bb87cf875a53e640ac637108560b654}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3a72c69b58a7716ad5a242b975ad383a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c4d46b2437b65084e854ba0d4fd16204}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 46f6776b9112dd3b7c305d95020a9d38, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 79628dca3fd598c46be64589144dbd4d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: bdcbf74d6be2381c04ce7d7aa5665a88, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7c0a0fd020d0ccf43a45d42be68f7ffa}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d652a15ef4a30d5a8312e2017f5f68eb, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8bf17a516a2fc504e99d02e81d0aaee2}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7d89dd3c04aab77b9f6928c95ed9a335, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 026e23fc5e4ba954f9b8d4caeab3e4cb}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 39d86bd3097275f5ae96d42a203c5514, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e93687165752b8e46b9732acd60bec6f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c98bf08605ad08ad1142b043fe5b23ea, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8c2f46983f48e8d48869ccf57f6153e9}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: cd0524c5aca7c38882d4dc344385ced0, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b6a34db061ca3514f99a068a22ad65c5}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5ce947d2f352f3fabbf9c5e6cb1f57b3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 417d872414b71da49875d91c9c6f18c5}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: bd1d5c5417f028501f06f8cf644c5d35, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e058ffac1e66e814c89e7e6c9f38c01e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a8fdae0377dc570b72fd76b525cb8e9b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4b0a7a891416e7f4caa76093216e3429}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 61d55f9ebc288cd28be9272c49397c31, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 93c4ee94349d71141a8744d3a9f426e3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9b1eab253aff0d4eb7404d6afcd021f3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8ff21e157a0195d47866d5e3d49c35d4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a37caa6031645daaceabfda807c486b6, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e4ed565fcdf2ab84f8cd02567ee9f1d0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 91f708b2c38698ca28ea914617fe40b5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 3f0bb178d3af7834f88cca16a8022603}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e8b9da4602b11988be598508c01cf876, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c5a5fdbc4ee00184d88f31511def9eb4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f6de0cad6f59772d18a50275e5f65d2b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 3441e0ccfb50d44418f03006d9a303b0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b02af90229a30bb3c39f51d7d4b8f8de, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c6ba9424f8ca905459dbb654bfa09a2f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b2c6d1061f771bc77c15ad86ba7b2474, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: bb4e7376d3f470944855e8fe7991eb15}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 38835931ecc7880fa7b4ccb023f7cdf7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c4513950811170c4db894fb8f3a0fb09}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 527fb036e40c596b6a9d001296044514, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1f8ff88f60afc5440860239f5cc53aaa}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a037f76323e2fb4d7f76b1d9024eb575, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2d6a42a494313a1499ec79a4849b5f5a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 74fa4f56bf98c5b6df82169fe3920623, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1178b3cebb18da245a2d434fbb4d519b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b2c618c5b9a837fce1a7268c194899be, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a8e055d206922734aa6d439d77e3a135}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 494098445a804ee0d7c4947c4fb68c5f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f52f008b7c3c71b4fafebb12acb60e65}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ead0515779ff3fa378a9201bb9d53956, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0da8bc3125eaa7b45a9782e0338f92a4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 281f1c652a73a176b1fd15e4ae196798, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0561e3fbbb1c40043a4982c16af92c38}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c57e7025fc5081c7ec942ba4a0443da5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: bb898691f8024b94cb6849087afbaa7f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c8aee2cb75f225e4f14f45c754c3bfff, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 9b918b6dd21bd334f98574e9ca3d23c0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6dc63c3393caf0fe4b6e6db314d461ce, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4dd0197eaaa52e34788af669cee5dcf5}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ce7de3e04108567310b0b6cb817ce7e1, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8a8d82f1d6e2c9742bd256cfb3fc5394}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 189209940bcf2d272f59eb677f75f6e1, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b44ffcec32282c34cbbed2f006ad994a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 69e4f790636c15bc0e82901b6a27622e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 804c072e8d615fb4b9432a5fd1b6f751}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 59daca322369647b85715d2c2340d9a0, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0cf49efb50b681d41b515eb0cfa72f24}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5ada400755f4cb6c058f9a681669bd13, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1478fe15600ebdf47b8e528603e9fa31}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 84a4c03c963aae6f5e80a6ec06063a34, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2d0ef7c57df87974c8107197bf285630}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 625430629a6eac9d2204db74030aed02, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: bd0db2e7b62734115b5ada068bc5f110}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 0a76b13086fd1a71c388c9b825dfe780, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6933ff4bcbbeb459eb0d6c313de16f17}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 696d76c0461e656f53d6dc7430addc19, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: fe71e1263255d46c6ad8a896c5af36db}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 61f10d43d3172056d5600212edc35ed0, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ca199e8e3a4e549a78110a09fbd4ad3f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e27289254feab192e0c685420e941306, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2d2bc730f5d4645fa96aab4a1369bf66}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a2509b4ee9de23d50672299a53720449, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 55590172fa1244558af8cdc06f7750a7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 89d18a55db964e9058c89dfe090133a7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1647f57cd959843ee89d52fbe1005334}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a50332491be78a9388f7124e2dc92271, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ff6c46b1a8a164ee8a13864aa36674fa}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 051b71a7dcda572fe325378d3fc4fc29, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2e8f4782c9bc144eeb1e3b64af95f7ca}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: eb236c46571385920214d345203471b8, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4e62b87ddea984324b83ae6d0ca0c2b1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7700a12003e0ca56c33ba35cf030d7c0, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 29b9e5d9b3b124777bf0c5e969b9b241}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 0fe91b3d4e42f1a880c2382962e81f1d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d82ae786faaa543ada1010cd2ff02665}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1c68865771369a3fb4f9d4b7f60e75b7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5aa5e31ea23b94ab8a5fc41a1819dccf}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 544cb712f70ef218d3241912b0e47a19, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1db30f0f4fb5747469a00469289268d2}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e6e095d378c4c4d7efe4ae3c44aa4976, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 44812dc0392df462db0d8e5719fef60d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: dfecc289ff6a57770286a781acd52355, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ca3e24a49d4ff4b39a240dfd014b4bc5}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9e4f557e00b5f2d8ef0b127244093307, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 082248f7bbfa24c27afb29b57c909889}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8595223ea25ace9fe1ccac129b3566ca, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c954a3c5f8e2d4774aabd3864916f676}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8eac17681c00c16502a21530b8d11564, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 909ee2458fae54116a36a143eb45c830}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f1e6257d6fd67d3519f15b3c9653f262, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 42e4ea684c53b4000b2cbe25c838934b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 23ddfaaf23bacce59eb34c28fda32ddd, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d0c31a5ddd15f46daa9a47cc062ff1e3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a59388278e56d75f4eae6fd267c4942a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4b591d860251c4fdbbe2dd1e038f820c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 0360bff65e06500d781a76910fc14bfb, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6eec5464a5808457e856b1a328fbe29b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: baeecff4d09296f5d79d8c22cf5081b2, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c6900cb445c97274c8edd0eb5e23baa9}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 473fcc56c0eae4c88bc1eed14aeab17b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: edd6a558438eb154a88f889f5e7b78cb}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1efd1f495cd16c153b3b081bb5045e09, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e35840f83eb55e04aadea8f47fa46658}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f7533c53fefa2b7a6a73d2451d9d372b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e361701df7eb08a43b9fc095665be66d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 0f9fb31f4e38ac49b1794b177c5d2797, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 003741abb0cc55c48a661cfce5db50b0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7b59cc349e56e5076f08fa6c09fb7f02, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e9594d9ec85d80d4faee9e4e42f8e42b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1646b81cbd7671921935b627743cd40d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d485919925e332e44b4a277dff700d3f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6ae774e10eed7d94d14b5f9cb892dd1f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 44bf3a6fe6c8a604a8ce66ff5da7d3e9}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 4be47a4e317aaed258c0eeddf7e4bbaa, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 3b72188cae9f4e7439d41e8e09039468}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2a1ebf5dd682e705ee361904e75786d4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: fd9e5095481fa74408a5360edc42ca88}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d625bd02a2ad251f946d62aa0df7fb66, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 246c4e6811ac0344f8f647e39e76331c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 37703fe2908ccbfcee2d5ff4d4640480, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d42ad345571ad0343965837096847753}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7bc708b82b34bda9cf451317e8f87d27, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0ad52c57dd499c240ae496f87278642a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9fd3dfbddd2b0aea0736cb39555696a5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b1bd6334d87a13540b99bbc4a4bf8a12}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 659f5c69a563e172db3aa0a400c96848, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d2e8ab3e39c9ef4449d0f7851da6ce7d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b3945730a44eebdf342caad3ebb4a039, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: aeacdbcf3de51bc48be8a0c2d103c679}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3a7960d40155de928d349376a0cb4af8, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f9417ccef31a4cd4c80cbee130df7f4a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1760e1ce6708daed42e311205ab96c8d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 771c148ffc518a741ae7c841ea507087}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5802e5fb1f4e0135e235a28a697f90e5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: eac84adbeafec7344a0e015a749ad1fd}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b00fbbdc4ff08d3f60161a1a20ca2c47, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: effa440e3a068d349b29d1c7a42f3432}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: bb23a1053ae6f013858b946bd597102b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d87d7ebfcb1d388488533cc543487272}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6e678afa23a0aeaf6f157b8233046f73, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 99b07b2236f298548b4bb68ce4beae19}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: dc539b388d1a3314f7a4a8a7fba012be, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d37c0069fe68e0941b06855a4df7b73b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2dd242dc5a8cae6b222a8addbd5e59c9, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e14a84a2b734035468e133b3c73a4cd1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 14a456cd4dcd8e2f218673072d1c11b4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 93aabf2106a15de45bc98477cb8029c9}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 57f95c4537174e49fc01cc5d0b0b1886, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 636335fd2eb6d4c45a3d5ad01f8965e5}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5e7adf707b902f3b8894d5db209fdd51, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 9014e7f602ada25489774aa88cd7f60d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b4d8766a80d1ef555a5f757166fa589b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5f8413e6852c1d84293b39bdce3b512c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5e6e342cd15e837266c28cb70e8f5174, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 3e4fa1e42e90a9f4e9efed82ed609cd9}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b0b0644412df2a1765684278b2a1bdba, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d20cee6d7c105e44cac77fb805188d93}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 338817b6012cbef87b1bb70b4e428b8d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a16bd8bcba2cc7a489864af625857b2b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c450f7653cf90962b549325b3c3ee710, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1e866129631855f48af7e947cae32ca6}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 965f74305a29093de0082f3f774e60e5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 57011e69b52ad3540aa83185920b10af}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 26c1022839be5d0a5f801c4581fd70ac, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e10cd08eddf69e54c92e162ceb9fd705}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 02b293e7f49e096e4d2440198de1d7ca, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f5f293150b533134e8cb6218cd365b24}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 38b659fdccf653d769136a383ebc525f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 313bd61dc5ea4c74bb17fb6dbf155bab}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c88baa9b63561e9833959902f85cd61a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c96437b2376a05841bdd7a448e9a8d83}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: bc65e929acdf3729d759f139e16606b3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4b7bbd75f0a6c884eaee183e27c4fcdc}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ba4bdcd1fa74494c53a49c0ecdfa1822, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 14214e1cb94b7e646b4393ecbf706266}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9a75352d962ffe048c3b42c6792f17ea, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 3fa1f8f67fe23d346978d6c5217e3d08}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6c136d1bf92ac18a3d60ae4e569a6b14, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c5af504ff81da5746a3f02f39e4bd887}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f420863d580804625c399733e96684db, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8eca40a2949615d43a3faf1088965ea1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c0c8f981461f355e6f15f3c46ebe1b7e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d37a8c404fe446a42b7326b48e134201}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: eff85f1aa30d45e3695906321d005c64, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: cd6456204b3ad844e8c6d15c671734fa}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e6f5bc02542147afad014348cc86c4aa, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d495f374175957c47ac504a3197a7cc3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 13385449d881dcc30ceac3c93fd8fa44, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6722505bc1fcc494da73ffec92148ce0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1515ca1c5744699bfb5677142bb069fe, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a23046dfb5c66d44ea007db8019f40af}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 39112210a99dd4db6303cf7ffc8cb32c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 9abcbd7bb62cca44fb4e88f6af783f1c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7bd1e95d99a91a115f90afedadc27de7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 43f701510618f8b438f52f362c003901}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e68fc639ae623e8bd30bd7c884f3780b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1223f3ac3af855b4fb65aa0e8c39f602}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 96ae48259fcfe1ab64800c8c3d58b634, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b0c6b98ea258ab44384fda9c72560b3a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 63a1f1f4dcd452bcbb81f5af3af7f11d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f638de0ed3481894f9baa681fc39d8bc}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f62c2a533e64a865543b2873e9670692, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 3f5dd57289a20495ea7e8fd6896b4641}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b1bcf36830635479379dd3bec3e9d4f2, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 298acdecc5e0b48ec96c7772378ff796}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 36964fc98b7d60cce89298222404ade4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: bc7c21eed205f1341b6a86bc662b8815}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: bcea5438a3055cf7348773f2b1b4edff, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 32d81b2e4e9e26e4baafee91b55d0ac7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 4ff51638d3f918fd158322219874b159, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7348efe6e0b922447beb57e957a3c09d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ea43ee23896ebaee12b5c4e69bbc67a3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c77e6664f8a760d4792ceceecaecd21b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f4288ac0d82b30fee2555130f0a93adc, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0b9a193ff5e65a0469a9fe3575196031}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ecdf7aae2a6f5e546c64bfa1a2f4de15, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7d565f62389fdf34a8f100ea3086bb70}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9caab829566a9a7c05361140818e620f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4770ab7dde5bd1747bcb251d510811b7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 09f16e80362a19d4990ded0f473c303c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 021557eaf031fa74ba20b5e39ee6c06f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3d008852567aace0b04dfa0ffa834a46, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8b5122eb95c04a14cbd1f91278da9955}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 12b97b36201bf1408ee57cd4a2015ea6, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: bfb452a2b320a0848b5e6935b8a1332d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6207d5d69b98fda863f1c8938af88311, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6fa66fab54c929542add69a38d728493}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: bff70f6875d196d01847fd5fb2dd3ed3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5c04ad7bb363f8844b6f60bdb4e2de95}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7dc8e8a23820b0b181d5aae4b4fe23a7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d02c55ba27c5c5349939e2d473b90d29}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 82f725df75432ae9a33c67c752695c6f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: dc6879164d350e34e8297c73095862c4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: dab794ad56e3037a293054fc5550e7b4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 33f807c9ae95f5048acea2385f20abca}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3669066579522b0586d1b307af7f8b76, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8c0be4c462e0ec640be4566c165b8b5a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3f8a3a6db79b3112663c8766b71b2b60, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 37dbe4a58d86a7e419e3902137d20b08}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ca02f65fe504a77468c602162e5b94ab, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: fb0df312c34b6bc4c8425c99e7f083f9}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7f452c9f47f68fbb52420e01145d685b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 242c7046388c2d64cbf0c89b3b7bd5b1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 296fa113bd40def425d11bcaf5b360db, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1fd49d48e5fdafc4f9b4a86f1a30f116}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 4a8bccf50b0d54925ffe5c6815e08355, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: fb78a18d465fe2147a89d68dfef2bb66}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 0f617f4086dc2be7ff343eb5f78f46b4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 86115c91038d5d34c9396f43fbcbf519}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ac00e61344ce0720eb10a6ea30a1b9d2, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e70c4afbb8f3b3a44a1184463fdd2dfc}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 43cefd556a55193416f383ad1dd0f6db, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 3c1658662214f0c449db34bc526e34f6}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 96fd944764ae55a55832cbfb667e7543, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 39b03bf5e7ec4cb41949d5cbb53428f0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6a6645d0726d18191f5c7c1c914f2084, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f2404e781f4fe6547b0f6e31b306d2a9}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 215bd7de78ec11ab911dfa1119fb6fb5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: fb1e26e27b10ce34c987c4d7525cc63e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c34104285b26cbd73f8b5c027ec63c54, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1b05645ddae2e06418aa82d45f035a59}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ca82d16a3154ffd816c61b9ce3da6167, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5fc4bbda9fbffe044bd9d275264e130d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f6ccc6f2fe54b805ba8cbae922428c07, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 94d4c2a676c81b243b375118fd6ac374}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7dd8e89791e3a762f607845b6be15f40, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b6803d0ff9a74bd48b771c91f99f7a48}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9e7dd2fa430454816deb5fd7053f3bb9, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 87c1df53fc617e7468516674a1d4bfd3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ac6ec8a4f44ad93c5b91002381441b0e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 25a78d4be06159144a18ee10692c1118}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d2ce52bdca89985d5f1b28b7a5825fef, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d0cfedb34c67e764d9fe6aa4169cdfa5}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d2bb194516bc0cf13525e2a6ffd1070d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c485777cde63b124985ce4e778894f23}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c3396718b3e171b799bae11e4ee5d16f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d1ce898ae71ea6c4cbc56c5e2d67e969}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 98e9c343b7fd566acbba34be95056116, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d8545d55f0905ee4aaf229dc80c11d05}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b38d83943f581a04eda4a81ccb803b10, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ee4e6d8c9fab4f24b847775a744373b3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9865afea386728a7d54f475cfd4bc5ac, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: df0394f61ff250941b6fa616314467a2}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 0e283736550a62d2c6dccb5976cd8384, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8b2ec7d1e791e514488ffe6442cb7473}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 634ccff35ee3737b6a32b46ee690185d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a1c41e9f4beb6bc4ab1ee3b410ef83b1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d77f6f9066eacb9f53bd39667cc740b9, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b869c736ca49f424e841075855efad60}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 95a8c1ea7969ea52f06786ec6ce43b88, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 255dc5baabc6cb940a82a267ae030be4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b95906e31311b6b087769d6388f532b7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7784685f8df664234831fd2948499f7d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 32b66e0c27ac34b5e9e7dc5594df4e95, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 053682ad17c07d148a4730dd6b7e8d57}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 384a043edd44d3e3f0e699df471d7ebd, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4858ec3b58dd6ad4aab8aed82df6fb59}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f67f9befb1de6b8840ef2a05d4e81f33, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: bdd2d147857e1f94ea81d3080413de6c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 09f3b80fc5c54eae8a2e2ff442b4a020, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b240661a1f4f8944998ddf46fa0af64f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e37c6be0faea78bb3fef45414e11c3eb, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 02fe8969621027848999d5c9fb21ab97}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1a710c4b570a3bc16cf256ca48c2d25f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b8069103daa402446997a034080430d1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ce50c4222268cfa113343b6065a8b372, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e92e2d3cec94ea74892660a3609c862a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 03a686d997a11d2c43e1778047721e58, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 262ffb9cf35f65446a9573d86eb2e3c3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 58c0f5a689e1c041d4cf027217b32262, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8dc11200e5a850449b4cdb920c205f8c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9cc82de6528baa730419f5b31a3c9e70, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 373a9a2e31b331743a98581b0fd833b0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a25881dd9936df1bb4437cc469fe9f30, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f04e74e4ce50b1643bd29c143d3b35ac}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ea000b5520990374fa7a983724fa9e98, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 20b160c4ca68c9b45bc6295e3b088d03}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 855a25cc57d6d3de39acc27c62d741a7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e25c3330f19076a4eb4fa223c04cc45d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 82e46f443d862cc15d797997cfb733da, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 00cfb2b2ffb4e754daea1987fc0c8100}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 57e52c540b1673e8d8bdb074ea31ef89, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8bf14ab4aa42ae945b622015de7f7aca}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2cbbc7d2a50cff2f5764d1fd8a973a42, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e6e88c054516cbf4b9dae43eecd32277}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 49ca983aac3688273bddb6e3a109073a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: cf4dfd26e70137a41a56cca2221d2b57}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ede485a68bc1c8779d3e4324d278251e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7877d9f551b7e704c87b911d590a9737}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: dd6fd4e1b73b8d1310eca9f27e9496fc, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: cad839f297a814241a9d5b7648ee6012}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 27dabd7d692abeb8a055d477ab3fcbb3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 96e1bbc928fbafd4dba5b66a9eec7d89}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 057d6977fec244ff2e2e4ede0a8143cd, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e1095845831a0ee4f8a248b4e87b85fc}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 090d0a597723f32ec0bbe3983e91b647, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c58f178f439e9a14abfe2b5f1cdecccb}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f37d37c859de6aa3758055a45b68730d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6c05809ef65cd0a46aaa8052191b89f3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 808366807da86741425ddf851fa1686a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 41c87500a0bd9c54e9a5e3f3b406a8bf}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b62a682f3c985e2e48f55303d5024def, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 646ddf67b295cba418bed5c54179c4a5}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8d7b2c5650220e3027b6221b180d8d8a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b3dd045d5b6ac754ca6cfdde6a0421f8}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c878eb7df0da127713e22b50aebf627b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b9714ea045df5ec4bacfef5cad378a0a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c999b897dec8bbc70fb0cbff66742c37, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 87603d73c48067e46a2f742655862d60}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 0e0bf85c6e29992472a730d971606d79, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 19078eafdd346074e8788c90909d924b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ac48dd67acaf32f8068b80c0f87a41c5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 102bde53858c32440b931c8aa583950b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 98bebb7962eef979083b9aec0559f13d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1681534082e63a94c8f08eb298cc839c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f7f5cd46f9c692e324a1c3bfbb1191db, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6c02ab46a9363bc4c8846ae667c01f19}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7d8ae4a577e2c7447a1b409ca5ffe4b2, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ea9898c255f509e44af75c4d1510d7aa}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1a55fec5912f8215fdb5255517c6a15c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: fee1780026785784b81447d523d05ad3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2f47b1c54bd05ef9f9069a93ea297026, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 539cb0e0516c12549aa9fc87037e82b3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7655ef8e5d240c47e76bc51ee9e99981, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e7c9fdeba238c8d40839ad1abcf3d62a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7f175a55946448ec8cc33e1a491e2159, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4f61648d617df404292bdf516598120a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: fb659216165150d58515ca735e15302e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ff468c208c6ad46fdb46b47a35250514}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 0d6066ec46b70000a6346cc13fef901f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: da261306de6f34578801cfbd295cb78b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 98c4b9235254576f51dffa0175ed5886, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f8fddf7f3abde49c0a71691eb4cfcc1a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c625e241bc6c43c4aecbbc5c8fe7e0ac, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 9ad3a0a3337344997af4656a673a4fb5}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8a069131eee947a46a754cc77e01964d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 512d23b30114e46f6b22be8bdd2540b3}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8973ddd82a2f61a741e5abe017fcef61, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b1e590324d95944108a6f2644a12a270}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 740f8fe15ea12fd85e38f091d91705d0, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1ab6743b7792b4b6c9653da00227dabc}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: eb1798dc87c7d5a089c7f08bb583a712, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 3cac1f204ab2b48a4ba31755e2c427bb}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d15c6b00c6da1a3f75ea6ceea0769735, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 71c0d4555b2bc41769fdccde382eb873}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2994e38129adef7b00cd1e75523c261c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ea499237e626b4975bfeaa851c25f2a6}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3f6aeda061ae88bc26079af23d7f09d7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ee522500c76334f7eaae158a4be81ca2}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ef8e475dbe13cfebeed2795f9c8ae08e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ea6bfa435e5c2459e833394d2f2ceebd}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6c541f435bc86cd0292cd688996d1669, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: adca49a6a120548e297e9f18ec3a909a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ace1f39fa4a1054f864b268a6ccac90f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8018386a18f8e4c90a540369b872e87c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3568de8e8cf0219a05aaeda21b8746a3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f17e5cc0c4f5c4fc780cacb67c82853b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 84a0c6d5cf7896262f6e5750384f244b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 623cbd944845c424fa362dbd6bc5c7c7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 237231f14f0937dcf16e829afcd0215e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 796a1c326a94546de86bd900d35dd884}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 98df32105dea15284070fb9aa7b4fd92, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ebb6731de28b243718d9e0c4d3560940}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a4420358540c7da2a96c1ce4dcc768d5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e00a1f9f2c286453b9ffb5f359026526}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: df98f956cbaa82176140cac624629bff, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c79558dc4cc21452bb3055ddded75b67}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5bb7b3e8a7e272970716f640486f68a0, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a67442c2f5cf848dd927b93df15be900}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 64c069bfc2b47899f643fdf5c36fb8a9, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2766f229ab3d04d619bb5b06f00404b2}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b57c723f9c45f1d489675b0331d9ab5e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 662ebce4299b14b0a94e7d6477d81beb}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d3557ceff9952b6122fc0b3a63106819, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0e48c32678b0cf04287c78dec4d3d31f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 4003cb840154c19f100f03104051cdc5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 23ac6e3ef53a589409498e116f782a26}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 668a2fa591112a40b4463d15800494f1, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: eb3c3d37ff0ef7244aabaa3d6b31f2a0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ff6bb51ae2bfe0e02a73c7ab5adffefa, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 29b5ac6687da3174fb29c0486c8dff22}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6c8aa2a8206ea53183a0d613e68c4bd9, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 9d75c167af074d840ae9b359c76af828}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c3267ee394c2f50f055ae9b8622df378, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 928b099fcddc1f34fa16b5b5d30e4174}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 7a3ef9e225a1f70df0c40338e47651dd, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ace0e42b70d008e4dac6f1f2e3dab2c2}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8ec7e064bdac1159f997e06af1a99954, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 67c76d021ac3fd1478806cf419e4fed6}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6475f95b42fba437e450a9ec2e8ffeeb, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7d2b806f395f11f4b99ea5df5af6480e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: fd03596e53fb5659ab942e6f42b2acaa, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8d2742a440d340d48b8afe9022b2afab}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5b6f906013c48ee6dbd15725e210c10f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8b7fa6f183200d14295001f67c7cbc25}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: bd6dd45f148c24947523894b62c9c499, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ae2d9807ea1251347a3ba989bd7e949a}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 30a5eba4a3f9dd6a622efae8173d555a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4b063d0191656574cabd5f945bcc0d4d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: fc4cd30291b7daf70991a713ee175a87, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6ce59a8c246ed3f428610b395369b6a9}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: fad80c66336d04bfc8efc430a64dd336, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2212003d198413643b0f3c7415b81b2d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 23bf04497b04bb18a1316c13177d3d4b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: fae367349e1050142be239004c57fcc8}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 267289b96a68b423589ae66166497a2f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 646defcd2cf99fc408692c91e24a0d1f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 96fe6f567c0701ace7409803719421d3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7736b84861302454dbd994b9c1efc0b9}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 22c5963b64dda904142a88ed1120ab35, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 9cae5711fda786c4d95eae92186d62f5}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1cb7594d0dea20d20cae8bb60fae0b2e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4ffe958723a39a14a92b879c964c35ae}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a8e84cf809ea42523669a28b48eea1b9, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f6c3c0f255ce24f4e9f4d05bef2bb3f8}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f3132c3916801e4891bf2c1b4910c8f5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 3e31b16a0d7964e4d9b46308a6d8237b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1c333cf3734104d628d354a99b983a52, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 7480dfc4f28ac364bacb1d890ed91472}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 057be3c3895eeb61b242b9d6f183eb1c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 48ec83e5747cd48479bde758f3b848b1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d926e014d1d2c9dd74ae813ef14ceedc, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 167d36c20aada4544ade3d14bdc5032e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ae29582fee662dcea5692e21a5b79e4d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 97a594350677b834ab66cc999c5c3f05}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 745c9e5237a9aa255b06c12618fdcf09, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 58c90927337e731468e409465c58b348}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 166ef553531540b82c08fdcb4a7ae4f7, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f3168ae59d71fd140a7408ed698feb4f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 37f992ad10faed81e5cb536487ee00f2, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5aa214aa7e822b84fa4717b45d5717c2}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b3931e9cc99308af86283632b46831b5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 68cfe258f4992c3478adc293b1fb8a25}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5af22eb3d34184bee40a9af03185c6cd, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 51211ce17c41b494db3c30b0d6ebbadb}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: fe0d2b2d1c1f453237f54825875ed54b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0fcb7799e7159aa4ebb28220336fbade}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 30a0cffbc8efe45508abf28d3d5e7c09, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 869b928548a5b274c80f0170c933fa04}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8f432e146adb83671e4d5bc70e522a8b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ba41de12eb8ae0c4a9f5d6fe97933fc0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e980ddf03bd1e148563f936e7a27845a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ce5184c4d91071c429c3e822b903f1d4}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 74a220674b85118273629430f7bc5cf6, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b9215135eed0ce94a98f03e3b070d551}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8f709106d936cb65e3c86ae9c27631f3, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 21fb348de79f1cb4c8f6e40a813873ce}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 592f431432898cdbde8c1311d38a0201, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2443020727d4ef7468e23b229c472101}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 27b701df59673cd73cc3215bec28a209, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 00f053de6b86fd34c8378b873ffa037d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8fa0ecae4f3875427bfd633cdea56b79, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 9d820cd742f731d42a90c2bb910a2ac1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 6c66c4cc14cc0059255601e89d4dcad1, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 25c48ee71255e3441a2d737f8424bee1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 241b8afdac7db98d5da125c8cf16d318, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e001a2078d759684c994d76a44658403}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a21624e0a555c3fc21c336f2660167cc, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 4e988bddab41de34baa01532ffe85d5b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c1115267def93ab9979d43024f3befa1, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e524bc8acd77d874e80a3a5cf77b4ee7}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ba31f1dca0680eb354c34ce334b82b5f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5d7a0d32f5df0eb4a831944b74fbcc74}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9adbcff31cc86bf4a7f79bd99d793903, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: d16e4b9f419525149b69e964f29175d2}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8d615fcba6eb4776ab6aee1fa99b8d15, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 45307de21c93df2489d4cef8aaaa192f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 5d57a4577ae00350489c0870f2f2f285, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1478a6278700e254fb575b096b6dcdf6}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b5131826c9816502d0220e41f7603718, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e64735ac310992442bcab206650ec140}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 56da712f1134e99c86d9226ba670691d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 505559d11b489f748ae8c4342d102471}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 62e8537fc7a7113fc618e9d49f15d328, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1dfcea48d88bebb478f89b5ccfc8d1d2}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 898847773f75afa3ddd0e36a4f63f3e4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c58f1cd9eb65c428983964f098e45fd0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a3a80d470feb122ea1aca1507843e7ca, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 39ea6747068c845f1bb9a5174bec6cca}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 24094be0f79543c39cc0aa4a517902f5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a24bba865de3bd6498e1512f9dcc6680}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 558c569eb31d0a701627bb9e0d473cb5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5482b74842e248e40921c3230e470f20}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: fee5a1d5382324a9150e0e264800c447, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 22476353332c53849b4785cf03ec0a0e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 8c86a0c3983fbcef36f784f02a6dc672, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 772262ba1c6064846a9c53e5099374fd}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2c9331e3931daebbf45009bb2b54cf1f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1cf109b819686044490cab2dbabe607f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: cc41d19133724f9f8015f13cf33fd505, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 07f9dfdaeccf9584aa11958d15916971}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 0ec8cfe265f66a00f73b2884c3f0ddf5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 270d64ac829a1644cad0f5199697b016}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9d9991342c50c74593e72666085ba049, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 594b7eef10c5c344591657f68803c711}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 1129c64a4e472618f10a1950e88129af, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 856b2ae39162ed746bc47d6888b73d74}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 95601b0c3639df16a2d1d704156642d4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 1e93312bee7abba429de074f4824ac55}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 9ab2eacf23a4334f74dfb69c36287213, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: cb4de44fdda9c934e9d42dca9a305ed8}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 87377329db1eb592838eb1b2502627e2, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ee53bc7142f74154c95ca394e126c11c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 3a15249da0ce8ee2dcc225cb7dd223a0, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f01bc0490e514964a840a2fa2eb4f3e5}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 73f0a3e59d0e1e05a772048f1bd197f8, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 384749ff54d58cf41858ff64c6c4902f}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f734f3de17dd85c90b0095ac8ccd5f95, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 6cfbd60f8ec5f7246bc68d5976b27f54}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 463666f3de864841a50697cdbdffb950, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 38f003cdb41f31e4db8f48b0ab565b8e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: d3fb9a612be4ec86e272d7e66f42cc78, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 764a03ba44ff99b47bd6574c5bdbdee8}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e53ee880271fb721760d351662a365bc, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: cff5c449eb2946343af5e9f5ef83066b}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ff59ff0360c65b3126f5aa952b17bcad, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 0ddcf6c694c36494380a4d42de3b5d5c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 0da1a4218af5d7e253e850519bfd3dd4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: f70a4cf46b72e0646b423a068757727c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: a7ed7c2e6e7ccb4177d0a0521cc8d307, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 76180ebdd1f824e46b37cc278e7c02d0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 452eaf55d597a3388f50c906f7297522, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 9fdb77d3ad459c34ca9f714ecceaf4b8}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: f5ddb8c690d8c5d33f7b339d45b5e1ad, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8026961215fd95e468e86b4dabcf323e}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 714fff9700e658be5b7c6543701b4f0f, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e5dd3487122a4a2429717856b3f1bf45}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 77351907a29237e86226320efeba633c, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 21d09ec525cd34b408669193c7826f22}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 42d689bf0f91ac5eaae99fea565df630, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: dcd1e08e7aa92ac4189f36ec096fa1aa}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 20f4575bf0b179482297997d2443d88d, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: ee10f717b88d69d4c87083495521b459}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: c51babbf26957455628568438d7bcdb4, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: deb2715e20b4fbb45bb747760d262ed1}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: dd33bf7758d5cda56617c9e771d4d245, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 40570ef1b0ac1ae47a9598774e789caa}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e87432c8c5674ce43fe4011a88e06548, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 2aea2e1a514803f428bc6a5d649fff83}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 66481acfa146f54ed08c3e021c13a827, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: e882b5d596c667f4a9a3dce579399e4c}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 79bdb83d73f24945c9db5ff63303c264, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 317faf5c77895d047a2828cdb3f9bcf0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 35639f9f74637266eff70ce7dc2c603e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: bc60aeea37d96e948b6a9a7a9781ab54}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 51b318255b9d79c134dbacf790e8c8c5, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 556c1fa0d7dea5442b6ae458e73c6968}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: eafbb0a35906255bf05fd2a639532236, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: a7ffaeb4b79a23f479132ef3fc48023d}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2c39b8dd2ebe8073a84b8c140d8e56c8, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 93063ccb338c4de4a8268fb62afaa965}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: bb017d014e3cfd5a13d927f9013cfaad, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: fb41b90d017da2f4a9bd7760892c3d23}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: e05555d0b936a4ce3a2bc8fdde6e579a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 5a2e7b6c60b14c542bae515a366c8d65}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: b23cee7ea88d83c245173bf0ecaeab3a, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: bb9cb0fd5c153ad4faac233309cfdbf0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 64eb1337793927860984716299398c6e, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: c3d036676d4ebb346a2f82b76da92b53}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 47f844e4c82253580296632bb3500d84, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 70bc857c89acb4ebca7ef081816817da}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 59d2be8f5045940daca43ea25107d24b, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: fbfa2d73e9a34e543ba2a23f82f607eb}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 680e850b992581a0aedc162c5c11d3ef, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: b9529f704fb46434e950681cf66368cc}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: ba264aee294b362148ba741b78455981, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 99b7067a159de3f42a85c38b4219f7de}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  - placeholderTexture: {fileID: 2800000, guid: 2ddc9db5d38a631b351e88f2c9f95b90, type: 2}
+    targetTextureReference:
+      AssetReference: {mAssetGuid: 8c2d07beb0968a946baeb9cb077178b0}
+    dyeTextureReference:
+      AssetReference: {mAssetGuid: ''}
+  LevelOfResolution: 1
+  PlaceholderPath: Atlas/Placeholder
+  TargetTexturePath: Atlas/Low
+  DyeTexturePath: null

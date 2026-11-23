@@ -2014,12 +2014,21 @@ namespace Zjcs.Offline.Progression
 
         public bool CanWearAppearance(int itemId, long nowUnixSeconds)
         {
+            if (!IsAppearanceAvailable(itemId)) return false;
             if (Player.Wardrobe.WornItems.Any(item => item.Id == itemId)) return true;
             var owned = Player.Inventory.ToDictionary(item => item.ItemId, item => item.Count);
             if (!owned.ContainsKey(itemId)) owned[itemId] = 1;
             WardrobeAppearanceState state = ReadAppearance(Player.Wardrobe);
             return OfflineWardrobeRules.TryWear(state, itemId, owned, catalog.Appearances,
                 catalog.Skins, catalog.AllowedSkins, nowUnixSeconds);
+        }
+
+        public bool IsAppearanceAvailable(int itemId)
+        {
+            return catalog.Appearances.TryGetValue(itemId, out WardrobeItemDefinition item)
+                && item.SkinBySex.TryGetValue(Player.Wardrobe.Sex, out int skinId)
+                && catalog.Skins.TryGetValue(skinId, out WardrobeSkinDefinition skin)
+                && OfflineAppearanceAvailability.IsSelectable(skin.SkinName);
         }
 
         private CharacterExperienceSnapshot Snapshot(OfflinePlayerProgress player)

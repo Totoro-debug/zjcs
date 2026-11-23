@@ -68,11 +68,13 @@
     "unity/Assets/Game/Runtime/Official/HomeFurniture.meta": "ca9d0edf5f0819afe26b16ff0ef206186ed5c208538799b6feb949246c5d533e"
   },
   "validation_inputs": {
-    "scripts/fixtures/home_furniture_controller_validation.cs": "d5192b1a7e23117030272e17c955893322bed75fb2777e0c1eaa2d3a18bdf298",
+    "scripts/fixtures/home_furniture_controller_validation.cs": "963f8f3a4231297cfc19cb1556f4573564954e9a67c5d12f5badd83455a34fd0",
     "scripts/fixtures/home_weapon_rack_controller_validation.cs": "a60b930eb15c3926ba5431550319711aa9fe97e64eb9e7d4e21824ae034ec2b3",
-    "scripts/fixtures/home_native_weapon_validation.cs": "ff58fc55f7d1837b00955a1c902e7d4c34d004cc19d3afb4d634f746aa0f859e",
+    "scripts/fixtures/home_native_weapon_validation.cs": "71fa4b943f1bb21e814b2898fa4279c22a0e7548158d1e4d8c4a9eaa197699da",
     "scripts/fixtures/home_native_weapon_controller_validation.cs": "ee7fec772c8de9e594612b3296a0e29092140ca056f35d76d5ac956c714bb030",
-    "scripts/test_home_furniture_controllers.ps1": "72584c0226ebcb145db287b2a0265624353e7596fea718e548610eedcbbcdea6"
+    "scripts/fixtures/home_native_weapon_catalog_validation.cs": "f05bf6725fb382a5c97532e13f08d6bd122b4c9eda5f0375c45f306ac6e5be50",
+    "scripts/fixtures/home_appearance_availability_validation.cs": "3cb5881c18033f0ac3570d5007322528d49031c801ac306810f977bc7286bbea",
+    "scripts/test_home_furniture_controllers.ps1": "e001855625cfee17cdc087f4981dd55ffb972fd4d208a238774d1cdad3ff4d52"
   },
   "shared_dependencies": {
     "unity/Assets/Game/Runtime/Official/HomeSceneInput/ClickableHomeObj.cs": "2ab7a2e3d378cd66e60e1378b0ff9b03ae097961a031ca690d1ec9e5c1884ca8",
@@ -132,7 +134,7 @@
       "b54377961060f7e5fea71f59deddfdb9b92bfbb3f68f52abe98bbf00b081e701"
     ]
   },
-  "generator_sha256": "850531bb9585adc4f3d9bbafec5214970bb1fe192d16357ff347dda4e29d366b",
+  "generator_sha256": "8005e9bc5f17151ef3ce247014af20606f62340f10db58f346e7d382997f6eb7",
   "adaptations": [
     "Original four-state priority, click branches, condition subscriptions and teardown are retained.",
     "Original notice transitions, time-offset callbacks, notice text keys and arguments are retained.",

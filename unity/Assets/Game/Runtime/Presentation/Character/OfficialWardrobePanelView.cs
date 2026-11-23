@@ -709,7 +709,7 @@ namespace Zjcs.Presentation.Character
                 List<int> owned = progression.Player.Inventory.Where(value => value.Count > 0
                     && progression.Catalog.ItemType(value.ItemId) == itemType)
                     .Select(value => value.ItemId).Distinct()
-                    .Where(value => IsNotExpired(value) && (showAllToggle == null || showAllToggle.isOn
+                    .Where(value => progression.IsAppearanceAvailable(value) && IsNotExpired(value) && (showAllToggle == null || showAllToggle.isOn
                         || progression.CanWearAppearance(value, DateTimeOffset.UtcNow.ToUnixTimeSeconds())))
                     .OrderByDescending(Quality).ThenByDescending(value => value).ToList();
                 visibleEntries = new List<WardrobeEntry> { new WardrobeEntry { ItemType = itemType } };

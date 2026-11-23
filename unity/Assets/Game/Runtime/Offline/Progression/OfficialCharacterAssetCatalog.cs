@@ -937,6 +937,7 @@ namespace Zjcs.Offline.Progression
                 skins[id] = new WardrobeSkinDefinition
                 {
                     SkinId = id,
+                    SkinName = Text(row, "SkinName"),
                     Type = Integer(row, "SkinType"),
                     BlockedSkinIds = Integers(row, "blocked_ids").ToArray(),
                     BindingSkinIds = Integers(row, "BindingIdList").ToArray()
