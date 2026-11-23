@@ -2,6 +2,8 @@
   "inputs": {
     "unity/Assets/Game/Runtime/Offline/HomeNativeAssets/HomeNativePrefabReference.cs": "d703ed81c1ffa42a41c99c7fea97f855ef02b8d036dd3ef165db3708ea56261d",
     "unity/Assets/Game/Runtime/Offline/HomeNativeAssets/HomeNativePrefabLoader.cs": "95337fba219b02830d8f79709f1fa12f9d51df718759ef0145d8aadb9fdb62fc",
+    "unity/Assets/Game/Runtime/Offline/HomeNativeAssets/HomeNativePrefabFactory.cs": "18118b96424a0ed84ecbf8ff212dabb3c6ba72b466a2d59d1add635bbc32bb3d",
+    "unity/Assets/Game/Runtime/Offline/HomeNativeAssets/HomeNativeWeaponRackServices.cs": "1902ce109520048ff16912ced8044437fbf7ec3c34f262867c056a3601478f00",
     "assets/reference/home-house-native-source-manifest.json": "585eb68d9c249340aacae4f6f49ec357b00f56bdfe0bc2011f693aafaed5a4a7",
     "unity/Assets/Official/Home/House/Native/House.prefab": "5b7047b51ca7b3269929e47ba942db93ee8f071b814c1426a590f8d4742ead3d",
     "unity/Assets/Official/Home/House/Native/House.prefab.meta": "3c6ebd32e65137860b4e10bdbb1ade5c2719f77e4d4d2515971ee11d361f01e6",
@@ -2067,7 +2069,7 @@
     "unity/Assets/Official/Home/WeaponParts/Prefabs/Appearance/PlayerPart/sWeapon_21_10306/sWeapon_21_10306_Home.prefab.meta": "28553e2076af8eed274e3049fa3a22a1dd45b17bbad7f63f32c90700b1614934",
     "unity/Assets/Official/Home/WeaponParts/Prefabs/Appearance/PlayerPart/sWeapon_21_10708/sWeapon_21_10708_Home.prefab": "4fc2a1e99163d76fa4b778eda1f13b9db5e635052055a9304b6efb577213ef1d",
     "unity/Assets/Official/Home/WeaponParts/Prefabs/Appearance/PlayerPart/sWeapon_21_10708/sWeapon_21_10708_Home.prefab.meta": "3dd03a2576d305c90b4a79f46eaca5ed21738d112b5f2715b9b77d5317269756",
-    "scripts/prepare_home_native_prefab_references.py": "77c2d8a06d74c02d957aadf06289bf316662837a6bfe8acded845acd9b7b6a33",
+    "scripts/prepare_home_native_prefab_references.py": "320dc1d3e53423cb30a8133400876346d10a22a091a703311be5094bcc684c7b",
     "scripts/prepare_partner_card_native.py": "0ec78aa2ba59c9f87c794d76067476ed63043a20b1da7a18df984319ff2f957d",
     "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePartPaths.cs": "d874e4e911bc387a025ebd03bb6440e131925d5d63525fafa9c00b7b34f72124",
     "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeEntityPrefabPaths.cs": "c619304f05fad91eb414914fb7c129ad9b54f8646117ef77700514de8e20e37b"
@@ -14470,7 +14472,11 @@
     "unity/Assets/Game/Runtime/Offline/HomeNativeAssets/HomeNativePrefabReference.cs": "d703ed81c1ffa42a41c99c7fea97f855ef02b8d036dd3ef165db3708ea56261d",
     "unity/Assets/Game/Runtime/Offline/HomeNativeAssets/HomeNativePrefabLoader.cs.meta": "da7cc007505738c6c06ac4677d34bbb5180023661bf66b8842bcde5f366f0b8d",
     "unity/Assets/Game/Runtime/Offline/HomeNativeAssets/HomeNativePrefabLoader.cs": "95337fba219b02830d8f79709f1fa12f9d51df718759ef0145d8aadb9fdb62fc",
-    "unity/Assets/Game/Runtime/Offline/HomeNativeAssets/Zjcs.Offline.HomeNativeAssets.asmdef": "127bfda3f2d69164e0c5a27b9f8f429cb8c63b6d8deeb3656fe1ff63d344628c",
+    "unity/Assets/Game/Runtime/Offline/HomeNativeAssets/HomeNativePrefabFactory.cs.meta": "e331cacd2a056e66e7146b3bd01aa108444a6ec5a020d630ca03f079217161a8",
+    "unity/Assets/Game/Runtime/Offline/HomeNativeAssets/HomeNativePrefabFactory.cs": "18118b96424a0ed84ecbf8ff212dabb3c6ba72b466a2d59d1add635bbc32bb3d",
+    "unity/Assets/Game/Runtime/Offline/HomeNativeAssets/HomeNativeWeaponRackServices.cs.meta": "3f2da1ceb087b93bbe96f12b7a79daea3a8aeae2e161a5b0735e98d15e6d3a8a",
+    "unity/Assets/Game/Runtime/Offline/HomeNativeAssets/HomeNativeWeaponRackServices.cs": "1902ce109520048ff16912ced8044437fbf7ec3c34f262867c056a3601478f00",
+    "unity/Assets/Game/Runtime/Offline/HomeNativeAssets/Zjcs.Offline.HomeNativeAssets.asmdef": "6dcbcc390a986ffc317be8799a0364a592268d965da9afd2c4cbb9e18fa4c61f",
     "unity/Assets/Game/Runtime/Offline/HomeNativeAssets/Zjcs.Offline.HomeNativeAssets.asmdef.meta": "151cbf3fbc55b2e2beb12efefb9cd8ae4e2f99db2dac025dffd29f3bdae64d3a",
     "unity/Assets/Game/Resources/Home/NativePrefabs/9c85c01f04b61315e9902e4fb4979a07cd9201a098eae1751928f3dbd80b5712.asset": "ec56d8351c05d7ec47bd55a61960f42785049905553a253d271ba09a03a8162f",
     "unity/Assets/Game/Resources/Home/NativePrefabs/9c85c01f04b61315e9902e4fb4979a07cd9201a098eae1751928f3dbd80b5712.asset.meta": "97aba6583a147e6e7c486917e0fa07655cf67042463e8060bdc9f2cbc0c818ea",
@@ -16537,8 +16543,11 @@
   },
   "validation_inputs": {
     "scripts/fixtures/home_native_prefab_resources_validation.cs": "f6da0157e8d0a874248fc9cc6b8cd2256abc32c8e644d2cf59b87258874b9db7",
-    "scripts/test_home_native_prefab_resources.ps1": "2bc548c9048289d49fa3852cb31d1c2050d69a919d1b2cbea5240049cda6436d"
+    "scripts/test_home_native_prefab_resources.ps1": "2bc548c9048289d49fa3852cb31d1c2050d69a919d1b2cbea5240049cda6436d",
+    "scripts/fixtures/home_native_factory_probe.cs": "7917c06451df1c317622f7ef876f966e4fb95dd9804b886845c8b40e3499ecda",
+    "scripts/fixtures/home_native_rack_owner_validation.cs": "3eb9cb20ef340da39a872087a0f8723e760684a322ae70d1c8620951f55db634",
+    "scripts/test_home_native_rack_owner.ps1": "ded62a48999b7c9cf02aff64233823f142a802a945249947a96f110c0037463e"
   },
-  "adaptation": "Each unchanged original prefab address resolves to one independent local Unity resource reference. Native prefab GUIDs, hierarchy and payload remain owned by their existing verified modules. Scene-owned leases retain references only until their callers/owner release them; no global asset unload or user-data mutation is performed.",
-  "scope": "Local runtime resource routes and shared prefab leases. Native component ownership, main-scene gameplay and full Player verification remain separate."
+  "adaptation": "Each unchanged original prefab address resolves to one independent local Unity resource reference. Native prefab GUIDs, hierarchy and payload remain owned by their existing verified modules. Local factories install dependencies before activation while original creators/controllers own returned models. The native rack resource owner supplies those factories and local leases without replacing official skin selection or lifetime rules. No global asset unload or user-data mutation is performed.",
+  "scope": "Local runtime resource routes, shared prefab leases, inactive dependency installation and native weapon-rack resource/instantiation ownership. Full building/main-scene gameplay and Player verification remain separate."
 }

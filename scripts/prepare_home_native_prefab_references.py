@@ -37,13 +37,15 @@ def prepare():
         write(Path(str(path) + '.meta'), (text + kind + ':\n  externalObjects: {}\n').encode())
 
     metadata(RUNTIME, True); metadata(DEST, True)
-    for name in ('HomeNativePrefabReference.cs', 'HomeNativePrefabLoader.cs'):
+    for name in ('HomeNativePrefabReference.cs', 'HomeNativePrefabLoader.cs',
+        'HomeNativePrefabFactory.cs', 'HomeNativeWeaponRackServices.cs'):
         path = RUNTIME / name
         inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes()); metadata(path)
         outputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
     definition = RUNTIME / 'Zjcs.Offline.HomeNativeAssets.asmdef'
     write(definition, (json.dumps(dict(name='Zjcs.Offline.HomeNativeAssets', references=[
-        'Zjcs.Official.HomeEntityCreation', 'Zjcs.Official.HomeFurniture']), indent=2) + '\n').encode()); metadata(definition)
+        'Zjcs.Official.HomeEntityCreation', 'Zjcs.Official.HomeFurniture',
+        'Zjcs.Official.ProfessionUI']), indent=2) + '\n').encode()); metadata(definition)
     script_guid = guid(Path(str(RUNTIME / 'HomeNativePrefabReference.cs') + '.meta'))
     for name in ('home-house-native', 'home-storage-native', 'home-weapon-parts'):
         path = ROOT / 'assets/reference' / (name + '-source-manifest.json')
@@ -95,11 +97,12 @@ def prepare():
         ROOT / 'unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePartPaths.cs',
         ROOT / 'unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeEntityPrefabPaths.cs'):
         inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
-    validations = [ROOT / path for path in ('scripts/fixtures/home_native_prefab_resources_validation.cs', 'scripts/test_home_native_prefab_resources.ps1')]
+    validations = [ROOT / path for path in ('scripts/fixtures/home_native_prefab_resources_validation.cs', 'scripts/test_home_native_prefab_resources.ps1',
+        'scripts/fixtures/home_native_factory_probe.cs', 'scripts/fixtures/home_native_rack_owner_validation.cs', 'scripts/test_home_native_rack_owner.ps1')]
     proof = dict(inputs=inputs, sources=sources, routes=routes, outputs=outputs,
         validation_inputs={p.relative_to(ROOT).as_posix(): sha(p.read_bytes()) for p in validations if p.is_file()},
-        adaptation='Each unchanged original prefab address resolves to one independent local Unity resource reference. Native prefab GUIDs, hierarchy and payload remain owned by their existing verified modules. Scene-owned leases retain references only until their callers/owner release them; no global asset unload or user-data mutation is performed.',
-        scope='Local runtime resource routes and shared prefab leases. Native component ownership, main-scene gameplay and full Player verification remain separate.')
+        adaptation='Each unchanged original prefab address resolves to one independent local Unity resource reference. Native prefab GUIDs, hierarchy and payload remain owned by their existing verified modules. Local factories install dependencies before activation while original creators/controllers own returned models. The native rack resource owner supplies those factories and local leases without replacing official skin selection or lifetime rules. No global asset unload or user-data mutation is performed.',
+        scope='Local runtime resource routes, shared prefab leases, inactive dependency installation and native weapon-rack resource/instantiation ownership. Full building/main-scene gameplay and Player verification remain separate.')
     RECEIPT.write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
     print('Prepared local original prefab routes:', len(routes), '; owned outputs:', len(outputs))
 
