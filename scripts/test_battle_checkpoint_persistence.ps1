@@ -127,6 +127,12 @@ $restored = [Zjcs.Combat.Official.FightBattleExecutor]::Restore(
 $replay = $restored.Step(0, 1)
 Assert-Persist ($replay.Replayed -and $replay.Event.ActorId -eq 1 -and $loaded.Units[0].Hp -eq 1000) 'Restored checkpoint replay did not reproduce the recorded step'
 Assert-Persist ([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($loaded) -ceq $json) 'Replaying a recorded step changed the loaded checkpoint'
+$replay.Event.DamageEvents[0].AfterHp = 0
+$replay.Event.DamageEvents[0].ShieldDamage = 0
+$replay.Event.TargetIds.Clear()
+$replayAgain = $restored.Step(0, 1)
+Assert-Persist ($replayAgain.Event.DamageEvents[0].AfterHp -eq 500 -and $replayAgain.Event.DamageEvents[0].ShieldDamage -eq 25 -and $replayAgain.Event.TargetIds[0] -eq 2) 'Editing a replay event changed the recorded step'
+Assert-Persist ([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($loaded) -ceq $json) 'Editing a replay event changed the saved checkpoint'
 
 $continuedHit = $false
 for ($counter = 2; $counter -le 12; $counter++) {
@@ -146,6 +152,14 @@ for ($counter = 2; $counter -le 12; $counter++) {
     if ($continuedHit -or $actual.Checkpoint.Finished) { break }
 }
 Assert-Persist $continuedHit 'Continuation did not exercise a new hit after the skill cooled down'
+
+$gridActor = New-Unit 3 1 0 0 1 0
+$gridActor.CharacterType = 6
+$gridActor.Ended = $true
+$gridItem = [Zjcs.Combat.Official.FightBattleGridItemState]@{ Id = 3; HasRuntime = $true; Runtime = $gridActor }
+$loaded.GridItems.Add($gridItem)
+$replayWithPendingCleanup = $restored.Step(0, $loaded.Counter)
+Assert-Persist ($replayWithPendingCleanup.Replayed -and -not $gridItem.Ended) 'Replaying a settled step ran pending grid item cleanup'
 
 $badVersion = $false
 try { [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load('{"version":2,"checkpoint":{}}') } catch { $badVersion = $true }

@@ -12,6 +12,21 @@ namespace Zjcs.Combat.Official
                     || unit.RoundStartClockResolver != null || unit.StatusApplicationRejected != null
                     || unit.CooldownActionTriggered != null)
                     throw new InvalidOperationException("A battle unit is already executing a step.");
+            if (sequence != checkpoint.Sequence) throw new InvalidOperationException("Fight sequence does not match.");
+            if (counter <= checkpoint.Counter)
+            {
+                FightBattleStepReceipt receipt = Receipt(sequence, counter);
+                if (receipt == null) throw new InvalidOperationException("Fight step counter is stale.");
+                return new FightBattleExecutionResult
+                {
+                    Checkpoint = checkpoint,
+                    Event = FightBattleCheckpointSerializer.CopyStepEvent(receipt.Event),
+                    Replayed = true
+                };
+            }
+            if (counter != checkpoint.Counter + 1) throw new InvalidOperationException("Fight step counter is out of order.");
+            if (checkpoint.Finished) throw new InvalidOperationException("Fight is already finished.");
+
             bool mutexChanged = false;
             foreach (var unit in StatusOwners())
             {
@@ -44,21 +59,17 @@ namespace Zjcs.Combat.Official
                 BeginStatusActionEvents();
                 BeginStatusSecondsHits();
                 CleanupGridItems();
-                if (sequence == checkpoint.Sequence && counter == checkpoint.Counter + 1
-                    && !checkpoint.Finished && statusCatalog != null)
+                if (statusCatalog != null)
                     foreach (var source in new System.Collections.Generic.List<FightBattleUnitState>(units))
                         if (source.Statuses.Exists(status => status != null && status.HasMoveRange
                             && status.MoveRangeHandleType == 1))
                             FightStatusTriggerRuntime.ApplyMoveRange(source, units, statusCatalog, random, false);
                 var result = StepCore(sequence, counter);
-                if (!result.Replayed)
-                {
-                    CompleteStatusViewEvents(result.Event);
-                    CompleteUnitEndEvents(result.Event);
-                    CompleteUnitLifeEvents(result.Event);
-                    CompleteStatusActionEvents(result.Event);
-                    CompleteStatusSecondsHits();
-                }
+                CompleteStatusViewEvents(result.Event);
+                CompleteUnitEndEvents(result.Event);
+                CompleteUnitLifeEvents(result.Event);
+                CompleteStatusActionEvents(result.Event);
+                CompleteStatusSecondsHits();
                 return result;
             }
             finally

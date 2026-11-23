@@ -183,15 +183,6 @@ namespace Zjcs.Combat.Official
 
         private FightBattleExecutionResult StepCore(int sequence, int counter)
         {
-            if (sequence != checkpoint.Sequence) throw new InvalidOperationException("Fight sequence does not match.");
-            if (counter <= checkpoint.Counter)
-            {
-                FightBattleStepReceipt receipt = Receipt(sequence, counter);
-                if (receipt == null) throw new InvalidOperationException("Fight step counter is stale.");
-                return new FightBattleExecutionResult { Checkpoint = checkpoint, Event = receipt.Event, Replayed = true };
-            }
-            if (counter != checkpoint.Counter + 1) throw new InvalidOperationException("Fight step counter is out of order.");
-            if (checkpoint.Finished) throw new InvalidOperationException("Fight is already finished.");
             foreach (var unit in units)
                 foreach (var status in unit.Statuses) InitializeRoundStartDelay(status);
 

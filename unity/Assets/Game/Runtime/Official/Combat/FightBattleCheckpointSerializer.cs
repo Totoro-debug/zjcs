@@ -30,10 +30,20 @@ namespace Zjcs.Combat.Official
         internal static FightBattleUnitState CopyUnit(FightBattleUnitState unit)
         {
             if (unit == null) throw new ArgumentNullException(nameof(unit));
+            return CopySnapshot(unit, "unit snapshot");
+        }
+
+        internal static FightBattleStepEvent CopyStepEvent(FightBattleStepEvent stepEvent)
+        {
+            return CopySnapshot(stepEvent, "step event snapshot");
+        }
+
+        private static T CopySnapshot<T>(T value, string context) where T : class, new()
+        {
             var builder = new StringBuilder();
-            WriteValue(builder, unit, typeof(FightBattleUnitState));
-            var copy = new FightBattleUnitState();
-            Populate(copy, FightOfficialCombatCatalog.ParseObject(builder.ToString(), "unit snapshot"));
+            WriteValue(builder, value, typeof(T));
+            var copy = new T();
+            Populate(copy, FightOfficialCombatCatalog.ParseObject(builder.ToString(), context));
             return copy;
         }
 
