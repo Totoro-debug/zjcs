@@ -1506,6 +1506,9 @@ namespace Zjcs.Offline.Progression
             if (save.Player.Equipment.Equipped == null) save.Player.Equipment.Equipped = new List<OfflineEquippedSlot>();
             if (save.Player.Equipment.SlotProgress == null) save.Player.Equipment.SlotProgress = new List<OfflineEquipmentSlotProgress>();
             OfflineEquipmentOperations.Initialize(save.Player.Equipment);
+            foreach (OfflineEquipmentInstance item in save.Player.Equipment.Instances)
+                if (item != null && item.PurifyProps == null)
+                    item.PurifyProps = new List<OfflineEquipmentPurifyProperty>();
             if (save.Player.Wardrobe.BaseSkins == null) save.Player.Wardrobe.BaseSkins = new List<OfflineAppearanceSkin>();
             if (save.Player.Wardrobe.WornSkins == null) save.Player.Wardrobe.WornSkins = new List<OfflineAppearanceSkin>();
             if (save.Player.Wardrobe.WornItems == null) save.Player.Wardrobe.WornItems = new List<OfflineAppearanceSkin>();
@@ -1553,6 +1556,16 @@ namespace Zjcs.Offline.Progression
                 if (item.Terms.Any(term => term == null || term.Type < 1 || term.Type > 5 || term.PropertyId < -1
                     || term.PropertyType < 0 || term.Group < 0 || term.SkillQuality < 0 || term.Indices == null
                     || term.Indices.Count > 16 || float.IsNaN(term.Factor) || float.IsInfinity(term.Factor))) return false;
+                if (item.PurifyProps == null || item.PurifyProps.Count > 20) return false;
+                var purifyKeys = new HashSet<int>();
+                foreach (OfflineEquipmentPurifyProperty property in item.PurifyProps)
+                {
+                    OfflineEquipmentTerm term = property?.Value;
+                    if (property == null || !purifyKeys.Add(property.Key) || term == null
+                        || term.Type < 1 || term.Type > 5 || term.PropertyId < -1 || term.PropertyType < 0
+                        || term.Group < 0 || term.SkillQuality < 0 || term.Indices == null || term.Indices.Count > 16
+                        || float.IsNaN(term.Factor) || float.IsInfinity(term.Factor)) return false;
+                }
                 var gemSlots = new HashSet<int>();
                 foreach (OfflineEquipmentGem gem in item.Gems)
                     if (gem == null || gem.Slot < 0 || gem.Slot > 4 || gem.ItemId < 0 || !gemSlots.Add(gem.Slot)) return false;

@@ -33,6 +33,7 @@ namespace Zjcs.Presentation.Inventory
         private GameObject detailWindow;
         private Func<OfflineInventoryItemView, IReadOnlyList<int>> itemSourceTypes;
         private Func<int, long, long> maxCookingUseCount;
+        private IOfflineInventoryItemIndicators indicators;
 
         public event Action<OfflineInventoryItemView> ItemSelected;
         public event Action<OfflineInventoryItemView, int> TreasureGachaSourceSelected;
@@ -40,11 +41,13 @@ namespace Zjcs.Presentation.Inventory
         public event Action Closed;
 
         public void Initialize(OfficialInventoryAssetCatalog assetCatalog,
-            OfficialEquipmentCatalog equipmentCatalog, OfflineMainlineSave playerSave)
+            OfficialEquipmentCatalog equipmentCatalog, OfflineMainlineSave playerSave,
+            IOfflineInventoryItemIndicators itemIndicators = null)
         {
             assets = assetCatalog ?? throw new ArgumentNullException(nameof(assetCatalog));
             rules = equipmentCatalog ?? throw new ArgumentNullException(nameof(equipmentCatalog));
             save = playerSave ?? throw new ArgumentNullException(nameof(playerSave));
+            indicators = itemIndicators;
             assets.ValidateBindings();
             ClearView();
             ConfigureCanvas();
@@ -77,7 +80,7 @@ namespace Zjcs.Presentation.Inventory
             displayedItems.Clear();
             IReadOnlyList<OfflineInventoryItemView> items = OfflineInventoryCatalog.Query(save, rules,
                 currentTab.ItemTypes, sort, reverse, DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                assets.FindRandomTreasurePieceRequirements());
+                assets.FindRandomTreasurePieceRequirements(), indicators);
             Dictionary<string, object> rowTemplate = assets.LoadRowTemplate("bag", ScrollPath);
             if (rowTemplate == null) throw new FormatException("Original inventory row template is missing.");
             Dictionary<string, object> rowRoot = Object(rowTemplate, "root");
@@ -562,7 +565,7 @@ namespace Zjcs.Presentation.Inventory
             targetNodes[path] = rect;
             if (HasScript(data, "SafeArea"))
             {
-                var safeArea = instance.AddComponent<Zjcs.Official.WorldUI.WorldSafeArea>();
+                var safeArea = instance.AddComponent<Zjcs.Official.HomeScreenUI.SafeArea>();
                 List<object> padding = Array(data, "safe_area");
                 safeArea.PaddingTop = Number(padding, 0, 0f);
                 safeArea.PaddingBottom = Number(padding, 1, 0f);

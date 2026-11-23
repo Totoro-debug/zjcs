@@ -79,7 +79,8 @@ namespace Zjcs.Offline.Progression
     {
         public static IReadOnlyList<OfflineInventoryItemView> Query(OfflineMainlineSave save,
             OfficialEquipmentCatalog catalog, IReadOnlyList<int> tabTypes, OfflineInventorySort sort,
-            bool reverse, long nowUnixSeconds, IReadOnlyDictionary<int, int> randomTreasurePieceRequirements = null)
+            bool reverse, long nowUnixSeconds, IReadOnlyDictionary<int, int> randomTreasurePieceRequirements = null,
+            IOfflineInventoryItemIndicators indicators = null)
         {
             if (save == null) throw new ArgumentNullException(nameof(save));
             if (save.Player == null || save.Player.Inventory == null || save.Player.Equipment == null)
@@ -117,8 +118,9 @@ namespace Zjcs.Offline.Progression
                     ExpiresAtUnixSeconds = expiry,
                     IsTimed = IsTimed(item) || expiry > 0,
                     CanOverlap = Bool(item, "CanOverlap"),
-                    CanUseRedDot = CanUseRedDot(catalog, item, stack.Count, randomTreasurePieceRequirements),
-                    RedDotType = Int(item, "RedDotType"),
+                    CanUseRedDot = indicators == null ? CanUseRedDot(catalog, item, stack.Count, randomTreasurePieceRequirements)
+                        : indicators.CanUseRedDot(stack.ItemId, 0, stack.Count),
+                    RedDotType = indicators == null ? Int(item, "RedDotType") : indicators.GetRedDotType(stack.ItemId, 0, stack.Count),
                     MergeRequiredCount = MergeRequiredCount(catalog, item, itemType, randomTreasurePieceRequirements),
                     DetailKind = DetailKind(catalog, item, itemType)
                 });
@@ -142,8 +144,9 @@ namespace Zjcs.Offline.Progression
                     IsEquipped = save.Player.Equipment.Equipped.Any(slot => slot.InstanceId == equipment.InstanceId),
                     IsTimed = IsTimed(item),
                     CanOverlap = Bool(item, "CanOverlap"),
-                    CanUseRedDot = CanUseRedDot(catalog, item, 1, randomTreasurePieceRequirements),
-                    RedDotType = Int(item, "RedDotType"),
+                    CanUseRedDot = indicators == null ? CanUseRedDot(catalog, item, 1, randomTreasurePieceRequirements)
+                        : indicators.CanUseRedDot(equipment.ItemId, equipment.InstanceId, 1),
+                    RedDotType = indicators == null ? Int(item, "RedDotType") : indicators.GetRedDotType(equipment.ItemId, equipment.InstanceId, 1),
                     DetailKind = OfflineInventoryDetailKind.Equipment
                 });
             }

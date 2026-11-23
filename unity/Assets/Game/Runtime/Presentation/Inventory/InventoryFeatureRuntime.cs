@@ -5,6 +5,7 @@ using Zjcs.Offline.Cooking;
 using Zjcs.Offline.Equipment;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
+using Zjcs.Offline.BagItemQueries;
 
 namespace Zjcs.Presentation.Inventory
 {
@@ -41,7 +42,8 @@ namespace Zjcs.Presentation.Inventory
             cookingService = new OfflineCookingService(session, OfficialCookingCatalog.LoadDefault());
             if (panelView == null) panelView = GetComponent<OfficialInventoryPanelView>();
             if (panelView == null) panelView = gameObject.AddComponent<OfficialInventoryPanelView>();
-            panelView.Initialize(inventoryAssets, equipmentCatalog, session.Save);
+            var indicators = OfflineBagItemIndicatorFactory.Create(() => session.Save);
+            panelView.Initialize(inventoryAssets, equipmentCatalog, session.Save, indicators);
             panelView.SetCookingUseHandler(cookingService.MaxPermanentPropertyUseCount);
             panelView.SetTreasureGachaSourceProvider(ResolveTreasureGachaSourceTypes);
             panelView.TreasureGachaSourceSelected -= OpenTreasureGachaSource;

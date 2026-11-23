@@ -455,9 +455,11 @@ namespace Zjcs.Presentation.Home
 
             GameObject root = new GameObject("HomeStorageInventory", typeof(RectTransform), typeof(Canvas),
                 typeof(CanvasScaler), typeof(GraphicRaycaster));
+            root.transform.SetParent(nativePublicSlot, false);
             inventoryRoot = root;
             Canvas overlay = root.GetComponent<Canvas>();
             overlay.renderMode = RenderMode.ScreenSpaceOverlay;
+            overlay.overrideSorting = true;
             overlay.sortingOrder = 80;
             InventoryFeatureRuntime runtime = root.AddComponent<InventoryFeatureRuntime>();
             inventoryRuntime = runtime;

@@ -41,7 +41,16 @@ namespace Zjcs.Offline.Equipment
         public bool Locked;
         public bool SystemLocked;
         public List<OfflineEquipmentTerm> Terms = new List<OfflineEquipmentTerm>();
+        // Original ItemParamEquip.PurifyProps candidates are separate from OtherProps.
+        public List<OfflineEquipmentPurifyProperty> PurifyProps = new List<OfflineEquipmentPurifyProperty>();
         public List<OfflineEquipmentGem> Gems = new List<OfflineEquipmentGem>();
+    }
+
+    [Serializable]
+    public sealed class OfflineEquipmentPurifyProperty
+    {
+        public int Key;
+        public OfflineEquipmentTerm Value;
     }
 
     [Serializable]

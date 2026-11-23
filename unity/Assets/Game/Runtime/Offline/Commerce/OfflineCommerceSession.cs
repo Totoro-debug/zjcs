@@ -91,6 +91,21 @@ namespace Zjcs.Offline.Commerce
             return counter == null ? 0L : counter.Count;
         }
 
+        // Read-only access for item eligibility. The embedded commerce ledger is
+        // authoritative; character-property cards are only a derived projection.
+        // False means a legacy profile has no embedded ledger yet.
+        public static bool TryReadPeriodicCardExpiry(OfflinePlayerProgress player, int cardId, out long expiresAtUnixSeconds)
+        {
+            expiresAtUnixSeconds = 0;
+            if (string.IsNullOrEmpty(player.CommerceStateJson)) return false;
+            var save = JsonUtility.FromJson<OfflineCommerceSave>(player.CommerceStateJson);
+            if (save == null || save.Version != 1 || !OfflineCommerceState.IsValid(save.State))
+                throw new InvalidDataException("The embedded commerce save is invalid or unsupported.");
+            long expiryDay = ReadCounter(save.State.Bought, "periodic-expiry:" + cardId);
+            if (expiryDay > 0) expiresAtUnixSeconds = new DateTimeOffset(DayZero.AddDays(expiryDay)).ToUnixTimeSeconds();
+            return true;
+        }
+
         /// <summary>
         /// Advances the local day checkpoint and mirrors the main profile inventory into the
         /// commerce state. Returns false when the resulting state could not be saved.
