@@ -11,15 +11,16 @@ namespace Zjcs.Presentation.Home
 {
     public sealed partial class SkillDamageTestValidation
     {
-        private static bool HasFlameSoulCompanion(int active)
+        private static int DestroyerActiveCompanion(int active)
         {
             string path = Environment.GetEnvironmentVariable("ZJCS_SKILLS_ACQUIRED_PASSIVE_SAVE");
-            if (active != 10028 || string.IsNullOrWhiteSpace(path)) return false;
+            if (active != 10028 || string.IsNullOrWhiteSpace(path)) return 0;
             var save = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(path));
-            return save.Player.Skills.Plans[save.Player.Skills.SelectedPlan].PassiveSkills[0] == 10599;
+            int itemId = save.Player.Skills.Plans[save.Player.Skills.SelectedPlan].PassiveSkills[0];
+            return itemId == 10599 || itemId == 10503 ? itemId : 0;
         }
 
-        private static bool IsFlameSoulVisible()
+        private static bool IsNativeSkillParticleVisible(string playablePrefix)
         {
             var camera = Camera.main;
             if (!camera) return false;
@@ -27,7 +28,7 @@ namespace Zjcs.Presentation.Home
             {
                 if (particle.particleCount == 0 || (camera.cullingMask & (1 << particle.gameObject.layer)) == 0
                     || !particle.GetComponentsInParent<Transform>().Any(parent =>
-                        parent.name.StartsWith("playable24386_", StringComparison.Ordinal))) continue;
+                        parent.name.StartsWith(playablePrefix, StringComparison.Ordinal))) continue;
                 Vector3 point = camera.WorldToViewportPoint(particle.transform.position);
                 if (point.z > 0 && point.x > .08f && point.x < .92f && point.y > .15f && point.y < .85f)
                     return true;

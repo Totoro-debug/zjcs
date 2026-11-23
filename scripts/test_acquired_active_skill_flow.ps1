@@ -15,7 +15,7 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     if ($PassiveId -in @(10606,10607)) {
         if (-not (Select-String -LiteralPath $runtimeLog -SimpleMatch "[Acquired passive combat] $PassiveId cultivated") -or
             -not (Test-Path -LiteralPath (Join-Path $Run 'companion-cold-checkpoint.json'))) { throw 'The cultivated secret did not exercise its original cold path.' }
-    } elseif ($PassiveId -in @(10543,10568,10579,10592,10594,10595,10597,10598,10599,10608,10609)) {
+    } elseif ($PassiveId -in @(10503,10543,10568,10579,10592,10594,10595,10597,10598,10599,10608,10609)) {
         $source = Get-Content -LiteralPath (Join-Path $Run 'companion-cultivated-save.json') -Raw | ConvertFrom-Json
         if ($source.Player.Skills.Plans[$source.Player.Skills.SelectedPlan].PassiveSkills[0] -ne $PassiveId) {
             throw 'The battle used another cultivated secret.'
@@ -83,6 +83,11 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     if ($PassiveId -eq 10543 -and (-not (Test-Path -LiteralPath (Join-Path $Run 'companion-flame-momentum-checkpoint.json')) -or
         -not (Test-Path -LiteralPath (Join-Path $Run 'acquired-active-ui-passive-battle.png')))) {
         throw 'The cultivated critical fire blast was not rendered and settled.'
+    }
+    if ($PassiveId -eq 10503 -and (-not (Test-Path -LiteralPath (Join-Path $Run 'companion-fire-core-checkpoint.json')) -or
+        -not (Test-Path -LiteralPath (Join-Path $Run 'acquired-active-ui-passive-battle.png')) -or
+        -not (Select-String -LiteralPath $runtimeLog -SimpleMatch '[Acquired passive combat] 10503 cultivated fire core burst and restore replay passed.'))) {
+        throw 'The cultivated fire core did not render, settle or restore its original burst.'
     }
 }
 $ErrorActionPreference = 'Stop'
@@ -180,7 +185,7 @@ try {
         $skillRun = if ($requestedSkills.Count -gt 1) { Join-Path $run "skill-$SkillId" } else { $run }
         $skillResult = Get-Content -LiteralPath (Join-Path $skillRun 'result.json') -Raw | ConvertFrom-Json
         if (-not $skillResult.passed) { throw "Skill $SkillId failed: $($skillResult.error) ($skillRun)" }
-        if (-not ($PassiveSave -and $passiveId -in @(10579,10599) -and $SkillId -eq 10028) -and
+        if (-not ($PassiveSave -and $passiveId -in @(10503,10579,10599) -and $SkillId -eq 10028) -and
             $SkillId -in @(10000,10010,10017,10028,10035,10044,10046,10048,10049,10066) -and
             -not (Select-String -LiteralPath $log -SimpleMatch "[Passive affinity wish] item=$SkillId granted")) {
             throw "The original profession wish pool did not grant skill $SkillId : $run"

@@ -1,0 +1,19 @@
+{
+  "entities": [25001, 10540, 10541, 10023],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/fire-core-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/conqueror-passive-current-skill-graphs-source-manifest.json"
+  ],
+  "visibility_bundles": ["global_10023"],
+  "client_code": ["MyFightStatusHitSkill"],
+  "code": [
+    "FightStatusComponentInfo",
+    "FightStatusHitSkillComponentInfo",
+    "FightStatusTriggerSkillCfg",
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "BattleFormulaHandler",
+    "ActionType"
+  ]
+}

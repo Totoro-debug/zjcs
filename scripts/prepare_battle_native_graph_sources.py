@@ -12,14 +12,18 @@ def main():
     parser.add_argument('--write', action='store_true')
     args = parser.parse_args()
     directory = ROOT / 'unity/Assets/Game/Resources/Combat'
+    migrated_skill_catalogs = (
+        'conqueror-current-skill-graphs',
+        'conqueror-passive-current-skill-graphs',
+        'hurricane-grief-current-skill-graphs',
+        'fire-life-current-skill-graphs',
+        'fire-core-current-skill-graphs',
+    )
     receipts = {
         'skill-native-graphs': 'skill-native-graph-assets-source-manifest',
         'hit-native-settings': 'hit-view-runtime-source-manifest',
         'skill-entity-views': 'skill-entity-views-source-manifest',
-        'conqueror-current-skill-graphs': 'conqueror-current-skill-graphs-source-manifest',
-        'conqueror-passive-current-skill-graphs': 'conqueror-passive-current-skill-graphs-source-manifest',
-        'hurricane-grief-current-skill-graphs': 'hurricane-grief-current-skill-graphs-source-manifest',
-        'fire-life-current-skill-graphs': 'fire-life-current-skill-graphs-source-manifest',
+        **{name: name + '-source-manifest' for name in migrated_skill_catalogs},
     }
     inputs, outputs = [], []
     for name, receipt in receipts.items():
@@ -38,10 +42,7 @@ def main():
         else:
             assert json.loads(target.read_bytes()) == expected, 'Native catalog source metadata changed: ' + name
         outputs.extend((identity(target), identity(Path(str(target) + '.meta'))))
-    index = dict(resources=['Combat/skill-native-graphs', 'Combat/conqueror-current-skill-graphs',
-                            'Combat/conqueror-passive-current-skill-graphs',
-                            'Combat/hurricane-grief-current-skill-graphs',
-                            'Combat/fire-life-current-skill-graphs'])
+    index = dict(resources=['Combat/' + name for name in ('skill-native-graphs', *migrated_skill_catalogs)])
     path = directory / 'skill-native-graph-sources.json'
     if args.write:
         write_changed(path, json.dumps(index, indent=2) + '\n')

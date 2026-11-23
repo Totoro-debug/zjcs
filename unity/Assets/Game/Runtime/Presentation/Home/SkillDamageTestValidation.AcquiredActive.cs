@@ -70,14 +70,17 @@ namespace Zjcs.Presentation.Home
             bool battlecry = skillId == 10092;
             bool judgmentThunder = skillId == 10093;
             bool protectiveRunes = skillId == 10102;
-            bool flameSoul = HasFlameSoulCompanion(skillId);
+            int destroyerCompanion = DestroyerActiveCompanion(skillId);
+            bool flameSoul = destroyerCompanion == 10599;
+            bool fireCore = destroyerCompanion == 10503;
             bool alienation = HasAlienationCompanion(skillId);
-            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder || protectiveRunes || flameSoul || alienation;
+            bool destroyer = starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder || protectiveRunes || destroyerCompanion > 0;
+            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry || protectiveRunes;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
-            int profession = alienation ? 17 : starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder || protectiveRunes || flameSoul ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = alienation ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -112,7 +115,7 @@ namespace Zjcs.Presentation.Home
                 var validationRunner = FindObjectsOfType<SkillDamageTestValidation>().FirstOrDefault();
                 if (validationRunner != null) validationRunner.deadline += 600f;
             }
-            if (!flameSoul && !alienation && (skillId == 10000 || skillId == 10028 || skillId == 10035)) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId);
+            if (destroyerCompanion == 0 && !alienation && (skillId == 10000 || skillId == 10028 || skillId == 10035)) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId);
             if (skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId, 2, 2);
             if (skillId == 10017) SkillBlazingHeartValidation.VerifyOriginalWish(output, save, skillId, 3, 3);
             int mergeCount = assets.Load().SkillMergePiece(skillId);
@@ -296,6 +299,8 @@ namespace Zjcs.Presentation.Home
             var actor = checkpoint.Units.Single(value => value.Id == 1);
             var active = actor.Skills.Single(value => value.Slot == 0);
             if (passiveCompanion > 0) VerifyAcquiredPassiveAssembly(actor, progression, passiveCompanion);
+            // Make each required trigger reproducible inside the isolated presentation diagnostic.
+            if (fireCore) SetAcquiredBattleProperty(actor, "CritRatePercent", 100000);
             Require(active.ItemId == skillId && active.Rank == cultivatedRank && active.Level == 2
                 && active.SubRank == progression.Player.SubRank && actor.Profession == profession,
                 "Production battle assembly lost the actual saved skill/profession/cultivation.");
@@ -710,7 +715,12 @@ namespace Zjcs.Presentation.Home
                 if (flameSoul && !capturedPassive
                     && File.Exists(Path.Combine(output, "companion-flame-soul-checkpoint.json"))
                     && checkpoint.Units.Single(unit => unit.Id == 1).Statuses.Any(status => status.ClassId == 24386)
-                    && IsFlameSoulVisible())
+                    && IsNativeSkillParticleVisible("playable24386_"))
+                {
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    capturedPassive = true;
+                }
+                if (fireCore && !capturedPassive && IsNativeSkillParticleVisible("playable10540"))
                 {
                     yield return CaptureAcquiredActive(output, "passive-battle");
                     capturedPassive = true;
@@ -901,6 +911,8 @@ namespace Zjcs.Presentation.Home
                 "The cultivated critical blast never rendered and dealt fire damage.");
             Require(!flameSoul || capturedPassive && File.Exists(Path.Combine(output, "companion-flame-soul-checkpoint.json")),
                 "The cultivated fire-cast critical stack was not exercised and rendered.");
+            Require(!fireCore || capturedPassive && File.Exists(Path.Combine(output, "companion-fire-core-checkpoint.json")),
+                "The cultivated fire core burst was not exercised and rendered.");
             Require(passiveCompanion != 10609 || capturedTacticalAttack && capturedTacticalDefence
                 && File.Exists(Path.Combine(output, "companion-tactical-24394.json"))
                 && File.Exists(Path.Combine(output, "companion-tactical-24393.json")),

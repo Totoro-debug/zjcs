@@ -1,0 +1,35 @@
+{
+  "manifest": "903_156948",
+  "skills": [
+    {
+      "skill_entity_id": 10540,
+      "entity_resource": "Combat/FireCoreSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10540/10540",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/FireCoreSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10540/playable10540"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 10541,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/FireCoreSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10540/10541"
+    }
+  ],
+  "moves": [],
+  "damages": []
+}
