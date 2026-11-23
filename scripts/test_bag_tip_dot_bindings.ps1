@@ -26,14 +26,17 @@ foreach ($group in @($receipt.inputs, $receipt.outputs, $receipt.validation_inpu
 $fixture = Join-Path $project 'Assets/Editor/BagTipDotBindingsValidation'
 [void](New-Item -ItemType Directory -Path $fixture -Force)
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/bag_tip_dot_bindings_validation.cs') -Destination (Join-Path $fixture 'BagTipDotBindingsValidation.cs') -Force
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_storage_pointer_validation.cs') -Destination (Join-Path $fixture 'HomeStoragePointerValidation.cs') -Force
 @{ name = 'BagTipDotBindingsValidation'; includePlatforms = @('Editor'); references = @(
     'Zjcs.Offline.BagTipDots', 'Zjcs.Offline.BagItemQueries', 'Zjcs.Official.BagTipDots', 'Zjcs.Official.BagItemQueries',
     'Zjcs.Official.PartnersUI', 'Zjcs.Official.PartnerRosterUI', 'Zjcs.Official.ProfessionUI', 'Zjcs.Official.HomeUI', 'Zjcs.Offline.PartnersUI', 'Zjcs.Offline.Progression',
     'Zjcs.Offline.Equipment', 'Zjcs.Offline.Home', 'Zjcs.Offline.Cooking', 'Zjcs.Offline.State', 'Zjcs.Offline.CharacterCreation',
-    'Zjcs.Presentation.Home', 'Zjcs.Presentation.Inventory', 'Unity.ugui'
+    'Zjcs.Presentation.Home', 'Zjcs.Presentation.Inventory', 'Zjcs.Official.HomeFurniture',
+    'Zjcs.Official.HomeMainUiControls', 'Zjcs.Official.HomeSceneInput', 'Unity.ugui'
 ) } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $fixture 'BagTipDotBindingsValidation.asmdef') -Encoding utf8
 $metadata = @{ ($fixture + '.meta') = @('folder', 'DefaultImporter');
     (Join-Path $fixture 'BagTipDotBindingsValidation.cs.meta') = @('script', 'MonoImporter');
+    (Join-Path $fixture 'HomeStoragePointerValidation.cs.meta') = @('storage-pointer', 'MonoImporter');
     (Join-Path $fixture 'BagTipDotBindingsValidation.asmdef.meta') = @('assembly', 'AssemblyDefinitionImporter') }
 foreach ($path in $metadata.Keys) {
     if (Test-Path -LiteralPath $path) { continue }

@@ -37,6 +37,7 @@ namespace Zjcs.Presentation.Home
         private readonly Dictionary<int, HomeFurnitureState> pendingRepairStates = new Dictionary<int, HomeFurnitureState>();
         private readonly HashSet<int> replacedFurniture = new HashSet<int>();
         private bool replacedHouse;
+        private readonly Dictionary<int, GameObject> nativeFurniture = new Dictionary<int, GameObject>();
         private readonly Dictionary<int, List<GameObject>> furnitureBaseObjects = new Dictionary<int, List<GameObject>>();
         private readonly Dictionary<int, List<GameObject>> themeBaseObjects = new Dictionary<int, List<GameObject>>();
         private readonly Dictionary<int, List<GameObject>> furnitureSkinObjects = new Dictionary<int, List<GameObject>>();
@@ -674,7 +675,24 @@ namespace Zjcs.Presentation.Home
                 SetObjectsActive(themeBaseObjects, group.Key, !replaceBase);
                 if (replaceBase) CreateThemeSkin(entity, group.Key);
             }
+            foreach (var pair in nativeFurniture) ApplyNativeFurnitureVisibility(pair.Key, pair.Value);
         }
+
+        internal void BindNativeFurniture(int type, GameObject instance)
+        {
+            nativeFurniture.Add(type, instance);
+            ApplyNativeFurnitureVisibility(type, instance);
+        }
+
+        void ApplyNativeFurnitureVisibility(int type, GameObject instance)
+        {
+            bool useNative = !replacedHouse && !replacedFurniture.Contains(type);
+            instance.SetActive(useNative);
+            SetObjectsActive(furnitureBaseObjects, type, !useNative && !replacedFurniture.Contains(type));
+        }
+
+        bool HasActiveNativeFurniture(int type)
+            => nativeFurniture.TryGetValue(type, out var instance) && instance && instance.activeInHierarchy;
 
         private void CreateFurnitureSkin(HomeSkinEntity entity, int furnitureType)
         {
@@ -1089,6 +1107,8 @@ namespace Zjcs.Presentation.Home
             int hitType = -1;
             float hitArea = float.MaxValue;
             foreach (KeyValuePair<int, List<HomeQuad>> pair in clickRegions)
+            {
+                if (HasActiveNativeFurniture(pair.Key)) continue;
                 foreach (HomeQuad region in pair.Value)
                 {
                     float minX = float.MaxValue;
@@ -1110,12 +1130,22 @@ namespace Zjcs.Presentation.Home
                         hitType = pair.Key;
                     }
                 }
+            }
             return hitType;
         }
 
         public bool TryGetFurnitureClickBounds(int type, out Rect bounds)
         {
             bounds = default;
+            if (HasActiveNativeFurniture(type))
+            {
+                var colliders = nativeFurniture[type].GetComponentsInChildren<Collider>();
+                if (colliders.Length == 0) return false;
+                var hit = colliders[0].bounds;
+                foreach (var collider in colliders) if (collider.enabled) hit.Encapsulate(collider.bounds);
+                bounds = Rect.MinMaxRect(hit.min.x, hit.min.y, hit.max.x, hit.max.y);
+                return bounds.width > 0f && bounds.height > 0f;
+            }
             if (type == 0 && TryGetNativeBedClickBounds(out bounds))
                 return true;
             if (!clickRegions.TryGetValue(type, out List<HomeQuad> regions)) return false;

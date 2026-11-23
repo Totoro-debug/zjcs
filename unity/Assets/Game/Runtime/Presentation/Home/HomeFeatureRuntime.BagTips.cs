@@ -21,11 +21,11 @@ namespace Zjcs.Presentation.Home
             foreach (var linker in root.GetComponentsInChildren<TipDotNodeLinker>(true))
                 if (linker.ConfiguredNodeKey.GraphName == bagTipAssets.GraphName) partnerTipDots.Bind(linker);
         }
-        internal void RefreshInventoryBindings()
+        internal void RefreshLocalCharacterBindings()
         {
             if (profile == null || scene == null || hud == null) return;
-            // The Bag window uses its own transaction session on the same file.
-            // Refresh the existing Home session before querying the committed data.
+            // The Bag and character windows have separate profile sessions.
+            // Resume Home on the last committed state of the same character.
             profile.Reload();
             RefreshPartnerDerivedState();
             bagTipServices?.Synchronize();

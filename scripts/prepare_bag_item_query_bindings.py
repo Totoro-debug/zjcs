@@ -124,7 +124,8 @@ def prepare():
     input_file(interface); outputs[interface.relative_to(ROOT).as_posix()] = sha(interface.read_bytes()); metadata(interface)
     path = ASSETS / 'catalog.json'
     write(path, (json.dumps(payload, ensure_ascii=False, separators=(',', ':'), allow_nan=False) + '\n').encode()); metadata(path)
-    validations = [ROOT / path for path in ('scripts/fixtures/bag_item_query_bindings_validation.cs', 'scripts/test_bag_item_query_bindings.ps1')]
+    validations = [ROOT / path for path in ('scripts/fixtures/bag_item_query_bindings_validation.cs',
+        'scripts/fixtures/home_storage_pointer_validation.cs', 'scripts/test_bag_item_query_bindings.ps1')]
     for path in (ROOT / 'docs/common/refresh-time.md', ROOT / 'unity/Assets/Game/Runtime/Offline/Progression/OfflineRefreshClock.cs',
         ROOT / 'unity/Assets/Game/Runtime/Offline/Equipment/OfflineEquipmentProfile.cs',
         ROOT / 'unity/Assets/Game/Runtime/Offline/Commerce/OfflineCommerceSession.cs',

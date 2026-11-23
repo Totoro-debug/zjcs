@@ -383,6 +383,7 @@ namespace Zjcs.Presentation.Home
         private void CloseCharacterPage()
         {
             if (characterRoot != null) characterRoot.SetActive(false);
+            host.RefreshLocalCharacterBindings();
             if (homePanel != null) homePanel.SetActive(true);
             selectedTab = 2;
             ApplyTabVisuals();
@@ -471,7 +472,7 @@ namespace Zjcs.Presentation.Home
                     inventoryRuntime = null;
                 }
                 UnityEngine.Object.Destroy(root);
-                host.RefreshInventoryBindings();
+                host.RefreshLocalCharacterBindings();
             };
             try
             {

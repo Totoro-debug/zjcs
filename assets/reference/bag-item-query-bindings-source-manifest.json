@@ -361,7 +361,7 @@
     "scripts/official_manifest.py": "1aae5bd86af587511466e17308719c2e6b356be4117942809c7e6ba89e2d7399",
     "scripts/official_metadata.py": "4e8066a7300d2512ca6807d7bbbe7798c48fb4178aeaeb33fc8478140f722657",
     "scripts/official_bundle_reader.py": "29e0015bcef7317e220159e0be13aeed990f94d09397b1ac7814131dc343e477",
-    "scripts/prepare_bag_item_query_bindings.py": "ff661a5b718f3870a244c0565af9786285b3a54a6ddc0cbf4bf547e14b68ab94",
+    "scripts/prepare_bag_item_query_bindings.py": "0303318aaf6047be25bef81f1ac3367614c920b181efe884f6b4580adfaebee2",
     "assets/reference/bag-item-queries-source-manifest.json": "d6199d13d6f415d399a8d6a8b410a0eccae2cc66017426a4e50d7d7e3873ac2d",
     "unity/Assets/Game/Runtime/Official/BagItemQueries.meta": "015a8e3601d4c2e75f8cd20c25e509037b191a4b85e438e28af4ef3eaaae1406",
     "unity/Assets/Game/Runtime/Official/BagItemQueries/BagItemQueryRules.cs": "6fb18c8a6a140ee267ddcc7592384d769fca3352199e2ade5a3ee4f1df275d96",
@@ -383,7 +383,7 @@
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineInventoryCatalog.cs": "e15e61e9f87752a26f8421c7ea4205d5fc2976279176161e735a03b11b47af19",
     "unity/Assets/Game/Runtime/Presentation/Inventory/InventoryFeatureRuntime.cs": "03d9c43a4fdb317cd5b2a990ece6fa3aa10330d3a4040a9d8d9dfbe46d11e7cf",
     "unity/Assets/Game/Runtime/Presentation/Inventory/OfficialInventoryPanelView.cs": "a79c5851fa4545cb4ccb9f0816c60117d96b74a00e8181cd00709be433e1a587",
-    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs": "6fb4cac0e556ebfb3edfd2a1b0988fbad11c977890b12e7d9a4e3f14c2792102",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs": "f6d427867c77c3615c983bd29216ab133a83dc046e2ebf2cabceb6abbcaae138",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.NativeFrame.cs": "c9084bf758caa398e840833a6c94ab238f5661721e3d2d819392104b5e50ac9f",
     "unity/Assets/Game/Runtime/Official/HomeScreenUI/SafeArea.cs": "49150d82f5564bbcc6345544021cccbacf3b8f2211dbdb06d165bf48b81cb29a",
     "unity/Assets/Game/Runtime/Official/HomeScreenUI/CanvasWidthAdjuster.cs": "c7db4821b74de53f30f2a87a0dd770bba2bd762fc0b3df48b3843835c3abdee9",
@@ -404,8 +404,9 @@
     "unity/Assets/Game/Resources/Home/BagItemQueries/catalog.json.meta": "a6416a0ee3e246a3815ca7e147a688d55fafaf47087a85e7cedad4644233e1b7"
   },
   "validation_inputs": {
-    "scripts/fixtures/bag_item_query_bindings_validation.cs": "5db37d26295f2d50d8ea4c896518c1d0c5add0c3d68eecf799e644e15d339695",
-    "scripts/test_bag_item_query_bindings.ps1": "3b57c4aa7244c19a697f98eddc10249387012d6cb5b203fbe64c43b1c9dbdcc6"
+    "scripts/fixtures/bag_item_query_bindings_validation.cs": "e3eaf62c297057bc307f7ec66375437de276cfa217dfdd0a6ce93d25753a0b9c",
+    "scripts/fixtures/home_storage_pointer_validation.cs": "896a1129098aac14adbb906d5d46397dbc593b5f52f62cb97eb7af994290b9dc",
+    "scripts/test_bag_item_query_bindings.ps1": "9593c7605da528c50566a2b36801bf2c77c2726e898567fd78f5111f04befcdc"
   },
   "adaptation": "Original Bag queries read current local inventory, pets, periodic-card expiry, formula-use records and equipment including persisted pending purify properties. Calendar day counts follow the shared user-confirmed local refresh boundary. Query reads do not mutate or reload a save.",
   "scope": "Local item query owner and formal inventory presentation. Complete native storage/city and Windows Player gameplay remain separate."

@@ -85,6 +85,17 @@ def prepare():
     for name, expected in native['outputs'].items():
         path = ROOT / name
         if sha(read(path)) != expected: raise ValueError('Original native storage/Bag asset differs: ' + name)
+    prefab_routes = json.loads(read(ROOT / 'assets/reference/home-native-prefab-references-source-manifest.json'))
+    for location in ('Home/Dynamic/Theme/House/House', 'Home/Dynamic/Furniture/StorageBox/StorageBox'):
+        route, = [value for value in prefab_routes['routes'] if value['location'] == location]
+        for path, group in ((route['prefab'], 'inputs'), (route['reference'], 'outputs')):
+            if sha(read(ROOT / path)) != prefab_routes[group][path]:
+                raise ValueError('Original indoor prefab route differs: ' + path)
+    weapons = json.loads(read(ROOT / 'assets/reference/home-weapon-parts-source-manifest.json'))
+    weapon_catalog = 'unity/Assets/Official/Home/WeaponParts/HomeWeaponAppearanceCatalog.asset'
+    for path in (weapon_catalog, weapon_catalog + '.meta'):
+        if sha(read(ROOT / path)) != weapons['outputs'][path]:
+            raise ValueError('Original rack appearance catalog differs: ' + path)
     graph_guid = re.search(r'^guid: ([a-f0-9]{32})$', Path(str(graph_path) + '.meta').read_text('utf8'), re.M).group(1)
     if graph_guid != graph['guid']: raise ValueError('The original Bag graph identity differs')
     for folder in (RUNTIME, ASSETS): metadata(folder, True)
@@ -116,6 +127,14 @@ def prepare():
         'unity/Assets/Game/Runtime/Official/ProfessionUI/TipDotGraphNodeSelector.cs',
         'unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs',
         'unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs',
+        'unity/Assets/Game/Runtime/Presentation/Home/HomeEnvironmentView.cs',
+        'unity/Assets/Game/Runtime/Presentation/Home/HomeSceneView.cs',
+        'unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs',
+        'unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs.meta',
+        'unity/Assets/Game/Runtime/Presentation/Home/HomeNativeStorageAssets.cs',
+        'unity/Assets/Game/Runtime/Presentation/Home/HomeNativeStorageAssets.cs.meta',
+        'unity/Assets/Game/Resources/Home/NativeStorageAssets.asset',
+        'unity/Assets/Game/Resources/Home/NativeStorageAssets.asset.meta',
         'unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef',
         'unity/Assets/Game/Runtime/Offline/Equipment/OfflineEquipmentProfile.cs',
         'unity/Assets/Game/Runtime/Offline/Progression/OfflineRefreshClock.cs', 'docs/common/refresh-time.md'):
@@ -126,12 +145,13 @@ def prepare():
     for name in ('official_apk.py', 'official_source.py', 'official_manifest.py', 'official_tables.py', 'official_metadata.py', 'official_bundle_reader.py'):
         read(ROOT / 'scripts' / name)
     read(Path(__file__))
-    validations = [ROOT / name for name in ('scripts/test_bag_tip_dot_bindings.ps1', 'scripts/fixtures/bag_tip_dot_bindings_validation.cs')]
+    validations = [ROOT / name for name in ('scripts/test_bag_tip_dot_bindings.ps1',
+        'scripts/fixtures/bag_tip_dot_bindings_validation.cs', 'scripts/fixtures/home_storage_pointer_validation.cs')]
     RECEIPT.write_text(json.dumps(dict(manifest=source.version, source_selection_sha256=sha((ROOT/'official-source.json').read_bytes()),
         inputs=inputs, outputs=outputs, configuration=configuration, graph=dict(configuration=row, resource=graph, installed=graph_path.relative_to(ROOT).as_posix()),
         validation_inputs={path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in validations if path.exists()},
         adaptation='The complete original Bag graph uses the existing Home tip factory/controller, original query modules and current local profile/furniture state. Committed snapshot deltas replace server messages; unknown award context stays null, no invented split/recycle events. Local daily invalidation follows the confirmed monotonic local refresh boundary.',
-        scope='Full Bag graph and Home data/visual binding. Complete native building/room composition and Windows Player gameplay remain separate.'), ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
+        scope='Full Bag graph and default native storage in the current Home. Native room replacement, decorating variants, character interaction graph and Windows Player remain separate.'), ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
     print('Prepared complete original Bag graph and Home data bindings')
 
 

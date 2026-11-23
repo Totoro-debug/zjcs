@@ -600,6 +600,10 @@ namespace Zjcs.Presentation.Home
 
         public static HomeFeatureRuntime Begin(string selectedSlotId, string savesRoot, Transform uiParent,
             Action onClose = null, Action onOpenMainland = null)
+            => BeginWithNativePointer(selectedSlotId, savesRoot, uiParent, null, onClose, onOpenMainland);
+
+        public static HomeFeatureRuntime BeginWithNativePointer(string selectedSlotId, string savesRoot, Transform uiParent,
+            IHomeSceneClickPointer nativePointer, Action onClose = null, Action onOpenMainland = null)
         {
             if (!ProfileSlotCatalog.TryParseSlotId(selectedSlotId))
                 throw new ArgumentException("An existing profile slot is required.", nameof(selectedSlotId));
@@ -609,12 +613,13 @@ namespace Zjcs.Presentation.Home
                 runtime.homeRenderPipeline = Resources.Load<OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets")
                     .Enter();
                 runtime.Open(selectedSlotId, string.IsNullOrEmpty(savesRoot) ? Zjcs.Offline.State.UserDataStorage.Root : savesRoot,
-                    uiParent, onClose, onOpenMainland);
+                    uiParent, onClose, onOpenMainland, nativePointer);
             } catch { Destroy(go); throw; }
             return runtime;
         }
 
-        private void Open(string selected, string root, Transform uiParent, Action close, Action openMainland)
+        private void Open(string selected, string root, Transform uiParent, Action close, Action openMainland,
+            IHomeSceneClickPointer nativePointer)
         {
             slotId = selected;
             savesRoot = root;
@@ -701,7 +706,7 @@ namespace Zjcs.Presentation.Home
             lastAdvanceUnix = openedAt;
             scene = new HomeSceneView(catalog, transform);
             nativeSceneInput = new OfflineHomeSceneInput(() => scene?.Camera,
-                () => EventSystem.current, new HomeSceneClickContext(this));
+                () => EventSystem.current, new HomeSceneClickContext(this), nativePointer);
             foreach (NativeHomeBedActor actor in scene.NativeBedActors)
             {
                 actor.Clicked += OnNativeBedClicked;
@@ -794,6 +799,7 @@ namespace Zjcs.Presentation.Home
             }
             ApplyFurnitureStates();
             scene.ApplyHomeSkins(catalog.HomeSkins, session.Skins, rules);
+            OpenNativeStorage();
             RefreshIncomeCatalog();
             RecoverPendingFastForward();
             DrainHomeInventory();
@@ -1911,6 +1917,7 @@ namespace Zjcs.Presentation.Home
             environment?.Dispose();
             environment = null;
             naturalTimeLimit?.Dispose(); naturalTimeLimit = null;
+            CloseNativeStorage();
             if (scene != null) scene.Dispose();
             scene = null;
             if (catalog != null) catalog.Release();
@@ -1943,6 +1950,7 @@ namespace Zjcs.Presentation.Home
             TickAstrologicalCharge();
             naturalTimeLimit?.RefreshCommittedProfile();
             environment?.Tick(Time.unscaledDeltaTime);
+            if (environment != null) storage?.Tick(environment.DayPhase);
             scene?.Tick(Time.unscaledDeltaTime);
             hangUpHud?.Tick();
             hud?.Tick();
@@ -1981,6 +1989,7 @@ namespace Zjcs.Presentation.Home
 
         private void OnDestroy()
         {
+            CloseNativeStorage();
             if (scene != null)
                 foreach (NativeHomeBedActor actor in scene.NativeBedActors)
                     if (actor != null) actor.Clicked -= OnNativeBedClicked;

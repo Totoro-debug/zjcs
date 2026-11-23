@@ -30,10 +30,12 @@ foreach ($name in $files.Keys) {
 $fixture = Join-Path $project 'Assets/Editor/BagItemQueryBindingsValidation'
 [void](New-Item -ItemType Directory -Path $fixture -Force)
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/bag_item_query_bindings_validation.cs') -Destination (Join-Path $fixture 'BagItemQueryBindingsValidation.cs') -Force
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_storage_pointer_validation.cs') -Destination (Join-Path $fixture 'HomeStoragePointerValidation.cs') -Force
 @{ name = 'BagItemQueryBindingsValidation'; includePlatforms = @('Editor'); references = @(
     'Zjcs.Offline.BagItemQueries', 'Zjcs.Official.BagItemQueries', 'Zjcs.Official.BagTipDots',
     'Zjcs.Offline.Progression', 'Zjcs.Offline.State', 'Zjcs.Offline.Equipment', 'Zjcs.Offline.CharacterCreation',
-    'Zjcs.Offline.Cooking', 'Zjcs.Offline.Commerce', 'Zjcs.Presentation.Home', 'Zjcs.Presentation.Inventory', 'Unity.ugui'
+    'Zjcs.Offline.Cooking', 'Zjcs.Offline.Commerce', 'Zjcs.Presentation.Home', 'Zjcs.Presentation.Inventory',
+    'Zjcs.Official.HomeFurniture', 'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeSceneInput', 'Zjcs.Official.HomeMainUiControls', 'Unity.ugui'
 ) } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $fixture 'BagItemQueryBindingsValidation.asmdef') -Encoding utf8
 $env:ZJCS_BAG_BINDINGS_PROJECT = $project
 $env:ZJCS_BAG_BINDINGS_OUTPUT = $work

@@ -17,6 +17,7 @@ using Zjcs.Offline.Equipment;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
 using Zjcs.Official.BagTipDots;
+using Zjcs.Official.HomeFurniture;
 using Zjcs.Official.PartnersUI;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Presentation.Home;
@@ -32,6 +33,7 @@ public static class BagTipDotBindingsValidation
     const string Active = "Zjcs.BagTipDotBindingsValidation.Active";
     static IEnumerator checks; static int frame = -1, errors;
     static HomeFeatureRuntime home;
+    static readonly HomeStoragePointerValidation pointer = new HomeStoragePointerValidation();
     static GameObject tipStage;
     static BagTipDotBindingsValidation()
     {
@@ -46,7 +48,14 @@ public static class BagTipDotBindingsValidation
                 Finish(new TimeoutException("Complete Bag binding validation timed out"));
             if (checks == null || !EditorApplication.isPlaying || frame == Time.frameCount) return;
             frame = Time.frameCount;
-            try { if (!checks.MoveNext()) { checks = null; Finish(errors == 0 ? null : new Exception("Unexpected Unity errors: " + errors)); } }
+            try
+            {
+                if (!checks.MoveNext())
+                {
+                    checks = null;
+                    Finish(errors == 0 ? null : new Exception($"Unexpected Unity errors: {errors}"));
+                }
+            }
             catch (Exception error) { checks = null; Finish(error); }
         };
     }
@@ -63,9 +72,9 @@ public static class BagTipDotBindingsValidation
     static void OnLog(string text, string stack, LogType type) { if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) errors++; }
     static void Finish(Exception error)
     {
-        SessionState.SetBool(Active, false); if (tipStage) Object.Destroy(tipStage);
+        SessionState.SetBool(Active, false);
         home?.Close(); home = null; Application.logMessageReceived -= OnLog;
-        if (error == null) Debug.Log("BAG_TIP_DOT_BINDINGS_PASSED: complete original graph in the formal Home owner, selected local inventory/formula/equipment/furniture queries, native storage tip subtree, rendered changes, actual Bag entry/close, separate-session cooking transaction, monotonic daily notifications, disk reopen and original graph teardown. Full native building/room composition and Windows Player remain separate.");
+        if (error == null) Debug.Log("BAG_TIP_DOT_BINDINGS_PASSED: native default storage construction, actual room slot transform, native collider click, rendered storage and red dot, original day strip, complete Bag graph and queries, entry/close, isolated-save recovery and teardown.");
         else Debug.LogException(error);
         EditorApplication.Exit(error == null ? 0 : 1);
     }
@@ -95,12 +104,12 @@ public static class BagTipDotBindingsValidation
             player.Inventory.Add(new OfflineItemStack { ItemId = blueId, Count = 7 });
             player.Inventory.Add(new OfflineItemStack { ItemId = recipe.ConditionItemId, Count = 2 });
         }, "bag-tip-bindings:seed").IsApplied, "Seed real isolated quantities and an unlearned original formula");
-        home = HomeFeatureRuntime.Begin(slot, root, null); home.TutorialAutoStartEnabled = false;
+        home = HomeFeatureRuntime.BeginWithNativePointer(slot, root, null, pointer); home.TutorialAutoStartEnabled = false;
         profile = home.Profile;
         yield return null; yield return null;
         var services = home.BagTipServices;
         Require(services != null && services.HasFurniture(Zjcs.Official.HomeUI.EFurniture.StorageBox), "Formal Home creates the actual local Bag owner and original default storage ownership");
-        var linker = CreateNativeTip();
+        var linker = LocateNativeTip();
         yield return null; yield return null; yield return null; yield return null;
         var manager = Field<TipDotNodeManager>(home.PartnerTipDots, "manager");
         TipDotNodeBase Node(int id) => manager.FindNode(authored.Single(node => node.TipDotNodeId == id).GetNodeKey());
@@ -109,6 +118,7 @@ public static class BagTipDotBindingsValidation
         Require(Node(10).IsShowTip && Node(10).TipDotInfo.Data == "7" && Node(6).IsShowTip && linker.IsShowTip,
             "Actual selected quantities drive the original blue count, storage aggregate and native visual linker");
         Capture("native-storage-tip-active.png");
+        CheckStorageBuilding();
         var files = Files(root);
         var records = services.FindItemsByType((BagItemType)catalog.Item(blueId).ItemType).Where(row => row.Info.ClassId == blueId).ToArray();
         Require(records.Length == 1 && services.ShowBagCanUseItemRedDot(records[0]) && services.GetCanUseBlueDotCount(records[0]) == 7
@@ -187,36 +197,97 @@ public static class BagTipDotBindingsValidation
         Require(!Node(10).IsShowTip && Node(10).TipDotInfo.Data == "0" && !Node(6).IsShowTip && !linker.IsShowTip,
             "Existing native storage tip responds to learned formula and removed inventory without recreating the Home owner");
         Capture("native-storage-tip-inactive.png");
-        Object.Destroy(tipStage); tipStage = null; yield return null; yield return null;
         home.Close(); home = null; yield return null; yield return null;
         Require(services.ReleaseSubscriberCount == 0, "Original graph teardown removes all player, daily, condition and scope subscriptions before owner disposal");
 
-        home = HomeFeatureRuntime.Begin(slot, root, null); home.TutorialAutoStartEnabled = false;
+        home = HomeFeatureRuntime.BeginWithNativePointer(slot, root, null, pointer); home.TutorialAutoStartEnabled = false;
         yield return null; yield return null;
-        linker = CreateNativeTip(); yield return null; yield return null; yield return null; yield return null;
+        linker = LocateNativeTip(); yield return null; yield return null; yield return null; yield return null;
         Require(home.Profile.InventoryCount(recipe.ConditionItemId) == 1 && !linker.IsShowTip,
             "Cold Home reopen restores inventory/formula state and the same native storage visual decision");
-        Object.Destroy(tipStage); tipStage = null; yield return null; yield return null;
         services = home.BagTipServices; home.Close(); home = null; yield return null; yield return null;
         Require(services.ReleaseSubscriberCount == 0, "Repeated Home lifetime leaves no original Bag graph subscriptions");
     }
-    static TipDotNodeLinker CreateNativeTip()
+    static TipDotNodeLinker LocateNativeTip()
     {
         var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Official/Home/StorageBox/Native/StorageBox.prefab");
-        var source = prefab.GetComponentsInChildren<TipDotNodeLinker>(true).Single(value => value.ConfiguredNodeKey.GraphName == "Bag" && value.ConfiguredNodeKey.NodeName == "6");
-        tipStage = new GameObject("NativeStorageTipScope"); tipStage.SetActive(false);
-        // The actual native visual subtree is the validation subject. Its
-        // enclosing furniture/room controllers are verified in their own scope.
-        var clone = Object.Instantiate(source.gameObject, tipStage.transform, true); clone.SetActive(true);
-        home.BindBagTipNativeTree(clone); tipStage.SetActive(true);
-        return clone.GetComponent<TipDotNodeLinker>();
+        var live = home.Scene.Root.GetComponentInChildren<StoreBoxFurniture>();
+        Require(live && live.gameObject.name == prefab.name + "(Clone)"
+            && live.transform.childCount == prefab.transform.childCount
+            && live.transform.parent.name == "StorageBoxSlot"
+            && live.GetState() == FurnitureBase.EFurnitureState.Functional, "Formal Home mounts the complete original default storage in the authored room slot");
+        var linker = live.GetComponentsInChildren<TipDotNodeLinker>(true)
+            .Single(value => value.ConfiguredNodeKey.GraphName == "Bag" && value.ConfiguredNodeKey.NodeName == "6");
+        tipStage = linker.gameObject;
+        return linker;
     }
     static void OpenStorage()
     {
         Require(home.Scene.TryGetFurnitureClickBounds(7, out var bounds), "Formal Home exposes storage input bounds");
-        Vector2 point = home.Scene.Camera.WorldToScreenPoint(bounds.center); var input = Field<object>(home, "input");
-        foreach (string method in new[] { "PointerDown", "PointerUp" })
-            input.GetType().GetMethod(method, BindingFlags.NonPublic | BindingFlags.Instance).Invoke(input, new object[] { point, false });
+        pointer.Click(home);
+    }
+
+    static void CheckStorageBuilding()
+    {
+        var storage = pointer.Center(home);
+        var sceneOwner = Field<object>(home, "storage");
+        var tick = sceneOwner.GetType().GetMethod("Tick", BindingFlags.NonPublic | BindingFlags.Instance);
+        var pad = storage.transform.Find("Repaired/StorageBox_Light/StorageBox_Light_Pad").GetComponent<SpriteRenderer>();
+        tick.Invoke(sceneOwner, new object[] { 8f / 24f });
+        Require(pad.gameObject.activeSelf && Mathf.Approximately(pad.color.a, 1f), "Original storage daylight clip enables its light pad at 08:00");
+        CaptureStorageHome("native-storage-home-0800");
+        tick.Invoke(sceneOwner, new object[] { 18f / 24f });
+        Require(!pad.gameObject.activeSelf && Mathf.Approximately(pad.color.a, 0f), "Original storage daylight clip disables its light pad at 18:00");
+        CaptureStorageHome("native-storage-home-1800");
+        var rack = storage.GetComponentInChildren<HomeWeaponRack>(true);
+        Require(rack && rack.PSlot.childCount == 1 && rack.PSlot.GetComponentInChildren<MeshRenderer>() != null,
+            "Original rack displays the actual local character primary weapon");
+        Require(storage.GetComponent<EntityClickSound>().Sound != null, "Original click sound is bound on the same native controller");
+    }
+
+    static void CaptureStorageHome(string name)
+    {
+        int magenta = CaptureHome(name + ".png");
+        if (magenta <= 20) return;
+        var beds = home.Scene.NativeBedActors.Where(actor => actor && actor.gameObject.activeInHierarchy).ToArray();
+        try
+        {
+            foreach (var bed in beds) bed.gameObject.SetActive(false);
+            Require(CaptureHome(name + "-bed-diagnostic.png") <= 20,
+                "Isolating the active native bed accounts for the main scene shader error pixels");
+        }
+        finally
+        {
+            foreach (var bed in beds) bed.gameObject.SetActive(true);
+        }
+    }
+
+    static int CaptureHome(string name)
+    {
+        var camera = home.Scene.Camera;
+        var target = new RenderTexture(720, 1280, 24);
+        var image = new Texture2D(720, 1280, TextureFormat.RGBA32, false);
+        var priorTarget = camera.targetTexture;
+        var priorActive = RenderTexture.active;
+        try
+        {
+            camera.targetTexture = target;
+            camera.Render();
+            RenderTexture.active = target;
+            image.ReadPixels(new Rect(0, 0, target.width, target.height), 0, 0);
+            image.Apply();
+            File.WriteAllBytes(Path.Combine(Work, name), image.EncodeToPNG());
+            int magenta = image.GetPixels32().Count(pixel => pixel.r > 230 && pixel.b > 230 && pixel.g < 25);
+            Debug.Log(name + " magenta pixels: " + magenta);
+            return magenta;
+        }
+        finally
+        {
+            camera.targetTexture = priorTarget;
+            RenderTexture.active = priorActive;
+            target.Release();
+            Object.Destroy(target); Object.Destroy(image);
+        }
     }
     static void Click(GameObject target)
     {

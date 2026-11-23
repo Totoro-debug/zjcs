@@ -179,6 +179,7 @@ namespace Zjcs.Presentation.Home
         public HomeMeteorRuntimePayload MeteorRuntime => meteorRuntime;
         public double NaturalTotalSeconds => timeState.HomeDateTime.TotalSeconds;
         public double StageDaySeconds => daySeconds;
+        internal float DayPhase => (float)(daySeconds / SecondsPerDay);
         public bool IsFastCycling => timeState.StageHandleProxy.InFasting;
         public float PlayableDeltaTime => timeState.PlayableDeltaTime;
 
@@ -258,7 +259,7 @@ namespace Zjcs.Presentation.Home
                 appliedMoon = moon;
                 MoonPhase = moon;
             }
-            nativeSky.Apply((float)(daySeconds / SecondsPerDay), MoonPhase);
+            nativeSky.Apply(DayPhase, MoonPhase);
         }
 
         public void Dispose()

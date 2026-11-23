@@ -28,6 +28,7 @@ public static class BagItemQueryBindingsValidation
     const string Active = "Zjcs.BagItemQueryBindingsValidation.Active";
     static IEnumerator checks; static int frame = -1, errors;
     static HomeFeatureRuntime home;
+    static readonly HomeStoragePointerValidation pointer = new HomeStoragePointerValidation();
     static BagItemQueryBindingsValidation()
     {
         EditorApplication.playModeStateChanged += state => {
@@ -161,7 +162,7 @@ public static class BagItemQueryBindingsValidation
         Require(query.CanUseRedDot(cardItem, 0, 1), "Canonical purchase state uses the shared local daily boundary");
 
         // Real production home -> Bag route, using the existing scene input.
-        home = HomeFeatureRuntime.Begin(slot, root, null); home.TutorialAutoStartEnabled = false;
+        home = HomeFeatureRuntime.BeginWithNativePointer(slot, root, null, pointer); home.TutorialAutoStartEnabled = false;
         yield return null; yield return null;
         OpenStorage(); yield return null; yield return null;
         var inventory = Object.FindObjectOfType<InventoryFeatureRuntime>();
@@ -177,7 +178,7 @@ public static class BagItemQueryBindingsValidation
         Click(close); yield return null; yield return null;
         Require(!Object.FindObjectOfType<InventoryFeatureRuntime>(), "Original close button returns from the actual Bag page");
         home.Close(); home = null; yield return null; yield return null;
-        home = HomeFeatureRuntime.Begin(slot, root, null); home.TutorialAutoStartEnabled = false;
+        home = HomeFeatureRuntime.BeginWithNativePointer(slot, root, null, pointer); home.TutorialAutoStartEnabled = false;
         yield return null; yield return null;
         OpenStorage(); yield return null; yield return null;
         inventory = Object.FindObjectOfType<InventoryFeatureRuntime>(); panel = inventory.GetComponent<OfficialInventoryPanelView>();
@@ -196,11 +197,8 @@ public static class BagItemQueryBindingsValidation
     static bool SameFiles(Dictionary<string, byte[]> before, Dictionary<string, byte[]> after) => before.Count == after.Count && before.All(row => after.TryGetValue(row.Key, out var bytes) && row.Value.SequenceEqual(bytes));
     static void OpenStorage()
     {
-        Require(home.Scene.TryGetFurnitureClickBounds(7, out var bounds), "Home exposes its original storage click bounds");
-        Vector2 point = home.Scene.Camera.WorldToScreenPoint(bounds.center);
-        var input = Field<object>(home, "input");
-        foreach (string method in new[] { "PointerDown", "PointerUp" })
-            input.GetType().GetMethod(method, BindingFlags.NonPublic | BindingFlags.Instance).Invoke(input, new object[] { point, false });
+        Require(home.Scene.TryGetFurnitureClickBounds(7, out _), "Home exposes its original storage click bounds");
+        pointer.Click(home);
     }
     static void SelectTab(OfficialInventoryPanelView panel, int itemId)
     {
