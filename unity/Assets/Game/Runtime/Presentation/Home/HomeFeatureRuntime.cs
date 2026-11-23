@@ -750,8 +750,10 @@ namespace Zjcs.Presentation.Home
             partnerGiftPlayer = new OfflinePartnerGiftPlayer(profile, partnerCatalog,
                 giftConfiguration, id => new OfflinePartnerItemInfo(partnerCatalog, id),
                 () => rules.IsFunctionLimited(65));
+            InitializeBagTipDots();
             partnerTipDots = new OfflinePartnerTipDotRuntime(profile, partnerCatalog,
-                giftConfiguration, progression, function => rules.IsFunctionLimited(function));
+                giftConfiguration, progression, function => rules.IsFunctionLimited(function),
+                bagTipAssets.Definitions(), bagTipAssets.LoadGraph, bagTipServices.BindNode);
             partnerTipDots.Refresh();
             partnerRoster.NpcAdded += OnPartnerRosterAdded;
             partnerRoster.NpcFriendshipUpdated += OnPartnerRosterFriendshipUpdated;
@@ -775,6 +777,7 @@ namespace Zjcs.Presentation.Home
                 partnerDetailSource, partnerRoster, id => profile.Save.Player.CharacterProperties.Treasures
                     .Any(value => value.ClassId == id && value.Active), hud);
             hud.Build();
+            BindBagTipNativeTree(hud.CanvasTransform.gameObject);
             partnerUiBinding = OfflineUiBindingModule.Register(hud.CanvasTransform, new OfflineUiBindings {
                 Images = image => image.GetComponentInParent<ItemIcon>(true) != null ? partnerGiftImages : partnerDetailImages
             });
@@ -1943,6 +1946,7 @@ namespace Zjcs.Presentation.Home
             scene?.Tick(Time.unscaledDeltaTime);
             hangUpHud?.Tick();
             hud?.Tick();
+            bagTipServices?.Synchronize();
             wishes?.Tick();
             if (tutorialAutoStartEnabled && tutorialRunner != null)
             {
@@ -2045,6 +2049,9 @@ namespace Zjcs.Presentation.Home
             }
             partnerTipDots?.Dispose();
             partnerTipDots = null;
+            bagTipServices?.Dispose();
+            bagTipServices = null;
+            bagTipAssets = null;
         }
 
         private void OnApplicationPause(bool pauseStatus)

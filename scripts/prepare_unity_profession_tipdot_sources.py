@@ -171,6 +171,9 @@ def ui_ports():
         body = body.replace("TipDotSystem.sTempLimitShowTip", "TipDotSystem.TempLimitShowTip")
         body = body.replace("TipDotInfo tipDotInfo = Parsers.Instance.TipDotInfoParser.Get(tipDotNodeKey.GraphName);", "TipDotGraphType? tipDotInfo = TipDotSystem.GetGraphType(tipDotNodeKey.GraphName);")
         body = body.replace("tipDotInfo.GraphType == TipDotGraphType.Static", "tipDotInfo.Value == TipDotGraphType.Static")
+        if name == "TipDotNodeLinker":
+            body = body.replace("public bool IsShowData => mNeedShowData;",
+                "public bool IsShowData => mNeedShowData;\n\n    // Read-only selector identity for binding a native tree to its actual graph owner.\n    public TipDotNodeKey ConfiguredNodeKey => mGraphNodeSelector?.GetTipDotNodeKey() ?? default;")
         if any(x in body for x in ("Parsers.", "GLogger", "Log.", "GetFullName", "[Inject]")):
             raise ValueError("Unresolved tip-dot UI dependency: " + name)
         outputs.append(write(name, wrap(body)))

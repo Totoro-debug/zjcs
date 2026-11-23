@@ -471,6 +471,7 @@ namespace Zjcs.Presentation.Home
                     inventoryRuntime = null;
                 }
                 UnityEngine.Object.Destroy(root);
+                host.RefreshInventoryBindings();
             };
             try
             {

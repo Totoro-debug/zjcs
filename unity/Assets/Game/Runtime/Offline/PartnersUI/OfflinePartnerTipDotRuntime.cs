@@ -193,7 +193,10 @@ namespace Zjcs.Offline.PartnersUI
 
         public OfflinePartnerTipDotRuntime(OfflineMainlineProgressSession session, OfficialPartnerCatalog catalog,
             OfflinePartnerGiftConfiguration gifts, OfflineCharacterProgressionService progression,
-            Func<int, bool> functionLimited = null)
+            Func<int, bool> functionLimited = null,
+            IEnumerable<PartnerTipDotGraphInfo> additionalGraphs = null,
+            Func<string, TipDotNodeGraph> loadAdditionalGraph = null,
+            Action<TipDotNodeBase> bindAdditionalNode = null)
         {
             if (session == null || catalog == null || gifts == null || progression == null)
                 throw new ArgumentNullException();
@@ -213,7 +216,10 @@ namespace Zjcs.Offline.PartnersUI
             panelServices = new PanelServices(services, panelPlayer, catalog);
 
             var assets = OfficialPartnerTipDotAssetCatalog.LoadDefault();
-            var graphHandler = new TipDotGraphHandler(assets.LoadGraph);
+            var extra = (additionalGraphs ?? Enumerable.Empty<PartnerTipDotGraphInfo>()).ToDictionary(value => value.GraphName);
+            var definitions = assets.GetAllGraphs().Select(value => extra.TryGetValue(value.GraphName, out var replacement) ? replacement : value)
+                .Concat(extra.Values.Where(value => assets.GetGraphType(value.GraphName) == null)).ToArray();
+            var graphHandler = new TipDotGraphHandler(name => extra.ContainsKey(name) ? loadAdditionalGraph(name) : assets.LoadGraph(name));
             var bans = new TipDotBanManager(Array.Empty<ITipDotBanStrategy>());
             TipDotNodeManager graphManager = null;
             var factory = new TipDotNodeFactory(graphHandler.GetNodeGraph, node => {
@@ -223,9 +229,10 @@ namespace Zjcs.Offline.PartnersUI
                 if (node is IPartnerPanelTipDotNode panelNode) panelNode.Services = panelServices;
                 if (node is TipDotConditionNodeBase conditionNode)
                 { conditionNode.Player = achievementPlayer; conditionNode.Rules = rulePort; }
+                bindAdditionalNode?.Invoke(node);
             });
             var bindings = new PartnerTipDotRuntimeBindings(() => session.Save.Player != null,
-                assets.GetAllGraphs, assets.GetGraphType,
+                () => definitions, name => definitions.FirstOrDefault(value => value.GraphName == name)?.GraphType,
                 (add, remove) => { add?.Invoke(this); return new Subscription(remove); },
                 _ => new Subscription(null));
             graphManager = new TipDotNodeManager(new TipDotNodeDataRepository(), factory, graphHandler, bindings);
@@ -251,6 +258,18 @@ namespace Zjcs.Offline.PartnersUI
             linker.Controller = controller;
             linker.TipDotSystem = system;
             linker.SetNodeInstanceInfo(new NpcNodeInstanceInfo(npcId));
+        }
+
+        public void Bind(TipDotNodeLinker linker)
+        {
+            if (linker == null || disposed || ReferenceEquals(linker.Controller, controller) && ReferenceEquals(linker.TipDotSystem, system)) return;
+            // Rebind through the original lifecycle even if a native tree was
+            // enabled before its owner arrived; no object/animation restart.
+            bool enabled = linker.enabled;
+            linker.enabled = false;
+            linker.Controller = controller;
+            linker.TipDotSystem = system;
+            linker.enabled = enabled;
         }
 
         public void BindDialogues(IPartnerDialogueUiServices dialogues)

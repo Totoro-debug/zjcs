@@ -39,6 +39,9 @@ public class TipDotNodeLinker : MonoBehaviour
 
 	public bool IsShowData => mNeedShowData;
 
+    // Read-only selector identity for binding a native tree to its actual graph owner.
+    public TipDotNodeKey ConfiguredNodeKey => mGraphNodeSelector?.GetTipDotNodeKey() ?? default;
+
 	public TipDotStateInfo StateInfo => mStateInfo;
 
 	public IProfessionTipDotSystemController Controller { get; set; }
