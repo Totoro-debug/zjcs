@@ -40,18 +40,24 @@ namespace Zjcs.Offline.BattleNativePlayables
             var catalog = JsonUtility.FromJson<Catalog>(text.text);
             if (catalog == null || catalog.sdk_version != "2022.1.18.8567" || catalog.packages == null)
                 throw new InvalidDataException("Unexpected original battle sound catalog.");
+            bool mutedValidation = Array.IndexOf(Environment.GetCommandLineArgs(), "-muteAudio") >= 0;
             try
             {
                 // AkWwiseInitializationSettings.InitializeSoundEngine, with the local
                 // package path and WwiseManager's Minimum -> Init -> Minimum sequence.
                 using (var native = platform.AkInitializationSettings)
                 {
+                    // Keep the original bank and event path active during a muted render run.
+                    // Extra refill buffers let the voices tolerate Editor import/render stalls.
+                    if (mutedValidation)
+                        using (var output = native.platformSettings)
+                            output.uNumRefillsInVoice = (ushort)Math.Max(8, (int)output.uNumRefillsInVoice);
                     var result = AkSoundEngine.Init(native);
                     if (result != AKRESULT.AK_Success) AkSoundEngine.Term();
                     Check(result, "Initialize original Windows engine");
                 }
                 ownsEngine = true;
-                if (muteOutput || Array.IndexOf(Environment.GetCommandLineArgs(), "-muteAudio") >= 0)
+                if (muteOutput || mutedValidation)
                     Check(AkSoundEngine.SetOutputVolume(0, 0), "Mute validation output");
                 if (AkSoundEngine.InitSpatialAudio(platform.AkSpatialAudioInitSettings) != AKRESULT.AK_Success)
                     Debug.LogWarning("WwiseUnity: Failed to initialize spatial audio.");

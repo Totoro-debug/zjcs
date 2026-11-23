@@ -80,6 +80,7 @@ namespace Zjcs.Combat.Official
         public List<FightBattleStatusState> Statuses = new List<FightBattleStatusState>();
         // Runtime-only subscription, scoped to an executor step. Checkpoints contain public fields.
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusStarted;
+        internal Action<FightBattleUnitState, FightBattleStatusState> StatusApplied;
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusEnded;
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusRefreshed;
         [NonSerialized] internal Action<FightBattleUnitState> CooldownActionTriggered;

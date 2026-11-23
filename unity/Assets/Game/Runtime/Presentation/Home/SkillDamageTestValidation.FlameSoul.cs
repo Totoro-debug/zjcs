@@ -14,10 +14,11 @@ namespace Zjcs.Presentation.Home
         private static int DestroyerActiveCompanion(int active)
         {
             string path = Environment.GetEnvironmentVariable("ZJCS_SKILLS_ACQUIRED_PASSIVE_SAVE");
-            if (active != 10028 || string.IsNullOrWhiteSpace(path)) return 0;
+            if ((active != 10028 && active != 10035) || string.IsNullOrWhiteSpace(path)) return 0;
             var save = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(path));
             int itemId = save.Player.Skills.Plans[save.Player.Skills.SelectedPlan].PassiveSkills[0];
-            return itemId == 10599 || itemId == 10503 ? itemId : 0;
+            return active == 10028 && (itemId == 10599 || itemId == 10503) || active == 10035 && itemId == 10557
+                ? itemId : 0;
         }
 
         private static bool IsNativeSkillParticleVisible(string playablePrefix)

@@ -1365,6 +1365,7 @@ namespace Zjcs.Combat.Official
                 summon.StatusStarted = OnStatusStarted;
                 summon.StatusApplicationRejected = template => RejectStatusApplication(summon, template);
                 summon.StatusEnded = OnStatusEnded;
+                summon.StatusApplied = ApplyTargetStatusReactions;
                 summon.StatusRefreshed = OnStatusViewRefreshed;
                 summon.CooldownActionTriggered = OnCooldownActionTriggered;
                 summon.HpUpdated = OnHpUpdated;

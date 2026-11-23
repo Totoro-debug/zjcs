@@ -39,6 +39,7 @@ namespace Zjcs.Combat.Official
             foreach (var unit in StatusOwners())
             {
                 unit.StatusStarted = OnStatusStarted;
+                unit.StatusApplied = ApplyTargetStatusReactions;
                 unit.StatusApplicationRejected = template => RejectStatusApplication(unit, template);
                 unit.StatusEnded = OnStatusEnded;
                 unit.StatusRefreshed = OnStatusViewRefreshed;
@@ -85,6 +86,7 @@ namespace Zjcs.Combat.Official
                 foreach (var unit in StatusOwners(true))
                 {
                     unit.StatusStarted = null;
+                    unit.StatusApplied = null;
                     unit.StatusApplicationRejected = null;
                     unit.StatusEnded = null;
                     unit.StatusRefreshed = null;
@@ -112,6 +114,7 @@ namespace Zjcs.Combat.Official
             if (statusCatalog != null && ended != null && ended.HasPropertyComponent)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             RefreshShieldAttackPresence(owner, ended);
+            ExecuteStatusEndReactions(owner, ended);
             if (movementStartContext != null && statusCatalog != null && owner != null && ended != null)
             {
                 var logicInvocations = FightStatusLogicRuntime.Apply(owner, ended,

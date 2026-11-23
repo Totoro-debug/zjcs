@@ -201,6 +201,7 @@ namespace Zjcs.Combat.Official
                 if (existing.IsOpenStack) FightStatusCooldownRuntime.Invoke(unit, existing, random);
                 RecordApplication(unit, template);
                 FightHealingStackReduction.Apply(unit, existing);
+                unit.StatusApplied?.Invoke(unit, existing);
                 return existing;
             }
             var applied = new FightBattleStatusState
@@ -595,6 +596,7 @@ namespace Zjcs.Combat.Official
             FightHealingStackReduction.Apply(unit, applied);
             unit.StatusStarted?.Invoke(unit, applied);
             FightStatusLifeReduction.OnApplied(unit, applied);
+            unit.StatusApplied?.Invoke(unit, applied);
             return applied;
         }
 

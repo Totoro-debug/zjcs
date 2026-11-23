@@ -73,6 +73,7 @@ namespace Zjcs.Presentation.Home
             int destroyerCompanion = DestroyerActiveCompanion(skillId);
             bool flameSoul = destroyerCompanion == 10599;
             bool fireCore = destroyerCompanion == 10503;
+            bool iceCrystal = destroyerCompanion == 10557;
             bool alienation = HasAlienationCompanion(skillId);
             bool destroyer = starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder || protectiveRunes || destroyerCompanion > 0;
             bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation;
@@ -301,6 +302,7 @@ namespace Zjcs.Presentation.Home
             if (passiveCompanion > 0) VerifyAcquiredPassiveAssembly(actor, progression, passiveCompanion);
             // Make each required trigger reproducible inside the isolated presentation diagnostic.
             if (fireCore) SetAcquiredBattleProperty(actor, "CritRatePercent", 100000);
+            if (iceCrystal) SetAcquiredBattleProperty(actor, "EffectRate", 1000000);
             Require(active.ItemId == skillId && active.Rank == cultivatedRank && active.Level == 2
                 && active.SubRank == progression.Player.SubRank && actor.Profession == profession,
                 "Production battle assembly lost the actual saved skill/profession/cultivation.");
@@ -725,6 +727,11 @@ namespace Zjcs.Presentation.Home
                     yield return CaptureAcquiredActive(output, "passive-battle");
                     capturedPassive = true;
                 }
+                if (iceCrystal && !capturedPassive && IsNativeSkillParticleVisible("playable11410"))
+                {
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    capturedPassive = true;
+                }
                 if (passiveCompanion == 10598 && !capturedPassive && IsHurricaneGriefVisible()
                     && File.Exists(Path.Combine(output, "companion-hurricane-grief-status.json")))
                 {
@@ -913,6 +920,8 @@ namespace Zjcs.Presentation.Home
                 "The cultivated fire-cast critical stack was not exercised and rendered.");
             Require(!fireCore || capturedPassive && File.Exists(Path.Combine(output, "companion-fire-core-checkpoint.json")),
                 "The cultivated fire core burst was not exercised and rendered.");
+            Require(!iceCrystal || capturedPassive && File.Exists(Path.Combine(output, "companion-ice-crystal-checkpoint.json")),
+                "The cultivated ice crystal thaw was not exercised and rendered.");
             Require(passiveCompanion != 10609 || capturedTacticalAttack && capturedTacticalDefence
                 && File.Exists(Path.Combine(output, "companion-tactical-24394.json"))
                 && File.Exists(Path.Combine(output, "companion-tactical-24393.json")),
