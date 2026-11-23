@@ -19,15 +19,15 @@ DEST = ROOT / 'unity/Assets/Official/Home/WeaponParts'
 RECEIPT = ROOT / 'assets/reference/home-weapon-parts-source-manifest.json'
 
 
-def prepare(names):
+def prepare(names=None):
     source = OfficialSource()
     cache = ROOT / '.tools/source-packages/current' / source.version / 'home-weapon-rack'
     selection = cache / 'selection.json'
     available = json.loads(selection.read_bytes())
     if available['manifest'] != source.version:
         raise ValueError('Home weapon selection differs from the selected source')
-    rows = [row for row in available['weapons'] if Path(row['path']).stem in names]
-    if len(rows) != len(set(names)):
+    rows = [row for row in available['weapons'] if names is None or Path(row['path']).stem in names]
+    if names is not None and len(rows) != len(set(names)):
         raise ValueError('Select exact current Home weapon prefab names')
     work = ROOT / 'output/validation' / ('home-weapon-parts-' + uuid.uuid4().hex)
     work.mkdir(parents=True)
@@ -51,9 +51,19 @@ def prepare(names):
     config = dict(asset=config_row, original=identity(config_obj), pointer=binding.original_asset(config_obj))
 
     skeletons = [proof for proof in binding.proof.values() if (proof.get('native_path') or '').endswith('_SkeletonData.asset')]
+    loader_paths = set()
     for skeleton in skeletons:
         path = Path(skeleton['native_path']).relative_to(recovery.native.relative_to(ROOT)).as_posix()
-        loader_path = 'Assets/' + path.removesuffix('_SkeletonData.asset') + '_TextureLoader_High.asset'
+        loader_paths.add('Assets/' + path.removesuffix('_SkeletonData.asset') + '_TextureLoader_High.asset')
+    # Explicit preview loaders are serialized dependencies and can select Low
+    # independently of the normal AppearanceRendererLite High path.
+    for proof in binding.proof.values():
+        path = proof.get('native_path') or ''
+        if '_TextureLoader_' in path and path.endswith('.asset'):
+            loader_paths.add('Assets/' + Path(path).relative_to(recovery.native.relative_to(ROOT)).as_posix())
+    requested_guids = set()
+    loader_fields = []
+    for loader_path in sorted(loader_paths):
         row, = [row for row in records if row['path'] == loader_path]
         obj = original_asset(row, 'MonoBehaviour')
         native = recovery.native / row['path'].removeprefix('Assets/')
@@ -65,20 +75,22 @@ def prepare(names):
         atlas_proof = binding.proof[identity(atlas)]
         loaders.append(dict(path=loader_path, asset=row, original=identity(obj), pointer=pointer,
             atlas=dict(fileID=11400000, guid=atlas_proof['guid'], type=2)))
-        requested_guids = {reference['AssetReference']['mAssetGuid']
+        loader_fields.append(fields)
+        requested_guids.update({reference['AssetReference']['mAssetGuid']
             for mapping in fields['placeholderMap'] for reference in (mapping['targetTextureReference'], mapping['dyeTextureReference'])
-            if reference.get('AssetReference') and reference['AssetReference'].get('mAssetGuid')}
-        roots = sorted({record['bundle'] for record in records if record['guid'] in requested_guids})
-        texture_cache = cache.parent / ('home-weapon-textures-' + sha('\n'.join(roots).encode())[:12])
-        completed = texture_cache / 'all-assets/windows-textures/source-manifest.json'
-        if not completed.exists():
-            from prepare_current_resource_inputs import prepare as prepare_inputs
-            from prepare_current_asset_inventory import build as inventory
-            from convert_current_texture_mips import build as convert_textures
-            prepare_inputs(texture_cache, roots)
-            inventory(texture_cache)
-            convert_textures(texture_cache, 2)
-        binding.add_texture_cache(texture_cache)
+            if reference.get('AssetReference') and reference['AssetReference'].get('mAssetGuid')})
+    roots = sorted({record['bundle'] for record in records if record['guid'] in requested_guids})
+    texture_cache = cache.parent / ('home-weapon-textures-' + sha('\n'.join(roots).encode())[:12])
+    completed = texture_cache / 'all-assets/windows-textures/source-manifest.json'
+    if not completed.exists():
+        from prepare_current_resource_inputs import prepare as prepare_inputs
+        from prepare_current_asset_inventory import build as inventory
+        from convert_current_texture_mips import build as convert_textures
+        prepare_inputs(texture_cache, roots)
+        inventory(texture_cache)
+        convert_textures(texture_cache, 2)
+    binding.add_texture_cache(texture_cache)
+    for fields in loader_fields:
         for mapping in fields['placeholderMap']:
             for name in ('targetTextureReference', 'dyeTextureReference'):
                 reference = mapping[name].get('AssetReference')
@@ -132,5 +144,7 @@ def prepare(names):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--parts', nargs='+', required=True)
+    selection = parser.add_mutually_exclusive_group(required=True)
+    selection.add_argument('--parts', nargs='+')
+    selection.add_argument('--all', action='store_true', help='Bind every selected official Home weapon prefab')
     prepare(parser.parse_args().parts)

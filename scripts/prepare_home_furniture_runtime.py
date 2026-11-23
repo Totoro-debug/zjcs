@@ -297,6 +297,7 @@ using Object = UnityEngine.Object;
         'scripts/fixtures/home_furniture_controller_validation.cs',
         'scripts/fixtures/home_weapon_rack_controller_validation.cs',
         'scripts/fixtures/home_native_weapon_validation.cs',
+        'scripts/fixtures/home_native_weapon_controller_validation.cs',
         'scripts/test_home_furniture_controllers.ps1')]
     shared = [ROOT / path for path in (
         'unity/Assets/Game/Runtime/Official/HomeSceneInput/ClickableHomeObj.cs',

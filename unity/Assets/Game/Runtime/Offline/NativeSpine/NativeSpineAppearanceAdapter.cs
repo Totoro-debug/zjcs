@@ -11,7 +11,7 @@ namespace Zjcs.Offline.NativeSpine
     // animation, constraints, skin attachments, geometry and material overrides.
     [DisallowMultipleComponent]
     public sealed class NativeSpineAppearanceAdapter : MonoBehaviour,
-        IProfessionAppearanceRendererLite, IProfessionFollowerRenderer
+        IProfessionAppearanceRendererLite, IProfessionFollowerRenderer, IProfessionBoneOverrideAnimation
     {
         [SerializeField] SkeletonRenderer source;
         [SerializeField] string skeletonDataName;
@@ -32,6 +32,9 @@ namespace Zjcs.Offline.NativeSpine
         IProfessionFollowerSkeleton IProfessionFollowerAnimation.Skeleton { get { EnsureView(); return view; } }
         public event Action<IProfessionAppearanceRendererLite> OnCustomDemandLoading;
         public event Action<IProfessionFollowerAnimation> OnAnimationRebuild;
+        public event Action<IProfessionBoneOverrideAnimation> UpdateLocal;
+        public event Action<IProfessionBoneOverrideAnimation> UpdateComplete;
+        public IProfessionLocalOverrideBone FindOverrideBone(string name) { EnsureView(); return view.FindOverrideBone(name); }
 
         public void Bind(SkeletonRenderer renderer, string originalSkeletonName)
         {
@@ -50,7 +53,12 @@ namespace Zjcs.Offline.NativeSpine
             animationSource = source as ISkeletonAnimation;
             attached.OnRebuild += Rebuild;
             attached.OnMeshAndMaterialsUpdated += Demand;
-            if (animationSource != null) animationSource.OnAnimationRebuild += AnimationRebuild;
+            if (animationSource != null)
+            {
+                animationSource.OnAnimationRebuild += AnimationRebuild;
+                animationSource.UpdateLocal += Local;
+                animationSource.UpdateComplete += Complete;
+            }
         }
         void Detach()
         {
@@ -58,7 +66,12 @@ namespace Zjcs.Offline.NativeSpine
             {
                 attached.OnRebuild -= Rebuild;
                 attached.OnMeshAndMaterialsUpdated -= Demand;
-                if (animationSource != null) animationSource.OnAnimationRebuild -= AnimationRebuild;
+                if (animationSource != null)
+                {
+                    animationSource.OnAnimationRebuild -= AnimationRebuild;
+                    animationSource.UpdateLocal -= Local;
+                    animationSource.UpdateComplete -= Complete;
+                }
             }
             attached = null; animationSource = null; view = null;
         }
@@ -75,6 +88,8 @@ namespace Zjcs.Offline.NativeSpine
             if (animationSource == null) OnAnimationRebuild?.Invoke(this);
         }
         void AnimationRebuild(ISkeletonAnimation renderer) { EnsureView(); OnAnimationRebuild?.Invoke(this); }
+        void Local(ISkeletonAnimation renderer) => UpdateLocal?.Invoke(this);
+        void Complete(ISkeletonAnimation renderer) => UpdateComplete?.Invoke(this);
         void Demand(SkeletonRenderer renderer) => OnCustomDemandLoading?.Invoke(this);
         public void Initialize(bool overwrite, bool quiet) { Attach(); source.Initialize(overwrite, quiet); EnsureView(); }
         public void UpdateAnimationAndMesh()
@@ -115,6 +130,7 @@ namespace Zjcs.Offline.NativeSpine
             public void UpdateCache() => Value.UpdateCache();
             public object GetAttachment(int slotIndex, string name) => Value.GetAttachment(slotIndex, name);
             public IProfessionFollowerBone FindBone(string name) => Wrap(Value.FindBone(name));
+            public IProfessionLocalOverrideBone FindOverrideBone(string name) => Wrap(Value.FindBone(name));
             public IProfessionFollowerSlot FindSlot(string name) => Wrap(Value.FindSlot(name));
             public IProfessionFollowerSlot[] DrawOrder
             {
@@ -158,11 +174,13 @@ namespace Zjcs.Offline.NativeSpine
             public void AddSkin(IProfessionAppearanceSkin skin) => Value.AddSkin(((SkinView)skin).Value);
             public object GetAttachment(int slot, string name) => Value.GetAttachment(slot, name);
         }
-        sealed class BoneView : IProfessionFollowerBone
+        sealed class BoneView : IProfessionFollowerBone, IProfessionLocalOverrideBone
         {
             readonly Spine.Bone value;
             public BoneView(Spine.Bone value) => this.value = value;
             public bool Active => value.Active;
+            public float Rotation { get => value.Rotation; set => this.value.Rotation = value; }
+            public float AppliedRotation { get => value.AppliedRotation; set => this.value.AppliedRotation = value; }
             public float WorldX => value.WorldX;
             public float WorldY => value.WorldY;
             public float WorldRotationX => value.WorldRotationX;

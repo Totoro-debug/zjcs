@@ -104,6 +104,7 @@ public sealed partial class HomeFurnitureControllerChecks
             "Destroy releases original prefab, texture-loader handles and high-resolution texture requests");
         data.Dispose(); bindings.Dispose(); manager.Dispose(); Destroy(managerConfig);
         Debug.Log("HOME_NATIVE_WEAPON_PASSED: authored rack load, real Spine skin/animation/mesh/follower, high textures, light attenuation, animation/side branches and owner teardown. Selected prefab component coverage only.");
+        yield return CheckNativeWeaponControllers();
     }
 
     void CheckNativeSides(SkeletonAnimation renderer, IHomeWeaponAnimationBindings bindings)

@@ -20,7 +20,21 @@ class NativeSpineBinding(PartnerCardBinding):
         if receipt['manifest'] != self.recovery.apk.version or not receipt['completed'] or sha(inventory.read_bytes()) != receipt['inventory_sha256']:
             raise ValueError('Native Spine dynamic texture conversion is incomplete or differs')
         self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
-        self.extra_textures = {row['source']['cab'].lower() + ':' + row['source']['path_id']: (cache, row) for row in receipt['textures']}
+        if not hasattr(self, 'extra_textures'):
+            self.extra_textures = {}
+        self.extra_textures.update({row['source']['cab'].lower() + ':' + row['source']['path_id']: (cache, row) for row in receipt['textures']})
+
+    def native_path(self, source_guid, obj):
+        if not hasattr(self, 'native_guids'):
+            self.native_guids = {}
+            for relative in self.checked:
+                if relative.startswith('ExportedProject/Assets/') and relative.endswith('.meta'):
+                    meta = self.cache / self.recovery.export_name / relative
+                    self.native_guids.setdefault(guid(meta), []).append(Path(str(meta)[:-5]))
+        paths = self.native_guids.get(source_guid, [])
+        if len(paths) != 1:
+            raise ValueError('Resolve one exact exported native Spine GUID: ' + source_guid + ' / ' + identity(obj))
+        return paths[0]
 
     def register_scripts(self):
         super().register_scripts()
@@ -34,6 +48,10 @@ class NativeSpineBinding(PartnerCardBinding):
             'SkeletonRendererFollower': runtime / 'Official/ProfessionUI/SkeletonRendererFollower.cs',
             'AppearanceSystem.Runtime.YooAssetTextureLoader': runtime / 'Official/ProfessionUI/YooAssetTextureLoader.cs',
             'AppearanceConfig': runtime / 'Official/ProfessionUI/AppearanceConfig.cs',
+            'AppearanceSystem.SkeletonBoneController': runtime / 'Official/ProfessionUI/SkeletonBoneController.cs',
+            'AppearanceSystem.SkeletonBoneRotOverride': runtime / 'Official/ProfessionUI/SkeletonBoneRotOverride.cs',
+            'TransformEulerZLocker': runtime / 'Official/ProfessionUI/TransformEulerZLocker.cs',
+            'SkeletonRendererHighTexturePreview': runtime / 'Official/ProfessionUI/SkeletonRendererHighTexturePreview.cs',
         }
         for name in ('HomeWeapon', 'AppearancePartSideSwitcher', 'AppearancePartSideSwitchListener'):
             paths[name] = runtime / 'Official/HomeFurniture' / (name + '.cs')
@@ -48,6 +66,14 @@ class NativeSpineBinding(PartnerCardBinding):
             self.script_guids.add(pointer['guid'])
             self.script_sources[full_name] = dict(path=path.relative_to(ROOT).as_posix(), pointer=pointer,
                 sha256=sha(path.read_bytes()), meta_sha256=sha(Path(str(path) + '.meta').read_bytes()))
+        # Reused controllers consume the SDK facade; record the selected
+        # original inputs as well as the exact previously migrated bodies.
+        original = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code/client-source'
+        for name in ('AppearanceSystem/SkeletonBoneController', 'AppearanceSystem/SkeletonBoneOverride',
+                     'AppearanceSystem/SkeletonBoneRotOverride', 'AppearanceSystem/OverrideUpdateMode',
+                     'AppearanceSystem/OverrideRotMode', 'TransformEulerZLocker', 'SkeletonRendererHighTexturePreview'):
+            source = original / (name + '.cs')
+            self.inputs[source.relative_to(ROOT).as_posix()] = sha(source.read_bytes())
 
     def checked_native(self, source_guid, obj):
         path = self.native_path(source_guid, obj)
@@ -67,6 +93,11 @@ class NativeSpineBinding(PartnerCardBinding):
         if obj is None:
             raise ValueError('Resolve original native Spine identity: ' + source_guid)
         key = identity(obj)
+        if not hasattr(self, 'object_redirects'):
+            self.object_redirects = {}
+        if key in self.object_redirects:
+            self.redirects[source_guid] = self.object_redirects[key]
+            return self.redirects[source_guid]
         if obj.type.name == 'Texture2D' and key not in self.textures and key in getattr(self, 'extra_textures', {}):
             cache, row = self.extra_textures[key]
             if sha(obj.get_raw_data()) != row['source']['object_sha256']:
@@ -146,6 +177,7 @@ class NativeSpineBinding(PartnerCardBinding):
             for proof in self.proof.values():
                 if proof.get('guid') == old:
                     proof['guid'] = token
+        self.object_redirects[key] = result
         self.script_guids.add(result['guid'])
         return result
 
@@ -189,6 +221,14 @@ class NativeSpineBinding(PartnerCardBinding):
                 if original_renderer not in renderers:
                     raise ValueError('Bind the original application renderer to its native SDK bridge')
                 fields['SkeletonRenderer'] = dict(fileID=renderers[original_renderer])
+            if script['type'] == 'SkeletonRendererHighTexturePreview':
+                fields = docs[script['nativeFileID']]['MonoBehaviour']
+                original_renderer = fields['mSkeletonRenderer']['fileID']
+                if original_renderer not in renderers or not docs[original_renderer]['MonoBehaviour']['initialSkinName']:
+                    raise ValueError('Bind original preview renderer and its explicit starting skin')
+                if any(value['type'] == 'AppearanceCombineSkin' for value in panel['scripts']):
+                    raise ValueError('Migrate the original combined-skin preview subscriptions explicitly')
+                fields['mSkeletonRenderer'] = dict(fileID=renderers[original_renderer])
         pointer = dict(fileID=panel['root'], guid=hashlib.md5(('zjcs:native-spine-prefab:' + identity(root)).encode()).hexdigest(), type=3)
         self.script_guids.add(pointer['guid'])
         # Resolving SDK dependencies may namespace/reassign the queue. Do not

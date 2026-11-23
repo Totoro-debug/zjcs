@@ -70,8 +70,9 @@
   "validation_inputs": {
     "scripts/fixtures/home_furniture_controller_validation.cs": "d5192b1a7e23117030272e17c955893322bed75fb2777e0c1eaa2d3a18bdf298",
     "scripts/fixtures/home_weapon_rack_controller_validation.cs": "a60b930eb15c3926ba5431550319711aa9fe97e64eb9e7d4e21824ae034ec2b3",
-    "scripts/fixtures/home_native_weapon_validation.cs": "22b93b851b81f9afec4c5e51c0645bd4d7f21ed84e15854bd83b2c5f2419b4a6",
-    "scripts/test_home_furniture_controllers.ps1": "c0dc97f0aeed3d6a681d686e87550e1a7a5e09fae17ec2403416287ad68bac81"
+    "scripts/fixtures/home_native_weapon_validation.cs": "ff58fc55f7d1837b00955a1c902e7d4c34d004cc19d3afb4d634f746aa0f859e",
+    "scripts/fixtures/home_native_weapon_controller_validation.cs": "ee7fec772c8de9e594612b3296a0e29092140ca056f35d76d5ac956c714bb030",
+    "scripts/test_home_furniture_controllers.ps1": "72584c0226ebcb145db287b2a0265624353e7596fea718e548610eedcbbcdea6"
   },
   "shared_dependencies": {
     "unity/Assets/Game/Runtime/Official/HomeSceneInput/ClickableHomeObj.cs": "2ab7a2e3d378cd66e60e1378b0ff9b03ae097961a031ca690d1ec9e5c1884ca8",
@@ -131,7 +132,7 @@
       "b54377961060f7e5fea71f59deddfdb9b92bfbb3f68f52abe98bbf00b081e701"
     ]
   },
-  "generator_sha256": "96da6cdd2d59dc03e2f83251f63c7f0ed01b5614d82bceedb15d3ba8ef964f64",
+  "generator_sha256": "850531bb9585adc4f3d9bbafec5214970bb1fe192d16357ff347dda4e29d366b",
   "adaptations": [
     "Original four-state priority, click branches, condition subscriptions and teardown are retained.",
     "Original notice transitions, time-offset callbacks, notice text keys and arguments are retained.",

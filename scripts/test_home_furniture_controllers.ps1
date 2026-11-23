@@ -28,6 +28,7 @@ $fixture = Join-Path $project 'Assets/Editor/HomeFurnitureControllerValidation'
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_furniture_controller_validation.cs') -Destination (Join-Path $fixture 'HomeFurnitureControllerValidation.cs') -Force
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_weapon_rack_controller_validation.cs') -Destination (Join-Path $fixture 'HomeWeaponRackControllerValidation.cs') -Force
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_native_weapon_validation.cs') -Destination (Join-Path $fixture 'HomeNativeWeaponValidation.cs') -Force
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_native_weapon_controller_validation.cs') -Destination (Join-Path $fixture 'HomeNativeWeaponControllerValidation.cs') -Force
 $rack = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/home-storage-weapon-rack-source-manifest.json') -Raw | ConvertFrom-Json
 foreach ($entry in $rack.outputs.PSObject.Properties) {
     $inputPath = Join-Path $repository $entry.Name
@@ -76,7 +77,8 @@ Write-Output ('Furniture controller log: ' + $log)
 $process.WaitForExit()
 if ($process.ExitCode -ne 0 -or
     -not (Select-String -LiteralPath $log -Pattern '^HOME_FURNITURE_CONTROLLERS_PASSED:' -Quiet) -or
-    -not (Select-String -LiteralPath $log -Pattern '^HOME_NATIVE_WEAPON_PASSED:' -Quiet)) {
+    -not (Select-String -LiteralPath $log -Pattern '^HOME_NATIVE_WEAPON_PASSED:' -Quiet) -or
+    -not (Select-String -LiteralPath $log -Pattern '^HOME_NATIVE_WEAPON_CONTROLLERS_PASSED:' -Quiet)) {
     throw ('Furniture controller runtime validation failed: ' + $log)
 }
 Write-Output 'HOME_FURNITURE_CONTROLLERS_PASSED'
