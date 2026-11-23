@@ -1,0 +1,267 @@
+{
+  "Lights": {
+    "HomeLightTimeConfigs": [
+      {
+        "BeginTime": {
+          "Hour": 0,
+          "Minute": 0,
+          "Second": 0
+        },
+        "DefaultLights": [
+          {
+            "Name": "DoorLight",
+            "IsOn": true
+          },
+          {
+            "Name": "LobbyLight",
+            "IsOn": true
+          },
+          {
+            "Name": "BedRoomLight",
+            "IsOn": true
+          },
+          {
+            "Name": "StudyLight",
+            "IsOn": true
+          },
+          {
+            "Name": "DeskLight",
+            "IsOn": false
+          },
+          {
+            "Name": "DiningTableLight",
+            "IsOn": false
+          }
+        ],
+        "Overrides": [
+          {
+            "BehaviourType": "Sleep",
+            "LightOverrides": [
+              {
+                "Index": 1,
+                "IsOn": false
+              },
+              {
+                "Index": 2,
+                "IsOn": false
+              },
+              {
+                "Index": 3,
+                "IsOn": false
+              }
+            ]
+          },
+          {
+            "BehaviourType": "Read",
+            "LightOverrides": [
+              {
+                "Index": 4,
+                "IsOn": true
+              }
+            ]
+          },
+          {
+            "BehaviourType": "Cook",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "Eat",
+            "LightOverrides": [
+              {
+                "Index": 5,
+                "IsOn": true
+              }
+            ]
+          },
+          {
+            "BehaviourType": "TreeLie",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "TreeSit",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "Idle",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "IdleB",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "BedSit",
+            "LightOverrides": []
+          }
+        ]
+      },
+      {
+        "BeginTime": {
+          "Hour": 6,
+          "Minute": 0,
+          "Second": 0
+        },
+        "DefaultLights": [
+          {
+            "Name": "DoorLight",
+            "IsOn": false
+          },
+          {
+            "Name": "LobbyLight",
+            "IsOn": false
+          },
+          {
+            "Name": "DeskLight",
+            "IsOn": false
+          },
+          {
+            "Name": "BedRoomLight",
+            "IsOn": false
+          },
+          {
+            "Name": "StudyLight",
+            "IsOn": false
+          },
+          {
+            "Name": "StudyLight",
+            "IsOn": false
+          },
+          {
+            "Name": "DiningTableLight",
+            "IsOn": false
+          }
+        ],
+        "Overrides": []
+      },
+      {
+        "BeginTime": {
+          "Hour": 17,
+          "Minute": 0,
+          "Second": 0
+        },
+        "DefaultLights": [],
+        "Overrides": []
+      },
+      {
+        "BeginTime": {
+          "Hour": 18,
+          "Minute": 0,
+          "Second": 0
+        },
+        "DefaultLights": [
+          {
+            "Name": "DoorLight",
+            "IsOn": true
+          },
+          {
+            "Name": "LobbyLight",
+            "IsOn": true
+          },
+          {
+            "Name": "BedRoomLight",
+            "IsOn": true
+          },
+          {
+            "Name": "StudyLight",
+            "IsOn": true
+          },
+          {
+            "Name": "DeskLight",
+            "IsOn": false
+          },
+          {
+            "Name": "DanluLight",
+            "IsOn": true
+          },
+          {
+            "Name": "DiningTableLight",
+            "IsOn": false
+          }
+        ],
+        "Overrides": [
+          {
+            "BehaviourType": "Sleep",
+            "LightOverrides": [
+              {
+                "Index": 1,
+                "IsOn": false
+              },
+              {
+                "Index": 2,
+                "IsOn": false
+              },
+              {
+                "Index": 3,
+                "IsOn": false
+              }
+            ]
+          },
+          {
+            "BehaviourType": "Read",
+            "LightOverrides": [
+              {
+                "Index": 4,
+                "IsOn": true
+              }
+            ]
+          },
+          {
+            "BehaviourType": "Cook",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "Eat",
+            "LightOverrides": [
+              {
+                "Index": 6,
+                "IsOn": true
+              }
+            ]
+          },
+          {
+            "BehaviourType": "TreeLie",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "TreeSit",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "Idle",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "IdleB",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "BedSit",
+            "LightOverrides": []
+          },
+          {
+            "BehaviourType": "ObserverStar",
+            "LightOverrides": [
+              {
+                "Index": 1,
+                "IsOn": false
+              },
+              {
+                "Index": 2,
+                "IsOn": false
+              },
+              {
+                "Index": 3,
+                "IsOn": false
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "Clock": {
+    "SecondsPerMinute": 60,
+    "MinutesPerHour": 60,
+    "HoursPerDay": 24
+  }
+}
