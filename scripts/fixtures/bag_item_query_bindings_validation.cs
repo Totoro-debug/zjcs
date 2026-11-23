@@ -233,12 +233,21 @@ public static class BagItemQueryBindingsValidation
     static void Capture(InventoryFeatureRuntime inventory, string name)
     {
         var canvas = inventory.GetComponent<Canvas>().rootCanvas; var oldMode = canvas.renderMode; var oldCamera = canvas.worldCamera; float oldDistance = canvas.planeDistance;
+        Require(oldMode == RenderMode.ScreenSpaceOverlay, "The actual Bag canvas overlays the world camera");
         var canvases = canvas.GetComponentsInChildren<Canvas>(true);
         var layers = canvases.Select(value => value.sortingLayerID).ToArray(); var orders = canvases.Select(value => value.sortingOrder).ToArray();
         var camera = home.Scene.Camera; var priorTarget = camera.targetTexture; var active = RenderTexture.active;
+        var ui = canvas.GetComponentsInChildren<Transform>(true);
+        var objectLayers = ui.Select(value => value.gameObject.layer).ToArray();
+        int worldMask = camera.cullingMask;
         int width = Screen.width, height = Screen.height;
         var target = new RenderTexture(width, height, 24); var image = new Texture2D(width, height, TextureFormat.RGBA32, false);
         try {
+            // The offscreen capture converts Overlay to Camera for readback.
+            // Keep world depth out of that temporary camera pass.
+            const int captureLayer = 30;
+            foreach (var value in ui) value.gameObject.layer = captureLayer;
+            camera.cullingMask = 1 << captureLayer;
             foreach (var current in canvases) { current.sortingLayerID = SortingLayer.layers.Last().id; if (current.sortingOrder < 30000) current.sortingOrder += 30000; }
             camera.targetTexture = target; canvas.renderMode = RenderMode.ScreenSpaceCamera; canvas.worldCamera = camera; canvas.planeDistance = 1;
             Canvas.ForceUpdateCanvases(); camera.Render(); RenderTexture.active = target;
@@ -247,6 +256,8 @@ public static class BagItemQueryBindingsValidation
             File.WriteAllBytes(Path.Combine(Work, name), image.EncodeToPNG());
         } finally {
             canvas.renderMode = oldMode; canvas.worldCamera = oldCamera; canvas.planeDistance = oldDistance; camera.targetTexture = priorTarget;
+            camera.cullingMask = worldMask;
+            for (int i = 0; i < ui.Length; i++) if (ui[i]) ui[i].gameObject.layer = objectLayers[i];
             for (int i = 0; i < canvases.Length; i++) if (canvases[i]) { canvases[i].sortingLayerID = layers[i]; canvases[i].sortingOrder = orders[i]; }
             RenderTexture.active = active; target.Release(); Object.Destroy(target); Object.Destroy(image); Canvas.ForceUpdateCanvases();
         }
