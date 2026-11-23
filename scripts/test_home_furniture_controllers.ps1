@@ -1,0 +1,45 @@
+param(
+    [Parameter(Mandatory)][string]$ProjectPath,
+    [string]$Editor = 'D:/Tool/Unity/Editor/Unity.exe'
+)
+$ErrorActionPreference = 'Stop'
+$repository = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+$project = [IO.Path]::GetFullPath($ProjectPath)
+$validationBase = [IO.Path]::GetFullPath((Join-Path $repository 'output/validation'))
+if (-not $project.StartsWith($validationBase + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
+    -not (Test-Path -LiteralPath (Join-Path $project 'ProjectSettings/ProjectVersion.txt'))) {
+    throw 'Select an existing independent Unity project below output/validation; the shared main project is forbidden.'
+}
+$running = @(Get-CimInstance Win32_Process -Filter "Name = 'Unity.exe'" | Where-Object {
+    $_.CommandLine -and $_.CommandLine.Replace('\', '/').Contains($project.Replace('\', '/'))
+})
+if ($running.Count -ne 0) { throw 'Do not stage files into a running Unity project.' }
+$work = Join-Path $validationBase ('home-furniture-controllers-' + [Guid]::NewGuid().ToString('N'))
+[void](New-Item -ItemType Directory -Path $work)
+$source = Join-Path $repository 'unity/Assets/Game/Runtime/Official/HomeFurniture'
+$destination = Join-Path $project 'Assets/Game/Runtime/Official/HomeFurniture'
+Copy-Item -LiteralPath $source -Destination (Split-Path $destination) -Recurse -Force
+Copy-Item -LiteralPath ($source + '.meta') -Destination ($destination + '.meta') -Force
+$fixture = Join-Path $project 'Assets/Editor/HomeFurnitureControllerValidation'
+[void](New-Item -ItemType Directory -Path $fixture -Force)
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_furniture_controller_validation.cs') -Destination (Join-Path $fixture 'HomeFurnitureControllerValidation.cs') -Force
+@{ name = 'HomeFurnitureControllerValidation'; includePlatforms = @('Editor'); references = @(
+    'Zjcs.Official.HomeFurniture', 'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeSceneInput',
+    'Zjcs.Official.HomeMainUiControls', 'Zjcs.Offline.HomeSceneInput', 'Zjcs.Official.WorldUI',
+    'Zjcs.Official.ProfessionUI', 'Unity.TextMeshPro', 'Unity.ugui'
+) } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $fixture 'HomeFurnitureControllerValidation.asmdef') -Encoding utf8
+$env:ZJCS_FURNITURE_PROJECT = $project
+$env:ZJCS_FURNITURE_VALIDATION_DIR = $work
+. (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
+$log = Join-Path $work 'unity.log'
+$process = Start-UnityOnInternalDisplay -Editor $Editor -ArgumentList @(
+    '-batchmode', '-muteAudio', '-job-worker-count', '2', '-gc-helper-count', '2',
+    '-projectPath', ('"' + $project + '"'), '-executeMethod', 'HomeFurnitureControllerValidation.Run',
+    '-logFile', ('"' + $log + '"')
+)
+Write-Output ('Furniture controller log: ' + $log)
+$process.WaitForExit()
+if ($process.ExitCode -ne 0 -or -not (Select-String -LiteralPath $log -Pattern '^HOME_FURNITURE_CONTROLLERS_PASSED:' -Quiet)) {
+    throw ('Furniture controller runtime validation failed: ' + $log)
+}
+Write-Output 'HOME_FURNITURE_CONTROLLERS_PASSED'

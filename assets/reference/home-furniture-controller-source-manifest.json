@@ -1,0 +1,44 @@
+{
+  "manifest": "903_156948",
+  "inputs": {
+    ".tools/source-packages/current/903_156948/code-manifest.json": "98672050f03e79d2b815c5f036ee014abea9a5f0333b304047699e224cdc4f8b",
+    ".tools/source-packages/current/903_156948/official-code/managed/decoded/Assembly-CSharp.dll": "0f7a39a453eedb4faa9be717daf7e8ee0c23e78adaba26daf18fb133ad8d1ce9",
+    ".tools/source-packages/current/903_156948/official-code/client-source/FurnitureBase.cs": "6d2f169a869341a5fe8e5911e17802c644ad1f16b17fa764d6014981c42263c8",
+    ".tools/source-packages/current/903_156948/official-code/client-source/HomeNotice.cs": "7203b67c6e6cd1fafcc6826947edfb90ff759448da16ba2e6917c13fa1b61362",
+    ".tools/source-packages/current/903_156948/official-code/client-source/StoreBoxFurniture.cs": "717a238af7e16d86b8b5a66d4f15db5a1b7d5850b99f5f93679295f22d4c5542",
+    "scripts/templates/home_furniture/HomeFurnitureServices.cs": "207a4bbc63176b29b828a10d114bd3a61ef04f8cfae8d0b45a8d2063edcd67c7"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/FurnitureBase.cs": "14171c8854b38c70048d98683c95adf1ef85db430668d0c0b61369eb7ebc967d",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/FurnitureBase.cs.meta": "79ea45e25f41d5a2946d1da6bb2da1abebabfa1cec621eae2d18507cc493f7af",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeNotice.cs": "d2855ef41eff72b9583fa016db75496260cfcf685767fedf9c9987ffb57c6110",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeNotice.cs.meta": "63fc4e11817640c00354b7acac473ab42a304e10dde7068616935cd3c0783cff",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/StoreBoxFurniture.cs": "6dc78a9cfdc66e7bf1295efb00dc76e712d40fac5e0f12255edd280f4ed17f93",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/StoreBoxFurniture.cs.meta": "7bb107d239af3400b9c68c330e19e0e2c13a1135587d530f47c3e02e6ee82aa5",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeFurnitureServices.cs": "207a4bbc63176b29b828a10d114bd3a61ef04f8cfae8d0b45a8d2063edcd67c7",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeFurnitureServices.cs.meta": "0a4c24493e5b0aeabd392607aea9b94962f03e337a640b7673bb5df656da1675",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/Zjcs.Official.HomeFurniture.asmdef": "37062cb6b5516719a5129e4a556ad191bafd024757bf04592737e8873ee8a108",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/Zjcs.Official.HomeFurniture.asmdef.meta": "b4ba2a3feb40823f56dbd23536b35154a44ae2109b17eefc8437f6bac27fb236",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture.meta": "ca9d0edf5f0819afe26b16ff0ef206186ed5c208538799b6feb949246c5d533e"
+  },
+  "validation_inputs": {
+    "scripts/fixtures/home_furniture_controller_validation.cs": "eb4f4064b8acf5eac601c278f3bfea6dda7d6f352802c63f46433d4c142c13c6"
+  },
+  "shared_dependencies": {
+    "unity/Assets/Game/Runtime/Official/HomeSceneInput/ClickableHomeObj.cs": "2ab7a2e3d378cd66e60e1378b0ff9b03ae097961a031ca690d1ec9e5c1884ca8",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/UIBase.cs": "71904439a92bd0bbe189a95f9a7213defc9bd3d9283c8279fa1fc0b9d09b87d8",
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldStateSwitcher.cs": "e2fd20a63aa5e3b82ab98ec3d17cc8c973c3558bb0b2083ef54a2bf80188a2dc",
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldMultiLanguageText.cs": "99a73c950330a27ca9a3ccce31905c4c8aef70deba9e76c8fd377535aded9cef",
+    "unity/Assets/Game/Runtime/Official/HomeUI/EFurniture.cs": "24a4692b1ff6b0fe40cab77181d96e7004324ccb681741c83a0fc3436b059043"
+  },
+  "generator_sha256": "9d1f279fb0145b6042fa8b45228c5731cb36b2c0effd9001b813299d6d0de320",
+  "adaptations": [
+    "Original four-state priority, click branches, condition subscriptions and teardown are retained.",
+    "Original notice transitions, time-offset callbacks, notice text keys and arguments are retained.",
+    "Original repair effect delays and story-context reuse/disposal are retained.",
+    "Client globals and injected owners are explicit local ports; no fallback rules or story content are introduced.",
+    "Original selected native click dispatcher, state switcher, UI lifecycle and localization component are reused.",
+    "Decompiler casts are retained; logging calls use Unity logging instead of the client logging framework."
+  ],
+  "scope": "Shared original furniture controllers and storage click action. Native prefab dependencies and local host binding are validated separately."
+}
