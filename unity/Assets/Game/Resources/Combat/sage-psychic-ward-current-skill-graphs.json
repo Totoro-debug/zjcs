@@ -1,0 +1,55 @@
+{
+  "manifest": "903_156948",
+  "skills": [
+    {
+      "skill_entity_id": 11760,
+      "entity_resource": "Combat/SagePsychicWardGraphs/Prefabs/EcEntity/Fight/FightSkill/11760/11760",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/SagePsychicWardGraphs/Prefabs/EcEntity/Fight/FightSkill/11760/playable11760"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11761,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [
+        {
+          "field": "myPlayable",
+          "resource": "Combat/SagePsychicWardGraphs/Prefabs/EcEntity/Fight/FightSkill/11760/playable11761"
+        }
+      ],
+      "entity_resource": "Combat/SagePsychicWardGraphs/Prefabs/EcEntity/Fight/FightSkill/11760/11761"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 11762,
+      "entity_prefab": "11760/11762.prefab",
+      "entity_prefab_sha256": "70826abf41c21bd2afe5321a3ba336d056337a684befc17a89852c3e7e5da93b",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": false,
+        "myHideDamage": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/SagePsychicWardGraphs/Prefabs/EcEntity/Fight/FightSkill/11760/11762"
+    }
+  ]
+}

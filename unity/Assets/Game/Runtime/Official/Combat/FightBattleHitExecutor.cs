@@ -203,7 +203,7 @@ namespace Zjcs.Combat.Official
                 formula.AddPropertyValue(targetProps, "FixedStatusDmgReduce", reduction.Fixed);
                 Func<double, double> customProps = skill != null && skill.CostType == 2
                     && hit.DamageType == 6 ? null
-                    : amount => ApplyDamageCustomProps(random, target, targetProps, skill, amount);
+                    : amount => ApplyDamageCustomProps(random, target, skill, amount);
                 result.Formula = formula.Calculate(request, result.Type, custom, elementConfrontation,
                     customProps);
                 long damage = result.Formula.Damage;
@@ -305,28 +305,28 @@ namespace Zjcs.Combat.Official
         }
 
         private double ApplyDamageCustomProps(FightRandomStream random,
-            FightBattleUnitState target, IDictionary<int, long> targetProperties,
-            FightBattleSkillDefinition skill, double damage)
+            FightBattleUnitState target, FightBattleSkillDefinition skill, double damage)
         {
             if (target.Statuses == null || target.Statuses.Count == 0) return damage;
             List<FightBattleStatusState> remove = null;
             foreach (FightBattleStatusState status in target.Statuses)
             {
-                if (status == null || !status.HasDamageCustomProps
+                if (status == null || status.ForbiddenType != 0 || !status.HasDamageCustomProps
                     || status.DamageCustomPropsPhase != 1
                     || status.DamageCustomPropsMaxCount >= 0
                         && status.DamageCustomPropsTriggeredCount >= status.DamageCustomPropsMaxCount)
                     continue;
                 float threshold = status.DamageCustomPropsDmgGreaterMaxHpPer;
-                if (threshold >= 0f && damage <= target.MaxHp * (double)threshold) continue;
+                // Configured percentages use decimal thresholds even when stored as floats.
+                if (threshold >= 0f && damage <= (double)(target.MaxHp * (decimal)threshold)) continue;
                 if (status.DamageCustomPropsCheckSkillTrigger
                     && (skill == null || !FightSkillTriggerPolicy.AllowsStatus(skill, status)))
                     continue;
                 float rate = Math.Max(0f, Math.Min(1f, status.DamageCustomPropsRate));
                 if (rate < 1f && (random == null || random.Next() > rate)) continue;
 
-                double reduction = formula.ReadProperty(targetProperties,
-                    status.DamageCustomPropsPropertyId);
+                var properties = Properties(status.StatusProperties ?? status.StatusConfigProperties);
+                double reduction = formula.ReadProperty(properties, status.DamageCustomPropsPropertyId);
                 damage /= Math.Max(1.0 + reduction, 0.1);
                 status.DamageCustomPropsTriggeredCount++;
                 if (status.DamageCustomPropsAutoRemove
@@ -338,7 +338,7 @@ namespace Zjcs.Combat.Official
                 }
             }
             if (remove != null)
-                foreach (FightBattleStatusState status in remove) target.Statuses.Remove(status);
+                foreach (FightBattleStatusState status in remove) FightStatusLifecycle.End(target, status);
             return damage;
         }
 

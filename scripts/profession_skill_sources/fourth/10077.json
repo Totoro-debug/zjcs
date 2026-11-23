@@ -1,0 +1,22 @@
+{
+  "entities": [11760, 11761, 11762, 24181],
+  "rule_pack_fragments": ["FightSkill_part87.g.bytes", "FightSkill_part708.g.bytes"],
+  "visibility_bundles": [11760],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/sage-psychic-ward-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/sage-psychic-ward-current-status-graphs-source-manifest.json"
+  ],
+  "reused_client_code": ["MyFightStatus", "MyFightSkill", "MyFightHitFixed", "MyFightDamage"],
+  "code": [
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "FightStatusComponentInfo",
+    "FightStatusBattleFormulaDamageCustomPropsComponentInfo",
+    "FightStatusBattleFormulaDamageCustomPropsComponent",
+    "BattleFormulaHandler",
+    "AiPriorityType",
+    "SkillAiCfg"
+  ],
+  "runtime_rule_packs": ["unity/Assets/Game/Resources/Combat/SkillRules/10077.json"]
+}

@@ -20,6 +20,7 @@ def main():
         'fire-core-current-skill-graphs',
         'chaos-rune-current-skill-graphs',
         'heavenly-rain-current-skill-graphs',
+        'sage-psychic-ward-current-skill-graphs',
         'sage-dark-blast-current-skill-graphs',
     )
     receipts = {

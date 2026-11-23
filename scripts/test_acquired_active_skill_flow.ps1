@@ -2,9 +2,9 @@ param(
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10102,10103,10104)][int]$SkillId = 10026,
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10102,10103,10104)][int]$SkillId = 10026,
     [Parameter(ParameterSetName='Player')]
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
     [string]$PassiveSave,
     [ValidateSet(0,39521)][int]$SkillSkinId = 0
 )
@@ -206,7 +206,7 @@ try {
         $rankQuery = "import json,sys; c=json.load(open(sys.argv[1],encoding='utf-8')); s=json.load(open(sys.argv[2],encoding='utf-8')); rows=[x for x in c['item'] if x['ClassId']==int(sys.argv[3])]; assert len(rows)==1; print(min(x['Rank'] for x in s['RankDisplays'] if x['Quality']==rows[0]['Quality'])+1)"
         $cultivatedRank = & python -B -c $rankQuery (Join-Path $repository 'unity/Assets/Official/Combat/rules.json') (Join-Path $repository 'unity/Assets/Official/Skills/skill-runtime-rules.json') $SkillId
         if ($LASTEXITCODE -ne 0 -or $cultivatedRank -notmatch '^\d+$') { throw "The original skill rank could not be resolved: $SkillId" }
-        $kind = if ($SkillId -in @(10024,10032,10046,10051,10066,10068,10092,10102)) { 'status' } else { 'damage' }
+        $kind = if ($SkillId -in @(10024,10032,10046,10051,10066,10068,10077,10092,10102)) { 'status' } else { 'damage' }
         foreach ($text in @(
             "[Acquired active UI] $SkillId fragment acquisition, original slot input, level/rank cultivation and disk reload passed.",
             "[Acquired active UI] $SkillId saved rank=$cultivatedRank level=2, original $kind/result/return and unchanged save passed.")) {
@@ -245,10 +245,13 @@ try {
         if ($SkillId -eq 10103 -and -not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-sage-dark-blast-checkpoint.json'))) {
             throw 'The original cultivated dark blast checkpoint was not persisted.'
         }
+        if ($SkillId -eq 10077 -and -not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-sage-psychic-ward-checkpoint.json'))) {
+            throw 'The consumed psychic ward checkpoint was not persisted.'
+        }
         if ($SkillId -eq 10096 -and -not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-heavenly-rain-checkpoint.json'))) {
             throw 'The original cultivated healing checkpoint was not persisted.'
         }
-        if ($SkillId -in @(10002,10032,10039,10047,10056,10059,10068,10073,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10102,10103,10104)) {
+        if ($SkillId -in @(10002,10032,10039,10047,10056,10059,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10102,10103,10104)) {
             # The Player asserts the original effects for each equipped cast.
             Write-Output "Acquired active skill-page flow passed: $skillRun"
             continue

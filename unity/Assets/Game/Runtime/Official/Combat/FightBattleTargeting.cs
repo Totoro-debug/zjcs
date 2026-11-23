@@ -725,8 +725,9 @@ namespace Zjcs.Combat.Official
                     int leftFiltered = Contains(skill.HpLowerCharacterTypeFilter, left.CharacterType) ? 1 : 0;
                     int rightFiltered = Contains(skill.HpLowerCharacterTypeFilter, right.CharacterType) ? 1 : 0;
                     if (leftFiltered != rightFiltered) return leftFiltered.CompareTo(rightFiltered);
-                    // The official description of 11170 specifies the lowest HP percentage.
-                    if (skill.EntityId == 11170 && left.MaxHp > 0 && right.MaxHp > 0)
+                    // These support skills use the lowest HP percentage.
+                    if ((skill.EntityId == 11170 || skill.EntityId == 11760)
+                        && left.MaxHp > 0 && right.MaxHp > 0)
                         return CompareHealthPercentage(left.Hp, left.MaxHp, right.Hp, right.MaxHp);
                     return left.Hp.CompareTo(right.Hp);
                 case 3: // SaferPos (local approximation)

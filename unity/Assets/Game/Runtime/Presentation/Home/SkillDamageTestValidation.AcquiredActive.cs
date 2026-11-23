@@ -72,6 +72,7 @@ namespace Zjcs.Presentation.Home
             bool protectiveRunes = skillId == 10102;
             bool chaosRune = skillId == 10059;
             bool heavenlyRain = skillId == 10096;
+            bool psychicWard = skillId == 10077;
             bool sageDarkBlast = skillId == 10103;
             int destroyerCompanion = DestroyerActiveCompanion(skillId);
             bool flameSoul = destroyerCompanion == 10599;
@@ -80,12 +81,12 @@ namespace Zjcs.Presentation.Home
             bool overloadProtection = destroyerCompanion == 10573;
             bool alienation = HasAlienationCompanion(skillId);
             bool destroyer = starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder || protectiveRunes || destroyerCompanion > 0;
-            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation || chaosRune || heavenlyRain || sageDarkBlast;
-            bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry || protectiveRunes;
+            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation || chaosRune || heavenlyRain || sageDarkBlast || psychicWard;
+            bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry || protectiveRunes || psychicWard;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
-            int profession = alienation || chaosRune || heavenlyRain || sageDarkBlast ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = alienation || chaosRune || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -289,7 +290,7 @@ namespace Zjcs.Presentation.Home
                 if (setting == "MonsterHp" && (waterBlade || soulPiercer || chaosRune || sageDarkBlast))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
-                if (setting == "MonsterHurt" && overloadProtection)
+                if (setting == "MonsterHurt" && (overloadProtection || psychicWard))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
                 if (setting == "Round" && (vortexSurge || passiveCompanion == 10607 || passiveCompanion == 10594 || passiveCompanion == 10543 || dreadShadow || starBurst || spiralWindBlade || battlecry))
@@ -310,12 +311,12 @@ namespace Zjcs.Presentation.Home
             // Make each required trigger reproducible inside the isolated presentation diagnostic.
             if (fireCore) SetAcquiredBattleProperty(actor, "CritRatePercent", 100000);
             if (iceCrystal || chaosRune) SetAcquiredBattleProperty(actor, "EffectRate", 1000000);
-            if (overloadProtection)
+            if (overloadProtection || psychicWard)
             {
                 Require(!checkpoint.DamageTest.EnableMonsterOneDamage,
-                    "The overload protection diagnostic requires the original normal monster damage option.");
+                    "The defensive skill diagnostic requires the original normal monster damage option.");
                 foreach (var enemy in checkpoint.Units.Where(unit => unit.Side != actor.Side))
-                    SetAcquiredBattleProperty(enemy, "Attack", actor.MaxHp / 3);
+                    SetAcquiredBattleProperty(enemy, "Attack", actor.MaxHp / (psychicWard ? 6 : 3));
             }
             Require(active.ItemId == skillId && active.Rank == cultivatedRank && active.Level == 2
                 && active.SubRank == progression.Player.SubRank && actor.Profession == profession,
@@ -348,6 +349,7 @@ namespace Zjcs.Presentation.Home
             }
             int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, standfastTurns = 0, assaultHits = 0, soulBreakHits = 0, windHits = 0, flameHits = 0, fireLifeCures = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
             int starBlindApplications = 0, starBlindEnds = 0;
+            int psychicWardEnds = 0;
             int doomPushes = 0;
             int tearApplications = 0, tearEnds = 0, tearHits = 0;
             int battlecryAdvances = 0;
@@ -363,6 +365,7 @@ namespace Zjcs.Presentation.Home
                     && view.Status.CreatorId == 1 && view.Kind == FightBattleStatusViewEventKind.End);
                 if (chaosRune) confusionEnds += step.Event.StatusViewEvents.Count(view => view.Status.ClassId == 24217
                     && view.Status.CreatorId == actor.Id && view.Kind == FightBattleStatusViewEventKind.End);
+                if (psychicWard) psychicWardEnds += VerifyAcquiredSagePsychicWard(step.Event, checkpoint, actor, output);
                 if (hellfire) VerifyAcquiredHellfireStep(step.Event, actor, ref hellfireCures, ref hits);
                 if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits, ref standfastTurns, ref assaultHits, ref soulBreakHits, ref windHits, ref flameHits, ref fireLifeCures);
                 var skillCasts = step.Event.SkillCasts.Where(value => value.ActorId == 1 && value.Slot == 0
@@ -421,6 +424,7 @@ namespace Zjcs.Presentation.Home
                         : judgmentThunder ? cast.SkillEntityId == 11970
                         : protectiveRunes ? cast.SkillEntityId == 12110
                         : chaosRune ? cast.SkillEntityId == 11380
+                        : psychicWard ? cast.SkillEntityId == 11760
                         : heavenlyRain ? cast.SkillEntityId == 12020
                         : sageDarkBlast ? cast.SkillEntityId == 12120
                         : skillId == 10048 ? cast.SkillEntityId == 11090
@@ -444,6 +448,15 @@ namespace Zjcs.Presentation.Home
                     {
                         VerifyAcquiredSageDarkBlast(cast, damageEvents, checkpoint, output, hits == 0);
                         hits += damageEvents.Length;
+                        continue;
+                    }
+                    if (psychicWard)
+                    {
+                        Require(damageEvents.Length == 1 && damageEvents[0].TargetId == actor.Id
+                            && damageEvents[0].HitEntityId == 11761 && damageEvents[0].DamageEntityId == 11762
+                            && damageEvents[0].Damage == 0 && !damageEvents[0].IsCure,
+                            "The original psychic ward changed its non-damaging status application.");
+                        hits++;
                         continue;
                     }
                     if (heavenlyRain)
@@ -923,6 +936,10 @@ namespace Zjcs.Presentation.Home
                     {
                         if (!IsNativeSkillParticleVisible("playable12120")) { yield return null; continue; }
                     }
+                    else if (psychicWard)
+                    {
+                        if (!IsNativeSkillParticleVisible("playable11762")) { yield return null; continue; }
+                    }
                     else if (heavenlyRain)
                     {
                         if (!IsNativeSkillParticleVisible("playable12021")) { yield return null; continue; }
@@ -939,8 +956,13 @@ namespace Zjcs.Presentation.Home
                 }
                 yield return null;
             }
+            if (psychicWard && (!checkpoint.Finished || casts == 0 || hits == 0 || !captured))
+                File.WriteAllText(Path.Combine(output, "acquired-sage-psychic-ward-diagnostic.json"),
+                    FightBattleCheckpointSerializer.Save(checkpoint));
             Require(checkpoint.Finished && casts > 0 && hits > 0 && captured,
                 "The acquired/cultivated active skill did not finish its damage battle.");
+            Require(!psychicWard || psychicWardEnds > 0,
+                "The cultivated psychic ward never consumed its original mark on actual monster damage.");
             Require(!lightSwordArray || capturedOpening, "The four original opening swords were not captured.");
             Require(!hellfire || hellfireCures >= 2, "The acquired hellfire did not heal on both subsequent turns.");
             Require(!soulPiercer || lifestealCures > 0, "The acquired soul piercer never restored actual HP.");

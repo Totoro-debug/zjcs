@@ -207,7 +207,7 @@ namespace Zjcs.Presentation.Combat
                 "Combat/spiral-wind-blade-current-graphs", "Combat/battlecry-current-graphs",
                 "Combat/protective-runes-current-graphs", "Combat/flame-soul-current-graphs",
                 "Combat/hurricane-grief-current-graphs", "Combat/overload-protection-current-graphs",
-                "Combat/confusion-current-graphs");
+                "Combat/confusion-current-graphs", "Combat/sage-psychic-ward-current-status-graphs");
             statusViews.Restore();
         }
 
