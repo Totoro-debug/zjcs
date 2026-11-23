@@ -8,7 +8,7 @@ namespace Zjcs.Presentation.Home
     public sealed partial class SkillDamageTestValidation
     {
         private static void VerifyAcquiredHeavenlyRain(FightBattleSkillCastEvent cast,
-            FightBattleDamageEvent[] heals, FightBattleCheckpoint checkpoint, string output, bool firstCure)
+            FightBattleDamageEvent[] heals, FightBattleCheckpoint checkpoint, string output, bool firstCure, bool requireLowHp)
         {
             Require(heals.Length == 1, "The acquired heavenly rain did not make its original single cure.");
             var cure = heals[0];
@@ -17,7 +17,9 @@ namespace Zjcs.Presentation.Home
                 && cure.Damage > 0 && cure.AfterHp - cure.BeforeHp == cure.Damage && cure.AfterHp <= cure.MaxHp,
                 "The acquired heavenly rain lost its original recipient, healing or impact timing.");
             if (!firstCure) return;
-            Require(cure.BeforeHp < cure.MaxHp / 2L, "The first heavenly rain cure did not exercise its low-HP branch.");
+            Require(requireLowHp ? cure.BeforeHp < cure.MaxHp / 2L
+                : cure.BeforeHp > cure.MaxHp / 2L && cure.DamageValue > cure.Damage,
+                "The first heavenly rain cure did not exercise the requested HP threshold.");
             string serialized = FightBattleCheckpointSerializer.Save(checkpoint);
             var restored = FightBattleCheckpointSerializer.Load(serialized);
             var executor = OfficialCombatAssetCatalog.LoadDefault().RestoreBattle(restored);

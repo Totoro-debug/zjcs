@@ -54,6 +54,10 @@ namespace Zjcs.Combat.Official
                 CollectHitCustomCures(actor, target, skill, hit, resolved,
                     movementStartContext?.StatusStartTime ?? 0f, invocations);
             }
+            FightDamageEvent cure = resolved?.IsCure == true ? resolved.Settlement : null;
+            long cureOverflow = cure != null && cure.RealDamageValue >= 0
+                && cure.DamageValue > cure.RealDamageValue
+                ? cure.DamageValue - cure.RealDamageValue : 0L;
             var owners = new List<FightBattleUnitState> { actor };
             if (!ReferenceEquals(actor, target)) owners.Add(target);
             foreach (FightBattleUnitState owner in owners)
@@ -65,6 +69,7 @@ namespace Zjcs.Combat.Official
                         || !FightSkillTriggerPolicy.AllowsStatus(skill, status)) continue;
                     FightBattleStatusHitSkillComponentState hitSkill = status.Components?.HitSkill;
                     if (processOther && hitSkill != null && HitSourceMatches(status, hitSkill.HitSourceType, actor)
+                        && (!hitSkill.IsOverflow || cureOverflow > 0L)
                         && status.ForbiddenType == 0
                         && (!hitSkill.Damage || resolved != null
                             && !resolved.Type.Dodge && !resolved.Type.Blinding && !resolved.Type.Immunity)
@@ -87,9 +92,12 @@ namespace Zjcs.Combat.Official
                                 EntityId = hitSkill.SkillId, Source = 0, Target = 0,
                                 TargetPos = hitSkill.IsSkillTargetPos ? 1 : 0
                             }, actor, target, invocations, hitSkill.IsSkillTargetPos);
-                        ApplyComponentStatuses(status, hitSkill.StatusTriggers, actor, target);
-                        ApplyComponentStatus(status, hitSkill.TargetStatusId, target, skill);
-                        ApplyComponentStatus(status, hitSkill.StatusId, owner, skill);
+                        long customParam = cureOverflow > 0L && hitSkill.StatusCustomParamByOverflow > 0f
+                            ? (long)Math.Min(long.MaxValue,
+                                cureOverflow * (decimal)hitSkill.StatusCustomParamByOverflow) : 0L;
+                        ApplyComponentStatuses(status, hitSkill.StatusTriggers, actor, target, customParam);
+                        ApplyComponentStatus(status, hitSkill.TargetStatusId, target, skill, customParam: customParam);
+                        ApplyComponentStatus(status, hitSkill.StatusId, owner, skill, customParam: customParam);
                         if (hitSkill.DisperseActionTypes != null && hitSkill.DisperseActionTypes.Count > 0)
                             DisperseActionStatuses(target, hitSkill.DisperseActionTypes);
                         if (hitSkill.AutoRemove && hitSkill.MaxInvokeCount >= 0

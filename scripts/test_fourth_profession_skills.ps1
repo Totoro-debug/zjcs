@@ -50,6 +50,7 @@ Add-Type -Path (@(Get-FightCombatSources) +
     (Join-Path $PSScriptRoot 'fixtures/battle_chaos_rune_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_heavenly_rain_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_sage_psychic_ward_harness.cs') +
+    (Join-Path $PSScriptRoot 'fixtures/battle_sage_overflow_shield_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_sage_dark_blast_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_flame_soul_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_saint_guard_harness.cs'))
@@ -85,6 +86,7 @@ if ($SkillId -ne 0) {
         10059 { [BattleChaosRuneHarness]::Run($catalog, $formula, $items); exit 0 }
         10096 { [BattleHeavenlyRainHarness]::Run($catalog, $formula, $items); exit 0 }
         10077 { [BattleSagePsychicWardHarness]::Run($catalog, $formula, $items); exit 0 }
+        10601 { [BattleSageOverflowShieldHarness]::Run($catalog, $formula, $items); exit 0 }
         10103 { [BattleSageDarkBlastHarness]::Run($catalog, $formula, $items); exit 0 }
         10599 { [BattleFlameSoulHarness]::Run($catalog, $formula, $items); exit 0 }
         10593 { [BattleSaintGuardHarness]::Run($catalog, $formula, $items); exit 0 }
@@ -143,6 +145,7 @@ if ($SkillId -ne 0) {
 [BattleChaosRuneHarness]::Run($catalog, $formula, $items)
 [BattleHeavenlyRainHarness]::Run($catalog, $formula, $items)
 [BattleSagePsychicWardHarness]::Run($catalog, $formula, $items)
+[BattleSageOverflowShieldHarness]::Run($catalog, $formula, $items)
 [BattleSageDarkBlastHarness]::Run($catalog, $formula, $items)
 [BattleFlameSoulHarness]::Run($catalog, $formula, $items)
 [BattleSaintGuardHarness]::Run($catalog, $formula, $items)

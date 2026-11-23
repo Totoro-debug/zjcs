@@ -15,7 +15,7 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     if ($PassiveId -in @(10606,10607)) {
         if (-not (Select-String -LiteralPath $runtimeLog -SimpleMatch "[Acquired passive combat] $PassiveId cultivated") -or
             -not (Test-Path -LiteralPath (Join-Path $Run 'companion-cold-checkpoint.json'))) { throw 'The cultivated secret did not exercise its original cold path.' }
-    } elseif ($PassiveId -in @(10503,10543,10557,10568,10573,10579,10592,10594,10595,10597,10598,10599,10608,10609)) {
+    } elseif ($PassiveId -in @(10503,10543,10557,10568,10573,10579,10592,10594,10595,10597,10598,10599,10601,10608,10609)) {
         $source = Get-Content -LiteralPath (Join-Path $Run 'companion-cultivated-save.json') -Raw | ConvertFrom-Json
         if ($source.Player.Skills.Plans[$source.Player.Skills.SelectedPlan].PassiveSkills[0] -ne $PassiveId) {
             throw 'The battle used another cultivated secret.'
@@ -94,6 +94,13 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
         -not (Select-String -LiteralPath $runtimeLog -SimpleMatch '[Acquired passive combat] 10557 cultivated ice crystal thaw and restore replay passed.'))) {
         throw 'The cultivated ice crystal did not render, settle or restore its original thaw strike.'
     }
+    if ($PassiveId -eq 10601) {
+        foreach ($file in @('companion-overflow-shield-checkpoint.json','acquired-active-ui-passive-battle.png')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $Run $file))) {
+                throw 'The original cultivated overflow shield did not settle and render.'
+            }
+        }
+    }
     if ($PassiveId -eq 10573 -and (-not (Test-Path -LiteralPath (Join-Path $Run 'companion-overload-protection-checkpoint.json')) -or
         -not (Test-Path -LiteralPath (Join-Path $Run 'acquired-active-ui-passive-battle.png')) -or
         -not (Select-String -LiteralPath $runtimeLog -SimpleMatch '[Acquired passive combat] 10573 cultivated overload protection shield and restore replay passed.'))) {
@@ -116,7 +123,7 @@ if ($SkillSkinId -gt 0 -and ($SkillId -ne 10082 -or $AdditionalSkillIds.Count -g
 if ($PassiveSave) {
     $PassiveSave = (Get-Item -LiteralPath $PassiveSave).FullName
     if (-not $PassiveSave.StartsWith($workspacePath + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
-        $SkillId -notin @(10028,10035,10047,10068,10084,10088,10089,10091) -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated passive cultivation save with its corresponding active skill.' }
+        $SkillId -notin @(10028,10035,10047,10068,10084,10088,10089,10091,10096) -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated passive cultivation save with its corresponding active skill.' }
     $passiveResult = Get-Content -LiteralPath (Join-Path (Split-Path -Parent $PassiveSave) 'result.json') -Raw | ConvertFrom-Json
     if (-not $passiveResult.passed) { throw 'The original passive cultivation flow has not passed.' }
     $passiveProfile = Get-Content -LiteralPath $PassiveSave -Raw | ConvertFrom-Json

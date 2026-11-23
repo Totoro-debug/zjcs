@@ -116,6 +116,7 @@ namespace Zjcs.Presentation.Home
                 ? Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType : 200;
             player.Wardrobe.Profession = profession;
             int passiveCompanion = LoadAcquiredPassiveCompanion(player, skillId, output);
+            bool overflowShield = passiveCompanion == 10601;
             if (passiveCompanion == 10609 || passiveCompanion == 10594 || passiveCompanion == 10543 || starBurst || spiralWindBlade || battlecry)
             {
                 var validationRunner = FindObjectsOfType<SkillDamageTestValidation>().FirstOrDefault();
@@ -332,7 +333,11 @@ namespace Zjcs.Presentation.Home
             }
             if (hellfire) PrepareAcquiredHellfire(actor);
             if (soulPiercer) { actor.Hp = actor.MaxHp / 2; actor.Turn.Hp = actor.Hp; }
-            if (heavenlyRain) { actor.Hp = Math.Max(1L, actor.MaxHp * 2L / 5L); actor.Turn.Hp = actor.Hp; }
+            if (heavenlyRain)
+            {
+                actor.Hp = Math.Max(1L, overflowShield ? actor.MaxHp - 1L : actor.MaxHp * 2L / 5L);
+                actor.Turn.Hp = actor.Hp;
+            }
             if (passiveCompanion == 10597)
             {
                 var listener = actor.Statuses.Single(status => status.ClassId == 25098
@@ -350,6 +355,7 @@ namespace Zjcs.Presentation.Home
             int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, standfastTurns = 0, assaultHits = 0, soulBreakHits = 0, windHits = 0, flameHits = 0, fireLifeCures = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
             int starBlindApplications = 0, starBlindEnds = 0;
             int psychicWardEnds = 0;
+            int overflowShields = 0;
             int doomPushes = 0;
             int tearApplications = 0, tearEnds = 0, tearHits = 0;
             int battlecryAdvances = 0;
@@ -367,7 +373,8 @@ namespace Zjcs.Presentation.Home
                     && view.Status.CreatorId == actor.Id && view.Kind == FightBattleStatusViewEventKind.End);
                 if (psychicWard) psychicWardEnds += VerifyAcquiredSagePsychicWard(step.Event, checkpoint, actor, output);
                 if (hellfire) VerifyAcquiredHellfireStep(step.Event, actor, ref hellfireCures, ref hits);
-                if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits, ref standfastTurns, ref assaultHits, ref soulBreakHits, ref windHits, ref flameHits, ref fireLifeCures);
+                if (overflowShield) overflowShields += VerifyAcquiredSageOverflowShield(step.Event, checkpoint, actor, output);
+                else if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits, ref standfastTurns, ref assaultHits, ref soulBreakHits, ref windHits, ref flameHits, ref fireLifeCures);
                 var skillCasts = step.Event.SkillCasts.Where(value => value.ActorId == 1 && value.Slot == 0
                     && value.SkillItemId == skillId).ToArray();
                 casts += skillCasts.Length;
@@ -461,7 +468,7 @@ namespace Zjcs.Presentation.Home
                     }
                     if (heavenlyRain)
                     {
-                        VerifyAcquiredHeavenlyRain(cast, damageEvents, checkpoint, output, hits == 0);
+                        VerifyAcquiredHeavenlyRain(cast, damageEvents, checkpoint, output, hits == 0, !overflowShield);
                         hits += damageEvents.Length;
                         continue;
                     }
@@ -789,6 +796,11 @@ namespace Zjcs.Presentation.Home
                     yield return CaptureAcquiredActive(output, "confusion");
                     capturedConfusion = true;
                 }
+                if (overflowShield && !capturedPassive && IsNativeSkillParticleVisible("playable24174"))
+                {
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    capturedPassive = true;
+                }
                 if (overloadProtection && !capturedPassive && IsNativeSkillParticleVisible("playable24240"))
                 {
                     yield return CaptureAcquiredActive(output, "passive-battle");
@@ -961,6 +973,8 @@ namespace Zjcs.Presentation.Home
                     FightBattleCheckpointSerializer.Save(checkpoint));
             Require(checkpoint.Finished && casts > 0 && hits > 0 && captured,
                 "The acquired/cultivated active skill did not finish its damage battle.");
+            Require(!overflowShield || overflowShields > 0 && capturedPassive,
+                "The cultivated overflow shield never settled and rendered its original protective effect.");
             Require(!psychicWard || psychicWardEnds > 0,
                 "The cultivated psychic ward never consumed its original mark on actual monster damage.");
             Require(!lightSwordArray || capturedOpening, "The four original opening swords were not captured.");
