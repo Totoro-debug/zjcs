@@ -74,6 +74,7 @@ namespace Zjcs.Presentation.Home
             bool flameSoul = destroyerCompanion == 10599;
             bool fireCore = destroyerCompanion == 10503;
             bool iceCrystal = destroyerCompanion == 10557;
+            bool overloadProtection = destroyerCompanion == 10573;
             bool alienation = HasAlienationCompanion(skillId);
             bool destroyer = starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder || protectiveRunes || destroyerCompanion > 0;
             bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation;
@@ -285,6 +286,9 @@ namespace Zjcs.Presentation.Home
                 if (setting == "MonsterHp" && (waterBlade || soulPiercer))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
+                if (setting == "MonsterHurt" && overloadProtection)
+                    choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
+                        && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
                 if (setting == "Round" && (vortexSurge || passiveCompanion == 10607 || passiveCompanion == 10594 || passiveCompanion == 10543 || dreadShadow || starBurst || spiralWindBlade || battlecry))
                     choice = settings.GetComponentsInChildren<Toggle>().Where(value =>
                         value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting))
@@ -303,6 +307,13 @@ namespace Zjcs.Presentation.Home
             // Make each required trigger reproducible inside the isolated presentation diagnostic.
             if (fireCore) SetAcquiredBattleProperty(actor, "CritRatePercent", 100000);
             if (iceCrystal) SetAcquiredBattleProperty(actor, "EffectRate", 1000000);
+            if (overloadProtection)
+            {
+                Require(!checkpoint.DamageTest.EnableMonsterOneDamage,
+                    "The overload protection diagnostic requires the original normal monster damage option.");
+                foreach (var enemy in checkpoint.Units.Where(unit => unit.Side != actor.Side))
+                    SetAcquiredBattleProperty(enemy, "Attack", actor.MaxHp / 3);
+            }
             Require(active.ItemId == skillId && active.Rank == cultivatedRank && active.Level == 2
                 && active.SubRank == progression.Player.SubRank && actor.Profession == profession,
                 "Production battle assembly lost the actual saved skill/profession/cultivation.");
@@ -732,6 +743,11 @@ namespace Zjcs.Presentation.Home
                     yield return CaptureAcquiredActive(output, "passive-battle");
                     capturedPassive = true;
                 }
+                if (overloadProtection && !capturedPassive && IsNativeSkillParticleVisible("playable24240"))
+                {
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    capturedPassive = true;
+                }
                 if (passiveCompanion == 10598 && !capturedPassive && IsHurricaneGriefVisible()
                     && File.Exists(Path.Combine(output, "companion-hurricane-grief-status.json")))
                 {
@@ -922,6 +938,8 @@ namespace Zjcs.Presentation.Home
                 "The cultivated fire core burst was not exercised and rendered.");
             Require(!iceCrystal || capturedPassive && File.Exists(Path.Combine(output, "companion-ice-crystal-checkpoint.json")),
                 "The cultivated ice crystal thaw was not exercised and rendered.");
+            Require(!overloadProtection || capturedPassive && File.Exists(Path.Combine(output, "companion-overload-protection-checkpoint.json")),
+                "The cultivated overload protection shield was not exercised and rendered.");
             Require(passiveCompanion != 10609 || capturedTacticalAttack && capturedTacticalDefence
                 && File.Exists(Path.Combine(output, "companion-tactical-24394.json"))
                 && File.Exists(Path.Combine(output, "companion-tactical-24393.json")),

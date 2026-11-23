@@ -185,12 +185,13 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleSkillStatistics skill in statistics.Skills)
             {
                 if (skill == null) continue;
+                int casts = skill.StatusTriggerCount > 0 ? skill.StatusTriggerCount : skill.Casts;
                 report.Skills.Add(new FightBattleReportSkill
                 {
                     UnitId = skill.UnitId,
                     SkillEntityId = skill.SkillEntityId,
                     SkillItemId = skill.SkillItemId,
-                    Casts = skill.Casts,
+                    Casts = casts,
                     Hits = skill.Hits,
                     HasDamageHitCounts = skill.HasDamageHitCounts,
                     DamageHits = skill.DamageHits,
@@ -200,8 +201,8 @@ namespace Zjcs.Combat.Official
                     HasStatusApplicationCounts = skill.HasStatusApplicationCounts,
                     BuffApplications = skill.BuffApplications,
                     DebuffApplications = skill.DebuffApplications,
-                    AvgDamageCount = skill.HasDamageHitCounts && skill.Casts > 0
-                        ? (float)skill.DamageHits / skill.Casts : 0f,
+                    AvgDamageCount = skill.HasDamageHitCounts && casts > 0
+                        ? (float)skill.DamageHits / casts : 0f,
                     AvgDamageCountPerTarget = skill.HasDamageHitCounts && skill.DamageTargets > 0
                         ? (float)skill.DamageHits / skill.DamageTargets : 0f,
                     Damage = skill.Damage,

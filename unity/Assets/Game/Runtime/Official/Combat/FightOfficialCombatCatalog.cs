@@ -123,6 +123,11 @@ namespace Zjcs.Combat.Official
         public int CooldownPropertyId => cooldownPropertyId;
         public bool ContainsEntity(int entityId) => entities.ContainsKey(entityId);
 
+        internal bool ReportsAccumulatedHpTriggers(int statusId)
+            => entities.TryGetValue(statusId, out var entity)
+                && Component(entity, "FightStatusHpAccDecreaseComponent") is Dictionary<string, object> component
+                && Bool(component, "ReportSkillTriggerCount");
+
         public IReadOnlyDictionary<int, long> CalculateMonsterProps(int monsterId, int groupNo,
             int level, int subRank)
         {

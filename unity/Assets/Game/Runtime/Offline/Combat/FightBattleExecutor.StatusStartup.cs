@@ -150,7 +150,8 @@ namespace Zjcs.Combat.Official
             FightStatusTriggerRuntime.InitializeRepeatableHpCrossing(owner, status);
             InitializeStatusDeathForbidden(owner, status);
             statusMutex.Add(owner, status);
-            if (statusCatalog != null && status != null && status.HasPropertyComponent)
+            if (statusCatalog != null && status != null
+                && (status.HasPropertyComponent || status.ShieldKind != FightBattleShieldKind.None))
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             // FightStatusComponentImplement.Start initializes the status round clock before
             // publishing its start notification. Capture the same initialized state so the

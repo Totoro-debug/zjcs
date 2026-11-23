@@ -101,6 +101,7 @@ namespace Zjcs.Combat.Official
         public int SkillEntityId;
         public int SkillItemId;
         public int Casts;
+        public int StatusTriggerCount;
         public int Hits;
         // Old checkpoints have no per-cast target history. Keep their averages explicitly unknown.
         public bool HasDamageHitCounts;
@@ -166,6 +167,14 @@ namespace Zjcs.Combat.Official
         {
             Unit(unitId).Casts++;
             Skill(unitId, skillEntityId, skillItemId).Casts++;
+        }
+
+        internal void RecordStatusTrigger(FightBattleStatusState status)
+        {
+            var source = FightBattleStatusReportSource.Resolve(status);
+            if (source.UnitId <= 0 || source.SkillEntityId <= 0) return;
+            var skill = Skill(source.UnitId, source.SkillEntityId, source.SkillItemId);
+            skill.StatusTriggerCount = checked(skill.StatusTriggerCount + 1);
         }
 
         // User-confirmed BreakResilience means successful enemy breaks, not resilience points.

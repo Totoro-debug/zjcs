@@ -178,6 +178,16 @@ namespace Zjcs.Presentation.Combat
             {
                 if (value?.Status == null || !prefabs.ContainsKey(value.Status.ClassId)) continue;
                 var scheduled = new Scheduled { Event = value, Remaining = Mathf.Max(0f, value.Delay) };
+                // Nested hit and round offsets can overlap. Keep transitions of the
+                // same status in settlement order, including a reused instance ID.
+                for (int i = pending.Count - 1; i >= 0 && pending[i].Remaining > scheduled.Remaining; i--)
+                {
+                    var earlier = pending[i];
+                    if (earlier.Event.OwnerId != value.OwnerId
+                        || earlier.Event.Status.InstanceId != value.Status.InstanceId) continue;
+                    scheduled.Remaining = earlier.Remaining;
+                    break;
+                }
                 int index = pending.FindIndex(other => other.Remaining > scheduled.Remaining);
                 if (index < 0) pending.Add(scheduled); else pending.Insert(index, scheduled);
             }

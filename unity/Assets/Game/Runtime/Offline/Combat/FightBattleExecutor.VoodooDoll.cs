@@ -60,7 +60,7 @@ namespace Zjcs.Combat.Official
                 syncTriggerContext, damage.DamageId);
             FightStatusTriggerRuntime.ApplyAccumulatedDamage(target,
                 Math.Max(0, damage.BeforeHp - damage.AfterHp), statusCatalog, random,
-                sourceSkill: syncTriggerContext);
+                sourceSkill: syncTriggerContext, statistics: checkpoint.Statistics);
             ApplyHpChangeTriggers(target, syncTriggerContext);
             SynchronizeDeathForbidden(target);
             TransmitVoodooDamage(target, damage, events, casts, visited);

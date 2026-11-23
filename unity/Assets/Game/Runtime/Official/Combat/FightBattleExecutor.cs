@@ -1165,7 +1165,7 @@ namespace Zjcs.Combat.Official
                     FightBattlePetEnergyRuntime.RecordOwnerDamage(units, target.Id, actualHpLoss);
                     CollectUnflinchingActions(target, actualHpLoss, skill, damage.DamageId);
                     FightStatusTriggerRuntime.ApplyAccumulatedDamage(target,
-                        actualHpLoss, statusCatalog, random, configuredTriggerSkills, skill);
+                        actualHpLoss, statusCatalog, random, configuredTriggerSkills, skill, checkpoint.Statistics);
                     ApplyMissingStatusComponentsOnHit(actor, target, skill, hit, resolved,
                         actualHpLoss, configuredComponentInvocations, processOther: false);
                     damage.IsDamageTriggerStatus = ApplyHitStatuses(actor, target, skill, hit, random, skillCostHp,

@@ -1747,7 +1747,7 @@ namespace Zjcs.Combat.Official
         public static int ApplyAccumulatedDamage(FightBattleUnitState unit, long actualHpDamage,
             FightOfficialCombatCatalog catalog, FightRandomStream random,
             List<FightBattleStatusStateTrigger> triggerSkills = null,
-            FightBattleSkillDefinition sourceSkill = null)
+            FightBattleSkillDefinition sourceSkill = null, FightBattleStatistics statistics = null)
         {
             if (unit == null || catalog == null || actualHpDamage <= 0 || unit.MaxHp <= 0
                 || unit.Statuses == null) return 0;
@@ -1766,6 +1766,7 @@ namespace Zjcs.Combat.Official
                 status.HpAccDamageAccumulated = actualHpDamage > long.MaxValue
                     - status.HpAccDamageAccumulated
                     ? long.MaxValue : status.HpAccDamageAccumulated + actualHpDamage;
+                bool reportTriggers = statistics != null && catalog.ReportsAccumulatedHpTriggers(status.ClassId);
                 while (status.HpAccDamageAccumulated >= threshold
                     && (status.HpAccMaxCount < 0
                         || status.HpAccTriggeredCount < status.HpAccMaxCount))
@@ -1773,6 +1774,7 @@ namespace Zjcs.Combat.Official
                     status.HpAccDamageAccumulated -= threshold;
                     status.HpAccTriggeredCount++;
                     triggered++;
+                    if (reportTriggers) statistics.RecordStatusTrigger(status);
                     ApplyConfiguredStatuses(unit, status, catalog, random);
                     AppendConfiguredSkills(status, triggerSkills, random);
                 }
