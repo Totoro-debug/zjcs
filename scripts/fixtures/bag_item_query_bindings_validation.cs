@@ -109,6 +109,10 @@ public static class BagItemQueryBindingsValidation
         Require(query.CanUseRedDot(recipe.ConditionItemId, 0, 2), "Unlearned formula reads the original inverted cooking condition");
         Require(query.CanUseRedDot(cardItem, 0, 1), "Missing local periodic-card record retains original successful zero count");
         Require(query.GetRedDotType(replaceItem, 0, 1) == (int)RedDotType.RedDot, "Actual equipment quality/property drives dynamic replacement red dot");
+        Require(query.FindItemsByType(new[] { (ItemType)catalog.Item(cardItem).ItemType,
+            (ItemType)catalog.Item(recipe.ConditionItemId).ItemType, (ItemType)catalog.Item(cardItem).ItemType })
+            .Select(row => row.Id).SequenceEqual(new[] { cardItem, recipe.ConditionItemId, cardItem }),
+            "Original type-list order and repeated types are retained independently of inventory insertion order");
         Require(SameFiles(before, Files(root)), "Eligibility, quantities and dynamic indicators never write the selected save");
 
         DateTime boundary = OfflineRefreshClock.DayStart(now.ToLocalTime());

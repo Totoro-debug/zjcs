@@ -72,14 +72,15 @@ namespace Zjcs.Offline.BagItemQueries
         }
         public IReadOnlyCollection<QueryItem> FindItemsByType(IReadOnlyCollection<ItemType> types)
         {
-            var selected = new HashSet<ItemType>(types);
             var equipmentTypes = new HashSet<ItemType>(catalog.EquipTypes);
             var player = PlayerData;
-            return player.Inventory.Where(row => selected.Contains((ItemType)catalog.Item(row.ItemId).ItemType)
-                    && !equipmentTypes.Contains((ItemType)catalog.Item(row.ItemId).ItemType))
+            // PlayerItemManagerExt.FindItemsByType appends each type's list in
+            // caller order. Repeated types deliberately repeat their records.
+            return types.SelectMany(type => player.Inventory
+                .Where(row => (ItemType)catalog.Item(row.ItemId).ItemType == type && !equipmentTypes.Contains(type))
                 .Select(row => Project(row.ItemId, 0, row.Count))
-                .Concat(player.Equipment.Instances.Where(row => selected.Contains((ItemType)catalog.Item(row.ItemId).ItemType))
-                    .Select(row => Project(row.ItemId, row.InstanceId, 1))).ToArray();
+                .Concat(player.Equipment.Instances.Where(row => (ItemType)catalog.Item(row.ItemId).ItemType == type)
+                    .Select(row => Project(row.ItemId, row.InstanceId, 1)))).ToArray();
         }
         QueryItem Project(int itemId, long instanceId, long count)
         {

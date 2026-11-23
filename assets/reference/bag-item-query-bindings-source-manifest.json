@@ -373,7 +373,7 @@
     "unity/Assets/Game/Runtime/Official/BagItemQueries/Zjcs.Official.BagItemQueries.asmdef": "fd9fb758cbec936de0b374a50e8224a0b800c13438f6315bad685f4026f2f732",
     "unity/Assets/Game/Runtime/Official/BagItemQueries/Zjcs.Official.BagItemQueries.asmdef.meta": "f5ab51df0f1e9a4bea15c2ee42c7f58bca2469e7a28c407b923d5ed1d3e40dea",
     "unity/Assets/Game/Runtime/Offline/BagItemQueries/OfflineBagItemQueryCatalog.cs": "30f26ce86f2f8eb78ff6feb2b833cd55ba9780280e84b7122b6a066e80b3b372",
-    "unity/Assets/Game/Runtime/Offline/BagItemQueries/OfflineBagItemQueries.cs": "bf5b628e680b6cacff750ca330314bf16d5a9c941740675a23f0a3642cf3335c",
+    "unity/Assets/Game/Runtime/Offline/BagItemQueries/OfflineBagItemQueries.cs": "703b2f3e6025c494c7c776710a1623c877be78a3833cb5be0f9efbb9d4a269be",
     "unity/Assets/Game/Runtime/Offline/Progression/IOfflineInventoryItemIndicators.cs": "a5316ff14b6271e3073543f4e5ddb5df6ddfb6c179d90667f2e926ff6bff7e74",
     "docs/common/refresh-time.md": "e25eb1c22d9b7a57108aed4173d9a37e2f9015cd2e0b84b902bd638c929db0e3",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineRefreshClock.cs": "bfdb55fdbd99cf5e9d460cf256f587706e7d3dd81e6e3457f8049c1e28b704cf",
@@ -394,7 +394,7 @@
     "unity/Assets/Game/Resources/Home/BagItemQueries.meta": "1d5a19d6012de56504cfd1443a4f7606f2d4668e9e7e4789d73fdece850c7e2d",
     "unity/Assets/Game/Runtime/Offline/BagItemQueries/OfflineBagItemQueryCatalog.cs": "30f26ce86f2f8eb78ff6feb2b833cd55ba9780280e84b7122b6a066e80b3b372",
     "unity/Assets/Game/Runtime/Offline/BagItemQueries/OfflineBagItemQueryCatalog.cs.meta": "74f29f34c63716f454875a919f9957ea87ee6d693024125d30b28a93c7f9b13b",
-    "unity/Assets/Game/Runtime/Offline/BagItemQueries/OfflineBagItemQueries.cs": "bf5b628e680b6cacff750ca330314bf16d5a9c941740675a23f0a3642cf3335c",
+    "unity/Assets/Game/Runtime/Offline/BagItemQueries/OfflineBagItemQueries.cs": "703b2f3e6025c494c7c776710a1623c877be78a3833cb5be0f9efbb9d4a269be",
     "unity/Assets/Game/Runtime/Offline/BagItemQueries/OfflineBagItemQueries.cs.meta": "56aae84a0143f06adb1d21739c6c57629dbde28cd0594c851053c9a9c4f8bba1",
     "unity/Assets/Game/Runtime/Offline/BagItemQueries/Zjcs.Offline.BagItemQueries.asmdef": "78031ef2cae69cf2045935c45379c83c2a44a864708c4e5820f66bc0df1af659",
     "unity/Assets/Game/Runtime/Offline/BagItemQueries/Zjcs.Offline.BagItemQueries.asmdef.meta": "95a1073cea76379f0e00cce2f24849e97eb642e38a3f3eedeb2110ad17a6821a",
@@ -404,7 +404,7 @@
     "unity/Assets/Game/Resources/Home/BagItemQueries/catalog.json.meta": "a6416a0ee3e246a3815ca7e147a688d55fafaf47087a85e7cedad4644233e1b7"
   },
   "validation_inputs": {
-    "scripts/fixtures/bag_item_query_bindings_validation.cs": "6e6789acf2cd48fa985eb167bb6ea06a7fa2ba67ae6239a9aec5a909d9638d8e",
+    "scripts/fixtures/bag_item_query_bindings_validation.cs": "5db37d26295f2d50d8ea4c896518c1d0c5add0c3d68eecf799e644e15d339695",
     "scripts/test_bag_item_query_bindings.ps1": "3b57c4aa7244c19a697f98eddc10249387012d6cb5b203fbe64c43b1c9dbdcc6"
   },
   "adaptation": "Original Bag queries read current local inventory, pets, periodic-card expiry, formula-use records and equipment including persisted pending purify properties. Calendar day counts follow the shared user-confirmed local refresh boundary. Query reads do not mutate or reload a save.",
