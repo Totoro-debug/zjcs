@@ -25,7 +25,8 @@ def write_staged_assets(queue, folder):
         else:
             raw = data
         path.write_bytes(raw)
-        importer = 'PrefabImporter' if path.suffix == '.prefab' else 'ShaderImporter' if path.suffix == '.shader' else 'NativeFormatImporter'
+        importer = ('PrefabImporter' if path.suffix == '.prefab' else 'ShaderImporter' if path.suffix == '.shader'
+                    else 'TextScriptImporter' if path.suffix in ('.bytes', '.txt', '.json') else 'NativeFormatImporter')
         meta = Path(str(path)+'.meta')
         meta.write_text('fileFormatVersion: 2\nguid: '+target_guid+'\n'+importer+':\n  externalObjects: {}\n','utf8',newline='\n')
         outputs[target.as_posix()] = sha(raw)
@@ -33,7 +34,7 @@ def write_staged_assets(queue, folder):
     return outputs
 
 
-def install_staged_assets(work, folder, outputs, destination, prefix):
+def install_staged_assets(work, folder, outputs, destination, prefix, *, previous_outputs=None):
     for relative, expected in outputs.items():
         if sha((folder/relative).read_bytes()) != expected:
             raise ValueError('Staged native asset changed: '+relative)
@@ -58,7 +59,15 @@ def install_staged_assets(work, folder, outputs, destination, prefix):
             if not meta.is_file() or guid(meta) != key:
                 raise ValueError('Preserve existing native asset with a different GUID: '+str(target))
             if target.read_bytes() != source.read_bytes():
-                raise ValueError('Preserve different existing native payload: '+str(target))
+                previous = previous_outputs or {}
+                if (not target.is_relative_to(destination) or
+                    sha(target.read_bytes()) != previous.get(target.relative_to(ROOT).as_posix()) or
+                    sha(meta.read_bytes()) != previous.get(meta.relative_to(ROOT).as_posix())):
+                    raise ValueError('Preserve different existing native payload: '+str(target))
+                # A serialization repair may update only this module's verified
+                # previous output. Original/cache input checks are unchanged.
+                target.write_bytes(source.read_bytes())
+                meta.write_bytes(Path(str(source)+'.meta').read_bytes())
         else:
             target.parent.mkdir(parents=True,exist_ok=True)
             target.write_bytes(source.read_bytes())

@@ -46,10 +46,10 @@ class UnityYamlLoader(getattr(yaml, 'CSafeLoader', yaml.SafeLoader)):
                 # Unity serializes object names as strings, including numeric
                 # child names such as 1/2/3 in the original battle results.
                 value.tag = 'tag:yaml.org,2002:str'
-            if key.value == 'myKey' and value.tag == 'tag:yaml.org,2002:null' and value.value == '':
-                # Unity's blank serialized language key is an empty string.
+            if key.value in ('myKey', 'mAssetGuid') and value.tag == 'tag:yaml.org,2002:null' and value.value == '':
+                # Unity's blank language/asset GUID fields are empty strings.
                 # PyYAML's null would be emitted as the literal text "null",
-                # causing MultiLanguageText to overwrite static separators.
+                # changing text or making an empty texture proxy appear valid.
                 value.tag = 'tag:yaml.org,2002:str'
             if key.value in ('m_IndexBuffer', '_typelessdata', 'm_TypelessData',
                              'IgnoreSkinTypes', 'IgnoreEffectTypes', 'm_VertexStreams',

@@ -12,11 +12,18 @@
     ".tools/source-packages/current/903_156948/official-code/client-source/HomeActionEventHandler.cs": "bbd8be6399f47db36ea8fbae22eda33843c44d65a800744e6625ad031e957748",
     ".tools/source-packages/current/903_156948/official-code/client-source/HomeSwitcherActionEventHandler.cs": "fc0569a6076b7168c48fde0ff30a7bdd6d65ef3391e9d2876f0a5851421d192c",
     ".tools/source-packages/current/903_156948/official-code/client-source/HomeWeaponRack.cs": "9c3c0ed1594a37986cd40bf3efab87391b595ee70bdec1a0949444d0027ec235",
+    ".tools/source-packages/current/903_156948/official-code/client-source/AppearancePartSideType.cs": "c43ed6668be591d1c53b9ccc183fdcdfbe5650c2e0dd8151692600d0de21b071",
+    ".tools/source-packages/current/903_156948/official-code/client-source/AppearancePartSide.cs": "832d2c6ba9181e52f4e2a5628667003f77fc5a80685ccec589d5d65acc498e2e",
+    ".tools/source-packages/current/903_156948/official-code/client-source/AppearancePartSideSwitchListener.cs": "c86f7c8d7a0ad5afe322a0dbfbfa1e9337bea17e0e87765460b08b0a116e1095",
+    ".tools/source-packages/current/903_156948/official-code/client-source/AppearancePartSideSwitcher.cs": "95d9dd3b28c2c185347a5085bc057b40fcb6feabcd79b87eab233865e52ac316",
+    ".tools/source-packages/current/903_156948/official-code/client-source/HomeWeapon.cs": "6870ffc0b70630e73f8a226bbde500c0166f2b219a410947bae291bb3332b5d4",
+    ".tools/source-packages/current/903_156948/official-code/client-source/AppearanceSystem.Runtime/AppearanceAnimUtils.cs": "32b704601acfdd112d8d289ef4082fa51fb5e7e0dd78281a76a1b56ebd1748c3",
     "scripts/prepare_unity_profession_appearance_resolver.py": "ed0e7b33e74acd7f45fbddcde7c4051d97b3f53ae6f850db378d4f33d68a4c2e",
     "scripts/prepare_unity_profession_photographer.py": "21b43ad45b60fea01af75928c8213b54045ec4461a54bb8e411a571382c6d282",
     "scripts/prepare_unity_profession_ui_parts.py": "ecbd7039f9fa4dff5e6453c23ca41dda07b9cf32a732d1bff87fd8659b5b291b",
     ".tools/source-packages/current/903_156948/official-code/client-source/AppearanceSystem.Runtime/AppearanceUtils.cs": "58e391189da627b3375bad37d74cd9222923c2dd3545c72ae63d11a64a5431e4",
     "scripts/templates/home_furniture/HomeFurnitureServices.cs": "207a4bbc63176b29b828a10d114bd3a61ef04f8cfae8d0b45a8d2063edcd67c7",
+    "scripts/templates/home_furniture/HomeWeaponAnimationBindings.cs": "f9d97174a4c95e3b7ef1f99458c14ffaf1ac6b4fc75def2c3ad21159a2671311",
     "scripts/templates/home_furniture/HomeWeaponRackServices.cs": "6749e1907742a1422981de1323712733c753ceadfcd6fa82d37b47fe8d195d6e"
   },
   "outputs": {
@@ -38,18 +45,33 @@
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeSwitcherActionEventHandler.cs.meta": "d55ed6cb50626c4d871033f33b46e9693c848e4308338f9184673d29042b4a56",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponRack.cs": "b3a8de48a340fd39792153821544b9e780a9734c373cd33e893b99c293df0abb",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponRack.cs.meta": "36bd816059695aad43dff33bc70f6f08b81abadbe28e95e4a949fdf60b396121",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/AppearancePartSideType.cs": "2141ea36b63a2cdfa18d320a080e86a27120e4522449726b7347cb4bca20ff38",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/AppearancePartSideType.cs.meta": "7ad664de8bbaf57dc9da194e939ded8d3f83402c40419557ea266d6772b86e05",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/AppearancePartSide.cs": "855ecfb19dd1999ca68160069c590e23bf79afc47a03cb6b0b92b5ada503a4a7",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/AppearancePartSide.cs.meta": "3ebb842ada1e80464bc70bb2431c8bbbb8f667b3aeae7362692dcc2c341eb499",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/AppearancePartSideSwitchListener.cs": "61c76952e2c3cb8d65c90fc8f48f55a9ffe00950cdf2a2b8cf4940121bed6a90",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/AppearancePartSideSwitchListener.cs.meta": "d3eec40ca6b892ee2308b763e5e54707999a4952cfc98cfd8e06db7beb520212",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/AppearancePartSideSwitcher.cs": "02681b965af34ae750dfca485b69828f0ec3942a07f34c57e09151e1124b8d97",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/AppearancePartSideSwitcher.cs.meta": "16edce0e0ef37424f01ca1a0a535b7e5bf0666628e45e693ec7a0aa10ff25e5d",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeapon.cs": "eb679c7e92711386068449dfdf65982d2c8e54023c31d9acd58b50977f86a709",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeapon.cs.meta": "1db6f7e94cfb42d37c2b79c9f1d8a71bd20f6d198093415434954c4329dc5d87",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponAnimation.cs": "491b80ece6f013e8fcb816b61577d00978cb433fbec95d5bb8727726086134b0",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponAnimation.cs.meta": "e92afc814460c698897c85b054c770bdca21e83beb8bcb33010933ad03c49553",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeFurnitureServices.cs": "207a4bbc63176b29b828a10d114bd3a61ef04f8cfae8d0b45a8d2063edcd67c7",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeFurnitureServices.cs.meta": "0a4c24493e5b0aeabd392607aea9b94962f03e337a640b7673bb5df656da1675",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponAnimationBindings.cs": "f9d97174a4c95e3b7ef1f99458c14ffaf1ac6b4fc75def2c3ad21159a2671311",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponAnimationBindings.cs.meta": "f237817b8d50faa2821d4d4d0f0169bbbb28a018b47a5b13c05d5a071cb45229",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponRackServices.cs": "6749e1907742a1422981de1323712733c753ceadfcd6fa82d37b47fe8d195d6e",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponRackServices.cs.meta": "c2ab9867f1ccc673eba0224e9e61fa989962a7f8fcb136f105d81d72f7a9c39f",
-    "unity/Assets/Game/Runtime/Official/HomeFurniture/Zjcs.Official.HomeFurniture.asmdef": "37062cb6b5516719a5129e4a556ad191bafd024757bf04592737e8873ee8a108",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/Zjcs.Official.HomeFurniture.asmdef": "c511984bdd0a216e289ab1dfd2a32f3959d8b8279660cbcfbe4b3b991d1057fa",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/Zjcs.Official.HomeFurniture.asmdef.meta": "b4ba2a3feb40823f56dbd23536b35154a44ae2109b17eefc8437f6bac27fb236",
     "unity/Assets/Game/Runtime/Official/HomeFurniture.meta": "ca9d0edf5f0819afe26b16ff0ef206186ed5c208538799b6feb949246c5d533e"
   },
   "validation_inputs": {
-    "scripts/fixtures/home_furniture_controller_validation.cs": "c5a4577fabcc711220a2d89bb2ef32a6c8dd562920a035e0eba704b258a1e7be",
-    "scripts/fixtures/home_weapon_rack_controller_validation.cs": "093854cad967060986b586b6cd735e6b2d7f9bd063dbe03728bbf54ba53d952b",
-    "scripts/test_home_furniture_controllers.ps1": "be06a127ce0ee8e5d0e739a91bacdc88b9b2e8f7a2dac65ed5c423badfcc708b"
+    "scripts/fixtures/home_furniture_controller_validation.cs": "d5192b1a7e23117030272e17c955893322bed75fb2777e0c1eaa2d3a18bdf298",
+    "scripts/fixtures/home_weapon_rack_controller_validation.cs": "a60b930eb15c3926ba5431550319711aa9fe97e64eb9e7d4e21824ae034ec2b3",
+    "scripts/fixtures/home_native_weapon_validation.cs": "22b93b851b81f9afec4c5e51c0645bd4d7f21ed84e15854bd83b2c5f2419b4a6",
+    "scripts/test_home_furniture_controllers.ps1": "c0dc97f0aeed3d6a681d686e87550e1a7a5e09fae17ec2403416287ad68bac81"
   },
   "shared_dependencies": {
     "unity/Assets/Game/Runtime/Official/HomeSceneInput/ClickableHomeObj.cs": "2ab7a2e3d378cd66e60e1378b0ff9b03ae097961a031ca690d1ec9e5c1884ca8",
@@ -109,7 +131,7 @@
       "b54377961060f7e5fea71f59deddfdb9b92bfbb3f68f52abe98bbf00b081e701"
     ]
   },
-  "generator_sha256": "5747b2c700b938a8113747c4bc19a63c3f0c10b5ee41510cf4011f34c00ccb39",
+  "generator_sha256": "96da6cdd2d59dc03e2f83251f63c7f0ed01b5614d82bceedb15d3ba8ef964f64",
   "adaptations": [
     "Original four-state priority, click branches, condition subscriptions and teardown are retained.",
     "Original notice transitions, time-offset callbacks, notice text keys and arguments are retained.",

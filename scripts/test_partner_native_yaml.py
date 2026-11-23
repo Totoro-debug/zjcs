@@ -6,6 +6,18 @@ from prepare_partner_detail_actor_native import PartnerDetailActorBinding
 
 
 class PartnerNativeYamlTests(unittest.TestCase):
+    def test_blank_optional_texture_guid_stays_empty(self):
+        # Original High loaders serialize a real target and a blank optional
+        # dye GUID. Literal "null" would instead request an invalid asset.
+        text = ('targetTextureReference:\n  AssetReference:\n'
+                '    mAssetGuid: 5f4c92f09b36fd2418d950ed3eb3503f\n'
+                'dyeTextureReference:\n  AssetReference:\n    mAssetGuid:\n')
+        value = yaml.load(text, Loader=UnityYamlLoader)
+        restored = yaml.load(yaml.safe_dump(value), Loader=UnityYamlLoader)
+        self.assertEqual(restored['targetTextureReference']['AssetReference']['mAssetGuid'],
+                         '5f4c92f09b36fd2418d950ed3eb3503f')
+        self.assertEqual(restored['dyeTextureReference']['AssetReference']['mAssetGuid'], '')
+
     def test_embedded_mesh_keeps_empty_external_stream_path(self):
         # A null path emitted by the converter becomes the literal filename
         # "null" in Unity, so its embedded vertex bytes are not loaded.

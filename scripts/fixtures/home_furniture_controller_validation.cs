@@ -211,6 +211,7 @@ public sealed partial class HomeFurnitureControllerChecks : MonoBehaviour
         Require(services.ConditionSubscriptions.Count == 0 && services.HomeChanges.Count == 0 && services.Awards.Count == 0, "Destroy disposes original subscriptions and award handler");
         Require(services.PlayerValue.RepairSubscribers == 0 && services.PlayerValue.TimeSubscribers == 0 && services.ContextDisposed == 1, "Destroy releases player callbacks and reused story context");
         yield return CheckWeaponRack();
+        yield return CheckNativeWeapon();
         Debug.Log("Furniture controller assertions completed.");
     }
 

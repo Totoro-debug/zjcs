@@ -83,8 +83,11 @@ using Object = UnityEngine.Object;
         source_header = header
         if 'List<' in text or 'HashSet<' in text:
             source_header = source_header.replace('using System.Collections;\n', 'using System.Collections;\nusing System.Collections.Generic;\n')
+        if name in ('HomeWeapon', 'AppearancePartSideSwitcher', 'HomeWeaponAnimation'):
+            source_header = source_header.replace('using UnityEngine.Serialization;\n',
+                'using UnityEngine.Serialization;\nusing Spine;\nusing Spine.Unity;\nusing Animation = Spine.Animation;\nusing AnimationState = Spine.AnimationState;\n')
         text = '\n'.join(line.rstrip() for line in (source_header + text + '\n}\n').split('\n'))
-        if any(token in text for token in ('MeManager', 'Parsers.Instance', 'WindowManager', 'AwardManager', 'Framework.', '[Inject]', 'ServiceProvider', 'PlayerPlayState', 'StoryPlayEntry', 'Log.Debug', 'Log.Error')):
+        if any(token in text for token in ('MeManager', 'Parsers.Instance', 'WindowManager', 'AwardManager', 'Framework.', '[Inject]', 'ServiceProvider', 'PlayerPlayState', 'StoryPlayEntry', 'GLogger', 'Log.')):
             raise ValueError('Unbound furniture service: ' + name)
         path = DEST / (name + '.cs')
         write(path, text.encode())
@@ -201,6 +204,49 @@ using Object = UnityEngine.Object;
     text = text.replace('quaternion.op_Implicit(quaternion.identity)', 'Quaternion.identity')
     emit('HomeWeaponRack', text)
 
+    from prepare_unity_profession_ui_parts import log_blocks
+    for name in ('AppearancePartSideType', 'AppearancePartSide', 'AppearancePartSideSwitchListener'):
+        emit(name, read(name))
+    text = log_blocks(read('AppearancePartSideSwitcher'))
+    text = replace(text, '''\t\t\tGLoggerErrorInterpolatedStringHandler message = new GLoggerErrorInterpolatedStringHandler(0, 0, out var _);
+\t\t\tLog.Error(exception, ref message, null, "UpdateSide", "/Volumes/Data/Projects/idleXX_cn_release_android/Client/Assets/Scripts/AppearanceSystem/SplitPart/AppearancePartSideSwitcher.cs", 64);''',
+        '\t\t\tDebug.LogException(exception, this);')
+    text = replace(text, 'public AppearancePartSideType Side;',
+        'public IHomeWeaponAnimationBindings AnimationBindings { get; set; }\n\n\tpublic AppearancePartSideType Side;')
+    text = text.replace('AppearanceAnimUtils.PlayAnimation(', 'HomeWeaponAnimation.PlayAnimation(AnimationBindings, ')
+    text = text.replace('Object.op_Implicit((Object)(object)SkeletonAnimation)', '(bool)SkeletonAnimation')
+    text = text.replace('Object.op_Implicit((Object)(object)SkeletonGraphic)', '(bool)SkeletonGraphic')
+    emit('AppearancePartSideSwitcher', text)
+    text = read('HomeWeapon')
+    text = text.replace('TryGetComponent<AppearanceRendererLite>(ref appearanceRendererLite)',
+        'TryGetComponent<AppearanceRendererLite>(out appearanceRendererLite)')
+    emit('HomeWeapon', text)
+
+    from prepare_unity_profession_appearance_resolver import method
+    animation_source = read('AppearanceSystem.Runtime/AppearanceAnimUtils')
+    bodies = []
+    for name in ('SkeletonAnimation', 'SkeletonGraphic'):
+        value = log_blocks(method(animation_source, 'public static void PlayAnimation(' + name + ' '))
+        # This overload reuses the decompiler's earlier logging-enabled local.
+        # The shared log helper handles only declarations with `out var`.
+        if name == 'SkeletonAnimation':
+            value = replace(value, '''\t\t\t\tGLoggerWarnInterpolatedStringHandler message2 = new GLoggerWarnInterpolatedStringHandler(9, 1, out enabled);
+\t\t\t\tif (enabled)
+\t\t\t\t{
+\t\t\t\t\tmessage2.AppendLiteral("不存在指定的动画:");
+\t\t\t\t\tmessage2.AppendFormatted(animationName, 0, null, "animationName");
+\t\t\t\t}
+\t\t\t\tLog.Warn(ref message2, null, "PlayAnimation", "/Volumes/Data/Projects/idleXX_cn_release_android/Client/Assets/Scripts/AppearanceSystem/Utils/AppearanceAnimUtils.cs", 206);''',
+                '\t\t\t\tDebug.LogWarning("不存在指定的动画:" + animationName);')
+            value = replace(value, '\t\tbool enabled;\n', '')
+        value = value.replace('PlayAnimation(' + name + ' ',
+            'PlayAnimation(IHomeWeaponAnimationBindings bindings, ' + name + ' ', 1)
+        value = value.replace('GetOrLoadSpineAnimation(', 'bindings.GetOrLoadSpineAnimation(')
+        value = value.replace('UpdateAnimation(', 'bindings.UpdateAnimation(')
+        bodies.append(value)
+    bodies.append(method(animation_source, 'private static void SetAnimation('))
+    emit('HomeWeaponAnimation', 'public static class HomeWeaponAnimation\n{\n' + '\n'.join(bodies) + '\n}\n')
+
     # Reuse the existing resolver only after proving that the complete method
     # closure used by this selected rack has the same original bodies.
     from prepare_unity_profession_appearance_resolver import adapt, method
@@ -243,13 +289,14 @@ using Object = UnityEngine.Object;
     definition = DEST / 'Zjcs.Official.HomeFurniture.asmdef'
     write(definition, (json.dumps(dict(name='Zjcs.Official.HomeFurniture', references=[
         'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeSceneInput', 'Zjcs.Official.ProfessionUI',
-        'Zjcs.Official.WorldUI']), indent=2) + '\n').encode())
+        'Zjcs.Official.WorldUI', 'spine-unity', 'spine-csharp']), indent=2) + '\n').encode())
     metadata(definition)
     metadata(DEST, True)
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     validations = [ROOT / path for path in (
         'scripts/fixtures/home_furniture_controller_validation.cs',
         'scripts/fixtures/home_weapon_rack_controller_validation.cs',
+        'scripts/fixtures/home_native_weapon_validation.cs',
         'scripts/test_home_furniture_controllers.ps1')]
     shared = [ROOT / path for path in (
         'unity/Assets/Game/Runtime/Official/HomeSceneInput/ClickableHomeObj.cs',

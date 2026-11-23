@@ -127,15 +127,18 @@ public sealed partial class HomeFurnitureControllerChecks
         public readonly List<Action<ActionEventData>> ActionCallbacks = new List<Action<ActionEventData>>();
         readonly GameObject fixtures;
         readonly Dictionary<string, GameObject> prefabs = new Dictionary<string, GameObject>();
+        readonly Func<string, GameObject> nativePrefab;
+        readonly Action<GameObject> configure;
         public int Released;
         public IProfessionPlayerAppearanceSource MainPlayer => Main;
         public IProfessionPlayerAppearanceSource PlayerData => Home;
         public ProfessionAppearanceTables Tables { get; }
         public ProfessionAppearanceResolver Appearance { get; }
         public HomeViewMode HomeViewMode { get; private set; }
-        public RackServices(GameObject fixtures)
+        public RackServices(GameObject fixtures, Func<string, GameObject> nativePrefab = null, Action<GameObject> configure = null)
         {
             this.fixtures = fixtures; fixtures.SetActive(false);
+            this.nativePrefab = nativePrefab; this.configure = configure;
             Tables = ProfessionAppearanceTables.Load(Resources.Load<TextAsset>("Combat/SceneAppearance/appearance-tables").text);
             Appearance = new ProfessionAppearanceResolver(Tables);
         }
@@ -155,6 +158,12 @@ public sealed partial class HomeFurnitureControllerChecks
         public IHomeFurniturePrefabHandle LoadPrefab(string originalLocation)
         {
             Loaded.Add(originalLocation);
+            if (nativePrefab != null)
+            {
+                var original = nativePrefab(originalLocation);
+                if (!original) throw new InvalidOperationException("Unbound original native Home weapon: " + originalLocation);
+                return new Handle(this, original);
+            }
             if (!prefabs.TryGetValue(originalLocation, out var prefab))
             {
                 prefab = new GameObject("ControllerPortFixture"); prefab.transform.SetParent(fixtures.transform, false);
@@ -165,7 +174,14 @@ public sealed partial class HomeFurnitureControllerChecks
             }
             return new Handle(this, prefab);
         }
-        public GameObject Instantiate(GameObject prefab, Transform parent, bool worldPositionStays) => Object.Instantiate(prefab, parent, worldPositionStays);
+        public GameObject Instantiate(GameObject prefab, Transform parent, bool worldPositionStays)
+        {
+            if (configure == null) return Object.Instantiate(prefab, parent, worldPositionStays);
+            var instance = Object.Instantiate(prefab, fixtures.transform, false);
+            configure(instance);
+            instance.transform.SetParent(parent, worldPositionStays);
+            return instance;
+        }
         public void Dispose() { if (fixtures) Object.Destroy(fixtures); }
     }
 }
