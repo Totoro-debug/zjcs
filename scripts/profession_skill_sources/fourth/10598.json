@@ -1,0 +1,26 @@
+{
+  "entities": [25099, 24488],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/profession-current-graphs-source-manifest.json",
+    "assets/reference/battle-animation/spiral-wind-blade-current-graphs-source-manifest.json",
+    "assets/reference/battle-animation/hurricane-grief-current-graphs-source-manifest.json",
+    "assets/reference/battle-animation/hurricane-grief-current-skill-graphs-source-manifest.json"
+  ],
+  "runtime_rule_packs": ["unity/Assets/Game/Resources/Combat/SkillRules/10598.json"],
+  "rule_pack_fragments": ["FightSkill_part755.g.bytes", "FightSkill_part725.g.bytes"],
+  "client_code": [
+    "MyFightStatus",
+    "MyFightStatusActionStart",
+    "MyFightStatusDoDamageHandle",
+    "MyFightHitFixed"
+  ],
+  "code": [
+    "FightStatusComponentInfo",
+    "FightStatusActionStartComponentInfo",
+    "FightStatusDoDamageHandleComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "BattleFormulaHandler",
+    "ActionType"
+  ]
+}

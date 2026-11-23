@@ -27,6 +27,7 @@ namespace Zjcs.Presentation.Home
             supported |= active == 10084 && player.Wardrobe.Profession == 4 && itemId == 10592;
             supported |= active == 10028 && player.Wardrobe.Profession == 13 && itemId == 10599;
             supported |= active == 10028 && player.Wardrobe.Profession == 17 && itemId == 10579;
+            supported |= active == 10091 && player.Wardrobe.Profession == 13 && itemId == 10598;
             Require(supported && source.Player.Wardrobe.Profession == player.Wardrobe.Profession
                 && source.Player.Level == player.Level && source.Player.SubRank == player.SubRank
                 && plan.ActiveSkills.All(id => id == 0)
@@ -64,6 +65,11 @@ namespace Zjcs.Presentation.Home
             if (itemId == 10579)
             {
                 VerifyAcquiredAlienation(checkpoint, output);
+                return;
+            }
+            if (itemId == 10598)
+            {
+                VerifyAcquiredHurricaneGrief(step, checkpoint, output, ref windHits);
                 return;
             }
             if (itemId == 10599)

@@ -701,6 +701,12 @@ namespace Zjcs.Presentation.Home
                     yield return CaptureAcquiredActive(output, "passive-battle");
                     capturedPassive = true;
                 }
+                if (passiveCompanion == 10598 && !capturedPassive && IsHurricaneGriefVisible()
+                    && File.Exists(Path.Combine(output, "companion-hurricane-grief-status.json")))
+                {
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    capturedPassive = true;
+                }
                 if (passiveCompanion == 10595 && !capturedPassive
                     && FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
                         && particle.GetComponentsInParent<Transform>().Any(parent =>
@@ -859,6 +865,10 @@ namespace Zjcs.Presentation.Home
                 "The cultivated steel faith never checked an actual taunted enemy's configured hit.");
             Require(passiveCompanion != 10579 || File.Exists(Path.Combine(output, "companion-alienation-checkpoint.json")),
                 "The cultivated alienation never checked an afflicted enemy's configured hit.");
+            Require(passiveCompanion != 10598 || capturedPassive && windHits > 0
+                && File.Exists(Path.Combine(output, "companion-hurricane-grief-status.json"))
+                && File.Exists(Path.Combine(output, "companion-hurricane-grief-movement.json")),
+                "The cultivated wind laceration was not applied, rendered and settled during movement.");
             Require(passiveCompanion != 10595 || windHits > 0 && capturedPassive,
                 "The cultivated wind orb never rendered and struck at the owner's turn end.");
             Require(passiveCompanion != 10543 || flameHits > 0 && capturedPassive,

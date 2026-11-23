@@ -1,0 +1,3513 @@
+{
+  "manifest": "903_156948",
+  "originals": [
+    {
+      "id": "skills:12660",
+      "shared_dependency_bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_12660.bundle",
+      "native_export_meta": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/12660/12660.prefab.meta",
+        "sha256": "207d9ca6af93ee3c2a5a505550fedcde2d029a4fdc8103e41bd98ff4d9f16b4e"
+      },
+      "original_game_object_name": "12660",
+      "original_game_object_sha256": "99c8a5c9b6ba76f65fa7c96691df422341c9a9242ecb36456a263ee47d191dc6",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_12660.bundle",
+        "bundle_hash": "835079de6e8deb1758a152f05e7a84dd",
+        "path_id": "4642496041832347459",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/835079de6e8deb1758a152f05e7a84dd.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 5918,
+        "bundle_sha256": "01a848022b8ab3646040364030f3628ca1e6b13dfc9ff9d42407505671709a84"
+      }
+    },
+    {
+      "id": "binding:Prefabs/EcEntity/Fight/FightSkill/12660/playable12660.prefab",
+      "shared_dependency_bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_12660.bundle",
+      "native_export_meta": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/12660/playable12660.prefab.meta",
+        "sha256": "c76d762c4306740463cae062a2122e98542cd9e49786a3deef9533a2424a8531"
+      },
+      "original_game_object_name": "playable12660",
+      "original_game_object_sha256": "a34e10988511747d22cc7a9de86251ecc977af6003f4f255c710f996cde1e84c",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_12660.bundle",
+        "bundle_hash": "835079de6e8deb1758a152f05e7a84dd",
+        "path_id": "3806022893271265977",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/835079de6e8deb1758a152f05e7a84dd.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 5918,
+        "bundle_sha256": "01a848022b8ab3646040364030f3628ca1e6b13dfc9ff9d42407505671709a84"
+      }
+    }
+  ],
+  "native_export_receipt": {
+    "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export-source-manifest.json",
+    "sha256": "0de6c74ff24d41ac9eb0bbb73791dc037ef9b3f9e8de0b0183ab65be48f10a5f"
+  },
+  "native_inputs": [
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/Materials/Fx_BaoDian_103_NB_5.mat",
+      "sha256": "1c10aa6ed1d68717d9bbdaf26472542026407348084c218bd02b35dfcdc8c1ad"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/Materials/Fx_BaoDian_103_NB_5.mat.meta",
+      "sha256": "9cb0d97e7f75fc68e5102abec6b35cea1020e0c25c480a4795c0c95d32b83bd0"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/Materials/Fx_DiLie_0012_NB_5.mat",
+      "sha256": "0c6d995da233147094775fe7dca0fd560cc3d5d3d95b48cb31b414f77b6b5095"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/Materials/Fx_DiLie_0012_NB_5.mat.meta",
+      "sha256": "f8bf999bd6015af74994cab15ef729a58381ce1e1bf82cd62b0f6e3e47dcaaac"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_12_2.mat",
+      "sha256": "b4ee0e52c0156b3cd9242634472564974fc579426638650d8fb248c7a3ace072"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_12_2.mat.meta",
+      "sha256": "5ca6e59ac807f3fcc4d23055b5567b133a4aeeb202795d99f09409f3e51c7a7f"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/Materials/Fx_QiLang_183 2_NB_5.mat",
+      "sha256": "02a33fdb106efb7882df89e6850c83e31a98c8153062a45f152178e899a4e76d"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/Materials/Fx_QiLang_183 2_NB_5.mat.meta",
+      "sha256": "c8c5f9f2821b214a10e78532f4be49a2b106e764216372046cae95a6c7a92d52"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/Materials/Fx_TuCi_0002_NB_5.mat",
+      "sha256": "be3566ba223369b3c623173a1322876a6e663431aae751e7be94513e8ed0403d"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/Materials/Fx_TuCi_0002_NB_5.mat.meta",
+      "sha256": "844f995c758ab1474d1457473ee856026b1496419f482e35998811f229189c0c"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/models/Plane01.asset",
+      "sha256": "4804a0d5faf99fc8c78fe419337fdef73f60df3e507e698c63db3e55a7f81bcf"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/models/Plane01.asset.meta",
+      "sha256": "391ec22283b2cdc92528ac7ec6818d6e49eb114c5b073a0f707ae27df84c56cb"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/textures/Fx_BaoDian_103.png",
+      "sha256": "23f69dfd8b1284ec467fc9dcbaee0f6274fdcec3efa5632f57bf06fd1c374fe7"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/textures/Fx_BaoDian_103.png.meta",
+      "sha256": "af93f9b51b7b1cb14dae41430023006f8f2b79cbfcc670808f09ef5b850b768c"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/textures/Fx_DiLie_0012.png",
+      "sha256": "dacbcadaea00dad1bad0cdd46047bc6023b9fee01b3f06cb7e787934250d5917"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/textures/Fx_DiLie_0012.png.meta",
+      "sha256": "6019b607aefcf6ee7a8ae6bbaea1011928d3c3cfd301dfe5fccd7425635e85e9"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/textures/Fx_Fire_001_1_F.png",
+      "sha256": "0db75de4bd12b5405b18b1a0504fb566f64e577ebf03c066370535c24b5ac7ac"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/textures/Fx_Fire_001_1_F.png.meta",
+      "sha256": "549cfcb052fdb607e256868b541179715d07ed954c15045c703a628fc7cbfbe5"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/textures/Fx_GuangDian_12_2.png",
+      "sha256": "ae8ac1c093c6cbc642a178dd277b1886585647e55cc87eff2a619f104fc90752"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/textures/Fx_GuangDian_12_2.png.meta",
+      "sha256": "b56f6fa332469120a4224e42ed61cf5dc024f713ad1ffa0dde696b299f4bec0c"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/textures/Fx_QiLang_134.png",
+      "sha256": "c870b95acfad45c091732eff0fe581178aa53bfff75271a7f657eb112e694bbe"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/textures/Fx_QiLang_134.png.meta",
+      "sha256": "300edc8b6a1204a776ebbc8f699eb7e99aa72667918aeb7cce45e7e482d76680"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/textures/Fx_RaoDon_0003.png",
+      "sha256": "756de12159ff7ea42b125906a6f8b3e6272c45548723fdc690784202829b5088"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/textures/Fx_RaoDon_0003.png.meta",
+      "sha256": "b0be020a9edc5995d6d7bd9c795e8d9ac730e93b13067733e2f2991f2664ee91"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/textures/Fx_TuCi_0002.png",
+      "sha256": "d0c1e6faab548af15aec92436c6153dac8b4edc60c8d95f878644976749f5edb"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/textures/Fx_TuCi_0002.png.meta",
+      "sha256": "7c8a58f00dac00f70b278efc32381a81e30ac5019b914f2cbc7341ea291372d7"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/textures/Fx_WenLi_0002.png",
+      "sha256": "faab5cef6b373a0119d1143a178f34521854fc9f44ca5dbcffcdbe2a119aee6b"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Effect/textures/Fx_WenLi_0002.png.meta",
+      "sha256": "5fff92efe18aec6b4653d2b301653e11bb52fa0b8c422b2bb243899c81e947e2"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Plugins/Unity.Timeline.dll.meta",
+      "sha256": "0871a44e79f3178c2157126737d5d2527c00a001106a723da193e2f42bc9828d"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Plugins/spine-unity.dll.meta",
+      "sha256": "432c9953ab7ddcf76e021cdf1aa969e8f50083bed4ba454262c09c46fac69e00"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/12660/12660.prefab",
+      "sha256": "153b9756bc3407553ff6e7c23ffad889c483707f89ff4a9cc8e454de81713770"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/12660/12660.prefab.meta",
+      "sha256": "207d9ca6af93ee3c2a5a505550fedcde2d029a4fdc8103e41bd98ff4d9f16b4e"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/12660/playable12660.prefab",
+      "sha256": "d4037b899c218acd0e79b82a97fc3e509372373afaf366f7d29029197679efa1"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/12660/playable12660.prefab.meta",
+      "sha256": "c76d762c4306740463cae062a2122e98542cd9e49786a3deef9533a2424a8531"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Shaders/Effect/Noise_Mask_Pro.asset",
+      "sha256": "dcced7bd050d56d4de0b198c25b0992f0600326a39c907750853602f32a66c43"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Shaders/Effect/Noise_Mask_Pro.asset.meta",
+      "sha256": "2c3d426eed171bbedfcd21b1474823d18efebc71ec167c1a3ea9f52791d35a49"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/AAE9E841-486D-4875-BB6C-63444D6B2B0D.asset",
+      "sha256": "f0af79743600ce8ddf24bd9144adfc2ffa1682a907836349560bcca97211f85f"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/AAE9E841-486D-4875-BB6C-63444D6B2B0D.asset.meta",
+      "sha256": "ff5abb9ae671b6d7237babd1d5717c88c58ff082f9f279f1a81d8e0ccdf817d3"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/C89F1758-B148-4FE4-BA3A-B6CBD3273D74.asset",
+      "sha256": "e8ea952a17591342fac61dbe4530407c40514261a011540b218cb98bc5f525c6"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/C89F1758-B148-4FE4-BA3A-B6CBD3273D74.asset.meta",
+      "sha256": "7ad068799f7043af975134ac5c2c37401b81336b3b81777bc52a65ef1a983a4e"
+    }
+  ],
+  "texture_conversion_receipt": {
+    "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/source-manifest.json",
+    "sha256": "32c5122b576228e4cb1ce5f0263499c1e9c84696e94d024579df2bb6a5f8cacf"
+  },
+  "converted_inputs": [
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/Assets/Textures/73/73ddc2abed12710070c823ab4ae93e6700cac7b174ddeb2487469c1d68cd87f4.asset",
+      "sha256": "1c7d3648237cacc41c4ec3286091c1aac32cc8ee71afece6296540ad8152480b"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/Assets/Textures/ef/ef52764ad78984ac08a3449e5393ea043101a31bd22749e935f41e66a1a33085.asset",
+      "sha256": "9d2671335d811ab6e2bc6d2e74270a7180d0a725a74d3dbb268703cc843bac67"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/Assets/Textures/6f/6ff993539647be064a00df2760ca5433958decf3d7d9000fe65222c2022f4e21.asset",
+      "sha256": "c8374e0966b8a4193e3e882fdb12f14164e882986cc408c223178eb2bc4b6642"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/Assets/Textures/19/199af1a3bc9b5fe6f0210c4a551809ba5b4cd7207d722471e47b13f4985b350e.asset",
+      "sha256": "30bd045ebbc7063aa0905733886a8449ea7baa59b3d88ad42abca20ff9933ad4"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/Assets/Textures/05/05e623b200246dd7c3d0a4eb50141878b06111be54f3966fd0be571ba26541d5.asset",
+      "sha256": "f84dc40e90830406689b174dacfe59f1ca53c483ef6e0278d0c8ae0ef950b427"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/Assets/Textures/07/07dd6f6db273818d9d14a87a75c7c6a5222c138c01eacf6ae88bce7a4159084f.asset",
+      "sha256": "07be3d12c73faa67531e8546de0bc673b2f2fa66aa99d323a9d09df9ad00618f"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/Assets/Textures/1d/1dd25875c11e7cc3c2fc5a8e4b35d5b245d010175d26fc0db0efad1c3e93e6a7.asset",
+      "sha256": "eca18c7d61543212ad159b6e872a2c13125de3a479043600ffc5cfd4e33478b1"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/Assets/Textures/55/557c66a8898e458348506f88d6156b3dd7917499a05efcb3e920692a273f4641.asset",
+      "sha256": "c41a3882532f3cc809694ae9936a55e7abb096fcf46c0e0472778d6133ee3abc"
+    }
+  ],
+  "textures": [
+    {
+      "source": {
+        "bundle": "defaultpackage_share_10db214d69946640a71cf10fc5a6b268.bundle",
+        "bundle_hash": "55fb8434072ab25b9da8bd03aa060b36",
+        "path_id": "-6318267164337156088",
+        "origin": "apk_zip",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "apk_entry": "assets/yoo/DefaultPackage/55fb8434072ab25b9da8bd03aa060b36.bundle",
+        "raw_size": 19027,
+        "raw_sha256": "3333beea0285487809d59b8e190e3668ed02b70921aee11b00d226b22cafa343"
+      },
+      "object_sha256": "013881967247568b93b7b16874f115d49603db4e53186184c1345fae3d660bf0",
+      "compressed_sha256": "858c31d4140bb874b39a54b720900771984cbaa80a0af7649c24bcead68f6cd0",
+      "native_format": 4,
+      "pixel_bytes": 349524,
+      "pixels_sha256": "678e28998b9d901a4db21258b6efed5d7929d47029520f7fe63c07caa3048b83",
+      "mips": [
+        {
+          "level": 0,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 0,
+          "astc_size": 29584,
+          "astc_sha256": "11e73e231ad26bbdd5f7b8ca752c438dcc087aabfbc45df1ca2467c8e2e83a28",
+          "rgba_offset": 0,
+          "rgba_size": 262144,
+          "rgba_sha256": "d62a4d4e3fd1820147628e46fc1564da6b3c79f0a11ed4a339ad5f0544f93d0f",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 0
+        },
+        {
+          "level": 1,
+          "width": 128,
+          "height": 128,
+          "astc_offset": 29584,
+          "astc_size": 7744,
+          "astc_sha256": "6a761241e0cac18d9b779828aec5461f0481be168219c14e8574c19d7cf6a5a5",
+          "rgba_offset": 262144,
+          "rgba_size": 65536,
+          "rgba_sha256": "3f2c10f40724d5f6602bc76ea57b3e9b2d85d61559aa21dee078f1fb92d8bf4b",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 262144
+        },
+        {
+          "level": 2,
+          "width": 64,
+          "height": 64,
+          "astc_offset": 37328,
+          "astc_size": 1936,
+          "astc_sha256": "3fee1879c0f2057cf2ee5f1c648eb43d7083ca6c89b2aa1790039f9ab30c0c9a",
+          "rgba_offset": 327680,
+          "rgba_size": 16384,
+          "rgba_sha256": "44b82c69a81d56bc1c7b60c9bf15af4aa26ce3e9cf96cc2f82d279213e918c6c",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 327680
+        },
+        {
+          "level": 3,
+          "width": 32,
+          "height": 32,
+          "astc_offset": 39264,
+          "astc_size": 576,
+          "astc_sha256": "0ad1eb11038105b9c3f31bdab3129b33ca0b2f4417cdcf07416319ea7beaeb90",
+          "rgba_offset": 344064,
+          "rgba_size": 4096,
+          "rgba_sha256": "ee63d007a0de1b4b75e6b211e475eaac9b9b3aea5d710c81024f7df26d5530b3",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 344064
+        },
+        {
+          "level": 4,
+          "width": 16,
+          "height": 16,
+          "astc_offset": 39840,
+          "astc_size": 144,
+          "astc_sha256": "bf1ea04849b07a90dbb983ed3f04ee9b9d10eb49af3935b75afe8ae56e27ec42",
+          "rgba_offset": 348160,
+          "rgba_size": 1024,
+          "rgba_sha256": "d921d537ba9c943de46c8c300b292931d4dfeef3354c1be875c9d999d836a54a",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 348160
+        },
+        {
+          "level": 5,
+          "width": 8,
+          "height": 8,
+          "astc_offset": 39984,
+          "astc_size": 64,
+          "astc_sha256": "11a66b9877fb9128a4b5fb3720a136c67c39914631fb99efcc366d4021603fc5",
+          "rgba_offset": 349184,
+          "rgba_size": 256,
+          "rgba_sha256": "2e8ce6a7df6355955fa01c00945e41abe9d5ca0f74388608b70d135684c9d8eb",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 349184
+        },
+        {
+          "level": 6,
+          "width": 4,
+          "height": 4,
+          "astc_offset": 40048,
+          "astc_size": 16,
+          "astc_sha256": "b355e67ed66f06bfe0ce845c5d032452881a4b9bcd36034a3eb5da6bffb97caa",
+          "rgba_offset": 349440,
+          "rgba_size": 64,
+          "rgba_sha256": "7f1a3635428f951d3b9c27374a5dcb0fde00b9b9232a318c84d7dca1d8009868",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 349440
+        },
+        {
+          "level": 7,
+          "width": 2,
+          "height": 2,
+          "astc_offset": 40064,
+          "astc_size": 16,
+          "astc_sha256": "2528e6e73e9227c29ad82a6abf923219b152ec3a626d515fb74673014ca6cdd5",
+          "rgba_offset": 349504,
+          "rgba_size": 16,
+          "rgba_sha256": "6af3298faa9e860e987e24fe03437cc935b88df823c6601da6bbeb028c757718",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 349504
+        },
+        {
+          "level": 8,
+          "width": 1,
+          "height": 1,
+          "astc_offset": 40080,
+          "astc_size": 16,
+          "astc_sha256": "c89edf1f08d01d7911be4e2d7a207d54209d82fab6f640bb6c522a138b6e0297",
+          "rgba_offset": 349520,
+          "rgba_size": 4,
+          "rgba_sha256": "73ad782f2825564670ec53be3df7e801ee912ae8c98582b6e9b1fceb4dad7e66",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 349520
+        }
+      ],
+      "exported_png_channel_max_delta": 1,
+      "converted": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/Assets/Textures/73/73ddc2abed12710070c823ab4ae93e6700cac7b174ddeb2487469c1d68cd87f4.asset",
+        "sha256": "1c7d3648237cacc41c4ec3286091c1aac32cc8ee71afece6296540ad8152480b"
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_share_1aee2fb66cb0baf7f8006e76390597bd.bundle",
+        "bundle_hash": "cf51f4afc93be88ff89c55355f30347e",
+        "path_id": "6109576829271104689",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/cf51f4afc93be88ff89c55355f30347e.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 58514,
+        "bundle_sha256": "4b8319887b107cc51e3283a92f9ba8adc67a883307db32e2786501126025c2e9"
+      },
+      "object_sha256": "0ceb5401394c046b8148c4f85924e7a9bc947a3067ba50f51bbfcf354bbc5847",
+      "compressed_sha256": "c4f714b02ec9a165795b8d170ae0aacf82cba64e873f8050abc666e79ac74d7a",
+      "native_format": 4,
+      "pixel_bytes": 1398100,
+      "pixels_sha256": "0bf8b8f4d806117e7c25766e1d0089648c3ad30eed387fc46681772c586f63a4",
+      "mips": [
+        {
+          "level": 0,
+          "width": 512,
+          "height": 512,
+          "astc_offset": 0,
+          "astc_size": 118336,
+          "astc_sha256": "6b1a3ad5230e91bd5aaf3a2c03436790ab045cf493cfacd1becf99057d2d8bef",
+          "rgba_offset": 0,
+          "rgba_size": 1048576,
+          "rgba_sha256": "9edeaecfa6ad835dada44c1b0a4109fa7584b6d9992772a417831392035a5c91",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 0
+        },
+        {
+          "level": 1,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 118336,
+          "astc_size": 29584,
+          "astc_sha256": "4c9a18bfff185ffce27435e53d449975daa7860b8c6175450e4679b76763a700",
+          "rgba_offset": 1048576,
+          "rgba_size": 262144,
+          "rgba_sha256": "45142e4806f81e323380a4eb3897211bbd9e9d4ffd090733d49221d480be6bd0",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1048576
+        },
+        {
+          "level": 2,
+          "width": 128,
+          "height": 128,
+          "astc_offset": 147920,
+          "astc_size": 7744,
+          "astc_sha256": "a035b681418c8c3af0e72a9b75b46107efef7a8c3303833625ea0599bfcc5a57",
+          "rgba_offset": 1310720,
+          "rgba_size": 65536,
+          "rgba_sha256": "db670f6ab18590060467d27a2f070bfc0b6512b6b860b5552267c58f950361ac",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1310720
+        },
+        {
+          "level": 3,
+          "width": 64,
+          "height": 64,
+          "astc_offset": 155664,
+          "astc_size": 1936,
+          "astc_sha256": "f0b0043aa76edac6c9d1e163044ec378742badae32c442fcc497c072ad151099",
+          "rgba_offset": 1376256,
+          "rgba_size": 16384,
+          "rgba_sha256": "e4df5490b8fd26c3262ad7ff5905f5591f749c32be6134b6a59a5371f165c1fb",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1376256
+        },
+        {
+          "level": 4,
+          "width": 32,
+          "height": 32,
+          "astc_offset": 157600,
+          "astc_size": 576,
+          "astc_sha256": "1b98a20abdf56c3aea29ea36bed4e1d82028aa8fcc63a2d36982cc53b0341a62",
+          "rgba_offset": 1392640,
+          "rgba_size": 4096,
+          "rgba_sha256": "3ed00f421836de6994db9560a4ab4df845d0b612d876955509eb05da4947baab",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1392640
+        },
+        {
+          "level": 5,
+          "width": 16,
+          "height": 16,
+          "astc_offset": 158176,
+          "astc_size": 144,
+          "astc_sha256": "4d7c9bca26d34230e96403c0171f497143949d7c0c4939f15b9844d3906969ed",
+          "rgba_offset": 1396736,
+          "rgba_size": 1024,
+          "rgba_sha256": "9fef7ab9f216a0dd7281e7d51cd57f2ac2a8aa1ac1213b25d7192005a21fa154",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1396736
+        },
+        {
+          "level": 6,
+          "width": 8,
+          "height": 8,
+          "astc_offset": 158320,
+          "astc_size": 64,
+          "astc_sha256": "0bb2a281e9dfa97e61ed7275e8ccbdcff7f6b3acd1c9aa439b471dc14818663e",
+          "rgba_offset": 1397760,
+          "rgba_size": 256,
+          "rgba_sha256": "21eb54824311131729e84efa023c6ba018bf465ab49aca34b11e562a571c94a6",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1397760
+        },
+        {
+          "level": 7,
+          "width": 4,
+          "height": 4,
+          "astc_offset": 158384,
+          "astc_size": 16,
+          "astc_sha256": "e73bde3cbcd055c25c7acfb01e66faa6ff677de95090aaf59c125a37eb8802ae",
+          "rgba_offset": 1398016,
+          "rgba_size": 64,
+          "rgba_sha256": "7d5ef8d3ebc22e5f3ce559f1d647c4b4b1a6a610d40475ed4957979b8b4bf926",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1398016
+        },
+        {
+          "level": 8,
+          "width": 2,
+          "height": 2,
+          "astc_offset": 158400,
+          "astc_size": 16,
+          "astc_sha256": "413cff6034107bf09e6f63bbfd3ff8c63d902353732665e1c997e8a49d13bd16",
+          "rgba_offset": 1398080,
+          "rgba_size": 16,
+          "rgba_sha256": "6bffde67cd539bd71a5ec788074b925e1796213cda4411fa0e4d632c9a7d3efd",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1398080
+        },
+        {
+          "level": 9,
+          "width": 1,
+          "height": 1,
+          "astc_offset": 158416,
+          "astc_size": 16,
+          "astc_sha256": "427f92e5953fdaef4c6c3cdffa7018acdbb8e9e0a68965e1a2ce072b977e2180",
+          "rgba_offset": 1398096,
+          "rgba_size": 4,
+          "rgba_sha256": "cc1e81f7716af233ea3663c7ce69949d079431f1d9c022c802c427e4f8a40a67",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1398096
+        }
+      ],
+      "exported_png_channel_max_delta": 1,
+      "converted": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/Assets/Textures/ef/ef52764ad78984ac08a3449e5393ea043101a31bd22749e935f41e66a1a33085.asset",
+        "sha256": "9d2671335d811ab6e2bc6d2e74270a7180d0a725a74d3dbb268703cc843bac67"
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_share_d46dfe7a58225ce710d1158bd252768d.bundle",
+        "bundle_hash": "ede45250ccfd5fa281c5b7b75c8789e3",
+        "path_id": "1259340324636677913",
+        "origin": "apk_zip",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "apk_entry": "assets/yoo/DefaultPackage/ede45250ccfd5fa281c5b7b75c8789e3.bundle",
+        "raw_size": 38555,
+        "raw_sha256": "77462cc9d1aaa5aa6ade6157a714065be66b18fa235aedb3ce2b9bdae47ace7f"
+      },
+      "object_sha256": "48a523eeaf82a64b9ac2b47de52e5c378c0b778e01eae5f5db3422814225a02d",
+      "compressed_sha256": "97dbc86b0ff56ca42ad05904bade0732fae849a822e77912bb9d74e94033edde",
+      "native_format": 4,
+      "pixel_bytes": 349524,
+      "pixels_sha256": "7a898830ecdf0457f8c40f8941f32eb1790aac5ee75986f5be6ba2f930c64baa",
+      "mips": [
+        {
+          "level": 0,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 0,
+          "astc_size": 29584,
+          "astc_sha256": "b7b019b000321324a04649330cafe94ab0cf6f8c3a02c22cab355fac79279fa9",
+          "rgba_offset": 0,
+          "rgba_size": 262144,
+          "rgba_sha256": "b2bfc2f9649fd9f0754625586fe17009630f4d2b1da002ba599aa13342102c62",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 0
+        },
+        {
+          "level": 1,
+          "width": 128,
+          "height": 128,
+          "astc_offset": 29584,
+          "astc_size": 7744,
+          "astc_sha256": "81abe9e915e12c6457fdee322bb45d002ffa03ade0f679ccd5b5dc4ef885daff",
+          "rgba_offset": 262144,
+          "rgba_size": 65536,
+          "rgba_sha256": "2785204a62627caa8f36d032640b99b74ecbffc72bc842add05ba8c07f99f049",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 262144
+        },
+        {
+          "level": 2,
+          "width": 64,
+          "height": 64,
+          "astc_offset": 37328,
+          "astc_size": 1936,
+          "astc_sha256": "2e051cde2e2f356ac93d53d131dc2ed3a9da9caab68642231aafec8264796982",
+          "rgba_offset": 327680,
+          "rgba_size": 16384,
+          "rgba_sha256": "c6fe0108b2c163cafc4b559b851439aa0c152166f69ed6d7b90eaf4c9d0236ac",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 327680
+        },
+        {
+          "level": 3,
+          "width": 32,
+          "height": 32,
+          "astc_offset": 39264,
+          "astc_size": 576,
+          "astc_sha256": "32da58b6c673e15f099058c5361e6e95a5f637c9f66144779cc7802ae9461b90",
+          "rgba_offset": 344064,
+          "rgba_size": 4096,
+          "rgba_sha256": "0a7b15b45d0104427df8631cf3652bc0075ee2d1e8d36274ed1c1b422c787108",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 344064
+        },
+        {
+          "level": 4,
+          "width": 16,
+          "height": 16,
+          "astc_offset": 39840,
+          "astc_size": 144,
+          "astc_sha256": "8f1acb3235f26dc1ed2250b82e2df12d2b9d745de2407ff9e8e4ede83feaa6f7",
+          "rgba_offset": 348160,
+          "rgba_size": 1024,
+          "rgba_sha256": "980fea6a11d67bce4e2ca17c49163a2b08dee66f6689eeb312296402ce50848e",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 348160
+        },
+        {
+          "level": 5,
+          "width": 8,
+          "height": 8,
+          "astc_offset": 39984,
+          "astc_size": 64,
+          "astc_sha256": "97e0a51555ec9b6c355f9ffb535df783e18b99e61dc3797e069b2c5b8f3d71a0",
+          "rgba_offset": 349184,
+          "rgba_size": 256,
+          "rgba_sha256": "e53b4ce1c8674a8075036f3d6e5a8bba3b77c34e32dfb8500547b9d616704c63",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 349184
+        },
+        {
+          "level": 6,
+          "width": 4,
+          "height": 4,
+          "astc_offset": 40048,
+          "astc_size": 16,
+          "astc_sha256": "c6528f56241eedcbc61f4e8f923c17e87013277691e5a74a89adc60af90c56c6",
+          "rgba_offset": 349440,
+          "rgba_size": 64,
+          "rgba_sha256": "c36245c167eb181f3aa584efd54091db8b470ed5e271be8e31169dc24c2f842b",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 349440
+        },
+        {
+          "level": 7,
+          "width": 2,
+          "height": 2,
+          "astc_offset": 40064,
+          "astc_size": 16,
+          "astc_sha256": "6562f3c87dab96b696b9a3d647ba0b6e38e6748984f1cf105d1e3418a586e951",
+          "rgba_offset": 349504,
+          "rgba_size": 16,
+          "rgba_sha256": "0c0c6249e3892a11bc4bcc5fdf10d7df4c6af17b5d99d124336cffefdd482333",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 349504
+        },
+        {
+          "level": 8,
+          "width": 1,
+          "height": 1,
+          "astc_offset": 40080,
+          "astc_size": 16,
+          "astc_sha256": "b103aa1bc7d65e2064a508b9432ba421de9f3d7a95ea75f136e18e842810215a",
+          "rgba_offset": 349520,
+          "rgba_size": 4,
+          "rgba_sha256": "53bad16dbd9a02a6a9e76ad8e3cb7937af9b58366fa53393289cc9c7861e4f43",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 349520
+        }
+      ],
+      "exported_png_channel_max_delta": 1,
+      "converted": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/Assets/Textures/6f/6ff993539647be064a00df2760ca5433958decf3d7d9000fe65222c2022f4e21.asset",
+        "sha256": "c8374e0966b8a4193e3e882fdb12f14164e882986cc408c223178eb2bc4b6642"
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_share_ef1da31a32e865a89cd31a1cffe0c422.bundle",
+        "bundle_hash": "02d20e49e5639d8370fa5702e29c5028",
+        "path_id": "7780928276603653353",
+        "origin": "apk_zip",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "apk_entry": "assets/yoo/DefaultPackage/02d20e49e5639d8370fa5702e29c5028.bundle",
+        "raw_size": 14185,
+        "raw_sha256": "15944466b96e2ac8d393bcec571bff37c29ec697dcbf5f4836045f4c0d2b7004"
+      },
+      "object_sha256": "8e8429a8025b5eeded5004cffed0510210aa350aaebf0698e4c23516dc4ba5de",
+      "compressed_sha256": "802b3756a96db6a8f941f11f822e37578e6f34d625f2b7a6a0ad603f1dfda452",
+      "native_format": 4,
+      "pixel_bytes": 349524,
+      "pixels_sha256": "65a468357927e546b65734fda94be8c7425369f898a2ebede504b14ba4268d44",
+      "mips": [
+        {
+          "level": 0,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 0,
+          "astc_size": 29584,
+          "astc_sha256": "55e913e02de1d4f9c7cdc11583ca3255e45bc97553353c40f723f5113bb3789e",
+          "rgba_offset": 0,
+          "rgba_size": 262144,
+          "rgba_sha256": "052caf5f3ac15ebed00f81f59583d90f474e03f71260c80047f2d46de23d006a",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 0
+        },
+        {
+          "level": 1,
+          "width": 128,
+          "height": 128,
+          "astc_offset": 29584,
+          "astc_size": 7744,
+          "astc_sha256": "faa00bbf92533ee64ea6d7afd3af588dda632468f49a1bcf7857e8e048667431",
+          "rgba_offset": 262144,
+          "rgba_size": 65536,
+          "rgba_sha256": "f0f476a97b337b7a51f99b96ce7b70c4c0ab4d38d9091ec70124513698735bb5",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 262144
+        },
+        {
+          "level": 2,
+          "width": 64,
+          "height": 64,
+          "astc_offset": 37328,
+          "astc_size": 1936,
+          "astc_sha256": "a1c00dff6ba6095ed04deca4fb6a346c1a6461f4ecc3920c204e610514374434",
+          "rgba_offset": 327680,
+          "rgba_size": 16384,
+          "rgba_sha256": "c32a7303ae12c49cf39d907832f3490de9c61f195498b944dd85fade64297ed0",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 327680
+        },
+        {
+          "level": 3,
+          "width": 32,
+          "height": 32,
+          "astc_offset": 39264,
+          "astc_size": 576,
+          "astc_sha256": "1f2094cb96fcde3654a068e5425e785cf1c6c47adc6ddab596efe4828731515b",
+          "rgba_offset": 344064,
+          "rgba_size": 4096,
+          "rgba_sha256": "426d108c278265866505915ccb032d4084b176cf005f0a9986a5216b49489cda",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 344064
+        },
+        {
+          "level": 4,
+          "width": 16,
+          "height": 16,
+          "astc_offset": 39840,
+          "astc_size": 144,
+          "astc_sha256": "77cf128f330937dab909fc6ca35320ee41913278bab00a5b161a175c39cbe62f",
+          "rgba_offset": 348160,
+          "rgba_size": 1024,
+          "rgba_sha256": "153dc09e1b09aa994e78fa220ec109921eaf49c9d23ac7e27a5bd5f5c9ba8149",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 348160
+        },
+        {
+          "level": 5,
+          "width": 8,
+          "height": 8,
+          "astc_offset": 39984,
+          "astc_size": 64,
+          "astc_sha256": "07dfeb676bdc755574fe4cf5e6797642b28643b6dbf42635bf59c01cacec0e71",
+          "rgba_offset": 349184,
+          "rgba_size": 256,
+          "rgba_sha256": "a8676f96d4c1579f58160f71753a8141447cfe35d8fcd77209958ef144c70d58",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 349184
+        },
+        {
+          "level": 6,
+          "width": 4,
+          "height": 4,
+          "astc_offset": 40048,
+          "astc_size": 16,
+          "astc_sha256": "5001444890e61b22092fa92c74107b584bb95196864b5264cc11395df0165317",
+          "rgba_offset": 349440,
+          "rgba_size": 64,
+          "rgba_sha256": "7b0a73fbd54ffc4a2725cf4a10a232be0e6abdc0809a96ac68750a8c73cf2b1b",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 349440
+        },
+        {
+          "level": 7,
+          "width": 2,
+          "height": 2,
+          "astc_offset": 40064,
+          "astc_size": 16,
+          "astc_sha256": "704d3ee92a3499f98deb239117b40d22ab2d9b77c4448425f522bd02932d15ea",
+          "rgba_offset": 349504,
+          "rgba_size": 16,
+          "rgba_sha256": "00663eb1542137cbc397d723e04678124dd06b292bc4a0053405c366b1fb75ea",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 349504
+        },
+        {
+          "level": 8,
+          "width": 1,
+          "height": 1,
+          "astc_offset": 40080,
+          "astc_size": 16,
+          "astc_sha256": "77312fc68df938c8a36f606618faf5c836413df4e9f0f4a629d9a0de20de14ca",
+          "rgba_offset": 349520,
+          "rgba_size": 4,
+          "rgba_sha256": "ab7a09ef746ced0262fb2a8e1bbd1d6f360adc8bf617f51f8b2ef2028112baf0",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 349520
+        }
+      ],
+      "exported_png_channel_max_delta": 1,
+      "converted": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/Assets/Textures/19/199af1a3bc9b5fe6f0210c4a551809ba5b4cd7207d722471e47b13f4985b350e.asset",
+        "sha256": "30bd045ebbc7063aa0905733886a8449ea7baa59b3d88ad42abca20ff9933ad4"
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_share_8fbacb030bc00097782669ef30d5ecc2.bundle",
+        "bundle_hash": "677e643c61ff6069c1b3942846ac6253",
+        "path_id": "-3618823350913383484",
+        "origin": "apk_zip",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "apk_entry": "assets/yoo/DefaultPackage/677e643c61ff6069c1b3942846ac6253.bundle",
+        "raw_size": 34238,
+        "raw_sha256": "1b8491e128a87516367042dc43975795d7910095b1ccde31196158c7b760fa3b"
+      },
+      "object_sha256": "d241ab60b441c7cd999c17cb7a77967f3e3a56f8a8a478da1aece6d58f06b513",
+      "compressed_sha256": "62e89f7c455d387f3bbe63a9a25279ad16b2e4321a659e1f92a6ad4853a0e4d3",
+      "native_format": 4,
+      "pixel_bytes": 1398100,
+      "pixels_sha256": "f1e0eb89be04a9e34bf88bf0a68550b62b3c24157176bd20bab27e54a8cde9b2",
+      "mips": [
+        {
+          "level": 0,
+          "width": 512,
+          "height": 512,
+          "astc_offset": 0,
+          "astc_size": 118336,
+          "astc_sha256": "d1e9252ba3c7903feab450347ad3af787dc8e7eda20488ab66b6a76e11a9ee31",
+          "rgba_offset": 0,
+          "rgba_size": 1048576,
+          "rgba_sha256": "bd496fa05fa4f7979e4fd8d1e6f2b75ae3c298d42c74e92c1d17189090e922e2",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 0
+        },
+        {
+          "level": 1,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 118336,
+          "astc_size": 29584,
+          "astc_sha256": "fd22c2483b0e4c4998c27f584d7b1583056ecf7130aa02025fb4e4c237c60486",
+          "rgba_offset": 1048576,
+          "rgba_size": 262144,
+          "rgba_sha256": "65327c03829744824295bc1ffc51e270e6e975cb5a03ef0fc26b6536ecc0a711",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1048576
+        },
+        {
+          "level": 2,
+          "width": 128,
+          "height": 128,
+          "astc_offset": 147920,
+          "astc_size": 7744,
+          "astc_sha256": "66627ac91e82703fef14e8ee1b8523cb9ac6eab54129ae45826bc1b04bfcebd8",
+          "rgba_offset": 1310720,
+          "rgba_size": 65536,
+          "rgba_sha256": "e3daf53397c3693b5e726bca477655f89953831d76b442afbf3f56a662b60d35",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1310720
+        },
+        {
+          "level": 3,
+          "width": 64,
+          "height": 64,
+          "astc_offset": 155664,
+          "astc_size": 1936,
+          "astc_sha256": "671a1ea92a6705fb1d65820f231805d175e4a8b6834d6a89732c1df2c655fa16",
+          "rgba_offset": 1376256,
+          "rgba_size": 16384,
+          "rgba_sha256": "275d390dfd7b34a3f413b4399d0c2795148fd99edcfc8627094951de7e070d51",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1376256
+        },
+        {
+          "level": 4,
+          "width": 32,
+          "height": 32,
+          "astc_offset": 157600,
+          "astc_size": 576,
+          "astc_sha256": "9b9c61270b11a21c272a48439f76424bc070e084e44131901f7441f7f6ae56ef",
+          "rgba_offset": 1392640,
+          "rgba_size": 4096,
+          "rgba_sha256": "a7aa6f041b4597adcb96c02c82e4e8e87c8e2eb39e4463f9c12a092a596a3ec3",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1392640
+        },
+        {
+          "level": 5,
+          "width": 16,
+          "height": 16,
+          "astc_offset": 158176,
+          "astc_size": 144,
+          "astc_sha256": "2b63bf1358033563e1f7d38558713088059c08071016f6adfa2770b4c0da6044",
+          "rgba_offset": 1396736,
+          "rgba_size": 1024,
+          "rgba_sha256": "64748a159fdce970f1423325065d9e15f091deabfe1ce32600e0c6d19df6ddb9",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1396736
+        },
+        {
+          "level": 6,
+          "width": 8,
+          "height": 8,
+          "astc_offset": 158320,
+          "astc_size": 64,
+          "astc_sha256": "60c7acd02e2e62e846cf1fea938e3aff4f70625e1c99cea8338e4d6ce8cbb648",
+          "rgba_offset": 1397760,
+          "rgba_size": 256,
+          "rgba_sha256": "ba34e6b6c54c4d5220d2409bb3eec7442956f1005c89779d86314e47b95f82af",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1397760
+        },
+        {
+          "level": 7,
+          "width": 4,
+          "height": 4,
+          "astc_offset": 158384,
+          "astc_size": 16,
+          "astc_sha256": "9ea28247f8781291c3aada3fbe190ee2f17da0f17a51175ebb44922f50bffc56",
+          "rgba_offset": 1398016,
+          "rgba_size": 64,
+          "rgba_sha256": "e940937efe9915157864de6a1cb3607e83ca203970cf01dd2aa292514c3c4597",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1398016
+        },
+        {
+          "level": 8,
+          "width": 2,
+          "height": 2,
+          "astc_offset": 158400,
+          "astc_size": 16,
+          "astc_sha256": "9443a0bd8c95ab8a0efe9240b8240a478e7521531dbc14ee4e1c93fe010aae07",
+          "rgba_offset": 1398080,
+          "rgba_size": 16,
+          "rgba_sha256": "ff6f59b63078271dcf5a1f72bc2dd0b34c5a8a8e17c974df4810a26e5ba65a61",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1398080
+        },
+        {
+          "level": 9,
+          "width": 1,
+          "height": 1,
+          "astc_offset": 158416,
+          "astc_size": 16,
+          "astc_sha256": "ef5714278c4059991dd346ab16fc381963cc7a53331f096f21c7670dbc5582d9",
+          "rgba_offset": 1398096,
+          "rgba_size": 4,
+          "rgba_sha256": "8d30002d9d7f1e484b35f74eeac90e3686f4719a1a799187667a2320afed5ff9",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1398096
+        }
+      ],
+      "exported_png_channel_max_delta": 1,
+      "converted": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/Assets/Textures/05/05e623b200246dd7c3d0a4eb50141878b06111be54f3966fd0be571ba26541d5.asset",
+        "sha256": "f84dc40e90830406689b174dacfe59f1ca53c483ef6e0278d0c8ae0ef950b427"
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_share_959bf642bd725a6b2b250f1b5f5ad495.bundle",
+        "bundle_hash": "d50b7cdfe0fc0c2edec4a3d1ce5aadc6",
+        "path_id": "-8744816673249466109",
+        "origin": "apk_zip",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "apk_entry": "assets/yoo/DefaultPackage/d50b7cdfe0fc0c2edec4a3d1ce5aadc6.bundle",
+        "raw_size": 35319,
+        "raw_sha256": "c4ed31d647f9ad612733777e1572b76c67c202e8c93412ba9ce36a0ba71f0919"
+      },
+      "object_sha256": "a7937478d4995b01b394750eaee4cfc1c73189d7e0e99d038370c14e39a55ed6",
+      "compressed_sha256": "a836d6184a334e68a00808ce408d5d8eff3fbec3c9d62e74da96bbda2f3ee010",
+      "native_format": 4,
+      "pixel_bytes": 349524,
+      "pixels_sha256": "dd577beca10ebc8a427e3ec41b4f490b67c5d1c5c867706481477fb15319bb9b",
+      "mips": [
+        {
+          "level": 0,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 0,
+          "astc_size": 29584,
+          "astc_sha256": "9bf4866ee8338541f499e293ea5e772ab1d4e664acb977207856e67788eb41bd",
+          "rgba_offset": 0,
+          "rgba_size": 262144,
+          "rgba_sha256": "6cdd2aed21b35abdadbb5a1b50986b33854e5fe3c0b7cbb3889db47036b98614",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 0
+        },
+        {
+          "level": 1,
+          "width": 128,
+          "height": 128,
+          "astc_offset": 29584,
+          "astc_size": 7744,
+          "astc_sha256": "192eb01c90e4d16b181d9732f5a8d9c6732f6510a0d058f5e5edb874ec4a0b6a",
+          "rgba_offset": 262144,
+          "rgba_size": 65536,
+          "rgba_sha256": "210c1d1bc03c04922d452ec4e5740a6b95f60e9538620f9aebbef3abb5ff328f",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 262144
+        },
+        {
+          "level": 2,
+          "width": 64,
+          "height": 64,
+          "astc_offset": 37328,
+          "astc_size": 1936,
+          "astc_sha256": "c8ce30af305174b4491e37374ee46d60c523794ece8df6e5699997d61d8fa478",
+          "rgba_offset": 327680,
+          "rgba_size": 16384,
+          "rgba_sha256": "85635585b04a1aac57bef113818d0aac79cd514e95fbfea3ddc522bc6f498317",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 327680
+        },
+        {
+          "level": 3,
+          "width": 32,
+          "height": 32,
+          "astc_offset": 39264,
+          "astc_size": 576,
+          "astc_sha256": "b2d2e9cd928682fb911d45827eeb73a18fa10fbd2ae828ff30d1060d18cede99",
+          "rgba_offset": 344064,
+          "rgba_size": 4096,
+          "rgba_sha256": "915089220479da77b70652c79ab89cf665f566ca1161c566a0cdd8cae3a15d18",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 344064
+        },
+        {
+          "level": 4,
+          "width": 16,
+          "height": 16,
+          "astc_offset": 39840,
+          "astc_size": 144,
+          "astc_sha256": "07295db9ae05784d0eedf7c0b9d70f46cc14b672ee96b1df4138ad26f26b472b",
+          "rgba_offset": 348160,
+          "rgba_size": 1024,
+          "rgba_sha256": "cebaccccf9e8841f6e7e0c24d655aa7030cc09067edec9f593678498c636c4b2",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 348160
+        },
+        {
+          "level": 5,
+          "width": 8,
+          "height": 8,
+          "astc_offset": 39984,
+          "astc_size": 64,
+          "astc_sha256": "ba08fdc8fe8f2beb1b38dc0518f24a9008e80cf07e898697cec60dad7e46af31",
+          "rgba_offset": 349184,
+          "rgba_size": 256,
+          "rgba_sha256": "55ee7d370b707ee950d135e55c6d6ae8e27d285923b690b49a73ae7561475979",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 349184
+        },
+        {
+          "level": 6,
+          "width": 4,
+          "height": 4,
+          "astc_offset": 40048,
+          "astc_size": 16,
+          "astc_sha256": "894068ebba713d0d4d11751a896c3f76699204af720a1266ab3a84a93f40f58f",
+          "rgba_offset": 349440,
+          "rgba_size": 64,
+          "rgba_sha256": "bc4b5935d99b0dbb72c3e8fb6f77ab345fbad863ee29252e45cb385fee283ac9",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 349440
+        },
+        {
+          "level": 7,
+          "width": 2,
+          "height": 2,
+          "astc_offset": 40064,
+          "astc_size": 16,
+          "astc_sha256": "117f4390a71cb8ff81a9ea0104a8aef797c7b10909e5e31606809ba4ee2ee29e",
+          "rgba_offset": 349504,
+          "rgba_size": 16,
+          "rgba_sha256": "b99689d8fd2212e94f34d53f1d8523e9cf7b69be5ae8866f15735d176c173568",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 349504
+        },
+        {
+          "level": 8,
+          "width": 1,
+          "height": 1,
+          "astc_offset": 40080,
+          "astc_size": 16,
+          "astc_sha256": "ce3965df6db03aad883ee1a9d75f364e307e67d65895f8c145b087fa6e8f665d",
+          "rgba_offset": 349520,
+          "rgba_size": 4,
+          "rgba_sha256": "b669f436241cc3c3f5c8ae9a5c658f77d82114bf37b81144bf942203aed9c25f",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 349520
+        }
+      ],
+      "exported_png_channel_max_delta": 1,
+      "converted": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/Assets/Textures/07/07dd6f6db273818d9d14a87a75c7c6a5222c138c01eacf6ae88bce7a4159084f.asset",
+        "sha256": "07be3d12c73faa67531e8546de0bc673b2f2fa66aa99d323a9d09df9ad00618f"
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_share_2d49e489294bc564a08f87e8ce49012e.bundle",
+        "bundle_hash": "f2dd24b95d6de7b96415c2f3f2ad5d34",
+        "path_id": "-4540646470203096992",
+        "origin": "apk_zip",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "apk_entry": "assets/yoo/DefaultPackage/f2dd24b95d6de7b96415c2f3f2ad5d34.bundle",
+        "raw_size": 39237,
+        "raw_sha256": "81efc3af0cda1dea3c5d1ebb46f60a19d764812bf091db523be377117e6be774"
+      },
+      "object_sha256": "f25d6058eac12805969a7ce347c6f10d7ca71c6fc1dee1a2b37c0bde9d3fff97",
+      "compressed_sha256": "f871371f51ad85f4ecf467b93ac5f779e1436d4690ff0e692d5483a5e8ba279a",
+      "native_format": 4,
+      "pixel_bytes": 1398100,
+      "pixels_sha256": "36801783844c87257a7d6cef63c1d7539241877c8023f269b104e65c139841f1",
+      "mips": [
+        {
+          "level": 0,
+          "width": 512,
+          "height": 512,
+          "astc_offset": 0,
+          "astc_size": 118336,
+          "astc_sha256": "5bb84be89a48be2c2909a228f24b324d8ca0190f9e6f360512b4e847d111054e",
+          "rgba_offset": 0,
+          "rgba_size": 1048576,
+          "rgba_sha256": "efe8a956f1b8bfe86932e19064e2a2098db035cd8fe65a1da67c0c9f77206e84",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 0
+        },
+        {
+          "level": 1,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 118336,
+          "astc_size": 29584,
+          "astc_sha256": "7f2bf6c888aa7d6679fbea633b16563cace8d05feca458ae07b448d98e8ababe",
+          "rgba_offset": 1048576,
+          "rgba_size": 262144,
+          "rgba_sha256": "24f431ac6729ba5ce3c9d794d044ca9496a2d794a8608154cc3cfa77f6c7e0e9",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1048576
+        },
+        {
+          "level": 2,
+          "width": 128,
+          "height": 128,
+          "astc_offset": 147920,
+          "astc_size": 7744,
+          "astc_sha256": "b42be1a3651bebf65c5fbee4cade8fc8672e9c370ddf75fa98287e99877671bb",
+          "rgba_offset": 1310720,
+          "rgba_size": 65536,
+          "rgba_sha256": "9351e942f4737231aa100abeeae13a43bb6d48377de61f614849912455643c39",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1310720
+        },
+        {
+          "level": 3,
+          "width": 64,
+          "height": 64,
+          "astc_offset": 155664,
+          "astc_size": 1936,
+          "astc_sha256": "f6f62ebc592d67b5dd4b845d1786ceb0b8ec6fdba5371d71c32d75032c6bf293",
+          "rgba_offset": 1376256,
+          "rgba_size": 16384,
+          "rgba_sha256": "e8b175218d3a953900c982c60550f7bdc8f2bf67f109458961ced692476d7029",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1376256
+        },
+        {
+          "level": 4,
+          "width": 32,
+          "height": 32,
+          "astc_offset": 157600,
+          "astc_size": 576,
+          "astc_sha256": "644a91ddd99f9f91f440b8d4ce38fa7ae67df8fdc032a253840011f5d471732d",
+          "rgba_offset": 1392640,
+          "rgba_size": 4096,
+          "rgba_sha256": "5c526c5e69e04182e7ec2bd2960118dffdc46dc79a9ccc6c670bea6afac5712d",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1392640
+        },
+        {
+          "level": 5,
+          "width": 16,
+          "height": 16,
+          "astc_offset": 158176,
+          "astc_size": 144,
+          "astc_sha256": "b94646380a734bf4bf0f3f0c3e3f110eb064d1ad2f3532cb89c18368c56f50d9",
+          "rgba_offset": 1396736,
+          "rgba_size": 1024,
+          "rgba_sha256": "4d2c06e56cd75139b49c49a1704f53e3e6672fbd2ccba5ede298e3ff94db65e1",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1396736
+        },
+        {
+          "level": 6,
+          "width": 8,
+          "height": 8,
+          "astc_offset": 158320,
+          "astc_size": 64,
+          "astc_sha256": "0d1ad0818fe2a3c26553d0553c531fcded08259d00993d47d1b0636df324db76",
+          "rgba_offset": 1397760,
+          "rgba_size": 256,
+          "rgba_sha256": "2c3df451ace3ebdd8857c89b21be91760bf620dfa1768242d5cee00cced61cd6",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1397760
+        },
+        {
+          "level": 7,
+          "width": 4,
+          "height": 4,
+          "astc_offset": 158384,
+          "astc_size": 16,
+          "astc_sha256": "4305dac6d3916fbe797b7ed67609d4cbabb24d83fe61ed7af507684a0b828e95",
+          "rgba_offset": 1398016,
+          "rgba_size": 64,
+          "rgba_sha256": "397d87d617e872bf0839de80b1eb96422cd84eba633bb166e98e89cea1aa3268",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1398016
+        },
+        {
+          "level": 8,
+          "width": 2,
+          "height": 2,
+          "astc_offset": 158400,
+          "astc_size": 16,
+          "astc_sha256": "b245904fb8fc028a7d38fc130b8e7c6023310aa1a05d3e2c20278d6e85ab9a50",
+          "rgba_offset": 1398080,
+          "rgba_size": 16,
+          "rgba_sha256": "4366561769159e791091065763d84c1b7bdc881f44b46e1a5b67204e3f6e90dd",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1398080
+        },
+        {
+          "level": 9,
+          "width": 1,
+          "height": 1,
+          "astc_offset": 158416,
+          "astc_size": 16,
+          "astc_sha256": "415895b271734341bf1e889c901d2dcea7d05abcf9bea1656e9a7f765984fbec",
+          "rgba_offset": 1398096,
+          "rgba_size": 4,
+          "rgba_sha256": "217c13661c79cc1dcd47c71e8c0582c15d83cb9ac918d5a1fc0dfc69a806898b",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1398096
+        }
+      ],
+      "exported_png_channel_max_delta": 1,
+      "converted": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/Assets/Textures/1d/1dd25875c11e7cc3c2fc5a8e4b35d5b245d010175d26fc0db0efad1c3e93e6a7.asset",
+        "sha256": "eca18c7d61543212ad159b6e872a2c13125de3a479043600ffc5cfd4e33478b1"
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_share_ca0fae9bc6ff83e8518710bc9ba53029.bundle",
+        "bundle_hash": "0aa1c52b4532481566944a757cb44845",
+        "path_id": "3691610079784464355",
+        "origin": "apk_zip",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "apk_entry": "assets/yoo/DefaultPackage/0aa1c52b4532481566944a757cb44845.bundle",
+        "raw_size": 109232,
+        "raw_sha256": "40d738c0779e426cbe31f70737486efd5a8c6a0071233745b8ba64b4939328b4"
+      },
+      "object_sha256": "34cb2510019606a07761b2cf7a2871cfb57480958a634c2738370d2f4d02a351",
+      "compressed_sha256": "0630e7ec6a33b765af7c17e3a3162baab3920362b445a806f5fa4a2b18110ecc",
+      "native_format": 4,
+      "pixel_bytes": 1398100,
+      "pixels_sha256": "a41be5fa72c5a99705dbec12e40355116502c2bf6e9ec936d0d95200ae50b74d",
+      "mips": [
+        {
+          "level": 0,
+          "width": 512,
+          "height": 512,
+          "astc_offset": 0,
+          "astc_size": 118336,
+          "astc_sha256": "8e905b97d7089798f8d75d81670a56523c00fdaacb5a1bf511fba49300fa29b1",
+          "rgba_offset": 0,
+          "rgba_size": 1048576,
+          "rgba_sha256": "a282a587ef45ad01271838657192eaba5b635afd91a47b3574df92011e88f0ec",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 0
+        },
+        {
+          "level": 1,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 118336,
+          "astc_size": 29584,
+          "astc_sha256": "eaf3770410bbc7ed4abd019d8cdb0d466d51a58693d7673555dbea5b8dbdd84f",
+          "rgba_offset": 1048576,
+          "rgba_size": 262144,
+          "rgba_sha256": "1f9228b64c34fba74b55a1ae34a4d9b0b515aa333de9316620151745b0859bb2",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1048576
+        },
+        {
+          "level": 2,
+          "width": 128,
+          "height": 128,
+          "astc_offset": 147920,
+          "astc_size": 7744,
+          "astc_sha256": "4680c216e7b6f1a07abb73bd38b9ad8aa610ad9fe0d25b1414db66832f3480d1",
+          "rgba_offset": 1310720,
+          "rgba_size": 65536,
+          "rgba_sha256": "1340828a9994c988a126d77ed5eba877beac8c0a5187f3585975cb241d1b92e7",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1310720
+        },
+        {
+          "level": 3,
+          "width": 64,
+          "height": 64,
+          "astc_offset": 155664,
+          "astc_size": 1936,
+          "astc_sha256": "40535718cdf7280ffeb281ff169490d4ec350b3a9798efb6974df80753cff88d",
+          "rgba_offset": 1376256,
+          "rgba_size": 16384,
+          "rgba_sha256": "47cc943422c2743ec78fe09b91b794adf7d9f92ad9f1359a1cd0c46452951f1d",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1376256
+        },
+        {
+          "level": 4,
+          "width": 32,
+          "height": 32,
+          "astc_offset": 157600,
+          "astc_size": 576,
+          "astc_sha256": "47664760fae2b003e3d499ea8ee6598f82854498ff9de361d952d09180c09b47",
+          "rgba_offset": 1392640,
+          "rgba_size": 4096,
+          "rgba_sha256": "b117c229c979dc3b00ce05e9a06c8e6bcc26fdd8f23b5de673794c1a42f82382",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1392640
+        },
+        {
+          "level": 5,
+          "width": 16,
+          "height": 16,
+          "astc_offset": 158176,
+          "astc_size": 144,
+          "astc_sha256": "7f35160fba5c313170b2215e66bf6a3f7a4b57dcbfb9d15fe93642c3386c8c59",
+          "rgba_offset": 1396736,
+          "rgba_size": 1024,
+          "rgba_sha256": "f1868dbe2c099fa31193d0108236ff297f6101a83fa17eb1af653555b50a75d9",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1396736
+        },
+        {
+          "level": 6,
+          "width": 8,
+          "height": 8,
+          "astc_offset": 158320,
+          "astc_size": 64,
+          "astc_sha256": "4df9d70aa92024e0b3b322b9a7b530fc76cb893a0209d355637e76bc32623401",
+          "rgba_offset": 1397760,
+          "rgba_size": 256,
+          "rgba_sha256": "0467cd99444319dfe0d24326130f1909b17115a1ac99ce58c8d991692e6bd5b6",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1397760
+        },
+        {
+          "level": 7,
+          "width": 4,
+          "height": 4,
+          "astc_offset": 158384,
+          "astc_size": 16,
+          "astc_sha256": "8476d6b7fcbc866d27dae2ea81d086cde4ac5b8f74565378a2eafcf531a795bb",
+          "rgba_offset": 1398016,
+          "rgba_size": 64,
+          "rgba_sha256": "daf02292aefa044925c5a7a91f7ebd08972d9d94c62ac4e0a70f61e1a3220b07",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1398016
+        },
+        {
+          "level": 8,
+          "width": 2,
+          "height": 2,
+          "astc_offset": 158400,
+          "astc_size": 16,
+          "astc_sha256": "9d667954ce06ba31e61c21251a96ea31324c8ccfdf9040193d51548a5c513e68",
+          "rgba_offset": 1398080,
+          "rgba_size": 16,
+          "rgba_sha256": "bfd3e46de534a5db3097ba432e970ad9422dc8144b3a02b4d04fc49d4f7eb288",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1398080
+        },
+        {
+          "level": 9,
+          "width": 1,
+          "height": 1,
+          "astc_offset": 158416,
+          "astc_size": 16,
+          "astc_sha256": "b27881f100d4461d0c28b51233a049439adcd220935ede0998687eb5610fa6df",
+          "rgba_offset": 1398096,
+          "rgba_size": 4,
+          "rgba_sha256": "5d99bebb39884386b0bfa9219bff14ef27c391c53f638fcc689f899c8a99b835",
+          "face": 0,
+          "source_face_offset": 0,
+          "native_offset": 1398096
+        }
+      ],
+      "exported_png_channel_max_delta": 1,
+      "converted": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-textures/Assets/Textures/55/557c66a8898e458348506f88d6156b3dd7917499a05efcb3e920692a273f4641.asset",
+        "sha256": "c41a3882532f3cc809694ae9936a55e7abb096fcf46c0e0472778d6133ee3abc"
+      }
+    }
+  ],
+  "shaders": [
+    {
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "04c568cd691a6f8274280e0412e9159d",
+        "path_id": "-1464726073327024352",
+        "origin": "apk_zip",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "apk_entry": "assets/yoo/DefaultPackage/04c568cd691a6f8274280e0412e9159d.bundle",
+        "raw_size": 2912207,
+        "raw_sha256": "ce8ca955261cee18799efe2f46d0a20f2706806f72a57c10ad404b894824d5c4"
+      },
+      "object_sha256": "cb7bb605cda7f4757119fe0100f6b2ccfb7578ffdcec82da35ebb3f3d78b6628",
+      "conversion": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-shaders/Records/59de19d261370c02044c882aeda72c54bf496caf9dc73bed0a9d6e9339fd6b95.json",
+        "sha256": "2b97282192d00bd88903a9a182fcbeee9b9caaf8f39a867cc8c816446c38fed2"
+      },
+      "converted": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/all-assets/windows-shaders/Assets/Shaders/59de19d261370c02044c882aeda72c54bf496caf9dc73bed0a9d6e9339fd6b95.shader",
+        "sha256": "9cb8bfecdb52d69825d8de83232d14e26cb0f2d131e64e9e91d9faf7b78df49c"
+      }
+    }
+  ],
+  "binary_assets": [],
+  "application": [
+    {
+      "file_id": -253978515,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/game-framework-source/GameFramework/MyPlayableSequence.cs",
+        "sha256": "169b013367c39521a6bd1a8161c59aa93201ed1e7190803f5ffcb76fd4ad7e22"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs",
+        "sha256": "f2f3c212ecd384e80c9a2a8f0a82e2251ede2abc8662c954a2c7988190080d42"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs.meta",
+        "sha256": "58ba372bbd79a79b5c7bb3c40858a9e663386a3ac05cfdd760931a3d4af569f0"
+      },
+      "verified_current_runtime_methods": {
+        "PlayImpl": "81c9f91f00d897b55ea95bc748a8e0eb2925b02955f1c387012c88b9094e5d26",
+        "Stop": "f963d47e08e3f30a7721e60711c280fdbe5e49bea63d69d57290098876236c27",
+        "RemoveImpl": "9dffe045eae4ebb0fdd4e11d30e73949fa747d085b67bcb005b0e7483c6d491d",
+        "ProcessFrameImpl": "5189aa3dd0117a7af30e8b1e09a224faaa4d8199b2252496a8a3c457009f652f",
+        "PostProcessFrameImpl": "20ea5653b366c0fafd344f1312378dc0b163bf2dbb0e427c8b6ca3b4a5e534b3",
+        "StopImpl": "cba86c5abc5cb4cc846277fb1399f787de27769c29054296fdab09b2f784c4c6",
+        "GetDuration": "b0d9510722c4f25fca3ace761e84cee06aca1731a631d83bb3e7e01ae86ea172",
+        "ResetData": "d4743a5f96c1f720213477e7f45fdfc3737f3267a5bd08dba6fdd0a798ac0523",
+        "InitDataOnPlay": "883a5bb3a5aa31061ad1500ada071c0fae86077159db07242a68d811b456584b",
+        "SinglePlay": "957a64ce66127743dfeec8fefb9b5810d63c1c522d3dd84f900926082666bdf3",
+        "SingleStop": "852c1dd5c3061c14d9e60f7acb6d1e1722c10958068e74454ccd98ef8765d6ff",
+        "SingleRemove": "22525e22e40f655ef175c5766cb89f0a8459e6cf21c90b399ff2738cd7b01ff0"
+      }
+    },
+    {
+      "file_id": -1107144664,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableFollowBone.cs",
+        "sha256": "cd3895c5b5bf31c42df77bf420b76c0e3ef4914ab74f5c930b41babcaefb942a"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableFollowBone.cs",
+        "sha256": "3ccc330554190f228073d3d8b5412e718e529aa328571368ad20a1800080ac39"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableFollowBone.cs.meta",
+        "sha256": "7e7ab1c3b226804894aa591e07078eccaf3499c34d05fe48f68e6b96002db69a"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 903818314,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/ApplyByGroundType.cs",
+        "sha256": "74985d35c1ca65745d75ceecc64ca013ba698b2d8a9afcbc7d7e1041d5a7e5cc"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryGroundEffects/ApplyByGroundType.cs",
+        "sha256": "4d3edca2dfbc9539c1146d6d5e6483d44bdedcd67196efcc9b80804ee483487c"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryGroundEffects/ApplyByGroundType.cs.meta",
+        "sha256": "209777acd1c016451e967642d89f2bb4a2200a0f2276e70c12b50f21dee8b0b7"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -1247969075,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/game-framework-source/GameFramework/ApplyEnableOnPlay.cs",
+        "sha256": "dcede1003f3fd0e2c75083fa1fed1937a9b79e6fc42126e4dfa8a18c9b80f0ff"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyEnableOnPlay.cs",
+        "sha256": "9031a17d29199a44af50a2cf289ab70dbf4885c4f238c6e5b3f96d0341f0a77e"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyEnableOnPlay.cs.meta",
+        "sha256": "4fa001c702d7b8d5a898513d3f5952a935e20cd9787ca96689c1aa9e9b257c94"
+      },
+      "verified_current_runtime_methods": {
+        "OnDestroy": "de843dae6116448e269cbbb1f9f1fe71b1c78305fdb941ae8cff7358eb0a1e48",
+        "InitImpl": "6c3108850d4a5fd16fde19ec71d7d6ba9760721ffdb045319837a39f2767d525",
+        "PlayImpl": "488628c7fc65e076729a3552333e4179702a7bfc5dfcb2463d7ac788d7a181aa",
+        "SetInitBeforeActive": "9710746423752f4973a57e6ce20297085c0d24269970268ccafe6db2cacbdda0",
+        "SetActive": "fee3146f14859ed37b23a117d5cf424f07ea59ea2da8a9cb351b6798a66c13b7"
+      }
+    },
+    {
+      "file_id": 768753278,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/ApplyOnStopFadeOut.cs",
+        "sha256": "4888f2a7285590305cd2b361e1b776f7027af6f8cee0df73ba1b337af284e77f"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStopFadeOut.cs",
+        "sha256": "c10011991db0c1c7ef27bdb74eb5f44a491913307f9c65a3cd1a9ddb74e604a0"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStopFadeOut.cs.meta",
+        "sha256": "876de6bd9727d012df10e69446323668893d574733fabda7bf491336c6a66dec"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 498949265,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableAnimationControllerPause.cs",
+        "sha256": "c90f7e760bdfe23a4690b35d141c915269a1a895b2db2cae2852692ef08dec8a"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleAnimationPlayables/MyPlayableAnimationControllerPause.cs",
+        "sha256": "04a916182aa51393f0d0a6bda2ea38af30b6c6aaf9e8ac2d386461f790c87d65"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleAnimationPlayables/MyPlayableAnimationControllerPause.cs.meta",
+        "sha256": "48a14205bd4d73167cc0dc625bfe76589de3e02b2a5540ccf10c5bd749dc85f0"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 1574993081,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableMaterialProperty.cs",
+        "sha256": "f6f57c8fe6da2cca042799f4c7838d0a400e528a97eecfc76be2c7a8824c39e1"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/MyPlayableMaterialProperty.cs",
+        "sha256": "190ba459566db143c76ee1bf10545af3653f8385bf40953f71aebd8661a70d1a"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/MyPlayableMaterialProperty.cs.meta",
+        "sha256": "37c4423ffc9d007f8b1889518ab5b14ef21a534b6824c611bc7bb405130358e3"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 1389507314,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyEffectFadeOut.cs",
+        "sha256": "f1b64ab54aa51c5b3a6733e74bfc9daab8dfb25671826ebb2b0d67757ffbcf46"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyEffectFadeOut.cs",
+        "sha256": "d8e26b3a16e420a3f4cce2471c34c354518c719a0774ebe680222cd78fce0084"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyEffectFadeOut.cs.meta",
+        "sha256": "2141bcf42a2d262113a6918887081ba19fd2b723365abb722f375758443ec03f"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -822603460,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/game-framework-source/GameFramework/ApplyBySource.cs",
+        "sha256": "5295d122baf98dfc982320cb68a73050ce594b1898699029bf95e6f376350a4f"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyBySource.cs",
+        "sha256": "650ea193fe5f1143d5b0438d6ad26069f9be64d6753f24d523248908b89d0b20"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyBySource.cs.meta",
+        "sha256": "d44656ffcbbc7922858a88080ab8c690ded072f406c3acc0784d01fca6de71e1"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -94696243,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableOverrideAnimator.cs",
+        "sha256": "9d9c4040a9cface2001a60be99a1ac33c72e158d47b69456867cd5594750cad8"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableOverrideAnimator.cs",
+        "sha256": "cc4860469b4e2f43e7ab957fd802b6ed2e505d17f94265bbab569418b1d516c7"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableOverrideAnimator.cs.meta",
+        "sha256": "94a67a18f79ac6b0718988e3ac0b18238a7a731b136a8b52e662d1d304a8d56b"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 205640859,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableAnimator.cs",
+        "sha256": "833f0b99dc83f3db92dc90400d8cea36596dde43a024f1ceb3f326e84d0e17b2"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs",
+        "sha256": "556de9b57b5684be1ca88df986687b9c7817a2bf79ea4b7def4ccf0268a19489"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs.meta",
+        "sha256": "87cfb6242ac3458692cef4e9ebf3803dcc1e8951ced05012bbbe51697ef61532"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 1616130977,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/AppearanceCombineSkin.cs",
+        "sha256": "424b0443d2cc9769b53068dbd751b36d6a0d162191835751892ed611272fe2d4"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/AppearanceCombineSkin.cs",
+        "sha256": "829d206ef6450bfcea960083d4c9f624929633bb551a9180b568ce9ed1021c4b"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/AppearanceCombineSkin.cs.meta",
+        "sha256": "678a470f2e0aa705f9ddecc8b4c70d513f7aee5760454b7fe96a0ea229be0545"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -424924989,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/game-framework-source/GameFramework/LinkEffect.cs",
+        "sha256": "0d19dee31c34b6f810b8e71aca7c805c2e8ff4d9b5e6d5bf3bd17e30eba6045e"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/LinkEffect.cs",
+        "sha256": "6044ac7e028fcf7438f549b91c74b9a6c398e6522a46cdc75a9fb15d60d8e38a"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/LinkEffect.cs.meta",
+        "sha256": "f73162eae87829342dd9fedc73bd2527828347664a88938f257da7deb98f980c"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 1913273902,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/game-framework-source/GameFramework/LinkEffectActiveConditionBase.cs",
+        "sha256": "60b5bf8bcc2bbf848051e9833b8183b1450db40c7cf405b86a38cc69e6c1bea7"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/LinkEffectActiveConditionBase.cs",
+        "sha256": "8b2b311e7e946b22d3449289a490f3d930e5be615d6366313020405bb671f876"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/LinkEffectActiveConditionBase.cs.meta",
+        "sha256": "ee597a5212143ccc9ff78dd0f4ae36e1bf58f56a095c51adc2fd5119f60a9221"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -383121192,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/LinkEffectActiveConditionOnPlayablePlay.cs",
+        "sha256": "efd67a306f2a5f7f02f94f949b20006d528d384ee42a381e6a7f3aee609613b0"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/LinkEffectActiveConditionOnPlayablePlay.cs",
+        "sha256": "6a52b8b72d88299555dc78e996b67e8d192b102f438afa8b35a52739adfb2fbc"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/LinkEffectActiveConditionOnPlayablePlay.cs.meta",
+        "sha256": "fc6cab74a957542a581ac6371555ab27cff448d98a34682c88d048b61831422e"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -644764131,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableCharacterPartVisibility.cs",
+        "sha256": "e38d6e49b073d1e3eab7f1e48553eb4e6da62fee23eae19bfd0576273f68616e"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableCharacterPartVisibility.cs",
+        "sha256": "f19378c78f6ff60088ae36b550f75a8c9a8dfe106c988a6e9413f655bd10c91b"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableCharacterPartVisibility.cs.meta",
+        "sha256": "a3baf1c793db4ad9fbd4bb6bc0facd2c81248d77625a41aa9de422295933609c"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 1391534298,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableFollowSpinePart.cs",
+        "sha256": "1324e411d818566e165436156ba1b37e5743c86f0c9a70ced3efbf1e2777e5ae"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/MyPlayableFollowSpinePart.cs",
+        "sha256": "1074d4fc9b2bf34e6f26b1c07f1ad08eaf13fb84c7912f37d73d3aaea02ba034"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/MyPlayableFollowSpinePart.cs.meta",
+        "sha256": "20ce4a8198ec708d2f8a43622a4eb60599230d9b30099d418ce227c9ac77b2a1"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -1421533442,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/AttachmentFollower.cs",
+        "sha256": "d8f8077dbbc72c21783e2af0d9b34b5b9109b829c51980cf7e6decf3b8ce79b2"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/AttachmentFollower.cs",
+        "sha256": "e9ac563e184ee7f5388f9a6c222adf4d2cefafb554444fad0f1738f3dccfc917"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/AttachmentFollower.cs.meta",
+        "sha256": "21dfcfbf1e6e5a3f75df8821e2a04f9823d3378e874e98fff9d92a51453452be"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 696733366,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableCameraMove.cs",
+        "sha256": "56d3045acaec7990be7f91fe3c0c8b53bfe9a6a1e1fdcb7831dd81e8f76ce7fb"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableCameraMove.cs",
+        "sha256": "023924d060006a1140a39882cc70fa4a684ee468edfb6d049a8abe2588219c76"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableCameraMove.cs.meta",
+        "sha256": "deccd87173455198803d139205d50f88d6c8f6c343298c5a160726b76563e114"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -1211289337,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/game-framework-source/GameFramework/ApplyOnStop.cs",
+        "sha256": "433c4cec79ab1a40681a9261f8968411446ce4171391b52fe5199a4a21759f9d"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStop.cs",
+        "sha256": "61be6fbd2f78694b9738c4e8e36fa58c99b576fa02164ec347b08290e2e5fc35"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStop.cs.meta",
+        "sha256": "f7a0f98fc68abc8f9a1e25f9af55bc4292c23ff1c7085a97751a85a77a6b6d26"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -61675510,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableFightCameraFollowerWeightModifier.cs",
+        "sha256": "37d90fa1028e25b724048cb71468c73253ffd4d8f05a9191902f12cf8c392348"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableFightCameraFollowerWeightModifier.cs",
+        "sha256": "9377e50298e0553fce12f0bd6f8561ca9f63ccec6cfcc59b6b22c2874bb01467"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableFightCameraFollowerWeightModifier.cs.meta",
+        "sha256": "55ed34ec0d96618fb4a9bfe58d7701a3e38c6744cee7f15d60a3226f74bfe6cc"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -782967297,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableSpineBoneLookAt.cs",
+        "sha256": "6cde321bc0ed73943869ec34c42b882590270a290972e32a7772c5f0ab15bfff"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableSpineBoneLookAt.cs",
+        "sha256": "cbf568018d99d76341c99ef3666567edccf89cd491e163bdfa74a88fa0aa5562"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableSpineBoneLookAt.cs.meta",
+        "sha256": "e867143d130b5417dec960a275c32a468c816bef8756c56da602952c416f0c30"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 1382981218,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableSpineClone.cs",
+        "sha256": "3e21f119a4826b1093d43dceacdf50d87e5aa51c59e39dfae2859db44372b5ad"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableSpineClone.cs",
+        "sha256": "cda56413e9f9df71118141f6c62c428cdf23fde7d4ce7564fe878cf2082d1bd9"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableSpineClone.cs.meta",
+        "sha256": "d25ada017d4addffdcbf6d3be6a41940426c166fd11e3c0f1f35aea7be696082"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -1957709185,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/PlayableSpinePlayerCloneInit.cs",
+        "sha256": "c0640094a8f9ba41082d1cc4fddbccb7ea49a00cba848f524f4570872f29032a"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/PlayableSpinePlayerCloneInit.cs",
+        "sha256": "4dca8f710caba80cd994f4d7f039dfa1fa269d0bdabc1cba23d133602c866b0b"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/PlayableSpinePlayerCloneInit.cs.meta",
+        "sha256": "68abad931e7b0b3d28d82a752c0456a252bf0f4ee55334a807c6e7fbc04db229"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 1122795596,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/ApplyOnStopCheckSourceDie.cs",
+        "sha256": "8f7c7bd235d5c5947742554c7f2c905cd3bd4136f7e292651ab28851ae86ec35"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStopCheckSourceDie.cs",
+        "sha256": "371d9e9321d27faa48f4795887c23b48f862d86bba5c07ccc84e99c52bd561f2"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStopCheckSourceDie.cs.meta",
+        "sha256": "ce312ed1101614e99bdbea7631fb9aad45bb95544ac5543b799ac051d5143778"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -1860136715,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/AppearanceAnimationPartHandler.cs",
+        "sha256": "608d4dbb4a4e8b1be034b792cea1b90113e09541a3ed39b08654066f905e1fdb"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceAnimationPartHandler.cs",
+        "sha256": "47d6e9f8c60fff582ff5ce490821cb9557f806d76d577ba5c2c8b3fed05f5545"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceAnimationPartHandler.cs.meta",
+        "sha256": "7891589408be7a3c3757b0c4051e087d5a75a91744ffaac564be017dd3234c17"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -713493980,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableAfterimage.cs",
+        "sha256": "942c61b38299bc656cd9af4889858a10154eabdbe453908a03d9b87126302a1c"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableAfterimage.cs",
+        "sha256": "3dc62962c3b27eeda918cfeb522ec5ba1006908ce5ab1bc4bb99f12bf7bf0113"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableAfterimage.cs.meta",
+        "sha256": "770bc5df36d37eabd2eee01e455b00eaf8713f2c4b12039e562b77b5ebd066f0"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -547320074,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableFightCameraPerformance.cs",
+        "sha256": "c46b62368c8f985f9f5508e61eebf92b6959319ac1f8d9d9b715e898d173277b"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableFightCameraPerformance.cs",
+        "sha256": "138437256925347939b1882b3e583a00a3440260b62ba2c639f0bd9b78111256"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableFightCameraPerformance.cs.meta",
+        "sha256": "229c31929c68a1f30c8493d23b287d1a00861e728e6ef288394bea70fd763e02"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 100375930,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/ApplyOverrideToMaster.cs",
+        "sha256": "dba625182c4623f136968e05452c0f81409bfeb2ecb811196377b3a7224fe2ff"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyOverrideToMaster.cs",
+        "sha256": "f2fe5b1ccd49a2b215a1be92b816d9cf2096c724f1a6bf09e3fa21e44e819c29"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyOverrideToMaster.cs.meta",
+        "sha256": "94aefebf576933d06175e87451b894479af9c6334b91a18c6b718b1b1be89f71"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 2012015779,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableAttachToBone.cs",
+        "sha256": "578ff6a34498753d569c75642f339e1e569d503d51bcdb00523d2d5648f44e30"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableAttachToBone.cs",
+        "sha256": "e31e60f5a0bedea5a118642dd90b0cf558105ba3f8f989b33ce0db12a9f8e476"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableAttachToBone.cs.meta",
+        "sha256": "48d3c220699315582f1ced306fa7667d4a52c27bacc391f015de4645ba9c7c34"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -1858338532,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableActiveBone.cs",
+        "sha256": "94006137403e0bf190a24c5efab4bc8563bb6229afc21b360eba90ffe22edcde"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableActiveBone.cs",
+        "sha256": "f759c2ab02210bd4340aea45a152480165d1ef9d795445df57958bfe9b2f8f5c"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableActiveBone.cs.meta",
+        "sha256": "ee4086b938e7c6691f3581a4e3b37e36a5e7351b5627e77b8b5d89972893b695"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 1513771027,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/SkeletonRendererFollower.cs",
+        "sha256": "b040dc742c6cb232065fbf9a8d516c12bcd8388d5662b0720b8276d97f2e3b9a"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/SkeletonRendererFollower.cs",
+        "sha256": "ee3128c81b45da2963f66c3c9c7a5ce73051a4323c332a07b3ee28fba1616f34"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/SkeletonRendererFollower.cs.meta",
+        "sha256": "21f234707236f675daa623c665ad213e816ac2219e4189722d0e0617dbf7c5fc"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 495083993,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/game-framework-source/GameFramework/MyPlayableLookAt.cs",
+        "sha256": "985a414d515b34bcd506b3c067cb0d21bc114447555ee3aabf05418339aa4fe1"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableLookAt.cs",
+        "sha256": "3b5b6bfe2d22472cc7760f5e6ddca6cd16ba160cfe4545a78dd0f4226c3c1ddb"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableLookAt.cs.meta",
+        "sha256": "dca9a64eb78a4ff2f29ae4ddf4c7c00b68a60deb207784cb3bf950f4922effd3"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 666328883,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/ApplyByBone.cs",
+        "sha256": "c56f44356f94efa0c6cb99b5b0cf17baa3ab0b8db849fd2809d24659fcdbeeff"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/ApplyByBone.cs",
+        "sha256": "76a30a691656802464e73b7f6506f91a4427040727c3c9ac830bf256a4862e9d"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/ApplyByBone.cs.meta",
+        "sha256": "7d6e24ec7fe2e395bfe44469900496dfb5da479a74d4491153487bb61d2f2476"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 1640720687,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableSound.cs",
+        "sha256": "f58057d9ca971d45618279659b27e0fd508c685065af7b3476a95d566ce788ca"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StorySounds/MyPlayableSound.cs",
+        "sha256": "d406bdb27df233456dba4c4bff0a12781e9551b733390eca621e673b8b74c83c"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StorySounds/MyPlayableSound.cs.meta",
+        "sha256": "6d723cee29eeef93753d7323f05b8b75fd61b4640d14e54fc99713a021eb0856"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -741389653,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableTrack.cs",
+        "sha256": "9652e978fe5ee9e2fa2ca326cb75f3abdefa8df351e400aae8bd4a383cea60d6"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/MyPlayableTrack.cs",
+        "sha256": "78c470f83dc6204baf45957f9c11fc77b0fdf13b24e010e89e134211e0ed3e1f"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/MyPlayableTrack.cs.meta",
+        "sha256": "5884b4cf11961d3299764ba9a52f5a7a6ba243f6e56cea8590d51a45707a4bb7"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 602813528,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyTrack.cs",
+        "sha256": "06df61c577e5971d9e0dbee622e8f307abc65308c65e734d781f6cbdcd3bd171"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/MyTrack.cs",
+        "sha256": "1ef7121b471722de685e6dae15600744d93d29c0cf2e7688d7bbd71bcf054965"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/MyTrack.cs.meta",
+        "sha256": "7fea5085afc62dd7b64b31c2b32aadfcd6a4b1f4dcf0751a25d3c6fd9d3907ac"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 1801709843,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyCurveTrack.cs",
+        "sha256": "62d36c4cac6cfe36c213e95ed71c8c5e9c8e5a9f95c0dee3e7eb2b5590e5aa2b"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/MyCurveTrack.cs",
+        "sha256": "519463b9320704de4fce29c3b15b7c11af6b40ead320d36c94051516fac14f30"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/MyCurveTrack.cs.meta",
+        "sha256": "c33c653ad871d4d738cfcc31962f1ddc0546a61d27d919025cce835aace8a004"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 180732079,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/AnimationTrack.cs",
+        "sha256": "bef94a1887a68da39352b2bdfaa3d9aea079498026cd839cd0fbdc2702ef1930"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/AnimationTrack.cs",
+        "sha256": "e58f175ae1cd9bc2260143a3964f8ab9fb7b7452a675f07e57d5ede76b80cb32"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/AnimationTrack.cs.meta",
+        "sha256": "25a6f5ac7ba895535ae732a7ce31eb9c857990e2738ef80896197d305e449511"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 116049708,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/ParabolicTrack.cs",
+        "sha256": "b6f11d695e0fcdb485a2b571d2afa10893d1fd29c457521a1620737974f61968"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/ParabolicTrack.cs",
+        "sha256": "8a7841c4d1877d2b7d19d50d91297719f0b419c1b8011a57b964c35c5a8a89ea"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/ParabolicTrack.cs.meta",
+        "sha256": "0615570eab3344d0ac39dcb9889bf69de21177e38c73195b3c39597298e3f921"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -210918009,
+      "original_native_reference": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/C89F1758-B148-4FE4-BA3A-B6CBD3273D74.asset",
+        "sha256": "e8ea952a17591342fac61dbe4530407c40514261a011540b218cb98bc5f525c6"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs",
+        "sha256": "7c7b698a69a8d3eb424dc94a32ab91b7364ca923979f89be53d405ee5f6d9942"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs.meta",
+        "sha256": "f393e1af77160cb98a16b745897e728620a26cafe5e3033cf0c2d23196a428e3"
+      },
+      "field_bridge_receipt": {
+        "path": "assets/reference/profession-ui/audio-source-manifest.json",
+        "sha256": "50a22684daa9c45eadf2278a18891840470470791c05d33f8545dc6b9561f94a"
+      }
+    },
+    {
+      "file_id": 354902358,
+      "original_native_reference": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Plugins/spine-unity.dll.meta",
+        "sha256": "432c9953ab7ddcf76e021cdf1aa969e8f50083bed4ba454262c09c46fac69e00"
+      },
+      "migrated": {
+        "path": "unity/Assets/Spine/Runtime/spine-unity/Components/SkeletonAnimation.cs",
+        "sha256": "2794d1e95e25602914cf368c8b0de814030b98e50244cf4bd5d74c8c2ffc2eff"
+      },
+      "migrated_script": {
+        "path": "unity/Assets/Spine/Runtime/spine-unity/Components/SkeletonAnimation.cs",
+        "sha256": "2794d1e95e25602914cf368c8b0de814030b98e50244cf4bd5d74c8c2ffc2eff"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Spine/Runtime/spine-unity/Components/SkeletonAnimation.cs.meta",
+        "sha256": "8fb0f98b2119a788e9acc58f322162575f575279f361ebf7853a989bdb8bfc42"
+      },
+      "verification": "namespace, type name, original native plugin reference"
+    },
+    {
+      "file_id": 1791324088,
+      "original_native_reference": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Plugins/spine-unity.dll.meta",
+        "sha256": "432c9953ab7ddcf76e021cdf1aa969e8f50083bed4ba454262c09c46fac69e00"
+      },
+      "migrated": {
+        "path": "unity/Assets/Spine/Runtime/spine-unity/Components/SkeletonMecanim.cs",
+        "sha256": "07aa9151a8a561ae88dd100cac0446a1272b6dc214aec888da0c5946546c2fae"
+      },
+      "migrated_script": {
+        "path": "unity/Assets/Spine/Runtime/spine-unity/Components/SkeletonMecanim.cs",
+        "sha256": "07aa9151a8a561ae88dd100cac0446a1272b6dc214aec888da0c5946546c2fae"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Spine/Runtime/spine-unity/Components/SkeletonMecanim.cs.meta",
+        "sha256": "bf2f6264b51f7a74aee8002cfa62212525f58e54c916b0623983cae96c403f86"
+      },
+      "verification": "namespace, type name, original native plugin reference and source script ID hash"
+    },
+    {
+      "file_id": 337831424,
+      "original_native_reference": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Plugins/Unity.Timeline.dll.meta",
+        "sha256": "0871a44e79f3178c2157126737d5d2527c00a001106a723da193e2f42bc9828d"
+      },
+      "migrated": {
+        "path": "unity/Packages/com.unity.timeline/Runtime/TimelineAsset.cs",
+        "sha256": "370c33c21502a7f1059afbe7dc763982a6fdbf4fce87e24874cba333d30314f1"
+      },
+      "migrated_script": {
+        "path": "unity/Packages/com.unity.timeline/Runtime/TimelineAsset.cs",
+        "sha256": "370c33c21502a7f1059afbe7dc763982a6fdbf4fce87e24874cba333d30314f1"
+      },
+      "migrated_meta": {
+        "path": "unity/Packages/com.unity.timeline/Runtime/TimelineAsset.cs.meta",
+        "sha256": "3c14683d2ee2dd47da453bf4e64077c04db037b700bc3b726eb1d1d3212cd7c1"
+      },
+      "verification": "namespace, type name, original native plugin reference and source script ID hash"
+    },
+    {
+      "file_id": 106799970,
+      "original_native_reference": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Plugins/spine-unity.dll.meta",
+        "sha256": "432c9953ab7ddcf76e021cdf1aa969e8f50083bed4ba454262c09c46fac69e00"
+      },
+      "migrated": {
+        "path": "unity/Assets/Spine/Runtime/spine-unity/Asset Types/SkeletonDataAsset.cs",
+        "sha256": "1ede7fa18882df30f65a5765fc4bc8aa8250a230b373a12f3b656a9bef759043"
+      },
+      "migrated_script": {
+        "path": "unity/Assets/Spine/Runtime/spine-unity/Asset Types/SkeletonDataAsset.cs",
+        "sha256": "1ede7fa18882df30f65a5765fc4bc8aa8250a230b373a12f3b656a9bef759043"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Spine/Runtime/spine-unity/Asset Types/SkeletonDataAsset.cs.meta",
+        "sha256": "07df0a6f8c1b7639d4645b515677518d3f7913a87d8662dfbe12b7c37081ed9c"
+      },
+      "verification": "namespace, type name, original native plugin reference"
+    },
+    {
+      "file_id": 1497261852,
+      "original_native_reference": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Plugins/spine-unity.dll.meta",
+        "sha256": "432c9953ab7ddcf76e021cdf1aa969e8f50083bed4ba454262c09c46fac69e00"
+      },
+      "migrated": {
+        "path": "unity/Assets/Spine/Runtime/spine-unity/Asset Types/SpineAtlasAsset.cs",
+        "sha256": "1b4f8140bb0912e5e57143a00948d79d4dadd8d9fae67ed7402a3d623efbfb9d"
+      },
+      "migrated_script": {
+        "path": "unity/Assets/Spine/Runtime/spine-unity/Asset Types/SpineAtlasAsset.cs",
+        "sha256": "1b4f8140bb0912e5e57143a00948d79d4dadd8d9fae67ed7402a3d623efbfb9d"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Spine/Runtime/spine-unity/Asset Types/SpineAtlasAsset.cs.meta",
+        "sha256": "e43d55eaad404b3c8a745c007cc9db25b201d5e6851a55a5a096c7c74373e83d"
+      },
+      "verification": "namespace, type name, original native plugin reference"
+    },
+    {
+      "file_id": 1339610166,
+      "original_native_reference": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Plugins/spine-unity.dll.meta",
+        "sha256": "432c9953ab7ddcf76e021cdf1aa969e8f50083bed4ba454262c09c46fac69e00"
+      },
+      "migrated": {
+        "path": "unity/Assets/Spine/Runtime/spine-unity/Components/SkeletonRenderSeparator/SkeletonPartsRenderer.cs",
+        "sha256": "3a87d340ab48a85aff335aacabb6b34afabb8999eb18ddf2fffd8deede841b23"
+      },
+      "migrated_script": {
+        "path": "unity/Assets/Spine/Runtime/spine-unity/Components/SkeletonRenderSeparator/SkeletonPartsRenderer.cs",
+        "sha256": "3a87d340ab48a85aff335aacabb6b34afabb8999eb18ddf2fffd8deede841b23"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Spine/Runtime/spine-unity/Components/SkeletonRenderSeparator/SkeletonPartsRenderer.cs.meta",
+        "sha256": "7c5806c28e5191b469c15cab59f2f138411c85193afa0d073ab74db01cc34117"
+      },
+      "verification": "namespace, type name, original native plugin reference"
+    },
+    {
+      "file_id": 502961096,
+      "original_native_reference": {
+        "path": ".tools/source-packages/current/903_156948/destroyer-hurricane-grief/native-export/ExportedProject/Assets/Plugins/spine-unity.dll.meta",
+        "sha256": "432c9953ab7ddcf76e021cdf1aa969e8f50083bed4ba454262c09c46fac69e00"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/SkeletonRendererHighTexturePreview.cs",
+        "sha256": "c970b739e24e1b6524a5cecad8a4b0e81a267b5b63092efb93cb7e0f2fef9c87"
+      },
+      "migrated_script": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/SkeletonRendererHighTexturePreview.cs",
+        "sha256": "c970b739e24e1b6524a5cecad8a4b0e81a267b5b63092efb93cb7e0f2fef9c87"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/SkeletonRendererHighTexturePreview.cs.meta",
+        "sha256": "fbb3c7d320569ec87e9115f6634b00ecffc9ba5be0afb61032a6b533cac08841"
+      },
+      "verification": "namespace, type name, original native plugin reference and source script ID hash"
+    },
+    {
+      "file_id": 1200213464,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyEntity.cs",
+        "sha256": "1d3cb29ee8e21bb2e8717aa95c8922434f1a20bf90fafb941b5ffcbf26bd2ae1"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyEntity.cs",
+        "sha256": "a79da2de6a96b7b999cca9ccc0b63268f6721203ee5d103300ccddc4112c8c8e"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyEntity.cs.meta",
+        "sha256": "37c1bca62c3f18ee7ae04cc407f650a3cf2a6a87713454e7345366e71e67bf4e"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -1946306183,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyGridTransform.cs",
+        "sha256": "6568a690831e9fc20eb95fcd659f4f8cca5b780d7b735b579406f1a9af8de0bd"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyGridTransform.cs",
+        "sha256": "4c85f5729c5acecc8a4ce17b12e1c566d7f2ee486743dfe20e4e0d03363340f4"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyGridTransform.cs.meta",
+        "sha256": "898f8062fd903c804ef38b3f95f78b08285bbbc6ac3a1b1bf67d3352cf569c5e"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1450751099,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyTransform.cs",
+        "sha256": "75775226b2ff4efbc2853dff3d9964d5f11cd5032ca69ccd304d298944f5d5b9"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyTransform.cs",
+        "sha256": "4f3992afc8ebf2f480ca1e7551a926e615a6240313d6013bc89b35808d641b14"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyTransform.cs.meta",
+        "sha256": "bf37794ce69c25ec76c84244af25678418d09e83b8918d73dd33acc84143b186"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1562105360,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightGameplayTag.cs",
+        "sha256": "9803582a17b79d53729d221bedb09b899025ee3b79dddf5801548a28b7bb39ef"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightGameplayTag.cs",
+        "sha256": "9261267df7185f333d0e25c46733d4d0ae7e4756ade85b8df1f4799a766492d7"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightGameplayTag.cs.meta",
+        "sha256": "af6d03a3ae722b3044c49a9d1a4f1eed55dc449e0d188b3b50407b58751b6fce"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1288110169,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightHitFixed.cs",
+        "sha256": "0ca7fd1d15c9892617490bbfcd624dc94f8755a9dbee122c36ee5603d7db82a6"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitFixed.cs",
+        "sha256": "5aba2c02a219f33772f3bf5be7b8cd88847e34cc34eff883bf8f5258dfe9d5ce"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitFixed.cs.meta",
+        "sha256": "f380b03412a26a75434b3cdf057afc4cf5638aab6869d666f7f5961499d7c6f5"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1140947477,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightHitChained.cs",
+        "sha256": "fd93da51b689b4a9a243b23ad2311ae5fe2637e42b460c2cfc8ffb0b327cb720"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitChained.cs",
+        "sha256": "b7e546f94f6a0336db1152081a9b4535797fa0690c4dc80a23257d8a8facd7c0"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitChained.cs.meta",
+        "sha256": "908c491a15332a8c1ffadf16781f8ba188a1b5bc5bd6578e280da55449e89282"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 189478852,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightHitSummon.cs",
+        "sha256": "27818e6067ba335d29c1666a7600bfe3029df71744551c3ae6cbb1cf4c789742"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitSummon.cs",
+        "sha256": "abc1774f0b79c5678c337aacff5c8db06b09c8084c028b670762861877898b6d"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitSummon.cs.meta",
+        "sha256": "853ecd30e663f8c7a1d3dc7ecfe2e239c5a780d71170472c3ebd89e8320f00d2"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 131563745,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightHitRandomTarget.cs",
+        "sha256": "5f560f887ca8ac20dc05407e1266ef9235b2d68ba227885e28b36f281e70d56c"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitRandomTarget.cs",
+        "sha256": "75015c008ba7685acfb298f1fe42e238262fe21615bd5cd1b8519cd3b941d846"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitRandomTarget.cs.meta",
+        "sha256": "1255cfc8be2cedbc4f79d0767a12361607c36ce17bd490b5c5da3b40f13e4747"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -121850323,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightHitCustomTarget.cs",
+        "sha256": "58f3e03e3d6587c1bd9b1aab1cd8b2e3ffd1844cd8bb82a6d335e8b08dd58c8e"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitCustomTarget.cs",
+        "sha256": "61e10c82e7daf0ccdcce5a8d291437ecbe0505cf25bbd1d6a30c0ae1055aba8a"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitCustomTarget.cs.meta",
+        "sha256": "8835a1bb200d411ae84efec071841338d27437157549c3c42d8551b6a32fdb34"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -1191326687,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightHitTriggerSkill.cs",
+        "sha256": "a6e1b883f8289cb6ade655612fab9eeb3e328541125322c029a717b96a188ea7"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitTriggerSkill.cs",
+        "sha256": "9b765bbee71b12d91e80929ce9d0574cd9d5642ced21445ebcd0e905e60e15a0"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitTriggerSkill.cs.meta",
+        "sha256": "f7422d7851d4f43384432e21dbad7526bd4ec3e19549a7ab95939934f0bf2561"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1258635147,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightHitExtHemophagia.cs",
+        "sha256": "6b82430ef76d633cfa67ad0caae268a3eb60addbebd7977ae781ad6a078aae4e"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitExtHemophagia.cs",
+        "sha256": "a60893be9c542456358036a0ee88dee800a3641017d61f3acb2fd90248f5c9a8"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitExtHemophagia.cs.meta",
+        "sha256": "5855a014c27e748d260ca6aab4b0a90450bdce71e092ce0b89c0a6236cf18b32"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -328712313,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightHitTransientPropDiff.cs",
+        "sha256": "b5da62b57c56ee8b7ea50179d82e74872abc99e4dec1e141fd9da21eba48eb08"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitTransientPropDiff.cs",
+        "sha256": "37d36fc671b7fbab250b1a84a4517ad70c4d8e1759a0de11bd52ed8ffd8c278a"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitTransientPropDiff.cs.meta",
+        "sha256": "289e62c7cf3b3e4ca2dcaa54465b95ec9c496495724cf4d67a5f009948c89358"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -731884637,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightHitTransientPropUpByCharacterType.cs",
+        "sha256": "def86b1e2f51382d38344b80b7c91aee1cb1e91ffb1bc66ab080aeef97f6cdde"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitTransientPropUpByCharacterType.cs",
+        "sha256": "0d1dd94d82484a0ea6dee8436eb7b26345b869006efe90cbbf88dc8d13150a74"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitTransientPropUpByCharacterType.cs.meta",
+        "sha256": "751286104a4c1afb268a861cd088b90f37bd273824253698bfc786d9d1f1f61d"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -1434554820,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightDamageLimit.cs",
+        "sha256": "286cb22afd40b58cbc7e31fe7b4d4d8e71adcc864d04a09208d347f077d35297"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightDamageLimit.cs",
+        "sha256": "791af431ef3f1abcfdaf6040d027891ee40cefccb3d1819f279a68fbcda5d8d7"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightDamageLimit.cs.meta",
+        "sha256": "bd26723a82a93f3419521c7a022250875ffd863c9efda0ad53bd3385e281f19c"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1228059701,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightHitExtApplyDamage.cs",
+        "sha256": "33d0c12ccedd441e1b78aa0bef38451e98af01ef7f8deda3b5c004a8ab184772"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitExtApplyDamage.cs",
+        "sha256": "4e895993fcb41d9a3aa53a59f76ad3a4cf376eea7cb41ce35dff82f565c64a1c"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitExtApplyDamage.cs.meta",
+        "sha256": "cd1627127eb8ea0188f1b7d4d2b3525ecfe9497ef09c71c33bf403505259ea69"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -2066325885,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/ApplySkillHitOffsetForPlayableTrackOnInit.cs",
+        "sha256": "39d9fa3c9e9332946e1e1eb7f731c08c3842d89bbc287c0020bd2bb920846345"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ApplySkillHitOffsetForPlayableTrackOnInit.cs",
+        "sha256": "2d38b90730a2e70384d27e1a5c5819abb1e0e53901daa7f1ef241d5424528316"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ApplySkillHitOffsetForPlayableTrackOnInit.cs.meta",
+        "sha256": "5460b1a004c321aa3b5000a4f71426e91799fc3fb8df24f8c3d1d43e07e5e55c"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1391853401,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/OverridePlayableTrackByHitOnInit.cs",
+        "sha256": "a127236594cb13ce7d3ff0491b98fda4adcafbc8820eb5d4eb356c5eece7a79c"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/OverridePlayableTrackByHitOnInit.cs",
+        "sha256": "16c23e0b84fbfe1718abebf9ca0d349b99fceaaa9a940b20e300d68771887772"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/OverridePlayableTrackByHitOnInit.cs.meta",
+        "sha256": "6537f69cb619078196a0300ce1f5456a8b21e00701a4d7370266843b19a8f199"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1261815661,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/OverridePlayableAttachOffsetByHitOnInit.cs",
+        "sha256": "c20cdffa3d2a8948e1badf40d58e848ff2bb11b91f43adb2f72bb4ae90fd9b6c"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/OverridePlayableAttachOffsetByHitOnInit.cs",
+        "sha256": "b48d906dbaddda69221a27b7022ea2bc88ca1bd242f9f9ce01be3f91e58dcb9b"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/OverridePlayableAttachOffsetByHitOnInit.cs.meta",
+        "sha256": "439d46b97369bce487dd381e3c0a4d12538677f2e322e5c23a9b4fc206785fcb"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -109006141,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyAction.cs",
+        "sha256": "6adf75aa0f477aab0ada42d10bd0b3ea7e8b3a77b111e02206faa7aa15e9a140"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/EntityActions/MyAction.cs",
+        "sha256": "1ac1ea7452f26a80a61d9526068f3120ded1e678016272ccc047ab6f3fca95bd"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/EntityActions/MyAction.cs.meta",
+        "sha256": "3d42f9efcbaa5feb7791380b952dfaed0a6996025c8f349d8045d3cf6b44957b"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 401787210,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/ECViewDriver.cs",
+        "sha256": "46808b5f955b1e120c939a78bbe64aed8f5b1d66d2e290b11e84c08c20ec07d7"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewDriver.cs",
+        "sha256": "50005bf41df35ab989c891c6c04655ea04678864bbdd4b7f275d65e6c58ea5dd"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewDriver.cs.meta",
+        "sha256": "626ea46d38a919d2d9707696b2a6597398e3ff197685a71a5c849cb14e17e80b"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1725120999,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightSkill.cs",
+        "sha256": "9c6035e4ef62e7a7acd5c4346cd2e52bbc6a7e058bee59010ca048bee2fd92af"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkill.cs",
+        "sha256": "06988c66e147bd3b58321fc01422d19ab1c10b15ad4bddb84a7a98e019e89355"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkill.cs.meta",
+        "sha256": "a8ce174ac94b84978ddcee006544c7f8adc4138d74b4021f6b9252ac1a42d5c4"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 51594902,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightSkillExtSkill.cs",
+        "sha256": "e7b245132f743ef74e93fbbb43eeec6f35e4c5b7ed48d474eae0147fc20b975f"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillExtSkill.cs",
+        "sha256": "4fc5b64996974573abf1be8f08027bd822947e6283a1f63fa9f298672afbc19e"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillExtSkill.cs.meta",
+        "sha256": "73c50380a595494e93ea7141552595fe408c0a8f6c0b74b3ac48706bb81bcfdc"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 284377878,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightSkillHitCfgOverrideByStatusStack.cs",
+        "sha256": "ad934c148478ea5d5690f714a8ad589305530ea880ff4dfc7f3f6e605ed205e3"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillHitCfgOverrideByStatusStack.cs",
+        "sha256": "b933d2b556364dff044d029fd762db9ea901d8657131070fe80b97fe4dbeeb51"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillHitCfgOverrideByStatusStack.cs.meta",
+        "sha256": "7de5cddced53cad5dc58fe5fe070716c68395780ee5791eef1fe59b916d250a0"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -939502920,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightSkillAIRandomTargetFallbackSpawner.cs",
+        "sha256": "1fd37c57bfe5932c3c41e7978a2df6cbb5c7bda799d371111d3bbfc6c565c864"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillAIRandomTargetFallbackSpawner.cs",
+        "sha256": "f5d71a1f0e66ea500334488b5e8d5aaac5f1ba3052b2aba0e81ad0eb7a486a5d"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillAIRandomTargetFallbackSpawner.cs.meta",
+        "sha256": "3c292fd9108020970a92fe9860586addddcb0e82064a83b533a5cc7e4270463e"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -885588873,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightSkillBehAttachOperate.cs",
+        "sha256": "7953476c460176fe7721576f5a63100b28fe9ebd4aae64ccede5e603094b004a"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillBehAttachOperate.cs",
+        "sha256": "8db8cd799bd97ca173cf7e9996e4deace5568144866be92f37fcf254684be203"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillBehAttachOperate.cs.meta",
+        "sha256": "35a1dbe738845a5aaa98f7f5b5e6ff434099e3f36b9b9944dcecf672360748fd"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1409721722,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightSkillBehAutoRemove.cs",
+        "sha256": "f9cc8237e65ba513ae82f26bc270cf17f5c34719d7585a1aad46489bcfa871a7"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillBehAutoRemove.cs",
+        "sha256": "23f80483cd76f3a8bd65ea402790997aa4036f6d442606d4c8d97931dc529842"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillBehAutoRemove.cs.meta",
+        "sha256": "2377aaa6d9d4aaa89c5fc15e1157670eadcacc35181961982cb12b02bdeed617"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1072259489,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightSkillCombo.cs",
+        "sha256": "2ff4f56a815daff7ecbef4d1dd30100f26e6a776760b35c7aea8e47f1f0a8215"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillCombo.cs",
+        "sha256": "96eac696511152371f2e964edbeaed16a45b79589de9aa884875d9f375812884"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillCombo.cs.meta",
+        "sha256": "83023c13d5bea62f420c93c22db076e034343d97ea864574d91ea4e5714c7ebc"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 2140173781,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightSkillReplay.cs",
+        "sha256": "9877433b46cb9d498f1c9b8bf44169e492fcf665f3d63b52421e27c89d2c98c4"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillReplay.cs",
+        "sha256": "20d3f11e915bf6c9d292de2a3ac2a2c551c79cab04db10d79e252f3dd532b6e8"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillReplay.cs.meta",
+        "sha256": "6fa977a0264262368d0d551481d8632c239b42fb29543dc4bc22bdf7cd99a301"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -538434650,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightSkillLogic.cs",
+        "sha256": "ae6acbd940a9c962573e19277741e140c9a55d175b48549ccf59267d205b4ca8"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillLogic.cs",
+        "sha256": "ce0206328d2a22daa7dda5767ba96ce43b7ec65c7b1cd08d08d1d72f44b1e9ff"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillLogic.cs.meta",
+        "sha256": "ed1c63915bfd234ddb46853857a9ca1dfe857ba00bbe25f2ad421bcc1ca115aa"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1988507687,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableOverrider.cs",
+        "sha256": "1674075af9e14ba0450503c927e9c918cf7712dcc627232ea2dbd690ed06e964"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableOverrider.cs",
+        "sha256": "4b9355bee9ae277e4dad40a2e5cecff88cd3d4b62ac8c68baf36ca0a40e951a2"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableOverrider.cs.meta",
+        "sha256": "0fd779339ef9d79168fbc2eb06bd79aaaf83a52252189a88a3d22528f938c3e6"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -652397137,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/FightSkillPlayableOverrideByStatusStack.cs",
+        "sha256": "1ca7d621c04a600037b83894f4b5839b25681c908680589048e2bf4a055c4250"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightSkillPlayableOverrideByStatusStack.cs",
+        "sha256": "205550ce5b8a7934cb1d7397ec34859eaa4a83a0e6907f63ca9e2e8d6e3198be"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightSkillPlayableOverrideByStatusStack.cs.meta",
+        "sha256": "297d3a516ffd85e887577977dd5f36bc70676c81da4e2b7d8791ef4178f9537d"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -301837026,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightHitExtDelayInfoOverriderByStatusStack.cs",
+        "sha256": "b657a96a38539fb90f720f67625e681a71a8b21707736a86292bfdebb4e27dca"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitExtDelayInfoOverriderByStatusStack.cs",
+        "sha256": "228e50314646c0d3d5e3bcbab5f9f4318d2f5539d52dc14336520c7e780167f6"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitExtDelayInfoOverriderByStatusStack.cs.meta",
+        "sha256": "fabad93f944db4189580cfa596754c4bdd4f3276ee8b929a45c710455b051133"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -802680585,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightActionSkillMove.cs",
+        "sha256": "87b1e139b0c6fde0e55fc3e35dcef835d60e2339d8276a7d74de8686899b7069"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightActionSkillMove.cs",
+        "sha256": "1aeb778d26071f1e080828f65d568946eed336d5a1abe7ad86289856d64e1dcd"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightActionSkillMove.cs.meta",
+        "sha256": "185c772cdcc46912bfce187b1132146e021dbe21297d2fe401bf66210f42da37"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1945368929,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightDamage.cs",
+        "sha256": "6ce2cb93b6e7df9c11d366ddf5398e8ad90baed282f04318269c521df139ed98"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightDamage.cs",
+        "sha256": "155e8402b0349fb2c315484196fbf9a49f2a575dc4fddc96c3cfbdf7e5b3b461"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightDamage.cs.meta",
+        "sha256": "4f7193c8ece932df88598ff7ce04050e0d331eeac4466c425685b9a1d73cb3a5"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -958291529,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightDamagePetTransferEnergyFilter.cs",
+        "sha256": "f4e429bc1f1034c57dcf92354d0c7f63abeba0ca2cfd92d45fbbe0815d3808f1"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightDamagePetTransferEnergyFilter.cs",
+        "sha256": "68a1ab88aa307883844f8b5bf00619204b78da42610c2152d8f4cb0cfed8a7a4"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightDamagePetTransferEnergyFilter.cs.meta",
+        "sha256": "3e6f1c33d704913451b797a110f2e5dcdd6177f20387a60aef71da80e667a7db"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -361845631,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/FightDamagePlayableOverrideByStatusStack.cs",
+        "sha256": "6ed00759548bcd563482b8983b7d90cecbf1e053589905d76920e191c248e7f3"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightDamagePlayableOverrideByStatusStack.cs",
+        "sha256": "3e2c8156581ac625ccf4998bf99ee0bdd5418575165aa446985f4b68752657f0"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightDamagePlayableOverrideByStatusStack.cs.meta",
+        "sha256": "55ad3a657fadbd72f3107035529014273aabde1ab85f51e16cc5355d459374d0"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1126251125,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/game-framework-source/GameFramework/MyPtSubPlayable.cs",
+        "sha256": "58b7e5fabfcce8e5fb456ea5ade487f8a886e809c3626c128917de63c82efdcd"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/MyPtSubPlayable.cs",
+        "sha256": "602cad345b92baea2d74822c686c2a01e0ae3985c603805f6cad7351861a9b9e"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/MyPtSubPlayable.cs.meta",
+        "sha256": "9b5dc5e43272fc068284b1e6abcb2757125da9568df858954a8e59002ab70d6b"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 2132115665,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/game-framework-source/GameFramework/MyPtStopPlayable.cs",
+        "sha256": "3f7085b013c3d2a83c703e3e6f89066dbbc8fb8cbc9536c76910805ada8e160b"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/MyPtStopPlayable.cs",
+        "sha256": "b8ce197258f133f5e8d965e8893de95af4f0c14d3d7a82ca5be1798c09776e94"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/MyPtStopPlayable.cs.meta",
+        "sha256": "987c28a0cb8e28398ff3a57c48c3b0a6e7da7c7658814650390acd2126dd3ab4"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 34885126,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/AppearanceSystem/AppearanceRendererLite.cs",
+        "sha256": "e0441d3ba36839af8381c6955de47eabd9ca1e02d86d858bd33be2fe07fe8d44"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRendererLite.cs",
+        "sha256": "f07bc35c75cd47472901dcfc5d505e7a1c220975b45f85e79a6aac870998cb17"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRendererLite.cs.meta",
+        "sha256": "8b052d66fc3a2376bf2916e79967d4e5e9489e640e416ede3049acf021ca41fe"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1708465776,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/AppearanceSystem.SpineExt/DynamicSkeletonRenderSeparator.cs",
+        "sha256": "8b9acb11d37399feba83878e0cfd6fa5c8158f4a3d750c77119f35a47cd4d3d5"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/DynamicSkeletonRenderSeparator.cs",
+        "sha256": "2152f33a0371d70f3a8508b343c94a9feb50e2661bfbb9109e52137e1f506a36"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/DynamicSkeletonRenderSeparator.cs.meta",
+        "sha256": "350c7bf0e976517306bfc86e96a6e09f1047987be0fb8611d9624e31e8f307c3"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 2111475641,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/AppearanceSystem.Runtime/AppearanceCharacter.cs",
+        "sha256": "599cbf36d797cad5329e9c5fd1b0e933e93e169a8802802458e1caf5ede5f30e"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs",
+        "sha256": "d89b6bfaac4e7a0b982928e151b121de40f2662c7b9e76df34ab151d4f963c99"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs.meta",
+        "sha256": "ac1111d971d46a2b2f4c73e29d5f0945ef95d3c2eea932df61e0e4e58f6d9925"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -1254263949,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/AppearanceSystem.Runtime/AppearanceAnimation.cs",
+        "sha256": "64df12857f7b48369681764b9f8d30abfb4d41954102a8633e1bb2d63a02daa8"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/AppearanceAnimation.cs",
+        "sha256": "51a853a7a4b7731c275d445185540db6c5b7efaee934c97aa914b1fd7dd711bc"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/AppearanceAnimation.cs.meta",
+        "sha256": "36805efd286a0ae3949a27070b283970fecee95af2265c3518a0987feb7fdfe0"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 2084312037,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/framework-source/PreviewTool.cs",
+        "sha256": "66b138f5f124629eb239d4fe9cd3e7b92a5bdd5e3bf691cedc24f6f002982611"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/PreviewTool.cs",
+        "sha256": "31c0d8d1e015285e2cf6bd7f6ad883963a04a5c1d7ddae3f249ad17004eb054c"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/PreviewTool.cs.meta",
+        "sha256": "8ce696c35772070aad863d8df076692cbb45223b369a0dc6b8cdafb7f82405f0"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -1369127073,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/AppearanceSystem.Runtime/YooAssetTextureLoader.cs",
+        "sha256": "b0c14f447e124812fc0db4afb7de0d48c0ddaccb5e9f4275d2dbbff277cd7605"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/YooAssetTextureLoader.cs",
+        "sha256": "0cc74727a5f0b792f2e97c0258c7cc07b74321b9f3ce9b0e0db92407b7cdcb39"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/YooAssetTextureLoader.cs.meta",
+        "sha256": "6b83b093151ea0f5e27f67781e6707724de5cd3bc81ea7419789f801e309131f"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -624567827,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableGroundEffect.cs",
+        "sha256": "33f38cba1e86b81377a3ea67d0265dac2bea0b8c209b57e5cc80646fc7e466b8"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableGroundEffect.cs",
+        "sha256": "e0d10065094f135f34325c8f71149b67901e909f23892b8401641114eaaaa952"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableGroundEffect.cs.meta",
+        "sha256": "0f203a3bf565446e3da85a174cdaf802d5c9a9daf9dbe01e174b4a460ef18f76"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -194148604,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/game-framework-source/GameFramework/MyPlayableApplyObj.cs",
+        "sha256": "d53877603d8dfac50bf9e2ea705732323ec4970b7accd81abd0a54ecb3576288"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableApplyObj.cs",
+        "sha256": "bf7b12fdc9361d1388aff774e5f56b02802dea4b63c8297a8ed41bf2a6982ee3"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableApplyObj.cs.meta",
+        "sha256": "e6fdcb1a2d2eef68d623eac554a3ff395dbc9a374728e5482adc3052d738ada3"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 2062756666,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/game-framework-source/GameFramework/ApplyByCustom.cs",
+        "sha256": "f8d1b07ddf849287a0a19c87e04f3a22e875dfcb926a44bf40574152f4d6b05d"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyByCustom.cs",
+        "sha256": "3483d2562951f0a491e03e1b8cfd6d70ffc1c8617933c5a85bfd5df0afc7a190"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyByCustom.cs.meta",
+        "sha256": "6ba24eb5cd7d47fd2479d1cb3cb3dcb9760010570f6f0ca9006cbe01bea8e078"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1420873720,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/TargetSourceInitByGameCamera.cs",
+        "sha256": "c7d94168b4b5aed4b7f6c6f747e2c3412045be10e540d4c863a493d5c23579d0"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/TargetSourceInitByGameCamera.cs",
+        "sha256": "7bdaec8ca76e0cec0ade5e72585e211dfde4217b86728ffa20e513323e5d9ec4"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/TargetSourceInitByGameCamera.cs.meta",
+        "sha256": "d0cdc809d03c5b31fb2e4451949971e3bb43a85209ee25fd1ac2b75a07dd378c"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -1154579867,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/SpineBoneAfterimageRTParamsProvider.cs",
+        "sha256": "635b002fe8c484d7ffcea19298ba9ca7512d3bc973314c8bed27e59f7bc306c0"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/SpineBoneAfterimageRTParamsProvider.cs",
+        "sha256": "72c708aa993e05941bd8d5f11f484f73655a44a5dd2222735becc55d78a3dddb"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/SpineBoneAfterimageRTParamsProvider.cs.meta",
+        "sha256": "8f06419f7de1cda54f133f509ca08ab7a621178d0762a1cf5914bdc7a8bace6d"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -1055498065,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/RTRenderer.cs",
+        "sha256": "ee92f940d90da42251078a7ca0111ab090282200c32893afb154a1ed2453fc6e"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/RTRenderer.cs",
+        "sha256": "bfde7539f8a520683c04f18d19eb0f4faf7544af3b6bb7228589bd45b27c1fb5"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/RTRenderer.cs.meta",
+        "sha256": "b61bcd8dfc8e9efdfd4880e8cf6f877899def006a085df6e568b9b751040c6e5"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": -2038699262,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/GrapplingLineCtrl.cs",
+        "sha256": "f118d5b037322472dae21fc72e5752af065e43ef71d70563b4bc2f03c5821e74"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/GrapplingLineCtrl.cs",
+        "sha256": "f118d5b037322472dae21fc72e5752af065e43ef71d70563b4bc2f03c5821e74"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/GrapplingLineCtrl.cs.meta",
+        "sha256": "29883a080e859050ec60d4ce7191b6b35b37c25ee0cee213a4438a33457d118d"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    },
+    {
+      "file_id": 1371266483,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableGrapplingLine.cs",
+        "sha256": "e86b749aad03ec28ff829e7ca866f72ceede19ea9c97537f2889e7c8214080de"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableGrapplingLine.cs",
+        "sha256": "599fe8eb77b1f27d2a10a51dad5c1a65a7e91a22c356520450dbd82554fc5298"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableGrapplingLine.cs.meta",
+        "sha256": "11d30a4568cef21db4a8ebcabbce409e9c8b230b7f16cd344d2bf59d6ec2b5c2"
+      },
+      "verification": "official source type and namespace; ID bound by active-version prefab reference"
+    }
+  ],
+  "external_assets": [],
+  "native_scripts": [],
+  "runtime_receipts": [
+    {
+      "path": "assets/reference/battle-animation/status-orbit-runtime-source-manifest.json",
+      "sha256": "5441d40bd2fdad97698c4d83861121026289501e1858e8061eac723203dae616"
+    },
+    {
+      "path": "assets/reference/battle-animation/status-view-runtime-source-manifest.json",
+      "sha256": "a6b159c66b253fb32b9208769ddd350cdc0ae1259937cac0822ede9a99528715"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_hurricane_grief_graphs.py",
+    "sha256": "fbe97ff9be5c3edea4cce09beaf0cc609f2ffbb7c6b0edd9403139b10856dec1"
+  },
+  "graph_asset_adapter": {
+    "path": "scripts/prepare_battle_status_orbit_assets.py",
+    "sha256": "fb570218ad67ca4925c975fa051ecaf52caaa65bc1bd0d860cc1f963f46a6795"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/hurricane-grief-current-skill-graphs.json",
+      "sha256": "e0de47808c7241cacd8763fa366e52995c312398d60e43d7bbd2474ca0a78052"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/hurricane-grief-current-skill-graphs.json.meta",
+      "sha256": "116415b61ec99dadd8cb8a1028dd065f3fa827ba3d5b0f90917027c85018af37"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/Shaders/HurricaneGriefSkillGraph_Noise_Mask_Pro.shader",
+      "sha256": "ff8975d88072767f61c5e474d24799868a230211c05a9bf4293f09ca9bdd4384"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/Shaders/HurricaneGriefSkillGraph_Noise_Mask_Pro.shader.meta",
+      "sha256": "de55a9377f2e134f955cbd92865fea2b214bd3ecfb20427335b3b4c6483b8ce9"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/Materials/Fx_BaoDian_103_NB_5.mat",
+      "sha256": "101ce94480e015413616cd27eab7bd724684c8ecbdf073f47a71dc84f4b5a8aa"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/Materials/Fx_BaoDian_103_NB_5.mat.meta",
+      "sha256": "b8892faac898b21b39ce5e0af70fe68e5ef3133229d1824734599e701d46e774"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/Materials/Fx_DiLie_0012_NB_5.mat",
+      "sha256": "47fc8371bf37c7e7a8d89aadd9b72fe78f56fc8ebd6ac82c59183f30fbe1c55a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/Materials/Fx_DiLie_0012_NB_5.mat.meta",
+      "sha256": "e4c2aa70224e9d566d33e13d313bf545c0cae26fa7ca4236935994f866834922"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/Materials/Fx_GuangDian_12_2.mat",
+      "sha256": "fb00a80126f94023824f5cb4260124ac166c541dac7e4c506b4de5938d3e2b52"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/Materials/Fx_GuangDian_12_2.mat.meta",
+      "sha256": "60dc6af9891dd32160968047337b6ca03341557a2a5cc27e9879a15e1f92468b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/Materials/Fx_QiLang_183 2_NB_5.mat",
+      "sha256": "39ffd8a74dd458b920dd9b563aa32e94bdd1668a8f33caa70d7b227cc6430e56"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/Materials/Fx_QiLang_183 2_NB_5.mat.meta",
+      "sha256": "485c87c4e749a319c774fbe82190a59541816694ca25cb804af8c3d1dc877aa5"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/Materials/Fx_TuCi_0002_NB_5.mat",
+      "sha256": "e705c8f2fb062b84db21f54754c242abcd250ef212fca16f299d66e8ead463a7"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/Materials/Fx_TuCi_0002_NB_5.mat.meta",
+      "sha256": "52022c1a1202e541efac6f769c73e852737c39e0629b2e7d64d226a5892278c7"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/Materials.meta",
+      "sha256": "c8eea16bf0e4ba36aed75620518753d66b7fc21c3d0ed7f34af44c880f69cf56"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/models/Plane01.asset",
+      "sha256": "4804a0d5faf99fc8c78fe419337fdef73f60df3e507e698c63db3e55a7f81bcf"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/models/Plane01.asset.meta",
+      "sha256": "504f7b6259c6ed5ac682951fc0dd523c2edd723a9ca7c2d2712b3435b8f67668"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/models.meta",
+      "sha256": "8ef59961dc83f6c8c805f541452af36481ba02a013f27f68fa39f31123027765"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures/Fx_BaoDian_103.texture.asset",
+      "sha256": "1c7d3648237cacc41c4ec3286091c1aac32cc8ee71afece6296540ad8152480b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures/Fx_BaoDian_103.texture.asset.meta",
+      "sha256": "085f90e0848c0faa2d8477c032046ecd8eeb03d62df75d7f106bef28bdfb34f0"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures/Fx_DiLie_0012.texture.asset",
+      "sha256": "9d2671335d811ab6e2bc6d2e74270a7180d0a725a74d3dbb268703cc843bac67"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures/Fx_DiLie_0012.texture.asset.meta",
+      "sha256": "e8c9cfea194798d7e2be6b60a8601feae6acdda247cdcbe9fe362688ede89a45"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures/Fx_Fire_001_1_F.texture.asset",
+      "sha256": "c8374e0966b8a4193e3e882fdb12f14164e882986cc408c223178eb2bc4b6642"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures/Fx_Fire_001_1_F.texture.asset.meta",
+      "sha256": "f1e404d5a86f281444441e479f99fe603df5e62c5e7c8d05371234665e27e1b9"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures/Fx_GuangDian_12_2.texture.asset",
+      "sha256": "30bd045ebbc7063aa0905733886a8449ea7baa59b3d88ad42abca20ff9933ad4"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures/Fx_GuangDian_12_2.texture.asset.meta",
+      "sha256": "bfe95125132e2b83674abcee18927c546550c0712d96f67ac93dff6385067fbb"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures/Fx_QiLang_134.texture.asset",
+      "sha256": "f84dc40e90830406689b174dacfe59f1ca53c483ef6e0278d0c8ae0ef950b427"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures/Fx_QiLang_134.texture.asset.meta",
+      "sha256": "f7e819f6ac0bd9e8358c8f7e968262d8c2958d16d346d771a6c4f3ca052ebf13"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures/Fx_RaoDon_0003.texture.asset",
+      "sha256": "07be3d12c73faa67531e8546de0bc673b2f2fa66aa99d323a9d09df9ad00618f"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures/Fx_RaoDon_0003.texture.asset.meta",
+      "sha256": "0e1f6f50a3ba0e884fe6e1f72ecaa03ba06052621ce8e405afa70ded204d913d"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures/Fx_TuCi_0002.texture.asset",
+      "sha256": "eca18c7d61543212ad159b6e872a2c13125de3a479043600ffc5cfd4e33478b1"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures/Fx_TuCi_0002.texture.asset.meta",
+      "sha256": "75d99cb2e9821a0d88e12fbb46b9e74b3384bf5a053eb28658d48acf9c484ddf"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures/Fx_WenLi_0002.texture.asset",
+      "sha256": "c41a3882532f3cc809694ae9936a55e7abb096fcf46c0e0472778d6133ee3abc"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures/Fx_WenLi_0002.texture.asset.meta",
+      "sha256": "e33bb2fc9286fad68e81638c92eac42c294a74f93d316ffdf75ecca072e5b234"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect/textures.meta",
+      "sha256": "52aa83926fffa42f14056c447390a1ba5df19a8cc53d3798edb67d0f7ae7c5dd"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Effect.meta",
+      "sha256": "29777293429fab13d36ccee3ffa2ab838ca4cad713a8384b7d34c3f61fe63435"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12660/12660.prefab",
+      "sha256": "ccf3b2fbd6e0f1208b3b4af8da60aee1c66b3fbcaa290736f4cac32eb3aa252f"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12660/12660.prefab.meta",
+      "sha256": "e897b81e5b34cce4982d613986800616c8815b5bc2b88a5a73694e16c0680e5e"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12660/playable12660.prefab",
+      "sha256": "34e0c24ecce9d22aff4288ff5b8629174d93bfc6f0dbd069c2682b3b1adaa73b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12660/playable12660.prefab.meta",
+      "sha256": "ca57eeda993fe84dc44d9a909d31952516f7e2f261dbf96b9dbca7c543f9a327"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12660.meta",
+      "sha256": "69f0ee760eec9625a2524fbd3b60a5590a721bfd1a1b919e3940ea8f4232515e"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Prefabs/EcEntity/Fight/FightSkill.meta",
+      "sha256": "ef33f81f689ce0bafa68e0aa8405aa96d4633076307e4ead1e66a5587d5128d8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Prefabs/EcEntity/Fight.meta",
+      "sha256": "c8a5e3236202c11c06a2542cdeffda0bb05e45d6afbbf3ed7577f63efa9eea9d"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Prefabs/EcEntity.meta",
+      "sha256": "3d405148757b6332acbd930cfc513a6a22a16e3638f809b5343ec2ef2dae25b0"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Prefabs.meta",
+      "sha256": "460ec87f9e134eaac4936b993047a5f466ccd05defe23ebe814b8223832a9593"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Wwise/ScriptableObjects/Event/AAE9E841-486D-4875-BB6C-63444D6B2B0D.asset",
+      "sha256": "9cb67c4b1634f8f5434c47a8aa7a65e29935c423da9c9d9cfca87fec9c282ef5"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Wwise/ScriptableObjects/Event/AAE9E841-486D-4875-BB6C-63444D6B2B0D.asset.meta",
+      "sha256": "bea85c4b13a3b45c57745fbe32c18db4cabdcc356a0e51ce0c73135f780a9852"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Wwise/ScriptableObjects/Event.meta",
+      "sha256": "c3b9f35f35c1f267e296a1998fe3ceb1404c58250ccf3e57aa5c0852511d3f70"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Wwise/ScriptableObjects.meta",
+      "sha256": "777aef5c414578a8000eeb2492b4b12ae3f77615c3c69f716a1428e7fb42a741"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Wwise.meta",
+      "sha256": "9d33260054916e92796beaa5d18942a6a8422c796e2890bf08a5b698a84e3e8b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs.meta",
+      "sha256": "1c9ebc8701efa0261acabea4568db7946ef40d3b31537434de4efa20cf860218"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat.meta",
+      "sha256": "b0f94a49d2bcf47d68dce0ccd1bf922ac3ed0ff540ba01dc54e738e0f2e020ac"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources.meta",
+      "sha256": "5e0f68e457ad3151e8b706b80d848478d4fe2007ec20c2e2ba76f0f01c6127b4"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs.meta",
+      "sha256": "e327f3a426a75b07972bb48c7d7c23503cd67097b21a67cad38e6e17eaa9f244"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/hurricane-grief-current-skill-graphs-source-manifest.json",
+      "sha256": "a13205391a962345fc50a1845cd60c50f1cd8f4c785140eb943c66a4239373a9"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/hurricane-grief-current-skill-graphs-source-manifest.json.meta",
+      "sha256": "ffb4673bed4a6ec0bddee6f63e661f6c1487c218b9591023cd437a64390035e9"
+    }
+  ],
+  "operation": "Full original graphs: no components, sequence leaves or local objects removed. Preserve native local fileIDs, transforms, particles, orbit configuration and dependencies. Remap migrated application scripts/GUIDs, decode all original texture mips through hash-matched conversion cache and use verified full Windows shaders.",
+  "limits": [
+    "Each owning skill separately verifies current rules, cultivation, persistence and rendered Windows gameplay."
+  ],
+  "current_native_bindings": [
+    {
+      "entity_id": 12660,
+      "converted": {
+        "path": "unity/Assets/Official/Combat/HurricaneGriefSkillGraphs/Resources/Combat/HurricaneGriefSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12660/12660.prefab",
+        "sha256": "ccf3b2fbd6e0f1208b3b4af8da60aee1c66b3fbcaa290736f4cac32eb3aa252f"
+      },
+      "component_file_id": 114884547391421755
+    }
+  ],
+  "verified_reused_view_fields": [
+    {
+      "skillEntityId": 12660,
+      "preferredPosToPlayable": false,
+      "showSkillReplay": true
+    }
+  ],
+  "reused_view_sources": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/skill-entity-views.json",
+      "sha256": "92a96bda4f5524c9c82450c78d523caa7fbe3159a6d07f6c612ff911fa726621"
+    },
+    {
+      "path": "assets/reference/battle-animation/skill-entity-views-source-manifest.json",
+      "sha256": "f31579e4e6c17b2ed52bca6041fa7406b613f8294e760a9ebe599f76c54aa4bc"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/damage-visibility.json",
+      "sha256": "34d99be2c53f017926f5cf1d73369b75216642df32a16979aed7ccbe893f0b1e"
+    },
+    {
+      "path": "assets/reference/battle-hud/damage-visibility-source-manifest.json",
+      "sha256": "5c1be7e74166aa6cff9fa3e0d1d776aee1864ee3753441b676ba7b9960c7df36"
+    }
+  ],
+  "binding_registry": [
+    {
+      "path": "scripts/current_battle_native_skill_graphs.py",
+      "sha256": "a50503459d194fa4b2bbdd6cbc5ed994adf61ffeb1decf19b20b3d17c87150c5"
+    },
+    {
+      "path": "scripts/battle_native_script_bindings.py",
+      "sha256": "9b5967c5d2a332410814d50c1712e9529decb0b2d0ab27655d8c1b4684da8efc"
+    },
+    {
+      "path": "scripts/prepare_battle_skill_graph_assets.py",
+      "sha256": "74c33e14b7bf506ee8c73d82adca98541cdec1f596a2860c475bdb95aceb25b1"
+    },
+    {
+      "path": "scripts/battle_skill_entity_prefabs.py",
+      "sha256": "115bb8fed71db11c65a0b095f138902a6ae52b6b1d321e1fc954a054dae3842e"
+    }
+  ],
+  "historical_catalog_shape": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/skill-native-graphs.json",
+      "sha256": "b5d19d737745fc2c4c15aad8accfcff4129c9db260958ef8ae847b8b9ca7a86d"
+    },
+    {
+      "path": "assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json",
+      "sha256": "cdd9985436816a9e37c4c6d6788d4f95b974b016533ce9cbcfa125c61d9de069"
+    }
+  ],
+  "selected_reference_examples": {}
+}
