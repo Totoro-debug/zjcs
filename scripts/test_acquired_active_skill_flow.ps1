@@ -15,7 +15,7 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     if ($PassiveId -in @(10606,10607)) {
         if (-not (Select-String -LiteralPath $runtimeLog -SimpleMatch "[Acquired passive combat] $PassiveId cultivated") -or
             -not (Test-Path -LiteralPath (Join-Path $Run 'companion-cold-checkpoint.json'))) { throw 'The cultivated secret did not exercise its original cold path.' }
-    } elseif ($PassiveId -in @(10543,10568,10579,10592,10594,10595,10598,10599,10608,10609)) {
+    } elseif ($PassiveId -in @(10543,10568,10579,10592,10594,10595,10597,10598,10599,10608,10609)) {
         $source = Get-Content -LiteralPath (Join-Path $Run 'companion-cultivated-save.json') -Raw | ConvertFrom-Json
         if ($source.Player.Skills.Plans[$source.Player.Skills.SelectedPlan].PassiveSkills[0] -ne $PassiveId) {
             throw 'The battle used another cultivated secret.'
@@ -29,6 +29,26 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
         foreach ($file in @('companion-hurricane-grief-status.json','companion-hurricane-grief-movement.json',
             'acquired-active-ui-passive-battle.png')) {
             if (-not (Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'The cultivated wind laceration was not rendered and settled during movement.' }
+        }
+    }
+    if ($PassiveId -eq 10597) {
+        foreach ($file in @('companion-fire-life-checkpoint.json','companion-fire-life-status-events.json',
+            'acquired-active-ui-passive-battle.png')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $Run $file))) {
+                throw 'The cultivated fire life did not render and persist its round-end cure.'
+            }
+        }
+        $receipt = Get-Content -LiteralPath (Join-Path $Run 'companion-fire-life-status-events.json') -Raw | ConvertFrom-Json
+        if ($receipt.invokes -lt 1 -or $receipt.cures -lt 1 -or
+            -not (Select-String -LiteralPath $runtimeLog -SimpleMatch '[Acquired passive combat] 10597 cultivated fire life round-end Invoke, cure, HP cap and restore replay passed.')) {
+            throw 'The cultivated fire life status Invoke or restore replay receipt is incomplete.'
+        }
+        $checkpoint = Get-Content -LiteralPath (Join-Path $Run 'companion-fire-life-checkpoint.json') -Raw | ConvertFrom-Json
+        $actor = $checkpoint.checkpoint.Units | Where-Object { $_.Id -eq 1 }
+        $listener = $actor.Statuses | Where-Object { $_.ClassId -eq 25098 -and $_.ApplyingSkillItemId -eq 10597 } | Select-Object -First 1
+        if ($null -eq $listener -or $listener.RoundEndTriggeredCount -lt 1 -or
+            -not ($checkpoint.checkpoint.GridItems | Where-Object { $_.EntityClassId -eq 3051 -and -not $_.Ended })) {
+            throw 'The fire life checkpoint lost its cultivated listener, trigger count or live burning tile.'
         }
     }
     if ($PassiveId -in @(10607,10608) -and -not (Test-Path -LiteralPath (Join-Path $Run 'acquired-active-ui-passive-battle.png'))) {

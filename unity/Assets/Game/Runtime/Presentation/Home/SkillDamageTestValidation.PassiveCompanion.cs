@@ -28,6 +28,7 @@ namespace Zjcs.Presentation.Home
             supported |= active == 10028 && player.Wardrobe.Profession == 13 && itemId == 10599;
             supported |= active == 10028 && player.Wardrobe.Profession == 17 && itemId == 10579;
             supported |= active == 10091 && player.Wardrobe.Profession == 13 && itemId == 10598;
+            supported |= active == 10091 && player.Wardrobe.Profession == 13 && itemId == 10597;
             Require(supported && source.Player.Wardrobe.Profession == player.Wardrobe.Profession
                 && source.Player.Level == player.Level && source.Player.SubRank == player.SubRank
                 && plan.ActiveSkills.All(id => id == 0)
@@ -60,8 +61,15 @@ namespace Zjcs.Presentation.Home
         }
 
         private static void VerifyAcquiredPassiveStep(FightBattleStepEvent step, FightBattleCheckpoint checkpoint,
-            string output, int itemId, ref int coldHits, ref int auraHits, ref int standfastTurns, ref int assaultHits, ref int soulBreakHits, ref int windHits, ref int flameHits)
+            string output, int itemId, ref int coldHits, ref int auraHits, ref int standfastTurns,
+            ref int assaultHits, ref int soulBreakHits, ref int windHits, ref int flameHits,
+            ref int fireLifeCures)
         {
+            if (itemId == 10597)
+            {
+                VerifyAcquiredFireLife(step, checkpoint, output, ref fireLifeCures);
+                return;
+            }
             if (itemId == 10579)
             {
                 VerifyAcquiredAlienation(checkpoint, output);
@@ -208,6 +216,63 @@ namespace Zjcs.Presentation.Home
             coldHits += applications.Length;
             File.WriteAllText(Path.Combine(output, "companion-cold-checkpoint.json"), FightBattleCheckpointSerializer.Save(checkpoint));
             Debug.Log("[Acquired passive combat] " + itemId + " cultivated passive and original cold application passed.");
+        }
+
+        private static void VerifyAcquiredFireLife(FightBattleStepEvent step,
+            FightBattleCheckpoint checkpoint, string output, ref int cures)
+        {
+            var actor = checkpoint.Units.Single(unit => unit.Id == 1);
+            var listener = actor.Statuses.Single(status => status.ClassId == 25098
+                && status.ApplyingSkillItemId == 10597 && status.SourceSkillLevel == 2);
+            Require(listener.RoundEndRulesSupported && listener.RoundEndEntityCount != null
+                && listener.RoundEndEntityCount.EntityClassId == 3051
+                && listener.RoundEndEntityCount.MaxCount == 1
+                && listener.RoundEndSkills.Count == 1
+                && listener.RoundEndSkills[0].EntityId == 12040,
+                "The cultivated fire life listener lost its live burning-tile and cure binding.");
+
+            var invokes = step.StatusViewEvents.Where(view => view.OwnerId == actor.Id
+                && view.Status.ClassId == 25098 && view.Status.CreatorId == actor.Id
+                && view.Kind == FightBattleStatusViewEventKind.Invoke).ToArray();
+            var healing = step.DamageEvents.Where(hit => hit.SkillEntityId == 12040).ToArray();
+            if (healing.Length == 0 && invokes.Length == 0) return;
+            Require(step.ActorId == actor.Id && invokes.Length == healing.Length && healing.Length == 1,
+                "The fire life round-end status event and cure count diverged.");
+            var cure = healing[0];
+            Require(cure.SourceId == actor.Id && cure.TargetId == actor.Id && cure.SkillItemId == 10597
+                && cure.HitEntityId == 12041 && cure.DamageEntityId == 12042 && cure.IsCure
+                && cure.HasDamageValue && cure.DamageValue > 0 && cure.Damage >= 0
+                && cure.BeforeHp < cure.MaxHp && cure.AfterHp > cure.BeforeHp
+                && cure.AfterHp == cure.MaxHp && cure.DamageValue > cure.Damage
+                && cure.Damage == cure.AfterHp - cure.BeforeHp
+                && listener.RoundEndTriggeredCount > 0,
+                "The cultivated fire life cure lost its source, original child graph, HP increase or cap.");
+            Require(invokes.All(view => view.Status.InstanceId == listener.InstanceId
+                && view.Status.CreatorId == actor.Id && view.Status.StackCount == listener.StackCount),
+                "The fire life Invoke status receipt lost its live cultivated listener.");
+
+            string state = FightBattleCheckpointSerializer.Save(checkpoint);
+            var restoredCheckpoint = FightBattleCheckpointSerializer.Load(state);
+            var receipt = restoredCheckpoint.Receipts.LastOrDefault(value => value.Event != null
+                && value.Event.DamageEvents.Any(hit => hit.SkillEntityId == 12040 && hit.IsCure));
+            Require(receipt != null && FightBattleCheckpointSerializer.Save(restoredCheckpoint) == state,
+                "The fire life cure checkpoint did not survive disk serialization.");
+            var restoredExecutor = OfficialCombatAssetCatalog.LoadDefault().RestoreBattle(restoredCheckpoint);
+            var replay = restoredExecutor.Step(receipt.Sequence, receipt.Counter);
+            Require(replay.Replayed && FightBattleCheckpointSerializer.Save(restoredCheckpoint) == state,
+                "The fire life cure receipt was not replayed idempotently after restore.");
+            File.WriteAllText(Path.Combine(output, "companion-fire-life-checkpoint.json"), state);
+            File.WriteAllText(Path.Combine(output, "companion-fire-life-status-events.json"),
+                JsonUtility.ToJson(new FireLifeStatusReceipt { invokes = invokes.Length, cures = healing.Length }, true));
+            cures += healing.Length;
+            Debug.Log("[Acquired passive combat] 10597 cultivated fire life round-end Invoke, cure, HP cap and restore replay passed.");
+        }
+
+        [Serializable]
+        private sealed class FireLifeStatusReceipt
+        {
+            public int invokes;
+            public int cures;
         }
     }
 }

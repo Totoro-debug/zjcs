@@ -310,7 +310,21 @@ namespace Zjcs.Presentation.Home
             }
             if (hellfire) PrepareAcquiredHellfire(actor);
             if (soulPiercer) { actor.Hp = actor.MaxHp / 2; actor.Turn.Hp = actor.Hp; }
-            int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, standfastTurns = 0, assaultHits = 0, soulBreakHits = 0, windHits = 0, flameHits = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
+            if (passiveCompanion == 10597)
+            {
+                var listener = actor.Statuses.Single(status => status.ClassId == 25098
+                    && status.ApplyingSkillItemId == 10597 && status.RoundEndEntityCount != null
+                    && status.RoundEndEntityCount.Range.Count > 0);
+                var offset = listener.RoundEndEntityCount.Range[0];
+                checkpoint.GridItems.Add(new FightBattleGridItemState
+                {
+                    Id = 9059701, GridItemClassId = 3320, EntityClassId = 3051,
+                    OwnerId = actor.Id, X = actor.X + offset.X, Y = actor.Y + offset.Y
+                });
+                actor.Hp = Math.Max(1L, actor.MaxHp - 1L);
+                actor.Turn.Hp = actor.Hp;
+            }
+            int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, standfastTurns = 0, assaultHits = 0, soulBreakHits = 0, windHits = 0, flameHits = 0, fireLifeCures = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
             int starBlindApplications = 0, starBlindEnds = 0;
             int doomPushes = 0;
             int tearApplications = 0, tearEnds = 0, tearHits = 0;
@@ -325,7 +339,7 @@ namespace Zjcs.Presentation.Home
                 if (starBurst) starBlindEnds += step.Event.StatusViewEvents.Count(view => view.Status.ClassId == 24234
                     && view.Status.CreatorId == 1 && view.Kind == FightBattleStatusViewEventKind.End);
                 if (hellfire) VerifyAcquiredHellfireStep(step.Event, actor, ref hellfireCures, ref hits);
-                if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits, ref standfastTurns, ref assaultHits, ref soulBreakHits, ref windHits, ref flameHits);
+                if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits, ref standfastTurns, ref assaultHits, ref soulBreakHits, ref windHits, ref flameHits, ref fireLifeCures);
                 var skillCasts = step.Event.SkillCasts.Where(value => value.ActorId == 1 && value.Slot == 0
                     && value.SkillItemId == skillId).ToArray();
                 casts += skillCasts.Length;
@@ -707,6 +721,13 @@ namespace Zjcs.Presentation.Home
                     yield return CaptureAcquiredActive(output, "passive-battle");
                     capturedPassive = true;
                 }
+                if (passiveCompanion == 10597 && !capturedPassive && fireLifeCures > 0
+                    && File.Exists(Path.Combine(output, "companion-fire-life-status-events.json")))
+                {
+                    yield return new WaitForSecondsRealtime(.12f);
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    capturedPassive = true;
+                }
                 if (passiveCompanion == 10595 && !capturedPassive
                     && FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
                         && particle.GetComponentsInParent<Transform>().Any(parent =>
@@ -870,6 +891,10 @@ namespace Zjcs.Presentation.Home
                 && File.Exists(Path.Combine(output, "companion-hurricane-grief-status.json"))
                 && File.Exists(Path.Combine(output, "companion-hurricane-grief-movement.json")),
                 "The cultivated wind laceration was not applied, rendered and settled during movement.");
+            Require(passiveCompanion != 10597 || capturedPassive && fireLifeCures > 0
+                && File.Exists(Path.Combine(output, "companion-fire-life-checkpoint.json"))
+                && File.Exists(Path.Combine(output, "companion-fire-life-status-events.json")),
+                "The cultivated fire life did not invoke its round-end cure, persist HP and render the native status event.");
             Require(passiveCompanion != 10595 || windHits > 0 && capturedPassive,
                 "The cultivated wind orb never rendered and struck at the owner's turn end.");
             Require(passiveCompanion != 10543 || flameHits > 0 && capturedPassive,
