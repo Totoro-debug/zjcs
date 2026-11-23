@@ -27,6 +27,12 @@ namespace Zjcs.Presentation.Home
     {
         NativeStorage storage;
 
+        public GameObject NativeStorageInstance => storage?.Instance;
+        public IStoryNodeRegisterMgr NativeStorageStoryNodes => storage?.StoryNodes;
+        public void RefreshNativeFurnitureSkins() => storage?.RefreshSkin();
+        public void SetHomeViewMode(HomeViewMode mode) => storage?.SetViewMode(mode);
+        public void PublishHomeActionEvent(ActionEventData data) => storage?.PublishActionEvent(data);
+
         void OpenNativeStorage()
         {
             var owner = new NativeStorage(this);
@@ -50,7 +56,8 @@ namespace Zjcs.Presentation.Home
         }
 
         sealed class NativeStorage : IHomeFurnitureServices, IHomeFurniturePlayer,
-            IHomeFurnitureViewModes, IHomeFurnitureActionEvents, IHomeWeaponAnimationBindings, IDisposable
+            IHomeFurnitureViewModes, IHomeFurnitureActionEvents, IHomeWeaponAnimationBindings,
+            IHomeEntityManagerContext, IHomeEntitySkinData, IHomeFurnitureChangePublisher, IDisposable
         {
             readonly HomeFeatureRuntime home;
             readonly HomeNativePrefabLoader loader = new HomeNativePrefabLoader();
@@ -67,13 +74,19 @@ namespace Zjcs.Presentation.Home
             OfflinePlayerProgress renderedPlayer;
             string renderedWardrobe;
             HomeNativePrefabFactory factory;
+            HomeEntityCreationCatalog tables;
+            HomeEntityPrefabPaths paths;
+            FurnitureEntityCreator creator;
             GameObject anchor;
             GameObject instance;
             AudioSource clickSound;
             PlayableGraph timeline;
+            HomeViewMode currentViewMode = HomeViewMode.Owner;
             bool disposed;
 
             internal NativeStorage(HomeFeatureRuntime home) => this.home = home;
+            internal GameObject Instance => instance;
+            internal IStoryNodeRegisterMgr StoryNodes => storyNodes;
 
             internal void Open()
             {
@@ -81,21 +94,22 @@ namespace Zjcs.Presentation.Home
                 if (!assets || !assets.WeaponAppearance)
                     throw new InvalidOperationException("The original Home weapon appearance catalog is missing.");
                 var control = assets.WeaponAppearance.Config;
-                var tables = ProfessionAppearanceTables.Load(Resources.Load<TextAsset>("Combat/SceneAppearance/appearance-tables").text);
-                var defaults = new ProfessionAppearanceSkinDefaults(tables,
+                var professionTables = ProfessionAppearanceTables.Load(Resources.Load<TextAsset>("Combat/SceneAppearance/appearance-tables").text);
+                var defaults = new ProfessionAppearanceSkinDefaults(professionTables,
                     Resources.Load<TextAsset>("Combat/SceneAppearance/skin-defaults").text, Debug.LogError);
                 var animations = Resources.Load<AppearanceAnimNameCombineRule>("Combat/SceneAppearance/AppearanceAnimNameCombineRule");
                 var config = Resources.Load<AppearanceAssetManagerConfig>("Partners/appearance-asset-manager-config");
                 renderedPlayer = home.profile.Save.Player;
                 renderedWardrobe = JsonUtility.ToJson(renderedPlayer.Wardrobe);
                 appearance = new OfflineProfessionAppearanceBindings(renderedPlayer.CharacterProperties.LocalActorIdentities.PlayerId,
-                    () => home.profile.Save.Player, id => home.progression.Catalog.ItemType(id), tables, control, animations, defaults);
+                    () => home.profile.Save.Player, id => home.progression.Catalog.ItemType(id), professionTables, control, animations, defaults);
                 materials = new AppearanceAssetManager(config, changed.Subscribe);
                 textures = new NativeSpineAppearanceBindings(assets.WeaponAppearance, materials);
                 rackServices = new HomeNativeWeaponRackServices(() => appearance, () => appearance,
-                    new ProfessionAppearanceResolver(tables), tables, changed.Subscribe, textures, this);
+                    new ProfessionAppearanceResolver(professionTables), professionTables, changed.Subscribe, textures, this);
                 factory = new HomeNativePrefabFactory(Install);
-                var paths = new HomeEntityPrefabPaths(HomeEntityCreationCatalog.Load());
+                tables = HomeEntityCreationCatalog.Load();
+                paths = new HomeEntityPrefabPaths(tables);
                 using var house = loader.LoadPrefab(paths.GetThemePrefabPath(home.rules.Data.themeSkins
                     .Single(value => value.isDefault && value.themeType == (int)HomeThemeType.House).skinItemId));
                 var housePrefab = house.Result;
@@ -103,21 +117,31 @@ namespace Zjcs.Presentation.Home
                     || !roomSlots.FurnitureDict.TryGetValue(EFurniture.StorageBox, out var slot)
                     || !slot || !slot.IsChildOf(housePrefab.transform))
                     throw new InvalidOperationException("The official Room has no StorageBox slot.");
-                var prefab = loader.LoadPrefab(paths.GetFurniturePrefabPath(home.rules.Data.furnitureSkins
-                    .Single(value => value.isDefault && value.furnitureType == (int)EFurniture.StorageBox).skinItemId)).Result;
-                if (!prefab) throw new InvalidOperationException("The original default StorageBox prefab is missing.");
                 // The current room composite exposes the original theme coordinate space.
                 // Project the authored transform chain until the native house owns this slot.
                 anchor = new GameObject("NativeIndoorFurniture");
-                anchor.SetActive(false);
                 anchor.transform.SetParent(home.scene.Root.transform, false);
-                instance = factory.Instantiate(prefab, ProjectSlot(slot, housePrefab.transform, anchor.transform), false);
-                if (instance.TryGetComponent<HomeEntityCreateData>(out var creation))
-                    instance.transform.localPosition += creation.LocalPosOffset;
-                SetupTimeline();
-                home.scene.BindNativeFurniture((int)EFurniture.StorageBox, instance);
-                anchor.SetActive(true);
+                var projectedSlot = ProjectSlot(slot, housePrefab.transform, anchor.transform);
+                creator = new FurnitureEntityCreator(
+                    new Dictionary<EFurniture, Transform> { { EFurniture.StorageBox, projectedSlot } },
+                    null);
+                if (!creator.GetOrCreate(EFurniture.StorageBox, this))
+                    throw new InvalidOperationException("The original StorageBox prefab is missing.");
             }
+
+            internal void RefreshSkin()
+            {
+                if (disposed || creator == null) return;
+                creator.OnSkinChanged(EFurniture.StorageBox, GetFurnitureSkinId(EFurniture.StorageBox), this, out _);
+            }
+
+            internal void SetViewMode(HomeViewMode mode)
+            {
+                currentViewMode = mode;
+                viewModes.Invoke(mode);
+            }
+
+            internal void PublishActionEvent(ActionEventData data) => actions.Invoke(data);
 
             static Transform ProjectSlot(Transform slot, Transform house, Transform parent)
             {
@@ -154,6 +178,8 @@ namespace Zjcs.Presentation.Home
 
             void SetupTimeline()
             {
+                if (timeline.IsValid()) timeline.Destroy();
+                clips.Clear();
                 timeline = PlayableGraph.Create("HomeFurnitureClips");
                 timeline.SetTimeUpdateMode(DirectorUpdateMode.Manual);
                 foreach (var binding in instance.GetComponent<HomePlayableClipBind>().ClipDatas)
@@ -189,7 +215,9 @@ namespace Zjcs.Presentation.Home
             {
                 if (disposed) return;
                 disposed = true;
+                creator?.ReleaseAll(this);
                 if (timeline.IsValid()) timeline.Destroy();
+                clips.Clear();
                 HomeAudioSettings.Unregister(clickSound);
                 if (anchor) { anchor.SetActive(false); Object.Destroy(anchor); }
                 ReleaseAfterInstances(anchor).Forget();
@@ -205,10 +233,49 @@ namespace Zjcs.Presentation.Home
                 loader.Dispose();
             }
 
+            public IHomeEntityResourceLoader ResourceLoader => loader;
+            public IHomeFurnitureChangePublisher FurnitureChangePublisher => this;
+            IHomeEntitySkinData IHomeEntityManagerContext.PlayerData => this;
+            public IHomeEntityPrefabTables Tables => tables;
+            public HomeEntityPrefabPaths PrefabPaths => paths;
+            public int PreviewWeatherId => 0;
+            public GameObject Instantiate(GameObject prefab, Transform parent, bool worldPositionStays)
+                => factory.Instantiate(prefab, parent, worldPositionStays);
+            public void OnEntityWillDestroy(GameObject go)
+            {
+                if (timeline.IsValid()) timeline.Destroy();
+                clips.Clear();
+                HomeAudioSettings.Unregister(clickSound);
+                clickSound = null;
+                if (instance == go) instance = null;
+            }
+            public void OnEntityCreated(GameObject go)
+            {
+                instance = go;
+                SetupTimeline();
+                home.scene.BindNativeFurniture((int)EFurniture.StorageBox, instance);
+            }
+            public int GetFurnitureSkinId(EFurniture type)
+            {
+                var defaultSkin = home.rules.Data.furnitureSkins.First(value => value.furnitureType == (int)type && value.isDefault);
+                return home.session.SkinOf(0, (int)type)?.SkinItemId ?? defaultSkin.skinItemId;
+            }
+            public int GetThemeSkinId(HomeThemeType type)
+            {
+                var defaultSkin = home.rules.Data.themeSkins.First(value => value.themeType == (int)type && value.isDefault);
+                return home.session.SkinOf(1, (int)type)?.SkinItemId ?? defaultSkin.skinItemId;
+            }
+            public int GetEnvironmentSkinId(HomeEnvironmentType type)
+            {
+                var defaultSkin = home.rules.Data.environmentSkins.First(value => value.environmentType == (int)type && value.isDefault);
+                return home.session.SkinOf(2, (int)type)?.SkinItemId ?? defaultSkin.skinItemId;
+            }
+            public void Publish(HomeFurnitureChangeData data) => changed.Invoke();
+
             public bool InMyHome => true;
             public IHomeFurniturePlayer Player => this;
             public IHomeFurniturePlayerData PlayerData => this;
-            public HomeViewMode HomeViewMode => HomeViewMode.Owner;
+            public HomeViewMode HomeViewMode => currentViewMode;
             public IDisposable Subscribe(Action<HomeViewMode> action) => viewModes.Subscribe(action);
             public IDisposable Subscribe(Action<ActionEventData> action) => actions.Subscribe(action);
             public bool HasFurniture(EFurniture furniture) => home.HasFurnitureForSkin((int)furniture);

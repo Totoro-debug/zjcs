@@ -22,6 +22,10 @@ $files = @{}; foreach ($entry in $receipt.outputs.PSObject.Properties) { $files[
 foreach ($entry in $receipt.inputs.PSObject.Properties) {
     if ($entry.Name.StartsWith('unity/') -and ($entry.Name.EndsWith('.prefab') -or $entry.Name.EndsWith('.prefab.meta'))) { $files[$entry.Name] = $entry.Value }
 }
+$bagReceipt = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/bag-tip-dot-bindings-source-manifest.json') -Raw | ConvertFrom-Json
+foreach ($entry in $bagReceipt.inputs.PSObject.Properties) {
+    if ($entry.Name.StartsWith('unity/Assets/Official/Home/StorageBox/Native/')) { $files[$entry.Name] = $entry.Value }
+}
 foreach ($name in $files.Keys) {
     $source = Join-Path $repository $name
     if (-not $name.StartsWith('unity/') -or (Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -ne $files[$name]) {

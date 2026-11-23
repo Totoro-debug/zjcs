@@ -32,7 +32,7 @@ Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_storage_pointer_v
     'Zjcs.Official.PartnersUI', 'Zjcs.Official.PartnerRosterUI', 'Zjcs.Official.ProfessionUI', 'Zjcs.Official.HomeUI', 'Zjcs.Offline.PartnersUI', 'Zjcs.Offline.Progression',
     'Zjcs.Offline.Equipment', 'Zjcs.Offline.Home', 'Zjcs.Offline.Cooking', 'Zjcs.Offline.State', 'Zjcs.Offline.CharacterCreation',
     'Zjcs.Presentation.Home', 'Zjcs.Presentation.Inventory', 'Zjcs.Official.HomeFurniture',
-    'Zjcs.Official.HomeMainUiControls', 'Zjcs.Official.HomeSceneInput', 'Unity.ugui'
+    'Zjcs.Official.HomeMainUiControls', 'Zjcs.Official.HomeSceneInput', 'Zjcs.Official.StoryNodes', 'Zjcs.Official.StoryPlayables', 'Unity.ugui'
 ) } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $fixture 'BagTipDotBindingsValidation.asmdef') -Encoding utf8
 $metadata = @{ ($fixture + '.meta') = @('folder', 'DefaultImporter');
     (Join-Path $fixture 'BagTipDotBindingsValidation.cs.meta') = @('script', 'MonoImporter');

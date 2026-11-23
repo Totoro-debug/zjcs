@@ -16,7 +16,15 @@ from prepare_bag_tip_dots import NODES as BAG_NODES
 DEST = ROOT / 'unity/Assets/Official/Home/StorageBox/Native'
 RECEIPT = ROOT / 'assets/reference/home-storage-native-source-manifest.json'
 BUNDLE = 'defaultpackage_assets_prefabs_home_dynamic_furniture_storagebox.bundle'
-PREFAB = 'Prefabs/Home/Dynamic/Furniture/StorageBox/StorageBox.prefab'
+PREFABS = (
+    'Prefabs/Home/Dynamic/Furniture/StorageBox/StorageBox.prefab',
+    'Prefabs/Home/Dynamic/Furniture/StorageBox/StorageBox1stAnniversary.prefab',
+    'Prefabs/Home/Dynamic/Furniture/StorageBox/StorageBoxChineseOdyssey.prefab',
+    'Prefabs/Home/Dynamic/Furniture/StorageBox/StorageBoxChineseStyle.prefab',
+    'Prefabs/Home/Dynamic/Furniture/StorageBox/StorageBoxChristmas.prefab',
+    'Prefabs/Home/Dynamic/Furniture/StorageBox/StorageBoxHalloween.prefab',
+)
+PREFAB = PREFABS[0]
 
 
 class StorageBinding(PartnerCardBinding):
@@ -90,31 +98,45 @@ class StorageBinding(PartnerCardBinding):
         return super().replace(value)
 
     def build(self):
-        root, = [pointer.deref() for path, pointer in self.recovery.apk.container(BUNDLE)
-            if path.casefold() == ('Assets/' + PREFAB).casefold() and pointer.deref().type.name == 'GameObject']
-        native = documents((self.native / PREFAB).read_text('utf8'))
-        native_root, = [key for key, value in native.items() if value.get('GameObject', {}).get('m_Name') == root.read().m_Name]
-        self.recovery.recover('StorageBox', self.work / 'recovered', bundle=BUNDLE,
-            native_relative=PREFAB, source_root=root, native_root_id=native_root)
+        by_path = {path.casefold(): pointer.deref() for path, pointer in self.recovery.apk.container(BUNDLE)
+            if pointer.deref().type.name == 'GameObject'}
+        roots = []
+        for relative in PREFABS:
+            root = by_path[('Assets/' + relative).casefold()]
+            name = root.read().m_Name
+            native = documents((self.native / relative).read_text('utf8'))
+            native_root, = [key for key, value in native.items() if value.get('GameObject', {}).get('m_Name') == name
+                and native[value['GameObject']['m_Component'][0]['component']['fileID']]['Transform']['m_Father']['fileID'] == 0]
+            self.recovery.recover(name, self.work / ('recovered-' + name), bundle=BUNDLE,
+                native_relative=relative, source_root=root, native_root_id=native_root)
+            roots.append((relative, name, root))
         self.recovery.finalize()
-        _, _, panel, _ = self.recovery.outputs[-1]
-        if any(value['type'] != 'MonoBehaviour' for value in panel['unresolved'].values()):
-            raise ValueError('Resolve additional original storage prefab references')
-        for key, pointer in panel['external'].items():
-            self.objects[pointer['guid']] = self.original(key)
-        for key, file_id in panel['objectMap'].items():
-            owner = self.original(key)
-            self.learn(self.recovery.fields(owner), next(iter(panel['documents'][file_id].values())), owner)
-        for script in panel['scripts']:
-            name = '.'.join(filter(None, [script['namespace'], script['type']]))
-            if name not in self.scripts:
-                raise ValueError('Bind the actual original storage controller: ' + name)
-            fields = panel['documents'][script['nativeFileID']]['MonoBehaviour']
-            fields['m_Script'] = self.scripts[name]
-            if name == 'EntityClickSound':
-                owner = self.original(script['original'])
-                fields['Sound'] = self.sound(self.recovery.fields(owner)['Sound'], owner)
-        resolved = self.replace(panel['documents'])
+        for (_, name, _), (_, _, panel, _) in zip(roots, self.recovery.outputs):
+            if any(value['type'] != 'MonoBehaviour' for value in panel['unresolved'].values()):
+                raise ValueError('Resolve additional original storage prefab references: ' + name)
+            for key, pointer in panel['external'].items():
+                self.objects[pointer['guid']] = self.original(key)
+            for key, file_id in panel['objectMap'].items():
+                owner = self.original(key)
+                self.learn(self.recovery.fields(owner), next(iter(panel['documents'][file_id].values())), owner)
+        prefab_queue, prefabs, selections = [], [], {}
+        for (relative, name, root), (_, _, panel, _) in zip(roots, self.recovery.outputs):
+            for script in panel['scripts']:
+                full_name = '.'.join(filter(None, [script['namespace'], script['type']]))
+                if full_name not in self.scripts:
+                    raise ValueError('Bind the actual original storage controller: ' + full_name)
+                fields = panel['documents'][script['nativeFileID']]['MonoBehaviour']
+                fields['m_Script'] = self.scripts[full_name]
+                if full_name == 'EntityClickSound':
+                    owner = self.original(script['original'])
+                    fields['Sound'] = self.sound(self.recovery.fields(owner)['Sound'], owner)
+            resolved = self.replace(panel['documents'])
+            pointer = dict(fileID=panel['root'], guid=hashlib.md5(('zjcs:home-storage-native-prefab:' + identity(root)).encode()).hexdigest(), type=3)
+            prefab_queue.append((Path(name + '.prefab'), pointer['guid'], resolved))
+            location = relative.removeprefix('Prefabs/').removesuffix('.prefab')
+            prefabs.append(dict(name=name, location=location, prefab=(DEST / (name + '.prefab')).relative_to(ROOT).as_posix(), pointer=pointer))
+            selections[name] = dict(root=identity(root), objects=panel['objectMap'], scripts=panel['scripts'],
+                resolved_graph_references=panel['unresolved'])
         index = 0
         while index < len(self.queue):
             _, _, data = self.queue[index]
@@ -122,13 +144,11 @@ class StorageBinding(PartnerCardBinding):
                 updated = self.replace(data)
                 data.clear(); data.update(updated)
             index += 1
-        pointer = dict(fileID=panel['root'], guid=hashlib.md5(('zjcs:home-storage-native-prefab:' + identity(root)).encode()).hexdigest(), type=3)
-        self.queue.append((Path('StorageBox.prefab'), pointer['guid'], resolved))
+        self.queue.extend(prefab_queue)
         self.queue.extend((path, token, raw) for path, (token, raw) in self.audio_outputs.items())
         staged = self.work / 'assets'
         outputs = write_staged_assets(self.queue, staged)
-        return outputs, staged, pointer, dict(root=identity(root), objects=panel['objectMap'], scripts=panel['scripts'],
-            resolved_graph_references=panel['unresolved'])
+        return outputs, staged, prefabs[0]['pointer'], selections['StorageBox'], prefabs, selections
 
 
 def build():
@@ -138,23 +158,26 @@ def build():
     (work / '.zjcs-validation.json').write_text(json.dumps(dict(format=1, repository=str(ROOT))), 'utf8')
     recovery = PartnerNativeRecovery(native_cache=ROOT / '.tools/source-packages/current' / source.version / 'home-storage-native',
         export_name='native-export', bundle=BUNDLE)
-    binding = StorageBinding(work, recovery=recovery)
-    outputs, staged, prefab, selection = binding.build()
-    previous = json.loads(RECEIPT.read_bytes())['outputs'] if RECEIPT.exists() else {}
-    installed = install_staged_assets(work, staged, outputs, DEST, 'native-storage-building', previous_outputs=previous)
-    for name in ('prepare_home_storage_native.py', 'prepare_selected_wwise_inputs.py'):
-        path = ROOT / 'scripts' / name
-        binding.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
-    receipt = dict(manifest=source.version, inputs=binding.inputs, selection=selection, recovery=recovery.proof,
-        native_scripts=binding.script_sources, resources=binding.proof, audio=binding.audio_proof,
-        prefab=prefab, outputs=installed,
-        validation_inputs={path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in (
-            ROOT / 'scripts/fixtures/bag_tip_dot_validation.cs', ROOT / 'scripts/test_bag_tip_dots.ps1')},
-        scope='Complete original storage hierarchy with migrated component/resource identities. Host ownership, gameplay and Player verification remain separate.')
-    stage_receipt = work / 'bound-source-manifest.json'
-    stage_receipt.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
-    stage_receipt.replace(RECEIPT)
-    print('Bound complete original storage prefab:', len(installed), 'files; work', work)
+    try:
+        binding = StorageBinding(work, recovery=recovery)
+        outputs, staged, prefab, selection, prefabs, selections = binding.build()
+        previous = json.loads(RECEIPT.read_bytes())['outputs'] if RECEIPT.exists() else {}
+        installed = install_staged_assets(work, staged, outputs, DEST, 'native-storage-building', previous_outputs=previous)
+        for name in ('prepare_home_storage_native.py', 'prepare_selected_wwise_inputs.py'):
+            path = ROOT / 'scripts' / name
+            binding.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
+        receipt = dict(manifest=source.version, inputs=binding.inputs, selection=selection, selections=selections,
+            recovery=recovery.proof, native_scripts=binding.script_sources, resources=binding.proof,
+            audio=binding.audio_proof, prefab=prefab, prefabs=prefabs, outputs=installed,
+            validation_inputs={path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in (
+                ROOT / 'scripts/fixtures/bag_tip_dot_validation.cs', ROOT / 'scripts/test_bag_tip_dots.ps1')},
+            scope='Complete original storage hierarchy (default and all skin variants) with migrated component/resource identities. Host ownership, gameplay and Player verification remain separate.')
+        stage_receipt = work / 'bound-source-manifest.json'
+        stage_receipt.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
+        stage_receipt.replace(RECEIPT)
+        print('Bound complete original storage prefabs:', len(prefabs), 'skins;', len(installed), 'files; work', work)
+    finally:
+        recovery.apk.reader.close()
 
 
 if __name__ == '__main__':

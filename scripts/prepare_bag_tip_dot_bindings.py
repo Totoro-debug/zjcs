@@ -86,11 +86,20 @@ def prepare():
         path = ROOT / name
         if sha(read(path)) != expected: raise ValueError('Original native storage/Bag asset differs: ' + name)
     prefab_routes = json.loads(read(ROOT / 'assets/reference/home-native-prefab-references-source-manifest.json'))
-    for location in ('Home/Dynamic/Theme/House/House', 'Home/Dynamic/Furniture/StorageBox/StorageBox'):
+    for location in (
+        'Home/Dynamic/Theme/House/House',
+        'Home/Dynamic/Furniture/StorageBox/StorageBox',
+        'Home/Dynamic/Furniture/StorageBox/StorageBox1stAnniversary',
+        'Home/Dynamic/Furniture/StorageBox/StorageBoxChineseOdyssey',
+        'Home/Dynamic/Furniture/StorageBox/StorageBoxChineseStyle',
+        'Home/Dynamic/Furniture/StorageBox/StorageBoxChristmas',
+        'Home/Dynamic/Furniture/StorageBox/StorageBoxHalloween',
+    ):
         route, = [value for value in prefab_routes['routes'] if value['location'] == location]
         for path, group in ((route['prefab'], 'inputs'), (route['reference'], 'outputs')):
             if sha(read(ROOT / path)) != prefab_routes[group][path]:
                 raise ValueError('Original indoor prefab route differs: ' + path)
+        read(ROOT / (route['reference'] + '.meta'))
     weapons = json.loads(read(ROOT / 'assets/reference/home-weapon-parts-source-manifest.json'))
     weapon_catalog = 'unity/Assets/Official/Home/WeaponParts/HomeWeaponAppearanceCatalog.asset'
     for path in (weapon_catalog, weapon_catalog + '.meta'):
@@ -129,6 +138,7 @@ def prepare():
         'unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs',
         'unity/Assets/Game/Runtime/Presentation/Home/HomeEnvironmentView.cs',
         'unity/Assets/Game/Runtime/Presentation/Home/HomeSceneView.cs',
+        'unity/Assets/Game/Runtime/Presentation/Home/HomeSkinScreenController.cs',
         'unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs',
         'unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs.meta',
         'unity/Assets/Game/Runtime/Presentation/Home/HomeNativeStorageAssets.cs',

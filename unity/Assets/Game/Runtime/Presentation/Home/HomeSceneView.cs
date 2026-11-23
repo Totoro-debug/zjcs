@@ -680,15 +680,17 @@ namespace Zjcs.Presentation.Home
 
         internal void BindNativeFurniture(int type, GameObject instance)
         {
-            nativeFurniture.Add(type, instance);
+            nativeFurniture[type] = instance;
             ApplyNativeFurnitureVisibility(type, instance);
         }
 
         void ApplyNativeFurnitureVisibility(int type, GameObject instance)
         {
-            bool useNative = !replacedHouse && !replacedFurniture.Contains(type);
+            if (!instance) return;
+            bool useNative = !replacedHouse;
             instance.SetActive(useNative);
             SetObjectsActive(furnitureBaseObjects, type, !useNative && !replacedFurniture.Contains(type));
+            SetObjectsActive(furnitureSkinObjects, type, !useNative && replacedFurniture.Contains(type));
         }
 
         bool HasActiveNativeFurniture(int type)

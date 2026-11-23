@@ -67,14 +67,22 @@ public static class HomeNativePrefabResourcesValidation
     static IEnumerator Check()
     {
         var input = JsonUtility.FromJson<Inputs>(File.ReadAllText(Environment.GetEnvironmentVariable("ZJCS_HOME_NATIVE_RESOURCE_INPUT")));
-        Require(input.routes.Length == 1031 && input.routes.Select(row => row.location).Distinct().Count() == input.routes.Length,
+        Require(input.routes.Length == 1036 && input.routes.Select(row => row.location).Distinct().Count() == input.routes.Length,
             "Every previously verified house, storage and Home weapon prefab has one original-address local route");
         loader = new HomeNativePrefabLoader(); other = new HomeNativePrefabLoader();
         const string housePath = "Home/Dynamic/Theme/House/House";
         const string storagePath = "Home/Dynamic/Furniture/StorageBox/StorageBox";
         var paths = new HomeEntityPrefabPaths(HomeEntityCreationCatalog.Load());
-        Require(paths.GetThemePrefabPath(4700) == housePath && paths.GetFurniturePrefabPath(4210) == storagePath,
-            "Current original theme/furniture address builders feed the local loader unchanged");
+        var storageSkins = new Dictionary<int, string> {
+            { 4210, "Home/Dynamic/Furniture/StorageBox/StorageBox" },
+            { 4220, "Home/Dynamic/Furniture/StorageBox/StorageBoxChristmas" },
+            { 4226, "Home/Dynamic/Furniture/StorageBox/StorageBoxChineseStyle" },
+            { 4238, "Home/Dynamic/Furniture/StorageBox/StorageBox1stAnniversary" },
+            { 4248, "Home/Dynamic/Furniture/StorageBox/StorageBoxChineseOdyssey" },
+            { 4261, "Home/Dynamic/Furniture/StorageBox/StorageBoxHalloween" },
+        };
+        Require(paths.GetThemePrefabPath(4700) == housePath && storageSkins.All(pair => paths.GetFurniturePrefabPath(pair.Key) == pair.Value),
+            "Current original theme/furniture address builders feed the local loader unchanged for House and all 6 StorageBox skins");
         var first = loader.LoadPrefab(housePath); var duplicate = loader.LoadPrefab(housePath);
         var otherOwner = other.LoadPrefab(housePath);
         Require(first.Result && first.Result == duplicate.Result && otherOwner.Result == first.Result,

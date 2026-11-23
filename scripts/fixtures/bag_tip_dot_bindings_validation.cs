@@ -119,6 +119,9 @@ public static class BagTipDotBindingsValidation
             "Actual selected quantities drive the original blue count, storage aggregate and native visual linker");
         Capture("native-storage-tip-active.png");
         CheckStorageBuilding();
+        var skinChecks = CheckStorageSkinsAndModes();
+        while (skinChecks.MoveNext()) yield return skinChecks.Current;
+        linker = LocateNativeTip();
         var files = Files(root);
         var records = services.FindItemsByType((BagItemType)catalog.Item(blueId).ItemType).Where(row => row.Info.ClassId == blueId).ToArray();
         Require(records.Length == 1 && services.ShowBagCanUseItemRedDot(records[0]) && services.GetCanUseBlueDotCount(records[0]) == 7
@@ -243,6 +246,63 @@ public static class BagTipDotBindingsValidation
         Require(rack && rack.PSlot.childCount == 1 && rack.PSlot.GetComponentInChildren<MeshRenderer>() != null,
             "Original rack displays the actual local character primary weapon");
         Require(storage.GetComponent<EntityClickSound>().Sound != null, "Original click sound is bound on the same native controller");
+    }
+
+    static IEnumerator CheckStorageSkinsAndModes()
+    {
+        var rack = home.NativeStorageInstance.GetComponentInChildren<HomeWeaponRack>(true);
+        var register = home.NativeStorageInstance.GetComponentInChildren<Zjcs.Official.StoryNodes.StoryNodeRegister>(true);
+        var switcher = home.NativeStorageInstance.GetComponentInChildren<HomeSwitcherActionEventHandler>(true);
+        Require(rack != null && register != null && register.StoryNodeKeys.Count > 0
+            && home.NativeStorageStoryNodes?.GetNode(register.StoryNodeKeys[0]) != null
+            && switcher != null && switcher.EventName == "Weapon",
+            "Original storage registers story nodes and binds the Weapon action event handler");
+        home.PublishHomeActionEvent(new ActionEventData { EventName = "Weapon", BoolParam = false });
+        Require(!rack.PSlot.gameObject.activeSelf && rack.SSlot.gameObject.activeSelf,
+            "Original storage Weapon action event hides only the primary weapon slot on false BoolParam");
+        home.PublishHomeActionEvent(new ActionEventData { EventName = "Weapon", BoolParam = true });
+        Require(rack.PSlot.gameObject.activeSelf,
+            "Original storage Weapon action event restores the primary weapon slot on true BoolParam");
+
+        var slots = rack.transform.Find("Slots");
+        var frame = rack.transform.Find("Rack");
+        home.SetHomeViewMode(HomeViewMode.TakePhoto);
+        Require(slots != null && frame != null && !slots.gameObject.activeSelf && frame.gameObject.activeSelf,
+            "Original storage photo view mode hides weapon slots while retaining the rack");
+        home.SetHomeViewMode(HomeViewMode.Owner);
+        Require(slots.gameObject.activeSelf,
+            "Original storage owner view mode restores weapon slots");
+
+        var skinCases = new (int skinId, string prefabName)[]
+        {
+            (4220, "StorageBoxChristmas"),
+            (4226, "StorageBoxChineseStyle"),
+            (4238, "StorageBox1stAnniversary"),
+            (4248, "StorageBoxChineseOdyssey"),
+            (4261, "StorageBoxHalloween"),
+            (4210, "StorageBox"),
+        };
+        foreach (var (skinId, prefabName) in skinCases)
+        {
+            Require(home.HomeProgression.EquipSkin(home.Session, 0, (int)Zjcs.Official.HomeUI.EFurniture.StorageBox,
+                skinId, _ => 1, "bag-tip-bindings:storage-skin:" + skinId),
+                "Equip original storage skin " + skinId);
+            home.Scene.ApplyHomeSkins(home.Catalog.HomeSkins, home.Session.Skins, home.Rules);
+            home.RefreshNativeFurnitureSkins();
+            yield return null; yield return null;
+            var live = home.NativeStorageInstance;
+            var switchedRack = live ? live.GetComponentInChildren<HomeWeaponRack>(true) : null;
+            var switchedRegister = live ? live.GetComponentInChildren<Zjcs.Official.StoryNodes.StoryNodeRegister>(true) : null;
+            var linker = live ? live.GetComponentsInChildren<TipDotNodeLinker>(true)
+                .SingleOrDefault(value => value.ConfiguredNodeKey.GraphName == "Bag" && value.ConfiguredNodeKey.NodeName == "6") : null;
+            Require(live && live.activeInHierarchy && live.name == prefabName + "(Clone)"
+                && switchedRack && switchedRack.PSlot.childCount == 1
+                && switchedRegister && switchedRegister.StoryNodeKeys.Count > 0
+                && home.NativeStorageStoryNodes.GetNode(switchedRegister.StoryNodeKeys[0]) != null
+                && linker != null && linker.IsShowTip,
+                "Switched native storage skin " + prefabName + " mounts weapon rack, story nodes and active Bag tip");
+            if (skinId == 4220) CaptureStorageHome("native-storage-skin-christmas");
+        }
     }
 
     static void CaptureStorageHome(string name)

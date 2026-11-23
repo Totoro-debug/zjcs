@@ -70,6 +70,8 @@ def prepare():
                 if not original.startswith('Assets/Prefabs/Appearance/PlayerPart/') or not original.endswith('_Home.prefab'):
                     raise ValueError('Verify the original home weapon address before routing it')
                 selected.append((original.removeprefix('Assets/Prefabs/').removesuffix('.prefab'), row['pointer']))
+        elif name == 'home-storage-native' and 'prefabs' in source:
+            selected = [(row['location'], row['pointer']) for row in source['prefabs']]
         else:
             location = 'Home/Dynamic/Theme/House/House' if name == 'home-house-native' else 'Home/Dynamic/Furniture/StorageBox/StorageBox'
             selected = [(location, source['prefab'])]

@@ -279,6 +279,7 @@ namespace Zjcs.Presentation.Home
                     return;
                 }
                 host.Scene.ApplyHomeSkins(catalog.HomeSkins, host.Session.Skins, host.Rules);
+                host.RefreshNativeFurnitureSkins();
             }
             RenderItems(skinGroup);
         }
