@@ -448,9 +448,11 @@ namespace Zjcs.Combat.Official
                 value += Prop(target, "MaxHp") * Prop(source, skillCureProperty);
 
             value += Prop(source, fixedCureProperty);
-            double cureAdd = Prop(source, "CureAddPercent") + Prop(target, "BeCureAddPercent")
-                + Divide(Prop(source, "CureAdd"), Prop(source, "BaseCureAdd"))
-                + Divide(Prop(target, "BeCureAdd"), Prop(target, "BaseBeCureAdd"));
+            double cureAdd = Prop(source, "CureAddPercent") + Prop(target, "BeCureAddPercent");
+            double sourceCureAdd = Prop(source, "CureAdd");
+            double targetCureAdd = Prop(target, "BeCureAdd");
+            if (sourceCureAdd != 0) cureAdd += Divide(sourceCureAdd, Prop(source, "BaseCureAdd"));
+            if (targetCureAdd != 0) cureAdd += Divide(targetCureAdd, Prop(target, "BaseBeCureAdd"));
             if (cureAdd > config.CureAddSoftCapThreshold)
                 cureAdd = config.CureAddSoftCapThreshold
                     + Divide((cureAdd - config.CureAddSoftCapThreshold) * config.CureAddOverflowScale, cureAdd);

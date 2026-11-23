@@ -75,7 +75,9 @@ namespace Zjcs.Combat.Official
             if (damageValue < 0)
                 nextHp = Math.Max(lowerLimit, Math.Max(0L, previousHp + damageValue));
             else if (damageValue > 0)
-                nextHp = Math.Min(target.MaxHp, previousHp + damageValue);
+                nextHp = previousHp > long.MaxValue - damageValue
+                    ? target.MaxHp
+                    : Math.Min(target.MaxHp, previousHp + damageValue);
 
             long realDamage = preserveHp ? damageValue : nextHp - previousHp;
             if (preserveHp) nextHp = previousHp;

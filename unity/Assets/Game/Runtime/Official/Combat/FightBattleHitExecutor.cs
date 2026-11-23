@@ -107,7 +107,7 @@ namespace Zjcs.Combat.Official
                 custom = CustomDamage(actor, target, skill, hit, sourceProps, targetProps);
                 var reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
                     skill, result.Type, true, random, formula);
-                long? customCure = skill.HasCustomCure ? (long?)skill.CustomCure : custom;
+                long? customCure = skill?.HasCustomCure == true ? (long?)skill.CustomCure : custom;
                 result.Cure = formula.CalculateCure(sourceProps, targetProps,
                     hit.DamageProperty, hit.FixedDamageProperty, customCure);
                 if (skill == null || !skill.ShieldConversionReturn)
@@ -445,8 +445,9 @@ namespace Zjcs.Combat.Official
             shieldDamage = 0;
             if (damage >= 0 || target == null || hit == null || hit.IgnoreShield
                 || target.Statuses == null) return damage;
-            long remaining = damage == long.MinValue ? long.MaxValue : -damage;
-            for (int i = 0; i < target.Statuses.Count && remaining > 0;)
+            // Keep damage negative so long.MinValue is representable throughout absorption.
+            long remaining = damage;
+            for (int i = 0; i < target.Statuses.Count && remaining < 0;)
             {
                 FightBattleStatusState status = target.Statuses[i];
                 if (status == null || status.ShieldKind == FightBattleShieldKind.None)
@@ -467,7 +468,7 @@ namespace Zjcs.Combat.Official
                     continue;
                 }
                 if (status.ShieldDamageGreaterMaxHpPer >= 0f
-                    && remaining <= target.MaxHp * (double)status.ShieldDamageGreaterMaxHpPer)
+                    && -(double)remaining <= target.MaxHp * (double)status.ShieldDamageGreaterMaxHpPer)
                 {
                     i++;
                     continue;
@@ -479,19 +480,18 @@ namespace Zjcs.Combat.Official
                     continue;
                 }
 
-                long absorbed = status.ShieldKind == FightBattleShieldKind.Invincible
-                    || status.ShieldIgnoreValue ? remaining : Math.Min(remaining, shieldValue);
-                if (absorbed <= 0)
+                long absorbedDamage = status.ShieldKind == FightBattleShieldKind.Invincible
+                    || status.ShieldIgnoreValue ? remaining : Math.Max(remaining, -Math.Max(0L, shieldValue));
+                if (absorbedDamage == 0)
                 {
                     i++;
                     continue;
                 }
-                shieldDamage = checked(shieldDamage + absorbed);
-                remaining -= absorbed;
+                remaining -= absorbedDamage;
                 bool destroyed = false;
                 if (status.ShieldKind == FightBattleShieldKind.Persistent)
                 {
-                    status.ShieldRemainValue = Math.Max(0L, shieldValue - absorbed);
+                    status.ShieldRemainValue = Math.Max(0L, shieldValue + absorbedDamage);
                     status.ShieldInitialized = true;
                     destroyed = status.ShieldRemainValue == 0;
                 }
@@ -499,7 +499,9 @@ namespace Zjcs.Combat.Official
                 {
                     if (status.ShieldRemainCount > 0) status.ShieldRemainCount--;
                     if (status.ShieldKeepRemainValue && !status.ShieldIgnoreValue)
-                        status.ShieldRemainValue = Math.Max(0L, shieldValue - absorbed);
+                        status.ShieldRemainValue = Math.Max(0L, shieldValue + absorbedDamage);
+                    else if (!status.ShieldInitialized)
+                        status.ShieldRemainValue = shieldValue;
                     status.ShieldInitialized = true;
                     destroyed = status.ShieldRemainCount == 0;
                 }
@@ -531,8 +533,9 @@ namespace Zjcs.Combat.Official
                 }
                 else i++;
             }
-            return remaining == long.MaxValue && damage == long.MinValue
-                ? long.MinValue + 1 : -remaining;
+            shieldDamage = damage == long.MinValue && remaining == 0
+                ? long.MaxValue : remaining - damage;
+            return remaining;
         }
     }
 }
