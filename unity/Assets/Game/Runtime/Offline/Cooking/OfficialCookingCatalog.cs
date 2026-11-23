@@ -109,12 +109,13 @@ namespace Zjcs.Offline.Cooking
             foreach (OfficialCookingRecipe recipe in data.recipes)
             {
                 if (recipe == null || recipe.id <= 0 || recipe.count <= 0 || !recipeIds.Add(recipe.id)
-                    || recipe.materials == null || recipe.materials.Count == 0 || recipe.effects == null
+                    || recipe.materials == null || recipe.effects == null
                     || recipe.formulaItemId < 0 || recipe.useSourceOperate < 0)
                     return false;
                 if (recipe.formulaItemId > 0 && !formulaIds.Add(recipe.formulaItemId)) return false;
                 foreach (OfficialCookingMaterial material in recipe.materials)
                     if (material == null || material.itemId <= 0 || material.count <= 0) return false;
+                if (recipe.materials.Count == 0 && recipe.conditionType != "AlwaysCondition") return false;
                 if (recipe.conditionType == "MapUnlockCondition" && recipe.mapClassId <= 0) return false;
                 if (recipe.conditionType == "UsedItemCondition" && recipe.useSourceOperate <= 0) return false;
                 if (recipe.conditionType != "NoneCondition" && recipe.conditionType != "MapUnlockCondition"
