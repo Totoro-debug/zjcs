@@ -449,10 +449,10 @@ namespace Zjcs.Combat.Official
 
             value += Prop(source, fixedCureProperty);
             double cureAdd = Prop(source, "CureAddPercent") + Prop(target, "BeCureAddPercent");
-            double sourceCureAdd = Prop(source, "CureAdd");
-            double targetCureAdd = Prop(target, "BeCureAdd");
-            if (sourceCureAdd != 0) cureAdd += Divide(sourceCureAdd, Prop(source, "BaseCureAdd"));
-            if (targetCureAdd != 0) cureAdd += Divide(targetCureAdd, Prop(target, "BaseBeCureAdd"));
+            double sourceCureBase = Prop(source, "BaseCureAdd");
+            double targetCureBase = Prop(target, "BaseBeCureAdd");
+            if (sourceCureBase != 0) cureAdd += Prop(source, "CureAdd") / sourceCureBase;
+            if (targetCureBase != 0) cureAdd += Prop(target, "BeCureAdd") / targetCureBase;
             if (cureAdd > config.CureAddSoftCapThreshold)
                 cureAdd = config.CureAddSoftCapThreshold
                     + Divide((cureAdd - config.CureAddSoftCapThreshold) * config.CureAddOverflowScale, cureAdd);
