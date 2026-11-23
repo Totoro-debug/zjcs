@@ -19,6 +19,7 @@ def main():
         'fire-life-current-skill-graphs',
         'fire-core-current-skill-graphs',
         'chaos-rune-current-skill-graphs',
+        'heavenly-rain-current-skill-graphs',
     )
     receipts = {
         'skill-native-graphs': 'skill-native-graph-assets-source-manifest',

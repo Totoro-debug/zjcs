@@ -1,38 +1,18 @@
 """Convert the current original Chaos Rune and shared confusion graphs."""
-import json
-import re
 from pathlib import Path
 
 from battle_native_script_bindings import shared_bindings
-from current_battle_native_skill_graphs import build_current_skill_graphs
+from current_battle_native_skill_graphs import build_current_skill_graphs, verified_noise_mask_binding
 from official_apk import ROOT
 from official_source import OfficialSource
-from prepare_battle_scene_appearance_runtime import identity
 from prepare_battle_status_orbit_assets import build
-
-
-def shared_shader(cache):
-    previous_path = ROOT / 'assets/reference/battle-animation/fire-core-current-skill-graphs-source-manifest.json'
-    previous = json.loads(previous_path.read_bytes())
-    inventory = json.loads((cache / 'all-assets/inventory.json').read_bytes())
-    shader_name = 'Effect/Noise_Mask_Pro'
-    current, = (value for value in inventory['shaders'] if value['name'] == shader_name)
-    converted, = previous['shaders']
-    assert current['object_sha256'] == converted['object_sha256']
-    target = 'unity/Assets/Game/Runtime/Presentation/Combat/Shaders/FireCoreSkillGraph_Noise_Mask_Pro.shader'
-    assert identity(ROOT / target) in previous['outputs']
-    assert identity(ROOT / (target + '.meta')) in previous['outputs']
-    source = 'Shaders/Effect/Noise_Mask_Pro.asset'
-    source_meta = cache / 'native-export/ExportedProject/Assets' / (source + '.meta')
-    guid = re.search(r'(?m)^guid: ([a-f0-9]{32})$', source_meta.read_text('utf-8-sig'))[1]
-    return {guid: dict(source=source, target=target)}
 
 
 def main():
     manifest = OfficialSource().version
     cache_name = 'sage-chaos-rune-current'
     cache = ROOT / '.tools/source-packages/current' / manifest / cache_name
-    shaders = shared_shader(cache)
+    shaders = verified_noise_mask_binding(cache)
     build_current_skill_graphs(
         DEST=ROOT / 'unity/Assets/Official/Combat/ChaosRuneSkillGraphs/Resources/Combat/ChaosRuneSkillGraphs',
         DATA=ROOT / 'unity/Assets/Game/Resources/Combat/chaos-rune-current-skill-graphs.json',

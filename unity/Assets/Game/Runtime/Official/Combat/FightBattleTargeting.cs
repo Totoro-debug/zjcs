@@ -674,7 +674,8 @@ namespace Zjcs.Combat.Official
                 {
                     // Healing targets the eligible ally with the lowest health percentage.
                     // Compare the fractions exactly, before the normal range-order tie breaker.
-                    if (skill.EntityId == 10720 && left.MaxHp > 0 && right.MaxHp > 0)
+                    if ((skill.EntityId == 10720 || skill.EntityId == 12020)
+                        && left.MaxHp > 0 && right.MaxHp > 0)
                     {
                         int health = CompareHealthPercentage(left.Hp, left.MaxHp, right.Hp, right.MaxHp);
                         if (health != 0) return health;

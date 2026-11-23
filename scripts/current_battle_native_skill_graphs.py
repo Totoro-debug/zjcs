@@ -12,6 +12,23 @@ from prepare_battle_status_orbit_assets import build
 from prepare_battle_scene_appearance_runtime import identity, meta, write_changed
 
 
+def verified_noise_mask_binding(cache):
+    """Share the migrated Noise_Mask_Pro shader when the official object bytes match."""
+    proof = ROOT / 'assets/reference/battle-animation/fire-core-current-skill-graphs-source-manifest.json'
+    previous = json.loads(proof.read_bytes())
+    inventory = json.loads((cache / 'all-assets/inventory.json').read_bytes())
+    current, = (row for row in inventory['shaders'] if row['name'] == 'Effect/Noise_Mask_Pro')
+    converted, = previous['shaders']
+    assert current['object_sha256'] == converted['object_sha256']
+    target = 'unity/Assets/Game/Runtime/Presentation/Combat/Shaders/FireCoreSkillGraph_Noise_Mask_Pro.shader'
+    assert identity(ROOT / target) in previous['outputs']
+    assert identity(ROOT / (target + '.meta')) in previous['outputs']
+    source = 'Shaders/Effect/Noise_Mask_Pro.asset'
+    source_meta = cache / 'native-export/ExportedProject/Assets' / (source + '.meta')
+    guid = re.search(r'(?m)^guid: ([a-f0-9]{32})$', source_meta.read_text('utf-8-sig'))[1]
+    return {guid: dict(source=source, target=target)}
+
+
 def build_current_skill_graphs(*, DEST, DATA, RECEIPT, GROUPS, family, cache_name, generator,
                                external_assets=None):
     source = OfficialSource()

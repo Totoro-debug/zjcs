@@ -110,6 +110,8 @@ namespace Zjcs.Combat.Official
                 long? customCure = skill?.HasCustomCure == true ? (long?)skill.CustomCure : custom;
                 result.Cure = formula.CalculateCure(sourceProps, targetProps,
                     hit.DamageProperty, hit.FixedDamageProperty, customCure);
+                result.Cure.Cure = ApplyExtDamageScale(target, hit, result.Cure.Cure);
+                result.Cure.AbsoluteCure = ApplyExtDamageScale(target, hit, result.Cure.AbsoluteCure);
                 if (skill == null || !skill.ShieldConversionReturn)
                 {
                 result.Cure.Cure = FightStatusDamageProcessRuntime.BeforeShield(actor, target,

@@ -1,0 +1,16 @@
+{
+  "entities": [12020, 12021, 12022],
+  "rule_pack_fragments": ["FightSkill_part101.g.bytes"],
+  "visibility_bundles": [12020],
+  "current_native_receipts": ["assets/reference/battle-animation/heavenly-rain-current-skill-graphs-source-manifest.json"],
+  "reused_client_code": ["MyFightSkill", "MyFightHitFixed", "MyFightDamage"],
+  "code": [
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightHitExtApplyDamageComponentInfo",
+    "FightDamageComponentInfo",
+    "BattleFormulaHandler",
+    "SkillAiCfg"
+  ],
+  "runtime_rule_packs": ["unity/Assets/Game/Resources/Combat/SkillRules/10096.json"]
+}
