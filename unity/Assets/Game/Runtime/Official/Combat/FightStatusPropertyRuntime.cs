@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Zjcs.Combat.Official
 {
@@ -130,6 +131,8 @@ namespace Zjcs.Combat.Official
             var statusProperties = Map(status.StatusProperties);
             if (!status.HasPropertyComponent) return statusProperties;
             Dictionary<int, long> sourceProperties = SourceProperties(status, units);
+            sourceProperties = ResolveByStatusShieldProperties(status, sourceProperties, units,
+                catalog, formula);
             var result = new Dictionary<int, long>();
             foreach (FightBattleStatusPropertyTransition transition in status.PropertyTransitions
                 ?? new List<FightBattleStatusPropertyTransition>())
@@ -149,6 +152,90 @@ namespace Zjcs.Combat.Official
                 statusProperties, formula);
             if (status.IsOpenStack && status.StackCount > 0) Scale(result, status.StackCount);
             return result;
+        }
+
+        private static Dictionary<int, long> ResolveByStatusShieldProperties(
+            FightBattleStatusState shield, Dictionary<int, long> sourceProperties,
+            IReadOnlyList<FightBattleUnitState> units, FightOfficialCombatCatalog catalog,
+            FightDamageFormula formula)
+        {
+            if (shield == null || sourceProperties == null || units == null
+                || !IsShieldStatus(shield, formula)) return sourceProperties;
+            FightBattleUnitState creator = FindUnit(units, shield.CreatorId);
+            if (creator == null) return sourceProperties;
+
+            // The confirmed 10593 rule is self-only. Pet casts reuse the owner's unit id,
+            // so creator role is retained on the status and participates in this check.
+            bool selfPlayerShield = shield.OwnerId == shield.CreatorId
+                && creator.CharacterType == 1
+                && shield.CreatorCharacterType == 1;
+
+            int[] shieldModifiers = {
+                formula.PropertyId("StatusShieldAddPercent"),
+                formula.PropertyId("StatusFixedShieldAdd")
+            };
+            if (shieldModifiers.All(propertyId => propertyId <= 0)) return sourceProperties;
+            var remove = new Dictionary<int, long>();
+            foreach (FightBattleStatusState modifier in creator.Statuses ?? new List<FightBattleStatusState>())
+            {
+                FightBattleStatusByStatusPropertyState definition = modifier?.Components?.ShieldByStatusProperty;
+                if (definition == null || !definition.IsShieldStatus || modifier.ForbiddenType != 0
+                    || modifier.OwnerId != creator.Id) continue;
+                EnsurePropertyDefinition(modifier, catalog);
+                InitializeProperties(modifier, creator, units,
+                    Map(creator.BaseProperties ?? creator.Properties), catalog, formula);
+                if (modifier.ResolvedProperties == null)
+                    modifier.ResolvedProperties = ToValues(Resolve(modifier, creator, units,
+                        Map(creator.BaseProperties ?? creator.Properties), catalog, formula));
+                if (selfPlayerShield && IncludesShieldProperty(definition, shield)) continue;
+                IList<FightPropertyValue> properties = modifier.ResolvedProperties
+                    ?? modifier.StatusProperties ?? modifier.StatusConfigProperties;
+                if (properties == null) continue;
+                foreach (FightPropertyValue property in properties)
+                    if (property != null && shieldModifiers.Contains(property.Id))
+                    {
+                        remove.TryGetValue(property.Id, out long current);
+                        remove[property.Id] = current + property.Value;
+                    }
+            }
+            foreach (KeyValuePair<int, long> entry in remove)
+                if (entry.Value > 0 && sourceProperties.TryGetValue(entry.Key, out long value) && value > 0)
+                    sourceProperties[entry.Key] = value - Math.Min(value, entry.Value);
+            return sourceProperties;
+        }
+
+        private static bool IncludesShieldProperty(FightBattleStatusByStatusPropertyState definition,
+            FightBattleStatusState shield)
+        {
+            if (definition.IncludePropertyTypes == null || definition.IncludePropertyTypes.Length == 0)
+                return true;
+            IList<FightPropertyValue> properties = shield.StatusProperties
+                ?? shield.ResolvedProperties ?? shield.StatusConfigProperties;
+            if (properties == null) return false;
+            foreach (FightPropertyValue property in properties)
+                if (property != null && property.Value != 0
+                    && definition.IncludePropertyTypes.Contains(property.Id)) return true;
+            return false;
+        }
+
+        private static bool IsShieldStatus(FightBattleStatusState status, FightDamageFormula formula)
+        {
+            if (status.ShieldKind != FightBattleShieldKind.None) return true;
+            int fixedShield = formula.PropertyId("SkillFixedShield");
+            int[] shieldProperties = {
+                fixedShield,
+                formula.PropertyId("ShieldByDefence"),
+                formula.PropertyId("ShieldByAttack"),
+                formula.PropertyId("ShieldByHp"),
+                formula.PropertyId("ShieldByTargetHp"),
+                formula.PropertyId("ShieldByConvertedCurHp")
+            };
+            IList<FightPropertyValue> properties = status.StatusProperties
+                ?? status.ResolvedProperties ?? status.StatusConfigProperties;
+            if (properties == null) return false;
+            foreach (FightPropertyValue property in properties)
+                if (property != null && property.Value != 0 && shieldProperties.Contains(property.Id)) return true;
+            return false;
         }
 
         private static Dictionary<int, long> TransitionTarget(FightBattleStatusState status,

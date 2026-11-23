@@ -192,6 +192,7 @@ namespace Zjcs.Combat.Official
             if (unit.StatusApplicationRejected?.Invoke(template) == true) return null;
             if (unit.Statuses == null) unit.Statuses = new List<FightBattleStatusState>();
             var origin = FightBattleStatusOrigin.Resolve(template);
+            template.CreatorCharacterType = ResolveCreatorCharacterType(unit, template, origin);
             FightPortableFlameRules.ReplaceDifferentSource(unit, template, origin);
             FightBattleStatusState existing = FindMatchingStatus(unit, template, origin);
             if (existing != null)
@@ -257,6 +258,7 @@ namespace Zjcs.Combat.Official
                 IsOpenStack = template.IsOpenStack,
                 OwnerId = unit.Id,
                 CreatorId = template.CreatorId,
+                CreatorCharacterType = template.CreatorCharacterType,
                 RootSkillId = template.RootSkillId,
                 ApplyingSkillItemId = template.ApplyingSkillItemId,
                 ReportSource = template.ReportSource == null ? null : template.ReportSource.Copy(),
@@ -603,6 +605,7 @@ namespace Zjcs.Combat.Official
         internal static void AttachInitial(FightBattleUnitState unit, FightBattleStatusState template)
         {
             var origin = FightBattleStatusOrigin.Resolve(template);
+            template.CreatorCharacterType = ResolveCreatorCharacterType(unit, template, origin);
             var existing = FindMatchingStatus(unit, template, origin);
             if (existing == null)
             {
@@ -620,6 +623,18 @@ namespace Zjcs.Combat.Official
                     && FightBattleStatusOrigin.Matches(FightBattleStatusOrigin.Resolve(candidate), origin))
                     return candidate;
             return null;
+        }
+
+        private static int ResolveCreatorCharacterType(FightBattleUnitState unit,
+            FightBattleStatusState template, FightBattleStatusOrigin origin)
+        {
+            if (template.CreatorCharacterType != 0 || template.CreatorId != unit.Id)
+                return template.CreatorCharacterType;
+            foreach (FightBattleStatusState status in unit.Statuses)
+                if (status != null && status.CreatorCharacterType != 0
+                    && FightBattleStatusOrigin.Matches(FightBattleStatusOrigin.Resolve(status), origin))
+                    return status.CreatorCharacterType;
+            return unit.CharacterType;
         }
 
         private static void RefreshExisting(FightBattleUnitState unit, FightBattleStatusState existing,
@@ -665,6 +680,7 @@ namespace Zjcs.Combat.Official
         {
             existing.Origin = origin.Copy();
             existing.CreatorId = template.CreatorId;
+            existing.CreatorCharacterType = template.CreatorCharacterType;
             existing.RootSkillId = template.RootSkillId;
             existing.ApplyingSkillItemId = template.ApplyingSkillItemId;
             existing.ReportSource = template.ReportSource?.Copy();

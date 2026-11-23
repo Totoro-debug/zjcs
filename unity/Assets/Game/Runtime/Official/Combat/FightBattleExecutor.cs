@@ -732,6 +732,7 @@ namespace Zjcs.Combat.Official
                 FightBattleStatusState status = statusCatalog.CreateStatus(classId, caster.Id, owner.Id,
                     ++index, state.SkillEntityId, state.SkillItemId, Math.Max(1, state.SkillRank),
                     Math.Max(1, state.SkillLevel), state.SkillSubRank, state.EntityProperties);
+                status.CreatorCharacterType = caster.CharacterType;
                 status.Origin = new FightBattleStatusOrigin
                 {
                     IsSet = true, UnitId = caster.Id, EntityId = caster.Id,
@@ -816,6 +817,7 @@ namespace Zjcs.Combat.Official
             lastDelay = 0f;
             statusTriggerDuration = 0f;
             statusTriggerActionDuration = -1f;
+            if (skill.CreatorCharacterType == 0) skill.CreatorCharacterType = actor.CharacterType;
             // Support settles against the owner state, but its original target
             // filters (notably TargetType.Master) belong to the pet source.
             targetingSource = targetingSource ?? actor;
@@ -1615,6 +1617,7 @@ namespace Zjcs.Combat.Official
                 actor.Id, NextStatusInstanceId(), skill.EntityId, skill.ItemId, skill.Rank,
                 skill.Level, skill.SubRank, actor.Properties, 0, null, skill.BlessPropertyScales);
             template.Origin = FightBattleStatusOrigin.Resolve(skill, actor.Id).Copy();
+            template.CreatorCharacterType = actor.CharacterType;
             FightBattleStatusState applied = FightStatusLifecycle.Apply(summon, template,
                 StatusClockRound(template), template.InstanceId, random);
             FightStatusLifecycle.Initialize(applied, StatusClockRound(template));
@@ -2194,6 +2197,7 @@ namespace Zjcs.Combat.Official
                 {
                     continue;
                 }
+                skill.CreatorCharacterType = invocation.Trigger.CreatorCharacterType;
                 skill.StatusOrigin = invocation.Trigger.Origin?.Copy();
                 if (invocation.HasCustomDamage)
                 {
@@ -2745,6 +2749,8 @@ namespace Zjcs.Combat.Official
                 skill == null ? 1 : skill.Level, skill == null ? actor.SubRank : skill.SubRank,
                 fixedSkillSourceProperties ?? actor.Properties, customStatusValue, null, skill?.BlessPropertyScales);
             template.Origin = FightBattleStatusOrigin.Resolve(skill, actor.Id).Copy();
+            template.CreatorCharacterType = skill != null && skill.CreatorCharacterType != 0
+                ? skill.CreatorCharacterType : actor.CharacterType;
             // Preserve old pending notifications; only the invocation caused by
             // this exact StatusList application may acquire this hit's timing.
             var pendingBefore = new Dictionary<FightBattleStatusState, int>();

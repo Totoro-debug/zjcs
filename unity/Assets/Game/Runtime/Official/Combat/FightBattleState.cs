@@ -211,6 +211,7 @@ namespace Zjcs.Combat.Official
         public int SourceSkillRank;
         public int SourceSkillLevel;
         public int SourceSubRank;
+        public int CreatorCharacterType;
         public int ApplyTarget;
         public FightBattleStatusPropTarget PropTarget;
         public int[] TargetWithoutStatusIds;
@@ -238,6 +239,7 @@ namespace Zjcs.Combat.Official
             result.SourceSkillRank = status.SourceSkillRank;
             result.SourceSkillLevel = status.SourceSkillLevel;
             result.SourceSubRank = status.SourceSubRank;
+            result.CreatorCharacterType = status.CreatorCharacterType;
             result.ApplyTarget = ApplyTarget;
             result.PropTarget = PropTarget?.Copy();
             result.TargetWithoutStatusIds = TargetWithoutStatusIds == null
@@ -342,6 +344,7 @@ namespace Zjcs.Combat.Official
         public FightBattleStatusCureReduceState CureReduce;
         public FightBattleStatusShieldExpiryState ShieldExpiry;
         public FightBattleShieldConversionState ShieldConversion;
+        public FightBattleStatusByStatusPropertyState ShieldByStatusProperty;
         public FightBattleStatusHitSkillComponentState HitSkill;
         public FightBattleStatusDamageSkillComponentState DamageSkill;
         public FightBattleStatusHitApplyDamageComponentState HitApplyDamage;
@@ -371,6 +374,7 @@ namespace Zjcs.Combat.Official
                 CureReduce = CureReduce?.Copy(),
                 ShieldExpiry = ShieldExpiry?.Copy(),
                 ShieldConversion = ShieldConversion?.Copy(),
+                ShieldByStatusProperty = ShieldByStatusProperty?.Copy(),
                 HitSkill = HitSkill?.Copy(),
                 DamageSkill = DamageSkill?.Copy(),
                 HitApplyDamage = HitApplyDamage?.Copy(),
@@ -398,6 +402,22 @@ namespace Zjcs.Combat.Official
 
         public FightBattleShieldConversionState Copy() =>
             (FightBattleShieldConversionState)MemberwiseClone();
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusByStatusPropertyState
+    {
+        public int HitTargetType;
+        public bool IsShieldStatus;
+        public int[] IncludePropertyTypes = Array.Empty<int>();
+
+        public FightBattleStatusByStatusPropertyState Copy() => new FightBattleStatusByStatusPropertyState
+        {
+            HitTargetType = HitTargetType,
+            IsShieldStatus = IsShieldStatus,
+            IncludePropertyTypes = IncludePropertyTypes == null ? Array.Empty<int>()
+                : (int[])IncludePropertyTypes.Clone()
+        };
     }
 
     [Serializable]
@@ -871,6 +891,7 @@ namespace Zjcs.Combat.Official
         public bool IsOpenStack;
         public int OwnerId;
         public int CreatorId;
+        public int CreatorCharacterType;
         public int RootSkillId;
         public int ApplyingSkillItemId;
         // Statistical ancestry is independent of gameplay creator, property snapshots and falloff.
@@ -1366,6 +1387,7 @@ namespace Zjcs.Combat.Official
         public int UseItemId;
         public int SkillSkinId;
         public int EntityId;
+        public int CreatorCharacterType;
         public int Rank;
         public int Level;
         public int SubRank;

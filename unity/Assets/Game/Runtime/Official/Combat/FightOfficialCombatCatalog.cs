@@ -891,6 +891,8 @@ namespace Zjcs.Combat.Official
                         binding.SkillRank, binding.SkillLevel, binding.SourceSubRank,
                         binding.SourceProperties, binding.CustomShieldValue, binding.ReplacementProperties,
                         binding.BlessPropertyScales);
+                    assembledStatus.CreatorCharacterType = binding.CreatorCharacterType != 0
+                        ? binding.CreatorCharacterType : binding.CreatorId == unit.Id ? unit.CharacterType : 0;
                     assembledStatus.Origin = binding.Origin?.Copy();
                     assembledStatuses.Add(assembledStatus);
                 }
@@ -953,6 +955,7 @@ namespace Zjcs.Combat.Official
                         Origin = origin.Copy(),
                         InstanceId = nextInstanceId++,
                         CreatorId = unit.Id,
+                        CreatorCharacterType = unit.CharacterType,
                         RootSkillId = item.EntityId,
                         ApplyingSkillItemId = item.ItemId,
                         SkillRank = binding.Rank,
@@ -1721,6 +1724,15 @@ namespace Zjcs.Combat.Official
                 };
             }
             result.Components.ShieldExpiry = ParseShieldExpiry(result.ClassId, components);
+            Dictionary<string, object> shieldByStatus = Component(components,
+                "FightStatusPropByStatusComponent");
+            if (shieldByStatus != null)
+                result.Components.ShieldByStatusProperty = new FightBattleStatusByStatusPropertyState
+                {
+                    HitTargetType = Int(shieldByStatus, "HitTargetType"),
+                    IsShieldStatus = Bool(shieldByStatus, "IsShieldStatus"),
+                    IncludePropertyTypes = IntArray(shieldByStatus, "IncludeProptypes")
+                };
             return result;
         }
 
@@ -3866,6 +3878,7 @@ namespace Zjcs.Combat.Official
         public int ClassId;
         public int InstanceId;
         public int CreatorId;
+        public int CreatorCharacterType;
         public int RootSkillId;
         public int ApplyingSkillItemId;
         public int SkillRank = 1;
