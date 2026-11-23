@@ -866,6 +866,7 @@ namespace Zjcs.Presentation.Home
             Require(passiveCompanion != 10579 || File.Exists(Path.Combine(output, "companion-alienation-checkpoint.json")),
                 "The cultivated alienation never checked an afflicted enemy's configured hit.");
             Require(passiveCompanion != 10598 || capturedPassive && windHits > 0
+                && HurricaneGriefTriggerCountMatches(checkpoint, windHits)
                 && File.Exists(Path.Combine(output, "companion-hurricane-grief-status.json"))
                 && File.Exists(Path.Combine(output, "companion-hurricane-grief-movement.json")),
                 "The cultivated wind laceration was not applied, rendered and settled during movement.");

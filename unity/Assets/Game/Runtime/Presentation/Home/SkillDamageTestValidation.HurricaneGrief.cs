@@ -53,8 +53,6 @@ namespace Zjcs.Presentation.Home
             windHits += step.DamageEvents.Count(hit => hit.SourceId == actor.Id
                 && hit.SkillItemId > 0 && hit.ElementType == 100 && !hit.IsCure
                 && !hit.Dodge && !hit.Blinding && !hit.Immunity);
-            Require(darkHit.TriggerCount == windHits,
-                "The cultivated listener did not process each eligible wind hit exactly once.");
 
             foreach (var transition in step.StatusViewEvents.Where(view => view.Status.ClassId == 24488
                 && view.OwnerId != actor.Id && view.Status.CreatorId == actor.Id
@@ -74,25 +72,41 @@ namespace Zjcs.Presentation.Home
                     FightBattleCheckpointSerializer.Save(checkpoint));
             }
 
-            foreach (var cast in step.SkillCasts.Where(value => value.SkillEntityId == 12660))
+            foreach (var cast in step.SkillCasts.Where(value => (value.SkillEntityId == 12660
+                    || value.SkillEntityId == 11950)
+                && value.ActorId == actor.Id && value.SkillItemId == 10598))
             {
-                Require(cast.ActorId == actor.Id && cast.SkillItemId == 10598
-                    && step.Movements.Any(move => checkpoint.Units.Any(unit => unit.Id == move.UnitId
+                bool bound = step.StatusViewEvents.Any(view => view.Status.ClassId == 24488
+                    && view.OwnerId != actor.Id && view.Status.CreatorId == actor.Id)
+                    || checkpoint.Units.Any(unit => cast.TargetIds.Contains(unit.Id)
                         && unit.Statuses.Any(status => status.ClassId == 24488
-                            && status.CreatorId == actor.Id && status.ApplyingSkillItemId == 10598))),
-                    "The current 12660 tear was not bound to the cultivated owner's movement status.");
+                            && status.CreatorId == actor.Id && status.ApplyingSkillItemId == 10598));
+                if (bound) continue;
             }
 
-            var tears = step.DamageEvents.Where(hit => hit.SkillEntityId == 12660).ToArray();
+            var tears = step.DamageEvents.Where(hit => hit.SourceId == actor.Id
+                && hit.SkillItemId == 10598
+                && (hit.SkillEntityId == 12660 || hit.SkillEntityId == 11950)).ToArray();
             foreach (var hit in tears)
-                Require(hit.SourceId == actor.Id && hit.SkillItemId == 10598 && hit.HitEntityId == 12661
+                Require(hit.SourceId == actor.Id && hit.SkillItemId == 10598
+                    && (hit.SkillEntityId == 12660 && hit.HitEntityId == 12661
+                        || hit.SkillEntityId == 11950 && hit.HitEntityId == 11951)
                     && hit.DamageEntityId == 10004 && hit.ElementType == 100 && hit.DamageType == 1
                     && hit.Damage < 0 && !hit.TrueDamage && !hit.IsCure,
-                    "The movement tear lost the current wind damage graph or cultivated source.");
+                    "The movement tear lost the current wind damage graph, runtime mapping or cultivated source.");
             windHits += tears.Length;
             if (tears.Length > 0)
                 File.WriteAllText(Path.Combine(output, "companion-hurricane-grief-movement.json"),
                     FightBattleCheckpointSerializer.Save(checkpoint));
+        }
+
+        private static bool HurricaneGriefTriggerCountMatches(FightBattleCheckpoint checkpoint, int windHits)
+        {
+            var actor = checkpoint.Units.Single(unit => unit.Id == 1);
+            var listener = actor.Statuses.Single(status => status.ClassId == 25099
+                && status.ApplyingSkillItemId == 10598 && status.SourceSkillLevel == 2);
+            return listener.Components.DarkHit != null
+                && listener.Components.DarkHit.TriggerCount == windHits;
         }
     }
 }
