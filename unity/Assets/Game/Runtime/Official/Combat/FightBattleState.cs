@@ -345,6 +345,7 @@ namespace Zjcs.Combat.Official
         public FightBattleStatusShieldExpiryState ShieldExpiry;
         public FightBattleShieldConversionState ShieldConversion;
         public FightBattleStatusByStatusPropertyState ShieldByStatusProperty;
+        public FightBattleStatusDamageReduceBeforeFinalState DamageReduceBeforeFinal;
         public FightBattleStatusHitSkillComponentState HitSkill;
         public FightBattleStatusDamageSkillComponentState DamageSkill;
         public FightBattleStatusHitApplyDamageComponentState HitApplyDamage;
@@ -375,6 +376,7 @@ namespace Zjcs.Combat.Official
                 ShieldExpiry = ShieldExpiry?.Copy(),
                 ShieldConversion = ShieldConversion?.Copy(),
                 ShieldByStatusProperty = ShieldByStatusProperty?.Copy(),
+                DamageReduceBeforeFinal = DamageReduceBeforeFinal?.Copy(),
                 HitSkill = HitSkill?.Copy(),
                 DamageSkill = DamageSkill?.Copy(),
                 HitApplyDamage = HitApplyDamage?.Copy(),
@@ -418,6 +420,26 @@ namespace Zjcs.Combat.Official
             IncludePropertyTypes = IncludePropertyTypes == null ? Array.Empty<int>()
                 : (int[])IncludePropertyTypes.Clone()
         };
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusDamageReduceBeforeFinalState
+    {
+        public int ReduceDamagePropertyId;
+        public int CustomDamageSkillId;
+        public int CustomDamagePropertyId;
+        public int CustomDamageSource;
+        public int CustomDamageTarget;
+        public int CustomDamageTargetPosition;
+        public int UnitPropertySource;
+        public int UnitPropertyId;
+        public int UnitPropertyTarget;
+        public int UnitPercent;
+        public int ResultPercent;
+        public bool IsCheckSkillTrigger;
+
+        public FightBattleStatusDamageReduceBeforeFinalState Copy() =>
+            (FightBattleStatusDamageReduceBeforeFinalState)MemberwiseClone();
     }
 
     [Serializable]

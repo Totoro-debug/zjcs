@@ -1724,6 +1724,28 @@ namespace Zjcs.Combat.Official
                 };
             }
             result.Components.ShieldExpiry = ParseShieldExpiry(result.ClassId, components);
+            Dictionary<string, object> reduceBeforeFinal = Component(components,
+                "FightStatusDamageReduceBeforeFinalComponent");
+            if (reduceBeforeFinal != null)
+            {
+                Dictionary<string, object> customSkill = Component(reduceBeforeFinal, "CustomDamageSkill");
+                Dictionary<string, object> unitPercent = Component(reduceBeforeFinal, "UnitPropPercentCfg");
+                result.Components.DamageReduceBeforeFinal = new FightBattleStatusDamageReduceBeforeFinalState
+                {
+                    ReduceDamagePropertyId = Int(reduceBeforeFinal, "ReduceDamagePropType"),
+                    CustomDamageSkillId = customSkill == null ? 0 : Int(customSkill, "SkillId"),
+                    CustomDamagePropertyId = Int(reduceBeforeFinal, "CustomDamagePropType"),
+                    CustomDamageSource = customSkill == null ? 0 : Int(customSkill, "Source"),
+                    CustomDamageTarget = customSkill == null ? 0 : Int(customSkill, "Target"),
+                    CustomDamageTargetPosition = customSkill == null ? 0 : Int(customSkill, "TargetPos"),
+                    UnitPropertySource = unitPercent == null ? 0 : Int(unitPercent, "Source"),
+                    UnitPropertyId = unitPercent == null ? 0 : Int(unitPercent, "PropType"),
+                    UnitPropertyTarget = unitPercent == null ? 0 : Int(unitPercent, "Target"),
+                    UnitPercent = unitPercent == null ? 0 : Int(unitPercent, "UnitPercent"),
+                    ResultPercent = unitPercent == null ? 0 : Int(unitPercent, "ResultPercent"),
+                    IsCheckSkillTrigger = Bool(reduceBeforeFinal, "IsCheckSkillTrigger")
+                };
+            }
             Dictionary<string, object> shieldByStatus = Component(components,
                 "FightStatusPropByStatusComponent");
             if (shieldByStatus != null)
