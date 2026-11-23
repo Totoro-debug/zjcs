@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 73d1312f954855f99cd6cbba7a148413, type: 3}
+  m_Name: '[10][Cnd]背包是否有可以使用的道具'
+  graph: {fileID: 11400000, guid: 211930ac64a7be94c9ebc155866cc88f, type: 2}
+  position: {x: 3720.0, y: -24.0}
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000, guid: 8246e2b3d08d715b7bcae7a552973a32, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: 945cc1024722896abe87f2c4a9bf4c32, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000, guid: 8246e2b3d08d715b7bcae7a552973a32, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono: ''
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: ''
+  SelectedType: ''
+  NodeName: ''
+  TipDotNodeId: 10
+  TipDotNode: {rid: 4800079984713531995}
+  RuntimeTipDotNode: {rid: -2}
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 4
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels: []
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: '', ns: '', asm: ''}
+    - rid: 4800079984713531995
+      type: {class: TipDotBagCanUseItemConditionNode, ns: Zjcs.Official.BagTipDots, asm: Zjcs.Official.BagTipDots}
+      data:
+        Parents: []
+        Childs: []
+        NodeKey: {GraphName: Bag, NodeName: 19440dcd-b2a4-42a7-9b95-fb443574f83c}
+        TipDotInfo: {TipLevel: 0, Data: ''}
+        IsShowTip: 0
+        Type: 1
+        CheckTypes:
+        - 415
+        - 416
+        - 417
+        - 418
+        - 419
+        - 420
+        - 421
+        - 302
+        - 315
+        - 334
+        - 402
+        - 412
+        - 413
+        - 410
+        - 500
+        - 411
+        - 1
+        - 325
+        - 109
+        - 320
+        - 105
+        - 300
+        - 321
+        - 401
+        - 403
+        - 328
+        - 108
+        - 115
+        - 316
+        - 341
+        - 342
+        - 434
+        ShowNum: 1

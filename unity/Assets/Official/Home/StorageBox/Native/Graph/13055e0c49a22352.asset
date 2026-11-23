@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: a60585f4089d5ba88818d9d94dc296aa, type: 3}
+  m_Name: '[24][State]背包道具切页是否有可使用的普通道具'
+  graph: {fileID: 11400000, guid: 211930ac64a7be94c9ebc155866cc88f, type: 2}
+  position: {x: 2632.0, y: 360.0}
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000, guid: 945cc1024722896abe87f2c4a9bf4c32, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: a14e5074d850934152e92b4e354e9aca, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000, guid: 945cc1024722896abe87f2c4a9bf4c32, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: 8246e2b3d08d715b7bcae7a552973a32, type: 2}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 1
+      _dynamic: 0
+  NodeId: -1
+  Mono: ''
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: 背包道具切页是否有可使用的普通道具
+  SelectedType: ''
+  NodeName: BagItemTabHasCanUseCommonItem
+  TipDotNodeId: 24
+  TipDotNode: {rid: 4800079984713531991}
+  RuntimeTipDotNode: {rid: -2}
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 3
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels: []
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: '', ns: '', asm: ''}
+    - rid: 4800079984713531991
+      type: {class: TipDotCommonNode, ns: Zjcs.Official.ProfessionUI, asm: Zjcs.Official.ProfessionUI}
+      data:
+        Parents: []
+        Childs: []
+        NodeKey: {GraphName: Bag, NodeName: BagItemTabHasCanUseCommonItem}
+        TipDotInfo: {TipLevel: 0, Data: ''}
+        IsShowTip: 0

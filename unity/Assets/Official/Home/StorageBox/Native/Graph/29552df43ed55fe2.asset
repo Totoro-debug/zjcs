@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 73d1312f954855f99cd6cbba7a148413, type: 3}
+  m_Name: '[15][Cnd]背包是否有可以使用的道具'
+  graph: {fileID: 11400000, guid: 211930ac64a7be94c9ebc155866cc88f, type: 2}
+  position: {x: 3304.0, y: 1096.0}
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000, guid: 520fe60192e313ba2545a0906451802a, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: ec8737984a2a263a54ca1196493f6d79, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000, guid: 520fe60192e313ba2545a0906451802a, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono: ''
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: ''
+  SelectedType: ''
+  NodeName: ''
+  TipDotNodeId: 15
+  TipDotNode: {rid: 4800079984713531995}
+  RuntimeTipDotNode: {rid: -2}
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 4
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels: []
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: '', ns: '', asm: ''}
+    - rid: 4800079984713531995
+      type: {class: TipDotBagCanUseItemConditionNode, ns: Zjcs.Official.BagTipDots, asm: Zjcs.Official.BagTipDots}
+      data:
+        Parents: []
+        Childs: []
+        NodeKey: {GraphName: Bag, NodeName: 635f84e2-c3eb-4e40-8f49-b7d58f3358e6}
+        TipDotInfo: {TipLevel: 0, Data: ''}
+        IsShowTip: 0
+        Type: 1
+        CheckTypes:
+        - 326
+        - 200
+        - 201
+        - 210
+        - 211
+        - 212
+        - 202
+        - 203
+        - 204
+        - 205
+        ShowNum: 1

@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: a60585f4089d5ba88818d9d94dc296aa, type: 3}
+  m_Name: '[26][State]是否拥有背包家具'
+  graph: {fileID: 11400000, guid: 211930ac64a7be94c9ebc155866cc88f, type: 2}
+  position: {x: 1144.0, y: -376.0}
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000, guid: bcd031837f30af2ca71e22acac07215c, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: 3caa65dec20cc714d8c97c8066b5deae, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000, guid: bcd031837f30af2ca71e22acac07215c, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: 300c24a5f04f09820d20d68a02151359, type: 2}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 1
+      _dynamic: 0
+  NodeId: -1
+  Mono: ''
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: 是否拥有背包家具
+  SelectedType: ''
+  NodeName: HomeHasStorageBox
+  TipDotNodeId: 26
+  TipDotNode: {rid: 2750172587488445068}
+  RuntimeTipDotNode: {rid: -2}
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 0
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels: []
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: '', ns: '', asm: ''}
+    - rid: 2750172587488445068
+      type: {class: TipDotCommonNode, ns: Zjcs.Official.ProfessionUI, asm: Zjcs.Official.ProfessionUI}
+      data:
+        Parents: []
+        Childs: []
+        NodeKey: {GraphName: Bag, NodeName: HomeHasStorageBox}
+        TipDotInfo: {TipLevel: 0, Data: ''}
+        IsShowTip: 0
