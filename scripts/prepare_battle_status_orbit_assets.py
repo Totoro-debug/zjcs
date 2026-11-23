@@ -171,7 +171,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         sidecar = Path(str(target)+'.meta')
         local_scripts.add(GUID.search(sidecar.read_text(encoding='utf-8-sig'))[1])
         native_script_records.append(dict(script=identity(target), meta=identity(sidecar)))
-    external_replacements, external_records = {}, []
+    external_replacements, external_records, external_shader_guids = {}, [], set()
     for original_guid, binding in (external_assets or {}).items():
         original, target = exported/binding['source'], ROOT/binding['target']
         read(original)
@@ -179,6 +179,8 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         assert GUID.search(read(source_meta).decode('utf-8-sig'))[1] == original_guid
         target_meta = Path(str(target)+'.meta')
         external_replacements[original_guid] = GUID.search(target_meta.read_text(encoding='utf-8-sig'))[1]
+        if target.suffix == '.shader':
+            external_shader_guids.add(external_replacements[original_guid])
         external_records.append(dict(source=identity(original), source_meta=identity(source_meta),
             target=identity(target), target_meta=identity(target_meta)))
     unmapped_scripts = {}
@@ -385,8 +387,8 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         # Keep deterministic output identities in memory. Unity can delete an
         # orphan sidecar while its asset is still awaiting conversion.
         texture_guids = {target_guids[path] for path in found if path.suffix == '.png'}
-        shader_guids = {target_guids[path] for path, target in targets.items()
-                        if target.suffix == '.shader'}
+        shader_guids = external_shader_guids | {target_guids[path] for path, target in targets.items()
+                                               if target.suffix == '.shader'}
         textures, shaders, binary_assets, converted_inputs = [], [], [], []
         print(f"{family}: converting {len(targets)} assets", flush=True)
         for ordinal, (path, target) in enumerate(targets.items(), 1):

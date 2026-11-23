@@ -70,6 +70,7 @@ namespace Zjcs.Presentation.Home
             bool battlecry = skillId == 10092;
             bool judgmentThunder = skillId == 10093;
             bool protectiveRunes = skillId == 10102;
+            bool chaosRune = skillId == 10059;
             int destroyerCompanion = DestroyerActiveCompanion(skillId);
             bool flameSoul = destroyerCompanion == 10599;
             bool fireCore = destroyerCompanion == 10503;
@@ -77,12 +78,12 @@ namespace Zjcs.Presentation.Home
             bool overloadProtection = destroyerCompanion == 10573;
             bool alienation = HasAlienationCompanion(skillId);
             bool destroyer = starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder || protectiveRunes || destroyerCompanion > 0;
-            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation;
+            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation || chaosRune;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry || protectiveRunes;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
-            int profession = alienation ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = alienation || chaosRune ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -283,7 +284,7 @@ namespace Zjcs.Presentation.Home
                 var choice = settings.GetComponentsInChildren<Toggle>().Single(value =>
                     value.transform.parent.name == "ToggleText" && value.GetComponentsInParent<Transform>()
                         .Any(parent => parent.name == setting));
-                if (setting == "MonsterHp" && (waterBlade || soulPiercer))
+                if (setting == "MonsterHp" && (waterBlade || soulPiercer || chaosRune))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
                 if (setting == "MonsterHurt" && overloadProtection)
@@ -306,7 +307,7 @@ namespace Zjcs.Presentation.Home
             if (passiveCompanion > 0) VerifyAcquiredPassiveAssembly(actor, progression, passiveCompanion);
             // Make each required trigger reproducible inside the isolated presentation diagnostic.
             if (fireCore) SetAcquiredBattleProperty(actor, "CritRatePercent", 100000);
-            if (iceCrystal) SetAcquiredBattleProperty(actor, "EffectRate", 1000000);
+            if (iceCrystal || chaosRune) SetAcquiredBattleProperty(actor, "EffectRate", 1000000);
             if (overloadProtection)
             {
                 Require(!checkpoint.DamageTest.EnableMonsterOneDamage,
@@ -347,6 +348,7 @@ namespace Zjcs.Presentation.Home
             int doomPushes = 0;
             int tearApplications = 0, tearEnds = 0, tearHits = 0;
             int battlecryAdvances = 0;
+            int confusionApplications = 0, confusionEnds = 0;
             battle.Controller.StepCompleted += step => {
                 if (spiralWindBlade)
                 {
@@ -356,6 +358,8 @@ namespace Zjcs.Presentation.Home
                 }
                 if (starBurst) starBlindEnds += step.Event.StatusViewEvents.Count(view => view.Status.ClassId == 24234
                     && view.Status.CreatorId == 1 && view.Kind == FightBattleStatusViewEventKind.End);
+                if (chaosRune) confusionEnds += step.Event.StatusViewEvents.Count(view => view.Status.ClassId == 24217
+                    && view.Status.CreatorId == actor.Id && view.Kind == FightBattleStatusViewEventKind.End);
                 if (hellfire) VerifyAcquiredHellfireStep(step.Event, actor, ref hellfireCures, ref hits);
                 if (passiveCompanion > 0) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits, ref standfastTurns, ref assaultHits, ref soulBreakHits, ref windHits, ref flameHits, ref fireLifeCures);
                 var skillCasts = step.Event.SkillCasts.Where(value => value.ActorId == 1 && value.Slot == 0
@@ -413,6 +417,7 @@ namespace Zjcs.Presentation.Home
                         : battlecry ? cast.SkillEntityId == 12010
                         : judgmentThunder ? cast.SkillEntityId == 11970
                         : protectiveRunes ? cast.SkillEntityId == 12110
+                        : chaosRune ? cast.SkillEntityId == 11380
                         : skillId == 10048 ? cast.SkillEntityId == 11090
                         : skillId == 10049 ? cast.SkillEntityId == 11100
                         : skillId == 10051 ? cast.SkillEntityId == 11260
@@ -424,6 +429,12 @@ namespace Zjcs.Presentation.Home
                         "The acquired active skill selected a foreign entity: " + cast.SkillEntityId);
                     var damageEvents = step.Event.DamageEvents.Where(value => value.SourceId == 1
                         && value.SkillEntityId == (skillId == 10017 ? 10970 : cast.SkillEntityId)).ToArray();
+                    if (chaosRune)
+                    {
+                        VerifyAcquiredChaosRune(step.Event, cast, damageEvents, checkpoint, output, ref confusionApplications);
+                        hits += damageEvents.Length;
+                        continue;
+                    }
                     if (protectiveRunes)
                     {
                         VerifyAcquiredProtectiveRunes(checkpoint, output);
@@ -700,7 +711,7 @@ namespace Zjcs.Presentation.Home
             click(FlameFlowButton(value => value.name == "Btn" && value.GetComponentsInParent<Transform>()
                 .Any(parent => parent.name == "StartBtn")));
             bool captured = false, capturedOpening = false, capturedPassive = false, capturedFear = false;
-            bool capturedStarBlind = false;
+            bool capturedStarBlind = false, capturedConfusion = false;
             bool capturedTear = false;
             bool capturedTacticalAttack = false, capturedTacticalDefence = false;
             while (battle != null)
@@ -742,6 +753,11 @@ namespace Zjcs.Presentation.Home
                 {
                     yield return CaptureAcquiredActive(output, "passive-battle");
                     capturedPassive = true;
+                }
+                if (chaosRune && !capturedConfusion && confusionApplications > 0 && IsNativeSkillParticleVisible("playable24217"))
+                {
+                    yield return CaptureAcquiredActive(output, "confusion");
+                    capturedConfusion = true;
                 }
                 if (overloadProtection && !capturedPassive && IsNativeSkillParticleVisible("playable24240"))
                 {
@@ -881,6 +897,11 @@ namespace Zjcs.Presentation.Home
                             && particle.GetComponentsInParent<Transform>().Any(parent => parent.name.StartsWith("playable11960", StringComparison.Ordinal))))
                         { yield return null; continue; }
                     }
+                    else if (chaosRune)
+                    {
+                        if (!IsNativeSkillParticleVisible("playable11380") && !IsNativeSkillParticleVisible("playable_damage_11382"))
+                        { yield return null; continue; }
+                    }
                     else yield return new WaitForSecondsRealtime(hellfire ? .2f : crisisGuard || starShatteringSlash ? 1.45f
                         : shieldCharge ? 1.1f : .7f);
                     yield return CaptureAcquiredActive(output, "battle"); captured = true;
@@ -899,6 +920,8 @@ namespace Zjcs.Presentation.Home
             Require(!hellfire || hellfireCures >= 2, "The acquired hellfire did not heal on both subsequent turns.");
             Require(!soulPiercer || lifestealCures > 0, "The acquired soul piercer never restored actual HP.");
             Require(!dreadShadow || fearApplications > 0 && capturedFear, "The acquired fear was never applied and rendered.");
+            Require(!chaosRune || confusionApplications > 0 && confusionEnds > 0 && capturedConfusion,
+                "The acquired chaos rune never rendered and expired its original confusion.");
             Require(!starBurst || starBlindApplications > 0 && starBlindEnds > 0 && capturedStarBlind,
                 "The acquired star burst never applied, rendered and consumed its original blinding status.");
             Require(!doomTorrent || doomPushes > 0, "The acquired doom torrent never exercised its original outward knockback.");

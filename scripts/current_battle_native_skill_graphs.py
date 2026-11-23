@@ -12,7 +12,8 @@ from prepare_battle_status_orbit_assets import build
 from prepare_battle_scene_appearance_runtime import identity, meta, write_changed
 
 
-def build_current_skill_graphs(*, DEST, DATA, RECEIPT, GROUPS, family, cache_name, generator):
+def build_current_skill_graphs(*, DEST, DATA, RECEIPT, GROUPS, family, cache_name, generator,
+                               external_assets=None):
     source = OfficialSource()
     cache = ROOT / '.tools/source-packages/current' / source.version / cache_name
     legacy_path = ROOT / 'unity/Assets/Game/Resources/Combat/skill-native-graphs.json'
@@ -64,7 +65,7 @@ def build_current_skill_graphs(*, DEST, DATA, RECEIPT, GROUPS, family, cache_nam
     build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS={}, graph_roots=roots,
           **bindings, family=family, shader_prefix=family.removesuffix('s') + '_',
           generator=generator, native_manifest=source.version, native_cache=cache,
-          native_export_name='native-export',
+          native_export_name='native-export', external_assets=external_assets,
           limits=['Each owning skill separately verifies current rules, cultivation, persistence and rendered Windows gameplay.'])
 
     # Read the freshly converted component fields, including current pointer

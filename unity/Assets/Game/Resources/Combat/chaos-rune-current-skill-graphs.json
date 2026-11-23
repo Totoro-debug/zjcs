@@ -1,0 +1,67 @@
+{
+  "manifest": "903_156948",
+  "skills": [
+    {
+      "skill_entity_id": 11380,
+      "entity_resource": "Combat/ChaosRuneSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11380/11380",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/ChaosRuneSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11380/playable11380"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11381,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": true,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/ChaosRuneSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11380/11381"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 11382,
+      "entity_prefab": "11380/11382.prefab",
+      "entity_prefab_sha256": "92b049c145bb778474844c0fe9a558fd80fd443a805736d029682c1df3ecb75a",
+      "component_file_id": 114703437598541787,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/ChaosRuneSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11380/playable_damage_11382"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/ChaosRuneSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/ChaosRuneSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/ChaosRuneSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/ChaosRuneSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11380/11382"
+    }
+  ]
+}
