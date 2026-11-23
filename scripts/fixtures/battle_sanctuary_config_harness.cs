@@ -28,6 +28,12 @@ public static class BattleSanctuaryConfigHarness
             && component.ResultPercent == -100
             && component.IsCheckSkillTrigger,
             "24304 creator/applicator defence transfer configuration changed");
+        long custom = FightBattleStatusDamageReduceBeforeFinalRuntime.CalculateStatusDamage(
+            1000, new[] {
+                new FightPropertyValue { Id = formula.PropertyId("DamageByDamage"), Value = 3000 },
+                new FightPropertyValue { Id = formula.PropertyId("FixedDamageByDamage"), Value = 1200 }
+            }, formula.PropertyId("DamageByDamage"), formula.PropertyId("FixedDamageByDamage"));
+        Check(custom == -3001200, "official StatusDamage formula changed for 233/238: " + custom);
         var linked = catalog.CreateStatus(24305, 1, 2, 2, 10580, 10580, 4, 30, 8);
         Check(linked.DurationRound == 1 && linked.ActionType == 50 && !linked.CanDispersed,
             "24305 linked status lifetime or dispel rule changed");
