@@ -25,6 +25,7 @@ namespace Zjcs.Presentation.Home
                 || active == 10068 && player.Wardrobe.Profession == 8 && itemId == 10609;
             supported |= active == 10089 && player.Wardrobe.Profession == 8 && itemId == 10594;
             supported |= active == 10084 && player.Wardrobe.Profession == 4 && itemId == 10592;
+            supported |= active == 10032 && player.Wardrobe.Profession == 4 && itemId == 10593;
             supported |= active == 10028 && player.Wardrobe.Profession == 13 && (itemId == 10599 || itemId == 10503 || itemId == 10573);
             supported |= active == 10035 && player.Wardrobe.Profession == 13 && itemId == 10557;
             supported |= active == 10028 && player.Wardrobe.Profession == 17 && itemId == 10579;
@@ -67,6 +68,11 @@ namespace Zjcs.Presentation.Home
             ref int assaultHits, ref int soulBreakHits, ref int windHits, ref int flameHits,
             ref int fireLifeCures)
         {
+            if (itemId == 10593)
+            {
+                acquiredGuardian.Observe(step, checkpoint);
+                return;
+            }
             if (itemId == 10597)
             {
                 VerifyAcquiredFireLife(step, checkpoint, output, ref fireLifeCures);

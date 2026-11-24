@@ -243,7 +243,8 @@ namespace Zjcs.Presentation.Combat
                 nextScene = new OfficialBattleSceneView(resolvedModelCatalog, worldRoot,
                     modelKey, gridMapper, animationForEvent, orientUnit, resolvedHudCatalog, hudParent,
                     nextNativeModels, animationGroupResolver, nativeNpcFactory,
-                    nextSkillGraphPlayback?.Scope, restoreCheckpoint, request.PlayerAppearance);
+                    nextSkillGraphPlayback?.Scope, restoreCheckpoint, request.PlayerAppearance,
+                    request.PlayerAppearanceResolver);
                 nextHud.ControlClicked += OnHudControlClicked;
                 nextHud.SpeedCycled += OnSpeedCycled;
                 if (sessionOptions.ShowMainPanelDelay <= 0)

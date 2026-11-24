@@ -8,9 +8,17 @@ namespace Zjcs.Presentation.Combat
     public sealed partial class OfficialBattleSceneView
     {
         private readonly OfficialBattlePlayerAppearanceSource playerAppearance;
+        private readonly Func<FightBattleUnitState, OfficialBattlePlayerAppearanceSource> playerAppearanceResolver;
         private OfflineProfessionBattlePlayerResources playerResources;
 
-        private bool CanCreatePlayer(FightBattleUnitState state) => playerAppearance?.Matches(state) == true;
+        private OfficialBattlePlayerAppearanceSource ResolvePlayerAppearance(FightBattleUnitState state)
+        {
+            var source = playerAppearance?.Matches(state) == true ? playerAppearance
+                : playerAppearanceResolver?.Invoke(state);
+            return source?.Matches(state) == true ? source : null;
+        }
+
+        private bool CanCreatePlayer(FightBattleUnitState state) => ResolvePlayerAppearance(state) != null;
 
         public void BindPlayerClonePrefab(GameObject instance)
         {
@@ -22,12 +30,13 @@ namespace Zjcs.Presentation.Combat
 
         private UnitView TryCreatePlayer(FightBattleUnitState state)
         {
-            if (!CanCreatePlayer(state)) return null;
+            var appearance = ResolvePlayerAppearance(state);
+            if (appearance == null) return null;
             if (nativePlayableScope == null)
                 throw new InvalidOperationException("Original player views require the battle's native skill graph scope.");
             playerResources ??= new OfflineProfessionBattlePlayerResources();
             var model = new OfficialBattlePlayerNativeModelView(state, root, nativePlayableScope, playerResources,
-                playerAppearance.PlayerId, playerAppearance.ReadPlayer, playerAppearance.ItemType);
+                appearance.PlayerId, appearance.ReadPlayer, appearance.ItemType);
             var view = new UnitView { State = state, NativeModel = model };
             try
             {

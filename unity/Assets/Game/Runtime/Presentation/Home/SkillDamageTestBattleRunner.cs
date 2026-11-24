@@ -63,7 +63,7 @@ namespace Zjcs.Presentation.Home
                 scene.FightGridGroundComponent.OriginPos.Z);
             OfficialCombatAssetCatalog assets = OfficialCombatAssetCatalog.LoadDefault();
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
-            controller.Begin(new OfficialBattleRequest
+            var battleRequest = new OfficialBattleRequest
             {
                 Checkpoint = checkpoint,
                 WorldRoot = battleRoot,
@@ -86,7 +86,9 @@ namespace Zjcs.Presentation.Home
                 StatueProgress = host.Profile,
                 Options = OfficialMapBattleSessionOptionsBuilder.Create(stage, true, 3, 3, player.X, player.Y),
                 InitialStepDelay = 0f
-            });
+            };
+            SkillDamageTestValidation.ConfigureGuardianBattleRequest(battleRequest);
+            controller.Begin(battleRequest);
         }
 
         private void Update()

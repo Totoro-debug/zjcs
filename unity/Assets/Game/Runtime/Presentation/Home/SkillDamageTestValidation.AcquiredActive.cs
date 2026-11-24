@@ -86,6 +86,7 @@ namespace Zjcs.Presentation.Home
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
+            fourthPromotion |= HasGuardianCompanion(skillId);
             int profession = alienation || chaosRune || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
@@ -116,6 +117,7 @@ namespace Zjcs.Presentation.Home
                 ? Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType : 200;
             player.Wardrobe.Profession = profession;
             int passiveCompanion = LoadAcquiredPassiveCompanion(player, skillId, output);
+            BeginAcquiredGuardianValidation(passiveCompanion, output);
             bool overflowShield = passiveCompanion == 10601;
             if (passiveCompanion == 10609 || passiveCompanion == 10594 || passiveCompanion == 10543 || starBurst || spiralWindBlade || battlecry)
             {
@@ -532,19 +534,20 @@ namespace Zjcs.Presentation.Home
                         bool spirit = skillId == 10051;
                         bool guard = skillId == 10046;
                         bool encouragement = skillId == 10066;
+                        var statusOwner = AcquiredGuardianStatusOwner(checkpoint, actor, passiveCompanion);
                         int statusId = crisisGuard ? 24180 : spirit ? 24214 : guard ? 24170 : encouragement ? 24237 : 24030;
                         int skillEntityId = cast.SkillEntityId;
                         float statusDelay = crisisGuard ? 1.2f : spirit ? .25f : guard ? .44f : .2f;
                         var started = step.Event.StatusViewEvents.Where(value => value.Kind == FightBattleStatusViewEventKind.Start
-                            && value.OwnerId == 1 && value.Status.ClassId == statusId && value.Status.CreatorId == 1
+                            && value.OwnerId == statusOwner.Id && value.Status.ClassId == statusId && value.Status.CreatorId == 1
                             && (encouragement || Math.Abs(value.Delay - cast.Delay - statusDelay) < .0001f)).ToArray();
                         Require((started.Length == 1 || (crisisGuard || guard || encouragement) && started.Length == 0) && damageEvents.Length == 1
-                            && damageEvents[0].TargetId == 1 && damageEvents[0].HitEntityId == skillEntityId + 1
+                            && damageEvents[0].TargetId == statusOwner.Id && damageEvents[0].HitEntityId == skillEntityId + 1
                             && damageEvents[0].DamageEntityId == skillEntityId + 2 && damageEvents[0].Damage == 0,
                             "The acquired skill lost its original self-status or timing.");
                         var status = started.Length == 1
-                            ? actor.Statuses.Single(value => value.InstanceId == started[0].Status.InstanceId)
-                            : actor.Statuses.Single(value => value.ClassId == statusId && value.CreatorId == 1);
+                            ? statusOwner.Statuses.Single(value => value.InstanceId == started[0].Status.InstanceId)
+                            : statusOwner.Statuses.Single(value => value.ClassId == statusId && value.CreatorId == 1);
                         Require(status.ApplyingSkillItemId == skillId && status.RootSkillId == skillEntityId
                             && status.SourceSkillRank == cultivatedRank && status.SourceSkillLevel == 2
                             && status.DurationRound == (spirit ? 4 : guard || encouragement ? 2 : 3)
@@ -819,6 +822,11 @@ namespace Zjcs.Presentation.Home
                     yield return CaptureAcquiredActive(output, "passive-battle");
                     capturedPassive = true;
                 }
+                if (passiveCompanion == 10593 && !capturedPassive && acquiredGuardian.Ready(battle.Controller))
+                {
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    capturedPassive = true;
+                }
                 if (passiveCompanion == 10595 && !capturedPassive
                     && FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
                         && particle.GetComponentsInParent<Transform>().Any(parent =>
@@ -1012,6 +1020,7 @@ namespace Zjcs.Presentation.Home
                 && File.Exists(Path.Combine(output, "companion-fire-life-checkpoint.json"))
                 && File.Exists(Path.Combine(output, "companion-fire-life-status-events.json")),
                 "The cultivated fire life did not invoke its round-end cure, persist HP and render the native status event.");
+            if (passiveCompanion == 10593) acquiredGuardian.Complete(capturedPassive);
             Require(passiveCompanion != 10595 || windHits > 0 && capturedPassive,
                 "The cultivated wind orb never rendered and struck at the owner's turn end.");
             Require(passiveCompanion != 10543 || flameHits > 0 && capturedPassive,

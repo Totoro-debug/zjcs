@@ -12,6 +12,21 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -eq 10593) {
+        foreach ($file in @('companion-cultivated-save.json','companion-saint-guard-checkpoint.json',
+            'companion-saint-guard-shield.json','acquired-active-ui-passive-battle.png')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'The actual allied defence shield evidence is incomplete.' }
+        }
+        $source = Get-Content -LiteralPath (Join-Path $Run 'companion-cultivated-save.json') -Raw | ConvertFrom-Json
+        $receipt = Get-Content -LiteralPath (Join-Path $Run 'companion-saint-guard-shield.json') -Raw | ConvertFrom-Json
+        $message = '[Acquired passive combat] 10593 cultivated allied defence shield, player source and restore replay passed.'
+        if ($source.Player.Skills.Plans[$source.Player.Skills.SelectedPlan].PassiveSkills[0] -ne 10593 -or
+            $receipt.ally -le 1 -or $receipt.actual -ne $receipt.expected -or $receipt.actual -le $receipt.basis -or
+            -not $receipt.restored -or -not (Select-String -LiteralPath $runtimeLog -SimpleMatch $message)) {
+            throw 'The cultivated allied defence shield did not preserve its value, source or restore receipt.'
+        }
+        return
+    }
     if ($PassiveId -in @(10606,10607)) {
         if (-not (Select-String -LiteralPath $runtimeLog -SimpleMatch "[Acquired passive combat] $PassiveId cultivated") -or
             -not (Test-Path -LiteralPath (Join-Path $Run 'companion-cold-checkpoint.json'))) { throw 'The cultivated secret did not exercise its original cold path.' }

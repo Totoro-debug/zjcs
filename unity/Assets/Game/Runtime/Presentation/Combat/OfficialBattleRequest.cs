@@ -65,6 +65,8 @@ namespace Zjcs.Presentation.Combat
         public OfficialBattleSessionOptions Options;
         public Func<FightBattleUnitState, IOfficialBattleNativeModel> NativeNpcFactory;
         public OfficialBattlePlayerAppearanceSource PlayerAppearance;
+        // Optional per-unit profiles for additional adventurers in the same battle.
+        public Func<FightBattleUnitState, OfficialBattlePlayerAppearanceSource> PlayerAppearanceResolver;
         // Optional override for sound leaves inside native FightSkill graphs.
         // With an official environment and presentation camera, the common module
         // otherwise acquires the original Wwise scene listener and shared engine.

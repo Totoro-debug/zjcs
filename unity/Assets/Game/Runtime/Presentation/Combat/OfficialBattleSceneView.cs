@@ -122,7 +122,8 @@ namespace Zjcs.Presentation.Combat
             Func<FightBattleUnitState, string> animationGroupResolver = null,
             Func<FightBattleUnitState, IOfficialBattleNativeModel> nativeNpcFactory = null,
             Zjcs.Offline.BattleNativePlayables.OfflineBattleNativePlayableScope nativePlayableScope = null,
-            bool restoringNativeUnits = false, OfficialBattlePlayerAppearanceSource playerAppearance = null)
+            bool restoringNativeUnits = false, OfficialBattlePlayerAppearanceSource playerAppearance = null,
+            Func<FightBattleUnitState, OfficialBattlePlayerAppearanceSource> playerAppearanceResolver = null)
         {
             this.catalog = catalog != null ? catalog : OfficialBattleModelCatalog.LoadDefault();
             this.nativeModelLibrary = nativeModelLibrary;
@@ -143,6 +144,7 @@ namespace Zjcs.Presentation.Combat
             this.nativePlayableScope = nativePlayableScope;
             this.restoringNativeUnits = restoringNativeUnits;
             this.playerAppearance = playerAppearance;
+            this.playerAppearanceResolver = playerAppearanceResolver;
             this.orientUnit = orientUnit ?? ((_, __) => { });
             this.hudCatalog = hudCatalog;
             damageVisibility = OfficialBattleDamageVisibilityCatalog.Load();
