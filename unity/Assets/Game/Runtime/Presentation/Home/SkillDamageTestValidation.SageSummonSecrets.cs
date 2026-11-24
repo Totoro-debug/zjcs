@@ -14,7 +14,7 @@ namespace Zjcs.Presentation.Home
         {
             private readonly int item;
             private readonly string output;
-            private readonly Dictionary<int, long> enemyAttack = new Dictionary<int, long>();
+            private bool lifespanPrepared;
             private int rank, observations, cures;
             private bool restored, captured;
 
@@ -61,23 +61,18 @@ namespace Zjcs.Presentation.Home
                 }
                 else
                 {
-                    // Let the actual emperor perform both attacks, then make an
-                    // already taunted training enemy lethal. Only test-process
-                    // properties change; the normal hit/death/heal path runs.
-                    if (summons.Length > 0 && rock.RegularHits > 0 && rock.OpeningHits > 0)
+                    // The emperor's permanent lifetime and both attacks have their
+                    // own flow. This isolated fixture expires the same live actor
+                    // after both attacks, exercising the normal removal/cure path
+                    // without killing its owner first with a training enemy.
+                    if (!lifespanPrepared && summons.Length > 0 && rock.RegularHits > 0 && rock.OpeningHits > 0)
                     {
                         var summon = summons.Single(unit => unit.MonsterTemplateId == 3196);
-                        foreach (var enemy in checkpoint.Units.Where(unit => unit.Side != actor.Side
-                            && unit.Statuses.Any(status => status.ActionType == 58 && status.CreatorId == summon.Id)))
-                        {
-                            if (!enemyAttack.ContainsKey(enemy.Id))
-                                enemyAttack.Add(enemy.Id, enemy.Properties.Single(value => value.Id == 1).Value);
-                            SetAcquiredBattleProperty(enemy, "Attack", checked(summon.MaxHp * 8));
-                        }
+                        var lifetime = summon.Statuses.Single(status => status.ClassId == 12142);
+                        lifetime.DurationRound = lifetime.CurDurationRound = 3;
+                        lifetime.StartRound = actor.SkillState.Round;
+                        lifespanPrepared = true;
                     }
-                    if (summons.Length == 0)
-                        foreach (var pair in enemyAttack)
-                            SetAcquiredBattleProperty(checkpoint.Units.Single(unit => unit.Id == pair.Key), "Attack", pair.Value);
                     foreach (var cure in step.DamageEvents.Where(hit => hit.SkillEntityId == 12050))
                     {
                         var source = actor.Properties.ToDictionary(value => value.Id, value => value.Value);
@@ -123,7 +118,9 @@ namespace Zjcs.Presentation.Home
             internal void Complete()
             {
                 Require(observations > 0 && restored && captured && (item != 10600 || cures > 0),
-                    "The cultivated summon secret did not settle, render and restore in the actual battle.");
+                    "The cultivated summon secret did not settle, render and restore in the actual battle: item="
+                        + item + ", observations=" + observations + ", cures=" + cures
+                        + ", restored=" + restored + ", captured=" + captured + ".");
                 WriteReceipt();
                 Debug.Log("[Acquired passive combat] " + item
                     + " cultivated summon secret, actual properties, native view and restore replay passed.");
