@@ -39,7 +39,7 @@ public static class BattleSanctuaryConfigHarness
         Check(linked.DurationRound == 1 && linked.ActionType == 50 && !linked.CanDispersed,
             "24305 linked status lifetime or dispel rule changed");
         return "Sanctuary configuration passed: 24304 reduction/custom/defence fields and 24305 linked status verified."
-            + " Execution order and rounding remain unverified because the official client component is empty.";
+            + " The client component has no server scheduling body; execution uses the separately confirmed offline rule.";
     }
 
     private static void CheckFormula(FightDamageFormula formula)

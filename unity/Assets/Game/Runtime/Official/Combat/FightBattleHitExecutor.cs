@@ -135,7 +135,7 @@ namespace Zjcs.Combat.Official
                 ProcessTransient(result.Type, ref zeroDamage, ref zeroAbsolute, false, onTransient, onTransientDamage);
                 result.Settlement = settlement.Apply(damageId, sourceEntity, targetEntity, 0);
             }
-            else if (hit.DamageType == 8)
+            else if (hit.DamageType == 8 || skill?.DamageSharingTransfer == true)
             {
                 long direct = custom.HasValue ? custom.Value : 0;
                 direct = direct == Int64.MinValue ? Int64.MinValue + 1 : -Math.Abs(direct);

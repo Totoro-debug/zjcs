@@ -1025,6 +1025,7 @@ namespace Zjcs.Combat.Official
                         && skill.SkillType != 3 && hit.DamageType >= 1 && hit.DamageType <= 7)
                         elementConfrontationResolved = statusCatalog.TryResolveElementConfrontation(
                             target, skill.ElementType, out elementConfrontation);
+                    var damageShares = new List<FightBattleStatusSkillInvocation>();
                     FightBattleHitResult resolved;
                     if (chaosInvasionWipe)
                     {
@@ -1046,7 +1047,9 @@ namespace Zjcs.Combat.Official
                         {
                             resolved = collisionHit
                                 ? hitExecutor.ApplyKnockbackCollision(random, damageId, actor, target, skill, hit,
-                                    CurrentAttack(actor), checkpoint.StageType)
+                                    CurrentAttack(actor), checkpoint.StageType,
+                                    damage => FightBattleDamageSharingRuntime.Collect(actor, target, skill,
+                                        damage, units, formula, damageShares))
                                 : hitExecutor.Apply(random, damageId, actor, target,
                                 skill, hit, checkpoint.StageType, checkpoint.IsPvp, elementConfrontation,
                                 new List<int>(), allowDeadSource, skillDamageScale
@@ -1056,8 +1059,11 @@ namespace Zjcs.Combat.Official
                                         skillLogic.OnDoHitTransient(target, hit, type);
                                         if (skillLogic.OnConfiguredTransient(target, hit, type)) RebuildBattleProperties();
                                     },
-                                skillLogic == null ? (Action<FightBattleTransientDamageContext>)null
-                                    : damage => skillLogic.OnTransientDamage(target, hit, damage),
+                                damage => {
+                                    skillLogic?.OnTransientDamage(target, hit, damage);
+                                    FightBattleDamageSharingRuntime.Collect(actor, target, skill,
+                                        damage, units, formula, damageShares);
+                                },
                                 cure => ApplyCureInterceptors(actor, target, skill, cure));
                         }
                         finally
@@ -1269,6 +1275,8 @@ namespace Zjcs.Combat.Official
                     // Death listeners and immediate revival settle before a summoned unit is
                     // considered removed. Property rebuilds alone are not removal boundaries.
                     ApplyMissingHitSummonRemovalTriggers(target);
+                    ExecuteDamageSharing(damageShares, casts, damageEvents, movements, hitDelay,
+                        ref lastDelay, ref statusTriggerDuration, ref statusTriggerActionDuration);
                     CleanupGridItems();
                     ApplyChildSkill(actor, target, skill, hit, casts, damageEvents, movements, ref lastDelay, hitDelay);
                 }
@@ -2200,6 +2208,7 @@ namespace Zjcs.Combat.Official
                 skill.CustomCure = invocation.CustomCure;
                 skill.ShieldConversionCost = invocation.ShieldConversionCost;
                 skill.ShieldConversionReturn = invocation.ShieldConversionReturn;
+                skill.DamageSharingTransfer = invocation.DamageSharingTransfer;
                 if (invocation.HitOrigin.HasValue)
                     targetPosition = targetPosition.ProbeAt(invocation.HitOrigin.Value);
                 if (invocation.SourceRootSkillId > 0) skill.RootEntityId = invocation.SourceRootSkillId;

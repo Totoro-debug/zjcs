@@ -13,7 +13,8 @@ $sources = @(Get-FightCombatSources | ForEach-Object {
 $inputs = Join-Path $root 'unity/Assets/Official/Combat'
 Add-Type -Path ($sources +
     (Join-Path $PSScriptRoot 'fixtures/skill_rule_pack_harness.cs') +
-    (Join-Path $PSScriptRoot 'fixtures/battle_sanctuary_config_harness.cs'))
+    (Join-Path $PSScriptRoot 'fixtures/battle_sanctuary_config_harness.cs') +
+    (Join-Path $PSScriptRoot 'fixtures/battle_sanctuary_sharing_harness.cs'))
 $sp = Get-Content (Join-Path $inputs 'skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $bp = Get-Content (Join-Path $inputs 'battle-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $rp = Get-Content (Join-Path $inputs 'rules-source-manifest.json') -Raw | ConvertFrom-Json
@@ -26,3 +27,5 @@ $source = Get-Content ($pack -replace '\.json$', '-source-manifest.json') -Raw |
 $rules = [IO.File]::ReadAllText((Join-Path $inputs 'rules.json'))
 $formula = $catalog.CreateDamageFormula($rules, $rp.output_sha256, $rp.manifest)
 [BattleSanctuaryConfigHarness]::Run($catalog, $formula)
+$items = [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load($rules, $rp.output_sha256, $rp.manifest)
+[BattleSanctuarySharingHarness]::Run($catalog, $formula, $items)

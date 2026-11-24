@@ -8,7 +8,8 @@ namespace Zjcs.Combat.Official
         // fatal-prevention and damage-event settlement without applying stat modifiers.
         internal FightBattleHitResult ApplyKnockbackCollision(FightRandomStream random, int damageId,
             FightBattleUnitState actor, FightBattleUnitState target, FightBattleSkillDefinition skill,
-            FightBattleHitDefinition hit, long sourceAttack, int stageType)
+            FightBattleHitDefinition hit, long sourceAttack, int stageType,
+            Action<FightBattleTransientDamageContext> beforeShield = null)
         {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
             if (target == null) throw new ArgumentNullException(nameof(target));
@@ -23,10 +24,13 @@ namespace Zjcs.Combat.Official
             var source = actor.EntityState();
             var destination = target.EntityState();
             var result = new FightBattleHitResult { Type = new FightDamageTypeData() };
+            var context = new FightBattleTransientDamageContext(result.Type, damage, damage, false);
+            beforeShield?.Invoke(context);
+            damage = context.Damage;
             long remaining = FightBattleShieldRuntime.AbsorbDamage(random, target, hit, damage,
                 out result.ShieldDamage, result.TriggeredStatusSkills, skill,
                 result.TriggeredStatusSkillInvocations, result.BrokenShields);
-            result.Formula = new FightDamageFormulaResult { Damage = remaining, AbsoluteDamage = damage };
+            result.Formula = new FightDamageFormulaResult { Damage = remaining, AbsoluteDamage = context.AbsoluteDamage };
             result.Settlement = SettleDamage(damageId, source, destination, target, skill,
                 remaining, stageType, result);
             target.Hp = destination.Hp;

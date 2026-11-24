@@ -276,6 +276,10 @@ namespace Zjcs.Combat.Official
         public bool HasCustomCure;
         public bool ShieldConversionCost;
         public bool ShieldConversionReturn;
+        public bool DamageSharingTransfer;
+        // One hit is atomic; read guardian properties after receiver responses settle.
+        internal FightBattleStatusState DamageSharingStatus;
+        internal long DamageSharingBaseDamage;
         public long CustomCure;
         // Runtime-only hit creation snapshot; ordinary status invocations use
         // their existing live unit position references.
@@ -1484,6 +1488,7 @@ namespace Zjcs.Combat.Official
         public bool HasCustomCure;
         public bool ShieldConversionCost;
         public bool ShieldConversionReturn;
+        public bool DamageSharingTransfer;
         public long CustomCure;
         public List<FightPropertyValue> Properties = new List<FightPropertyValue>();
         public List<FightBattleHitDefinition> Hits = new List<FightBattleHitDefinition>();
