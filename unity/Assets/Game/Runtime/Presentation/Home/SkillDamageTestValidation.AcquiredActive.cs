@@ -55,7 +55,10 @@ namespace Zjcs.Presentation.Home
             bool waterBlade = skillId == 10082;
             int skillSkinId = int.Parse(Environment.GetEnvironmentVariable("ZJCS_SKILLS_ACQUIRED_SKIN") ?? "0");
             bool frostSong = waterBlade && skillSkinId == 39521;
-            Require(skillSkinId == 0 || frostSong, "Unsupported original acquired-skill skin diagnostic.");
+            bool flowingFire = skillId == 10100;
+            bool fireSkin = flowingFire && skillSkinId == 39523;
+            int flowingFireExtras = 0;
+            Require(skillSkinId == 0 || frostSong || fireSkin, "Unsupported original acquired-skill skin diagnostic.");
             bool lightSwordArray = skillId == 10083;
             bool diversionHarassment = skillId == 10084;
             bool heavenlyLightBlades = skillId == 10085;
@@ -83,13 +86,13 @@ namespace Zjcs.Presentation.Home
             bool alienation = HasAlienationCompanion(skillId);
             bool destroyer = starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder || protectiveRunes || destroyerCompanion > 0;
             bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation || chaosRune || heavenlyRain || sageDarkBlast || psychicWard;
-            fourthPromotion |= fireLeap;
+            fourthPromotion |= fireLeap || flowingFire;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry || protectiveRunes || psychicWard;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
             fourthPromotion |= HasGuardianCompanion(skillId);
-            int profession = fireLeap ? 8 : alienation || chaosRune || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = fireLeap || flowingFire ? 8 : alienation || chaosRune || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -138,7 +141,7 @@ namespace Zjcs.Presentation.Home
                 else stack.Count += count;
             }
             Supply(definition.PieceItemId, mergeCount);
-            if (frostSong) Supply(skillSkinId, 1);
+            if (frostSong || fireSkin) Supply(skillSkinId, 1);
             foreach (var cost in rankCost.Items) Supply(cost.ItemId, cost.Count);
             foreach (var cost in rules.SlotLevelCosts.Single(value => value.Level == 2).Items) Supply(cost.ItemId, cost.Count);
             File.WriteAllText(slots.GetProgressPath(slot), JsonUtility.ToJson(save, true));
@@ -220,7 +223,7 @@ namespace Zjcs.Presentation.Home
             click(FlameFlowButton(value => value.name == "SkillListItem_" + skillId));
             yield return new WaitForSecondsRealtime(.5f);
             yield return CaptureAcquiredActive(output, "acquired-detail");
-            if (frostSong) yield return SelectAcquiredSkillSkin(progression, skillSkinId, output);
+            if (frostSong || fireSkin) yield return SelectAcquiredSkillSkin(progression, skillSkinId, output);
             click(FlameFlowButton(value => value.name == "EquipBtn"));
             yield return new WaitForSecondsRealtime(.4f);
             var group = FindObjectsOfType<RectTransform>().Single(value =>
@@ -264,7 +267,7 @@ namespace Zjcs.Presentation.Home
                 && disk.Player.Skills.ActiveSlotLevels[0] == 2,
                 "Original acquisition, equipment or cultivation changed during disk reload.");
             yield return CaptureAcquiredActive(output, "reloaded");
-            if (frostSong) Require(progression.EquippedSkillSkinId(skillId) == skillSkinId
+            if (frostSong || fireSkin) Require(progression.EquippedSkillSkinId(skillId) == skillSkinId
                 && disk.Player.Wardrobe.SkillSkins.Any(value => value.SkillId == skillId && value.SkillSkinId == skillSkinId),
                 "The original skill skin changed after disk reload.");
             Debug.Log("[Acquired active UI] " + skillId + " fragment acquisition, original slot input, level/rank cultivation and disk reload passed.");
@@ -328,6 +331,9 @@ namespace Zjcs.Presentation.Home
                 "Production battle assembly lost the actual saved skill/profession/cultivation.");
             if (frostSong) Require(active.UseItemId == 10184 && active.SkillSkinId == skillSkinId && active.EntityId == 13580,
                 "The production battle assembler lost the saved original frost-song variant.");
+            if (flowingFire) Require(active.EntityId == (fireSkin ? 13590 : 12090)
+                && active.UseItemId == (fireSkin ? 10185 : 10100) && active.SkillSkinId == skillSkinId,
+                "The production battle assembler lost the saved flowing-fire appearance.");
             if (skillId == 10049) yield return MoveChallengeIntoRange(battle.Controller);
             if (skillId == 10066)
             {
@@ -424,6 +430,7 @@ namespace Zjcs.Presentation.Home
                         : diversionHarassment ? cast.SkillEntityId == 11890
                         : heavenlyLightBlades ? cast.SkillEntityId == 11900
                         : vortexSurge ? cast.SkillEntityId == 12080
+                        : flowingFire ? cast.SkillEntityId == (fireSkin ? 13590 : 12090)
                         : fireLeap ? cast.SkillEntityId == 12100
                         : hellfire ? cast.SkillEntityId == 11520
                         : swordWindDance ? cast.SkillEntityId == 11910
@@ -450,6 +457,12 @@ namespace Zjcs.Presentation.Home
                         "The acquired active skill selected a foreign entity: " + cast.SkillEntityId);
                     var damageEvents = step.Event.DamageEvents.Where(value => value.SourceId == 1
                         && value.SkillEntityId == (skillId == 10017 ? 10970 : cast.SkillEntityId)).ToArray();
+                    if (flowingFire)
+                    {
+                        flowingFireExtras += VerifyAcquiredFlowingFire(step.Event, checkpoint, output, fireSkin);
+                        hits += step.Event.DamageEvents.Count(value => value.SourceId == actor.Id && value.SkillItemId == skillId);
+                        continue;
+                    }
                     if (fireLeap)
                     {
                         VerifyAcquiredFireLeap(step.Event, cast, damageEvents, checkpoint, output, hits == 0);
@@ -911,6 +924,11 @@ namespace Zjcs.Presentation.Home
                                 parent.name.StartsWith("playable10801", StringComparison.Ordinal)));
                         if (!explosionVisible) { yield return null; continue; }
                     }
+                    else if (flowingFire)
+                    {
+                        if (flowingFireExtras == 0 || !IsNativeSkillParticleVisible(fireSkin ? "playable13590" : "playable12090"))
+                        { yield return null; continue; }
+                    }
                     else if (fireLeap)
                     {
                         if (!IsNativeSkillParticleVisible("playable12100")) { yield return null; continue; }
@@ -985,13 +1003,13 @@ namespace Zjcs.Presentation.Home
                         if (!IsNativeSkillParticleVisible("playable12021")) { yield return null; continue; }
                     }
                     else yield return new WaitForSecondsRealtime(hellfire ? .2f : crisisGuard || starShatteringSlash ? 1.45f
-                        : shieldCharge ? 1.1f : .7f);
+                        : shieldCharge ? 1.1f : flowingFire ? .1f : .7f);
                     yield return CaptureAcquiredActive(output, "battle"); captured = true;
-                    if (heavenlyLightBlades || frostSong || swordWindDance || soulPiercer || doomTorrent || spiralWindBlade || judgmentThunder || fireLeap)
-                        for (int frame = 1; frame <= 4; frame++)
+                    if (heavenlyLightBlades || frostSong || swordWindDance || soulPiercer || doomTorrent || spiralWindBlade || judgmentThunder || fireLeap || flowingFire)
+                        for (int frame = 1; frame <= (flowingFire ? 8 : 4); frame++)
                         {
-                            yield return new WaitForSecondsRealtime(.18f);
-                            yield return CaptureAcquiredActive(output, (frostSong ? "skin-hit-" : swordWindDance ? "wind-hit-" : soulPiercer ? "soul-hit-" : fireLeap ? "jump-hit-" : "blade-") + frame);
+                            yield return new WaitForSecondsRealtime(flowingFire ? .22f : .18f);
+                            yield return CaptureAcquiredActive(output, (frostSong ? "skin-hit-" : swordWindDance ? "wind-hit-" : soulPiercer ? "soul-hit-" : fireLeap ? "jump-hit-" : flowingFire ? "fire-hit-" : "blade-") + frame);
                         }
                 }
                 yield return null;
@@ -1001,6 +1019,7 @@ namespace Zjcs.Presentation.Home
                     FightBattleCheckpointSerializer.Save(checkpoint));
             Require(checkpoint.Finished && casts > 0 && hits > 0 && captured,
                 "The acquired/cultivated active skill did not finish its damage battle.");
+            Require(!flowingFire || flowingFireExtras > 0, "The cultivated flowing fire never performed an extra cast.");
             Require(!overflowShield || overflowShields > 0 && capturedPassive,
                 "The cultivated overflow shield never settled and rendered its original protective effect.");
             Require(!psychicWard || psychicWardEnds > 0,
@@ -1079,7 +1098,7 @@ namespace Zjcs.Presentation.Home
             Require(JsonUtility.ToJson(disk.Player.Skills) == expectedSkills && inventory.SequenceEqual(disk.Player.Inventory
                 .OrderBy(value => value.ItemId).SelectMany(value => new[] { (long)value.ItemId, value.Count })),
                 "Damage test changed the persisted cultivation, equipped plan or material counts.");
-            if (frostSong) Require(disk.Player.Wardrobe.SkillSkins.Any(value => value.SkillId == skillId && value.SkillSkinId == skillSkinId),
+            if (frostSong || fireSkin) Require(disk.Player.Wardrobe.SkillSkins.Any(value => value.SkillId == skillId && value.SkillSkinId == skillSkinId),
                 "The original battle/result flow changed the saved skill appearance.");
             yield return CaptureAcquiredActive(output, "return");
             Debug.Log("[Acquired active UI] " + skillId + " saved rank=" + cultivatedRank + " level=2, original "

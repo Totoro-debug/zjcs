@@ -14,6 +14,7 @@ def main():
     directory = ROOT / 'unity/Assets/Game/Resources/Combat'
     migrated_skill_catalogs = (
         'conqueror-current-skill-graphs',
+        'flowing-fire-skill-skin-current-skill-graphs',
         'conqueror-passive-current-skill-graphs',
         'hurricane-grief-current-skill-graphs',
         'fire-life-current-skill-graphs',

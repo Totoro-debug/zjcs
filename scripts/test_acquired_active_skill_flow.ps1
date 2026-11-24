@@ -2,11 +2,11 @@ param(
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10101,10102,10103,10104)][int]$SkillId = 10026,
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10100,10101,10102,10103,10104)][int]$SkillId = 10026,
     [Parameter(ParameterSetName='Player')]
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10100,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
     [string]$PassiveSave,
-    [ValidateSet(0,39521)][int]$SkillSkinId = 0
+    [ValidateSet(0,39521,39523)][int]$SkillSkinId = 0
 )
 function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
@@ -185,7 +185,7 @@ if ([IO.Path]::GetDirectoryName($workspacePath) -ne (Get-ZjcsValidationRoot).Tri
 }
 $marker = Get-Content -LiteralPath (Join-Path $workspacePath '.zjcs-validation.json') -Raw | ConvertFrom-Json
 if ($marker.format -ne 1 -or $marker.repository -ne $repository) { throw 'Wrong validation repository.' }
-if ($SkillSkinId -gt 0 -and ($SkillId -ne 10082 -or $AdditionalSkillIds.Count -gt 0 -or $PassiveSave)) { throw 'Use the original water-blade skin with its base active skill.' }
+if ($SkillSkinId -gt 0 -and ((($SkillId -ne 10082 -or $SkillSkinId -ne 39521) -and ($SkillId -ne 10100 -or $SkillSkinId -ne 39523)) -or $AdditionalSkillIds.Count -gt 0 -or $PassiveSave)) { throw 'Use an original skill skin with its corresponding base active skill.' }
 if ($PassiveSave) {
     $PassiveSave = (Get-Item -LiteralPath $PassiveSave).FullName
     if (-not $PassiveSave.StartsWith($workspacePath + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
@@ -253,7 +253,7 @@ try {
         foreach ($phase in @('skin-selection','skin-equipped')) {
             if (-not (Test-Path -LiteralPath (Join-Path $run "acquired-active-ui-$phase.png"))) { throw 'The original skin selection flow was not captured.' }
         }
-        if (-not (Select-String -LiteralPath $log -SimpleMatch '[Acquired active skin] 39521 selected, equipped and persisted through original input.')) { throw 'The original skill skin did not persist.' }
+        if (-not (Select-String -LiteralPath $log -SimpleMatch "[Acquired active skin] $SkillSkinId selected, equipped and persisted through original input.")) { throw 'The original skill skin did not persist.' }
     }
     if ($PassiveSave) {
         Assert-AcquiredPassiveFlowEvidence $run $passiveId
@@ -293,6 +293,19 @@ try {
         }
         if (-not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-active-ui-checkpoint.json'))) {
             throw "The completed skill-page battle checkpoint is absent: $run"
+        }
+        if ($SkillId -eq 10100) {
+            $receipt = Get-Content -LiteralPath (Join-Path $skillRun 'acquired-flowing-fire-receipt.json') -Raw | ConvertFrom-Json
+            if ($receipt.extras -lt 1 -or $receipt.extras -gt 2 -or $receipt.rank -ne 4 -or $receipt.level -ne 2 -or
+                $receipt.skin -ne ($SkillSkinId -eq 39523) -or -not $receipt.restored -or
+                -not (Select-String -LiteralPath $log -SimpleMatch '[Acquired active combat] 10100 cultivated sequential extras, original fire impacts and restore replay passed.')) {
+                throw 'The cultivated flowing fire lost its extra-cast chain or restore receipt.'
+            }
+            foreach ($frame in 1..8) {
+                if (-not (Test-Path -LiteralPath (Join-Path $skillRun "acquired-active-ui-fire-hit-$frame.png"))) {
+                    throw 'The original flowing-fire sequence was not captured.'
+                }
+            }
         }
         if ($SkillId -eq 10101) {
             foreach ($file in @('acquired-fire-leap-checkpoint.json','acquired-fire-leap-receipt.json',
@@ -337,7 +350,7 @@ try {
         if ($SkillId -eq 10096 -and -not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-heavenly-rain-checkpoint.json'))) {
             throw 'The original cultivated healing checkpoint was not persisted.'
         }
-        if ($SkillId -in @(10002,10032,10039,10047,10056,10059,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10101,10102,10103,10104)) {
+        if ($SkillId -in @(10002,10032,10039,10047,10056,10059,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10100,10101,10102,10103,10104)) {
             # The Player asserts the original effects for each equipped cast.
             Write-Output "Acquired active skill-page flow passed: $skillRun"
             continue

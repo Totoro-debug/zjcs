@@ -396,7 +396,8 @@ namespace Zjcs.Combat.Official
                 int skillCastStart = casts.Count, skillDamageStart = damageEvents.Count;
                 int skillMovementStart = movements.Count;
                 skillState.RunSkill(skill.Slot);
-                bool parentFirst = skill.ComboSkills.Count > 0 || skill.EntityId == 10910;
+                bool parentFirst = skill.ComboSkills.Count > 0 || skill.EntityId == 10910
+                    || HasSequentialExtraSkills(skill);
                 if (parentFirst) casts.Add(cast);
                 ExecuteSkill(actor, skill, targets, casts, damageEvents, movements,
                     out float castLastDelay, out float skillStartDuration,
@@ -1296,7 +1297,8 @@ namespace Zjcs.Combat.Official
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay,
                 float.PositiveInfinity, completedSourceMoves, targetPosition);
             if (!inheritedFeatherFalloff) FightDamageFalloff.EndCast(units, skill);
-            ApplyExtraSkills(actor, skill, casts, damageEvents, movements, ref lastDelay);
+            if (!HasSequentialExtraSkills(skill))
+                ApplyExtraSkills(actor, skill, casts, damageEvents, movements, ref lastDelay);
             if (statusCatalog != null)
             {
                 movementStartContext.StatusStartTime = Math.Max(0f, ResolveActionDuration(skill, lastDelay));
@@ -1320,6 +1322,8 @@ namespace Zjcs.Combat.Official
                             actionEndActionDuration);
                 }
             }
+            ApplySequentialExtraSkills(actor, skill, targets, casts, damageEvents, movements,
+                lastDelay, ref statusTriggerDuration, ref statusTriggerActionDuration);
             ApplySkillCombo(actor, skill, targets, casts, damageEvents, movements, lastDelay,
                 ref statusTriggerDuration, ref statusTriggerActionDuration);
             ApplySkillReplay(actor, skill, casts, damageEvents, movements, lastDelay,

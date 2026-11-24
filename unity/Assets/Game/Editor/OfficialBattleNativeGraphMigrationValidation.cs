@@ -29,6 +29,7 @@ namespace Zjcs.Editor
         public static void ValidateConqueror()
         {
             ValidateFamily("Combat/conqueror-current-skill-graphs", "ConquerorSkillGraphs");
+            ValidateFamily("Combat/flowing-fire-skill-skin-current-skill-graphs", "FlowingFireSkillSkinGraphs");
             OfficialSparseShaderVariants.ValidateConquerorSkills();
         }
 

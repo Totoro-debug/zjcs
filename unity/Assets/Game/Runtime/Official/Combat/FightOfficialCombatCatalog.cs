@@ -700,8 +700,6 @@ namespace Zjcs.Combat.Official
             ReadSkillTriggerPolicy(skill, result);
             RestoreSkillLogicDefinition(result);
             AddSourceMoves(skill, result.SourceMoves);
-            Dictionary<string, object> extSkill = Component(components, "FightSkillExtSkillComponent");
-            if (extSkill != null) AddExtraSkills(extSkill, result.ExtraSkills);
             Dictionary<string, object> replay = Component(components, "FightSkillReplayComponent");
             if (replay != null) AddSkillReplay(replay, result);
             Dictionary<string, object> replayCfg = Component(skill, "Replay");
@@ -752,6 +750,7 @@ namespace Zjcs.Combat.Official
         {
             FightSkillJumpPolicy.RestoreTargetRange(skill);
             RestoreSkillSequenceDefinition(skill);
+            RestoreExtraSkillDefinition(skill);
             if (skill != null && entities.TryGetValue(skill.EntityId, out var fixedComponents))
                 skill.IsFixedProp = Bool(Component(fixedComponents, "FightSkillComponent"), "IsFixedProp");
             if (skill == null || skill.LogicDefinitionResolved
@@ -779,6 +778,16 @@ namespace Zjcs.Combat.Official
                 default: throw new InvalidOperationException("Unknown official fixed skill direction: " + entityId);
             }
             return true;
+        }
+
+        private void RestoreExtraSkillDefinition(FightBattleSkillDefinition skill)
+        {
+            if (skill == null || skill.ExtraSkills != null && skill.ExtraSkills.Count > 0
+                || !entities.TryGetValue(skill.EntityId, out var components)) return;
+            var extra = Component(components, "FightSkillExtSkillComponent");
+            if (extra == null) return;
+            if (skill.ExtraSkills == null) skill.ExtraSkills = new List<FightBattleSkillExtra>();
+            AddExtraSkills(extra, skill.ExtraSkills);
         }
 
         private void RestoreSkillSequenceDefinition(FightBattleSkillDefinition skill)
