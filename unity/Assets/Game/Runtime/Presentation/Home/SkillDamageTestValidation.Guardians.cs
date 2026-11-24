@@ -142,9 +142,14 @@ namespace Zjcs.Presentation.Home
                 long expected = (long)Math.Max(0.0, basis
                     * (1.0 + formula.ReadProperty(source, formula.PropertyId("StatusShieldAddPercent")))
                     + formula.ReadProperty(source, formula.PropertyId("StatusFixedShieldAdd")));
+                File.WriteAllText(Path.Combine(output, "companion-saint-guard-observed.json"),
+                    FightBattleCheckpointSerializer.Save(checkpoint));
                 Require(shield.ShieldValue == expected && expected > basis && shield.OwnerId == AllyId
                     && shield.CreatorCharacterType == 1 && step.DamageEvents.Any(hit => hit.SkillItemId == 10032
-                        && hit.TargetId == AllyId), "The actual allied defence shield lost its bonus, target or player origin.");
+                        && hit.TargetId == AllyId), "The actual allied defence shield lost its bonus, target or player origin: actual="
+                    + shield.ShieldValue + ", expected=" + expected + ", basis=" + basis + ", creator="
+                    + shield.CreatorId + "/" + shield.CreatorCharacterType + ", targets="
+                    + string.Join(",", step.DamageEvents.Select(hit => hit.SkillItemId + ":" + hit.TargetId)));
                 string saved = FightBattleCheckpointSerializer.Save(checkpoint);
                 var restored = FightBattleCheckpointSerializer.Load(saved);
                 var replay = assets.RestoreBattle(restored).Step(restored.Sequence, restored.Counter);
