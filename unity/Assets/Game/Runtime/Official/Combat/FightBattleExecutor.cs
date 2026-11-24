@@ -3061,6 +3061,7 @@ namespace Zjcs.Combat.Official
                     if (amount > 0) InvokeShieldConversion(owner, status,
                         conversion.ReturnSkillId, amount, true);
                 }
+                SynchronizeTurn(owner);
             }
             checkpoint.Outcome.PlayerHp = RequiredUnit(1).Hp;
         }

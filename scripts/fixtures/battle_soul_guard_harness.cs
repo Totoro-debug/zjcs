@@ -153,6 +153,13 @@ public static class BattleSoulGuardHarness
         int cures = events.Sum(step => step.DamageEvents.Count(hit => hit.SkillEntityId == 10163));
         Check(cures == (outcome == 0 && remaining > 0 ? 1 : 0), "terminal return emitted an unexpected cure");
         string settled = FightBattleCheckpointSerializer.Save(state);
+        var settledCopy = FightBattleCheckpointSerializer.Load(settled);
+        var settledExecutor = FightBattleExecutor.Restore(settledCopy, formula,
+            new FightDamageSettlement(), catalog, items);
+        var settledReplay = settledExecutor.Step(settledCopy.Sequence, settledCopy.Counter);
+        Check(owner.Turn.Hp == owner.Hp && settledReplay.Replayed
+            && FightBattleCheckpointSerializer.Save(settledCopy) == settled,
+            "restoring the settled victory changed its HP, turn queue or return receipt");
         var replay = executor.Step(state.Sequence, state.Counter);
         Check(replay.Replayed && FightBattleCheckpointSerializer.Save(state) == settled,
             "replaying the terminal receipt settled the return twice");
