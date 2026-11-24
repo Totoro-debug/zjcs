@@ -28,7 +28,7 @@ namespace Zjcs.Presentation.Home
                 Require(cast.SkillEntityId == 12200 && doll.IsVoodooDoll && doll.MonsterId == 4600
                     && doll.MasterId == actor.Id && doll.CharacterType == target.CharacterType
                     && doll.Side == target.Side && doll.Level == skill.Level
-                    && Math.Abs(spawn.Delay - cast.Delay - .35f) < .0001f
+                    && Math.Abs(spawn.Delay - .35f) < .0001f
                     && Math.Abs(spawn.X - actor.X) + Math.Abs(spawn.Y - actor.Y) == 2
                     && spawn.InitialHp == spawn.InitialMaxHp && spawn.InitialHp > 0
                     && lifetime.CreatorId == actor.Id && lifetime.DurationRound == 3
