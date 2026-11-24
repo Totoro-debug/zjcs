@@ -13,18 +13,21 @@ from prepare_unity_map13_native_scene import decode_mips, native_texture
 from prepare_battle_live_monsters import sha, encoded
 
 
-def build(*, destination=None, resource_path="Combat/NativeMonsters/catalog", receipt_path=None):
+def build(*, destination=None, resource_path="Combat/NativeMonsters/catalog", receipt_path=None,
+          reuse_verified_shader=False, presentation_resource_root=None):
     work = validation_directory()
     source = work / "live-monsters"
     proof_path = work / "live-monsters-source-manifest.json"
     proof = json.loads(proof_path.read_bytes())
-    if proof["manifest"] != "884_156692" or proof["generator_sha256"] != sha((ROOT / "scripts/prepare_battle_live_monsters.py").read_bytes()):
-        raise ValueError("Verified monster generator or source version differs")
+    if proof["generator_sha256"] != sha((ROOT / "scripts/prepare_battle_live_monsters.py").read_bytes()):
+        raise ValueError("Verified monster generator differs")
     for file, record in proof["outputs"].items():
         if sha((source / file).read_bytes()) != record["sha256"]:
             raise ValueError("Verified monster input changed: " + file)
     catalog = json.loads((source / "catalog.json").read_bytes())
     apk = Apk.current()
+    if proof["manifest"] != apk.version or catalog["manifest"] != apk.version:
+        raise ValueError("Verified monster catalog and source versions differ")
     destination = Path(destination) if destination is not None else ROOT / "unity/Assets/Official/Combat/NativeMonsters"
     receipt_path = Path(receipt_path) if receipt_path is not None else ROOT / "assets/reference/battle-animation/live-monsters-source-manifest.json"
     files, outputs, textures = {}, {}, {}
@@ -78,35 +81,58 @@ def build(*, destination=None, resource_path="Combat/NativeMonsters/catalog", re
                 installed.write_bytes(raw)
                 outputs[installed.relative_to(ROOT).as_posix()] = sha(raw)
             files[file] = 9100000 if file.endswith(".controller") else 7400000
-    cache = ROOT / ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders"
-    shader_proof = cache / "source-manifest.json"
-    shader_rows = json.loads(shader_proof.read_bytes())["shaders"]
-    shader, = [row for row in shader_rows if row["source"]["object_sha256"] == "4aa96ea56babfdc788805e559c0c1d94e1d64b7ed36719d12e61f6a08bb850ae"]
-    raw = (cache / shader["path"]).read_bytes()
-    if sha(raw) != shader["sha256"]: raise ValueError("Original Windows monster shader differs")
-    write("OriginalSkeletonEffect.shader", raw)
     shader_bindings, additional_shaders = [], []
-    required_shaders = {material["shader"] for model in catalog["models"] for material in model["materials"]}
-    for name in sorted(required_shaders - {shader["source"]["name"]}):
-        original, = [row for row in shader_rows if row["source"]["name"] == name]
-        raw = (cache / original["path"]).read_bytes()
-        if sha(raw) != original["sha256"]:
-            raise ValueError("Original Windows monster material shader differs: " + name)
-        relative = write("shaders/" + original["sha256"] + ".shader", raw)
-        shader_bindings.append(dict(Name=name, Asset=dict(fileID=4800000, guid=guid(destination / relative), type=3)))
-        additional_shaders.append(original)
+    required_shaders = {(material["shader"], proof["sources"][material["shaderSource"]]["payload_sha256"])
+        for model in catalog["models"] for material in model["materials"]}
+    if reuse_verified_shader:
+        shader_proof = ROOT / "assets/reference/battle-animation/live-monsters-source-manifest.json"
+        installed = json.loads(shader_proof.read_bytes())
+        original = installed["shader"]["source"]
+        if required_shaders != {(original["source"]["name"], original["source"]["object_sha256"])}:
+            raise ValueError("Selected monster materials require different native shader programs")
+        shader_asset = ROOT / "unity/Assets/Official/Combat/NativeMonsters/OriginalSkeletonEffect.shader"
+        shader_meta = Path(str(shader_asset) + ".meta")
+        for path in (shader_asset, shader_meta):
+            if sha(path.read_bytes()) != installed["outputs"][path.relative_to(ROOT).as_posix()]:
+                raise ValueError("Verified shared monster shader differs: " + str(path))
+        shader = dict(source=original["source"], path=shader_asset.relative_to(ROOT).as_posix(),
+                      sha256=sha(shader_asset.read_bytes()), meta_sha256=sha(shader_meta.read_bytes()))
+    else:
+        cache = ROOT / ".tools/source-packages/current" / apk.version / "native-conversion/all-assets/windows-shaders"
+        shader_proof = cache / "source-manifest.json"
+        shader_rows = json.loads(shader_proof.read_bytes())["shaders"]
+        shader, = [row for row in shader_rows if row["source"]["name"] == "Universal Render Pipeline/Spine/SkeletonEffect-2D"]
+        raw = (cache / shader["path"]).read_bytes()
+        if sha(raw) != shader["sha256"]:
+            raise ValueError("Original Windows monster shader differs")
+        shader_asset = destination / write("OriginalSkeletonEffect.shader", raw)
+        for name, expected in sorted(required_shaders):
+            original, = [row for row in shader_rows if row["source"]["name"] == name and row["source"]["object_sha256"] == expected]
+            if original == shader:
+                continue
+            raw = (cache / original["path"]).read_bytes()
+            if sha(raw) != original["sha256"]:
+                raise ValueError("Original Windows monster material shader differs: " + name)
+            relative = write("shaders/" + original["sha256"] + ".shader", raw)
+            shader_bindings.append(dict(Name=name, Asset=dict(fileID=4800000, guid=guid(destination / relative), type=3)))
+            additional_shaders.append(original)
     inventory = write("inventory.json", encoded(catalog))
     script = ROOT / "unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterAssets.cs"
     if not Path(str(script) + ".meta").exists(): meta(script)
     target = destination / "Resources" / (resource_path + ".asset")
     target.parent.mkdir(parents=True, exist_ok=True)
-    asset(target, "Original full-binary battle monsters", script, dict(
+    payload = dict(
         inventory=dict(fileID=4900000, guid=guid(destination / inventory), type=3),
-        shader=dict(fileID=4800000, guid=guid(destination / "OriginalSkeletonEffect.shader"), type=3),
+        shader=dict(fileID=4800000, guid=guid(shader_asset), type=3),
         shaderBindings=shader_bindings,
-        bindings=[dict(File=file, Asset=dict(fileID=kind, guid=guid(destination / file), type=3 if kind == 4900000 else 2)) for file, kind in sorted(files.items())]))
+        bindings=[dict(File=file, Asset=dict(fileID=kind, guid=guid(destination / file), type=3 if kind == 4900000 else 2)) for file, kind in sorted(files.items())])
+    if presentation_resource_root is not None:
+        payload["presentationResourceRoot"] = presentation_resource_root
+    asset(target, "Original full-binary battle monsters", script, payload)
     for path in (target, Path(str(target) + ".meta")): outputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
-    for folder in sorted({parent for path in destination.rglob("*") if path.is_file() for parent in path.parents if parent.is_relative_to(destination)}):
+    folders = {parent for name in outputs for parent in (ROOT / name).parents
+               if parent.is_relative_to(destination)}
+    for folder in sorted(folders):
         sidecar = Path(str(folder) + ".meta")
         if not sidecar.exists(): meta(folder, folder=True)
         outputs[sidecar.relative_to(ROOT).as_posix()] = sha(sidecar.read_bytes())

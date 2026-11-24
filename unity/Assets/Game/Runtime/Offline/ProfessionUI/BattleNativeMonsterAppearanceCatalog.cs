@@ -22,9 +22,10 @@ namespace Zjcs.Offline.ProfessionUI
         }
         [SerializeField] private Binding[] bindings;
 
-        public static Binding Find(int entityId)
+        public static Binding Find(int entityId, BattleNativeMonsterAssets assets = null)
         {
-            var catalog = Resources.Load<BattleNativeMonsterAppearanceCatalog>("Combat/NativeMonsterAppearance/catalog");
+            string scoped = assets?.PresentationResource("appearance");
+            var catalog = Resources.Load<BattleNativeMonsterAppearanceCatalog>(scoped ?? "Combat/NativeMonsterAppearance/catalog");
             return catalog ? catalog.bindings.SingleOrDefault(value => value.EntityId == entityId) : null;
         }
     }

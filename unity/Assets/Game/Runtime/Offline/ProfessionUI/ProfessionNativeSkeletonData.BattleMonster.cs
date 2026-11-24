@@ -7,7 +7,8 @@ namespace Zjcs.Offline.ProfessionUI
 {
     public sealed partial class ProfessionNativeSkeletonData
     {
-        public static ProfessionNativeSkeletonData LoadBattleMonster(byte[] data, int entityId)
+        public static ProfessionNativeSkeletonData LoadBattleMonster(byte[] data, int entityId,
+            string expectedManifest = "884_156692")
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
             if (entityId <= 0) throw new ArgumentOutOfRangeException(nameof(entityId));
@@ -18,7 +19,7 @@ namespace Zjcs.Offline.ProfessionUI
             string manifest = ReadString(reader);
             int originalEntity = reader.ReadInt32();
             float scale = reader.ReadSingle();
-            if (manifest != "884_156692" || originalEntity != entityId || !float.IsFinite(scale) || scale <= 0)
+            if (manifest != expectedManifest || originalEntity != entityId || !float.IsFinite(scale) || scale <= 0)
                 throw new InvalidDataException("Original battle monster identity or scale differs.");
             string skeleton = ReadBlock(reader, out string skeletonHash);
             string atlas = ReadBlock(reader, out string atlasHash);

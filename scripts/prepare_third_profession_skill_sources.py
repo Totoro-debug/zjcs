@@ -453,10 +453,16 @@ def compact_receipt(result):
 
 def main():
     parser = argparse.ArgumentParser(__doc__)
-    parser.add_argument('--item', type=int, choices=SKILLS, required=True)
+    parser.add_argument('--item', type=int, required=True)
     parser.add_argument('--write', action='store_true')
     args = parser.parse_args()
-    result = build(args.item)
+    spec_path = ROOT / f'scripts/profession_skill_sources/third/{args.item}.json'
+    spec = SKILLS.get(args.item)
+    if spec is None:
+        if not spec_path.is_file():
+            raise FileNotFoundError(f'Third-profession source spec is missing: {spec_path}')
+        spec = json.loads(spec_path.read_bytes())
+    result = build(args.item, spec)
     if args.item != 10017:
         result = compact_receipt(result)
     target = ROOT / f'assets/reference/battle-rules/third-profession-{args.item}-source-manifest.json'

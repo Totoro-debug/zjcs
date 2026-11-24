@@ -14,15 +14,16 @@ from prepare_battle_scene_appearance_runtime import identity, meta, write_change
 from UnityPy.classes import PPtr
 
 
-def build(work, monsters=False):
+def build(work, monsters=False, *, inventory=None, managed_directory=None):
     work = work.resolve()
     if work.parent != ROOT / 'output/validation' or not (work / '.zjcs-validation.json').is_file():
         raise ValueError('Use an owned attachment validation workspace')
-    inventory = ROOT / ('unity/Assets/Official/Combat/NativeMonsters/inventory.json' if monsters
-        else 'unity/Assets/Official/Combat/NativePartners/catalog.json')
+    if inventory is None:
+        inventory = ROOT / ('unity/Assets/Official/Combat/NativeMonsters/inventory.json' if monsters
+            else 'unity/Assets/Official/Combat/NativePartners/catalog.json')
     selected = json.loads(inventory.read_bytes())
-    apk, schemas = Apk.current(), CurrentSchemas()
-    if apk.version != selected['manifest'] or apk.version != '884_156692':
+    apk, schemas = Apk.current(), CurrentSchemas(managed_directory)
+    if apk.version != selected['manifest']:
         raise ValueError('Review the original partner attachment source version')
     objects, results = [], []
 

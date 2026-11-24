@@ -11,12 +11,15 @@ namespace Zjcs.Offline.ProfessionUI
     {
         public PartnerNativeBattleAttachments Attachments { get; private set; }
 
-        public void BindOriginalAttachments(int entityId)
+        public void BindOriginalAttachments(BattleNativeMonsterAssets assets, int entityId)
         {
             if (Attachments != null) throw new InvalidOperationException("Original monster attachments are already bound.");
-            var asset = Resources.Load<TextAsset>("Combat/NativeMonsters/attachments");
+            string scopedResource = assets.PresentationResource("attachments");
+            var asset = Resources.Load<TextAsset>(scopedResource ?? "Combat/NativeMonsters/attachments");
             if (!asset) throw new FileNotFoundException("Original monster attachment graph is not packaged.");
             var catalog = Obj(OfficialEquipmentJson.Parse(asset.text));
+            if (scopedResource != null && !Equals(catalog["manifest"], assets.SourceManifest))
+                throw new InvalidDataException("Original skill actor attachment source differs: " + entityId);
             var row = Arr(catalog["partners"]).Select(Obj).Single(value => Int(value, "entityId") == entityId);
             var nodes = Arr(row["nodes"]).Select(Obj).ToArray();
             var originals = new Dictionary<string, Transform>(StringComparer.Ordinal)
@@ -31,7 +34,7 @@ namespace Zjcs.Offline.ProfessionUI
             Attachments = new PartnerNativeBattleAttachments(EntityRoot.parent, EntityRoot, row, originals,
                 new[] { new PartnerNativeBattleAttachments.RendererBinding(transform, state, settings, material) },
                 () => Advance(0), bindBoneFollowers: true);
-            BindOriginalMeshCopies(BattleNativeMonsterAssets.Load().Find(entityId), originals);
+            BindOriginalMeshCopies(assets.Find(entityId), originals);
             BindOriginalBodyEffects(entityId, originals);
             EntityRoot.name = name;
         }

@@ -12,6 +12,7 @@ from current_component_schemas import CurrentSchemas
 from official_apk import Apk, ROOT
 from official_battle_spine_component import read_component
 from official_manifest import read_asset_manifest
+from prepare_battle_live_monsters import entity_prefab_family
 from prepare_unity_map13_native_scene import decode_mips, native_texture
 from prepare_unity_profession_character_resources import guid, meta
 from prepare_unity_profession_reward_sprites import Dumper, fields, source_header
@@ -22,18 +23,21 @@ def sha(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
-def build(entity_ids):
+def build(entity_ids, *, destination=ROOT / 'unity/Assets/Official/Combat/NativeMonsterAppearance',
+          native_root=ROOT / 'unity/Assets/Official/Combat/NativeMonsters',
+          model_receipt=ROOT / 'assets/reference/battle-animation/live-monsters-source-manifest.json',
+          catalog_path='Resources/Combat/NativeMonsterAppearance/catalog.asset', managed_directory=None):
     work = validation_directory()
-    destination = ROOT / 'unity/Assets/Official/Combat/NativeMonsterAppearance'
-    native_root = ROOT / 'unity/Assets/Official/Combat/NativeMonsters'
-    installed = json.loads((ROOT / 'assets/reference/battle-animation/live-monsters-source-manifest.json').read_bytes())
+    installed = json.loads(model_receipt.read_bytes())
     models = {row['entityId']: row for row in json.loads((native_root / 'inventory.json').read_bytes())['models']}
     template_path = work / 'monster-texture-template.asset'
     template = template_path.read_text('utf-8')
-    shader_path = native_root / 'OriginalSkeletonEffect.shader'
+    shared_shader = installed['shader']['source']
+    shader_path = ROOT / shared_shader['path'] if shared_shader['path'].startswith('unity/') else native_root / 'OriginalSkeletonEffect.shader'
+    assert sha(shader_path.read_bytes()) == shared_shader['sha256']
     sources, outputs, inputs, rows, bindings, textures = {}, {}, {}, [], [], {}
-    apk, schemas = Apk.current(), CurrentSchemas()
-    assert apk.version == installed['manifest'] == '884_156692'
+    apk, schemas = Apk.current(), CurrentSchemas(managed_directory)
+    assert apk.version == installed['manifest']
 
     def record(obj):
         key = obj.assets_file.name + ':' + str(obj.path_id)
@@ -120,7 +124,7 @@ def build(entity_ids):
     input_file(validation)
     for name in ('OfficialBattleAnimatorPlaybackAcceptance.cs', 'OfficialBattleAnimatorPlaybackAcceptance.PetMaterials.cs'):
         input_file(ROOT / 'unity/Assets/Game/Editor/Combat/AnimatorPlayback' / name)
-    original_client = ROOT / '.tools/source-packages/current/884_156692/official-code/client-source'
+    original_client = ROOT / '.tools/source-packages/current' / apk.version / 'official-code/client-source'
     for name in ('AppearanceSystem/AppearanceRendererLite.cs', 'AppearanceSystem.Runtime/LevelOfResolution.cs',
                  'MeshMaterialProperty.cs', 'Spine.Extension/CustomRenderExistingMesh.cs'):
         path = original_client / name
@@ -136,10 +140,8 @@ def build(entity_ids):
         for entity_id in sorted(set(entity_ids)):
             model = models[entity_id]
             components = {}
-            families = [family for family in ('fightmonster', 'fightpet')
-                if f'defaultpackage_assets_prefabs_ecentity_fight_{family}_{entity_id}.bundle' in apk.index]
-            assert len(families) == 1, ('Review original actor prefab family.', entity_id)
-            for obj in apk.objects(f'prefabs_ecentity_fight_{families[0]}_{entity_id}'):
+            family = entity_prefab_family(apk, entity_id)
+            for obj in apk.objects(f'prefabs_ecentity_fight_{family}_{entity_id}'):
                 if obj.type.name == 'MonoBehaviour':
                     name = obj.read(check_read=False).m_Script.read().m_ClassName
                     components.setdefault(name, []).append(obj)
@@ -313,8 +315,9 @@ def build(entity_ids):
             rows.append(dict(entityId=entity_id, appearance=appearance, material_property=prop, renderer_path=renderer_path,
                 loader=loader, atlas=atlas, materials=original_materials, binding=binding))
             print(f'{entity_id}: original placeholder materials, atlas, Low texture loader and root property bound', flush=True)
-        scriptable('Resources/Combat/NativeMonsterAppearance/catalog.asset', 'Original native monster appearance bindings', catalog_script, dict(bindings=bindings))
-        for folder in sorted({parent for path in destination.rglob('*') if path.is_file() for parent in path.parents if parent.is_relative_to(destination)}):
+        scriptable(catalog_path, 'Original native monster appearance bindings', catalog_script, dict(bindings=bindings))
+        folders = {parent for key in outputs for parent in (ROOT / key).parents if parent.is_relative_to(destination)}
+        for folder in sorted(folders):
             sidecar = folder.with_name(folder.name + '.meta')
             if not sidecar.exists():
                 meta(folder, folder=True)

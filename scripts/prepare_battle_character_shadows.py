@@ -25,18 +25,26 @@ def sha(raw):
 
 
 def main(destination=DEST, data=DATA, receipt=RECEIPT, role_catalog=None,
-         catalog_source=None, resource_root='Combat/CharacterShadows', generator=None):
+         catalog_source=None, resource_root='Combat/CharacterShadows', generator=None,
+         conversion_cache=None):
     DEST, DATA, RECEIPT = destination, data, receipt
+    export, export_receipt = EXPORT, EXPORT_RECEIPT
     work = Path(os.environ['ZJCS_VALIDATION_DIR']).resolve()
     if work.parent != (ROOT / 'output/validation').resolve() or not (work / '.zjcs-validation.json').is_file():
         raise ValueError('An owned validation workspace is required.')
-    proof = json.loads(EXPORT_RECEIPT.read_bytes())
+    if conversion_cache is not None:
+        export_receipt = conversion_cache / 'native-export-source-manifest.json'
+    proof = json.loads(export_receipt.read_bytes())
+    if conversion_cache is not None:
+        if not proof['completed'] or proof['input_manifest_sha256'] != sha((conversion_cache / 'source-manifest.json').read_bytes()):
+            raise ValueError('Original shadow native conversion source differs.')
+        export = conversion_cache / proof['export_directory'] / 'ExportedProject/Assets'
     verified = {row['path']: row['sha256'] for row in proof['outputs']}
     inputs, outputs, converted, originals = {}, set(), [], []
 
     def read(path):
         raw = path.read_bytes()
-        if sha(raw) != verified[path.relative_to(EXPORT.parents[1]).as_posix()]:
+        if sha(raw) != verified[path.relative_to(export.parents[1]).as_posix()]:
             raise ValueError('Original native export changed: ' + str(path))
         inputs[str(path)] = identity(path)
         return raw
@@ -58,9 +66,9 @@ def main(destination=DEST, data=DATA, receipt=RECEIPT, role_catalog=None,
         return guid
 
     apk = Apk.current()
-    if apk.version != '884_156692' or proof['manifest'] != apk.version:
+    if proof['manifest'] != apk.version or (conversion_cache is None and apk.version != '884_156692'):
         raise ValueError('Review the selected original shadow source version.')
-    texture_root = EXPORT.parents[2] / 'all-assets/windows-textures'
+    texture_root = export.parents[2] / 'all-assets/windows-textures'
     texture_receipt = texture_root / 'source-manifest.json'
     texture_proof = json.loads(texture_receipt.read_bytes())
     if texture_proof['manifest'] != apk.version or not texture_proof['completed']:
@@ -74,7 +82,7 @@ def main(destination=DEST, data=DATA, receipt=RECEIPT, role_catalog=None,
         # Both known original flat Sprite export locations are checked before
         # treating an unresolved reference as a conversion failure.
         candidates = [path for directory in ('Image', 'Sprite')
-            for path in (EXPORT / directory).glob('*shadow*.asset.meta')
+            for path in (export / directory).glob('*shadow*.asset.meta')
             if GUID.search(read(path).decode('utf-8-sig'))[1] == old_guid]
         if len(candidates) != 1:
             raise ValueError(f'Resolve the original shadow Sprite GUID {old_guid}: {candidates}')
@@ -82,7 +90,7 @@ def main(destination=DEST, data=DATA, receipt=RECEIPT, role_catalog=None,
         text = read(source).decode('utf-8-sig')
         texture_guid = re.search(r'texture: \{fileID: 2800000, guid: ([a-f0-9]{32}), type: 3\}', text)[1]
         textures = [path for directory in ('Image', 'Texture2D')
-            for path in (EXPORT / directory).glob('*shadow*.png.meta')
+            for path in (export / directory).glob('*shadow*.png.meta')
             if GUID.search(read(path).decode('utf-8-sig'))[1] == texture_guid]
         if len(textures) != 1:
             raise ValueError('Resolve the original shadow texture GUID: ' + texture_guid)
@@ -150,7 +158,7 @@ def main(destination=DEST, data=DATA, receipt=RECEIPT, role_catalog=None,
         if not shadow_paths:
             continue
         kind = 'FightCharacter' if role['prefab'] in ('3100', '3102', '3991') else 'FightMonster'
-        source = EXPORT / role['sourcePrefab'] if 'sourcePrefab' in role else EXPORT / 'Prefabs/EcEntity/Fight' / kind / (role['prefab'] + '.prefab')
+        source = export / role['sourcePrefab'] if 'sourcePrefab' in role else export / 'Prefabs/EcEntity/Fight' / kind / (role['prefab'] + '.prefab')
         raw = read(source).decode('utf-8-sig')
         docs = documents(source)
         gos = {key: data['GameObject'] for key, data in docs.items() if 'GameObject' in data}
@@ -239,7 +247,7 @@ def main(destination=DEST, data=DATA, receipt=RECEIPT, role_catalog=None,
     outputs.update((DATA, Path(str(DATA) + '.meta')))
     receipt = dict(manifest=apk.version, generator=identity(generator or Path(__file__)),
         shadow_graph_adapter=identity(Path(__file__)),
-        original_export=identity(EXPORT_RECEIPT), visibility_catalog=identity(source_catalog),
+        original_export=identity(export_receipt), visibility_catalog=identity(source_catalog),
         texture_conversion=identity(texture_receipt), native_inputs=list(inputs.values()), originals=originals,
         converted=converted, follower=identity(follower_script), follower_meta=identity(Path(str(follower_script) + '.meta')),
         bone_follower=identity(bone_script), bone_follower_meta=identity(Path(str(bone_script) + '.meta')),

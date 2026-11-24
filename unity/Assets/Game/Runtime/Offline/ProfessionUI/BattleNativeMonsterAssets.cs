@@ -10,14 +10,20 @@ namespace Zjcs.Offline.ProfessionUI
     public sealed class BattleNativeMonsterAssets : ScriptableObject
     {
         public const string ResourcePath = "Combat/NativeMonsters/catalog";
+        private const string SkillActorFolder = "Combat/NativeMonsters/SkillActors";
         [Serializable] public sealed class Binding { public string File; public Object Asset; }
         [Serializable] public sealed class ShaderBinding { public string Name; public Shader Asset; }
         [SerializeField] private TextAsset inventory;
         [SerializeField] private Shader shader;
         [SerializeField] private Binding[] bindings = Array.Empty<Binding>();
         [SerializeField] private ShaderBinding[] shaderBindings = Array.Empty<ShaderBinding>();
+        [SerializeField] private string presentationResourceRoot;
         private Dictionary<string, Object> files;
         private Dictionary<int, Dictionary<string, object>> models;
+        private string manifest;
+        public string SourceManifest { get { Initialize(); return manifest; } }
+        public string PresentationResource(string name) => string.IsNullOrEmpty(presentationResourceRoot)
+            ? null : presentationResourceRoot + "/" + name;
         public Shader Shader => shader ? shader : throw new InvalidDataException("Original monster shader is unbound.");
         public Shader ResolveShader(string name)
         {
@@ -29,6 +35,19 @@ namespace Zjcs.Offline.ProfessionUI
         public IEnumerable<int> EntityIds { get { Initialize(); return models.Keys; } }
         public static BattleNativeMonsterAssets Load() => Resources.Load<BattleNativeMonsterAssets>(ResourcePath)
             ?? throw new InvalidDataException("Original native monster assets are unbound.");
+        public static BattleNativeMonsterAssets Locate(int entityId)
+        {
+            var common = Resources.Load<BattleNativeMonsterAssets>(ResourcePath);
+            if (common && common.Find(entityId) != null) return common;
+            BattleNativeMonsterAssets match = null;
+            foreach (var candidate in Resources.LoadAll<BattleNativeMonsterAssets>(SkillActorFolder))
+            {
+                if (candidate.Find(entityId) == null) continue;
+                if (match) throw new InvalidDataException("Duplicate original skill actor binding: " + entityId);
+                match = candidate;
+            }
+            return match;
+        }
         public Dictionary<string, object> Find(int entityId)
         { Initialize(); return models.TryGetValue(entityId, out var row) ? row : null; }
         public T Resolve<T>(string file) where T : Object
@@ -42,7 +61,8 @@ namespace Zjcs.Offline.ProfessionUI
             if (files != null) return;
             if (!inventory || !shader) throw new InvalidDataException("Original monster catalog is incomplete.");
             var source = (Dictionary<string, object>)OfficialEquipmentJson.Parse(inventory.text);
-            if (!Equals(source["manifest"], "884_156692")) throw new InvalidDataException("Original monster version differs.");
+            string nextManifest = source["manifest"] as string;
+            if (string.IsNullOrWhiteSpace(nextManifest)) throw new InvalidDataException("Original monster source identity is missing.");
             var nextFiles = new Dictionary<string, Object>(StringComparer.Ordinal);
             foreach (var binding in bindings)
             {
@@ -58,6 +78,7 @@ namespace Zjcs.Offline.ProfessionUI
                 if (id <= 0) throw new InvalidDataException("Invalid original monster identity.");
                 nextModels.Add(id, row);
             }
+            manifest = nextManifest;
             files = nextFiles; models = nextModels;
         }
     }

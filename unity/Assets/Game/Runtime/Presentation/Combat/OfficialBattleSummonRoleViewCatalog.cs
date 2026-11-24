@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Zjcs.Offline.ProfessionUI;
 
 namespace Zjcs.Presentation.Combat
 {
@@ -18,21 +19,27 @@ namespace Zjcs.Presentation.Combat
         }
         private static Dictionary<int, Role> roles;
 
-        internal static Role FindRole(int entityId)
+        internal static Role FindRole(int entityId, BattleNativeMonsterAssets assets = null)
         {
-            if (roles == null)
-            {
-                var asset = Resources.Load<TextAsset>("Combat/SummonRoleViews/role-views");
-                var views = asset ? JsonUtility.FromJson<Views>(asset.text) : null;
-                if (views?.schema != 2 || views.manifest != "884_156692" || views.roles == null)
-                    throw new InvalidOperationException("Original summon role view bindings are missing.");
-                roles = views.roles.ToDictionary(value => value.entityId);
-            }
-            return roles.TryGetValue(entityId, out var role) ? role : null;
+            string scoped = assets?.PresentationResource("role-views");
+            var selected = scoped != null ? Read(scoped, assets.SourceManifest)
+                : roles ?? (roles = Read("Combat/SummonRoleViews/role-views", "884_156692"));
+            return selected.TryGetValue(entityId, out var role) ? role : null;
         }
-        internal static OfficialBattleCharacterGenerationPlayback.Binding FindGeneration(int entityId)
+
+        private static Dictionary<int, Role> Read(string resource, string expectedManifest)
         {
-            var role = FindRole(entityId);
+            var asset = Resources.Load<TextAsset>(resource);
+            var views = asset ? JsonUtility.FromJson<Views>(asset.text) : null;
+            if (views?.schema != 2 || views.manifest != expectedManifest || views.roles == null)
+                throw new InvalidOperationException("Original summon role view bindings are missing: " + resource);
+            return views.roles.ToDictionary(value => value.entityId);
+        }
+
+        internal static OfficialBattleCharacterGenerationPlayback.Binding FindGeneration(int entityId,
+            BattleNativeMonsterAssets assets = null)
+        {
+            var role = FindRole(entityId, assets);
             if (role == null) return null;
             return new OfficialBattleCharacterGenerationPlayback.Binding
             {
@@ -40,9 +47,10 @@ namespace Zjcs.Presentation.Combat
                 NeedsDelay = role.mGeneratePlayableNeedDelay
             };
         }
-        internal static OfficialBattleCharacterDeathCatalog.Binding FindDeath(int entityId)
+        internal static OfficialBattleCharacterDeathCatalog.Binding FindDeath(int entityId,
+            BattleNativeMonsterAssets assets = null)
         {
-            var role = FindRole(entityId);
+            var role = FindRole(entityId, assets);
             return role == null ? null : new OfficialBattleCharacterDeathCatalog.Binding
             {
                 Normal = Load(role.mDiePlayable), OnStart = Load(role.mDieOnStartPlayable), TryOnStart = role.tryOnStart

@@ -41,32 +41,31 @@ def verify_monster_motion(original, state, converted, native, native_names):
     verify_partner_motion(original, state, converted, native, native_names)
 
 
-def package(entity, scale, skeleton, regions):
+def package(entity, scale, skeleton, regions, source_version="884_156692"):
     def block(raw):
         compressed = gzip.compress(raw, mtime=0)
         return struct.pack("<I", len(raw)) + hashlib.sha256(raw).digest() + struct.pack("<I", len(compressed)) + compressed
-    manifest = b"884_156692"
+    manifest = source_version.encode("ascii")
     return (b"ZJCSMNST" + struct.pack("<II", 1, len(manifest)) + manifest
             + struct.pack("<if", entity, scale) + block(encoded(skeleton)) + block(encoded(regions)))
 
 
 def entity_prefab_family(apk, entity):
-    families = [family for family in ("fightmonster", "fightpet")
+    families = [family for family in ("fightmonster", "fightpet", "fightother")
         if f"defaultpackage_assets_prefabs_ecentity_fight_{family}_{entity}.bundle" in apk.index]
     if len(families) != 1:
         raise ValueError("Bind an unambiguous original summon prefab family: " + str(entity))
     return families[0]
 
 
-def build(roles, pet_roles=(), rt_roles=()):
+def build(roles, pet_roles=(), rt_roles=(), *, conversion_cache=None):
     work = validation_directory()
     if not (work / ".zjcs-validation.json").is_file():
         raise ValueError("An owned monster validation workspace is required")
     apk = Apk.current()
-    if apk.version != "884_156692":
+    if conversion_cache is None and apk.version != "884_156692":
         raise ValueError("Review the selected monster source version")
     from UnityPy.classes.PPtr import PPtr
-    schemas = CurrentSchemas()
     Reader, _ = reader_type()
     sources, outputs, records = {}, {}, []
     destination = work / "live-monsters"
@@ -74,8 +73,17 @@ def build(roles, pet_roles=(), rt_roles=()):
     table = apk.source.manifest_bytes("DefaultPackage", apk.archive)
     locations = read_asset_manifest(table)
     by_guid = {row["guid"]: row for row in locations if row["guid"]}
-    cache = ROOT / ".tools/source-packages/current" / apk.version / "native-conversion"
-    conversion_path = cache / "native-export-all-source-manifest.json"
+    cache_root = ROOT / ".tools/source-packages/current" / apk.version
+    if conversion_cache is None:
+        cache = cache_root / "native-conversion"
+        conversion_path = cache / "native-export-all-source-manifest.json"
+        schemas = CurrentSchemas()
+    else:
+        cache = Path(conversion_cache).resolve()
+        if not cache.is_relative_to(cache_root):
+            raise ValueError("Use the selected original monster conversion cache")
+        conversion_path = cache / "native-export-source-manifest.json"
+        schemas = CurrentSchemas(cache / "inputs/Managed")
     conversion = json.loads(conversion_path.read_bytes())
     if (not conversion["completed"] or conversion["manifest"] != apk.version
             or sha((cache / "source-manifest.json").read_bytes()) != conversion["input_manifest_sha256"]):
@@ -333,7 +341,7 @@ def build(roles, pet_roles=(), rt_roles=()):
             nativeController=recover_animator(controller, clips),
             clips=[dict(name=obj.read().m_Name, duration=obj.read().m_MuscleClip.m_StopTime,
                 source=obj.assets_file.name + ":" + str(obj.path_id)) for obj in clips],
-            package=write(prefix + "model.bytes", package(entity, data["scale"], skeleton, regions)),
+            package=write(prefix + "model.bytes", package(entity, data["scale"], skeleton, regions, apk.version)),
             skeleton=write(prefix + "skeleton.json", encoded(skeleton)), atlas=write(prefix + "atlas.txt", atlas_bytes),
             regions=write(prefix + "regions.json", encoded(regions)), materials=materials, textures=textures,
             counts={key: len(skeleton.get(key, [])) for key in ("bones", "slots", "skins", "animations", "ik", "transform", "path", "physics")},

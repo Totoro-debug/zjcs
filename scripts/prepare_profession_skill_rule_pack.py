@@ -31,7 +31,7 @@ def build(item):
     previous = copy.deepcopy(skill['entities'])
     for key, value in json.loads((baseline / 'battle-rules.json').read_bytes())['entities'].items():
         previous.setdefault(key, {}).update(value)
-    wanted = {str(value) for value in spec['entities']}
+    wanted = {str(value) for value in spec.get('rule_pack_entities', spec['entities'])}
     with Apk.current() as apk:
         code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
         formats, constructors = Formats(code), Constructors(code)

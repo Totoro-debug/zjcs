@@ -61,10 +61,9 @@ namespace Zjcs.Presentation.Combat
 
         internal static bool HasBinding(FightBattleUnitState state)
         {
-            if (state == null || state.CharacterType == 1) return false;
+            if (state == null || state.CharacterType == 1 && !state.IsVoodooDoll) return false;
             int entityId = state.MonsterTemplateId > 0 ? state.MonsterTemplateId : state.MonsterId;
-            var assets = Resources.Load<BattleNativeMonsterAssets>(BattleNativeMonsterAssets.ResourcePath);
-            return assets && assets.Find(entityId) != null;
+            return BattleNativeMonsterAssets.Locate(entityId) != null;
         }
 
         public static OfficialBattleLiveMonsterModelView TryCreate(FightBattleUnitState state, Transform parent,
@@ -73,10 +72,10 @@ namespace Zjcs.Presentation.Combat
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
             // Role-player arena guards may carry a monster stat row.
-            if (state.CharacterType == 1) return null;
+            if (state.CharacterType == 1 && !state.IsVoodooDoll) return null;
             int entityId = state.MonsterTemplateId > 0 ? state.MonsterTemplateId : state.MonsterId;
-            var assets = BattleNativeMonsterAssets.Load();
-            return assets.Find(entityId) == null ? null
+            var assets = BattleNativeMonsterAssets.Locate(entityId);
+            return assets == null ? null
                 : new OfficialBattleLiveMonsterModelView(assets, entityId, parent, "BattleUnit_" + state.Id,
                     nativeSkillGraphs, scope, restoring, state.Hp <= 0, initialPosition);
         }
@@ -88,17 +87,17 @@ namespace Zjcs.Presentation.Combat
             try
             {
                 this.assets = assets;
-                states = OfficialBattleMonsterAnimatorBindings.Find(entityId);
-                var appearanceBinding = BattleNativeMonsterAppearanceCatalog.Find(entityId);
+                states = OfficialBattleMonsterAnimatorBindings.Find(entityId, assets);
+                var appearanceBinding = BattleNativeMonsterAppearanceCatalog.Find(entityId, assets);
                 renderer = BattleNativeMonsterRenderer.Create(assets, entityId, parent, name, appearanceBinding?.Materials);
                 // Generation leaves sample their source while being played below.
                 // Place the entity before initializing those original graphs.
                 if (initialPosition.HasValue) renderer.EntityRoot.position = initialPosition.Value;
                 renderer.BindOriginalAnimator(assets, entityId);
-                renderer.BindOriginalAttachments(entityId);
+                renderer.BindOriginalAttachments(assets, entityId);
                 renderer.BindOriginalPhaseAnimator(entityId);
                 if (appearanceBinding != null) appearance = new OfficialBattleMonsterAppearance(renderer, appearanceBinding);
-                application = new OfficialBattleMonsterAnimationController(renderer.EntityRoot, renderer.Animator, entityId);
+                application = new OfficialBattleMonsterAnimationController(renderer.EntityRoot, renderer.Animator, entityId, assets);
                 UsesNativeSkillGraphs = nativeSkillGraphs;
                 Transform body = renderer.transform.parent;
                 if (!body || body.name != "body" || !body.IsChildOf(renderer.EntityRoot))
@@ -107,15 +106,18 @@ namespace Zjcs.Presentation.Combat
                 var source = (Dictionary<string, object>)assets.Find(entityId)["meshRenderer"];
                 sorting = new OfficialBattleUnitSorting(renderer.transform,
                     checked(Convert.ToInt32(source["m_SortingLayer"]) * 1000 + Convert.ToInt32(source["m_SortingOrder"])));
-                shadow = OfficialBattleShadowView.Create(entityId, renderer.EntityRoot, renderer)
-                    ?? OfficialBattleShadowView.Create(entityId, renderer.EntityRoot, renderer, "Combat/NativeMonsters/shadow-bindings")
-                    ?? throw new InvalidOperationException("Original monster shadow is unbound: " + entityId);
+                string scopedShadow = assets.PresentationResource("shadow-bindings");
+                shadow = scopedShadow != null
+                    ? OfficialBattleShadowView.Create(entityId, renderer.EntityRoot, renderer, scopedShadow, assets.SourceManifest)
+                    : OfficialBattleShadowView.Create(entityId, renderer.EntityRoot, renderer)
+                        ?? OfficialBattleShadowView.Create(entityId, renderer.EntityRoot, renderer, "Combat/NativeMonsters/shadow-bindings");
+                if (shadow == null) throw new InvalidOperationException("Original monster shadow is unbound: " + entityId);
                 renderer.Attachments.RebindOriginalShadow(shadow.Root);
                 follower = shadow.Root.GetComponent<OfficialBattleShadowBoneFollower>();
                 if (!follower) throw new InvalidOperationException("Original monster bone follower is unbound: " + entityId);
                 if (scope != null)
                 {
-                    var role = OfficialBattleSummonRoleViewCatalog.FindRole(entityId);
+                    var role = OfficialBattleSummonRoleViewCatalog.FindRole(entityId, assets);
                     if (role != null)
                     {
                         if (!float.IsFinite(role.DestroyDelayTime) || role.DestroyDelayTime < 0)
@@ -124,10 +126,10 @@ namespace Zjcs.Presentation.Combat
                         destroyOnDeath = role.DestroyOnDie;
                         destroyDelayTime = role.DestroyDelayTime;
                         death = new OfficialBattleCharacterDeathPlayback(renderer.EntityRoot.gameObject, () => dead,
-                            scope, OfficialBattleSummonRoleViewCatalog.FindDeath(entityId));
+                            scope, OfficialBattleSummonRoleViewCatalog.FindDeath(entityId, assets));
                         death.OnAnimatorInited();
                     }
-                    var binding = OfficialBattleSummonRoleViewCatalog.FindGeneration(entityId);
+                    var binding = OfficialBattleSummonRoleViewCatalog.FindGeneration(entityId, assets);
                     if (binding != null)
                     {
                         generation = new OfficialBattleCharacterGenerationPlayback(renderer.EntityRoot.gameObject,

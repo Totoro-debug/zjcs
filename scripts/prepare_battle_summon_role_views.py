@@ -11,11 +11,13 @@ sys.path.insert(0, str(ROOT / '.tools/character-art-python/Lib/site-packages'))
 from UnityPy.classes import PPtr
 
 from official_apk import Apk
+from current_component_schemas import CurrentSchemas
 from official_unity_schema import ScriptSchemas
 from prepare_battle_scene_appearance_runtime import identity, meta, write_changed
 from prepare_battle_status_orbit_assets import build
 from prepare_battle_movement_effects import CACHE, EXPORTED
 from prepare_battle_movement_effects import SCRIPTS
+from prepare_battle_live_monsters import entity_prefab_family
 from verify_battle_skill_graph_rules import verify_selected_components
 
 BASE = ROOT / 'unity/Assets/Official/Combat/SummonRoleViews/Resources/Combat/SummonRoleViews'
@@ -24,21 +26,29 @@ RECEIPT = ROOT / 'assets/reference/battle-animation/summon-role-views-source-man
 ENTITIES = (3181, 3182, 3183, 3190, 3932, 3935)
 
 
-def main():
+def main(*, entities_to_prepare=ENTITIES, base=BASE, receipt=RECEIPT,
+         resource_root='Combat/SummonRoleViews', conversion_cache=None, external_assets=None,
+         lifecycle_names=None):
     apk = Apk.current()
-    if apk.version != '884_156692':
+    if conversion_cache is None and apk.version != '884_156692':
         raise ValueError('Review summon role views for the selected version')
+    data_path = base / 'role-views.json'
+    cache = conversion_cache or CACHE
+    export_name = 'native-export' if conversion_cache is not None else 'native-export-all'
+    exported = cache / export_name / 'ExportedProject/Assets' if conversion_cache is not None else EXPORTED
     code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
-    schemas = ScriptSchemas(code_root=code)
+    schemas = (CurrentSchemas(cache / 'inputs/Managed') if conversion_cache is not None
+               else ScriptSchemas(code_root=code))
     entities = json.loads((ROOT / 'unity/Assets/Official/Combat/battle-rules.json').read_bytes())['entities']
     character_components = {str(entity): {'FightRoleCharacterComponent': entities[str(entity)]['FightRoleCharacterComponent']}
-                            for entity in ENTITIES}
-    selected_character_components = verify_selected_components(character_components)
+                            for entity in entities_to_prepare}
+    selected_character_components = verify_selected_components(character_components, source_version=apk.version)
     rows, sources, roots, originals = [], [], {}, {}
-    native_outputs = json.loads((CACHE / 'native-export-all-source-manifest.json').read_bytes())['outputs']
+    native_outputs = json.loads((cache / (export_name + '-source-manifest.json')).read_bytes())['outputs']
     try:
-        for entity_id in ENTITIES:
-            bundle = f'defaultpackage_assets_prefabs_ecentity_fight_fightmonster_{entity_id}.bundle'
+        for entity_id in entities_to_prepare:
+            family = entity_prefab_family(apk, entity_id)
+            bundle = f'defaultpackage_assets_prefabs_ecentity_fight_{family}_{entity_id}.bundle'
             found = []
             for obj in apk.objects(bundle):
                 if obj.type.name != 'MonoBehaviour' or obj.read(check_read=False).m_Script.read().m_ClassName != 'ECViewDriver':
@@ -66,11 +76,12 @@ def main():
                         name = target.read().m_Name
                         generate_id = 3181 if entity_id in (3190, 3932) else entity_id
                         expected = 'playable_die_1' if field == 'mDiePlayable' else f'playable_{generate_id}_generate'
+                        expected = (lifecycle_names or {}).get(entity_id, {}).get(field, expected)
                         if field == 'mDieOnStartPlayable' or name != expected:
                             raise ValueError('Unexpected original summon lifecycle graph: ' + name)
                         path = ('Prefabs/Playables/' if field == 'mDiePlayable' else
                                 'Prefabs/Playables/EC/Battle/Monster/') + name + '.prefab'
-                        if not (EXPORTED / path).is_file():
+                        if not (exported / path).is_file():
                             matches = [item['path'].removeprefix('ExportedProject/Assets/')
                                 for item in native_outputs if item['path'].endswith('/' + name + '.prefab')]
                             if len(matches) != 1:
@@ -81,7 +92,7 @@ def main():
                         if name in originals and originals[name] != original:
                             raise ValueError('Conflicting shared lifecycle graph identity')
                         roots[name], originals[name] = path, original
-                        row[field] = 'Combat/SummonRoleViews/Graphs/' + path[:-7]
+                        row[field] = resource_root + '/Graphs/' + path[:-7]
                     found.append(row)
                     sources.append(dict(entityId=entity_id, source=apk.provenance(obj),
                         object_sha256=hashlib.sha256(obj.get_raw_data()).hexdigest(),
@@ -91,18 +102,19 @@ def main():
             rows.extend(found)
     finally:
         apk.archive.close()
-    build(DEST=BASE / 'Graphs', DATA=BASE / 'graphs.json', RECEIPT=RECEIPT,
+    build(DEST=base / 'Graphs', DATA=base / 'graphs.json', RECEIPT=receipt,
         ROOTS={}, graph_roots=roots, graph_originals=originals,
         family='SummonRoleViews', shader_prefix='SummonRoleViews_',
         MAPPED={**SCRIPTS, -822603460: ('StoryPlayables', 'ApplyBySource'),
                 205640859: ('StoryAnimation', 'MyPlayableAnimator'),
                 1574993081: ('BattleMaterialPlayables', 'MyPlayableMaterialProperty')},
         runtime_receipts=('scene-player-animator-source-manifest.json',), generator=Path(__file__),
-        limits=['Exact 3181/3182/3183/3190/3932/3935 ordered ECFightRoleCharacterView bindings and graph assets. '
-                'Other EC views, action invisibility status 24008 and other summon models are outside this extraction.'])
-    write_changed(DATA, json.dumps(dict(schema=2, manifest=apk.version, roles=rows), ensure_ascii=False, indent=2) + '\n')
-    meta(DATA)
-    proof = json.loads(RECEIPT.read_bytes())
+        native_cache=conversion_cache, native_manifest=apk.version, native_export_name=export_name,
+        external_assets=external_assets,
+        limits=['Ordered ECFightRoleCharacterView bindings and graph assets for the selected summons.'])
+    write_changed(data_path, json.dumps(dict(schema=2, manifest=apk.version, roles=rows), ensure_ascii=False, indent=2) + '\n')
+    meta(data_path)
+    proof = json.loads(receipt.read_bytes())
     registry = ROOT / 'unity/Assets/Game/Editor/OfficialSparseShaderVariants.cs'
     registrations = dict(re.findall(r'\["([^"]+\.shader)"\]\s*=\s*(\d+)', registry.read_text('utf-8-sig')))
     shader_outputs = [row for row in proof['outputs'] if row['path'].endswith('.shader')]
@@ -127,13 +139,16 @@ def main():
     proof.update(original_role_views=sources, decoder=identity(ROOT / 'scripts/official_unity_schema.py'),
         schema=identity(ROOT / 'scripts/unity_schema_types.cs'),
         official_role_view=identity(code / 'client-source/ECFightRoleCharacterView.cs'))
-    archive = code.parent / 'client-decompilation-manifest.json'
-    archived = {row['path']: row['sha256'] for project in json.loads(archive.read_bytes())['projects']
-        for row in project['files']}
-    original = code / 'client-source/ECFightRoleCharacterView.cs'
-    if identity(original)['sha256'] != archived[original.relative_to(ROOT).as_posix()]:
-        raise ValueError('Original role view differs from its pinned decompilation')
-    proof['decompilation_receipt'] = identity(archive)
+    if conversion_cache is None:
+        archive = code.parent / 'client-decompilation-manifest.json'
+        archived = {row['path']: row['sha256'] for project in json.loads(archive.read_bytes())['projects']
+            for row in project['files']}
+        original = code / 'client-source/ECFightRoleCharacterView.cs'
+        if identity(original)['sha256'] != archived[original.relative_to(ROOT).as_posix()]:
+            raise ValueError('Original role view differs from its pinned decompilation')
+        proof['decompilation_receipt'] = identity(archive)
+    else:
+        proof['assembly_source_receipt'] = identity(code.parent / 'code-manifest.json')
     proof['runtime_bindings'] = [identity(ROOT / path) for path in (
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleCharacterGenerationPlayback.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSummonRoleViewCatalog.cs',
@@ -150,8 +165,8 @@ def main():
         'unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.FirstPromotion.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGraphCapabilityValidation.cs')]
-    proof['outputs'].extend(identity(p) for p in (DATA, Path(str(DATA) + '.meta')))
-    write_changed(RECEIPT, json.dumps(proof, ensure_ascii=False, indent=2) + '\n')
+    proof['outputs'].extend(identity(p) for p in (data_path, Path(str(data_path) + '.meta')))
+    write_changed(receipt, json.dumps(proof, ensure_ascii=False, indent=2) + '\n')
     print('Restored', len(rows), 'ordered summon role views and', len(roots), 'original lifecycle graphs')
 
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Zjcs.Offline.ProfessionUI;
 using AnimationController = Zjcs.Official.StoryAnimation.AnimationController;
 
 namespace Zjcs.Presentation.Combat
@@ -10,7 +11,7 @@ namespace Zjcs.Presentation.Combat
     // ApplyBySource leaves query; the original Animator remains on its model.
     internal sealed class OfficialBattleMonsterAnimationController : IDisposable
     {
-        [Serializable] private sealed class Catalog { public Binding[] models; }
+        [Serializable] private sealed class Catalog { public string manifest; public Binding[] models; }
         [Serializable] private sealed class Binding
         {
             public int entityId;
@@ -24,19 +25,15 @@ namespace Zjcs.Presentation.Combat
         private bool disposed;
         internal AnimationController Controller { get; private set; }
 
-        internal OfficialBattleMonsterAnimationController(Transform entity, Animator animator, int entityId)
+        internal OfficialBattleMonsterAnimationController(Transform entity, Animator animator, int entityId,
+            BattleNativeMonsterAssets assets = null)
         {
             this.animator = animator ? animator : throw new ArgumentNullException(nameof(animator));
             if (!entity) throw new ArgumentNullException(nameof(entity));
-            if (bindings == null)
-            {
-                var asset = Resources.Load<TextAsset>("Combat/monster-animation-controllers");
-                var data = asset ? JsonUtility.FromJson<Catalog>(asset.text) : null;
-                if (data == null || data.models == null)
-                    throw new InvalidOperationException("Original monster application controller bindings are missing.");
-                bindings = data.models.ToDictionary(value => value.entityId);
-            }
-            if (!bindings.TryGetValue(entityId, out var binding) || entity.Find(binding.animatorPath) != animator.transform)
+            string scoped = assets?.PresentationResource("animation-controllers");
+            var selected = scoped != null ? Read(scoped, assets.SourceManifest)
+                : bindings ?? (bindings = Read("Combat/monster-animation-controllers", null));
+            if (!selected.TryGetValue(entityId, out var binding) || entity.Find(binding.animatorPath) != animator.transform)
                 throw new InvalidOperationException("Original monster application Animator hierarchy differs: " + entityId);
             if (entity.GetComponent<AnimationController>())
                 throw new InvalidOperationException("Original monster application controller is already bound.");
@@ -61,6 +58,15 @@ namespace Zjcs.Presentation.Combat
                 Controller.Init();
             if (entity.gameObject.activeInHierarchy && binding.initOnAwake && !Controller.myInited)
             { Dispose(); throw new InvalidOperationException("Original monster application controller did not initialize."); }
+        }
+
+        private static Dictionary<int, Binding> Read(string resource, string expectedManifest)
+        {
+            var asset = Resources.Load<TextAsset>(resource);
+            var data = asset ? JsonUtility.FromJson<Catalog>(asset.text) : null;
+            if (data?.models == null || (expectedManifest != null && data.manifest != expectedManifest))
+                throw new InvalidOperationException("Original monster controller bindings are missing: " + resource);
+            return data.models.ToDictionary(value => value.entityId);
         }
 
         public void Dispose()

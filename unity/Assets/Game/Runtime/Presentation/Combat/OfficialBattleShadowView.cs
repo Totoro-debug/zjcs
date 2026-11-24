@@ -23,7 +23,7 @@ namespace Zjcs.Presentation.Combat
         public Transform Root => instance.transform;
 
         public static OfficialBattleShadowView Create(int entityId, Transform entityRoot, Component skeletonRenderer,
-            string catalogResource = "Combat/character-shadow-bindings")
+            string catalogResource = "Combat/character-shadow-bindings", string expectedManifest = "884_156692")
         {
             if (entityRoot == null) throw new ArgumentNullException(nameof(entityRoot));
             if (skeletonRenderer == null) throw new ArgumentNullException(nameof(skeletonRenderer));
@@ -34,7 +34,7 @@ namespace Zjcs.Presentation.Combat
                 TextAsset source = Resources.Load<TextAsset>(catalogResource);
                 if (!source) throw new InvalidOperationException("Original role shadow bindings are missing.");
                 Catalog catalog = JsonUtility.FromJson<Catalog>(source.text);
-                if (catalog?.manifest != "884_156692" || catalog.roles == null)
+                if (catalog?.manifest != expectedManifest || catalog.roles == null)
                     throw new InvalidOperationException("Original role shadow source differs.");
                 var next = new Dictionary<string, Binding>(StringComparer.Ordinal);
                 foreach (Binding binding in catalog.roles) next.Add(binding.prefab, binding);

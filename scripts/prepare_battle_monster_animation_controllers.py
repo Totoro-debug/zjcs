@@ -16,14 +16,16 @@ def digest(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
-def build():
-    inventory = ROOT / "unity/Assets/Official/Combat/NativeMonsters/inventory.json"
-    receipt = ROOT / "assets/reference/battle-animation/live-monsters-source-manifest.json"
+def build(*, inventory=ROOT / "unity/Assets/Official/Combat/NativeMonsters/inventory.json",
+          receipt=ROOT / "assets/reference/battle-animation/live-monsters-source-manifest.json",
+          target=ROOT / "unity/Assets/Game/Resources/Combat/monster-animation-controllers.json",
+          proof_path=ROOT / "assets/reference/battle-animation/monster-animation-controllers-source-manifest.json",
+          managed_directory=None):
     selected = json.loads(inventory.read_bytes())
     if digest(inventory.read_bytes()) != json.loads(receipt.read_bytes())["outputs"][inventory.relative_to(ROOT).as_posix()]:
         raise ValueError("Verified original monster inventory differs")
-    apk, schemas = Apk.current(), CurrentSchemas()
-    if apk.version != selected["manifest"] or apk.version != "884_156692":
+    apk, schemas = Apk.current(), CurrentSchemas(managed_directory)
+    if apk.version != selected["manifest"]:
         raise ValueError("Review original monster controller source versions")
     rows, originals = [], []
     try:
@@ -61,9 +63,7 @@ def build():
             print(entity, "original entity AnimationController recovered", flush=True)
     finally:
         apk.archive.close()
-    target = ROOT / "unity/Assets/Game/Resources/Combat/monster-animation-controllers.json"
     payload = json.dumps(dict(manifest=apk.version, models=rows), separators=(",", ":")).encode("utf-8")
-    proof_path = ROOT / "assets/reference/battle-animation/monster-animation-controllers-source-manifest.json"
     if target.exists() and target.read_bytes() != payload:
         old = json.loads(proof_path.read_bytes())
         if digest(target.read_bytes()) != old["outputs"][target.relative_to(ROOT).as_posix()]:

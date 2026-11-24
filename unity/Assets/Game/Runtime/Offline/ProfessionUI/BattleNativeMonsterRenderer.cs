@@ -78,7 +78,8 @@ namespace Zjcs.Offline.ProfessionUI
                 || Flag(settings, "addNormals") || Flag(settings, "calculateTangents")
                 || Int(settings, "maskInteraction") != 0 || Arr(settings["separatorSlotNames"]).Count != 0)
                 throw new NotSupportedException("Bind additional original monster renderer branches.");
-            var data = ProfessionNativeSkeletonData.LoadBattleMonster(assets.Resolve<TextAsset>((string)row["package"]).bytes, entityId);
+            var data = ProfessionNativeSkeletonData.LoadBattleMonster(
+                assets.Resolve<TextAsset>((string)row["package"]).bytes, entityId, assets.SourceManifest);
             state = new ProfessionNativeAppearanceSkeleton(data);
             state.SetSkin(data.CreateCombinedNpcSkin(Arr(row["skins"]).Select(value => (string)value).ToArray()));
             batches = new ProfessionNativeMeshBatches(data.SlotCount);
