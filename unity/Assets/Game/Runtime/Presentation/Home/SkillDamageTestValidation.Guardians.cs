@@ -27,7 +27,8 @@ namespace Zjcs.Presentation.Home
 
         private static void BeginAcquiredGuardianValidation(int item, string output)
         {
-            acquiredGuardian = item == 10593 || item == 10575 || item == 10580 ? new AcquiredGuardianProbe(item, output) : null;
+            acquiredGuardian = item == 10593 || item == 10575 || item == 10580 || item == 10572
+                ? new AcquiredGuardianProbe(item, output) : null;
         }
 
         internal static void ConfigureGuardianBattleRequest(OfficialBattleRequest request)
@@ -60,6 +61,12 @@ namespace Zjcs.Presentation.Home
             {
                 var checkpoint = request.Checkpoint;
                 var actor = checkpoint.Units.Single(unit => unit.Id == 1);
+                if (item == 10572)
+                {
+                    actor.Hp = Math.Max(1L, actor.MaxHp / 2L);
+                    actor.Turn.Hp = actor.Hp;
+                    return;
+                }
                 if (item == 10575)
                 {
                     ConfigureSoulGuard(actor);
@@ -105,6 +112,11 @@ namespace Zjcs.Presentation.Home
 
             public void Observe(FightBattleStepEvent step, FightBattleCheckpoint checkpoint)
             {
+                if (item == 10572)
+                {
+                    ObserveVitalitySpring(step, checkpoint);
+                    return;
+                }
                 if (item == 10575)
                 {
                     ObserveSoulGuard(step, checkpoint);
@@ -147,6 +159,7 @@ namespace Zjcs.Presentation.Home
 
             public bool Ready(OfficialBattleRuntimeController controller)
             {
+                if (item == 10572) return VitalityCureCount > 0 && IsNativeSkillParticleVisible("playable11560");
                 if (item == 10575) return soulOpened && IsNativeSkillParticleVisible("playable11570");
                 if (item == 10580) return sanctuaryTransferred && IsNativeSkillParticleVisible("playable11780");
                 if (!verified || controller == null) return false;
@@ -161,6 +174,12 @@ namespace Zjcs.Presentation.Home
 
             public void Complete(bool captured)
             {
+                if (item == 10572)
+                {
+                    Require(VitalityCureCount > 0 && vitalityHealed && captured,
+                        "The cultivated vitality spring did not heal, restore and render its original self-cure.");
+                    return;
+                }
                 if (item == 10575)
                 {
                     Require(soulOpened && soulReturned && captured,

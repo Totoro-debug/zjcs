@@ -68,6 +68,13 @@ namespace Zjcs.Presentation.Home
             ref int assaultHits, ref int soulBreakHits, ref int windHits, ref int flameHits,
             ref int fireLifeCures)
         {
+            if (itemId == 10572)
+            {
+                int previous = acquiredGuardian.VitalityCureCount;
+                acquiredGuardian.Observe(step, checkpoint);
+                fireLifeCures += acquiredGuardian.VitalityCureCount - previous;
+                return;
+            }
             if (itemId == 10593 || itemId == 10575 || itemId == 10580)
             {
                 acquiredGuardian.Observe(step, checkpoint);
