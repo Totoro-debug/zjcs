@@ -165,10 +165,9 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState creator = FindUnit(units, shield.CreatorId);
             if (creator == null) return sourceProperties;
 
-            // The confirmed 10593 rule is self-only. Pet casts reuse the owner's unit id,
-            // so creator role is retained on the status and participates in this check.
-            bool selfPlayerShield = shield.OwnerId == shield.CreatorId
-                && creator.CharacterType == 1
+            // Confirmed 10593 scope includes shields the player casts on allies. Pet casts
+            // reuse the owner's unit id, so retain the actual creator role in this check.
+            bool playerCreatedShield = creator.CharacterType == 1
                 && shield.CreatorCharacterType == 1;
 
             int[] shieldModifiers = {
@@ -188,7 +187,7 @@ namespace Zjcs.Combat.Official
                 if (modifier.ResolvedProperties == null)
                     modifier.ResolvedProperties = ToValues(Resolve(modifier, creator, units,
                         Map(creator.BaseProperties ?? creator.Properties), catalog, formula));
-                if (selfPlayerShield && IncludesShieldProperty(definition, shield)) continue;
+                if (playerCreatedShield && IncludesShieldProperty(definition, shield)) continue;
                 IList<FightPropertyValue> properties = modifier.ResolvedProperties
                     ?? modifier.StatusProperties ?? modifier.StatusConfigProperties;
                 if (properties == null) continue;

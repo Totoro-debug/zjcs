@@ -19,15 +19,21 @@ public static class BattleSaintGuardHarness
         {
             long boosted = CheckShield(catalog, formula, items, true, 1, 1, 1, source[0], source[1]);
             Check(boosted > ordinary, "self shield from a configured source did not gain the 10593 bonus");
+            Check(CheckShield(catalog, formula, items, true, 2, 1, 1, source[0], source[1]) == boosted,
+                "the player's defence shield cast on an ally lost the 10593 bonus");
         }
-        Check(CheckShield(catalog, formula, items, true, 2, 1, 1, 10032, 10032) == ordinary,
-            "a teammate-applied defence shield received the owner's 10593 bonus");
+        CheckForeignShield(catalog, formula, items, ordinary);
         Check(CheckShield(catalog, formula, items, true, 1, 1, 5, 10032, 10032) == ordinary,
             "a pet shield with a shared owner id received the 10593 bonus");
         Check(CheckShield(catalog, formula, items, true, 1, 1, 0, 10032, 10032) == ordinary,
             "an unknown shield creator role received the 10593 bonus");
         CheckFixedShield(catalog, formula, items);
-        return "Saint guard defence-shield formula, self active/passive/weapon sources, teammate/pet exclusions, fixed-shield filter and checkpoint cases passed.";
+        long ordinaryCast = CastAllyShield(catalog, formula, items, false, 1, 1);
+        foreach (int rank in new[] { 1, 3, 5 })
+        foreach (int level in new[] { 1, 2, 20 })
+            Check(CastAllyShield(catalog, formula, items, true, rank, level) > ordinaryCast,
+                "an actual cultivated allied shield cast did not receive the defence-shield bonus");
+        return "Saint guard defence-shield formula, self/ally recipients, active/passive/weapon sources, foreign/pet exclusions, fixed-shield filter and checkpoint cases passed.";
     }
 
     private static void CheckPropertyDefinition(FightOfficialCombatCatalog catalog, FightDamageFormula formula)
@@ -87,9 +93,8 @@ public static class BattleSaintGuardHarness
     {
         var values = Values(shield.StatusProperties);
         var source = Values(creator.Properties);
-        bool selfPlayerShield = shield.OwnerId == shield.CreatorId
-            && creator.CharacterType == 1 && shield.CreatorCharacterType == 1;
-        if (!selfPlayerShield)
+        bool playerCreatedShield = creator.CharacterType == 1 && shield.CreatorCharacterType == 1;
+        if (!playerCreatedShield)
         {
             int[] bonusIds = { formula.PropertyId("StatusShieldAddPercent"),
                 formula.PropertyId("StatusFixedShieldAdd") };
@@ -163,6 +168,65 @@ public static class BattleSaintGuardHarness
             ShieldInitialCount = -1,
             ShieldRemainCount = -1
         };
+    }
+
+    private static void CheckForeignShield(FightOfficialCombatCatalog catalog, FightDamageFormula formula,
+        FightOfficialSkillItemCatalog items, long ordinary)
+    {
+        var checkpoint = BaseCheckpoint(formula);
+        var owner = Unit(1, 1, 1, formula);
+        var creator = Unit(2, 1, 1, formula);
+        owner.Statuses.Add(catalog.CreateStatus(25109, 1, 1, 1, 25109, 10593, 1, 1, 8, owner.Properties));
+        var shield = DefenceShield(formula, owner.Id, creator.Id, 1, 10032, 10032, creator.Properties);
+        owner.Statuses.Add(shield);
+        checkpoint.Units.AddRange(new[] { owner, creator });
+        FightBattleExecutor.Begin(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+        Check(shield.ShieldRemainValue == ordinary, "a foreign shield used its recipient's 10593 bonus");
+        var restored = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+        FightBattleExecutor.Restore(restored, formula, new FightDamageSettlement(), catalog, items);
+        Check(restored.Units.Single(unit => unit.Id == 1).Statuses.Single(status => status.ClassId == shield.ClassId)
+            .ShieldRemainValue == ordinary, "a foreign shield gained the recipient's bonus after restore");
+    }
+
+    private static long CastAllyShield(FightOfficialCombatCatalog catalog, FightDamageFormula formula,
+        FightOfficialSkillItemCatalog items, bool equipPassive, int rank, int level)
+    {
+        var checkpoint = BaseCheckpoint(formula);
+        var caster = Unit(1, 1, 1, formula);
+        var ally = Unit(2, 1, 1, formula);
+        var enemy = Unit(3, 2, 1, formula);
+        caster.Hp = caster.Turn.Hp = 1000;
+        ally.Hp = ally.Turn.Hp = 100;
+        enemy.X = 18;
+        if (equipPassive)
+            caster.Statuses.Add(catalog.CreateStatus(25109, 1, 1, 1, 25109, 10593, rank, level, 8, caster.Properties));
+        var skill = catalog.CreateSkill(11170, 0, 10032, 2, 20, 8,
+            catalog.CalculateSkillProps(11170, 2, 20, 8).Select(pair =>
+                new FightPropertyValue { Id = pair.Key, Value = pair.Value }).ToList());
+        skill.ResetCooldownAtStart = true;
+        caster.Skills.Add(skill);
+        caster.SkillState.Slots.Add(catalog.CreateSkillSlot(skill, 0));
+        checkpoint.Units.AddRange(new[] { caster, ally, enemy });
+        var wave = new FightBattleWaveState();
+        wave.UnitIds.Add(enemy.Id);
+        checkpoint.Waves.Add(wave);
+        var executor = FightBattleExecutor.Begin(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+        FightBattleStatusState shield = null;
+        for (int i = 0; i < 6 && shield == null; i++)
+        {
+            executor.Step(checkpoint.Sequence, checkpoint.Counter + 1);
+            shield = ally.Statuses.Find(status => status.ClassId == 24180);
+        }
+        Check(shield != null && shield.CreatorId == caster.Id && shield.CreatorCharacterType == 1,
+            "the original ally-targeting skill did not preserve the shield's player origin");
+        long value = shield.ShieldRemainValue;
+        Check(value > 0 && caster.Statuses.All(status => status.ClassId != 24180),
+            "the original shield missed the ally with lowest HP percentage");
+        var copy = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+        FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items);
+        Check(copy.Units.Single(unit => unit.Id == ally.Id).Statuses.Single(status => status.ClassId == 24180)
+            .ShieldRemainValue == value, "the actual allied shield changed after restore");
+        return value;
     }
 
     private static void CheckFixedShield(FightOfficialCombatCatalog catalog, FightDamageFormula formula,

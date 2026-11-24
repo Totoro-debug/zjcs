@@ -1,8 +1,17 @@
+param([string]$SourceRoot)
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'combat_sources.ps1')
-$root = Split-Path -Parent $PSScriptRoot
+$repository = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+if (-not $SourceRoot) { $SourceRoot = $repository }
+$root = (Get-Item -LiteralPath $SourceRoot).FullName.TrimEnd('\', '/')
+$sources = @(Get-FightCombatSources | ForEach-Object {
+    if (-not $_.StartsWith($repository + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'The common combat source list refers outside the repository.'
+    }
+    Join-Path $root $_.Substring($repository.Length + 1)
+})
 $inputs = Join-Path $root 'unity/Assets/Official/Combat'
-Add-Type -Path (@(Get-FightCombatSources) +
+Add-Type -Path ($sources +
     (Join-Path $PSScriptRoot 'fixtures/skill_rule_pack_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_saint_guard_harness.cs'))
 $sp = Get-Content (Join-Path $inputs 'skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
