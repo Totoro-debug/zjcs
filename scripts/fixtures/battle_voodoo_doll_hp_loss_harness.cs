@@ -11,6 +11,7 @@ public static class BattleVoodooDollHpLossHarness
         MaxHpExpiry(catalog, items, formula, false);
         MaxHpExpiry(catalog, items, formula, true);
         SkillCost(catalog, items, formula);
+        SkillCost(catalog, items, formula, true);
         ShieldAbsorption(catalog, items, formula);
         RestoreNormalization(catalog, items, formula);
         LinkedSummonDeath(catalog, items, formula);
@@ -68,6 +69,7 @@ public static class BattleVoodooDollHpLossHarness
         Check(doll.MaxHp == 1000 && doll.Hp == (unchangedHp ? 1 : 1000),
             "The controlled status did not expire through the ordinary maximum-HP module.");
         var transfers = step.DamageEvents.Where(hit => hit.SkillEntityId == 10140).ToArray();
+        BattleVoodooDollHarness.CheckTransmissionPresentation(step);
         Check(transfers.Length == (unchangedHp ? 0 : 1)
             && checkpoint.Units[1].Hp == (unchangedHp ? 20000 : 19000),
             "Maximum-HP change omitted, duplicated or invented actual HP transmission.");
@@ -77,7 +79,7 @@ public static class BattleVoodooDollHpLossHarness
     }
 
     private static void SkillCost(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
-        FightDamageFormula formula)
+        FightDamageFormula formula, bool lethal = false)
     {
         var checkpoint = Checkpoint(catalog);
         var doll = checkpoint.Units[2];
@@ -88,10 +90,12 @@ public static class BattleVoodooDollHpLossHarness
         skill.Range.Add(new FightGridPoint(0, 0));
         doll.Skills.Add(skill); doll.SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = 1 });
         var executor = FightBattleExecutor.Begin(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+        if (lethal) checkpoint.Units[1].Hp = checkpoint.Units[1].Turn.Hp = 1;
         var step = executor.Step(0, 1).Event;
-        Check(step.ActorId == doll.Id && doll.Hp == 877 && checkpoint.Units[1].Hp == 19877
+        Check(step.ActorId == doll.Id && doll.Hp == 877 && checkpoint.Units[1].Hp == (lethal ? 0 : 19877)
             && step.DamageEvents.Count(hit => hit.SkillEntityId == 10140 && hit.DamageValue == -123) == 1,
             "Non-hit skill cost did not transmit its actual HP reduction exactly once.");
+        BattleVoodooDollHarness.CheckTransmissionPresentation(step);
         Replay(checkpoint, catalog, items, formula);
     }
 

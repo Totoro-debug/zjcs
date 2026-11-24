@@ -6,6 +6,31 @@ using Zjcs.Combat.Official;
 public static class BattleVoodooDollHarness
 {
     static void Check(bool value, string message) { if (!value) throw new Exception(message); }
+    public static void CheckTransmissionPresentation(FightBattleStepEvent step)
+    {
+        foreach (var damage in step.DamageEvents.Where(value => value.SkillEntityId == 10140))
+        {
+            var cast = step.SkillCasts.Single(value => value.SkillEntityId == 10140
+                && value.DamageEventIds.Contains(damage.DamageId));
+            Check(cast.Presentation != null && cast.ActorId == damage.SourceId && cast.Slot == -1
+                && cast.TargetIds.SequenceEqual(new[] { damage.TargetId })
+                && cast.Presentation.TargetId == damage.TargetId
+                && Math.Abs(cast.Delay - damage.Delay) < .00001f
+                && Math.Abs(cast.Presentation.Duration - .2f) < .00001f
+                && Math.Abs(cast.Presentation.ActionDuration - .2f) < .00001f,
+                "Direct HP transmission lost its original native cast snapshot or timing.");
+            var hit = cast.HitSelections.Single();
+            var target = hit.Targets.Single();
+            Check(hit.Sequence == 1 && hit.HitEntityId == 10141 && damage.DamageEntityId == 10004
+                && target.TargetId == damage.TargetId && target.HasGridPosition
+                && target.HasScopeIndex && target.ScopeIndex == 0
+                && target.TargetX == cast.Presentation.TargetX && target.TargetY == cast.Presentation.TargetY
+                && damage.HasDamagePosition && damage.HasHitGridPosition
+                && damage.DamageX == target.GridX && damage.DamageY == target.GridY
+                && damage.HasDamageTriggerStatus && !damage.IsDamageTriggerStatus,
+                "Direct HP transmission lost its original hit selection or native damage receipt.");
+        }
+    }
     static FightBattleUnitState Unit(int id, int side, int type, long hp, int speed) {
         var u = new FightBattleUnitState { Id=id, Side=side, CharacterType=type, Hp=hp,
             MaxHp=hp, LastMaxHp=hp, Level=150, SubRank=1, MoveMask=5, X=5, Y=5 };
@@ -59,6 +84,7 @@ public static class BattleVoodooDollHarness
         var restored=FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(state));
         executor=FightBattleExecutor.Restore(restored,formula,new FightDamageSettlement(),catalog,items);
         var step=executor.Step(0,2).Event;
+        CheckTransmissionPresentation(step);
         var linked=restored.Units.Find(u=>u.Id==2);var deadDoll=restored.Units.Find(u=>u.VoodooDoll!=null);
         Check(linked.Hp==1000000,"Overflow transmission did not deduct the full million HP: "+linked.Hp);
         Check(linked.Statuses.Find(s=>s.ClassId==90003).ShieldRemainValue==3000000,"Transmission consumed target shield.");
@@ -136,6 +162,7 @@ public static class BattleVoodooDollHarness
             var suffered = step.DamageEvents.Find(value => value.SkillEntityId == 10500 && value.TargetId == doll.Id
                 && value.Damage < 0);
             if (suffered == null) continue;
+            CheckTransmissionPresentation(step);
             var transmitted = step.DamageEvents.Find(value => value.SkillEntityId == 10140 && value.TargetId == enemy.Id);
             Check(transmitted != null && transmitted.DamageValue == suffered.DamageValue
                 && transmitted.TrueDamage && transmitted.IgnoreShield && transmitted.AfterHp < transmitted.BeforeHp,
@@ -190,6 +217,7 @@ public static class BattleVoodooDollHarness
             enemy=cp.Units.Find(value=>value.Id==2);
         }
         var step=runner.Step(0,2).Event;
+        CheckTransmissionPresentation(step);
         Check(enemy.Hp==400000,"Substitute lost full transmitted HP loss.");
         var casts=step.SkillCasts.FindAll(value=>value.SkillEntityId==10170);
         bool allowed=mode!=0;

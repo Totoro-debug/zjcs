@@ -11,7 +11,7 @@ namespace Zjcs.Combat.Official
         { Skill = skill; Cast = cast; }
     }
 
-    /// <summary>One equipped cast: the definition drives common damage/status settlement and
+    /// <summary>One cast: the definition drives common damage/status settlement and
     /// its matching snapshot drives the original four-way effects and native skeleton pipeline.
     /// Targets have already been selected. This module never spends an equipped slot.</summary>
     public sealed class FightSkillCastModule
@@ -45,6 +45,50 @@ namespace Zjcs.Combat.Official
             };
             if (targets != null) foreach (var target in targets) cast.TargetIds.Add(target.Id);
             return new FightPreparedSkillCast(selected, cast);
+        }
+
+        /// <summary>Record an already settled HP change using its original single-target
+        /// hit graph. This neither selects a new target nor repeats damage settlement,
+        /// including when the recorded hit was lethal.</summary>
+        public FightPreparedSkillCast PrepareRecordedHit(FightBattleUnitState actor,
+            FightBattleSkillDefinition skill, FightBattleUnitState target, FightBattleDamageEvent damage)
+        {
+            if (target == null || damage == null) throw new ArgumentNullException();
+            var prepared = Prepare(actor, skill, new[] { target });
+            var hits = FightBattleHitCollector.CollectAll(prepared.Skill);
+            if (hits.Count != 1) throw new InvalidOperationException("A recorded HP change requires one original hit.");
+            var hit = hits[0];
+            bool scoped = hit.Scope != null && hit.Scope.Count > 0;
+            if (hit.EntityId != damage.HitEntityId || hit.DamageId != damage.DamageEntityId
+                || damage.SourceId != actor.Id || damage.TargetId != target.Id
+                || damage.SkillEntityId != prepared.Skill.EntityId || damage.DamageId <= 0
+                || hit.RandomTargetGroupId != 0 || hit.ActionType != 4
+                || scoped && (hit.Scope.Count != 1 || hit.Scope[0].X != 0 || hit.Scope[0].Y != 0))
+                throw new InvalidOperationException("The recorded HP change does not match a single original target hit.");
+            var position = new FightGridPoint(target.X, target.Y);
+            var center = FightHitAnchorExtensions.ResolveCenter(hit.Anchor, actor, target, prepared.Cast.Presentation);
+            if (scoped && (center.X != position.X || center.Y != position.Y))
+                throw new InvalidOperationException("The recorded HP target is outside the original hit centre.");
+            float scopeDelay = scoped && hit.ScopeEntries != null && hit.ScopeEntries.Count > 0
+                ? hit.ScopeEntries[0].Delay : 0f;
+            var selection = new FightHitTargetSelection(new List<FightBattleUnitState> { target },
+                new[] { new FightHitOccurrence(target, scoped, position, scopeDelay, 0, scoped ? 0 : -1) },
+                new List<FightGridPoint>(), new[] { center });
+            float localDelay = FightBattleHitTiming.DamageDelay(hit, prepared.Cast.Presentation, selection, 0);
+            float castDelay = damage.Delay - localDelay;
+            if (float.IsNaN(castDelay) || float.IsInfinity(castDelay) || castDelay < 0f)
+                throw new InvalidOperationException("The recorded HP change precedes its original hit timing.");
+            prepared.Cast.Delay = castDelay;
+            prepared.Cast.HitSelections.Add(FightBattleHitSelectionSnapshot.Capture(1, hit, selection,
+                prepared.Cast.Presentation));
+            prepared.Cast.DamageEventIds.Add(damage.DamageId);
+            damage.Anchor = hit.Anchor;
+            damage.HasHitGridPosition = scoped;
+            damage.HitGridX = position.X; damage.HitGridY = position.Y;
+            damage.HasDamagePosition = true;
+            damage.DamageX = position.X; damage.DamageY = position.Y;
+            damage.HasDamageTriggerStatus = hit.AppliedStatuses == null || hit.AppliedStatuses.Count == 0;
+            return prepared;
         }
 
         private FightBattleSkillDefinition Resolve(FightBattleUnitState actor,

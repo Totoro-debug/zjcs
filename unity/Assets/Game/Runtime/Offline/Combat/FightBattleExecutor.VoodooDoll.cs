@@ -50,9 +50,22 @@ namespace Zjcs.Combat.Official
                 NextDamageId());
             if (damage == null) return;
             var syncTriggerContext = statusCatalog?.CreateSkillTriggerContext(damage.SkillEntityId);
+            var syncSkill = statusCatalog.CreateSkill(damage.SkillEntityId, -1, 0, 1,
+                doll.Level, doll.SubRank, null);
+            var prepared = SkillCasts.PrepareRecordedHit(doll, syncSkill, target, damage);
+            float localHitDelay = damage.Delay - prepared.Cast.Delay;
+            prepared.Cast.Presentation.Duration = ResolveDuration(prepared.Skill, localHitDelay);
+            prepared.Cast.Presentation.ActionDuration = ResolveActionDuration(prepared.Skill, localHitDelay);
             events.Add(damage);
-            casts.Add(new FightBattleSkillCastEvent { ActorId = doll.Id, Slot = -1,
-                SkillEntityId = damage.SkillEntityId, Delay = damage.Delay, TargetIds = new List<int> {target.Id} });
+            casts.Add(prepared.Cast);
+            if (movementStartContext != null)
+            {
+                movementStartContext.Duration = Math.Max(movementStartContext.Duration,
+                    prepared.Cast.Delay + prepared.Cast.Presentation.Duration);
+                if (prepared.Cast.Presentation.ActionDuration >= 0f)
+                    movementStartContext.ActionDuration = Math.Max(movementStartContext.ActionDuration,
+                        prepared.Cast.Delay + prepared.Cast.Presentation.ActionDuration);
+            }
             checkpoint.Statistics.RecordCast(doll.Id, damage.SkillEntityId, 0);
             checkpoint.Statistics.RecordHit(damage, new HashSet<int>());
             FightStatusAccumulatedDamageRuntime.RecordHit(target, damage, syncTriggerContext);
