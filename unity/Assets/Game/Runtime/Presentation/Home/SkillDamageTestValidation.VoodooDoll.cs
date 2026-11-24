@@ -29,11 +29,16 @@ namespace Zjcs.Presentation.Home
                     && doll.MasterId == actor.Id && doll.CharacterType == target.CharacterType
                     && doll.Side == target.Side && doll.Level == skill.Level
                     && Math.Abs(spawn.Delay - .35f) < .0001f
-                    && Math.Abs(spawn.X - actor.X) + Math.Abs(spawn.Y - actor.Y) == 2
+                    && cast.Presentation != null
+                    && Math.Abs(spawn.X - cast.Presentation.SourceX)
+                        + Math.Abs(spawn.Y - cast.Presentation.SourceY) == 2
                     && spawn.InitialHp == spawn.InitialMaxHp && spawn.InitialHp > 0
                     && lifetime.CreatorId == actor.Id && lifetime.DurationRound == 3
                     && lifetime.SourceSkillRank == skill.Rank && lifetime.SourceSkillLevel == skill.Level,
-                    "The acquired substitute changed its inherited type, spawn, source or three-turn lifetime.");
+                    "The acquired substitute changed its inherited type, spawn, source or three-turn lifetime: unit="
+                        + doll.Id + ", spawn=" + spawn.X + "/" + spawn.Y + ", source="
+                        + cast.Presentation?.SourceX + "/" + cast.Presentation?.SourceY
+                        + ", delay=" + spawn.Delay + ", duration=" + lifetime.DurationRound + ".");
                 var inheritance = OfficialCombatAssetCatalog.LoadDefault().Load().CalculateSummonInheritance(
                     4600, skill.Level, skill.Rank, skill.SubRank,
                     target.Properties.ToDictionary(value => value.Id, value => value.Value));
@@ -80,7 +85,7 @@ namespace Zjcs.Presentation.Home
                     }
                 }
                 // The acquired loadout contains only the summon. After observing
-                // one complete natural lifetime, add an original lightning skill
+                // one complete natural lifetime, add an original water projectile skill
                 // inside this isolated battle to exercise real hostile hits and
                 // substitute priority through the normal target/damage pipeline.
                 if (expired.Count > 0 && actor.Skills.All(skill => skill.Slot != 1))

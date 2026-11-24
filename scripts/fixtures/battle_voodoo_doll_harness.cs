@@ -117,18 +117,18 @@ public static class BattleVoodooDollHarness
         string living = FightBattleCheckpointSerializer.Save(state);
         var attackProps = catalog.CalculateSkillProps(10500, 5, 20, 1)
             .Select(pair => new FightPropertyValue { Id = pair.Key, Value = pair.Value }).ToList();
-        var lightning = catalog.CreateSkill(10500, 0, 10000, 5, 20, 1, attackProps);
-        Check(FightBattleTargeting.IsEligibleSkillTarget(player, doll, lightning)
-            && FightBattleTargeting.Select(player, state.Units, 1, skill: lightning)[0].Id == doll.Id,
+        var waterBolt = catalog.CreateSkill(10500, 0, 10000, 5, 20, 1, attackProps);
+        Check(FightBattleTargeting.IsEligibleSkillTarget(player, doll, waterBolt)
+            && FightBattleTargeting.Select(player, state.Units, 1, skill: waterBolt)[0].Id == doll.Id,
             "An original attack did not prefer the eligible living substitute.");
-        Check(FightBattleTargeting.Select(player, state.Units, 1, enemy.Id, skill: lightning)[0].Id == enemy.Id,
+        Check(FightBattleTargeting.Select(player, state.Units, 1, enemy.Id, skill: waterBolt)[0].Id == enemy.Id,
             "Substitute preference overrode the forced hostile target.");
         var heal = catalog.CreateSkill(12020, 1, 10096, 5, 20, 1, null);
         Check(!FightBattleTargeting.IsEligibleSkillTarget(enemy, doll, heal)
             && FightBattleTargeting.Select(enemy, state.Units, 2, skill: heal).TrueForAll(unit => !unit.IsVoodooDoll),
             "A substitute remained eligible as a cure's primary target.");
         player.Skills.Clear(); player.SkillState.Slots.Clear();
-        player.Skills.Add(lightning); player.SkillState.Slots.Add(catalog.CreateSkillSlot(lightning, 0));
+        player.Skills.Add(waterBolt); player.SkillState.Slots.Add(catalog.CreateSkillSlot(waterBolt, 0));
         bool hit = false;
         for (int i = 0; i < 8 && !state.Finished; i++)
         {
@@ -148,7 +148,7 @@ public static class BattleVoodooDollHarness
         doll = linkedDeath.Units.Find(unit => unit.IsVoodooDoll);
         player = linkedDeath.Units.Find(unit => unit.Id == 1);
         player.Skills.Clear(); player.SkillState.Slots.Clear();
-        player.Skills.Add(lightning); player.SkillState.Slots.Add(catalog.CreateSkillSlot(lightning, 0));
+        player.Skills.Add(waterBolt); player.SkillState.Slots.Add(catalog.CreateSkillSlot(waterBolt, 0));
         enemy.Hp = enemy.Turn.Hp = 1;
         doll.Targetable = false;
         executor = FightBattleExecutor.Restore(linkedDeath, formula, new FightDamageSettlement(), catalog, items);
