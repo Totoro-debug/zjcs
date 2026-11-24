@@ -105,16 +105,17 @@ def build_current_skill_graphs(*, DEST, DATA, RECEIPT, GROUPS, family, cache_nam
     catalog = dict(manifest=source.version)
     for group, (id_key, cls, _) in GROUPS.items():
         catalog[group] = []
-        script = ROOT / 'unity/Assets/Game/Runtime/Official/BattleSkillPlayables' / (cls + '.cs.meta')
-        script_guid = re.search(r'(?m)^guid: ([a-f0-9]{32})$', script.read_text('utf-8-sig'))[1]
         for row in selected[group]:
+            client_type = cls if cls is not None else row['client_type']
+            script = ROOT / 'unity/Assets/Game/Runtime/Official/BattleSkillPlayables' / (client_type + '.cs.meta')
+            script_guid = re.search(r'(?m)^guid: ([a-f0-9]{32})$', script.read_text('utf-8-sig'))[1]
             relative = roots[f'{group}:{row[id_key]}']
             path = DEST / relative
             text = path.read_text('utf-8-sig')
             components = [(int(match[1]), yaml.safe_load('MonoBehaviour:\n' + match[2])['MonoBehaviour'])
                           for match in re.finditer(r'(?ms)^--- !u!114 &(-?\d+)\nMonoBehaviour:\n(.*?)(?=^--- !u!|\Z)', text)
                           if re.search(r'm_Script: \{fileID: 11500000, guid: ' + script_guid, match[2])]
-            assert len(components) == 1, ('Missing current native component', path, cls)
+            assert len(components) == 1, ('Missing current native component', path, client_type)
             component_id, fields = components[0]
             if group == 'skills':
                 actual = dict(skillEntityId=row[id_key], preferredPosToPlayable=bool(fields['PreferredPosToPlayable']),

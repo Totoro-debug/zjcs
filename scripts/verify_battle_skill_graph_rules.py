@@ -17,9 +17,9 @@ def identity(path):
                 sha256=hashlib.sha256(path.read_bytes()).hexdigest())
 
 
-def verify_selected_components(definitions, skill_items=None, *, entity_paths=None):
+def verify_selected_components(definitions, skill_items=None, *, entity_paths=None, source_version='884_156692'):
     apk = Apk.current()
-    assert apk.version == '884_156692', 'Review the selected EC version.'
+    assert apk.version == source_version, 'Review the selected EC version.'
     code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
     formats = Formats(code)
     manifests = [ROOT / 'unity/Assets/Official/Combat' / name
