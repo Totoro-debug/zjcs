@@ -9,7 +9,8 @@ namespace Zjcs.Combat.Official
     {
         public static bool AllowsStatus(FightBattleSkillDefinition skill, FightBattleStatusState status)
         {
-            return status != null && (skill == null || skill.CanTriggerChild
+            // Confirmed offline conversion HP loss can notify hurt passives before its shield exists.
+            return status != null && (skill == null || skill.ShieldConversionCost || skill.CanTriggerChild
                 || skill.CanTriggerStatusEntityIds != null
                     && skill.CanTriggerStatusEntityIds.Contains(status.ClassId));
         }
