@@ -79,6 +79,17 @@ namespace Zjcs.Presentation.Home
                         expired.Add(doll.Id);
                     }
                 }
+                // The acquired loadout contains only the summon. After observing
+                // one complete natural lifetime, add an original lightning skill
+                // inside this isolated battle to exercise real hostile hits and
+                // substitute priority through the normal target/damage pipeline.
+                if (expired.Count > 0 && actor.Skills.All(skill => skill.Slot != 1))
+                {
+                    var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+                    var attack = catalog.CreateSkill(10500, 1, 10000, 1, 1, actor.SubRank, null);
+                    actor.Skills.Add(attack);
+                    actor.SkillState.Slots.Add(catalog.CreateSkillSlot(attack, 1));
+                }
                 if (hits > 0 || expired.Count > 0) Restore(checkpoint, output);
                 return hits;
             }
@@ -94,7 +105,9 @@ namespace Zjcs.Presentation.Home
             internal void Complete(string output)
             {
                 Require(expiryRounds.Count > 0 && transfers > 0 && expired.Count > 0 && restored && captured,
-                    "The acquired substitute did not render its model/link, transmit HP loss and expire after three turns.");
+                    "The acquired substitute did not render, transmit and expire: summons=" + expiryRounds.Count
+                        + ", transfers=" + transfers + ", expirations=" + expired.Count
+                        + ", restored=" + restored + ", captured=" + captured + ".");
                 File.WriteAllText(Path.Combine(output, "acquired-voodoo-doll-receipt.json"), JsonUtility.ToJson(
                     new VoodooDollReceipt { summons = expiryRounds.Count, transfers = transfers,
                         expirations = expired.Count, restored = restored, captured = captured }, true));
