@@ -12,8 +12,11 @@ namespace Zjcs.Presentation.Home
     {
         private OfflineHomeRepairWindows repairWindows;
         private PartnerWindowBlurCapture repairCapture;
+        internal FurnitureRepairDialog ActiveRepairDialog => repairWindows?.RepairDialog;
 
-        private void ShowNativeRepair(int type)
+        internal void ShowRepair(int type, bool isBuild) => ShowNativeRepair(type, isBuild);
+
+        private void ShowNativeRepair(int type, bool isBuild = false)
         {
             if (host.Rules.FurnitureOf(type) == null) return;
             CloseDialog();
@@ -33,7 +36,7 @@ namespace Zjcs.Presentation.Home
             {
                 if (notification) host.OnFruitTreeRepairDialogClosed((int)furniture);
             };
-            repairWindows.ShowRepair((EFurniture)type, false);
+            repairWindows.ShowRepair((EFurniture)type, isBuild);
         }
 
         bool IOfflineHomeRepairState.HasRepairCost(EFurniture furniture)

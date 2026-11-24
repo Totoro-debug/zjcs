@@ -91,7 +91,23 @@ namespace Zjcs.Presentation.Home
         }
 
         public Transform CanvasTransform => canvas == null ? null : canvas.transform;
+        internal Canvas Canvas => canvas;
         internal Transform HomeSceneUiParent => homePanel.transform.Find("Content");
+
+        internal WorldPopupWindow LastModalPopupWindowIgnoringTips()
+        {
+            if (canvas == null) return null;
+            WorldPopupWindow last = null;
+            foreach (WorldPopupWindow popup in canvas.GetComponentsInChildren<WorldPopupWindow>(false))
+            {
+                if (popup.GetComponent<Zjcs.Official.HomeStoryDialog.OptionTalkDialogPanel>() != null) continue;
+                var metadata = popup.GetComponent<NativeStoryWindowMetadata>();
+                if (metadata != null && metadata.WindowType == 3) continue;
+                if (last == null || (popup.Canvas != null ? popup.Canvas.sortingOrder : 0) >= (last.Canvas != null ? last.Canvas.sortingOrder : 0))
+                    last = popup;
+            }
+            return last;
+        }
 
         public bool AnyModalOpen => CharacterPageOpen || activeDialog != null || inventoryRoot != null || host.FeatureModalOpen || skillDamageTest != null
             || NativeCurrencyModalOpen || DungeonModalOpen || nativeFastProgress != null && nativeFastProgress.IsOpen
@@ -801,6 +817,7 @@ namespace Zjcs.Presentation.Home
             if (repairCapture != null) UnityEngine.Object.Destroy(repairCapture);
             repairCapture = null;
             ClosePartnerDialogueImmediate();
+            host.PartnerConversationsProxy?.Detach(partnerDialoguePresentation);
             DestroyPartnerPromptWindow();
             DestroyPartnerFriendshipWindow();
             partnerRosterPanel?.Close();

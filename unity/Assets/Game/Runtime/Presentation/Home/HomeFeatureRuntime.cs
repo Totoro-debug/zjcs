@@ -74,6 +74,8 @@ namespace Zjcs.Presentation.Home
         private OfflinePartnerGiftPlayer partnerGiftPlayer;
         private OfflinePartnerTipDotRuntime partnerTipDots;
         private OfflinePartnerConversationOpenRefresher partnerConversationOpenRefresher;
+        private OfflinePartnerConversationUiSession partnerConversations;
+        private PartnerDialoguePresentationProxy partnerDialogueProxy;
         private OfflineProfessionImageResourceLoader partnerDetailImages;
         private OfficialPartnerGiftPageAssetCatalog partnerGiftAssets;
         private OfflinePartnerGiftRuntimeBindings partnerGiftBindings;
@@ -85,6 +87,7 @@ namespace Zjcs.Presentation.Home
         private float astrologicalNextChargeTick;
         private bool equipmentPropertiesLoaded;
         private OfficialHomeRules rules;
+        private OfflineHomeConditionPlayer furnitureConditionPlayer;
         private HomeTutorialCatalog tutorials;
         private OfflineHomeProgression homeProgression;
         private WishRuntimeCatalog tutorialRewardCatalog;
@@ -188,6 +191,8 @@ namespace Zjcs.Presentation.Home
         public OfficialPartnerCatalog PartnerCatalog => partnerCatalog;
         public OfflinePartnerTipDotRuntime PartnerTipDots => partnerTipDots;
         public OfflinePartnerConversationOpenRefresher PartnerConversationOpenRefresher => partnerConversationOpenRefresher;
+        internal OfflinePartnerConversationUiSession PartnerConversations => partnerConversations;
+        internal PartnerDialoguePresentationProxy PartnerConversationsProxy => partnerDialogueProxy;
         public OfficialPartnerDetailPropertyAssetCatalog PartnerDetailAssets => partnerDetailAssets;
         public OfflinePartnerDetailPropertyServices PartnerDetailServices => partnerDetailServices;
         public OfficialPartnerGiftPageAssetCatalog PartnerGiftAssets => partnerGiftAssets;
@@ -195,7 +200,9 @@ namespace Zjcs.Presentation.Home
         public OfflinePartnerGiftRuntimeBindings PartnerGiftBindings => partnerGiftBindings;
         public OfflinePartnerGiftPlayer PartnerGiftPlayer => partnerGiftPlayer;
         public OfficialPartnerFriendshipAssetCatalog PartnerFriendshipAssets => partnerFriendshipAssets;
+        private OfflineProfessionImageCatalog partnerDialogueRewardImages;
         public OfflinePartnerFriendshipDialogServices PartnerFriendshipDialogServices => partnerFriendshipDialogServices;
+        internal OfflineProfessionImageCatalog PartnerDialogueRewardImages => partnerDialogueRewardImages;
         public OfflineArenaSession Arena => arena;
         public OfflineCharacterProgressionService DailyDungeonProgression
         {
@@ -686,10 +693,10 @@ namespace Zjcs.Presentation.Home
             rules = OfficialHomeRules.LoadDefault();
             partnerCatalog = OfficialPartnerAssetCatalog.LoadDefault();
             var selectedHomeRules = OfficialCurrentHomeRuleAssetCatalog.LoadDefault();
-            var furniturePlayer = new OfflineHomeConditionPlayer(selectedHomeRules,
+            furnitureConditionPlayer = new OfflineHomeConditionPlayer(selectedHomeRules,
                 () => profile.Save, type => session != null && session.OwnsFurniture(type));
-            new OfflineCurrentHomeFurniture(selectedHomeRules, partnerCatalog.Conditions, () => furniturePlayer).Bind(rules);
-            new OfflineCurrentHomeIncome(selectedHomeRules, partnerCatalog.Conditions, () => furniturePlayer).Bind(rules);
+            new OfflineCurrentHomeFurniture(selectedHomeRules, partnerCatalog.Conditions, () => furnitureConditionPlayer).Bind(rules);
+            new OfflineCurrentHomeIncome(selectedHomeRules, partnerCatalog.Conditions, () => furnitureConditionPlayer).Bind(rules);
             tutorials = HomeTutorialCatalog.LoadDefault();
             homeProgression = new OfflineHomeProgression(rules);
             BlessingLevel = 1;
@@ -737,7 +744,15 @@ namespace Zjcs.Presentation.Home
                 () => rules.IsFunctionLimited(57), 8);
             partnerDetailImages = new OfflineProfessionImageResourceLoader(partnerDetailAssets.Common.Images);
             partnerGiftAssets = OfficialPartnerGiftPageAssetCatalog.LoadDefault();
-            var partnerGiftImages = new OfflineProfessionImageResourceLoader(partnerGiftAssets.Images);
+            partnerDialogueRewardImages = Resources.Load<OfflineProfessionImageCatalog>("Partners/OfficialPartnerDialogueRewardImages");
+            var rewardAttachmentCatalog = Resources.Load<OfflineProfessionImageCatalog>("Home/OfflineHomeTaskRewardAttachments");
+            var currencyImages = Zjcs.Offline.HomeCurrencyUI.OfflineHomeCurrencyAssets.LoadDefault().images;
+            var partnerGiftCatalog = BuildPartnerImageCatalog(
+                partnerGiftAssets.Images.Entries,
+                partnerDialogueRewardImages != null ? partnerDialogueRewardImages.Entries : null,
+                rewardAttachmentCatalog != null ? rewardAttachmentCatalog.Entries : null,
+                currencyImages != null ? currencyImages.Entries : null);
+            var partnerGiftImages = new OfflineProfessionImageResourceLoader(partnerGiftCatalog);
             var localization = new OfflinePartnerLocalizationService(partnerDetailAssets.Texts,
                 partnerDetailAssets.Common.GiftTexts, friendshipAssets.PropertyTexts, friendshipAssets.DialogTexts,
                 partnerGiftAssets.GiftTexts, partnerGiftAssets.RelationshipTexts,
@@ -758,14 +773,22 @@ namespace Zjcs.Presentation.Home
             InitializeBagTipDots();
             partnerTipDots = new OfflinePartnerTipDotRuntime(profile, partnerCatalog,
                 giftConfiguration, progression, function => rules.IsFunctionLimited(function),
-                bagTipAssets.Definitions(), bagTipAssets.LoadGraph, bagTipServices.BindNode);
+                bagTipAssets.Definitions(), bagTipAssets.LoadGraph, bagTipServices.BindNode,
+                type => HasFurnitureForSkin(type), FurnitureTipDotInfo);
+            partnerDialogueProxy = new PartnerDialoguePresentationProxy();
+            partnerConversations = OfflinePartnerConversationUiSessionFactory.Create(profile,
+                progression.Catalog, partnerCatalog, () => DateTime.UtcNow,
+                () => rules.IsFunctionLimited(57), 8,
+                partnerDialogueProxy, partnerDialogueProxy, OnPartnerConversationsCommitted);
+            partnerTipDots.BindDialogues(partnerConversations.Playback);
             partnerTipDots.Refresh();
             partnerRoster.NpcAdded += OnPartnerRosterAdded;
             partnerRoster.NpcFriendshipUpdated += OnPartnerRosterFriendshipUpdated;
             partnerGiftPlayer.OnNpcFriendshipLevelUpdate += OnPartnerGiftFriendshipUpdated;
             partnerGiftPlayer.OnItemCountUpdate += OnPartnerGiftInventoryUpdated;
             partnerGiftBindings = new OfflinePartnerGiftRuntimeBindings(profile, partnerCatalog, partnerGiftAssets,
-                id => new OfflinePartnerItemInfo(partnerCatalog, id), key => localization.GetText(key, LanguageType.zh_CN));
+                id => new OfflinePartnerItemInfo(partnerCatalog, id), key => localization.GetText(key, LanguageType.zh_CN),
+                partnerGiftImages);
             partnerStarGod = new OfflinePartnerStarGodUiServices(profile, partnerCatalog, partnerRoster,
                 OfficialPartnerStarGodAssetCatalog.LoadDefault(), hud, partnerGiftBindings.BindGiftIcon);
             partnerGiftServices = new OfflinePartnerGiftUiServices(profile, partnerGiftPlayer,
@@ -799,6 +822,7 @@ namespace Zjcs.Presentation.Home
             }
             ApplyFurnitureStates();
             scene.ApplyHomeSkins(catalog.HomeSkins, session.Skins, rules);
+            furnitureStories = new FurnitureStories(this);
             OpenNativeStorage();
             RefreshIncomeCatalog();
             RecoverPendingFastForward();
@@ -812,6 +836,21 @@ namespace Zjcs.Presentation.Home
         }
 
         private static long Now() => DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+        internal static OfflineProfessionImageCatalog BuildPartnerImageCatalog(
+            params OfflineProfessionImageCatalog.Entry[][] groups)
+        {
+            var catalog = ScriptableObject.CreateInstance<OfflineProfessionImageCatalog>();
+            catalog.Entries = (groups ?? Array.Empty<OfflineProfessionImageCatalog.Entry[]>())
+                .Where(group => group != null)
+                .SelectMany(group => group)
+                .Where(entry => entry != null && !string.IsNullOrEmpty(entry.Path)
+                    && !string.IsNullOrEmpty(entry.AssetGuid) && entry.Asset != null)
+                .GroupBy(entry => entry.Path, StringComparer.Ordinal).Select(group => group.First())
+                .GroupBy(entry => entry.AssetGuid, StringComparer.Ordinal).Select(group => group.First())
+                .ToArray();
+            return catalog;
+        }
 
         public string FormatTopBarCurrency(long count)
         {
@@ -944,10 +983,13 @@ namespace Zjcs.Presentation.Home
                     && rules.Item(stack.ItemId)?.type == itemType),
                 AnyGoddessActive = profile.Save.World.ActivatedGoddessRegions != null
                     && profile.Save.World.ActivatedGoddessRegions.Count > 0,
-                HasManualMeetNpc = player.HasManualMeetNpc,
+                HasManualMeetNpc = player.HasManualMeetNpc
+                    || (partnerCatalog != null && furnitureConditionPlayer != null
+                        && partnerCatalog.Conditions.HasManualMeetNpc(new HomePartnerConditionPlayer(furnitureConditionPlayer))),
                 UnlockedMapClassIds = new HashSet<int>(player.UnlockedMapClassIds ?? new List<int>())
             };
             rules.CurrentContext = context;
+            storage?.NotifyHomeChanged();
         }
 
         private OfflineHomeIncomeSession OpenSession()
@@ -1261,6 +1303,10 @@ namespace Zjcs.Presentation.Home
                             pendingFruitTreeRepairTutorialType = type;
                             hud.ShowFruitTreeFurnitureMask(type);
                         });
+                    else if (!string.IsNullOrEmpty(record.repairStory)
+                        && StoryStatus(record.repairStory) == 0
+                        && TryPlayFurnitureStory(record.repairStory))
+                        break;
                     else hud.ShowRepair(type);
                     break;
                 }
@@ -1289,6 +1335,7 @@ namespace Zjcs.Presentation.Home
         {
             if (type == 0) hud.ShowBed();
             else if (type == 10) hud.ShowCart();
+            else if (type == 2) OpenPartnerTab(NpcPanelTabType.NpcList);
             else if (type == 6) hud.ShowMail();
             else if (type == 7) hud.ShowStorage();
             else if (type == 9) hud.ShowTreasureGacha();
@@ -1520,6 +1567,7 @@ namespace Zjcs.Presentation.Home
             }
             if (repaired)
             {
+                partnerTipDots?.NotifyRepairFurniture(type);
                 if (type == 0 || type == 1 || type == 2 || type == 3 || type == 5 || type == 7
                     || type == 8 || type == 9 || type == 10 || type == 12)
                 {
@@ -1529,6 +1577,8 @@ namespace Zjcs.Presentation.Home
                 ApplyFurnitureStates();
                 RefreshIncomeCatalog();
                 DrainHomeInventory();
+                bagTipServices?.Synchronize();
+                storage?.NotifyRepaired((Zjcs.Official.HomeUI.EFurniture)type);
                 hud.RefreshAll();
                 FurnitureRepairedForTutorial?.Invoke(type);
                 hangUpHud?.Source.NotifyRepaired((Zjcs.Official.HomeUI.EFurniture)type);
@@ -1875,6 +1925,24 @@ namespace Zjcs.Presentation.Home
             hud.OpenPartnerGift(npcId, partnerGiftAssets, partnerGiftServices, partnerGiftPlayer);
         }
 
+        internal void OpenPartnerTab(NpcPanelTabType defaultTab)
+        {
+            if (hud == null) return;
+            if (rules != null && rules.IsFunctionLimited(57))
+            {
+                hud.ShowNotice("功能暂未开放");
+                return;
+            }
+            hud.OpenPartnerRoster(defaultTab);
+        }
+
+        private void OnPartnerConversationsCommitted()
+        {
+            partnerTipDots?.Refresh();
+            bagTipServices?.Synchronize();
+            storage?.NotifyDialogueChanged();
+        }
+
         public bool EnterMainland()
         {
             if (onOpenMainland == null)
@@ -1918,6 +1986,8 @@ namespace Zjcs.Presentation.Home
             environment = null;
             naturalTimeLimit?.Dispose(); naturalTimeLimit = null;
             CloseNativeStorage();
+            furnitureStories?.Dispose();
+            furnitureStories = null;
             if (scene != null) scene.Dispose();
             scene = null;
             if (catalog != null) catalog.Release();
@@ -1950,13 +2020,13 @@ namespace Zjcs.Presentation.Home
             TickAstrologicalCharge();
             naturalTimeLimit?.RefreshCommittedProfile();
             environment?.Tick(Time.unscaledDeltaTime);
-            if (environment != null) storage?.Tick(environment.DayPhase);
+            storage?.Tick(environment != null ? environment.DayPhase : 0f);
             scene?.Tick(Time.unscaledDeltaTime);
             hangUpHud?.Tick();
             hud?.Tick();
             bagTipServices?.Synchronize();
             wishes?.Tick();
-            if (tutorialAutoStartEnabled && tutorialRunner != null)
+            if (tutorialAutoStartEnabled && tutorialRunner != null && !IsFurnitureStoryRunning)
             {
                 if (!tutorialRunner.IsBlocked && !tutorialRunner.HasActiveGuide && !tutorialRunner.HasQueuedGuide)
                 {
@@ -1990,6 +2060,8 @@ namespace Zjcs.Presentation.Home
         private void OnDestroy()
         {
             CloseNativeStorage();
+            furnitureStories?.Dispose();
+            furnitureStories = null;
             if (scene != null)
                 foreach (NativeHomeBedActor actor in scene.NativeBedActors)
                     if (actor != null) actor.Clicked -= OnNativeBedClicked;
@@ -2033,12 +2105,34 @@ namespace Zjcs.Presentation.Home
         // home condition context and derived property consumers immediately so
         // unlocks, home income and the next battle all read the committed state
         // without requiring a home reload.
+        private PartnerPanelFurnitureInfo FurnitureTipDotInfo(int furnitureId)
+        {
+            HomeFurnitureRecord row = rules?.FurnitureOf(furnitureId);
+            if (row == null)
+            {
+                return new PartnerPanelFurnitureInfo
+                {
+                    UnlockCondition = new PartnerPanelCondition(_ => false),
+                    RepairCost = Array.Empty<KeyValuePair<int, long>>()
+                };
+            }
+            return new PartnerPanelFurnitureInfo
+            {
+                UnlockCondition = new PartnerPanelCondition(_ => rules.IsMet(row.unlock, context)),
+                RepairCost = (row.repairCost ?? Array.Empty<HomeCostEntry>())
+                    .ToDictionary(entry => entry.itemId, entry => entry.count)
+            };
+        }
+
         private void RefreshPartnerDerivedState()
         {
             if (profile == null || progression == null || rules == null) return;
             ReloadContext();
             if (session != null && homeProgression != null) RefreshIncomeCatalog();
+            partnerConversations?.Source.SynchronizeCommittedState();
             partnerTipDots?.Refresh();
+            bagTipServices?.Synchronize();
+            storage?.NotifyHomeChanged();
             hud?.RefreshAll();
         }
 
@@ -2058,6 +2152,8 @@ namespace Zjcs.Presentation.Home
             }
             partnerTipDots?.Dispose();
             partnerTipDots = null;
+            partnerConversations = null;
+            partnerDialogueProxy = null;
             bagTipServices?.Dispose();
             bagTipServices = null;
             bagTipAssets = null;
@@ -2069,5 +2165,72 @@ namespace Zjcs.Presentation.Home
         }
 
         private void OnApplicationQuit() => tutorialRunner?.Suspend();
+
+        internal sealed class PartnerDialoguePresentationProxy : IOfflinePartnerDialoguePresentation,
+            IOfflinePartnerDialoguePlaybackPresentation
+        {
+            private IOfflinePartnerDialoguePresentation dialogueTarget;
+            private IOfflinePartnerDialoguePlaybackPresentation playbackTarget;
+
+            internal void Attach(HomeHudView.HomePartnerDialoguePresentation presentation)
+            {
+                dialogueTarget = presentation;
+                playbackTarget = presentation;
+            }
+
+            internal void Detach(HomeHudView.HomePartnerDialoguePresentation presentation)
+            {
+                if (ReferenceEquals(dialogueTarget, presentation)) dialogueTarget = null;
+                if (ReferenceEquals(playbackTarget, presentation)) playbackTarget = null;
+            }
+
+            public GameObject Instantiate(GameObject prefab, Transform parent, bool resetTransformOnly)
+                => dialogueTarget != null
+                    ? dialogueTarget.Instantiate(prefab, parent, resetTransformOnly)
+                    : HomeHudView.InstantiateDialogueUiItem(prefab, parent, resetTransformOnly);
+
+            public void InitializeNpcIcon(Component icon, PartnerDialogueNpcData npc)
+                => dialogueTarget?.InitializeNpcIcon(icon, npc);
+
+            public void ShowError(int code)
+                => dialogueTarget?.ShowError(code);
+
+            public void ShowDialogue(PartnerDialogueData dialogue)
+                => dialogueTarget?.ShowDialogue(dialogue);
+
+            public string GetNpcNameKey(int npcClassId)
+            {
+                if (playbackTarget != null) return playbackTarget.GetNpcNameKey(npcClassId);
+                var row = OfficialPartnerAssetCatalog.LoadDefault().Rows("npc")
+                    .FirstOrDefault(value => Convert.ToInt32(value["Id"]) == npcClassId);
+                return row == null ? string.Empty : Convert.ToString(row["NameKey"]);
+            }
+
+            public void InitializeActorIcon(Component icon, long actorId, PartnerDialogueSpokesMan speaker)
+                => playbackTarget?.InitializeActorIcon(icon, actorId, speaker);
+
+            public ItemIcon GetRewardIcon(int itemClassId, Transform parent)
+                => playbackTarget != null ? playbackTarget.GetRewardIcon(itemClassId, parent) : null;
+
+            public void RecycleRewardIcon(ItemIcon icon)
+            {
+                if (playbackTarget != null) playbackTarget.RecycleRewardIcon(icon);
+                else if (icon != null) UnityEngine.Object.Destroy(icon.gameObject);
+            }
+
+            public void ShowAcknowledgeFailure(ProgressionResult result, bool invokeByPlayer)
+                => playbackTarget?.ShowAcknowledgeFailure(result, invokeByPlayer);
+        }
+
+        private sealed class HomePartnerConditionPlayer : IPartnerConditionPlayer
+        {
+            private readonly OfflineHomeConditionPlayer source;
+            internal HomePartnerConditionPlayer(OfflineHomeConditionPlayer source) => this.source = source;
+            public int BaseLevel => source.BaseLevel;
+            public long GetItemAmount(int classId) => source.GetItemAmount(classId);
+            public bool IsMapAccessible(int mapClassId) => source.IsMapAccessible(mapClassId);
+            public bool RegionIsActived(int mapClassId, int region) => source.RegionIsActived(mapClassId, region);
+            public bool HasNpc(int npcClassId) => source.HasNpc(npcClassId);
+        }
     }
 }

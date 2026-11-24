@@ -67,11 +67,12 @@ public static class HomeNativePrefabResourcesValidation
     static IEnumerator Check()
     {
         var input = JsonUtility.FromJson<Inputs>(File.ReadAllText(Environment.GetEnvironmentVariable("ZJCS_HOME_NATIVE_RESOURCE_INPUT")));
-        Require(input.routes.Length == 1036 && input.routes.Select(row => row.location).Distinct().Count() == input.routes.Length,
-            "Every previously verified house, storage and Home weapon prefab has one original-address local route");
+        Require(input.routes.Length == 1042 && input.routes.Select(row => row.location).Distinct().Count() == input.routes.Length,
+            "Every previously verified house, storage, dining table and Home weapon prefab has one original-address local route");
         loader = new HomeNativePrefabLoader(); other = new HomeNativePrefabLoader();
         const string housePath = "Home/Dynamic/Theme/House/House";
         const string storagePath = "Home/Dynamic/Furniture/StorageBox/StorageBox";
+        const string diningTablePath = "Home/Dynamic/Furniture/DiningTable/DiningTable";
         var paths = new HomeEntityPrefabPaths(HomeEntityCreationCatalog.Load());
         var storageSkins = new Dictionary<int, string> {
             { 4210, "Home/Dynamic/Furniture/StorageBox/StorageBox" },
@@ -81,8 +82,17 @@ public static class HomeNativePrefabResourcesValidation
             { 4248, "Home/Dynamic/Furniture/StorageBox/StorageBoxChineseOdyssey" },
             { 4261, "Home/Dynamic/Furniture/StorageBox/StorageBoxHalloween" },
         };
-        Require(paths.GetThemePrefabPath(4700) == housePath && storageSkins.All(pair => paths.GetFurniturePrefabPath(pair.Key) == pair.Value),
-            "Current original theme/furniture address builders feed the local loader unchanged for House and all 6 StorageBox skins");
+        var diningTableSkins = new Dictionary<int, string> {
+            { 4205, "Home/Dynamic/Furniture/DiningTable/DiningTable" },
+            { 4217, "Home/Dynamic/Furniture/DiningTable/DiningTableChristmas" },
+            { 4224, "Home/Dynamic/Furniture/DiningTable/DiningTableChineseStyle" },
+            { 4236, "Home/Dynamic/Furniture/DiningTable/DiningTable1stAnniversary" },
+            { 4246, "Home/Dynamic/Furniture/DiningTable/DiningTableChineseOdyssey" },
+            { 4259, "Home/Dynamic/Furniture/DiningTable/DiningTableHalloween" },
+        };
+        Require(paths.GetThemePrefabPath(4700) == housePath && storageSkins.All(pair => paths.GetFurniturePrefabPath(pair.Key) == pair.Value)
+            && diningTableSkins.All(pair => paths.GetFurniturePrefabPath(pair.Key) == pair.Value),
+            "Current original theme/furniture address builders feed the local loader unchanged for House, all 6 StorageBox skins and all 6 DiningTable skins");
         var first = loader.LoadPrefab(housePath); var duplicate = loader.LoadPrefab(housePath);
         var otherOwner = other.LoadPrefab(housePath);
         Require(first.Result && first.Result == duplicate.Result && otherOwner.Result == first.Result,
@@ -106,6 +116,13 @@ public static class HomeNativePrefabResourcesValidation
             storage.GetComponentInChildren<HomeWeaponRack>(true), "Runtime storage route retains all original components and its weapon rack");
         storageLease.Release(); Require(!storageLease.Result && furnitureLease.Result && storage, "Original Release and Dispose contracts preserve separate active leases");
         furnitureLease.Dispose(); Require(!furnitureLease.Result, "Disposed furniture resource lease clears its own result");
+        using (var diningLease = loader.LoadPrefab(diningTablePath)) {
+            Require(diningLease.Result != null, "Runtime dining table route resolves its native prefab");
+            var dining = InstantiateInactive(diningLease.Result);
+            Require(dining.GetComponent<HomeNpcChatEntry>() && dining.GetComponentInChildren<DiningTableNpcPopClick>(true)
+                && dining.GetComponentInChildren<HomeNpcBubbleTip>(true) && dining.GetComponentInChildren<HomeNotice>(true),
+                "Runtime dining table route retains HomeNpcChatEntry, DiningTableNpcPopClick, HomeNpcBubbleTip and HomeNotice components");
+        }
         foreach (string missing in new[] { "Home/Dynamic/Furniture/NotMigrated/NotMigrated", "", null }) {
             using (var lease = loader.LoadPrefab(missing)) Require(!lease.Result, "Unavailable original address retains a null-result lease: " + (missing ?? "<null>"));
         }

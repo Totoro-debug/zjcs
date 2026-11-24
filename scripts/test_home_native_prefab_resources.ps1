@@ -16,15 +16,19 @@ if (@(Get-CimInstance Win32_Process -Filter "Name='Unity.exe'" | Where-Object {
 $work = Join-Path $validationBase ('home-native-prefab-resources-' + [Guid]::NewGuid().ToString('N'))
 [void](New-Item -ItemType Directory -Path $work)
 $receiptPath = Join-Path $repository 'assets/reference/home-native-prefab-references-source-manifest.json'
-$receipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json
+$receipt = Get-Content -LiteralPath $receiptPath -Raw -Encoding UTF8 | ConvertFrom-Json
 Copy-Item -LiteralPath $receiptPath -Destination (Join-Path $work 'routes.json')
 $files = @{}; foreach ($entry in $receipt.outputs.PSObject.Properties) { $files[$entry.Name] = $entry.Value }
 foreach ($entry in $receipt.inputs.PSObject.Properties) {
     if ($entry.Name.StartsWith('unity/') -and ($entry.Name.EndsWith('.prefab') -or $entry.Name.EndsWith('.prefab.meta'))) { $files[$entry.Name] = $entry.Value }
 }
-$bagReceipt = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/bag-tip-dot-bindings-source-manifest.json') -Raw | ConvertFrom-Json
+$bagReceipt = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/bag-tip-dot-bindings-source-manifest.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 foreach ($entry in $bagReceipt.inputs.PSObject.Properties) {
     if ($entry.Name.StartsWith('unity/Assets/Official/Home/StorageBox/Native/')) { $files[$entry.Name] = $entry.Value }
+}
+$diningReceipt = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/home-diningtable-native-source-manifest.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+foreach ($entry in $diningReceipt.outputs.PSObject.Properties) {
+    if ($entry.Name.StartsWith('unity/Assets/Official/Home/DiningTable/Native/')) { $files[$entry.Name] = $entry.Value }
 }
 foreach ($name in $files.Keys) {
     $source = Join-Path $repository $name
@@ -41,7 +45,8 @@ $fixture = Join-Path $project 'Assets/Editor/HomeNativePrefabResourcesValidation
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_native_prefab_resources_validation.cs') -Destination (Join-Path $fixture 'HomeNativePrefabResourcesValidation.cs') -Force
 @{ name = 'HomeNativePrefabResourcesValidation'; includePlatforms = @('Editor'); references = @(
     'Zjcs.Offline.HomeNativeAssets', 'Zjcs.Official.HomeEntityCreation', 'Zjcs.Official.HomeFurniture',
-    'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeModelEnvironment', 'Zjcs.Official.HomeSceneInput'
+    'Zjcs.Official.HomeHudUI', 'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeModelEnvironment',
+    'Zjcs.Official.HomeSceneInput', 'Zjcs.Official.ProfessionUI'
 ) } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $fixture 'HomeNativePrefabResourcesValidation.asmdef') -Encoding utf8
 $env:ZJCS_HOME_NATIVE_RESOURCE_PROJECT = $project
 $env:ZJCS_HOME_NATIVE_RESOURCE_INPUT = Join-Path $work 'routes.json'

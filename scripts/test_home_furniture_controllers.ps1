@@ -38,9 +38,26 @@ foreach ($relative in @(
     'Game/Runtime/Offline/Progression/OfflineWardrobeRules.cs',
     'Game/Runtime/Offline/Progression/OfficialCharacterAssetCatalog.cs',
     'Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.cs',
-    'Game/Runtime/Presentation/Character/OfficialWardrobePanelView.cs'
+    'Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotNodeManager.cs',
+    'Game/Runtime/Offline/PartnersUI/OfflinePartnerTipDotRuntime.cs',
+    'Game/Runtime/Offline/PartnersUI/PartnerDialoguePlaybackView.cs',
+    'Game/Runtime/Presentation/Character/OfficialWardrobePanelView.cs',
+    'Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef',
+    'Game/Runtime/Presentation/Home/HomeAssetCatalog.cs',
+    'Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs',
+    'Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs',
+    'Game/Runtime/Presentation/Home/HomeFeatureRuntime.FurnitureStories.cs',
+    'Game/Runtime/Presentation/Home/HomeFeatureRuntime.FurnitureStories.cs.meta',
+    'Game/Runtime/Presentation/Home/HomeHudView.cs',
+    'Game/Runtime/Presentation/Home/HomeHudView.Partners.cs',
+    'Game/Runtime/Presentation/Home/HomeHudView.Repair.cs',
+    'Game/Runtime/Presentation/Home/HomeHudView.Tutorial.cs',
+    'Game/Runtime/Presentation/Home/HomeSceneView.cs'
 )) {
-    Copy-Item -LiteralPath (Join-Path $repository ('unity/Assets/' + $relative)) -Destination (Join-Path $project ('Assets/' + $relative)) -Force
+    $src = Join-Path $repository ('unity/Assets/' + $relative)
+    $dst = Join-Path $project ('Assets/' + $relative)
+    [void](New-Item -ItemType Directory -Path (Split-Path $dst) -Force)
+    Copy-Item -LiteralPath $src -Destination $dst -Force
 }
 $rack = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/home-storage-weapon-rack-source-manifest.json') -Raw | ConvertFrom-Json
 foreach ($entry in $rack.outputs.PSObject.Properties) {
@@ -82,7 +99,7 @@ foreach ($entry in $weapon.outputs.PSObject.Properties) {
     Copy-Item -LiteralPath $inputPath -Destination $target -Force
 }
 @{ name = 'HomeFurnitureControllerValidation'; includePlatforms = @('Editor'); references = @(
-    'Zjcs.Official.HomeFurniture', 'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeSceneInput',
+    'Zjcs.Official.HomeFurniture', 'Zjcs.Official.HomeHudUI', 'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeSceneInput',
     'Zjcs.Official.HomeMainUiControls', 'Zjcs.Offline.HomeSceneInput', 'Zjcs.Official.WorldUI',
     'Zjcs.Official.ProfessionUI', 'Unity.TextMeshPro', 'Unity.ugui', 'Unity.RenderPipelines.Universal.Runtime',
     'Zjcs.Offline.NativeSpine', 'spine-unity', 'spine-csharp'

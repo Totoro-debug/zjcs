@@ -62,7 +62,12 @@ namespace Zjcs.Offline.PartnersUI
                 bindingRoot.SetActive(false);
                 uiBinding = OfflineUiBindingModule.Register(rect, new OfflineUiBindings {
                     Localize = assets.CreateLocalizer(value.Localize), Font = () => value.Font,
-                    Images = image => value.Images, SkinClip = new OfflineProfessionCurrentUiSkinClipBindings(skinClip)
+                    Images = image => value.Images, SkinClip = new OfflineProfessionCurrentUiSkinClipBindings(skinClip),
+                    Pool = (scope, prefab, parent, keepWorld) => {
+                        var instance = Instantiate(prefab, parent, keepWorld);
+                        BindTree(instance);
+                        return instance;
+                    }
                 });
                 content = Instantiate(assets.PanelPrefab, rect, false);
                 BindTree(content);
@@ -101,8 +106,8 @@ namespace Zjcs.Offline.PartnersUI
         public void Close()
         {
             if (context == null) return;
-            uiBinding?.Dispose(); uiBinding = null;
             if (bindingRoot) { bindingRoot.SetActive(false); Destroy(bindingRoot); }
+            uiBinding?.Dispose(); uiBinding = null;
             bindingRoot = null; content = null;
             skinClip?.Dispose(); skinClip = null;
             sounds?.Dispose(); sounds = null; context = null;

@@ -557,6 +557,9 @@ namespace Zjcs.Presentation.Home
                     panels[panel.key] = RestoreFlatPanelNodes(panel);
             foreach (HomeTextPair text in ui.texts ?? Array.Empty<HomeTextPair>())
                 if (text != null && !string.IsNullOrEmpty(text.key)) texts[text.key] = text.value ?? string.Empty;
+            foreach (HomeTextPair text in scene.strings ?? Array.Empty<HomeTextPair>())
+                if (text != null && !string.IsNullOrEmpty(text.key) && !texts.ContainsKey(text.key))
+                    texts[text.key] = text.value ?? string.Empty;
             foreach (HomeDynamicSprite sprite in ui.dynamic_sprites ?? Array.Empty<HomeDynamicSprite>())
                 if (sprite != null && !string.IsNullOrEmpty(sprite.key)) dynamicSprites[sprite.key] = sprite.file;
             foreach (HomeTextPair name in ui.furniture_names ?? Array.Empty<HomeTextPair>())

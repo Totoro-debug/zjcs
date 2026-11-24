@@ -23,11 +23,27 @@ namespace Zjcs.Offline.PartnersUI
         private sealed class PanelPlayer : IPartnerPanelTipDotPlayer
         {
             private readonly OfflinePartnerTipDotPlayer player;
+            private readonly Func<int, bool> hasFurniture;
             private readonly EmptyPetManager pets = new EmptyPetManager();
             private IPartnerDialogueUiServices dialogues;
-            public PanelPlayer(OfflinePartnerTipDotPlayer player) { this.player = player; }
-            public bool HasFurniture(int id) => false;
-            public bool HasItems(object items) => false;
+            public PanelPlayer(OfflinePartnerTipDotPlayer player, Func<int, bool> hasFurniture = null)
+            {
+                this.player = player;
+                this.hasFurniture = hasFurniture;
+            }
+            public bool HasFurniture(int id) => hasFurniture != null && hasFurniture(id);
+            internal void NotifyRepairFurniture(int id) => OnRepairFurniture?.Invoke(id);
+            public bool HasItems(object items)
+            {
+                if (items == null) return true;
+                if (items is IEnumerable<KeyValuePair<int, long>> longPairs)
+                    return longPairs.All(pair => player.GetItemAmount(pair.Key) >= pair.Value);
+                if (items is IEnumerable<KeyValuePair<int, int>> intPairs)
+                    return intPairs.All(pair => player.GetItemAmount(pair.Key) >= pair.Value);
+                if (items is System.Collections.ICollection collection && collection.Count == 0)
+                    return true;
+                return false;
+            }
             public bool HasAnyNpcDialogueRedDot() => dialogues != null && dialogues.Dialogues.Values
                 .Any(value => PartnerDialogueListRules.HasRedDot(value, dialogues));
             public PartnerPanelPetManager PetManager => pets;
@@ -66,15 +82,20 @@ namespace Zjcs.Offline.PartnersUI
             private static readonly IReadOnlyList<(int, long)> NoFoods = Array.Empty<(int, long)>();
             private readonly OfflinePartnerTipDotServices partners;
             private readonly Dictionary<int, NpcRoleType> npcRoles;
-            public PanelServices(OfflinePartnerTipDotServices partners, PanelPlayer player, OfficialPartnerCatalog catalog)
+            private readonly Func<int, PartnerPanelFurnitureInfo> getFurniture;
+            private readonly HashSet<Action> conditionCallbacks = new HashSet<Action>();
+            public PanelServices(OfflinePartnerTipDotServices partners, PanelPlayer player, OfficialPartnerCatalog catalog,
+                Func<int, PartnerPanelFurnitureInfo> getFurniture = null)
             {
                 this.partners = partners; Player = player;
+                this.getFurniture = getFurniture;
                 npcRoles = catalog.Rows("npc").ToDictionary(row => Convert.ToInt32(row["Id"]),
                     row => (NpcRoleType)Convert.ToInt32(row["NpcRoleType"]));
             }
             public IPartnerPanelTipDotPlayer Player { get; }
-            public PartnerPanelFurnitureInfo GetFurniture(int id) => new PartnerPanelFurnitureInfo {
-                UnlockCondition = new PartnerPanelCondition(_ => false), RepairCost = Array.Empty<int>() };
+            public PartnerPanelFurnitureInfo GetFurniture(int id)
+                => getFurniture?.Invoke(id) ?? new PartnerPanelFurnitureInfo {
+                    UnlockCondition = new PartnerPanelCondition(_ => false), RepairCost = Array.Empty<int>() };
             public IEnumerable<PartnerPanelNpcInfo> MapExploreNpcs() => partners.MapExploreNpcs()
                 .Select(npc => new PartnerPanelNpcInfo { Id = npc.Id, NpcRoleType = npcRoles[npc.Id] });
             public PartnerPanelPetInfo GetPet(int id) => null;
@@ -86,8 +107,18 @@ namespace Zjcs.Offline.PartnersUI
             public bool TryCalcLevelUpExpRequire(PartnerPanelPetRecord pet, int levels, out long required)
             { required = 0; return false; }
             public PartnerPanelCondition GetPetPotentialCondition() => new PartnerPanelCondition(_ => false);
-            public void RegisterCondition(PartnerPanelCondition condition, Action changed) { }
-            public void DeregisterCondition(PartnerPanelCondition condition, Action changed) { }
+            public void RegisterCondition(PartnerPanelCondition condition, Action changed)
+            {
+                if (changed != null) conditionCallbacks.Add(changed);
+            }
+            public void DeregisterCondition(PartnerPanelCondition condition, Action changed)
+            {
+                if (changed != null) conditionCallbacks.Remove(changed);
+            }
+            internal void NotifyConditionsChanged()
+            {
+                foreach (Action callback in conditionCallbacks.ToArray()) callback?.Invoke();
+            }
             public string ItemName(int id) => id.ToString();
         }
 
@@ -196,7 +227,9 @@ namespace Zjcs.Offline.PartnersUI
             Func<int, bool> functionLimited = null,
             IEnumerable<PartnerTipDotGraphInfo> additionalGraphs = null,
             Func<string, TipDotNodeGraph> loadAdditionalGraph = null,
-            Action<TipDotNodeBase> bindAdditionalNode = null)
+            Action<TipDotNodeBase> bindAdditionalNode = null,
+            Func<int, bool> hasFurniture = null,
+            Func<int, PartnerPanelFurnitureInfo> getFurniture = null)
         {
             if (session == null || catalog == null || gifts == null || progression == null)
                 throw new ArgumentNullException();
@@ -212,8 +245,8 @@ namespace Zjcs.Offline.PartnersUI
             services = new OfflinePartnerTipDotServices(session, catalog, gifts, player, progression,
                 (id, starGod) => FriendshipKey(achievementRules, id, starGod),
                 (error, type) => UnityEngine.Debug.LogException(new InvalidOperationException("Partner tip condition failed: " + type, error)));
-            panelPlayer = new PanelPlayer(player);
-            panelServices = new PanelServices(services, panelPlayer, catalog);
+            panelPlayer = new PanelPlayer(player, hasFurniture);
+            panelServices = new PanelServices(services, panelPlayer, catalog, getFurniture);
 
             var assets = OfficialPartnerTipDotAssetCatalog.LoadDefault();
             var extra = (additionalGraphs ?? Enumerable.Empty<PartnerTipDotGraphInfo>()).ToDictionary(value => value.GraphName);
@@ -243,12 +276,23 @@ namespace Zjcs.Offline.PartnersUI
             system.OnPlayerUpdate();
         }
 
+        public IProfessionTipDotSystem System => system;
+
+        public void NotifyRepairFurniture(int furnitureType)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfflinePartnerTipDotRuntime));
+            panelPlayer.NotifyRepairFurniture(furnitureType);
+            Refresh();
+            manager.FlushDirtyConditionNodes();
+        }
+
         public void Refresh()
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfflinePartnerTipDotRuntime));
             var refreshed = achievements.RefreshFromSave();
             if (!refreshed.IsApplied && refreshed.Status != ProgressionResultStatus.Unchanged)
                 UnityEngine.Debug.LogWarning("Partner achievement tip refresh did not apply: " + refreshed.Message);
+            panelServices.NotifyConditionsChanged();
             player.Synchronize();
         }
 

@@ -104,6 +104,7 @@ namespace Zjcs.Presentation.Home
             var go = new GameObject("Home Camera", typeof(Camera));
             go.transform.SetParent(Root.transform, false);
             Camera = go.GetComponent<Camera>();
+            if (Camera.main == null) Camera.tag = "MainCamera";
             Camera.orthographic = true;
             Camera.orthographicSize = OrthographicSize;
             Camera.clearFlags = CameraClearFlags.SolidColor;
@@ -597,7 +598,7 @@ namespace Zjcs.Presentation.Home
 
         public void BeginFurnitureRepairEffect(int type)
         {
-            if (!Root.activeInHierarchy || (type != 0 && type != 1 && type != 2 && type != 3 && type != 5 && type != 7
+            if (!Root.activeInHierarchy || HasActiveNativeFurniture(type) || (type != 0 && type != 1 && type != 2 && type != 3 && type != 5 && type != 7
                 && type != 8 && type != 9 && type != 10 && type != 12) || replacedFurniture.Contains(type)
                 || replacedHouse && (type == 0 || type == 1 || type == 2 || type == 3 || type == 7)) return;
             if (pendingRepairStates.ContainsKey(type))

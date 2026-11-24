@@ -37,7 +37,9 @@ namespace Zjcs.Presentation.Home
             }
         }
 
-        private void OpenPartnerRoster()
+        private void OpenPartnerRoster() => OpenPartnerRoster(NpcPanelTabType.NpcList);
+
+        internal void OpenPartnerRoster(NpcPanelTabType defaultTab)
         {
             CloseDialog();
             host.PartnerTipDots?.Refresh();
@@ -57,19 +59,24 @@ namespace Zjcs.Presentation.Home
                 var roster = host.PartnerRosterAssets;
                 var starGodAssets = OfficialPartnerStarGodAssetCatalog.LoadDefault();
                 var panelAssets = OfficialPartnerPanelAssetCatalog.Load();
-                partnerUiImages = ScriptableObject.CreateInstance<OfflineProfessionImageCatalog>();
-                partnerUiImages.Entries = roster.Images.Entries.Concat(starGodAssets.CreateImageCatalog().Entries)
-                    .Concat(host.PartnerGiftAssets.Images.Entries)
-                    .GroupBy(value => value.Path).Select(group => group.First()).ToArray();
+                var npcIconImages = Resources.Load<OfflineProfessionImageCatalog>("Partners/OfficialPartnerNpcIconImages");
+                if (!npcIconImages) throw new InvalidOperationException("Official NPC icon catalog is not packaged.");
+                var rewardAttachmentCatalog = Resources.Load<OfflineProfessionImageCatalog>("Home/OfflineHomeTaskRewardAttachments");
+                var currencyImages = Zjcs.Offline.HomeCurrencyUI.OfflineHomeCurrencyAssets.LoadDefault().images;
+                partnerUiImages = HomeFeatureRuntime.BuildPartnerImageCatalog(
+                    roster.Images.Entries,
+                    starGodAssets.CreateImageCatalog().Entries,
+                    host.PartnerGiftAssets.Images.Entries,
+                    npcIconImages.Entries,
+                    host.PartnerDialogueRewardImages != null ? host.PartnerDialogueRewardImages.Entries : null,
+                    rewardAttachmentCatalog != null ? rewardAttachmentCatalog.Entries : null,
+                    currencyImages != null ? currencyImages.Entries : null);
                 var panel = root.AddComponent<PartnerPanelView>();
                 partnerPanel = panel;
                 var dialoguePresentation = new HomePartnerDialoguePresentation(this);
                 partnerDialoguePresentation = dialoguePresentation;
                 var partnerData = OfficialPartnerAssetCatalog.LoadDefault();
-                var conversationUi = OfflinePartnerConversationUiSessionFactory.Create(host.Profile,
-                    host.DailyDungeonProgression.Catalog, partnerData, () => DateTime.UtcNow,
-                    () => host.Rules.IsFunctionLimited(57), 8,
-                    dialoguePresentation, dialoguePresentation, () => host.PartnerTipDots?.Refresh());
+                var conversationUi = host.PartnerConversations;
                 Func<string, string> panelFallback = WorldMultiLanguageText.Localize;
                 partnerActorUi = new OfflinePartnerActorUiRuntime(host.Profile, host.DailyDungeonProgression,
                     partnerData, new OfflineProfessionImageResourceLoader(partnerUiImages),
@@ -79,6 +86,8 @@ namespace Zjcs.Presentation.Home
                         OpenCharacterPage();
                     });
                 dialoguePresentation.Bind(conversationUi);
+                host.PartnerConversationsProxy.Attach(dialoguePresentation);
+                conversationUi.Source.SynchronizeCommittedState();
                 var context = new PartnerPanelContext {
                     Roster = host.PartnerRoster,
                     StarGod = host.PartnerStarGod,
@@ -100,7 +109,7 @@ namespace Zjcs.Presentation.Home
                     PostSound = ((IOfflinePartnerPresentation)this).PostSound
                 };
                 conversationUi.Bind(context);
-                panel.Open(panelAssets, context);
+                panel.Open(panelAssets, context, defaultTab);
             }
             catch (Exception error)
             {
@@ -110,7 +119,17 @@ namespace Zjcs.Presentation.Home
             }
         }
 
-        private sealed class HomePartnerDialoguePresentation : IOfflinePartnerDialoguePresentation,
+        internal static GameObject InstantiateDialogueUiItem(GameObject prefab, Transform parent, bool resetTransformOnly)
+        {
+            var instance = UnityEngine.Object.Instantiate(prefab, parent, false);
+            instance.transform.localPosition = Vector3.zero;
+            instance.transform.localRotation = Quaternion.identity;
+            instance.transform.localScale = Vector3.one;
+            if (!resetTransformOnly) instance.SetActive(true);
+            return instance;
+        }
+
+        internal sealed class HomePartnerDialoguePresentation : IOfflinePartnerDialoguePresentation,
             IOfflinePartnerDialoguePlaybackPresentation
         {
             private readonly HomeHudView owner;
@@ -119,7 +138,7 @@ namespace Zjcs.Presentation.Home
             internal void Bind(OfflinePartnerConversationUiSession value)
                 => conversations = value ?? throw new ArgumentNullException(nameof(value));
             public GameObject Instantiate(GameObject prefab, Transform parent, bool resetTransformOnly)
-                => UnityEngine.Object.Instantiate(prefab, parent, resetTransformOnly);
+                => InstantiateDialogueUiItem(prefab, parent, resetTransformOnly);
             public void InitializeNpcIcon(Component icon, PartnerDialogueNpcData npc)
                 => owner.partnerActorUi.InitializeNpcIcon(icon, npc);
             public void ShowError(int code) => owner.Notify("伙伴通话错误：" + code);
@@ -134,11 +153,12 @@ namespace Zjcs.Presentation.Home
                 => owner.partnerActorUi.InitializeActorIcon(icon, actorId, speaker, conversations.Source.Npcs);
             public ItemIcon GetRewardIcon(int itemClassId, Transform parent)
             {
-                var prototype = owner.host.PartnerGiftAssets.GiftPrefab
-                    ? owner.host.PartnerGiftAssets.GiftPrefab.GetComponentInChildren<ItemIcon>(true)
-                    : null;
-                if (!prototype) throw new InvalidOperationException("Original partner gift ItemIcon prototype is missing.");
-                return owner.host.PartnerGiftBindings.CreateGiftIcon(itemClassId, parent, prototype.gameObject);
+                var prototype = owner.host.PartnerFriendshipAssets?.GiftIconPrefab
+                    ?? OfficialPartnerProfileAssetCatalog.Load().RewardIconPrefab;
+                if (!prototype) throw new InvalidOperationException("Original partner reward ItemIcon prototype is missing.");
+                var icon = owner.host.PartnerGiftBindings.CreateGiftIcon(itemClassId, parent, prototype);
+                if (icon != null && !icon.gameObject.activeSelf) icon.gameObject.SetActive(true);
+                return icon;
             }
             public void RecycleRewardIcon(ItemIcon icon)
             {

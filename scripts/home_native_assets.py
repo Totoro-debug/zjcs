@@ -1,6 +1,7 @@
 """Write and install explicitly bound home-native resource closures."""
 import hashlib
 from pathlib import Path
+import shutil
 import subprocess
 
 import yaml
@@ -38,16 +39,23 @@ def install_staged_assets(work, folder, outputs, destination, prefix, *, previou
     for relative, expected in outputs.items():
         if sha((folder/relative).read_bytes()) != expected:
             raise ValueError('Staged native asset changed: '+relative)
-    wanted = work/(prefix+'-guids.txt')
-    wanted.write_text(''.join('guid: '+guid(folder/path)+'\n' for path in outputs if path.endswith('.meta')),'utf8')
-    found = subprocess.run(['rg','-l','-F','-f',str(wanted),'unity/Assets','-g','*.meta'],cwd=ROOT,capture_output=True,text=True)
-    if found.returncode not in (0,1):
-        raise ValueError(found.stderr)
+    wanted_lines = ['guid: ' + guid(folder / path) for path in outputs if path.endswith('.meta')]
+    wanted = work / (prefix + '-guids.txt')
+    wanted.write_text(''.join(line + '\n' for line in wanted_lines), 'utf8')
     existing = {}
-    for name in found.stdout.splitlines():
-        key = guid(ROOT/name)
-        if key in existing: raise ValueError('Existing native GUID collision: '+key)
-        existing[key] = ROOT/name[:-5]
+    if shutil.which('rg'):
+        found = subprocess.run(['rg', '-l', '-F', '-f', str(wanted), 'unity/Assets', '-g', '*.meta'], cwd=ROOT, capture_output=True, text=True)
+        if found.returncode not in (0, 1):
+            raise ValueError(found.stderr)
+        matched_metas = [ROOT / name for name in found.stdout.splitlines()]
+    else:
+        wanted_set = set(wanted_lines)
+        matched_metas = [meta for meta in (ROOT / 'unity/Assets').rglob('*.meta')
+                         if any(line in wanted_set for line in meta.read_text('utf8', errors='ignore').splitlines())]
+    for meta in matched_metas:
+        key = guid(meta)
+        if key in existing: raise ValueError('Existing native GUID collision: ' + key)
+        existing[key] = meta.with_suffix('')
     installed = {}
     for relative in outputs:
         if relative.endswith('.meta'): continue

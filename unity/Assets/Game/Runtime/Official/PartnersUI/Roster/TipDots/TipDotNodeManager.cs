@@ -117,24 +117,29 @@ public class TipDotNodeManager : IPartnerDynamicTipDotNodeManager, IDisposable
 		ScopeDataCollector = null;
 	}
 
+	public void FlushDirtyConditionNodes()
+	{
+		if (bindings.HasPlayer() && mStartConditionNodeUpdate && mDirtyConditionNodeSet.Count > 0)
+		{
+			mProcessDirtyConditionNodeList.Clear();
+			mProcessDirtyConditionNodeList.AddRange(mDirtyConditionNodeSet);
+			mDirtyConditionNodeSet.Clear();
+			for (int i = 0; i < mProcessDirtyConditionNodeList.Count; i++)
+			{
+				try { mProcessDirtyConditionNodeList[i]?.UpdateNode(); }
+				catch (Exception error) { UnityEngine.Debug.LogException(error); }
+			}
+			mProcessDirtyConditionNodeList.Clear();
+		}
+	}
+
 	private async UniTaskVoid PeriodicConditionNodeUpdater()
     {
         // Restored from the game's async state machine. Dispose ends only the
         // owner lifetime; Init/Release retain the original worker semantics.
         while (!disposed)
         {
-            if (bindings.HasPlayer() && mStartConditionNodeUpdate && mDirtyConditionNodeSet.Count > 0)
-            {
-                mProcessDirtyConditionNodeList.Clear();
-                mProcessDirtyConditionNodeList.AddRange(mDirtyConditionNodeSet);
-                mDirtyConditionNodeSet.Clear();
-                for (int i = 0; i < mProcessDirtyConditionNodeList.Count; i++)
-                {
-                    try { mProcessDirtyConditionNodeList[i]?.UpdateNode(); }
-                    catch (Exception error) { UnityEngine.Debug.LogException(error); }
-                }
-                mProcessDirtyConditionNodeList.Clear();
-            }
+            FlushDirtyConditionNodes();
             await UniTask.DelayFrame(1, (PlayerLoopTiming)8, default(System.Threading.CancellationToken), false);
         }
     }

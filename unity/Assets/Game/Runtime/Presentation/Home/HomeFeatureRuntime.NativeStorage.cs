@@ -5,37 +5,54 @@ using Cysharp.Threading.Tasks;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.Animations;
+using UnityEngine.Events;
 using UnityEngine.Playables;
+using Zjcs.Offline.Home;
 using Zjcs.Offline.HomeNativeAssets;
+using Zjcs.Offline.HomeNativeTime;
 using Zjcs.Offline.NativeSpine;
+using Zjcs.Offline.PartnersUI;
 using Zjcs.Offline.ProfessionUI;
 using Zjcs.Offline.Progression;
 using Zjcs.Official.HomeEntityBindings;
 using Zjcs.Official.HomeEntityCreation;
 using Zjcs.Official.HomeEntityRuntime;
+using Zjcs.Official.HomeFunctionMenuUI;
 using Zjcs.Official.HomeFurniture;
+using Zjcs.Official.HomeHudUI;
+using Zjcs.Official.HomeNativeTime;
+using Zjcs.Official.HomeSceneInput;
+using Zjcs.Official.HomeSceneUiControls;
 using Zjcs.Official.HomeUI;
+using Zjcs.Official.PartnersUI;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.StoryNodes;
 using Zjcs.Official.StoryPlayables;
+using Zjcs.Official.World.NativeCamera;
+using Zjcs.Official.World.Map13MiniMap;
+using Zjcs.Official.World.NativeLabelUI.Framework;
+using Zjcs.Official.WorldUI;
 using Object = UnityEngine.Object;
 using GAction = Zjcs.Official.StoryPlayables.GAction;
+using HomeViewMode = Zjcs.Official.HomeFurniture.HomeViewMode;
 
 namespace Zjcs.Presentation.Home
 {
     public sealed partial class HomeFeatureRuntime
     {
-        NativeStorage storage;
+        private NativeFurniture storage;
 
-        public GameObject NativeStorageInstance => storage?.Instance;
+        public GameObject NativeStorageInstance => storage?.GetInstance(EFurniture.StorageBox);
+        public GameObject NativeFurnitureInstance(EFurniture furniture) => storage?.GetInstance(furniture);
         public IStoryNodeRegisterMgr NativeStorageStoryNodes => storage?.StoryNodes;
         public void RefreshNativeFurnitureSkins() => storage?.RefreshSkin();
         public void SetHomeViewMode(HomeViewMode mode) => storage?.SetViewMode(mode);
         public void PublishHomeActionEvent(ActionEventData data) => storage?.PublishActionEvent(data);
+        internal void SetNativeSceneUiActive(bool active) => storage?.SetSceneUiActive(active);
 
-        void OpenNativeStorage()
+        private void OpenNativeStorage()
         {
-            var owner = new NativeStorage(this);
+            var owner = new NativeFurniture(this);
             try
             {
                 owner.Open();
@@ -48,45 +65,201 @@ namespace Zjcs.Presentation.Home
             }
         }
 
-        void CloseNativeStorage()
+        private void CloseNativeStorage()
         {
             var owner = storage;
             storage = null;
             owner?.Dispose();
         }
 
-        sealed class NativeStorage : IHomeFurnitureServices, IHomeFurniturePlayer,
+        /// <summary>
+        /// Shared multi-furniture owner for official native Home building prefabs,
+        /// managing House slots, Spine weapon/furniture bindings, timelines, time-driven
+        /// animations, TipDot linkers, NPC dialogue bubbles, conditions, and stories.
+        /// </summary>
+        internal sealed class NativeFurniture : IHomeFurnitureServices, IHomeFurniturePlayer,
             IHomeFurnitureViewModes, IHomeFurnitureActionEvents, IHomeWeaponAnimationBindings,
-            IHomeEntityManagerContext, IHomeEntitySkinData, IHomeFurnitureChangePublisher, IDisposable
+            IHomeEntityManagerContext, IHomeEntitySkinData, IHomeFurnitureChangePublisher,
+            IHomeNpcBubbleTipServices, IHomePlayerUiServices, IHomeSceneUiServices, IDisposable
         {
-            readonly HomeFeatureRuntime home;
-            readonly HomeNativePrefabLoader loader = new HomeNativePrefabLoader();
-            readonly StoryNodeRegisterMgr storyNodes = new StoryNodeRegisterMgr();
-            readonly GAction changed = new GAction();
-            readonly GAction<HomeViewMode> viewModes = new GAction<HomeViewMode>();
-            readonly GAction<ActionEventData> actions = new GAction<ActionEventData>();
-            readonly HashSet<Func<HomeFurnitureAward, bool>> awardHandlers = new HashSet<Func<HomeFurnitureAward, bool>>();
-            readonly List<AnimationClipPlayable> clips = new List<AnimationClipPlayable>();
-            AppearanceAssetManager materials;
-            NativeSpineAppearanceBindings textures;
-            HomeNativeWeaponRackServices rackServices;
-            OfflineProfessionAppearanceBindings appearance;
-            OfflinePlayerProgress renderedPlayer;
-            string renderedWardrobe;
-            HomeNativePrefabFactory factory;
-            HomeEntityCreationCatalog tables;
-            HomeEntityPrefabPaths paths;
-            FurnitureEntityCreator creator;
-            GameObject anchor;
-            GameObject instance;
-            AudioSource clickSound;
-            PlayableGraph timeline;
-            HomeViewMode currentViewMode = HomeViewMode.Owner;
-            bool disposed;
+            private static readonly EFurniture[] SupportedFurniture =
+            {
+                EFurniture.StorageBox,
+                EFurniture.DiningTable
+            };
 
-            internal NativeStorage(HomeFeatureRuntime home) => this.home = home;
-            internal GameObject Instance => instance;
+            private sealed class EntityState
+            {
+                public EFurniture Type;
+                public GameObject Instance;
+                public readonly List<AnimationClipPlayable> Clips = new List<AnimationClipPlayable>();
+                public PlayableGraph Timeline;
+            }
+
+            private sealed class StoryContextToken : IHomeFurnitureStoryContext
+            {
+                public string Owner;
+            }
+
+            private sealed class ConditionSubscription
+            {
+                public IHomeFurnitureCondition Condition;
+                public bool LastMet;
+                public Action Callback;
+            }
+
+            private sealed class ActionDisposable : IDisposable
+            {
+                private Action release;
+                public ActionDisposable(Action release) => this.release = release;
+                public void Dispose() { Action action = release; release = null; action?.Invoke(); }
+            }
+
+            private sealed class HomeConditionAdapter : IHomeFurnitureCondition
+            {
+                private readonly NativeFurniture owner;
+                internal readonly HomeConditionNode Node;
+
+                internal HomeConditionAdapter(NativeFurniture owner, HomeConditionNode node)
+                {
+                    this.owner = owner;
+                    Node = node;
+                }
+
+                public bool IsMet() => owner.home.rules.IsMet(Node, owner.home.context);
+            }
+
+            private sealed class ConditionNoticeAdapter : IHomeFurnitureConditionNotice
+            {
+                private readonly NativeFurniture owner;
+                private readonly IHomeFurnitureCondition condition;
+
+                internal ConditionNoticeAdapter(NativeFurniture owner, IHomeFurnitureCondition condition)
+                {
+                    this.owner = owner;
+                    this.condition = condition;
+                }
+
+                public Action<string, object[]> OnNoticeTxtUpdate { get; set; }
+
+                public void Refresh()
+                {
+                    if (TryResolveLevelNotice(out int level))
+                    {
+                        OnNoticeTxtUpdate?.Invoke("<size=50>{0}</size>级解锁", new object[] { level });
+                        return;
+                    }
+                    OnNoticeTxtUpdate?.Invoke("满足条件后解锁", Array.Empty<object>());
+                }
+
+                public bool OnUpdate(float deltaTime) => false;
+
+                public string MessageTip()
+                {
+                    if (TryResolveLevelNotice(out int level))
+                        return "等级达到" + level + "级后可解锁";
+                    return "尚未满足解锁条件";
+                }
+
+                private bool TryResolveLevelNotice(out int level)
+                {
+                    level = 0;
+                    if (!(condition is HomeConditionAdapter adapter) || adapter.Node == null) return false;
+                    return TryFindLevelTarget(adapter.Node, out level);
+                }
+
+                private bool TryFindLevelTarget(HomeConditionNode node, out int level)
+                {
+                    level = 0;
+                    if (node == null) return false;
+                    if (node._type == "LevelCondition" && node.Level > 0)
+                    {
+                        level = node.Level;
+                        return true;
+                    }
+                    if ((node._type == "CompositeOrCondition" || node._type == "CompositeAndCondition")
+                        && node.Ids != null)
+                    {
+                        var lookup = owner.home.rules?.Data?.conditions?
+                            .Where(row => row != null && row.node != null)
+                            .ToDictionary(row => row.classId, row => row.node);
+                        if (lookup != null)
+                        {
+                            foreach (int id in node.Ids)
+                                if (lookup.TryGetValue(id, out HomeConditionNode child)
+                                    && TryFindLevelTarget(child, out level))
+                                    return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+
+            private readonly HomeFeatureRuntime home;
+            private readonly HomeNativePrefabLoader loader = new HomeNativePrefabLoader();
+            private readonly StoryNodeRegisterMgr storyNodes = new StoryNodeRegisterMgr();
+            private readonly GAction changed = new GAction();
+            private readonly GAction<HomeViewMode> viewModes = new GAction<HomeViewMode>();
+            private readonly GAction<ActionEventData> actions = new GAction<ActionEventData>();
+            private readonly GAction bubbleDialogueChanged = new GAction();
+            private readonly GAction<SetHomeSceneUIActiveData> uiActiveEvents = new GAction<SetHomeSceneUIActiveData>();
+            private readonly UnityEvent playerUpdateEvent = new UnityEvent();
+            private readonly HashSet<Func<HomeFurnitureAward, bool>> awardHandlers = new HashSet<Func<HomeFurnitureAward, bool>>();
+            private readonly List<ConditionSubscription> conditionSubscriptions = new List<ConditionSubscription>();
+            private readonly Dictionary<EFurniture, EntityState> entities = new Dictionary<EFurniture, EntityState>();
+            private readonly Dictionary<GameObject, EntityState> instances = new Dictionary<GameObject, EntityState>();
+
+            private AppearanceAssetManager materials;
+            private NativeSpineAppearanceBindings textures;
+            private HomeNativeWeaponRackServices rackServices;
+            private OfflineProfessionAppearanceBindings appearance;
+            private OfflinePlayerProgress renderedPlayer;
+            private string renderedWardrobe;
+            private HomeNativePrefabFactory factory;
+            private HomeEntityCreationCatalog tables;
+            private HomeEntityPrefabPaths paths;
+            private FurnitureEntityCreator creator;
+            private sealed class HomeLanguageTypeService : ILanguageTypeService
+            {
+                public Zjcs.Official.World.NativeLabelUI.Framework.LanguageType CurrentLanguage { get; set; }
+                    = Zjcs.Official.World.NativeLabelUI.Framework.LanguageType.zh_CN;
+                public bool IsShowLanguageKey { get; set; }
+                public bool IsShowMissingKeyText { get; set; }
+                public event Action<Zjcs.Official.World.NativeLabelUI.Framework.LanguageType> OnLanguageChanged
+                {
+                    add { }
+                    remove { }
+                }
+            }
+
+            private OfflineHomeNativeTime nativeTime;
+            private readonly HomeLanguageTypeService languageService = new HomeLanguageTypeService();
+            private LanguageGroupConfig languageGroupConfig;
+            private GameObject anchor;
+            private AudioSource clickSound;
+            private OfflineProfessionImageResourceLoader npcIconLoader;
+            private Dictionary<int, string> npcIconPaths;
+            private HomeViewMode currentViewMode = HomeViewMode.Owner;
+            private Action<EFurniture> onRepairFurniture;
+            private Action<long> onDebugTimeOffset;
+            private bool disposed;
+
+            internal NativeFurniture(HomeFeatureRuntime home) => this.home = home;
             internal IStoryNodeRegisterMgr StoryNodes => storyNodes;
+
+            internal GameObject GetInstance(EFurniture type)
+                => entities.TryGetValue(type, out EntityState state) ? state.Instance : null;
+
+            internal bool TryGetFurnitureMaskTarget(int furnitureType, out GameObject target)
+            {
+                target = null;
+                if (!entities.TryGetValue((EFurniture)furnitureType, out EntityState state) || !state.Instance)
+                    return false;
+                Collider activeCollider = state.Instance.GetComponentsInChildren<Collider>(true)
+                    .FirstOrDefault(collider => collider != null && collider.enabled && collider.gameObject.activeInHierarchy);
+                target = activeCollider != null ? activeCollider.gameObject : state.Instance;
+                return true;
+            }
 
             internal void Open()
             {
@@ -107,32 +280,50 @@ namespace Zjcs.Presentation.Home
                 textures = new NativeSpineAppearanceBindings(assets.WeaponAppearance, materials);
                 rackServices = new HomeNativeWeaponRackServices(() => appearance, () => appearance,
                     new ProfessionAppearanceResolver(professionTables), professionTables, changed.Subscribe, textures, this);
+                nativeTime = new OfflineHomeNativeTime(() => Time.deltaTime, () => Time.timeScale);
+                languageGroupConfig = CreateLanguageGroupConfig();
                 factory = new HomeNativePrefabFactory(Install);
                 tables = HomeEntityCreationCatalog.Load();
                 paths = new HomeEntityPrefabPaths(tables);
+
                 using var house = loader.LoadPrefab(paths.GetThemePrefabPath(home.rules.Data.themeSkins
                     .Single(value => value.isDefault && value.themeType == (int)HomeThemeType.House).skinItemId));
                 var housePrefab = house.Result;
-                if (!housePrefab || !housePrefab.TryGetComponent<HomeSlotEntityData>(out var roomSlots)
-                    || !roomSlots.FurnitureDict.TryGetValue(EFurniture.StorageBox, out var slot)
-                    || !slot || !slot.IsChildOf(housePrefab.transform))
-                    throw new InvalidOperationException("The official Room has no StorageBox slot.");
-                // The current room composite exposes the original theme coordinate space.
-                // Project the authored transform chain until the native house owns this slot.
+                if (!housePrefab || !housePrefab.TryGetComponent<HomeSlotEntityData>(out var roomSlots))
+                    throw new InvalidOperationException("The official Room has no furniture slots.");
+
                 anchor = new GameObject("NativeIndoorFurniture");
                 anchor.transform.SetParent(home.scene.Root.transform, false);
-                var projectedSlot = ProjectSlot(slot, housePrefab.transform, anchor.transform);
-                creator = new FurnitureEntityCreator(
-                    new Dictionary<EFurniture, Transform> { { EFurniture.StorageBox, projectedSlot } },
-                    null);
-                if (!creator.GetOrCreate(EFurniture.StorageBox, this))
-                    throw new InvalidOperationException("The original StorageBox prefab is missing.");
+                clickSound = anchor.AddComponent<AudioSource>();
+                clickSound.playOnAwake = false;
+                HomeAudioSettings.Register(clickSound, HomeAudioChannel.Sound);
+
+                var slotDict = new Dictionary<EFurniture, Transform>();
+                foreach (EFurniture type in SupportedFurniture)
+                {
+                    if (!roomSlots.FurnitureDict.TryGetValue(type, out Transform slot)
+                        || !slot || !slot.IsChildOf(housePrefab.transform))
+                        throw new InvalidOperationException("The official Room has no slot for " + type + ".");
+                    slotDict[type] = ProjectSlot(slot, housePrefab.transform, anchor.transform);
+                }
+
+                creator = new FurnitureEntityCreator(slotDict, null);
+                foreach (EFurniture type in SupportedFurniture)
+                {
+                    if (!creator.GetOrCreate(type, this))
+                        throw new InvalidOperationException("The original native furniture prefab is missing: " + type);
+                }
+                nativeTime.Enable();
             }
 
             internal void RefreshSkin()
             {
                 if (disposed || creator == null) return;
-                creator.OnSkinChanged(EFurniture.StorageBox, GetFurnitureSkinId(EFurniture.StorageBox), this, out _);
+                foreach (EFurniture type in SupportedFurniture)
+                {
+                    if (entities.ContainsKey(type))
+                        creator.OnSkinChanged(type, GetFurnitureSkinId(type), this, out _);
+                }
             }
 
             internal void SetViewMode(HomeViewMode mode)
@@ -141,9 +332,38 @@ namespace Zjcs.Presentation.Home
                 viewModes.Invoke(mode);
             }
 
+            internal void SetSceneUiActive(bool isActive)
+                => uiActiveEvents.Invoke(new SetHomeSceneUIActiveData { IsActive = isActive });
+
             internal void PublishActionEvent(ActionEventData data) => actions.Invoke(data);
 
-            static Transform ProjectSlot(Transform slot, Transform house, Transform parent)
+            internal void NotifyRepaired(EFurniture furniture)
+            {
+                onRepairFurniture?.Invoke(furniture);
+                NotifyHomeChanged();
+            }
+
+            internal void NotifyDialogueChanged()
+            {
+                if (disposed) return;
+                bubbleDialogueChanged.Invoke();
+                NotifyHomeChanged();
+            }
+
+            internal void NotifyHomeChanged()
+            {
+                if (disposed) return;
+                foreach (ConditionSubscription entry in conditionSubscriptions.ToArray())
+                {
+                    bool met = entry.Condition == null || entry.Condition.IsMet();
+                    if (met == entry.LastMet) continue;
+                    entry.LastMet = met;
+                    entry.Callback?.Invoke();
+                }
+                changed.Invoke();
+            }
+
+            private static Transform ProjectSlot(Transform slot, Transform house, Transform parent)
             {
                 if (slot != house) parent = ProjectSlot(slot.parent, house, parent);
                 var node = new GameObject(slot.name).transform;
@@ -153,48 +373,96 @@ namespace Zjcs.Presentation.Home
                 return node;
             }
 
-            void Install(GameObject root)
+            private void Install(GameObject root)
             {
-                var furniture = root.GetComponent<StoreBoxFurniture>();
-                furniture.Services = this;
-                furniture.OnClickAction.AddListener(() => home.FurnitureClickedForTutorial?.Invoke((int)EFurniture.StorageBox));
-                home.nativeSceneInput.Bind(furniture);
-                foreach (var notice in root.GetComponentsInChildren<HomeNotice>(true)) notice.Services = this;
-                foreach (var rack in root.GetComponentsInChildren<HomeWeaponRack>(true)) rack.Services = rackServices;
-                foreach (var mode in root.GetComponentsInChildren<HomeViewModeControl>(true)) mode.ViewModes = this;
-                foreach (var action in root.GetComponentsInChildren<HomeActionEventHandler>(true)) action.ActionEvents = this;
+                foreach (var furniture in root.GetComponentsInChildren<FurnitureBase>(true))
+                {
+                    furniture.Services = this;
+                    EFurniture type = furniture.Furniture;
+                    furniture.OnClickAction.AddListener(() => home.FurnitureClickedForTutorial?.Invoke((int)type));
+                }
+                foreach (var clickable in root.GetComponentsInChildren<ClickableHomeObj>(true))
+                    home.nativeSceneInput.Bind(clickable);
+                foreach (var popClick in root.GetComponentsInChildren<DiningTableNpcPopClick>(true))
+                    popClick.Services = this;
+                foreach (var bubble in root.GetComponentsInChildren<HomeNpcBubbleTip>(true))
+                {
+                    bubble.PlayerServices = this;
+                    bubble.FurnitureServices = this;
+                    bubble.BubbleServices = this;
+                    bubble.AnimationBindings = this;
+                }
+                foreach (var notice in root.GetComponentsInChildren<HomeNotice>(true))
+                    notice.Services = this;
+                foreach (var rack in root.GetComponentsInChildren<HomeWeaponRack>(true))
+                    rack.Services = rackServices;
+                foreach (var mode in root.GetComponentsInChildren<HomeViewModeControl>(true))
+                    mode.ViewModes = this;
+                foreach (var action in root.GetComponentsInChildren<HomeActionEventHandler>(true))
+                    action.ActionEvents = this;
+                foreach (var screen in root.GetComponentsInChildren<HomeScreenShootActive>(true))
+                    screen.Services = this;
+                foreach (var anim in root.GetComponentsInChildren<HomeTimeDriveAnimationElement>(true))
+                    anim.Publisher = nativeTime.Events;
+                foreach (var skel in root.GetComponentsInChildren<HomeTimeDriveSkeletonElement>(true))
+                    skel.Publisher = nativeTime.Events;
+                foreach (var text in root.GetComponentsInChildren<WorldMultiLanguageText>(true))
+                {
+                    if (text.FontProvider == null) text.FontProvider = () => home.catalog.Font;
+                    if (text.Localizer == null) text.Localizer = LocalizeUiText;
+                }
+                foreach (var tmpController in root.GetComponentsInChildren<MultiLanguageTMPControler>(true))
+                {
+                    tmpController.LanguageGroupConfig = languageGroupConfig;
+                    tmpController.LanguageTypeService = languageService;
+                }
                 foreach (var node in root.GetComponentsInChildren<Zjcs.Official.StoryNodes.StoryNodeRegister>(true))
                     node.NodeRegisterManager = storyNodes;
-                clickSound = root.AddComponent<AudioSource>();
-                clickSound.playOnAwake = false;
-                HomeAudioSettings.Register(clickSound, HomeAudioChannel.Sound);
+                foreach (var node in root.GetComponentsInChildren<Zjcs.Official.ProfessionUI.StoryNodeRegister>(true))
+                    node.Init(storyNodes);
                 foreach (var sound in root.GetComponentsInChildren<EntityClickSound>(true))
                 {
                     sound.InputOperationModule = home.nativeSceneInput.InputModule;
-                    sound.Post = (clip, _) => clickSound.PlayOneShot(clip);
+                    sound.Post = (clip, _) => { if (clip && clickSound) clickSound.PlayOneShot(clip); };
                 }
+                home.PartnerTipDots?.BindNativeTree(root);
                 home.BindBagTipNativeTree(root);
             }
 
-            void SetupTimeline()
+            private string LocalizeUiText(string key)
             {
-                if (timeline.IsValid()) timeline.Destroy();
-                clips.Clear();
-                timeline = PlayableGraph.Create("HomeFurnitureClips");
-                timeline.SetTimeUpdateMode(DirectorUpdateMode.Manual);
-                foreach (var binding in instance.GetComponent<HomePlayableClipBind>().ClipDatas)
+                if (string.IsNullOrEmpty(key)) return string.Empty;
+                if (WorldMultiLanguageText.Localize != null)
                 {
-                    var clip = AnimationClipPlayable.Create(timeline, binding.Clip);
-                    clip.SetSpeed(0);
-                    var output = AnimationPlayableOutput.Create(timeline, binding.Clip.name, binding.Animator);
-                    output.SetSourcePlayable(clip);
-                    clips.Add(clip);
+                    string localized = WorldMultiLanguageText.Localize(key);
+                    if (!string.IsNullOrEmpty(localized) && localized != key) return localized;
                 }
-                timeline.Play();
+                return home.catalog != null ? home.catalog.LocalizedText(key, key) : key;
+            }
+
+            private static void SetupTimeline(EntityState state)
+            {
+                if (state.Timeline.IsValid()) state.Timeline.Destroy();
+                state.Clips.Clear();
+                var clipBind = state.Instance ? state.Instance.GetComponent<HomePlayableClipBind>() : null;
+                if (clipBind == null || clipBind.ClipDatas == null || clipBind.ClipDatas.Count == 0) return;
+                state.Timeline = PlayableGraph.Create("HomeFurnitureClips_" + state.Type);
+                state.Timeline.SetTimeUpdateMode(DirectorUpdateMode.Manual);
+                foreach (var binding in clipBind.ClipDatas)
+                {
+                    if (!binding.Clip || !binding.Animator) continue;
+                    var clip = AnimationClipPlayable.Create(state.Timeline, binding.Clip);
+                    clip.SetSpeed(0);
+                    var output = AnimationPlayableOutput.Create(state.Timeline, binding.Clip.name, binding.Animator);
+                    output.SetSourcePlayable(clip);
+                    state.Clips.Add(clip);
+                }
+                state.Timeline.Play();
             }
 
             internal void Tick(float dayPhase)
             {
+                if (disposed) return;
                 var next = home.profile.Save.Player;
                 if (!ReferenceEquals(renderedPlayer, next))
                 {
@@ -205,10 +473,15 @@ namespace Zjcs.Presentation.Home
                         renderedWardrobe = wardrobe;
                         appearance.Refresh(AppearanceOperateSource.Normal);
                     }
+                    NotifyHomeChanged();
                 }
-                if (!instance || !instance.activeInHierarchy) return;
-                foreach (var clip in clips) clip.SetTime(dayPhase * clip.GetAnimationClip().length);
-                timeline.Evaluate();
+                nativeTime?.Tick();
+                foreach (EntityState state in entities.Values)
+                {
+                    if (!state.Instance || !state.Instance.activeInHierarchy || !state.Timeline.IsValid()) continue;
+                    foreach (var clip in state.Clips) clip.SetTime(dayPhase * clip.GetAnimationClip().length);
+                    state.Timeline.Evaluate();
+                }
             }
 
             public void Dispose()
@@ -216,21 +489,49 @@ namespace Zjcs.Presentation.Home
                 if (disposed) return;
                 disposed = true;
                 creator?.ReleaseAll(this);
-                if (timeline.IsValid()) timeline.Destroy();
-                clips.Clear();
+                foreach (EntityState state in entities.Values)
+                {
+                    if (state.Timeline.IsValid()) state.Timeline.Destroy();
+                    state.Clips.Clear();
+                }
+                entities.Clear();
+                instances.Clear();
+                conditionSubscriptions.Clear();
                 HomeAudioSettings.Unregister(clickSound);
+                clickSound = null;
                 if (anchor) { anchor.SetActive(false); Object.Destroy(anchor); }
                 ReleaseAfterInstances(anchor).Forget();
             }
 
-            async UniTask ReleaseAfterInstances(GameObject root)
+            private async UniTask ReleaseAfterInstances(GameObject root)
             {
                 while (root) await UniTask.NextFrame();
+                nativeTime?.Dispose();
+                nativeTime = null;
                 factory?.Dispose();
                 rackServices?.Dispose();
                 textures?.Dispose();
                 materials?.Dispose();
+                if (languageGroupConfig)
+                {
+                    Object.Destroy(languageGroupConfig);
+                    languageGroupConfig = null;
+                }
                 loader.Dispose();
+            }
+
+            private static LanguageGroupConfig CreateLanguageGroupConfig()
+            {
+                var config = ScriptableObject.CreateInstance<LanguageGroupConfig>();
+                config.LanguageGroupMappingDict = new Zjcs.Official.World.NativeMap13Labels.MonoDictionary<LanguageGroup, List<Zjcs.Official.World.NativeLabelUI.Framework.LanguageType>>
+                {
+                    { LanguageGroup.Zh, new List<Zjcs.Official.World.NativeLabelUI.Framework.LanguageType> {
+                        Zjcs.Official.World.NativeLabelUI.Framework.LanguageType.zh_CN,
+                        Zjcs.Official.World.NativeLabelUI.Framework.LanguageType.zh_TW } },
+                    { LanguageGroup.West, new List<Zjcs.Official.World.NativeLabelUI.Framework.LanguageType> {
+                        Zjcs.Official.World.NativeLabelUI.Framework.LanguageType.en_US } }
+                };
+                return config;
             }
 
             public IHomeEntityResourceLoader ResourceLoader => loader;
@@ -241,35 +542,47 @@ namespace Zjcs.Presentation.Home
             public int PreviewWeatherId => 0;
             public GameObject Instantiate(GameObject prefab, Transform parent, bool worldPositionStays)
                 => factory.Instantiate(prefab, parent, worldPositionStays);
+
             public void OnEntityWillDestroy(GameObject go)
             {
-                if (timeline.IsValid()) timeline.Destroy();
-                clips.Clear();
-                HomeAudioSettings.Unregister(clickSound);
-                clickSound = null;
-                if (instance == go) instance = null;
+                if (!go || !instances.TryGetValue(go, out EntityState state)) return;
+                if (state.Timeline.IsValid()) state.Timeline.Destroy();
+                state.Clips.Clear();
+                instances.Remove(go);
+                if (entities.TryGetValue(state.Type, out EntityState current) && current == state)
+                    entities.Remove(state.Type);
             }
+
             public void OnEntityCreated(GameObject go)
             {
-                instance = go;
-                SetupTimeline();
-                home.scene.BindNativeFurniture((int)EFurniture.StorageBox, instance);
+                FurnitureBase furniture = go.GetComponent<FurnitureBase>();
+                if (!furniture)
+                    throw new InvalidOperationException("Native furniture prefab has no FurnitureBase controller: " + go.name);
+                var state = new EntityState { Type = furniture.Furniture, Instance = go };
+                entities[state.Type] = state;
+                instances[go] = state;
+                SetupTimeline(state);
+                home.scene.BindNativeFurniture((int)state.Type, go);
             }
+
             public int GetFurnitureSkinId(EFurniture type)
             {
                 var defaultSkin = home.rules.Data.furnitureSkins.First(value => value.furnitureType == (int)type && value.isDefault);
                 return home.session.SkinOf(0, (int)type)?.SkinItemId ?? defaultSkin.skinItemId;
             }
+
             public int GetThemeSkinId(HomeThemeType type)
             {
                 var defaultSkin = home.rules.Data.themeSkins.First(value => value.themeType == (int)type && value.isDefault);
                 return home.session.SkinOf(1, (int)type)?.SkinItemId ?? defaultSkin.skinItemId;
             }
+
             public int GetEnvironmentSkinId(HomeEnvironmentType type)
             {
                 var defaultSkin = home.rules.Data.environmentSkins.First(value => value.environmentType == (int)type && value.isDefault);
                 return home.session.SkinOf(2, (int)type)?.SkinItemId ?? defaultSkin.skinItemId;
             }
+
             public void Publish(HomeFurnitureChangeData data) => changed.Invoke();
 
             public bool InMyHome => true;
@@ -281,37 +594,160 @@ namespace Zjcs.Presentation.Home
             public bool HasFurniture(EFurniture furniture) => home.HasFurnitureForSkin((int)furniture);
             public bool CheckFunctionDisabled(EFurniture furniture) => home.hud.IsClosedByNetworkPolicy((int)furniture);
             public void PopupPlayerBag() => home.hud.ShowStorage();
-            public void PopupRepair(EFurniture furniture, bool isBuild) => home.hud.ShowRepair((int)furniture);
+            public void PopupRepair(EFurniture furniture, bool isBuild) => home.hud.ShowRepair((int)furniture, isBuild);
             public void RegisterAwardHandler(Func<HomeFurnitureAward, bool> handler) => awardHandlers.Add(handler);
             public void RemoveAwardHandler(Func<HomeFurnitureAward, bool> handler) => awardHandlers.Remove(handler);
             public IDisposable SubscribePostHomeChange(Action action) => changed.Subscribe(action);
             public void ShowError(int textId) => home.hud.ShowNotice(home.catalog.LocalizedText("TextError." + textId, textId.ToString()));
             public void SystemMessage(string message) => home.hud.ShowNotice(message);
+            public bool IsFunctionLimit(int functionType) => home.rules.IsFunctionLimited(functionType);
+            public void PopupNpcPanel(int defaultTab = 0) => home.OpenPartnerTab((NpcPanelTabType)defaultTab);
+            public DateTime GetDateTime() => DateTime.UtcNow.AddHours(8);
+            public DateTime GetDailyResetTimeFromDate(DateTime dateTime) => OfflineRefreshClock.DayStart(dateTime);
+            public void RefreshDailyDialogues(bool invokeByPlayer) => home.RefreshPartnerDerivedState();
             public bool HasStartedStory(string name) => home.StoryStatus(name) > 0;
-            public void DoStoryAction(Action action) => action();
+            public void DoStoryAction(Action action) => action?.Invoke();
+
             public FurnitureInfo GetFurnitureInfo(EFurniture furniture)
             {
-                var row = home.rules.FurnitureOf((int)furniture);
-                if (!string.IsNullOrEmpty(row.repairStory)) throw UnexpectedRepair();
-                return new FurnitureInfo();
+                HomeFurnitureRecord row = home.rules.FurnitureOf((int)furniture);
+                return new FurnitureInfo
+                {
+                    RepairNoticeCondition = new HomeConditionAdapter(this, row?.repairNotice),
+                    UnlockCondition = new HomeConditionAdapter(this, row?.unlock),
+                    RepairStoryName = row?.repairStory ?? string.Empty
+                };
             }
-            static InvalidOperationException UnexpectedRepair()
-                => new InvalidOperationException("Default storage has no repair condition or story in the original configuration.");
-            public bool IsMetFurnitureRepairCondition(FurnitureInfo furniture) => throw UnexpectedRepair();
-            public bool IsMetFurnitureNoticeCondition(FurnitureInfo furniture) => throw UnexpectedRepair();
-            public IDisposable SubscribeCondition(IHomeFurnitureCondition condition, Action action) => throw UnexpectedRepair();
-            public IHomeFurnitureConditionNotice CreateConditionNotice(IHomeFurnitureCondition condition) => throw UnexpectedRepair();
-            public IHomeFurnitureStoryContext CreateStoryContext(string owner) => throw UnexpectedRepair();
-            public void PlayStory(IHomeFurnitureStoryContext context, string name) => throw UnexpectedRepair();
-            public void DisposeStory(IHomeFurnitureStoryContext context) => throw UnexpectedRepair();
-            public event Action<EFurniture> OnRepairFurniture { add { } remove { } }
-            public event Action<long> OnDebugTimeOffset { add { } remove { } }
+
+            public bool IsMetFurnitureRepairCondition(FurnitureInfo furniture) => furniture?.UnlockCondition?.IsMet() ?? true;
+            public bool IsMetFurnitureNoticeCondition(FurnitureInfo furniture) => furniture?.RepairNoticeCondition?.IsMet() ?? true;
+
+            public IDisposable SubscribeCondition(IHomeFurnitureCondition condition, Action action)
+            {
+                if (action == null) return new ActionDisposable(null);
+                var entry = new ConditionSubscription
+                {
+                    Condition = condition,
+                    LastMet = condition == null || condition.IsMet(),
+                    Callback = action
+                };
+                conditionSubscriptions.Add(entry);
+                return new ActionDisposable(() => conditionSubscriptions.Remove(entry));
+            }
+
+            public IHomeFurnitureConditionNotice CreateConditionNotice(IHomeFurnitureCondition condition)
+                => new ConditionNoticeAdapter(this, condition);
+
+            public IHomeFurnitureStoryContext CreateStoryContext(string owner)
+                => new StoryContextToken { Owner = owner };
+
+            public void PlayStory(IHomeFurnitureStoryContext context, string name)
+                => home.TryPlayFurnitureStory(name);
+
+            public void DisposeStory(IHomeFurnitureStoryContext context) { }
+
+            public event Action<EFurniture> OnRepairFurniture
+            {
+                add => onRepairFurniture += value;
+                remove => onRepairFurniture -= value;
+            }
+
+            public event Action<long> OnDebugTimeOffset
+            {
+                add => onDebugTimeOffset += value;
+                remove => onDebugTimeOffset -= value;
+            }
 
             public Spine.Animation GetOrLoadSpineAnimation(ISkeletonComponent component, string name)
-                => component.SkeletonDataAsset.GetSkeletonData(true).FindAnimation(name);
+                => component != null && component.SkeletonDataAsset && !string.IsNullOrEmpty(name)
+                    ? component.SkeletonDataAsset.GetSkeletonData(true).FindAnimation(name) : null;
+
             public void UpdateAnimation(SkeletonRenderer renderer)
-                => renderer.GetComponent<NativeSpineAppearanceAdapter>().UpdateAnimationAndMesh();
+            {
+                if (!renderer) return;
+                if (renderer.TryGetComponent<NativeSpineAppearanceAdapter>(out var adapter))
+                    adapter.UpdateAnimationAndMesh();
+                else if (renderer is SkeletonAnimation skeletonAnimation)
+                {
+                    skeletonAnimation.ApplyAnimation();
+                    skeletonAnimation.LateUpdateMesh();
+                }
+                else renderer.LateUpdateMesh();
+            }
+
             public void UpdateAnimation(SkeletonGraphic graphic) { graphic.ApplyAnimation(); graphic.UpdateMesh(); }
+
+            IDisposable IHomeNpcBubbleTipServices.SubscribeDialogueChanged(Action action) => bubbleDialogueChanged.Subscribe(action);
+            IDisposable IHomeNpcBubbleTipServices.SubscribePostHomeChange(Action action) => changed.Subscribe(action);
+
+            bool IHomeNpcBubbleTipServices.TryFindActiveDialogueNpcClassId(out int npcClassId)
+            {
+                npcClassId = 0;
+                OfflinePartnerConversationUiSession conversations = home.PartnerConversations;
+                if (conversations == null) return false;
+                var playback = conversations.Playback;
+                var comparer = Comparer<PartnerDialogueData>.Create(PartnerDialogueListRules.CompareDialogues);
+                foreach (PartnerDialogueData dialogue in playback.Dialogues.Values.OrderBy(value => value, comparer))
+                {
+                    if (!PartnerDialogueListRules.HasRedDot(dialogue, playback)) continue;
+                    if (playback.Npcs.TryGetValue(dialogue.NpcId, out PartnerDialogueNpcData npc) && npc.NpcClassId > 0)
+                    {
+                        npcClassId = npc.NpcClassId;
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            string IHomeNpcBubbleTipServices.GetNpcIconPath(int npcClassId)
+            {
+                if (npcIconPaths == null)
+                {
+                    npcIconPaths = new Dictionary<int, string>();
+                    foreach (var row in home.PartnerCatalog.Rows("npc"))
+                    {
+                        int id = Convert.ToInt32(row["Id"]);
+                        npcIconPaths[id] = Convert.ToString(row["Icon"]) ?? string.Empty;
+                    }
+                }
+                return npcIconPaths.TryGetValue(npcClassId, out string path) ? path : string.Empty;
+            }
+
+            Sprite IHomeNpcBubbleTipServices.LoadNpcIcon(string iconPath)
+            {
+                if (string.IsNullOrEmpty(iconPath)) return null;
+                if (npcIconLoader == null)
+                {
+                    var catalog = Resources.Load<OfflineProfessionImageCatalog>("Partners/OfficialPartnerNpcIconImages");
+                    if (!catalog) throw new InvalidOperationException("Official NPC icon catalog is not packaged.");
+                    npcIconLoader = new OfflineProfessionImageResourceLoader(catalog);
+                }
+                return npcIconLoader.LoadAsset<Sprite>(iconPath).Result;
+            }
+
+            void IHomeNpcBubbleTipServices.UnloadNpcIcon(string iconPath) { }
+
+            bool IHomePlayerUiServices.HasPlayer => home.profile?.Save?.Player != null;
+            bool IHomePlayerUiServices.ManagerAvailable => true;
+            UnityEvent IHomePlayerUiServices.OnPlayerUpdate => playerUpdateEvent;
+            IProfessionTipDotSystem IHomePlayerUiServices.TipDotSystem => home.PartnerTipDots?.System;
+
+            IHomeDirectionCameraServices IHomeSceneUiServices.Camera => null;
+            IDragControllerManager IHomeSceneUiServices.DragControllerManager => null;
+            float IHomeSceneUiServices.DirectionGuideFocusDuration => 0f;
+            IHomeDirectionFurniture IHomeSceneUiServices.GetFurniture(EFurniture type) => null;
+            IDisposable IHomeSceneUiServices.SubscribeHangUpTips(Action<HangUpTipLevelChangeData> callback) => new ActionDisposable(null);
+            UnityEvent IHomeSceneUiServices.OnHomeNpcRefresh => null;
+            List<IHomeDirectionNpcData> IHomeSceneUiServices.HomeNpcDatas => null;
+            int IHomeSceneUiServices.AwardRetrieveHomeNpcId => 0;
+            Transform IHomeSceneUiServices.GetSpawnPoint(int index) => null;
+            HomeDirectionNpcInfo IHomeSceneUiServices.GetNpcInfo(int id) => null;
+            IHomeMenuPrefabHandle IHomeSceneUiServices.LoadPrefab(string path) => null;
+            GameObject IHomeSceneUiServices.InstantiatePrefab(GameObject prefab, Transform slot) => null;
+            void IHomeSceneUiServices.FreezeSkeletonGraphic(GameObject instance) { }
+            Zjcs.Official.HomeSceneUiControls.HomeViewMode IHomeSceneUiServices.HomeViewMode
+                => (Zjcs.Official.HomeSceneUiControls.HomeViewMode)(int)currentViewMode;
+            IDisposable IHomeSceneUiServices.SubscribeUiActive(Action<SetHomeSceneUIActiveData> callback) => uiActiveEvents.Subscribe(callback);
         }
     }
 }

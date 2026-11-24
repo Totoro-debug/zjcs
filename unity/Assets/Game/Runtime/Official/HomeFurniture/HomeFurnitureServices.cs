@@ -69,5 +69,20 @@ namespace Zjcs.Official.HomeFurniture
         void DisposeStory(IHomeFurnitureStoryContext context);
         IHomeFurnitureConditionNotice CreateConditionNotice(IHomeFurnitureCondition condition);
         void SystemMessage(string message);
+        bool IsFunctionLimit(int functionType);
+        void PopupNpcPanel(int defaultTab = 0);
+        DateTime GetDateTime();
+        DateTime GetDailyResetTimeFromDate(DateTime dateTime);
+        void RefreshDailyDialogues(bool invokeByPlayer);
+    }
+
+    public interface IHomeNpcBubbleTipServices
+    {
+        IDisposable SubscribeDialogueChanged(Action action);
+        IDisposable SubscribePostHomeChange(Action action);
+        bool TryFindActiveDialogueNpcClassId(out int npcClassId);
+        string GetNpcIconPath(int npcClassId);
+        UnityEngine.Sprite LoadNpcIcon(string iconPath);
+        void UnloadNpcIcon(string iconPath);
     }
 }

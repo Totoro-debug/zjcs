@@ -47,7 +47,7 @@ def prepare():
         'Zjcs.Official.HomeEntityCreation', 'Zjcs.Official.HomeFurniture',
         'Zjcs.Official.ProfessionUI']), indent=2) + '\n').encode()); metadata(definition)
     script_guid = guid(Path(str(RUNTIME / 'HomeNativePrefabReference.cs') + '.meta'))
-    for name in ('home-house-native', 'home-storage-native', 'home-weapon-parts'):
+    for name in ('home-house-native', 'home-storage-native', 'home-diningtable-native', 'home-weapon-parts'):
         path = ROOT / 'assets/reference' / (name + '-source-manifest.json')
         source = json.loads(path.read_bytes()); inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
         sources[name] = dict(manifest=source['manifest'], receipt=path.relative_to(ROOT).as_posix(), sha256=sha(path.read_bytes()))
@@ -70,7 +70,7 @@ def prepare():
                 if not original.startswith('Assets/Prefabs/Appearance/PlayerPart/') or not original.endswith('_Home.prefab'):
                     raise ValueError('Verify the original home weapon address before routing it')
                 selected.append((original.removeprefix('Assets/Prefabs/').removesuffix('.prefab'), row['pointer']))
-        elif name == 'home-storage-native' and 'prefabs' in source:
+        elif name in ('home-storage-native', 'home-diningtable-native') and 'prefabs' in source:
             selected = [(row['location'], row['pointer']) for row in source['prefabs']]
         else:
             location = 'Home/Dynamic/Theme/House/House' if name == 'home-house-native' else 'Home/Dynamic/Furniture/StorageBox/StorageBox'

@@ -242,7 +242,159 @@ public sealed partial class HomeFurnitureControllerChecks : MonoBehaviour
         Require(services.PlayerValue.RepairSubscribers == 0 && services.PlayerValue.TimeSubscribers == 0 && services.ContextDisposed == 1, "Destroy releases player callbacks and reused story context");
         yield return CheckWeaponRack();
         yield return CheckNativeWeapon();
+        yield return CheckDiningTableControllers();
         Debug.Log("Furniture controller assertions completed.");
+    }
+
+    IEnumerator CheckDiningTableControllers()
+    {
+        viewCamera.transform.position = new Vector3(0, 0, -10);
+        viewCamera.orthographicSize = 4;
+        services.OwnHome = true;
+        services.WindowsClosed = true;
+        services.PlayerValue.Owned = true;
+        services.Disabled = false;
+        services.FunctionLimited = false;
+        services.NpcPanels.Clear();
+        services.DailyRefreshes = 0;
+
+        var popHost = New("DiningTablePopHost");
+        popHost.SetActive(false);
+        var popCollider = Child(popHost, "PopBubbleCollider");
+        popCollider.transform.position = Vector3.zero;
+        popCollider.AddComponent<BoxCollider>();
+        var popClick = popHost.AddComponent<DiningTableNpcPopClick>();
+        popClick.Services = services;
+        var soPop = new SerializedObject(popClick);
+        var touchListProp = soPop.FindProperty("mTouchList");
+        touchListProp.arraySize = 1;
+        touchListProp.GetArrayElementAtIndex(0).objectReferenceValue = popCollider;
+        soPop.ApplyModifiedPropertiesWithoutUndo();
+        input.Bind(popClick);
+        popHost.SetActive(true);
+        yield return null;
+        yield return Click(popCollider);
+        Require(services.NpcPanels.Count == 1 && services.NpcPanels[0] == 1, "DiningTableNpcPopClick opens NpcPanel Dialogue tab (1)");
+        Destroy(popHost);
+        yield return null;
+
+        services.NpcPanels.Clear();
+        services.Now = new DateTime(2026, 11, 24, 5, 59, 59, 950);
+        services.ResetDate = new DateTime(2026, 11, 23, 6, 0, 0);
+        var chatHost = New("HomeNpcChatHost");
+        chatHost.SetActive(false);
+        var chatCollider = Child(chatHost, "TableCollider");
+        chatCollider.transform.position = Vector3.zero;
+        chatCollider.AddComponent<BoxCollider>();
+        var chatStates = Enumerable.Range(0, 4).Select(index => Child(chatHost, "ChatState" + index)).ToArray();
+        var chatNoticeRoot = Child(chatHost, "ChatNotice");
+        var chatNoticeText = Child(chatNoticeRoot, "ChatNoticeTxt").AddComponent<TextMeshPro>().gameObject.AddComponent<WorldMultiLanguageText>();
+        var chatNotice = chatNoticeRoot.AddComponent<HomeNotice>();
+        chatNotice.Bind(chatNoticeText, Switch<bool>(chatNoticeRoot, new[] { new[] { Child(chatNoticeRoot, "Shown") } }, new[] { 1 }), "", services);
+        var chat = chatHost.AddComponent<HomeNpcChatEntry>();
+        chat.Bind(EFurniture.DiningTable, Switch<FurnitureBase.EFurnitureState>(chatHost, chatStates.Select(value => new[] { value }).ToArray(), new[] { 0, 1, 2, 3 }), chatNotice, null, 0.2f, 1.0f, services);
+        var soChat = new SerializedObject(chat);
+        var chatTouch = soChat.FindProperty("mTouchList");
+        chatTouch.arraySize = 1;
+        chatTouch.GetArrayElementAtIndex(0).objectReferenceValue = chatCollider;
+        soChat.ApplyModifiedPropertiesWithoutUndo();
+        input.Bind(chat);
+        chatHost.SetActive(true);
+        yield return null;
+
+        services.FunctionLimited = true;
+        yield return Click(chatCollider);
+        Require(services.NpcPanels.Count == 0, "HomeNpcChatEntry blocks click when FunctionType 57 is limited");
+        services.PlayerValue.TimeOffset();
+        Require(services.DailyRefreshes == 0, "HomeNpcChatEntry ignores debug time offset when FunctionType 57 is limited");
+
+        services.FunctionLimited = false;
+        yield return Click(chatCollider);
+        Require(services.NpcPanels.Count == 1 && services.NpcPanels[0] == 0, "HomeNpcChatEntry opens NpcPanel default tab when unlocked");
+        services.PlayerValue.TimeOffset();
+        Require(services.DailyRefreshes == 1, "HomeNpcChatEntry triggers RefreshDailyDialogues on debug time offset");
+        yield return new WaitForSeconds(0.15f);
+        Require(services.DailyRefreshes >= 2, "HomeNpcChatEntry coroutine triggers RefreshDailyDialogues after daily reset boundary");
+        Destroy(chatHost);
+        yield return null;
+        Require(services.PlayerValue.TimeSubscribers == 0, "Destroyed HomeNpcChatEntry unsubscribes debug time offset");
+
+        var playerUi = new BubblePlayerUi();
+        var bubbleSvc = new BubbleServicesImpl();
+        var tex = new Texture2D(4, 4, TextureFormat.RGBA32, false);
+        bubbleSvc.Sprites["UI/NPC/Npc_Icon/Map_11/npc_icon_8401"] = Sprite.Create(tex, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f));
+        var bubbleHost = New("HomeNpcBubbleHost");
+        bubbleHost.SetActive(false);
+        var iconRenderer = Child(bubbleHost, "Icon").AddComponent<SpriteRenderer>();
+        var bubbleVisual = Child(bubbleHost, "BubbleVisual");
+        var bubble = bubbleHost.AddComponent<HomeNpcBubbleTip>();
+        bubble.PlayerServices = playerUi;
+        bubble.FurnitureServices = services;
+        bubble.BubbleServices = bubbleSvc;
+        var soBubble = new SerializedObject(bubble);
+        soBubble.FindProperty("mIcon").objectReferenceValue = iconRenderer;
+        soBubble.ApplyModifiedPropertiesWithoutUndo();
+        var switcherField = typeof(HomeNpcBubbleTip).GetField("mShowStateSwitcher", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+        switcherField.SetValue(bubble, Switch<bool>(bubbleHost, new[] { new[] { bubbleVisual } }, new[] { 1 }));
+        bubbleHost.SetActive(true);
+        yield return null;
+        yield return null;
+        Require(!bubble.IsShow && !bubbleVisual.activeSelf && iconRenderer.sprite == null, "HomeNpcBubbleTip hides bubble when no dialogue has red dot");
+
+        bubbleSvc.ActiveNpcClassId = 8401;
+        bubbleSvc.RaiseDialogueChanged();
+        yield return null;
+        yield return null;
+        Require(bubble.IsShow && bubbleVisual.activeSelf && iconRenderer.sprite == bubbleSvc.Sprites["UI/NPC/Npc_Icon/Map_11/npc_icon_8401"], "HomeNpcBubbleTip shows NPC icon when dialogue red dot is active");
+
+        services.FunctionLimited = true;
+        bubbleSvc.RaiseHomeChanged();
+        yield return null;
+        yield return null;
+        Require(!bubble.IsShow && !bubbleVisual.activeSelf && iconRenderer.sprite == null && bubbleSvc.UnloadedCount >= 1, "HomeNpcBubbleTip hides and unloads sprite when NPCDialogue is locked");
+
+        Destroy(bubbleHost);
+        Destroy(bubbleSvc.Sprites["UI/NPC/Npc_Icon/Map_11/npc_icon_8401"]);
+        Destroy(tex);
+        yield return null;
+        Require(bubbleSvc.DialogueSubscribers == 0 && bubbleSvc.HomeSubscribers == 0, "Destroyed HomeNpcBubbleTip unsubscribes dialogue and home changes");
+    }
+
+    sealed class BubbleTipDotSystem : Zjcs.Official.ProfessionUI.IProfessionTipDotSystem
+    {
+        public bool IsShowTipDot => true;
+        public bool TempLimitShowTip => false;
+        public Action OnTipDotShowChanged { get; set; }
+        public Zjcs.Official.ProfessionUI.SafeAction OnTipDotSystemInited { get; set; } = new Zjcs.Official.ProfessionUI.SafeAction();
+        public Zjcs.Official.ProfessionUI.SafeAction OnTipDotSystemPreClear { get; set; } = new Zjcs.Official.ProfessionUI.SafeAction();
+        public Zjcs.Official.ProfessionUI.TipDotGraphType? GetGraphType(string graphName) => null;
+    }
+
+    sealed class BubblePlayerUi : Zjcs.Official.HomeHudUI.IHomePlayerUiServices
+    {
+        public bool HasPlayer => true;
+        public bool ManagerAvailable => true;
+        public UnityEngine.Events.UnityEvent OnPlayerUpdate { get; } = new UnityEngine.Events.UnityEvent();
+        public Zjcs.Official.ProfessionUI.IProfessionTipDotSystem TipDotSystem { get; } = new BubbleTipDotSystem();
+    }
+
+    sealed class BubbleServicesImpl : IHomeNpcBubbleTipServices
+    {
+        public int ActiveNpcClassId;
+        public int UnloadedCount;
+        public readonly Dictionary<string, Sprite> Sprites = new Dictionary<string, Sprite>();
+        public readonly List<Action> DialogueListeners = new List<Action>();
+        public readonly List<Action> HomeListeners = new List<Action>();
+        public int DialogueSubscribers => DialogueListeners.Count;
+        public int HomeSubscribers => HomeListeners.Count;
+        public void RaiseDialogueChanged() { foreach (var action in DialogueListeners.ToArray()) action(); }
+        public void RaiseHomeChanged() { foreach (var action in HomeListeners.ToArray()) action(); }
+        public IDisposable SubscribeDialogueChanged(Action action) { DialogueListeners.Add(action); return new Subscription(() => DialogueListeners.Remove(action)); }
+        public IDisposable SubscribePostHomeChange(Action action) { HomeListeners.Add(action); return new Subscription(() => HomeListeners.Remove(action)); }
+        public bool TryFindActiveDialogueNpcClassId(out int npcClassId) { npcClassId = ActiveNpcClassId; return npcClassId > 0; }
+        public string GetNpcIconPath(int npcClassId) => npcClassId > 0 ? "UI/NPC/Npc_Icon/Map_11/npc_icon_" + npcClassId : null;
+        public Sprite LoadNpcIcon(string iconPath) => Sprites.TryGetValue(iconPath, out var value) ? value : null;
+        public void UnloadNpcIcon(string iconPath) { if (!string.IsNullOrEmpty(iconPath)) UnloadedCount++; }
     }
 
     IEnumerator Click(GameObject target)
@@ -304,7 +456,11 @@ public sealed partial class HomeFurnitureControllerChecks : MonoBehaviour
     }
     sealed class Services : IHomeFurnitureServices, IHomeSceneClickContext
     {
-        public bool OwnHome = true, WindowsClosed = true, Disabled;
+        public bool OwnHome = true, WindowsClosed = true, Disabled, FunctionLimited;
+        public DateTime Now = new DateTime(2026, 11, 24, 12, 0, 0);
+        public DateTime ResetDate = new DateTime(2026, 11, 24, 6, 0, 0);
+        public int DailyRefreshes;
+        public readonly List<int> NpcPanels = new List<int>();
         public readonly Condition Notice = new Condition(), Unlock = new Condition();
         public readonly List<(IHomeFurnitureCondition condition, Action action)> ConditionSubscriptions = new List<(IHomeFurnitureCondition, Action)>();
         public readonly List<Action> HomeChanges = new List<Action>();
@@ -338,5 +494,10 @@ public sealed partial class HomeFurnitureControllerChecks : MonoBehaviour
         public void DisposeStory(IHomeFurnitureStoryContext context) => ContextDisposed++;
         public IHomeFurnitureConditionNotice CreateConditionNotice(IHomeFurnitureCondition condition) => ConditionNotice;
         public void SystemMessage(string message) => Calls.Add("message:" + message);
+        public bool IsFunctionLimit(int functionType) => FunctionLimited;
+        public void PopupNpcPanel(int defaultTab = 0) => NpcPanels.Add(defaultTab);
+        public DateTime GetDateTime() => Now;
+        public DateTime GetDailyResetTimeFromDate(DateTime dateTime) => ResetDate;
+        public void RefreshDailyDialogues(bool invokeByPlayer) => DailyRefreshes++;
     }
 }

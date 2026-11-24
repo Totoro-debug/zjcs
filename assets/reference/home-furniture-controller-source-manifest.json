@@ -19,11 +19,14 @@
     ".tools/source-packages/current/903_156948/official-code/client-source/AppearancePartSideSwitcher.cs": "95d9dd3b28c2c185347a5085bc057b40fcb6feabcd79b87eab233865e52ac316",
     ".tools/source-packages/current/903_156948/official-code/client-source/HomeWeapon.cs": "6870ffc0b70630e73f8a226bbde500c0166f2b219a410947bae291bb3332b5d4",
     ".tools/source-packages/current/903_156948/official-code/client-source/AppearanceSystem.Runtime/AppearanceAnimUtils.cs": "32b704601acfdd112d8d289ef4082fa51fb5e7e0dd78281a76a1b56ebd1748c3",
+    ".tools/source-packages/current/903_156948/official-code/client-source/DiningTableNpcPopClick.cs": "c4e5b787143ee834cca4a796ca1ea96352e96401ad035ee097242470ce687471",
+    ".tools/source-packages/current/903_156948/official-code/client-source/HomeNpcChatEntry.cs": "b2dd701280827510b7a0cd6bb99dde0e15e64ba6a3e44db89843c9d3173564d6",
+    ".tools/source-packages/current/903_156948/official-code/client-source/HomeNpcBubbleTip.cs": "237f749329f69263b1e055b3a5289147f2ed7aa932f85f91aa74eae6f15e0066",
     "scripts/prepare_unity_profession_appearance_resolver.py": "ed0e7b33e74acd7f45fbddcde7c4051d97b3f53ae6f850db378d4f33d68a4c2e",
     "scripts/prepare_unity_profession_photographer.py": "21b43ad45b60fea01af75928c8213b54045ec4461a54bb8e411a571382c6d282",
     "scripts/prepare_unity_profession_ui_parts.py": "ecbd7039f9fa4dff5e6453c23ca41dda07b9cf32a732d1bff87fd8659b5b291b",
     ".tools/source-packages/current/903_156948/official-code/client-source/AppearanceSystem.Runtime/AppearanceUtils.cs": "58e391189da627b3375bad37d74cd9222923c2dd3545c72ae63d11a64a5431e4",
-    "scripts/templates/home_furniture/HomeFurnitureServices.cs": "207a4bbc63176b29b828a10d114bd3a61ef04f8cfae8d0b45a8d2063edcd67c7",
+    "scripts/templates/home_furniture/HomeFurnitureServices.cs": "b5845b77ac4a6deaea3c70232882e053bea1940f75c32f4f7521ebd21aaaf0e7",
     "scripts/templates/home_furniture/HomeWeaponAnimationBindings.cs": "f9d97174a4c95e3b7ef1f99458c14ffaf1ac6b4fc75def2c3ad21159a2671311",
     "scripts/templates/home_furniture/HomeWeaponRackServices.cs": "6749e1907742a1422981de1323712733c753ceadfcd6fa82d37b47fe8d195d6e"
   },
@@ -60,24 +63,30 @@
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeapon.cs.meta": "1db6f7e94cfb42d37c2b79c9f1d8a71bd20f6d198093415434954c4329dc5d87",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponAnimation.cs": "491b80ece6f013e8fcb816b61577d00978cb433fbec95d5bb8727726086134b0",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponAnimation.cs.meta": "e92afc814460c698897c85b054c770bdca21e83beb8bcb33010933ad03c49553",
-    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeFurnitureServices.cs": "207a4bbc63176b29b828a10d114bd3a61ef04f8cfae8d0b45a8d2063edcd67c7",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/DiningTableNpcPopClick.cs": "041eae898953e6d2efc19d21bd76c23ba58d129dd00294d4708edd74be63c1c1",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/DiningTableNpcPopClick.cs.meta": "56946d81c638d6cedef7e8b412601a0026f18079976bc83e70a2aaddafd87fd0",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeNpcChatEntry.cs": "06ac56e0b199969cdb986af3b433ab2ce18b2b589bb66fcd9183e654608e2be0",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeNpcChatEntry.cs.meta": "5d8c1d778aa065c6254f99b36493ac33cf5083bc10b5d678e1a17b4bd71c12ca",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeNpcBubbleTip.cs": "2a7915a6ffb42f04ca7ffc1be7594c07c5a1c590edb1e5eb69816e6bd53b3b61",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeNpcBubbleTip.cs.meta": "8e0f23d8ed32fa798f3d72242afb161f4f6007ef8afc41e7ecb519201bee6621",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeFurnitureServices.cs": "b5845b77ac4a6deaea3c70232882e053bea1940f75c32f4f7521ebd21aaaf0e7",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeFurnitureServices.cs.meta": "0a4c24493e5b0aeabd392607aea9b94962f03e337a640b7673bb5df656da1675",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponAnimationBindings.cs": "f9d97174a4c95e3b7ef1f99458c14ffaf1ac6b4fc75def2c3ad21159a2671311",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponAnimationBindings.cs.meta": "f237817b8d50faa2821d4d4d0f0169bbbb28a018b47a5b13c05d5a071cb45229",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponRackServices.cs": "6749e1907742a1422981de1323712733c753ceadfcd6fa82d37b47fe8d195d6e",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponRackServices.cs.meta": "c2ab9867f1ccc673eba0224e9e61fa989962a7f8fcb136f105d81d72f7a9c39f",
-    "unity/Assets/Game/Runtime/Official/HomeFurniture/Zjcs.Official.HomeFurniture.asmdef": "c0f4434695d15e4451c8769b39181902e61d412572053140a9f8de83ef973370",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/Zjcs.Official.HomeFurniture.asmdef": "8252427cfdde5e287cdae678b8a62ab9941490fa6e962a3ed8eaf4e11a2c73aa",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/Zjcs.Official.HomeFurniture.asmdef.meta": "b4ba2a3feb40823f56dbd23536b35154a44ae2109b17eefc8437f6bac27fb236",
     "unity/Assets/Game/Runtime/Official/HomeFurniture.meta": "ca9d0edf5f0819afe26b16ff0ef206186ed5c208538799b6feb949246c5d533e"
   },
   "validation_inputs": {
-    "scripts/fixtures/home_furniture_controller_validation.cs": "7b2fd2b9a33bf91d43e4d639430c2b22fcdce0e13cf1cf01fd944da4fa8ad127",
+    "scripts/fixtures/home_furniture_controller_validation.cs": "ea29bed8cb35704296f12dbbab3c95f350aebd91a850eed4f178a5fe156233c9",
     "scripts/fixtures/home_weapon_rack_controller_validation.cs": "a60b930eb15c3926ba5431550319711aa9fe97e64eb9e7d4e21824ae034ec2b3",
     "scripts/fixtures/home_native_weapon_validation.cs": "71fa4b943f1bb21e814b2898fa4279c22a0e7548158d1e4d8c4a9eaa197699da",
     "scripts/fixtures/home_native_weapon_controller_validation.cs": "ee7fec772c8de9e594612b3296a0e29092140ca056f35d76d5ac956c714bb030",
     "scripts/fixtures/home_native_weapon_catalog_validation.cs": "f05bf6725fb382a5c97532e13f08d6bd122b4c9eda5f0375c45f306ac6e5be50",
     "scripts/fixtures/home_appearance_availability_validation.cs": "3cb5881c18033f0ac3570d5007322528d49031c801ac306810f977bc7286bbea",
-    "scripts/test_home_furniture_controllers.ps1": "e001855625cfee17cdc087f4981dd55ffb972fd4d208a238774d1cdad3ff4d52"
+    "scripts/test_home_furniture_controllers.ps1": "e7214e28b121697c252b3957b601ee2f236468136ef2553d99d7923b7f1dab66"
   },
   "shared_dependencies": {
     "unity/Assets/Game/Runtime/Official/HomeSceneInput/ClickableHomeObj.cs": "2ab7a2e3d378cd66e60e1378b0ff9b03ae097961a031ca690d1ec9e5c1884ca8",
@@ -87,7 +96,9 @@
     "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceResolver.cs": "986becf66387d4c54f312a203a77faf59a865125ab4ae2048c0e10d671ccb358",
     "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePartPaths.cs": "d874e4e911bc387a025ebd03bb6440e131925d5d63525fafa9c00b7b34f72124",
     "unity/Assets/Game/Runtime/Official/ProfessionUI/BaseSkeletonFollower.cs": "ba2ef614a29d46fb92d24e1a6a8e8c5876f35190f9957564d8f478cfa1d447e2",
-    "unity/Assets/Game/Runtime/Official/HomeUI/EFurniture.cs": "24a4692b1ff6b0fe40cab77181d96e7004324ccb681741c83a0fc3436b059043"
+    "unity/Assets/Game/Runtime/Official/HomeUI/EFurniture.cs": "24a4692b1ff6b0fe40cab77181d96e7004324ccb681741c83a0fc3436b059043",
+    "unity/Assets/Game/Runtime/Official/HomeHudUI/HomePlayerUIBase.cs": "b273bdb404e63adf90ca9e84b1eb511589a5c50d73f40a68bbe8aea2694e6665",
+    "unity/Assets/Game/Runtime/Official/HomeHudUI/RedDotItemBase.cs": "4399e4a537b018786162ff51ece6490aeb9ceaa52c4fd0139de7a634a4a6c64e"
   },
   "reused_appearance_method_closure": {
     "TryGetFinalSkinId": [
@@ -137,7 +148,7 @@
       "b54377961060f7e5fea71f59deddfdb9b92bfbb3f68f52abe98bbf00b081e701"
     ]
   },
-  "generator_sha256": "3c9e8477c750b0000da40a1168cbbe2772f11f19f5089a4e1adaf31213a2a878",
+  "generator_sha256": "96773b5e700eb5edcef1004b32c017d47c21a12c43f1558bf95ec32d0f454c46",
   "adaptations": [
     "Original four-state priority, click branches, condition subscriptions and teardown are retained.",
     "Original notice transitions, time-offset callbacks, notice text keys and arguments are retained.",

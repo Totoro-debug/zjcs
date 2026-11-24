@@ -165,6 +165,15 @@ namespace Zjcs.Presentation.Home
             if (tutorialMask != null) tutorialMask.Hide();
         }
 
+        private readonly HashSet<GameObject> preservedStoryUi = new HashSet<GameObject>();
+
+        internal void SetStoryUiPreserved(GameObject target, bool preserved)
+        {
+            if (target == null) return;
+            if (preserved) preservedStoryUi.Add(target);
+            else preservedStoryUi.Remove(target);
+        }
+
         public void SetTutorialMainUiVisible(bool visible)
         {
             if (canvas == null) return;
@@ -174,7 +183,9 @@ namespace Zjcs.Presentation.Home
                 foreach (Transform child in canvas.transform)
                 {
                     GameObject target = child.gameObject;
-                    if (target == tutorialDialogueLayer || target == tutorialMaskObject) continue;
+                    if (target == tutorialDialogueLayer || target == tutorialMaskObject || preservedStoryUi.Contains(target)
+                        || target.GetComponent<Zjcs.Presentation.World.NativeStoryMaskHost>() != null
+                        || target.GetComponent<Zjcs.Official.HomeStoryDialog.OptionTalkDialogPanel>() != null) continue;
                     hiddenTutorialUi[target] = target.activeSelf;
                     target.SetActive(false);
                 }

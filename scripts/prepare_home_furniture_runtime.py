@@ -81,16 +81,22 @@ using Object = UnityEngine.Object;
         text = re.sub(r'\bICondition\b', 'IHomeFurnitureCondition', text)
         text = text.replace('IStoryPlayContext', 'IHomeFurnitureStoryContext')
         source_header = header
+        if name in ('EntityClickSound', 'HomeNpcChatEntry'):
+            pass
         if name == 'EntityClickSound':
             source_header = source_header.replace('using UnityEngine.Serialization;\n',
                 'using UnityEngine.Serialization;\nusing Zjcs.Official.HomeMainUiControls;\n')
-        if 'List<' in text or 'HashSet<' in text:
+        if name == 'HomeNpcBubbleTip':
+            source_header = source_header.replace('using Zjcs.Official.HomeUI;\n',
+                'using Zjcs.Official.HomeUI;\nusing Zjcs.Official.HomeHudUI;\n')
+        if 'List<' in text or 'HashSet<' in text or 'KeyValuePair<' in text:
             source_header = source_header.replace('using System.Collections;\n', 'using System.Collections;\nusing System.Collections.Generic;\n')
-        if name in ('HomeWeapon', 'AppearancePartSideSwitcher', 'HomeWeaponAnimation'):
+        if name in ('HomeWeapon', 'AppearancePartSideSwitcher', 'HomeWeaponAnimation', 'HomeNpcBubbleTip'):
             source_header = source_header.replace('using UnityEngine.Serialization;\n',
                 'using UnityEngine.Serialization;\nusing Spine;\nusing Spine.Unity;\nusing Animation = Spine.Animation;\nusing AnimationState = Spine.AnimationState;\n')
         text = '\n'.join(line.rstrip() for line in (source_header + text + '\n}\n').split('\n'))
-        if any(token in text for token in ('MeManager', 'Parsers.Instance', 'WindowManager', 'AwardManager', 'Framework.', '[Inject]', 'ServiceProvider', 'PlayerPlayState', 'StoryPlayEntry', 'GLogger', 'Log.')):
+        code_only = re.sub(r'//[^\n]*', '', text)
+        if any(token in code_only for token in ('MeManager', 'Parsers.Instance', 'WindowManager', 'AwardManager', 'Framework.', '[Inject]', 'ServiceProvider', 'PlayerPlayState', 'StoryPlayEntry', 'GLogger', 'Log.', 'NpcPanelUtils', 'ServiceProxyBase', 'TimeManager', 'TimeUtils', 'AppearanceAnimUtils', 'Disposable.')) or re.search(r'\bDisposableBag\b', code_only):
             raise ValueError('Unbound furniture service: ' + name)
         path = DEST / (name + '.cs')
         write(path, text.encode())
@@ -256,6 +262,145 @@ using Object = UnityEngine.Object;
     bodies.append(method(animation_source, 'private static void SetAnimation('))
     emit('HomeWeaponAnimation', 'public static class HomeWeaponAnimation\n{\n' + '\n'.join(bodies) + '\n}\n')
 
+    text = replace(read('DiningTableNpcPopClick'),
+        'public class DiningTableNpcPopClick : ClickableHomeObj\n{',
+        'public class DiningTableNpcPopClick : ClickableHomeObj\n{\n\tpublic IHomeFurnitureServices Services { get; set; }\n')
+    text = replace(text, 'NpcPanelUtils.Open(NpcPanelTabType.Dialogue);', 'Services.PopupNpcPanel(1);')
+    emit('DiningTableNpcPopClick', text)
+
+    text = read('HomeNpcChatEntry')
+    text = replace(text, 'MeManager.MainPlayer != null', 'Services != null && Services.Player != null')
+    text = text.replace('MeManager.MainPlayer.IsFunctionLimit(FunctionType.NPCDialogue)', 'Services.IsFunctionLimit(57)')
+    text = text.replace('MeManager.MainPlayer', 'Services.Player')
+    text = replace(text, 'WindowManager.Instance.Popup<NpcPanel>();', 'Services.PopupNpcPanel();')
+    text = replace(text, 'TimeManager.Instance.GetDateTime()', 'Services.GetDateTime()')
+    text = replace(text, 'TimeUtils.GetDailyResetTimeFromDate(dateTime)', 'Services.GetDailyResetTimeFromDate(dateTime)')
+    text = text.replace('ServiceProxyBase<PlayerServiceProxyImpl>.Instance.OperPlayerNpcDialogueRefreshDailyDialogue(invokeByPlayer: false);',
+        'Services.RefreshDailyDialogues(invokeByPlayer: false);')
+    emit('HomeNpcChatEntry', text)
+
+    text = replace(read('HomeNpcBubbleTip'), 'internal class HomeNpcBubbleTip : RedDotItemBase', 'public class HomeNpcBubbleTip : RedDotItemBase')
+    text = replace(text, '''\tprivate DisposableBag mDisposableBag;
+\tprivate IResourceLoader ResourceLoader { get; set; }
+\tprivate IHomeData HomeData { get; set; }''', '''\tprivate readonly HomeFurnitureLifetime mSubscriptions = new HomeFurnitureLifetime();
+
+\tprivate readonly List<string> mLoadedIcons = new List<string>();
+
+\tpublic IHomeFurnitureServices FurnitureServices { get; set; }
+
+\tpublic IHomeNpcBubbleTipServices BubbleServices { get; set; }
+
+\tpublic IHomeWeaponAnimationBindings AnimationBindings { get; set; }''')
+    text = replace(text, '''\tprotected override void OnEnableAndInited()
+\t{
+\t\tbase.OnEnableAndInited();
+\t\tmDisposableBag = default;
+\t\tMeManager.MainPlayer.OnNpcDialogueAdd += MainPlayer_OnNpcDialogueAdd;
+\t\tMeManager.MainPlayer.OnNpcDialogueUpdate += MainPlayer_OnNpcDialogueUpdate;
+\t\tMeManager.MainPlayer.OnNpcDialogueRemove += MainPlayer_OnNpcDialogueRemove;
+\t\tDisposable.AddTo<IDisposable>(HomeData.OnPostHomeChange.Subscribe(OnPostHomeChange), ref mDisposableBag);
+\t}
+
+\tprotected override void OnDisableAndInited()
+\t{
+\t\tif (MeManager.MainPlayer != null)
+\t\t{
+\t\t\tMeManager.MainPlayer.OnNpcDialogueAdd -= MainPlayer_OnNpcDialogueAdd;
+\t\t\tMeManager.MainPlayer.OnNpcDialogueUpdate -= MainPlayer_OnNpcDialogueUpdate;
+\t\t\tMeManager.MainPlayer.OnNpcDialogueRemove -= MainPlayer_OnNpcDialogueRemove;
+\t\t}
+\t\tmDisposableBag.Dispose();
+\t\tbase.OnDisableAndInited();
+\t}
+
+\tprivate void MainPlayer_OnNpcDialogueUpdate(PlayerNpcDialogueDataWrap obj)
+\t{
+\t\tSetDirty();
+\t}
+
+\tprivate void MainPlayer_OnNpcDialogueAdd(PlayerNpcDialogueDataWrap obj)
+\t{
+\t\tSetDirty();
+\t}
+
+\tprivate void MainPlayer_OnNpcDialogueRemove(PlayerNpcDialogueDataWrap obj)
+\t{
+\t\tSetDirty();
+\t}''', '''\tprivate void ReleaseLoadedIcons()
+\t{
+\t\tif ((Object)(object)mIcon != (Object)null)
+\t\t{
+\t\t\tmIcon.sprite = null;
+\t\t}
+\t\tif (BubbleServices != null)
+\t\t{
+\t\t\tfor (int i = 0; i < mLoadedIcons.Count; i++)
+\t\t\t{
+\t\t\t\tBubbleServices.UnloadNpcIcon(mLoadedIcons[i]);
+\t\t\t}
+\t\t}
+\t\tmLoadedIcons.Clear();
+\t}
+
+\tprotected override void OnEnableAndInited()
+\t{
+\t\tbase.OnEnableAndInited();
+\t\tmSubscriptions.Dispose();
+\t\tif (BubbleServices != null)
+\t\t{
+\t\t\tmSubscriptions.Add(BubbleServices.SubscribeDialogueChanged(OnDialogueChanged));
+\t\t\tmSubscriptions.Add(BubbleServices.SubscribePostHomeChange(OnPostHomeChange));
+\t\t}
+\t}
+
+\tprotected override void OnDisableAndInited()
+\t{
+\t\tmSubscriptions.Dispose();
+\t\tReleaseLoadedIcons();
+\t\tbase.OnDisableAndInited();
+\t}
+
+\tprivate void OnDialogueChanged()
+\t{
+\t\tSetDirty();
+\t}''')
+    text = replace(text, '\t\tmDisposableBag.Clear();\n\t\tbase.Refresh();', '\t\tReleaseLoadedIcons();\n\t\tbase.Refresh();')
+    text = replace(text, 'AppearanceAnimUtils.PlayAnimation(mSkeletonAnimation, animationName, loop: true);',
+        'HomeWeaponAnimation.PlayAnimation(AnimationBindings, mSkeletonAnimation, animationName, loop: true);')
+    begin = text.index('\tpublic override bool ShowRedDot()')
+    text = text[:begin] + '''\tpublic override bool ShowRedDot()
+\t{
+\t\tif (FurnitureServices == null || !FurnitureServices.InMyHome || FurnitureServices.Player == null)
+\t\t{
+\t\t\treturn false;
+\t\t}
+\t\tif (FurnitureServices.IsFunctionLimit(57))
+\t\t{
+\t\t\treturn false;
+\t\t}
+\t\tif (BubbleServices != null && BubbleServices.TryFindActiveDialogueNpcClassId(out int npcClassId))
+\t\t{
+\t\t\tSetNpc(npcClassId);
+\t\t\treturn true;
+\t\t}
+\t\treturn base.ShowRedDot();
+\t}
+
+\tpublic HomeNpcBubbleTip SetNpc(int npcClassId)
+\t{
+\t\tstring iconPath = BubbleServices?.GetNpcIconPath(npcClassId);
+\t\tif (string.IsNullOrEmpty(iconPath))
+\t\t{
+\t\t\tDebug.LogError($"{nameof(HomeNpcBubbleTip)}.{nameof(SetNpc)}({npcClassId}) 没有找到 Npc 配置数据！", this);
+\t\t\treturn this;
+\t\t}
+\t\tmIcon.sprite = BubbleServices.LoadNpcIcon(iconPath);
+\t\tmLoadedIcons.Add(iconPath);
+\t\treturn this;
+\t}
+}'''
+    emit('HomeNpcBubbleTip', text)
+
     # Reuse the existing resolver only after proving that the complete method
     # closure used by this selected rack has the same original bodies.
     from prepare_unity_profession_appearance_resolver import adapt, method
@@ -297,7 +442,7 @@ using Object = UnityEngine.Object;
         metadata(DEST / port.name)
     definition = DEST / 'Zjcs.Official.HomeFurniture.asmdef'
     write(definition, (json.dumps(dict(name='Zjcs.Official.HomeFurniture', references=[
-        'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeSceneInput', 'Zjcs.Official.HomeMainUiControls', 'Zjcs.Official.ProfessionUI',
+        'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeHudUI', 'Zjcs.Official.HomeSceneInput', 'Zjcs.Official.HomeMainUiControls', 'Zjcs.Official.ProfessionUI',
         'Zjcs.Official.WorldUI', 'spine-unity', 'spine-csharp']), indent=2) + '\n').encode())
     metadata(definition)
     metadata(DEST, True)
@@ -318,7 +463,9 @@ using Object = UnityEngine.Object;
         'unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceResolver.cs',
         'unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePartPaths.cs',
         'unity/Assets/Game/Runtime/Official/ProfessionUI/BaseSkeletonFollower.cs',
-        'unity/Assets/Game/Runtime/Official/HomeUI/EFurniture.cs')]
+        'unity/Assets/Game/Runtime/Official/HomeUI/EFurniture.cs',
+        'unity/Assets/Game/Runtime/Official/HomeHudUI/HomePlayerUIBase.cs',
+        'unity/Assets/Game/Runtime/Official/HomeHudUI/RedDotItemBase.cs')]
     RECEIPT.write_text(json.dumps(dict(manifest=source.version, inputs=inputs, outputs=outputs,
         validation_inputs={path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in validations},
         shared_dependencies={path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in shared},

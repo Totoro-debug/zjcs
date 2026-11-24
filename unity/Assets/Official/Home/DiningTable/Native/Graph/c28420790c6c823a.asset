@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 470ff18f5f06dc419f26859ff7e55db7, type: 3}
+  m_Name: '[4][State]伙伴Npc是否有提示'
+  graph: {fileID: 11400000, guid: ced756d2ea134bab23630ba74257f2ae, type: 2}
+  position: {x: 2168.0, y: 408.0}
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000, guid: 5f0608c69e48430cf33b5e998cd76a3f, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: 0a736cf6418fe6d4ae24d1ecff078eda, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000, guid: 5f0608c69e48430cf33b5e998cd76a3f, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono: ''
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: 伙伴Npc是否有提示
+  SelectedType: ''
+  NodeName: ''
+  TipDotNodeId: 4
+  TipDotNode: {rid: 6713798781268131965}
+  RuntimeTipDotNode: {rid: -2}
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 0
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels: []
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: '', ns: '', asm: ''}
+    - rid: 6713798781268131965
+      type: {class: TipDotLinkNpcNode, ns: Zjcs.Official.PartnersUI, asm: Zjcs.Official.PartnerRosterUI}
+      data:
+        Parents: []
+        Childs: []
+        NodeKey: {GraphName: '', NodeName: ''}
+        TipDotInfo: {TipLevel: 0, Data: ''}
+        IsShowTip: 0
+        mNodeSelector:
+          GraphNode: {fileID: 11400000, guid: 15c9fee286e6ff4c6afbb07938da1558, type: 2}
+        NpcRoleTypes:
+        - 0
+        - 1
