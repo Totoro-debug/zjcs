@@ -1,8 +1,23 @@
 {
   "manifest": "903_156948",
   "item_id": 10185,
-  "output_sha256": "8eb8176b64e9bef175387c4523e83c14613a4a5caf94c335d74bd4f4b07595b8",
+  "output_sha256": "514ddff94e30ee7205588773778cd18237dfac0a6ebc857e4dc92fa8dcf68ee2",
   "inputs": [
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "aa0cc702699dec89dc3440b1bd85e4f5",
+        "path_id": "253029796457880455",
+        "origin": "apk_zip",
+        "manifest": "903_156948",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+        "apk_entry": "assets/yoo/DefaultPackage/aa0cc702699dec89dc3440b1bd85e4f5.bundle",
+        "raw_size": 6879371,
+        "raw_sha256": "4ac3d96c533455cd6c1af8f2c64a3276f4fc21d95764c118f2e4c6fb2de03578"
+      },
+      "payload_sha256": "9acfa30ee6025705018c25b1a4c6fff188150b4d928528e2135e209737f5f1d2"
+    },
     {
       "source": {
         "bundle": "defaultpackage_assets_config_ec.bundle",
@@ -56,6 +71,45 @@
     },
     {
       "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_12090.bundle",
+        "bundle_hash": "05370d466ef1a3f8dfcb3ed3ee368f33",
+        "path_id": "8635743475268455672",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/05370d466ef1a3f8dfcb3ed3ee368f33.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 94310,
+        "bundle_sha256": "a5d774dba11f48bee5af7ec7c0ab7e65539697d1a1e1b5555e256ba1d8de089c"
+      },
+      "payload_sha256": "00da720d98821d46193441e4136802755979998bd87eb402fe28a090311d551c"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_12090.bundle",
+        "bundle_hash": "05370d466ef1a3f8dfcb3ed3ee368f33",
+        "path_id": "-7155783621017322235",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/05370d466ef1a3f8dfcb3ed3ee368f33.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 94310,
+        "bundle_sha256": "a5d774dba11f48bee5af7ec7c0ab7e65539697d1a1e1b5555e256ba1d8de089c"
+      },
+      "payload_sha256": "64280e16a18c36286f5f0879c2132de7f37d06084cf2cf8d4ff690b31a99533e"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_12090.bundle",
+        "bundle_hash": "05370d466ef1a3f8dfcb3ed3ee368f33",
+        "path_id": "-1726043048756966152",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/05370d466ef1a3f8dfcb3ed3ee368f33.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 94310,
+        "bundle_sha256": "a5d774dba11f48bee5af7ec7c0ab7e65539697d1a1e1b5555e256ba1d8de089c"
+      },
+      "payload_sha256": "2f5fa67fefc5f6973b69d49e422d377e68aed58294bc673381417524c1f700b0"
+    },
+    {
+      "source": {
         "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_13590.bundle",
         "bundle_hash": "6d06ca4c50bc162fbb1594674d38252d",
         "path_id": "6998397275897255988",
@@ -95,6 +149,11 @@
     }
   ],
   "entity_locations": {
+    "12090": "Assets/Config/EC/FightSkill_part104.g.bytes",
+    "12091": "Assets/Config/EC/FightSkill_part104.g.bytes",
+    "12092": "Assets/Config/EC/FightSkill_part104.g.bytes",
+    "12093": "Assets/Config/EC/FightSkill_part104.g.bytes",
+    "12094": "Assets/Config/EC/FightSkill_part104.g.bytes",
     "13590": "Assets/Config/EC/FightSkill_part179.g.bytes",
     "13591": "Assets/Config/EC/FightSkill_part179.g.bytes",
     "13592": "Assets/Config/EC/FightSkill_part179.g.bytes",
@@ -103,7 +162,7 @@
   },
   "source_spec": {
     "path": "scripts/profession_skill_sources/fourth/10185.json",
-    "sha256": "0c940356150d2012535c245eeac62ba4f58f3b08c1e1e3f43e76d0597cde528d"
+    "sha256": "083a365391e6708f968f1ed370a523bf02637c9f8d15eb6c5de74c30300be125"
   },
   "generator": {
     "path": "scripts/prepare_profession_skill_rule_pack.py",

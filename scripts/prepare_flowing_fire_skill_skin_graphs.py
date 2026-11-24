@@ -12,6 +12,7 @@ RECEIPT = ROOT / 'assets/reference/battle-animation/flowing-fire-skill-skin-curr
 GROUPS = {
     'skills': ('skill_entity_id', 'MyFightSkill', [13590, 13593, 13594]),
     'hits': ('hit_entity_id', 'MyFightHitFixed', [13591]),
+    'moves': ('action_entity_id', 'MyFightActionSkillMove', []),
     'damages': ('damage_entity_id', 'MyFightDamage', [13592]),
 }
 
