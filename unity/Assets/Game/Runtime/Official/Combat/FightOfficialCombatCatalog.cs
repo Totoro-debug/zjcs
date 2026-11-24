@@ -750,6 +750,7 @@ namespace Zjcs.Combat.Official
         // without changing their cooldowns, source information, hit graphs or cast counters.
         internal void RestoreSkillLogicDefinition(FightBattleSkillDefinition skill)
         {
+            FightSkillJumpPolicy.RestoreTargetRange(skill);
             RestoreSkillSequenceDefinition(skill);
             if (skill != null && entities.TryGetValue(skill.EntityId, out var fixedComponents))
                 skill.IsFixedProp = Bool(Component(fixedComponents, "FightSkillComponent"), "IsFixedProp");

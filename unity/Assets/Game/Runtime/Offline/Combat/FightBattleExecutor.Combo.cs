@@ -136,12 +136,15 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState targetPosition = null)
         {
             landing = default;
-            // Only the verified target-relative, fixed-offset pull is used by this combo.
-            // Unsupported mandatory movement cannot silently release a segment.
+            // Validate the original mandatory action before releasing its segment.
+            // Confirmed jump policies supply their own standable landing selection.
             if (checkpoint.Grid == null || move.Distance != -1 || move.Direction != 1
                 || !move.TowardsTargetPos || move.CanExpandOffset
                 || !statusCatalog.CanStartEntityAction(actor, move.MoveBehaviourId)) return false;
             targetPosition = targetPosition ?? target;
+            if (FightSkillJumpPolicy.LandsBesideTarget(skill))
+                return FightBattleTargeting.TryAdjacentJumpLanding(actor, target, targetPosition,
+                    units, skill, checkpoint.Grid, out landing);
             var positions = new[] { new FightGridPoint(targetPosition.X + move.OffsetX, targetPosition.Y + move.OffsetY) };
             var occupied = OccupiedPositions(actor.Id);
             foreach (var position in positions)
@@ -149,7 +152,7 @@ namespace Zjcs.Combat.Official
                 var body = actor.BodyOffsets == null || actor.BodyOffsets.Count == 0
                     ? new List<FightGridPoint> { new FightGridPoint() } : actor.BodyOffsets;
                 if (body.Any(offset => !checkpoint.Grid.CanStand(position + offset, actor.MoveMask, occupied))) continue;
-                if (skill.MoveByTeleport || skill.EntityId == 10670 && skill.ItemId == 10015
+                if (FightSkillJumpPolicy.UsesDirectPath(skill)
                     || position.Equals(new FightGridPoint(actor.X, actor.Y)))
                 { landing = position; return true; }
                 var path = checkpoint.Grid.FindPath(new FightGridPoint(actor.X, actor.Y), position,

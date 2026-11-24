@@ -187,6 +187,17 @@ namespace Zjcs.Presentation.Character
                 var pos = (List<object>)positions[i];
                 positionsToType.Add(new Vector2Int(Convert.ToInt32(pos[0]), Convert.ToInt32(pos[1])), Convert.ToInt32(types[i]));
             }
+            var confirmedRange = FightSkillJumpPolicy.ConfirmedTargetRange(skillId);
+            if (confirmedRange != null)
+            {
+                foreach (var position in positionsToType.Where(pair => pair.Value == 1).Select(pair => pair.Key).ToList())
+                    positionsToType.Remove(position);
+                foreach (var position in confirmedRange)
+                {
+                    var point = new Vector2Int(position.X, position.Y);
+                    if (!positionsToType.ContainsKey(point)) positionsToType.Add(point, 1);
+                }
+            }
             var info = CharacterModelPackage.AsObject(data["range_grid"], "original range grid");
             var grid = gridNode.GetComponent<GridLayoutGroup>();
             if (grid == null) grid = gridNode.gameObject.AddComponent<GridLayoutGroup>();

@@ -367,7 +367,10 @@ namespace Zjcs.Combat.Official
                 if (dashPosition != null)
                     actor.Direction = dashPosition.X < actor.X ? 1 : dashPosition.X > actor.X ? 3
                         : dashPosition.Y > actor.Y ? 2 : 0;
-                if (skill.ComboSkills.Count > 0)
+                if (FightSkillJumpPolicy.LandsBesideTarget(skill))
+                    targets = FightBattleTargeting.SelectAdjacentJumpTargets(actor, units, skill,
+                        target => ComboTargetAllowed(actor, skill, target));
+                else if (skill.ComboSkills.Count > 0)
                     targets.RemoveAll(target => !ComboTargetAllowed(actor, skill, target));
                 if (targets.Count == 0 && skill.TargetType != 5
                     && !FightBattleTargeting.HasCasterAreaTargets(actor, units, skill))
@@ -379,11 +382,12 @@ namespace Zjcs.Combat.Official
                 // FightSkillAgentComponentImplement.UpdateSkillDataOnRun records this
                 // release before its end callbacks can check LimitedTimes or modify CD.
                 FightBattleUnitState comboTargetPosition = dashPosition;
-                if (skill.ComboSkills.Count > 0 || skill.FallbackSkills.Count > 0)
+                if (skill.ComboSkills.Count > 0 || skill.FallbackSkills.Count > 0
+                    || FightSkillJumpPolicy.LandsBesideTarget(skill))
                 {
                     if (targets.Count > 0)
                         TryComboTargetPosition(actor, skill, targets[0], out comboTargetPosition);
-                    ApplyComboFacing(actor, skill);
+                    if (!FightSkillJumpPolicy.LandsBesideTarget(skill)) ApplyComboFacing(actor, skill);
                 }
                 var preparedCast = SkillCasts.Prepare(actor, skill, targets, comboTargetPosition);
                 skill = preparedCast.Skill;
@@ -1744,7 +1748,7 @@ namespace Zjcs.Combat.Official
                         if (!TryRequiredSourceLanding(actor, target, skill, move, out var landing, targetPosition)) continue;
                         var start = new FightGridPoint(actor.X, actor.Y);
                         if (landing.Equals(start)) continue;
-                        if (skill.MoveByTeleport || skill.EntityId == 10670 && skill.ItemId == 10015)
+                        if (FightSkillJumpPolicy.UsesDirectPath(skill))
                         {
                             var movement = new FightBattleMovementEvent { UnitId = actor.Id,
                                 HasDirection = true, Direction = actor.Direction };
