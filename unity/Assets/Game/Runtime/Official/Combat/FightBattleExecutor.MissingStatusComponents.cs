@@ -328,15 +328,16 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleStatusStateTrigger trigger in status.Components.Start.Statuses)
             {
                 if (trigger == null || !RollComponent(trigger.BasePercent)) continue;
-                FightBattleUnitState target = trigger.ApplyTarget == 1
-                    ? ResolveUnit(status.CreatorId) : owner;
+                // FightStatusStartComponentInfo has no trigger source or trigger target.
+                FightBattleUnitState target = FightStatusTriggerTargets.Resolve(status, owner,
+                    null, null, trigger.ApplyTarget, units, null);
                 ApplyComponentStatus(status, trigger.EntityId, target, null,
                     trigger.StatusReplacementProperties);
             }
             if (status.Components.Start.ForbiddenStatusId > 0)
             {
-                FightBattleUnitState target = status.Components.Start.ForbiddenTarget == 1
-                    ? ResolveUnit(status.CreatorId) : owner;
+                FightBattleUnitState target = FightStatusTriggerTargets.Resolve(status, owner,
+                    null, null, status.Components.Start.ForbiddenTarget, units, null);
                 FightBattleStatusState forbidden = target?.Statuses?.Find(value => value != null
                     && value.ClassId == status.Components.Start.ForbiddenStatusId);
                 // FightStatusStartComponent uses EFightStatusForbiddenType.StatusTrigger

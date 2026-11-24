@@ -127,15 +127,26 @@ public static class BattleSanctuarySharingHarness
                 formula.PropertyId("Defence"), responseDefence);
         }
         FightBattleStepEvent impact = null;
+        bool grantObserved = false;
         for (int i = 0; i < 10 && impact == null; i++)
         {
             var step = executor.Step(state.Sequence, state.Counter + 1).Event;
             restored.Step(copy.Sequence, copy.Counter + 1);
             Check(FightBattleCheckpointSerializer.Save(state) == FightBattleCheckpointSerializer.Save(copy),
                 "original shelter selection or damage settlement changed after restore");
+            if (step.SkillCasts.Any(cast => cast.SkillEntityId == 11790))
+            {
+                Check(receiver.Statuses.Any(status => status.ClassId == 24304
+                        && status.CreatorId == guardian.Id && status.SourceSkillLevel == level)
+                    && guardian.Statuses.Any(status => status.ClassId == 24305
+                        && status.CreatorId == guardian.Id && status.SourceSkillLevel == level)
+                    && !receiver.Statuses.Any(status => status.ClassId == 24305),
+                    "the original status-start Creator target did not link the guardian");
+                grantObserved = true;
+            }
             if (step.DamageEvents.Any(hit => hit.SkillEntityId == 990580)) impact = step;
         }
-        Check(impact != null, "the incoming controlled hit did not execute");
+        Check(grantObserved && impact != null, "the original grant or incoming controlled hit did not execute");
         var received = impact.DamageEvents.Single(hit => hit.SkillEntityId == 990580);
         var transferred = impact.DamageEvents.Single(hit => hit.SkillEntityId == 11780);
         Check(impact.DamageEvents.IndexOf(received) < impact.DamageEvents.IndexOf(transferred),
