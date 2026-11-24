@@ -45,7 +45,10 @@ public static class BattleSanctuarySharingHarness
         CheckBattle(catalog, formula, items, 4, 2, 100, 800, 1, 20000);
         CheckBattle(catalog, formula, items, 4, 2, 100, 0, 20000, 1);
         CheckBattle(catalog, formula, items, 4, 2, 100, 0, 20000, 20000, 150);
-        return $"Sanctuary sharing passed: 225 numeric/filter cases, {cases} cultivated battles, independent shields, death order, restore and receipt replay.";
+        CheckBattle(catalog, formula, items, 4, 2, 100, 800, 1, 20000, selfMaster: true);
+        CheckBattle(catalog, formula, items, 4, 2, 100, 0, 20000, 1, selfMaster: true);
+        CheckBattle(catalog, formula, items, 4, 2, 100, 0, 20000, 20000, selfMaster: true);
+        return $"Sanctuary sharing passed: 225 numeric/filter cases, {cases + 6} cultivated battles, independent shields, death order, restore and receipt replay.";
     }
 
     private static void CheckPlan(FightOfficialCombatCatalog catalog, FightDamageFormula formula,
@@ -95,13 +98,18 @@ public static class BattleSanctuarySharingHarness
 
     private static void CheckBattle(FightOfficialCombatCatalog catalog, FightDamageFormula formula,
         FightOfficialSkillItemCatalog items, int rank, int level, int defence, int receiverShield,
-        long guardianHp, long receiverHp, int responseDefence = 0)
+        long guardianHp, long receiverHp, int responseDefence = 0, bool selfMaster = false)
     {
         var state = new FightBattleCheckpoint { StageId = 1, RandomSeed = 71, MaxRound = 8,
             Grid = new FightBattleGrid { Width = 12, Height = 12, DefaultGroundType = 2 } };
         var guardian = Unit(1, 1, 3, guardianHp, defence, 2000, formula);
         var attacker = Unit(2, 2, 4, 20000, 100, 1000, formula);
         var receiver = Unit(3, 1, 4, receiverHp, 100, 900, formula);
+        if (selfMaster)
+        {
+            guardian.MasterId = guardian.Turn.MasterId = guardian.Id;
+            receiver.MasterId = receiver.Turn.MasterId = receiver.Id;
+        }
         guardian.Statuses.Add(catalog.CreateStatus(25074, 1, 1, 1, 25074, 10580,
             rank, level, 8, guardian.Properties));
         if (receiverShield > 0) AddShield(catalog, receiver, receiverShield, 20);
@@ -169,6 +177,12 @@ public static class BattleSanctuarySharingHarness
         Check(impact.DamageEvents.Count(hit => hit.SkillEntityId == 11780) == 1,
             "the transferred damage recursively split");
         string settled = FightBattleCheckpointSerializer.Save(state);
+        var settledState = FightBattleCheckpointSerializer.Load(settled);
+        var settledExecutor = FightBattleExecutor.Restore(settledState, formula,
+            new FightDamageSettlement(), catalog, items);
+        Check(settledExecutor.Step(settledState.Sequence, settledState.Counter).Replayed
+            && FightBattleCheckpointSerializer.Save(settledState) == settled,
+            "restoring the settled hit changed its living or dead adventurer into a removed summon");
         var replay = executor.Step(state.Sequence, state.Counter);
         Check(replay.Replayed && FightBattleCheckpointSerializer.Save(state) == settled,
             "replaying the hit charged its guardian twice");

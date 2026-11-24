@@ -63,7 +63,8 @@ namespace Zjcs.Combat.Official
             {
                 // Checkpoints are recorded between atomic steps. Legacy saves did not keep
                 // the removal receipt, but their already removed units must not emit new casts.
-                if (!initialize && unit.MasterId > 0 && (unit.Hp <= 0 || unit.Ended))
+                if (!initialize && unit.MasterId > 0 && unit.MasterId != unit.Id
+                    && (unit.Hp <= 0 || unit.Ended))
                     unit.HitSummonRemoveProcessed = true;
                 FightBattlePetEnergyRuntime.Initialize(unit);
                 ApplyMonsterInfo(unit);
