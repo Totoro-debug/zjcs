@@ -20,7 +20,8 @@ namespace Zjcs.Presentation.Home
             var source = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(path));
             var plan = source.Player.Skills.Plans[source.Player.Skills.SelectedPlan];
             int itemId = plan.PassiveSkills[0];
-            bool supported = active == 10047 && player.Wardrobe.Profession == 4 && (itemId == 10606 || itemId == 10607 || itemId == 10575 || itemId == 10580)
+            bool supported = active == 10017 && player.Wardrobe.Profession == 3 && itemId == 10572
+                || active == 10047 && player.Wardrobe.Profession == 4 && (itemId == 10606 || itemId == 10607 || itemId == 10575 || itemId == 10580)
                 || active == 10088 && player.Wardrobe.Profession == 8 && (itemId == 10608 || itemId == 10568 || itemId == 10595 || itemId == 10543)
                 || active == 10068 && player.Wardrobe.Profession == 8 && itemId == 10609;
             supported |= active == 10089 && player.Wardrobe.Profession == 8 && itemId == 10594;
