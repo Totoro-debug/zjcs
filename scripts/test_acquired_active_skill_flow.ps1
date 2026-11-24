@@ -2,9 +2,9 @@ param(
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10099,10100,10101,10102,10103,10104)][int]$SkillId = 10026,
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10099,10100,10101,10102,10103,10104)][int]$SkillId = 10026,
     [Parameter(ParameterSetName='Player')]
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10099,10100,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10099,10100,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
     [string]$PassiveSave,
     [ValidateSet(0,39521,39523)][int]$SkillSkinId = 0
 )
@@ -388,6 +388,15 @@ try {
         if ($SkillId -eq 10077 -and -not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-sage-psychic-ward-checkpoint.json'))) {
             throw 'The consumed psychic ward checkpoint was not persisted.'
         }
+        if ($SkillId -eq 10097) {
+            foreach ($file in @('acquired-voodoo-doll-checkpoint.json','acquired-voodoo-doll-receipt.json',
+                'acquired-active-ui-opening.png','acquired-active-ui-battle.png')) {
+                if (-not (Test-Path -LiteralPath (Join-Path $skillRun $file))) { throw 'The actual substitute evidence is incomplete.' }
+            }
+            $receipt = Get-Content -LiteralPath (Join-Path $skillRun 'acquired-voodoo-doll-receipt.json') -Raw | ConvertFrom-Json
+            if ($receipt.summons -lt 1 -or $receipt.transfers -lt 1 -or $receipt.expirations -lt 1 -or
+                -not $receipt.restored -or -not $receipt.captured) { throw 'The original substitute lost its link, true damage, lifetime or restore receipt.' }
+        }
         if ($SkillId -eq 10095) {
             foreach ($file in @('acquired-rock-emperor-checkpoint.json','acquired-active-ui-opening.png','acquired-active-ui-battle.png')) {
                 if (-not (Test-Path -LiteralPath (Join-Path $skillRun $file))) { throw 'The cultivated rock emperor did not render and persist its original summon.' }
@@ -396,7 +405,7 @@ try {
         if ($SkillId -eq 10096 -and -not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-heavenly-rain-checkpoint.json'))) {
             throw 'The original cultivated healing checkpoint was not persisted.'
         }
-        if ($SkillId -in @(10002,10032,10039,10047,10056,10059,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10099,10100,10101,10102,10103,10104)) {
+        if ($SkillId -in @(10002,10032,10039,10047,10056,10059,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10099,10100,10101,10102,10103,10104)) {
             # The Player asserts the original effects for each equipped cast.
             Write-Output "Acquired active skill-page flow passed: $skillRun"
             continue

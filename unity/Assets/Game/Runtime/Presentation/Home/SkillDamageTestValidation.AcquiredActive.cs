@@ -76,6 +76,7 @@ namespace Zjcs.Presentation.Home
             bool protectiveRunes = skillId == 10102;
             bool chaosRune = skillId == 10059;
             bool rockSummon = skillId == 10095;
+            bool voodooDoll = skillId == 10097;
             bool heavenlyRain = skillId == 10096;
             bool psychicWard = skillId == 10077;
             bool sageDarkBlast = skillId == 10103;
@@ -86,14 +87,14 @@ namespace Zjcs.Presentation.Home
             bool overloadProtection = destroyerCompanion == 10573;
             bool alienation = HasAlienationCompanion(skillId);
             bool destroyer = starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder || protectiveRunes || destroyerCompanion > 0;
-            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation || chaosRune || rockSummon || heavenlyRain || sageDarkBlast || psychicWard;
+            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard;
             fourthPromotion |= fireLeap || flowingFire;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry || protectiveRunes || psychicWard;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
             fourthPromotion |= HasGuardianCompanion(skillId);
-            int profession = fireLeap || flowingFire ? 8 : alienation || chaosRune || rockSummon || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = fireLeap || flowingFire ? 8 : alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -299,7 +300,7 @@ namespace Zjcs.Presentation.Home
                 var choice = settings.GetComponentsInChildren<Toggle>().Single(value =>
                     value.transform.parent.name == "ToggleText" && value.GetComponentsInParent<Transform>()
                         .Any(parent => parent.name == setting));
-                if (setting == "MonsterHp" && (waterBlade || soulPiercer || chaosRune || rockSummon || sageDarkBlast))
+                if (setting == "MonsterHp" && (waterBlade || soulPiercer || chaosRune || rockSummon || voodooDoll || sageDarkBlast))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
                 if (setting == "MonsterHurt" && (overloadProtection || psychicWard || passiveCompanion == 10580 || passiveCompanion == 10600))
@@ -379,6 +380,7 @@ namespace Zjcs.Presentation.Home
             int battlecryAdvances = 0;
             int confusionApplications = 0, confusionEnds = 0;
             var rock = rockSummon ? new AcquiredRockSummon() : null;
+            var doll = voodooDoll ? new AcquiredVoodooDoll() : null;
             battle.Controller.StepCompleted += step => {
                 if (spiralWindBlade)
                 {
@@ -455,6 +457,7 @@ namespace Zjcs.Presentation.Home
                         : chaosRune ? cast.SkillEntityId == 11380
                         : psychicWard ? cast.SkillEntityId == 11760
                         : rockSummon ? cast.SkillEntityId == 12140
+                        : voodooDoll ? cast.SkillEntityId == 12200
                         : heavenlyRain ? cast.SkillEntityId == 12020
                         : sageDarkBlast ? cast.SkillEntityId == 12120
                         : skillId == 10048 ? cast.SkillEntityId == 11090
@@ -510,6 +513,11 @@ namespace Zjcs.Presentation.Home
                     if (rock != null)
                     {
                         rock.VerifySummon(cast, step.Event, checkpoint, actor, active, output);
+                        continue;
+                    }
+                    if (doll != null)
+                    {
+                        doll.VerifySummon(cast, checkpoint, actor, active, output);
                         continue;
                     }
                     if (protectiveRunes)
@@ -786,6 +794,7 @@ namespace Zjcs.Presentation.Home
                 }
                 if (rock != null) hits += rock.VerifyAttacks(step.Event, checkpoint);
                 sageSummonSecret?.Observe(step.Event, checkpoint, rock);
+                if (doll != null) hits += doll.Observe(step.Event, checkpoint, output);
             };
             yield return CaptureAcquiredActive(output, "preparation");
             click(FlameFlowButton(value => value.name == "Btn" && value.GetComponentsInParent<Transform>()
@@ -814,6 +823,11 @@ namespace Zjcs.Presentation.Home
                     yield return CaptureAcquiredActive(output, "opening");
                     capturedOpening = true;
                     acquiredGuardian.OpeningCaptured();
+                }
+                if (doll?.IsVisible() == true && !capturedOpening)
+                {
+                    yield return CaptureAcquiredActive(output, "opening");
+                    capturedOpening = true;
                 }
                 if (rock?.IsVisible() == true && !capturedOpening)
                 {
@@ -1038,6 +1052,11 @@ namespace Zjcs.Presentation.Home
                     {
                         if (!IsNativeSkillParticleVisible("playable12021")) { yield return null; continue; }
                     }
+                    else if (doll != null)
+                    {
+                        if (!doll.IsVisible()) { yield return null; continue; }
+                        doll.Captured();
+                    }
                     else if (rock != null)
                     {
                         if (!rock.IsVisible() || !rock.IsAttackVisible()) { yield return null; continue; }
@@ -1104,6 +1123,7 @@ namespace Zjcs.Presentation.Home
             acquiredGuardian?.Complete(capturedPassive);
             sageRoundSecret?.Complete();
             sageSummonSecret?.Complete();
+            doll?.Complete(output);
             Require(passiveCompanion != 10595 || windHits > 0 && capturedPassive,
                 "The cultivated wind orb never rendered and struck at the owner's turn end.");
             Require(passiveCompanion != 10543 || flameHits > 0 && capturedPassive,
