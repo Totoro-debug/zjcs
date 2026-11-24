@@ -7,7 +7,7 @@ public static class BattleFlowingFireHarness {
  public static string Run(FightOfficialCombatCatalog c,FightDamageFormula f,FightOfficialSkillItemCatalog items) {
   var counts=new HashSet<int>();int cases=0;
   foreach(int entity in new[]{12090,13590})
-  foreach(int rank in new[]{3,4,5})
+  foreach(int rank in new[]{3,4,5,7})
   foreach(int level in new[]{1,2,10})
   foreach(int seed in Enumerable.Range(1,64)) { counts.Add(Case(c,f,items,entity,rank,level,seed,"normal"));cases++; }
   foreach(int entity in new[]{12090,13590})

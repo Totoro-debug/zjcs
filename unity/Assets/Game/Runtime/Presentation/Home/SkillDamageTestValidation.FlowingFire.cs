@@ -16,7 +16,7 @@ namespace Zjcs.Presentation.Home
             Require(casts.Length >= 1 && casts.Length <= 3, "The cultivated flowing fire exceeded its extra-cast limit.");
             var catalog = Zjcs.Presentation.Combat.OfficialCombatAssetCatalog.LoadDefault().Load();
             var active = checkpoint.Units.Single(value => value.Id == 1).Skills.Single(value => value.Slot == 0);
-            float start = 0f;
+            float start = casts[0].Delay;
             for (int index = 0; index < casts.Length; index++)
             {
                 var cast = casts[index];

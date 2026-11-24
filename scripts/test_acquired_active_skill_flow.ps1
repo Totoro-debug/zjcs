@@ -296,7 +296,7 @@ try {
         }
         if ($SkillId -eq 10100) {
             $receipt = Get-Content -LiteralPath (Join-Path $skillRun 'acquired-flowing-fire-receipt.json') -Raw | ConvertFrom-Json
-            if ($receipt.extras -lt 1 -or $receipt.extras -gt 2 -or $receipt.rank -ne 4 -or $receipt.level -ne 2 -or
+            if ($receipt.extras -lt 1 -or $receipt.extras -gt 2 -or $receipt.rank -ne [int]$cultivatedRank -or $receipt.level -ne 2 -or
                 $receipt.skin -ne ($SkillSkinId -eq 39523) -or -not $receipt.restored -or
                 -not (Select-String -LiteralPath $log -SimpleMatch '[Acquired active combat] 10100 cultivated sequential extras, original fire impacts and restore replay passed.')) {
                 throw 'The cultivated flowing fire lost its extra-cast chain or restore receipt.'
