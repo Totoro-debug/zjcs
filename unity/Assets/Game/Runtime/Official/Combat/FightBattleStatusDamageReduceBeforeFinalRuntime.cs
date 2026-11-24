@@ -13,20 +13,14 @@ namespace Zjcs.Combat.Official
     {
         public static long CalculateStatusDamage(long originalValue,
             IList<FightPropertyValue> statusProperties, int damagePropertyId,
-            int fixedDamagePropertyId, long maximumValue = -1L)
+            int fixedDamagePropertyId, FightDamageFormula formula, long maximumValue = -1L)
         {
-            double amount = Math.Abs((double)originalValue) * Read(statusProperties, damagePropertyId)
-                + Read(statusProperties, fixedDamagePropertyId);
-            if (maximumValue > 0) amount = Math.Min(amount, maximumValue);
-            return -(long)Math.Max(0.0, amount);
-        }
-
-        private static double Read(IList<FightPropertyValue> properties, int id)
-        {
-            if (properties == null || id <= 0) return 0.0;
-            foreach (FightPropertyValue value in properties)
-                if (value != null && value.Id == id) return value.Value;
-            return 0.0;
+            if (formula == null) throw new ArgumentNullException(nameof(formula));
+            var properties = new Dictionary<int, long>();
+            foreach (FightPropertyValue value in statusProperties ?? Array.Empty<FightPropertyValue>())
+                if (value != null) properties[value.Id] = value.Value;
+            return formula.CalculateStatusDamage(properties, damagePropertyId,
+                fixedDamagePropertyId, originalValue, maximumValue);
         }
     }
 }

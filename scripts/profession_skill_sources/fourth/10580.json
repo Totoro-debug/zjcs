@@ -1,0 +1,26 @@
+{
+  "entities": [10005, 11780, 11781, 11790, 11791, 11792, 24304, 24305, 25074],
+  "runtime_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10580.json"
+  ],
+  "rule_pack_fragments": [
+    "FightSkill_part1.g.bytes",
+    "FightSkill_part87.g.bytes",
+    "FightSkill_part716.g.bytes",
+    "FightSkill_part754.g.bytes"
+  ],
+  "visibility_bundles": ["11780", "11790", "global_10005"],
+  "code": [
+    "FightStatusComponentInfo",
+    "FightStatusRoundStartComponentInfo",
+    "FightStatusDamageReduceBeforeFinalComponentInfo",
+    "FightStatusDamageReduceBeforeFinalComponent",
+    "FightStatusUnitPropPercentCfg",
+    "FightStatusStartComponentInfo",
+    "StatusAutoRemoveComponentInfo",
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "BattleFormulaHandler"
+  ]
+}
