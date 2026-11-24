@@ -120,6 +120,7 @@ namespace Zjcs.Combat.Official
             turns = new FightTurnQueue(checkpoint.Timeline, Turns());
             lastGlobalRound = turns.GlobalRound();
             random = new FightRandomStream(checkpoint.RandomSeed);
+            if (!initialize) NormalizeVoodooDeathStatuses();
             foreach (var unit in units) statusMutex.Synchronize(unit);
             if (initialize) InitializeWithStatusApplicationFilter();
             else if (statusCatalog != null)
@@ -1408,7 +1409,6 @@ namespace Zjcs.Combat.Official
                     FightBattleStatusState mark = ApplySummonStatus(reference, actor, skill,
                         summon.VoodooDoll.VoodooStatusId);
                     summon.VoodooDoll.VoodooStatusInstanceId = mark == null ? 0 : mark.InstanceId;
-                    ApplySummonStatus(summon, reference, skill, summon.VoodooDoll.FollowDieStatusId);
                 }
                 // Initial monster passives precede registration; additional statuses start
                 // through StatusStarted. Sweep only still-pending HP starts, once each.

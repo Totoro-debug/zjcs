@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Zjcs.Combat.Official;
 
 public static class BattleVoodooDollHarness
@@ -22,6 +23,7 @@ public static class BattleVoodooDollHarness
     public static void Run(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
         FightDamageFormula formula)
     {
+        OfficialAttack(catalog, items, formula);
         var player=Unit(1,1,1,100007,101); var enemy=Unit(2,2,2,2000000,1); enemy.X=6;
         var summonSkill=catalog.CreateSkill(12200,0,10097,5,20,1,null);
         player.Skills.Add(summonSkill); player.SkillState.Slots.Add(catalog.CreateSkillSlot(summonSkill,0));
@@ -90,6 +92,71 @@ public static class BattleVoodooDollHarness
         Check(source.Ended && source.Statuses.Count==0,"Creator-clock lifetime did not destroy the applicator.");
         linked.Hp=0;Check(restored.ResultRules.Evaluate(restored,1).Won,
             "A target-type substitute incorrectly blocked enemy clear.");
+    }
+
+    private static void OfficialAttack(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
+        FightDamageFormula formula)
+    {
+        var player = Unit(1, 1, 1, 100007, 101);
+        var enemy = Unit(2, 2, 2, 2000000, 1); enemy.X = 6;
+        var summon = catalog.CreateSkill(12200, 0, 10097, 5, 20, 1, null);
+        player.Skills.Add(summon); player.SkillState.Slots.Add(catalog.CreateSkillSlot(summon, 0));
+        var state = new FightBattleCheckpoint { StageId = 1001, RandomSeed = 13,
+            ResultRules = new FightBattleResultRules() };
+        state.Units.Add(player); state.Units.Add(enemy);
+        var executor = FightBattleExecutor.Begin(state, formula, new FightDamageSettlement(), catalog, items);
+        executor.Step(0, 1);
+        var doll = state.Units.Find(unit => unit.IsVoodooDoll);
+        Check(doll != null && !doll.Statuses.Exists(status => status.ActionType == 3),
+            "A living substitute started with the linked death status.");
+        doll.Statuses.Add(catalog.CreateStatus(doll.VoodooDoll.FollowDieStatusId, doll.Id, enemy.Id,
+            9999, 12200, 10097, 5, 20, 1, enemy.Properties));
+        executor = FightBattleExecutor.Restore(state, formula, new FightDamageSettlement(), catalog, items);
+        Check(!doll.Statuses.Exists(status => status.ActionType == 3),
+            "Restoring an old living substitute retained its premature linked death status.");
+        string living = FightBattleCheckpointSerializer.Save(state);
+        var attackProps = catalog.CalculateSkillProps(10500, 5, 20, 1)
+            .Select(pair => new FightPropertyValue { Id = pair.Key, Value = pair.Value }).ToList();
+        var lightning = catalog.CreateSkill(10500, 0, 10000, 5, 20, 1, attackProps);
+        Check(FightBattleTargeting.IsEligibleSkillTarget(player, doll, lightning)
+            && FightBattleTargeting.Select(player, state.Units, 1, skill: lightning)[0].Id == doll.Id,
+            "An original attack did not prefer the eligible living substitute.");
+        Check(FightBattleTargeting.Select(player, state.Units, 1, enemy.Id, skill: lightning)[0].Id == enemy.Id,
+            "Substitute preference overrode the forced hostile target.");
+        var heal = catalog.CreateSkill(12020, 1, 10096, 5, 20, 1, null);
+        Check(!FightBattleTargeting.IsEligibleSkillTarget(enemy, doll, heal)
+            && FightBattleTargeting.Select(enemy, state.Units, 2, skill: heal).TrueForAll(unit => !unit.IsVoodooDoll),
+            "A substitute remained eligible as a cure's primary target.");
+        player.Skills.Clear(); player.SkillState.Slots.Clear();
+        player.Skills.Add(lightning); player.SkillState.Slots.Add(catalog.CreateSkillSlot(lightning, 0));
+        bool hit = false;
+        for (int i = 0; i < 8 && !state.Finished; i++)
+        {
+            var step = executor.Step(state.Sequence, state.Counter + 1).Event;
+            var suffered = step.DamageEvents.Find(value => value.SkillEntityId == 10500 && value.TargetId == doll.Id
+                && value.Damage < 0);
+            if (suffered == null) continue;
+            var transmitted = step.DamageEvents.Find(value => value.SkillEntityId == 10140 && value.TargetId == enemy.Id);
+            Check(transmitted != null && transmitted.DamageValue == suffered.DamageValue
+                && transmitted.TrueDamage && transmitted.IgnoreShield && transmitted.AfterHp < transmitted.BeforeHp,
+                "An original hostile attack did not transmit the substitute's settled HP loss.");
+            hit = true; break;
+        }
+        Check(hit, "The original attack did not damage the substitute through the real hit pipeline.");
+        var linkedDeath = FightBattleCheckpointSerializer.Load(living);
+        enemy = linkedDeath.Units.Find(unit => unit.Id == 2);
+        doll = linkedDeath.Units.Find(unit => unit.IsVoodooDoll);
+        player = linkedDeath.Units.Find(unit => unit.Id == 1);
+        player.Skills.Clear(); player.SkillState.Slots.Clear();
+        player.Skills.Add(lightning); player.SkillState.Slots.Add(catalog.CreateSkillSlot(lightning, 0));
+        enemy.Hp = enemy.Turn.Hp = 1;
+        doll.Targetable = false;
+        executor = FightBattleExecutor.Restore(linkedDeath, formula, new FightDamageSettlement(), catalog, items);
+        for (int i = 0; i < 8 && enemy.Hp > 0 && !linkedDeath.Finished; i++)
+            executor.Step(linkedDeath.Sequence, linkedDeath.Counter + 1);
+        Check(enemy.Hp == 0 && doll.Ended && doll.Statuses.Exists(status => status.ClassId == doll.VoodooDoll.FollowDieStatusId
+            && status.ActionType == 3 && status.CreatorId == enemy.Id),
+            "A linked target death did not apply its original follow-death status.");
     }
 
     public static string RunHpTriggers(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,

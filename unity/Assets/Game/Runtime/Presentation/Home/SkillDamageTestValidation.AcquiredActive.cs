@@ -300,7 +300,7 @@ namespace Zjcs.Presentation.Home
                 var choice = settings.GetComponentsInChildren<Toggle>().Single(value =>
                     value.transform.parent.name == "ToggleText" && value.GetComponentsInParent<Transform>()
                         .Any(parent => parent.name == setting));
-                if (setting == "MonsterHp" && (waterBlade || soulPiercer || chaosRune || rockSummon || voodooDoll || sageDarkBlast))
+                if (setting == "MonsterHp" && (waterBlade || soulPiercer || chaosRune || rockSummon || sageDarkBlast))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
                 if (setting == "MonsterHurt" && (overloadProtection || psychicWard || passiveCompanion == 10580 || passiveCompanion == 10600))

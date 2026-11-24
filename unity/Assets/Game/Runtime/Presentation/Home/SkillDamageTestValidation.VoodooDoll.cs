@@ -86,7 +86,10 @@ namespace Zjcs.Presentation.Home
                 if (expired.Count > 0 && actor.Skills.All(skill => skill.Slot != 1))
                 {
                     var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
-                    var attack = catalog.CreateSkill(10500, 1, 10000, 1, 1, actor.SubRank, null);
+                    var props = catalog.CalculateSkillProps(10500, 1, 1, actor.SubRank)
+                        .Select(pair => new FightPropertyValue { Id = pair.Key, Value = pair.Value }).ToList();
+                    var attack = catalog.CreateSkill(10500, 1, 10000, 1, 1, actor.SubRank, props);
+                    attack.CreatorCharacterType = actor.CharacterType;
                     actor.Skills.Add(attack);
                     actor.SkillState.Slots.Add(catalog.CreateSkillSlot(attack, 1));
                 }

@@ -88,13 +88,51 @@ namespace Zjcs.Combat.Official
             }, context.DamageEvents, context.Casts);
         }
 
+        private void NormalizeVoodooDeathStatuses()
+        {
+            foreach (var doll in units)
+            {
+                if (!doll.IsVoodooDoll || doll.Ended || doll.Hp <= 0
+                    || !unitById.TryGetValue(doll.VoodooDoll.TargetId, out var target)
+                    || target.Ended || target.Hp <= 0) continue;
+                // Legacy saves attached FollowDieId at spawn. The target is alive,
+                // so remove only that source's premature death action on restore.
+                foreach (var stale in new List<FightBattleStatusState>(doll.Statuses))
+                    if (stale.ClassId == doll.VoodooDoll.FollowDieStatusId
+                        && stale.CreatorId == target.Id && stale.ActionType == 3)
+                        FightStatusLifecycle.End(doll, stale);
+            }
+        }
+
         private void FinishVoodooDolls()
         {
             foreach (FightBattleUnitState doll in units)
             {
                 if (!doll.IsVoodooDoll) continue;
                 unitById.TryGetValue(doll.VoodooDoll.TargetId, out var target);
-                if (target == null || target.Hp <= 0 || target.Ended) doll.Ended = true;
+                if (target == null || target.Hp <= 0 || target.Ended)
+                {
+                    if (target != null && target.Hp <= 0 && doll.Hp > 0 && !doll.Ended
+                        && doll.VoodooDoll.FollowDieStatusId > 0 && statusCatalog != null)
+                    {
+                        var source = doll.Statuses.Find(status => status.CreatorId == doll.MasterId
+                            && status.RootSkillId > 0 && status.ApplyingSkillItemId > 0);
+                        if (source != null)
+                        {
+                            // FollowDieId is the linked death status, not a starting status.
+                            var death = statusCatalog.CreateStatus(doll.VoodooDoll.FollowDieStatusId,
+                                doll.Id, target.Id, NextStatusInstanceId(), source.RootSkillId,
+                                source.ApplyingSkillItemId, source.SourceSkillRank, source.SourceSkillLevel,
+                                source.SourceSubRank, target.Properties, 0, source.ReplacementProperties,
+                                source.BlessPropertyScales);
+                            death.CreatorCharacterType = target.CharacterType;
+                            death.Origin = FightBattleStatusOrigin.Resolve(source).Copy();
+                            death.ReportSource = FightBattleStatusReportSource.Resolve(source).Copy();
+                            FightStatusLifecycle.Apply(doll, death, StatusClockRound(death), death.InstanceId, random);
+                        }
+                    }
+                    doll.Ended = true;
+                }
                 if (doll.Hp > 0 && !doll.Ended) continue;
                 FightVoodooDollRules.TransferDebuffs(doll, target, units,
                     NextStatusInstanceId, random);

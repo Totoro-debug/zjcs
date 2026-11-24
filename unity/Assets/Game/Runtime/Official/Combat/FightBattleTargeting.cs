@@ -55,7 +55,8 @@ namespace Zjcs.Combat.Official
                 ridiculeTargetId = RidiculeSourceId(actor);
             foreach (FightBattleUnitState unit in units)
             {
-                if (!IsSelectable(unit) || IsHiddenFromEnemySelection(actor, unit) || HasIgnoredStatus(unit, skill)
+                if (!IsSelectable(unit) || IsCureBlockedByRole(unit, skill)
+                    || IsHiddenFromEnemySelection(actor, unit) || HasIgnoredStatus(unit, skill)
                     || IsActionBlockedByStatus(unit, skill == null ? null
                         : skill.BlockingTargetActionTypes)) continue;
                 bool isRidiculeSource = targetType == 1 && ridiculeTargetId > 0
@@ -391,7 +392,8 @@ namespace Zjcs.Combat.Official
             {
                 bool explicitDead = unit != null && !unit.Ended && unit.Targetable && unit.Hp <= 0
                     && explicitDeadTargets != null && explicitDeadTargets.Contains(unit);
-                if (!IsSelectable(unit) && !explicitDead || IsHiddenFromEnemySelection(actor, unit)
+                if (!IsSelectable(unit) && !explicitDead || IsCureBlockedByRole(unit, skill)
+                    || IsHiddenFromEnemySelection(actor, unit)
                     || HasIgnoredStatus(unit, skill)
                     || IsActionBlockedByStatus(unit, skill == null ? null
                         : skill.BlockingTargetActionTypes)) continue;
@@ -410,6 +412,7 @@ namespace Zjcs.Combat.Official
             FightBattleSkillDefinition skill)
         {
             return actor != null && skill != null && IsSelectable(target)
+                && !IsCureBlockedByRole(target, skill)
                 && !IsHiddenFromEnemySelection(actor, target)
                 && !HasIgnoredStatus(target, skill)
                 && !IsActionBlockedByStatus(target, skill.BlockingTargetActionTypes)
@@ -691,8 +694,12 @@ namespace Zjcs.Combat.Official
             return Compare(left, right, skill);
         }
 
+        private static bool IsCureBlockedByRole(FightBattleUnitState unit, FightBattleSkillDefinition skill)
+            => unit != null && unit.IsVoodooDoll && skill != null && skill.SkillType == 3;
+
         private static bool HasMoreHitStatus(FightBattleUnitState unit)
         {
+            if (unit.IsVoodooDoll) return true;
             if (unit.Statuses == null) return false;
             foreach (FightBattleStatusState status in unit.Statuses)
                 if (status != null && status.AiMoreHit) return true;
