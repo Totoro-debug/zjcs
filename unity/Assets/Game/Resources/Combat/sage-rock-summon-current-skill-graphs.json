@@ -1,0 +1,150 @@
+{
+  "manifest": "903_156948",
+  "skills": [
+    {
+      "skill_entity_id": 12140,
+      "entity_resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/12140/12140",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/12140/playable12140"
+        }
+      ]
+    },
+    {
+      "skill_entity_id": 56800,
+      "entity_resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/56800/56800",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/56800/playable56800"
+        }
+      ]
+    },
+    {
+      "skill_entity_id": 56810,
+      "entity_resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/56810/56810",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/56810/playable56810"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 12141,
+      "client_type": "MyFightHitSummon",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/12140/12141"
+    },
+    {
+      "hit_entity_id": 56801,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/56800/56801"
+    },
+    {
+      "hit_entity_id": 56811,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/56810/56811"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 56802,
+      "entity_prefab": "56800/56802.prefab",
+      "entity_prefab_sha256": "5655690d17c3a7850c2c406e10c951503c10746eb64de8d475ae778cc35cf8c1",
+      "component_file_id": 114703437598541787,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage_noanim"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage_wave"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/56800/56802"
+    },
+    {
+      "damage_entity_id": 56812,
+      "entity_prefab": "56810/56812.prefab",
+      "entity_prefab_sha256": "7bcf73ff012ae9cb93552edf856e2af31af282a80fe194dc08ef2d3a2f300dd6",
+      "component_file_id": 114703437598541787,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage_wuli"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/SageRockSummonGraphs/Prefabs/EcEntity/Fight/FightSkill/56810/56812"
+    }
+  ]
+}

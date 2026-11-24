@@ -103,6 +103,14 @@
     {
       "path": "assets/reference/battle-animation/sage-dark-blast-current-skill-graphs-source-manifest.json",
       "sha256": "a9a89450996af381b4c44e7d7491c11294c0a91b38f9e5a84287a7c2a268497f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/sage-rock-summon-current-skill-graphs.json",
+      "sha256": "db78da02227ad360ea93e90bf600bcefe5abe34f0fa8865d8fb1e5f9ebb3128d"
+    },
+    {
+      "path": "assets/reference/battle-animation/sage-rock-summon-current-skill-graphs-source-manifest.json",
+      "sha256": "62db3ba20cfada7f4f9d87f53460d568a418c4cde2c63c6b727910ff3e2fb957"
     }
   ],
   "outputs": [
@@ -211,8 +219,16 @@
       "sha256": "559da331888a31d9e2ffa3817a14ed46b5df7eb67c04afa57d545eeb73bd1240"
     },
     {
+      "path": "unity/Assets/Game/Resources/Combat/sage-rock-summon-current-skill-graphs-source-manifest.json",
+      "sha256": "075f1fda7b93c555a44640d97a5eca43457ceef532d86748d01ccdd9fe070ff2"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/sage-rock-summon-current-skill-graphs-source-manifest.json.meta",
+      "sha256": "6526d4f8be636fa61257b6646fad643f614164ac2407d157cd7de5925a88ad74"
+    },
+    {
       "path": "unity/Assets/Game/Resources/Combat/skill-native-graph-sources.json",
-      "sha256": "7da5c20013abb6c9e6ba48284e1f5c07a93f3ccd1a5ca3d21bec5a6de7e00727"
+      "sha256": "9a52ab41bc45012b89e537552e74d990347bd250df2c22f2c6dd24e392b2c41d"
     },
     {
       "path": "unity/Assets/Game/Resources/Combat/skill-native-graph-sources.json.meta",
@@ -221,7 +237,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_native_graph_sources.py",
-    "sha256": "d7fd8fa04ca4c11f925313483376ed8207c1b6b68544a0400535763b22d89774"
+    "sha256": "f2672654fa5a171d831adf0a44ce7fbdd962398a1bb9ac58b49e82b6208d6375"
   },
   "runtime": [
     {
@@ -230,7 +246,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs",
-      "sha256": "724544e103a3e6c3fe67ae3076f60106930f0473169cd3ed48012e62225d9efd"
+      "sha256": "7e5947335c66eab951339db38ae51b229b3bf467cd371734eab47eb35b99075d"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphCatalog.cs",

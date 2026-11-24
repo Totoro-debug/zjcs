@@ -75,6 +75,7 @@ namespace Zjcs.Presentation.Home
             bool judgmentThunder = skillId == 10093;
             bool protectiveRunes = skillId == 10102;
             bool chaosRune = skillId == 10059;
+            bool rockSummon = skillId == 10095;
             bool heavenlyRain = skillId == 10096;
             bool psychicWard = skillId == 10077;
             bool sageDarkBlast = skillId == 10103;
@@ -85,14 +86,14 @@ namespace Zjcs.Presentation.Home
             bool overloadProtection = destroyerCompanion == 10573;
             bool alienation = HasAlienationCompanion(skillId);
             bool destroyer = starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder || protectiveRunes || destroyerCompanion > 0;
-            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation || chaosRune || heavenlyRain || sageDarkBlast || psychicWard;
+            bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation || chaosRune || rockSummon || heavenlyRain || sageDarkBlast || psychicWard;
             fourthPromotion |= fireLeap || flowingFire;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry || protectiveRunes || psychicWard;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
             fourthPromotion |= HasGuardianCompanion(skillId);
-            int profession = fireLeap || flowingFire ? 8 : alienation || chaosRune || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = fireLeap || flowingFire ? 8 : alienation || chaosRune || rockSummon || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -296,7 +297,7 @@ namespace Zjcs.Presentation.Home
                 var choice = settings.GetComponentsInChildren<Toggle>().Single(value =>
                     value.transform.parent.name == "ToggleText" && value.GetComponentsInParent<Transform>()
                         .Any(parent => parent.name == setting));
-                if (setting == "MonsterHp" && (waterBlade || soulPiercer || chaosRune || sageDarkBlast))
+                if (setting == "MonsterHp" && (waterBlade || soulPiercer || chaosRune || rockSummon || sageDarkBlast))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
                 if (setting == "MonsterHurt" && (overloadProtection || psychicWard || passiveCompanion == 10580))
@@ -371,6 +372,7 @@ namespace Zjcs.Presentation.Home
             int tearApplications = 0, tearEnds = 0, tearHits = 0;
             int battlecryAdvances = 0;
             int confusionApplications = 0, confusionEnds = 0;
+            var rock = rockSummon ? new AcquiredRockSummon() : null;
             battle.Controller.StepCompleted += step => {
                 if (spiralWindBlade)
                 {
@@ -446,6 +448,7 @@ namespace Zjcs.Presentation.Home
                         : protectiveRunes ? cast.SkillEntityId == 12110
                         : chaosRune ? cast.SkillEntityId == 11380
                         : psychicWard ? cast.SkillEntityId == 11760
+                        : rockSummon ? cast.SkillEntityId == 12140
                         : heavenlyRain ? cast.SkillEntityId == 12020
                         : sageDarkBlast ? cast.SkillEntityId == 12120
                         : skillId == 10048 ? cast.SkillEntityId == 11090
@@ -496,6 +499,11 @@ namespace Zjcs.Presentation.Home
                     {
                         VerifyAcquiredHeavenlyRain(cast, damageEvents, checkpoint, output, hits == 0, !overflowShield);
                         hits += damageEvents.Length;
+                        continue;
+                    }
+                    if (rock != null)
+                    {
+                        rock.VerifySummon(cast, step.Event, checkpoint, actor, active, output);
                         continue;
                     }
                     if (protectiveRunes)
@@ -770,6 +778,7 @@ namespace Zjcs.Presentation.Home
                         hits++;
                     }
                 }
+                if (rock != null) hits += rock.VerifyAttacks(step.Event, checkpoint);
             };
             yield return CaptureAcquiredActive(output, "preparation");
             click(FlameFlowButton(value => value.name == "Btn" && value.GetComponentsInParent<Transform>()
@@ -792,6 +801,11 @@ namespace Zjcs.Presentation.Home
                     yield return CaptureAcquiredActive(output, "opening");
                     capturedOpening = true;
                     acquiredGuardian.OpeningCaptured();
+                }
+                if (rock?.IsVisible() == true && !capturedOpening)
+                {
+                    yield return CaptureAcquiredActive(output, "opening");
+                    capturedOpening = true;
                 }
                 if (spiralWindBlade && !capturedTear && FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
                     && particle.GetComponentsInParent<Transform>().Any(parent => parent.name.StartsWith("playable24376", StringComparison.Ordinal))))
@@ -1011,6 +1025,10 @@ namespace Zjcs.Presentation.Home
                     {
                         if (!IsNativeSkillParticleVisible("playable12021")) { yield return null; continue; }
                     }
+                    else if (rock != null)
+                    {
+                        if (!rock.IsVisible() || !rock.IsAttackVisible()) { yield return null; continue; }
+                    }
                     else yield return new WaitForSecondsRealtime(hellfire ? .2f : crisisGuard || starShatteringSlash ? 1.45f
                         : shieldCharge ? 1.1f : flowingFire ? .1f : .7f);
                     yield return CaptureAcquiredActive(output, "battle"); captured = true;
@@ -1033,6 +1051,8 @@ namespace Zjcs.Presentation.Home
                 "The cultivated overflow shield never settled and rendered its original protective effect.");
             Require(!psychicWard || psychicWardEnds > 0,
                 "The cultivated psychic ward never consumed its original mark on actual monster damage.");
+            Require(rock == null || casts == 1 && rock.RegularHits > 0 && rock.OpeningHits > 0 && capturedOpening,
+                "The original rock emperor did not render its summon and both physical attacks.");
             Require(!lightSwordArray || capturedOpening, "The four original opening swords were not captured.");
             Require(!hellfire || hellfireCures >= 2, "The acquired hellfire did not heal on both subsequent turns.");
             Require(!soulPiercer || lifestealCures > 0, "The acquired soul piercer never restored actual HP.");

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Zjcs.Combat.Official;
 
 public static class BattleHitSummonHarness
@@ -67,6 +68,70 @@ public static class BattleHitSummonHarness
         SummonTags(catalog,items,formula,12140,10095,3196,false);
         SummonTags(catalog,items,formula,10710,10019,3181,true);
         TagBoundaries(catalog,items,formula);
+        RockEmperor(catalog, items, formula, 3, 1);
+        RockEmperor(catalog, items, formula, 5, 20);
+    }
+
+    static void RockEmperor(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
+        FightDamageFormula formula, int rank, int level)
+    {
+        var owner = Unit(1, 1, 5, 5, 1000);
+        var enemy = Unit(2, 2, 6, 5);
+        var skill = catalog.CreateSkill(12140, 0, 10095, rank, level, owner.SubRank, null);
+        Equip(owner, skill);
+        owner.SkillState.Slots[0].LimitedTimes = skill.LimitedTimes;
+        var checkpoint = State(owner, enemy);
+        checkpoint.MaxRound = 10;
+        var battle = FightBattleExecutor.Begin(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+        var first = battle.Step(0, 1).Event;
+        var cast = first.SkillCasts.Single(value => value.SkillItemId == 10095);
+        var spawn = cast.HitSelections.Single(hit => hit.HitEntityId == 12141).SpawnedUnits.Single();
+        var rock = checkpoint.Units.Single(unit => unit.Id == spawn.UnitId);
+        Check(rock.MasterId == owner.Id && rock.MonsterTemplateId == 3196 && rock.Level == level
+            && Math.Abs(spawn.X - owner.X) + Math.Abs(spawn.Y - owner.Y) == 2
+            && Math.Abs(spawn.Delay - .8f) < .0001f && skill.LimitedTimes == 1,
+            "The official rock emperor spawn, owner, level, position or timing changed.");
+        var inherited = catalog.CalculateSummonInheritance(3196, level, rank, owner.SubRank,
+            owner.Properties.ToDictionary(property => property.Id, property => property.Value));
+        var baseProps = catalog.CalculateMonsterProps(3196, 0, level, owner.SubRank);
+        foreach (string name in new[] { "MaxHp", "Attack", "Defence", "Speed" })
+        {
+            int property = formula.PropertyId(name);
+            long expected = (baseProps.TryGetValue(property, out long standard) ? standard : 0)
+                + (inherited.Fixed.TryGetValue(property, out long fixedValue) ? fixedValue : 0)
+                + (inherited.Summoner.TryGetValue(property, out long added) ? added : 0);
+            long actual = rock.BaseProperties.Where(value => value.Id == property).Sum(value => value.Value);
+            Check(actual == expected, "The rock emperor changed inherited " + name + ".");
+        }
+        Check(rock.Statuses.Any(status => status.ClassId == 12142 && status.CreatorId == owner.Id
+                && status.DurationRound == -1 && !status.CanDispersed)
+            && rock.Statuses.Any(status => status.ClassId == 25110)
+            && rock.Statuses.Any(status => status.ClassId == 25121),
+            "The official rock emperor initial statuses or lifespan changed.");
+        string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+        checkpoint = FightBattleCheckpointSerializer.Load(saved);
+        battle = FightBattleExecutor.Restore(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+        Check(battle.Step(checkpoint.Sequence, checkpoint.Counter).Replayed
+            && FightBattleCheckpointSerializer.Save(checkpoint) == saved,
+            "The rock emperor's spawn or inherited stats changed on restore.");
+
+        int ordinary = 0, opening = 0;
+        for (int i = 0; i < 24 && !checkpoint.Finished && (ordinary == 0 || opening == 0); i++)
+        {
+            var step = battle.Step(checkpoint.Sequence, checkpoint.Counter + 1).Event;
+            Check(step.SkillCasts.All(value => value.SkillEntityId != 12140)
+                && step.SpawnedUnitIds.Count == 0, "The original wave cast limit did not stop a second rock emperor.");
+            foreach (var hit in step.DamageEvents.Where(value => value.SourceId == rock.Id && value.Damage < 0))
+            {
+                bool regular = hit.SkillEntityId == 56800;
+                Check((regular || hit.SkillEntityId == 56810) && hit.HitEntityId == (regular ? 56801 : 56811)
+                    && hit.DamageEntityId == (regular ? 56802 : 56812) && hit.TargetId == enemy.Id
+                    && hit.DamageType == 1 && hit.ElementType == 0 && !hit.TrueDamage && !hit.IsCure,
+                    "The rock emperor released an incorrect physical attack.");
+                if (regular) ordinary++; else opening++;
+            }
+        }
+        Check(ordinary > 0 && opening == 1, "The rock emperor did not perform its single opening attack and normal attack.");
     }
     static void SummonTags(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
         FightDamageFormula formula, int skillId, int itemId, int monsterId, bool matchesBeast)

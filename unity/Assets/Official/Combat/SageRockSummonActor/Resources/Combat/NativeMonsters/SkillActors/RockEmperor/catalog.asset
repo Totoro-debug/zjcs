@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Name: Original full-binary battle monsters
+  m_EditorClassIdentifier: ''
+  m_Script: {fileID: 11500000, guid: 7c82caa682647b14ebcfc2dc80b360c8, type: 3}
+  inventory: {fileID: 4900000, guid: ebec30ff1ee95ac18495e679ce72965d, type: 3}
+  shader: {fileID: 4800000, guid: 054030caba1d5805a9f41cf36fa476c9, type: 3}
+  shaderBindings: []
+  bindings:
+  - File: 3196/model.bytes
+    Asset: {fileID: 4900000, guid: bc0ef79804985804b06433a9c2b264f8, type: 3}
+  - File: animators/AppearanceAssets/Summons/summons_3196/block_01.anim
+    Asset: {fileID: 7400000, guid: de41e5e9f87c8227d43410f2519a9a8f, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3196/die_01.anim
+    Asset: {fileID: 7400000, guid: 1da403d7728ffdeaeaddcff7dd13687a, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3196/floating_01.anim
+    Asset: {fileID: 7400000, guid: a7adbfef19660b848fa5d70a98888941, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3196/generate_01.anim
+    Asset: {fileID: 7400000, guid: 8fe9a641d460db4450075d172bd9f794, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3196/hit_01.anim
+    Asset: {fileID: 7400000, guid: d5c65d9da748e6377a0c6a1dc262259a, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3196/hit_02.anim
+    Asset: {fileID: 7400000, guid: 9e7afc84669a021ccfafa6af496f0dd9, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3196/idle_01.anim
+    Asset: {fileID: 7400000, guid: 6697059d643d923db337a0d34acc5a1e, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3196/run_01.anim
+    Asset: {fileID: 7400000, guid: 56c4c9a2912b4fb635bc8baed5e03562, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3196/skill_01.anim
+    Asset: {fileID: 7400000, guid: 960cc84c6f3a9b659b54c0920cbb4a0f, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3196/stun_01.anim
+    Asset: {fileID: 7400000, guid: 48a4451a2f1f91b86f9693f571b01e56, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3196/summons_3196_Controller.controller
+    Asset: {fileID: 9100000, guid: 99ffc527dabc9646fe93d207074c90eb, type: 2}
+  - File: textures/1015df57db0c63406255af4343502bc3cbd55f9713414d76b670b4608137a6c0.asset
+    Asset: {fileID: 2800000, guid: 68691f6af04153b790d001e79066c07c, type: 2}
+  - File: textures/307a40a9a546b00f2d63b2c9753e69229d453bc1fa28c83f95570cf40ced9043.asset
+    Asset: {fileID: 2800000, guid: 19a1953fc6dc5cacb52c249c7ff75535, type: 2}
+  - File: textures/87eec55ac622d4084ca884b0b3470d8748f0ff36cacec305425fa44975de58a4.asset
+    Asset: {fileID: 2800000, guid: 54bc8f04352e5de6ac432d894ffd9e03, type: 2}
+  presentationResourceRoot: Combat/NativeMonsters/SkillActors/RockEmperor

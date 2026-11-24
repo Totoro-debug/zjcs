@@ -209,7 +209,7 @@ namespace Zjcs.Presentation.Combat
                 "Combat/hurricane-grief-current-graphs", "Combat/overload-protection-current-graphs",
                 "Combat/confusion-current-graphs", "Combat/sage-overflow-shield-current-graphs",
                 "Combat/sage-blessing-current-status-graphs", "Combat/sage-dark-star-current-status-graphs",
-                "Combat/sage-psychic-ward-current-status-graphs");
+                "Combat/sage-psychic-ward-current-status-graphs", "Combat/sage-rock-summon-current-status-graphs");
             statusViews.Restore();
         }
 

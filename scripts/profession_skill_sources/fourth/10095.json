@@ -1,0 +1,17 @@
+{
+  "entities": [12140, 12141, 12142, 3196, 56800, 56801, 56802, 56810, 56811, 56812, 24216, 25110, 25121, 19810],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/sage-rock-summon-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/sage-rock-summon-current-status-graphs-source-manifest.json",
+    "assets/reference/battle-animation/sage-rock-summon-current-role-views-source-manifest.json"
+  ],
+  "reused_client_code": [
+    "MyFightSkill", "MyFightHitSummon", "MyFightHitFixed", "MyFightDamage",
+    "MyFightRoleSummon", "MyFightStatusRoundStart"
+  ],
+  "code": [
+    "FightSkillComponentInfo", "FightHitSummonComponentInfo", "FightHitSummonMonsterCfg",
+    "FightRoleSummonComponent", "FightRoleCharacterComponentInfo", "FightStatusRoundStartComponentInfo",
+    "FightStatusPropComponentInfo", "FightDamageComponentInfo", "StatusEndComponentInfo", "BattleFormulaHandler"
+  ]
+}
