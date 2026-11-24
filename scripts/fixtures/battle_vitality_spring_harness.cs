@@ -29,8 +29,9 @@ public static class BattleVitalitySpringHarness
         int cases = 0;
         foreach (int rank in new[] { 1, 2, 4 })
         foreach (int level in new[] { 1, 2, 20 })
+        foreach (long startingHp in new[] { 1000L, 999999L, 1000000L })
         {
-            var actor = Unit(1, 1, 1000, formula);
+            var actor = Unit(1, 1, startingHp, formula);
             var enemy = Unit(2, 2, 1000000, formula);
             var status = catalog.CreateStatus(25040, 1, 1, 725040, 25040, 10572, rank, level, 8);
             actor.Statuses.Add(status);
@@ -51,7 +52,13 @@ public static class BattleVitalitySpringHarness
             Check(receipt.SourceId == 1 && receipt.TargetId == 1 && receipt.SkillItemId == 10572
                 && receipt.HitEntityId == 11561 && receipt.DamageEntityId == 11562 && receipt.IsCure,
                 "the original self-cure graph or source was lost");
-            Check(expected > 0 && receipt.Damage == expected && actor.Hp == 1000 + expected,
+            Check(step.StatusViewEvents.Count(value => value.Kind == FightBattleStatusViewEventKind.Invoke
+                && value.OwnerId == actor.Id && value.Status.ClassId == 25040) == 1,
+                "the personal turn did not emit exactly one native status invocation, including at full HP");
+            long recovered = Math.Min(expected, actor.MaxHp - startingHp);
+            Check(expected > 0 && receipt.HasDamageValue && receipt.DamageValue == expected
+                && receipt.Damage == recovered && receipt.BeforeHp == startingHp
+                && receipt.AfterHp == startingHp + recovered && actor.Hp == receipt.AfterHp,
                 "the recovery does not match the cultivated maximum HP and fixed cure values: expected=" + expected
                 + ", receipt=" + receipt.Damage + ", hp=" + actor.Hp + ", rank=" + rank + ", level=" + level);
             string saved = FightBattleCheckpointSerializer.Save(cp);
@@ -69,7 +76,9 @@ public static class BattleVitalitySpringHarness
                     Check(cures.Length == 0, "the cure triggered on another unit's turn");
                 else if (next.ActorRound > 1)
                 {
-                    Check(cures.Length == 1 && cures[0].Damage == expected,
+                    Check(cures.Length == 1 && cures[0].HasDamageValue && cures[0].DamageValue == expected
+                        && cures[0].Damage == Math.Min(expected, cures[0].MaxHp - cures[0].BeforeHp)
+                        && cures[0].AfterHp == cures[0].BeforeHp + cures[0].Damage,
                         "the next personal turn did not repeat the cultivated cure");
                     nextTurn = true;
                     break;
