@@ -1255,19 +1255,8 @@ namespace Zjcs.Combat.Official
                     // including role-death responses, rather than on the first zero HP.
                     if (target.Hp <= 0)
                     {
-                        List<FightBattleStatusSkillInvocation> roleDieInvocations =
-                            FightStatusTriggerRuntime.CollectRoleDieSkills(target, units,
-                                statusCatalog, random);
-                        if (roleDieInvocations.Count > 0)
-                        {
-                            foreach (var invocation in roleDieInvocations)
-                                invocation.Delay = Math.Max(0f, damage.Delay);
-                            ExecuteConfiguredStatusSkills(roleDieInvocations, casts, damageEvents,
-                                movements, ref lastDelay, out _, out _);
-                        }
-                        ExecuteRevivalSkills(casts, damageEvents, movements, ref lastDelay,
+                        ExecuteRoleDeathSkills(target, damage.Delay, casts, damageEvents, movements, ref lastDelay,
                             ref statusTriggerDuration, ref statusTriggerActionDuration);
-                        SynchronizeDeathForbidden(target);
                         if (target.Hp <= 0)
                             FightStatusTriggerRuntime.ApplyKillSkills(actor, target, skill, units,
                                 statusCatalog, random, configuredKillSkillInvocations);

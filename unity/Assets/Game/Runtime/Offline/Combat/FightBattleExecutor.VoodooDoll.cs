@@ -62,7 +62,16 @@ namespace Zjcs.Combat.Official
                 Math.Max(0, damage.BeforeHp - damage.AfterHp), statusCatalog, random,
                 sourceSkill: syncTriggerContext, statistics: checkpoint.Statistics);
             ApplyHpChangeTriggers(target, syncTriggerContext);
-            SynchronizeDeathForbidden(target);
+            if (target.Hp <= 0 && movementStartContext != null)
+            {
+                float delay = Math.Max(0f, damage.Delay), duration = 0f, actionDuration = -1f;
+                ExecuteRoleDeathSkills(target, damage.Delay, casts, events, movementStartContext.Movements,
+                    ref delay, ref duration, ref actionDuration);
+                movementStartContext.Duration = Math.Max(movementStartContext.Duration, Math.Max(delay, duration));
+                movementStartContext.ActionDuration = Math.Max(movementStartContext.ActionDuration, actionDuration);
+            }
+            else SynchronizeDeathForbidden(target);
+            ApplyMissingHitSummonRemovalTriggers(target);
             TransmitVoodooDamage(target, damage, events, casts, visited);
         }
 

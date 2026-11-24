@@ -13,6 +13,9 @@ public static class BattleVoodooDollHpLossHarness
         SkillCost(catalog, items, formula);
         ShieldAbsorption(catalog, items, formula);
         RestoreNormalization(catalog, items, formula);
+        LinkedSummonDeath(catalog, items, formula);
+        LinkedPlayerRevival(catalog, items, formula, false);
+        LinkedPlayerRevival(catalog, items, formula, true);
     }
 
     private static FightBattleUnitState Unit(int id, int side, long hp, int speed)
@@ -125,6 +128,70 @@ public static class BattleVoodooDollHpLossHarness
         FightBattleExecutor.Restore(checkpoint, formula, new FightDamageSettlement(), catalog, items);
         Check(checkpoint.Units[2].Hp == 1000 && checkpoint.Units[1].Hp == 20000,
             "Checkpoint property normalization transmitted an initialization HP difference.");
+    }
+
+    private static void LinkedSummonDeath(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
+        FightDamageFormula formula)
+    {
+        var checkpoint = Checkpoint(catalog);
+        var actor = checkpoint.Units[0];
+        var target = checkpoint.Units[1];
+        var doll = checkpoint.Units[2];
+        var master = Unit(4, 2, 20000, 1);
+        master.Hp = master.Turn.Hp = 19998;
+        target.CharacterType = doll.CharacterType = 3;
+        target.MasterId = target.Turn.MasterId = master.Id;
+        target.MonsterId = target.MonsterTemplateId = 3196;
+        target.Hp = target.MaxHp = target.LastMaxHp = target.Turn.Hp = 100;
+        target.Properties.Single(property => property.Id == 3).Value = 100;
+        catalog.AssembleUnit(master, null, catalog.CreatePassiveStatusBindings(master, items,
+            new[] { new FightOfficialPassiveSkillBinding { ItemId = 10600, Rank = 2, Level = 1, SubRank = 8 } }));
+        checkpoint.Units.Add(master);
+        var skill = new FightBattleSkillDefinition { EntityId = 990102, Slot = 0, TargetType = 1 };
+        skill.Range.Add(new FightGridPoint(doll.X - actor.X, 0));
+        skill.Hits.Add(new FightBattleHitDefinition { EntityId = 990103, DamageType = 8,
+            HasCustomDamage = true, CustomDamage = -200, Delay = .4f });
+        actor.Skills.Add(skill); actor.SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = 1 });
+        var executor = FightBattleExecutor.Begin(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+        var step = executor.Step(0, 1).Event;
+        Check(target.Hp == 0 && doll.Hp > 0 && master.Hp == master.MaxHp
+            && step.DamageEvents.Count(hit => hit.SkillEntityId == 12050 && hit.TargetId == master.Id
+                && hit.IsCure && hit.Damage == 2 && Math.Abs(hit.Delay - .4f) < .0001f) == 1,
+            "A lethal substitute transmission did not run the linked summon's ordinary death/heal response.");
+        Replay(checkpoint, catalog, items, formula);
+    }
+
+    private static void LinkedPlayerRevival(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
+        FightDamageFormula formula, bool onlyDollDies)
+    {
+        var checkpoint = Checkpoint(catalog);
+        var actor = checkpoint.Units[0];
+        var target = checkpoint.Units[1];
+        var doll = checkpoint.Units[2];
+        var holder = Unit(4, 2, 20000, 1);
+        target.CharacterType = doll.CharacterType = 1;
+        if (!onlyDollDies) target.Hp = target.Turn.Hp = 100;
+        catalog.AssembleUnit(holder, null, catalog.CreatePassiveStatusBindings(holder, items,
+            new[] { new FightOfficialPassiveSkillBinding { ItemId = 10531, Rank = 5, Level = 20, SubRank = 8 } }));
+        checkpoint.Units.Add(holder);
+        var skill = new FightBattleSkillDefinition { EntityId = 990104, Slot = 0, TargetType = 1 };
+        skill.Range.Add(new FightGridPoint(doll.X - actor.X, 0));
+        skill.Hits.Add(new FightBattleHitDefinition { EntityId = 990105, DamageType = 8,
+            HasCustomDamage = true, CustomDamage = onlyDollDies ? -2000 : -200, Delay = .4f });
+        actor.Skills.Add(skill); actor.SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = 1 });
+        var executor = FightBattleExecutor.Begin(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+        var step = executor.Step(0, 1).Event;
+        var listener = holder.Statuses.Single(status => status.ClassId == 25014);
+        Check(target.Hp > 0 && listener.RoleDieTriggeredCount == (onlyDollDies ? 0 : 1),
+            onlyDollDies ? "An unhealable substitute consumed a revival charge."
+                : "Lethal mapped HP loss did not run the linked player's ordinary immediate revival.");
+        if (!onlyDollDies)
+        {
+            var revivals = step.SkillCasts.Where(cast => cast.ActorId == holder.Id && cast.SkillItemId == 10531).ToArray();
+            Check(revivals.Length > 0 && revivals.Min(cast => cast.Delay) >= .3999f,
+                "Mapped lethal damage revived its target before the fatal hit time.");
+        }
+        Replay(checkpoint, catalog, items, formula);
     }
 
     private static void Replay(FightBattleCheckpoint checkpoint, FightOfficialCombatCatalog catalog,
