@@ -16,6 +16,7 @@ public static class BattleFlowingFireHarness {
    Check(mode=="legacy-checkpoint" || actual==(mode=="first-failure"||mode=="target-death"?0:mode=="second-failure"||mode=="second-death"?1:2),"sequential stop case changed: "+mode);cases++;
   }
   cases += ReplayCases(c, f, items);
+  foreach (int entity in new[] { 12090, 13590 }) { DeferredOwnerDeath(c, f, items, entity); cases++; }
   Check(counts.SetEquals(new[]{0,1,2}),"the original rates did not exercise all chain lengths");
   return "Flowing fire passed: "+cases+" cultivated base/skin chain cases, action times, original targets, failed-rate/death stop, attribution, shared round allowances, FIFO, legacy restore and replay.";
  }
@@ -64,6 +65,50 @@ public static class BattleFlowingFireHarness {
   Check(step.DamageEvents.Count==step.SkillCasts.Count && other.Hp==other.MaxHp,"the extra retargeted or created another impact");
   string settled=FightBattleCheckpointSerializer.Save(s);Check(ex.Step(s.Sequence,s.Counter).Replayed&&FightBattleCheckpointSerializer.Save(s)==settled,"receipt replay cast the extras twice");
   return step.SkillCasts.Count-1;
+ }
+ static void DeferredOwnerDeath(FightOfficialCombatCatalog catalog, FightDamageFormula formula,
+  FightOfficialSkillItemCatalog items, int entity) {
+  var state = new FightBattleCheckpoint { StageId = 1, MaxRound = 8, RandomSeed = 71,
+   Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+  var actor = Unit(3, 1, 7, 7, formula);
+  var target = Unit(2, 2, 7, 8, formula);
+  var ally = Unit(1, 1, 6, 8, formula);
+  actor.Turn.Speed = 1000; ally.Turn.Speed = 10;
+  actor.Properties.Single(value => value.Id == formula.PropertyId("Speed")).Value = 1000;
+  ally.Properties.Single(value => value.Id == formula.PropertyId("Speed")).Value = 10;
+  var root = catalog.CreateSkill(entity, 0, 10100, 4, 2, 8, Props(catalog, entity, 4, 2));
+  root.HasReplay = root.ReplayUsesRate = true; root.ReplayChance = 1d; root.ReplayMaxCountEachRound = 2;
+  foreach (var extra in root.ExtraSkills) extra.Rate = 1f;
+  actor.Skills.Add(root); actor.SkillState.Slots.Add(catalog.CreateSkillSlot(root, 0));
+  var other = catalog.CreateSkill(12090, 0, 10100, 4, 2, 8, Props(catalog, 12090, 4, 2));
+  other.ExtraSkills[0].Rate = 0f;
+  ally.Skills.Add(other); ally.SkillState.Slots.Add(catalog.CreateSkillSlot(other, 0));
+  state.Units.AddRange(new[] { actor, target, ally });
+  var wave = new FightBattleWaveState(); wave.UnitIds.Add(2); state.Waves.Add(wave);
+  var executor = FightBattleExecutor.Begin(state, formula, new FightDamageSettlement(), catalog, items);
+  executor.ImpactGate = new OwnerDiesAtExtra(actor);
+  executor.Step(state.Sequence, state.Counter + 1);
+  Check(actor.Hp == 0 && !state.Finished, "the deferred-owner death boundary was not reached: hp=" + actor.Hp + " finished=" + state.Finished);
+  var copy = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(state));
+  var restored = FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items);
+  // An actor that later returns to battle must not regain a discarded old action queue.
+  foreach (var revived in new[] { actor, copy.Units.Single(value => value.Id == actor.Id) }) {
+   revived.Hp = revived.Turn.Hp = revived.MaxHp; revived.Ended = false;
+  }
+  for (int index = 0; index < 3 && !state.Finished; index++) {
+   executor.Step(state.Sequence, state.Counter + 1);
+   restored.Step(copy.Sequence, copy.Counter + 1);
+   Check(FightBattleCheckpointSerializer.Save(state) == FightBattleCheckpointSerializer.Save(copy),
+    "a deferred replay survived its owner's death only in the live executor");
+  }
+ }
+ sealed class OwnerDiesAtExtra : IFightBattleImpactGate {
+  readonly FightBattleUnitState owner; bool fired;
+  public OwnerDiesAtExtra(FightBattleUnitState owner) { this.owner = owner; }
+  public void AwaitImpact(FightBattlePendingImpact impact) {
+   if (fired || impact.SourceId != owner.Id || impact.SkillEntityId != 12093 && impact.SkillEntityId != 13593) return;
+   fired = true; owner.Hp = owner.Turn.Hp = 0;
+  }
  }
  static int ReplayCases(FightOfficialCombatCatalog catalog, FightDamageFormula formula,
   FightOfficialSkillItemCatalog items) {

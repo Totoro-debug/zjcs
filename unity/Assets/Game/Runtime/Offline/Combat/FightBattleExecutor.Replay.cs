@@ -130,7 +130,9 @@ namespace Zjcs.Combat.Official
             ref float maxDuration, ref float maxActionDuration,
             bool collect = true, float minimumStart = -1f)
         {
-            if (actor.Hp <= 0 || actor.Ended) return;
+            // A deferred queue must still be drained when its initiating actor died;
+            // the FIFO loop drops defeated owners and retains other living sources.
+            if (collect && (actor.Hp <= 0 || actor.Ended)) return;
             if (collect)
             {
                 CollectDirectSkillReplay(actor, skill);
