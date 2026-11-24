@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Zjcs.Official.HomeUI;
 
 namespace Zjcs.Official.HomeFurniture
@@ -74,6 +76,24 @@ namespace Zjcs.Official.HomeFurniture
         DateTime GetDateTime();
         DateTime GetDailyResetTimeFromDate(DateTime dateTime);
         void RefreshDailyDialogues(bool invokeByPlayer);
+    }
+
+    public interface IHomeHangUpAwardMessage
+    {
+        IList DataList { get; }
+        object SourceData { get; }
+    }
+
+    public interface IHomeHangUpFurnitureServices
+    {
+        Zjcs.Official.HomeHangUpTips.IHomeHangUpTipServices Tips { get; }
+        UnityEngine.Sprite LoadAwardSprite(EFurniture furniture);
+        void CollectHangUpRewards(EFurniture furniture, IReadOnlyList<int> hangUpIds, Action<IHomeHangUpAwardMessage, int> completed);
+        void AwardCollected(IList dataList, object sourceData);
+        void MergeAndPopupAward(EFurniture furniture, IHomeHangUpAwardMessage response);
+        void PublishHangUpCollect(EFurniture furniture, IReadOnlyList<int> hangUpIds);
+        void PopupFurnitureWindow(EFurniture furniture);
+        void OnTipLevelUpdated(EFurniture furniture, int tipLevel);
     }
 
     public interface IHomeNpcBubbleTipServices

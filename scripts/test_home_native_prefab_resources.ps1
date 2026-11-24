@@ -30,6 +30,21 @@ $diningReceipt = Get-Content -LiteralPath (Join-Path $repository 'assets/referen
 foreach ($entry in $diningReceipt.outputs.PSObject.Properties) {
     if ($entry.Name.StartsWith('unity/Assets/Official/Home/DiningTable/Native/')) { $files[$entry.Name] = $entry.Value }
 }
+$bedReceipt = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/home-bed-native-source-manifest.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+foreach ($entry in $bedReceipt.outputs.PSObject.Properties) {
+    if ($entry.Name.StartsWith('unity/Assets/Official/Home/Bed/Native/')) { $files[$entry.Name] = $entry.Value }
+}
+foreach ($dirRelative in @(
+    'Game/Runtime/Official/HomeFurniture',
+    'Game/Runtime/Official/HomeTipDots',
+    'Game/Runtime/Offline/HomeTipDots',
+    'Game/Resources/Home/HomeTipDots'
+)) {
+    $dirSrc = Join-Path $repository ('unity/Assets/' + $dirRelative)
+    $dirDst = Join-Path $project ('Assets/' + $dirRelative)
+    Copy-Item -LiteralPath $dirSrc -Destination (Split-Path $dirDst) -Recurse -Force
+    Copy-Item -LiteralPath ($dirSrc + '.meta') -Destination ($dirDst + '.meta') -Force
+}
 foreach ($name in $files.Keys) {
     $source = Join-Path $repository $name
     if (-not $name.StartsWith('unity/') -or (Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -ne $files[$name]) {
@@ -46,7 +61,8 @@ Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_native_prefab_res
 @{ name = 'HomeNativePrefabResourcesValidation'; includePlatforms = @('Editor'); references = @(
     'Zjcs.Offline.HomeNativeAssets', 'Zjcs.Official.HomeEntityCreation', 'Zjcs.Official.HomeFurniture',
     'Zjcs.Official.HomeHudUI', 'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeModelEnvironment',
-    'Zjcs.Official.HomeSceneInput', 'Zjcs.Official.ProfessionUI'
+    'Zjcs.Official.HomeSceneInput', 'Zjcs.Official.ProfessionUI', 'Zjcs.Official.HomeRelations',
+    'Zjcs.Official.HomeHangUpTips', 'Zjcs.Official.HomeMainUiControls'
 ) } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $fixture 'HomeNativePrefabResourcesValidation.asmdef') -Encoding utf8
 $env:ZJCS_HOME_NATIVE_RESOURCE_PROJECT = $project
 $env:ZJCS_HOME_NATIVE_RESOURCE_INPUT = Join-Path $work 'routes.json'

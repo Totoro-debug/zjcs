@@ -147,14 +147,6 @@ namespace Zjcs.Presentation.Home
                 unrepairedRoot.transform.SetParent(Root.transform, false);
                 repairedRoot.SetActive(false);
                 unrepairedRoot.SetActive(false);
-                if (furniture.type == 0)
-                {
-                    CreateNativeBed(furniture, repairedRoot.transform, true);
-                    CreateNativeBed(furniture, unrepairedRoot.transform, false);
-                    repaired[furniture.type] = repairedRoot;
-                    unrepaired[furniture.type] = unrepairedRoot;
-                    continue;
-                }
                 foreach (HomeSceneLayer layer in furniture.layers ?? Array.Empty<HomeSceneLayer>())
                 {
                     if (layer == null || layer.vertices == null || layer.vertices.Length < 8) continue;

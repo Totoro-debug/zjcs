@@ -28,9 +28,13 @@ $syncPaths = @(
     'Assets/Game/Runtime/Offline/PartnersUI/PartnerDialoguePlaybackView.cs',
     'Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef',
     'Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs',
+    'Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.FastForward.cs',
+    'Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.HomeTipDots.cs',
+    'Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.HomeTipDots.cs.meta',
     'Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs',
     'Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.FurnitureStories.cs',
     'Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.FurnitureStories.cs.meta',
+    'Assets/Game/Runtime/Presentation/Home/HomeHangUpHudRuntime.cs',
     'Assets/Game/Runtime/Presentation/Home/HomeHudView.cs',
     'Assets/Game/Runtime/Presentation/Home/HomeHudView.Partners.cs',
     'Assets/Game/Runtime/Presentation/Home/HomeHudView.Repair.cs',
@@ -43,12 +47,19 @@ foreach ($relative in $syncPaths) {
     [void](New-Item -ItemType Directory -Path (Split-Path $dst) -Force)
     Copy-Item -LiteralPath $src -Destination $dst -Force
 }
-Copy-Item -LiteralPath (Join-Path $repository 'unity/Assets/Game/Runtime/Official/HomeFurniture') `
-    -Destination (Join-Path $project 'Assets/Game/Runtime/Official') -Recurse -Force
-Copy-Item -LiteralPath (Join-Path $repository 'unity/Assets/Game/Runtime/Official/HomeFurniture.meta') `
-    -Destination (Join-Path $project 'Assets/Game/Runtime/Official/HomeFurniture.meta') -Force
+foreach ($dirRelative in @(
+    'Assets/Game/Runtime/Official/HomeFurniture',
+    'Assets/Game/Runtime/Official/HomeTipDots',
+    'Assets/Game/Runtime/Offline/HomeTipDots',
+    'Assets/Game/Resources/Home/HomeTipDots'
+)) {
+    Copy-Item -LiteralPath (Join-Path $repository ('unity/' + $dirRelative)) `
+        -Destination (Split-Path (Join-Path $project $dirRelative)) -Recurse -Force
+    Copy-Item -LiteralPath (Join-Path $repository ('unity/' + $dirRelative + '.meta')) `
+        -Destination (Join-Path $project ($dirRelative + '.meta')) -Force
+}
 
-foreach ($manifestName in @('home-diningtable-native-source-manifest.json', 'home-native-prefab-references-source-manifest.json', 'partner-dialogue-reward-assets-source-manifest.json')) {
+foreach ($manifestName in @('home-bed-native-source-manifest.json', 'home-diningtable-native-source-manifest.json', 'home-native-prefab-references-source-manifest.json', 'partner-dialogue-reward-assets-source-manifest.json')) {
     $manifest = Get-Content -LiteralPath (Join-Path $repository ('assets/reference/' + $manifestName)) -Raw -Encoding UTF8 | ConvertFrom-Json
     foreach ($entry in $manifest.outputs.PSObject.Properties) {
         if (-not $entry.Name.StartsWith('unity/')) { continue }

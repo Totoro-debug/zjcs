@@ -307,19 +307,7 @@ public static class BagTipDotBindingsValidation
 
     static void CaptureStorageHome(string name)
     {
-        int magenta = CaptureHome(name + ".png");
-        if (magenta <= 20) return;
-        var beds = home.Scene.NativeBedActors.Where(actor => actor && actor.gameObject.activeInHierarchy).ToArray();
-        try
-        {
-            foreach (var bed in beds) bed.gameObject.SetActive(false);
-            Require(CaptureHome(name + "-bed-diagnostic.png") <= 20,
-                "Isolating the active native bed accounts for the main scene shader error pixels");
-        }
-        finally
-        {
-            foreach (var bed in beds) bed.gameObject.SetActive(true);
-        }
+        Require(CaptureHome(name + ".png") <= 20, "Main home scene renders without magenta shader errors: " + name);
     }
 
     static int CaptureHome(string name)

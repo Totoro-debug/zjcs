@@ -46,7 +46,14 @@ namespace Zjcs.Presentation.Home
                 : FastForwardRequests.PrepareItems(fastId, costs, receipt);
             if (operation == null) return null;
             var result = RecoverPendingFastForward();
-            if (result != null && free) FastForwardAppliedForTutorial?.Invoke(receipt);
+            if (result != null)
+            {
+                if (free) FastForwardAppliedForTutorial?.Invoke(receipt);
+                homeTipServices?.NotifyFastHangUp(fastId);
+                SynchronizeHomeTipDots();
+                storage?.NotifyFastForward(fastId);
+                if (definition != null) hangUpHud?.Source.NotifyDataChanged(definition.HangUpId);
+            }
             hud.RefreshAll();
             return result;
         }

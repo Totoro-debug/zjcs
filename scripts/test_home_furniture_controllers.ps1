@@ -32,6 +32,16 @@ Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_native_weapon_val
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_native_weapon_controller_validation.cs') -Destination (Join-Path $fixture 'HomeNativeWeaponControllerValidation.cs') -Force
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_native_weapon_catalog_validation.cs') -Destination (Join-Path $fixture 'HomeNativeWeaponCatalogValidation.cs') -Force
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_appearance_availability_validation.cs') -Destination (Join-Path $fixture 'HomeAppearanceAvailabilityValidation.cs') -Force
+foreach ($dirRelative in @(
+    'Game/Runtime/Official/HomeTipDots',
+    'Game/Runtime/Offline/HomeTipDots',
+    'Game/Resources/Home/HomeTipDots'
+)) {
+    $dirSrc = Join-Path $repository ('unity/Assets/' + $dirRelative)
+    $dirDst = Join-Path $project ('Assets/' + $dirRelative)
+    Copy-Item -LiteralPath $dirSrc -Destination (Split-Path $dirDst) -Recurse -Force
+    Copy-Item -LiteralPath ($dirSrc + '.meta') -Destination ($dirDst + '.meta') -Force
+}
 foreach ($relative in @(
     'Game/Runtime/Offline/Progression/OfflineAppearanceAvailability.cs',
     'Game/Runtime/Offline/Progression/OfflineAppearanceAvailability.cs.meta',
@@ -45,9 +55,13 @@ foreach ($relative in @(
     'Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef',
     'Game/Runtime/Presentation/Home/HomeAssetCatalog.cs',
     'Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs',
+    'Game/Runtime/Presentation/Home/HomeFeatureRuntime.FastForward.cs',
+    'Game/Runtime/Presentation/Home/HomeFeatureRuntime.HomeTipDots.cs',
+    'Game/Runtime/Presentation/Home/HomeFeatureRuntime.HomeTipDots.cs.meta',
     'Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs',
     'Game/Runtime/Presentation/Home/HomeFeatureRuntime.FurnitureStories.cs',
     'Game/Runtime/Presentation/Home/HomeFeatureRuntime.FurnitureStories.cs.meta',
+    'Game/Runtime/Presentation/Home/HomeHangUpHudRuntime.cs',
     'Game/Runtime/Presentation/Home/HomeHudView.cs',
     'Game/Runtime/Presentation/Home/HomeHudView.Partners.cs',
     'Game/Runtime/Presentation/Home/HomeHudView.Repair.cs',
@@ -101,8 +115,10 @@ foreach ($entry in $weapon.outputs.PSObject.Properties) {
 @{ name = 'HomeFurnitureControllerValidation'; includePlatforms = @('Editor'); references = @(
     'Zjcs.Official.HomeFurniture', 'Zjcs.Official.HomeHudUI', 'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeSceneInput',
     'Zjcs.Official.HomeMainUiControls', 'Zjcs.Offline.HomeSceneInput', 'Zjcs.Official.WorldUI',
+    'Zjcs.Official.HomeHangUpTips', 'Zjcs.Official.HomeSceneUiControls', 'Zjcs.Official.HomeRelations',
+    'Zjcs.Official.HomeTipDots', 'Zjcs.Official.HomeHangUpWindowsUI',
     'Zjcs.Official.ProfessionUI', 'Unity.TextMeshPro', 'Unity.ugui', 'Unity.RenderPipelines.Universal.Runtime',
-    'Zjcs.Offline.NativeSpine', 'spine-unity', 'spine-csharp'
+    'Zjcs.Offline.NativeSpine', 'spine-unity', 'spine-csharp',
     'Zjcs.Offline.Progression', 'Zjcs.Offline.State', 'Zjcs.Presentation.Character'
 ) } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $fixture 'HomeFurnitureControllerValidation.asmdef') -Encoding utf8
 $env:ZJCS_FURNITURE_PROJECT = $project

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
@@ -8,6 +9,8 @@ using UnityEngine.Animations;
 using UnityEngine.Events;
 using UnityEngine.Playables;
 using Zjcs.Offline.Home;
+using Zjcs.Offline.HomeExperienceUI;
+using Zjcs.Offline.HomeHangUpUI;
 using Zjcs.Offline.HomeNativeAssets;
 using Zjcs.Offline.HomeNativeTime;
 using Zjcs.Offline.NativeSpine;
@@ -17,10 +20,14 @@ using Zjcs.Offline.Progression;
 using Zjcs.Official.HomeEntityBindings;
 using Zjcs.Official.HomeEntityCreation;
 using Zjcs.Official.HomeEntityRuntime;
+using Zjcs.Official.HomeExperienceRules;
 using Zjcs.Official.HomeFunctionMenuUI;
 using Zjcs.Official.HomeFurniture;
+using Zjcs.Official.HomeHangUpTips;
+using Zjcs.Official.HomeHangUpWindowsUI;
 using Zjcs.Official.HomeHudUI;
 using Zjcs.Official.HomeNativeTime;
+using Zjcs.Official.HomeRelations;
 using Zjcs.Official.HomeSceneInput;
 using Zjcs.Official.HomeSceneUiControls;
 using Zjcs.Official.HomeUI;
@@ -80,13 +87,23 @@ namespace Zjcs.Presentation.Home
         internal sealed class NativeFurniture : IHomeFurnitureServices, IHomeFurniturePlayer,
             IHomeFurnitureViewModes, IHomeFurnitureActionEvents, IHomeWeaponAnimationBindings,
             IHomeEntityManagerContext, IHomeEntitySkinData, IHomeFurnitureChangePublisher,
-            IHomeNpcBubbleTipServices, IHomePlayerUiServices, IHomeSceneUiServices, IDisposable
+            IHomeNpcBubbleTipServices, IHomePlayerUiServices, IHomeSceneUiServices,
+            IHomeHangUpFurnitureServices, IDisposable
         {
             private static readonly EFurniture[] SupportedFurniture =
             {
+                EFurniture.Bed,
                 EFurniture.StorageBox,
                 EFurniture.DiningTable
             };
+
+            private sealed class HangUpAwardMessage : IHomeHangUpAwardMessage
+            {
+                internal readonly List<OfflineHomeCollectedReward> Rewards = new List<OfflineHomeCollectedReward>();
+                internal readonly ArrayList Data = new ArrayList();
+                public IList DataList => Data;
+                public object SourceData => this;
+            }
 
             private sealed class EntityState
             {
@@ -203,8 +220,12 @@ namespace Zjcs.Presentation.Home
             private readonly GAction<ActionEventData> actions = new GAction<ActionEventData>();
             private readonly GAction bubbleDialogueChanged = new GAction();
             private readonly GAction<SetHomeSceneUIActiveData> uiActiveEvents = new GAction<SetHomeSceneUIActiveData>();
+            private readonly GAction<HangUpTipLevelChangeData> hangUpTipEvents = new GAction<HangUpTipLevelChangeData>();
             private readonly UnityEvent playerUpdateEvent = new UnityEvent();
             private readonly HashSet<Func<HomeFurnitureAward, bool>> awardHandlers = new HashSet<Func<HomeFurnitureAward, bool>>();
+            private readonly HashSet<int> observedUnlockedHangUps = new HashSet<int>();
+            private readonly Dictionary<IHomeHangUpAwardMessage, (EFurniture Furniture, List<OfflineHomeCollectedReward> Rewards)> pendingHangUpAwards =
+                new Dictionary<IHomeHangUpAwardMessage, (EFurniture, List<OfflineHomeCollectedReward>)>();
             private readonly List<ConditionSubscription> conditionSubscriptions = new List<ConditionSubscription>();
             private readonly Dictionary<EFurniture, EntityState> entities = new Dictionary<EFurniture, EntityState>();
             private readonly Dictionary<GameObject, EntityState> instances = new Dictionary<GameObject, EntityState>();
@@ -239,6 +260,11 @@ namespace Zjcs.Presentation.Home
             private AudioSource clickSound;
             private OfflineProfessionImageResourceLoader npcIconLoader;
             private Dictionary<int, string> npcIconPaths;
+            private HomeRelationManager relationManager;
+            private HomeExperienceTables tipExperience;
+            private OfflineHomeHangUpTipSource hangUpTipSource;
+            private Sprite bedRewardSprite;
+            private int lastPlayerLevel;
             private HomeViewMode currentViewMode = HomeViewMode.Owner;
             private Action<EFurniture> onRepairFurniture;
             private Action<long> onDebugTimeOffset;
@@ -281,6 +307,22 @@ namespace Zjcs.Presentation.Home
                 rackServices = new HomeNativeWeaponRackServices(() => appearance, () => appearance,
                     new ProfessionAppearanceResolver(professionTables), professionTables, changed.Subscribe, textures, this);
                 nativeTime = new OfflineHomeNativeTime(() => Time.deltaTime, () => Time.timeScale);
+                relationManager = new HomeRelationManager();
+                OfflineHomeHangUpTipConfiguration tipConfig = OfflineHomeHangUpTipConfiguration.LoadDefault();
+                tipExperience = OfflineHomeExperienceConfiguration.LoadDefault().CreateTables();
+                hangUpTipSource = new OfflineHomeHangUpTipSource(home.Session, tipConfig,
+                    () => DateTimeOffset.UtcNow.ToUnixTimeSeconds(), () => true,
+                    () => home.profile.Save.Player.Level, () => home.CanGetHangUpExperience(tipExperience),
+                    level => tipExperience.LevelExpParser.GetLevelUpExp(1, level),
+                    home.GetHangUpQuickReceiveState, (_, _) => { },
+                    data => hangUpTipEvents.Invoke(data));
+                lastPlayerLevel = home.profile.Save.Player.Level;
+                observedUnlockedHangUps.Clear();
+                if (home.session?.Definitions != null)
+                {
+                    foreach (OfflineHomeIncomeDefinition definition in home.session.Definitions)
+                        if (definition.Unlocked) observedUnlockedHangUps.Add(definition.HangUpId);
+                }
                 languageGroupConfig = CreateLanguageGroupConfig();
                 factory = new HomeNativePrefabFactory(Install);
                 tables = HomeEntityCreationCatalog.Load();
@@ -340,6 +382,34 @@ namespace Zjcs.Presentation.Home
             internal void NotifyRepaired(EFurniture furniture)
             {
                 onRepairFurniture?.Invoke(furniture);
+                hangUpTipSource?.NotifyRepaired(furniture);
+                NotifyHomeChanged();
+            }
+
+            internal void NotifyHangUpUnlock(int hangUpId)
+            {
+                if (disposed) return;
+                observedUnlockedHangUps.Add(hangUpId);
+                hangUpTipSource?.NotifyUnlocked(hangUpId);
+                NotifyHomeChanged();
+            }
+
+            internal void NotifyHangUpDataChanged(int hangUpId)
+            {
+                if (disposed) return;
+                hangUpTipSource?.NotifyDataChanged(hangUpId);
+                NotifyHomeChanged();
+            }
+
+            internal void NotifyFastForward(int fastHangUpId)
+            {
+                if (disposed) return;
+                HomeFastHangUpRecord fast = home.rules.FastHangUp(fastHangUpId);
+                if (fast?.hangUpIdList != null)
+                {
+                    foreach (int hangUpId in fast.hangUpIdList)
+                        hangUpTipSource?.NotifyDataChanged(hangUpId);
+                }
                 NotifyHomeChanged();
             }
 
@@ -353,6 +423,20 @@ namespace Zjcs.Presentation.Home
             internal void NotifyHomeChanged()
             {
                 if (disposed) return;
+                int playerLevel = home.profile.Save.Player.Level;
+                if (playerLevel != lastPlayerLevel)
+                {
+                    lastPlayerLevel = playerLevel;
+                    hangUpTipSource?.NotifyLevelChanged(playerLevel);
+                }
+                if (home.session?.Definitions != null)
+                {
+                    foreach (OfflineHomeIncomeDefinition definition in home.session.Definitions)
+                    {
+                        if (definition.Unlocked && observedUnlockedHangUps.Add(definition.HangUpId))
+                            hangUpTipSource?.NotifyUnlocked(definition.HangUpId);
+                    }
+                }
                 foreach (ConditionSubscription entry in conditionSubscriptions.ToArray())
                 {
                     bool met = entry.Condition == null || entry.Condition.IsMet();
@@ -378,9 +462,13 @@ namespace Zjcs.Presentation.Home
                 foreach (var furniture in root.GetComponentsInChildren<FurnitureBase>(true))
                 {
                     furniture.Services = this;
+                    if (furniture is BaseHangUpFurniture hangUp)
+                        hangUp.HangUpServices = this;
                     EFurniture type = furniture.Furniture;
                     furniture.OnClickAction.AddListener(() => home.FurnitureClickedForTutorial?.Invoke((int)type));
                 }
+                foreach (var mutex in root.GetComponentsInChildren<HomeMutex>(true))
+                    mutex.InjectRelationManager = relationManager;
                 foreach (var clickable in root.GetComponentsInChildren<ClickableHomeObj>(true))
                     home.nativeSceneInput.Bind(clickable);
                 foreach (var popClick in root.GetComponentsInChildren<DiningTableNpcPopClick>(true))
@@ -427,6 +515,7 @@ namespace Zjcs.Presentation.Home
                 }
                 home.PartnerTipDots?.BindNativeTree(root);
                 home.BindBagTipNativeTree(root);
+                home.BindHomeTipNativeTree(root);
             }
 
             private string LocalizeUiText(string key)
@@ -464,7 +553,8 @@ namespace Zjcs.Presentation.Home
             {
                 if (disposed) return;
                 var next = home.profile.Save.Player;
-                if (!ReferenceEquals(renderedPlayer, next))
+                bool playerReplaced = !ReferenceEquals(renderedPlayer, next);
+                if (playerReplaced)
                 {
                     renderedPlayer = next;
                     string wardrobe = JsonUtility.ToJson(next.Wardrobe);
@@ -474,6 +564,11 @@ namespace Zjcs.Presentation.Home
                         appearance.Refresh(AppearanceOperateSource.Normal);
                     }
                     NotifyHomeChanged();
+                }
+                else if (next.Level != lastPlayerLevel)
+                {
+                    lastPlayerLevel = next.Level;
+                    hangUpTipSource?.NotifyLevelChanged(lastPlayerLevel);
                 }
                 nativeTime?.Tick();
                 foreach (EntityState state in entities.Values)
@@ -497,6 +592,8 @@ namespace Zjcs.Presentation.Home
                 entities.Clear();
                 instances.Clear();
                 conditionSubscriptions.Clear();
+                pendingHangUpAwards.Clear();
+                observedUnlockedHangUps.Clear();
                 HomeAudioSettings.Unregister(clickSound);
                 clickSound = null;
                 if (anchor) { anchor.SetActive(false); Object.Destroy(anchor); }
@@ -736,7 +833,7 @@ namespace Zjcs.Presentation.Home
             IDragControllerManager IHomeSceneUiServices.DragControllerManager => null;
             float IHomeSceneUiServices.DirectionGuideFocusDuration => 0f;
             IHomeDirectionFurniture IHomeSceneUiServices.GetFurniture(EFurniture type) => null;
-            IDisposable IHomeSceneUiServices.SubscribeHangUpTips(Action<HangUpTipLevelChangeData> callback) => new ActionDisposable(null);
+            IDisposable IHomeSceneUiServices.SubscribeHangUpTips(Action<HangUpTipLevelChangeData> callback) => hangUpTipEvents.Subscribe(callback);
             UnityEvent IHomeSceneUiServices.OnHomeNpcRefresh => null;
             List<IHomeDirectionNpcData> IHomeSceneUiServices.HomeNpcDatas => null;
             int IHomeSceneUiServices.AwardRetrieveHomeNpcId => 0;
@@ -748,6 +845,86 @@ namespace Zjcs.Presentation.Home
             Zjcs.Official.HomeSceneUiControls.HomeViewMode IHomeSceneUiServices.HomeViewMode
                 => (Zjcs.Official.HomeSceneUiControls.HomeViewMode)(int)currentViewMode;
             IDisposable IHomeSceneUiServices.SubscribeUiActive(Action<SetHomeSceneUIActiveData> callback) => uiActiveEvents.Subscribe(callback);
+
+            IHomeHangUpTipServices IHomeHangUpFurnitureServices.Tips => hangUpTipSource;
+
+            Sprite IHomeHangUpFurnitureServices.LoadAwardSprite(EFurniture furniture)
+            {
+                if (furniture != EFurniture.Bed) return null;
+                if (!bedRewardSprite)
+                    bedRewardSprite = OfficialHomeHangUpWindowAssetCatalog.LoadDefault().bedRewardImage;
+                return bedRewardSprite;
+            }
+
+            void IHomeHangUpFurnitureServices.CollectHangUpRewards(EFurniture furniture, IReadOnlyList<int> hangUpIds,
+                Action<IHomeHangUpAwardMessage, int> completed)
+            {
+                var message = new HangUpAwardMessage();
+                if (hangUpIds != null)
+                {
+                    for (int i = 0; i < hangUpIds.Count; i++)
+                    {
+                        OfflineHomeCollectedReward reward = home.PrepareHomeCollection(hangUpIds[i]);
+                        if (reward != null && reward.Count > 0)
+                        {
+                            message.Rewards.Add(reward);
+                            message.Data.Add(reward);
+                        }
+                    }
+                }
+                pendingHangUpAwards[message] = (furniture, message.Rewards);
+                completed?.Invoke(message, 0);
+            }
+
+            void IHomeHangUpFurnitureServices.AwardCollected(IList dataList, object sourceData)
+                => home.AwardPreparedHomeCollections();
+
+            void IHomeHangUpFurnitureServices.MergeAndPopupAward(EFurniture furniture, IHomeHangUpAwardMessage response)
+            {
+                if (response == null || !pendingHangUpAwards.TryGetValue(response, out var entry)) return;
+                foreach (OfflineHomeCollectedReward reward in entry.Rewards)
+                {
+                    if (reward != null && reward.Count > 0 && (furniture == EFurniture.Bed || reward.HangUpId == 1))
+                        home.Hud.ShowBedAward(reward);
+                }
+            }
+
+            void IHomeHangUpFurnitureServices.PublishHangUpCollect(EFurniture furniture, IReadOnlyList<int> hangUpIds)
+            {
+                var matched = pendingHangUpAwards
+                    .Where(kv => kv.Value.Furniture == furniture)
+                    .ToArray();
+                foreach (var entry in matched)
+                    pendingHangUpAwards.Remove(entry.Key);
+
+                var notifiedIds = new HashSet<int>();
+                foreach (var entry in matched)
+                {
+                    foreach (OfflineHomeCollectedReward reward in entry.Value.Rewards)
+                    {
+                        if (reward == null || reward.Count <= 0) continue;
+                        home.PublishHomeCollection(reward);
+                        notifiedIds.Add(reward.HangUpId);
+                    }
+                }
+                if (hangUpIds != null)
+                {
+                    for (int i = 0; i < hangUpIds.Count; i++)
+                    {
+                        if (notifiedIds.Add(hangUpIds[i]))
+                        {
+                            hangUpTipSource?.NotifyDataChanged(hangUpIds[i]);
+                            home.HangUpHud?.Source.NotifyDataChanged(hangUpIds[i]);
+                        }
+                    }
+                }
+                home.SynchronizeHomeTipDots();
+            }
+
+            void IHomeHangUpFurnitureServices.PopupFurnitureWindow(EFurniture furniture)
+                => home.OpenFurniture((int)furniture);
+
+            void IHomeHangUpFurnitureServices.OnTipLevelUpdated(EFurniture furniture, int tipLevel) { }
         }
     }
 }

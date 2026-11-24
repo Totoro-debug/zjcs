@@ -197,11 +197,20 @@ namespace Zjcs.Presentation.Home
         public bool SetHangUpQuickReceiveState(EFurniture type, bool enabled)
         {
             if (type != EFurniture.Bed && type != EFurniture.Cart) throw new ArgumentOutOfRangeException(nameof(type));
-            return session.Mutate("home:quick-receive:" + Guid.NewGuid().ToString("N"), save => {
+            bool mutated = session.Mutate("home:quick-receive:" + Guid.NewGuid().ToString("N"), save => {
                 var entry = save.QuickReceiveStates.FirstOrDefault(value => value.Type == (int)type);
                 if (entry == null) save.QuickReceiveStates.Add(entry = new OfflineHomeQuickReceiveState { Type = (int)type });
                 entry.Enabled = enabled;
             });
+            if (mutated)
+            {
+                foreach (HomeHangUpRecord row in rules.HangUpsOf((int)type))
+                {
+                    hangUpHud?.Source.NotifyDataChanged(row.id);
+                    storage?.NotifyHangUpDataChanged(row.id);
+                }
+            }
+            return mutated;
         }
         private void DisposeHangUpHud() { hangUpHud?.Dispose(); hangUpHud = null; }
     }

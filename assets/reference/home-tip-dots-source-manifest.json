@@ -1,0 +1,28 @@
+{
+  "manifest": "903_156948",
+  "inputs": {
+    ".tools/source-packages/current/903_156948/code-manifest.json": "98672050f03e79d2b815c5f036ee014abea9a5f0333b304047699e224cdc4f8b",
+    ".tools/source-packages/current/903_156948/official-code/managed/decoded/Assembly-CSharp.dll": "0f7a39a453eedb4faa9be717daf7e8ee0c23e78adaba26daf18fb133ad8d1ce9",
+    ".tools/source-packages/current/903_156948/official-code/client-source/TipDotHasFreeFastHangUpTimesConditionNode.cs": "f0812277c82ce89bcdafe064c3bcadd5364e2ac605edf8a6a736b08a72d5dfd6",
+    ".tools/source-packages/current/903_156948/official-code/client-source/TipDotHasItemFastHangUpTimesConditionNode.cs": "55bd180ef4a046a261a5a243e799afd6f2ff2dc773e3a5a8b7eb9af18bd6ea53",
+    "scripts/templates/home_tip_dots/HomeTipDotServices.cs": "adb61cb1ea75b46404a1f0ed8ef5ac32d70a21e44b4ad9944e942f9cf70ccec7",
+    "scripts/prepare_home_tip_dots.py": "c20540ddea6723ab5232ed62b7b3636e56ee2cab5f960b9231e1430a1a53aa8a"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/HomeTipDots/TipDotHasFreeFastHangUpTimesConditionNode.cs": "03a139850091729419f0c7dcfa0b5d48cbbd328f11d221065379282d0f462e89",
+    "unity/Assets/Game/Runtime/Official/HomeTipDots/TipDotHasFreeFastHangUpTimesConditionNode.cs.meta": "b44d58906e4e5325733b6262b04e5d65bbb87b5aaf7e00a89bdcaf5934e2b2a5",
+    "unity/Assets/Game/Runtime/Official/HomeTipDots/TipDotHasItemFastHangUpTimesConditionNode.cs": "0511eb94723aa2ae16a6df28a1abf54da4a4aab69a8e7786f6e1c9cb7cf4b374",
+    "unity/Assets/Game/Runtime/Official/HomeTipDots/TipDotHasItemFastHangUpTimesConditionNode.cs.meta": "cb6f6904f224eede600122cc20267d79a619645d9e2fe3c253b741d88b61c4dd",
+    "unity/Assets/Game/Runtime/Official/HomeTipDots/HomeTipDotServices.cs": "adb61cb1ea75b46404a1f0ed8ef5ac32d70a21e44b4ad9944e942f9cf70ccec7",
+    "unity/Assets/Game/Runtime/Official/HomeTipDots/HomeTipDotServices.cs.meta": "f179519256d477f3e3b678265a2e7a64dcd47210213e706a0bc4d6a55d742208",
+    "unity/Assets/Game/Runtime/Official/HomeTipDots/Zjcs.Official.HomeTipDots.asmdef": "bb7da9db63e7d3827f27ca5fbdbb3c32f24982073c5c1fb1571ac2f1c209358c",
+    "unity/Assets/Game/Runtime/Official/HomeTipDots/Zjcs.Official.HomeTipDots.asmdef.meta": "1c8446e9cec7004f52fcc2f0a341f6886d54a03eade09ba861775f9faaad357f",
+    "unity/Assets/Game/Runtime/Official/HomeTipDots.meta": "257d4b2d97d95ebf7c0f97c795aa8c189b20b91d11a2a7e941e9e32cdf5a5d85"
+  },
+  "generator_sha256": "c20540ddea6723ab5232ed62b7b3636e56ee2cab5f960b9231e1430a1a53aa8a",
+  "adaptations": [
+    "Preserves official CheckShowTip formulas, HangUp unlock/item/new-day subscriptions, and numeric TipDotInfo.Data text formatting.",
+    "Replaces MeManager/Parsers/MessagePipe with explicit IHomeTipDotServices and IHomeTipDotPlayer ports."
+  ],
+  "scope": "Home fast-hangup TipDot condition nodes consumed by native HomeBed and FurnitureCart TipDotNodeGraph assets."
+}

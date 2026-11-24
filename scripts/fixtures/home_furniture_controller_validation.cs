@@ -243,6 +243,7 @@ public sealed partial class HomeFurnitureControllerChecks : MonoBehaviour
         yield return CheckWeaponRack();
         yield return CheckNativeWeapon();
         yield return CheckDiningTableControllers();
+        yield return CheckBedHangUpControllers();
         Debug.Log("Furniture controller assertions completed.");
     }
 
@@ -358,6 +359,174 @@ public sealed partial class HomeFurnitureControllerChecks : MonoBehaviour
         Destroy(tex);
         yield return null;
         Require(bubbleSvc.DialogueSubscribers == 0 && bubbleSvc.HomeSubscribers == 0, "Destroyed HomeNpcBubbleTip unsubscribes dialogue and home changes");
+    }
+
+    IEnumerator CheckBedHangUpControllers()
+    {
+        viewCamera.transform.position = new Vector3(0, 0, -10);
+        viewCamera.orthographicSize = 4;
+        services.OwnHome = true;
+        services.WindowsClosed = true;
+        services.PlayerValue.Owned = true;
+        services.Disabled = false;
+        services.NpcPanels.Clear();
+        services.Calls.Clear();
+
+        var tipSvc = new HangUpTipTestServices();
+        var hangUpSvc = new HangUpFurnitureTestServices(tipSvc);
+        var tex = new Texture2D(4, 4, TextureFormat.RGBA32, false);
+        hangUpSvc.AwardSprite = Sprite.Create(tex, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f));
+
+        var host = New("BedHangUpHost");
+        host.SetActive(false);
+        var bedCollider = Child(host, "BedCollider");
+        bedCollider.transform.position = Vector3.zero;
+        bedCollider.AddComponent<BoxCollider>();
+        var states = Enumerable.Range(0, 4).Select(index => Child(host, "BedState" + index)).ToArray();
+        var tip0 = Child(host, "Tip0");
+        var tip1 = Child(host, "Tip1");
+        var noticeRoot = Child(host, "BedNotice");
+        var noticeText = Child(noticeRoot, "BedNoticeTxt").AddComponent<TextMeshPro>().gameObject.AddComponent<WorldMultiLanguageText>();
+        var notice = noticeRoot.AddComponent<HomeNotice>();
+        notice.Bind(noticeText, Switch<bool>(noticeRoot, new[] { new[] { Child(noticeRoot, "Shown") } }, new[] { 1 }), "", services);
+        var iconRenderer = Child(host, "icon").AddComponent<SpriteRenderer>();
+        var bed = host.AddComponent<BedFurniture>();
+        var soBed = new SerializedObject(bed);
+        var touchList = soBed.FindProperty("mTouchList");
+        touchList.arraySize = 1;
+        touchList.GetArrayElementAtIndex(0).objectReferenceValue = bedCollider;
+        soBed.ApplyModifiedPropertiesWithoutUndo();
+        bed.Bind(EFurniture.Bed,
+            Switch<FurnitureBase.EFurnitureState>(host, states.Select(value => new[] { value }).ToArray(), new[] { 0, 1, 2, 3 }),
+            notice, null, 0.2f, 1.0f, services, iconRenderer,
+            Switch<int>(host, new[] { new[] { tip0 }, new[] { tip0, tip1 } }, new[] { 0, 1 }),
+            hangUpSvc);
+        input.Bind(bed);
+        host.SetActive(true);
+        yield return null;
+
+        Require(iconRenderer.sprite == hangUpSvc.AwardSprite, "BedFurniture binds AwardIcon sprite from HangUpServices");
+        Require(bed.TipLevel == -1 && !tip0.activeSelf && !tip1.activeSelf, "BedFurniture hides mRewardTipSwitcher at TipLevel -1 (actual=" + bed.TipLevel + ")");
+        Require(!bed.CanReceiveAward(), "BedFurniture CanReceiveAward is false at TipLevel -1");
+        yield return Click(bedCollider);
+        Require(hangUpSvc.Popups.SequenceEqual(new[] { EFurniture.Bed }), "Clicking BedFurniture at TipLevel -1 opens Bed window");
+
+        tipSvc.TestPlayer.AwardCount = 10;
+        tipSvc.TestPlayer.RaiseHangUpDataChanged(4100);
+        yield return null;
+        Require(bed.TipLevel == 0 && tip0.activeSelf && !tip1.activeSelf, "BedFurniture switches mRewardTipSwitcher to level 0");
+        Require(hangUpSvc.TipLevelUpdates.Last() == (EFurniture.Bed, 0), "BedFurniture reports TipLevel 0 update");
+        Require(!bed.CanReceiveAward(), "CanReceiveAward stays false when quick-receive is disabled");
+        yield return Click(bedCollider);
+        Require(hangUpSvc.Popups.Count == 2, "Clicking BedFurniture without quick-receive opens Bed window instead of collecting");
+
+        tipSvc.TestPlayer.AwardCount = 120;
+        tipSvc.TestPlayer.QuickReceive = true;
+        tipSvc.TestPlayer.RaiseHangUpDataChanged(4100);
+        yield return null;
+        Require(bed.TipLevel == 1 && tip0.activeSelf && tip1.activeSelf, "BedFurniture switches mRewardTipSwitcher to level 1");
+        Require(bed.CanReceiveAward(), "CanReceiveAward is true when quick-receive is enabled and TipLevel >= 0");
+        yield return Click(bedCollider);
+        Require(hangUpSvc.Collections == 1 && hangUpSvc.AwardCollectedCalls == 1 && hangUpSvc.MergedAwards == 1 && hangUpSvc.PublishedCollections == 1,
+            "Clicking BedFurniture with quick-receive collects, awards, merges/popups and publishes reward");
+        tipSvc.TestPlayer.AwardCount = 0;
+        tipSvc.TestPlayer.RaiseHangUpDataChanged(4100);
+        yield return null;
+        Require(bed.TipLevel == -1 && !tip0.activeSelf && !tip1.activeSelf, "BedFurniture resets mRewardTipSwitcher to -1 after collection");
+
+        Destroy(host);
+        Destroy(hangUpSvc.AwardSprite);
+        Destroy(tex);
+        yield return null;
+        Require(tipSvc.TestPlayer.UnlockSubscribers == 0 && tipSvc.TestPlayer.DataChangedSubscribers == 0
+            && tipSvc.TestPlayer.RepairSubscribers == 0 && tipSvc.TestPlayer.TimeSubscribers == 0
+            && tipSvc.TestPlayer.LevelSubscribers == 0,
+            "Destroyed BedFurniture disposes HomeHangUpTipController and releases all player subscriptions");
+    }
+
+    sealed class HangUpTipPlayerStub : Zjcs.Official.HomeHangUpTips.IHomeHangUpTipPlayer
+    {
+        public long AwardCount;
+        public bool QuickReceive;
+        public bool HasFurniture(EFurniture furniture) => true;
+        public IReadOnlyDictionary<int, Zjcs.Official.HomeHangUpTips.HomeHangUpTipRecord> HangUpDataDict { get; } =
+            new Dictionary<int, Zjcs.Official.HomeHangUpTips.HomeHangUpTipRecord> {
+                { 4100, new Zjcs.Official.HomeHangUpTips.HomeHangUpTipRecord { IsUnlock = true } }
+            };
+        public long GetHangUpAwardCount(int id) => AwardCount;
+        public long GetHangUpMaxCount(int id) => 1000;
+        public double GetHangUpHourOutput(int id) => 100.0;
+        public bool GetHangUpQuickReceiveState(EFurniture furniture) => QuickReceive;
+        public int Level => 1;
+        public bool CanGetExp() => false;
+        public event Action<int> OnHangUpUnlock;
+        public event Action<int> OnHangUpDataChanged;
+        public event Action<EFurniture> OnRepairFurniture;
+        public event Action<long> OnDebugTimeOffset;
+        public event Action<int> OnLevelUpdate;
+        public int UnlockSubscribers => OnHangUpUnlock?.GetInvocationList().Length ?? 0;
+        public int DataChangedSubscribers => OnHangUpDataChanged?.GetInvocationList().Length ?? 0;
+        public int RepairSubscribers => OnRepairFurniture?.GetInvocationList().Length ?? 0;
+        public int TimeSubscribers => OnDebugTimeOffset?.GetInvocationList().Length ?? 0;
+        public int LevelSubscribers => OnLevelUpdate?.GetInvocationList().Length ?? 0;
+        public void RaiseHangUpDataChanged(int id) => OnHangUpDataChanged?.Invoke(id);
+    }
+
+    sealed class HangUpTipTestServices : Zjcs.Official.HomeHangUpTips.IHomeHangUpTipServices
+    {
+        public readonly HangUpTipPlayerStub TestPlayer = new HangUpTipPlayerStub();
+        public HangUpTipTestServices()
+        {
+            Settings = new Zjcs.Official.HomeHangUpTips.HomeHangUpTipSettings(
+                new List<Zjcs.Official.HomeHangUpTips.HomeHangUpTipSettings.HangUpTipSetting>
+                {
+                    new Zjcs.Official.HomeHangUpTips.HomeHangUpTipSettings.HangUpTipSetting
+                    {
+                        FurnitureList = new List<EFurniture> { EFurniture.Bed },
+                        TipLevelList = new List<float> { 0.005f, 0.05f }
+                    }
+                },
+                0.1f);
+            RecordHangUpIdDict = new Dictionary<EFurniture, List<int>> {
+                { EFurniture.Bed, new List<int> { 4100 } }
+            };
+        }
+        public Zjcs.Official.HomeHangUpTips.IHomeHangUpTipPlayer MainPlayer => TestPlayer;
+        public Zjcs.Official.HomeHangUpTips.IHomeHangUpTipPlayer PlayerData => TestPlayer;
+        public bool InMyHome => true;
+        public IReadOnlyDictionary<EFurniture, List<int>> RecordHangUpIdDict { get; }
+        public Zjcs.Official.HomeHangUpTips.HomeHangUpTipSettings Settings { get; }
+        public long GetLevelUpExp(int level) => 10000;
+        public void SetTipState(EFurniture furniture, int level) { }
+        public void Publish(Zjcs.Official.HomeSceneUiControls.HangUpTipLevelChangeData data) { }
+        public IDisposable Wait(float seconds, Action completed) => new Subscription(null);
+    }
+
+    sealed class HangUpAwardMessageStub : IHomeHangUpAwardMessage
+    {
+        public IList DataList { get; } = new List<object> { "reward" };
+        public object SourceData { get; } = "bed-collect";
+    }
+
+    sealed class HangUpFurnitureTestServices : IHomeHangUpFurnitureServices
+    {
+        public Sprite AwardSprite;
+        public readonly List<EFurniture> Popups = new List<EFurniture>();
+        public readonly List<(EFurniture furniture, int tipLevel)> TipLevelUpdates = new List<(EFurniture, int)>();
+        public int Collections, AwardCollectedCalls, MergedAwards, PublishedCollections;
+        public HangUpFurnitureTestServices(Zjcs.Official.HomeHangUpTips.IHomeHangUpTipServices tips) { Tips = tips; }
+        public Zjcs.Official.HomeHangUpTips.IHomeHangUpTipServices Tips { get; }
+        public Sprite LoadAwardSprite(EFurniture furniture) => AwardSprite;
+        public void CollectHangUpRewards(EFurniture furniture, IReadOnlyList<int> hangUpIds, Action<IHomeHangUpAwardMessage, int> completed)
+        {
+            Collections++;
+            completed?.Invoke(new HangUpAwardMessageStub(), 0);
+        }
+        public void AwardCollected(IList dataList, object sourceData) => AwardCollectedCalls++;
+        public void MergeAndPopupAward(EFurniture furniture, IHomeHangUpAwardMessage response) => MergedAwards++;
+        public void PublishHangUpCollect(EFurniture furniture, IReadOnlyList<int> hangUpIds) => PublishedCollections++;
+        public void PopupFurnitureWindow(EFurniture furniture) => Popups.Add(furniture);
+        public void OnTipLevelUpdated(EFurniture furniture, int tipLevel) => TipLevelUpdates.Add((furniture, tipLevel));
     }
 
     sealed class BubbleTipDotSystem : Zjcs.Official.ProfessionUI.IProfessionTipDotSystem

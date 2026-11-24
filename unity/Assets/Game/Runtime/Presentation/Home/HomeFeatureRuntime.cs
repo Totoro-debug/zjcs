@@ -771,9 +771,10 @@ namespace Zjcs.Presentation.Home
                 giftConfiguration, id => new OfflinePartnerItemInfo(partnerCatalog, id),
                 () => rules.IsFunctionLimited(65));
             InitializeBagTipDots();
+            InitializeHomeTipDots();
             partnerTipDots = new OfflinePartnerTipDotRuntime(profile, partnerCatalog,
                 giftConfiguration, progression, function => rules.IsFunctionLimited(function),
-                bagTipAssets.Definitions(), bagTipAssets.LoadGraph, bagTipServices.BindNode,
+                CreateAdditionalTipDotGraphs(), LoadAdditionalTipDotGraph, BindAdditionalTipDotNode,
                 type => HasFurnitureForSkin(type), FurnitureTipDotInfo);
             partnerDialogueProxy = new PartnerDialoguePresentationProxy();
             partnerConversations = OfflinePartnerConversationUiSessionFactory.Create(profile,
@@ -806,6 +807,7 @@ namespace Zjcs.Presentation.Home
                     .Any(value => value.ClassId == id && value.Active), hud);
             hud.Build();
             BindBagTipNativeTree(hud.CanvasTransform.gameObject);
+            BindHomeTipNativeTree(hud.CanvasTransform.gameObject);
             partnerUiBinding = OfflineUiBindingModule.Register(hud.CanvasTransform, new OfflineUiBindings {
                 Images = image => image.GetComponentInParent<ItemIcon>(true) != null ? partnerGiftImages : partnerDetailImages
             });
@@ -823,10 +825,10 @@ namespace Zjcs.Presentation.Home
             ApplyFurnitureStates();
             scene.ApplyHomeSkins(catalog.HomeSkins, session.Skins, rules);
             furnitureStories = new FurnitureStories(this);
-            OpenNativeStorage();
             RefreshIncomeCatalog();
             RecoverPendingFastForward();
             DrainHomeInventory();
+            OpenNativeStorage();
             hud.RefreshAll();
             tutorialHost = new HomeTutorialHost(this, hud);
             hangUpHud = new HomeHangUpHudRuntime(this, hud.HomeSceneUiParent);
@@ -1567,6 +1569,8 @@ namespace Zjcs.Presentation.Home
             }
             if (repaired)
             {
+                RefreshIncomeCatalog();
+                SynchronizeHomeTipDots();
                 partnerTipDots?.NotifyRepairFurniture(type);
                 if (type == 0 || type == 1 || type == 2 || type == 3 || type == 5 || type == 7
                     || type == 8 || type == 9 || type == 10 || type == 12)
@@ -1575,9 +1579,8 @@ namespace Zjcs.Presentation.Home
                     catch (Exception error) { Debug.LogError("Original furniture repair effect failed: " + error); }
                 }
                 ApplyFurnitureStates();
-                RefreshIncomeCatalog();
                 DrainHomeInventory();
-                bagTipServices?.Synchronize();
+                SynchronizeHomeTipDots();
                 storage?.NotifyRepaired((Zjcs.Official.HomeUI.EFurniture)type);
                 hud.RefreshAll();
                 FurnitureRepairedForTutorial?.Invoke(type);
@@ -1619,6 +1622,8 @@ namespace Zjcs.Presentation.Home
                 DrainHomeInventory();
                 if (hangUpId == 1) hud.ShowBedAward(reward);
                 hangUpHud?.Source.NotifyDataChanged(hangUpId);
+                storage?.NotifyHangUpDataChanged(hangUpId);
+                SynchronizeHomeTipDots();
                 hud.RefreshAll();
             }
             return count;
@@ -1639,6 +1644,8 @@ namespace Zjcs.Presentation.Home
             if (reward == null || reward.Count <= 0) return;
             HangUpCollectedForTutorial?.Invoke(reward.HangUpId, reward.Count, reward.Receipt);
             hangUpHud?.Source.NotifyDataChanged(reward.HangUpId);
+            storage?.NotifyHangUpDataChanged(reward.HangUpId);
+            SynchronizeHomeTipDots();
             hud.RefreshAll();
         }
 
@@ -1660,6 +1667,10 @@ namespace Zjcs.Presentation.Home
             {
                 FastForwardAppliedForTutorial?.Invoke(receipt);
                 DrainHomeInventory();
+                homeTipServices?.NotifyFastHangUp(fast.fastHangUpId);
+                SynchronizeHomeTipDots();
+                storage?.NotifyFastForward(fast.fastHangUpId);
+                hangUpHud?.Source.NotifyDataChanged(hangUpId);
                 hud.RefreshAll();
             }
             return total;
@@ -1687,6 +1698,10 @@ namespace Zjcs.Presentation.Home
             if (total > 0)
             {
                 DrainHomeInventory();
+                homeTipServices?.NotifyFastHangUp(fastHangUpId);
+                SynchronizeHomeTipDots();
+                storage?.NotifyFastForward(fastHangUpId);
+                foreach (int id in unlocked) hangUpHud?.Source.NotifyDataChanged(id);
                 hud.RefreshAll();
             }
             return total;
@@ -1703,6 +1718,9 @@ namespace Zjcs.Presentation.Home
             {
                 RefreshIncomeCatalog();
                 hangUpHud?.Source.NotifyUnlocked(hangUpId);
+                homeTipServices?.NotifyHangUpUnlock(hangUpId);
+                SynchronizeHomeTipDots();
+                storage?.NotifyHangUpUnlock(hangUpId);
                 hud.RefreshAll();
             }
             return unlocked;
@@ -1727,6 +1745,8 @@ namespace Zjcs.Presentation.Home
             {
                 DrainHomeInventory();
                 hangUpHud?.Source.NotifyDataChanged(hangUpId);
+                storage?.NotifyHangUpDataChanged(hangUpId);
+                SynchronizeHomeTipDots();
             }
             string costReceipt = "home:levelup:" + slotId + ":" + hangUpId + ":cost:"
                 + System.Guid.NewGuid().ToString("N");
@@ -1739,6 +1759,8 @@ namespace Zjcs.Presentation.Home
                 RefreshIncomeCatalog();
                 DrainHomeInventory();
                 hangUpHud?.Source.NotifyDataChanged(hangUpId);
+                storage?.NotifyHangUpDataChanged(hangUpId);
+                SynchronizeHomeTipDots();
                 hud.RefreshAll();
             }
             return result;
@@ -1939,7 +1961,7 @@ namespace Zjcs.Presentation.Home
         private void OnPartnerConversationsCommitted()
         {
             partnerTipDots?.Refresh();
-            bagTipServices?.Synchronize();
+            SynchronizeHomeTipDots();
             storage?.NotifyDialogueChanged();
         }
 
@@ -2024,7 +2046,7 @@ namespace Zjcs.Presentation.Home
             scene?.Tick(Time.unscaledDeltaTime);
             hangUpHud?.Tick();
             hud?.Tick();
-            bagTipServices?.Synchronize();
+            SynchronizeHomeTipDots();
             wishes?.Tick();
             if (tutorialAutoStartEnabled && tutorialRunner != null && !IsFurnitureStoryRunning)
             {
@@ -2046,7 +2068,11 @@ namespace Zjcs.Presentation.Home
             {
                 if (!AdvanceFruitTree(now)) return;
                 session.AdvanceTo(now);
-                RecoverPendingFastForward();
+                if (RecoverPendingFastForward() != null)
+                {
+                    SynchronizeHomeTipDots();
+                    storage?.NotifyHomeChanged();
+                }
                 rewards?.Refresh();
                 DrainHomeInventory();
                 hud?.RefreshAll();
@@ -2131,7 +2157,7 @@ namespace Zjcs.Presentation.Home
             if (session != null && homeProgression != null) RefreshIncomeCatalog();
             partnerConversations?.Source.SynchronizeCommittedState();
             partnerTipDots?.Refresh();
-            bagTipServices?.Synchronize();
+            SynchronizeHomeTipDots();
             storage?.NotifyHomeChanged();
             hud?.RefreshAll();
         }
@@ -2157,6 +2183,7 @@ namespace Zjcs.Presentation.Home
             bagTipServices?.Dispose();
             bagTipServices = null;
             bagTipAssets = null;
+            DisposeHomeTipDots();
         }
 
         private void OnApplicationPause(bool pauseStatus)

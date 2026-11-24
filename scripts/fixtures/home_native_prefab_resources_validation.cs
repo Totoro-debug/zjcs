@@ -67,11 +67,13 @@ public static class HomeNativePrefabResourcesValidation
     static IEnumerator Check()
     {
         var input = JsonUtility.FromJson<Inputs>(File.ReadAllText(Environment.GetEnvironmentVariable("ZJCS_HOME_NATIVE_RESOURCE_INPUT")));
-        Require(input.routes.Length == 1042 && input.routes.Select(row => row.location).Distinct().Count() == input.routes.Length,
-            "Every previously verified house, storage, dining table and Home weapon prefab has one original-address local route");
+        Require(input.routes.Length == 1049 && input.routes.Select(row => row.location).Distinct().Count() == input.routes.Length,
+            "Every previously verified house, storage, bed, dining table and Home weapon prefab has one original-address local route");
         loader = new HomeNativePrefabLoader(); other = new HomeNativePrefabLoader();
         const string housePath = "Home/Dynamic/Theme/House/House";
         const string storagePath = "Home/Dynamic/Furniture/StorageBox/StorageBox";
+        const string bedPath = "Home/Dynamic/Furniture/Bed/Bed";
+        const string bedAnniversaryPath = "Home/Dynamic/Furniture/Bed/Bed1stAnniversary";
         const string diningTablePath = "Home/Dynamic/Furniture/DiningTable/DiningTable";
         var paths = new HomeEntityPrefabPaths(HomeEntityCreationCatalog.Load());
         var storageSkins = new Dictionary<int, string> {
@@ -82,6 +84,15 @@ public static class HomeNativePrefabResourcesValidation
             { 4248, "Home/Dynamic/Furniture/StorageBox/StorageBoxChineseOdyssey" },
             { 4261, "Home/Dynamic/Furniture/StorageBox/StorageBoxHalloween" },
         };
+        var bedSkins = new Dictionary<int, string> {
+            { 4201, "Home/Dynamic/Furniture/Bed/Bed" },
+            { 4215, "Home/Dynamic/Furniture/Bed/BedChristmas" },
+            { 4222, "Home/Dynamic/Furniture/Bed/BedChineseStyle" },
+            { 4234, "Home/Dynamic/Furniture/Bed/Bed1stAnniversary" },
+            { 4244, "Home/Dynamic/Furniture/Bed/BedChineseOdyssey" },
+            { 4254, "Home/Dynamic/Furniture/Bed/BedNon_Human" },
+            { 4257, "Home/Dynamic/Furniture/Bed/BedHalloween" },
+        };
         var diningTableSkins = new Dictionary<int, string> {
             { 4205, "Home/Dynamic/Furniture/DiningTable/DiningTable" },
             { 4217, "Home/Dynamic/Furniture/DiningTable/DiningTableChristmas" },
@@ -91,8 +102,9 @@ public static class HomeNativePrefabResourcesValidation
             { 4259, "Home/Dynamic/Furniture/DiningTable/DiningTableHalloween" },
         };
         Require(paths.GetThemePrefabPath(4700) == housePath && storageSkins.All(pair => paths.GetFurniturePrefabPath(pair.Key) == pair.Value)
+            && bedSkins.All(pair => paths.GetFurniturePrefabPath(pair.Key) == pair.Value)
             && diningTableSkins.All(pair => paths.GetFurniturePrefabPath(pair.Key) == pair.Value),
-            "Current original theme/furniture address builders feed the local loader unchanged for House, all 6 StorageBox skins and all 6 DiningTable skins");
+            "Current original theme/furniture address builders feed the local loader unchanged for House, all 6 StorageBox skins, all 7 Bed skins and all 6 DiningTable skins");
         var first = loader.LoadPrefab(housePath); var duplicate = loader.LoadPrefab(housePath);
         var otherOwner = other.LoadPrefab(housePath);
         Require(first.Result && first.Result == duplicate.Result && otherOwner.Result == first.Result,
@@ -122,6 +134,21 @@ public static class HomeNativePrefabResourcesValidation
             Require(dining.GetComponent<HomeNpcChatEntry>() && dining.GetComponentInChildren<DiningTableNpcPopClick>(true)
                 && dining.GetComponentInChildren<HomeNpcBubbleTip>(true) && dining.GetComponentInChildren<HomeNotice>(true),
                 "Runtime dining table route retains HomeNpcChatEntry, DiningTableNpcPopClick, HomeNpcBubbleTip and HomeNotice components");
+        }
+        using (var bedLease = loader.LoadPrefab(bedPath)) {
+            Require(bedLease.Result != null, "Runtime bed route resolves its native prefab");
+            var bed = InstantiateInactive(bedLease.Result);
+            Require(bed.GetComponent<BedFurniture>() && bed.GetComponentInChildren<HomeNotice>(true)
+                && bed.GetComponentsInChildren<Component>(true).All(c => c != null),
+                "Runtime bed route retains BedFurniture, HomeNotice and zero missing scripts");
+        }
+        using (var bedAnniLease = loader.LoadPrefab(bedAnniversaryPath)) {
+            Require(bedAnniLease.Result != null, "Runtime anniversary bed route resolves its native prefab");
+            var bedAnni = InstantiateInactive(bedAnniLease.Result);
+            Require(bedAnni.GetComponent<BedFurniture>()
+                && bedAnni.GetComponentsInChildren<Component>(true).All(c => c != null)
+                && bedAnni.GetComponentsInChildren<MonoBehaviour>(true).Any(c => c.GetType().Name == "HomeMutex"),
+                "Runtime anniversary bed route retains BedFurniture, HomeMutex and zero missing scripts");
         }
         foreach (string missing in new[] { "Home/Dynamic/Furniture/NotMigrated/NotMigrated", "", null }) {
             using (var lease = loader.LoadPrefab(missing)) Require(!lease.Result, "Unavailable original address retains a null-result lease: " + (missing ?? "<null>"));

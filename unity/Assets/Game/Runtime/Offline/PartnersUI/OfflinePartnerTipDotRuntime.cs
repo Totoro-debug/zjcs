@@ -286,6 +286,12 @@ namespace Zjcs.Offline.PartnersUI
             manager.FlushDirtyConditionNodes();
         }
 
+        public void Flush()
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfflinePartnerTipDotRuntime));
+            manager.FlushDirtyConditionNodes();
+        }
+
         public void Refresh()
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfflinePartnerTipDotRuntime));

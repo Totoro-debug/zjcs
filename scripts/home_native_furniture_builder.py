@@ -12,6 +12,7 @@ from official_apk import ROOT
 from official_source import OfficialSource
 from prepare_bag_tip_dots import NODES as BAG_NODES
 from prepare_current_partner_native import PartnerNativeRecovery, documents, identity
+from prepare_home_tip_dots import NODES as HOME_TIP_NODES
 from prepare_selected_wwise_inputs import prepare as prepare_audio
 
 
@@ -54,7 +55,7 @@ class HomeNativeFurnitureBinding(NativeSpineBinding):
         runtime = ROOT / 'unity/Assets/Game/Runtime'
         paths = {name: runtime / 'Official/HomeFurniture' / (name + '.cs') for name in (
             'EntityClickSound', 'StoreBoxFurniture', 'HomeNotice', 'HomeWeaponRack',
-            'HomeViewModeControl', 'HomeSwitcherActionEventHandler',
+            'HomeViewModeControl', 'HomeSwitcherActionEventHandler', 'BaseHangUpFurniture', 'BedFurniture',
             'HomeNpcChatEntry', 'DiningTableNpcPopClick', 'HomeNpcBubbleTip')}
         paths.update({
             'Home.ActorBehaviour.HomeBindingAuthoring': runtime / 'Official/HomeEntityBindings/HomeBindingAuthoring.cs',
@@ -75,7 +76,10 @@ class HomeNativeFurnitureBinding(NativeSpineBinding):
             'UnityEngine.Rendering.Universal.Light2D':
                 ROOT / 'unity/Packages/com.unity.render-pipelines.universal/Runtime/2D/Light2D.cs',
         })
+        paths['TipDotObject'] = runtime / 'Official/HomeMainUiControls/TipDotObject.cs'
+        paths['HomeMutex'] = runtime / 'Official/HomeRelations/HomeMutex.cs'
         paths.update({name: runtime / 'Official/BagTipDots' / (name + '.cs') for name in BAG_NODES})
+        paths.update({name: runtime / 'Official/HomeTipDots' / (name + '.cs') for name in HOME_TIP_NODES})
         paths.update(self.extra_scripts)
         for full_name, path in paths.items():
             namespace, _, name = full_name.rpartition('.')
@@ -160,14 +164,24 @@ class HomeNativeFurnitureBinding(NativeSpineBinding):
         return result
 
     def load(self, source_guid):
-        result = super().load(source_guid)
+        obj = self.objects.get(source_guid)
+        if source_guid not in self.redirects and obj is not None and obj.type.name == 'AnimatorController':
+            from home_native_prefab import load_controller
+            result = load_controller(self, source_guid, obj)
+        else:
+            result = super().load(source_guid)
         if isinstance(result, dict) and isinstance(result.get('guid'), str):
             result['guid'] = self._namespace_guid(result['guid'])
         return result
 
     def replace(self, value):
-        if isinstance(value, dict) and set(value) == {'class', 'ns', 'asm'} and value['class'] in BAG_NODES:
-            return dict(value, ns='Zjcs.Official.BagTipDots', asm='Zjcs.Official.BagTipDots')
+        if isinstance(value, dict) and set(value) == {'class', 'ns', 'asm'}:
+            if value['class'] in BAG_NODES:
+                return dict(value, ns='Zjcs.Official.BagTipDots', asm='Zjcs.Official.BagTipDots')
+            if value['class'] in HOME_TIP_NODES:
+                return dict(value, ns='Zjcs.Official.HomeTipDots', asm='Zjcs.Official.HomeTipDots')
+            if value['class'] == 'HomeMutex':
+                return dict(value, ns='Zjcs.Official.HomeRelations', asm='Zjcs.Official.HomeRelations')
         return super().replace(value)
 
     def build_furniture_prefabs(self, bundle: str, prefab_relatives: tuple[str, ...], dest: Path,
