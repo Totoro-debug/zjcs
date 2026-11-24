@@ -42,7 +42,7 @@
 | [战士职业技能详情（一阶）](character/skills-warrior.md) | 已完成 |
 | [法师职业技能详情（一阶）](character/skills-mage.md) | 已完成 |
 | [骑士路线职业技能详情（二至四阶）](character/skills-knight.md) | 部分完成 |
-| [斗士路线职业技能详情（二至四阶）](character/skills-fighter.md) | 部分完成 |
+| [斗士路线职业技能详情（二至四阶）](character/skills-fighter.md) | 已完成 |
 | [术士路线职业技能详情（二至四阶）](character/skills-warlock.md) | 部分完成 |
 | [贤者路线职业技能详情（二至四阶）](character/skills-sage.md) | 部分完成 |
 | [幻兽编队、养成与改名](character/pets.md) | 未完成 |
