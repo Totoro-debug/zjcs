@@ -125,8 +125,10 @@ namespace Zjcs.Presentation.Home
             int passiveCompanion = LoadAcquiredPassiveCompanion(player, skillId, output);
             BeginAcquiredGuardianValidation(passiveCompanion, output);
             var sageRoundSecret = BeginAcquiredSageRoundSecretValidation(passiveCompanion, output);
+            var sageSummonSecret = passiveCompanion == 10591 || passiveCompanion == 10600
+                ? new AcquiredSageSummonSecret(passiveCompanion, output) : null;
             bool overflowShield = passiveCompanion == 10601;
-            if (sageRoundSecret != null || passiveCompanion == 10609 || passiveCompanion == 10594 || passiveCompanion == 10543 || starBurst || spiralWindBlade || battlecry)
+            if (sageRoundSecret != null || sageSummonSecret != null || passiveCompanion == 10609 || passiveCompanion == 10594 || passiveCompanion == 10543 || starBurst || spiralWindBlade || battlecry)
             {
                 var validationRunner = FindObjectsOfType<SkillDamageTestValidation>().FirstOrDefault();
                 if (validationRunner != null) validationRunner.deadline += 600f;
@@ -300,10 +302,10 @@ namespace Zjcs.Presentation.Home
                 if (setting == "MonsterHp" && (waterBlade || soulPiercer || chaosRune || rockSummon || sageDarkBlast))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
-                if (setting == "MonsterHurt" && (overloadProtection || psychicWard || passiveCompanion == 10580))
+                if (setting == "MonsterHurt" && (overloadProtection || psychicWard || passiveCompanion == 10580 || passiveCompanion == 10600))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
-                if (setting == "Round" && (passiveCompanion == 10611 || vortexSurge || passiveCompanion == 10607 || passiveCompanion == 10594 || passiveCompanion == 10543 || dreadShadow || starBurst || spiralWindBlade || battlecry))
+                if (setting == "Round" && (passiveCompanion == 10600 || passiveCompanion == 10611 || vortexSurge || passiveCompanion == 10607 || passiveCompanion == 10594 || passiveCompanion == 10543 || dreadShadow || starBurst || spiralWindBlade || battlecry))
                     choice = settings.GetComponentsInChildren<Toggle>().Where(value =>
                         value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting))
                         .OrderBy(value => value.transform.parent.GetSiblingIndex()).Last();
@@ -364,6 +366,10 @@ namespace Zjcs.Presentation.Home
                 actor.Hp = Math.Max(1L, actor.MaxHp - 1L);
                 actor.Turn.Hp = actor.Hp;
             }
+            if (passiveCompanion == 10600)
+            {
+                actor.Hp = Math.Max(1L, actor.MaxHp / 2); actor.Turn.Hp = actor.Hp;
+            }
             int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, standfastTurns = 0, assaultHits = 0, soulBreakHits = 0, windHits = 0, flameHits = 0, fireLifeCures = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
             int starBlindApplications = 0, starBlindEnds = 0;
             int psychicWardEnds = 0;
@@ -387,7 +393,7 @@ namespace Zjcs.Presentation.Home
                 if (psychicWard) psychicWardEnds += VerifyAcquiredSagePsychicWard(step.Event, checkpoint, actor, output);
                 if (hellfire) VerifyAcquiredHellfireStep(step.Event, actor, ref hellfireCures, ref hits);
                 if (overflowShield) overflowShields += VerifyAcquiredSageOverflowShield(step.Event, checkpoint, actor, output);
-                else if (passiveCompanion > 0 && sageRoundSecret == null) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits, ref standfastTurns, ref assaultHits, ref soulBreakHits, ref windHits, ref flameHits, ref fireLifeCures);
+                else if (passiveCompanion > 0 && sageRoundSecret == null && sageSummonSecret == null) VerifyAcquiredPassiveStep(step.Event, checkpoint, output, passiveCompanion, ref coldHits, ref auraHits, ref standfastTurns, ref assaultHits, ref soulBreakHits, ref windHits, ref flameHits, ref fireLifeCures);
                 sageRoundSecret?.Observe(step.Event, checkpoint);
                 var skillCasts = step.Event.SkillCasts.Where(value => value.ActorId == 1 && value.Slot == 0
                     && value.SkillItemId == skillId).ToArray();
@@ -779,6 +785,7 @@ namespace Zjcs.Presentation.Home
                     }
                 }
                 if (rock != null) hits += rock.VerifyAttacks(step.Event, checkpoint);
+                sageSummonSecret?.Observe(step.Event, checkpoint, rock);
             };
             yield return CaptureAcquiredActive(output, "preparation");
             click(FlameFlowButton(value => value.name == "Btn" && value.GetComponentsInParent<Transform>()
@@ -789,6 +796,12 @@ namespace Zjcs.Presentation.Home
             bool capturedTacticalAttack = false, capturedTacticalDefence = false;
             while (battle != null)
             {
+                if (sageSummonSecret?.ReadyCapture(rock) == true)
+                {
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    capturedPassive = true;
+                    sageSummonSecret.Captured();
+                }
                 int sageRoundCapture = sageRoundSecret?.ReadyCapture() ?? 0;
                 if (sageRoundCapture > 0)
                 {
@@ -1090,6 +1103,7 @@ namespace Zjcs.Presentation.Home
                 "The cultivated fire life did not invoke its round-end cure, persist HP and render the native status event.");
             acquiredGuardian?.Complete(capturedPassive);
             sageRoundSecret?.Complete();
+            sageSummonSecret?.Complete();
             Require(passiveCompanion != 10595 || windHits > 0 && capturedPassive,
                 "The cultivated wind orb never rendered and struck at the owner's turn end.");
             Require(passiveCompanion != 10543 || flameHits > 0 && capturedPassive,

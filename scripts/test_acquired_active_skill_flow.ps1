@@ -12,6 +12,21 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -in @(10591,10600)) {
+        foreach ($file in @('companion-cultivated-save.json', 'acquired-active-ui-passive-battle.png',
+            "companion-sage-summon-$PassiveId-checkpoint.json", "companion-sage-summon-$PassiveId-receipt.json")) {
+            if (-not (Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'The actual summon-secret evidence is incomplete.' }
+        }
+        $receipt = Get-Content -LiteralPath (Join-Path $Run "companion-sage-summon-$PassiveId-receipt.json") -Raw | ConvertFrom-Json
+        $message = "[Acquired passive combat] $PassiveId cultivated summon secret, actual properties, native view and restore replay passed."
+        if ($receipt.item -ne $PassiveId -or $receipt.rank -lt 1 -or $receipt.level -ne 2 -or
+            $receipt.observations -lt 1 -or -not $receipt.restored -or -not $receipt.captured -or
+            ($PassiveId -eq 10600 -and $receipt.cures -lt 1) -or
+            -not (Select-String -LiteralPath $runtimeLog -SimpleMatch $message)) {
+            throw 'The cultivated summon secret lost its source, actual effect, rendering or restore receipt.'
+        }
+        return
+    }
     if ($PassiveId -in @(10610,10611)) {
         foreach ($file in @('companion-cultivated-save.json',
             "companion-sage-round-$PassiveId-checkpoint.json", "companion-sage-round-$PassiveId-receipt.json")) {
