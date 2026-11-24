@@ -46,7 +46,7 @@ def build(entity, *, cache, destination, resource_root, receipt_prefix, generato
     appearance_receipt = receipt('appearance')
     appearance = build_appearance([entity], destination=destination, native_root=destination,
         model_receipt=model_receipt, catalog_path='Resources/' + resource_root + '/appearance.asset',
-        managed_directory=managed)
+        managed_directory=managed, texture_directory='textures')
     write_changed(appearance_receipt, json.dumps(appearance, ensure_ascii=False, indent=2) + '\n')
     inventory = destination / 'inventory.json'
     states_receipt = receipt('animator-bindings')

@@ -26,7 +26,8 @@ def sha(raw):
 def build(entity_ids, *, destination=ROOT / 'unity/Assets/Official/Combat/NativeMonsterAppearance',
           native_root=ROOT / 'unity/Assets/Official/Combat/NativeMonsters',
           model_receipt=ROOT / 'assets/reference/battle-animation/live-monsters-source-manifest.json',
-          catalog_path='Resources/Combat/NativeMonsterAppearance/catalog.asset', managed_directory=None):
+          catalog_path='Resources/Combat/NativeMonsterAppearance/catalog.asset', managed_directory=None,
+          texture_directory='Textures'):
     work = validation_directory()
     installed = json.loads(model_receipt.read_bytes())
     models = {row['entityId']: row for row in json.loads((native_root / 'inventory.json').read_bytes())['models']}
@@ -93,7 +94,7 @@ def build(entity_ids, *, destination=ROOT / 'unity/Assets/Official/Combat/Native
         if key not in textures:
             image = obj.read()
             rgba, mips, profile = decode_mips(image)
-            path = write('Textures/' + sha(obj.get_raw_data()) + '.asset', native_texture(template, image, rgba), 2800000)
+            path = write(texture_directory + '/' + sha(obj.get_raw_data()) + '.asset', native_texture(template, image, rgba), 2800000)
             textures[key] = dict(output=path.relative_to(ROOT).as_posix(), rgba_sha256=sha(rgba), mips=mips, profile=profile)
         return ROOT / textures[key]['output']
 
