@@ -845,6 +845,7 @@ namespace Zjcs.Combat.Official
             FightBattlePetEnergyRuntime.RecordOwnerDamage(units, actor.Id, skillCostHp);
             if (skillCostHp > 0)
             {
+                OnNonHitHpDecreased(actor, skillCostHp);
                 ApplyHpChangeTriggers(actor, skill);
                 SynchronizeDeathForbidden(actor);
             }
@@ -1429,6 +1430,9 @@ namespace Zjcs.Combat.Official
                     if (summon.Statuses.Contains(status)) StartHpStatus(summon, status);
                 ExecuteMissingHitSummon(summon, true);
                 RebuildBattleProperties();
+                // Initialization is not a loss of existing HP. Register this
+                // notification only after all initial summon statuses settle.
+                summon.HpDecreased = OnNonHitHpDecreased;
             }
         }
 

@@ -23,6 +23,7 @@ namespace Zjcs.Combat.Official
             foreach (var change in hpChanges)
             {
                 // Freeze every delta before callbacks may recursively rebuild other units.
+                if (change.Value < 0) change.Key.HpDecreased?.Invoke(change.Key, -change.Value);
                 change.Key.HpUpdated?.Invoke(change.Key);
                 if (change.Value > 0) change.Key.HpIncreased?.Invoke(change.Key, change.Value);
             }

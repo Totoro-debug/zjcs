@@ -1,7 +1,8 @@
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'combat_sources.ps1')
 $root = Split-Path -Parent $PSScriptRoot
-$sources = @(Get-FightCombatSources) + (Join-Path $PSScriptRoot 'fixtures/battle_voodoo_doll_harness.cs')
+$sources = @(Get-FightCombatSources) + (Join-Path $PSScriptRoot 'fixtures/battle_voodoo_doll_harness.cs') +
+    (Join-Path $PSScriptRoot 'fixtures/battle_voodoo_doll_hp_loss_harness.cs')
 Add-Type -Path $sources
 $inputs = Join-Path $root 'unity/Assets/Official/Combat'
 $skillJson = Get-Content (Join-Path $inputs 'skill-rules.json') -Raw
@@ -20,4 +21,5 @@ $items = [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load(
     $rulesJson, $rulesProof.output_sha256, $rulesProof.manifest)
 $formula = $catalog.CreateDamageFormula($rulesJson, $rulesProof.output_sha256, $rulesProof.manifest)
 [BattleVoodooDollHarness]::Run($catalog, $items, $formula)
+[BattleVoodooDollHpLossHarness]::Run($catalog, $items, $formula)
 Write-Output 'Substitute checks passed: actual official summon, target identity, overflow HP transmission, shield bypass, buff rejection, debuff transfer/merge, lifetime and checkpoint.'

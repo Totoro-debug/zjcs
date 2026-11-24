@@ -66,6 +66,19 @@ namespace Zjcs.Combat.Official
             TransmitVoodooDamage(target, damage, events, casts, visited);
         }
 
+        private void OnNonHitHpDecreased(FightBattleUnitState unit, long amount)
+        {
+            var context = movementStartContext;
+            if (context == null || unit == null || !unit.IsVoodooDoll || unit.Ended || amount <= 0) return;
+            // Confirmed offline rule: actual HP lost outside a hit also travels
+            // through 10140. Hit damage keeps its separate overflow-aware input.
+            TransmitVoodooDamage(unit, new FightBattleDamageEvent {
+                TargetId = unit.Id, HasDamageValue = true, DamageValue = -amount,
+                BeforeHp = checked(unit.Hp + amount), AfterHp = unit.Hp, MaxHp = unit.MaxHp,
+                Delay = Math.Max(0f, context.StatusStartTime)
+            }, context.DamageEvents, context.Casts);
+        }
+
         private void FinishVoodooDolls()
         {
             foreach (FightBattleUnitState doll in units)

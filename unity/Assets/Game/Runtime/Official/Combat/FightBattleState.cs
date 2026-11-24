@@ -86,6 +86,7 @@ namespace Zjcs.Combat.Official
         [NonSerialized] internal Action<FightBattleUnitState> CooldownActionTriggered;
         [NonSerialized] internal Action<FightBattleUnitState> HpUpdated;
         [NonSerialized] internal Action<FightBattleUnitState, long> HpIncreased;
+        [NonSerialized] internal Action<FightBattleUnitState, long> HpDecreased;
         internal Action<FightBattleUnitState, FightBattleStatusState, bool> StatusForbiddenChanged;
         internal Func<FightBattleStatusState, bool> StatusApplicationRejected;
         internal Func<FightBattleStatusState, int> StatusRoundResolver;
