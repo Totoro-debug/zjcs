@@ -30,6 +30,7 @@ namespace Zjcs.Presentation.Combat
 
         private UnitView TryCreatePlayer(FightBattleUnitState state)
         {
+            if (state.IsVoodooDoll) return null;
             var appearance = ResolvePlayerAppearance(state);
             if (appearance == null) return null;
             if (nativePlayableScope == null)

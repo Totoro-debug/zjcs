@@ -1,0 +1,41 @@
+{
+  "manifest": "903_156948",
+  "roles": [
+    {
+      "prefab": "4600",
+      "name": "ShadowBoneFollower",
+      "parent": "4600_view",
+      "ancestors": [
+        {
+          "name": "4600_view",
+          "active": true,
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      ],
+      "resource": "Combat/NativeMonsters/SkillActors/VoodooDoll/Shadows/Prefabs/4600",
+      "renderers": [
+        {
+          "path": "Shadow",
+          "layerIndex": 18,
+          "layerId": 1182434123,
+          "order": -10
+        }
+      ]
+    }
+  ]
+}

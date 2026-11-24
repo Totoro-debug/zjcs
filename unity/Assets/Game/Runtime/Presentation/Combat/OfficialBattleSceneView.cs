@@ -618,6 +618,7 @@ namespace Zjcs.Presentation.Combat
                 ReleaseAttachedAnimator(attachedAnimators[id]);
                 attachedAnimators.Remove(id);
             }
+            RefreshVoodooLinks();
         }
 
         /// <summary>
@@ -1343,6 +1344,7 @@ namespace Zjcs.Presentation.Combat
 
         private void RemoveUnit(int unitId)
         {
+            StopVoodooLink(unitId);
             movementEffects?.RemoveUnit(unitId);
             RemovePendingAnimations(unitId);
             if (!units.TryGetValue(unitId, out UnitView view)) return;
@@ -1364,6 +1366,7 @@ namespace Zjcs.Presentation.Combat
 
         public void Dispose()
         {
+            ReleaseVoodooLinks();
             unitEndPlayback?.Clear();
             unitSpawns?.Clear();
             unitLifePlayback?.Clear();

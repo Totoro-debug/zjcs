@@ -1,0 +1,46 @@
+{
+  "entities": [
+    12200,
+    12201,
+    12202,
+    12203,
+    12204,
+    4600,
+    10140,
+    10141,
+    10004,
+    24000,
+    24014
+  ],
+  "code": [
+    "FightSkillComponentInfo",
+    "FightHitSummonComponentInfo",
+    "FightHitSummonVoodooDollCfg",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "FightStatusComponentInfo",
+    "StatusEndComponentInfo",
+    "FightRoleVoodooDollComponentInfo",
+    "BattleFormulaHandler"
+  ],
+  "client_code": [
+    "MyFightRoleVoodooDoll",
+    "MyFightStatus",
+    "MyAction"
+  ],
+  "rule_pack_entities": [
+    10140
+  ],
+  "rule_pack_fragments": [
+    "FightSkill_part7.g.bytes"
+  ],
+  "runtime_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10097.json"
+  ],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/sage-voodoo-doll-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/sage-voodoo-doll-current-status-graphs-source-manifest.json",
+    "assets/reference/battle-animation/sage-voodoo-doll-current-role-views-source-manifest.json",
+    "assets/reference/battle-animation/sage-voodoo-doll-current-link-graphs-source-manifest.json"
+  ]
+}

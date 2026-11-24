@@ -1,0 +1,72 @@
+{
+  "manifest": "903_156948",
+  "skills": [
+    {
+      "skill_entity_id": 10140,
+      "entity_resource": "Combat/SageVoodooDollSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10140/10140",
+      "playables": []
+    },
+    {
+      "skill_entity_id": 12200,
+      "entity_resource": "Combat/SageVoodooDollSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12200/12200",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/SageVoodooDollSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12200/playable12200"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 10141,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/SageVoodooDollSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10140/10141"
+    },
+    {
+      "hit_entity_id": 12201,
+      "client_type": "MyFightHitSummon",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/SageVoodooDollSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12200/12201"
+    },
+    {
+      "hit_entity_id": 12203,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/SageVoodooDollSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12200/12203"
+    }
+  ],
+  "moves": [],
+  "damages": []
+}

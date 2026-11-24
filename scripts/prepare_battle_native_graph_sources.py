@@ -25,6 +25,7 @@ def main():
         'sage-dark-blast-current-skill-graphs',
         'sage-rock-summon-current-skill-graphs',
         'sage-summon-restoration-current-skill-graphs',
+        'sage-voodoo-doll-current-skill-graphs',
     )
     receipts = {
         'skill-native-graphs': 'skill-native-graph-assets-source-manifest',

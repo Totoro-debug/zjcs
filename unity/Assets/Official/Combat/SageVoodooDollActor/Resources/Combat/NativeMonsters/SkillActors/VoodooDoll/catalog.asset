@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Name: Original full-binary battle monsters
+  m_EditorClassIdentifier: ''
+  m_Script: {fileID: 11500000, guid: 7c82caa682647b14ebcfc2dc80b360c8, type: 3}
+  inventory: {fileID: 4900000, guid: 0f8d021b33fc588dbf29efdfeedfa8f9, type: 3}
+  shader: {fileID: 4800000, guid: 054030caba1d5805a9f41cf36fa476c9, type: 3}
+  shaderBindings: []
+  bindings:
+  - File: 4600/model.bytes
+    Asset: {fileID: 4900000, guid: 42c5c3d02923500688b5212fc6b40cf0, type: 3}
+  - File: animators/AppearanceAssets/Summons/summons_3193/block_01.anim
+    Asset: {fileID: 7400000, guid: 590910f359ba69650413829f09d159ae, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3193/die_01.anim
+    Asset: {fileID: 7400000, guid: 8b8aa3166c49ffd8b443cf6e480ec025, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3193/floating_01.anim
+    Asset: {fileID: 7400000, guid: e624ddaab6d105f61392cf700f17436e, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3193/generate_01.anim
+    Asset: {fileID: 7400000, guid: 4855e4af572afb955a648504c3346f33, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3193/hit_01.anim
+    Asset: {fileID: 7400000, guid: 3b97b4e8eee352495b003b21f3435731, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3193/hit_02.anim
+    Asset: {fileID: 7400000, guid: 467fe60cc266b3ff997b3eb5f2956f16, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3193/idle_01.anim
+    Asset: {fileID: 7400000, guid: bbf9bdb6a9c7d5151487984c1f756487, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3193/stun_01.anim
+    Asset: {fileID: 7400000, guid: 0b103823aee4d7db960ed4333d1199d4, type: 2}
+  - File: animators/AppearanceAssets/Summons/summons_3193/summons_3193_Controller.controller
+    Asset: {fileID: 9100000, guid: 6c9062f0510bf0f8c32eda4582c0bb40, type: 2}
+  - File: textures/307a40a9a546b00f2d63b2c9753e69229d453bc1fa28c83f95570cf40ced9043.asset
+    Asset: {fileID: 2800000, guid: 7ce941689f2a536da0117d79217b12f3, type: 2}
+  - File: textures/4d1b1935be2f5210d7380231094ce558e1a85791f45c69a2640b8afaab5ab17c.asset
+    Asset: {fileID: 2800000, guid: dee51118a9af5e6da265c0dd557c038c, type: 2}
+  - File: textures/87eec55ac622d4084ca884b0b3470d8748f0ff36cacec305425fa44975de58a4.asset
+    Asset: {fileID: 2800000, guid: a41b8beaee025b25904dc018f5b1cdb1, type: 2}
+  presentationResourceRoot: Combat/NativeMonsters/SkillActors/VoodooDoll

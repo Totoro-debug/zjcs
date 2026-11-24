@@ -13,6 +13,9 @@ $rulesProof = Get-Content (Join-Path $inputs 'rules-source-manifest.json') -Raw 
 $catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load($skillJson,
     $skillProof.output_sha256, $skillProof.manifest, $battleJson,
     $battleProof.output_sha256, $battleProof.manifest)
+$pack = Join-Path $root 'unity/Assets/Game/Resources/Combat/SkillRules/10097.json'
+$packProof = Get-Content ($pack -replace '\.json$', '-source-manifest.json') -Raw | ConvertFrom-Json
+$catalog.ApplySkillRulePack([IO.File]::ReadAllText($pack), $packProof.output_sha256, $packProof.manifest)
 $items = [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load(
     $rulesJson, $rulesProof.output_sha256, $rulesProof.manifest)
 $formula = $catalog.CreateDamageFormula($rulesJson, $rulesProof.output_sha256, $rulesProof.manifest)

@@ -36,6 +36,7 @@ namespace Zjcs.Presentation.Combat
             var body = Body(state.Id);
             orientUnit(body, state);
             body.position = gridToWorld(new FightGridPoint(receipt.X, receipt.Y));
+            RefreshVoodooLinks();
         }
 
         private void CreateSummonView(FightBattleHitSelectionSnapshot.SpawnedUnit receipt)
