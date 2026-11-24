@@ -243,10 +243,7 @@ namespace Zjcs.Combat.Official
             if (FightStatusLifecycle.TickTurn(actor, StatusOwners(), actorRound, FightStatusLifecycle.TimingStart) > 0)
                 RebuildBattleProperties();
             ApplyMissingHitSummonRemovalTriggers();
-            if (statusCatalog != null)
-                foreach (FightBattleUnitState summonOwner in new List<FightBattleUnitState>(units))
-                    FightStatusTriggerRuntime.ApplyRoleSummonCount(summonOwner, units,
-                        statusCatalog, random);
+            RebuildBattleProperties();
             float statusEndDelay = 0f;
             ExecuteShieldExpiryCures(0f, casts, damageEvents, movements,
                 ref statusEndDelay, ref stepDuration, ref stepActionDuration);
@@ -2707,7 +2704,12 @@ namespace Zjcs.Combat.Official
                 // A newly started status may cast synchronously while its action-existence
                 // producer is still recording the new instance. Do not enter that producer twice.
                 applyingActionExistStatuses = true;
-                try { FightStatusTriggerRuntime.ApplyActionExistStatuses(units, statusCatalog, random); }
+                try
+                {
+                    foreach (var owner in new List<FightBattleUnitState>(units))
+                        FightStatusTriggerRuntime.ApplyRoleSummonCount(owner, units, statusCatalog, random);
+                    FightStatusTriggerRuntime.ApplyActionExistStatuses(units, statusCatalog, random);
+                }
                 finally { applyingActionExistStatuses = false; }
             }
             foreach (FightBattleUnitState unit in units) statusMutex.Synchronize(unit);

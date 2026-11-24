@@ -7,6 +7,7 @@ public static class BattleSageSummonResonanceHarness
     public static void Run(FightOfficialCombatCatalog catalog, FightDamageFormula formula,
         FightOfficialSkillItemCatalog items)
     {
+        SpawnLifecycle(catalog, formula, items);
         foreach (var cultivation in new[] { (Rank: 2, Level: 1), (Rank: 4, Level: 9) })
         {
             var owner = Unit(1, 1, 1, 0, 5, 5, 1000);
@@ -62,6 +63,50 @@ public static class BattleSageSummonResonanceHarness
                     && view.OwnerId == owner.Id && view.Kind == FightBattleStatusViewEventKind.End) == 1,
                 "The last removed summon did not return attack to its ordinary value.");
         }
+    }
+
+    private static void SpawnLifecycle(FightOfficialCombatCatalog catalog, FightDamageFormula formula,
+        FightOfficialSkillItemCatalog items)
+    {
+        var owner = Unit(1, 1, 1, 0, 5, 5, 1000);
+        var enemy = Unit(2, 2, 2, 0, 6, 5);
+        var bindings = catalog.CreatePassiveStatusBindings(owner, items, new[] {
+            new FightOfficialPassiveSkillBinding { ItemId = 10591, Rank = 4, Level = 9, SubRank = owner.SubRank }
+        });
+        catalog.AssembleUnit(owner, null, bindings);
+        var skill = catalog.CreateSkill(12140, 0, 10095, 4, 9, owner.SubRank, null);
+        owner.Skills.Add(skill);
+        owner.SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = 1 });
+        var checkpoint = new FightBattleCheckpoint { StageId = 1001, MaxRound = 20, RandomSeed = 41,
+            Grid = new FightBattleGrid { Width = 16, Height = 16 }, ResultRules = new FightBattleResultRules() };
+        checkpoint.Units.AddRange(new[] { owner, enemy });
+        var executor = FightBattleExecutor.Begin(checkpoint, formula, new FightDamageSettlement(), catalog, items);
+        long baseline = Attack(owner);
+        var spawn = executor.Step(0, 1).Event;
+        var rock = checkpoint.Units.Single(unit => unit.MonsterTemplateId == 3196);
+        Check(rock.Hp > 0 && owner.Statuses.Count(status => status.ClassId == 24133) == 1
+            && Attack(owner) > baseline && spawn.StatusViewEvents.Count(view => view.Status.ClassId == 24133
+                && view.Kind == FightBattleStatusViewEventKind.Start) == 1,
+            "A real summon did not apply resonance in its spawn step.");
+        // Expire the real summon through its original lifetime status while its
+        // creator takes the next turn, rather than changing a saved unit list.
+        var lifetime = rock.Statuses.Single(status => status.ClassId == 12142);
+        lifetime.DurationRound = 1;
+        lifetime.CurDurationRound = 1;
+        lifetime.StartRound = owner.SkillState.Round;
+        bool removed = false;
+        for (int i = 0; i < 10 && !checkpoint.Finished; i++)
+        {
+            var step = executor.Step(0, checkpoint.Counter + 1).Event;
+            if (!rock.Ended) continue;
+            Check(owner.Statuses.All(status => status.ClassId != 24133) && Attack(owner) == baseline
+                && step.StatusViewEvents.Count(view => view.Status.ClassId == 24133
+                    && view.Kind == FightBattleStatusViewEventKind.End) == 1,
+                "The real last summon did not remove resonance in its expiry step.");
+            removed = true;
+            break;
+        }
+        Check(removed, "The real resonance summon did not reach lifespan expiry.");
     }
 
     private static FightBattleUnitState Unit(int id, int side, int role, int master, int x, int y, int speed = 1)
