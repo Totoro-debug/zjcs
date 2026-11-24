@@ -79,6 +79,7 @@ namespace Zjcs.Presentation.Home
                 ally.Id = ally.MasterId = AllyId;
                 ally.Hp = Math.Max(1L, ally.MaxHp / 2);
                 ally.Turn.Id = AllyId;
+                ally.Turn.MasterId = ally.MasterId;
                 ally.Turn.Hp = ally.Hp;
                 ally.Turn.Speed = Math.Max(1, actor.Turn.Speed - 1);
                 ally.Skills.Clear(); ally.SkillState.Slots.Clear(); ally.ReportSkillSnapshots.Clear();
