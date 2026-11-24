@@ -23,6 +23,7 @@ namespace Zjcs.Editor
             ["Assets/Game/Resources/Dungeons/UI/884_156692/Native/Playables/Converted/59de19d261370c02.shader"] = 260,
             ["Assets/Game/Runtime/Official/World/NativeWater/Shaders/EnvironmentNoise.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Home/Shaders/FruitTree_59de19d261370c02.shader"] = 260,
+            ["Assets/Official/Home/DiningTable/Native/Converted/59de19d261370c02.shader"] = 260,
             ["Assets/Official/Home/House/Native/Converted/59de19d261370c02.shader"] = 260,
             ["Assets/Official/Home/StorageBox/Native/Converted/59de19d261370c02.shader"] = 260,
             ["Assets/Official/Home/WeaponParts/Converted/59de19d261370c02.shader"] = 260,
@@ -128,12 +129,12 @@ namespace Zjcs.Editor
                 stages += selection.PassCount * selection.Programs.Count * 2;
             }
             ValidateCoverage();
-            if (stages != 78968) throw new BuildFailedException("Original shader stage domain changed: " + stages);
+            if (stages != 80008) throw new BuildFailedException("Original shader stage domain changed: " + stages);
             Debug.Log("Original sparse shader domains validated: " + originalPrograms.Count + " assets / " + stages + " GPU stages.");
         }
 
         [MenuItem("Zjcs/Assets/Validate Original Sparse Shader Programs")]
-        public static void Validate() => ValidatePrograms(originalPrograms, 78968);
+        public static void Validate() => ValidatePrograms(originalPrograms, 80008);
 
         public static void ValidateCurrentSkillShaders()
         {
@@ -147,7 +148,15 @@ namespace Zjcs.Editor
 
         public static void ValidateHomeFurnitureShaders() => ValidatePrograms(originalPrograms.Where(row =>
             row.Key.StartsWith("Assets/Official/Home/", StringComparison.Ordinal))
-            .ToDictionary(row => row.Key, row => row.Value), 3120, validateProject: false);
+            .ToDictionary(row => row.Key, row => row.Value), 4160, validateProject: false);
+
+        public static void ValidateDiningTableShaders()
+        {
+            ValidateCoverage();
+            ValidatePrograms(originalPrograms.Where(row => row.Key.StartsWith(
+                "Assets/Official/Home/DiningTable/", StringComparison.Ordinal))
+                .ToDictionary(row => row.Key, row => row.Value), 1040, validateProject: false);
+        }
 
         public static void ValidateProtectiveRunes() => ValidatePrograms(originalPrograms.Where(row =>
             row.Key.StartsWith("Assets/Game/Runtime/Presentation/Combat/Shaders/ProtectiveRunesGraph_", StringComparison.Ordinal))
