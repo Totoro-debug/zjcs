@@ -12,6 +12,23 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -eq 10580) {
+        foreach ($file in @('companion-cultivated-save.json','companion-sanctuary-grant.json',
+            'companion-sanctuary-transfer.json','companion-sanctuary-receipt.json',
+            'acquired-active-ui-opening.png','acquired-active-ui-passive-battle.png')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'The actual sanctuary grant or transferred hit evidence is incomplete.' }
+        }
+        $source = Get-Content -LiteralPath (Join-Path $Run 'companion-cultivated-save.json') -Raw | ConvertFrom-Json
+        $receipt = Get-Content -LiteralPath (Join-Path $Run 'companion-sanctuary-receipt.json') -Raw | ConvertFrom-Json
+        $message = '[Acquired passive combat] 10580 cultivated allied sanctuary, ordered original transfer and restore replay passed.'
+        if ($source.Player.Skills.Plans[$source.Player.Skills.SelectedPlan].PassiveSkills[0] -ne 10580 -or
+            $receipt.ally -le 1 -or $receipt.attacker -le 1 -or $receipt.parentIndex -ge $receipt.transferIndex -or
+            $receipt.guardianDamage -gt 0 -or -not $receipt.restored -or
+            -not (Select-String -LiteralPath $runtimeLog -SimpleMatch $message)) {
+            throw 'The cultivated sanctuary did not preserve its target, ordered transfer or restore receipt.'
+        }
+        return
+    }
     if ($PassiveId -eq 10575) {
         foreach ($file in @('companion-cultivated-save.json','companion-soul-guard-opening.json',
             'companion-soul-guard-return.json','companion-soul-guard-receipt.json','acquired-active-ui-passive-battle.png')) {

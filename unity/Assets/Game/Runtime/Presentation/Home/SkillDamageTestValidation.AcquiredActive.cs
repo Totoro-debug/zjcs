@@ -293,7 +293,7 @@ namespace Zjcs.Presentation.Home
                 if (setting == "MonsterHp" && (waterBlade || soulPiercer || chaosRune || sageDarkBlast))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
-                if (setting == "MonsterHurt" && (overloadProtection || psychicWard))
+                if (setting == "MonsterHurt" && (overloadProtection || psychicWard || passiveCompanion == 10580))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
                 if (setting == "Round" && (vortexSurge || passiveCompanion == 10607 || passiveCompanion == 10594 || passiveCompanion == 10543 || dreadShadow || starBurst || spiralWindBlade || battlecry))
@@ -314,7 +314,7 @@ namespace Zjcs.Presentation.Home
             // Make each required trigger reproducible inside the isolated presentation diagnostic.
             if (fireCore) SetAcquiredBattleProperty(actor, "CritRatePercent", 100000);
             if (iceCrystal || chaosRune) SetAcquiredBattleProperty(actor, "EffectRate", 1000000);
-            if (overloadProtection || psychicWard)
+            if (overloadProtection || psychicWard || passiveCompanion == 10580)
             {
                 Require(!checkpoint.DamageTest.EnableMonsterOneDamage,
                     "The defensive skill diagnostic requires the original normal monster damage option.");
@@ -756,6 +756,12 @@ namespace Zjcs.Presentation.Home
             bool capturedTacticalAttack = false, capturedTacticalDefence = false;
             while (battle != null)
             {
+                if (acquiredGuardian?.OpeningReady() == true && !capturedOpening)
+                {
+                    yield return CaptureAcquiredActive(output, "opening");
+                    capturedOpening = true;
+                    acquiredGuardian.OpeningCaptured();
+                }
                 if (spiralWindBlade && !capturedTear && FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
                     && particle.GetComponentsInParent<Transform>().Any(parent => parent.name.StartsWith("playable24376", StringComparison.Ordinal))))
                 {

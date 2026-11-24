@@ -27,7 +27,7 @@ namespace Zjcs.Presentation.Home
 
         private static void BeginAcquiredGuardianValidation(int item, string output)
         {
-            acquiredGuardian = item == 10593 || item == 10575 ? new AcquiredGuardianProbe(item, output) : null;
+            acquiredGuardian = item == 10593 || item == 10575 || item == 10580 ? new AcquiredGuardianProbe(item, output) : null;
         }
 
         internal static void ConfigureGuardianBattleRequest(OfficialBattleRequest request)
@@ -65,8 +65,8 @@ namespace Zjcs.Presentation.Home
                     ConfigureSoulGuard(actor);
                     return;
                 }
-                Require(actor.Statuses.Any(status => status.ClassId == 25109
-                    && status.ApplyingSkillItemId == 10593), "The guardian fixture lacks its actually equipped secret.");
+                Require(actor.Statuses.Any(status => status.ClassId == (item == 10580 ? 25074 : 25109)
+                    && status.ApplyingSkillItemId == item), "The guardian fixture lacks its actually equipped secret.");
                 var ally = JsonUtility.FromJson<FightBattleUnitState>(JsonUtility.ToJson(actor));
                 AllyId = checkpoint.Units.Max(unit => unit.Id) + 1;
                 ally.Id = ally.MasterId = AllyId;
@@ -78,6 +78,10 @@ namespace Zjcs.Presentation.Home
                 ally.Statuses.Clear(); ally.PetEnergy = new FightBattlePetEnergyState();
                 FightGridPoint[] offsets = { new FightGridPoint(1, 0), new FightGridPoint(-1, 0),
                     new FightGridPoint(0, 1), new FightGridPoint(0, -1) };
+                if (item == 10580)
+                    offsets = offsets.OrderBy(offset => checkpoint.Units.Where(unit => unit.Side != actor.Side)
+                        .Min(enemy => Math.Abs(actor.X + offset.X - enemy.X)
+                            + Math.Abs(actor.Y + offset.Y - enemy.Y))).ToArray();
                 bool placed = false;
                 foreach (var offset in offsets)
                 {
@@ -104,6 +108,11 @@ namespace Zjcs.Presentation.Home
                 if (item == 10575)
                 {
                     ObserveSoulGuard(step, checkpoint);
+                    return;
+                }
+                if (item == 10580)
+                {
+                    ObserveSanctuary(step, checkpoint);
                     return;
                 }
                 if (verified) return;
@@ -139,6 +148,7 @@ namespace Zjcs.Presentation.Home
             public bool Ready(OfficialBattleRuntimeController controller)
             {
                 if (item == 10575) return soulOpened && IsNativeSkillParticleVisible("playable11570");
+                if (item == 10580) return sanctuaryTransferred && IsNativeSkillParticleVisible("playable11780");
                 if (!verified || controller == null) return false;
                 var field = typeof(OfficialBattleRuntimeController).GetField("sceneView", BindingFlags.Instance | BindingFlags.NonPublic);
                 var view = (OfficialBattleSceneView)field.GetValue(controller);
@@ -155,6 +165,12 @@ namespace Zjcs.Presentation.Home
                 {
                     Require(soulOpened && soulReturned && captured,
                         "The cultivated soul guard did not render its opening, return HP and preserve its receipts.");
+                    return;
+                }
+                if (item == 10580)
+                {
+                    Require(sanctuaryGranted && sanctuaryTransferred && sanctuaryOpeningCaptured && captured,
+                        "The cultivated sanctuary did not render its grant and actual transferred damage.");
                     return;
                 }
                 Require(verified && captured, "The cultivated allied defence shield was not rendered and persisted.");
