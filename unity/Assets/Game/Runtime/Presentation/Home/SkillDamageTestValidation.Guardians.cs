@@ -135,13 +135,18 @@ namespace Zjcs.Presentation.Home
                 if (shield == null) return;
                 var formula = assets.LoadDamageFormula();
                 var source = shield.SourceProperties.ToDictionary(value => value.Id, value => value.Value);
-                var values = shield.StatusProperties.ToDictionary(value => value.Id, value => value.Value);
+                // StatusProperties already contains the projected shield value.
+                // Read the original cultivated coefficients for an independent calculation.
+                var values = assets.Load().CalculateSkillProps(shield.ClassId, shield.SourceSkillRank,
+                    shield.SourceSkillLevel, shield.SourceSubRank).ToDictionary(pair => pair.Key, pair => pair.Value);
                 long basis = (long)(formula.ReadProperty(source, formula.PropertyId("Defence"))
                     * formula.ReadProperty(values, formula.PropertyId("ShieldByDefence")))
                     + (long)formula.ReadProperty(values, formula.PropertyId("SkillFixedShield"));
                 long expected = (long)Math.Max(0.0, basis
                     * (1.0 + formula.ReadProperty(source, formula.PropertyId("StatusShieldAddPercent")))
                     + formula.ReadProperty(source, formula.PropertyId("StatusFixedShieldAdd")));
+                expected = (long)Math.Max(0.0, expected
+                    * (1.0 + formula.ReadProperty(source, formula.PropertyId("FinalShieldScale"))));
                 File.WriteAllText(Path.Combine(output, "companion-saint-guard-observed.json"),
                     FightBattleCheckpointSerializer.Save(checkpoint));
                 Require(shield.ShieldValue == expected && expected > basis && shield.OwnerId == AllyId
