@@ -30,7 +30,7 @@ namespace Zjcs.Presentation.Home
             supported |= active == 10028 && player.Wardrobe.Profession == 13 && (itemId == 10599 || itemId == 10503 || itemId == 10573);
             supported |= active == 10035 && player.Wardrobe.Profession == 13 && itemId == 10557;
             supported |= active == 10028 && player.Wardrobe.Profession == 17 && itemId == 10579;
-            supported |= active == 10096 && player.Wardrobe.Profession == 17 && itemId == 10601;
+            supported |= active == 10096 && player.Wardrobe.Profession == 17 && (itemId == 10601 || itemId == 10610 || itemId == 10611);
             supported |= active == 10091 && player.Wardrobe.Profession == 13 && itemId == 10598;
             supported |= active == 10091 && player.Wardrobe.Profession == 13 && itemId == 10597;
             Require(supported && source.Player.Wardrobe.Profession == player.Wardrobe.Profession
