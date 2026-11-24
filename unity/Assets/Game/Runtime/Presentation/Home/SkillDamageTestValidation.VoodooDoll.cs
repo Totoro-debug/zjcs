@@ -17,6 +17,7 @@ namespace Zjcs.Presentation.Home
             private readonly HashSet<int> expired = new HashSet<int>();
             private int transfers;
             private bool restored, captured;
+            private bool modelSeen, linkSeen;
 
             internal void VerifySummon(FightBattleSkillCastEvent cast, FightBattleCheckpoint checkpoint,
                 FightBattleUnitState actor, FightBattleSkillDefinition skill, string output)
@@ -102,11 +103,21 @@ namespace Zjcs.Presentation.Home
                 return hits;
             }
 
-            internal bool IsVisible() => FindObjectsOfType<BattleNativeMonsterRenderer>().Any(model =>
-                model.name == "MonsterModel_4600" && model.TryGetComponent<MeshRenderer>(out var renderer)
-                && renderer.enabled && model.TryGetComponent<MeshFilter>(out var mesh)
-                && mesh.sharedMesh && mesh.sharedMesh.vertexCount > 0)
-                && IsNativeSkillParticleVisible("playable_Link");
+            internal bool IsVisible()
+            {
+                // Entity 4600 uses the original summons_3193 model hierarchy.
+                bool modelVisible = FindObjectsOfType<BattleNativeMonsterRenderer>().Any(model =>
+                    model.name == "MonsterModel_3193" && model.SkeletonDataName == "summons_3193"
+                    && expiryRounds.Keys.Any(id => model.EntityRoot.name == "BattleUnit_" + id)
+                    && model.TryGetComponent<MeshRenderer>(out var renderer) && renderer.enabled
+                    && model.TryGetComponent<MeshFilter>(out var mesh)
+                    && mesh.sharedMesh && mesh.sharedMesh.vertexCount > 0);
+                bool linkVisible = IsNativeSkillParticleVisible("playable_Link");
+                if (modelVisible && !modelSeen || linkVisible && !linkSeen)
+                    Debug.Log("[Acquired substitute view] Original model=" + modelVisible + ", link=" + linkVisible + ".");
+                modelSeen |= modelVisible; linkSeen |= linkVisible;
+                return modelVisible && linkVisible;
+            }
 
             internal void Captured() { captured = true; }
 
