@@ -66,7 +66,7 @@ namespace Zjcs.Presentation.Home
                     // FightStatusProp consumes scale properties into the final
                     // stat, then applies its fixed addition. The scale itself
                     // is no longer present in the actor's property list.
-                    foreach (string name in new[] { "Attack", "Defence", "Speed" })
+                    foreach (string name in new[] { "Attack", "MaxHp", "Speed" })
                     {
                         double scale = formula.ReadProperty(cultivated, formula.PropertyId(name + "Scale"));
                         double fixedValue = formula.ReadProperty(cultivated, formula.PropertyId("Fixed" + name));
@@ -80,6 +80,8 @@ namespace Zjcs.Presentation.Home
                             + (long)fixedValue;
                         Require(actor.Properties.Single(value => value.Id == id).Value == expected,
                             "The acquired dark-star gain changed its final " + name + " calculation.");
+                        if (name == "MaxHp") Require(actor.MaxHp == expected,
+                            "The acquired dark-star gain did not update the actual maximum HP.");
                     }
                     Require(checkedFinalProperty, "The acquired dark-star gain did not improve a final property.");
                 }
