@@ -306,7 +306,7 @@ namespace Zjcs.Presentation.Home
                 if (setting == "MonsterHurt" && (overloadProtection || psychicWard || passiveCompanion == 10580 || passiveCompanion == 10600))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
-                if (setting == "Round" && (passiveCompanion == 10600 || passiveCompanion == 10611 || vortexSurge || passiveCompanion == 10607 || passiveCompanion == 10594 || passiveCompanion == 10543 || dreadShadow || starBurst || spiralWindBlade || battlecry))
+                if (setting == "Round" && (passiveCompanion == 10611 || vortexSurge || passiveCompanion == 10607 || passiveCompanion == 10594 || passiveCompanion == 10543 || dreadShadow || starBurst || spiralWindBlade || battlecry))
                     choice = settings.GetComponentsInChildren<Toggle>().Where(value =>
                         value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting))
                         .OrderBy(value => value.transform.parent.GetSiblingIndex()).Last();
@@ -370,6 +370,8 @@ namespace Zjcs.Presentation.Home
             if (passiveCompanion == 10600)
             {
                 actor.Hp = Math.Max(1L, actor.MaxHp / 2); actor.Turn.Hp = actor.Hp;
+                foreach (var enemy in checkpoint.Units.Where(unit => unit.Side != actor.Side))
+                    SetAcquiredBattleProperty(enemy, "Attack", 1L);
             }
             int casts = 0, hits = 0, vortexMovements = 0, coldHits = 0, auraHits = 0, standfastTurns = 0, assaultHits = 0, soulBreakHits = 0, windHits = 0, flameHits = 0, fireLifeCures = 0, hellfireCures = 0, lifestealCures = 0, fearApplications = 0;
             int starBlindApplications = 0, starBlindEnds = 0;

@@ -73,6 +73,8 @@ namespace Zjcs.Presentation.Home
                         lifetime.StartRound = actor.SkillState.Round;
                         lifespanPrepared = true;
                     }
+                    File.WriteAllText(Path.Combine(output, "companion-sage-summon-" + item + "-latest.json"),
+                        FightBattleCheckpointSerializer.Save(checkpoint));
                     foreach (var cure in step.DamageEvents.Where(hit => hit.SkillEntityId == 12050))
                     {
                         var source = actor.Properties.ToDictionary(value => value.Id, value => value.Value);
