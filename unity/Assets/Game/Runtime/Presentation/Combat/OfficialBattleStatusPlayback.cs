@@ -15,6 +15,22 @@ namespace Zjcs.Presentation.Combat
     /// <summary>Plays complete original character-status entities at their captured transition times.</summary>
     public sealed class OfficialBattleStatusPlayback : IMyActionEntityLookup, IDisposable
     {
+        public sealed class CatalogReplacement
+        {
+            internal readonly string Previous, Incoming;
+            internal readonly int[] StatusIds;
+
+            public CatalogReplacement(string previous, string incoming, params int[] statusIds)
+            {
+                if (string.IsNullOrEmpty(previous) || string.IsNullOrEmpty(incoming) || previous == incoming
+                    || statusIds == null || statusIds.Length == 0)
+                    throw new ArgumentException("A status migration must declare its source catalogs and entity IDs.");
+                Previous = previous; Incoming = incoming; StatusIds = (int[])statusIds.Clone();
+                foreach (int id in StatusIds)
+                    if (id <= 0) throw new ArgumentOutOfRangeException(nameof(statusIds));
+            }
+        }
+
         [Serializable] private sealed class Catalog { public Entry[] graphs; }
         [Serializable] private sealed class Entry { public int id; public string resource; }
         private sealed class Scheduled { public FightBattleStatusViewEvent Event; public float Remaining; }
@@ -124,12 +140,21 @@ namespace Zjcs.Presentation.Combat
         public OfficialBattleStatusPlayback(FightBattleExecutor executor, Transform root,
             OfflineBattleNativePlayableScope scope, Func<int, Transform> body, Func<int, bool> hasIcon,
             params string[] catalogs)
+            : this(executor, root, scope, body, hasIcon, Array.Empty<CatalogReplacement>(), catalogs) { }
+
+        public OfficialBattleStatusPlayback(FightBattleExecutor executor, Transform root,
+            OfflineBattleNativePlayableScope scope, Func<int, Transform> body, Func<int, bool> hasIcon,
+            IReadOnlyList<CatalogReplacement> replacements, params string[] catalogs)
         {
             this.executor = executor ?? throw new ArgumentNullException(nameof(executor));
             this.root = root ?? throw new ArgumentNullException(nameof(root));
             this.scope = scope ?? throw new ArgumentNullException(nameof(scope));
             this.body = body ?? throw new ArgumentNullException(nameof(body));
             this.hasIcon = hasIcon ?? throw new ArgumentNullException(nameof(hasIcon));
+            var declarations = new Dictionary<int, CatalogReplacement>();
+            foreach (var replacement in replacements ?? throw new ArgumentNullException(nameof(replacements)))
+                foreach (int id in replacement.StatusIds) declarations.Add(id, replacement);
+            var owners = new Dictionary<int, string>();
             foreach (string path in catalogs)
             {
                 var text = Resources.Load<TextAsset>(path);
@@ -139,7 +164,16 @@ namespace Zjcs.Presentation.Combat
                     var prefab = Resources.Load<GameObject>(entry.resource);
                     if (!prefab || !prefab.GetComponent<MyEntity>() || !prefab.GetComponent<MyFightStatus>())
                         throw new InvalidOperationException("Original status prefab is unbound: " + entry.id);
-                    prefabs.Add(entry.id, prefab);
+                    if (owners.TryGetValue(entry.id, out string previous))
+                    {
+                        if (!declarations.TryGetValue(entry.id, out var replacement)
+                            || previous != replacement.Previous || path != replacement.Incoming)
+                            throw new InvalidOperationException("Undeclared original status prefab replacement: "
+                                + entry.id + " (" + previous + " -> " + path + ")");
+                        prefabs[entry.id] = prefab;
+                    }
+                    else prefabs.Add(entry.id, prefab);
+                    owners[entry.id] = path;
                 }
             }
             staging = new GameObject("Inactive original character-status staging");
