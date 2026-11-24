@@ -2,9 +2,9 @@ param(
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10102,10103,10104)][int]$SkillId = 10026,
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10101,10102,10103,10104)][int]$SkillId = 10026,
     [Parameter(ParameterSetName='Player')]
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
     [string]$PassiveSave,
     [ValidateSet(0,39521)][int]$SkillSkinId = 0
 )
@@ -294,6 +294,17 @@ try {
         if (-not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-active-ui-checkpoint.json'))) {
             throw "The completed skill-page battle checkpoint is absent: $run"
         }
+        if ($SkillId -eq 10101) {
+            foreach ($file in @('acquired-fire-leap-checkpoint.json','acquired-fire-leap-receipt.json')) {
+                if (-not (Test-Path -LiteralPath (Join-Path $skillRun $file))) { throw 'The cultivated fire leap evidence is incomplete.' }
+            }
+            $leap = Get-Content -LiteralPath (Join-Path $skillRun 'acquired-fire-leap-receipt.json') -Raw | ConvertFrom-Json
+            if ($leap.target -le 1 -or $leap.distance -lt 1 -or $leap.distance -gt 2 -or $leap.pathCount -ne 2 -or
+                $leap.rank -ne $cultivatedRank -or $leap.level -ne 2 -or $leap.damage -ge 0 -or -not $leap.restored -or
+                -not (Select-String -LiteralPath $log -SimpleMatch '[Acquired active combat] 10101 cultivated direct jump, adjacent landing, original fire impact and restore replay passed.')) {
+                throw 'The acquired fire leap changed its cultivated jump, original impact or restore receipt.'
+            }
+        }
         if ($SkillId -eq 10102 -and (-not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-protective-runes-checkpoint.json')) -or
             -not (Select-String -LiteralPath $log -SimpleMatch '[Acquired active combat] 10102 cultivated conditional reduction,'))) {
             throw 'The cultivated protective runes omitted their original conditional damage check.'
@@ -324,7 +335,7 @@ try {
         if ($SkillId -eq 10096 -and -not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-heavenly-rain-checkpoint.json'))) {
             throw 'The original cultivated healing checkpoint was not persisted.'
         }
-        if ($SkillId -in @(10002,10032,10039,10047,10056,10059,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10102,10103,10104)) {
+        if ($SkillId -in @(10002,10032,10039,10047,10056,10059,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10096,10099,10101,10102,10103,10104)) {
             # The Player asserts the original effects for each equipped cast.
             Write-Output "Acquired active skill-page flow passed: $skillRun"
             continue

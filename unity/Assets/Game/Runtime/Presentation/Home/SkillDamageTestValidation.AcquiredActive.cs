@@ -60,6 +60,7 @@ namespace Zjcs.Presentation.Home
             bool diversionHarassment = skillId == 10084;
             bool heavenlyLightBlades = skillId == 10085;
             bool vortexSurge = skillId == 10099;
+            bool fireLeap = skillId == 10101;
             bool hellfire = skillId == 10068;
             bool swordWindDance = skillId == 10088;
             bool soulPiercer = skillId == 10089;
@@ -82,12 +83,13 @@ namespace Zjcs.Presentation.Home
             bool alienation = HasAlienationCompanion(skillId);
             bool destroyer = starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder || protectiveRunes || destroyerCompanion > 0;
             bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation || chaosRune || heavenlyRain || sageDarkBlast || psychicWard;
+            fourthPromotion |= fireLeap;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry || protectiveRunes || psychicWard;
             bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
             fourthPromotion |= HasGuardianCompanion(skillId);
-            int profession = alienation || chaosRune || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = fireLeap ? 8 : alienation || chaosRune || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -422,6 +424,7 @@ namespace Zjcs.Presentation.Home
                         : diversionHarassment ? cast.SkillEntityId == 11890
                         : heavenlyLightBlades ? cast.SkillEntityId == 11900
                         : vortexSurge ? cast.SkillEntityId == 12080
+                        : fireLeap ? cast.SkillEntityId == 12100
                         : hellfire ? cast.SkillEntityId == 11520
                         : swordWindDance ? cast.SkillEntityId == 11910
                         : soulPiercer ? cast.SkillEntityId == 11920
@@ -447,6 +450,12 @@ namespace Zjcs.Presentation.Home
                         "The acquired active skill selected a foreign entity: " + cast.SkillEntityId);
                     var damageEvents = step.Event.DamageEvents.Where(value => value.SourceId == 1
                         && value.SkillEntityId == (skillId == 10017 ? 10970 : cast.SkillEntityId)).ToArray();
+                    if (fireLeap)
+                    {
+                        VerifyAcquiredFireLeap(step.Event, cast, damageEvents, checkpoint, output, hits == 0);
+                        hits += damageEvents.Length;
+                        continue;
+                    }
                     if (chaosRune)
                     {
                         VerifyAcquiredChaosRune(step.Event, cast, damageEvents, checkpoint, output, ref confusionApplications);
@@ -901,6 +910,10 @@ namespace Zjcs.Presentation.Home
                             && particle.GetComponentsInParent<Transform>().Any(parent =>
                                 parent.name.StartsWith("playable10801", StringComparison.Ordinal)));
                         if (!explosionVisible) { yield return null; continue; }
+                    }
+                    else if (fireLeap)
+                    {
+                        if (!IsNativeSkillParticleVisible("playable12100")) { yield return null; continue; }
                     }
                     else if (diversionHarassment)
                     {
