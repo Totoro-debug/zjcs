@@ -1258,8 +1258,12 @@ namespace Zjcs.Combat.Official
                             FightStatusTriggerRuntime.CollectRoleDieSkills(target, units,
                                 statusCatalog, random);
                         if (roleDieInvocations.Count > 0)
+                        {
+                            foreach (var invocation in roleDieInvocations)
+                                invocation.Delay = Math.Max(0f, damage.Delay);
                             ExecuteConfiguredStatusSkills(roleDieInvocations, casts, damageEvents,
                                 movements, ref lastDelay, out _, out _);
+                        }
                         ExecuteRevivalSkills(casts, damageEvents, movements, ref lastDelay,
                             ref statusTriggerDuration, ref statusTriggerActionDuration);
                         SynchronizeDeathForbidden(target);
@@ -2192,6 +2196,7 @@ namespace Zjcs.Combat.Official
                         && !invocation.AllowDeadTarget)
                     || (!invocation.SelectTargets && !FightBattleTargeting.IsSelectable(targetPosition)
                         && !invocation.AllowDeadTarget
+                        && !invocation.AllowDeadTargetPosition
                         && !(invocation.AllowDeadSource && targetPosition == source))) continue;
                 FightBattleSkillDefinition skill;
                 try

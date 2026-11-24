@@ -54,7 +54,8 @@ Add-Type -Path (@(Get-FightCombatSources) +
     (Join-Path $PSScriptRoot 'fixtures/battle_sage_dark_blast_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_flame_soul_harness.cs') +
     (Join-Path $PSScriptRoot 'fixtures/battle_saint_guard_harness.cs') +
-    (Join-Path $PSScriptRoot 'fixtures/battle_sage_summon_resonance_harness.cs'))
+    (Join-Path $PSScriptRoot 'fixtures/battle_sage_summon_resonance_harness.cs') +
+    (Join-Path $PSScriptRoot 'fixtures/battle_sage_summon_restoration_harness.cs'))
 $sp = Get-Content (Join-Path $inputs 'skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $bp = Get-Content (Join-Path $inputs 'battle-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $rp = Get-Content (Join-Path $inputs 'rules-source-manifest.json') -Raw | ConvertFrom-Json
@@ -88,6 +89,7 @@ if ($SkillId -ne 0) {
         10096 { [BattleHeavenlyRainHarness]::Run($catalog, $formula, $items); exit 0 }
         10077 { [BattleSagePsychicWardHarness]::Run($catalog, $formula, $items); exit 0 }
         10591 { [BattleSageSummonResonanceHarness]::Run($catalog, $formula, $items); exit 0 }
+        10600 { [BattleSageSummonRestorationHarness]::Run($catalog, $formula, $items); exit 0 }
         10601 { [BattleSageOverflowShieldHarness]::Run($catalog, $formula, $items); exit 0 }
         10103 { [BattleSageDarkBlastHarness]::Run($catalog, $formula, $items); exit 0 }
         10599 { [BattleFlameSoulHarness]::Run($catalog, $formula, $items); exit 0 }
@@ -153,3 +155,5 @@ if ($SkillId -ne 0) {
 [BattleSaintGuardHarness]::Run($catalog, $formula, $items)
 
 [BattleSageSummonResonanceHarness]::Run($catalog, $formula, $items)
+
+[BattleSageSummonRestorationHarness]::Run($catalog, $formula, $items)

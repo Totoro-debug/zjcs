@@ -1,0 +1,15 @@
+{
+  "entities": [25105, 12050, 12051, 12052],
+  "rule_pack_fragments": ["FightSkill_part756.g.bytes", "FightSkill_part101.g.bytes"],
+  "visibility_bundles": [12050],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/sage-summon-restoration-current-status-graphs-source-manifest.json",
+    "assets/reference/battle-animation/sage-summon-restoration-current-skill-graphs-source-manifest.json"
+  ],
+  "reused_client_code": ["MyFightStatusRoleDie", "MyFightSkill", "MyFightHitFixed", "MyFightDamage"],
+  "runtime_rule_packs": ["unity/Assets/Game/Resources/Combat/SkillRules/10600.json"],
+  "code": [
+    "FightStatusRoleDieComponentInfo", "FightStatusTriggerSkillCfg", "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo", "FightDamageComponentInfo", "BattleFormulaHandler"
+  ]
+}

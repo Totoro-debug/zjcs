@@ -1,0 +1,349 @@
+{
+  "manifest": "903_156948",
+  "originals": [
+    {
+      "id": 25105,
+      "shared_dependency_bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_25105.bundle",
+      "native_export_meta": {
+        "path": ".tools/source-packages/current/903_156948/sage-summon-companions/native-export/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/25105/25105.prefab.meta",
+        "sha256": "e070db499d402f696270f6b57e4e54b9202720d0b923dd58fda86dfd374728b3"
+      },
+      "original_game_object_name": "25105",
+      "original_game_object_sha256": "985f6c9a12cb4a6a3a441591d08b825274a25be4bf0bb3d44a4009d4925294e7",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_25105.bundle",
+        "bundle_hash": "d0ba92761f5573fadd0febca2de96399",
+        "path_id": "3488315740127110807",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/d0ba92761f5573fadd0febca2de96399.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 1002,
+        "bundle_sha256": "0e87114ea4390c3a1f07ae5c43e88545f0354a2fb5005e9e63be9d3e7287403c"
+      }
+    }
+  ],
+  "native_export_receipt": {
+    "path": ".tools/source-packages/current/903_156948/sage-summon-companions/native-export-source-manifest.json",
+    "sha256": "5023a9f83496fe179cd953b49158f8a4c16b1df40855b90cc4c07e9919eb377e"
+  },
+  "native_inputs": [
+    {
+      "path": ".tools/source-packages/current/903_156948/sage-summon-companions/native-export/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/25105/25105.prefab",
+      "sha256": "ddc12c8486045030e315d61e5a496e06f864d6be12e114e632d5c64f4bc107bf"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/sage-summon-companions/native-export/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/25105/25105.prefab.meta",
+      "sha256": "e070db499d402f696270f6b57e4e54b9202720d0b923dd58fda86dfd374728b3"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/sage-summon-companions/native-export/ExportedProject/Assets/Shaders/Effect/Noise_Mask_Pro.asset",
+      "sha256": "dcced7bd050d56d4de0b198c25b0992f0600326a39c907750853602f32a66c43"
+    },
+    {
+      "path": ".tools/source-packages/current/903_156948/sage-summon-companions/native-export/ExportedProject/Assets/Shaders/Effect/Noise_Mask_Pro.asset.meta",
+      "sha256": "bddb56578fc59f7df4e09f57f41f7c6a95b39f918ccef5f04d819d8ea1b990e2"
+    }
+  ],
+  "texture_conversion_receipt": {
+    "path": ".tools/source-packages/current/903_156948/sage-summon-companions/all-assets/windows-textures/source-manifest.json",
+    "sha256": "25fa6eca310aa7f1b9bfe72c516116b325e9c5263830c84015f13cf1ae7fd0d0"
+  },
+  "converted_inputs": [],
+  "textures": [],
+  "shaders": [],
+  "binary_assets": [],
+  "application": [
+    {
+      "file_id": -253978515,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/game-framework-source/GameFramework/MyPlayableSequence.cs",
+        "sha256": "169b013367c39521a6bd1a8161c59aa93201ed1e7190803f5ffcb76fd4ad7e22"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs",
+        "sha256": "f2f3c212ecd384e80c9a2a8f0a82e2251ede2abc8662c954a2c7988190080d42"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs.meta",
+        "sha256": "58ba372bbd79a79b5c7bb3c40858a9e663386a3ac05cfdd760931a3d4af569f0"
+      },
+      "verified_current_runtime_methods": {
+        "PlayImpl": "81c9f91f00d897b55ea95bc748a8e0eb2925b02955f1c387012c88b9094e5d26",
+        "Stop": "f963d47e08e3f30a7721e60711c280fdbe5e49bea63d69d57290098876236c27",
+        "RemoveImpl": "9dffe045eae4ebb0fdd4e11d30e73949fa747d085b67bcb005b0e7483c6d491d",
+        "ProcessFrameImpl": "5189aa3dd0117a7af30e8b1e09a224faaa4d8199b2252496a8a3c457009f652f",
+        "PostProcessFrameImpl": "20ea5653b366c0fafd344f1312378dc0b163bf2dbb0e427c8b6ca3b4a5e534b3",
+        "StopImpl": "cba86c5abc5cb4cc846277fb1399f787de27769c29054296fdab09b2f784c4c6",
+        "GetDuration": "b0d9510722c4f25fca3ace761e84cee06aca1731a631d83bb3e7e01ae86ea172",
+        "ResetData": "d4743a5f96c1f720213477e7f45fdfc3737f3267a5bd08dba6fdd0a798ac0523",
+        "InitDataOnPlay": "883a5bb3a5aa31061ad1500ada071c0fae86077159db07242a68d811b456584b",
+        "SinglePlay": "957a64ce66127743dfeec8fefb9b5810d63c1c522d3dd84f900926082666bdf3",
+        "SingleStop": "852c1dd5c3061c14d9e60f7acb6d1e1722c10958068e74454ccd98ef8765d6ff",
+        "SingleRemove": "22525e22e40f655ef175c5766cb89f0a8459e6cf21c90b399ff2738cd7b01ff0"
+      }
+    },
+    {
+      "file_id": -1107144664,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableFollowBone.cs",
+        "sha256": "cd3895c5b5bf31c42df77bf420b76c0e3ef4914ab74f5c930b41babcaefb942a"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableFollowBone.cs",
+        "sha256": "3ccc330554190f228073d3d8b5412e718e529aa328571368ad20a1800080ac39"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableFollowBone.cs.meta",
+        "sha256": "7e7ab1c3b226804894aa591e07078eccaf3499c34d05fe48f68e6b96002db69a"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 903818314,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/ApplyByGroundType.cs",
+        "sha256": "74985d35c1ca65745d75ceecc64ca013ba698b2d8a9afcbc7d7e1041d5a7e5cc"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryGroundEffects/ApplyByGroundType.cs",
+        "sha256": "4d3edca2dfbc9539c1146d6d5e6483d44bdedcd67196efcc9b80804ee483487c"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryGroundEffects/ApplyByGroundType.cs.meta",
+        "sha256": "209777acd1c016451e967642d89f2bb4a2200a0f2276e70c12b50f21dee8b0b7"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -1247969075,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/game-framework-source/GameFramework/ApplyEnableOnPlay.cs",
+        "sha256": "dcede1003f3fd0e2c75083fa1fed1937a9b79e6fc42126e4dfa8a18c9b80f0ff"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyEnableOnPlay.cs",
+        "sha256": "9031a17d29199a44af50a2cf289ab70dbf4885c4f238c6e5b3f96d0341f0a77e"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyEnableOnPlay.cs.meta",
+        "sha256": "4fa001c702d7b8d5a898513d3f5952a935e20cd9787ca96689c1aa9e9b257c94"
+      },
+      "verified_current_runtime_methods": {
+        "OnDestroy": "de843dae6116448e269cbbb1f9f1fe71b1c78305fdb941ae8cff7358eb0a1e48",
+        "InitImpl": "6c3108850d4a5fd16fde19ec71d7d6ba9760721ffdb045319837a39f2767d525",
+        "PlayImpl": "488628c7fc65e076729a3552333e4179702a7bfc5dfcb2463d7ac788d7a181aa",
+        "SetInitBeforeActive": "9710746423752f4973a57e6ce20297085c0d24269970268ccafe6db2cacbdda0",
+        "SetActive": "fee3146f14859ed37b23a117d5cf424f07ea59ea2da8a9cb351b6798a66c13b7"
+      }
+    },
+    {
+      "file_id": 768753278,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/ApplyOnStopFadeOut.cs",
+        "sha256": "4888f2a7285590305cd2b361e1b776f7027af6f8cee0df73ba1b337af284e77f"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStopFadeOut.cs",
+        "sha256": "c10011991db0c1c7ef27bdb74eb5f44a491913307f9c65a3cd1a9ddb74e604a0"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStopFadeOut.cs.meta",
+        "sha256": "876de6bd9727d012df10e69446323668893d574733fabda7bf491336c6a66dec"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -413707684,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyPlayableOrbitMovement.cs",
+        "sha256": "0c17b9a694d062c4a326eb556bfaa82907972fbe4d0d281c58a0537c6abbe65c"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyPlayableOrbitMovement.cs",
+        "sha256": "b2aed1bc1d6910a1c2768ce080cdeb8fc81311e9467a0fbbb5e1c6e3660d6113"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyPlayableOrbitMovement.cs.meta",
+        "sha256": "037cb4af8f0baa0cbdb844f80b4f816cffaf8efd527b5c112758e17e60a7b2f7"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -270686477,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/ApplyByStatusStackCount.cs",
+        "sha256": "2460a45bdbe431cf6a114f261f53d45fca52e67caa933b435999c96dcc1b2d6a"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyByStatusStackCount.cs",
+        "sha256": "2e15b81be389f872e737a063582ef78e02756fd5d502dccd84fa0f4bdde9beb4"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyByStatusStackCount.cs.meta",
+        "sha256": "0442dc0e90a14a3e86d18f0e161ee0f06f49517c06c464e5506cc5ce19eb6a6b"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 219313581,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightStatusRoleDie.cs",
+        "sha256": "f627993e9dc63716d4ff7210011d8fb5b3dadf94ee85fc742f37881fa3061369"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusRoleDie.cs",
+        "sha256": "e80bbca3e4a894151dfa2d617bc55dc66caa67b0fa286a82a2b5df236841924b"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyFightStatusRoleDie.cs.meta",
+        "sha256": "c7f20c0188dd33bc5c94e5a87294bb758f6317f32c504a600ec9e679d9678b0f"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": 1200213464,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyEntity.cs",
+        "sha256": "1d3cb29ee8e21bb2e8717aa95c8922434f1a20bf90fafb941b5ffcbf26bd2ae1"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyEntity.cs",
+        "sha256": "a79da2de6a96b7b999cca9ccc0b63268f6721203ee5d103300ccddc4112c8c8e"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyEntity.cs.meta",
+        "sha256": "37c1bca62c3f18ee7ae04cc407f650a3cf2a6a87713454e7345366e71e67bf4e"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -1481699058,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyFightStatus.cs",
+        "sha256": "6703467530851893a67bd76e3d6a2d15253cf336d3c6abe23b6a1a104ddace1d"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyFightStatus.cs",
+        "sha256": "504c6797a56e88f403e9982f55be9a285f8f4ebd2cc12f2d2b967e088dae4ea2"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyFightStatus.cs.meta",
+        "sha256": "14d89eb5ed4c9723870e218138398c5c055b58399b0c5300f7b944ef581fba0a"
+      },
+      "verified_current_runtime_methods": {}
+    },
+    {
+      "file_id": -109006141,
+      "original": {
+        "path": ".tools/source-packages/current/903_156948/official-code/client-source/MyAction.cs",
+        "sha256": "6adf75aa0f477aab0ada42d10bd0b3ea7e8b3a77b111e02206faa7aa15e9a140"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/EntityActions/MyAction.cs",
+        "sha256": "1ac1ea7452f26a80a61d9526068f3120ded1e678016272ccc047ab6f3fca95bd"
+      },
+      "migrated_meta": {
+        "path": "unity/Assets/Game/Runtime/Official/EntityActions/MyAction.cs.meta",
+        "sha256": "3d42f9efcbaa5feb7791380b952dfaed0a6996025c8f349d8045d3cf6b44957b"
+      },
+      "verified_current_runtime_methods": {}
+    }
+  ],
+  "external_assets": [
+    {
+      "source": {
+        "path": ".tools/source-packages/current/903_156948/sage-summon-companions/native-export/ExportedProject/Assets/Shaders/Effect/Noise_Mask_Pro.asset",
+        "sha256": "dcced7bd050d56d4de0b198c25b0992f0600326a39c907750853602f32a66c43"
+      },
+      "source_meta": {
+        "path": ".tools/source-packages/current/903_156948/sage-summon-companions/native-export/ExportedProject/Assets/Shaders/Effect/Noise_Mask_Pro.asset.meta",
+        "sha256": "bddb56578fc59f7df4e09f57f41f7c6a95b39f918ccef5f04d819d8ea1b990e2"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Presentation/Combat/Shaders/FireCoreSkillGraph_Noise_Mask_Pro.shader",
+        "sha256": "23b0eccebf30317cd8356c1973ffcae0c9e7f675ccad64dc6aa990d5267a8442"
+      },
+      "target_meta": {
+        "path": "unity/Assets/Game/Runtime/Presentation/Combat/Shaders/FireCoreSkillGraph_Noise_Mask_Pro.shader.meta",
+        "sha256": "c232c04c889f5e9188edc7627bd2e420d90c08dedde03e57e98a0797f26f6638"
+      }
+    }
+  ],
+  "native_scripts": [],
+  "runtime_receipts": [
+    {
+      "path": "assets/reference/battle-animation/status-orbit-runtime-source-manifest.json",
+      "sha256": "5441d40bd2fdad97698c4d83861121026289501e1858e8061eac723203dae616"
+    },
+    {
+      "path": "assets/reference/battle-animation/status-view-runtime-source-manifest.json",
+      "sha256": "a6b159c66b253fb32b9208769ddd350cdc0ae1259937cac0822ede9a99528715"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_sage_summon_secret_graphs.py",
+    "sha256": "97d54784b234992a57a4fbade8e6ff74d06b1b8e3e89d1b32d3b935af85eec54"
+  },
+  "graph_asset_adapter": {
+    "path": "scripts/prepare_battle_status_orbit_assets.py",
+    "sha256": "b099c33aab8a36e86737e04b93bb50d5f3700243240069fca9a24a6c5b1134bd"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/sage-summon-restoration-current-status-graphs.json",
+      "sha256": "d53e11acd96ac3fe6394c557a0020e029559049ca4ba6b13e993e41ca1b6be20"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/sage-summon-restoration-current-status-graphs.json.meta",
+      "sha256": "1868ef0a23d48cb7dcd60a75977d77b229787b7fd90457489c6f9002393e5c74"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SageSummonRestorationStatusGraphs/Resources/Combat/SageSummonRestorationStatusGraphs/Prefabs/EcEntity/Fight/FightSkill/25105/25105.prefab",
+      "sha256": "579f5d9d69541edf6c5364e3ebe279be375909e79d5bec4eb88c8c380e3b41cd"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SageSummonRestorationStatusGraphs/Resources/Combat/SageSummonRestorationStatusGraphs/Prefabs/EcEntity/Fight/FightSkill/25105/25105.prefab.meta",
+      "sha256": "549b76147fb42dbf79a61e861a1c704c8d89497981e60a2494ad099af47d7b45"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SageSummonRestorationStatusGraphs/Resources/Combat/SageSummonRestorationStatusGraphs/Prefabs/EcEntity/Fight/FightSkill/25105.meta",
+      "sha256": "2de853c2f1772a60f2530a9bd25aebe0042de846694e7034326eaf3657a33658"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SageSummonRestorationStatusGraphs/Resources/Combat/SageSummonRestorationStatusGraphs/Prefabs/EcEntity/Fight/FightSkill.meta",
+      "sha256": "50990bffd31b2a50e30a28b5edb48c4bd9f43596ef687456d7bb09b4c42748bd"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SageSummonRestorationStatusGraphs/Resources/Combat/SageSummonRestorationStatusGraphs/Prefabs/EcEntity/Fight.meta",
+      "sha256": "05a17140fdd4026ad5699f65df4fb8e8290f78becfee62e38e8088faacff68ce"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SageSummonRestorationStatusGraphs/Resources/Combat/SageSummonRestorationStatusGraphs/Prefabs/EcEntity.meta",
+      "sha256": "42fefb37dacee79122df8c30f0662c442161defcfc44112695b4ab362feec41e"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SageSummonRestorationStatusGraphs/Resources/Combat/SageSummonRestorationStatusGraphs/Prefabs.meta",
+      "sha256": "6a5945e3fb977be33f20819369044d0fe5d329f4b75fc79854258e7965ddf88d"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SageSummonRestorationStatusGraphs/Resources/Combat/SageSummonRestorationStatusGraphs.meta",
+      "sha256": "71c713e4d6cf65b36a70781f11561679e4e0e3d5d6ed5f50eb0ae08b3ccd2f16"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SageSummonRestorationStatusGraphs/Resources/Combat.meta",
+      "sha256": "3b40cdf6e3e1f993bd06bf6fc2b29dea0dd01d8dba7a9ca06fa19dc956604256"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SageSummonRestorationStatusGraphs/Resources.meta",
+      "sha256": "63cea3e5f0c99d05305e1b2a16a74603422b658981f129e6a46e2bef1937234a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SageSummonRestorationStatusGraphs.meta",
+      "sha256": "fa2ce6e1063d522a98508fec750bdd6acc1e255a298244a5dcb2ef80115c87ac"
+    }
+  ],
+  "operation": "Full original graphs: no components, sequence leaves or local objects removed. Preserve native local fileIDs, transforms, particles, orbit configuration and dependencies. Remap migrated application scripts/GUIDs, decode all original texture mips through hash-matched conversion cache and use verified full Windows shaders.",
+  "limits": [
+    "These three graph resources do not install all status lifecycle roles or formal battle actor/timeline binding."
+  ]
+}

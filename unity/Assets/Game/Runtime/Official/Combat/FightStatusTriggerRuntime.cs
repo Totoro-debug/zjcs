@@ -385,7 +385,7 @@ namespace Zjcs.Combat.Official
             FightOfficialCombatCatalog catalog, FightRandomStream random)
         {
             var result = new List<FightBattleStatusSkillInvocation>();
-            if (dead == null || units == null || catalog == null || dead.Hp > 0) return result;
+            if (dead == null || units == null || catalog == null || dead.Hp > 0 && !dead.Ended) return result;
             foreach (FightBattleUnitState owner in units)
             {
                 if (owner == null || owner.Statuses == null || owner.Hp <= 0) continue;
@@ -396,6 +396,7 @@ namespace Zjcs.Combat.Official
                         || status.RoleDieCharacterTypes.Count > 0
                             && !status.RoleDieCharacterTypes.Contains(dead.CharacterType)
                         || status.RoleDieSameFaction && owner.Side != dead.Side
+                        || !MatchesRoleDieMaster(owner, dead, status, units)
                         || status.RoleDieUniqueRole && !status.RoleDieSeenUnitIds.Add(dead.Id)
                         || status.RoleDieMaxCount >= 0
                             && status.RoleDieTriggeredCount >= status.RoleDieMaxCount) continue;
@@ -415,7 +416,8 @@ namespace Zjcs.Combat.Official
                             SourceUnitId = owner.Id,
                             TargetUnitId = trigger.Target == 5 ? dead.Id : owner.Id,
                             TargetPositionUnitId = dead.Id,
-                            AllowDeadTarget = trigger.Target == 5
+                            AllowDeadTarget = trigger.Target == 5,
+                            AllowDeadTargetPosition = true
                         });
                         added++;
                     }
@@ -424,6 +426,25 @@ namespace Zjcs.Combat.Official
                 }
             }
             return result;
+        }
+
+        private static bool MatchesRoleDieMaster(FightBattleUnitState owner, FightBattleUnitState dead,
+            FightBattleStatusState status, IReadOnlyList<FightBattleUnitState> units)
+        {
+            // FightStatusRoleDieComponentInfo.MasterType uses StatusTargetType:
+            // compare the removed role's master with that status-relative role.
+            int master;
+            switch (status.RoleDieMasterType)
+            {
+                case 0: return true;
+                case FightStatusLifecycle.TargetCreator: master = status.CreatorId; break;
+                case FightStatusLifecycle.TargetApplicator: master = owner.Id; break;
+                case FightStatusLifecycle.TargetCreatorMaster:
+                    master = FindUnit(units, status.CreatorId)?.MasterId ?? 0; break;
+                case FightStatusLifecycle.TargetApplicatorMaster: master = owner.MasterId; break;
+                default: return false;
+            }
+            return master > 0 && dead.MasterId == master;
         }
 
         private static bool ApplyRoleDieStatuses(FightBattleUnitState owner,

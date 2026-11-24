@@ -540,6 +540,7 @@ namespace Zjcs.Combat.Official
                     || summon.Hp > 0 && !summon.Ended || summon.HitSummonRemoveProcessed) continue;
                 summon.HitSummonRemoveProcessed = true;
                 ExecuteMissingHitSummon(summon, false);
+                ExecuteLivingRoleRemovalSkills(summon);
             }
         }
     }

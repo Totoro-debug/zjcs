@@ -263,6 +263,8 @@ namespace Zjcs.Combat.Official
         internal bool WaitForMovementEnd;
         public bool AllowDeadSource;
         public bool AllowDeadTarget;
+        // Death reactions may use a removed role's position while targeting a living role.
+        public bool AllowDeadTargetPosition;
         public bool Sequential;
         public int SourceRootSkillId;
         // Legacy threshold SkillId/SkillList without explicit source/target uses the skill AI.
