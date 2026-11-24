@@ -32,7 +32,7 @@ def main():
     adapter = ROOT / 'unity/Assets/Game/Runtime/Offline/Combat/FightStatusLogicRuntime.ReflectionArmor.cs'
     record = dict(manifest='884_156692', official_code=[identity(CODE / (name + '.cs')) for name in files],
         runtime_inputs=[identity(COMBAT / (name + '.json')) for name in ('rules', 'skill-rules', 'battle-rules')],
-        formula_proof=identity(ROOT / 'assets/reference/battle-rules/status-damage-source-manifest.json'),
+        formula_proof=code_identity(ROOT / 'assets/reference/battle-rules/status-damage-source-manifest.json'),
         adapter=code_identity(adapter), generator=code_identity(Path(__file__)),
         validation=[code_identity(ROOT / p) for p in ('scripts/test_battle_reflection_armor.ps1',
             'scripts/fixtures/battle_reflection_armor_harness.cs')],
