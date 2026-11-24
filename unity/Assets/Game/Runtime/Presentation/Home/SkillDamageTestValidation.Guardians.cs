@@ -27,7 +27,7 @@ namespace Zjcs.Presentation.Home
 
         private static void BeginAcquiredGuardianValidation(int item, string output)
         {
-            acquiredGuardian = item == 10593 ? new AcquiredGuardianProbe(output) : null;
+            acquiredGuardian = item == 10593 || item == 10575 ? new AcquiredGuardianProbe(item, output) : null;
         }
 
         internal static void ConfigureGuardianBattleRequest(OfficialBattleRequest request)
@@ -41,15 +41,17 @@ namespace Zjcs.Presentation.Home
             return item == 10593 ? state.Units.Single(unit => unit.Id == acquiredGuardian.AllyId) : actor;
         }
 
-        private sealed class AcquiredGuardianProbe
+        private sealed partial class AcquiredGuardianProbe
         {
+            private readonly int item;
             private readonly string output;
             private readonly OfficialCombatAssetCatalog assets;
             public int AllyId { get; private set; }
             private bool verified;
 
-            public AcquiredGuardianProbe(string output)
+            public AcquiredGuardianProbe(int item, string output)
             {
+                this.item = item;
                 this.output = output;
                 assets = OfficialCombatAssetCatalog.LoadDefault();
             }
@@ -58,6 +60,11 @@ namespace Zjcs.Presentation.Home
             {
                 var checkpoint = request.Checkpoint;
                 var actor = checkpoint.Units.Single(unit => unit.Id == 1);
+                if (item == 10575)
+                {
+                    ConfigureSoulGuard(actor);
+                    return;
+                }
                 Require(actor.Statuses.Any(status => status.ClassId == 25109
                     && status.ApplyingSkillItemId == 10593), "The guardian fixture lacks its actually equipped secret.");
                 var ally = JsonUtility.FromJson<FightBattleUnitState>(JsonUtility.ToJson(actor));
@@ -94,6 +101,11 @@ namespace Zjcs.Presentation.Home
 
             public void Observe(FightBattleStepEvent step, FightBattleCheckpoint checkpoint)
             {
+                if (item == 10575)
+                {
+                    ObserveSoulGuard(step, checkpoint);
+                    return;
+                }
                 if (verified) return;
                 var ally = checkpoint.Units.Single(unit => unit.Id == AllyId);
                 var shield = ally.Statuses.FirstOrDefault(status => status.ClassId == 24180
@@ -126,6 +138,7 @@ namespace Zjcs.Presentation.Home
 
             public bool Ready(OfficialBattleRuntimeController controller)
             {
+                if (item == 10575) return soulOpened && IsNativeSkillParticleVisible("playable11570");
                 if (!verified || controller == null) return false;
                 var field = typeof(OfficialBattleRuntimeController).GetField("sceneView", BindingFlags.Instance | BindingFlags.NonPublic);
                 var view = (OfficialBattleSceneView)field.GetValue(controller);
@@ -138,6 +151,12 @@ namespace Zjcs.Presentation.Home
 
             public void Complete(bool captured)
             {
+                if (item == 10575)
+                {
+                    Require(soulOpened && soulReturned && captured,
+                        "The cultivated soul guard did not render its opening, return HP and preserve its receipts.");
+                    return;
+                }
                 Require(verified && captured, "The cultivated allied defence shield was not rendered and persisted.");
             }
         }

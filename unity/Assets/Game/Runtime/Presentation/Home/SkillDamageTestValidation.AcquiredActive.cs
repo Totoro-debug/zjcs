@@ -822,10 +822,11 @@ namespace Zjcs.Presentation.Home
                     yield return CaptureAcquiredActive(output, "passive-battle");
                     capturedPassive = true;
                 }
-                if (passiveCompanion == 10593 && !capturedPassive && acquiredGuardian.Ready(battle.Controller))
+                if (acquiredGuardian != null && !capturedPassive && acquiredGuardian.Ready(battle.Controller))
                 {
                     yield return CaptureAcquiredActive(output, "passive-battle");
                     capturedPassive = true;
+                    acquiredGuardian.Captured(checkpoint);
                 }
                 if (passiveCompanion == 10595 && !capturedPassive
                     && FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
@@ -1020,7 +1021,7 @@ namespace Zjcs.Presentation.Home
                 && File.Exists(Path.Combine(output, "companion-fire-life-checkpoint.json"))
                 && File.Exists(Path.Combine(output, "companion-fire-life-status-events.json")),
                 "The cultivated fire life did not invoke its round-end cure, persist HP and render the native status event.");
-            if (passiveCompanion == 10593) acquiredGuardian.Complete(capturedPassive);
+            acquiredGuardian?.Complete(capturedPassive);
             Require(passiveCompanion != 10595 || windHits > 0 && capturedPassive,
                 "The cultivated wind orb never rendered and struck at the owner's turn end.");
             Require(passiveCompanion != 10543 || flameHits > 0 && capturedPassive,

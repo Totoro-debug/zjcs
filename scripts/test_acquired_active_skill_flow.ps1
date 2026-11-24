@@ -12,6 +12,24 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -eq 10575) {
+        foreach ($file in @('companion-cultivated-save.json','companion-soul-guard-opening.json',
+            'companion-soul-guard-return.json','companion-soul-guard-receipt.json','acquired-active-ui-passive-battle.png')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'The actual soul guard opening or victory evidence is incomplete.' }
+        }
+        $source = Get-Content -LiteralPath (Join-Path $Run 'companion-cultivated-save.json') -Raw | ConvertFrom-Json
+        $receipt = Get-Content -LiteralPath (Join-Path $Run 'companion-soul-guard-receipt.json') -Raw | ConvertFrom-Json
+        $opening = '[Acquired passive combat] 10575 cultivated opening HP cost, converted shield and restore replay passed.'
+        $victory = '[Acquired passive combat] 10575 surviving victory return, original cure and restore replay passed.'
+        if ($source.Player.Skills.Plans[$source.Player.Skills.SelectedPlan].PassiveSkills[0] -ne 10575 -or
+            $receipt.cost -le 0 -or $receipt.principal -le 0 -or $receipt.actual -ne $receipt.expected -or
+            $receipt.healed -le 0 -or -not $receipt.restored -or
+            -not (Select-String -LiteralPath $runtimeLog -SimpleMatch $opening) -or
+            -not (Select-String -LiteralPath $runtimeLog -SimpleMatch $victory)) {
+            throw 'The cultivated soul guard did not preserve its HP cost, original return cure or restore receipts.'
+        }
+        return
+    }
     if ($PassiveId -eq 10593) {
         foreach ($file in @('companion-cultivated-save.json','companion-saint-guard-checkpoint.json',
             'companion-saint-guard-shield.json','acquired-active-ui-passive-battle.png')) {
