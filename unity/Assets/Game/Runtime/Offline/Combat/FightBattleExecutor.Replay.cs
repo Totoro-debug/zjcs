@@ -127,11 +127,15 @@ namespace Zjcs.Combat.Official
         private void ApplySkillReplay(FightBattleUnitState actor, FightBattleSkillDefinition skill,
             List<FightBattleSkillCastEvent> casts, List<FightBattleDamageEvent> damageEvents,
             List<FightBattleMovementEvent> movements, float lastDelay,
-            ref float maxDuration, ref float maxActionDuration)
+            ref float maxDuration, ref float maxActionDuration,
+            bool collect = true, float minimumStart = -1f)
         {
             if (actor.Hp <= 0 || actor.Ended) return;
-            CollectDirectSkillReplay(actor, skill);
-            CollectStatusSkillReplays(actor, skill);
+            if (collect)
+            {
+                CollectDirectSkillReplay(actor, skill);
+                CollectStatusSkillReplays(actor, skill);
+            }
             if (executingSkillReplays) return;
             executingSkillReplays = true;
             // FightSkillComponentInfo.Replay fires at action end. Keep lifetime tails
@@ -139,7 +143,7 @@ namespace Zjcs.Combat.Official
             // original skill's AllEndedDuration apply again to the whole queue.
             // The legacy adapter has no finite boundary for an action configured -1;
             // retain its unresolved zero-offset path rather than invent a duration.
-            float replayStart = Math.Max(0f, ResolveActionDuration(skill, lastDelay));
+            float replayStart = Math.Max(minimumStart, Math.Max(0f, ResolveActionDuration(skill, lastDelay)));
             try
             {
                 while (pendingSkillReplays.Count > 0)
@@ -174,7 +178,7 @@ namespace Zjcs.Combat.Official
                         maxActionDuration = Math.Max(maxActionDuration, replayStart + actionEnd);
                     // FIFO also applies when several passives already queued their casts:
                     // a continuation joins the tail and starts after the preceding action.
-                    replayStart += Math.Max(0f, actionDuration);
+                    replayStart += Math.Max(0f, HasSequentialExtraSkills(next) ? actionEnd : actionDuration);
                 }
             }
             finally

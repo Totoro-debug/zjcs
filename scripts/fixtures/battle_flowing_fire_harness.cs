@@ -15,8 +15,9 @@ public static class BattleFlowingFireHarness {
    int actual=Case(c,f,items,entity,4,2,73,mode);
    Check(mode=="legacy-checkpoint" || actual==(mode=="first-failure"||mode=="target-death"?0:mode=="second-failure"||mode=="second-death"?1:2),"sequential stop case changed: "+mode);cases++;
   }
+  cases += ReplayCases(c, f, items);
   Check(counts.SetEquals(new[]{0,1,2}),"the original rates did not exercise all chain lengths");
-  return "Flowing fire passed: "+cases+" cultivated base/skin chain cases, action times, original targets, failed-rate/death stop, attribution, restore and replay.";
+  return "Flowing fire passed: "+cases+" cultivated base/skin chain cases, action times, original targets, failed-rate/death stop, attribution, shared round allowances, FIFO, legacy restore and replay.";
  }
  static int Case(FightOfficialCombatCatalog c,FightDamageFormula f,FightOfficialSkillItemCatalog items,int entity,int rank,int level,int seed,string mode) {
   var s=new FightBattleCheckpoint {StageId=1,MaxRound=8,RandomSeed=seed*1000003+12345,Grid=new FightBattleGrid { Width=16,Height=16,DefaultGroundType=2 }};
@@ -63,6 +64,73 @@ public static class BattleFlowingFireHarness {
   Check(step.DamageEvents.Count==step.SkillCasts.Count && other.Hp==other.MaxHp,"the extra retargeted or created another impact");
   string settled=FightBattleCheckpointSerializer.Save(s);Check(ex.Step(s.Sequence,s.Counter).Replayed&&FightBattleCheckpointSerializer.Save(s)==settled,"receipt replay cast the extras twice");
   return step.SkillCasts.Count-1;
+ }
+ static int ReplayCases(FightOfficialCombatCatalog catalog, FightDamageFormula formula,
+  FightOfficialSkillItemCatalog items) {
+  int cases = 0;
+  foreach (int entity in new[] { 12090, 13590 })
+  foreach (string mode in new[] { "full", "one-at-a-time", "partial", "exhausted", "next-round", "legacy", "variant", "source-origin" }) {
+   var state = new FightBattleCheckpoint { StageId = 1, MaxRound = 8, RandomSeed = 71,
+    Grid = new FightBattleGrid { Width = 16, Height = 16, DefaultGroundType = 2 } };
+   var actor = Unit(1, 1, 7, 7, formula);
+   var target = Unit(2, 2, 7, 8, formula);
+   var root = catalog.CreateSkill(entity, 0, 10100, 4, 2, 8, Props(catalog, entity, 4, 2));
+   root.HasReplay = root.ReplayUsesRate = true;
+   root.ReplayChance = 1d;
+   root.ReplayMaxCountEachRound = 2;
+   root.ExtraSkills[0].Rate = 1f;
+   root.ExtraSkills[1].Rate = mode == "one-at-a-time" ? 0f : 1f;
+   if (mode == "source-origin") root.ItemId = 0;
+   if (mode == "variant") root.ReplayReplacementEntities.Add(entity == 12090 ? 13590 : 12090);
+   int prior = mode == "partial" ? 1 : mode == "exhausted" || mode == "next-round" ? 2 : 0;
+   if (prior > 0) actor.SkillState.ExtraCounts.Add(new FightSkillExtraCounter {
+    EntityId = 12090, Round = mode == "next-round" ? 0 : 1, Count = prior });
+   actor.Skills.Add(root);
+   actor.SkillState.Slots.Add(catalog.CreateSkillSlot(root, 0));
+   state.Units.AddRange(new[] { actor, target });
+   var wave = new FightBattleWaveState(); wave.UnitIds.Add(2); state.Waves.Add(wave);
+   var executor = FightBattleExecutor.Begin(state, formula, new FightDamageSettlement(), catalog, items);
+   string saved = FightBattleCheckpointSerializer.Save(state);
+   if (mode == "legacy") saved = saved.Replace("\"ExtraCounts\":[],", "").Replace(",\"ExtraCounts\":[]", "");
+   var copy = FightBattleCheckpointSerializer.Load(saved);
+   var restored = FightBattleExecutor.Restore(copy, formula, new FightDamageSettlement(), catalog, items);
+   var step = executor.Step(state.Sequence, state.Counter + 1).Event;
+   restored.Step(copy.Sequence, copy.Counter + 1);
+   Check(FightBattleCheckpointSerializer.Save(state) == FightBattleCheckpointSerializer.Save(copy),
+    "round allowance/replay FIFO changed on restore: " + mode);
+   int expectedExtras = mode == "partial" ? 1 : mode == "exhausted" ? 0 : 2;
+   int expectedRoots = mode == "variant" ? 2 : 3;
+   Check(step.SkillCasts.Count(value => value.Slot < 0) == expectedExtras
+    && step.SkillCasts.Count(value => value.Slot == 0) == expectedRoots
+    && actor.SkillState.ExtraCounts.Single().Count == 2,
+    "replay reset or exceeded the shared successful-extra allowance: " + mode);
+   float boundary = 0f;
+   foreach (var cast in step.SkillCasts) {
+    var definition = catalog.CreateSkill(cast.SkillEntityId, -1, 10100, 4, 2, 8,
+     Props(catalog, cast.SkillEntityId, 4, 2));
+    Check(Math.Abs(cast.Delay - boundary) < .0001f,
+     "a queued replay overlapped an unfinished extra chain: " + mode);
+    boundary += definition.ActionDuration;
+   }
+   if (mode != "variant") {
+    int round = actor.SkillState.Round;
+    bool advanced = false;
+    for (int count = 0; count < 8 && !state.Finished; count++) {
+     var next = executor.Step(state.Sequence, state.Counter + 1).Event;
+     restored.Step(copy.Sequence, copy.Counter + 1);
+     Check(FightBattleCheckpointSerializer.Save(state) == FightBattleCheckpointSerializer.Save(copy),
+      "restoring lost the extra allowance at the next personal round");
+     if (actor.SkillState.Round <= round) continue;
+     Check(next.SkillCasts.Count(value => value.ActorId == 1 && value.Slot < 0) == 2
+      && actor.SkillState.ExtraCounts.Single().Count == 2,
+      "the next personal round did not reset the allowance");
+     advanced = true; break;
+    }
+    Check(advanced, "the allowance reset fixture never advanced to the next personal round");
+   }
+   cases++;
+  }
+  return cases;
  }
  static long SingleDamage(FightOfficialCombatCatalog c,FightDamageFormula f,FightOfficialSkillItemCatalog items,int entity,int rank,int level) {
   var s=new FightBattleCheckpoint {StageId=1,MaxRound=8,RandomSeed=7,Grid=new FightBattleGrid { Width=16,Height=16,DefaultGroundType=2 }};

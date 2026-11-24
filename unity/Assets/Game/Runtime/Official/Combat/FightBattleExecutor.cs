@@ -1327,7 +1327,9 @@ namespace Zjcs.Combat.Official
             ApplySkillCombo(actor, skill, targets, casts, damageEvents, movements, lastDelay,
                 ref statusTriggerDuration, ref statusTriggerActionDuration);
             ApplySkillReplay(actor, skill, casts, damageEvents, movements, lastDelay,
-                ref statusTriggerDuration, ref statusTriggerActionDuration);
+                ref statusTriggerDuration, ref statusTriggerActionDuration,
+                collect: !HasSequentialExtraSkills(skill),
+                minimumStart: HasSequentialExtraSkills(skill) ? statusTriggerActionDuration : -1f);
         }
 
         private void SpawnSummons(FightBattleUnitState actor, FightBattleSkillDefinition skill,
