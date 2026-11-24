@@ -89,5 +89,71 @@ namespace Zjcs.Editor.ProfessionUI
             }
             catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
         }
+
+        public static void RunSkillActors()
+        {
+            string work = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+            string selection = Environment.GetEnvironmentVariable("ZJCS_BATTLE_SKILL_ACTOR_IDS");
+            if (string.IsNullOrEmpty(work) || !Path.IsPathRooted(work) || string.IsNullOrEmpty(selection))
+                throw new InvalidDataException("Select installed skill actors in an owned validation workspace.");
+            int[] ids = selection.Split(',').Select(int.Parse).ToArray();
+            if (ids.Length == 0 || ids.Any(id => id <= 0) || ids.Distinct().Count() != ids.Length)
+                throw new InvalidDataException("Skill actor selection contains invalid or repeated identities.");
+            var results = new Results { models = ids.Length };
+            var motions = new List<Motion>();
+            ProfessionNativeSkeletonData previous = null;
+            foreach (int id in ids)
+            {
+                var assets = BattleNativeMonsterAssets.Locate(id);
+                if (!assets) throw new InvalidDataException("Original skill actor is not installed: " + id);
+                var row = assets.Find(id);
+                var bytes = assets.Resolve<TextAsset>((string)row["package"]).bytes;
+                var source = ProfessionNativeSkeletonData.LoadBattleMonster(bytes, id, assets.SourceManifest);
+                bool rejected = false;
+                try { ProfessionNativeSkeletonData.LoadBattleMonster(bytes, id, assets.SourceManifest + "-wrong"); }
+                catch (InvalidDataException) { rejected = true; }
+                if (!rejected) throw new InvalidDataException("The skill actor accepted a different source identity.");
+                var state = new ProfessionNativeAppearanceSkeleton(source);
+                state.SetSkin(source.CreateCombinedNpcSkin(((List<object>)row["skins"]).Cast<string>().ToArray()));
+                using var batches = new ProfessionNativeMeshBatches(source.SlotCount);
+                foreach (string name in source.AnimationNames)
+                {
+                    var result = new Motion { entityId = id, name = name }; motions.Add(result);
+                    var animation = new ProfessionNativeAnimationChannels(source, name, originalBezierSegments: true);
+                    var physics = source.Constraints.Any(value => value.Kind == "physics")
+                        ? new ProfessionNativeOrderedPhysicsPose(source) : null;
+                    for (int sample = 0; sample <= 8; sample++)
+                    {
+                        float time = animation.Duration * sample / 8;
+                        if (physics != null) physics.Apply(state, animation, time, false, animation.Duration / 8);
+                        else ProfessionNativeOrderedConstraintPose.EvaluateBeforePhysics(state, animation, time, false);
+                        batches.Build(state.Pose, state.CreateDrawSlots(), true, true, allowConcaveClipping: true);
+                        foreach (var batch in batches.Batches)
+                        {
+                            var vertices = batch.Mesh.vertices;
+                            if (vertices.Any(v => !float.IsFinite(v.x) || !float.IsFinite(v.y) || !float.IsFinite(v.z)))
+                                throw new InvalidDataException("Original skill actor produced a nonfinite animated vertex.");
+                            results.vertices += vertices.Length;
+                        }
+                        result.samples++;
+                    }
+                }
+                if (previous != null)
+                {
+                    string shared = previous.AnimationNames.Intersect(source.AnimationNames).First();
+                    var other = new ProfessionNativeAnimationChannels(source, shared, originalBezierSegments: true);
+                    rejected = false;
+                    try { ProfessionNativeOrderedConstraintPose.EvaluateBeforePhysics(
+                        new ProfessionNativeAppearanceSkeleton(previous), other, 0, false); }
+                    catch (ArgumentException) { rejected = true; }
+                    if (!rejected) throw new InvalidDataException("The constraint solver accepted another actor's animation.");
+                }
+                previous = source;
+            }
+            results.motions = motions.ToArray();
+            File.WriteAllText(Path.Combine(work, "skill-actor-pose-results.json"), JsonUtility.ToJson(results, true));
+            Debug.Log("[Original skill actor poses] models=" + results.models + " motions=" + motions.Count
+                + " samples=" + motions.Sum(value => value.samples) + " vertices=" + results.vertices);
+        }
     }
 }

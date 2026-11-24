@@ -106,7 +106,7 @@ namespace Zjcs.Offline.ProfessionUI
             ProfessionNativeAnimationChannels animation, float time)
         {
             if (skeleton == null || animation == null) throw new ArgumentNullException();
-            if (skeleton.Source.Manifest != "884_156692" ||
+            if (string.IsNullOrWhiteSpace(skeleton.Source.Manifest) ||
                 !(skeleton.Source.Sex.StartsWith("partner-battle:", StringComparison.Ordinal)
                     || skeleton.Source.Sex.StartsWith("partner-ui:", StringComparison.Ordinal)
                     || skeleton.Source.Sex.StartsWith("battle-monster:", StringComparison.Ordinal)) ||
