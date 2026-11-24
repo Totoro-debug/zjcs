@@ -329,7 +329,8 @@ namespace Zjcs.Combat.Official
                 return 0;
             int count = 0;
             foreach (FightBattleUnitState unit in units)
-                if (unit != null && !unit.Ended && unit.MasterId == owner.Id && unit.Hp > 0) count++;
+                if (unit != null && !unit.Ended && unit.Hp > 0
+                    && FightBattleTargeting.IsOwnedSummon(unit, owner.Id)) count++;
             foreach (FightBattleStatusState sourceStatus in new List<FightBattleStatusState>(owner.Statuses))
             {
                 if (sourceStatus == null || !sourceStatus.HasRoleSummonCount

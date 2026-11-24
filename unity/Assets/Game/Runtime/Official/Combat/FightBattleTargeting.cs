@@ -435,10 +435,13 @@ namespace Zjcs.Combat.Official
                     && (ignoreFaction || sameSide);
                 case 4: return true;
                 case 6: return unit.Id == actor.MasterId;
-                case 7: return unit.CharacterType == 3 && unit.MasterId == actor.Id;
+                case 7: return IsOwnedSummon(unit, actor.Id);
                 default: return false;
             }
         }
+
+        internal static bool IsOwnedSummon(FightBattleUnitState unit, int ownerId) =>
+            unit.CharacterType == 3 && unit.MasterId == ownerId;
 
         internal static bool CanReleaseUnderControl(FightBattleUnitState actor,
             FightBattleSkillDefinition skill)
