@@ -67,7 +67,26 @@ namespace Zjcs.Offline.ProfessionUI
             catch { DestroyOwned(root.gameObject); throw; }
         }
 
-        public void Release() { if (EntityRoot) DestroyOwned(EntityRoot.gameObject); else DestroyOwned(gameObject); }
+        private bool followersDetached;
+
+        public void Release()
+        {
+            DetachFollowers();
+            if (EntityRoot) DestroyOwned(EntityRoot.gameObject); else DestroyOwned(gameObject);
+        }
+
+        private void DetachFollowers()
+        {
+            if (followersDetached) return;
+            followersDetached = true;
+            // Playable effects may outlive the removed role and live outside its
+            // hierarchy. Use the original follower's Clear before its renderer dies.
+            foreach (var follower in FindObjectsOfType<BaseSkeletonFollower>(true))
+                if (ReferenceEquals(follower.SkeletonAnimation, this)
+                    || follower is SkeletonRendererFollower rendererFollower
+                        && ReferenceEquals(rendererFollower.SkeletonRenderer, this))
+                    follower.Clear();
+        }
 
         private void Initialize(BattleNativeMonsterAssets assets, int entityId)
         {
@@ -195,6 +214,7 @@ namespace Zjcs.Offline.ProfessionUI
         }
         private void OnDestroy()
         {
+            DetachFollowers();
             batches?.Dispose();
             if (sourceMaterials != null && prefabMaterials == null) foreach (var value in sourceMaterials) DestroyOwned(value);
             batches = null; material = null; sourceMaterials = null;
