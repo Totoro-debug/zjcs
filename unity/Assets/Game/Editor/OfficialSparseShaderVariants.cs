@@ -23,6 +23,9 @@ namespace Zjcs.Editor
             ["Assets/Game/Resources/Dungeons/UI/884_156692/Native/Playables/Converted/59de19d261370c02.shader"] = 260,
             ["Assets/Game/Runtime/Official/World/NativeWater/Shaders/EnvironmentNoise.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Home/Shaders/FruitTree_59de19d261370c02.shader"] = 260,
+            ["Assets/Official/Home/House/Native/Converted/59de19d261370c02.shader"] = 260,
+            ["Assets/Official/Home/StorageBox/Native/Converted/59de19d261370c02.shader"] = 260,
+            ["Assets/Official/Home/WeaponParts/Converted/59de19d261370c02.shader"] = 260,
             ["Assets/Game/Runtime/Official/Combat/Shaders/OfficialSummonSkeletonEffect2D.shader"] = 768,
             ["Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpineSkeletonGraphicCustom_05649282.shader"] = 16,
             ["Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipelineSpineSkeletonEffect2D_19e49995.shader"] = 768,
@@ -118,12 +121,16 @@ namespace Zjcs.Editor
                 selections.Add(original.Key, selection);
                 stages += selection.PassCount * selection.Programs.Count * 2;
             }
-            if (stages != 69608) throw new BuildFailedException("Original shader stage domain changed: " + stages);
+            if (stages != 72728) throw new BuildFailedException("Original shader stage domain changed: " + stages);
             Debug.Log("Original sparse shader domains validated: " + originalPrograms.Count + " assets / " + stages + " GPU stages.");
         }
 
         [MenuItem("Zjcs/Assets/Validate Original Sparse Shader Programs")]
-        public static void Validate() => ValidatePrograms(originalPrograms, 69608);
+        public static void Validate() => ValidatePrograms(originalPrograms, 72728);
+
+        public static void ValidateHomeFurnitureShaders() => ValidatePrograms(originalPrograms.Where(row =>
+            row.Key.StartsWith("Assets/Official/Home/", StringComparison.Ordinal))
+            .ToDictionary(row => row.Key, row => row.Value), 3120, validateProject: false);
 
         public static void ValidateProtectiveRunes() => ValidatePrograms(originalPrograms.Where(row =>
             row.Key.StartsWith("Assets/Game/Runtime/Presentation/Combat/Shaders/ProtectiveRunesGraph_", StringComparison.Ordinal))
@@ -178,7 +185,8 @@ namespace Zjcs.Editor
                 .ToDictionary(row => row.Key, row => row.Value), 1052);
         }
 
-        private static void ValidatePrograms(IReadOnlyDictionary<string, int> programsToValidate, int expectedStages)
+        private static void ValidatePrograms(IReadOnlyDictionary<string, int> programsToValidate, int expectedStages,
+            bool validateProject = true)
         {
             bool previousAsync = ShaderUtil.allowAsyncCompilation;
             int stages = 0;
@@ -193,6 +201,7 @@ namespace Zjcs.Editor
                     Shader shader = AssetDatabase.LoadAssetAtPath<Shader>(path);
                     if (shader == null) throw new BuildFailedException("Original shader is missing: " + path);
                     Selection selection = Read(shader, path, original.Value);
+                    Debug.Log("Validating original shader programs: " + path);
                     selections[path] = selection;
                     var source = ShaderUtil.GetShaderData(shader).GetSubshader(0);
                     for (int pass = 0; pass < selection.PassCount; pass++)
@@ -216,7 +225,7 @@ namespace Zjcs.Editor
             if (stages != expectedStages) throw new BuildFailedException("Original shader stage count changed: " + stages);
             Debug.Log("Original sparse shaders: all " + stages + " Windows GPU stages across "
                 + programsToValidate.Count + " original shader assets compiled.");
-            ProjectTools.Validate();
+            if (validateProject) ProjectTools.Validate();
         }
 
         public void OnProcessShader(Shader shader, ShaderSnippetData snippet, IList<ShaderCompilerData> data)
