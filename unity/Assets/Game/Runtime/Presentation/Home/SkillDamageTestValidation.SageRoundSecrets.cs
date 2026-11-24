@@ -34,21 +34,54 @@ namespace Zjcs.Presentation.Home
             {
                 var actor = checkpoint.Units.Single(value => value.Id == 1);
                 if (step.ActorId != actor.Id || actor.SkillState.Round <= round) return;
-                var listener = actor.Statuses.Single(value => value.ClassId == (item == 10610 ? 25119 : 25120)
+                string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+                File.WriteAllText(Path.Combine(output, "companion-sage-round-" + item + "-checkpoint.json"), saved);
+                var listener = actor.Statuses.SingleOrDefault(value => value.ClassId == (item == 10610 ? 25119 : 25120)
                     && value.ApplyingSkillItemId == item);
-                var gain = actor.Statuses.Single(value => gains.Contains(value.ClassId));
+                var gain = actor.Statuses.SingleOrDefault(value => gains.Contains(value.ClassId));
+                Require(listener != null && gain != null, "The acquired personal-round listener or gain is missing.");
                 Require(gain.OwnerId == actor.Id && gain.CreatorId == actor.Id && gain.ApplyingSkillItemId == item
                     && gain.SourceSkillRank == listener.SourceSkillRank && gain.SourceSkillLevel == 2
                     && gain.SourceSubRank == actor.SubRank && gain.DurationRound == 1
                     && gain.StartRound == actor.SkillState.Round && gain.CanDispersed == (item == 10611),
                     "The acquired round-secret gain lost its source, cultivation, lifetime or dispel rule.");
                 var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
-                foreach (var pair in catalog.CalculateSkillProps(gain.ClassId, listener.SourceSkillRank, 2, actor.SubRank))
+                var formula = OfficialCombatAssetCatalog.LoadDefault().LoadDamageFormula();
+                var cultivated = catalog.CalculateSkillProps(gain.ClassId, listener.SourceSkillRank, 2, actor.SubRank)
+                    .ToDictionary(value => value.Key, value => value.Value);
+                foreach (var pair in cultivated)
                 {
-                    long baseline = actor.BaseProperties.FirstOrDefault(value => value.Id == pair.Key)?.Value ?? 0;
-                    Require(gain.StatusProperties.Single(value => value.Id == pair.Key).Value == pair.Value
-                        && actor.Properties.Single(value => value.Id == pair.Key).Value == baseline + pair.Value,
-                        "The acquired round-secret gain changed or omitted its actual cultivated property.");
+                    Require(gain.StatusProperties.Single(value => value.Id == pair.Key).Value == pair.Value,
+                        "The acquired round-secret gain changed its cultivated status property.");
+                    if (item == 10610)
+                    {
+                        long baseline = actor.BaseProperties.FirstOrDefault(value => value.Id == pair.Key)?.Value ?? 0;
+                        Require(actor.Properties.Single(value => value.Id == pair.Key).Value == baseline + pair.Value,
+                            "The acquired blessing omitted its actual cultivated damage increase.");
+                    }
+                }
+                if (item == 10611)
+                {
+                    bool checkedFinalProperty = false;
+                    // FightStatusProp consumes scale properties into the final
+                    // stat, then applies its fixed addition. The scale itself
+                    // is no longer present in the actor's property list.
+                    foreach (string name in new[] { "Attack", "Defence", "Speed" })
+                    {
+                        double scale = formula.ReadProperty(cultivated, formula.PropertyId(name + "Scale"));
+                        double fixedValue = formula.ReadProperty(cultivated, formula.PropertyId("Fixed" + name));
+                        if (scale == 0 && fixedValue == 0) continue;
+                        checkedFinalProperty = true;
+                        int id = formula.PropertyId(name);
+                        long baseline = actor.BaseProperties.FirstOrDefault(value => value.Id == id)?.Value ?? 0;
+                        long reference = baseline + (actor.BaseProperties.FirstOrDefault(
+                            value => value.Id == formula.PropertyId("Base" + name))?.Value ?? 0);
+                        long expected = (scale == 0 ? baseline : Math.Max(1L, baseline + (long)(reference * scale)))
+                            + (long)fixedValue;
+                        Require(actor.Properties.Single(value => value.Id == id).Value == expected,
+                            "The acquired dark-star gain changed its final " + name + " calculation.");
+                    }
+                    Require(checkedFinalProperty, "The acquired dark-star gain did not improve a final property.");
                 }
                 if (item == 10610)
                 {
@@ -56,7 +89,6 @@ namespace Zjcs.Presentation.Home
                     Require(cast.SkillItemId == item && cast.TargetIds.SequenceEqual(new[] { actor.Id }),
                         "The acquired blessing lost its original support child or eligible role.");
                 }
-                string saved = FightBattleCheckpointSerializer.Save(checkpoint);
                 var copy = FightBattleCheckpointSerializer.Load(saved);
                 var executor = OfficialCombatAssetCatalog.LoadDefault().RestoreBattle(copy);
                 Require(executor.Step(copy.Sequence, copy.Counter).Replayed
@@ -67,7 +99,6 @@ namespace Zjcs.Presentation.Home
                 round = actor.SkillState.Round;
                 turns++;
                 seen.Add(gain.ClassId);
-                File.WriteAllText(Path.Combine(output, "companion-sage-round-" + item + "-checkpoint.json"), saved);
                 WriteReceipt();
             }
 
