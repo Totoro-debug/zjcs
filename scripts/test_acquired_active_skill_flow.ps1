@@ -295,7 +295,9 @@ try {
             throw "The completed skill-page battle checkpoint is absent: $run"
         }
         if ($SkillId -eq 10101) {
-            foreach ($file in @('acquired-fire-leap-checkpoint.json','acquired-fire-leap-receipt.json')) {
+            foreach ($file in @('acquired-fire-leap-checkpoint.json','acquired-fire-leap-receipt.json',
+                'acquired-active-ui-jump-hit-1.png','acquired-active-ui-jump-hit-2.png',
+                'acquired-active-ui-jump-hit-3.png','acquired-active-ui-jump-hit-4.png')) {
                 if (-not (Test-Path -LiteralPath (Join-Path $skillRun $file))) { throw 'The cultivated fire leap evidence is incomplete.' }
             }
             $leap = Get-Content -LiteralPath (Join-Path $skillRun 'acquired-fire-leap-receipt.json') -Raw | ConvertFrom-Json

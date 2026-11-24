@@ -987,11 +987,11 @@ namespace Zjcs.Presentation.Home
                     else yield return new WaitForSecondsRealtime(hellfire ? .2f : crisisGuard || starShatteringSlash ? 1.45f
                         : shieldCharge ? 1.1f : .7f);
                     yield return CaptureAcquiredActive(output, "battle"); captured = true;
-                    if (heavenlyLightBlades || frostSong || swordWindDance || soulPiercer || doomTorrent || spiralWindBlade || judgmentThunder)
+                    if (heavenlyLightBlades || frostSong || swordWindDance || soulPiercer || doomTorrent || spiralWindBlade || judgmentThunder || fireLeap)
                         for (int frame = 1; frame <= 4; frame++)
                         {
                             yield return new WaitForSecondsRealtime(.18f);
-                            yield return CaptureAcquiredActive(output, (frostSong ? "skin-hit-" : swordWindDance ? "wind-hit-" : soulPiercer ? "soul-hit-" : "blade-") + frame);
+                            yield return CaptureAcquiredActive(output, (frostSong ? "skin-hit-" : swordWindDance ? "wind-hit-" : soulPiercer ? "soul-hit-" : fireLeap ? "jump-hit-" : "blade-") + frame);
                         }
                 }
                 yield return null;
