@@ -14,7 +14,7 @@
 | [法师（一阶）](skills-mage.md) | 已完成 |
 | [骑士路线（二至四阶）](skills-knight.md) | 已完成 |
 | [斗士路线（二至四阶）](skills-fighter.md) | 已完成 |
-| [术士路线（二至四阶）](skills-warlock.md) | 部分完成 |
+| [术士路线（二至四阶）](skills-warlock.md) | 已完成 |
 | [贤者路线（二至四阶）](skills-sage.md) | 部分完成 |
 
 <a id="自定义实现"></a>

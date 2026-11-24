@@ -43,7 +43,7 @@
 | [法师职业技能详情（一阶）](character/skills-mage.md) | 已完成 |
 | [骑士路线职业技能详情（二至四阶）](character/skills-knight.md) | 已完成 |
 | [斗士路线职业技能详情（二至四阶）](character/skills-fighter.md) | 已完成 |
-| [术士路线职业技能详情（二至四阶）](character/skills-warlock.md) | 部分完成 |
+| [术士路线职业技能详情（二至四阶）](character/skills-warlock.md) | 已完成 |
 | [贤者路线职业技能详情（二至四阶）](character/skills-sage.md) | 部分完成 |
 | [幻兽编队、养成与改名](character/pets.md) | 未完成 |
 | [古遗物收藏、任务与培养](character/relics.md) | 未完成 |
