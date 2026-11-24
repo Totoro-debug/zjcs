@@ -44,6 +44,12 @@ namespace Zjcs.Editor
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/FirstPromotionStatus_SpriteSequence.shader"] = 4,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/GroundEffectNoiseMaskPro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/GridEntity_Noise_Mask_Pro_0.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/FireCoreSkillGraph_Noise_Mask_Pro.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/FireLifeGraph_Noise_Mask_Pro.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/FlameSoulGraph_Noise_Mask_Pro.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/HurricaneGriefGraph_Noise_Mask_Pro.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/HurricaneGriefSkillGraph_Noise_Mask_Pro.shader"] = 260,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/OverloadProtectionGraph_Noise_Mask_Pro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/MonsterBodyEffect_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/MovementEffect_Noise_Mask_Pro_0.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/PartnerHp_Noise_Mask_Pro_0.shader"] = 260,
@@ -121,12 +127,23 @@ namespace Zjcs.Editor
                 selections.Add(original.Key, selection);
                 stages += selection.PassCount * selection.Programs.Count * 2;
             }
-            if (stages != 72728) throw new BuildFailedException("Original shader stage domain changed: " + stages);
+            ValidateCoverage();
+            if (stages != 78968) throw new BuildFailedException("Original shader stage domain changed: " + stages);
             Debug.Log("Original sparse shader domains validated: " + originalPrograms.Count + " assets / " + stages + " GPU stages.");
         }
 
         [MenuItem("Zjcs/Assets/Validate Original Sparse Shader Programs")]
-        public static void Validate() => ValidatePrograms(originalPrograms, 72728);
+        public static void Validate() => ValidatePrograms(originalPrograms, 78968);
+
+        public static void ValidateCurrentSkillShaders()
+        {
+            string[] prefixes = { "FireCoreSkillGraph_", "FireLifeGraph_", "FlameSoulGraph_",
+                "HurricaneGriefGraph_", "HurricaneGriefSkillGraph_", "OverloadProtectionGraph_" };
+            ValidateCoverage();
+            ValidatePrograms(originalPrograms.Where(row => prefixes.Any(prefix =>
+                Path.GetFileName(row.Key).StartsWith(prefix, StringComparison.Ordinal)))
+                .ToDictionary(row => row.Key, row => row.Value), 6240, validateProject: false);
+        }
 
         public static void ValidateHomeFurnitureShaders() => ValidatePrograms(originalPrograms.Where(row =>
             row.Key.StartsWith("Assets/Official/Home/", StringComparison.Ordinal))
@@ -264,33 +281,9 @@ namespace Zjcs.Editor
                     || names != null && !names.SequenceEqual(currentNames))
                     throw new BuildFailedException("Original shader keyword domain changed: " + path);
                 names = currentNames;
-                var currentPrograms = new HashSet<int>();
-                int depth = 0;
-                foreach (Match branch in Regex.Matches(source,
-                    @"(?m)^\s*#(if|ifdef|ifndef|elif|else|endif)\b([^\r\n]*)"))
-                {
-                    string directive = branch.Groups[1].Value;
-                    bool selectsProgram = directive == "if" && depth == 0 || directive == "elif" && depth == 1;
-                    if (directive == "else" && depth == 1)
-                        throw new BuildFailedException("Original sparse shader gained an unbounded fallback: " + path);
-                    if (directive == "if" || directive == "ifdef" || directive == "ifndef") depth++;
-                    else if (directive == "endif") depth--;
-                    // Original bodies may contain platform branches such as
-                    // UNITY_UV_STARTS_AT_TOP. Only the outer chain selects programs.
-                    if (!selectsProgram) continue;
-                    string condition = branch.Groups[2].Value.Trim();
-                    MatchCollection terms = Regex.Matches(condition, @"(!?)defined\((\w+)\)");
-                    if (terms.Count != names.Length || string.Join(" && ", terms.Cast<Match>().Select(value => value.Value)) != condition
-                        || !terms.Cast<Match>().Select(value => value.Groups[2].Value)
-                            .OrderBy(value => value, StringComparer.Ordinal).SequenceEqual(names))
-                        throw new BuildFailedException("Original shader branch is not an exact keyword selection: " + path);
-                    int signature = 0;
-                    foreach (Match term in terms)
-                        if (term.Groups[1].Value.Length == 0) signature |= 1 << Array.IndexOf(names, term.Groups[2].Value);
-                    if (!currentPrograms.Add(signature))
-                        throw new BuildFailedException("Original shader program selection is ambiguous: " + path);
-                }
-                if (depth != 0) throw new BuildFailedException("Original shader condition nesting changed: " + path);
+                HashSet<int> currentPrograms = ReadExactPrograms(source, names);
+                if (currentPrograms == null)
+                    throw new BuildFailedException("Original shader exact keyword selection changed: " + path);
                 if (currentPrograms.Count != expected || programs != null && !programs.SetEquals(currentPrograms))
                     throw new BuildFailedException("Recheck original shader program domains for each pass: " + path);
                 programs = currentPrograms;
@@ -298,6 +291,53 @@ namespace Zjcs.Editor
             if (programs == null) throw new BuildFailedException("Original shader programs are missing: " + path);
             return new Selection { Keywords = names.Select(name => new LocalKeyword(shader, name)).ToArray(),
                 Names = names, Programs = programs, PassCount = blocks.Count };
+        }
+
+        private static HashSet<int> ReadExactPrograms(string source, string[] names)
+        {
+            var programs = new HashSet<int>();
+            int depth = 0;
+            foreach (Match branch in Regex.Matches(source,
+                @"(?m)^\s*#(if|ifdef|ifndef|elif|else|endif)\b([^\r\n]*)"))
+            {
+                string directive = branch.Groups[1].Value;
+                bool selectsProgram = directive == "if" && depth == 0 || directive == "elif" && depth == 1;
+                if (directive == "else" && depth == 1) return null;
+                if (directive == "if" || directive == "ifdef" || directive == "ifndef") depth++;
+                else if (directive == "endif") depth--;
+                // Platform branches inside an original program do not select variants.
+                if (!selectsProgram) continue;
+                string condition = branch.Groups[2].Value.Trim();
+                MatchCollection terms = Regex.Matches(condition, @"(!?)defined\((\w+)\)");
+                if (terms.Count != names.Length || string.Join(" && ", terms.Cast<Match>().Select(value => value.Value)) != condition
+                    || !terms.Cast<Match>().Select(value => value.Groups[2].Value)
+                        .OrderBy(value => value, StringComparer.Ordinal).SequenceEqual(names)) return null;
+                int signature = 0;
+                foreach (Match term in terms)
+                    if (term.Groups[1].Value.Length == 0) signature |= 1 << Array.IndexOf(names, term.Groups[2].Value);
+                if (!programs.Add(signature)) return null;
+            }
+            return depth == 0 && programs.Count > 0 ? programs : null;
+        }
+
+        public static void ValidateCoverage()
+        {
+            foreach (string file in Directory.EnumerateFiles(Application.dataPath, "*.shader", SearchOption.AllDirectories))
+            {
+                string path = "Assets" + file.Substring(Application.dataPath.Length).Replace('\\', '/');
+                if (originalPrograms.ContainsKey(path)) continue;
+                foreach (Match block in Regex.Matches(File.ReadAllText(file), @"CGPROGRAM\s*\n(.*?)ENDCG", RegexOptions.Singleline))
+                {
+                    string source = block.Groups[1].Value;
+                    string[] names = Regex.Matches(source, @"(?m)^#pragma multi_compile(?:_local)? __ (\w+)\s*$")
+                        .Cast<Match>().Select(value => value.Groups[1].Value).OrderBy(value => value, StringComparer.Ordinal).ToArray();
+                    if (names.Length == 0 || names.Length > 30) continue;
+                    HashSet<int> programs = ReadExactPrograms(source, names);
+                    if (programs != null && programs.Count < (1L << names.Length))
+                        throw new BuildFailedException("Original sparse shader is not bound to the shared program filter: " + path);
+                }
+            }
+            Debug.Log("Original sparse shader program coverage verified.");
         }
     }
 }
