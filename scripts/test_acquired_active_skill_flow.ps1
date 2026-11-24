@@ -12,6 +12,32 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -in @(10610,10611)) {
+        foreach ($file in @('companion-cultivated-save.json',
+            "companion-sage-round-$PassiveId-checkpoint.json", "companion-sage-round-$PassiveId-receipt.json")) {
+            if (-not (Test-Path -LiteralPath (Join-Path $Run $file))) {
+                throw 'The cultivated personal-round secret evidence is incomplete.'
+            }
+        }
+        $source = Get-Content -LiteralPath (Join-Path $Run 'companion-cultivated-save.json') -Raw | ConvertFrom-Json
+        $receipt = Get-Content -LiteralPath (Join-Path $Run "companion-sage-round-$PassiveId-receipt.json") -Raw | ConvertFrom-Json
+        $expected = if ($PassiveId -eq 10610) { @(24395) } else { @(24396,24398,24399) }
+        $message = "[Acquired passive combat] $PassiveId cultivated personal-round gains, actual properties, native effects and restore replay passed."
+        if ($source.Player.Skills.Plans[$source.Player.Skills.SelectedPlan].PassiveSkills[0] -ne $PassiveId -or
+            $receipt.item -ne $PassiveId -or $receipt.rank -lt 1 -or $receipt.level -lt 1 -or
+            $receipt.turns -lt 2 -or -not $receipt.restored -or
+            @($receipt.seen).Count -ne $expected.Count -or @($receipt.captured).Count -ne $expected.Count -or
+            -not (Select-String -LiteralPath $runtimeLog -SimpleMatch $message)) {
+            throw 'The cultivated personal-round secret lost its source, gain, native effect or restore receipt.'
+        }
+        foreach ($id in $expected) {
+            if ($id -notin $receipt.seen -or $id -notin $receipt.captured -or
+                -not (Test-Path -LiteralPath (Join-Path $Run "acquired-active-ui-sage-round-$id.png"))) {
+                throw 'Every original personal-round gain must be observed and rendered.'
+            }
+        }
+        return
+    }
     if ($PassiveId -eq 10572) {
         foreach ($file in @('companion-cultivated-save.json','companion-vitality-spring-checkpoint.json',
             'companion-vitality-spring-status-events.json','acquired-active-ui-passive-battle.png')) {
