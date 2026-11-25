@@ -1,0 +1,77 @@
+{
+  "manifest": "903_156948",
+  "inputs": {
+    ".tools/source-packages/current/903_156948/code-manifest.json": "98672050f03e79d2b815c5f036ee014abea9a5f0333b304047699e224cdc4f8b",
+    ".tools/source-packages/current/903_156948/official-code/managed/decoded/Assembly-CSharp.dll": "0f7a39a453eedb4faa9be717daf7e8ee0c23e78adaba26daf18fb133ad8d1ce9",
+    ".tools/source-packages/current/903_156948/official-code/managed/decoded/Console.dll": "e57c5d8ec74467682059a8dd4720167812d0308311c2f34050a8a8b35b37f4b1",
+    ".tools/source-packages/current/903_156948/official-code/client-source/PetGachaPanel.cs": "f1137135837df007a8543afd268c0f665ed6c1ac34ee7d32fc44f3df27e51ddc",
+    ".tools/source-packages/current/903_156948/official-code/common-source/NewFunctionManager.cs": "8141989f8212142c6bb198814f85674dcf9ab80edc9218b24d0195fdd7069d81",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/ConditionHandlerExtension.cs": "593fa800dbcb2b3f07cf82b32bc85578117ce6fcea1ac291263facca4276c272",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/ConditionHandlerRegistration.cs": "3abd6f28221a331af04fdbe8559421a2ac19c7188e039e28746091877e140e17",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/FunctionType.cs": "61ef574d90228876511e5d019a4de2514c3b729c67e7777d2b1a531062a297c7"
+  },
+  "tables": {
+    "function_limit": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "4838b38a3b272ae4bd23e89d77cd3b90",
+      "path_id": "-5263075563552482356",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/4838b38a3b272ae4bd23e89d77cd3b90.bundle",
+      "manifest": "903_156948",
+      "bundle_size": 2210171,
+      "bundle_sha256": "b87533144cd1777aa13ac24e283d12bafab338b7d4e66a3ea20361504caf795f",
+      "payload_sha256": "36c1195d9098bc65b3a50fe2ffd2b4246f433484f0274713bebb58ac0a702965"
+    },
+    "conditions": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "4838b38a3b272ae4bd23e89d77cd3b90",
+      "path_id": "2135504609496173008",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/4838b38a3b272ae4bd23e89d77cd3b90.bundle",
+      "manifest": "903_156948",
+      "bundle_size": 2210171,
+      "bundle_sha256": "b87533144cd1777aa13ac24e283d12bafab338b7d4e66a3ea20361504caf795f",
+      "payload_sha256": "ed1152fbdbe42f89f7b439cc2c6fa0ee9147c348a71b299a398e31b2fe3a9a25"
+    }
+  },
+  "selection": {
+    "function_limit": {
+      "Type": 18,
+      "Key0": 7,
+      "Key1": 0,
+      "Condition": {
+        "Jumpable": null,
+        "Ids": [
+          3050,
+          1302
+        ],
+        "_type": "CompositeAndCondition"
+      }
+    },
+    "conditions": [
+      {
+        "ClassId": 1302,
+        "Condition": {
+          "Jumpable": null,
+          "ClassId": 4017,
+          "Count": 1,
+          "Op": ">=",
+          "_type": "HasItemCondition"
+        }
+      },
+      {
+        "ClassId": 3050,
+        "Condition": {
+          "Jumpable": null,
+          "Level": 50,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        }
+      }
+    ]
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/HomeTipDots/HomePetShopNewFunction.cs": "cff9a59e76e664ad604b84de2a4d42ae619d9e6c7bd29f84f7381072ee335fc7"
+  },
+  "scope": "Original pet shop new-function condition registration and tab transition. Local condition service and player-session lifecycle remain unbound."
+}
