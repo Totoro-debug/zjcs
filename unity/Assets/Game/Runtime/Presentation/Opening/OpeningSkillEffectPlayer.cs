@@ -4,6 +4,7 @@ using System.IO;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Zjcs.Official.StoryFollowBone;
 
 namespace Zjcs.Presentation.Opening
 {
@@ -303,14 +304,9 @@ namespace Zjcs.Presentation.Opening
             string kind = OpeningJson.String(entry, "kind");
             var root = new GameObject("OpeningEffect_" + OpeningJson.Int(entry, "classId") + "_" + kind);
             root.transform.SetParent(parent, false);
+            root.transform.position = worldPosition;
             if (followTarget != null)
-            {
-                root.transform.localPosition = Vector3.zero;
-                root.transform.localRotation = Quaternion.identity;
-                root.transform.localScale = Vector3.one;
-                ConfigureBoneFollower(root, entry, followTarget);
-            }
-            else root.transform.position = worldPosition;
+                ConfigureAttachment(root, entry, followTarget);
 
             Transform content = root.transform;
             if (followTarget != null)
@@ -356,7 +352,7 @@ namespace Zjcs.Presentation.Opening
             return root;
         }
 
-        private void ConfigureBoneFollower(GameObject root, Dictionary<string, object> entry,
+        private static void ConfigureAttachment(GameObject root, Dictionary<string, object> entry,
             Spine.Unity.SkeletonAnimation target)
         {
             Dictionary<string, object> source = SourceEvent(entry);
@@ -366,18 +362,49 @@ namespace Zjcs.Presentation.Opening
                 && rawFollow is Dictionary<string, object> flags ? flags : null;
             string boneName = attach != null && attach.TryGetValue("myBoneName", out object rawBone)
                 ? Convert.ToString(rawBone) : "body";
-            // AttachPosRotCfg.GetBone returns the target transform when a named
-            // attachment is unavailable. Do not feed an unresolved alias to Spine's
-            // BoneFollower: it retries and reports an error on every LateUpdate.
-            if (target.Skeleton == null || target.Skeleton.FindBone(boneName) == null) return;
+            bool followPosition = Flag(follow, "IsFollowPos", true);
+            bool followRotation = Flag(follow, "IsFollowRot", false);
+            bool followScale = Flag(follow, "IsFollowScale", false);
+            // AttachPosRotCfg.GetBone resolves missing attachments to the target transform.
+            if (string.IsNullOrEmpty(boneName) || target.Skeleton?.FindBone(boneName) == null)
+            {
+                var sync = TransformSyncType.None;
+                if (followPosition) sync |= TransformSyncType.Position;
+                if (followRotation) sync |= TransformSyncType.Rotation;
+                if (followScale) sync |= TransformSyncType.Scale;
+                if (sync != TransformSyncType.None)
+                    root.AddComponent<EffectTransformFollower>().Bind(target.transform, sync,
+                        Flag(follow, "IsStatic", false));
+                return;
+            }
             var follower = root.AddComponent<Spine.Unity.BoneFollower>();
             follower.skeletonRenderer = target;
             follower.boneName = boneName;
-            follower.followXYPosition = Flag(follow, "IsFollowPos", true);
-            follower.followZPosition = true;
-            follower.followBoneRotation = Flag(follow, "IsFollowRot", false);
-            follower.followLocalScale = Flag(follow, "IsFollowScale", false);
+            follower.followXYPosition = followPosition;
+            follower.followZPosition = followPosition;
+            follower.followBoneRotation = followRotation;
+            follower.followLocalScale = followScale;
             follower.Initialize();
+            follower.LateUpdate();
+        }
+
+        private sealed class EffectTransformFollower : MonoBehaviour
+        {
+            private Transform target;
+            private TransformSyncType sync;
+
+            public void Bind(Transform source, TransformSyncType syncType, bool isStatic)
+            {
+                target = source;
+                sync = syncType;
+                LateUpdate();
+                enabled = !isStatic;
+            }
+
+            private void LateUpdate()
+            {
+                if (target != null) TransformUtils.SyncTransformAccurately(target, transform, sync);
+            }
         }
 
         private static void ApplyAttachment(Transform transform, Dictionary<string, object> entry)

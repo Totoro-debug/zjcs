@@ -295,6 +295,9 @@ namespace Zjcs.Editor.CharacterCreation
                 while (session.Playback.SkillEffectsSpawned == 0 && Time.realtimeSinceStartup < effectDeadline)
                     yield return null;
                 Require(session.Playback.SkillEffectsSpawned > 0, "official opening skill particles were not spawned");
+                Transform castEffect = session.Battlefield.Root.transform.Find("OpeningEffect_11190_particles");
+                Require(castEffect != null && Vector3.Distance(castEffect.position, npc.transform.position) < .01f,
+                    "The first cast's missing attachment bone must resolve to the caster's transform.");
                 while ((session.Playback.StatusVisualsSpawned == 0 || session.Playback.StatusAnimations == 0
                         || session.Playback.SkillSoundEvents == 0 || session.Playback.SkillSoundsPlaying == 0)
                        && Time.realtimeSinceStartup < effectDeadline)
