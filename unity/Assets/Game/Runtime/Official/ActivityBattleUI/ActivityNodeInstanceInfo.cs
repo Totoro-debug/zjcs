@@ -4,7 +4,7 @@ using Zjcs.Official.ProfessionUI;
 namespace Zjcs.Official.ActivityBattleUI
 {
     // Selected original ActivityNodeInstanceInfo.
-    public sealed class ActivityNodeInstanceInfo : BaseNodeInstanceInfo
+    public class ActivityNodeInstanceInfo : BaseNodeInstanceInfo
     {
         public int ActivityId;
         public ActivityNodeInstanceInfo(int activityId) => ActivityId = activityId;
