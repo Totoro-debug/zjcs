@@ -42,9 +42,9 @@
 | [战士职业技能详情（一阶）](character/skills-warrior.md) | 已完成 |
 | [法师职业技能详情（一阶）](character/skills-mage.md) | 已完成 |
 | [骑士路线职业技能详情（二至四阶）](character/skills-knight.md) | 未完成 |
-| [斗士路线职业技能详情（二至四阶）](character/skills-fighter.md) | 已完成 |
-| [术士路线职业技能详情（二至四阶）](character/skills-warlock.md) | 已完成 |
-| [贤者路线职业技能详情（二至四阶）](character/skills-sage.md) | 已完成 |
+| [斗士路线职业技能详情（二至四阶）](character/skills-fighter.md) | 未完成 |
+| [术士路线职业技能详情（二至四阶）](character/skills-warlock.md) | 未完成 |
+| [贤者路线职业技能详情（二至四阶）](character/skills-sage.md) | 未完成 |
 | [幻兽编队、养成与改名](character/pets.md) | 未完成 |
 | [古遗物收藏、任务与培养](character/relics.md) | 未完成 |
 | [赛季记录、赐福与装备柜](character/seasons.md) | 未完成 |
