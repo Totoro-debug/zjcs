@@ -17,7 +17,7 @@ def prepare():
         raise FileExistsError('Retain the existing validation project: ' + str(project))
     project.mkdir()
     runtime = ROOT / 'unity/Assets/Game/Runtime'
-    roots = ['Zjcs.Official.HomeFurniture', 'Zjcs.Offline.HomeAirship', 'Zjcs.Offline.NativeSpine',
+    roots = ['Zjcs.Official.HomeFurniture', 'Zjcs.Official.HomeAirship', 'Zjcs.Offline.HomeAirship', 'Zjcs.Offline.NativeSpine',
              'Zjcs.Official.HomeTipDots', 'Zjcs.Official.HomeEntityBindings', 'Zjcs.Official.StoryNodes',
              'Zjcs.Official.World.NativeText', 'Zjcs.Official.World.MainlineMiniMapHud', 'Zjcs.Offline.HomeSceneInput']
     stage_runtime_modules(project, runtime, roots)
@@ -74,7 +74,9 @@ def prepare():
     for source, target in (('home_airship_native_import.cs', 'AirshipImportProbe.cs'),
                            ('home_airship_native_visual.cs', 'AirshipVisualProbe.cs'),
                            ('home_airship_assets_validation.cs', 'AirshipAssetsProbe.cs'),
-                           ('home_airship_configuration_validation.cs', 'AirshipConfigProbe.cs')):
+                           ('home_airship_configuration_validation.cs', 'AirshipConfigProbe.cs'),
+                           ('home_airship_banner_title_validation.cs', 'AirshipBannerTitleProbe.cs'),
+                           ('home_language_sprite_validation.cs', 'LanguageSpriteProbe.cs')):
         shutil.copy2(ROOT / 'scripts/fixtures' / source, editor / target)
     print('Staged independent airship Unity validation:', project)
     return project
