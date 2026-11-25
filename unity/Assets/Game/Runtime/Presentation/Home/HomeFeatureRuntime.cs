@@ -1454,18 +1454,18 @@ namespace Zjcs.Presentation.Home
                 });
         }
 
-        private void OnFruitTreeClicked()
+        private bool OnFruitTreeClicked()
         {
             if (!AdvanceFruitTree(Now()))
             {
                 hud.HideFruitTreeTutorialMask();
-                return;
+                return false;
             }
             OfflineFruitTreeProgress state = profile.Save.Player.FruitTree;
             if (state.ProductionRepaired && !state.ProductionRepairStorySeen)
             {
                 hud.ShowFruitTreeTutorial("FruitTreeUnlock1", 1, CompleteProductionRepairTutorial);
-                return;
+                return false;
             }
             FruitTreeResult collected = fruitTree.Collect("home:fruit-tree:collect:" + slotId + ":"
                 + Guid.NewGuid().ToString("N"));
@@ -1487,17 +1487,18 @@ namespace Zjcs.Presentation.Home
                         showReward();
                     });
                 else showReward();
-                return;
+                return true;
             }
 
             if (profile.Save.Player.FruitTree.PetFacilityRepaired)
             {
                 OpenFurniture(OfflineFruitTreeService.PetFurnitureType);
-                return;
+                return false;
             }
             long seconds = fruitTree.SecondsUntilNextFruit();
             hud.ShowNotice(seconds == long.MaxValue ? "果树暂时没有成熟果实"
                 : "下一颗果实将在 " + FormatFruitDuration(seconds) + " 后成熟");
+            return false;
         }
 
         private static string FormatFruitDuration(long seconds)

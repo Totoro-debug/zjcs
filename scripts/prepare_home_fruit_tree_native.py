@@ -8,6 +8,7 @@ from home_native_cache_verification import verify_native_cache
 from home_native_furniture_builder import install_furniture_bundle, prepare_native_cache
 from official_apk import ROOT
 from official_source import OfficialSource
+from prepare_partner_card_native import guid as asset_guid
 from official_manifest import read_asset_manifest
 
 BUNDLE = 'defaultpackage_assets_prefabs_home_dynamic_furniture_fruittree.bundle'
@@ -28,6 +29,9 @@ FRUIT_PREFABS = (
 PREFABS = tuple(BASE + name + '.prefab' for name in (*TREE_PREFABS, *FRUIT_PREFABS))
 DEST = ROOT / 'unity/Assets/Official/Home/FruitTree/Native'
 RECEIPT = ROOT / 'assets/reference/home-fruit-tree-native-source-manifest.json'
+RESOURCE_DEST = ROOT / 'unity/Assets/Game/Resources/Home/NativePrefabs'
+RESOURCE_SCRIPT = ROOT / 'unity/Assets/Game/Runtime/Offline/HomeNativeAssets/HomeNativePrefabReference.cs'
+FRUIT_CATALOG_SCRIPT = ROOT / 'unity/Assets/Game/Runtime/Offline/HomeNativeAssets/HomeFruitTreePrefabCatalog.cs'
 RUNTIME = ROOT / 'unity/Assets/Game/Runtime/Official'
 EXTRA = {
     'HomeFruitTree': RUNTIME / 'HomeFruitTreeWorld/HomeFruitTree.cs',
@@ -146,6 +150,74 @@ def install():
                 prefab=prefab['prefab'], pointer=prefab['pointer']))
         receipt['dynamic_prefabs'] = dynamic
         receipt['dynamic_manifest_sha256'] = hashlib.sha256(manifest_raw).hexdigest()
+        reference_script_guid = asset_guid(Path(str(RESOURCE_SCRIPT) + '.meta'))
+        dynamic_refs = {}
+        for row in dynamic:
+            location = row['original_path'].removeprefix('Assets/').removesuffix('.prefab')
+            token = hashlib.sha256(location.encode('utf8')).hexdigest()
+            target = RESOURCE_DEST / (token + '.asset')
+            prefab = row['prefab']
+            raw = ('%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!114 &11400000\nMonoBehaviour:\n'
+                '  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n'
+                '  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 0}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n'
+                f'  m_Script: {{fileID: 11500000, guid: {reference_script_guid}, type: 3}}\n'
+                f'  m_Name: {token}\n  m_EditorClassIdentifier:\n  mOriginalLocation: {location}\n'
+                f"  mPrefab: {{fileID: {row['pointer']['fileID']}, guid: {row['pointer']['guid']}, type: 3}}\n").encode('utf8')
+            meta_path = Path(str(target) + '.meta')
+            meta = ('fileFormatVersion: 2\n' + 'guid: ' + hashlib.md5(
+                ('zjcs:home-native-prefab-reference:' + target.relative_to(ROOT).as_posix()).encode()).hexdigest()
+                + '\nNativeFormatImporter:\n  externalObjects: {}\n').encode('utf8')
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(raw); meta_path.write_bytes(meta)
+            dynamic_refs[target.relative_to(ROOT).as_posix()] = hashlib.sha256(raw).hexdigest()
+            dynamic_refs[meta_path.relative_to(ROOT).as_posix()] = hashlib.sha256(meta).hexdigest()
+        for row in receipt['prefabs']:
+            if row['name'] not in TREE_PREFABS:
+                continue
+            location = 'Home/Dynamic/Furniture/FruitTree/' + row['name']
+            token = hashlib.sha256(location.encode('utf8')).hexdigest()
+            target = RESOURCE_DEST / (token + '.asset')
+            raw = ('%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!114 &11400000\nMonoBehaviour:\n'
+                '  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n'
+                '  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 0}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n'
+                f'  m_Script: {{fileID: 11500000, guid: {reference_script_guid}, type: 3}}\n'
+                f'  m_Name: {token}\n  m_EditorClassIdentifier:\n  mOriginalLocation: {location}\n'
+                f"  mPrefab: {{fileID: {row['pointer']['fileID']}, guid: {row['pointer']['guid']}, type: 3}}\n").encode('utf8')
+            meta_path = Path(str(target) + '.meta')
+            meta = ('fileFormatVersion: 2\nguid: ' + hashlib.md5(
+                ('zjcs:home-native-prefab-reference:' + target.relative_to(ROOT).as_posix()).encode()).hexdigest()
+                + '\nNativeFormatImporter:\n  externalObjects: {}\n').encode()
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(raw); meta_path.write_bytes(meta)
+            dynamic_refs[target.relative_to(ROOT).as_posix()] = hashlib.sha256(raw).hexdigest()
+            dynamic_refs[meta_path.relative_to(ROOT).as_posix()] = hashlib.sha256(meta).hexdigest()
+        catalog = ROOT / 'unity/Assets/Game/Resources/Home/FruitTree/Prefabs.asset'
+        catalog_script_guid = asset_guid(Path(str(FRUIT_CATALOG_SCRIPT) + '.meta'))
+        lines = ['%YAML 1.1', '%TAG !u! tag:unity3d.com,2011:', '--- !u!114 &11400000', 'MonoBehaviour:',
+            '  m_ObjectHideFlags: 0', '  m_CorrespondingSourceObject: {fileID: 0}', '  m_PrefabInstance: {fileID: 0}',
+            '  m_PrefabAsset: {fileID: 0}', '  m_GameObject: {fileID: 0}', '  m_Enabled: 1',
+            '  m_EditorHideFlags: 0', f'  m_Script: {{fileID: 11500000, guid: {catalog_script_guid}, type: 3}}',
+            '  m_Name: Prefabs', '  m_EditorClassIdentifier:', '  entries:']
+        for row in dynamic:
+            location = row['original_path'].removeprefix('Assets/').removesuffix('.prefab')
+            token = hashlib.sha256(location.encode('utf8')).hexdigest()
+            reference_guid = asset_guid(RESOURCE_DEST / (token + '.asset.meta'))
+            lines.extend(['  - AssetGuid: ' + row['asset_guid'],
+                f'    Reference: {{fileID: 11400000, guid: {reference_guid}, type: 2}}'])
+        catalog_raw = ('\n'.join(lines) + '\n').encode('utf8')
+        catalog_meta_path = Path(str(catalog) + '.meta')
+        catalog_meta = ('fileFormatVersion: 2\nguid: ' + hashlib.md5(
+            ('zjcs:home-fruit-tree-assets:catalog').encode()).hexdigest() + '\nNativeFormatImporter:\n  externalObjects: {}\n').encode()
+        catalog.parent.mkdir(parents=True, exist_ok=True)
+        catalog.write_bytes(catalog_raw); catalog_meta_path.write_bytes(catalog_meta)
+        dynamic_refs[catalog.relative_to(ROOT).as_posix()] = hashlib.sha256(catalog_raw).hexdigest()
+        dynamic_refs[catalog_meta_path.relative_to(ROOT).as_posix()] = hashlib.sha256(catalog_meta).hexdigest()
+        receipt['outputs'].update(dynamic_refs)
+        receipt['inputs'][RESOURCE_SCRIPT.relative_to(ROOT).as_posix()] = hashlib.sha256(RESOURCE_SCRIPT.read_bytes()).hexdigest()
+        receipt['inputs'][Path(str(RESOURCE_SCRIPT) + '.meta').relative_to(ROOT).as_posix()] = hashlib.sha256(
+            Path(str(RESOURCE_SCRIPT) + '.meta').read_bytes()).hexdigest()
+        for source in (FRUIT_CATALOG_SCRIPT, Path(str(FRUIT_CATALOG_SCRIPT) + '.meta')):
+            receipt['controller_sources'][source.relative_to(ROOT).as_posix()] = hashlib.sha256(source.read_bytes()).hexdigest()
         RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf8', newline='\n')
         return receipt
     finally:

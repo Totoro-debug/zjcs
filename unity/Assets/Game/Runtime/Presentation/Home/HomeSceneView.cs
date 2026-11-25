@@ -80,6 +80,15 @@ namespace Zjcs.Presentation.Home
         private int moonPhase = -1;
 
         public GameObject Root { get; }
+        public Vector3 FruitTreePosition
+        {
+            get
+            {
+                float[] p = fruitTreeData?.tree_position ?? Array.Empty<float>();
+                return new Vector3(p.Length > 0 ? p[0] : 0f, p.Length > 1 ? p[1] : 0f, p.Length > 2 ? p[2] : 0f);
+            }
+        }
+        public float FruitTreeScale => fruitTreeData == null || fruitTreeData.tree_scale <= 0f ? 1f : fruitTreeData.tree_scale;
         public Camera Camera { get; private set; }
         public IReadOnlyList<NativeHomeBedActor> NativeBedActors => nativeBedActors;
         public Vector3 Position => Camera == null ? Vector3.zero : Camera.transform.position;
@@ -677,10 +686,21 @@ namespace Zjcs.Presentation.Home
             ApplyNativeFurnitureVisibility(type, instance);
         }
 
+        internal void BindNativeFruitTree(GameObject instance)
+        {
+            if (!instance) throw new ArgumentNullException(nameof(instance));
+            if (treeRoot) treeRoot.SetActive(false);
+            if (fruitTreeParticleRoot) fruitTreeParticleRoot.SetActive(false);
+            foreach (var layer in fruitTreeLayers.Values) if (layer) layer.SetActive(false);
+            foreach (var layer in fruitTreeSkinLayerObjects.Values.SelectMany(value => value)) if (layer) layer.SetActive(false);
+            foreach (var fruit in fruitObjects) if (fruit) fruit.SetActive(false);
+            BindNativeFurniture(4, instance);
+        }
+
         void ApplyNativeFurnitureVisibility(int type, GameObject instance)
         {
             if (!instance) return;
-            bool useNative = type == 10 || !replacedHouse;
+            bool useNative = type == 4 || type == 10 || !replacedHouse;
             instance.SetActive(useNative);
             SetObjectsActive(furnitureBaseObjects, type, !useNative && !replacedFurniture.Contains(type));
             SetObjectsActive(furnitureSkinObjects, type, !useNative && replacedFurniture.Contains(type));

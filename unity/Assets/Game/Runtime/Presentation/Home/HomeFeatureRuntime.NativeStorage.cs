@@ -23,6 +23,9 @@ using Zjcs.Official.HomeEntityRuntime;
 using Zjcs.Official.HomeExperienceRules;
 using Zjcs.Official.HomeFunctionMenuUI;
 using Zjcs.Official.HomeFurniture;
+using Zjcs.Official.HomeFruitTreeNative;
+using Zjcs.Official.HomeFruitTreeOutput;
+using Zjcs.Official.HomeFruitTreeWorld;
 using Zjcs.Official.HomeHangUpTips;
 using Zjcs.Official.HomeHangUpWindowsUI;
 using Zjcs.Official.HomeHudUI;
@@ -88,6 +91,7 @@ namespace Zjcs.Presentation.Home
             IHomeFurnitureViewModes, IHomeFurnitureActionEvents, IHomeWeaponAnimationBindings,
             IHomeEntityManagerContext, IHomeEntitySkinData, IHomeFurnitureChangePublisher,
             IHomeNpcBubbleTipServices, IHomePlayerUiServices, IHomeSceneUiServices,
+            IHomeFruitTreeProductionServices, IHomePetTreeFeatureServices, IHomeFruitTreeOutputServices,
             IHomeHangUpFurnitureServices, IDisposable
         {
             private static readonly EFurniture[] SupportedFurniture =
@@ -205,6 +209,8 @@ namespace Zjcs.Presentation.Home
             private readonly Dictionary<EFurniture, EntityState> entities = new Dictionary<EFurniture, EntityState>();
             private readonly Dictionary<GameObject, EntityState> instances = new Dictionary<GameObject, EntityState>();
 
+            private readonly HashSet<Func<HomeFruitTreeAward, bool>> fruitTreeAwardHandlers = new HashSet<Func<HomeFruitTreeAward, bool>>();
+            private readonly FruitTreeOutputItem fruitTreeOutputItem;
             private AppearanceAssetManager materials;
             private NativeSpineAppearanceBindings textures;
             private HomeNativeWeaponRackServices rackServices;
@@ -233,6 +239,7 @@ namespace Zjcs.Presentation.Home
             private LanguageGroupConfig languageGroupConfig;
             private GameObject anchor;
             private AudioSource clickSound;
+            private GameObject fruitTreeInstance;
             private OfflineProfessionImageResourceLoader npcIconLoader;
             private Dictionary<int, string> npcIconPaths;
             private HomeRelationManager relationManager;
@@ -246,11 +253,16 @@ namespace Zjcs.Presentation.Home
             private Action<long> onDebugTimeOffset;
             private bool disposed;
 
-            internal NativeFurniture(HomeFeatureRuntime home) => this.home = home;
+            internal NativeFurniture(HomeFeatureRuntime home)
+            {
+                this.home = home;
+                fruitTreeOutputItem = new FruitTreeOutputItem(this);
+            }
             internal IStoryNodeRegisterMgr StoryNodes => storyNodes;
 
             internal GameObject GetInstance(EFurniture type)
-                => entities.TryGetValue(type, out EntityState state) ? state.Instance : null;
+                => type == EFurniture.FruitTree ? fruitTreeInstance
+                    : entities.TryGetValue(type, out EntityState state) ? state.Instance : null;
 
             internal bool TryGetFurnitureMaskTarget(int furnitureType, out GameObject target)
             {
@@ -343,9 +355,23 @@ namespace Zjcs.Presentation.Home
                         throw new InvalidOperationException("The original native furniture prefab is missing: " + type);
                 }
                 nativeTime.Enable();
+                OpenNativeFruitTree();
             }
 
             internal void RefreshSkin()
+            private void OpenNativeFruitTree()
+            {
+                string location = GetFruitTreePrefabPath();
+                using var handle = loader.LoadPrefab(location);
+                if (!handle.Result)
+                    throw new InvalidOperationException("The original native fruit-tree prefab is missing: " + location);
+                fruitTreeInstance = factory.Instantiate(handle.Result, anchor.transform, false);
+                fruitTreeInstance.name = "NativeFruitTree";
+                fruitTreeInstance.transform.localPosition = home.scene.FruitTreePosition;
+                fruitTreeInstance.transform.localScale = Vector3.one * home.scene.FruitTreeScale;
+                home.scene.BindNativeFruitTree(fruitTreeInstance);
+            }
+
             {
                 if (disposed || creator == null) return;
                 foreach (EFurniture type in SupportedFurniture)
@@ -354,6 +380,31 @@ namespace Zjcs.Presentation.Home
                         creator.OnSkinChanged(type, GetFurnitureSkinId(type), this, out _);
                 }
             }
+                RefreshNativeFruitTree();
+            }
+
+            private void RefreshNativeFruitTree()
+            {
+                if (disposed || !anchor) return;
+                string location = GetFruitTreePrefabPath();
+                using var handle = loader.LoadPrefab(location);
+                if (!handle.Result)
+                    throw new InvalidOperationException("The original native fruit-tree prefab is missing: " + location);
+                if (fruitTreeInstance) Object.Destroy(fruitTreeInstance);
+                fruitTreeInstance = factory.Instantiate(handle.Result, anchor.transform, false);
+                fruitTreeInstance.name = "NativeFruitTree";
+                fruitTreeInstance.transform.localPosition = home.scene.FruitTreePosition;
+                fruitTreeInstance.transform.localScale = Vector3.one * home.scene.FruitTreeScale;
+                home.scene.BindNativeFruitTree(fruitTreeInstance);
+            }
+
+            private string GetFruitTreePrefabPath()
+            {
+                int skinId = GetFurnitureSkinId(EFurniture.FruitTree);
+                HomeSkinWeatherOverridePrefabInfo weather = tables.GetWeatherOverride(skinId,
+                    GetEnvironmentSkinId(HomeEnvironmentType.Weather));
+                return weather == null ? paths.GetFurniturePrefabPath(skinId)
+                    : paths.GetFurniturePrefabPath(skinId, weather.PrefabName);
 
             internal void SetViewMode(HomeViewMode mode)
             {
@@ -405,6 +456,7 @@ namespace Zjcs.Presentation.Home
             {
                 if (disposed) return;
                 HomeFastHangUpRecord fast = home.rules.FastHangUp(fastHangUpId);
+                OnFastHangUp?.Invoke(fastHangUpId);
                 if (fast?.hangUpIdList != null)
                 {
                     foreach (int hangUpId in fast.hangUpIdList)
@@ -460,6 +512,17 @@ namespace Zjcs.Presentation.Home
             private void Install(GameObject root)
             {
                 foreach (var furniture in root.GetComponentsInChildren<FurnitureBase>(true))
+                foreach (var tree in root.GetComponentsInChildren<HomeFruitTree>(true))
+                {
+                    tree.FurnitureServices = this;
+                    tree.Localize = LocalizeUiText;
+                }
+                foreach (var produce in root.GetComponentsInChildren<HomeFruitTreeProduceFruit>(true))
+                    produce.ProductionServices = this;
+                foreach (var pet in root.GetComponentsInChildren<HomeFruitTreePet>(true))
+                    pet.PetTreeFeatureServices = this;
+                foreach (var output in root.GetComponentsInChildren<HomeFruitTreeHangUpHandlerFruitItem>(true))
+                    output.OutputServices = this;
                 {
                     furniture.Services = this;
                     if (furniture is BaseHangUpFurniture hangUp)
@@ -597,6 +660,7 @@ namespace Zjcs.Presentation.Home
                 pendingHangUpAwards.Clear();
                 observedUnlockedHangUps.Clear();
                 HomeAudioSettings.Unregister(clickSound);
+                fruitTreeAwardHandlers.Clear();
                 clickSound = null;
                 if (anchor) { anchor.SetActive(false); Object.Destroy(anchor); }
                 ReleaseAfterInstances(anchor).Forget();
@@ -711,6 +775,58 @@ namespace Zjcs.Presentation.Home
 
             public FurnitureInfo GetFurnitureInfo(EFurniture furniture)
             {
+            public bool AwardManagerAvailable => !disposed;
+            public int FruitId => OfflineFruitTreeService.FruitItemId;
+            public void RegisterAwardHandler(Func<HomeFruitTreeAward, bool> handler) => fruitTreeAwardHandlers.Add(handler);
+            public void RemoveAwardHandler(Func<HomeFruitTreeAward, bool> handler) => fruitTreeAwardHandlers.Remove(handler);
+            public void CollectFruitTreeReward(Action<object, int> completed)
+            {
+                if (disposed) { completed?.Invoke(null, 1); return; }
+                completed?.Invoke(null, home.OnFruitTreeClicked() ? 0 : 1);
+            }
+            public void PopupAward(HomeFruitTreeAward award)
+            {
+                home.hud.RefreshAll();
+            }
+            public bool IsPetGachaDisabled() => false;
+            public void PopupPetGacha() => home.hud.ShowPetGacha();
+            public bool HasPlayer => !disposed && home.profile != null;
+            public int RandomRange(int minInclusive, int maxExclusive) => UnityEngine.Random.Range(minInclusive, maxExclusive);
+            public long GetItemAmount(int itemId) => itemId == FruitId
+                ? home.fruitTree.State.StoredCount : home.profile.InventoryCount(itemId);
+            public IHomeFruitTreeOutputItem GetItemById(int itemId)
+                => itemId == FruitId ? fruitTreeOutputItem : null;
+            public IEnumerable<IHomeFruitTreeOutputItem> FindItemsById(int itemId)
+            {
+                if (itemId == FruitId) yield return fruitTreeOutputItem;
+            }
+            public EFurniture FastHangUpFurniture(int fastHangUpId)
+                => (EFurniture)(home.rules.FastHangUp(fastHangUpId)?.bindFurniture ?? 0);
+            public double CalcElapsedSeconds(DateTime since)
+                => Math.Max(0.0, (DateTime.UtcNow - since.ToUniversalTime()).TotalSeconds);
+            public void ShowFruitNotRipe(TimeSpan remaining)
+            {
+                long seconds = Math.Max(0L, (long)remaining.TotalSeconds);
+                string duration = seconds < 60 ? seconds + " 秒"
+                    : seconds < 3600 ? seconds / 60 + " 分钟"
+                    : seconds / 3600 + " 小时 " + seconds % 3600 / 60 + " 分钟";
+                home.hud.ShowNotice("下一颗果实将在 " + duration + " 后成熟");
+            }
+            public event Action<int> OnFastHangUp;
+            public GameObject LoadEffectPrefab(string assetGuid) => HomeFruitTreePrefabCatalog.LoadDefault().Load(assetGuid);
+            public GameObject InstantiateEffect(GameObject prefab, Transform parent) => factory.Instantiate(prefab, parent, false);
+
+            private sealed class FruitTreeOutputItem : IHomeFruitTreeOutputItem
+            {
+                private readonly NativeFurniture owner;
+                internal FruitTreeOutputItem(NativeFurniture owner) => this.owner = owner;
+                private OfflineFruitTreeProgress State => owner.home.fruitTree.State;
+                public long Count => State.StoredCount;
+                public double Decimal => State.FractionalCount;
+                public double IncreaseSpeed => owner.home.fruitTree.SpeedPerHourAt(HomeFeatureRuntime.Now());
+                public DateTime LastUpdateTime => DateTimeOffset.FromUnixTimeSeconds(Math.Max(0, State.LastUpdateUnixSeconds)).UtcDateTime;
+            }
+
                 HomeFurnitureRecord row = home.rules.FurnitureOf((int)furniture);
                 return new FurnitureInfo
                 {
