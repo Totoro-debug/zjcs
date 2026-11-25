@@ -267,11 +267,13 @@ namespace Zjcs.Presentation.Home
             internal bool TryGetFurnitureMaskTarget(int furnitureType, out GameObject target)
             {
                 target = null;
-                if (!entities.TryGetValue((EFurniture)furnitureType, out EntityState state) || !state.Instance)
+                GameObject instance = furnitureType == (int)EFurniture.FruitTree ? fruitTreeInstance
+                    : entities.TryGetValue((EFurniture)furnitureType, out EntityState state) ? state.Instance : null;
+                if (!instance)
                     return false;
-                Collider activeCollider = state.Instance.GetComponentsInChildren<Collider>(true)
+                Collider activeCollider = instance.GetComponentsInChildren<Collider>(true)
                     .FirstOrDefault(collider => collider != null && collider.enabled && collider.gameObject.activeInHierarchy);
-                target = activeCollider != null ? activeCollider.gameObject : state.Instance;
+                target = activeCollider != null ? activeCollider.gameObject : instance;
                 return true;
             }
 
