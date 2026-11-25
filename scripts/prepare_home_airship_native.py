@@ -2,11 +2,14 @@
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 
+import home_native_furniture_builder as furniture_builder
 from home_native_furniture_builder import install_furniture_bundle, prepare_native_cache
 from official_apk import ROOT
 from official_source import OfficialSource
+from prepare_partner_card_native import guid
 
 
 BUNDLE = 'defaultpackage_assets_prefabs_home_dynamic_furniture_airship.bundle'
@@ -16,6 +19,45 @@ PREFABS = tuple('Prefabs/Home/Dynamic/Furniture/Airship/' + name + '.prefab' for
 DEST = ROOT / 'unity/Assets/Official/Home/Airship/Native'
 RECEIPT = ROOT / 'assets/reference/home-airship-native-source-manifest.json'
 CONTROLLER = ROOT / 'unity/Assets/Game/Runtime/Official/HomeFurniture/AirshipFurniture.cs'
+SCROLL = ROOT / 'unity/Assets/Game/Runtime/Official/HomeFurniture/HomeScrollTextBord.cs'
+BANNER = ROOT / 'unity/Assets/Game/Runtime/Official/HomeFurniture/AirShipBanner.cs'
+CUSTOM_MATERIALS = ROOT / 'unity/Assets/Spine/Runtime/spine-unity/Components/SkeletonRendererCustomMaterials/SkeletonRendererCustomMaterials.cs'
+SLOT_COLOR = ROOT / 'unity/Assets/Game/Runtime/Official/HomeFurniture/SkeletonSlotColor.cs'
+RENDER_MESH = ROOT / 'unity/Assets/Game/Runtime/Official/HomeFurniture/RenderExistingMesh.cs'
+
+
+class AirshipFurnitureBinding(furniture_builder.HomeNativeFurnitureBinding):
+    def build_furniture_prefabs(self, bundle, prefab_relatives, dest, **kwargs):
+        # LanguageUtils.GetAirshipItemBg selects this sprite dynamically; it is
+        # not referenced by the repaired prefab's serialized object graph.
+        native = self.native / 'Image/Home/Dynamic/Airship/SmallPoster_1.asset'
+        source_guid = guid(Path(str(native) + '.meta'))
+        matches = [pointer.deref() for path, pointer in self.recovery.apk.container(
+            'defaultpackage_assets_image_home_dynamic_airship.bundle')
+            if path.casefold().endswith('/smallposter_1.png') and pointer.type.name == 'Sprite']
+        if len(matches) != 1:
+            raise ValueError('The original unrepaired airship background is missing or ambiguous.')
+        self.objects[source_guid] = matches[0]
+        self.load(source_guid)
+        result = super().build_furniture_prefabs(bundle, prefab_relatives, dest, **kwargs)
+        outputs, staged, _, _ = result
+        referenced = set()
+        for name in outputs:
+            if not name.endswith('.meta'):
+                referenced.update(match.decode('ascii') for match in
+                    re.findall(rb'guid: ([0-9a-f]{32})', (staged / name).read_bytes()))
+        self.script_sources = {name: row for name, row in self.script_sources.items()
+                               if row['pointer']['guid'] in referenced}
+        return result
+
+    def replace(self, value):
+        if isinstance(value, dict) and value == {
+                'class': 'TipDotTradeLedgerHasTipConditionNode', 'ns': '', 'asm': 'Assembly-CSharp'}:
+            return {'class': value['class'], 'ns': 'Zjcs.Offline.HomeAirship', 'asm': 'Zjcs.Offline.HomeAirship'}
+        if isinstance(value, dict) and value == {
+                'class': 'TipDotFunctionUnlockConditionNode', 'ns': '', 'asm': 'Assembly-CSharp'}:
+            return {'class': value['class'], 'ns': 'Zjcs.Official.HomeFurniture', 'asm': 'Zjcs.Official.HomeFurniture'}
+        return super().replace(value)
 
 
 def prepare():
@@ -71,13 +113,34 @@ def install():
     if not CONTROLLER.is_file() or not Path(str(CONTROLLER) + '.meta').is_file():
         raise FileNotFoundError('Migrate the original AirshipFurniture controller before binding the prefabs.')
     prepare()
-    return install_furniture_bundle(
+    previous = furniture_builder.HomeNativeFurnitureBinding
+    furniture_builder.HomeNativeFurnitureBinding = AirshipFurnitureBinding
+    try:
+        result = install_furniture_bundle(
         cache_name='home-airship-native', bundle=BUNDLE, prefabs=PREFABS,
         dest=DEST, receipt_path=RECEIPT, guid_prefix='zjcs:home-airship-native:',
         install_prefix='native-airship-building', script_path=Path(__file__),
-        extra_scripts={'AirshipFurniture': CONTROLLER},
+        extra_scripts={'AirshipFurniture': CONTROLLER, 'HomeScrollTextBord': SCROLL, 'AirShipBanner': BANNER,
+                       'Spine.Unity.SkeletonRendererCustomMaterials': CUSTOM_MATERIALS,
+                       'AppearanceSystem.SpineExt.SkeletonSlotColor': SLOT_COLOR,
+                       'Spine.Extension.RenderExistingMesh': RENDER_MESH},
         scope='Original airship scene prefabs and dependencies, including weather and Yellow Duck variants.',
-    )
+        )
+        source = ROOT / '.tools/source-packages/current' / OfficialSource().version / 'official-code/client-source'
+        original = ['AirshipFurniture.cs', 'AirShipBanner.cs', 'HomeScrollTextBord.cs',
+                    'AppearanceSystem.SpineExt/SkeletonSlotColor.cs', 'TipDotTradeLedgerHasTipConditionNode.cs',
+                    'TipDotFunctionUnlockConditionNode.cs']
+        managed = [ROOT / 'unity/Assets/Game/Runtime/Official/WorldUI/WorldStateSwitcher.cs',
+                   ROOT / 'unity/Assets/Game/Runtime/Official/ProfessionUI/TipDotCommonNode.cs',
+                   ROOT / 'unity/Assets/Game/Runtime/Official/HomeFurniture/TipDotFunctionUnlockConditionNode.cs',
+                   ROOT / 'unity/Assets/Game/Runtime/Offline/HomeAirship/TipDotTradeLedgerHasTipConditionNode.cs',
+                   ROOT / 'assets/reference/home-airship-render-mesh-source-manifest.json']
+        result['controller_sources'] = {path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+                                        for path in [*(source / name for name in original), *managed]}
+        RECEIPT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf8', newline='\n')
+        return result
+    finally:
+        furniture_builder.HomeNativeFurnitureBinding = previous
 
 
 if __name__ == '__main__':

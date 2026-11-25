@@ -1,0 +1,18 @@
+{
+  "source": {
+    "profile": "903_156948",
+    "apk_sha256": "08d7f7f1dd847d37ff888789844129bc869dbde397da4e0fdc9eed1e5e573abb",
+    "native_entry": "lib/arm64-v8a/libil2cpp.so",
+    "native_sha256": "369ebf3e5db0a65682b69f45ae52ec0d4e0a1c8d098ffc052a5836561a7255e3",
+    "metadata_dump_sha256": "d54b5920fb753ddf69df302e7ac61e639b57498780112c36fb5af55785de13d2",
+    "type": "Spine.Extension.RenderExistingMesh",
+    "address_start": "0x10d8dfa8",
+    "length": 1208,
+    "recovered_bytes_sha256": "5dfd739074efa65df0a6b2ce840f9107805cb6185c806847162cdfb787102e4d"
+  },
+  "verifier": {
+    "path": "scripts/verify_home_airship_render_mesh.py",
+    "sha256": "4073fe05016c5128069246f95d30d22572f320fbe028e1c3d4e6484ee8139a50"
+  },
+  "scope": "Runtime Awake, InitializeDict, LateUpdate, UpdateOnCallback and UpdateMaterials; native ARM64 instructions recovered from the selected APK loader before runtime initialization."
+}
