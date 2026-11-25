@@ -89,7 +89,7 @@ using Object = UnityEngine.Object;
         if name == 'HomeNpcBubbleTip':
             source_header = source_header.replace('using Zjcs.Official.HomeUI;\n',
                 'using Zjcs.Official.HomeUI;\nusing Zjcs.Official.HomeHudUI;\n')
-        if name in ('BaseHangUpFurniture', 'BedFurniture'):
+        if name in ('BaseHangUpFurniture', 'BedFurniture', 'CartFurniture'):
             source_header = source_header.replace('using Zjcs.Official.HomeUI;\n',
                 'using Zjcs.Official.HomeUI;\nusing Zjcs.Official.HomeHangUpTips;\nusing Zjcs.Official.HomeSceneUiControls;\n')
         if 'List<' in text or 'HashSet<' in text or 'KeyValuePair<' in text:
@@ -399,6 +399,83 @@ using Object = UnityEngine.Object;
 		HangUpServices?.PopupFurnitureWindow(mFurniture);
 	}
 }""")
+    _ = read('CartFurniture')
+    emit('CartFurniture', """public class CartFurniture : BaseHangUpFurniture
+{
+	protected override void PopFurnitureWindow()
+	{
+		HangUpServices?.PopupFurnitureWindow(mFurniture);
+	}
+}""")
+    text = read('HomeDayNight')
+    text = replace(text, '\tpublic IHomeEnvironmentManager HomeEnvironmentManager { get; set; }\n',
+        """\tprivate bool mSubscribed;
+
+\tpublic IHomeDayNightServices EnvironmentServices { get; set; }
+
+\tpublic void Bind(IHomeDayNightServices services)
+\t{
+\t\tif (EnvironmentServices == services)
+\t\t{
+\t\t\tif (EnvironmentServices != null)
+\t\t\t{
+\t\t\t\tOnDayNightChange(EnvironmentServices.IsPlayableDay);
+\t\t\t}
+\t\t\treturn;
+\t\t}
+\t\tUnsubscribe();
+\t\tEnvironmentServices = services;
+\t\tif (isActiveAndEnabled)
+\t\t{
+\t\t\tSubscribeAndSync();
+\t\t}
+\t}
+
+\tprivate void SubscribeAndSync()
+\t{
+\t\tif (EnvironmentServices == null)
+\t\t{
+\t\t\treturn;
+\t\t}
+\t\tif (!mSubscribed)
+\t\t{
+\t\t\tEnvironmentServices.OnDayNightChange += mOnDayNightChange;
+\t\t\tmSubscribed = true;
+\t\t}
+\t\tOnDayNightChange(EnvironmentServices.IsPlayableDay);
+\t}
+
+\tprivate void Unsubscribe()
+\t{
+\t\tif (!mSubscribed || EnvironmentServices == null)
+\t\t{
+\t\t\tmSubscribed = false;
+\t\t\treturn;
+\t\t}
+\t\tEnvironmentServices.OnDayNightChange -= mOnDayNightChange;
+\t\tmSubscribed = false;
+\t}
+""")
+    text = replace(text, """\tprivate void OnEnable()
+\t{
+\t\tHomeEnvironmentManager.OnDayNightChange.AddListener(mOnDayNightChange);
+\t\tOnDayNightChange(HomeEnvironmentManager.IsPlayableDay);
+\t}
+
+\tprivate void OnDisable()
+\t{
+\t\tHomeEnvironmentManager.OnDayNightChange.RemoveListener(mOnDayNightChange);
+\t}""", """\tprivate void OnEnable()
+\t{
+\t\tSubscribeAndSync();
+\t}
+
+\tprivate void OnDisable()
+\t{
+\t\tUnsubscribe();
+\t}""")
+    text = replace(text, '\t\tDayNightSwitcher.SetState(isDay);', '\t\tDayNightSwitcher?.SetState(isDay);')
+    emit('HomeDayNight', text)
     text = read('EntityClickSound')
     text = replace(text, 'public Event Sound;', 'public AudioClip Sound;\n    [NonSerialized] public Action<AudioClip, GameObject> Post;')
     text = text.replace('protected IInputOperationModule InputOperationModule { get; set; }',

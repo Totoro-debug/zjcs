@@ -680,7 +680,7 @@ namespace Zjcs.Presentation.Home
         void ApplyNativeFurnitureVisibility(int type, GameObject instance)
         {
             if (!instance) return;
-            bool useNative = !replacedHouse;
+            bool useNative = type == 10 || !replacedHouse;
             instance.SetActive(useNative);
             SetObjectsActive(furnitureBaseObjects, type, !useNative && !replacedFurniture.Contains(type));
             SetObjectsActive(furnitureSkinObjects, type, !useNative && replacedFurniture.Contains(type));

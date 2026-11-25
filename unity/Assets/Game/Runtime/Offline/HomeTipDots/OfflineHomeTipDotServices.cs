@@ -22,23 +22,38 @@ namespace Zjcs.Offline.HomeTipDots
         private readonly OfflineHomeIncomeSession session;
         private readonly OfficialHomeRules rules;
         private readonly Func<DateTime> clock;
+        private readonly Func<int> readBlessingLevel;
+        private readonly Func<HomeConditionContext> readConditionContext;
         private readonly Dictionary<EFurniture, List<HomeTipFastHangUpInfo>> byFurniture =
             new Dictionary<EFurniture, List<HomeTipFastHangUpInfo>>();
+        private readonly Dictionary<int, HomeTipHangUpInfo> hangUpInfosById =
+            new Dictionary<int, HomeTipHangUpInfo>();
+        private readonly Dictionary<EFurniture, List<HomeTipHangUpInfo>> hangUpInfosByFurniture =
+            new Dictionary<EFurniture, List<HomeTipHangUpInfo>>();
         private readonly HashSet<int> fastHangUpItems = new HashSet<int>();
+        private readonly HashSet<int> watchedItems = new HashSet<int>();
         private readonly Dictionary<int, long> observedItemCounts = new Dictionary<int, long>();
         private readonly HashSet<int> observedUnlockedHangUps = new HashSet<int>();
+        private readonly Dictionary<int, int> observedHangUpLevels = new Dictionary<int, int>();
         private readonly List<Action> newDaySubscribers = new List<Action>();
         private DateTime observedDay;
+        private int observedPlayerLevel;
+        private int observedBlessingLevel;
         private bool disposed;
 
         public OfflineHomeTipDotServices(Func<OfflineMainlineSave> readSave, OfflineHomeIncomeSession session,
-            OfficialHomeRules rules, Func<DateTime> clock = null)
+            OfficialHomeRules rules, Func<DateTime> clock = null,
+            Func<int> readBlessingLevel = null, Func<HomeConditionContext> readConditionContext = null)
         {
             this.readSave = readSave ?? throw new ArgumentNullException(nameof(readSave));
             this.session = session ?? throw new ArgumentNullException(nameof(session));
             this.rules = rules ?? throw new ArgumentNullException(nameof(rules));
             this.clock = clock ?? (() => DateTime.Now);
+            this.readBlessingLevel = readBlessingLevel ?? (() => 1);
+            this.readConditionContext = readConditionContext ?? (() => this.rules.CurrentContext);
             observedDay = OfflineRefreshClock.DayStart(this.clock());
+            observedPlayerLevel = this.readSave()?.Player?.Level ?? 1;
+            observedBlessingLevel = this.readBlessingLevel();
 
             foreach (HomeFastHangUpRecord fast in rules.Data.fastHangUps ?? Array.Empty<HomeFastHangUpRecord>())
             {
@@ -56,6 +71,7 @@ namespace Zjcs.Offline.HomeTipDots
                     int hours = checked((int)Math.Round(item.hours));
                     itemDic[item.itemId] = hours;
                     fastHangUpItems.Add(item.itemId);
+                    watchedItems.Add(item.itemId);
                 }
                 list.Add(new HomeTipFastHangUpInfo
                 {
@@ -65,16 +81,43 @@ namespace Zjcs.Offline.HomeTipDots
                 });
             }
 
-            foreach (int itemId in fastHangUpItems)
+            foreach (HomeHangUpRecord row in rules.HangUps ?? Array.Empty<HomeHangUpRecord>())
+            {
+                if (row == null || row.levelRuleId <= 0) continue;
+                var info = new HomeTipHangUpInfo { Id = row.id, CanLevelUp = row.canLevelUp };
+                hangUpInfosById[row.id] = info;
+                var furniture = (EFurniture)row.bindFurniture;
+                if (!hangUpInfosByFurniture.TryGetValue(furniture, out List<HomeTipHangUpInfo> infoList))
+                {
+                    infoList = new List<HomeTipHangUpInfo>();
+                    hangUpInfosByFurniture.Add(furniture, infoList);
+                }
+                infoList.Add(info);
+                foreach (HomeHangUpUpgradeRecord upgrade in rules.Upgrades(row.id) ?? Array.Empty<HomeHangUpUpgradeRecord>())
+                {
+                    if (upgrade?.cost == null) continue;
+                    foreach (HomeCostEntry cost in upgrade.cost)
+                        if (cost != null && cost.itemId > 0) watchedItems.Add(cost.itemId);
+                }
+            }
+
+            foreach (int itemId in watchedItems)
                 observedItemCounts[itemId] = GetItemAmount(itemId);
             foreach (OfflineHomeIncomeDefinition definition in session.Definitions)
-                if (definition.Unlocked) observedUnlockedHangUps.Add(definition.HangUpId);
+            {
+                if (!definition.Unlocked) continue;
+                observedUnlockedHangUps.Add(definition.HangUpId);
+                observedHangUpLevels[definition.HangUpId] = session.HangUpLevel(definition.HangUpId);
+            }
         }
 
         public IHomeTipDotPlayer Player => this;
 
         public event Action<int> OnHangUpUnlock;
+        public event Action<int, int> OnHangUpLevelUp;
         public event Action<int> OnFastHangUp;
+        public event Action<int> OnLevelUpdate;
+        public event Action OnGoddessUpdate;
         public event Action<long> OnDebugTimeOffset;
         public event Action<HomeTipItemData, long, object> OnItemCountUpdate;
 
@@ -124,6 +167,63 @@ namespace Zjcs.Offline.HomeTipDots
         public bool HasUnlockedHangUp(int hangUpId)
             => session.Definitions.Any(value => value.HangUpId == hangUpId && value.Unlocked);
 
+        public bool TryGetUnlockSingleHangUpData(int hangUpId, out int level)
+        {
+            if (HasUnlockedHangUp(hangUpId))
+            {
+                level = session.HangUpLevel(hangUpId);
+                return true;
+            }
+            level = 0;
+            return false;
+        }
+
+        public int GetHangUpMaxLevel()
+            => rules.FurnitureLevelUpLimit(readBlessingLevel());
+
+        public bool HasItems(Dictionary<int, long> costs)
+        {
+            if (costs == null || costs.Count == 0) return true;
+            foreach (KeyValuePair<int, long> pair in costs)
+                if (pair.Value > 0 && GetItemAmount(pair.Key) < pair.Value) return false;
+            return true;
+        }
+
+        public bool CheckHangUpUnlockMet(EFurniture furniture)
+        {
+            HomeConditionContext context = readConditionContext?.Invoke() ?? rules.CurrentContext;
+            foreach (HomeHangUpRecord row in rules.HangUpsOf((int)furniture))
+            {
+                if (row == null || row.levelRuleId <= 0 || row.initAutoUnlock) continue;
+                if (session.IsHangUpUnlocked(row.id) || HasUnlockedHangUp(row.id)) continue;
+                if (rules.IsMet(row.unlock, context)) return true;
+            }
+            return false;
+        }
+
+        public bool TryGetHangUpInfo(int hangUpId, out HomeTipHangUpInfo info)
+            => hangUpInfosById.TryGetValue(hangUpId, out info);
+
+        public bool TryGetHangUpInfos(EFurniture furniture, out List<HomeTipHangUpInfo> list)
+            => hangUpInfosByFurniture.TryGetValue(furniture, out list);
+
+        public int GetHangUpUpgradeMaxLevel(int hangUpId)
+            => rules.MaxHangUpLevel(hangUpId);
+
+        public Dictionary<int, long> GetHangUpUpgradeCosts(int hangUpId, int nextLevel)
+        {
+            HomeHangUpUpgradeRecord upgrade = rules.Upgrade(hangUpId, nextLevel);
+            if (upgrade?.cost == null) return null;
+            var costs = new Dictionary<int, long>();
+            foreach (HomeCostEntry entry in upgrade.cost)
+            {
+                if (entry == null || entry.itemId <= 0 || entry.count <= 0) continue;
+                costs[entry.itemId] = costs.TryGetValue(entry.itemId, out long prev)
+                    ? checked(prev + entry.count) : entry.count;
+            }
+            return costs;
+        }
+
         public void NotifyFastHangUp(int fastHangUpId)
         {
             if (disposed) return;
@@ -134,7 +234,17 @@ namespace Zjcs.Offline.HomeTipDots
         {
             if (disposed) return;
             if (observedUnlockedHangUps.Add(hangUpId) || HasUnlockedHangUp(hangUpId))
+            {
+                observedHangUpLevels[hangUpId] = session.HangUpLevel(hangUpId);
                 OnHangUpUnlock?.Invoke(hangUpId);
+            }
+        }
+
+        public void NotifyHangUpLevelUp(int hangUpId, int level)
+        {
+            if (disposed) return;
+            observedHangUpLevels[hangUpId] = level;
+            OnHangUpLevelUp?.Invoke(hangUpId, level);
         }
 
         public void NotifyDebugTimeOffset(long offset)
@@ -148,10 +258,32 @@ namespace Zjcs.Offline.HomeTipDots
             if (disposed) return;
             foreach (OfflineHomeIncomeDefinition definition in session.Definitions)
             {
-                if (definition.Unlocked && observedUnlockedHangUps.Add(definition.HangUpId))
+                if (!definition.Unlocked) continue;
+                int currentLevel = session.HangUpLevel(definition.HangUpId);
+                if (observedUnlockedHangUps.Add(definition.HangUpId))
+                {
+                    observedHangUpLevels[definition.HangUpId] = currentLevel;
                     OnHangUpUnlock?.Invoke(definition.HangUpId);
+                }
+                else if (!observedHangUpLevels.TryGetValue(definition.HangUpId, out int prevLevel) || prevLevel != currentLevel)
+                {
+                    observedHangUpLevels[definition.HangUpId] = currentLevel;
+                    OnHangUpLevelUp?.Invoke(definition.HangUpId, currentLevel);
+                }
             }
-            foreach (int itemId in fastHangUpItems)
+            int playerLevel = readSave()?.Player?.Level ?? 1;
+            if (playerLevel != observedPlayerLevel)
+            {
+                observedPlayerLevel = playerLevel;
+                OnLevelUpdate?.Invoke(playerLevel);
+            }
+            int blessingLevel = readBlessingLevel();
+            if (blessingLevel != observedBlessingLevel)
+            {
+                observedBlessingLevel = blessingLevel;
+                OnGoddessUpdate?.Invoke();
+            }
+            foreach (int itemId in watchedItems)
             {
                 long current = GetItemAmount(itemId);
                 long previous = observedItemCounts.TryGetValue(itemId, out long prior) ? prior : 0L;
@@ -178,7 +310,10 @@ namespace Zjcs.Offline.HomeTipDots
             disposed = true;
             newDaySubscribers.Clear();
             OnHangUpUnlock = null;
+            OnHangUpLevelUp = null;
             OnFastHangUp = null;
+            OnLevelUpdate = null;
+            OnGoddessUpdate = null;
             OnDebugTimeOffset = null;
             OnItemCountUpdate = null;
         }

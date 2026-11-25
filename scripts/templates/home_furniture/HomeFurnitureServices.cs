@@ -105,4 +105,10 @@ namespace Zjcs.Official.HomeFurniture
         UnityEngine.Sprite LoadNpcIcon(string iconPath);
         void UnloadNpcIcon(string iconPath);
     }
+
+    public interface IHomeDayNightServices
+    {
+        bool IsPlayableDay { get; }
+        event Action<bool> OnDayNightChange;
+    }
 }

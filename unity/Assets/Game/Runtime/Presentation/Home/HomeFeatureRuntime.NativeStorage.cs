@@ -94,7 +94,8 @@ namespace Zjcs.Presentation.Home
             {
                 EFurniture.Bed,
                 EFurniture.StorageBox,
-                EFurniture.DiningTable
+                EFurniture.DiningTable,
+                EFurniture.Cart
             };
 
             private sealed class HangUpAwardMessage : IHomeHangUpAwardMessage
@@ -182,33 +183,7 @@ namespace Zjcs.Presentation.Home
                 {
                     level = 0;
                     if (!(condition is HomeConditionAdapter adapter) || adapter.Node == null) return false;
-                    return TryFindLevelTarget(adapter.Node, out level);
-                }
-
-                private bool TryFindLevelTarget(HomeConditionNode node, out int level)
-                {
-                    level = 0;
-                    if (node == null) return false;
-                    if (node._type == "LevelCondition" && node.Level > 0)
-                    {
-                        level = node.Level;
-                        return true;
-                    }
-                    if ((node._type == "CompositeOrCondition" || node._type == "CompositeAndCondition")
-                        && node.Ids != null)
-                    {
-                        var lookup = owner.home.rules?.Data?.conditions?
-                            .Where(row => row != null && row.node != null)
-                            .ToDictionary(row => row.classId, row => row.node);
-                        if (lookup != null)
-                        {
-                            foreach (int id in node.Ids)
-                                if (lookup.TryGetValue(id, out HomeConditionNode child)
-                                    && TryFindLevelTarget(child, out level))
-                                    return true;
-                        }
-                    }
-                    return false;
+                    return TryFindLevelTarget(owner.home.rules, adapter.Node, out level);
                 }
             }
 
@@ -264,6 +239,7 @@ namespace Zjcs.Presentation.Home
             private HomeExperienceTables tipExperience;
             private OfflineHomeHangUpTipSource hangUpTipSource;
             private Sprite bedRewardSprite;
+            private Sprite cartRewardSprite;
             private int lastPlayerLevel;
             private HomeViewMode currentViewMode = HomeViewMode.Owner;
             private Action<EFurniture> onRepairFurniture;
@@ -315,7 +291,10 @@ namespace Zjcs.Presentation.Home
                     () => home.profile.Save.Player.Level, () => home.CanGetHangUpExperience(tipExperience),
                     level => tipExperience.LevelExpParser.GetLevelUpExp(1, level),
                     home.GetHangUpQuickReceiveState, (_, _) => { },
-                    data => hangUpTipEvents.Invoke(data));
+                    data => hangUpTipEvents.Invoke(data))
+                {
+                    HasFurnitureOverride = furniture => home.HasFurnitureForSkin((int)furniture)
+                };
                 lastPlayerLevel = home.profile.Save.Player.Level;
                 observedUnlockedHangUps.Clear();
                 if (home.session?.Definitions != null)
@@ -343,6 +322,14 @@ namespace Zjcs.Presentation.Home
                 var slotDict = new Dictionary<EFurniture, Transform>();
                 foreach (EFurniture type in SupportedFurniture)
                 {
+                    if (type == EFurniture.Cart)
+                    {
+                        var cartSlot = new GameObject("Cart").transform;
+                        cartSlot.SetParent(anchor.transform, false);
+                        cartSlot.localPosition = new Vector3(-8.92f, -4.51f, 0f);
+                        slotDict[type] = cartSlot;
+                        continue;
+                    }
                     if (!roomSlots.FurnitureDict.TryGetValue(type, out Transform slot)
                         || !slot || !slot.IsChildOf(housePrefab.transform))
                         throw new InvalidOperationException("The official Room has no slot for " + type + ".");
@@ -393,6 +380,19 @@ namespace Zjcs.Presentation.Home
                 hangUpTipSource?.NotifyUnlocked(hangUpId);
                 NotifyHomeChanged();
             }
+
+            internal void NotifyHangUpLevelUp(int hangUpId, int level)
+            {
+                if (disposed) return;
+                hangUpTipSource?.NotifyDataChanged(hangUpId);
+                NotifyHomeChanged();
+            }
+
+            internal LanguageGroupConfig NativeLanguageGroupConfig => languageGroupConfig;
+            internal ILanguageTypeService NativeLanguageTypeService => languageService;
+            internal IHomeFurnitureServices FurnitureServices => this;
+            internal IHomeFurnitureCondition CreateCondition(HomeConditionNode node)
+                => new HomeConditionAdapter(this, node);
 
             internal void NotifyHangUpDataChanged(int hangUpId)
             {
@@ -482,6 +482,8 @@ namespace Zjcs.Presentation.Home
                 }
                 foreach (var notice in root.GetComponentsInChildren<HomeNotice>(true))
                     notice.Services = this;
+                foreach (var dayNight in root.GetComponentsInChildren<HomeDayNight>(true))
+                    dayNight.Bind(home.environment);
                 foreach (var rack in root.GetComponentsInChildren<HomeWeaponRack>(true))
                     rack.Services = rackServices;
                 foreach (var mode in root.GetComponentsInChildren<HomeViewModeControl>(true))
@@ -643,6 +645,8 @@ namespace Zjcs.Presentation.Home
             public void OnEntityWillDestroy(GameObject go)
             {
                 if (!go || !instances.TryGetValue(go, out EntityState state)) return;
+                foreach (var dayNight in go.GetComponentsInChildren<HomeDayNight>(true))
+                    dayNight.Bind(null);
                 if (state.Timeline.IsValid()) state.Timeline.Destroy();
                 state.Clips.Clear();
                 instances.Remove(go);
@@ -676,8 +680,8 @@ namespace Zjcs.Presentation.Home
 
             public int GetEnvironmentSkinId(HomeEnvironmentType type)
             {
-                var defaultSkin = home.rules.Data.environmentSkins.First(value => value.environmentType == (int)type && value.isDefault);
-                return home.session.SkinOf(2, (int)type)?.SkinItemId ?? defaultSkin.skinItemId;
+                var defaultSkin = home.rules.Data.environmentSkins.FirstOrDefault(value => value.environmentType == (int)type && value.isDefault);
+                return home.session.SkinOf(2, (int)type)?.SkinItemId ?? defaultSkin?.skinItemId ?? 0;
             }
 
             public void Publish(HomeFurnitureChangeData data) => changed.Invoke();
@@ -850,10 +854,19 @@ namespace Zjcs.Presentation.Home
 
             Sprite IHomeHangUpFurnitureServices.LoadAwardSprite(EFurniture furniture)
             {
-                if (furniture != EFurniture.Bed) return null;
-                if (!bedRewardSprite)
-                    bedRewardSprite = OfficialHomeHangUpWindowAssetCatalog.LoadDefault().bedRewardImage;
-                return bedRewardSprite;
+                if (furniture == EFurniture.Bed)
+                {
+                    if (!bedRewardSprite)
+                        bedRewardSprite = OfficialHomeHangUpWindowAssetCatalog.LoadDefault().bedRewardImage;
+                    return bedRewardSprite;
+                }
+                if (furniture == EFurniture.Cart)
+                {
+                    if (!cartRewardSprite && home.CartAssets != null)
+                        home.CartAssets.TryGetSprite("UI/Furniture/ImgItem_Cart_0", out cartRewardSprite);
+                    return cartRewardSprite;
+                }
+                return null;
             }
 
             void IHomeHangUpFurnitureServices.CollectHangUpRewards(EFurniture furniture, IReadOnlyList<int> hangUpIds,
@@ -882,6 +895,16 @@ namespace Zjcs.Presentation.Home
             void IHomeHangUpFurnitureServices.MergeAndPopupAward(EFurniture furniture, IHomeHangUpAwardMessage response)
             {
                 if (response == null || !pendingHangUpAwards.TryGetValue(response, out var entry)) return;
+                if (furniture == EFurniture.Cart)
+                {
+                    var cartRewards = new List<OfflineHomeCollectedReward>();
+                    foreach (OfflineHomeCollectedReward reward in entry.Rewards)
+                        if (reward != null && reward.Count > 0)
+                            cartRewards.Add(reward);
+                    if (cartRewards.Count > 0)
+                        home.Hud.ShowCartAwards(cartRewards);
+                    return;
+                }
                 foreach (OfflineHomeCollectedReward reward in entry.Rewards)
                 {
                     if (reward != null && reward.Count > 0 && (furniture == EFurniture.Bed || reward.HangUpId == 1))

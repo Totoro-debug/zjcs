@@ -48,8 +48,9 @@ namespace Zjcs.Offline.HomeHangUpUI
         public bool CanGetExp() => canGetExp();
         public long GetLevelUpExp(int value) => levelUpExp(value);
         public HomeHangUpTipSettings Settings { get; }
+        public Func<EFurniture, bool> HasFurnitureOverride;
         public IReadOnlyDictionary<EFurniture, List<int>> RecordHangUpIdDict { get; }
-        public bool HasFurniture(EFurniture furniture) => session.OwnsFurniture((int)furniture);
+        public bool HasFurniture(EFurniture furniture) => HasFurnitureOverride?.Invoke(furniture) ?? session.OwnsFurniture((int)furniture);
         public bool GetHangUpQuickReceiveState(EFurniture furniture) => quickReceive(furniture);
         public IReadOnlyDictionary<int, HomeHangUpTipRecord> HangUpDataDict
         {

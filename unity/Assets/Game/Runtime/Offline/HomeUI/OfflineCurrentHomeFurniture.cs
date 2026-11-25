@@ -99,7 +99,11 @@ namespace Zjcs.Offline.HomeUI
         public IEnumerable<HomeConditionItem> GetInventoryItems()
         {
             foreach (var stack in Player.Inventory)
-                yield return new HomeConditionItem(itemTypes[stack.ItemId], stack.Count);
+            {
+                // Runtime-registered items (e.g. Cart skin 4266) are absent from the official item table.
+                if (itemTypes.TryGetValue(stack.ItemId, out int itemType))
+                    yield return new HomeConditionItem(itemType, stack.Count);
+            }
             foreach (var furniture in furnitureTypes)
                 if (HasFurniture(furniture.Value) && !Player.Inventory.Any(stack => stack.ItemId == furniture.Key && stack.Count > 0))
                     yield return new HomeConditionItem(itemTypes[furniture.Key], 1);

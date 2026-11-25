@@ -697,6 +697,7 @@ namespace Zjcs.Presentation.Home
                 () => profile.Save, type => session != null && session.OwnsFurniture(type));
             new OfflineCurrentHomeFurniture(selectedHomeRules, partnerCatalog.Conditions, () => furnitureConditionPlayer).Bind(rules);
             new OfflineCurrentHomeIncome(selectedHomeRules, partnerCatalog.Conditions, () => furnitureConditionPlayer).Bind(rules);
+            RegisterCartExtensions();
             tutorials = HomeTutorialCatalog.LoadDefault();
             homeProgression = new OfflineHomeProgression(rules);
             BlessingLevel = 1;
@@ -1726,10 +1727,16 @@ namespace Zjcs.Presentation.Home
             return unlocked;
         }
 
-        public HomeLevelUpResult TryLevelUpHangUp(int hangUpId)
+        public HomeLevelUpResult TryLevelUpHangUp(int hangUpId) => TryLevelUpHangUp(hangUpId, 1);
+
+        public int CalcCartLevelUpNum(int hangUpId, int maxLevel)
+            => homeProgression.CalcLevelUpNum(session, hangUpId, context, BlessingLevel,
+                profile.InventoryCount, maxLevel, CartMaxCalcLevelUp);
+
+        public HomeLevelUpResult TryLevelUpHangUp(int hangUpId, int levels)
         {
             HomeLevelUpResult check = homeProgression.CheckLevelUp(session, hangUpId, context, BlessingLevel,
-                profile.InventoryCount);
+                profile.InventoryCount, levels);
             if (!check.CanApply) return check;
             long now = Now();
             if (now < session.Save.LastLocalUnixSeconds)
@@ -1753,12 +1760,13 @@ namespace Zjcs.Presentation.Home
             HomeLevelUpResult result = homeProgression.LevelUp(session, hangUpId, context, BlessingLevel,
                 profile.InventoryCount, costs => ConsumeItems(costs, costReceipt),
                 costs => RestoreItems(costs, costReceipt + ":refund"),
-                "home:levelup:" + slotId + ":" + hangUpId + ":" + check.Level);
+                "home:levelup:" + slotId + ":" + hangUpId + ":" + check.Level, levels);
             if (result.Success)
             {
                 RefreshIncomeCatalog();
                 DrainHomeInventory();
                 hangUpHud?.Source.NotifyDataChanged(hangUpId);
+                homeTipServices?.NotifyHangUpLevelUp(hangUpId, result.Level);
                 storage?.NotifyHangUpDataChanged(hangUpId);
                 SynchronizeHomeTipDots();
                 hud.RefreshAll();
@@ -1907,6 +1915,11 @@ namespace Zjcs.Presentation.Home
 
         public Sprite ItemIcon(int itemId)
         {
+            if (itemId == 4266)
+            {
+                var cartIcon = CartAssets?.cartSkin4266Icon;
+                if (cartIcon) return cartIcon;
+            }
             string file = rules.ItemIcon(itemId);
             return string.IsNullOrEmpty(file) ? null : catalog.FindSprite(file);
         }

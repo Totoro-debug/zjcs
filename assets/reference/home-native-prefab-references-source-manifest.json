@@ -48,6 +48,19 @@
     "unity/Assets/Official/Home/DiningTable/Native/DiningTableChristmas.prefab.meta": "83097c9e33433bfcf6f6d343c69e8566ef8fc28ad341218117740f55e9a2bec9",
     "unity/Assets/Official/Home/DiningTable/Native/DiningTableHalloween.prefab": "b69d76a3bf1869306108f9cbc9991c16bb4e4555d4e2fd59ae7238397f9da1f2",
     "unity/Assets/Official/Home/DiningTable/Native/DiningTableHalloween.prefab.meta": "7ef994f1c9c0004ee4f58a62384631749577143aa3ba690546ab2fc7cb60da75",
+    "assets/reference/home-cart-native-source-manifest.json": "e7233d0674a5afbc9371ada116c8c4eea6e8b5a4bb73d543cdd3f285612a896a",
+    "unity/Assets/Official/Home/Cart/Native/Cart.prefab": "76159463ca9f7532d1759003502943055fc41b69dbcf8e07c104dde2695830a3",
+    "unity/Assets/Official/Home/Cart/Native/Cart.prefab.meta": "a90dde162ada004ddd8a0b13a0d889c7d48d2f81ece9635b739ce7506fa0d3f0",
+    "unity/Assets/Official/Home/Cart/Native/CartSpring.prefab": "7bbab25bca5eccfaafff8041ca600833f8267c3adf0e974509ea44d3e458b55b",
+    "unity/Assets/Official/Home/Cart/Native/CartSpring.prefab.meta": "682b2ede4447f431c6988a44c7c87d63f6c3c6b543fa9b5bdd4e7c8f2857740e",
+    "unity/Assets/Official/Home/Cart/Native/CartSnow.prefab": "a2206939cf28063e55646a375f5dcd8d736440302fd7433e56f9aec3c081fda9",
+    "unity/Assets/Official/Home/Cart/Native/CartSnow.prefab.meta": "d76e771c3682c8d81d7fe6e281980376e1b2aee4d9facf89d48efd33f94a467c",
+    "unity/Assets/Official/Home/Cart/Native/CartSpringSnow.prefab": "1e7c9d1040755b238802a5c52827a3d5dffe6961cdf338763dcc7e8220f78bf0",
+    "unity/Assets/Official/Home/Cart/Native/CartSpringSnow.prefab.meta": "719d36c49d6fa4dc496c372ce6a464fa8e49957e10e48037992051a71126936b",
+    "unity/Assets/Official/Home/Cart/Native/CartMaidCafe.prefab": "27bc0a6594620cbd9efe456cbe385cf36d171b806fdffc364f74294cd4dce308",
+    "unity/Assets/Official/Home/Cart/Native/CartMaidCafe.prefab.meta": "ae36bde140dc67bdba34fab2c39b19685654669a2739ea70b309624003555d00",
+    "unity/Assets/Official/Home/Cart/Native/CartMaidCafeSnow.prefab": "53ac869379b77b595162b36163c6231ccae35359046b63907a9bc2137e08a05b",
+    "unity/Assets/Official/Home/Cart/Native/CartMaidCafeSnow.prefab.meta": "5c8a72c9fb01a6e4e1337a67cb5254d1de4608a85d453b4cc100974caaf3b242",
     "assets/reference/home-weapon-parts-source-manifest.json": "a6fe4bad16c2320ee31bca1b34ad71483925d1e57849ff62f031cc83193804a0",
     "unity/Assets/Official/Home/WeaponParts/Prefabs/Appearance/PlayerPart/pWeapon_100_G_015/pWeapon_100_G_015_Home.prefab": "50d028e59883de66ea647367cd37acf98e3a5494ca0e2f759b6b3e499b9c3ecb",
     "unity/Assets/Official/Home/WeaponParts/Prefabs/Appearance/PlayerPart/pWeapon_100_G_015/pWeapon_100_G_015_Home.prefab.meta": "e85edbe0807f749f85edf75f6155fe290a66c6d6e11b9591e7cd5269ef913fcd",
@@ -2107,7 +2120,7 @@
     "unity/Assets/Official/Home/WeaponParts/Prefabs/Appearance/PlayerPart/sWeapon_21_10306/sWeapon_21_10306_Home.prefab.meta": "28553e2076af8eed274e3049fa3a22a1dd45b17bbad7f63f32c90700b1614934",
     "unity/Assets/Official/Home/WeaponParts/Prefabs/Appearance/PlayerPart/sWeapon_21_10708/sWeapon_21_10708_Home.prefab": "4fc2a1e99163d76fa4b778eda1f13b9db5e635052055a9304b6efb577213ef1d",
     "unity/Assets/Official/Home/WeaponParts/Prefabs/Appearance/PlayerPart/sWeapon_21_10708/sWeapon_21_10708_Home.prefab.meta": "3dd03a2576d305c90b4a79f46eaca5ed21738d112b5f2715b9b77d5317269756",
-    "scripts/prepare_home_native_prefab_references.py": "a79946f97e1992d87ef06fe79345db7e98ab2be0f7a46bf67713cf180f2a7b3a",
+    "scripts/prepare_home_native_prefab_references.py": "6fc6eb759b9e68c8b73140bd49e9b574df081c02c613c880460e4c7c4b0e51a1",
     "scripts/prepare_partner_card_native.py": "0ec78aa2ba59c9f87c794d76067476ed63043a20b1da7a18df984319ff2f957d",
     "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePartPaths.cs": "d874e4e911bc387a025ebd03bb6440e131925d5d63525fafa9c00b7b34f72124",
     "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeEntityPrefabPaths.cs": "c619304f05fad91eb414914fb7c129ad9b54f8646117ef77700514de8e20e37b"
@@ -2132,6 +2145,11 @@
       "manifest": "903_156948",
       "receipt": "assets/reference/home-diningtable-native-source-manifest.json",
       "sha256": "f76f5d11c633bdfcd4369d549e23b10981c2490fc2753d6089d1b94bb9e2d5a1"
+    },
+    "home-cart-native": {
+      "manifest": "903_156948",
+      "receipt": "assets/reference/home-cart-native-source-manifest.json",
+      "sha256": "e7233d0674a5afbc9371ada116c8c4eea6e8b5a4bb73d543cdd3f285612a896a"
     },
     "home-weapon-parts": {
       "manifest": "903_156948",
@@ -2379,6 +2397,78 @@
         "type": 3
       },
       "source": "home-diningtable-native"
+    },
+    {
+      "location": "Home/Dynamic/Furniture/Cart/Cart",
+      "resource": "Home/NativePrefabs/63965c1e5a4d1d4c3bb3eff021bc30667ad7caefd9ee536482b63fb32e19be0d",
+      "reference": "unity/Assets/Game/Resources/Home/NativePrefabs/63965c1e5a4d1d4c3bb3eff021bc30667ad7caefd9ee536482b63fb32e19be0d.asset",
+      "prefab": "unity/Assets/Official/Home/Cart/Native/Cart.prefab",
+      "pointer": {
+        "fileID": 1709254077376921,
+        "guid": "135f3ed1e15bebb9864b1490832cf488",
+        "type": 3
+      },
+      "source": "home-cart-native"
+    },
+    {
+      "location": "Home/Dynamic/Furniture/Cart/CartSpring",
+      "resource": "Home/NativePrefabs/a47ed17f869140340a67ccdf2ccb029845f27afdd8f1874d3dad3f5baeba51f3",
+      "reference": "unity/Assets/Game/Resources/Home/NativePrefabs/a47ed17f869140340a67ccdf2ccb029845f27afdd8f1874d3dad3f5baeba51f3.asset",
+      "prefab": "unity/Assets/Official/Home/Cart/Native/CartSpring.prefab",
+      "pointer": {
+        "fileID": 1709254077376921,
+        "guid": "8d8c1e251a877f7b9f5ad06e2ab3e2e9",
+        "type": 3
+      },
+      "source": "home-cart-native"
+    },
+    {
+      "location": "Home/Dynamic/Furniture/Cart/CartSnow",
+      "resource": "Home/NativePrefabs/588699c7c9de634cbb85d1c8c48828a40333c4140a11e2a0b35efa4c00928ecc",
+      "reference": "unity/Assets/Game/Resources/Home/NativePrefabs/588699c7c9de634cbb85d1c8c48828a40333c4140a11e2a0b35efa4c00928ecc.asset",
+      "prefab": "unity/Assets/Official/Home/Cart/Native/CartSnow.prefab",
+      "pointer": {
+        "fileID": 1709254077376921,
+        "guid": "d3e0f085ec6cbe37a4333b36281d0eae",
+        "type": 3
+      },
+      "source": "home-cart-native"
+    },
+    {
+      "location": "Home/Dynamic/Furniture/Cart/CartSpringSnow",
+      "resource": "Home/NativePrefabs/a667f6433a2b7dca15b37bc60035a6fbc4e808d8fe7e3595caecd206ff4fd06c",
+      "reference": "unity/Assets/Game/Resources/Home/NativePrefabs/a667f6433a2b7dca15b37bc60035a6fbc4e808d8fe7e3595caecd206ff4fd06c.asset",
+      "prefab": "unity/Assets/Official/Home/Cart/Native/CartSpringSnow.prefab",
+      "pointer": {
+        "fileID": 1709254077376921,
+        "guid": "3eedc1b3125c0d92246ea7bea406375e",
+        "type": 3
+      },
+      "source": "home-cart-native"
+    },
+    {
+      "location": "Home/Dynamic/Furniture/Cart/CartMaidCafe",
+      "resource": "Home/NativePrefabs/afa9084769352cdf46a21f17e878691d49ca6b14a81390036e6d3a9cba5ae8cd",
+      "reference": "unity/Assets/Game/Resources/Home/NativePrefabs/afa9084769352cdf46a21f17e878691d49ca6b14a81390036e6d3a9cba5ae8cd.asset",
+      "prefab": "unity/Assets/Official/Home/Cart/Native/CartMaidCafe.prefab",
+      "pointer": {
+        "fileID": 1709254077376921,
+        "guid": "7f46fd70ebfe2dd5d9a752d7c1c2a608",
+        "type": 3
+      },
+      "source": "home-cart-native"
+    },
+    {
+      "location": "Home/Dynamic/Furniture/Cart/CartMaidCafeSnow",
+      "resource": "Home/NativePrefabs/189534bb200e6c6984094c2fc632146b1b74a749d5b9c6d2279726ee9d3c0df4",
+      "reference": "unity/Assets/Game/Resources/Home/NativePrefabs/189534bb200e6c6984094c2fc632146b1b74a749d5b9c6d2279726ee9d3c0df4.asset",
+      "prefab": "unity/Assets/Official/Home/Cart/Native/CartMaidCafeSnow.prefab",
+      "pointer": {
+        "fileID": 1709254077376921,
+        "guid": "a3b9e41da5bbc1f19cb501084e926a3a",
+        "type": 3
+      },
+      "source": "home-cart-native"
     },
     {
       "location": "Appearance/PlayerPart/pWeapon_100_G_015/pWeapon_100_G_015_Home",
@@ -14782,6 +14872,18 @@
     "unity/Assets/Game/Resources/Home/NativePrefabs/9f18adb7256a5b42ad3c244ca65bf9d8ce51cd4a071851f94afa433b255f881e.asset.meta": "c888923f42a1a4fa68dd436463b16e609a91dc80698277ebcd477387476e82d8",
     "unity/Assets/Game/Resources/Home/NativePrefabs/d7ddd40c4bc56db419065c859e91316c3852ee4c01af72e94a67b1861093d8a2.asset": "e9dc895788f57f8468fa4d19dc5ff97826f0fbe41cb79d1efa458004cbfcf2db",
     "unity/Assets/Game/Resources/Home/NativePrefabs/d7ddd40c4bc56db419065c859e91316c3852ee4c01af72e94a67b1861093d8a2.asset.meta": "3dac4095ef2421bbe4f1f2f151a59d674c7ef0bdb60373b549948d791b7de385",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/63965c1e5a4d1d4c3bb3eff021bc30667ad7caefd9ee536482b63fb32e19be0d.asset": "043a0ec2a7828b6dd9cc994cada265677b86561bfb80cb6301b575e2d5c62e1b",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/63965c1e5a4d1d4c3bb3eff021bc30667ad7caefd9ee536482b63fb32e19be0d.asset.meta": "ad5644ba7b5be316c64fa942de81a7109ce903c287ec213ee6635f747cda0595",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/a47ed17f869140340a67ccdf2ccb029845f27afdd8f1874d3dad3f5baeba51f3.asset": "539bbb62f4bc731dadf6930466dbab6ee84a10159906f37d1870dc058ca889df",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/a47ed17f869140340a67ccdf2ccb029845f27afdd8f1874d3dad3f5baeba51f3.asset.meta": "725d1b7d948f6c1d242697bec8c7a8918fabfe83583baf489288658c3614dd52",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/588699c7c9de634cbb85d1c8c48828a40333c4140a11e2a0b35efa4c00928ecc.asset": "3c6e005b5594414bdc803151400d0182b131da77bb6d1a13617d2314a7be7666",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/588699c7c9de634cbb85d1c8c48828a40333c4140a11e2a0b35efa4c00928ecc.asset.meta": "343f8924c50149e05d462c7b59b4a431cd1ca7db07060ccac7e186af84937af8",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/a667f6433a2b7dca15b37bc60035a6fbc4e808d8fe7e3595caecd206ff4fd06c.asset": "bdc5b23b6d5a2542cb2bc3e1b0f80ce2e34c5b17c2891b6fa0f77dbda82e222f",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/a667f6433a2b7dca15b37bc60035a6fbc4e808d8fe7e3595caecd206ff4fd06c.asset.meta": "5d83de7ced40eab28754f4a44ef6c40a5e6ecd9c2d05fb4a1e05de811786805b",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/afa9084769352cdf46a21f17e878691d49ca6b14a81390036e6d3a9cba5ae8cd.asset": "baf9fe87f5f61de7d3d1472115b2c49f61d33593d597a739d8caac97f71e9345",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/afa9084769352cdf46a21f17e878691d49ca6b14a81390036e6d3a9cba5ae8cd.asset.meta": "ca03644648dcaef71427a1d930ce8cc66fdc58cf8d7ab2a8281bd9bded54e42e",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/189534bb200e6c6984094c2fc632146b1b74a749d5b9c6d2279726ee9d3c0df4.asset": "053df2954e54875aed4374abdfe3a19050337b7ceb9b8e06f6fc3bf654f3fe0d",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/189534bb200e6c6984094c2fc632146b1b74a749d5b9c6d2279726ee9d3c0df4.asset.meta": "d6a220bd9d0048c7b745369cc3f4fa4b4a1da25e8143c86dea1e51793626521b",
     "unity/Assets/Game/Resources/Home/NativePrefabs/631141b93e2677d408b064044654cee5e5340c92204e55e9aa96c0a5af85d7f7.asset": "026a5c4137cda852e34a4029e11aa232b0074a4a2770367aabdd8eabbb0996ae",
     "unity/Assets/Game/Resources/Home/NativePrefabs/631141b93e2677d408b064044654cee5e5340c92204e55e9aa96c0a5af85d7f7.asset.meta": "08d3a062f0d900642e0c83487c56278586c783dca294c97cacd6525a96fcc08b",
     "unity/Assets/Game/Resources/Home/NativePrefabs/bc553a0cb87d8da4aa8f2d2696c27b2dc8494529c242741354ae6bc68f2d7363.asset": "fc2c47a64413cda6ae1de011a197a44da046b4879a84ee974add0d47d8a0470e",
@@ -16842,8 +16944,8 @@
     "unity/Assets/Game/Resources/Home/NativePrefabs/6a15b73530ce7476f1c5054770accb51e84950daada2f043a5968530a10b949b.asset.meta": "a83fa133201d61ff38e8f7796f3af364cf8530563e30650a11a5abd9293a6c9f"
   },
   "validation_inputs": {
-    "scripts/fixtures/home_native_prefab_resources_validation.cs": "e274d5724327f217d1a7577e11176332f044bae7aa803cf5d978285aaa721851",
-    "scripts/test_home_native_prefab_resources.ps1": "5297eb934898109c7d6fc6462ed7faec1d3bbaf02cbeb3faf58af165140d44e2",
+    "scripts/fixtures/home_native_prefab_resources_validation.cs": "a03b6abd43371d9a802f5b950db6b1422ed059727e127b5c2a923cae2506f78b",
+    "scripts/test_home_native_prefab_resources.ps1": "fb7546ad13708c6e0e5cc20d6afb4862a10b14c2740a9ff9732dc9cb0b370efd",
     "scripts/fixtures/home_native_factory_probe.cs": "7917c06451df1c317622f7ef876f966e4fb95dd9804b886845c8b40e3499ecda",
     "scripts/fixtures/home_native_rack_owner_validation.cs": "3eb9cb20ef340da39a872087a0f8723e760684a322ae70d1c8620951f55db634",
     "scripts/test_home_native_rack_owner.ps1": "ded62a48999b7c9cf02aff64233823f142a802a945249947a96f110c0037463e"

@@ -19,7 +19,8 @@ namespace Zjcs.Presentation.Home
         private void InitializeHomeTipDots()
         {
             homeTipAssets = OfflineHomeTipDotAssets.LoadDefault();
-            homeTipServices = new OfflineHomeTipDotServices(() => profile.Save, session, rules);
+            homeTipServices = new OfflineHomeTipDotServices(() => profile.Save, session, rules,
+                null, () => BlessingLevel, () => context);
         }
 
         private IEnumerable<PartnerTipDotGraphInfo> CreateAdditionalTipDotGraphs()

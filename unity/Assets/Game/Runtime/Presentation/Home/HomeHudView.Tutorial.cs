@@ -202,6 +202,8 @@ namespace Zjcs.Presentation.Home
             if (string.IsNullOrWhiteSpace(storyUiKey)) return null;
             if (storyUiKey == "FurnitureRepairDialog.RepaireBtn" && repairWindows?.RepairDialog != null)
                 return repairWindows.RepairDialog.RepairBtn;
+            if (storyUiKey == "FurnitureCartDialog.CommonBtn" && nativeCartWindows?.Cart != null)
+                return nativeCartWindows.Cart.GetHangUpRewardBtn;
             HomeUiRenderer renderer = activeDialogRenderer;
             string buttonName = storyUiKey.Substring(storyUiKey.LastIndexOf('.') + 1);
             if (storyUiKey == "FurnitureCartDialog.CommonBtn") buttonName = "CommonBtn_12";
@@ -220,6 +222,15 @@ namespace Zjcs.Presentation.Home
 
         public Button FindTutorialUnlockButton()
         {
+            if (activePanelKey == "cart" && nativeCartWindows?.Cart != null)
+            {
+                foreach (var item in nativeCartWindows.Cart.GetActiveUnlockButtonItems())
+                {
+                    if (item != null && item.UnlockBtn != null
+                        && item.UnlockBtn.gameObject.activeInHierarchy && item.UnlockBtn.interactable)
+                        return item.UnlockBtn;
+                }
+            }
             if (activeDialogRenderer == null || activePanelKey != "cart") return null;
             foreach (GameObject node in activeDialogRenderer.AllNodes)
             {

@@ -26,13 +26,25 @@ namespace Zjcs.Official.HomeTipDots
         public HomeTipItemInfo Info;
     }
 
+    public sealed class HomeTipHangUpInfo
+    {
+        public int Id;
+        public bool CanLevelUp;
+    }
+
     public interface IHomeTipDotPlayer
     {
         bool CanFreeFastHangUp(int fastHangUpId);
         long GetItemAmount(int itemId);
         bool HasUnlockedHangUp(int hangUpId);
+        bool TryGetUnlockSingleHangUpData(int hangUpId, out int level);
+        int GetHangUpMaxLevel();
+        bool HasItems(Dictionary<int, long> costs);
         event Action<int> OnHangUpUnlock;
+        event Action<int, int> OnHangUpLevelUp;
         event Action<int> OnFastHangUp;
+        event Action<int> OnLevelUpdate;
+        event Action OnGoddessUpdate;
         event Action<long> OnDebugTimeOffset;
         event Action<HomeTipItemData, long, object> OnItemCountUpdate;
     }
@@ -43,6 +55,11 @@ namespace Zjcs.Official.HomeTipDots
         bool TryGetFastHangUpInfo(EFurniture furniture, out List<HomeTipFastHangUpInfo> list);
         bool IsFastHangUpItem(int itemId);
         EFurniture GetHangUpBindFurniture(int hangUpId);
+        bool CheckHangUpUnlockMet(EFurniture furniture);
+        bool TryGetHangUpInfo(int hangUpId, out HomeTipHangUpInfo info);
+        bool TryGetHangUpInfos(EFurniture furniture, out List<HomeTipHangUpInfo> list);
+        int GetHangUpUpgradeMaxLevel(int hangUpId);
+        Dictionary<int, long> GetHangUpUpgradeCosts(int hangUpId, int nextLevel);
         IDisposable SubscribeEnterNewDay(Action callback);
     }
 }

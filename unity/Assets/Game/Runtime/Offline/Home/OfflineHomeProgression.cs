@@ -99,6 +99,16 @@ namespace Zjcs.Offline.Home
                 }
                 entry.Unlocked = true;
                 entry.Level = Math.Max(1, entry.Level);
+                if (record.initialExtraRewardSeconds > 0)
+                {
+                    OfflineHomeIncomeEntry income = save.Income.FirstOrDefault(value => value.HangUpId == hangUpId);
+                    if (income == null)
+                    {
+                        income = new OfflineHomeIncomeEntry { HangUpId = hangUpId };
+                        save.Income.Add(income);
+                    }
+                    income.StoredSeconds = Math.Max(income.StoredSeconds, record.initialExtraRewardSeconds);
+                }
             });
         }
 
@@ -113,10 +123,16 @@ namespace Zjcs.Offline.Home
             HomeConditionContext context, int blessingLevel, Func<int, long> itemCount,
             Func<IReadOnlyList<HomeCostEntry>, bool> consume, Action<IReadOnlyList<HomeCostEntry>> refund,
             string receipt)
+            => LevelUp(session, hangUpId, context, blessingLevel, itemCount, consume, refund, receipt, 1);
+
+        public HomeLevelUpResult LevelUp(OfflineHomeIncomeSession session, int hangUpId,
+            HomeConditionContext context, int blessingLevel, Func<int, long> itemCount,
+            Func<IReadOnlyList<HomeCostEntry>, bool> consume, Action<IReadOnlyList<HomeCostEntry>> refund,
+            string receipt, int levels)
         {
-            HomeLevelUpResult result = CheckLevelUp(session, hangUpId, context, blessingLevel, itemCount);
+            HomeLevelUpResult result = CheckLevelUp(session, hangUpId, context, blessingLevel, itemCount, levels);
             if (!result.CanApply) return result;
-            int level = result.Level - 1;
+            int targetLevel = result.Level;
             if (result.Costs.Count > 0 && (consume == null || refund == null || !consume(result.Costs)))
             {
                 result.CanApply = false;
@@ -127,7 +143,7 @@ namespace Zjcs.Offline.Home
                 {
                     OfflineHomeHangUpEntry entry = save.HangUps.FirstOrDefault(value => value.HangUpId == hangUpId);
                     if (entry == null) throw new InvalidOperationException("The hang-up is not unlocked.");
-                    entry.Level = level + 1;
+                    entry.Level = targetLevel;
                 }))
             {
                 if (result.Costs.Count > 0) refund?.Invoke(result.Costs);
@@ -141,8 +157,13 @@ namespace Zjcs.Offline.Home
 
         public HomeLevelUpResult CheckLevelUp(OfflineHomeIncomeSession session, int hangUpId,
             HomeConditionContext context, int blessingLevel, Func<int, long> itemCount)
+            => CheckLevelUp(session, hangUpId, context, blessingLevel, itemCount, 1);
+
+        public HomeLevelUpResult CheckLevelUp(OfflineHomeIncomeSession session, int hangUpId,
+            HomeConditionContext context, int blessingLevel, Func<int, long> itemCount, int levels)
         {
             var result = new HomeLevelUpResult();
+            if (levels <= 0) { result.Error = "invalid_levels"; return result; }
             HomeHangUpRecord record = rules.HangUp(hangUpId);
             if (record == null) { result.Error = "unknown_hang_up"; return result; }
             if (!record.canLevelUp) { result.Error = "not_levelable"; return result; }
@@ -150,18 +171,68 @@ namespace Zjcs.Offline.Home
             if (!rules.IsMet(record.unlock, context)) { result.Error = "condition"; return result; }
             int level = session.HangUpLevel(hangUpId);
             int maximum = rules.MaxHangUpLevel(hangUpId);
-            if (level >= maximum) { result.Error = "max_level"; result.Level = level; return result; }
             int homeLimit = rules.FurnitureLevelUpLimit(blessingLevel);
-            if (level >= homeLimit) { result.Error = "home_level"; result.Level = level; return result; }
-            HomeHangUpUpgradeRecord upgrade = rules.Upgrade(hangUpId, level + 1);
-            var costs = (upgrade?.cost ?? Array.Empty<HomeCostEntry>())
-                .Where(cost => cost != null && cost.itemId > 0 && cost.count > 0).ToList();
+            if (level + levels > maximum) { result.Error = "max_level"; result.Level = level; return result; }
+            if (level + levels > homeLimit) { result.Error = "home_level"; result.Level = level; return result; }
+
+            var aggregated = new Dictionary<int, long>();
+            var orderedIds = new List<int>();
+            for (int step = 1; step <= levels; step++)
+            {
+                HomeHangUpUpgradeRecord upgrade = rules.Upgrade(hangUpId, level + step);
+                if (upgrade?.cost == null) continue;
+                foreach (HomeCostEntry cost in upgrade.cost)
+                {
+                    if (cost == null || cost.itemId <= 0 || cost.count <= 0) continue;
+                    if (!aggregated.ContainsKey(cost.itemId)) orderedIds.Add(cost.itemId);
+                    aggregated[cost.itemId] = (aggregated.TryGetValue(cost.itemId, out long prev) ? prev : 0L) + cost.count;
+                }
+            }
+            var costs = orderedIds.Select(id => new HomeCostEntry { itemId = id, count = aggregated[id] }).ToList();
             result.Costs = costs;
             foreach (HomeCostEntry cost in costs)
                 if (itemCount == null || itemCount(cost.itemId) < cost.count) { result.Error = "items"; return result; }
             result.CanApply = true;
-            result.Level = level + 1;
+            result.Level = level + levels;
             return result;
+        }
+
+        public int CalcLevelUpNum(OfflineHomeIncomeSession session, int hangUpId,
+            HomeConditionContext context, int blessingLevel, Func<int, long> itemCount,
+            int maxLevel, int calcMaxLevelUp)
+        {
+            if (calcMaxLevelUp <= 0) return 0;
+            HomeHangUpRecord record = rules.HangUp(hangUpId);
+            if (record == null || !record.canLevelUp || !session.IsHangUpUnlocked(hangUpId)) return 0;
+            if (!rules.IsMet(record.unlock, context)) return 0;
+            int level = session.HangUpLevel(hangUpId);
+            int cap = Math.Min(maxLevel, Math.Min(rules.MaxHangUpLevel(hangUpId), rules.FurnitureLevelUpLimit(blessingLevel)));
+            int count = 0;
+            var needed = new Dictionary<int, long>();
+            while (count < calcMaxLevelUp && level + count + 1 <= cap)
+            {
+                HomeHangUpUpgradeRecord upgrade = rules.Upgrade(hangUpId, level + count + 1);
+                if (upgrade?.cost != null)
+                {
+                    foreach (HomeCostEntry cost in upgrade.cost)
+                    {
+                        if (cost == null || cost.itemId <= 0 || cost.count <= 0) continue;
+                        needed[cost.itemId] = (needed.TryGetValue(cost.itemId, out long prev) ? prev : 0L) + cost.count;
+                    }
+                }
+                bool affordable = true;
+                foreach (KeyValuePair<int, long> pair in needed)
+                {
+                    if (itemCount == null || itemCount(pair.Key) < pair.Value)
+                    {
+                        affordable = false;
+                        break;
+                    }
+                }
+                if (!affordable) break;
+                count++;
+            }
+            return count;
         }
 
         /// <summary>Builds the income catalog from the current furniture and hang-up state.</summary>

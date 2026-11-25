@@ -14,6 +14,8 @@ TEMPLATE = Path(__file__).parent / 'templates/home_tip_dots/HomeTipDotServices.c
 NODES = (
     'TipDotHasFreeFastHangUpTimesConditionNode',
     'TipDotHasItemFastHangUpTimesConditionNode',
+    'TipDotHangUpItemCanUnlockConditionNode',
+    'TipDotHangUpItemCanLevelUpConditionNode',
 )
 
 
@@ -106,7 +108,99 @@ def prepare():
                 '\t\t\tmEventDisposable = Services.SubscribeEnterNewDay(OnEnterNewDay);')
             text = text.replace('mEventDisposable.Dispose();', 'mEventDisposable?.Dispose();\n\t\tmEventDisposable = null;')
             text = text.replace('OnEnterNewDay(IEnterNewDay _)', 'OnEnterNewDay()')
+        elif name == 'TipDotHangUpItemCanUnlockConditionNode':
+            text = replace(text, 'FurnitureUtils.CheckHangUpUnlockMet(Services.Player, Furniture)',
+                'Services.CheckHangUpUnlockMet(Furniture)')
+        elif name == 'TipDotHangUpItemCanLevelUpConditionNode':
+            text = re.sub(r'\bHangUpInfo\b', 'HomeTipHangUpInfo', text)
+            text = replace(text, """\t\tif (NodeKey.InstanceInfo is HangUpNodeInstanceInfo hangUpNodeInstanceInfo)
+\t\t{
+\t\t\tHomeTipHangUpInfo item = Parsers.Instance.HangUpInfoParser.Get(hangUpNodeInstanceInfo.HangUpId);
+\t\t\tif (mHangUpInfos == null)
+\t\t\t{
+\t\t\t\tmHangUpInfos = new List<HomeTipHangUpInfo>(1);
+\t\t\t}
+\t\t\tmHangUpInfos.Clear();
+\t\t\tmHangUpInfos.Add(item);
+\t\t}
+\t\telse
+\t\t{
+\t\t\tParsers.Instance.HangUpInfoParser.RecordHangUpInfoDict.TryGetValue(Furniture, out mHangUpInfos);
+\t\t}""", """\t\tif (NodeKey.InstanceInfo is HangUpNodeInstanceInfo hangUpNodeInstanceInfo)
+\t\t{
+\t\t\tif (mHangUpInfos == null)
+\t\t\t{
+\t\t\t\tmHangUpInfos = new List<HomeTipHangUpInfo>(1);
+\t\t\t}
+\t\t\tmHangUpInfos.Clear();
+\t\t\tif (Services.TryGetHangUpInfo(hangUpNodeInstanceInfo.HangUpId, out HomeTipHangUpInfo item) && item != null)
+\t\t\t{
+\t\t\t\tmHangUpInfos.Add(item);
+\t\t\t}
+\t\t}
+\t\telse
+\t\t{
+\t\t\tServices.TryGetHangUpInfos(Furniture, out mHangUpInfos);
+\t\t}""")
+            text = replace(text, 'mainPlayer.OnActiveableEntUpdate += MainPlayer_OnActiveableEntUpdate;',
+                'mainPlayer.OnGoddessUpdate += MainPlayer_OnGoddessUpdate;')
+            text = replace(text, 'mainPlayer.OnActiveableEntUpdate -= MainPlayer_OnActiveableEntUpdate;',
+                'mainPlayer.OnGoddessUpdate -= MainPlayer_OnGoddessUpdate;')
+            text = replace(text, """\tprotected virtual void MainPlayer_OnActiveableEntUpdate(MapActiveableEntityInfo info)
+\t{
+\t\tif (info.ActiveEntType == MapWorldActiveableEntityType.Goddess)
+\t\t{
+\t\t\tRefreshLevelUpInfo();
+\t\t\tSetDirty();
+\t\t}
+\t}""", """\tprotected virtual void MainPlayer_OnGoddessUpdate()
+\t{
+\t\tRefreshLevelUpInfo();
+\t\tSetDirty();
+\t}""")
+            text = replace(text, """\t\tHangUpUpgradeMaterialInfoParser hangUpUpgradeMaterialInfoParser = Parsers.Instance.HangUpUpgradeMaterialInfoParser;
+\t\tmHangUpCanLevelUpItemCostDict.Clear();
+\t\tint hangUpMaxLevel = Services.Player.GetHangUpMaxLevel();
+\t\tforeach (HomeTipHangUpInfo mHangUpInfo in mHangUpInfos)
+\t\t{
+\t\t\tif (!mHangUpInfo.CanLevelUp)
+\t\t\t{
+\t\t\t\tcontinue;
+\t\t\t}
+\t\t\tint id = mHangUpInfo.Id;
+\t\t\tif (Services.Player.TryGetUnlockSingleHangUpData(id, out var singleHangUpData))
+\t\t\t{
+\t\t\t\tint maxLevel = hangUpUpgradeMaterialInfoParser.GetMaxLevel(id);
+\t\t\t\tif (singleHangUpData.Level < hangUpMaxLevel && singleHangUpData.Level != maxLevel)
+\t\t\t\t{
+\t\t\t\t\tmHangUpCanLevelUpItemCostDict[id] = hangUpUpgradeMaterialInfoParser.Get(id, singleHangUpData.Level + 1);
+\t\t\t\t}
+\t\t\t}
+\t\t}""", """\t\tmHangUpCanLevelUpItemCostDict.Clear();
+\t\tint hangUpMaxLevel = Services.Player.GetHangUpMaxLevel();
+\t\tforeach (HomeTipHangUpInfo mHangUpInfo in mHangUpInfos)
+\t\t{
+\t\t\tif (!mHangUpInfo.CanLevelUp)
+\t\t\t{
+\t\t\t\tcontinue;
+\t\t\t}
+\t\t\tint id = mHangUpInfo.Id;
+\t\t\tif (Services.Player.TryGetUnlockSingleHangUpData(id, out int currentLevel))
+\t\t\t{
+\t\t\t\tint maxLevel = Services.GetHangUpUpgradeMaxLevel(id);
+\t\t\t\tif (currentLevel < hangUpMaxLevel && currentLevel != maxLevel)
+\t\t\t\t{
+\t\t\t\t\tDictionary<int, long> cost = Services.GetHangUpUpgradeCosts(id, currentLevel + 1);
+\t\t\t\t\tif (cost != null)
+\t\t\t\t\t{
+\t\t\t\t\t\tmHangUpCanLevelUpItemCostDict[id] = cost;
+\t\t\t\t\t}
+\t\t\t\t}
+\t\t\t}
+\t\t}""")
         emit(name, text)
+
+    emit('HangUpNodeInstanceInfo', read('HangUpNodeInstanceInfo'))
 
     inputs[TEMPLATE.relative_to(ROOT).as_posix()] = sha(TEMPLATE.read_bytes())
     write(DEST / TEMPLATE.name, TEMPLATE.read_bytes())

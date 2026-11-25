@@ -15,6 +15,8 @@ SERVICES = ROOT / 'unity/Assets/Game/Runtime/Offline/HomeTipDots/OfflineHomeTipD
 RUNTIME_HELPER = ROOT / 'unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.HomeTipDots.cs'
 MANIFEST_SOURCES = (
     ROOT / 'assets/reference/home-bed-native-source-manifest.json',
+    ROOT / 'assets/reference/home-cart-native-source-manifest.json',
+    ROOT / 'assets/reference/home-cart-windows-native-source-manifest.json',
 )
 GRAPH_SCRIPT_GUID = '8e5b2be808a35cf8a8914701067cfea8'
 
@@ -78,6 +80,11 @@ def prepare():
                 prefab_rows = data.get('prefabs', [])
                 if prefab_rows:
                     asset_path = (ROOT / prefab_rows[0]['prefab']).parent / rel
+            if not asset_path.is_file():
+                suffix = '/' + rel
+                matches = [ROOT / k for k in data.get('installed_output_sha256', {}) if k.endswith(suffix)]
+                if matches:
+                    asset_path = matches[0]
             asset_raw = asset_path.read_bytes()
             if sha(asset_raw) != expected_sha:
                 raise ValueError('Home graph payload differs from source receipt: ' + rel)

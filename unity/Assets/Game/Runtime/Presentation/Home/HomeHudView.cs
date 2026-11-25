@@ -721,6 +721,8 @@ namespace Zjcs.Presentation.Home
             nativeCurrencyPeriodic?.Update(Time.time);
             nativeBedServices?.Tick();
             nativeBedWindows?.Tick();
+            nativeCartServices?.Tick();
+            nativeCartWindows?.Tick();
             host.SetFantasyTowerBackgroundExecution(AnyModalOpen);
             UpdatePartnerDetailRuntime();
             TickPetIntroduction();
@@ -737,6 +739,11 @@ namespace Zjcs.Presentation.Home
         public bool TryHandleBack()
         {
             if (NativeCurrencyModalOpen) { nativeCurrencyWindows.CloseLast(); return true; }
+            if (nativeCartWindows != null && nativeCartWindows.HasWindows)
+            {
+                nativeCartWindows.CloseLast();
+                return true;
+            }
             if (ClosePartnerPromptWindow()) return true;
             if (ClosePartnerFriendshipWindow()) return true;
             if (NpcTravelModalOpen)
@@ -769,7 +776,6 @@ namespace Zjcs.Presentation.Home
             RefreshTasks();
             RefreshNativePlayerPanel();
             if (bedOpen) RefreshBed();
-            if (cartOpen) RefreshCart();
         }
 
         public void RefreshCounts()
@@ -812,6 +818,7 @@ namespace Zjcs.Presentation.Home
             bool wasOpen = activeDialog != null;
             ReleaseNativeBedWindow();
             ReleaseNativeBedOutput();
+            ReleaseNativeCartWindow();
             repairWindows?.Dispose();
             repairWindows = null;
             if (repairCapture != null) UnityEngine.Object.Destroy(repairCapture);
@@ -942,93 +949,7 @@ namespace Zjcs.Presentation.Home
             hourly = preview.HourlyRate;
         }
 
-        public void ShowCart()
-        {
-            OpenDialog("cart", (renderer, panel) =>
-            {
-                renderer.SetTextByName("TitleTxt", host.Rules.FurnitureNameForType(10));
-                renderer.SetTextByName("DescText", "小推车资源产出");
-                BuildCartRows(renderer, panel);
-                Button collect = FirstButton(renderer, "CommonBtn_12");
-                if (collect != null)
-                {
-                    collect.onClick.RemoveAllListeners();
-                    collect.onClick.AddListener(() =>
-                    {
-                        long total = 0;
-                        foreach (HomeHangUpRecord record in host.Rules.HangUpsOf(10))
-                            if (host.Session.IsHangUpUnlocked(record.id)) total += host.TryCollect(record.id);
-                        Notify(total > 0 ? "领取 " + Format(total) : "暂无可领取产出");
-                        RefreshCart();
-                    });
-                }
-            });
-            cartOpen = activeDialog != null;
-        }
-
-        private void RefreshCart()
-        {
-            if (activeDialogRenderer == null || !cartOpen) return;
-            Transform panel = activeDialog == null ? null : activeDialog.transform;
-            Transform scroll = Find(panel, "HangUpScrollRect");
-            Transform content = scroll == null ? null : Find(scroll, "Content");
-            if (content == null) content = Find(panel, "Content");
-            if (content == null) return;
-            for (int index = content.childCount - 1; index >= 0; index--)
-            {
-                Transform row = content.GetChild(index);
-                if (row.name == "CartHangUpItem")
-                    UnityEngine.Object.Destroy(row.gameObject);
-            }
-            BuildCartRows(activeDialogRenderer, activeDialog);
-        }
-
-        private void BuildCartRows(HomeUiRenderer renderer, GameObject panel)
-        {
-            Transform content = Find(panel.transform, "HangUpScrollRect");
-            Transform list = content == null ? null : Find(content, "Content");
-            if (list == null) list = Find(panel.transform, "Content");
-            if (list == null) return;
-            foreach (HomeHangUpRecord record in host.Rules.HangUpsOf(10))
-            {
-                HomeUiRenderer rowRenderer = Renderer();
-                GameObject row = rowRenderer.Create("cart_row", list, null);
-                bool unlocked = host.Session.IsHangUpUnlocked(record.id);
-                rowRenderer.SetActiveByName("Unlock", unlocked);
-                rowRenderer.SetActiveByName("Lock", !unlocked && !host.Rules.IsMet(record.unlock, host.Context));
-                rowRenderer.SetActiveByName("CanUnlock", !unlocked && host.Rules.IsMet(record.unlock, host.Context));
-                rowRenderer.SetTextByName("Name", host.Rules.ItemName(host.Rules.HangUpReward(record.rewardId)?.rewardRuleId ?? 0));
-                string rowName = host.ItemNameForHangUp(record.id);
-                rowRenderer.SetTextByName("Name", rowName);
-                rowRenderer.SetTextByName("LevelNumber", host.Session.HangUpLevel(record.id).ToString());
-                if (unlocked)
-                {
-                    HangUpIncomePreview preview = host.Session.Preview(record.id);
-                    rowRenderer.SetTextByName("ValueTxt", Format(preview.Count) + "/" + Format(preview.Capacity));
-                }
-                int id = record.id;
-                Button levelUp = FirstButton(rowRenderer, "CommonBtn_LevelUp");
-                if (levelUp != null && unlocked && record.canLevelUp)
-                {
-                    levelUp.onClick.AddListener(() =>
-                    {
-                        HomeLevelUpResult result = host.TryLevelUpHangUp(id);
-                        Notify(result.Success ? "升级到 " + result.Level + " 级" : ErrorText(result.Error));
-                        RefreshCart();
-                    });
-                }
-                else if (levelUp != null) levelUp.gameObject.SetActive(false);
-                Button unlock = FirstButton(rowRenderer, "UnlockBtn");
-                if (unlock != null)
-                {
-                    unlock.onClick.AddListener(() =>
-                    {
-                        Notify(host.TryUnlockHangUp(id) ? "已解锁" : "解锁条件未满足");
-                        RefreshCart();
-                    });
-                }
-            }
-        }
+        public void ShowCart() => ShowNativeCart();
 
         private static string ErrorText(string error) => error switch
         {
@@ -1310,6 +1231,7 @@ namespace Zjcs.Presentation.Home
             ReleaseNativeCurrencyBar();
             ReleaseNativeFunctionMenu();
             ReleaseNativeBedWindow();
+            ReleaseNativeCartWindow();
             bedAwards?.Dispose(); bedAwards = null;
             ReleaseNativeBedOutput();
             dungeonUiBindingModule?.Dispose();

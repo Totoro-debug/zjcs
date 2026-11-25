@@ -8,6 +8,8 @@
     ".tools/source-packages/current/903_156948/official-code/client-source/StoreBoxFurniture.cs": "717a238af7e16d86b8b5a66d4f15db5a1b7d5850b99f5f93679295f22d4c5542",
     ".tools/source-packages/current/903_156948/official-code/client-source/BaseHangUpFurniture.cs": "9678a0c5babfc0bb2632477254a20e6ddbe92ae084b3ae710bfb46f9bfca1ce2",
     ".tools/source-packages/current/903_156948/official-code/client-source/BedFurniture.cs": "c99791f69431fec864f2c1ccba86d22ec99c0637d67426de44975ed5289d8ca8",
+    ".tools/source-packages/current/903_156948/official-code/client-source/CartFurniture.cs": "f07c9921f5170db420adbe7dd2303046e3385c33584738365454722bf05f71e2",
+    ".tools/source-packages/current/903_156948/official-code/client-source/HomeDayNight.cs": "b075dd78080d99949b301f52424c6e5f9828015ec8a3e80297262aa67df39a54",
     ".tools/source-packages/current/903_156948/official-code/client-source/EntityClickSound.cs": "b3162ede8186a68078e7e5b5ce12047bfd752bf57236042f228b790c76a3a9fc",
     ".tools/source-packages/current/903_156948/official-code/client-source/HomeViewMode.cs": "e3d09f7c0bce94df43903262478c7e927e5295a5bafd4f883e9119a05fcaf0e8",
     ".tools/source-packages/current/903_156948/official-code/client-source/HomeViewModeControl.cs": "1ad8cdce4e6dc34a862b816ea9e00ae303316cc44534db0b086bb0ad14688796",
@@ -28,7 +30,7 @@
     "scripts/prepare_unity_profession_photographer.py": "21b43ad45b60fea01af75928c8213b54045ec4461a54bb8e411a571382c6d282",
     "scripts/prepare_unity_profession_ui_parts.py": "ecbd7039f9fa4dff5e6453c23ca41dda07b9cf32a732d1bff87fd8659b5b291b",
     ".tools/source-packages/current/903_156948/official-code/client-source/AppearanceSystem.Runtime/AppearanceUtils.cs": "58e391189da627b3375bad37d74cd9222923c2dd3545c72ae63d11a64a5431e4",
-    "scripts/templates/home_furniture/HomeFurnitureServices.cs": "83cd256a830366c490e3d50bab374c688b1e613eabeda3125bd84059adfa2435",
+    "scripts/templates/home_furniture/HomeFurnitureServices.cs": "accf59ee24e5d18ce6e7e78a5de9241f0562af578d1a2c7231ef5fb9d4e16297",
     "scripts/templates/home_furniture/HomeWeaponAnimationBindings.cs": "f9d97174a4c95e3b7ef1f99458c14ffaf1ac6b4fc75def2c3ad21159a2671311",
     "scripts/templates/home_furniture/HomeWeaponRackServices.cs": "6749e1907742a1422981de1323712733c753ceadfcd6fa82d37b47fe8d195d6e"
   },
@@ -43,6 +45,10 @@
     "unity/Assets/Game/Runtime/Official/HomeFurniture/BaseHangUpFurniture.cs.meta": "6d1daa5b6902b3026df7aa2d1ef7578be5327ffc9b1118aef4de499a02b1378d",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/BedFurniture.cs": "9fc42ce00c54e644e909a53985ff62dd32db84e3b6910e854056ebe13f98af6d",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/BedFurniture.cs.meta": "0441eb154f8b926179bf59a55732be8eff6b06f264262ba3d71541ec7d513fe4",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/CartFurniture.cs": "6972f656b6711504528e0a66294c9e0e5acfb2fbc682a7b54073c1e422bd9037",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/CartFurniture.cs.meta": "f0a1fa1cb60a7f610834a988d30c5f391498785e4f3e1bf88bd1fbd4cde6a2f2",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeDayNight.cs": "fb88652a9901ebc8f840170c8e38475c96b08b926838a18e96b69fe763a0e4f9",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeDayNight.cs.meta": "a09fca5d03596c7075fa66ab50411fd522a1e91b9f3042354cf4ac55d1b9f87d",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/EntityClickSound.cs": "70ad61d68660398d3e5e38bb8594eca5103947147552ef8218552ebf7ed0c1ff",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/EntityClickSound.cs.meta": "db91b72af941c3a4e533ebb4e1f222aea2c784d7793b70c1e2d742fd6c2cbad5",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeViewMode.cs": "585ff84440dc485b535724e114557b0e42076de0c116169ba022c1ad3dd83ce3",
@@ -75,7 +81,7 @@
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeNpcChatEntry.cs.meta": "5d8c1d778aa065c6254f99b36493ac33cf5083bc10b5d678e1a17b4bd71c12ca",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeNpcBubbleTip.cs": "2a7915a6ffb42f04ca7ffc1be7594c07c5a1c590edb1e5eb69816e6bd53b3b61",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeNpcBubbleTip.cs.meta": "8e0f23d8ed32fa798f3d72242afb161f4f6007ef8afc41e7ecb519201bee6621",
-    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeFurnitureServices.cs": "83cd256a830366c490e3d50bab374c688b1e613eabeda3125bd84059adfa2435",
+    "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeFurnitureServices.cs": "accf59ee24e5d18ce6e7e78a5de9241f0562af578d1a2c7231ef5fb9d4e16297",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeFurnitureServices.cs.meta": "0a4c24493e5b0aeabd392607aea9b94962f03e337a640b7673bb5df656da1675",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponAnimationBindings.cs": "f9d97174a4c95e3b7ef1f99458c14ffaf1ac6b4fc75def2c3ad21159a2671311",
     "unity/Assets/Game/Runtime/Official/HomeFurniture/HomeWeaponAnimationBindings.cs.meta": "f237817b8d50faa2821d4d4d0f0169bbbb28a018b47a5b13c05d5a071cb45229",
@@ -86,7 +92,7 @@
     "unity/Assets/Game/Runtime/Official/HomeFurniture.meta": "ca9d0edf5f0819afe26b16ff0ef206186ed5c208538799b6feb949246c5d533e"
   },
   "validation_inputs": {
-    "scripts/fixtures/home_furniture_controller_validation.cs": "fff9697f40b3336c93365500f143f1e54db2dd0c2ee57e56991cede91db1f7e3",
+    "scripts/fixtures/home_furniture_controller_validation.cs": "75946746e3b26073aa957e5a081732ee882ee6a3718ef6ddf0d714e362d4f0dc",
     "scripts/fixtures/home_weapon_rack_controller_validation.cs": "a60b930eb15c3926ba5431550319711aa9fe97e64eb9e7d4e21824ae034ec2b3",
     "scripts/fixtures/home_native_weapon_validation.cs": "71fa4b943f1bb21e814b2898fa4279c22a0e7548158d1e4d8c4a9eaa197699da",
     "scripts/fixtures/home_native_weapon_controller_validation.cs": "ee7fec772c8de9e594612b3296a0e29092140ca056f35d76d5ac956c714bb030",
@@ -154,7 +160,7 @@
       "b54377961060f7e5fea71f59deddfdb9b92bfbb3f68f52abe98bbf00b081e701"
     ]
   },
-  "generator_sha256": "3826c45a41186c943697185647155bf2359341be0b1d9c8320062dd5b16b241b",
+  "generator_sha256": "0426adbf1109ab79d9f903e18a603130f7592f5acd178a20049acdd2dc54c67b",
   "adaptations": [
     "Original four-state priority, click branches, condition subscriptions and teardown are retained.",
     "Original notice transitions, time-offset callbacks, notice text keys and arguments are retained.",

@@ -56,7 +56,7 @@ class HomeNativeFurnitureBinding(NativeSpineBinding):
         paths = {name: runtime / 'Official/HomeFurniture' / (name + '.cs') for name in (
             'EntityClickSound', 'StoreBoxFurniture', 'HomeNotice', 'HomeWeaponRack',
             'HomeViewModeControl', 'HomeSwitcherActionEventHandler', 'BaseHangUpFurniture', 'BedFurniture',
-            'HomeNpcChatEntry', 'DiningTableNpcPopClick', 'HomeNpcBubbleTip')}
+            'CartFurniture', 'HomeDayNight', 'HomeNpcChatEntry', 'DiningTableNpcPopClick', 'HomeNpcBubbleTip')}
         paths.update({
             'Home.ActorBehaviour.HomeBindingAuthoring': runtime / 'Official/HomeEntityBindings/HomeBindingAuthoring.cs',
             'HomeEntityDataProvider': runtime / 'Official/HomeEntityBindings/HomeEntityDataProvider.cs',

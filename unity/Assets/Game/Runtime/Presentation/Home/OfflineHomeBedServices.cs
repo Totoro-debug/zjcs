@@ -53,7 +53,7 @@ namespace Zjcs.Presentation.Home
         readonly Func<string, string> outputText;
         readonly Func<int, int, bool> mapPublic;
         readonly Zjcs.Offline.PartnersUI.OfflinePartnerLocalizationService confirmTexts;
-        readonly Dictionary<object, List<Action>> conditions = new Dictionary<object, List<Action>>();
+        readonly Dictionary<object, (bool LastMet, List<Action> Callbacks)> conditions = new Dictionary<object, (bool, List<Action>)>();
         readonly List<OfflineHomeCollectedReward> pending = new List<OfflineHomeCollectedReward>();
         readonly OfflineProfessionImageCatalog imageCatalog;
         Action outputFunctionChanged;
@@ -68,6 +68,8 @@ namespace Zjcs.Presentation.Home
         public Action<HomeWindowText, HomeWindowText?, Action> ConfirmWindow;
         public Action<OutputGroupType> OpenOutputWindow;
         public Action OpenBlessingWindow;
+        public Func<string, string> TryExtraText;
+        public Func<object, bool> EvaluateCondition;
         public OfflineHomeFurnitureOutput Output { get; }
         public OfflineHomeOutputAddition OutputAddition { get; }
         public IHomeHangUpWindowServices Window => this;
@@ -117,7 +119,17 @@ namespace Zjcs.Presentation.Home
             if (observedLevel != Level)
             {
                 observedLevel = Level; Output.Refresh();
-                foreach (var callback in conditions.Values.SelectMany(value => value).ToArray()) callback();
+            }
+            if (conditions.Count > 0 && EvaluateCondition != null)
+            {
+                foreach (var key in conditions.Keys.ToArray())
+                {
+                    if (!conditions.TryGetValue(key, out var entry)) continue;
+                    bool met = EvaluateCondition(key);
+                    if (met == entry.LastMet) continue;
+                    conditions[key] = (met, entry.Callbacks);
+                    foreach (var callback in entry.Callbacks.ToArray()) callback?.Invoke();
+                }
             }
             long day = OfflineRefreshClock.DayStart(DateTime.Now).Ticks;
             if (day != observedDay) { observedDay = day; newDay?.Invoke(null); }
@@ -181,7 +193,9 @@ namespace Zjcs.Presentation.Home
         public string GetHangUpBaseOutput(int id) => Output.GetHangUpBaseOutput(id);
         public string Text(string key)
         {
-            string text = assets.Text(key);
+            string text = TryExtraText?.Invoke(key);
+            if (text != null) return text;
+            text = assets.Text(key);
             if (text == key && FastAwards != null) text = FastAwards().Text(key);
             if (text == key) text = confirmTexts.GetText(key, Zjcs.Official.World.NativeLabelUI.Framework.LanguageType.zh_CN);
             return text == key ? outputText(key) : text;
@@ -225,8 +239,9 @@ namespace Zjcs.Presentation.Home
             && (home.Session.HasActivityIncome(id) ? home.Session.PreviewAt(id, DateTimeOffset.UtcNow).Count > 0
                 : (home.Session.Save.Income.FirstOrDefault(value => value.HangUpId == id)?.SettledCount ?? 0) > 0 || Unsettled(id, out _) > 0);
         public HomeWindowItemInfo GetHangUpRewardItem(int id)
-            => id == 1 ? new HomeWindowItemInfo { Icon = assets.bedRewardImagePath }
-                : throw new NotSupportedException("Bind the selected cart item before opening it from the bed services.");
+            => id == 1
+                ? new HomeWindowItemInfo { Icon = assets.bedRewardImagePath }
+                : new HomeWindowItemInfo { Icon = home.Rules.HangUp(id)?.icon ?? string.Empty };
         public double GetProp(IReadOnlyDictionary<PropType, long> props, PropType type) => Output.GetProp(props, type);
         public void GetHangUpProp(HomeWindowHangUpInfo info, IReadOnlyDictionary<PropType, long> props, out double addPercent, out double addFixed)
             => Output.GetHangUpProp(info, props, out addPercent, out addFixed);
@@ -265,11 +280,20 @@ namespace Zjcs.Presentation.Home
         public IDisposable SubscribeTips(Action<HangUpTipLevelChangeData> callback) => home.HangUpHud.SubscribeHangUpTips(callback);
         public void RegisterCondition(object condition, Action callback)
         {
-            if (!conditions.TryGetValue(condition, out var callbacks)) conditions.Add(condition, callbacks = new List<Action>());
-            callbacks.Add(callback);
+            if (condition == null || callback == null) return;
+            if (!conditions.TryGetValue(condition, out var entry))
+                conditions.Add(condition, entry = (EvaluateCondition?.Invoke(condition) ?? true, new List<Action>()));
+            entry.Callbacks.Add(callback);
         }
         public void DeregisterCondition(object condition, Action callback)
-        { if (conditions.TryGetValue(condition, out var callbacks)) { callbacks.Remove(callback); if (callbacks.Count == 0) conditions.Remove(condition); } }
+        {
+            if (condition == null || callback == null) return;
+            if (conditions.TryGetValue(condition, out var entry))
+            {
+                entry.Callbacks.Remove(callback);
+                if (entry.Callbacks.Count == 0) conditions.Remove(condition);
+            }
+        }
         public void SwitchQuickReceive(EFurniture type, bool enabled, Action<object, int> onError)
         { if (!home.SetHangUpQuickReceiveState(type, enabled)) onError(null, -1); }
         public void Collect(IReadOnlyList<int> ids, Action<IHomeWindowAwardMessage> onSuccess)
@@ -277,9 +301,8 @@ namespace Zjcs.Presentation.Home
             var response = new Response();
             foreach (int id in ids)
             {
-                if (id != 1) throw new NotSupportedException("The bed collection owner consumes its selected XP entry.");
                 var reward = home.PrepareHomeCollection(id);
-                if (reward != null) { pending.Add(reward); response.Rewards.Add(reward); }
+                if (reward != null && reward.Count > 0) { pending.Add(reward); response.Rewards.Add(reward); }
             }
             onSuccess(response);
         }

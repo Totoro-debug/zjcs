@@ -1,5 +1,7 @@
 using System;
+using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 
@@ -82,7 +84,18 @@ namespace Zjcs.Official.WorldUI
         private void SetLanguageText(string text)
         {
             if (mLocalizedTextProcessor != null) text = mLocalizedTextProcessor.Process(text);
-            CacheText.text = text;
+            CacheText.text = RestoreMidsize(text, CacheText.fontSize);
+        }
+        private static string RestoreMidsize(string source, float baseSize)
+        {
+            if (string.IsNullOrEmpty(source) || source.IndexOf("<midsize=", StringComparison.Ordinal) < 0) return source;
+            return Regex.Replace(source, @"<midsize=([0-9]+(?:\.[0-9]+)?)>", match =>
+            {
+                float size = float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+                float offset = (baseSize - size) * 0.5f * (38.04f / 40f);
+                return "<voffset=" + (offset / Mathf.Max(1f, baseSize)).ToString("0.#####", CultureInfo.InvariantCulture)
+                    + "em><size=" + size.ToString("0.###", CultureInfo.InvariantCulture) + ">";
+            }).Replace("</midsize>", "</size></voffset>");
         }
         private string GetRawKeyValueProcessed(string text) => string.IsNullOrEmpty(text) || mRawKeyValueProcessor == null
             ? text : mRawKeyValueProcessor.Process(text);

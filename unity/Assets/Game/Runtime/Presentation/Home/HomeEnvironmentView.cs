@@ -142,7 +142,7 @@ namespace Zjcs.Presentation.Home
     /// ``EffectLightOnTime``/``EffectLightOffTime``.  The official Moon renderer
     /// and ``Night_Common`` curve drive the phase and night visibility.
     /// </summary>
-    public sealed class HomeEnvironmentView : IDisposable
+    public sealed class HomeEnvironmentView : IDisposable, Zjcs.Official.HomeFurniture.IHomeDayNightServices
     {
         private static readonly Dictionary<string, string> LightPaths = new Dictionary<string, string>(StringComparer.Ordinal)
         {
@@ -182,6 +182,12 @@ namespace Zjcs.Presentation.Home
         internal float DayPhase => (float)(daySeconds / SecondsPerDay);
         public bool IsFastCycling => timeState.StageHandleProxy.InFasting;
         public float PlayableDeltaTime => timeState.PlayableDeltaTime;
+        public bool IsPlayableDay => timeState.IsPlayableDay;
+        public event Action<bool> OnDayNightChange
+        {
+            add => timeState.OnDayNightChange += value;
+            remove => timeState.OnDayNightChange -= value;
+        }
 
         public HomeEnvironmentView(HomeSceneView scene, long nowUnixSeconds, long homeStartUnixSeconds = 0,
             IHomeNaturalTimeLimit naturalTimeLimit = null)

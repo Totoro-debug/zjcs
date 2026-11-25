@@ -92,6 +92,29 @@ namespace Zjcs.Presentation.Home
         AwardListPanel panel;
         bool disposed;
         uint playingId;
+        sealed class RuleItemInfo : ItemInfo
+        {
+            internal HomeItemRecord Source;
+            public override int ClassId => Source.id;
+            public override string Icon => !string.IsNullOrEmpty(Source.icon)
+                ? Source.icon
+                : (Source.type == 110 ? "ItemIcon/Box/item_50400" : string.Empty);
+            public override string IconEffect => string.Empty;
+            public override Quality Quality => (Quality)Source.quality;
+            public override bool CanOverlap => Source.overlap;
+            public override ItemType ItemType => (ItemType)Source.type;
+            public override int Rank => Source.rank;
+            public override object PartInfo => null;
+            public override bool IsEquip => false;
+            public override bool IsSkill => false;
+            public override bool IsSkillPiece => false;
+            public override object GetFakeIcon() => null;
+        }
+        public Func<int, ItemInfo> ExtraItemInfo { get; set; }
+        public Func<string, Sprite> ExtraSprite { get; set; }
+        public Func<uint, AudioClip> ExtraAudioClip { get; set; }
+        public Func<string, string> TryExtraText { get; set; }
+        public Action<IProfessionItemInfo, IWindowOperator, long, Action<GameObject>> OpenItemDetail { get; set; }
 
         public OfflineHomeBedAwards(HomeFeatureRuntime home, Canvas canvas, Action<AudioClip, GameObject> postSound)
         {
@@ -198,8 +221,15 @@ namespace Zjcs.Presentation.Home
             popup.Resume(); popup.Show();
             return new Done();
         }
-        public ItemInfo GetItemInfo(int id) => incomeItems.TryGetValue(id, out var item) ? item
-            : throw new ArgumentOutOfRangeException(nameof(id), "Bind the selected original reward catalog before displaying another item.");
+        public ItemInfo GetItemInfo(int id)
+        {
+            if (incomeItems.TryGetValue(id, out var item)) return item;
+            var extra = ExtraItemInfo?.Invoke(id);
+            if (extra != null) return extra;
+            var record = home.Rules.Item(id);
+            if (record != null) return new RuleItemInfo { Source = record };
+            throw new ArgumentOutOfRangeException(nameof(id), "Bind the selected original reward catalog before displaying another item: " + id);
+        }
         public HomeAwardIcon InstantiateAward(Transform slot, AwardData award, Action<HomeAwardIcon, AwardData> init,
             bool autoTransition, bool isSelf, bool showOutputAddition)
         {
@@ -210,7 +240,12 @@ namespace Zjcs.Presentation.Home
         }
         public string GetItemNameKey(int id) { GetItemInfo(id); return "item_" + id + "_name"; }
         public object CultureText(string key) => new CultureTextArg(Text(key), Array.Empty<object>(), false);
-        public string Text(string key) => texts.TryGetValue(key, out var text) ? text : key;
+        public string Text(string key)
+        {
+            string extra = TryExtraText?.Invoke(key);
+            if (extra != null) return extra;
+            return texts.TryGetValue(key, out var text) ? text : key;
+        }
         public object Compact(long count) => CultureNumberArg.Compact(count);
         public object DecorateExtra(object text, Color color) => "<color=#" + ColorUtility.ToHtmlStringRGBA(color) + ">" + text + "</color>";
         public int MoneyId => 1;
@@ -219,18 +254,33 @@ namespace Zjcs.Presentation.Home
         public double GetExperienceAdditionPercent() => formula.GetProp(home.PlayerProperties(), FormulaProp.ExpAdditionAwardPercent);
         public IHomeAwardAsset<Sprite> LoadSprite(string path)
         {
-            using var handle = images.LoadAsset<Sprite>("Assets/Image/" + path);
-            if (!handle.Result) throw new InvalidOperationException("Original award sprite is unbound: " + path);
-            return new Asset<Sprite>(handle.Result);
+            var extra = ExtraSprite?.Invoke(path);
+            if (extra) return new Asset<Sprite>(extra);
+            if (images != null)
+            {
+                using var handle = images.LoadAsset<Sprite>("Assets/Image/" + path);
+                if (handle.Result) return new Asset<Sprite>(handle.Result);
+            }
+            var catalogSprite = string.IsNullOrEmpty(path) ? null : home.Catalog.FindSprite(System.IO.Path.GetFileName(path));
+            if (catalogSprite) return new Asset<Sprite>(catalogSprite);
+            throw new InvalidOperationException("Original award sprite is unbound: " + path);
         }
         public ItemIcon GetIcon(ItemInfo info, Transform parent)
         {
             GetItemInfo(info.ClassId);
             var icon = Clone(assets.itemIconPrefab, parent).GetComponent<ItemIcon>(); icon.Bind(this);
+            foreach (var progress in icon.GetComponentsInChildren<WorldItemProgress>(true))
+                progress.Compact = count => CultureNumberArg.Compact(count).ToString();
             iconScopes.Add(icon, OfflineUiBindingModule.Register(icon.transform, new OfflineUiBindings {
                 Localize = Text, Font = () => OfflineHomeHudAssets.LoadDefault().defaultFont,
                 Images = _ => images,
-                Pool = (_, prefab, owner, world) => Object.Instantiate(prefab, owner, world) }));
+                Pool = (_, prefab, owner, world) =>
+                {
+                    var child = Object.Instantiate(prefab, owner, world);
+                    foreach (var progress in child.GetComponentsInChildren<WorldItemProgress>(true))
+                        progress.Compact = count => CultureNumberArg.Compact(count).ToString();
+                    return child;
+                } }));
             foreach (var attachment in icon.GetComponentsInChildren<ItemIconAttachment>(true)) attachment.Bind(this);
             icon.gameObject.SetActive(true); icon.Init(info); return icon;
         }
@@ -254,13 +304,16 @@ namespace Zjcs.Presentation.Home
         { if (value) { value.gameObject.SetActive(false); Object.Destroy(value.gameObject); } }
         public uint PostEvent(uint eventId, GameObject emitter)
         {
-            var clip = assets.sounds.FirstOrDefault(row => row.eventId == eventId)?.clip
+            var clip = ExtraAudioClip?.Invoke(eventId)
+                ?? assets.sounds.FirstOrDefault(row => row.eventId == eventId)?.clip
                 ?? OfflineHomeHudAssets.LoadDefault().Sound(eventId);
             if (!clip)
             {
                 var bed = OfficialHomeHangUpWindowAssetCatalog.LoadDefault();
                 if (eventId == bed.fastHangUpEventId) clip = bed.fastHangUpClip;
             }
+            if (!clip && home.CartAssets != null && home.CartAssets.TryGetSound(eventId, out var cartClip))
+                clip = cartClip;
             if (!clip) throw new InvalidOperationException("Original award sound is unbound: " + eventId);
             postSound(clip, emitter); return ++playingId;
         }
@@ -286,8 +339,21 @@ namespace Zjcs.Presentation.Home
             return clone;
         }
         public void InstantiateAsync(string prefab, Transform parent, Action<GameObject> callback) => throw OutsideBed("item effect");
-        public void PopupInfoDialog(IProfessionItemData item, IWindowOperator owner, long required, Action<GameObject> callback) => throw OutsideBed("indexed item details");
-        public void PopupInfoDialog(IProfessionItemInfo item, IWindowOperator owner, long required, Action<GameObject> callback) => throw OutsideBed("independent item details");
+        public void PopupInfoDialog(IProfessionItemData item, IWindowOperator owner, long required, Action<GameObject> callback)
+        {
+            if (item == null) return;
+            PopupInfoDialog(item.Info, owner, required, callback);
+        }
+        public void PopupInfoDialog(IProfessionItemInfo item, IWindowOperator owner, long required, Action<GameObject> callback)
+        {
+            if (item == null) return;
+            if (OpenItemDetail != null)
+            {
+                OpenItemDetail(item, owner, required, callback);
+                return;
+            }
+            home.Hud?.ShowNotice(home.ItemName(item.ClassId));
+        }
         public long GetItemAmount(int id)
         {
             GetItemInfo(id);

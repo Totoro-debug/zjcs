@@ -4,10 +4,16 @@
     "assets/reference/home-bed-native-source-manifest.json": "7bdaf020e60b87b6a71956c8df11cb28b24aafb0c2c01b81a2273725c85c7468",
     "unity/Assets/Official/Home/Bed/Native/Graph/628cc095cfdb3086.asset": "2f8096b958cbc075a1364da25d647ce1464f97177c0efb8de5dcb29f066de7e8",
     "unity/Assets/Official/Home/Bed/Native/Graph/628cc095cfdb3086.asset.meta": "f8fd145e14ecc49867e801a19e6005dfc5d6358cd2bbe2a014c8b1ad6637a708",
-    "scripts/prepare_home_tip_dot_catalog.py": "14f1f4ac06074980ebc0c6ad9f5ce3fb0e8913d9f174e5d5952d9882145ddc45"
+    "assets/reference/home-cart-native-source-manifest.json": "e7233d0674a5afbc9371ada116c8c4eea6e8b5a4bb73d543cdd3f285612a896a",
+    "unity/Assets/Official/Home/Cart/Native/Graph/ec93860384863b34.asset": "b828c9b87b425de75f623253b65041f72094016111b89bec353c920ee06a59f7",
+    "unity/Assets/Official/Home/Cart/Native/Graph/ec93860384863b34.asset.meta": "a1ccb1e2e9bf7a79d7d4f0a96d057b04a574ff971910e7f93236a8b66f7b9807",
+    "assets/reference/home-cart-windows-native-source-manifest.json": "359f93883b00e7582dfddd2c5a1c516eeca3f8fcf8639e0c33d1c675272e7d70",
+    "unity/Assets/Official/Home/UI/CartWindows/Graph/d777590eb8849d65.asset": "192fe9cf97f5e358492d3a8f92c5171a83296271f8bef93cce3cc25aa591a205",
+    "unity/Assets/Official/Home/UI/CartWindows/Graph/d777590eb8849d65.asset.meta": "2b966062daa8732ecc719da1dc7b7dda94b41a9f1ce73386a0bed41f0f81b98c",
+    "scripts/prepare_home_tip_dot_catalog.py": "45fce0af6cbbd0507643f18b65b6b24942c3212bef88e6b34c7cabef45297572"
   },
   "outputs": {
-    "unity/Assets/Game/Resources/Home/HomeTipDots/Assets.asset": "53a4ee341255924bb796b862317a94926b30130b20c79471cd1d1073407713d8",
+    "unity/Assets/Game/Resources/Home/HomeTipDots/Assets.asset": "0533373edd1b32205ce64162180669c427a54a4d35f53b41744ca642c4e4062d",
     "unity/Assets/Game/Resources/Home/HomeTipDots/Assets.asset.meta": "f1148bdb7732e4d03ac1ad1ffb406ccfa79191434a6184b684fc2ba865c47c0d"
   },
   "entries": [
@@ -18,8 +24,24 @@
       "GraphScope": 0,
       "GraphGuid": "11cdedcde1b27ebf10acd247c8b86f04",
       "GraphFile": "unity/Assets/Official/Home/Bed/Native/Graph/628cc095cfdb3086.asset"
+    },
+    {
+      "GraphName": "FurnitureCart",
+      "GraphPath": "Home/FurnitureCart",
+      "GraphType": 0,
+      "GraphScope": 0,
+      "GraphGuid": "ca4faefb0487360ff001e1a695bd1ce6",
+      "GraphFile": "unity/Assets/Official/Home/Cart/Native/Graph/ec93860384863b34.asset"
+    },
+    {
+      "GraphName": "HangUpItem",
+      "GraphPath": "Home/HangUpItem",
+      "GraphType": 1,
+      "GraphScope": 0,
+      "GraphGuid": "393d8548d4562e6adc4d8cc4be737025",
+      "GraphFile": "unity/Assets/Official/Home/UI/CartWindows/Graph/d777590eb8849d65.asset"
     }
   ],
   "asset_guid": "e05b8f1fab548d853447cf85d0537581",
-  "generator_sha256": "14f1f4ac06074980ebc0c6ad9f5ce3fb0e8913d9f174e5d5952d9882145ddc45"
+  "generator_sha256": "45fce0af6cbbd0507643f18b65b6b24942c3212bef88e6b34c7cabef45297572"
 }
