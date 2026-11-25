@@ -33,6 +33,7 @@ namespace Zjcs.Presentation.CharacterCreation
             public Mesh Mesh;
             public Vector3[][] Frames;
             public MeshRenderer Renderer;
+            public CharacterCreationDyeMapBinding DyeBinding;
             public Frame[] SourceFrames;
             public int InitialOrder;
             public bool Frozen;
@@ -45,7 +46,10 @@ namespace Zjcs.Presentation.CharacterCreation
         private readonly Dictionary<string, Texture2D> masks = new Dictionary<string, Texture2D>();
         private readonly Dictionary<string, Material> materials = new Dictionary<string, Material>();
         private readonly List<Instance> instances = new List<Instance>();
-        private HashSet<string> selected = new HashSet<string>();
+        private readonly Dictionary<string, List<Instance>> skinInstances =
+            new Dictionary<string, List<Instance>>(StringComparer.Ordinal);
+        private MaterialPropertyBlock dyeProperties;
+        private HashSet<string> selected = new HashSet<string>(StringComparer.Ordinal);
         private HashSet<string> availableSkinNames = new HashSet<string>(StringComparer.Ordinal);
         private Dictionary<string, string> hashes;
         private ZipArchive archive;
@@ -114,8 +118,9 @@ namespace Zjcs.Presentation.CharacterCreation
         {
             if (!poses.TryGetValue(name, out Dictionary<string, SkinEntry> skinEntries))
                 throw new InvalidOperationException("Missing official pose: " + name);
-            foreach (Instance value in instances) { value.Node.SetActive(false); Destroy(value.Node); Destroy(value.Mesh); }
+            RemoveParts(instances);
             instances.Clear();
+            skinInstances.Clear();
             currentPose = name;
             PoseIndex timing = poseTimings[name];
             poseFps = timing.fps;
@@ -124,10 +129,20 @@ namespace Zjcs.Presentation.CharacterCreation
             ResetPlayback();
             foreach (string skin in selected.OrderBy(value => value, StringComparer.Ordinal))
             {
-                bool freeze = !skinEntries.TryGetValue(skin, out SkinEntry skinEntry);
-                if (freeze && !poses["home/idle_01"].TryGetValue(skin, out skinEntry))
-                    throw new InvalidOperationException("Official character pose has no skin attachment: " + skin);
-                int firstInstance = instances.Count;
+                List<Instance> parts = BuildSkin(skin, skinEntries);
+                skinInstances.Add(skin, parts);
+                instances.AddRange(parts);
+            }
+        }
+
+        private List<Instance> BuildSkin(string skin, Dictionary<string, SkinEntry> skinEntries)
+        {
+            bool freeze = !skinEntries.TryGetValue(skin, out SkinEntry skinEntry);
+            if (freeze && !poses["home/idle_01"].TryGetValue(skin, out skinEntry))
+                throw new InvalidOperationException("Official character pose has no skin attachment: " + skin);
+            var parts = new List<Instance>();
+            try
+            {
                 foreach (string entry in skinEntry.entries)
                 {
                     Pose skinPose = JsonUtility.FromJson<Pose>(Read(entry));
@@ -135,12 +150,32 @@ namespace Zjcs.Presentation.CharacterCreation
                         || Mathf.Abs(skinPose.fps - poseFps) > .001f
                         || Mathf.Abs(skinPose.duration - poseDuration) > .001f)
                         throw new InvalidDataException("Character skin frame data is invalid: " + entry);
-                    foreach (Part part in skinPose.parts) CreatePart(part);
+                    foreach (Part part in skinPose.parts)
+                    {
+                        if (part.triangles.Length == 0) continue;
+                        Instance instance = CreatePart(part, freeze);
+                        parts.Add(instance);
+                        if (CurrentFrame != 0) ApplyFrame(instance, CurrentFrame);
+                        ApplyPartDye(instance);
+                    }
                 }
-                if (freeze)
-                    for (int index = firstInstance; index < instances.Count; index++) instances[index].Frozen = true;
+                return parts;
             }
-            ApplyDye(dye);
+            catch
+            {
+                RemoveParts(parts);
+                throw;
+            }
+        }
+
+        private void RemoveParts(List<Instance> parts)
+        {
+            foreach (Instance part in parts)
+            {
+                part.Node.SetActive(false);
+                Destroy(part.Node);
+                Destroy(part.Mesh);
+            }
         }
 
         private void ResetPlayback()
@@ -160,9 +195,16 @@ namespace Zjcs.Presentation.CharacterCreation
             oneShot = true;
         }
 
-        private void CreatePart(Part part)
+        private Instance CreatePart(Part part, bool frozen)
         {
-            if (part.triangles.Length == 0) return;
+            if (!materials.TryGetValue(part.texture, out Material material))
+            {
+                Texture2D texture = LoadTexture(part.texture);
+                material = new Material(nativeShader);
+                material.mainTexture = texture;
+                material.SetFloat("_StraightAlphaInput", 1f);
+                materials.Add(part.texture, material);
+            }
             var node = new GameObject("__skin__" + part.skin, typeof(MeshFilter), typeof(MeshRenderer));
             node.transform.SetParent(transform, false);
             node.layer = gameObject.layer;
@@ -184,20 +226,17 @@ namespace Zjcs.Presentation.CharacterCreation
             mesh.triangles = part.triangles;
             node.GetComponent<MeshFilter>().sharedMesh = mesh;
             var renderer = node.GetComponent<MeshRenderer>();
-            if (!materials.TryGetValue(part.texture, out Material material))
-            {
-                material = new Material(nativeShader);
-                material.mainTexture = LoadTexture(part.texture);
-                material.SetFloat("_StraightAlphaInput", 1f);
-                materials.Add(part.texture, material);
-            }
             renderer.sharedMaterial = material;
             renderer.sortingOrder = part.order;
             renderer.enabled = frames.Length == 0 || frames[0].Length > 0;
-            node.AddComponent<CharacterCreationDyeMapBinding>().Bind(part.skin_type,
+            var binding = node.AddComponent<CharacterCreationDyeMapBinding>();
+            binding.Bind(part.skin_type,
                 masks.TryGetValue(part.texture, out Texture2D mask) ? mask : null);
-            instances.Add(new Instance { Node = node, Mesh = mesh, Frames = frames,
-                SourceFrames = part.frames, Renderer = renderer, InitialOrder = part.order });
+            return new Instance
+            {
+                Node = node, Mesh = mesh, Frames = frames, SourceFrames = part.frames,
+                Renderer = renderer, InitialOrder = part.order, DyeBinding = binding, Frozen = frozen
+            };
         }
 
         private Texture2D LoadTexture(string name)
@@ -207,8 +246,8 @@ namespace Zjcs.Presentation.CharacterCreation
             if (!textures.TryGetValue(name, out Texture2D texture))
             {
                 texture = LoadTextureFile(entry.texture);
-                textures.Add(name, texture);
                 if (!string.IsNullOrEmpty(entry.mask)) masks.Add(name, LoadTextureFile(entry.mask));
+                textures.Add(name, texture);
             }
             return texture;
         }
@@ -247,25 +286,52 @@ namespace Zjcs.Presentation.CharacterCreation
         {
             if (names == null) throw new ArgumentNullException(nameof(names));
             var next = new HashSet<string>(names, StringComparer.Ordinal);
+            if (selected.SetEquals(next)) return;
             string missing = next.FirstOrDefault(name => !availableSkinNames.Contains(name));
             if (missing != null) throw new InvalidOperationException("Missing official character mesh skin: " + missing);
+
+            var additions = new Dictionary<string, List<Instance>>(StringComparer.Ordinal);
+            try
+            {
+                foreach (string skin in next.OrderBy(value => value, StringComparer.Ordinal))
+                    if (!skinInstances.ContainsKey(skin)) additions.Add(skin, BuildSkin(skin, poses[currentPose]));
+            }
+            catch
+            {
+                foreach (List<Instance> parts in additions.Values) RemoveParts(parts);
+                throw;
+            }
+            foreach (string skin in selected)
+            {
+                if (next.Contains(skin)) continue;
+                RemoveParts(skinInstances[skin]);
+                skinInstances.Remove(skin);
+            }
+            foreach (var addition in additions) skinInstances.Add(addition.Key, addition.Value);
             selected = next;
-            RebuildPose(currentPose);
+            instances.Clear();
+            foreach (string skin in selected.OrderBy(value => value, StringComparer.Ordinal))
+                instances.AddRange(skinInstances[skin]);
+            for (int index = 0; index < instances.Count; index++)
+                instances[index].Node.transform.SetSiblingIndex(index);
         }
 
         public void ApplyDye(IReadOnlyDictionary<int, Vector4[]> changes)
         {
             dye = changes;
-            var properties = new MaterialPropertyBlock();
-            foreach (Instance value in instances)
-            {
-                var binding = value.Node.GetComponent<CharacterCreationDyeMapBinding>();
-                Vector4[] channels = changes != null && changes.TryGetValue(binding.SkinType, out Vector4[] values) ? values : null;
-                properties.Clear();
-                properties.SetTexture("_DyeTex", binding.DyeMask != null ? binding.DyeMask : Texture2D.blackTexture);
-                for (int i = 0; i < 3; i++) properties.SetVector("_DyeHsv" + (i+1), channels != null && channels.Length > i ? channels[i] : Vector4.zero);
-                value.Node.GetComponent<Renderer>().SetPropertyBlock(properties);
-            }
+            foreach (Instance value in instances) ApplyPartDye(value);
+        }
+
+        private void ApplyPartDye(Instance instance)
+        {
+            dyeProperties ??= new MaterialPropertyBlock();
+            CharacterCreationDyeMapBinding binding = instance.DyeBinding;
+            Vector4[] channels = dye != null && dye.TryGetValue(binding.SkinType, out Vector4[] values) ? values : null;
+            dyeProperties.SetTexture("_DyeTex", binding.DyeMask != null ? binding.DyeMask : Texture2D.blackTexture);
+            dyeProperties.SetVector("_DyeHsv1", channels != null && channels.Length > 0 ? channels[0] : Vector4.zero);
+            dyeProperties.SetVector("_DyeHsv2", channels != null && channels.Length > 1 ? channels[1] : Vector4.zero);
+            dyeProperties.SetVector("_DyeHsv3", channels != null && channels.Length > 2 ? channels[2] : Vector4.zero);
+            instance.Renderer.SetPropertyBlock(dyeProperties);
         }
 
         private void Update()

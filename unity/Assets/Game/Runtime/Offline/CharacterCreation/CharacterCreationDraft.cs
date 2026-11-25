@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 using Zjcs.Offline.State;
 
@@ -59,10 +60,15 @@ namespace Zjcs.Offline.CharacterCreation
     {
         private const int CurrentVersion = 4;
         private readonly ProfileSlotCatalog slots;
+        private readonly DraftOptions options;
+        private readonly Func<string, bool> validateStoredDraft;
+        private readonly object fileGate = new object();
 
-        public CharacterCreationDraftStore(ProfileSlotCatalog slots)
+        public CharacterCreationDraftStore(ProfileSlotCatalog slots, CharacterCreationAssetCatalog catalog = null)
         {
             this.slots = slots ?? throw new ArgumentNullException(nameof(slots));
+            if (catalog != null) options = new DraftOptions(catalog);
+            validateStoredDraft = json => IsValidStoredJson(json, options);
         }
 
         public CharacterCreationDraftReadResult Open(string slotId)
@@ -70,7 +76,9 @@ namespace Zjcs.Offline.CharacterCreation
             if (!slots.Contains(slotId))
                 throw new DirectoryNotFoundException("The selected profile slot does not exist.");
 
-            SaveReadResult result = LocalJsonSaveFile.Read(slots.GetDraftPath(slotId), IsValidJson);
+            SaveReadResult result;
+            lock (fileGate)
+                result = LocalJsonSaveFile.Read(slots.GetDraftPath(slotId), validateStoredDraft);
             CharacterCreationDraft draft = result.Json == null
                 ? null
                 : JsonUtility.FromJson<CharacterCreationDraft>(result.Json);
@@ -79,12 +87,31 @@ namespace Zjcs.Offline.CharacterCreation
 
         public void Save(string slotId, CharacterCreationDraft draft)
         {
+            (string path, string json) = PrepareSave(slotId, draft);
+            WritePreparedSave(path, json);
+        }
+
+        internal Task SaveAsync(string slotId, CharacterCreationDraft draft)
+        {
+            if (options == null) throw new InvalidOperationException("Draft options must be prepared before background saves.");
+            (string path, string json) = PrepareSave(slotId, draft);
+            return Task.Run(() => WritePreparedSave(path, json));
+        }
+
+        private void WritePreparedSave(string path, string json)
+        {
+            lock (fileGate)
+                LocalJsonSaveFile.Write(path, json, validateStoredDraft);
+        }
+
+        private (string path, string json) PrepareSave(string slotId, CharacterCreationDraft draft)
+        {
             if (!slots.Contains(slotId))
                 throw new DirectoryNotFoundException("The selected profile slot does not exist.");
-            if (draft == null || !IsValid(draft))
+            if (draft == null || !IsValid(draft, options))
                 throw new InvalidDataException("The character creation draft is incomplete or has an unsupported version.");
 
-            LocalJsonSaveFile.Write(slots.GetDraftPath(slotId), JsonUtility.ToJson(draft), IsValidJson);
+            return (slots.GetDraftPath(slotId), JsonUtility.ToJson(draft));
         }
 
         public void Clear(string slotId)
@@ -106,7 +133,7 @@ namespace Zjcs.Offline.CharacterCreation
                 throw new DirectoryNotFoundException("The selected profile slot does not exist.");
 
             string path = slots.GetDraftPath(slotId);
-            if (LocalJsonSaveFile.Read(path, IsValidJson).Status != SaveReadStatus.Corrupt)
+            if (LocalJsonSaveFile.Read(path, validateStoredDraft).Status != SaveReadStatus.Corrupt)
                 throw new InvalidOperationException("The character draft is no longer corrupt.");
 
             string suffix = ".corrupt-" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfffffff", CultureInfo.InvariantCulture);
@@ -135,11 +162,16 @@ namespace Zjcs.Offline.CharacterCreation
 
         public static bool IsValidJson(string json)
         {
+            return IsValidStoredJson(json, null);
+        }
+
+        private static bool IsValidStoredJson(string json, DraftOptions options)
+        {
             if (string.IsNullOrWhiteSpace(json) || json.Length > 65536) return false;
             try
             {
                 if (!CharacterCreationJson.HasOnlyKnownDraftFields(json)) return false;
-                return IsValid(JsonUtility.FromJson<CharacterCreationDraft>(json));
+                return IsValid(JsonUtility.FromJson<CharacterCreationDraft>(json), options);
             }
             catch
             {
@@ -147,7 +179,7 @@ namespace Zjcs.Offline.CharacterCreation
             }
         }
 
-        private static bool IsValid(CharacterCreationDraft draft)
+        private static bool IsValid(CharacterCreationDraft draft, DraftOptions options)
         {
             if (draft == null || draft.version != CurrentVersion
                 || (draft.page != "body" && draft.page != "appearance" && draft.page != "name")
@@ -159,33 +191,50 @@ namespace Zjcs.Offline.CharacterCreation
                 || !IsAppearance(draft.bodies.female, "female"))
                 return false;
 
-            CharacterCreationAssetCatalog catalog;
-            try
+            if (options == null)
             {
-                catalog = CharacterCreationAssetCatalog.LoadDefault();
+                try { options = new DraftOptions(CharacterCreationAssetCatalog.LoadDefault()); }
+                catch { return false; }
             }
-            catch
-            {
-                return false;
-            }
-
-            if (!HasValidOptions(catalog, draft.bodies.male) || !HasValidOptions(catalog, draft.bodies.female))
+            if (!options.Contains(draft.bodies.male) || !options.Contains(draft.bodies.female))
                 return false;
 
             return IsFieldInTab(draft.tab, draft.field);
         }
 
-        private static bool HasValidOptions(CharacterCreationAssetCatalog catalog, CharacterAppearanceDraft appearance)
+        // Captured from the validated catalog on the main thread. Background saves only read these sets.
+        private sealed class DraftOptions
         {
-            int sex = appearance.body_type == "female" ? 1 : 0;
-            return (appearance.appearance_group_id == 0
-                    || catalog.IsSelectableAppearanceGroup(sex, appearance.appearance_group_id))
-                && catalog.HasAppearanceOption(appearance.body_type, "hairstyle_id", appearance.hairstyle_id)
-                && catalog.HasAppearanceOption(appearance.body_type, "eyebrow_id", appearance.eyebrow_id)
-                && catalog.HasAppearanceOption(appearance.body_type, "eye_id", appearance.eye_id)
-                && catalog.HasAppearanceOption(appearance.body_type, "mouth_id", appearance.mouth_id)
-                && catalog.HasAppearanceOption(appearance.body_type, "makeup_id", appearance.makeup_id)
-                && catalog.HasAppearanceOption(appearance.body_type, "feature_id", appearance.feature_id);
+            private readonly HashSet<(string body, string field, string id)> choices =
+                new HashSet<(string body, string field, string id)>();
+            private readonly HashSet<(int sex, int id)> groups = new HashSet<(int sex, int id)>();
+
+            public DraftOptions(CharacterCreationAssetCatalog catalog)
+            {
+                string[] fields = { "hairstyle_id", "eyebrow_id", "eye_id", "mouth_id", "makeup_id", "feature_id" };
+                for (int sex = 0; sex < 2; sex++)
+                {
+                    string body = sex == 0 ? "male" : "female";
+                    foreach (CharacterCreationAppearanceGroupInfo group in catalog.GetAppearanceGroups(sex))
+                        if (group.condition_id == 0) groups.Add((sex, group.group_id));
+                    foreach (string field in fields)
+                        foreach (CharacterCreationOptionInfo choice in catalog.GetAppearanceOptions(body, field))
+                            choices.Add((body, field, choice.Id));
+                }
+            }
+
+            public bool Contains(CharacterAppearanceDraft appearance)
+            {
+                string body = appearance.body_type;
+                int sex = body == "female" ? 1 : 0;
+                return (appearance.appearance_group_id == 0 || groups.Contains((sex, appearance.appearance_group_id)))
+                    && choices.Contains((body, "hairstyle_id", appearance.hairstyle_id))
+                    && choices.Contains((body, "eyebrow_id", appearance.eyebrow_id))
+                    && choices.Contains((body, "eye_id", appearance.eye_id))
+                    && choices.Contains((body, "mouth_id", appearance.mouth_id))
+                    && choices.Contains((body, "makeup_id", appearance.makeup_id))
+                    && choices.Contains((body, "feature_id", appearance.feature_id));
+            }
         }
 
         private static bool IsAppearance(CharacterAppearanceDraft appearance, string body)

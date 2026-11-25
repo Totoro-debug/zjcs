@@ -45,7 +45,7 @@ namespace Zjcs.Offline.CharacterCreation
             this.slots = slots ?? throw new ArgumentNullException(nameof(slots));
             this.creationAssets = creationAssets ?? throw new ArgumentNullException(nameof(creationAssets));
             this.creationAssets.ValidateBindings();
-            drafts = new CharacterCreationDraftStore(slots);
+            drafts = new CharacterCreationDraftStore(slots, this.creationAssets);
             characterCatalog = (characterAssets ?? throw new ArgumentNullException(nameof(characterAssets))).Load();
         }
 
@@ -79,6 +79,11 @@ namespace Zjcs.Offline.CharacterCreation
         public void SaveDraft(string slotId, CharacterCreationDraft draft)
         {
             drafts.Save(slotId, draft);
+        }
+
+        public System.Threading.Tasks.Task SaveDraftAsync(string slotId, CharacterCreationDraft draft)
+        {
+            return drafts.SaveAsync(slotId, draft);
         }
 
         public SaveReadStatus GetDraftStatus(string slotId)

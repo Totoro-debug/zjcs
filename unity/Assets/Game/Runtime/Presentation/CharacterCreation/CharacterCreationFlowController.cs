@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -42,9 +43,10 @@ namespace Zjcs.Presentation.CharacterCreation
         private Transform selectSexContent;
         private Transform diyContent;
         private Transform setNameContent;
-        private string populatedOptionKey;
         private string populatedDyeKey;
-        private readonly Dictionary<string, Transform> optionItems = new Dictionary<string, Transform>(StringComparer.Ordinal);
+        private Dictionary<string, Transform> optionItems;
+        private readonly Dictionary<Transform, (string key, Dictionary<string, Transform> items)> optionViews =
+            new Dictionary<Transform, (string key, Dictionary<string, Transform> items)>();
         private readonly Dictionary<int, Transform> dyeItems = new Dictionary<int, Transform>();
         private bool customColorOpen;
         private bool customColorControlsBound;
@@ -56,6 +58,7 @@ namespace Zjcs.Presentation.CharacterCreation
         private int dyeSaturation;
         private int dyeValue;
         private Coroutine pendingSave;
+        private Task draftWrite;
         private GameObject characterFeatureRoot;
         private CharacterFeatureRuntime characterRuntime;
         private Zjcs.Presentation.Home.HomeFeatureRuntime homeRuntime;
@@ -315,10 +318,8 @@ namespace Zjcs.Presentation.CharacterCreation
             performancePlayer = officialPanel.AddComponent<CharacterCreationPerformancePlayer>();
             performancePlayer.Initialize(performanceAssets, ResetDIYContentTabGroup,
                 PlayCreationRunAnimation, PlayCreationIdleAnimation);
-            populatedOptionKey = null;
             populatedDyeKey = null;
             customColorControlsBound = false;
-            optionItems.Clear();
             dyeItems.Clear();
             RenderDraftPage();
             if (draft.page == "body")
@@ -461,14 +462,20 @@ namespace Zjcs.Presentation.CharacterCreation
             Transform colorRoot = RequireNode(editRoot, "ColorGo");
             bool colorField = IsColorField(draft.field);
             colorRoot.gameObject.SetActive(colorField);
+            Transform optionRoot = null;
             foreach (string name in new[] { "HairTypeSelect", "EyeTypeSelect", "MouthTypeSelect", "EthnicityTypeSelect" })
             {
                 Transform root = FindDeep(editRoot, name);
                 if (root == null) throw new InvalidOperationException("Official character creation option view is missing: " + name);
-                root.gameObject.SetActive(!colorField && name == OptionViewForField(draft.field));
+                if (!colorField && name == OptionViewForField(draft.field)) optionRoot = root;
+                else root.gameObject.SetActive(false);
             }
             if (colorField) RenderColorPicker(appearance, DyeType(draft.field), colorRoot);
-            else RenderAppearanceOptions(appearance, draft.field, FindDeep(editRoot, OptionViewForField(draft.field)));
+            else
+            {
+                RenderAppearanceOptions(appearance, draft.field, optionRoot);
+                optionRoot.gameObject.SetActive(true);
+            }
         }
 
         private void RenderAppearanceGroups(Transform groupRoot, int sex, int selectedGroupId)
@@ -555,7 +562,7 @@ namespace Zjcs.Presentation.CharacterCreation
         {
             if (viewRoot == null) throw new InvalidOperationException("Official character creation option view is missing: " + field);
             string key = appearance.body_type + ":" + field;
-            if (populatedOptionKey != key)
+            if (!optionViews.TryGetValue(viewRoot, out var view) || view.key != key)
             {
                 string templateName = field == "hairstyle_id" ? "HairTypeItem" : "EditTypeSelectItem";
                 Transform template = RequireNode(viewRoot, templateName);
@@ -564,14 +571,13 @@ namespace Zjcs.Presentation.CharacterCreation
                 if (content == null) throw new InvalidOperationException("Official character creation option content is missing: " + field);
                 template.gameObject.SetActive(false);
                 ClearChildrenExcept(content, template);
-                optionItems.Clear();
+                var items = new Dictionary<string, Transform>(StringComparer.Ordinal);
                 EnsureOptionScroll(viewRoot, content);
 
                 foreach (CharacterCreationOptionInfo option in assets.GetAppearanceOptions(appearance.body_type, field))
                 {
                     Transform item = Instantiate(template.gameObject, content, false).transform;
                     item.name = templateName + "_" + option.Id;
-                    item.gameObject.SetActive(true);
                     // TypeSelectItem.Icon points to Background for hair, not its sibling mask.
                     Image icon = field == "hairstyle_id" ? item.Find("Background").GetComponent<Image>()
                         : FindDeep(item, "Icon")?.GetComponent<Image>();
@@ -583,12 +589,17 @@ namespace Zjcs.Presentation.CharacterCreation
                         icon.sprite = assets.FindSkinIcon(option.SkinName);
                         icon.preserveAspect = field != "hairstyle_id";
                     }
-                    BindOptionItem(item, option, appearance, field);
-                    optionItems.Add(option.Id, item);
+                    BindOptionItem(item, option, appearance, field, items);
+                    items.Add(option.Id, item);
+                    item.gameObject.SetActive(true);
                 }
-                populatedOptionKey = key;
+                view = (key, items);
+                optionViews[viewRoot] = view;
+                optionItems = items;
+                return;
             }
 
+            optionItems = view.items;
             string selectedId = CurrentOption(appearance, field);
             foreach (KeyValuePair<string, Transform> item in optionItems)
                 SetOfficialSelected(item.Value, item.Key == selectedId);
@@ -669,9 +680,6 @@ namespace Zjcs.Presentation.CharacterCreation
                 update(Mathf.RoundToInt(value));
                 SetDye(type, 0, dyeHue, dyeSaturation, dyeValue);
                 RefreshHsvGradient(colorRoot);
-                Transform tip = FindDeep(RequireNode(colorRoot, "CustomColorGo"), "Tip");
-                SetLabel(FindText(tip),
-                    "#" + CurrentColor(ActiveAppearance(), type));
             });
         }
 
@@ -682,18 +690,26 @@ namespace Zjcs.Presentation.CharacterCreation
                 ShowStatus(error);
                 return;
             }
+            int previousColorId = dyeColorId;
             dyeType = type;
             dyeColorId = colorId;
             dyeHue = hue;
             dyeSaturation = saturation;
             dyeValue = value;
             QueueDraftSave();
-            RefreshNativePreviews();
-            foreach (KeyValuePair<int, Transform> item in dyeItems)
-                SetOfficialSelected(item.Value, item.Key == dyeColorId);
+            // A color edit leaves the selected attachments and animation pose intact.
+            CharacterAppearanceDraft appearance = ActiveAppearance();
+            if (dyeColorId != previousColorId)
+            {
+                if (dyeItems.TryGetValue(previousColorId, out Transform previousItem))
+                    SetOfficialSelected(previousItem, false);
+                if (dyeItems.TryGetValue(dyeColorId, out Transform selectedItem))
+                    SetOfficialSelected(selectedItem, true);
+            }
+            ActivePreview().ApplyDyeChannels(ResolveDyeChanges(appearance, ResolveSelectedSkins(appearance, true)));
             Transform colorRoot = FindDeep(diyContent, "ColorGo");
             Transform tip = FindDeep(colorRoot, "Tip");
-            SetLabel(FindText(tip), "#" + CurrentColor(ActiveAppearance(), type));
+            SetLabel(FindText(tip), "#" + CurrentColor(appearance, type));
         }
 
         private static void RefreshHsvGradient(Transform colorRoot)
@@ -909,7 +925,7 @@ namespace Zjcs.Presentation.CharacterCreation
         }
 
         private void BindOptionItem(Transform item, CharacterCreationOptionInfo option,
-            CharacterAppearanceDraft appearance, string field)
+            CharacterAppearanceDraft appearance, string field, Dictionary<string, Transform> items)
         {
             Toggle toggle = item.GetComponentInChildren<Toggle>(true);
             Action choose = () =>
@@ -923,7 +939,7 @@ namespace Zjcs.Presentation.CharacterCreation
                 QueueDraftSave();
                 RefreshNativePreviews();
                 SetOfficialSelected(item, true);
-                foreach (KeyValuePair<string, Transform> other in optionItems)
+                foreach (KeyValuePair<string, Transform> other in items)
                     if (other.Key != option.Id) SetOfficialSelected(other.Value, false);
             };
 
@@ -1493,8 +1509,23 @@ namespace Zjcs.Presentation.CharacterCreation
         private IEnumerator SaveDraftAfterDelay()
         {
             yield return new WaitForSecondsRealtime(0.25f);
+            while (draftWrite != null && !draftWrite.IsCompleted) yield return null;
             pendingSave = null;
-            PersistDraft();
+            try
+            {
+                CompleteDraftWrite();
+                draftWrite = service.SaveDraftAsync(slotId, draft);
+            }
+            catch (Exception error)
+            {
+                ReportDraftSaveError(error);
+                yield break;
+            }
+            Task started = draftWrite;
+            while (!started.IsCompleted) yield return null;
+            if (draftWrite != started) yield break;
+            try { CompleteDraftWrite(); }
+            catch (Exception error) { ReportDraftSaveError(error); }
         }
 
         private bool PersistDraft()
@@ -1507,15 +1538,28 @@ namespace Zjcs.Presentation.CharacterCreation
             }
             try
             {
+                CompleteDraftWrite();
                 service.SaveDraft(slotId, draft);
                 return true;
             }
             catch (Exception error)
             {
-                Debug.LogException(error, this);
-                ShowOfficialMessage("创角草稿保存失败，当前操作已取消。\n" + error.Message);
+                ReportDraftSaveError(error);
                 return false;
             }
+        }
+
+        private void CompleteDraftWrite()
+        {
+            Task write = draftWrite;
+            draftWrite = null;
+            write?.GetAwaiter().GetResult();
+        }
+
+        private void ReportDraftSaveError(Exception error)
+        {
+            Debug.LogException(error, this);
+            ShowOfficialMessage("创角草稿保存失败，当前操作已取消。\n" + error.Message);
         }
 
         private CharacterAppearanceDraft ActiveAppearance()
@@ -1542,6 +1586,8 @@ namespace Zjcs.Presentation.CharacterCreation
             selectSexContent = null;
             diyContent = null;
             setNameContent = null;
+            optionViews.Clear();
+            optionItems = null;
             performancePlayer = null;
             performanceAssets = null;
             customColorControlsBound = false;
