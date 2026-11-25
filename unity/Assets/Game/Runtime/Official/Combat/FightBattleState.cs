@@ -57,6 +57,7 @@ namespace Zjcs.Combat.Official
         public long Hp;
         public long MaxHp;
         public long LastMaxHp;
+        public bool IsAlive => Hp > 0 && !Ended;
         public List<FightPropertyValue> BaseProperties;
         public long Resilience;
         public long MaxResilience;
