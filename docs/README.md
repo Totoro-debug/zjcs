@@ -38,10 +38,10 @@
 | [职业、晋升与自由转职](character/professions.md) | 未完成 |
 | [装备、强化、继承与星石](character/equipment.md) | 未完成 |
 | [行囊、物品与宝箱](character/inventory.md) | 未完成 |
-| [技能目录（一至四阶）](character/skills.md) | 已完成 |
+| [技能目录（一至四阶）](character/skills.md) | 未完成 |
 | [战士职业技能详情（一阶）](character/skills-warrior.md) | 已完成 |
 | [法师职业技能详情（一阶）](character/skills-mage.md) | 已完成 |
-| [骑士路线职业技能详情（二至四阶）](character/skills-knight.md) | 已完成 |
+| [骑士路线职业技能详情（二至四阶）](character/skills-knight.md) | 未完成 |
 | [斗士路线职业技能详情（二至四阶）](character/skills-fighter.md) | 已完成 |
 | [术士路线职业技能详情（二至四阶）](character/skills-warlock.md) | 已完成 |
 | [贤者路线职业技能详情（二至四阶）](character/skills-sage.md) | 已完成 |
