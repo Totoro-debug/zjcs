@@ -6,7 +6,11 @@ namespace Zjcs.Offline.Progression
 {
     public sealed partial class OfflineMainlineProgressSession
     {
-        public static void EndPlayerSession() => OfflineSkillItemNewMarks.EndPlayerSession();
+        public static void EndPlayerSession()
+        {
+            OfflinePlayerSessionNotifications.EndPlayerSession();
+            OfflineSkillItemNewMarks.EndPlayerSession();
+        }
         private OfflineSkillItemNewMarks itemNewMarks;
         public bool IsNewSessionItem(int itemId) => itemNewMarks.IsNewItem(itemId);
         public void RemoveNewSessionItem(int itemId) => itemNewMarks.RemoveNewItem(itemId);

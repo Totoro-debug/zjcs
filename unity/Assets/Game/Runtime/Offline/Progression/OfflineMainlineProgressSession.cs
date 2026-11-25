@@ -1191,6 +1191,7 @@ namespace Zjcs.Offline.Progression
             LocalJsonSaveFile.Write(savePath, json, IsValidSaveJson);
             UpdateSessionItemMarks(Save.Player, next.Player);
             Save = next;
+            OfflinePlayerSessionNotifications.PublishCommitted(savePath);
             return result;
         }
 
