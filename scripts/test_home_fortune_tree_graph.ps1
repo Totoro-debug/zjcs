@@ -1,0 +1,10 @@
+param([Parameter(Mandatory)][string]$Workspace,[Parameter(Mandatory)][string]$Project)
+$ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'validation_workspace.ps1')
+$repository=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'));$work=(Get-Item -LiteralPath $Workspace).FullName.TrimEnd('\','/')
+$marker=Get-Content (Join-Path $work '.zjcs-validation.json') -Raw|ConvertFrom-Json;if($marker.format -ne 1 -or $marker.repository -ne $repository){throw 'Wrong validation repository.'}
+$projectPath=(Get-Item -LiteralPath $Project).FullName.TrimEnd('\','/');if(-not $projectPath.StartsWith($work+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)){throw 'Independent project required.'}
+$source=Join-Path $repository 'unity/Assets/Official/Home/FruitTree/Native/Graph';$destination=Join-Path $projectPath 'Assets/Official/Home/FruitTree/Native/Graph';New-Item -ItemType Directory -Path $destination -Force|Out-Null;Get-ChildItem $source -File|Copy-Item -Destination $destination -Force
+$fixture=Join-Path $projectPath 'Assets/Editor/HomeFortuneTreeGraph';New-Item -ItemType Directory -Path $fixture -Force|Out-Null;Copy-Item (Join-Path $PSScriptRoot 'fixtures/home_fortune_tree_graph_validation.cs') (Join-Path $fixture 'HomeFortuneTreeGraphValidation.cs') -Force
+@{name='HomeFortuneTreeGraphValidation';includePlatforms=@('Editor');references=@('Zjcs.Official.ProfessionUI')}|ConvertTo-Json|Set-Content (Join-Path $fixture 'HomeFortuneTreeGraphValidation.asmdef') -Encoding utf8
+$editor=(Get-Content (Join-Path $repository 'unity-tools.json') -Raw|ConvertFrom-Json).editorExecutable;$log=Join-Path $work 'fortune-tree-graph.log';$args=@('-batchmode','-nographics','-muteAudio','-job-worker-count','2','-projectPath',('"'+$projectPath+'"'),'-logFile',('"'+$log+'"'),'-executeMethod','HomeFortuneTreeGraphValidation.Run');$p=Start-Process $editor -ArgumentList $args -WindowStyle Hidden -PassThru -Wait;if($p.ExitCode -ne 0 -or -not(Select-String -LiteralPath $log -SimpleMatch 'HOME_FORTUNE_TREE_GRAPH_PASSED' -Quiet)){throw "FortuneTree graph validation failed: $log"};Write-Output 'HOME_FORTUNE_TREE_GRAPH_PASSED'

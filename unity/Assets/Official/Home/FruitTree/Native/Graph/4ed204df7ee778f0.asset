@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: a60585f4089d5ba88818d9d94dc296aa, type: 3}
+  m_Name: '[1][State]命运树是否有提示'
+  graph: {fileID: 11400000, guid: 96dbac9790eb476c50224ae08a599740, type: 2}
+  position: {x: -184.0, y: -152.0}
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000, guid: 43e2390cb5ccc701f8123e58f8e71dee, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000, guid: 43e2390cb5ccc701f8123e58f8e71dee, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: 7567d259c5c47f1b30ab172b0321b4f2, type: 2}
+        reroutePoints: []
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: 24af017d06dacd69161636d92294bb2a, type: 2}
+        reroutePoints: []
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: 4488d27cd93b58a945c7af881306a544, type: 2}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: 2
+  Mono: ''
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: 命运树是否有提示
+  SelectedType: TipDotCommonNode
+  NodeName: FortuneTreeHasTip
+  TipDotNodeId: 1
+  TipDotNode: {rid: 4800079859009192819}
+  RuntimeTipDotNode: {rid: -2}
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 0
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels: []
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: '', ns: '', asm: ''}
+    - rid: 4800079859009192819
+      type: {class: TipDotCommonNode, ns: Zjcs.Official.ProfessionUI, asm: Zjcs.Official.ProfessionUI}
+      data:
+        Parents: []
+        Childs: []
+        NodeKey: {GraphName: FortuneTree, NodeName: FortuneTreeHasTip}
+        TipDotInfo: {TipLevel: 0, Data: ''}
+        IsShowTip: 0
