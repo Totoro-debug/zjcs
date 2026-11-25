@@ -166,7 +166,7 @@ namespace Zjcs.Presentation.CharacterCreation
             {
                 material = new Material(nativeShader);
                 material.mainTexture = LoadTexture(part.texture);
-                material.EnableKeyword("_STRAIGHT_ALPHA_INPUT");
+                material.SetFloat("_StraightAlphaInput", 1f);
                 materials.Add(part.texture, material);
             }
             renderer.sharedMaterial = material;

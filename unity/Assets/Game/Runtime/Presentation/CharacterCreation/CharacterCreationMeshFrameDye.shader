@@ -6,7 +6,7 @@ Shader "Zjcs/CharacterCreation/OfficialMeshFrameDye" {
 		_DyeHsv1 ("Dye HSV 1", Vector) = (0,0,0,0)
 		_DyeHsv2 ("Dye HSV 2", Vector) = (0,0,0,0)
 		_DyeHsv3 ("Dye HSV 3", Vector) = (0,0,0,0)
-		[Toggle(_STRAIGHT_ALPHA_INPUT)] _StraightAlphaInput("Straight Alpha Texture", Int) = 0
+		[HideInInspector] _StraightAlphaInput("Straight Alpha Texture", Float) = 0
 		[HideInInspector] _StencilRef("Stencil Reference", Float) = 1.0
 		[HideInInspector][Enum(UnityEngine.Rendering.CompareFunction)] _StencilComp("Stencil Comparison", Float) = 8
 	}
@@ -27,7 +27,6 @@ Shader "Zjcs/CharacterCreation/OfficialMeshFrameDye" {
 		Pass {
 			Name "Normal"
 			CGPROGRAM
-			#pragma shader_feature _ _STRAIGHT_ALPHA_INPUT
 			#pragma vertex vert
 			#pragma fragment frag
 			#include "UnityCG.cginc"
@@ -37,6 +36,7 @@ Shader "Zjcs/CharacterCreation/OfficialMeshFrameDye" {
 			float4 _DyeHsv1;
 			float4 _DyeHsv2;
 			float4 _DyeHsv3;
+			float _StraightAlphaInput;
 
 			struct VertexInput {
 				float4 vertex : POSITION;
@@ -85,9 +85,8 @@ Shader "Zjcs/CharacterCreation/OfficialMeshFrameDye" {
 				hsv.z *= 1.0 + hsvChange.z;
 				texColor.rgb = hsvToRgb(hsv);
 
-				#if defined(_STRAIGHT_ALPHA_INPUT)
-				texColor.rgb *= texColor.a;
-				#endif
+				// Preview materials are created at runtime, after build-time shader variant stripping.
+				texColor.rgb *= lerp(1.0, texColor.a, _StraightAlphaInput);
 				return texColor * i.vertexColor;
 			}
 			ENDCG
