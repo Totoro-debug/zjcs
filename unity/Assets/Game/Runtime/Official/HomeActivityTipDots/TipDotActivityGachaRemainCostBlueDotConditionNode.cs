@@ -36,6 +36,7 @@ namespace Zjcs.Official.HomeActivityTipDots
         event Action<HomeTipActivity> OnActivityOpen;
         event Action<HomeTipActivity> OnActivityClose;
         event Action<ActivityType> OnActivitiesUpdate;
+        bool HasActivity(ActivityType type, int activityId);
         IDisposable SubscribeNoRedDotSetting(Action<HomeTipActivity> callback);
         bool IsActivityNoRedDotSet(ActivityType type, int activityId);
     }
@@ -47,7 +48,6 @@ namespace Zjcs.Official.HomeActivityTipDots
         HashSet<int> GetCanAwardItems(int gachaId);
         IDisposable SubscribeNoRedDotWithMessage(Action<IHomeActivityNoRedDotMessage> callback);
         bool IsNoRedDotWithGachaSet(HomeActivityNoRedDotGacha data);
-        bool HasActivity(ActivityType type, int activityId);
         long GetItemAmount(int itemId);
         event Action<int> OnItemCountUpdate;
         event Action<int> OnSpecialGachaEnd;

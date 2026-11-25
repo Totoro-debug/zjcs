@@ -111,6 +111,12 @@ public static class HomeActivityGachaTipValidation
             Require(manager.Dirty == 6, "Cost, award, free-time, role and draw events must dirty the availability condition.");
             Require(((TipDotActivityGachaHasCostConditionNode)cost.Clone()).Times == 2, "The availability clone must preserve Times.");
             cost.Release(); Require(services.Setting == null && services.Message == null && services.EventSubscribers == 0, "Availability release must remove all subscriptions.");
+            var open = new TipDotActivityIsOpenNode { Services = services, NodeManager = manager, ActivityType = ActivityType.ActivityGacha, ActivityId = 0 };
+            open.NodeKey = new TipDotNodeKey("FortuneTree", "Open", new ActivityNodeInstanceInfo(9));
+            services.Active = true; open.Init(); open.IsActive = true; Require(open.CheckShowTip(), "Activity open condition must use the instance activity id.");
+            manager.Dirty = 0; services.Open(ActivityType.ActivityGacha, 8); Require(manager.Dirty == 0, "Unrelated activity open is ignored.");
+            services.Open(ActivityType.ActivityGacha, 9); Require(manager.Dirty == 1, "Matching activity open dirties the node.");
+            open.Release(); Require(services.EventSubscribers == 0, "Activity open release must remove subscriptions.");
             Debug.Log("HOME_ACTIVITY_GACHA_TIP_PASSED"); EditorApplication.Exit(0);
         }
         catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }

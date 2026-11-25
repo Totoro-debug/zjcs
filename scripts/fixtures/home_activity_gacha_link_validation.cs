@@ -20,6 +20,7 @@ public static class HomeActivityGachaLinkValidation
         public void AddDirtyConditionNode(TipDotConditionNodeBase node) { }
         public void RemoveDirtyConditionNode(TipDotConditionNodeBase node) { }
         public void ConnectNodes(TipDotNodeKey parent, List<TipDotNodeKey> children) => Children.AddRange(children);
+        public void DisconnectNode(TipDotNodeKey parent, TipDotNodeKey child) => Children.RemoveAll(value => value.Equals(child));
     }
     private sealed class Services : IHomeActivityGachaLinkServices
     {

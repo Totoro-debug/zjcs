@@ -12,6 +12,7 @@ namespace Zjcs.Official.HomeActivityTipDots
         Action<TipDotNodeKey> OnAddNode { get; set; }
         Action<TipDotNodeKey> OnReduceNode { get; set; }
         void ConnectNodes(TipDotNodeKey parent, List<TipDotNodeKey> children);
+        void DisconnectNode(TipDotNodeKey parent, TipDotNodeKey child);
     }
 
     public interface IHomeActivityGachaLinkServices
