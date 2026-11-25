@@ -72,7 +72,7 @@ namespace Zjcs.Presentation.Combat
                     throw new InvalidDataException("Official passive skill item is missing: " + binding.ItemId);
                 IReadOnlyDictionary<int, long> additions = combat.CalculatePassiveSkillProps(
                     item.PassiveRankPropId, item.PassiveGroupLevelPropId, item.PassiveRankFactorId,
-                    item.PassivePropFactors, Math.Max(1, binding.Rank), Math.Max(1, binding.Level), binding.SubRank);
+                    item.PassivePropFactors, Math.Max(1, binding.Rank), Math.Max(1, binding.Level), binding.SubRank, binding.ItemId);
                 foreach (KeyValuePair<int, long> addition in additions)
                     properties[addition.Key] = properties.TryGetValue(addition.Key, out long current)
                         ? checked(current + addition.Value) : addition.Value;

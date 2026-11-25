@@ -247,7 +247,7 @@ namespace Zjcs.Combat.Official
                 if (item.PassiveRankPropId <= 0 && item.PassiveGroupLevelPropId <= 0) continue;
                 IReadOnlyDictionary<int, long> additions = combat.CalculatePassiveSkillProps(
                     item.PassiveRankPropId, item.PassiveGroupLevelPropId, item.PassiveRankFactorId,
-                    item.PassivePropFactors, passive.Rank, passive.Level, subRank);
+                    item.PassivePropFactors, passive.Rank, passive.Level, subRank, passive.ItemId);
                 Merge(properties, additions);
             }
             ApplyFinalPassiveProperties(properties);

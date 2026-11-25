@@ -65,7 +65,7 @@ namespace Zjcs.Presentation.Character
             var rows = new List<Row>();
             Fill(0, inputBaseProps ?? formula.CalculatePassiveSkillProps(Int(skill, "PassiveRankPropId"),
                 Int(skill, "PassiveGroupLevelPropId"), Int(skill, "PassiveRankFactorId"),
-                LongMap(skill, "PassivePropFactors"), rank, level, subRank), addition, rank, rows, validDigits);
+                LongMap(skill, "PassivePropFactors"), rank, level, subRank, skillId), addition, rank, rows, validDigits);
             foreach (int id in views)
             {
                 if (Component(id, "FightSkillComponent") != null || Component(id, "FightStatusComponent") != null)

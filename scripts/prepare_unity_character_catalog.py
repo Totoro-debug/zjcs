@@ -30,7 +30,7 @@ RULE_TABLES = (
 FIDELITY_TABLES = ("system_level_limit", "system_level_gap_limit", "level_prop_default_value")
 
 
-def decode_level_props(raw: bytes, wanted: set[int]) -> dict[str, object]:
+def decode_level_props(raw: bytes, wanted: set[int], *, include_zero: bool = False) -> dict[str, object]:
     import struct
 
     magic, version, sections_at, index_at = struct.unpack_from("<IHii", raw)
@@ -76,7 +76,7 @@ def decode_level_props(raw: bytes, wanted: set[int]) -> dict[str, object]:
             values = {}
             for property_id in sections[section]:
                 value, cursor = varint(cursor)
-                if value:
+                if value or include_zero:
                     values[str(property_id)] = value
             rows[str(level)] = values
         result[str(class_id)] = {"min": first, "max": last, "rows": rows}

@@ -56,7 +56,7 @@ namespace Zjcs.Presentation.Home
                     && status.CreatorId == actor.Id && status.SourceSkillRank == rank && status.SourceSkillLevel == 2
                     && status.SourceSubRank == actor.SubRank), "The battle assembler lost the cultivated passive listener.");
             var bonus = combat.CalculatePassiveSkillProps(item.PassiveRankPropId, item.PassiveGroupLevelPropId,
-                item.PassiveRankFactorId, item.PassivePropFactors, rank, 2, actor.SubRank);
+                item.PassiveRankFactorId, item.PassivePropFactors, rank, 2, actor.SubRank, itemId);
             var baseline = progression.PropertyCalculator.Evaluate(progression.Player,
                 DateTimeOffset.UtcNow.ToUnixTimeSeconds()).OutOfFightBattleProps;
             foreach (var pair in bonus)

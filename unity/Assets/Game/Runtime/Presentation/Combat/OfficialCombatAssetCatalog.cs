@@ -62,6 +62,7 @@ namespace Zjcs.Presentation.Combat
                 packs.Add(pack);
             }
             skillRulePacks = packs.AsReadOnly();
+            Zjcs.Offline.Progression.OfficialPassiveSkillPropertyPacks.Apply(combat, LoadSkillItems());
             loadedCatalog = combat;
             return loadedCatalog;
         }

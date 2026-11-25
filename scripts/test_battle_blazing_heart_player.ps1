@@ -3,7 +3,7 @@ param(
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
     [Parameter(Mandatory)][string]$Profile,
-    [ValidateSet(10520,10521,10522,10550,10555,10583,10559,10554,10578,10524,10535,10505,10510,10501,10500,10507,10509,10516,10540,10541,10563)][int]$SecretId = 10520
+    [ValidateSet(10520,10521,10522,10550,10555,10583,10559,10554,10578,10524,10535,10505,10510,10501,10500,10507,10509,10516,10540,10541,10563,10587)][int]$SecretId = 10520
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -90,7 +90,8 @@ try {
             throw "The actual battle produced a runtime or shutdown error: $run"
         }
         if (-not $equipped) {
-            foreach ($skill in @(10520,10521,10522,10550,10555,10583,10559,10554,10578,10513,10561,10502,10556,10569,10576,10602,10509,10516,10540,10541,10563,10500,10501,10505,10507,10510,10524,10535,10537,10539,10544,10546,10571)) {
+            $wishIds=if($SecretId -eq 10587){@(10587)}else{@(10520,10521,10522,10550,10555,10583,10559,10554,10578,10513,10561,10502,10556,10569,10576,10602,10509,10516,10540,10541,10563,10500,10501,10505,10507,10510,10524,10535,10537,10539,10544,10546,10571)}
+            foreach ($skill in $wishIds) {
                 if (-not (Select-String -LiteralPath (Join-Path $run 'player.log') -SimpleMatch "[Passive affinity wish] item=$skill granted")) {
                     throw "Original skill wish acquisition did not complete for $skill : $run"
                 }
@@ -100,11 +101,11 @@ try {
         Write-Output "Blazing heart actual battle passed: equipped=$equipped / $run"
     }
     if ($evidence['True'].affinity -le $evidence['False'].affinity -or
-        ($SecretId -notin @(10550,10505,10510,10583,10501,10559,10554,10500,10507) -and $evidence['True'].damage -le $evidence['False'].damage) -or
-        ($SecretId -in @(10554,10500,10507) -and $evidence['True'].secondary -le $evidence['False'].secondary) -or
+        ($SecretId -notin @(10550,10505,10510,10583,10501,10559,10554,10500,10507,10587) -and $evidence['True'].damage -le $evidence['False'].damage) -or
+        ($SecretId -in @(10554,10500,10507,10587) -and $evidence['True'].secondary -le $evidence['False'].secondary) -or
         ($SecretId -eq 10559 -and ($evidence['True'].effectRate -le $evidence['False'].effectRate -or
             $evidence['True'].damage -ne $evidence['False'].damage)) -or
-        ($SecretId -in @(10583,10501) -and $evidence['True'].damage -ge $evidence['False'].damage) -or
+        ($SecretId -in @(10583,10501,10587) -and $evidence['True'].damage -ge $evidence['False'].damage) -or
         ($SecretId -in @(10550,10505,10510) -and $evidence['True'].damage -ne $evidence['False'].damage) -or
         ($SecretId -eq 10510 -and ($evidence['True'].firstActor -ne 1 -or $evidence['False'].firstActor -le 1))) {
         throw 'Equipping the acquired secret produced unexpected battle properties or damage.'

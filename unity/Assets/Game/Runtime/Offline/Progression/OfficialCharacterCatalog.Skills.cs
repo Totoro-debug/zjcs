@@ -33,7 +33,7 @@ namespace Zjcs.Offline.Progression
             var item = skillPropertyItems.Required(skillId);
             return skillPropertyRules.CalculatePassiveSkillProps(item.PassiveRankPropId,
                 item.PassiveGroupLevelPropId, item.PassiveRankFactorId, item.PassivePropFactors,
-                rank, level, subRank);
+                rank, level, subRank, skillId);
         }
     }
 }

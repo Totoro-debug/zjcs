@@ -39,6 +39,7 @@ namespace Zjcs.Offline.Progression
         [SerializeField] private TextAsset passiveSkillItemsSourceManifest;
         private Zjcs.Combat.Official.FightOfficialCombatCatalog loadedSkillProperties;
         private Zjcs.Combat.Official.FightOfficialSkillItemCatalog loadedSkillPropertyItems;
+        private bool loadedPassiveSkillPropertyPacks;
         [SerializeField] private GameObject confirmDialogPrefab;
         [SerializeField] private AnimationClip skillSlotLevelUpAnimation;
         [SerializeField] private AudioClip skillSlotLevelUpSound;
@@ -198,6 +199,11 @@ namespace Zjcs.Offline.Progression
                 var itemSource = Zjcs.Combat.Official.FightOfficialCombatCatalog.ReadSourceManifest(passiveSkillItemsSourceManifest.text);
                 loadedSkillPropertyItems = Zjcs.Combat.Official.FightOfficialSkillItemCatalog.Load(passiveSkillItems.text,
                     itemSource.OutputSha256, itemSource.Manifest);
+            }
+            if (!loadedPassiveSkillPropertyPacks)
+            {
+                OfficialPassiveSkillPropertyPacks.Apply(loadedSkillProperties, loadedSkillPropertyItems);
+                loadedPassiveSkillPropertyPacks = true;
             }
             return character.WithSkillPropertyRules(loadedSkillProperties, loadedSkillPropertyItems);
         }

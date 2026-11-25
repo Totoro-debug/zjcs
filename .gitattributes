@@ -1,5 +1,9 @@
 # Line endings follow Git defaults; retain LFS and resource handling rules.
 
+# Passive cultivation payload hashes cover exact generated UTF-8/LF bytes.
+unity/Assets/Game/Resources/Combat/SkillRules/*-passive.json text eol=lf
+unity/Assets/Game/Resources/Combat/SkillRules/*-passive-source-manifest.json text eol=lf
+
 # The native skill UI bundle receipt records these original CRLF bytes.
 unity/Assets/Official/Skills/skill-ui.json.meta text eol=crlf
 unity/Assets/Official/Skills/source-manifest.json text eol=crlf

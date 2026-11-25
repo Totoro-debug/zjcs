@@ -163,7 +163,7 @@ namespace Zjcs.Presentation.Combat
                 {
                     Merge(entityProps, combat.CalculatePassiveSkillProps(item.PassiveRankPropId,
                         item.PassiveGroupLevelPropId, item.PassiveRankFactorId, item.PassivePropFactors,
-                        PetSkillRank(catalog, pet, itemId), Math.Max(1, level), subRank));
+                        PetSkillRank(catalog, pet, itemId), Math.Max(1, level), subRank, itemId));
                     state.EntityPassiveStatusIds.AddRange(item.PassiveStatusIds ?? Array.Empty<int>());
                 }
             state.EntityProperties = new List<FightPropertyValue>(OfficialBattlePropertyAssembler.ToProperties(entityProps));
@@ -211,7 +211,7 @@ namespace Zjcs.Presentation.Combat
                 int effectiveLevel = Math.Max(1, level);
                 IReadOnlyDictionary<int, long> properties = combat.CalculatePassiveSkillProps(
                     item.PassiveRankPropId, item.PassiveGroupLevelPropId, item.PassiveRankFactorId,
-                    item.PassivePropFactors, rank, effectiveLevel, subRank);
+                    item.PassivePropFactors, rank, effectiveLevel, subRank, itemId);
                 Merge(propertyMap, properties);
                 bindings.Add(new FightOfficialPassiveSkillBinding
                 {

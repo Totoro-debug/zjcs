@@ -1486,7 +1486,7 @@ namespace Zjcs.Combat.Official
                 IReadOnlyDictionary<int, long> passive = statusCatalog.CalculatePassiveSkillProps(
                     item.PassiveRankPropId, item.PassiveGroupLevelPropId,
                     item.PassiveRankFactorId, item.PassivePropFactors, 1, level,
-                    Math.Max(0, actor.SubRank));
+                    Math.Max(0, actor.SubRank), itemId);
                 foreach (KeyValuePair<int, long> property in passive)
                     properties[property.Key] = properties.TryGetValue(property.Key,
                         out long current) ? checked(current + property.Value) : property.Value;

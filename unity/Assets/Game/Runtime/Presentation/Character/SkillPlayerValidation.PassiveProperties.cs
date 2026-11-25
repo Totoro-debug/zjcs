@@ -133,7 +133,7 @@ namespace Zjcs.Presentation.Character
             var items = combatAssets.LoadSkillItems();
             var item = items.Required(itemId);
             var expected = combat.CalculatePassiveSkillProps(item.PassiveRankPropId, item.PassiveGroupLevelPropId,
-                item.PassiveRankFactorId, item.PassivePropFactors, rank, level, player.SubRank);
+                item.PassiveRankFactorId, item.PassivePropFactors, rank, level, player.SubRank, itemId);
             Require(expected.Count > 0 || item.PassivePropFactors.Count == 0 && item.PassiveStatusIds.Any(id => id > 0),
                 "Selected original secret has neither property contributions nor a configured passive status.");
             long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();

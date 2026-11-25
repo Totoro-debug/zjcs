@@ -566,8 +566,10 @@ namespace Zjcs.Combat.Official
         /// </summary>
         public IReadOnlyDictionary<int, long> CalculatePassiveSkillProps(int rankPropId,
             int groupLevelPropId, int rankFactorId, IReadOnlyDictionary<int, long> propFactors,
-            int rank, int level, int subRank)
+            int rank, int level, int subRank, int skillItemId = 0)
         {
+            if (TryCalculatePassiveSkillProps(skillItemId, rankPropId, groupLevelPropId, rankFactorId,
+                propFactors, rank, level, subRank, out var selected)) return selected;
             int levelPropId = 0;
             if (groupLevelPropId > 0 && skillGroupLevels.TryGetValue(groupLevelPropId,
                     out Dictionary<int, int> bySubRank))
