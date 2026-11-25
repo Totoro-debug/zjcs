@@ -1,0 +1,48 @@
+{
+  "official_manifest": "903_156948",
+  "existing_payload_manifest": "884_156692",
+  "inputs": {
+    "assets/reference/home-pet-shop-new-function-source-manifest.json": "3e9d504e443a7065cb4c64843841d7aba739523a81736a4b92861538d8f5516b",
+    "unity/Assets/Official/Home/home-rules-current.json": "493eb0be246a11e26f84069ed999021d867f4706d5b9934a33745ec5dc387d03"
+  },
+  "verified_equal": {
+    "function_limit": {
+      "Type": 18,
+      "Key0": 7,
+      "Key1": 0,
+      "Condition": {
+        "Jumpable": null,
+        "Ids": [
+          3050,
+          1302
+        ],
+        "_type": "CompositeAndCondition"
+      }
+    },
+    "conditions": [
+      {
+        "ClassId": 1302,
+        "Condition": {
+          "Jumpable": null,
+          "ClassId": 4017,
+          "Count": 1,
+          "Op": ">=",
+          "_type": "HasItemCondition"
+        }
+      },
+      {
+        "ClassId": 3050,
+        "Condition": {
+          "Jumpable": null,
+          "Level": 50,
+          "Op": ">=",
+          "_type": "LevelCondition"
+        }
+      }
+    ]
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Offline/HomeHudUI/OfflineHomeHudConditions.cs": "8e843d09cb56fce7c7f2e38b102cddac616bc8108590d0f5f37a07a6c76c4cce"
+  },
+  "scope": "Parameterized function-condition lookup; selected existing rows are verified equal to the current official source."
+}

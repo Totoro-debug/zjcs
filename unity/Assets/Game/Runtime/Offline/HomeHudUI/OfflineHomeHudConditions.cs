@@ -80,13 +80,14 @@ namespace Zjcs.Offline.HomeHudUI
             return conditions.TryGetValue(id, out var node) ? Wrap(node) : null;
         }
 
-        public IHomeHudCondition GetFunctionCondition(FunctionType type)
+        public IHomeHudCondition GetFunctionCondition(FunctionType type) => GetFunctionCondition(type, 0, 0);
+
+        public IHomeHudCondition GetFunctionCondition(FunctionType type, int key0, int key1 = 0)
         {
             EnsureAlive();
-            // Selected FunctionLimitInfoParser.Get(type) uses the two default zero keys.
             var record = configuration.Rows("function_limit").SingleOrDefault(row =>
-                Convert.ToInt32(row["Type"]) == (int)type && Convert.ToInt32(row["Key0"]) == 0 &&
-                Convert.ToInt32(row["Key1"]) == 0);
+                Convert.ToInt32(row["Type"]) == (int)type && Convert.ToInt32(row["Key0"]) == key0 &&
+                Convert.ToInt32(row["Key1"]) == key1);
             return record == null ? null : Wrap((Dictionary<string, object>)record["Condition"]);
         }
 
