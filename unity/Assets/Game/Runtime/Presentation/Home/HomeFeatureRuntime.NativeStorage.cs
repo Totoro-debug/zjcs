@@ -99,7 +99,7 @@ namespace Zjcs.Presentation.Home
                 EFurniture.Bed,
                 EFurniture.StorageBox,
                 EFurniture.DiningTable,
-                EFurniture.Cart
+                EFurniture.Cart,
             };
 
             private sealed class HangUpAwardMessage : IHomeHangUpAwardMessage
@@ -208,9 +208,9 @@ namespace Zjcs.Presentation.Home
             private readonly List<ConditionSubscription> conditionSubscriptions = new List<ConditionSubscription>();
             private readonly Dictionary<EFurniture, EntityState> entities = new Dictionary<EFurniture, EntityState>();
             private readonly Dictionary<GameObject, EntityState> instances = new Dictionary<GameObject, EntityState>();
-
             private readonly HashSet<Func<HomeFruitTreeAward, bool>> fruitTreeAwardHandlers = new HashSet<Func<HomeFruitTreeAward, bool>>();
             private readonly FruitTreeOutputItem fruitTreeOutputItem;
+
             private AppearanceAssetManager materials;
             private NativeSpineAppearanceBindings textures;
             private HomeNativeWeaponRackServices rackServices;
@@ -238,8 +238,8 @@ namespace Zjcs.Presentation.Home
             private readonly HomeLanguageTypeService languageService = new HomeLanguageTypeService();
             private LanguageGroupConfig languageGroupConfig;
             private GameObject anchor;
-            private AudioSource clickSound;
             private GameObject fruitTreeInstance;
+            private AudioSource clickSound;
             private OfflineProfessionImageResourceLoader npcIconLoader;
             private Dictionary<int, string> npcIconPaths;
             private HomeRelationManager relationManager;
@@ -354,11 +354,10 @@ namespace Zjcs.Presentation.Home
                     if (!creator.GetOrCreate(type, this))
                         throw new InvalidOperationException("The original native furniture prefab is missing: " + type);
                 }
-                nativeTime.Enable();
                 OpenNativeFruitTree();
+                nativeTime.Enable();
             }
 
-            internal void RefreshSkin()
             private void OpenNativeFruitTree()
             {
                 string location = GetFruitTreePrefabPath();
@@ -372,6 +371,7 @@ namespace Zjcs.Presentation.Home
                 home.scene.BindNativeFruitTree(fruitTreeInstance);
             }
 
+            internal void RefreshSkin()
             {
                 if (disposed || creator == null) return;
                 foreach (EFurniture type in SupportedFurniture)
@@ -379,7 +379,6 @@ namespace Zjcs.Presentation.Home
                     if (entities.ContainsKey(type))
                         creator.OnSkinChanged(type, GetFurnitureSkinId(type), this, out _);
                 }
-            }
                 RefreshNativeFruitTree();
             }
 
@@ -405,6 +404,7 @@ namespace Zjcs.Presentation.Home
                     GetEnvironmentSkinId(HomeEnvironmentType.Weather));
                 return weather == null ? paths.GetFurniturePrefabPath(skinId)
                     : paths.GetFurniturePrefabPath(skinId, weather.PrefabName);
+            }
 
             internal void SetViewMode(HomeViewMode mode)
             {
@@ -455,8 +455,8 @@ namespace Zjcs.Presentation.Home
             internal void NotifyFastForward(int fastHangUpId)
             {
                 if (disposed) return;
-                HomeFastHangUpRecord fast = home.rules.FastHangUp(fastHangUpId);
                 OnFastHangUp?.Invoke(fastHangUpId);
+                HomeFastHangUpRecord fast = home.rules.FastHangUp(fastHangUpId);
                 if (fast?.hangUpIdList != null)
                 {
                     foreach (int hangUpId in fast.hangUpIdList)
@@ -511,7 +511,6 @@ namespace Zjcs.Presentation.Home
 
             private void Install(GameObject root)
             {
-                foreach (var furniture in root.GetComponentsInChildren<FurnitureBase>(true))
                 foreach (var tree in root.GetComponentsInChildren<HomeFruitTree>(true))
                 {
                     tree.FurnitureServices = this;
@@ -523,6 +522,7 @@ namespace Zjcs.Presentation.Home
                     pet.PetTreeFeatureServices = this;
                 foreach (var output in root.GetComponentsInChildren<HomeFruitTreeHangUpHandlerFruitItem>(true))
                     output.OutputServices = this;
+                foreach (var furniture in root.GetComponentsInChildren<FurnitureBase>(true))
                 {
                     furniture.Services = this;
                     if (furniture is BaseHangUpFurniture hangUp)
@@ -659,8 +659,8 @@ namespace Zjcs.Presentation.Home
                 conditionSubscriptions.Clear();
                 pendingHangUpAwards.Clear();
                 observedUnlockedHangUps.Clear();
-                HomeAudioSettings.Unregister(clickSound);
                 fruitTreeAwardHandlers.Clear();
+                HomeAudioSettings.Unregister(clickSound);
                 clickSound = null;
                 if (anchor) { anchor.SetActive(false); Object.Destroy(anchor); }
                 ReleaseAfterInstances(anchor).Forget();
@@ -773,8 +773,6 @@ namespace Zjcs.Presentation.Home
             public bool HasStartedStory(string name) => home.StoryStatus(name) > 0;
             public void DoStoryAction(Action action) => action?.Invoke();
 
-            public FurnitureInfo GetFurnitureInfo(EFurniture furniture)
-            {
             public bool AwardManagerAvailable => !disposed;
             public int FruitId => OfflineFruitTreeService.FruitItemId;
             public void RegisterAwardHandler(Func<HomeFruitTreeAward, bool> handler) => fruitTreeAwardHandlers.Add(handler);
@@ -827,6 +825,8 @@ namespace Zjcs.Presentation.Home
                 public DateTime LastUpdateTime => DateTimeOffset.FromUnixTimeSeconds(Math.Max(0, State.LastUpdateUnixSeconds)).UtcDateTime;
             }
 
+            public FurnitureInfo GetFurnitureInfo(EFurniture furniture)
+            {
                 HomeFurnitureRecord row = home.rules.FurnitureOf((int)furniture);
                 return new FurnitureInfo
                 {
