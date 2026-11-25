@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using TMPro;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -17,6 +18,9 @@ using Zjcs.Official.Partners;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Offline.PartnersUI;
 using Zjcs.Official.WorldUI;
+using Zjcs.Official.HomeFruitTreeNative;
+using Zjcs.Official.HomeFruitTreeOutput;
+using Zjcs.Official.HomeFruitTreeWorld;
 using Zjcs.Presentation.World;
 
 namespace Zjcs.Presentation.Home
@@ -79,6 +83,16 @@ namespace Zjcs.Presentation.Home
             {
                 HideForeignCanvases();
                 yield return VerifyHomeSourceConfiguration(runtime);
+                yield break;
+            }
+
+            if (Environment.GetCommandLineArgs().Contains("-fruitTreeNativeAcceptance"))
+            {
+                HideForeignCanvases();
+                DumpFullscreen();
+                bool passed = false;
+                yield return VerifyNativeFruitTree(runtime, value => passed = value);
+                Finish(passed);
                 yield break;
             }
 
@@ -664,6 +678,92 @@ namespace Zjcs.Presentation.Home
             yield return Capture("home-source-restored.png");
             restored.Close();
             Finish(passed);
+        }
+
+        private IEnumerator VerifyNativeFruitTree(HomeFeatureRuntime runtime, Action<bool> completed)
+        {
+            GameObject nativeTree = null;
+            Rect fruitTreeClickBounds = default;
+            bool passed = Check("native-fruit-tree-runtime", () =>
+            {
+                nativeTree = runtime.NativeFurnitureInstance(Zjcs.Official.HomeUI.EFurniture.FruitTree);
+                Assert(nativeTree != null && nativeTree.activeInHierarchy, "native fruit-tree instance is active");
+                Assert(nativeTree.transform.IsChildOf(runtime.Scene.Root.transform), "native tree is parented under the official home scene");
+                HomeFruitTree tree = nativeTree.GetComponentInChildren<HomeFruitTree>(true);
+                HomeFruitTreeProduceFruit produce = nativeTree.GetComponentInChildren<HomeFruitTreeProduceFruit>(true);
+                HomeFruitTreePet pet = nativeTree.GetComponentInChildren<HomeFruitTreePet>(true);
+                HomeFruitTreeHangUpHandlerFruitItem output = nativeTree.GetComponentInChildren<HomeFruitTreeHangUpHandlerFruitItem>(true);
+                Assert(tree != null && tree.FurnitureServices != null, "original parent state controller has local furniture services");
+                Assert(produce != null && produce.ProductionServices != null, "original production controller has local reward service");
+                Assert(pet != null && pet.PetTreeFeatureServices != null, "original pet controller has local interaction service");
+                Assert(output != null && output.OutputServices != null, "original output controller has local production and display service");
+                Rect clickBounds = default;
+                Assert(runtime.Scene.TryGetFurnitureClickBounds((int)Zjcs.Official.HomeUI.EFurniture.FruitTree, out clickBounds)
+                    && clickBounds.width > 0f && clickBounds.height > 0f, "native fruit-tree click bounds are available");
+                fruitTreeClickBounds = clickBounds;
+                Renderer[] renderers = nativeTree.GetComponentsInChildren<Renderer>(true)
+                    .Where(value => value != null && value.enabled && value.gameObject.activeInHierarchy).ToArray();
+                Assert(renderers.Length > 0, "native fruit-tree renderers are active");
+                SkeletonAnimation[] skeletons = nativeTree.GetComponentsInChildren<SkeletonAnimation>(true)
+                    .Where(value => value != null && value.isActiveAndEnabled).ToArray();
+                Assert(skeletons.Length > 0 && skeletons.Any(value => value.skeletonDataAsset
+                    && value.skeletonDataAsset.GetSkeletonData(false)?.Bones.Count > 0),
+                    "original tree skeleton data is active and decodes");
+                Bounds rendered = renderers[0].bounds;
+                foreach (Renderer renderer in renderers.Skip(1)) rendered.Encapsulate(renderer.bounds);
+                bool inFrustum = GeometryUtility.TestPlanesAABB(
+                    GeometryUtility.CalculateFrustumPlanes(runtime.Scene.Camera), rendered);
+                bool rendererVisible = renderers.Any(value => value.isVisible);
+                Vector3 projectedCenter = runtime.Scene.Camera.WorldToScreenPoint(rendered.center);
+                string detail = "position=" + nativeTree.transform.position + ", scale=" + nativeTree.transform.lossyScale
+                    + ", renderers=" + renderers.Length + ", skeletons=" + skeletons.Length
+                    + ", inFrustum=" + inFrustum + ", rendererVisible=" + rendererVisible
+                    + ", projectedCenter=" + projectedCenter + ", bounds=" + rendered + ", click=" + clickBounds;
+                log.Add("INFO native-fruit-tree " + detail);
+                return "official tree, production, pet, and fruit-display controllers are mounted; " + detail;
+            });
+            if (passed && nativeTree)
+            {
+                Vector3 startPosition = runtime.Scene.Camera.transform.position;
+                float unitsPerPixel = 2f * runtime.Scene.OrthographicSize / Mathf.Max(1f, Screen.height);
+                float sensitivity = runtime.Scene.DragSensitivity;
+                Vector2 dragDelta = new Vector2(
+                    -(nativeTree.transform.position.x - startPosition.x) / (unitsPerPixel * sensitivity),
+                    -(nativeTree.transform.position.y - startPosition.y) / (unitsPerPixel * sensitivity));
+                object input = PrivateField<object>(runtime, "input");
+                Vector2 dragStart = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+                Type inputType = input.GetType();
+                inputType.GetMethod("PointerDown", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(input, new object[] { dragStart, false });
+                inputType.GetMethod("PointerMove", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(input, new object[] { dragStart + dragDelta });
+                inputType.GetMethod("PointerUp", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(input, new object[] { dragStart + dragDelta, false });
+            }
+            passed &= Check("native-fruit-tree-camera-drag", () =>
+            {
+                Assert(nativeTree != null, "native fruit-tree instance is available after startup");
+                Vector3 projected = runtime.Scene.Camera.WorldToScreenPoint(nativeTree.transform.position);
+                Assert(projected.z > 0f && runtime.Scene.Camera.pixelRect.Contains(projected),
+                    "official scene drag pans the native fruit tree into the active camera viewport");
+                return "official one-pixel-threshold scene drag brings the fruit tree into view at " + projected;
+            });
+            passed &= Check("native-fruit-tree-scene-pointer", () =>
+            {
+                Vector2 point = runtime.Scene.Camera.WorldToScreenPoint(fruitTreeClickBounds.center);
+                var pointer = new PointerEventData(EventSystem.current) { position = point };
+                var hits = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(pointer, hits);
+                Assert(hits.Count == 0, "native fruit-tree scene input is not covered by UI");
+                object input = PrivateField<object>(runtime, "input");
+                foreach (string method in new[] { "PointerDown", "PointerUp" })
+                    input.GetType().GetMethod(method, BindingFlags.Instance | BindingFlags.NonPublic)
+                        .Invoke(input, new object[] { point, false });
+                return "simulated scene pointer reaches the official native fruit tree";
+            });
+            yield return new WaitForSecondsRealtime(.5f);
+            yield return Capture("native-fruit-tree-home.png");
+            completed?.Invoke(passed);
         }
         private void DumpFullscreen()
         {
