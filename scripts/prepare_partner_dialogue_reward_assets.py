@@ -208,7 +208,15 @@ class PartnerDialogueRewardBinding(PartnerPanelBinding):
                     shared_by_sha.setdefault(can_row["sha256"], can_row["guid"])
 
         proof_path = ROOT / "assets/reference" / RECEIPT_NAME
-        previous = json.loads(proof_path.read_bytes()).get("outputs", {}) if proof_path.is_file() else {}
+        previous_receipt = json.loads(proof_path.read_bytes()) if proof_path.is_file() else {}
+        previous = previous_receipt.get("outputs", {})
+        isolated_guids = previous_receipt.get("isolated_guids", {})
+        if (not isinstance(isolated_guids, dict)
+                or any(not re.fullmatch(r"[0-9a-f]{32}", value)
+                       for pair in isolated_guids.items() for value in pair)
+                or len(set(isolated_guids.values())) != len(isolated_guids)
+                or set(isolated_guids) & set(isolated_guids.values())):
+            raise ValueError("Invalid isolated partner reward GUID mapping")
         existing = {}
         for meta_path in (ROOT / "unity/Assets/Official/Partners").rglob("*.meta"):
             asset = Path(str(meta_path)[:-5])
@@ -246,13 +254,18 @@ class PartnerDialogueRewardBinding(PartnerPanelBinding):
                 path.write_bytes(raw)
             installed[relative] = sha(path.read_bytes())
 
+        # A previous collision repair keeps the two different native objects
+        # distinct. Preserve those GUIDs whenever this source is regenerated.
         serialized_queue = []
         aliases = dict(shared_guid_aliases)
+        aliases.update(isolated_guids)
         for target, target_guid, data in self.queue:
             raw = emit(data) if isinstance(data, dict) else data
             norm_sha = sha(raw.replace(b"\r\n", b"\n"))
             raw_sha = sha(raw)
-            if target_guid not in existing:
+            if target_guid in isolated_guids:
+                target_guid = isolated_guids[target_guid]
+            elif target_guid not in existing:
                 canonical_guid = (
                     shared_guid_aliases.get(target_guid)
                     or shared_by_sha.get(raw_sha)
@@ -262,6 +275,19 @@ class PartnerDialogueRewardBinding(PartnerPanelBinding):
                     aliases[target_guid] = canonical_guid
                     target_guid = canonical_guid
             serialized_queue.append((target, target_guid, raw))
+
+        # Unity GUIDs are project-wide, including assets outside Partners.
+        # Do not recreate a duplicate when another feature already owns one.
+        selected = {target_guid for _, target_guid, _ in serialized_queue} - canonical_paths.keys()
+        assets_root = ROOT / "unity/Assets"
+        partners_root = ROOT / "unity/Assets/Official/Partners"
+        for meta_path in assets_root.rglob("*.meta"):
+            asset = Path(str(meta_path)[:-5])
+            if not asset.is_file() or asset.is_relative_to(partners_root):
+                continue
+            key = guid(meta_path)
+            if key in selected:
+                raise ValueError("Partner reward GUID already belongs to another asset: " + str(asset))
 
         def remap_guids(raw: bytes) -> bytes:
             if not aliases or not raw.startswith(b"%YAML"):
@@ -325,7 +351,7 @@ class PartnerDialogueRewardBinding(PartnerPanelBinding):
                 )
             )
         }
-        write_file_checked(catalog_path, emit(catalog_body))
+        write_file_checked(catalog_path, remap_guids(emit(catalog_body)))
         catalog_meta = (
             "fileFormatVersion: 2\nguid: "
             + hashlib.md5(b"zjcs:partner-dialogue-reward-images").hexdigest()
@@ -341,6 +367,7 @@ class PartnerDialogueRewardBinding(PartnerPanelBinding):
             script_bindings=self.script_sources,
             got_gray_attachment=dict(record=attachment_record, pointer=got_gray_pointer),
             reward_sprites=len(sprites),
+            isolated_guids=isolated_guids,
             reused=reused,
             outputs=installed,
             scope="Original 884_156692 GotGrayObj (GotGrayTip) attachment prefab and all 86 partner dialogue RewardItem sprites.",

@@ -16,5 +16,5 @@
 
 ## 单机适配实现
 
-- 通话、历史、奖励、头像与日界的单机规则及红点链路复用[伙伴](../functions/partners.md)服务与存档，`NpcDialoguePanelRewardItemContent` 补全全部 86 种通话奖励 `ItemIcon` 及 `GotGrayObj` 已领附件资源目录。
+- 通话、历史、奖励、头像与日界的单机规则及红点链路复用[伙伴](../functions/partners.md)服务与存档，`NpcDialoguePanelRewardItemContent` 补全全部 86 种通话奖励 `ItemIcon` 及 `GotGrayObj` 已领附件资源目录；奖励资源与主城素材分别保留原始绑定，避免导入时引用冲突。
 - 共用解锁条件、修复资格、修复弹窗与剧情控制复用[建筑管理](management.md)的原生家具挂载与故事调度链路；受 `FunctionLimit(57)` 约束，未达到开放条件时隐藏通话气泡并阻止进入伙伴界面。

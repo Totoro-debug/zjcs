@@ -775,9 +775,19 @@ public static class HomeDiningTableRuntimeValidation
             + (finishedDialogue != null ? finishedDialogue.CurrentNode.ToString() : "null")
             + ", status=" + (finishedDialogue != null ? finishedDialogue.DialogueStatus.ToString() : "null")
             + ", hasRedDot=" + (finishedDialogue != null && PartnerDialogueListRules.HasRedDot(finishedDialogue, conversations.Playback)) + ")");
-        yield return new WaitForSecondsRealtime(1.5f);
-        var rewardContent = playbackView.GetComponentsInChildren<NpcDialoguePanelRewardItemContent>(false).FirstOrDefault();
-        var rewardIcon = rewardContent != null ? rewardContent.GetComponentInChildren<ItemIcon>(false) : null;
+        NpcDialoguePanelRewardItemContent rewardContent = null;
+        ItemIcon rewardIcon = null;
+        float rewardDeadline = Time.realtimeSinceStartup + 15f;
+        while (Time.realtimeSinceStartup < rewardDeadline)
+        {
+            rewardContent = playbackView.GetComponentsInChildren<NpcDialoguePanelRewardItemContent>(false).FirstOrDefault();
+            rewardIcon = rewardContent != null ? rewardContent.GetComponentInChildren<ItemIcon>(false) : null;
+            if (rewardIcon != null
+                && rewardIcon.GetComponentsInChildren<Image>(false).Any(img => img != null && img.sprite != null
+                    && img.sprite.name.IndexOf("item_110", StringComparison.OrdinalIgnoreCase) >= 0)
+                && rewardIcon.GetComponentsInChildren<ItemIconAttachmentCell>(false).Any()) break;
+            yield return null;
+        }
         Require(rewardIcon != null, "Final dialogue node renders RewardItem ItemIcon");
         var rewardImages = rewardIcon.GetComponentsInChildren<Image>(false);
         Require(rewardImages.Any(img => img != null && img.sprite != null && img.sprite.name.IndexOf("item_110", StringComparison.OrdinalIgnoreCase) >= 0),
