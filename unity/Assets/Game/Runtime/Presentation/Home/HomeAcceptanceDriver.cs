@@ -683,6 +683,7 @@ namespace Zjcs.Presentation.Home
         private IEnumerator VerifyNativeFruitTree(HomeFeatureRuntime runtime, Action<bool> completed)
         {
             GameObject nativeTree = null;
+            HomeFruitTreeProduceFruit produce = null;
             Rect fruitTreeClickBounds = default;
             bool passed = Check("native-fruit-tree-runtime", () =>
             {
@@ -690,10 +691,13 @@ namespace Zjcs.Presentation.Home
                 Assert(nativeTree != null && nativeTree.activeInHierarchy, "native fruit-tree instance is active");
                 Assert(nativeTree.transform.IsChildOf(runtime.Scene.Root.transform), "native tree is parented under the official home scene");
                 HomeFruitTree tree = nativeTree.GetComponentInChildren<HomeFruitTree>(true);
-                HomeFruitTreeProduceFruit produce = nativeTree.GetComponentInChildren<HomeFruitTreeProduceFruit>(true);
+                HomeSpineDayNightSwitcher dayNight = nativeTree.GetComponentInChildren<HomeSpineDayNightSwitcher>(true);
+                produce = nativeTree.GetComponentInChildren<HomeFruitTreeProduceFruit>(true);
                 HomeFruitTreePet pet = nativeTree.GetComponentInChildren<HomeFruitTreePet>(true);
                 HomeFruitTreeHangUpHandlerFruitItem output = nativeTree.GetComponentInChildren<HomeFruitTreeHangUpHandlerFruitItem>(true);
                 Assert(tree != null && tree.FurnitureServices != null, "original parent state controller has local furniture services");
+                Assert(dayNight == null || dayNight.EnvironmentServices != null,
+                    "any original Spine day/night switcher has the local home event service");
                 Assert(produce != null && produce.ProductionServices != null, "original production controller has local reward service");
                 Assert(pet != null && pet.PetTreeFeatureServices != null, "original pet controller has local interaction service");
                 Assert(output != null && output.OutputServices != null, "original output controller has local production and display service");
@@ -748,6 +752,52 @@ namespace Zjcs.Presentation.Home
                     "official scene drag pans the native fruit tree into the active camera viewport");
                 return "official one-pixel-threshold scene drag brings the fruit tree into view at " + projected;
             });
+            long rewardBefore = runtime.Profile.InventoryCount(OfflineFruitTreeService.RewardItemId);
+            passed &= Check("native-fruit-tree-ready-output", () =>
+            {
+                var progress = runtime.Profile.ApplyCharacterMutationIfChanged(player =>
+                {
+                    var state = player.FruitTree;
+                    state.ProductionRepaired = true;
+                    state.InitialRewardGranted = true;
+                    state.ProductionRepairStorySeen = true;
+                    state.CollectionTutorialSeen = true;
+                    state.StoredCount = 3;
+                    state.FractionalCount = 0.25;
+                    state.LastUpdateUnixSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                    return true;
+                });
+                Assert(progress.Status == ProgressionResultStatus.Applied,
+                    "isolated test profile accepts the mature-fruit fixture");
+                bool owned = runtime.Session.Mutate("acceptance:fruit-tree-native:owned", save =>
+                {
+                    OfflineHomeFurnitureEntry entry = save.Furniture.FirstOrDefault(value => value.Type == OfflineFruitTreeService.ProductionFurnitureType);
+                    if (entry == null)
+                    {
+                        entry = new OfflineHomeFurnitureEntry { Type = OfflineFruitTreeService.ProductionFurnitureType };
+                        save.Furniture.Add(entry);
+                    }
+                    entry.Owned = true;
+                });
+                Assert(owned, "isolated test home save owns the repaired fruit-tree facility");
+                Assert(runtime.HasFurnitureForSkin(OfflineFruitTreeService.ProductionFurnitureType),
+                    "local fruit-tree service recognizes the production facility as repaired");
+                typeof(HomeFeatureRuntime).GetMethod("ReloadContext", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(runtime, null);
+                produce.UpdateState();
+                Assert(produce.GetState() == Zjcs.Official.HomeFurniture.FurnitureBase.EFurnitureState.Functional,
+                    "native production sub-building reaches the functional state");
+                return "test profile now exposes three mature fruits to the original production controller";
+            });
+            yield return new WaitForSecondsRealtime(.35f);
+            passed &= Check("native-fruit-tree-ripe-slots", () =>
+            {
+                int visible = nativeTree.GetComponentsInChildren<HomeFruitTreeHangUpEffectItem>(true)
+                    .Count(value => value != null && value.gameObject.activeInHierarchy);
+                Assert(visible == 3, "original fruit display instantiates the three mature slot effects");
+                return "three original fruit effects are visible on configured tree slots";
+            });
+            yield return Capture("native-fruit-tree-ripe.png");
             passed &= Check("native-fruit-tree-scene-pointer", () =>
             {
                 Vector2 point = runtime.Scene.Camera.WorldToScreenPoint(fruitTreeClickBounds.center);
@@ -755,14 +805,32 @@ namespace Zjcs.Presentation.Home
                 var hits = new List<RaycastResult>();
                 EventSystem.current.RaycastAll(pointer, hits);
                 Assert(hits.Count == 0, "native fruit-tree scene input is not covered by UI");
+                int hitType = runtime.Scene.HitTest(runtime.Scene.ScreenToWorld(point));
+                Assert(hitType == OfflineFruitTreeService.ProductionFurnitureType,
+                    "native scene hit test resolves to the fruit-tree facility; actual type=" + hitType + ", point=" + point);
                 object input = PrivateField<object>(runtime, "input");
+                Func<bool> blocked = PrivateField<Func<bool>>(input, "blocked");
+                Assert(!blocked(), "home scene pointer is not blocked by a modal or wish screen");
                 foreach (string method in new[] { "PointerDown", "PointerUp" })
                     input.GetType().GetMethod(method, BindingFlags.Instance | BindingFlags.NonPublic)
                         .Invoke(input, new object[] { point, false });
                 return "simulated scene pointer reaches the official native fruit tree";
             });
             yield return new WaitForSecondsRealtime(.5f);
-            yield return Capture("native-fruit-tree-home.png");
+            passed &= Check("native-fruit-tree-collection", () =>
+            {
+                var state = runtime.Profile.Save.Player.FruitTree;
+                long rewardAfter = runtime.Profile.InventoryCount(OfflineFruitTreeService.RewardItemId);
+                int visible = nativeTree.GetComponentsInChildren<HomeFruitTreeHangUpEffectItem>(true)
+                    .Count(value => value != null && value.gameObject.activeInHierarchy);
+                Assert(state.StoredCount == 0 && state.TotalCollected == 3 && state.CollectionCount == 1,
+                    "native tree click collection state: stored=" + state.StoredCount + ", total=" + state.TotalCollected
+                        + ", collections=" + state.CollectionCount);
+                Assert(rewardAfter == rewardBefore + 3, "fruit collection grants the configured local reward item");
+                Assert(visible == 0, "successful collection resets and hides pooled original fruit effects");
+                return "collected three mature fruits, granted three local rewards, and reset the native display";
+            });
+            yield return Capture("native-fruit-tree-collected.png");
             completed?.Invoke(passed);
         }
         private void DumpFullscreen()

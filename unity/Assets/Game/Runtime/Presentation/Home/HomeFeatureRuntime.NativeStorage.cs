@@ -518,6 +518,8 @@ namespace Zjcs.Presentation.Home
                     tree.FurnitureServices = this;
                     tree.Localize = LocalizeUiText;
                 }
+                foreach (var dayNightSwitcher in root.GetComponentsInChildren<HomeSpineDayNightSwitcher>(true))
+                    dayNightSwitcher.EnvironmentServices = home.environment;
                 foreach (var produce in root.GetComponentsInChildren<HomeFruitTreeProduceFruit>(true))
                     produce.ProductionServices = this;
                 foreach (var pet in root.GetComponentsInChildren<HomeFruitTreePet>(true))
