@@ -357,6 +357,8 @@ namespace Zjcs.Presentation.CharacterCreation
                         EnsureButton(node.gameObject).onClick.AddListener(SubmitCharacter);
                         break;
                     case "RandomNameBtn":
+                    // The online pre-create notice covers the whole name field and consumes pointer events.
+                    case "PreCreateNotifyBtn":
                         node.gameObject.SetActive(false);
                         break;
                     case "RandomSkinBtn":

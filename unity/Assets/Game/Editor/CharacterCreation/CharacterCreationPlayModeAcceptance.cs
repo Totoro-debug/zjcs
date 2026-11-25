@@ -810,6 +810,31 @@ namespace Zjcs.Editor.CharacterCreation
                 && inputModule != null && inputModule.isActiveAndEnabled
                 && selected == name.gameObject && name.isFocused,
                 "The name page did not focus the input with an active UI input module.");
+            eventSystem.SetSelectedGameObject(null);
+            Require(!name.isFocused, "The name input did not lose focus before the mouse click.");
+
+            Canvas.ForceUpdateCanvases();
+            var rect = (RectTransform)name.transform;
+            Vector2 center = RectTransformUtility.WorldToScreenPoint(null, rect.TransformPoint(rect.rect.center));
+            var pointer = new PointerEventData(eventSystem)
+            {
+                button = PointerEventData.InputButton.Left,
+                position = center,
+                pressPosition = center
+            };
+            var hits = new List<RaycastResult>();
+            eventSystem.RaycastAll(pointer, hits);
+            Require(hits.Count > 0, "The naming field had no raycast hit at its center.");
+            pointer.pointerCurrentRaycast = pointer.pointerPressRaycast = hits[0];
+            GameObject hit = hits[0].gameObject;
+            Require(ExecuteEvents.GetEventHandler<IPointerClickHandler>(hit) == name.gameObject,
+                "The name input click was intercepted by " + HierarchyPath(hit.transform));
+            ExecuteEvents.ExecuteHierarchy(hit, pointer, ExecuteEvents.pointerDownHandler);
+            ExecuteEvents.ExecuteHierarchy(hit, pointer, ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.ExecuteHierarchy(hit, pointer, ExecuteEvents.pointerClickHandler);
+            yield return WaitUntil(() => name.isFocused && eventSystem.currentSelectedGameObject == name.gameObject,
+                "Clicking the name input did not restore focus.");
+
             yield return Capture(controller, "name-input-focused");
             name.ProcessEvent(new Event { type = EventType.KeyDown, character = '测' });
             Require(name.text == "测", "A simulated keyboard character was not accepted by the name input.");
@@ -821,8 +846,12 @@ namespace Zjcs.Editor.CharacterCreation
                 + ":placeholder=" + (name.placeholder == null ? "<null>" : name.placeholder.enabled.ToString()));
             Require(name.textComponent.text.Contains("测") && (name.placeholder == null || !name.placeholder.enabled),
                 "The entered name did not replace the visible placeholder text.");
+            var service = (CharacterCreationOfflineService)Field(controller, "service").GetValue(controller);
+            string slotId = (string)Field(controller, "slotId").GetValue(controller);
+            yield return WaitUntil(() => service.OpenDraft(slotId).name == "测",
+                "The name entered after clicking was not persisted in the slot draft.");
             yield return Capture(controller, "name-input-entered");
-            Debug.Log("NAME_INPUT_PASSED: focused official field accepted simulated Chinese text and updated the draft.");
+            Debug.Log("NAME_INPUT_PASSED: clicking restored focus and simulated Chinese text was saved to the draft.");
             Finish(true, null);
         }
 
