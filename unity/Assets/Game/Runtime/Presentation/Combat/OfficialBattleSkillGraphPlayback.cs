@@ -214,7 +214,7 @@ namespace Zjcs.Presentation.Combat
                 "Combat/sage-psychic-ward-current-status-graphs", "Combat/sage-rock-summon-current-status-graphs",
                 "Combat/sage-summon-resonance-current-status-graphs",
                 "Combat/sage-summon-restoration-current-status-graphs",
-                "Combat/sage-voodoo-doll-current-status-graphs");
+                "Combat/sage-voodoo-doll-current-status-graphs", "Combat/stone-skin-current-graphs");
             statusViews.Restore();
         }
 

@@ -163,7 +163,9 @@ namespace Zjcs.Editor
             }
         }
         public static IEnumerator Steps(Action<string> capture) =>
-            Environment.GetEnvironmentVariable("ZJCS_PUBLIC_OPENING_SKILL") == "1"
+            Environment.GetEnvironmentVariable("ZJCS_PUBLIC_STONE_SKIN") == "1"
+                ? Zjcs.Validation.Combat.OfficialBattlePublicFlowValidation.StoneSkinSteps(capture)
+                : Environment.GetEnvironmentVariable("ZJCS_PUBLIC_OPENING_SKILL") == "1"
                 ? Zjcs.Validation.Combat.OfficialBattlePublicFlowValidation.OpeningSkillSteps(capture)
                 : Zjcs.Validation.Combat.OfficialBattlePublicFlowValidation.Steps(capture);
 

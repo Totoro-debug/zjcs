@@ -1,7 +1,8 @@
 param(
     [Parameter(Mandatory,ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory,ParameterSetName='Player')][string]$Player,
-    [Parameter(Mandatory)][string]$Workspace
+    [Parameter(Mandatory)][string]$Workspace,
+    [switch]$StoneSkin
 )
 $ErrorActionPreference='Stop'
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
@@ -20,24 +21,26 @@ if($PSCmdlet.ParameterSetName -eq 'Play'){
     if(-not $executable.StartsWith($workspacePath+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)){throw 'Use the isolated Windows Player.'}
 }
 $previous=@{}
+$label=if($StoneSkin){'stone-skin'}else{'return-strike'}
 Get-ChildItem Env:ZJCS_*|ForEach-Object {$previous[$_.Name]=$_.Value}
 try {
     Get-ChildItem Env:ZJCS_*|ForEach-Object {Remove-Item ('Env:'+$_.Name)}
     $env:ZJCS_REPOSITORY_ROOT=$repository
     $env:ZJCS_ACTIVE_LOADOUT_ACCEPTANCE='1'
-    $env:ZJCS_RETURN_STRIKE_ACCEPTANCE='1'
+    if($StoneSkin){$env:ZJCS_STONE_SKIN_ACCEPTANCE='1'}else{$env:ZJCS_RETURN_STRIKE_ACCEPTANCE='1'}
     $env:ZJCS_SKILLS_VALIDATE_SUMMON_ONLY='1'
     if($PSCmdlet.ParameterSetName -eq 'Play'){
         $env:ZJCS_SKILLS_AUTORUN='1'
         $env:ZJCS_SKILLS_PASSIVE_FLOW='1'
+        if($StoneSkin){$env:ZJCS_BATTLE_INPUT_AUTOMATION='1'}
     }
-    foreach($mode in @('return-strike')){
-        $run=Join-Path $workspacePath ("return-strike-$($PSCmdlet.ParameterSetName)-"+[guid]::NewGuid().ToString('N'))
+    foreach($mode in @($label)){
+        $run=Join-Path $workspacePath ("$label-$($PSCmdlet.ParameterSetName)-"+[guid]::NewGuid().ToString('N'))
         New-Item -ItemType Directory -Path $run|Out-Null
         $env:ZJCS_VALIDATION_DIR=$run
         $env:ZJCS_ACTIVE_LOADOUT_MODE=$mode
         $log=Join-Path $run 'runtime.log'
-        $arguments=@('-logFile',('"'+$log+'"'))
+        $arguments=@('-muteAudio','-logFile',('"'+$log+'"'))
         if($PSCmdlet.ParameterSetName -eq 'Play'){
             $arguments+=@('-projectPath',('"'+$projectPath+'"'))
         } else {
@@ -46,26 +49,27 @@ try {
         }
         $process=Start-UnityOnInternalDisplay -Editor $executable -ArgumentList $arguments
         $process.PriorityClass='BelowNormal'
-        Write-Output "Return strike $($PSCmdlet.ParameterSetName) PID=$($process.Id) mode=$mode run=$run"
+        Write-Output "$label $($PSCmdlet.ParameterSetName) PID=$($process.Id) mode=$mode run=$run"
         $timer=[Diagnostics.Stopwatch]::StartNew()
         while(-not $process.WaitForExit(30000)){
             if($timer.Elapsed.TotalMinutes -gt 25 -or (Test-Path -LiteralPath $log) -and
                 (Select-String -LiteralPath $log -Pattern 'error CS\d+')){
                 Stop-Process -Id $process.Id
-                throw "Isolated return strike process stopped after timeout or compilation failure: $run"
+                throw "Isolated $label process stopped after timeout or compilation failure: $run"
             }
-            Write-Output "Return strike remains active: $mode / $run"
+            Write-Output "$label remains active: $mode / $run"
         }
         $result=Get-Content -LiteralPath (Join-Path $run 'result.json') -Raw|ConvertFrom-Json
-        if($process.ExitCode -ne 0 -or -not $result.passed){throw "Return strike failed: $($result.error) ($run)"}
+        if($process.ExitCode -ne 0 -or -not $result.passed){throw "$label failed: $($result.error) ($run)"}
         foreach($phase in @('preparation','cap','consumed','result','return')){
-            if(-not(Test-Path -LiteralPath (Join-Path $run "return-strike-$phase.png"))){throw "Missing return strike screenshot: $phase"}
+            if(-not(Test-Path -LiteralPath (Join-Path $run "$label-$phase.png"))){throw "Missing $label screenshot: $phase"}
         }
-        if(@(Select-String -LiteralPath $log -SimpleMatch '[Return strike flow] cap=10 ').Count -ne 1){throw 'Requested return strike flow did not complete.'}
+        $marker=if($StoneSkin){'[Stone skin flow] cap=9 '}else{'[Return strike flow] cap=10 '}
+        if(@(Select-String -LiteralPath $log -SimpleMatch $marker).Count -ne 1){throw "Requested $label flow did not complete."}
         if(Select-String -LiteralPath $log -Pattern '^(?:[A-Za-z0-9_.]+Exception:|Assertion failed|Error:)|\[Skills acceptance\] failed'){
-            throw "Return strike has runtime or shutdown errors: $run"
+            throw "$label has runtime or shutdown errors: $run"
         }
-        Write-Output "Return strike passed: $mode / $run"
+        Write-Output "$label passed: $mode / $run"
     }
 }
 finally {

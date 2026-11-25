@@ -99,6 +99,8 @@ namespace Zjcs.Presentation.Home
                     yield return SkillShieldAttackValidation.Exercise(output, CaptureGridFrame, ClickGridControl);
                 else if (Environment.GetEnvironmentVariable("ZJCS_RETURN_STRIKE_ACCEPTANCE") == "1")
                     yield return SkillReturnStrikeValidation.Exercise(output, CaptureGridFrame, ClickGridControl);
+                else if (Environment.GetEnvironmentVariable("ZJCS_STONE_SKIN_ACCEPTANCE") == "1")
+                    yield return SkillReturnStrikeValidation.Exercise(output, CaptureGridFrame, ClickGridControl, true);
                 else yield return SkillActiveLoadoutValidation.Exercise(output, CaptureGridFrame, ClickGridControl);
                 File.WriteAllText(Path.Combine(output,"result.json"),JsonUtility.ToJson(new Result {passed=true},true));
                 Application.Quit(0);

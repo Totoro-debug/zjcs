@@ -20,22 +20,29 @@ namespace Zjcs.Presentation.Home
     public static class SkillReturnStrikeValidation
     {
         public static IEnumerator Exercise(string output, Func<string, IEnumerator> capture,
-            Func<Selectable, IEnumerator> click)
+            Func<Selectable, IEnumerator> click, bool stoneSkin = false)
         {
             AudioListener.volume = 0f;
+            int secretId = stoneSkin ? 10542 : 10509;
+            int listenerId = stoneSkin ? 25033 : 25003;
+            int buffId = stoneSkin ? 24229 : 24268;
+            int cap = stoneSkin ? 9 : 10;
+            string label = stoneSkin ? "stone-skin" : "return-strike";
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             string saveRoot = Path.Combine(output, "save-" + Guid.NewGuid().ToString("N"));
             var slots = new ProfileSlotCatalog(saveRoot);
             string slot = slots.CreateSlot();
             var save = new OfflineMainlineSave();
             var profile = save.Player;
+            OfflineItemAutoIncrease.InitializeNewCharacter(profile, DateTime.UtcNow);
             profile.CharacterCreated = true; profile.CharacterName = "招式奉还验证";
-            profile.Level = 50; profile.Rank = 2; profile.SubRank = 5;
+            profile.Level = 50; profile.Rank = stoneSkin ? 3 : 2; profile.SubRank = 5;
+            if (stoneSkin) profile.MaxProfessionRank = 3;
             profile.Experience = assets.Load().CumulativeLevelExperience[50];
-            profile.InitialWeaponType = 200; profile.Wardrobe.Profession = 2;
-            profile.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = 10509, Rank = 7 });
+            profile.InitialWeaponType = 200; profile.Wardrobe.Profession = stoneSkin ? 3 : 2;
+            profile.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = secretId, Rank = 7 });
             profile.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = 10008, Rank = 7 });
-            profile.Skills.Plans[0].PassiveSkills[0] = 10509;
+            profile.Skills.Plans[0].PassiveSkills[0] = secretId;
             profile.Skills.Plans[0].ActiveSkills[0] = 10008;
             profile.Skills.ActiveSlotLevels = new[] { 20, 1, 1, 1 };
             profile.Skills.PassiveSlotLevels = new[] { 30, 1, 1, 1 };
@@ -59,10 +66,17 @@ namespace Zjcs.Presentation.Home
                 Stage = stage, Roster = roster, Scene = scene, Player = home.Profile.Save.Player,
                 World = home.Profile.Save.World, Progression = home.DailyDungeonProgression, RandomSeed = 17 });
             var player = checkpoint.Units.Single(value => value.Id == 1);
-            var secret = player.Statuses.Single(value => value.ClassId == 25003 && value.ApplyingSkillItemId == 10509);
+            var secret = player.Statuses.Single(value => value.ClassId == listenerId && value.ApplyingSkillItemId == secretId);
             Require(secret.SourceSkillRank == 7 && secret.SourceSkillLevel == 30 && secret.SourceSubRank == 5,
                 "Production secret assembly lost cultivation provenance.");
             var enemy = checkpoint.Units.First(value => value.Side != player.Side && value.Wave == 0);
+            if (stoneSkin)
+            {
+                // Use a bound original small monster so the weekly boss cannot obscure
+                // the holder's status playable in this isolated visual check.
+                enemy.MonsterId = enemy.MonsterTemplateId = enemy.RoleEntityId = 3206;
+                enemy.BodyOffsets = new List<FightGridPoint> { new FightGridPoint(0, 0) };
+            }
             checkpoint.Units.RemoveAll(value => value != player && value != enemy);
             checkpoint.Waves.Clear();
             checkpoint.Waves.Add(new FightBattleWaveState { Index = 0, Spawned = true, UnitIds = new List<int> { enemy.Id } });
@@ -79,11 +93,11 @@ namespace Zjcs.Presentation.Home
                 combat.CalculateSkillProps(10600, 7, 20, 5)
                     .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList());
             enemy.Skills.Add(incoming); enemy.SkillState.Slots.Add(combat.CreateSkillSlot(incoming, 0));
-            // Twelve-hit accumulation is covered by the executor harness. This presentation
-            // input starts at nine to observe the real incoming hit reaching the cap.
-            var initial = combat.CreateStatus(24268, 1, 1, 724268, 25003, 10509,
+            // Multi-hit accumulation is covered by the executor harness. Start one
+            // layer below the cap to observe the real incoming hit reaching it.
+            var initial = combat.CreateStatus(buffId, 1, 1, 724268, listenerId, secretId,
                 secret.SourceSkillRank, secret.SourceSkillLevel, secret.SourceSubRank, player.Properties);
-            initial.StackCount = 9;
+            initial.StackCount = cap - 1;
             player.Statuses.Add(initial);
             var weekly = new OfflineWeeklyChallengeSession(Path.Combine(saveRoot, "saves", slot, "weekly-challenge-save.json"));
             weekly.StartBattle(4800, weekly.CurrentPeriodStartLocalTicks(DateTime.Now), FightBattleCheckpointSerializer.Save(checkpoint));
@@ -95,16 +109,16 @@ namespace Zjcs.Presentation.Home
             FightBattleCheckpoint pendingDisk = null;
             controller.StepCompleted += step => {
                 var current = step.Checkpoint.Units.Single(value => value.Id == 1);
-                var buff = current.Statuses.SingleOrDefault(value => value.ClassId == 24268);
+                var buff = current.Statuses.SingleOrDefault(value => value.ClassId == buffId);
                 if (!capped && step.Event.ActorId == enemy.Id) {
                     Require(step.Event.DamageEvents.Any(value => value.SkillEntityId == 10600 && value.Damage < 0)
-                        && buff != null && buff.StackCount == 10 && buff.SourceSkillRank == 7
+                        && buff != null && buff.StackCount == cap && buff.SourceSkillRank == 7
                         && buff.SourceSkillLevel == 30 && buff.SourceSubRank == 5,
-                        "Real received damage did not reach ten layers with secret cultivation.");
+                        "Real received damage did not reach the configured cap with secret cultivation.");
                     capped = true;
                 }
                 if (step.Event.SkillCasts.Any(value => value.ActorId == 1 && value.Slot >= 0)) {
-                    Require(capped && buff == null, "Holder cast before accumulating, or failed to consume its buff.");
+                    Require(capped && buff == null, "Holder cast before accumulating, or its buff did not expire.");
                     consumed = true; releases++;
                 }
                 // StepCompleted precedes the mode adapter's save. Compare an immutable
@@ -119,28 +133,28 @@ namespace Zjcs.Presentation.Home
                 if (start == null) yield return null;
             }
             yield return new WaitForSecondsRealtime(1f);
-            yield return capture("return-strike-preparation");
+            yield return capture(label + "-preparation");
             yield return click(start);
             bool capCaptured = false, castCaptured = false, resultCaptured = false;
             while (runner != null) {
                 if (pendingDisk != null) {
                     var diskSession = new OfflineWeeklyChallengeSession(Path.Combine(saveRoot, "saves", slot, "weekly-challenge-save.json"));
                     Require(diskSession.TryResumeBattle(4800, out string json, out _), "Missing disk battle checkpoint.");
-                    VerifyDisk(pendingDisk, FightBattleCheckpointSerializer.Load(json));
+                    VerifyDisk(pendingDisk, FightBattleCheckpointSerializer.Load(json), listenerId, buffId, stoneSkin);
                     pendingDisk = null; diskChecks++;
                 }
                 if (capped && !capCaptured) {
                     runner.enabled = false; yield return new WaitForSecondsRealtime(0.6f);
-                    yield return capture("return-strike-cap"); capCaptured = true; runner.enabled = true;
+                    yield return capture(label + "-cap"); capCaptured = true; runner.enabled = true;
                 }
                 if (consumed && !castCaptured) {
                     runner.enabled = false; yield return new WaitForSecondsRealtime(0.6f);
-                    yield return capture("return-strike-consumed"); castCaptured = true; runner.enabled = true;
+                    yield return capture(label + "-consumed"); castCaptured = true; runner.enabled = true;
                 }
                 var result = UnityEngine.Object.FindObjectOfType<DemonResultWindow>();
                 if (result != null && result.IsReady) {
                     Require(settled != null && settled.Finished, "Native result preceded actual settlement.");
-                    yield return capture("return-strike-result"); resultCaptured = true;
+                    yield return capture(label + "-result"); resultCaptured = true;
                     yield return click(result.Panel.GetComponent<Zjcs.Official.BattleResultUI.GameEndPanelDemonKing>().LeaveGameBtn);
                 }
                 yield return null;
@@ -149,15 +163,17 @@ namespace Zjcs.Presentation.Home
                 "Stacking, holder release, native result or disk checkpoint was not exercised.");
             var saved = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(slots.GetProgressPath(slot)));
             Require(JsonUtility.ToJson(saved.Player.Skills) == originalSkills, "Battle changed the player's saved skill plan.");
-            File.WriteAllText(Path.Combine(output, "return-strike-final.json"), FightBattleCheckpointSerializer.Save(settled));
-            yield return capture("return-strike-return");
+            File.WriteAllText(Path.Combine(output, label + "-final.json"), FightBattleCheckpointSerializer.Save(settled));
+            yield return capture(label + "-return");
             Require(UnityEngine.Object.FindObjectOfType<DemonResultWindow>() == null, "Native result did not close after simulated leave.");
-            Debug.Log("[Return strike flow] cap=10 releases=" + releases + " disk=" + diskChecks
-                + "; production assembly, received hit, next-cast consumption, original input and saved plans passed.");
+            Debug.Log((stoneSkin ? "[Stone skin flow]" : "[Return strike flow]") + " cap=" + cap
+                + " releases=" + releases + " disk=" + diskChecks
+                + "; production assembly, received hit, buff expiration, original input and saved plans passed.");
             home.CloseForNavigation();
         }
 
-        private static void VerifyDisk(FightBattleCheckpoint expected, FightBattleCheckpoint disk)
+        private static void VerifyDisk(FightBattleCheckpoint expected, FightBattleCheckpoint disk,
+            int listenerId, int buffId, bool stoneSkin)
         {
             Require(disk.Sequence == expected.Sequence && disk.Counter == expected.Counter
                 && disk.RandomSeed == expected.RandomSeed, "Saved receipt counter or random stream differs: expected "
@@ -170,7 +186,7 @@ namespace Zjcs.Presentation.Home
                     && saved.SkillState.Slots.Select(value => value.ReleasedTimes)
                         .SequenceEqual(unit.SkillState.Slots.Select(value => value.ReleasedTimes)),
                     "Saved life, personal round or release count differs.");
-                foreach (int id in new[] { 25003, 24268 }) {
+                foreach (int id in new[] { listenerId, buffId }) {
                     var source = unit.Statuses.SingleOrDefault(value => value.ClassId == id);
                     var copy = saved.Statuses.SingleOrDefault(value => value.ClassId == id);
                     Require((source == null) == (copy == null), "Saved secret/buff presence differs.");
@@ -179,7 +195,8 @@ namespace Zjcs.Presentation.Home
                         && source.CreatorId == copy.CreatorId && source.ApplyingSkillItemId == copy.ApplyingSkillItemId
                         && source.RootSkillId == copy.RootSkillId && source.SourceSkillRank == copy.SourceSkillRank
                         && source.SourceSkillLevel == copy.SourceSkillLevel && source.SourceSubRank == copy.SourceSubRank
-                        && source.Components?.HitDmgAddPer?.DurationSkillCount == copy.Components?.HitDmgAddPer?.DurationSkillCount,
+                        && (stoneSkin ? source.CurDurationRound == copy.CurDurationRound
+                            : source.Components?.HitDmgAddPer?.DurationSkillCount == copy.Components?.HitDmgAddPer?.DurationSkillCount),
                         "Saved stack, provenance or next-cast duration differs.");
                 }
             }
