@@ -163,8 +163,7 @@ def build(dotnet, ilspy, client=False, manifest=None, output_root=None):
         (data_folder/(text.m_Name+'.bytes')).write_bytes(text.m_Script.encode('utf8','surrogateescape'))
     reference=destination
     reference.mkdir(exist_ok=True)
-    from fetch_official_assets import SHA256
-    (reference/'code-manifest.json').write_text(json.dumps({'manifest':apk.version,'apk_sha256':SHA256,'assemblies':evidence,
+    (reference/'code-manifest.json').write_text(json.dumps({'manifest':apk.version,'apk_sha256':apk.source.apk_sha256,'assemblies':evidence,
         'metadata_sha256':hashlib.sha256(metadata).hexdigest(),
         'assembly_encryption':dict(layout=layout,source=decryptor.relative_to(ROOT).as_posix(),
             sha256=hashlib.sha256(decryptor.read_bytes()).hexdigest()),
