@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -602,7 +604,10 @@ namespace Zjcs.Presentation.Home
 
         public void LoadPanelExtension(string path)
         {
-            HomeUiPanelExtensionData extension = Read<HomeUiPanelExtensionData>(path);
+            string localPath = LocalFilePath(path);
+            if (!File.Exists(localPath)) throw new FileNotFoundException("Home payload is missing.", localPath);
+            HomeUiPanelExtensionData extension = JsonUtility.FromJson<HomeUiPanelExtensionData>(
+                FlattenNestedPanelExtensions(File.ReadAllText(localPath)));
             if (extension == null || extension.panels == null || extension.panels.Length == 0)
                 throw new InvalidDataException("The official home panel extension is missing or empty.");
             foreach (HomeUiFlatPanel flatPanel in extension.panels)
@@ -622,6 +627,56 @@ namespace Zjcs.Presentation.Home
                 if (sprite != null && !string.IsNullOrEmpty(sprite.key)) dynamicSprites[sprite.key] = sprite.file;
             foreach (HomeTextPair text in extension.texts ?? Array.Empty<HomeTextPair>())
                 if (text != null && !string.IsNullOrEmpty(text.key)) texts[text.key] = text.value ?? string.Empty;
+        }
+
+        // Some previously extracted panels retain their native nested hierarchy,
+        // while newer payloads use a flat list to avoid JsonUtility's depth limit.
+        // Flatten before deserializing so both formats reach the same reconstruction.
+        private static string FlattenNestedPanelExtensions(string json)
+        {
+            JObject document = JObject.Parse(json);
+            if (!(document["panels"] is JArray panelList))
+                throw new InvalidDataException("The official home panel extension has no panel list.");
+            foreach (JToken item in panelList)
+            {
+                if (!(item is JObject panel) || !(panel["root"] is JObject root))
+                    throw new InvalidDataException("The official home panel extension contains an invalid root.");
+                JToken children = root["children"];
+                if (children == null || children.Type == JTokenType.Null) continue;
+                if (!(children is JArray nested))
+                    throw new InvalidDataException("The official home panel children are invalid.");
+                if (panel["nodes"] is JArray existing && existing.Count > 0 && nested.Count > 0)
+                    throw new InvalidDataException("The official home panel mixes nested and flattened nodes.");
+                if (nested.Count == 0) continue;
+                var flattened = new JArray();
+                JObject Flatten(JObject node, string parentPath)
+                {
+                    string nodePath = (string)node["path"];
+                    if (string.IsNullOrEmpty(nodePath))
+                        throw new InvalidDataException("The official home panel node path is missing.");
+                    var result = new JObject();
+                    foreach (JProperty property in node.Properties())
+                        if (property.Name != "children") result.Add(property.Name, property.Value.DeepClone());
+                    if (parentPath != null) result["parent_path"] = parentPath;
+                    JToken childToken = node["children"];
+                    if (childToken != null && childToken.Type != JTokenType.Null)
+                    {
+                        if (!(childToken is JArray childList))
+                            throw new InvalidDataException("The official home panel children are invalid: " + nodePath);
+                        foreach (JToken child in childList)
+                        {
+                            if (!(child is JObject childObject))
+                                throw new InvalidDataException("The official home panel child is invalid: " + nodePath);
+                            JObject flatChild = Flatten(childObject, nodePath);
+                            flattened.Add(flatChild);
+                        }
+                    }
+                    return result;
+                }
+                panel["root"] = Flatten(root, null);
+                panel["nodes"] = flattened;
+            }
+            return document.ToString(Formatting.None);
         }
 
         public void LoadTreasureGachaMachine(string path)
