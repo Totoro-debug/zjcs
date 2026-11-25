@@ -110,15 +110,18 @@ namespace Zjcs.Combat.Official
                     if (status.ClassId == 24052 ? !processDamage : !processOther) continue;
                     if (TryApplyReturnStrikeStatus(status, owner, target, skill, hit, resolved)) continue;
                     FightBattleStatusDamageSkillComponentState damageSkill = status.Components?.DamageSkill;
-                    if (damageSkill != null && status.Components.Seconds == null && resolved != null
+                    if (damageSkill != null && status.ForbiddenType == 0 && status.StackCount > 0
+                        && status.Components.Seconds == null && resolved != null
                         && (resolved.Formula != null || resolved.Cure != null || resolved.Settlement != null)
+                        && (!damageSkill.Damage || !resolved.Type.Dodge
+                            && !resolved.Type.Blinding && !resolved.Type.Immunity)
                         // Confirmed solo rule: non-skill damage leaves the mark for
                         // the next Skill or SkillMove hit.
                         && (status.ClassId != 24052 || skill != null
                             && (skill.ActionType == 2 || skill.ActionType == 6) && !resolved.IsCure
                             && !resolved.Type.Dodge && !resolved.Type.Blinding && !resolved.Type.Immunity)
-                        && (status.ClassId == 24052 ? ReferenceEquals(owner, target)
-                            : HitSourceMatches(status, damageSkill.IsAttackerTarget ? 0 : 2, actor))
+                        && (status.ClassId == 24052 || !damageSkill.IsAttackerTarget
+                            ? ReferenceEquals(owner, target) : HitSourceMatches(status, 0, actor))
                         && HitRuleMatches(damageSkill.Rate, damageSkill.Block, damageSkill.Crit,
                             damageSkill.Damage, damageSkill.Cure, false, null,
                             damageSkill.ElementTypes, null, null, skill, hit, resolved, target)
