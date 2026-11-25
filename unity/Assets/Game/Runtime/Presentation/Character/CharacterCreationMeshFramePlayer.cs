@@ -34,6 +34,7 @@ namespace Zjcs.Presentation.CharacterCreation
             public Vector3[][] Frames;
             public MeshRenderer Renderer;
             public Frame[] SourceFrames;
+            public int InitialOrder;
             public bool Frozen;
         }
         private readonly Dictionary<string, Dictionary<string, SkinEntry>> poses =
@@ -95,19 +96,32 @@ namespace Zjcs.Presentation.CharacterCreation
 
         public void Play(string name)
         {
+            if (currentPose == null || !string.Equals(currentPose, name, StringComparison.Ordinal))
+            {
+                RebuildPose(name);
+                return;
+            }
+
+            ResetPlayback();
+            foreach (Instance value in instances)
+            {
+                ApplyFrame(value, 0);
+                value.Renderer.sortingOrder = value.InitialOrder;
+            }
+        }
+
+        private void RebuildPose(string name)
+        {
             if (!poses.TryGetValue(name, out Dictionary<string, SkinEntry> skinEntries))
                 throw new InvalidOperationException("Missing official pose: " + name);
             foreach (Instance value in instances) { value.Node.SetActive(false); Destroy(value.Node); Destroy(value.Mesh); }
             instances.Clear();
-            oneShot = false;
-            oneShotReturnPose = null;
             currentPose = name;
             PoseIndex timing = poseTimings[name];
             poseFps = timing.fps;
             poseDuration = timing.duration;
             availableSkinNames = new HashSet<string>(skinEntries.Keys, StringComparer.Ordinal);
-            elapsed = 0;
-            CurrentFrame = 0;
+            ResetPlayback();
             foreach (string skin in selected.OrderBy(value => value, StringComparer.Ordinal))
             {
                 bool freeze = !skinEntries.TryGetValue(skin, out SkinEntry skinEntry);
@@ -127,6 +141,14 @@ namespace Zjcs.Presentation.CharacterCreation
                     for (int index = firstInstance; index < instances.Count; index++) instances[index].Frozen = true;
             }
             ApplyDye(dye);
+        }
+
+        private void ResetPlayback()
+        {
+            oneShot = false;
+            oneShotReturnPose = null;
+            elapsed = 0;
+            CurrentFrame = 0;
         }
 
         public void PlayOnce(string name, string returnPose)
@@ -175,7 +197,7 @@ namespace Zjcs.Presentation.CharacterCreation
             node.AddComponent<CharacterCreationDyeMapBinding>().Bind(part.skin_type,
                 masks.TryGetValue(part.texture, out Texture2D mask) ? mask : null);
             instances.Add(new Instance { Node = node, Mesh = mesh, Frames = frames,
-                SourceFrames = part.frames, Renderer = renderer });
+                SourceFrames = part.frames, Renderer = renderer, InitialOrder = part.order });
         }
 
         private Texture2D LoadTexture(string name)
@@ -228,7 +250,7 @@ namespace Zjcs.Presentation.CharacterCreation
             string missing = next.FirstOrDefault(name => !availableSkinNames.Contains(name));
             if (missing != null) throw new InvalidOperationException("Missing official character mesh skin: " + missing);
             selected = next;
-            Play(currentPose);
+            RebuildPose(currentPose);
         }
 
         public void ApplyDye(IReadOnlyDictionary<int, Vector4[]> changes)
@@ -261,17 +283,20 @@ namespace Zjcs.Presentation.CharacterCreation
             if (frame == CurrentFrame) return;
             CurrentFrame = frame;
             foreach (Instance value in instances)
-            {
-                if (!value.Node.activeSelf || value.Frozen || value.Frames.Length == 0) continue;
-                int frameIndex = CurrentFrame % value.Frames.Length;
-                Vector3[] points = value.Frames[frameIndex];
-                value.Renderer.enabled = points.Length > 0;
-                if (frameIndex < value.SourceFrames.Length && value.SourceFrames[frameIndex].has_order)
-                    value.Renderer.sortingOrder = value.SourceFrames[frameIndex].order;
-                if (points.Length == 0) continue; // Official attachment visibility, including eye blinks.
-                value.Mesh.vertices = points;
-                value.Mesh.RecalculateBounds();
-            }
+                ApplyFrame(value, frame);
+        }
+
+        private static void ApplyFrame(Instance value, int frame)
+        {
+            if (!value.Node.activeSelf || value.Frozen || value.Frames.Length == 0) return;
+            int frameIndex = frame % value.Frames.Length;
+            Vector3[] points = value.Frames[frameIndex];
+            value.Renderer.enabled = points.Length > 0;
+            if (value.SourceFrames[frameIndex].has_order)
+                value.Renderer.sortingOrder = value.SourceFrames[frameIndex].order;
+            if (points.Length == 0) return; // Official attachment visibility, including eye blinks.
+            value.Mesh.vertices = points;
+            value.Mesh.RecalculateBounds();
         }
 
         private void OnDestroy()

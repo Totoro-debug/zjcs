@@ -778,10 +778,11 @@ namespace Zjcs.Presentation.CharacterCreation
             PlayUiSound("Main_Page");
             draft.body_type = body;
             QueueDraftSave();
-            RefreshNativePreviews(true);
+            ActivePreview().Play("home/idle_01");
+            UpdateNativePreviewVisibility();
             performancePlayer.PlaySelection(body == "female" ? "SelFemale" : "SelMale");
             performancePlayer.PlaySelectedGlow(body);
-            RenderDraftPage(false);
+            RenderBodyPage();
         }
 
         private void BackFromCreationPage()
@@ -1555,29 +1556,39 @@ namespace Zjcs.Presentation.CharacterCreation
                 throw new InvalidOperationException("Official character preview placeholders are missing.");
             malePreview = new CharacterCreationNativeModelPreview(transform, maleRect, "Male", 30);
             femalePreview = new CharacterCreationNativeModelPreview(transform, femaleRect, "Female", 29);
-            RefreshNativePreviews(true);
+            // Prepare the inactive body's draft before it can be selected.
+            if (draft.body_type == "female")
+                ApplyNativePreviewAppearance(malePreview, draft.bodies.male, false);
+            else
+                ApplyNativePreviewAppearance(femalePreview, draft.bodies.female, false);
+            RefreshNativePreviews();
         }
 
-        private void RefreshNativePreviews(bool restartAnimation = false)
+        private void RefreshNativePreviews()
         {
             if (draft == null || malePreview == null || femalePreview == null) return;
+            ApplyNativePreviewAppearance(ActivePreview(), ActiveAppearance(), draft.page == "appearance");
+            UpdateNativePreviewVisibility();
+        }
+
+        private void UpdateNativePreviewVisibility()
+        {
             bool isFemale = draft.body_type == "female";
-            if (maleModelNode != null) maleModelNode.gameObject.SetActive(!isFemale);
-            if (femaleModelNode != null) femaleModelNode.gameObject.SetActive(isFemale);
+            maleModelNode.gameObject.SetActive(!isFemale);
+            femaleModelNode.gameObject.SetActive(isFemale);
             malePreview.SetVisible(!isFemale);
             femalePreview.SetVisible(isFemale);
+        }
 
-            CharacterAppearanceDraft appearance = ActiveAppearance();
-            int sex = isFemale ? 1 : 0;
+        private void ApplyNativePreviewAppearance(CharacterCreationNativeModelPreview preview,
+            CharacterAppearanceDraft appearance, bool applyDiyMutex)
+        {
             Dictionary<int, CharacterCreationSkinInfo> selectedSkins = ResolveSelectedSkins(
-                appearance, draft.page == "appearance");
+                appearance, applyDiyMutex);
             var skinNames = selectedSkins.Values.Select(info => info.Name).Distinct(StringComparer.Ordinal).ToList();
             Dictionary<int, Vector4[]> dyeChanges = ResolveDyeChanges(appearance, selectedSkins);
-
-            CharacterCreationNativeModelPreview active = isFemale ? femalePreview : malePreview;
-            active.ApplySkins(skinNames);
-            active.ApplyDyeChannels(dyeChanges);
-            if (restartAnimation) active.Play("home/idle_01");
+            preview.ApplySkins(skinNames);
+            preview.ApplyDyeChannels(dyeChanges);
         }
 
         private Dictionary<int, CharacterCreationSkinInfo> ResolveSelectedSkins(

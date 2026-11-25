@@ -25,6 +25,7 @@ namespace Zjcs.Editor.CharacterCreation
         private const string PathKey = "Zjcs.CharacterCreation.Acceptance.Path";
         private const string ResultKey = "Zjcs.CharacterCreation.Acceptance.Result";
         private const string DeadlineKey = "Zjcs.CharacterCreation.Acceptance.Deadline";
+        private const string BodySelectionOnlyKey = "Zjcs.CharacterCreation.Acceptance.BodySelectionOnly";
         private static bool started;
         private static double nextRefresh;
         private const string RetryKey = "Zjcs.CharacterCreation.Acceptance.Retry";
@@ -48,6 +49,16 @@ namespace Zjcs.Editor.CharacterCreation
         [MenuItem("Zjcs/Validate/Character Creation Play Mode")]
         public static void Run()
         {
+            Run(false);
+        }
+
+        public static void RunBodySelection()
+        {
+            Run(true);
+        }
+
+        private static void Run(bool bodySelectionOnly)
+        {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 throw new InvalidOperationException("Exit Play Mode before running character creation acceptance.");
 
@@ -59,6 +70,7 @@ namespace Zjcs.Editor.CharacterCreation
                     "output", "character-creation-smoke-" + Guid.NewGuid().ToString("N"))
                 : Path.Combine(Path.GetFullPath(validationRoot), "character-creation-smoke");
             SessionState.SetString(PathKey, testRoot);
+            SessionState.SetBool(BodySelectionOnlyKey, bodySelectionOnly);
             SessionState.SetInt(ResultKey, 2);
             SessionState.SetFloat(DeadlineKey, (float)EditorApplication.timeSinceStartup + 300f);
             SessionState.SetBool(ActiveKey, true);
@@ -213,6 +225,8 @@ namespace Zjcs.Editor.CharacterCreation
                 yield break;
             }
             yield return null;
+            yield return WaitUntil(() => Screen(controller)?.GetComponent<OfficialSaveSelectionView>()?.IsReady == true,
+                "The official save selection did not finish opening.");
             GameObject startScreen = Screen(controller);
             Debug.Log("Character creation start screen: " + (startScreen == null ? "null" : startScreen.name)
                 + "; buttons=" + (startScreen == null ? 0 : startScreen.GetComponentsInChildren<Button>(true).Length)
@@ -227,6 +241,12 @@ namespace Zjcs.Editor.CharacterCreation
             ClickLastButtonByLabel(Screen(controller), "新建存档");
             yield return WaitForPage(controller, "body");
             Require(Panel(controller) != null, "Creation panel initialization failed: " + CurrentStatus(controller));
+            if (SessionState.GetBool(BodySelectionOnlyKey, false))
+            {
+                yield return VerifyBodySelection(controller, service);
+                Finish(true, null);
+                yield break;
+            }
             TMP_Text[] initialLabels = Screen(controller).GetComponentsInChildren<TMP_Text>(true);
             TMP_FontAsset officialFont = (TMP_FontAsset)Field(controller, "font").GetValue(controller);
             Require(officialFont != null && initialLabels.Length > 0,
@@ -1026,6 +1046,47 @@ namespace Zjcs.Editor.CharacterCreation
                 Require(channel.value >= channel.minValue && channel.value <= channel.maxValue,
                     "The custom dye channel is outside the official range: " + axis);
             }
+        }
+
+        private static IEnumerator VerifyBodySelection(CharacterCreationFlowController controller,
+            CharacterCreationOfflineService service)
+        {
+            yield return WaitForTransition(controller);
+            yield return Capture(controller, "body-male");
+            string slotId = (string)Field(controller, "slotId").GetValue(controller);
+            var performance = (CharacterCreationPerformancePlayer)Field(controller, "performancePlayer").GetValue(controller);
+            foreach (string body in new[] { "female", "male", "female" })
+            {
+                bool female = body == "female";
+                string previewField = female ? "femalePreview" : "malePreview";
+                object preview = Field(controller, previewField).GetValue(controller);
+                var framePlayer = (CharacterCreationMeshFramePlayer)Field(preview, "framePlayer").GetValue(preview);
+                int[] MeshIds() => framePlayer.GetComponentsInChildren<MeshFilter>(true)
+                    .Where(filter => filter.gameObject.activeSelf)
+                    .Select(filter => filter.sharedMesh.GetInstanceID()).ToArray();
+                int[] prepared = MeshIds();
+                var clickTime = System.Diagnostics.Stopwatch.StartNew();
+                ClickOfficial(controller, female ? "FemaleBtn" : "MaleBtn");
+                clickTime.Stop();
+                Debug.Log($"Body selection {body} took {clickTime.Elapsed.TotalMilliseconds:F2} ms.");
+                Require(prepared.Length > 10 && prepared.SequenceEqual(MeshIds()),
+                    "Body selection rebuilt the prepared preview meshes: " + body);
+                Require(framePlayer.CurrentFrame == 0, "The prepared preview did not rewind: " + body);
+                Require(performance.IsSelectionPlaying(female ? "SelFemale" : "SelMale"),
+                    "The original body selection animation did not start: " + body);
+                RequireNativePreview(controller, previewField, true);
+                RequireNativePreview(controller, female ? "malePreview" : "femalePreview", false);
+                yield return WaitUntil(() => framePlayer.CurrentFrame > 0 && service.OpenDraft(slotId).body_type == body,
+                    "The body preview did not animate or the draft was not saved: " + body);
+                yield return Capture(controller, "body-selected-" + body);
+            }
+
+            ClickOfficial(controller, "NextBtn");
+            yield return WaitForPage(controller, "appearance");
+            yield return WaitForTransition(controller);
+            RequireNativePreview(controller, "femalePreview", true);
+            yield return Capture(controller, "body-next-appearance");
+            Debug.Log("Body selection Play Mode acceptance passed.");
         }
 
         private static void RequireNativePreview(CharacterCreationFlowController controller,
