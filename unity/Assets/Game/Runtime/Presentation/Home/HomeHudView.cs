@@ -556,6 +556,7 @@ namespace Zjcs.Presentation.Home
         private void ShowPetTab(string tab)
         {
             if (petGachaRenderer == null) return;
+            HomePetShopSession.Current?.OnTabChanged(true, tab == "shop");
             string middle = "/PetGachaPanel/BgPanel1/Content/MiddleGo/";
             petGachaRenderer.SetActive(middle + "PetGachaSubPanel", tab == "gacha");
             petGachaRenderer.SetActive(middle + "ShopContent", tab == "shop");

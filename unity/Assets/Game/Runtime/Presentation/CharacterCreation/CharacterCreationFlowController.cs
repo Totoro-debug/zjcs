@@ -1331,6 +1331,9 @@ namespace Zjcs.Presentation.CharacterCreation
 
         private void ShowComplete(string message)
         {
+            if (!string.IsNullOrEmpty(slotId) && service.HasCharacter(slotId)
+                && service.GetInitialWeaponType(slotId) != 0)
+                HomePetShopSession.Begin(SaveSelectionProbe.ProfileRoot, slotId);
             ClearScreen();
             screen = CreateScreen("角色创建完成");
             AddText(screen.transform, message, 26, new Color32(250, 224, 180, 255),

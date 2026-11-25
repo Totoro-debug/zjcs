@@ -635,6 +635,7 @@ namespace Zjcs.Presentation.Home
             onOpenMainland = openMainland;
             slots = new ProfileSlotCatalog(root);
             if (!slots.Contains(slotId)) throw new DirectoryNotFoundException("The selected profile does not exist.");
+            HomePetShopSession.Begin(root, slotId);
             homeSettings = new HomeSettingsProfile(Path.Combine(slots.GetSlotDirectory(slotId), "settings.json"));
             homeSettings.Load();
             string fantasyTowerSavePath = Path.Combine(slots.GetSlotDirectory(slotId), "fantasy-tower-save.json");
