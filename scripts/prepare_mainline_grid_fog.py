@@ -46,7 +46,7 @@ def meta(path, importer, file_id=None, folder=False):
 def build(map_ids):
     apk = Apk.current()
     schemas = ScriptSchemas()
-    source_code = ROOT / ".tools/source-packages/official-code/client-source/CloudController2.cs"
+    source_code = ROOT / ".tools/source-packages/current/884_156692/official-code/client-source/CloudController2.cs"
     original_receipt = ROOT / "assets/reference/official-map/map14-root-fog-source-manifest.json"
     old = json.loads(original_receipt.read_bytes())
     expected = next(v["sha256"] for v in old["inputs"] if v["path"].endswith("/CloudController2.cs"))

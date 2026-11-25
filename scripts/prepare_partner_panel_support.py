@@ -9,7 +9,7 @@ def prepare():
     output = ROOT / 'unity/Assets/Game/Runtime/Official/PartnersUI'
     inputs, outputs = [], []
     for name in ('StateAnimationConfig', 'StateAnimationData'):
-        source = ROOT / '.tools/source-packages/official-code/framework-source' / (name + '.cs')
+        source = ROOT / '.tools/source-packages/current/884_156692/official-code/framework-source' / (name + '.cs')
         selected = ROOT / '.tools/source-packages/current/884_156692/official-code/framework-source' / (name + '.cs')
         if source.read_bytes() != selected.read_bytes(): raise ValueError('Selected state-animation code differs')
         body = source.read_text('utf8').replace('IStateConfig', 'IWorldStateConfig').replace('StateConfigValue', 'WorldStateConfigValue')

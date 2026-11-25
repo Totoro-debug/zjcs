@@ -82,7 +82,7 @@ def main():
         raise ValueError('Selected original code manifest differs')
     for name in ('Console', 'Luban', 'Framework.FirstPass.Runtime'):
         source = selected_code / 'managed/decoded' / (name + '.dll')
-        if source.read_bytes() != (ROOT / '.tools/source-packages/official-code/managed/decoded' / source.name).read_bytes():
+        if source.read_bytes() != (ROOT / '.tools/source-packages/current/884_156692/official-code/managed/decoded' / source.name).read_bytes():
             raise ValueError('Selected original module differs: ' + name)
         raw = source.read_bytes()
         if hashlib.sha256(raw).hexdigest() != code_manifest['assemblies'][source.name]['decoded_sha256']:

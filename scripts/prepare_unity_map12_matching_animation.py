@@ -60,7 +60,7 @@ def build(native_path=NATIVE, update=False):
         raise ValueError('Original matching clip list changed')
     clip=PPtr(**settings['m_Animation'],assetsfile=animation.assets_file).deref();original=clip.read_typetree()
     duration=legacy_duration(clip.read())
-    engine=ROOT/'.tools/source-packages/official-code/libunity.so'
+    engine=ROOT/'.tools/source-packages/current/884_156692/official-code/libunity.so'
     if sha(engine.read_bytes())!=ENGINE_SHA256: raise ValueError('Original AnimationClip duration engine changed')
     if original['m_Name']!=NAME or not original['m_Legacy'] or len(original['m_FloatCurves'])!=31 or len(original['m_ScaleCurves'])!=5:
         raise ValueError('Original matching animation identity changed')

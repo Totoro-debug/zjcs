@@ -18,7 +18,7 @@ class Map11NativeUiSchemas(ScriptSchemas):
         # TextRendering assemblies. Read original bytes with strict consumption;
         # no official game scripts are replaced by these schema dependencies.
         self.generator = TypeTreeGenerator("2022.3.57f1", generator="AssetsTools")
-        code_root = code_root or ROOT / ".tools/source-packages/official-code"
+        code_root = code_root or ROOT / ".tools/source-packages/current/884_156692/official-code"
         paths = {path.name: path for path in (code_root / "managed/decoded").glob("*.dll")}
         paths.update({name + ".dll": path for name, path in assemblies.items()})
         for path in paths.values():
@@ -38,7 +38,7 @@ class Map11SupportUi(CookingConverter):
             "UnityEngine.CoreModule": editor / "Managed/UnityEngine/UnityEngine.CoreModule.dll",
             "UnityEngine.TextRenderingModule": editor / "Managed/UnityEngine/UnityEngine.TextRenderingModule.dll",
             "netstandard": editor / "NetStandard/ref/2.1.0/netstandard.dll",
-            "Framework": (code_root or ROOT / ".tools/source-packages/official-code") / "managed/decoded/Framework.dll",
+            "Framework": (code_root or ROOT / ".tools/source-packages/current/884_156692/official-code") / "managed/decoded/Framework.dll",
             "mscorlib": Path("C:/Windows/Microsoft.NET/Framework64/v4.0.30319/mscorlib.dll"),
         }
         self.ui_schemas = Map11NativeUiSchemas(self.ui_assemblies, code_root)

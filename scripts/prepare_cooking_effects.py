@@ -169,7 +169,7 @@ def build():
     templates['entry_row'] = e.ui('prefabs_ui_item', '/EntryDetailItem.prefab')
     for key in ['entry', 'entry_row']:
         unique_sibling_paths(templates[key]['root'])
-    raw_path = ROOT / '.tools/source-packages/official-data/cooking_prop_effect_full.g.bytes'
+    raw_path = ROOT / '.tools/source-packages/current/884_156692/official-data/cooking_prop_effect_full.g.bytes'
     raw = raw_path.read_bytes()
     table_obj = next(p.deref() for path, p in e.apk.container('config_luban')
                      if path.endswith('/cooking_prop_effect_full.g.bytes'))
@@ -216,7 +216,7 @@ def build():
     value = dict(templates=templates, permanent=rows, props=props, texts=texts,
                  colors={key:colors[key] for key in ['Red','Orange']}, rule_orders=[row['Order'] for row in tip_rows], entries=entries)
     e.save('cooking-effects.json', value)
-    code = ROOT / '.tools/source-packages/official-code'
+    code = ROOT / '.tools/source-packages/current/884_156692/official-code'
     sources = {}
     for folder, names in {'common-source/Common': ['CookingInfo', 'CookingPropEffectFullInfo',
         'CookingPropEffectFullInfoParser', 'BattleFormulaHandler', 'PlayerCookingData',

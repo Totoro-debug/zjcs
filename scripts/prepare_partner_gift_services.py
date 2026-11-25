@@ -17,7 +17,7 @@ def main():
         'common-source/Common/NpcAdventureSettings.cs': ['public bool IsTraveNpcUnlock(Player player)', 'public bool IsUnlockTraveNpcProp(Player player, PropType propType)'],
         'framework-firstpass-source/ResourceLoaderExtensions.cs': [],
     }.items():
-        path = ROOT / '.tools/source-packages/official-code' / relative
+        path = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
         raw = path.read_bytes()
         if raw != (ROOT / '.tools/source-packages/current' / version / 'official-code' / relative).read_bytes():
             raise ValueError('Current gift service source differs: ' + relative)

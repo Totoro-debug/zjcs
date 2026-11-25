@@ -411,7 +411,7 @@ class NativeRecovery:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source", type=Path, default=ROOT / ".tools/source-packages/official-code/libil2cpp.so")
+    parser.add_argument("--source", type=Path, default=ROOT / ".tools/source-packages/current/884_156692/official-code/libil2cpp.so")
     parser.add_argument("--output", type=Path)
     parser.add_argument("--selected-source", action="store_true", help="Verify the input against the SHA256-pinned selected APK entry, retaining the legacy default pin")
     parser.add_argument("--restore-loader-relocations", action="store_true", help="Restore original X19 loader-context relative relocations at an explicitly inspected stop boundary")

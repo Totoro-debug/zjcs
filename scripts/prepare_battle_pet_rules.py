@@ -78,7 +78,7 @@ def build():
     receipt = ROOT / 'assets/reference/battle-rules/pet-assembly-source-manifest.json'
     receipt.write_bytes((json.dumps(dict(manifest='854_156383', generator=identity(Path(__file__).resolve()),
         inputs=[identity(rules_path), identity(source_path), identity(raw_path), identity(character_source)],
-        original_code=identity(ROOT / '.tools/source-packages/official-code/common-source/Common/FightRolePetSkillItem.cs'),
+        original_code=identity(ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common/FightRolePetSkillItem.cs'),
         active_comparison=dict(manifest=apk.version, tables=comparisons,
             properties=dict(record=record, source=origin, payload_sha256=hashlib.sha256(active_raw).hexdigest(), groups=sorted(wanted))),
         outputs=[identity(output), identity(output.with_name('pet-battle-rules-source-manifest.json'))],

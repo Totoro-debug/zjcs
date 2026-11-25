@@ -28,7 +28,7 @@ def meta(path, folder=False):
 
 def build(map_ids):
     apk = Apk.current()
-    code = ROOT / ".tools/source-packages/official-code"
+    code = ROOT / ".tools/source-packages/current/884_156692/official-code"
     formats = Formats(code)
     prepared = code.parent / "prepared-code-source-manifest.json"
     manifest = json.loads(prepared.read_bytes())

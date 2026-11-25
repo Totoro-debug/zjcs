@@ -7,7 +7,7 @@ import uuid
 
 from official_apk import ROOT
 
-SOURCE = ROOT / ".tools/source-packages/official-code/client-source"
+SOURCE = ROOT / ".tools/source-packages/current/884_156692/official-code/client-source"
 DEST = ROOT / "unity/Assets/Game/Runtime/Official/ProfessionUI"
 NAMES = ("TipDotNodeBase", "TipDotConditionNodeBase", "TipDotNodePresetData", "TipDotNodeKey",
          "TipDotStateInfo", "ETipDotLevelType", "INodeInstanceInfo", "ITipDotBanManager", "TipDotCommonNode")
@@ -121,7 +121,7 @@ namespace Zjcs.Official.ProfessionUI
             body = body.replace("public Profession Profession;", "public int Profession;").replace("(Profession profession)", "(int profession)").replace("HashCode.Combine<Profession>", "HashCode.Combine<int>")
         outputs.append(write(name, wrap(body)))
     for name in ("TipDotGraphType", "TipDotGraphScope"):
-        body = source(name, ROOT / ".tools/source-packages/official-code/common-source/Common")
+        body = source(name, ROOT / ".tools/source-packages/current/884_156692/official-code/common-source/Common")
         outputs.append(write(name, wrap(body.replace("namespace Common;", ""))))
     source("TipDotNodeGraph")
     outputs.append(write("TipDotNodeGraph", """using System;
@@ -341,7 +341,7 @@ def build():
         if any(value in source for value in ("ClonerResolver", "CloneableHelper", "Log.Error", "MeManager", "GLogger", "ITipDotNodeEventCenter")):
             raise ValueError("Unresolved original dependency in " + name)
         outputs.append(write(name, wrap(source)))
-    path = ROOT / ".tools/source-packages/official-code/framework-firstpass-source/Framework/SafeAction.cs"
+    path = ROOT / ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/Framework/SafeAction.cs"
     source = path.read_text(encoding="utf-8")
     inputs.append(dict(path=path.relative_to(ROOT).as_posix(), sha256=sha(path)))
     source = source[:source.index("public class SafeAction<T1, T2>")]
@@ -375,7 +375,7 @@ namespace Zjcs.Official.ProfessionUI
     original_manager = SOURCE / "ITipDotNodeManager.cs"
     inputs.append(dict(path=original_manager.relative_to(ROOT).as_posix(), sha256=sha(original_manager)))
     for relative in ("common-source/Common/ItemType.cs", "common-source/Common/FunctionType.cs"):
-        path = ROOT / ".tools/source-packages/official-code" / relative
+        path = ROOT / ".tools/source-packages/current/884_156692/official-code" / relative
         inputs.append(dict(path=path.relative_to(ROOT).as_posix(), sha256=sha(path)))
     validation = []
     for relative in ("unity/Assets/Game/Editor/ProfessionUI/ProfessionTipDotValidation.cs",

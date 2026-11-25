@@ -364,7 +364,7 @@ def jigsaw_panel_fields(apk):
 
 def jigsaw_table_projection():
     """Prove changed global tables leave the jigsaw's selected rows unchanged."""
-    old_path = ROOT / '.tools/source-packages/official-data/tables.json'
+    old_path = ROOT / '.tools/source-packages/current/884_156692/official-data/tables.json'
     new_path = ROOT / '.tools/source-packages/current/871_156598/official-data/tables.json'
     old = json.loads(old_path.read_text(encoding='utf-8-sig'))
     new = json.loads(new_path.read_text(encoding='utf-8-sig'))

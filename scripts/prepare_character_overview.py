@@ -36,7 +36,7 @@ def build():
     if row is None:raise ValueError('Original character property row missing')
     rules=json.loads((ART/'rules.json').read_text(encoding='utf8'))
     rules.update(json.loads((ART/'fidelity-rules.json').read_text(encoding='utf8')))
-    source=ROOT/'.tools/source-packages/official-code';common=source/'common-source/Common'
+    source=ROOT/'.tools/source-packages/current/884_156692/official-code';common=source/'common-source/Common'
     enum=(common/'SubRank.cs').read_text(encoding='utf-8-sig');ids={name:index for index,name in enumerate(re.findall(r'\b(\w+)\s*,?',enum.split('{',1)[1].rsplit('}',1)[0]))}
     ext=(common/'EnumExt.cs').read_text(encoding='utf-8-sig').split('public static Rank ToRank(this SubRank subRank)',1)[1].split('default:',1)[0]
     rank_ids={name:index for index,name in enumerate(re.findall(r'\b(\w+)\s*,?',(common/'Rank.cs').read_text(encoding='utf-8-sig').split('{',1)[1].rsplit('}',1)[0]))}

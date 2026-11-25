@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 APK_SHA256 = "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9"
 EXTRACTED = ROOT / ".tools/source-packages/extracted"
-OFFICIAL_DATA = ROOT / ".tools/source-packages/official-data"
+OFFICIAL_DATA = ROOT / ".tools/source-packages/current/884_156692/official-data"
 PAYLOAD = ROOT / "unity/Assets/Official/CharacterCreation/Recovered/AppearanceGroupIcons"
 PAYLOAD_MANIFEST = PAYLOAD / "source-manifest.json"
 REFERENCE_MANIFEST = ROOT / "assets/reference/character-creation/appearance-group-icons-source-manifest.json"

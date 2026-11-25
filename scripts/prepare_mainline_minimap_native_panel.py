@@ -281,7 +281,7 @@ class MiniMapPanelBinding(MiniMapHudBinding):
             ('UIBloomGroup','framework-firstpass-source')):
             selected=self.cache.parent/'official-code'/folder/(name+'.cs')
             if not selected.is_file():selected,=(self.cache.parent/'official-code').glob('*/'+name+'.cs')
-            previous=ROOT/'.tools/source-packages/official-code'/selected.relative_to(self.cache.parent/'official-code')
+            previous=ROOT/'.tools/source-packages/current/884_156692/official-code'/selected.relative_to(self.cache.parent/'official-code')
             if selected.read_bytes()!=previous.read_bytes():raise ValueError('Review changed original shared window code: '+name)
             for path in (selected,previous):self.inputs[path.relative_to(ROOT).as_posix()]=sha(path.read_bytes())
             records.append(dict(selected=selected.relative_to(ROOT).as_posix(),previous=previous.relative_to(ROOT).as_posix(),sha256=sha(selected.read_bytes())))

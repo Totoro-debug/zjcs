@@ -28,7 +28,7 @@ def build(map_id=11):
     REL=f'Resources/Map{map_id}/BaseGround'
     BUNDLE=f'defaultpackage_assets_partition_mapground_{map_id}_mapground_{map_id}_bare.bundle'
     apk=Apk.current() if map_id==12 else Apk()
-    code_root=ROOT/f'.tools/source-packages/current/{apk.version}/official-code' if map_id==12 else ROOT/'.tools/source-packages/official-code'
+    code_root=ROOT/f'.tools/source-packages/current/{apk.version}/official-code' if map_id==12 else ROOT/'.tools/source-packages/current/884_156692/official-code'
     apk.load(BUNDLE)
     sources=[o for o in apk.env.objects if o.type.name=='Tilemap' and o.read().m_GameObject.read().m_Name=='Ground']
     if len(sources)!=1:raise ValueError('Expected one native base Ground Tilemap')

@@ -96,7 +96,7 @@ namespace Zjcs.Official.HomeAwardUI
 
 def shared_code_compatibility():
     rows = []
-    older = ROOT / '.tools/source-packages/official-code'
+    older = ROOT / '.tools/source-packages/current/884_156692/official-code'
     for name in ('ItemIcon', 'ItemIconAttachment', 'ItemIconAttachmentCell', 'ItemIconAttachmentHint',
                  'ItemIconConfig', 'UIClickSound', 'UIBase', 'GameObjectPool', 'GameObjectPoolBase',
                  'GameObjectDestoryListener', 'ImageProxy', 'ImageLoaderProxy', 'MultiLanguageText', 'LayoutElementClamper'):

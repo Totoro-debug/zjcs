@@ -94,7 +94,7 @@ def build(map_id=11):
     # The original player prefabs carry the same StoryTalk bit as NPCs.
     classes.update((3001, 3002))
     current_code = ROOT / ".tools/source-packages/current" / apk.version / "official-code"
-    code_root = current_code / "client-source" if map_id in (12, 14) else ROOT / ".tools/source-packages/official-code/client-source"
+    code_root = current_code / "client-source" if map_id in (12, 14) else ROOT / ".tools/source-packages/current/884_156692/official-code/client-source"
     schemas = ScriptSchemas(code_root=current_code) if map_id in (12, 14) else ScriptSchemas()
     index_object = next(pointer.deref() for path, pointer in apk.container("config_ec")
                         if path.endswith("/index.g.txt"))

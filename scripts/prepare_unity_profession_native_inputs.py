@@ -91,7 +91,7 @@ def build(unity_project=None):
                 raise ValueError('Original GachaOneRewardGo serialized field order changed')
             state_source = code / 'framework-source/StateSwitcher.cs'
             if not state_source.exists():
-                state_source = ROOT / '.tools/source-packages/official-code/framework-source/StateSwitcher.cs'
+                state_source = ROOT / '.tools/source-packages/current/884_156692/official-code/framework-source/StateSwitcher.cs'
             state_text = state_source.read_text(encoding='utf-8')
             if '[SerializeReference]\n\tprivate List<IStateConfig> mStateConfigs;' not in state_text or '[SerializeField]\n\tprivate GameObject mOwner;' not in state_text:
                 raise ValueError('Original StateSwitcher generic serialization changed')

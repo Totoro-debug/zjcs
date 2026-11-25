@@ -45,7 +45,7 @@ def main():
     inputs, methods = {}, {}
 
     def selected(relative, signature=None):
-        source = ROOT / '.tools/source-packages/official-code' / relative
+        source = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
         raw = source.read_bytes()
         if raw != (ROOT / '.tools/source-packages/current' / version / 'official-code' / relative).read_bytes():
             raise ValueError('Selected roster source differs: ' + relative)

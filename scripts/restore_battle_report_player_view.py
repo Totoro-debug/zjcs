@@ -29,7 +29,7 @@ def build(source_root):
     schemas.generator = TypeTreeGenerator('2022.3.57f1', generator='AssetsTools')
     editor = Path('D:/Tool/Unity/Editor/Data')
     schemas.generator.load_local_dll_folder(str(editor / 'Managed/UnityEngine'))
-    for path in sorted((source_root / '.tools/source-packages/official-code/managed/decoded').glob('*.dll')):
+    for path in sorted((source_root / '.tools/source-packages/current/884_156692/official-code/managed/decoded').glob('*.dll')):
         if not path.stem.startswith('UnityEngine') and path.stem != 'Unity.TextMeshPro':
             schemas.generator.load_dll(path.read_bytes())
     for path in [ROOT / ('unity/Library/ScriptAssemblies/' + name + '.dll') for name in ['UnityEngine.UI', 'Unity.TextMeshPro']] + [
@@ -96,7 +96,7 @@ def build(source_root):
     blocks[index] = '!u!114 &' + str(file_id) + '\n' + yaml.dump({'MonoBehaviour': value}, Dumper=Dumper, allow_unicode=True, sort_keys=False, width=10000)
     result = '--- '.join(blocks).encode()
     write(ROOT / PREFAB, result)
-    official = source_root / '.tools/source-packages/official-code'
+    official = source_root / '.tools/source-packages/current/884_156692/official-code'
     names = ['client-source/FightEndReportPlayerTabView.cs', 'common-source/Common/FightReportData.cs',
              'common-source/Common/FightRoleNormalReport.cs', 'common-source/Common/GameCharacterType.cs',
              'common-source/Common/BattleReportDistributor.cs', 'common-source/Common/FightReportComponent.cs']

@@ -35,7 +35,8 @@ class ResourceUnionTests(unittest.TestCase):
         import prepare_official_sources as converter
         with temporary_validation_directory('resource-merge-') as temporary:
             root = Path(temporary)
-            source, cache = root/'prepared', root/'cache'
+            source, cache_root = root/'prepared', root/'cache'
+            cache = cache_root/'current/test'
             for base in (source, cache):
                 (base/'official-code').mkdir(parents=True)
                 (base/'official-data').mkdir()
@@ -48,14 +49,16 @@ class ResourceUnionTests(unittest.TestCase):
             def preserve(path):
                 preserved.append(path.read_bytes())
                 return dict(path=path.relative_to(root).as_posix())
-            with patch.object(converter, 'ROOT', root), patch.object(converter, 'CACHE', cache), \
-                 patch('official_source.OfficialSource', return_value=SimpleNamespace(version='test')), \
+            with patch.object(converter, 'ROOT', root), patch.object(converter, 'CACHE', cache_root), \
+                 patch('official_source.OfficialSource', return_value=SimpleNamespace(version='test', prepared_path=cache)), \
                  patch('refresh_current_character_meshes.preserve', side_effect=preserve):
                 converter.activate_prepared(source)
             self.assertEqual((cache/'official-code/shared.cs').read_bytes(), b'new')
             self.assertEqual((cache/'official-code/added.cs').read_bytes(), b'added')
             self.assertEqual((cache/'official-code/old-only.cs').read_bytes(), b'retain')
             self.assertEqual(preserved, [b'old'])
+            self.assertFalse((cache_root/'official-code').exists())
+            self.assertFalse((cache_root/'official-data').exists())
 
     def test_flat_vm_parser_view_preserves_native_bytes_and_maps_dynamic_table(self):
         raw = bytearray(1024)

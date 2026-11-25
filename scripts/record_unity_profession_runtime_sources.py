@@ -3,7 +3,7 @@ import hashlib
 import json
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
-CODE = ROOT / ".tools/source-packages/official-code"
+CODE = ROOT / ".tools/source-packages/current/884_156692/official-code"
 PORTS = {
     "ImageLocator": ("ImageLocator", "Sprite native size and pivot correction."),
     "ProfessionOverviewPanel": ("ProfessionOverviewPanel", "Original tab state order, source image selection, property row pool and alternating backgrounds; offline data/resource/window services are injected."),

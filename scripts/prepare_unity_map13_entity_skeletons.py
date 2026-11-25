@@ -244,7 +244,7 @@ def build(graph_path=GRAPH, graph_receipt_path=GRAPH_RECEIPT):
         split_animations=sum(len(s["split_animations"]) for s in skeletons),
         decoded_totals=dict(sum((Counter(s["counts"]) for s in skeletons), Counter())))
     tools = [Path(__file__), ROOT / "scripts/convert_official_skeletons.py"]
-    client_sources = [ROOT / ".tools/source-packages/official-code/client-source" / name for name in
+    client_sources = [ROOT / ".tools/source-packages/current/884_156692/official-code/client-source" / name for name in
         ("SpineAnimationSplitBinarySO.cs", "SpineLazyAnimLoad.cs", "AppearanceCombineSkin.cs")]
     write(RECEIPT, encode(dict(format=1, manifest=graph["manifest"], mapClassId=13,
         graph=dict(path=source_path(graph_path), sha256=sha(graph_path.read_bytes())),

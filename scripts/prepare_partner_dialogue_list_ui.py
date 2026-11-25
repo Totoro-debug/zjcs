@@ -6,7 +6,7 @@ import re
 
 from official_apk import ROOT
 
-SOURCE = ROOT / '.tools/source-packages/official-code'
+SOURCE = ROOT / '.tools/source-packages/current/884_156692/official-code'
 TARGET = ROOT / 'unity/Assets/Game/Runtime/Official/PartnersUI/Roster'
 RECEIPT = ROOT / 'assets/reference/partner-dialogue-list-ui-source-manifest.json'
 

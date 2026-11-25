@@ -164,7 +164,7 @@ class HomePlayerPanelBinding(HomeAvatarBinding):
         reused_sources+=['framework-firstpass-source/SlicedFilledImage.cs','framework-source/UGUIJszx/HorizontalLayoutGroupJSZX.cs',
                          'framework-source/UGUIJszx/HorizontalOrVerticalLayoutGroupJSZX.cs']
         for relative in reused_sources:
-            current=code/relative;previous=ROOT/'.tools/source-packages/official-code'/relative
+            current=code/relative;previous=ROOT/'.tools/source-packages/current/884_156692/official-code'/relative
             if current.read_bytes()!=previous.read_bytes():raise ValueError('Recheck selected shared panel controller: '+relative)
             for file in (current,previous):receipt['inputs'][file.relative_to(ROOT).as_posix()]=sha(file.read_bytes())
         file=ROOT/'assets/reference/home-player-info-native-source-manifest.json'

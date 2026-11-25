@@ -93,7 +93,7 @@ class PartnerFriendshipDialogBinding(PartnerGiftBinding):
                          'framework-firstpass-source/PopupWindowSound.cs', 'framework-firstpass-source/MirrorImage.cs',
                          'framework-source/UGUIJszx/VerticalLayoutGroupJSZX.cs',
                          'framework-source/UGUIJszx/HorizontalOrVerticalLayoutGroupJSZX.cs'):
-            path = ROOT / '.tools/source-packages/official-code' / relative
+            path = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
             raw = path.read_bytes()
             selected = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code' / relative
             if raw != selected.read_bytes():

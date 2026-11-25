@@ -31,7 +31,7 @@ def native_edges(image,angle,bearing,height,padding,style_padding,scale):
 
 
 def main():
-    native=NativeMethods(ROOT/'.tools/source-packages/commerce-native/libil2cpp-restored.bin',ROOT/'.tools/source-packages/official-code/global-metadata.dat')
+    native=NativeMethods(ROOT/'.tools/source-packages/commerce-native/libil2cpp-restored.bin',ROOT/'.tools/source-packages/current/884_156692/official-code/global-metadata.dat')
     font=Apk().asset('textmesh_pro_assets_fonts_&_materials','/FZY4K SDF - dynamic.asset')
     assert struct.unpack_from('<i',font.get_raw_data(),1004)[0]==15
     for args in [(15,17,20,4,0,1),(0,30,36,4,1,.75),(-15,12,15,4,0,1.5)]:

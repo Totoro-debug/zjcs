@@ -17,7 +17,7 @@ def build(work):
     folder.mkdir(exist_ok=True)
 
     def source(relative):
-        path = ROOT / '.tools/source-packages/official-code' / relative
+        path = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
         raw = path.read_bytes()
         if raw != (ROOT / '.tools/source-packages/current' / version / 'official-code' / relative).read_bytes():
             raise ValueError('Selected detail property source differs: ' + relative)

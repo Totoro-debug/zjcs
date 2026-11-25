@@ -68,7 +68,7 @@ def is_manifest_extension(existing: object, current: object, path: tuple[str, ..
 
 
 def is_verified_code_hash(relative_path: str, expected_hash: object) -> bool:
-    source = ROOT / ".tools/source-packages/official-code" / relative_path
+    source = ROOT / ".tools/source-packages/current/884_156692/official-code" / relative_path
     return isinstance(expected_hash, str) and source.is_file() and sha256(source) == expected_hash
 
 

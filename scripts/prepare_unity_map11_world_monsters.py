@@ -27,12 +27,12 @@ SHADOW_PNG = ROOT / "unity/Assets/Official/World/Map/11/Resources/Map11/Textures
 SHADOW_META = SHADOW_PNG.with_suffix(".png.meta")
 
 SOURCE_CODE = (
-    ".tools/source-packages/official-code/client-source/ECStageBehStageView.cs",
-    ".tools/source-packages/official-code/client-source/MapMonsterLoader.cs",
-    ".tools/source-packages/official-code/client-source/MapMonsterLoadHandler.cs",
-    ".tools/source-packages/official-code/client-source/BaseSkeletonFollower.cs",
-    ".tools/source-packages/official-code/client-source/SkeletonRendererFollower.cs",
-    ".tools/source-packages/official-code/common-source/Common/FormulaHandler.cs",
+    ".tools/source-packages/current/884_156692/official-code/client-source/ECStageBehStageView.cs",
+    ".tools/source-packages/current/884_156692/official-code/client-source/MapMonsterLoader.cs",
+    ".tools/source-packages/current/884_156692/official-code/client-source/MapMonsterLoadHandler.cs",
+    ".tools/source-packages/current/884_156692/official-code/client-source/BaseSkeletonFollower.cs",
+    ".tools/source-packages/current/884_156692/official-code/client-source/SkeletonRendererFollower.cs",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FormulaHandler.cs",
 )
 
 

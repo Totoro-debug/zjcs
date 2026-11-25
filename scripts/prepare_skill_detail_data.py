@@ -19,7 +19,7 @@ def restore(reader, rules, ui, city):
         assert len({tuple(value) for value in positions}) == len(positions)
         assert all(isinstance(value, int) for value in types)
         ranges[str(key)] = row
-    enum_path = ROOT / ".tools/source-packages/official-code/common-source/Common/ESkillTag.cs"
+    enum_path = ROOT / ".tools/source-packages/current/884_156692/official-code/common-source/Common/ESkillTag.cs"
     enum_raw = enum_path.read_bytes()
     body = enum_raw.decode("utf-8-sig").split("{", 1)[1].rsplit("}", 1)[0]
     tag_names = {}
@@ -61,8 +61,8 @@ def restore(reader, rules, ui, city):
             "range_config": {"source": reader.apk.provenance(obj), "payload_sha256": hashlib.sha256(raw).hexdigest(), "rows": len(ranges)},
             "tag_prefab": {"source": reader.apk.provenance(original), "payload_sha256": hashlib.sha256(original.get_raw_data()).hexdigest()},
             "tag_enum": {"path": enum_path.relative_to(ROOT).as_posix(), "sha256": hashlib.sha256(enum_raw).hexdigest()},
-            "source_code": {".tools/source-packages/official-code/" + name: hashlib.sha256(
-                (ROOT / ".tools/source-packages/official-code" / name).read_bytes()).hexdigest()
+            "source_code": {".tools/source-packages/current/884_156692/official-code/" + name: hashlib.sha256(
+                (ROOT / ".tools/source-packages/current/884_156692/official-code" / name).read_bytes()).hexdigest()
                 for name in ("common-source/PropConfigUtils.cs", "common-source/Common/PropConfigUtils.cs",
                     "common-source/Common/ProfessionBaseInfoParser.cs", "common-source/Common/LanguageUtils.cs",
                     "client-source/SkillPanelPropPanel.cs", "client-source/SkillDetailDialog.cs",

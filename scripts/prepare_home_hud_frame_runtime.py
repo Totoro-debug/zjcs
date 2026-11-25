@@ -7,7 +7,7 @@ from official_apk import ROOT
 from prepare_partner_card_native import sha
 
 def build():
-    source=ROOT/'.tools/source-packages/official-code/client-source/StencilMask.cs'
+    source=ROOT/'.tools/source-packages/current/884_156692/official-code/client-source/StencilMask.cs'
     text=source.read_text('utf-8-sig').replace('\r\n','\n').replace('using Framework.DependencyInjection;\n','')
     text=re.sub(r'^\s*//IL_[^\n]*\n','\n',text,flags=re.M)
     before='IServiceProvider sceneContainer = ((Component)(object)((Component)this).transform.parent).GetSceneContainer();\n\t\t\tmCopy = ServiceProviderExtensions.Instantiate(sceneContainer, ((Component)this).gameObject, ((Component)this).transform.parent, false);'

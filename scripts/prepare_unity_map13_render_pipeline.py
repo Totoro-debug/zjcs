@@ -20,7 +20,7 @@ def replace_once(text, old, new):
 
 def native_evidence():
     image = ROOT / ".tools/source-packages/commerce-native/libil2cpp-restored.bin"
-    metadata = ROOT / ".tools/source-packages/official-code/global-metadata.dat"
+    metadata = ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat"
     raw_image, raw_metadata = image.read_bytes(), metadata.read_bytes()
     if sha(raw_image) != "8e49906e085ba3819c4b47fd3bd12dcdd594ff0fcc75d418a87ac35a4566305b" or sha(raw_metadata) != "58884b94b56ef35665f44d3f186fce8b8c854cf3bab0a74e4733a18b6a9175b4":
         raise ValueError("Pinned APK-derived native image or metadata changed")

@@ -257,7 +257,7 @@ def build():
             icon=ptr(action_config['mIcon'],action_owner)
             if icon is None:raise ValueError('Original custom-action icon reference is absent')
             prefab['iconPath']=paths[(icon.assets_file.name,icon.path_id)]
-            enum_path=ROOT/'.tools/source-packages/official-code/common-source/Common/EStatusCustomAction.cs'
+            enum_path=ROOT/'.tools/source-packages/current/884_156692/official-code/common-source/Common/EStatusCustomAction.cs'
             names=re.findall(r'^\s*(None|Immunity|Unflinching|CDModify),?\s*$',enum_path.read_text(encoding='utf-8'),re.M)
             if names!=['None','Immunity','Unflinching','CDModify']:raise ValueError('Original custom action enum changed')
             prefab['actions']=[]
@@ -301,7 +301,7 @@ def build():
     receipt['official_code']=[]
     receipt['replay_catalog']=dict(path=catalog_path.relative_to(ROOT).as_posix(),sha256=sha(catalog_path),
         source_manifest_sha256=sha(catalog_receipt),recovered_omitted_ids=sorted(missing),count=len(required),hidden_count=sum(not replay[v] for v in required))
-    for version,directory in [('854_156383',ROOT/'.tools/source-packages/official-code'),
+    for version,directory in [('854_156383',ROOT/'.tools/source-packages/current/884_156692/official-code'),
             ('871_156598',ROOT/'.tools/source-packages/current/871_156598/official-code')]:
         receipt['official_code'].append(dict(manifest=version,files=[dict(path=p.relative_to(ROOT).as_posix(),sha256=sha(p))
             for p in [directory/n for n in ['client-source/CharacterDamageUI.cs','client-source/CharacterDamageUIManager.cs',

@@ -21,12 +21,12 @@ def main():
     version = selection['active']
     inputs = {}
     for name in FILES:
-        source = ROOT / '.tools/source-packages/official-code' / name
+        source = ROOT / '.tools/source-packages/current/884_156692/official-code' / name
         archived = ROOT / '.tools/source-packages/current' / version / 'official-code' / name
         if source.read_bytes() != archived.read_bytes():
             raise ValueError('Official working source differs from selected version: ' + name)
         inputs[source.relative_to(ROOT).as_posix()] = hashlib.sha256(source.read_bytes()).hexdigest()
-    data_paths = [ROOT / '.tools/source-packages/official-data' / (name + '.g.bytes')
+    data_paths = [ROOT / '.tools/source-packages/current/884_156692/official-data' / (name + '.g.bytes')
                   for name in ('npc', 'npc_friendship_level', 'function_limit', 'conditions')]
     data_paths += [ROOT / 'unity/Assets/Official/Character/character-progression.json']
     target = ROOT / 'assets/reference/partner-roster-rules-source-manifest.json'

@@ -1280,7 +1280,7 @@ def build():
             },
             "tutorialFixedReward": {
                 "id": HOME_TUTORIAL_FIXED_REWARD_ID,
-                "table": ".tools/source-packages/official-data/tables.json",
+                "table": ".tools/source-packages/current/884_156692/official-data/tables.json",
                 "sha256": digest(FIXED_REWARD_TABLE.read_bytes()),
                 "itemIds": sorted(tutorial_reward_item_ids),
             },

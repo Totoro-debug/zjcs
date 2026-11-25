@@ -42,7 +42,7 @@ def build(map_id=15):
     adaptor = next(c.component.deref() for c in controller.read().m_Component if c.component.type.name == "MonoBehaviour"
         and c.component.deref().read(check_read=False).m_Script.read().m_ClassName == "OrthographicCameraResolutionAdaptor")
     camera = component(child(root, "Main Camera"), "Camera")
-    schemas = ScriptSchemas(code_root=ROOT / ".tools/source-packages/official-code")
+    schemas = ScriptSchemas(code_root=ROOT / ".tools/source-packages/current/884_156692/official-code")
     fields = schemas.read(adaptor)
     follow = child(controller, "followVCam")
     follow_controller = next(c.component.deref() for c in follow.read().m_Component if c.component.type.name == "MonoBehaviour"
@@ -56,7 +56,7 @@ def build(map_id=15):
     prepared_path = ROOT / ".tools/source-packages/prepared-code-source-manifest.json"
     prepared = json.loads(prepared_path.read_bytes())
     expected = {row["path"]: row["sha256"] for row in prepared["outputs"]}
-    assembly = record(ROOT / ".tools/source-packages/official-code/managed/decoded/Assembly-CSharp.dll")
+    assembly = record(ROOT / ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll")
     if prepared["manifest"] != apk.version or expected.get(assembly["path"]) != assembly["sha256"]:
         raise ValueError("Selected original camera format assembly differs")
 

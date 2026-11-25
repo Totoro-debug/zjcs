@@ -13,7 +13,7 @@ def main():
     inputs, methods = {}, {}
 
     def source(name):
-        path = ROOT / '.tools/source-packages/official-code/common-source' / name
+        path = ROOT / '.tools/source-packages/current/884_156692/official-code/common-source' / name
         raw = path.read_bytes()
         if raw != (ROOT / '.tools/source-packages/current' / version / 'official-code/common-source' / name).read_bytes():
             raise ValueError('Selected reward source differs: ' + name)

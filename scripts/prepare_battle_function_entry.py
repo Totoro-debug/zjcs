@@ -148,7 +148,7 @@ def build():
     metadata = {"manifest": "854_156383", "output": output.relative_to(ROOT).as_posix(), "output_sha256": sha(payload),
                 "generator_sha256": sha(Path(__file__).read_bytes()), "animation_decoder_sha256": sha((ROOT / "scripts/official_animation.py").read_bytes()),
                 "prefab_manifest_sha256": sha(source_path.read_bytes()), "runtime_prefab_sha256": sha(runtime_path.read_bytes()),
-                "inputs": list(inputs.values()), "official_code": {p: sha((ROOT / ".tools/source-packages/official-code" / p).read_bytes()) for p in code},
+                "inputs": list(inputs.values()), "official_code": {p: sha((ROOT / ".tools/source-packages/current/884_156692/official-code" / p).read_bytes()) for p in code},
                 "operation": "Restore the pinned prefab's state bindings and original Animator states, parameters, transitions, curves and events as Unity native assets.",
                 "absent_targets": entries[0]["absentTargets"]}
     receipt.write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

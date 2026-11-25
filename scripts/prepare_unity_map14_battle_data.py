@@ -163,7 +163,7 @@ def build():
     for name in ("BattleFormulaHandler.cs", "RolePropGroupInfo.cs", "LevelPropParser.cs", "LevelPropBinaryReader.cs",
                  "Formula.cs", "StageMonsterArrayInfoParser.cs", "SkillInfoParser.cs", "TbSkillInfo.cs", "PropType.cs"):
         current = CODE / "common-source/Common" / name
-        baseline = ROOT / ".tools/source-packages/official-code/common-source/Common" / name
+        baseline = ROOT / ".tools/source-packages/current/884_156692/official-code/common-source/Common" / name
         if current.read_bytes() != baseline.read_bytes():
             raise ValueError("Shared formula port requires source review: " + name)
         formula_sources.append({"path": current.relative_to(ROOT).as_posix(), "sha256": sha(current.read_bytes())})

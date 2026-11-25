@@ -8,7 +8,7 @@ from prepare_unity_map13_sources import sha, source_path
 
 def install_input_field(schemas):
     image = ROOT / ".tools/source-packages/commerce-native/libil2cpp-restored.bin"
-    metadata = ROOT / ".tools/source-packages/official-code/global-metadata.dat"
+    metadata = ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat"
     native = NativeMethods(image, metadata)
     model = Metadata(native.metadata)
     registration = struct.unpack_from("<16Q", native.image, 0x11B6A188)

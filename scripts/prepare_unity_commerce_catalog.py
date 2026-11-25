@@ -359,7 +359,7 @@ def build():
         "horizontal": False, "vertical": True, "inertia": True,
         "movement": 2, "sensitivity": 1.0, "elasticity": 0.1, "deceleration": 0.135,
     }
-    settings = json.loads((ROOT / ".tools/source-packages/official-data/settings.json").read_text(encoding="utf-8"))
+    settings = json.loads((ROOT / ".tools/source-packages/current/884_156692/official-data/settings.json").read_text(encoding="utf-8"))
     item_rows = rules["item"]
     names = {int(item["ClassId"]): item["Name"] for item in item_rows}
     qualities = {int(item["ClassId"]): int(item.get("Quality", 1)) for item in item_rows}
@@ -510,7 +510,7 @@ def build():
         "manifest": source_manifest["manifest"],
         "sourceHashes": {"rulesJson": files["rules.json"], "commerceUiJson": files["commerce-ui.json"],
                          "officialUiJson": sha256(OFFICIAL_UI),
-                         "settingsJson": sha256(ROOT / ".tools/source-packages/official-data/settings.json"),
+                         "settingsJson": sha256(ROOT / ".tools/source-packages/current/884_156692/official-data/settings.json"),
                          "itemIconsJson": sha256(item_icons_path),
                          "accumulatedDescriptionsRawfile": LEGACY_LANGUAGE_SHA256,
                          "accumulatedQualityBundle": sha256(ACCUMULATED_IMAGE_BUNDLE),

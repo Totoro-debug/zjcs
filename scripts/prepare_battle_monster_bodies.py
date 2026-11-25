@@ -27,8 +27,8 @@ def build():
         generator=identity('scripts/prepare_battle_monster_bodies.py'),
         inputs=[identity(rules), identity(receipt)],
         original_code=[identity(name) for name in (
-            '.tools/source-packages/official-code/common-source/Common/GridTransformComponentInfo.cs',
-            '.tools/source-packages/official-code/common-source/Common/GridTransformComponentBodyPosInfo.cs',
+            '.tools/source-packages/current/884_156692/official-code/common-source/Common/GridTransformComponentInfo.cs',
+            '.tools/source-packages/current/884_156692/official-code/common-source/Common/GridTransformComponentBodyPosInfo.cs',
             '.tools/source-packages/current/884_156692/official-code/client-source/GameCameraController.cs')],
         resolved_monsters=len(bodies),
         resolved_body_config_sha256=sha256(json.dumps(bodies, sort_keys=True, separators=(',', ':')).encode()).hexdigest(),

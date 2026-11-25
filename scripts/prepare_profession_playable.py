@@ -59,7 +59,7 @@ def build():
         schemas=e.schemas.records,unresolved=assets.unresolved,components=dict(counts),
         unconverted_modules=sorted({m for emitter in scene['emitters'] for m in emitter['unconverted_modules']}),
         audio_inputs=audio['inputs'],
-        code={n:sha(ROOT/'.tools/source-packages/official-code'/n) for n in sources},
+        code={n:sha(ROOT/'.tools/source-packages/current/884_156692/official-code'/n) for n in sources},
         outputs={'profession-upgrade.json':sha(ART/'profession-upgrade.json'),**{p.relative_to(ART).as_posix():sha(p) for p in assets.folder.iterdir() if p.suffix in ['.geom','.json']}},
         operation='Original PlayerWorldProfessionUpgradeConfig PPtr; original MyPlayable tracks, transforms, time keys, animation and geometry; no substitute effects'))
     central=ROOT/'assets/reference/official-city/source-manifest.json';manifest=json.loads(central.read_text(encoding='utf8'));manifest['resources'].update(e.records)

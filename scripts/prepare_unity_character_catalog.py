@@ -301,8 +301,8 @@ def restore(catalog_only: bool = False) -> dict:
     for name, count in expected_property_rows.items():
         if len(rules[name]) != count:
             raise ValueError("Pinned NPC property table is incomplete: " + name)
-    role_prop_bytes = (ROOT / ".tools/source-packages/official-data/role_prop_group.g.bytes").read_bytes()
-    item_time_bytes = (ROOT / ".tools/source-packages/official-data/item_time_limit.g.bytes").read_bytes()
+    role_prop_bytes = (ROOT / ".tools/source-packages/current/884_156692/official-data/role_prop_group.g.bytes").read_bytes()
+    item_time_bytes = (ROOT / ".tools/source-packages/current/884_156692/official-data/item_time_limit.g.bytes").read_bytes()
     parser = Constructors()
     role_groups = parser.table(role_prop_bytes, "TbRolePropGroupInfo")
     time_limits = parser.table(item_time_bytes, "TbItemTimeLimitInfo")
@@ -316,7 +316,7 @@ def restore(catalog_only: bool = False) -> dict:
         ("legion_map_building_level_hall", "TbLegionMapBuildingLevelPartInfoHall", 75),
         ("legion_map_hangup", "TbLegionMapHangUpInfo", 10),
     ):
-        raw_path = ROOT / ".tools/source-packages/official-data" / (table_name + ".g.bytes")
+        raw_path = ROOT / ".tools/source-packages/current/884_156692/official-data" / (table_name + ".g.bytes")
         raw_bytes = raw_path.read_bytes()
         rows = parser.table(raw_bytes, constructor)
         if len(rows) != expected_count:
@@ -342,7 +342,7 @@ def restore(catalog_only: bool = False) -> dict:
     level_prop_ids.update(int(row["LevelPropID"]) for row in role_groups
                           if int(row["ID"]) == int(game_settings["CalcCombatPropGroupId"]))
     level_props = decode_level_props(level_prop_bytes, level_prop_ids)
-    prop_type_source = (ROOT / ".tools/source-packages/official-code/common-source/Common/PropType.cs").read_text(encoding="utf-8-sig")
+    prop_type_source = (ROOT / ".tools/source-packages/current/884_156692/official-code/common-source/Common/PropType.cs").read_text(encoding="utf-8-sig")
     property_ids = {name: int(value) for name, value in
                     re.findall(r"\b(\w+)\s*=\s*(\d+)", prop_type_source)}
     wardrobe_rules = json.loads((ROOT / "assets/characters/wardrobe/rules.json").read_text(encoding="utf-8"))
@@ -464,7 +464,7 @@ def restore(catalog_only: bool = False) -> dict:
     from npc_travel_language import language
     unit_keys = {row["Unit"] for row in rules["prop_cfg"] if row.get("Unit")}
     prop_units, unit_sources = language(unit_keys)
-    profession_source = (ROOT / ".tools/source-packages/official-code/common-source/Common/Profession.cs"
+    profession_source = (ROOT / ".tools/source-packages/current/884_156692/official-code/common-source/Common/Profession.cs"
                          ).read_text(encoding="utf-8-sig")
     profession_enum = {int(value): name for name, value in
                        re.findall(r"^\s*(\w+)\s*=\s*(\d+)", profession_source, re.M)} if "= 0" in profession_source else {}
@@ -545,9 +545,9 @@ def restore(catalog_only: bool = False) -> dict:
          "sha256": digest(season_rules_manifest_bytes)},
         {"path": "assets/reference/fidelity/source-manifest.json",
          "sha256": digest((ROOT / "assets/reference/fidelity/source-manifest.json").read_bytes())},
-        {"path": ".tools/source-packages/official-data/role_prop_group.g.bytes",
+        {"path": ".tools/source-packages/current/884_156692/official-data/role_prop_group.g.bytes",
          "sha256": digest(role_prop_bytes), "constructor": "TbRolePropGroupInfo"},
-        {"path": ".tools/source-packages/official-data/item_time_limit.g.bytes",
+        {"path": ".tools/source-packages/current/884_156692/official-data/item_time_limit.g.bytes",
          "sha256": digest(item_time_bytes), "constructor": "TbItemTimeLimitInfo"},
         *legion_inputs,
         {"path": str(level_prop_path.relative_to(ROOT)).replace("\\", "/"),

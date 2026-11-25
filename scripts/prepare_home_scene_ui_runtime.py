@@ -145,7 +145,7 @@ def build():
     # Full cancellation lifecycle is absent from dummy IL; verify its actual
     # three AOT methods and the exact BCL call targets before emitting C#.
     from capstone import Cs,CS_ARCH_ARM64,CS_MODE_ARM
-    folder=ROOT/'.tools/source-packages/official-code/aot-metadata';proof=folder/'source-manifest.json';data=json.loads(read(proof))
+    folder=ROOT/'.tools/source-packages/current/884_156692/official-code/aot-metadata';proof=folder/'source-manifest.json';data=json.loads(read(proof))
     image=folder/'native-image.so';raw=image.read_bytes();expected={Path(row['path']).name:row['sha256'] for row in data['outputs']}
     assert hashlib.sha256(raw).hexdigest()==expected[image.name];inputs[image.relative_to(ROOT).as_posix()]=sha(image)
     methods=[]

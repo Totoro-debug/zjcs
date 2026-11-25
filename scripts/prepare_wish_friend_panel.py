@@ -52,7 +52,7 @@ def make_schemas() -> ScriptSchemas:
     folder = ROOT / ".tools/unity-schema"
     schema = ScriptSchemas.__new__(ScriptSchemas)
     generator = TypeTreeGenerator("2022.3.60f1", generator="AssetsTools")
-    generator.load_local_dll_folder(str(ROOT / ".tools/source-packages/official-code/managed/decoded"))
+    generator.load_local_dll_folder(str(ROOT / ".tools/source-packages/current/884_156692/official-code/managed/decoded"))
     for path in (
         data / "il2cpp/build/deploy/netstandard.dll",
         managed / "UnityEngine.CoreModule.dll",

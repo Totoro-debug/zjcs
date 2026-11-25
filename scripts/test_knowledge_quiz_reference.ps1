@@ -1,6 +1,6 @@
 param([string]$FixturePath='scripts/fixtures/knowledge-quiz-reference.json',[string]$PythonExecutable='python')
 $ErrorActionPreference='Stop'
-$sourceRoot=Join-Path $PSScriptRoot '../.tools/source-packages/official-code'
+$sourceRoot=Join-Path $PSScriptRoot '../.tools/source-packages/current/884_156692/official-code'
 $files=@('ActivityKnowledgeQuizQuestionInfoParser','KnowledgeQuizDifficultyType','KnowledgeQuizOptionType','WeightRandomSelector') | ForEach-Object {Join-Path $sourceRoot "common-source/Common/$_.cs"}
 $files+=@('SystemRandom','IRandom') | ForEach-Object {Join-Path $sourceRoot "framework-firstpass-source/Framework/$_.cs"}
 $files+=Join-Path $sourceRoot 'launch-source/Common/RegionCodeEnum.cs'
@@ -13,7 +13,7 @@ sys.path.insert(0,'scripts')
 from official_tables import Constructors
 c=Constructors();tables={};sources={}
 for name,kind in [('question','TbActivityKnowledgeQuizQuestionInfo'),('stage','TbActivityKnowledgeQuizStageInfo')]:
- p=Path('.tools/source-packages/official-data/activity_knowledge_quiz_'+name+'.g.bytes')
+ p=Path('.tools/source-packages/current/884_156692/official-data/activity_knowledge_quiz_'+name+'.g.bytes')
  tables[name]=c.table(p.read_bytes(),kind);sources[p.name]=hashlib.sha256(p.read_bytes()).hexdigest()
 print(json.dumps(dict(tables=tables,sources=sources)))
 '@

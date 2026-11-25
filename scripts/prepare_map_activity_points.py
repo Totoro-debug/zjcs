@@ -15,7 +15,7 @@ def build():
         maps[str(value[0])]=[dict(id=row[0],point_class=row[1],position=row[2],region=row[3]) for row in value[1]]
         inputs[str(value[0])]=dict(apk.provenance(obj),sha256=hashlib.sha256(raw).hexdigest(),bytes=len(raw),consumed_bytes=len(raw))
     target=ART/'map-activity-points.json';save(target,maps)
-    source=ROOT/'.tools/source-packages/official-code/common-source/MessagePack.Formatters.Common'
+    source=ROOT/'.tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common'
     save(REF/'activity-points-source-manifest.json',dict(manifest='854_156383',inputs=inputs,formatters={name:hashlib.sha256((source/name).read_bytes()).hexdigest() for name in ['MapActivityPointConfigFormatter.cs','MapActivityLoPointInfoFormatter.cs']},outputs={'map-activity-points.json':hashlib.sha256(target.read_bytes()).hexdigest()},operation='Original map IDs, point IDs, point classes, grid coordinates and regions decoded in native formatter field order'))
     print('Native activity points',len(maps),'maps',sum(len(v) for v in maps.values()),'points')
 

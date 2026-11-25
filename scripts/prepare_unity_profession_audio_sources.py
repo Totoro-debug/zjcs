@@ -29,7 +29,7 @@ def build(project=None):
     if len(events) != 8 or any(row["enable_action"] or row["use_callbacks"] or row["callback_count"] for row in events):
         raise ValueError("Inspect original profession event callback/action scope")
     native = NativeMethods(ROOT / ".tools/source-packages/commerce-native/libil2cpp-restored.bin",
-        ROOT / ".tools/source-packages/official-code/global-metadata.dat")
+        ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat")
     methods = []
     for name in ("AK.Wwise.BaseType.get_Id", "AK.Wwise.BaseType.IsValid", "AkEvent.HandleEvent",
             "AkEvent.Start", "AkTriggerHandler.Start", "AkTriggerHandler.OnEnable"):
@@ -47,7 +47,7 @@ def build(project=None):
     code = ROOT / ".tools/source-packages/current/871_156598/official-code"
     result = dict(format=1, manifest=proof["manifest"], native_export=record(proof_path),
         native_inputs=[record(ROOT / ".tools/source-packages/commerce-native/libil2cpp-restored.bin"),
-            record(ROOT / ".tools/source-packages/official-code/global-metadata.dat")], methods=methods,
+            record(ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat")], methods=methods,
         managed_sources=[record(code / "framework-firstpass-source" / (name + ".cs"))
             for name in ("ButtonSound", "UIClickSound", "PopupWindowSound")], runtime=runtime,
         generator=record(Path(__file__)), validation=record(ROOT / "unity/Assets/Game/Editor/ProfessionUI/ProfessionEventFieldValidation.cs"),

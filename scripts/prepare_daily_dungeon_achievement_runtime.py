@@ -8,14 +8,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = "854_156383"
-TABLES = ROOT / ".tools/source-packages/official-data/tables.json"
-ACHIEVEMENT_BYTES = ROOT / ".tools/source-packages/official-data/achievement.g.bytes"
+TABLES = ROOT / ".tools/source-packages/current/884_156692/official-data/tables.json"
+ACHIEVEMENT_BYTES = ROOT / ".tools/source-packages/current/884_156692/official-data/achievement.g.bytes"
 OUTPUT = ROOT / "unity/Assets/Game/Resources/Dungeons/daily-dungeon-achievements.json"
 RECEIPT = ROOT / "assets/reference/daily-dungeon-achievements-source-manifest.json"
 CLIENT_SOURCES = (
-    ROOT / ".tools/source-packages/official-code/client-source/DailyDungeonAchievementPanel.cs",
-    ROOT / ".tools/source-packages/official-code/common-source/Common/AchievementDataDailyDungeonGetRewardCount.cs",
-    ROOT / ".tools/source-packages/official-code/common-source/Common/AchievementTaskDailyDungeonGetRewardCount.cs",
+    ROOT / ".tools/source-packages/current/884_156692/official-code/client-source/DailyDungeonAchievementPanel.cs",
+    ROOT / ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementDataDailyDungeonGetRewardCount.cs",
+    ROOT / ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementTaskDailyDungeonGetRewardCount.cs",
 )
 
 

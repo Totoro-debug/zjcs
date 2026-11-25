@@ -88,7 +88,7 @@ def _build_from_reader(source, apk, reader, save_selection):
     schemas.generator = TypeTreeGenerator('2022.3.57f1', generator='AssetsTools')
     schemas.cache, schemas.records = {}, {}
     loaded_dlls = set()
-    for folder in [ROOT / '.tools/source-packages/official-code/managed/decoded',
+    for folder in [ROOT / '.tools/source-packages/current/884_156692/official-code/managed/decoded',
                    editor / 'Managed/UnityEngine', ROOT / 'unity/Library/Bee/PlayerScriptAssemblies',
                    editor / 'NetStandard/ref/2.1.0', editor / 'MonoBleedingEdge/lib/mono/4.5']:
         for dll in folder.glob('*.dll'):
@@ -497,13 +497,13 @@ def _build_from_reader(source, apk, reader, save_selection):
                    operation=('Recover APK PlanesListPanel and embedded PlanesRoleItem, original UGUI fields, sprite proxy, TMP and role state bindings; replace online providers with local profiles.' if save_selection else 'Deserialize original BootSplash, ThemeCanvas, LaunchRoot/LaunchCanvas and AgeTipsDialog; restore native components with exact PPtr bindings; decode original sprites and animation curves.'),
                    inputs=inputs, language_sources=language_sources,
                    code_sources=[dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes())) for p in [
-                       ROOT / '.tools/source-packages/official-code/launch-source/LaunchPanel.cs',
-                       ROOT / '.tools/source-packages/official-code/launch-source/LaunchUIRoot.cs',
-                       ROOT / '.tools/source-packages/official-code/launch-source/ThemeCanvas.cs',
-                       ROOT / '.tools/source-packages/official-code/launch-source/Launch/AgeTipGo.cs',
-                       ROOT / '.tools/source-packages/official-code/launch-source/AgeTipsDialog.cs',
-                       ROOT / '.tools/source-packages/official-code/framework-firstpass-source/CanvasWidthAdjuster.cs',
-                       ROOT / '.tools/source-packages/official-code/framework-firstpass-source/PopupWindow.cs']],
+                       ROOT / '.tools/source-packages/current/884_156692/official-code/launch-source/LaunchPanel.cs',
+                       ROOT / '.tools/source-packages/current/884_156692/official-code/launch-source/LaunchUIRoot.cs',
+                       ROOT / '.tools/source-packages/current/884_156692/official-code/launch-source/ThemeCanvas.cs',
+                       ROOT / '.tools/source-packages/current/884_156692/official-code/launch-source/Launch/AgeTipGo.cs',
+                       ROOT / '.tools/source-packages/current/884_156692/official-code/launch-source/AgeTipsDialog.cs',
+                       ROOT / '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/CanvasWidthAdjuster.cs',
+                       ROOT / '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/PopupWindow.cs']],
                    native_text_effect={k: effect_evidence[k] for k in ['native_methods', 'native_image_sha256', 'metadata_sha256', 'native_outline']},
                    source_font=dict(path=font_path.relative_to(ROOT).as_posix(), sha256=digest(font_bytes), bytes=len(font_bytes)),
                    converters=[dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes())) for p in [
@@ -513,16 +513,16 @@ def _build_from_reader(source, apk, reader, save_selection):
                             for p in sorted(ART.rglob('*')) if p.is_file() and p.suffix != '.meta' and p.name != 'source-manifest.json'])
     if save_selection:
         receipt['code_sources'].extend(dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes())) for p in [
-            ROOT / '.tools/source-packages/official-code/client-source' / (name + '.cs') for name in [
+            ROOT / '.tools/source-packages/current/884_156692/official-code/client-source' / (name + '.cs') for name in [
                 'PlanesListPanel', 'PlanesRoleListContent', 'PlanesInfoItemBase', 'PlanesInfoItemWithRoleInfo',
                 'PlayerInfoUI', 'PlayerPortraitSettings', 'HeadCharacterPortrait', 'HeadCharacterPortraitBuilder',
                 'UnityEngine.UI.Ext/TabAnimatorTransition']])
         receipt['converters'].append(dict(path='scripts/prepare_official_save_selection.py',
                                          sha256=digest((ROOT / 'scripts/prepare_official_save_selection.py').read_bytes())))
         receipt['code_sources'].extend(dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes())) for p in [
-            ROOT / '.tools/source-packages/official-code/client-source/BgDialogElement.cs',
-            ROOT / '.tools/source-packages/official-code/framework-firstpass-source/WindowBlurMask.cs',
-            ROOT / '.tools/source-packages/official-code/framework-firstpass-source/MultiLanguageFontService.cs'])
+            ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/BgDialogElement.cs',
+            ROOT / '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/WindowBlurMask.cs',
+            ROOT / '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/MultiLanguageFontService.cs'])
         receipt['operation'] += ' Chinese font follows MultiLanguageFontService; native role head photography and launch blur mask are recovered from the same APK.'
     write(REF / 'source-manifest.json', receipt)
     write(ART / 'source-manifest.json', receipt)

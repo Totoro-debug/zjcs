@@ -54,7 +54,7 @@ def prepare() -> dict:
                 raise ValueError("Existing official payload differs from its source manifest: " + name)
             row.update(manifest=manifest["manifest"], source_manifest=source)
         inputs.append(row)
-    original = ".tools/source-packages/official-code/common-source/Common/"
+    original = ".tools/source-packages/current/884_156692/official-code/common-source/Common/"
     return {
         "operation": "Bind already verified local combat TextAssets to the character property catalog; "
                      "reuse CalcSkillPassiveProps, with original rank, effective slot level and SubRank inputs. "

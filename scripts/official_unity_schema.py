@@ -48,7 +48,7 @@ Remove-Item -LiteralPath '{(folder/'temporary.dll').as_posix()}'
             subprocess.run(['pwsh','-NoProfile','-File',str(script)],check=True,stdout=subprocess.DEVNULL)
             (folder / 'source.sha256').write_text(fingerprint)
         self.generator = TypeTreeGenerator('2022.3.60f1', generator='AssetsTools')
-        selected_code = Path(code_root) if code_root is not None else ROOT / '.tools/source-packages/official-code'
+        selected_code = Path(code_root) if code_root is not None else ROOT / '.tools/source-packages/current/884_156692/official-code'
         self.generator.load_local_dll_folder(str(selected_code / 'managed/decoded'))
         self.generator.load_dll(target.read_bytes())
         self.generator.load_dll((folder/'UnityEngine.TilemapModule.dll').read_bytes())

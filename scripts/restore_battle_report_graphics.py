@@ -397,7 +397,7 @@ def record_native(source_root):
              'unity/Assets/Game/Editor/Combat/OfficialBattleReportGraphicsAcceptance.cs',
              'unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs']
     receipt['runtime'] = {p: sha((ROOT / p).read_bytes()) for p in paths}
-    original = source_root / '.tools/source-packages/official-code/framework-firstpass-source/MirrorImage.cs'
+    original = source_root / '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/MirrorImage.cs'
     migrated = 'unity/Assets/Game/Runtime/Official/WorldUI/MirrorImage.cs'
     receipt['mirror_code'] = dict(original=original.relative_to(source_root).as_posix(), original_sha256=sha(original.read_bytes()),
                                   path=migrated, canonical_lf_sha256=sha((ROOT / migrated).read_bytes().replace(b'\r\n', b'\n')))

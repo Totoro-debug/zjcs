@@ -52,7 +52,7 @@ def build():
     for row in water["outputs"]:
         if sha((ROOT / row["path"]).read_bytes().replace(b"\r\n", b"\n")) != row["sha256"]:
             raise ValueError("Installed original water component changed: " + row["path"])
-    official_path = ROOT / ".tools/source-packages/official-code/common-source/Common/MapRegionInfo.cs"
+    official_path = ROOT / ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapRegionInfo.cs"
     proof = dict(format=1, operation="Extract the existing original-component binding into one shared labels/environment module. Preserve bind-before-Awake, original status/progress events, region data and renderer pipeline ownership. Partitioned Map14 reuses the same services; non-partitioned prefabs use MainlineNativeGround. Map15's confirmed local unlocked-map state supplies the time-reached port; the original time-before-level branch is retained. Unbound timed/rank scopes fail closed; no server dates are invented.",
         predecessor=dict(commit=PREDECESSOR, path=previous_path, sha256=sha(previous)),
         original_label_receipt=record(ROOT / "assets/reference/official-map/map14-label-components-code-source-manifest.json"),

@@ -126,11 +126,11 @@ def main():
     parser.add_argument("methods", nargs="*")
     parser.add_argument("--engine", action="store_true", help="Read the pinned libunity.so icalls instead of IL2CPP")
     parser.add_argument("--image", type=Path, default=ROOT / ".tools/source-packages/commerce-native/libil2cpp-restored.bin")
-    parser.add_argument("--metadata", type=Path, default=ROOT / ".tools/source-packages/official-code/global-metadata.dat")
+    parser.add_argument("--metadata", type=Path, default=ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat")
     parser.add_argument("--address", type=lambda v: int(v, 0))
     parser.add_argument("--length", type=lambda v: int(v, 0))
     args = parser.parse_args()
-    native = EngineMethods(ROOT/'.tools/source-packages/official-code/libunity.so') if args.engine else NativeMethods(args.image, args.metadata)
+    native = EngineMethods(ROOT/'.tools/source-packages/current/884_156692/official-code/libunity.so') if args.engine else NativeMethods(args.image, args.metadata)
     if args.address is not None:
         native.disassemble(args.address, args.length or 256)
     for requested in args.methods:

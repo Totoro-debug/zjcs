@@ -204,7 +204,7 @@ def build(destination):
     meta(OUTPUT)
     files = [Path(__file__), ROOT / "scripts/map13_native_schemas.py",
              ROOT / "scripts/official_unity_schema.py", ROOT / "scripts/unity_schema_types.cs"]
-    metadata = ROOT / ".tools/source-packages/official-code/global-metadata.dat"
+    metadata = ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat"
     result = dict(format=1, manifest=apk.version, mapClassId=13, roots=ROOTS, inputs=inputs,
         builtins=[dict(apk_entry=builtin, apk_sha256=apk.source.apk_sha256, sha256=sha(builtin_raw))],
         serialized_files=list(assets.values()), schemas=list(trees.values()),

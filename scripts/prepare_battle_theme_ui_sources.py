@@ -5,7 +5,7 @@ from pathlib import Path
 import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / '.tools/source-packages/official-code/client-source'
+SOURCE = ROOT / '.tools/source-packages/current/884_156692/official-code/client-source'
 SELECTED = ROOT / '.tools/source-packages/current/884_156692/official-code/client-source'
 CODE = ROOT / 'unity/Assets/Game/Runtime/Official/BattleThemeUI'
 RECEIPT = ROOT / 'assets/reference/battle-animation/theme-ui-runtime-source-manifest.json'

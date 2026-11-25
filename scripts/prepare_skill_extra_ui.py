@@ -194,7 +194,7 @@ def restore(reader, schemas, data, city, rules):
     # Engine reference assembly supplies only Unity's VideoPlayer field type;
     # the serialized client schemas still come from the pinned APK assemblies.
     reader.schemas.generator.load_dll(Path("D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.VideoModule.dll").read_bytes())
-    schemas.generator.load_dll((ROOT / ".tools/source-packages/official-code/managed/decoded/Framework.dll").read_bytes())
+    schemas.generator.load_dll((ROOT / ".tools/source-packages/current/884_156692/official-code/managed/decoded/Framework.dll").read_bytes())
     templates = {
         "damage_test": ("prefabs_ui_stagedamagetest", "StageDamageTestPanel"),
         "damage_test_num_cell": ("prefabs_ui_stagedamagetest", "StageLevelCellItem"),
@@ -223,10 +223,10 @@ def restore(reader, schemas, data, city, rules):
                  "HyperLinkClickHandlerPetEnergyEntry", "HyperLinkClickHandlerMonster", "HyperLinkClickHandlerPetEntity",
                  "MonsterInfoPanelNavigateHandler", "PetEntityInfoPanelNavigateHandler", "MonsterBriefInfoPanel",
                  "MonsterDetailPropsDialog", "NonPlayerBriefInfo", "SkillDetailDialog", "FightEndReportSkillTabViewItem"):
-        path = ROOT / ".tools/source-packages/official-code/client-source" / (name + ".cs")
+        path = ROOT / ".tools/source-packages/current/884_156692/official-code/client-source" / (name + ".cs")
         inputs["hyperlink_code"].append({"source": path.relative_to(ROOT).as_posix(),
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
-    pet_formula = ROOT / ".tools/source-packages/official-code/common-source/Common/BattleFormulaHandler.cs"
+    pet_formula = ROOT / ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormulaHandler.cs"
     inputs["pet_entity_formula"] = {"source": pet_formula.relative_to(ROOT).as_posix(),
         "sha256": hashlib.sha256(pet_formula.read_bytes()).hexdigest(),
         "methods": ["CalculatePetEntityBaseProps", "GetPetSkillRank"]}
@@ -266,7 +266,7 @@ def restore(reader, schemas, data, city, rules):
     for name in ("CharacterPanelSkillListPanelItem", "CharacterPanelSkillListPanelItemNewMark", "ItemNewMarkManager",
                  "SkillPanelRedDotItem", "SkillPanelCanRankUpRedDotItem", "SkillPanelCanPromoteRedDotItemBase",
                  "SkillCanMergeRedDotItem", "ItemIconAttachmentRedDotHandler", "ItemIconAttachmentHint", "ItemIconSkill", "RedDotMultiItem"):
-        path = ROOT / ".tools/source-packages/official-code/client-source" / (name + ".cs")
+        path = ROOT / ".tools/source-packages/current/884_156692/official-code/client-source" / (name + ".cs")
         inputs["skill_list_code"].append({"source": path.relative_to(ROOT).as_posix(),
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
     def walk(node):
@@ -287,7 +287,7 @@ def restore(reader, schemas, data, city, rules):
                  "PlayerUseItemContent", "CharacterPanelSkillItem", "SkillPromotePanelItem", "SkillRankUpNotifyDialog",
                  "SkillStarInfo", "StarMiniInfo", "PlayerPropItem", "CharacterPanelSkillContent",
                  "CharacterPanelSkillPanel", "CharacterPanelSkillItemDragContent", "BlessLevelTextViewChanger"):
-        path = ROOT / ".tools/source-packages/official-code/client-source" / (name + ".cs")
+        path = ROOT / ".tools/source-packages/current/884_156692/official-code/client-source" / (name + ".cs")
         inputs["cultivation_code"].append({"source": path.relative_to(ROOT).as_posix(),
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
     for source in ("common-source/Common/PlayerSkillDataExt.cs", "common-source/SkillItemComparer.cs",
@@ -295,7 +295,7 @@ def restore(reader, schemas, data, city, rules):
                    "common-source/Common/SystemLevelGapLimitInfoParser.cs", "common-source/Common/SystemLevelLimitInfoParser.cs",
                    "common-source/Common/PlayerSkllSlotDataExt.cs", "common-source/Common/AstrologicalSeasonConfigParser.cs",
                    "common-source/Common/FormulaHandler.cs", "common-source/Common/LanguageUtils.cs"):
-        path = ROOT / ".tools/source-packages/official-code" / source
+        path = ROOT / ".tools/source-packages/current/884_156692/official-code" / source
         inputs["cultivation_code"].append({"source": path.relative_to(ROOT).as_posix(),
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
     from prepare_skill_cultivation_scroll import restore as restore_cultivation_scroll

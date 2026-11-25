@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from official_apk import ROOT, LubanReader
 from official_metadata import Metadata
 
-SOURCE = ROOT / '.tools/source-packages/official-code/common-source/Common'
+SOURCE = ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common'
 
 
 class Record(dict):
@@ -35,7 +35,7 @@ def split_args(value):
 
 class Constructors:
     def __init__(self, code_root=None):
-        code_root = Path(code_root) if code_root is not None else ROOT / '.tools/source-packages/official-code'
+        code_root = Path(code_root) if code_root is not None else ROOT / '.tools/source-packages/current/884_156692/official-code'
         self.source_root = code_root / 'common-source/Common'
         self.metadata = Metadata((code_root / 'global-metadata.dat').read_bytes())
         self.cache = {}

@@ -76,7 +76,7 @@ def build():
             outputs.append(target)
     # The optional gradient component is AOT code rather than a managed DLL body.
     image = ROOT / ".tools/source-packages/commerce-native/libil2cpp-restored.bin"
-    metadata = ROOT / ".tools/source-packages/official-code/global-metadata.dat"
+    metadata = ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat"
     native = NativeMethods(image, metadata)
     records = []
     for name, (address, index) in native.by_name.items():

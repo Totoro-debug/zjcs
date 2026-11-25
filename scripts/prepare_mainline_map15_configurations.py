@@ -69,7 +69,7 @@ def build():
             text = json.dumps(row, ensure_ascii=False, separators=(",", ":"))
             configs.append(dict(TableName=kind, RecordId=str(row["EntityClassId"] if identity is None else identity),
                 Json=text, Sha256=sha(text.encode()), SourceBundle=bundle, SourcePathId=str(obj.path_id)))
-    source_paths = [ROOT / ".tools/source-packages/official-code/global-metadata.dat"]
+    source_paths = [ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat"]
     for name in constructors.sources:
         path = constructors.source_root / (name + ".cs")
         if not path.exists():

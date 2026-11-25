@@ -40,7 +40,7 @@ Varying vert(appdata_img input) { Varying output; output.position=UnityObjectToC
         '  m_SavedProperties:\n    serializedVersion: 3\n    m_TexEnvs: []\n    m_Ints: []\n    m_Floats: []\n    m_Colors: []\n', encoding='utf-8', newline='\n')
     write_meta(material, 'NativeFormatImporter')
     native = NativeMethods(ROOT/'.tools/source-packages/commerce-native/libil2cpp-restored.bin',
-                           ROOT/'.tools/source-packages/official-code/global-metadata.dat')
+                           ROOT/'.tools/source-packages/current/884_156692/official-code/global-metadata.dat')
     methods = []
     for name, (address, index) in native.by_name.items():
         if not name.startswith('TMPColorGradient.'):
@@ -48,11 +48,11 @@ Varying vert(appdata_img input) { Varying output; output.position=UnityObjectToC
         end = min(v for v in native.by_address if v > address)
         methods.append(dict(name=name, metadata_index=index, address=hex(address), length=end-address,
                             sha256=sha256(native.image[address:end])))
-    source_root = ROOT/'.tools/source-packages/official-code/framework-firstpass-source'
+    source_root = ROOT/'.tools/source-packages/current/884_156692/official-code/framework-firstpass-source'
     receipt = dict(manifest=apk.version, shader=dict(apk.provenance(shader), objectSha256=sha256(shader.get_raw_data())),
         programs=programs, nativeMethods=methods,
         nativeImage=dict(path='.tools/source-packages/commerce-native/libil2cpp-restored.bin',sha256=sha256(native.image)),
-        metadata=dict(path='.tools/source-packages/official-code/global-metadata.dat',sha256=sha256(native.metadata)),
+        metadata=dict(path='.tools/source-packages/current/884_156692/official-code/global-metadata.dat',sha256=sha256(native.metadata)),
         officialCode=[dict(path=p.relative_to(ROOT).as_posix(),sha256=sha256(p.read_bytes()))
             for p in [source_root/(v+'.cs') for v in ('ScreenBlurPass','BlurManager','WindowBlurMask','WindowMaskBase','PopupWindow')]],
         outputs=[dict(path=p.relative_to(ROOT).as_posix(),sha256=sha256(p.read_bytes())) for p in (output, material)],

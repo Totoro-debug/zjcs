@@ -166,10 +166,10 @@ def main() -> int:
     }
     provenance = {
         "manifest": "854_156383",
-        "source_table": ".tools/source-packages/official-data/skill_skin.g.bytes",
-        "source_table_sha256": sha256((ROOT / ".tools/source-packages/official-data/skill_skin.g.bytes").read_bytes()),
-        "constructor": ".tools/source-packages/official-code/common-source/Common/TbSkillSkinInfo.cs",
-        "constructor_sha256": sha256((ROOT / ".tools/source-packages/official-code/common-source/Common/TbSkillSkinInfo.cs").read_bytes()),
+        "source_table": ".tools/source-packages/current/884_156692/official-data/skill_skin.g.bytes",
+        "source_table_sha256": sha256((ROOT / ".tools/source-packages/current/884_156692/official-data/skill_skin.g.bytes").read_bytes()),
+        "constructor": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbSkillSkinInfo.cs",
+        "constructor_sha256": sha256((ROOT / ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbSkillSkinInfo.cs").read_bytes()),
         "runtime_index": "unity/Assets/StreamingAssets/Character/skill-skin-videos.json",
         "bundles": len(effects),
         "rows": source_rows,

@@ -40,7 +40,7 @@ def main():
     inputs, outputs = {}, {}
 
     def source(name):
-        path = ROOT / '.tools/source-packages/official-code' / name
+        path = ROOT / '.tools/source-packages/current/884_156692/official-code' / name
         archived = ROOT / '.tools/source-packages/current' / version / 'official-code' / name
         raw = path.read_bytes()
         if raw != archived.read_bytes():

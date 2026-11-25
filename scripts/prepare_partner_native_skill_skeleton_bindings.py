@@ -107,9 +107,9 @@ def main():
         ROOT / 'scripts/inspect_partner_native_skill_skeletons.py',
         ROOT / 'unity/Assets/Official/Combat/NativePartnerAssets/Resources/Combat/NativePartnerAssets/catalog.asset',
         ROOT / 'assets/reference/partner-native-battle-assets-source-manifest.json']
-    inputs += [ROOT / '.tools/source-packages/official-code/client-source' / name for name in
+    inputs += [ROOT / '.tools/source-packages/current/884_156692/official-code/client-source' / name for name in
         ('SkeletonRendererHighTexturePreview.cs', 'AppearanceCombineSkin.cs', 'AppearanceSystem.SpineExt/DynamicSkeletonRenderSeparator.cs')]
-    inputs.append(ROOT / '.tools/source-packages/official-code/aot-metadata/DummyDll/spine-unity.dll')
+    inputs.append(ROOT / '.tools/source-packages/current/884_156692/official-code/aot-metadata/DummyDll/spine-unity.dll')
     inputs += [ROOT / 'unity/Assets/Game/Runtime' / name for name in
         ('Offline/ProfessionUI/PartnerNativeBattleActor.cs', 'Offline/ProfessionUI/PartnerNativeBattleMesh.cs',
          'Offline/ProfessionUI/PartnerNativeBattleRendererPort.cs', 'Offline/ProfessionUI/PartnerNativeSkillSkeleton.cs',

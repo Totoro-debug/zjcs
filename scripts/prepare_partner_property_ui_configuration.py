@@ -41,13 +41,13 @@ def build(work):
         source = code / 'common-source/Common' / (name + '.cs')
         if not source.is_file():
             source = code / 'common-source/Common.LubanGen' / (name + '.cs')
-        if source.read_bytes() != (ROOT / '.tools/source-packages/official-code' / source.relative_to(code)).read_bytes():
+        if source.read_bytes() != (ROOT / '.tools/source-packages/current/884_156692/official-code' / source.relative_to(code)).read_bytes():
             raise ValueError('Selected entry constructor differs: ' + name)
         sources[source.relative_to(ROOT).as_posix()] = sha(source.read_bytes())
     for source in (code / 'global-metadata.dat', ROOT / 'scripts/official_tables.py', ROOT / 'scripts/official_metadata.py'):
         sources[source.relative_to(ROOT).as_posix()] = sha(source.read_bytes())
     prop_type = code / 'common-source/Common/PropType.cs'
-    if prop_type.read_bytes() != (ROOT / '.tools/source-packages/official-code/common-source/Common/PropType.cs').read_bytes():
+    if prop_type.read_bytes() != (ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common/PropType.cs').read_bytes():
         raise ValueError('Selected property enum differs')
     sources[prop_type.relative_to(ROOT).as_posix()] = sha(prop_type.read_bytes())
     names = {int(value): name for name, value in re.findall(r'^\s*(\w+) = (\d+),?$', prop_type.read_text('utf-8-sig'), re.M)}

@@ -1,6 +1,6 @@
 param([string]$FixturePath='scripts/fixtures/jump-score-reference.json',[string]$PythonExecutable='python')
 $ErrorActionPreference='Stop'
-$sourceRoot=Join-Path $PSScriptRoot '../.tools/source-packages/official-code/common-source/Common'
+$sourceRoot=Join-Path $PSScriptRoot '../.tools/source-packages/current/884_156692/official-code/common-source/Common'
 $files=@('FixInt','ServerDifficultyConfig','ServerStageScoreConfig','ActivityMinigameJumpScoreRuleInfoParser') | ForEach-Object {Join-Path $sourceRoot "$_.cs"}
 # The decompiler spells the IL base call as a virtual cast, which recurses in C#.
 # Restore that dispatch only; the parser's configuration construction is unchanged.

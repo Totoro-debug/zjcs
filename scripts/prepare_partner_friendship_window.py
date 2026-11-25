@@ -192,7 +192,7 @@ Varying vert(appdata_img input) { Varying output; output.position=UnityObjectToC
         for relative in ('client-source/NpcFriendshipDialog.cs', 'framework-firstpass-source/WindowBlurMask.cs',
                 'framework-firstpass-source/WindowMaskBase.cs', 'framework-firstpass-source/BlurManager.cs',
                 'framework-firstpass-source/ScreenBlurPass.cs', 'framework-firstpass-source/PopupWindow.cs'):
-            item = ROOT / '.tools/source-packages/official-code' / relative
+            item = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
             selected = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code' / relative
             if item.read_bytes() != selected.read_bytes():
                 raise ValueError('Selected friendship source differs: ' + relative)

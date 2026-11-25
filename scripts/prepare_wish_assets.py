@@ -105,7 +105,7 @@ def build():
         else:
             evidence['reward_icons'][str(item_id)] = {'missing': icon, 'searched': searched}
     (ART / 'icons.json').write_text(json.dumps(icons, ensure_ascii=False, separators=(',',':')), encoding='utf-8')
-    code = ROOT / '.tools/source-packages/official-code'
+    code = ROOT / '.tools/source-packages/current/884_156692/official-code'
     for folder, names in {
         'client-source': ['SkillGachaPanel', 'SkillSeniorGachaPanel', 'GachaPanelBase', 'GachaProbabilityContent',
                           'GachaDetailInfoSkillGachaProvider', 'ScoreRewardUI', 'GachaHistoryContent'],

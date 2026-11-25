@@ -5,7 +5,7 @@ import uuid
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CODE = ROOT / ".tools/source-packages/official-code"
+CODE = ROOT / ".tools/source-packages/current/884_156692/official-code"
 OUTPUT = ROOT / "unity/Assets/Game/Runtime/Official/SkillsUI"
 
 

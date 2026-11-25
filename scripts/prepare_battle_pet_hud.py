@@ -246,7 +246,7 @@ def build():
     write(output, dict(manifest=source["manifest"], references=references, rotations=rotations, extraCurves=extra_curves, **config))
     write(output.with_name("battle-pet-hud-source-manifest.json"),
           dict(manifest=source["manifest"], output_sha256=identity(output)["sha256"]))
-    code = ROOT / ".tools/source-packages/official-code/client-source/GamePetSkillIcon.cs"
+    code = ROOT / ".tools/source-packages/current/884_156692/official-code/client-source/GamePetSkillIcon.cs"
     current = ROOT / ".tools/source-packages/current/884_156692/official-code/client-source/GamePetSkillIcon.cs"
     if code.read_bytes() != current.read_bytes():
         raise ValueError("Review the different original pet widget implementations before adapting them")
@@ -258,16 +258,16 @@ def build():
         discharge_clip=dict(source=apk.provenance(clip), object_sha256=hashlib.sha256(clip.get_raw_data()).hexdigest(),
             operation="Compare every installed scalar curve to the original; restore quaternion channels as a native legacy clip and omitted scale Z on the existing scalar clock."),
         application_sources=[identity(code), identity(current),
-            identity(ROOT / '.tools/source-packages/official-code/client-source/FightSkillListDataEntityProvider.cs'),
-            identity(ROOT / '.tools/source-packages/official-code/client-source/FightSkillListDataProvider.cs'),
-            identity(ROOT / '.tools/source-packages/official-code/client-source/MyFightRolePet.cs'),
-            identity(ROOT / '.tools/source-packages/official-code/common-source/Common/FightRolePetSpawnerComponent.cs'),
-            identity(ROOT / '.tools/source-packages/official-code/common-source/Common/FightSkillAgentComponentImplement.cs'),
-            identity(ROOT / '.tools/source-packages/official-code/common-source/Common/FightSkillData.cs'),
-            identity(ROOT / '.tools/source-packages/official-code/common-source/Common/FightSourceInfo.cs'),
-            identity(ROOT / '.tools/source-packages/official-code/common-source/Common/FormulaHandler.cs'),
-            identity(ROOT / '.tools/source-packages/official-code/framework-firstpass-source/Framework/CultureNumberFormatterBase.cs'),
-            identity(ROOT / '.tools/source-packages/official-code/framework-firstpass-source/Framework/NumberFormatHelper.cs')],
+            identity(ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/FightSkillListDataEntityProvider.cs'),
+            identity(ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/FightSkillListDataProvider.cs'),
+            identity(ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/MyFightRolePet.cs'),
+            identity(ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common/FightRolePetSpawnerComponent.cs'),
+            identity(ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillAgentComponentImplement.cs'),
+            identity(ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillData.cs'),
+            identity(ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common/FightSourceInfo.cs'),
+            identity(ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common/FormulaHandler.cs'),
+            identity(ROOT / '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/Framework/CultureNumberFormatterBase.cs'),
+            identity(ROOT / '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/Framework/NumberFormatHelper.cs')],
         runtime_sources=[identity(ROOT / path) for path in (
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudAnimationPlayer.cs',
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs',

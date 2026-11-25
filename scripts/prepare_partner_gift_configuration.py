@@ -39,7 +39,7 @@ def build(work):
     stage.mkdir(exist_ok=True)
 
     def source(relative):
-        path = ROOT / '.tools/source-packages/official-code' / relative
+        path = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
         raw = path.read_bytes()
         if raw != (ROOT / '.tools/source-packages/current' / apk.version / 'official-code' / relative).read_bytes():
             raise ValueError('Current gift parser source differs: ' + relative)

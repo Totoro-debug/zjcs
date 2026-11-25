@@ -19,7 +19,7 @@ WANTED = {'arena_guard_template': 'TbArenaGuardTemplateInfo',
 
 def build(output, verify_apk=False, manifest_output=None):
     constructors = Constructors()
-    cache = ROOT/'.tools/source-packages/official-data'
+    cache = ROOT/'.tools/source-packages/current/884_156692/official-data'
     tables, inputs, raws = {}, {}, {}
     for name, typ in WANTED.items():
         path = cache/(name+'.g.bytes')
@@ -104,7 +104,7 @@ def build(output, verify_apk=False, manifest_output=None):
     target.write_text(json.dumps(dict(tables=tables, runtime=runtime, settings=setting, items=items,
                                       function_limits=limits, arena_scene=arena_scene),
                                  ensure_ascii=False, indent=2)+'\n', 'utf8')
-    source = ROOT/'.tools/source-packages/official-code/common-source/Common'
+    source = ROOT/'.tools/source-packages/current/884_156692/official-code/common-source/Common'
     code = {name+'.cs': hashlib.sha256((source/(name+'.cs')).read_bytes()).hexdigest() for name in constructors.sources}
     record = dict(status='runtime_resource' if manifest_output else 'staged_only', manifest='854_156383', tables=inputs, original_constructor_code_sha256=code,
                   rules_sha256=hashlib.sha256(rules_path.read_bytes()).hexdigest(),

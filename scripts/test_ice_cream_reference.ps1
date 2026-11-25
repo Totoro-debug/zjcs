@@ -1,6 +1,6 @@
 param([string]$FixturePath='scripts/fixtures/ice-cream-reference.json',[string]$PythonExecutable='python')
 $ErrorActionPreference='Stop'
-$sourceRoot=Join-Path $PSScriptRoot '../.tools/source-packages/official-code'
+$sourceRoot=Join-Path $PSScriptRoot '../.tools/source-packages/current/884_156692/official-code'
 $files=@('ActivityMiniGameIceCreamDataExt','WeightRandomSelector') | ForEach-Object {Join-Path $sourceRoot "common-source/Common/$_.cs"}
 $files+=@('SystemRandom','IRandom') | ForEach-Object {Join-Path $sourceRoot "framework-firstpass-source/Framework/$_.cs"}
 $files+=Join-Path $sourceRoot 'client-source/IceCreamUIUtils.cs'

@@ -20,7 +20,7 @@ def build():
             'client-source/MapRegionLimitStatusRefreshForRankUnlockTime.cs',
             'client-source/ShowRemainTimeInfo.cs',
             'framework-firstpass-source/Framework/CultureTimeSpanArg.cs'):
-        path = ROOT / '.tools/source-packages/official-code' / relative
+        path = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
         if prepared['manifest'] != '884_156692' or expected.get(path.relative_to(ROOT).as_posix()) != sha(path.read_bytes()):
             raise ValueError('Selected original timed-region source differs: ' + relative)
         inputs.append(record(path))

@@ -18,7 +18,7 @@ def build(source_root=ROOT, output_root=ROOT):
              'common-source/Common/DamageResultParameter.cs',
              'common-source/Common/FightDamageComponentImplement.cs']
     for version, directory in (
-        ('854_156383', source_root/'.tools/source-packages/official-code'),
+        ('854_156383', source_root/'.tools/source-packages/current/884_156692/official-code'),
         ('871_156598', source_root/'.tools/source-packages/current/871_156598/official-code')):
         manager = (directory/files[0]).read_text('utf8')
         result = (directory/files[2]).read_text('utf8')

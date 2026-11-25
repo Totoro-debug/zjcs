@@ -171,7 +171,7 @@ def build():
         else:
             meta.write_text("\n".join(line.rstrip() for line in meta.read_text(encoding="utf-8").splitlines())
                             + "\n", encoding="utf-8")
-    code_paths = [ROOT / ".tools/source-packages/official-code" / path for path in
+    code_paths = [ROOT / ".tools/source-packages/current/884_156692/official-code" / path for path in
                   ("client-source/TalkDialog.cs", "client-source/OptionTalkDialogPanel.cs",
                    "common-source/DialogInfoUtils.cs", "common-source/Common/DialogType.cs")]
     manifest = {"manifest": selected.version, "mapClassId": 11,

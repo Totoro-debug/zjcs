@@ -10,7 +10,7 @@ from official_map_codec import unpack
 from official_apk import ROOT
 import msgpack
 
-SOURCE=ROOT/'.tools/source-packages/official-code/common-source'
+SOURCE=ROOT/'.tools/source-packages/current/884_156692/official-code/common-source'
 
 
 def args(text):

@@ -27,7 +27,7 @@ def build(source_root):
     editor = Path('D:/Tool/Unity/Editor/Data')
     schema.generator.load_local_dll_folder(str(editor / 'Managed/UnityEngine'))
     assemblies = []
-    for path in sorted((source_root / '.tools/source-packages/official-code/managed/decoded').glob('*.dll')):
+    for path in sorted((source_root / '.tools/source-packages/current/884_156692/official-code/managed/decoded').glob('*.dll')):
         if not path.stem.startswith('UnityEngine') and path.stem != 'Unity.TextMeshPro':
             schema.generator.load_dll(path.read_bytes())
             assemblies.append(dict(path=path.relative_to(source_root).as_posix(), sha256=sha(path.read_bytes())))
@@ -122,7 +122,7 @@ def build(source_root):
     metadata(ROOT / SERVICE, 'MonoImporter')
     write(payload, (json.dumps(dict(manifest=apk.version, language='zh_CN', texts=texts), ensure_ascii=False, indent=2) + '\n').encode())
     for path, result in results: write(path, result)
-    code = {name: sha((source_root / '.tools/source-packages/official-code' / name).read_bytes()) for name in
+    code = {name: sha((source_root / '.tools/source-packages/current/884_156692/official-code' / name).read_bytes()) for name in
             ['framework-firstpass-source/MultiLanguageText.cs', 'framework-firstpass-source/MultiLanguageUI.cs',
              'framework-firstpass-source/Framework/LocalizationTextService.cs']}
     receipt = dict(format=1, manifest=apk.version, generator_sha256=sha(Path(__file__).read_bytes()),

@@ -119,11 +119,11 @@ def main():
     native['popup_timing'] = dict(
         behavior='Original PlayPlayable yields once after the show or hide duration before replacing the clip.',
         sha256={path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in timing_sources})
-    graph_sources = [ROOT / '.tools/source-packages/official-code/client-source/RunNode.cs',
-        ROOT / '.tools/source-packages/official-code/client-source/OptionDialogNode.cs',
-        ROOT / '.tools/source-packages/official-code/client-source/DialogNode.cs',
-        ROOT / '.tools/source-packages/official-code/client-source/OptionTalkDialogProxy.cs',
-        ROOT / '.tools/source-packages/official-code/client-source/StoryGraph.cs',
+    graph_sources = [ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/RunNode.cs',
+        ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/OptionDialogNode.cs',
+        ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/DialogNode.cs',
+        ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/OptionTalkDialogProxy.cs',
+        ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/StoryGraph.cs',
         ROOT / 'unity/Assets/Game/Runtime/Offline/Story/StoryModule.cs',
         ROOT / 'scripts/fixtures/home_story_graph_validation.cs']
     native['graph_connections'] = dict(

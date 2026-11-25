@@ -140,7 +140,7 @@ def build(output_dir: Path, make_package_manifest: bool = False) -> tuple[dict, 
     data_path.write_bytes(data_bytes)
 
     bundle = verify_bundle(apk)
-    code_root = WORKSPACE / ".tools/source-packages/official-code"
+    code_root = WORKSPACE / ".tools/source-packages/current/884_156692/official-code"
     constructor_paths = [
         code_root / "global-metadata.dat",
         code_root / "common-source/Common/Tables.cs",

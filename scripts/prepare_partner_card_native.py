@@ -429,7 +429,7 @@ class PartnerCardBinding:
         if data['manifest'] != self.recovery.apk.version:
             raise ValueError('Dynamic partner image configuration differs from selected source')
         self.inputs[rules.relative_to(ROOT).as_posix()] = sha(rules.read_bytes())
-        original = ROOT / '.tools/source-packages/official-code/framework-firstpass-source/ResourceLoaderExtensions.cs'
+        original = ROOT / '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/ResourceLoaderExtensions.cs'
         selected = ROOT / '.tools/source-packages/current' / data['manifest'] / 'official-code/framework-firstpass-source/ResourceLoaderExtensions.cs'
         if original.read_bytes() != selected.read_bytes() or '"Assets/Image/" + spriteName' not in original.read_text('utf-8-sig'):
             raise ValueError('Original sprite address prefix changed')
@@ -535,7 +535,7 @@ class PartnerCardBinding:
             original_sha256=sha(font_obj.get_raw_data()), font_data_sha256=sha(raw), output=target.as_posix(), guid=font_guid)
         for filename in ('MultiLanguageFontService.cs', 'FontAssetFontService.cs', 'MultiLanguageText.cs'):
             relative = Path('framework-firstpass-source') / filename
-            original = ROOT / '.tools/source-packages/official-code' / relative
+            original = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
             selected = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code' / relative
             if original.read_bytes() != selected.read_bytes():
                 raise ValueError('Original font source differs from selected version: ' + filename)

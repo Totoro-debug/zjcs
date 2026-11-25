@@ -6,7 +6,7 @@ import re
 import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / '.tools/source-packages/official-code'
+SOURCE = ROOT / '.tools/source-packages/current/884_156692/official-code'
 CODE = ROOT / 'unity/Assets/Game/Runtime/Official/BattleBgm'
 RECEIPT = ROOT / 'assets/reference/battle-animation/bgm-runtime-source-manifest.json'
 

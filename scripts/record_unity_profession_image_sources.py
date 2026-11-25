@@ -17,7 +17,7 @@ def build():
     ports = [dict(source=record(code / (name + ".cs")), runtime=record(runtime / (name + ".cs")),
         meta=record(runtime / (name + ".cs.meta"))) for name in names]
     image = ROOT / ".tools/source-packages/commerce-native/libil2cpp-restored.bin"
-    metadata = ROOT / ".tools/source-packages/official-code/global-metadata.dat"
+    metadata = ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat"
     if record(image)["sha256"] != "8e49906e085ba3819c4b47fd3bd12dcdd594ff0fcc75d418a87ac35a4566305b":
         raise ValueError("Original IL2CPP image changed")
     if record(metadata)["sha256"] != "58884b94b56ef35665f44d3f186fce8b8c854cf3bab0a74e4733a18b6a9175b4":

@@ -151,7 +151,7 @@ def build():
     for name, constructor in mapping.items():
         if not name.startswith(('legion_', 'stage_legion')) and name != 'achievement':
             continue
-        path = ROOT / '.tools/source-packages/official-data' / (name + '.g.bytes')
+        path = ROOT / '.tools/source-packages/current/884_156692/official-data' / (name + '.g.bytes')
         raw = path.read_bytes()
         tables[name] = c.table(raw, constructor)
         records[name] = {'text_asset': name + '.g', 'bytes': len(raw), 'consumed_bytes': len(raw),

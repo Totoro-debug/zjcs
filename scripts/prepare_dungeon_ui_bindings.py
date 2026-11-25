@@ -397,7 +397,7 @@ def private_matching_binding(apk, schemas, root):
         if not reference_path.exists() and reference['path'].startswith('.tools/source-packages/current/'):
             _, _, relative = reference['path'].partition('/official-code/')
             candidates = [ROOT / '.tools/source-packages/current' / VERSION / 'official-code' / relative,
-                          ROOT / '.tools/source-packages/official-code' / relative]
+                          ROOT / '.tools/source-packages/current/884_156692/official-code' / relative]
             reference_path = next((candidate for candidate in candidates
                                    if candidate.exists() and recorded_file_sha256(candidate) == reference['sha256']),
                                   reference_path)

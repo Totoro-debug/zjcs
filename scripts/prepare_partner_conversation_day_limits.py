@@ -16,7 +16,7 @@ def main():
 
     def selected(name, signature, diagnostics=0):
         relative = 'common-source/Common/' + name + '.cs'
-        path = ROOT / '.tools/source-packages/official-code' / relative
+        path = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
         raw = path.read_bytes()
         if raw != (ROOT / '.tools/source-packages/current' / version / 'official-code' / relative).read_bytes():
             raise ValueError('Selected original day-limit source differs: ' + name)
@@ -37,7 +37,7 @@ def main():
     player = player.replace('TimeUtils.GetDailyResetTimeFromDateWithOffset', 'GetDailyResetTimeFromDateWithOffset')
     player = player.replace('Parsers.GameSettings.NpcDialogueDayLimit', 'limit')
     relative = 'common-source/Common/NpcDialogueDayLimitRecordData.cs'
-    record_source = ROOT / '.tools/source-packages/official-code' / relative
+    record_source = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
     if record_source.read_bytes() != (ROOT / '.tools/source-packages/current' / version / 'official-code' / relative).read_bytes():
         raise ValueError('Selected original day-limit record differs')
     inputs[record_source.relative_to(ROOT).as_posix()] = sha(record_source.read_bytes())

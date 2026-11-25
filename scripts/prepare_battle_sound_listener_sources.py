@@ -88,7 +88,7 @@ def main():
 
     # The existing original map port already contains this exact client body.
     follow = ROOT / 'unity/Assets/Game/Runtime/Official/World/NativeEnvironment/FollowSceneActiveSelfController.cs'
-    follow_source = ROOT / '.tools/source-packages/official-code/client-source/FollowSceneActiveSelfController.cs'
+    follow_source = ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/FollowSceneActiveSelfController.cs'
     body = follow_source.read_text(encoding='utf-8-sig').strip()
     if body not in follow.read_text(encoding='utf-8'):
         raise ValueError('Inspect changed existing original scene activation implementation')

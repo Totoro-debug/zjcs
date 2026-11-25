@@ -11,7 +11,7 @@ DEST = ROOT / "unity/Assets/Game/Runtime/Official/World/NativeText"
 
 def build():
     image = ROOT / ".tools/source-packages/commerce-native/libil2cpp-restored.bin"
-    metadata = ROOT / ".tools/source-packages/official-code/global-metadata.dat"
+    metadata = ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat"
     receipt = json.loads((ROOT / "assets/reference/official-map/map13-text-effects-code-source-manifest.json").read_bytes())
     if receipt["manifest"] != "871_156598":
         raise ValueError("Original TMP effects require the pinned 871_156598 source receipt.")

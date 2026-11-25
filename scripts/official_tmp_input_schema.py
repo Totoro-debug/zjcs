@@ -10,7 +10,7 @@ from official_metadata import Metadata
 
 @lru_cache(maxsize=1)
 def encoding_evidence():
-    path = ROOT / ".tools/source-packages/official-code/global-metadata.dat"
+    path = ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat"
     raw = path.read_bytes()
     metadata = Metadata(raw)
     owner = next(row for row in metadata.types

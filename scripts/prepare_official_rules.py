@@ -33,7 +33,7 @@ def build():
     mapping = {m[2]:m[1] for m in re.finditer(r'new (Tb\w+)\(loader\("([^"]+)"\)\)', c.source('Tables'))}
     output, records, missing = {}, {}, {}
     for name in TABLES:
-        path = ROOT/'.tools/source-packages/official-data'/(name+'.g.bytes')
+        path = ROOT/'.tools/source-packages/current/884_156692/official-data'/(name+'.g.bytes')
         if name not in mapping or not path.exists():
             missing[name] = 'Not in packaged table set'
             continue
@@ -49,7 +49,7 @@ def build():
     (art/'rules.json').write_text(json.dumps(output,ensure_ascii=False,separators=(',',':')),encoding='utf8')
     reference = ROOT/'assets/reference/official-city'
     reference.mkdir(exist_ok=True)
-    code_root = ROOT/'.tools/source-packages/official-code'
+    code_root = ROOT/'.tools/source-packages/current/884_156692/official-code'
     code_files = ['client-source/ExploreBossTeamDialog.cs',
         'client-source/ActivityFestivalBossPanelBattleContent.cs',
         'client-source/ActivityFestivalBossPanelDetailContent.cs',

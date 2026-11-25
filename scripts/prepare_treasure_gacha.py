@@ -624,9 +624,9 @@ def extract_machine_states(source_ui, codex_ui):
         return result
 
     raw = component.get_raw_data()
-    source_path = ROOT / ".tools/source-packages/official-code/client-source/GachaponMachineView.cs"
+    source_path = ROOT / ".tools/source-packages/current/884_156692/official-code/client-source/GachaponMachineView.cs"
     fitter_raw = fitter_component.get_raw_data()
-    fitter_source = ROOT / ".tools/source-packages/official-code/client-source/AspectRatioScaleFitterForGachaponMachine.cs"
+    fitter_source = ROOT / ".tools/source-packages/current/884_156692/official-code/client-source/AspectRatioScaleFitterForGachaponMachine.cs"
     fitter_target = object_path(PPtr(**fitter_fields["mSubTransform"], assetsfile=fitter_component.assets_file))
     if fitter_target != owner_path:
         raise ValueError("The pinned gacha aspect-ratio fitter targets an unexpected object: " + fitter_target)

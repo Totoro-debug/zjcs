@@ -81,7 +81,7 @@ def build():
         path.with_name(path.name + '.meta').write_text('fileFormatVersion: 2\nguid: ' + hashlib.md5(('zjcs-profession-ui-' + path.stem).encode()).hexdigest() + '\n', encoding='utf-8')
     from read_official_native import NativeMethods
     image = ROOT / '.tools/source-packages/commerce-native/libil2cpp-restored.bin'
-    metadata = ROOT / '.tools/source-packages/official-code/global-metadata.dat'
+    metadata = ROOT / '.tools/source-packages/current/884_156692/official-code/global-metadata.dat'
     native = NativeMethods(image, metadata)
     methods = []
     for name in ('MessagePipe.CancellationTokenDisposable..ctor', 'MessagePipe.CancellationTokenDisposable.Dispose'):

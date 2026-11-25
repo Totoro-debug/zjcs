@@ -55,12 +55,12 @@ def build(work):
         path = code / 'common-source/Common' / (name + '.cs')
         if not path.is_file():
             path = code / 'common-source/Common.LubanGen' / (name + '.cs')
-        if path.read_bytes() != (ROOT / '.tools/source-packages/official-code' / path.relative_to(code)).read_bytes():
+        if path.read_bytes() != (ROOT / '.tools/source-packages/current/884_156692/official-code' / path.relative_to(code)).read_bytes():
             raise ValueError('Working official constructor differs: ' + name)
         sources[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
     for name in ('LevelPropBinaryReader', 'LevelPropParser', 'NpcInfoParser', 'NpcFriendshipLevelInfoParser', 'PropType'):
         path = code / 'common-source/Common' / (name + '.cs')
-        if path.read_bytes() != (ROOT / '.tools/source-packages/official-code' / path.relative_to(code)).read_bytes():
+        if path.read_bytes() != (ROOT / '.tools/source-packages/current/884_156692/official-code' / path.relative_to(code)).read_bytes():
             raise ValueError('Working official property source differs: ' + name)
         sources[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
     for path in (code / 'global-metadata.dat', ROOT / 'scripts/official_tables.py',

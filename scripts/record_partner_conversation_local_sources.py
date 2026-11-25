@@ -15,7 +15,7 @@ def main():
     sources = {}
     for name in ('PlayerNpcDialogueData', 'PlayerNpcDialogueDataWrap'):
         relative = 'common-source/Common/' + name + '.cs'
-        path = ROOT / '.tools/source-packages/official-code' / relative
+        path = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
         if path.read_bytes() != (ROOT / '.tools/source-packages/current' / version / 'official-code' / relative).read_bytes():
             raise ValueError('Selected conversation source differs: ' + name)
         sources[path.relative_to(ROOT).as_posix()] = sha(path)

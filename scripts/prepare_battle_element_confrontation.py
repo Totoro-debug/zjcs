@@ -56,7 +56,7 @@ def build(output_root=ROOT):
             'DamageResultParameter.cs', 'BattleFormulaHandler.cs', 'ElementType.cs']
     code_inputs = []
     for version, directory in (
-        ('854_156383', ROOT / '.tools/source-packages/official-code'),
+        ('854_156383', ROOT / '.tools/source-packages/current/884_156692/official-code'),
         ('871_156598', ROOT / '.tools/source-packages/current/871_156598/official-code')):
         code_inputs.append({'manifest': version, 'files': [
             {'path': (directory/'common-source/Common'/name).relative_to(ROOT).as_posix(),

@@ -120,7 +120,7 @@ class PartnerConfirmBinding(PartnerInputBinding):
             receipt['inputs'][item.relative_to(ROOT).as_posix()] = sha(item.read_bytes())
         for relative in ('client-source/ConfirmDialog.cs', 'client-source/AutoAlignForSingleMultiLineTextContent.cs',
                          'client-source/AutoAlignForSingleMultiLineText.cs', 'client-source/LockMaskWithTime.cs'):
-            item = ROOT / '.tools/source-packages/official-code' / relative
+            item = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
             selected = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code' / relative
             if item.read_bytes() != selected.read_bytes():
                 raise ValueError('Selected confirm dialog source differs: ' + relative)

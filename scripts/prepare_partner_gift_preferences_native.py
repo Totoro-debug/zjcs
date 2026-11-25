@@ -112,7 +112,7 @@ class PartnerGiftPreferencesBinding(PartnerGiftBinding):
         if data['manifest'] != self.recovery.apk.version:
             raise ValueError('Gift configuration version differs')
         self.inputs[rules.relative_to(ROOT).as_posix()] = sha(rules.read_bytes())
-        source = ROOT / '.tools/source-packages/official-code/framework-firstpass-source/ResourceLoaderExtensions.cs'
+        source = ROOT / '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/ResourceLoaderExtensions.cs'
         selected = ROOT / '.tools/source-packages/current' / data['manifest'] / 'official-code/framework-firstpass-source/ResourceLoaderExtensions.cs'
         if source.read_bytes() != selected.read_bytes() or '"Assets/Image/" + spriteName' not in source.read_text('utf-8-sig'):
             raise ValueError('Original sprite address prefix changed')
@@ -178,13 +178,13 @@ class PartnerGiftPreferencesBinding(PartnerGiftBinding):
         receipt['script_bindings'] = {name: row for name, row in receipt['script_bindings'].items() if row['pointer']['guid'] in used_scripts}
         for filename in ('ItemIconManager.cs', 'IconConfigPool.cs', 'ItemIconManagerConfig.cs', 'ItemIconAttachmentManager.cs'):
             relative = Path('client-source') / filename
-            source = ROOT / '.tools/source-packages/official-code' / relative
+            source = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
             selected = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code' / relative
             if source.read_bytes() != selected.read_bytes():
                 raise ValueError('Selected manager implementation differs: ' + filename)
             receipt['inputs'][source.relative_to(ROOT).as_posix()] = sha(source.read_bytes())
         for relative in (Path('common-source/Common/ItemInfo.cs'), Path('common-source/ItemComparerBase.cs')):
-            source = ROOT / '.tools/source-packages/official-code' / relative
+            source = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
             selected = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code' / relative
             if source.read_bytes() != selected.read_bytes():
                 raise ValueError('Selected item semantics differ: ' + str(relative))

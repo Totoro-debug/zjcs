@@ -18,7 +18,7 @@ PUZZLE_41001_KEYS = (
 
 
 def task_growth_keys():
-    source=ROOT/'.tools/source-packages/official-code/common-source/Common/SubRank.cs'
+    source=ROOT/'.tools/source-packages/current/884_156692/official-code/common-source/Common/SubRank.cs'
     names=re.findall(r'^\s*(\w+)\s*,?\s*$',source.read_text(encoding='utf8'),re.M)
     return ['condition_SubRank_desc','jump_to_home_tip0']+['SubRank.'+name for name in names],source
 

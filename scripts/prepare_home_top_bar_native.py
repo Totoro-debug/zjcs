@@ -164,7 +164,7 @@ class HomeTopBarBinding(HomeBottomBarBinding):
             scope='Selected original top-bar native resources. Production home binding and Play Mode validation remain required.')
         for name in ('TopBarHandler', 'TopBarItem', 'MePlayerItemUI', 'CurrencyItemData', 'PlayerItemUIItemIdProvider'):
             current = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code/client-source' / (name+'.cs')
-            previous = ROOT / '.tools/source-packages/official-code/client-source' / (name+'.cs')
+            previous = ROOT / '.tools/source-packages/current/884_156692/official-code/client-source' / (name+'.cs')
             if current.read_bytes() != previous.read_bytes():
                 raise ValueError('Recheck shared original top-bar implementation: '+name)
             receipt['inputs'][current.relative_to(ROOT).as_posix()] = sha(current.read_bytes())

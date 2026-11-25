@@ -42,6 +42,6 @@ Unity 已接入装备实例、属性来源、本地存档事务和部分页面�
 
 [OfflineEquipmentProfile.cs](../../unity/Assets/Game/Runtime/Offline/Equipment/OfflineEquipmentProfile.cs)、[OfflineEquipmentOperations.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineEquipmentOperations.cs)、[OfficialEquipmentGenerator.cs](../../unity/Assets/Game/Runtime/Offline/Equipment/OfficialEquipmentGenerator.cs)、[OfflineEquipmentPropSource.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineEquipmentPropSource.cs)。
 
-[PlayerEquipDataExt](../../.tools/source-packages/official-code/common-source/Common/PlayerEquipDataExt.cs)、[EquipAttributeInfoParser](../../.tools/source-packages/official-code/common-source/Common/EquipAttributeInfoParser.cs)、[BattleFormulaHandler](../../.tools/source-packages/official-code/common-source/Common/BattleFormulaHandler.cs)。
+[PlayerEquipDataExt](../../.tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerEquipDataExt.cs)、[EquipAttributeInfoParser](../../.tools/source-packages/current/884_156692/official-code/common-source/Common/EquipAttributeInfoParser.cs)、[BattleFormulaHandler](../../.tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormulaHandler.cs)。
 
 装备词条筛选与替换参数的来源及适配入口见[战斗规则来源](../../assets/reference/battle-rules/equipment-selection-source-manifest.json)和[词条替换来源](../../assets/reference/battle-rules/equipment-term-source-manifest.json)。

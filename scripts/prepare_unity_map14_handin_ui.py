@@ -71,7 +71,7 @@ def build():
         folders=[];p=base
         while p!=ROOT/'unity/Assets':folders.append(p);p=p.parent
         for p in reversed(folders):p.mkdir(parents=True,exist_ok=True);meta(p,True)
-    code=ROOT/'.tools/source-packages/official-code'
+    code=ROOT/'.tools/source-packages/current/884_156692/official-code'
     used={'client-source':['DialogHandInItemDialog','HandInItemNode','ItemIcon','ItemProgress','AwardPanelLayoutElement','MaintainGlobalScaleUI','MaintainGlobalScale','UIUtils','UIBloomGroup','BgDialogElement','CountRedDotImage','CountRedDotBase','UIBloomGroupBase'],
           'framework-source':['PreviewTool','StateSwitcher','StateGameObjectConfig'],
           'framework-firstpass-source':['PopupWindow','MirrorImage','NoDrawingRayCast','ButtonSound','PopupWindowSound','MultiLanguageText']}

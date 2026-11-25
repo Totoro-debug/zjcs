@@ -193,7 +193,7 @@ class PartnerInputBinding(PartnerRosterBinding):
                          'framework-firstpass-source/WindowMaskEffectBase.cs',
                          'framework-firstpass-source/Framework.UI/WindowContainer.cs',
                          'framework-firstpass-source/PopupWindow.cs'):
-            item = ROOT / '.tools/source-packages/official-code' / relative
+            item = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
             selected = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code' / relative
             if item.read_bytes() != selected.read_bytes():
                 raise ValueError('Selected input dialog source differs: ' + relative)

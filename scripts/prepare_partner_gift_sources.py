@@ -15,13 +15,13 @@ def main():
     version = selection['active']
     inputs = {}
     for name in SOURCE_FILES:
-        path = ROOT / '.tools/source-packages/official-code' / name
+        path = ROOT / '.tools/source-packages/current/884_156692/official-code' / name
         archived = ROOT / '.tools/source-packages/current' / version / 'official-code' / name
         if path.read_bytes() != archived.read_bytes():
             raise ValueError('Working official source does not match active source: ' + name)
         inputs[path.relative_to(ROOT).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
     target = ROOT / 'assets/reference/partner-gift-rules-source-manifest.json'
-    data_paths = [ROOT / '.tools/source-packages/official-data' / (name + '.g.bytes')
+    data_paths = [ROOT / '.tools/source-packages/current/884_156692/official-data' / (name + '.g.bytes')
                   for name in ('npc', 'npc_gift', 'npc_unlock_item', 'npc_friendship_level', 'game_settings')]
     data_paths += [ROOT / 'unity/Assets/Official/Character/character-progression.json',
                    ROOT / 'unity/Assets/Game/Resources/Official/Progression/mainline-tasks.json']

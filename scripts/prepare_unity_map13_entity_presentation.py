@@ -70,7 +70,7 @@ def build():
     parser_base = code / "common-source/Common/LubanCsvParser.cs"
     inputs.append(dict(path=source_path(parser_base), sha256=sha(parser_base.read_bytes())))
     native_path = ROOT / ".tools/source-packages/commerce-native/libil2cpp-restored.bin"
-    metadata_path = ROOT / ".tools/source-packages/official-code/global-metadata.dat"
+    metadata_path = ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat"
     native = NativeMethods(native_path, metadata_path)
     address, method_index = native.by_name["GConfig.ParserBase.PostParse"]
     body = native.image[address:address + 4]

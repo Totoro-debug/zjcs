@@ -69,7 +69,7 @@ class PartnerGiftBinding(PartnerCardBinding):
                 ('NpcFriendshipPropItemGroup', self.recovery.outputs[1][2])]
 
     def gradient_evidence(self):
-        folder = ROOT / '.tools/source-packages/official-code/aot-metadata'
+        folder = ROOT / '.tools/source-packages/current/884_156692/official-code/aot-metadata'
         receipt_path = folder / 'source-manifest.json'
         receipt = json.loads(receipt_path.read_bytes())
         if receipt['manifest'] != self.recovery.apk.version:

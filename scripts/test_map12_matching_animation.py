@@ -21,7 +21,7 @@ def main():
     animation = next(pair.component.deref() for pair in host.m_Component if pair.component.type.name == 'Animation')
     clip = PPtr(**animation.read_typetree()['m_Animation'], assetsfile=animation.assets_file).read()
     assert clip.m_Legacy and clip.m_Name == 'DailyDungeonDetailContent_GameMatch_Show' and clip.m_SampleRate == 60
-    engine = EngineMethods(ROOT/'.tools/source-packages/official-code/libunity.so')
+    engine = EngineMethods(ROOT/'.tools/source-packages/current/884_156692/official-code/libunity.so')
     assert engine.by_name['UnityEngine.AnimationClip::get_length'][0] == 0x5755e0
     actual = native_length(engine.image, clip, [event.time for event in clip.m_Events])
     # The existing native fixture supplies float curves and events. Verify that every

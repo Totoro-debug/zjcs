@@ -121,7 +121,7 @@ def build():
     sources = ['client-source/ChangeAppearancePanel.cs', 'client-source/PlayerCostMoneyContent.cs',
                'common-source/PlayerServiceProxyImpl.cs', 'client-source/AppearanceSetContext.cs',
                'client-source/ImageLocator.cs', 'client-source/MoneyUtils.cs', 'client-source/ItemDetailDialog.cs']
-    source_root = ROOT / '.tools/source-packages/official-code'
+    source_root = ROOT / '.tools/source-packages/current/884_156692/official-code'
     receipt = dict(manifest='854_156383', prefab=panel['source'], inputs=e.inputs, resources=e.records,
         language_sources=language_sources, logic_inputs={str((source_root/n).relative_to(ROOT).as_posix()): sha(source_root/n) for n in sources},
         reused_sources={'assets/official/ui.json':sha(ART/'ui.json'),'assets/official/icons.json':sha(ART/'icons.json')},

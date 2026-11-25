@@ -26,7 +26,7 @@ def main():
         'common-source/Common/PlayerItemDataWrap.cs': ['public bool CanExpire()', 'public Quality GetQuality()'],
     }
     for name, signatures in declarations.items():
-        source = ROOT / '.tools/source-packages/official-code' / name
+        source = ROOT / '.tools/source-packages/current/884_156692/official-code' / name
         canonical = ROOT / '.tools/source-packages/current' / version / 'official-code' / name
         raw = source.read_bytes()
         if raw != canonical.read_bytes():

@@ -332,7 +332,7 @@ def build():
                   'skeleton_renderers': skeleton_renderers, 'player_renderers': player_renderers,
                   'model_bindings': {k: dict(v, component=animation_components.get(v.get('animator'), {})) for k, v in model_bindings.items()},
                   'player_prefabs': read_player_renderers(e.apk,e)})
-    source = ROOT / '.tools/source-packages/official-code/client-source'
+    source = ROOT / '.tools/source-packages/current/884_156692/official-code/client-source'
     names = ['MyPlayableAnimator', 'MyPlayableOverrideAnimator', 'MyPlayableAnimationControllerPause', 'MyPlayableMaterialProperty',
              'MyPlayableFollowSpinePart', 'MyPlayableActiveBone', 'MyPlayableCharacterPartVisibility',
              'MyPlayableModifyPlayerAppearance', 'MyPlayableCameraMove', 'MyPlayableGroundEffect',
@@ -351,7 +351,7 @@ def build():
                      'PlayableMaterialPropertyStencilProvider.cs']:
         path = source / relative
         if path.exists():code[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
-    common_source = ROOT / '.tools/source-packages/official-code/common-source/Common'
+    common_source = ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common'
     common_code = {name: hashlib.sha256((common_source / name).read_bytes()).hexdigest()
                    for name in ['GridGroundComponentInfo.cs','GroundType.cs','BattleFormulaHandler.cs']
                    if (common_source / name).exists()}
@@ -365,9 +365,9 @@ def build():
         code[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
     for path in source.glob('MyFightHit*.cs'):
         code[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
-    framework = ROOT / '.tools/source-packages/official-code/gameframework-animation-source'
+    framework = ROOT / '.tools/source-packages/current/884_156692/official-code/gameframework-animation-source'
     framework_code = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in framework.glob('*.cs')}
-    assembly = ROOT / '.tools/source-packages/official-code/managed/decoded/GameFramework.Runtime.dll'
+    assembly = ROOT / '.tools/source-packages/current/884_156692/official-code/managed/decoded/GameFramework.Runtime.dll'
     if assembly.exists():framework_code['GameFramework.Runtime.dll'] = hashlib.sha256(assembly.read_bytes()).hexdigest()
     save(ROOT / 'assets/reference/battle-animation/source-manifest.json', {
         'manifest': e.apk.version, 'inputs': e.source_records, 'schemas': e.schemas.records,

@@ -68,7 +68,7 @@ def extract_astrological(e, constructors, tables, sources, panels, text, localiz
         # and the pinned C# serialized field order; UnityPy still checks full bytes.
         from official_apk import ROOT
         from copy import deepcopy
-        source=(ROOT / '.tools/source-packages/official-code/client-source' / (cls+'.cs')).read_text('utf-8-sig')
+        source=(ROOT / '.tools/source-packages/current/884_156692/official-code/client-source' / (cls+'.cs')).read_text('utf-8-sig')
         schemas.tree('Assembly-CSharp','AstrologicalDestinyEntryPanel')
         schemas.tree('Assembly-CSharp','AstrologicalContractContent')
         entry=schemas.cache['Assembly-CSharp:AstrologicalDestinyEntryPanel']

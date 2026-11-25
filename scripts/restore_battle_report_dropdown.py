@@ -59,7 +59,7 @@ def build(source_root):
     schemas.generator = TypeTreeGenerator('2022.3.57f1', generator='AssetsTools')
     editor = Path('D:/Tool/Unity/Editor/Data')
     schemas.generator.load_local_dll_folder(str(editor / 'Managed/UnityEngine'))
-    for path in sorted((source_root / '.tools/source-packages/official-code/managed/decoded').glob('*.dll')):
+    for path in sorted((source_root / '.tools/source-packages/current/884_156692/official-code/managed/decoded').glob('*.dll')):
         if not path.stem.startswith('UnityEngine') and path.stem != 'Unity.TextMeshPro':
             schemas.generator.load_dll(path.read_bytes())
     for path in [ROOT / ('unity/Library/ScriptAssemblies/' + name + '.dll') for name in ['UnityEngine.UI', 'Unity.TextMeshPro']] + [
@@ -267,7 +267,7 @@ def build(source_root):
     source_paths += ['framework-source/' + name + '.cs' for name in ['StateSwitcher', 'StateConfigValue', 'StateGameObjectConfig', 'StateGameObjectData', 'StateUIColorConfig', 'StateUIColorData', 'StateKVMatch', 'IStateConfig']]
     source_paths += ['framework-firstpass-source/' + name + '.cs' for name in ['MultiLanguageText', 'MultiLanguageUI', 'MonoKeyValuePair', 'Common/ITextProcessor', 'Framework/LocalizationTextService', 'MultiLanguageFontService']]
     for name in source_paths:
-        path = source_root / '.tools/source-packages/official-code' / name
+        path = source_root / '.tools/source-packages/current/884_156692/official-code' / name
         code[path.relative_to(source_root).as_posix()] = sha(path.read_bytes())
     baseline = json.loads((ROOT / 'assets/reference/battle-hud/report-panels-source-manifest.json').read_bytes())
     reused_animations = []

@@ -150,7 +150,7 @@ def build():
     mapping_raw = json_bytes(mapping)
     write_generated(mapping_path, mapping_raw, previous)
     write_meta(mapping_path, "TextScriptImporter")
-    code = [ROOT / ".tools/source-packages/official-code/client-source" / (name + ".cs")
+    code = [ROOT / ".tools/source-packages/current/884_156692/official-code/client-source" / (name + ".cs")
             for name in ("MapBgmHandler", "BgmManager")]
     manifest = {"manifest": selected.version, "mapClassId": 11,
                 "inputs": {"apkCheckedFirst": {"entry": entry, "packaged": packaged},

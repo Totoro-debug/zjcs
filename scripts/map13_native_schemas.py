@@ -66,7 +66,7 @@ def node(kind, name, level):
 
 @lru_cache(maxsize=1)
 def light_metadata():
-    path = ROOT / ".tools/source-packages/official-code/global-metadata.dat"
+    path = ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat"
     raw = path.read_bytes()
     if hashlib.sha256(raw).hexdigest() != "58884b94b56ef35665f44d3f186fce8b8c854cf3bab0a74e4733a18b6a9175b4":
         raise ValueError("Light2D metadata differs from the pinned official APK")
@@ -102,7 +102,7 @@ def structure(kind, name, level, fields):
 @lru_cache(maxsize=1)
 def metadata_types():
     light_metadata()  # Validate the pinned APK metadata hash before reuse.
-    return Metadata((ROOT / ".tools/source-packages/official-code/global-metadata.dat").read_bytes()).types
+    return Metadata((ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat").read_bytes()).types
 
 
 def verify_fields(name, fields):

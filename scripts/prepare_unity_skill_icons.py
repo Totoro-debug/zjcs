@@ -119,7 +119,7 @@ def restore():
         text_schemas.generator.load_dll(candidate.read_bytes())
     for framework in ("D:/Tool/Unity/Editor/Data/NetStandard/ref/2.1.0/netstandard.dll", "D:/Tool/Unity/Editor/Data/MonoBleedingEdge/lib/mono/4.5/mscorlib.dll"):
         text_schemas.generator.load_dll(Path(framework).read_bytes())
-    text_schemas.generator.load_dll((ROOT / ".tools/source-packages/official-code/managed/decoded/LoopScrollRect.Runtime.dll").read_bytes())
+    text_schemas.generator.load_dll((ROOT / ".tools/source-packages/current/884_156692/official-code/managed/decoded/LoopScrollRect.Runtime.dll").read_bytes())
     from prepare_skill_detail_data import restore_grid
     restore_grid(reader, text_schemas, data)
     data["item"] = ui["item"]
@@ -291,17 +291,17 @@ def restore():
     for row in data["auxiliary_data"]["entry"]:
         auxiliary_keys.update("entry_" + str(row["Id"]) + suffix for suffix in ("_name", "_desc"))
         uris.update(row[field] for field in ("Icon_uri", "Bg_uri") if row[field])
-    rank_source = ROOT / ".tools/source-packages/official-code/common-source/Common/Rank.cs"
+    rank_source = ROOT / ".tools/source-packages/current/884_156692/official-code/common-source/Common/Rank.cs"
     rank_names = re.findall(r"^\s*([A-Za-z0-9]+)\s*,?\s*$", rank_source.read_text(encoding="utf-8-sig"), re.M)
     data["auxiliary_data"]["rank_names"] = rank_names
-    item_type_source = ROOT / ".tools/source-packages/official-code/common-source/Common/ItemType.cs"
+    item_type_source = ROOT / ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemType.cs"
     item_type_names = {number: name for name, number in re.findall(r"^\s*(\w+)\s*=\s*(\d+)\s*,?\s*$", item_type_source.read_text(encoding="utf-8-sig"), re.M)}
     data["auxiliary_data"]["item_type_names"] = item_type_names
-    source_type_path = ROOT / ".tools/source-packages/official-code/common-source/Common/ItemSourceType.cs"
+    source_type_path = ROOT / ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemSourceType.cs"
     source_type_names = re.findall(r"^\s*([A-Za-z0-9]+)\s*,?\s*$", source_type_path.read_text(encoding="utf-8-sig"), re.M)
     data["auxiliary_data"]["item_source_type_names"] = {str(index): name for index, name in enumerate(source_type_names)}
     auxiliary_keys.update("ItemSourceType." + name for name in source_type_names)
-    material_type_path = ROOT / ".tools/source-packages/official-code/common-source/Common/MaterialDungeonType.cs"
+    material_type_path = ROOT / ".tools/source-packages/current/884_156692/official-code/common-source/Common/MaterialDungeonType.cs"
     material_type_names = re.findall(r"^\s*([A-Za-z0-9]+)\s*,?\s*$", material_type_path.read_text(encoding="utf-8-sig"), re.M)
     data["auxiliary_data"]["material_dungeon_type_names"] = {str(index): name for index, name in enumerate(material_type_names)}
     auxiliary_keys.update("ItemSourceType.NormalMaterial_" + name for name in material_type_names)
@@ -332,7 +332,7 @@ def restore():
     data["auxiliary_inputs"]["plan_name_rules"] = []
     for relative in ("common-source/Common/CJK.cs", "common-source/Common/Formula.cs", "common-source/Common/FormulaHandler.cs",
                      "common-source/Common/ErrCode.cs", "client-source/CharacterPanelSkillPlan.cs", "client-source/ContentModerationClickMask.cs"):
-        path = ROOT / ".tools/source-packages/official-code" / relative
+        path = ROOT / ".tools/source-packages/current/884_156692/official-code" / relative
         data["auxiliary_inputs"]["plan_name_rules"].append({"path": path.relative_to(ROOT).as_posix(), "sha256": digest(path)})
     data["auxiliary_data"]["texts"] = {}
     for key in sorted(auxiliary_keys):
@@ -442,7 +442,7 @@ def restore():
     font_config = json.loads(font_config_object.read().m_Script)
     assert font_config["RegionFontAssetDict"]["CN"] == {"Default": "FZY4K SDF - dynamic", "Fallbacks": []}
     assert font_config["FontAssetDict"]["zh_CN"] == "FZY4K SDF - dynamic"
-    language_code = ROOT / ".tools/source-packages/official-code/framework-firstpass-source"
+    language_code = ROOT / ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source"
     data["localized_font"] = {
         "source": apk.provenance(font_config_object),
         "sha256": hashlib.sha256(font_config_object.get_raw_data()).hexdigest(),

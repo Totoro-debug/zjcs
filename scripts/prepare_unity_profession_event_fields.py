@@ -119,7 +119,7 @@ def restore(proof_path):
     if checked != set(originals):
         raise ValueError("Not every original profession event trigger was restored: " + repr(sorted(set(originals) - checked)))
     native = NativeMethods(ROOT / ".tools/source-packages/commerce-native/libil2cpp-restored.bin",
-        ROOT / ".tools/source-packages/official-code/global-metadata.dat")
+        ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat")
     address, method_index = native.by_name["AkTriggerHandler.OnEnable"]
     # The native handler checks this exact List<int> value before HandleEvent(null).
     words = struct.unpack_from("<2I", native.image, 0x794a7c4)

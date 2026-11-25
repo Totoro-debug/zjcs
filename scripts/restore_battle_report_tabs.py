@@ -195,13 +195,13 @@ def build(source_root, ugui, netstandard):
                             'previous_sha256': record['sha256'], 'restored_components': restored})
     code = []
     for name in (*TAB_CLASSES, 'TabTransition'):
-        original = source_root / '.tools/source-packages/official-code/client-source/UnityEngine.UI.Ext' / (name + '.cs')
+        original = source_root / '.tools/source-packages/current/884_156692/official-code/client-source/UnityEngine.UI.Ext' / (name + '.cs')
         migrated = ROOT / SCRIPT_PATH / ('World' + name + '.cs')
         code.append({'original': original.relative_to(source_root).as_posix(), 'original_sha256': digest(original.read_bytes()),
                      'path': migrated.relative_to(ROOT).as_posix(), 'sha256': digest(migrated.read_bytes()),
                      'meta_sha256': digest(migrated.with_name(migrated.name + '.meta').read_bytes())})
     for name, migrated_name in [('NoDrawingRayCast', 'NoDrawingRayCast'), ('SafeArea', 'WorldSafeArea')]:
-        original = source_root / '.tools/source-packages/official-code/framework-firstpass-source' / (name + '.cs')
+        original = source_root / '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source' / (name + '.cs')
         migrated = ROOT / SCRIPT_PATH / (migrated_name + '.cs')
         code.append({'original': original.relative_to(source_root).as_posix(), 'original_sha256': digest(original.read_bytes()),
                      'path': migrated.relative_to(ROOT).as_posix(), 'canonical_lf_sha256': digest(migrated.read_bytes().replace(b'\r\n', b'\n')),

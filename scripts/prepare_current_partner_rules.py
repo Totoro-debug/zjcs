@@ -145,7 +145,7 @@ def build(work):
         path = code / 'common-source/Common' / (name + '.cs')
         if not path.is_file() or name in ('Pos2d', 'Vector2', 'Vector3'):
             path = code / 'common-source/Common.LubanGen' / (name + '.cs')
-        if path.read_bytes() != (ROOT / '.tools/source-packages/official-code' / path.relative_to(code)).read_bytes():
+        if path.read_bytes() != (ROOT / '.tools/source-packages/current/884_156692/official-code' / path.relative_to(code)).read_bytes():
             raise ValueError('Working official source differs: ' + name)
         sources[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
     metadata_path = code / 'global-metadata.dat'

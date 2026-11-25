@@ -28,7 +28,7 @@ def main():
     rules_path = ROOT / 'unity/Assets/Official/Combat/rules.json'
     limits = json.loads(rules_path.read_bytes())['game_settings']['Battle']['ShareStatusMaxStacks']
     assert limits == {'24029': 10, '25300': 5}
-    code = ROOT / '.tools/source-packages/official-code/common-source/Common'
+    code = ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common'
     output = dict(manifest='884_156692', entity_evidence=identity(proof_path),
         configuration_inputs=[identity(entities_path), identity(rules_path)], entities=selected,
         limits=limits, original_implementations=[identity(code / (name + '.cs')) for name in (

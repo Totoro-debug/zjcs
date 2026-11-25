@@ -29,7 +29,7 @@ def build():
         fields = e.schemas.read(config)
         quality = [e.sprite(PPtr(**ptr, assetsfile=config.assets_file)) for ptr in fields['QualityBgImages']]
         # The existing trial group manifest pins the item IDs and conditions.
-        table_path = ROOT / '.tools/source-packages/official-data/tables.json'
+        table_path = ROOT / '.tools/source-packages/current/884_156692/official-data/tables.json'
         tables = json.loads(table_path.read_text('utf-8'))
         wanted = {35506,35556,35599,35600,36008,36108,36001,36101,35891,35893,39815,39816}
         items = {str(r['ClassId']): r['Quality'] for r in tables['item'] if r['ClassId'] in wanted}

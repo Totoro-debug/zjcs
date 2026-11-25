@@ -16,7 +16,7 @@ def build():
     source = json.loads((ROOT / rules).read_bytes())
     entries = [dict(entity_id=int(key), component=value['StatusStackCountComponent'])
         for key, value in source['entities'].items() if 'StatusStackCountComponent' in value]
-    code = '.tools/source-packages/official-code/common-source/Common/'
+    code = '.tools/source-packages/current/884_156692/official-code/common-source/Common/'
     proof = dict(generator=identity('scripts/prepare_battle_stack_count_runtime.py'),
         original_code=[identity(code + name + '.cs') for name in
             ('StatusStackCountComponentInfo', 'StatusStackCountComponent', 'FightStatusTriggerSkillCfg', 'SkillTargetType', 'StatusTriggerTarget', 'EStatusTriggerTargetPos')],

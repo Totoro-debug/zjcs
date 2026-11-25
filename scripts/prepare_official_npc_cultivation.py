@@ -79,7 +79,7 @@ def build():
     tables, inputs = {}, {}
     for name in ['npc_profile', 'npc_talent_tree_map', 'npc_talent_tree_map_prop',
                  'npc_talent_tree_gift_transform']:
-        source = ROOT / '.tools/source-packages/official-data' / (name + '.g.bytes')
+        source = ROOT / '.tools/source-packages/current/884_156692/official-data' / (name + '.g.bytes')
         if not source.exists():
             continue
         raw = source.read_bytes()
@@ -140,7 +140,7 @@ def build():
             texts[key] = value
     save(art / 'npc-cultivation.json', dict(tables=tables, props=props, texts=texts))
     save(art / 'npc-cultivation-ui.json', panels)
-    code = ROOT / '.tools/source-packages/official-code'
+    code = ROOT / '.tools/source-packages/current/884_156692/official-code'
     names = ['common-source/Common/NpcFriendshipLevelPropChunck.cs',
              'common-source/Common/NpcInfoParser.cs', 'common-source/Common/NpcProfileInfo.cs',
              'common-source/Common/BattleFormulaHandler.cs', 'common-source/PlayerServiceProxyImpl.cs',

@@ -6,7 +6,7 @@ from pathlib import Path
 from prepare_battle_scene_appearance_runtime import write_changed
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / '.tools/source-packages/official-code/client-source/AppearanceSystem.Runtime/AppearanceOnDemandTextureLoader.cs'
+SOURCE = ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceOnDemandTextureLoader.cs'
 RUNTIME = ROOT / 'unity/Assets/Spine/Runtime/spine-unity/Asset Types/SpineAtlasAsset.cs'
 RECEIPT = ROOT / 'assets/reference/battle-animation/atlas-placeholder-binding-source-manifest.json'
 SOURCE_SHA256 = '2b3619bb979fce0483e373c14bd8854c2848a228d0ab5743695815da7eda7463'

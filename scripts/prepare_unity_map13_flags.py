@@ -81,7 +81,7 @@ def build():
     if len(instances) != 46 or any(settings != instance_settings[0] for settings in instance_settings):
         raise ValueError("Restore differing original flag instance animation/rendering settings")
     settings = instance_settings[0]
-    metadata_path = ROOT / ".tools/source-packages/official-code/global-metadata.dat"
+    metadata_path = ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat"
     if sha(metadata_path.read_bytes()) != "58884b94b56ef35665f44d3f186fce8b8c854cf3bab0a74e4733a18b6a9175b4":
         raise ValueError("Original flag enum metadata differs")
     metadata = Metadata(metadata_path.read_bytes())

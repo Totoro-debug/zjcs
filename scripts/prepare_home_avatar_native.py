@@ -103,7 +103,7 @@ class HomeAvatarBinding(HomeBottomBarBinding):
         code=ROOT/'.tools/source-packages/current'/self.recovery.apk.version/'official-code'
         for name in ('PlayerIcon','PlayerIconMe','PlayerIconOther','PlayerInfoUI','HeadCharacterPortrait'):
             current=code/'client-source'/(name+'.cs')
-            previous=ROOT/'.tools/source-packages/official-code/client-source'/(name+'.cs')
+            previous=ROOT/'.tools/source-packages/current/884_156692/official-code/client-source'/(name+'.cs')
             if current.read_bytes()!=previous.read_bytes():raise ValueError('Recheck shared avatar source: '+name)
             for file in (current,previous):receipt['inputs'][file.relative_to(ROOT).as_posix()]=sha(file.read_bytes())
         evidence=experience_runtime()

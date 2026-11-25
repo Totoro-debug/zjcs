@@ -112,7 +112,7 @@ def build(output_root=ROOT):
                'pet_unlock_input': {'path': rules_path.relative_to(ROOT).as_posix(),
                                     'sha256': sha(rules_path.read_bytes()), 'rows': unlock_rows},
                'inputs': list(inputs.values()),
-               'official_code': {p: sha((ROOT / '.tools/source-packages/official-code' / p).read_bytes()) for p in code},
+               'official_code': {p: sha((ROOT / '.tools/source-packages/current/884_156692/official-code' / p).read_bytes()) for p in code},
                'runtime': {p: sha((output_root / p).read_bytes()) for p in (
                    'unity/Assets/Game/Runtime/Official/WorldUI/WorldGameSkillIcon.cs',
                    'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillSlotBindings.cs',

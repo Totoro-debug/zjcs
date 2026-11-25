@@ -19,6 +19,7 @@ class OfficialSource:
         configuration = json.loads((ROOT / 'official-source.json').read_text(encoding='utf-8'))
         self.version = manifest or configuration['active']
         self.profile = configuration['profiles'][self.version]
+        self.prepared_path = CACHE / 'current' / self.version
         self.apk = ROOT / self.profile['apk']['path']
         self.apk_version = self.profile['apk']['manifest']
         self.apk_sha256 = self.profile['apk']['sha256']

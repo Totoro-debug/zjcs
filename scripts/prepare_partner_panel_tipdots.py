@@ -11,7 +11,7 @@ NODES = ('TipDotFurnitureCanRepairConditionNode', 'TipDotHasAnyNpcDialogueCondit
 
 def prepare():
     target = ROOT / 'unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots'
-    original = ROOT / '.tools/source-packages/official-code'
+    original = ROOT / '.tools/source-packages/current/884_156692/official-code'
     selected = ROOT / '.tools/source-packages/current/884_156692/official-code'
     inputs, outputs = [], []
     names = [(name, 'client-source') for name in (*NODES, 'PetNodeInstanceInfo',

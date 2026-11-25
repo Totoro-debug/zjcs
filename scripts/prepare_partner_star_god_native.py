@@ -240,7 +240,7 @@ class PartnerStarGodBinding(PartnerDialogueEntryBinding):
                          'framework-firstpass-source/ResourceLoaderExtensions.cs', 'launch-source/AnimationSoundPlayer.cs',
                          'launch-source/UIMesh.cs', 'launch-source/RotateAnimation.cs', 'launch-source/Common/RegionCodeEnum.cs',
                          'common-source/NpcHelper.cs'):
-            path = ROOT / '.tools/source-packages/official-code' / relative
+            path = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
             selected = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code' / relative
             if path.read_bytes() != selected.read_bytes(): raise ValueError('Selected source differs: ' + relative)
             self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())

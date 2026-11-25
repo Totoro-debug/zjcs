@@ -118,7 +118,7 @@ def build(source_root: Path = ROOT / ".tools/source-packages") -> tuple[bytes, b
         "sha256": sha256(raw),
         "constructor": table_type,
         "bytes": len(raw),
-        "source": ".tools/source-packages/official-data/state_mutex.g.bytes",
+        "source": ".tools/source-packages/current/884_156692/official-data/state_mutex.g.bytes",
     }
     original_code = manifest.setdefault("original_code", {})
     for name in SOURCE_CODE:

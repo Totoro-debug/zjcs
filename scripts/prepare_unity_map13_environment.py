@@ -27,7 +27,7 @@ def build():
     if sha(assembly.read_bytes()) != manifest["assemblies"][assembly.name]["decoded_sha256"]:
         raise ValueError("Official environment assembly changed")
     metadata_types()  # Validates the pinned APK metadata.
-    metadata = Metadata((ROOT / ".tools/source-packages/official-code/global-metadata.dat").read_bytes())
+    metadata = Metadata((ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat").read_bytes())
     timing = next(t for t in metadata.types if t["name"] == "PlayerLoopTiming")
     timing_values = {f["name"]: metadata.default_int(f["index"]) for f in timing["fields"] if f["index"] in metadata.defaults}
     if timing_values["Update"] != 8: raise ValueError("Original fade scheduler timing changed")

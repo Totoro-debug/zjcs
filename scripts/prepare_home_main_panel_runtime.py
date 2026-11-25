@@ -18,7 +18,7 @@ def build():
     dependencies={p.relative_to(ROOT).as_posix():sha(p) for p in [assembly,ilspy,*sorted(references.glob('*.dll'))]}
     inputs.update(dependencies)
     # Reuse the existing original base; do not create a second UI lifecycle.
-    previous=ROOT/'.tools/source-packages/official-code/framework-firstpass-source/UIBase.cs'
+    previous=ROOT/'.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/UIBase.cs'
     current=CODE/'framework-firstpass-source/UIBase.cs'
     assert previous.read_bytes()==current.read_bytes(),'Recheck the shared original UIBase version.'
     for file in (previous,current,ROOT/'unity/Assets/Game/Runtime/Official/ProfessionUI/UIBase.cs'):

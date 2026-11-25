@@ -310,7 +310,7 @@ def extract():
         raise ValueError('Official Day_Common hierarchy contains no SpriteRenderer assets.')
     validate_track_targets(tracks, nodes, renderers, lights)
 
-    source_code = ROOT / '.tools/source-packages/official-code/client-source'
+    source_code = ROOT / '.tools/source-packages/current/884_156692/official-code/client-source'
     timeline_driver = source_code / 'HomeTimeDriver.cs'
     camera_follower = source_code / 'CameraFollower.cs'
     runtime_code = ROOT / 'unity/Assets/Game/Runtime/Presentation/Home'

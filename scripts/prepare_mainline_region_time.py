@@ -8,7 +8,7 @@ from prepare_unity_map14_sources import meta
 
 
 def build():
-    source = ROOT / '.tools/source-packages/official-code/client-source/MapRegionLimitStatusRefreshForRankUnlockTime.cs'
+    source = ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/MapRegionLimitStatusRefreshForRankUnlockTime.cs'
     receipt = json.loads((ROOT / '.tools/source-packages/prepared-code-source-manifest.json').read_bytes())
     expected = {row['path']: row['sha256'] for row in receipt['outputs']}
     if receipt['manifest'] != '884_156692' or expected.get(source.relative_to(ROOT).as_posix()) != sha(source.read_bytes()):
@@ -24,7 +24,7 @@ def build():
         target = ROOT / f'unity/Assets/Game/Runtime/Official/World/NativeMap{label_id}Labels/MapRegionLimitStatusRefreshForRankUnlockTime.cs'
         target.write_text(text, 'utf8', newline='\n')
         meta(target)
-    helper = ROOT / '.tools/source-packages/official-code/client-source/MapRegionLimitStatusRefreshHelper.cs'
+    helper = ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/MapRegionLimitStatusRefreshHelper.cs'
     if expected.get(helper.relative_to(ROOT).as_posix()) != sha(helper.read_bytes()):
         raise ValueError('Selected original time helper differs from prepared receipt')
     text = helper.read_text('utf8').replace('using Common;\n', '').replace('using Framework;\n', '')

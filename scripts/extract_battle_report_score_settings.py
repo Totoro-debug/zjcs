@@ -64,7 +64,7 @@ def build(source_root):
         if re.search(pattern, catalog): catalog = re.sub(pattern, lambda _: line, catalog)
         else: catalog += line
     write(ROOT / CATALOG, catalog.encode())
-    official = source_root / '.tools/source-packages/official-code/client-source'
+    official = source_root / '.tools/source-packages/current/884_156692/official-code/client-source'
     names = ['FightSettings.cs', 'FightReportSetting.cs', 'FightReportUIUtils.cs',
              'FightEndReportPlayerTabViewItem.cs', 'FightEndReportPlayerTabView.cs']
     record = dict(manifest=apk.version, source=apk.provenance(obj),

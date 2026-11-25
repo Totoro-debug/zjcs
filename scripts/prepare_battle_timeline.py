@@ -228,7 +228,7 @@ def build():
     OUTPUT.write_bytes((json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n').encode())
     def file_hashes(paths):
         return [dict(path=p.relative_to(ROOT).as_posix(),sha256=sha(p.read_bytes())) for p in paths]
-    official_code=ROOT/'.tools/source-packages/official-code/client-source'
+    official_code=ROOT/'.tools/source-packages/current/884_156692/official-code/client-source'
     runtime=ROOT/'unity/Assets/Game/Runtime'
     RECEIPT.write_text(json.dumps(dict(manifest=apk.version,inputs=list(inputs.values()),
         foundation_input=dict(path=source_path.relative_to(ROOT).as_posix(),sha256=sha(source_path.read_bytes())),

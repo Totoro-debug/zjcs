@@ -59,7 +59,7 @@ class MiniMapRendererBinding(MiniMapHudBinding):
                 resolved=self.replace(data);data.clear();data.update(resolved)
             index+=1
         selected=self.cache.parent/'official-code/client-source/MiniMapNonMaskableManager.cs'
-        previous=ROOT/'.tools/source-packages/official-code/client-source/MiniMapNonMaskableManager.cs'
+        previous=ROOT/'.tools/source-packages/current/884_156692/official-code/client-source/MiniMapNonMaskableManager.cs'
         if selected.read_bytes()!=previous.read_bytes():raise ValueError('Review changed original shared renderer code')
         host=self.cache.parent/'official-code/client-source/MapRootSwitchMapSupport.cs'
         if 'component.NonMaskableManager = ((Component)mMinimapSlot).GetComponentInChildren<MiniMapNonMaskableManager>();' not in host.read_text('utf-8-sig'):

@@ -19,7 +19,7 @@ def write_receipt():
         'home-hud-infrastructure-runtime', 'home-hud-infrastructure-native',
         'home-social-ui-runtime', 'home-currency-windows-native']
     inputs = ['assets/reference/' + name + '-source-manifest.json' for name in sources]
-    inputs += ['.tools/source-packages/official-code/framework-firstpass-source/Framework.UI/WindowContainer.cs',
+    inputs += ['.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/Framework.UI/WindowContainer.cs',
         '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/Framework.UI/WindowContainer.cs']
     bindings = ['scripts/prepare_home_native_player_validation.py', 'scripts/fixtures/home_native_player_validation.cs',
         'scripts/fixtures/home_furniture_host_validation.cs', 'scripts/fixtures/home_income_formula_validation.cs',

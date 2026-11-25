@@ -174,7 +174,7 @@ def build(output_root=ROOT):
     receipt = {'manifest': '854_156383', 'generator_sha256': sha(Path(__file__).read_bytes()),
                'rules_sha256': sha(rules_path.read_bytes()), 'items': len(items), 'sprites': bindings,
                'inputs': inputs, 'dependencies': list(cache.sources.values()),
-               'official_code': {p: sha((ROOT/'.tools/source-packages/official-code'/p).read_bytes()) for p in code},
+               'official_code': {p: sha((ROOT/'.tools/source-packages/current/884_156692/official-code'/p).read_bytes()) for p in code},
                'runtime': {p: sha((output_root/p).read_bytes()) for p in (
                    runtime.relative_to(output_root).as_posix(),
                    'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillQualityGeometry.cs',

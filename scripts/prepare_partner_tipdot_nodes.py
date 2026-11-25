@@ -16,7 +16,7 @@ def main():
     inputs, outputs = {}, {}
     DEST.mkdir(parents=True, exist_ok=True)
     meta(DEST, folder=True)
-    function_path = ROOT / '.tools/source-packages/official-code/common-source/Common/FunctionType.cs'
+    function_path = ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common/FunctionType.cs'
     function_raw = function_path.read_bytes()
     if function_raw != (ROOT / '.tools/source-packages/current' / version / 'official-code/common-source/Common/FunctionType.cs').read_bytes():
         raise ValueError('Official function enum differs from selected source')
@@ -24,7 +24,7 @@ def main():
     address_list = re.search(r'\bNPCAddressList\s*=\s*(\d+)', function_raw.decode('utf-8-sig'))[1]
 
     def source(name):
-        path = ROOT / '.tools/source-packages/official-code/client-source' / (name + '.cs')
+        path = ROOT / '.tools/source-packages/current/884_156692/official-code/client-source' / (name + '.cs')
         raw = path.read_bytes()
         selected = ROOT / '.tools/source-packages/current' / version / 'official-code/client-source' / path.name
         if raw != selected.read_bytes():

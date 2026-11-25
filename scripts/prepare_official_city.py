@@ -23,7 +23,7 @@ UNITY_EDITOR_DATA = Path('D:/Tool/Unity/Editor/Data')
 class PanelSchemas(ScriptSchemas):
     def __init__(self):
         self.generator = TypeTreeGenerator('2022.3.57f1', generator='AssetsTools')
-        code = ROOT / '.tools/source-packages/official-code/managed/decoded'
+        code = ROOT / '.tools/source-packages/current/884_156692/official-code/managed/decoded'
         paths = {path.name: path for path in code.glob('*.dll')}
         paths.update({
             'UnityEngine.CoreModule.dll': UNITY_EDITOR_DATA / 'Managed/UnityEngine/UnityEngine.CoreModule.dll',

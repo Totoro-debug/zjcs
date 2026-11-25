@@ -230,10 +230,10 @@ def build():
     nodes += part
     schemas.cache['Assembly-CSharp:UnityEngine.UI.Ext.TabGroup'] = nodes
     sources['manual_schemas'] = {'UnityEngine.UI.Ext.TabGroup': dict(
-        source_sha256=hashlib.sha256((ROOT / '.tools/source-packages/official-code/client-source/UnityEngine.UI.Ext/TabGroup.cs').read_bytes()).hexdigest(),
+        source_sha256=hashlib.sha256((ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/UnityEngine.UI.Ext/TabGroup.cs').read_bytes()).hexdigest(),
         operation='Three original serialized fields; non-Serializable TabChangeEvent excluded; exact PPtr layout and full bytes required')}
     name = 'RuleGradeScrollRectAwardInfo'
-    source = (ROOT / '.tools/source-packages/official-code/client-source' / (name + '.cs')).read_text('utf-8-sig')
+    source = (ROOT / '.tools/source-packages/current/884_156692/official-code/client-source' / (name + '.cs')).read_text('utf-8-sig')
     nodes = copy.deepcopy(entry[:9]); nodes[0]['type'] = name
     for kind, field in re.findall(r'\[SerializeField\]\s*private (\w+) (\w+)(?:\s*=.*)?;', source):
         if kind in ['Align', 'float']:
@@ -370,7 +370,7 @@ def build():
         elif key.startswith('NPCAdventureGroup'):
             keys_to_read.add('ui_npc_travel_map_group_' + key.removeprefix('NPCAdventureGroup'))
     keys_to_read.add('ui_npc_adventure_progress_text')
-    source_code = ROOT / '.tools/source-packages/official-code'
+    source_code = ROOT / '.tools/source-packages/current/884_156692/official-code'
     source_paths = list((source_code / 'client-source').glob('AD*TagController.cs'))
     source_paths.append(source_code / 'client-source/ADGamePlayTagControllerUtils.cs')
     source_paths += list((source_code / 'client-source').glob('AstrologicalDestiny*.cs'))
@@ -401,7 +401,7 @@ def build():
             history.write_bytes(previous)
     save(out / 'season-lifecycle.json', dict(tables=tables, art=art, texts=texts))
     save(out / 'season-lifecycle-ui.json', panels)
-    source_code = ROOT / '.tools/source-packages/official-code'
+    source_code = ROOT / '.tools/source-packages/current/884_156692/official-code'
     paths = ['common-source/Common/' + name + '.cs' for name in [
         'EquipCabinetEvaluateInfoParser', 'EquipCabinetScoreInfoParser', 'ArenaDestinyInfoParser',
         'PlayerEquipCabinetDataExt', 'PlayerSeasonRecordDataWrap', 'PlayerSeasonRecordDataWrapExtra',

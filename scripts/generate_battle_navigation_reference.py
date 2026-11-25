@@ -6,7 +6,7 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / '.tools/source-packages/official-code/common-source'
+SOURCE = ROOT / '.tools/source-packages/current/884_156692/official-code/common-source'
 OUT = ROOT / '.tools/gameplay-fixtures/combat'
 
 

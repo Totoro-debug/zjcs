@@ -61,7 +61,7 @@ def build():
         raise ValueError('Original world-label Chinese language is incomplete')
     target = ROOT/'assets/official/map16-world-ui.json'
     save(target,dict(manifest='854_156383',map=16,items=items,texts=strings))
-    source = ROOT/'.tools/source-packages/official-code/client-source'
+    source = ROOT/'.tools/source-packages/current/884_156692/official-code/client-source'
     code = {f'{name}.cs':digest(source/f'{name}.cs') for name in [
         'MapRegionDescSupportUI','MapRegionDescItemUI','MapRegionStrengthDisplayUI','UIColorByLevel']}
     save(ROOT/'assets/reference/official-map/world-ui-16-source-manifest.json',dict(

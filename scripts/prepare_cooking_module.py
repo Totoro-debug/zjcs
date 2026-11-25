@@ -630,22 +630,22 @@ TextureImporter:
         self.write_file_meta(PAYLOAD / "ui.json")
 
         code_paths = [
-            ".tools/source-packages/official-code/client-source/CookingPanel.cs",
-            ".tools/source-packages/official-code/client-source/CookingPanelItem.cs",
-            ".tools/source-packages/official-code/client-source/ItemUseEffectCookingFormula.cs",
-            ".tools/source-packages/official-code/common-source/Common/CookingInfo.cs",
-            ".tools/source-packages/official-code/common-source/Common/CookingInfoParser.cs",
-            ".tools/source-packages/official-code/common-source/Common/CookingExtraInfoRecovery.cs",
-            ".tools/source-packages/official-code/common-source/CookingMakeItemComparer.cs",
-            ".tools/source-packages/official-code/common-source/CookingItemComparer.cs",
-            ".tools/source-packages/official-code/common-source/ItemComparer.cs",
-            ".tools/source-packages/official-code/common-source/ItemComparerBase.cs",
-            ".tools/source-packages/official-code/common-source/Common/UsedItemCondition.cs",
-            ".tools/source-packages/official-code/common-source/Common/MapUnlockCondition.cs",
-            ".tools/source-packages/official-code/common-source/Common/SourceOperate.cs",
-            ".tools/source-packages/official-code/common-source/Common/PlayerCookingRequest.cs",
+            ".tools/source-packages/current/884_156692/official-code/client-source/CookingPanel.cs",
+            ".tools/source-packages/current/884_156692/official-code/client-source/CookingPanelItem.cs",
+            ".tools/source-packages/current/884_156692/official-code/client-source/ItemUseEffectCookingFormula.cs",
+            ".tools/source-packages/current/884_156692/official-code/common-source/Common/CookingInfo.cs",
+            ".tools/source-packages/current/884_156692/official-code/common-source/Common/CookingInfoParser.cs",
+            ".tools/source-packages/current/884_156692/official-code/common-source/Common/CookingExtraInfoRecovery.cs",
+            ".tools/source-packages/current/884_156692/official-code/common-source/CookingMakeItemComparer.cs",
+            ".tools/source-packages/current/884_156692/official-code/common-source/CookingItemComparer.cs",
+            ".tools/source-packages/current/884_156692/official-code/common-source/ItemComparer.cs",
+            ".tools/source-packages/current/884_156692/official-code/common-source/ItemComparerBase.cs",
+            ".tools/source-packages/current/884_156692/official-code/common-source/Common/UsedItemCondition.cs",
+            ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapUnlockCondition.cs",
+            ".tools/source-packages/current/884_156692/official-code/common-source/Common/SourceOperate.cs",
+            ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerCookingRequest.cs",
         ]
-        code = {path.removeprefix(".tools/source-packages/official-code/"): file_sha(ROOT / path)
+        code = {path.removeprefix(".tools/source-packages/current/884_156692/official-code/"): file_sha(ROOT / path)
                 for path in code_paths if (ROOT / path).is_file()}
         sprite_records = [{"name": name, "file": value["file"], "source": value["source"],
                            "path_id": value["path_id"], "sha256": sha256(value["bytes"])}

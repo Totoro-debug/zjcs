@@ -18,7 +18,7 @@ def calls(source, name, replacement):
 
 
 def build():
-    source_root = ROOT/'.tools/source-packages/official-code/loop-scroll-full-source'
+    source_root = ROOT/'.tools/source-packages/current/884_156692/official-code/loop-scroll-full-source'
     target_root = ROOT/'unity/Assets/Game/Runtime/Official/WorldUI/LoopScroll'
     target_root.mkdir(parents=True, exist_ok=True)
     write_meta(target_root, 'DefaultImporter')
@@ -58,7 +58,7 @@ def build():
         write_meta(target, 'MonoImporter')
         inputs.append(dict(path=path.relative_to(ROOT).as_posix(),sha256=sha256(raw)))
         outputs.append(dict(path=target.relative_to(ROOT).as_posix(),sha256=sha256(target.read_bytes())))
-    assembly = ROOT/'.tools/source-packages/official-code/managed/decoded/LoopScrollRect.Runtime.dll'
+    assembly = ROOT/'.tools/source-packages/current/884_156692/official-code/managed/decoded/LoopScrollRect.Runtime.dll'
     receipt = dict(manifest='854_156383', assembly=dict(path=assembly.relative_to(ROOT).as_posix(),sha256=sha256(assembly.read_bytes())),
         inputs=inputs, outputs=outputs, operation='Retain original scroll layout, bounds, velocity, drag, virtualization and pool order; repair decompiler base calls/conversions and use Unity Instantiate instead of offline-unavailable service-provider injection.',
         converter=dict(path=Path(__file__).relative_to(ROOT).as_posix(),sha256=sha256(Path(__file__).read_bytes())))

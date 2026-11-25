@@ -12,7 +12,7 @@ def record(path):
 
 def main():
     current = ".tools/source-packages/current/871_156598/official-code/"
-    historical = ".tools/source-packages/official-code/"
+    historical = ".tools/source-packages/current/884_156692/official-code/"
     names = ["common-source/Common/BattleFormulaHandler.cs",
              "common-source/Common/SummonRankAdditiveFactorParser.cs",
              "client-source/MonsterInfoPanelNavigateHandler.cs"]

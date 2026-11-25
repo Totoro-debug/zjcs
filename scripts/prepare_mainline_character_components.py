@@ -121,7 +121,7 @@ def main():
                         help="Exact historical bundle recorded by the installed 3001 prefab input")
     args = parser.parse_args()
     selected, identities, inputs = recover(args.bundle)
-    code = ROOT / ".tools/source-packages/official-code"
+    code = ROOT / ".tools/source-packages/current/884_156692/official-code"
     code_receipt = ROOT / ".tools/source-packages/current/884_156692/code-manifest.json"
     code_proof = json.loads(code_receipt.read_bytes())
     assemblies = [code / "managed/decoded" / name for name in ("Assembly-CSharp.dll", "Console.dll")]

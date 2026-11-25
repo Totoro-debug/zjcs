@@ -29,7 +29,7 @@ def main():
     meta(DEST, folder=True)
 
     def source(name):
-        path = ROOT / '.tools/source-packages/official-code' / name
+        path = ROOT / '.tools/source-packages/current/884_156692/official-code' / name
         raw = path.read_bytes()
         if raw != (ROOT / '.tools/source-packages/current' / version / 'official-code' / name).read_bytes():
             raise ValueError('Official source differs from selected version: ' + name)

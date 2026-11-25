@@ -151,7 +151,7 @@ def build():
     receipt = dict(manifest=apk.version, inputs=list(inputs.values()), npcTableSha256=sha(raw),
         assetManifestSha256=sha(manifest_bytes), generator_sha256=sha(Path(__file__).read_bytes()),
         shared_meta_writer_sha256=sha((ROOT/'scripts/prepare_unity_battle_monster_portraits.py').read_bytes()),
-        battleRulesSha256=sha(rules_path.read_bytes()), official_code={name:sha((ROOT/'.tools/source-packages/official-code'/name).read_bytes()) for name in code},
+        battleRulesSha256=sha(rules_path.read_bytes()), official_code={name:sha((ROOT/'.tools/source-packages/current/884_156692/official-code'/name).read_bytes()) for name in code},
         runtime_sha256=sha(SCRIPT.read_bytes()), outputs=outputs, deferred=deferred,
         unresolvedBattleNpcIds=unresolved, missing_icon_checks=missing_checks,
         operation='APK-first original NpcInfo, full Texture2D PNG and exact full-rect Sprite metadata. Explicit NpcClassId bindings cover available icons. Configured missing paths, MapExploreBoss legacy and empty icons are not substituted.')

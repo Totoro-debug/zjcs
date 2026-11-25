@@ -30,7 +30,7 @@ def stable_id(name, field, suffix):
 
 def catalog():
     parser = Constructors()
-    tables = {n: parser.table((ROOT/'.tools/source-packages/official-data'/(n+'.g.bytes')).read_bytes(), c)
+    tables = {n: parser.table((ROOT/'.tools/source-packages/current/884_156692/official-data'/(n+'.g.bytes')).read_bytes(), c)
               for n, c in TABLES.items()}
     skins = {r['Id']: r for r in tables['spine_skin']}
     groups = {r['GroupId']: [i for span in (r['NestedIdList'] or []) for i in range(span[0], span[-1]+1)]

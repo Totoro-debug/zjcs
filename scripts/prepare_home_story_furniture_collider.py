@@ -102,8 +102,8 @@ def prepare():
     inputs = {path.relative_to(ROOT).as_posix(): sha(path.read_bytes())
               for path in (Path(__file__), native, native_meta,
                            ROOT / 'scripts/prepare_current_partner_native.py',
-                           ROOT / '.tools/source-packages/official-code/client-source/RepairFurnitureNode.cs',
-                           ROOT / '.tools/source-packages/official-code/client-source/BaseHomeEntityCreator.cs')}
+                           ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/RepairFurnitureNode.cs',
+                           ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/BaseHomeEntityCreator.cs')}
     proof = dict(manifest=recovery.apk.version, inputs=inputs, recovery=record, chain=all_chains, rootScripts=root_scripts,
         collider=dict(source=identity(colliders[0]), sha256=sha(colliders[0].get_raw_data()),
                       provenance=recovery.apk.provenance(colliders[0]), fields=recovery.fields(colliders[0])),

@@ -188,7 +188,7 @@ def build():
                            'SkillItemComparer.cs', 'TreasureComparer.cs', 'TreasureCollectInfo.cs'],
               'outputs': {name: sha(ART / name) for name in ['codex-ui.json', 'codex.json', 'codex-props.json']}}
     behavior = {}
-    code = ROOT / '.tools/source-packages/official-code'
+    code = ROOT / '.tools/source-packages/current/884_156692/official-code'
     for key in source['behavior']:
         path = next((code / folder / key for folder in ['client-source', 'common-source/Common', 'common-source'] if (code / folder / key).is_file()), None)
         if path is None:

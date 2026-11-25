@@ -58,7 +58,7 @@ def build():
         e.input(component);value=e.schemas.read(component)
         if not value['mSetZ'] or value['mOffsetZ']!=0:raise ValueError('Cannon source grid Z configuration changed')
         grid[str(identity)]=dict(set_z=bool(value['mSetZ']),offset=value['mOffsetZ'],real_center=centers[identity])
-    engine=EngineMethods(ROOT/'.tools/source-packages/official-code/libunity.so')
+    engine=EngineMethods(ROOT/'.tools/source-packages/current/884_156692/official-code/libunity.so')
     if engine.by_name['UnityEngine.Mathf::PerlinNoise'][0]!=0x5038b0:raise ValueError('Original Mathf noise entry changed')
     permutation=list(struct.unpack_from('<512i',engine.image,engine.offset(0x1cd084)))
     assert permutation[:256]==permutation[256:] and len(set(permutation))==256
@@ -66,7 +66,7 @@ def build():
     output=ART/'map15-impulse.json';save(output,dict(listener=fields,permutation=permutation[:256],normalization=normal,grid=grid))
     fixture=ROOT/'scripts/fixtures/map15-perlin-native.json';fixture.parent.mkdir(exist_ok=True)
     save(fixture,dict(engine_sha256=digest(engine.image),entry='0x5038b0',samples=native_samples(engine)))
-    code=ROOT/'.tools/source-packages/official-code'
+    code=ROOT/'.tools/source-packages/current/884_156692/official-code'
     names=['client-source/MyPlayableCameraShake.cs','client-source/MyGridTransform.cs','client-source/ECGridTransformView.cs',
            'client-source/ZSetUtils.cs','client-source/ECActionPlayableSupporterView.cs']
     package=ROOT/'.tools/unity-cinemachine-source'
@@ -79,7 +79,7 @@ def build():
     save(REF/'tower-impulse-source-manifest.json',dict(manifest='854_156383',inputs=e.source_records,
         outputs={output.relative_to(ROOT).as_posix():digest(output.read_bytes())},resources={},
         code_sha256={n:digest((code/n).read_bytes()) for n in names},
-        engine=dict(file='.tools/source-packages/official-code/libunity.so',sha256=digest(engine.image),sections=sections),
+        engine=dict(file='.tools/source-packages/current/884_156692/official-code/libunity.so',sha256=digest(engine.image),sections=sections),
         cinemachine=dict(url='https://packages.unity.com/com.unity.cinemachine/-/com.unity.cinemachine-2.9.7.tgz',
             archive_sha256=digest((package/'com.unity.cinemachine-2.9.7.tgz').read_bytes()),
             files_sha256={'.tools/unity-cinemachine-source/package/'+p:digest((package/'package'/p).read_bytes()) for p in refs}),

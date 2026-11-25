@@ -114,7 +114,7 @@ def main():
                     hit_properties=hit_program is not None))
             hit_sources.append(dict(classId=identity, binding=binding, materials=materials))
     receipt = json.loads(REFERENCE.read_text(encoding='utf8'))
-    source_dir = ROOT / '.tools/source-packages/official-code'
+    source_dir = ROOT / '.tools/source-packages/current/884_156692/official-code'
     source_files = ['client-source/MyFightActionSkillMove.cs', 'client-source/MyPlayableTrack.cs',
         'client-source/MyTrack.cs', 'client-source/MyCurveTrack.cs', 'client-source/MyGridTransform.cs',
         'client-source/MyFightSkill.cs', 'client-source/MyAction.cs', 'client-source/MyPlayableOverrideAnimator.cs',

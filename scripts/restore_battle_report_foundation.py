@@ -52,7 +52,7 @@ def build(source_root):
     schemas.generator = TypeTreeGenerator('2022.3.57f1', generator='AssetsTools')
     unity_data = Path('D:/Tool/Unity/Editor/Data')
     schemas.generator.load_local_dll_folder(str(unity_data / 'Managed/UnityEngine'))
-    decoded = source_root / '.tools/source-packages/official-code/managed/decoded'
+    decoded = source_root / '.tools/source-packages/current/884_156692/official-code/managed/decoded'
     schema_inputs = []
     for path in sorted(decoded.glob('*.dll')):
         if path.stem.startswith('UnityEngine') or path.stem == 'Unity.TextMeshPro':
@@ -207,7 +207,7 @@ def build(source_root):
         write(panel['path'], panel['result'])
     code = []
     for name in ['LayoutElementClamper', 'MaintainGlobalScale', 'MaintainGlobalScaleUI']:
-        original = source_root / '.tools/source-packages/official-code/client-source' / (name + '.cs')
+        original = source_root / '.tools/source-packages/current/884_156692/official-code/client-source' / (name + '.cs')
         migrated = ROOT / WORLD / ('World' + name + '.cs')
         code.append(dict(original=original.relative_to(source_root).as_posix(), original_sha256=sha(original.read_bytes()),
                          path=migrated.relative_to(ROOT).as_posix(), sha256=sha(migrated.read_bytes())))

@@ -138,7 +138,7 @@ def build():
                    roles=roles)
     save(ROOT/OUTPUT, payload)
     official = []
-    for version, directory in [('854_156383', ROOT/'.tools/source-packages/official-code'),
+    for version, directory in [('854_156383', ROOT/'.tools/source-packages/current/884_156692/official-code'),
         ('871_156598', ROOT/'.tools/source-packages/current/871_156598/official-code')]:
         official.append(dict(manifest=version, files=[dict(path=p.relative_to(ROOT).as_posix(), sha256=sha(p))
             for p in [directory/'client-source'/name for name in (

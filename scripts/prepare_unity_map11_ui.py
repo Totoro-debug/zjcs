@@ -558,7 +558,7 @@ def build(map_id=11):
             "Coffee.UIParticle": ROOT / ".tools/home-particle-schema/Coffee.UIParticle.dll"})
         support = load_support_ui(apk, schemas)
     constructors = Constructors(code_root)
-    official_code = code_root or ROOT / ".tools/source-packages/official-code"
+    official_code = code_root or ROOT / ".tools/source-packages/current/884_156692/official-code"
     version = apk.version if map_id in (12, 13, 14) else VERSION
     panels, components, sprites, shader_programs = [], [], {}, {}
     extra_trees, extra_sources, extra_resources, item_icons, icon_config_source, quality_sprite, ui_schemas, support_exporter = support

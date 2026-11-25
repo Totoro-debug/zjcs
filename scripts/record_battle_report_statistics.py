@@ -13,7 +13,7 @@ def sha(path):
 
 
 def build(source_root):
-    official = source_root / '.tools/source-packages/official-code'
+    official = source_root / '.tools/source-packages/current/884_156692/official-code'
     code = ['common-source/Common/PlayerFightSkillReport.cs',
             'common-source/Common/FightReportDamageStats.cs',
             'common-source/Common/FightRoleNormalReport.cs',

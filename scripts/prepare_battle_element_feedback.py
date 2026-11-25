@@ -260,7 +260,7 @@ def build():
     target.write_bytes((json.dumps(payload,ensure_ascii=True,indent=2)+'\n').encode())
     from read_official_native import NativeMethods
     native = NativeMethods(ROOT/'.tools/source-packages/commerce-native/libil2cpp-restored.bin',
-        ROOT/'.tools/source-packages/official-code/global-metadata.dat')
+        ROOT/'.tools/source-packages/current/884_156692/official-code/global-metadata.dat')
     native_methods = []
     for name in ('TMPro.TMPEffect.DoSetup','TMPro.TMPEffect.<DoSetup>b__62_0','TMPro.TMP_FontAsset.get_atlasPadding'):
         address, index = native.by_name[name]
@@ -268,7 +268,7 @@ def build():
         native_methods.append(dict(name=name,metadata_index=index,address=hex(address),length=end-address,
             sha256=hashlib.sha256(native.image[address:end]).hexdigest()))
     official_code = []
-    for version,directory in [('854_156383',ROOT/'.tools/source-packages/official-code'),
+    for version,directory in [('854_156383',ROOT/'.tools/source-packages/current/884_156692/official-code'),
             ('871_156598',ROOT/'.tools/source-packages/current/871_156598/official-code')]:
         for name in ('ElementConfrontationUI','CharacterDamageUI','CharacterDamageUIManager','DamageAutoSizeTextBack'):
             path = directory/'client-source'/(name+'.cs')

@@ -23,7 +23,7 @@ def build(work, install=False):
     def source(relative):
         path = code / relative
         raw = path.read_bytes()
-        if raw != (ROOT / '.tools/source-packages/official-code' / relative).read_bytes():
+        if raw != (ROOT / '.tools/source-packages/current/884_156692/official-code' / relative).read_bytes():
             raise ValueError('Selected map source differs: ' + relative)
         source_hashes[path.relative_to(ROOT).as_posix()] = sha(raw)
         return raw.decode('utf-8-sig')

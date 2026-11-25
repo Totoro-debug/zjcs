@@ -31,7 +31,7 @@ def main():
     args = parser.parse_args()
     receipt = json.loads(RECEIPT.read_text(encoding="utf-8"))
     original = next(entry["source"] for entry in receipt["prefabs"] if entry["name"] == "TravelNotesPanel")
-    code = ROOT / ".tools/source-packages/official-code/framework-firstpass-source/SafeArea.cs"
+    code = ROOT / ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/SafeArea.cs"
     expected = next(entry["sha256"] for entry in receipt["code_sources"] if entry["path"].endswith("/SafeArea.cs"))
     if fingerprint(code)["sha256"] != expected:
         raise ValueError("SafeArea source differs from the previously recorded original implementation")
@@ -115,7 +115,7 @@ def main():
                    "Selected bundle bytes and SafeArea implementation match the recorded original input. "
                    "Historical input provenance remains unchanged; current identical bundle location is recorded separately.",
                    identical_input_location=source, objects=objects, safe_area_code=fingerprint(code),
-                   raycast_code=fingerprint(ROOT / ".tools/source-packages/official-code/framework-firstpass-source/NoDrawingRayCast.cs"),
+                   raycast_code=fingerprint(ROOT / ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/NoDrawingRayCast.cs"),
                    schema_assemblies=[fingerprint(ugui), fingerprint(netstandard)],
                    extractor=fingerprint(Path(__file__).resolve()), output=fingerprint(BINDING))
     receipt["travel_entry_layout"] = section

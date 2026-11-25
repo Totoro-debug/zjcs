@@ -59,7 +59,7 @@ namespace Zjcs.Combat.Official
     output.write_bytes(code.encode())
     sources = []
     for name in ("LevelPropParser", "LevelPropDefaultValue", "TbLevelPropDefaultValue"):
-        path = ROOT / ".tools/source-packages/official-code/common-source/Common" / (name + ".cs")
+        path = ROOT / ".tools/source-packages/current/884_156692/official-code/common-source/Common" / (name + ".cs")
         sources.append({"path": path.relative_to(ROOT).as_posix(), "sha256": sha(path.read_bytes())})
     receipt.write_text(json.dumps({"manifest": "854_156383", "asset": entry, "source": apk.provenance(obj),
                                   "input_sha256": sha(raw), "code": sources, "row_count": len(rows),

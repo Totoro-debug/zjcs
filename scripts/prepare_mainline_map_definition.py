@@ -44,7 +44,7 @@ class MainlineMapSource:
             raise ValueError("A positive original map identity is required")
         self.map_id = map_id
         self.apk = Apk.current()
-        self.code = ROOT / ".tools/source-packages/official-code"
+        self.code = ROOT / ".tools/source-packages/current/884_156692/official-code"
         self.prepared_path = ROOT / ".tools/source-packages/prepared-code-source-manifest.json"
         prepared = json.loads(self.prepared_path.read_bytes())
         if prepared["manifest"] != self.apk.version:

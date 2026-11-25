@@ -17,11 +17,11 @@ def main():
     for relative in ('common-source/Common/PlayerNpcDialogueManager.cs', 'common-source/Common/PlayerNpcDialogueDataWrap.cs',
                      'common-source/Common/NpcFriendshipLevelInfoParser.cs', 'client-source/NpcDialoguePanel.cs',
                      'client-source/NpcDialoguePanelOptionItem.cs', 'client-source/HomeNpcChatEntry.cs'):
-        path = ROOT / '.tools/source-packages/official-code' / relative
+        path = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
         if path.read_bytes() != (ROOT / '.tools/source-packages/current' / version / 'official-code' / relative).read_bytes():
             raise ValueError('Selected original transaction source differs: ' + relative)
         sources[path.relative_to(ROOT).as_posix()] = sha(path)
-    original = (ROOT / '.tools/source-packages/official-code/common-source/Common/NpcFriendshipLevelInfoParser.cs').read_text('utf-8-sig')
+    original = (ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common/NpcFriendshipLevelInfoParser.cs').read_text('utf-8-sig')
     signature = 'public int GetFriendshipLevelByExp(int id, long friendshipExp, SubRank subRank)'
     body, = re.findall(r'\t' + re.escape(signature) + r'\n\t\{.*?\n\t\}', original, re.S)
     method_sha = hashlib.sha256(body.encode()).hexdigest()

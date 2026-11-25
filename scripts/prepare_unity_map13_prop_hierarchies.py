@@ -174,7 +174,7 @@ def build():
             guid = uuid.uuid5(uuid.NAMESPACE_URL, 'zjcs:map13-native-prop-hierarchies:' + output.name).hex
             write(meta, ('fileFormatVersion: 2\nguid: ' + guid + '\nTextScriptImporter:\n  externalObjects: {}\n').encode())
     dependencies = [graph_path, components_path, CATALOG, material_path, Path(__file__).resolve()]
-    metadata_path = ROOT / '.tools/source-packages/official-code/global-metadata.dat'
+    metadata_path = ROOT / '.tools/source-packages/current/884_156692/official-code/global-metadata.dat'
     raw_metadata = metadata_path.read_bytes()
     if sha(raw_metadata) != '58884b94b56ef35665f44d3f186fce8b8c854cf3bab0a74e4733a18b6a9175b4':
         raise ValueError('Original serialized enum metadata changed')

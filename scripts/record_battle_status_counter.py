@@ -35,7 +35,7 @@ def build(output_root):
               'unity/Assets/Game/Resources/Combat/battle-status-icons.json')
     record = dict(manifest='854_156383', generator_sha256=sha(Path(__file__)),
                   operation='Port FightStatusController.CalcStatusRemainRound and FightStatusItemBase.GetCountText; resolve RoundComp through the complete roster without changing combat clocks or status duration.',
-                  official_code={p: sha(ROOT / '.tools/source-packages/official-code' / p) for p in code},
+                  official_code={p: sha(ROOT / '.tools/source-packages/current/884_156692/official-code' / p) for p in code},
                   inputs={p: sha(ROOT / p) for p in inputs},
                   runtime={p: sha(output_root / p) for p in files},
                   rules=dict(clock='RoundComp belongs to the configured creator, applicator or master; do not require its HP to be positive.',

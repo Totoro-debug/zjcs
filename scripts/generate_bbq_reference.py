@@ -21,7 +21,7 @@ def method(text,signature):
 
 
 def main():
-    source=ROOT/'.tools/source-packages/official-code'
+    source=ROOT/'.tools/source-packages/current/884_156692/official-code'
     client=source/'client-source';common=source/'common-source/Common';framework=source/'framework-firstpass-source/Framework'
     files=[client/'BBQGameSession.cs',client/'BBQCookState.cs',client/'BBQSkewerFlowState.cs',common/'WeightRandomSelector.cs',framework/'SystemRandom.cs',framework/'IRandom.cs']
     groups={

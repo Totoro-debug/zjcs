@@ -33,7 +33,7 @@ def main():
     schemas = ScriptSchemas.__new__(ScriptSchemas)
     schemas.generator = TypeTreeGenerator("2022.3.57f1", generator="AssetsTools")
     schemas.cache, schemas.records = {}, {}
-    schemas.generator.load_local_dll_folder(str(ROOT / ".tools/source-packages/official-code/managed/decoded"))
+    schemas.generator.load_local_dll_folder(str(ROOT / ".tools/source-packages/current/884_156692/official-code/managed/decoded"))
     schemas.generator.load_local_dll_folder(str(editor / "Managed/UnityEngine"))
     cinemachine = ROOT / "unity/Library/ScriptAssemblies/Cinemachine.dll"
     schemas.generator.load_dll(cinemachine.read_bytes())
@@ -166,7 +166,7 @@ def main():
             raise ValueError("Recovered battle camera bindings differ")
     else:
         OUTPUT.write_bytes(payload)
-        source_code = ROOT / ".tools/source-packages/official-code/client-source"
+        source_code = ROOT / ".tools/source-packages/current/884_156692/official-code/client-source"
         receipt = dict(operation="Read original GameCameraIniter.Adaptor, referenced virtual camera, target group, framing transposer, camera offset and recomposer; preserve original aspect adaptation, group framing, extension stage and follow/look-at attachment weights. Historical bundle identities remain fixed.",
             layout_sha256=sha(LAYOUT.read_bytes()), original_objects=records,
             fight_settings_source=dict(apk.provenance(fight), object_sha256=sha(fight.get_raw_data())),

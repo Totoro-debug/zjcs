@@ -38,7 +38,7 @@ def main():
         'launch-source/Launch/WwiseManagerConfig.cs',
         'client-source/GameSoundSpeedController.cs',
     ):
-        inputs.append(identity(ROOT / '.tools/source-packages/official-code' / relative))
+        inputs.append(identity(ROOT / '.tools/source-packages/current/884_156692/official-code' / relative))
 
     export_receipt = EXPORT.with_name(EXPORT.name + '-source-manifest.json')
     exports = {entry['path']: entry for entry in json.loads(export_receipt.read_bytes())['outputs']}

@@ -22,7 +22,7 @@ def build(project=None):
     original_guid = guid(original_script)
     runtime = ROOT / 'unity/Assets/Game/Runtime/Official/ProfessionUI/AkGameObj.cs'
     native = NativeMethods(ROOT / '.tools/source-packages/commerce-native/libil2cpp-restored.bin',
-        ROOT / '.tools/source-packages/official-code/global-metadata.dat')
+        ROOT / '.tools/source-packages/current/884_156692/official-code/global-metadata.dat')
     methods = []
     for name in ('AkGameObj.Register', 'AkGameObj.SetPosition', 'AkGameObj.Awake', 'AkGameObj.OnEnable',
                  'AkGameObj.OnDestroy', 'AkGameObj.Update', 'AkGameObj.GetPosition', 'AkGameObj.GetForward',
@@ -69,7 +69,7 @@ def build(project=None):
             carriers.append('%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n' + ''.join(blocks[item] for item in (go_id, transform_id, file_id)).replace(original_guid, guid(runtime)))
     if len(rows) != 3:
         raise ValueError('Inspect original profession sound-object closure: ' + str(len(rows)))
-    result = dict(format=1, manifest=closure['manifest'], native_inputs=[record(ROOT / '.tools/source-packages/commerce-native/libil2cpp-restored.bin'), record(ROOT / '.tools/source-packages/official-code/global-metadata.dat')],
+    result = dict(format=1, manifest=closure['manifest'], native_inputs=[record(ROOT / '.tools/source-packages/commerce-native/libil2cpp-restored.bin'), record(ROOT / '.tools/source-packages/current/884_156692/official-code/global-metadata.dat')],
         methods=methods, position_threshold=dict(address='0x3982ee8', value=epsilon,
             sha256=hashlib.sha256(native.image[0x3982ee8:0x3982eec]).hexdigest()), source_objects=rows,
         runtime=[record(runtime), record(runtime.with_name(runtime.name + '.meta')),

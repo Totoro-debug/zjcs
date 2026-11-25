@@ -52,7 +52,7 @@ def write_json(path, value):
 
 def archive():
     source = OfficialSource()
-    destination = CACHE / 'current' / source.version
+    destination = source.prepared_path
     dotnet = ROOT / '.tools/dotnet/dotnet.exe'
     ilspy = ROOT / '.tools/ilspycmd/tools/net10.0/any/ilspycmd.dll'
     version = subprocess.check_output([str(dotnet), str(ilspy), '--version'], text=True).strip()
@@ -83,9 +83,8 @@ def archive():
                     existing['apk_sha256'] != receipt['apk_sha256']):
                 raise ValueError('Existing version archive differs from verified inputs')
             for name, row in receipt['assemblies'].items():
-                for root in (destination, CACHE):
-                    if digest(root / 'official-code/managed/decoded' / name) != row['decoded_sha256']:
-                        raise ValueError('Existing decoded assembly differs: ' + name)
+                if digest(destination / 'official-code/managed/decoded' / name) != row['decoded_sha256']:
+                    raise ValueError('Existing decoded assembly differs: ' + name)
             projects = []
             for name, folder in FOLDERS.items():
                 generated = staging / 'official-code' / folder
@@ -96,12 +95,11 @@ def archive():
                     if not item.is_file():
                         continue
                     relative = item.relative_to(staging)
-                    for root in (destination, CACHE):
-                        target = root / relative
-                        target.parent.mkdir(parents=True, exist_ok=True)
-                        if target.exists() and digest(target) != digest(item):
-                            preserve(target)
-                        shutil.copyfile(item, target)
+                    target = destination / relative
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    if target.exists() and digest(target) != digest(item):
+                        preserve(target)
+                    shutil.copyfile(item, target)
                     files.append(record(destination / relative))
                 projects.append(dict(assembly=name, folder=folder, files=files,
                                      csharp_files=sum(p['path'].endswith('.cs') for p in files)))

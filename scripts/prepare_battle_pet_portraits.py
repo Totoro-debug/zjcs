@@ -88,9 +88,9 @@ def build():
     outputs.extend([identity(asset), identity(meta)])
     receipt = dict(manifest=apk.version, generator=identity(Path(__file__).resolve()), rules=identity(rules),
         application_sources=[identity(ROOT / path) for path in (
-            ".tools/source-packages/official-code/client-source/GameRoundCharacterItem.cs",
-            ".tools/source-packages/official-code/client-source/GameRoundCharacterItemScene.cs",
-            ".tools/source-packages/official-code/common-source/Common/LanguageUtils.cs")],
+            ".tools/source-packages/current/884_156692/official-code/client-source/GameRoundCharacterItem.cs",
+            ".tools/source-packages/current/884_156692/official-code/client-source/GameRoundCharacterItemScene.cs",
+            ".tools/source-packages/current/884_156692/official-code/common-source/Common/LanguageUtils.cs")],
         inputs=inputs, outputs=outputs, entity_ids=ids,
         operation="GameRoundCharacterItem pet branch uses LanguageUtils.GetPetIcon(PetEntityClassId), ItemIcon/GameHeadIcon/Pet/G_ID; retain verified native exported Sprite meshes/UVs and decoded source textures, explicitly bind a separate catalog of the existing shared catalog type.")
     target = ROOT / "assets/reference/battle-hud/pet-portraits-source-manifest.json"

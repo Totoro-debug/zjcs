@@ -18,7 +18,7 @@ from read_official_native import NativeMethods
 
 def install(schemas, code):
     image = ROOT / ".tools/source-packages/commerce-native/libil2cpp-restored.bin"
-    metadata = ROOT / ".tools/source-packages/official-code/global-metadata.dat"
+    metadata = ROOT / ".tools/source-packages/current/884_156692/official-code/global-metadata.dat"
     native = NativeMethods(image, metadata)
     model = Metadata(native.metadata)
     registration = 0x11B6A188

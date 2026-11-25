@@ -155,7 +155,7 @@ def build():
         if node['path'] in int_states: node['animator_integers'] = int_states[node['path']]
         for child in node['children']: enrich(child)
     for panel in panels.values(): enrich(panel['root'])
-    raw_path = ROOT / '.tools/source-packages/official-data/npc_dialogue.g.bytes'
+    raw_path = ROOT / '.tools/source-packages/current/884_156692/official-data/npc_dialogue.g.bytes'
     rows = Constructors().table(raw_path.read_bytes(), 'TbNpcDialogueInfo')
     keys = {f"npc_dialogue_{r['ClassId']}_{r['Node']}_text" for r in rows}
     options = {f"npc_dialogue_{r['ClassId']}_{n}_option_text" for r in rows if len(r['NextNodes'] or []) > 1 for n in r['NextNodes']}
@@ -203,7 +203,7 @@ def build():
                           assetsfile=component.assets_file), art / 'partner-interactions/audio')
     save(art / 'partner-interactions/panels.json', dict(prefabs=panels, texts=texts, tag_backgrounds=tag_backgrounds, meet_sound=audio))
     save(art / 'partner-interactions/dialogues.json', rows)
-    code = ROOT / '.tools/source-packages/official-code'
+    code = ROOT / '.tools/source-packages/current/884_156692/official-code'
     names = ['client-source/NpcDetailPanelGiftContent.cs', 'client-source/ItemIconNpcGift.cs',
              'client-source/NpcDetailPanelDetailContent.cs', 'client-source/NpcTalkUI.cs',
              'client-source/NpcPanelDialogueList.cs', 'client-source/NpcPanelDialogueListNpcItem.cs',

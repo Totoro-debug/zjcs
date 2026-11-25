@@ -48,7 +48,7 @@ def native_length(source, clip, events):
 
 
 def main():
-    path=ROOT/'.tools/source-packages/official-code/libunity.so'
+    path=ROOT/'.tools/source-packages/current/884_156692/official-code/libunity.so'
     engine=EngineMethods(path)  # verifies the pinned engine hash and icall binding
     assert engine.by_name['UnityEngine.AnimationClip::get_length'][0]==0x5755e0
     apk=Apk()

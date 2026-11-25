@@ -100,7 +100,7 @@ def main():
     receipt = json.loads(REFERENCE.read_text(encoding="utf-8"))
     receipt["unit_ui"] = dict(inputs=without_source_versions(sources), language_sources=without_source_versions(language_sources),
         generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
-    official_code = ROOT / ".tools/source-packages/official-code/client-source"
+    official_code = ROOT / ".tools/source-packages/current/884_156692/official-code/client-source"
     source_names = ("GameRoundUI", "GameRoundCharacterItem", "CharacterDamageUI", "ElementConfrontationUI",
                     "DamageSequenceImage", "AttachmentFollower", "Spine.Extension/CustomRenderExistingMesh", "MyPlayableOverrideAnimator")
     receipt["battle_presentation_adapters"] = dict(

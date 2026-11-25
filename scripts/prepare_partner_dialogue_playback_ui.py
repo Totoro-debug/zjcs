@@ -113,7 +113,7 @@ def main():
     TARGET.mkdir(parents=True, exist_ok=True)
     inputs, outputs, logs = {}, {}, {}
     for name in NAMES + SUPPORT:
-        path = ROOT / '.tools/source-packages/official-code/client-source' / (name + '.cs')
+        path = ROOT / '.tools/source-packages/current/884_156692/official-code/client-source' / (name + '.cs')
         raw = path.read_bytes()
         if raw != (ROOT / '.tools/source-packages/current' / version / 'official-code/client-source' / path.name).read_bytes():
             raise ValueError('Playback controller differs from selected source: ' + name)
@@ -121,21 +121,21 @@ def main():
         content, logs[name] = port(name, raw)
         target = TARGET / path.name
         target.write_text(content, 'utf8', newline='\n')
-    enum_path = ROOT / '.tools/source-packages/official-code/common-source/Common/DialogueSpokesMan.cs'
+    enum_path = ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common/DialogueSpokesMan.cs'
     raw = enum_path.read_bytes()
     if raw != (ROOT / '.tools/source-packages/current' / version / 'official-code/common-source/Common' / enum_path.name).read_bytes():
         raise ValueError('Original speaker enum differs')
     inputs[enum_path.relative_to(ROOT).as_posix()] = sha(raw)
     enum = raw.decode('utf-8-sig').replace('\r\n', '\n').replace('namespace Common;', 'namespace Zjcs.Official.PartnersUI\n{').replace('DialogueSpokesMan', 'PartnerDialogueSpokesMan') + '\n}\n'
     (TARGET / 'PartnerDialogueSpokesMan.cs').write_text(enum, 'utf8', newline='\n')
-    language = ROOT / '.tools/source-packages/official-code/common-source/Common/LanguageUtils.cs'
+    language = ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common/LanguageUtils.cs'
     raw = language.read_bytes()
     if raw != (ROOT / '.tools/source-packages/current' / version / 'official-code/common-source/Common/LanguageUtils.cs').read_bytes():
         raise ValueError('Original language helper differs')
     inputs[language.relative_to(ROOT).as_posix()] = sha(raw)
     for relative in ('client-source/IHyperLinkInfoProvider.cs', 'common-source/Common/HyperLinkInfo.cs',
         'client-source/TMP_TypeWriterEffect.cs'):
-        path = ROOT / '.tools/source-packages/official-code' / relative
+        path = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
         if path.read_bytes() != (ROOT / '.tools/source-packages/current' / version / 'official-code' / relative).read_bytes():
             raise ValueError('Selected playback dependency source differs: ' + relative)
         inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())

@@ -15,7 +15,7 @@ def main():
     sources = {}
     for relative in ('client-source/NpcPanelDialogueList.cs', 'client-source/NpcPanelDialogueListNpcItem.cs',
                      'client-source/NpcPanelDialogueListDialogueItem.cs', 'common-source/Common/PlayerNpcDialogueManager.cs'):
-        path = ROOT / '.tools/source-packages/official-code' / relative
+        path = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
         if path.read_bytes() != (ROOT / '.tools/source-packages/current' / version / 'official-code' / relative).read_bytes():
             raise ValueError('Selected dialogue UI consumer differs: ' + relative)
         sources[path.relative_to(ROOT).as_posix()] = sha(path)

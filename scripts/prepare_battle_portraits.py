@@ -99,7 +99,7 @@ def build():
             'GameRoundPlayerPortrait', 'GameRoundPortraitETC2SceneHandler']
     RECEIPT.write_text(json.dumps(dict(manifest=apk.version, settings=versions, inputs=inputs,
         requestors=requestors, generator_sha256=sha(Path(__file__).read_bytes()),
-        official_code={name:sha((ROOT/'.tools/source-packages/official-code/client-source'/f'{name}.cs').read_bytes()) for name in code},
+        official_code={name:sha((ROOT/'.tools/source-packages/current/884_156692/official-code/client-source'/f'{name}.cs').read_bytes()) for name in code},
         output=OUTPUT.relative_to(ROOT).as_posix(), output_sha256=sha(OUTPUT.read_bytes()),
         runtime_bindings={name:sha((ROOT/name).read_bytes()) for name in (
             'unity/Assets/Game/Runtime/Presentation/Character/CharacterNativePortraitCapture.cs',

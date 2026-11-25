@@ -151,7 +151,7 @@ def build():
                     raise ValueError('Blessing text requires a nonidentity vertex-color adapter: '+path)
     # The original gap table has no DevelopType.Equip rows; retain the complete
     # table and parser behavior rather than invent an equipment gap constraint.
-    raw_path = ROOT / '.tools/source-packages/official-data/system_level_gap_limit.g.bytes'
+    raw_path = ROOT / '.tools/source-packages/current/884_156692/official-data/system_level_gap_limit.g.bytes'
     table_obj = e.apk.asset('config_luban', '/system_level_gap_limit.g.bytes')
     table_raw = table_obj.read().m_Script
     if isinstance(table_raw,str):table_raw = table_raw.encode('utf8','surrogateescape')
@@ -160,7 +160,7 @@ def build():
     rows = Constructors().table(table_raw, 'TbSystemLevelGapLimitInfo')
     fidelity = json.loads((ART / 'fidelity-rules.json').read_text('utf8'))
     fidelity['system_level_gap_limit'] = rows
-    enum_path = ROOT / '.tools/source-packages/official-code/common-source/Common/PropType.cs'
+    enum_path = ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common/PropType.cs'
     prop_names = {int(value):name for name,value in re.findall(r'(\w+)\s*=\s*(\d+)',enum_path.read_text('utf8'))}
     fidelity['equipment_prop_names'] = [dict(PropType=value,Name=name) for value,name in prop_names.items()]
     gradient_obj = e.apk.asset('textmesh_pro_assets_color_gradient_presets','/GreenRainbow.asset')
@@ -213,7 +213,7 @@ def build():
     for name, updates in [('ui.json', panels), ('fidelity-rules.json', fidelity),
                           ('fidelity-texts.json', texts)]:
         value = json.loads((ART / name).read_text('utf8'));value.update(updates);e.save(name, value)
-    code = ROOT / '.tools/source-packages/official-code'
+    code = ROOT / '.tools/source-packages/current/884_156692/official-code'
     sources = {}
     for folder, names in [('client-source', CLASSES | {'EquipChooseDialog', 'EquipPropPanel',
                           'EquipSpecialPropItem', 'EquipMutillPropItem'}),
@@ -234,7 +234,7 @@ def build():
     record = dict(manifest='854_156383', templates={k:v['source'] for k,v in panels.items()},
                   serialized_components=e.receipts, layout_fields=e.layout_inputs, resources=e.records,
                   tmp_schema_sha256=sha(ROOT/'scripts/unity_schema_types.cs'),
-                  tmp_metadata_sha256=sha(ROOT/'.tools/source-packages/official-code/global-metadata.dat'),
+                  tmp_metadata_sha256=sha(ROOT/'.tools/source-packages/current/884_156692/official-code/global-metadata.dat'),
                   green_rainbow=dict(source=e.apk.provenance(gradient_obj),sha256=hashlib.sha256(gradient_raw).hexdigest(),consumed_bytes=len(gradient_raw)),
                   original_code_sha256={**sources,enum_path.relative_to(ROOT).as_posix():sha(enum_path)},
                   language_sha256=language_sources, table=dict(source=e.apk.provenance(table_obj),

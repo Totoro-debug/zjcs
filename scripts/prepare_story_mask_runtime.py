@@ -48,7 +48,7 @@ def main():
     version = json.loads((ROOT / 'official-source.json').read_bytes())['active']
     if version != '884_156692':
         raise ValueError('Re-verify story mask sources for the selected version')
-    source_root = ROOT / '.tools/source-packages/official-code/client-source'
+    source_root = ROOT / '.tools/source-packages/current/884_156692/official-code/client-source'
     inputs, outputs = {}, {}
     DEST.mkdir(parents=True, exist_ok=True)
     for name in ('StoryMask', 'StoryMaskGraphic', 'ProcessGuideHint', 'MaskSetting',

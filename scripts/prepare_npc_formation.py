@@ -11,7 +11,7 @@ from pathlib import Path
 from official_apk import ROOT, Apk, LubanReader
 
 TABLE = 'game_match_npc'
-SOURCE = ROOT / '.tools/source-packages/official-code/common-source/Common'
+SOURCE = ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common'
 
 
 def decode(raw):
@@ -32,7 +32,7 @@ def decode(raw):
 
 
 def build(output, verify_apk=False):
-    cached = ROOT / '.tools/source-packages/official-data' / (TABLE + '.g.bytes')
+    cached = ROOT / '.tools/source-packages/current/884_156692/official-data' / (TABLE + '.g.bytes')
     raw = cached.read_bytes()
     source = dict(path=cached.relative_to(ROOT).as_posix(), bytes=len(raw),
                   sha256=hashlib.sha256(raw).hexdigest(), apk_verified_this_run=False)

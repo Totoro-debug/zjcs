@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def restore():
-    source = ROOT / ".tools/source-packages/official-code/loop-scroll-full-source/UnityEngine.UI/LoopHorizontalScrollRect.cs"
+    source = ROOT / ".tools/source-packages/current/884_156692/official-code/loop-scroll-full-source/UnityEngine.UI/LoopHorizontalScrollRect.cs"
     raw = source.read_bytes()
     source_hash = hashlib.sha256(raw).hexdigest()
     assert source_hash == "fcb6aa1db13c8fc37c35972df4e0c1592e18b0a0b5ad52cb6293df9042ff6b22"
