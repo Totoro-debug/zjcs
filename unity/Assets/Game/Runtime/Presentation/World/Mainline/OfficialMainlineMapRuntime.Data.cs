@@ -44,7 +44,7 @@ namespace Zjcs.Presentation.World
             if (battleData == null || storyData == null)
                 throw new InvalidOperationException("Official Map" + mapClassId + " battle and story payloads are missing from Resources.");
 
-            Map10RuntimeBattleData battles = JsonUtility.FromJson<Map10RuntimeBattleData>(battleData.text);
+            Map10RuntimeBattleData battles = Map10RuntimeBattleData.Parse(battleData.text);
             Map10RuntimeStoryData storyDataValue = JsonUtility.FromJson<Map10RuntimeStoryData>(storyData.text);
             string expectedBattleManifest = MapProfile.BattleDataManifest;
             string expectedStoryManifest = MapProfile.StoryDataManifest;

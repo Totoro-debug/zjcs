@@ -63,6 +63,7 @@ namespace Zjcs.Presentation.World
         private Action closeCallback;
         private Transform uiParent;
         private Transform mapRoot;
+        private PlanarGridProjection mapGridProjection;
         private Transform entityRoot;
         private Transform battleRoot;
         private GameObject avatar;
@@ -417,6 +418,8 @@ namespace Zjcs.Presentation.World
         {
             mapRoot = new GameObject("OfficialMap" + mapClassId + "World").transform;
             mapRoot.SetParent(transform, false);
+            OfficialMapVector3 origin = session.Definition.Navigation.Origin;
+            mapGridProjection = new PlanarGridProjection(mapRoot, new Vector3(origin.X, origin.Y, origin.Z));
             WorldMapAssets assets = session.Assets;
             GameObject terrain = null;
             if (mapClassId != 12 && mapClassId != 13 && mapClassId != 14 && MapProfile.NativeGroundLabelResource == null)

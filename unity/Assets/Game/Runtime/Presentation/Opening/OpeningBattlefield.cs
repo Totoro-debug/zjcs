@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Zjcs.Presentation.Combat;
 
 namespace Zjcs.Presentation.Opening
 {
@@ -25,16 +26,16 @@ namespace Zjcs.Presentation.Opening
         private Color damageCureColor = Color.white;
         private Color damageDefaultColor = Color.white;
         private Vector3 damageSpacing;
-        private readonly Vector3 gridOrigin;
+        private readonly PlanarGridProjection gridProjection;
 
         private OpeningBattlefield(GameObject root, Camera camera, Transform unitRoot, Vector3 rootOffset,
-            Vector3 gridOrigin, Vector2Int size, Vector2Int entry, List<Vector2Int> blocked)
+            Vector2Int size, Vector2Int entry, List<Vector2Int> blocked)
         {
             this.root = root;
             StageCamera = camera;
             UnitRoot = unitRoot;
             RootOffset = rootOffset;
-            this.gridOrigin = gridOrigin;
+            gridProjection = new PlanarGridProjection(unitRoot, Vector3.zero);
             Size = size;
             Entry = entry;
             Blocked = blocked;
@@ -46,7 +47,6 @@ namespace Zjcs.Presentation.Opening
         public Vector2Int Size { get; }
         public Vector2Int Entry { get; }
         public List<Vector2Int> Blocked { get; }
-        public Vector3 GridOrigin { get; private set; }
         public int BatchCount { get; private set; }
         public int ParticleCount => particles.Count;
         public GameObject Root => root;
@@ -73,9 +73,9 @@ namespace Zjcs.Presentation.Opening
             var unitObject = new GameObject("OpeningBattlefieldUnits");
             unitObject.transform.SetParent(rootObject.transform, false);
             Vector3 rootOffset = ReadVector(OpeningJson.Array(data["root_offset"], "root offset"));
-            Dictionary<string, object> grid = OpeningJson.Object(data["grid"], "grid");
-            Vector3 gridOrigin = ReadVector(OpeningJson.Array(grid["origin"], "grid origin"));
-            unitObject.transform.localPosition = rootOffset + gridOrigin;
+            // The retained opening geometry has half-unit corners. Its tile
+            // centres are half a unit above and to the right of the logical origin.
+            unitObject.transform.localPosition = rootOffset + ReadGridOrigin(data) + new Vector3(.5f, .5f, 0f);
 
             var textures = new Dictionary<string, Texture2D>(StringComparer.Ordinal);
             foreach (object entry in OpeningJson.Array(data["textures"], "textures"))
@@ -93,7 +93,7 @@ namespace Zjcs.Presentation.Opening
             var materialTemplate = new Material(shader) { name = "OpeningBattlefield" };
 
             var instance = new OpeningBattlefield(rootObject, null, unitObject.transform, rootOffset,
-                gridOrigin, Vector2Int.zero, Vector2Int.zero, new List<Vector2Int>());
+                Vector2Int.zero, Vector2Int.zero, new List<Vector2Int>());
             instance.materials.Add(materialTemplate);
             foreach (object entry in OpeningJson.Array(data["batches"], "batches"))
                 instance.CreateBatch(OpeningJson.Object(entry, "batch"), textures, materialTemplate, log);
@@ -103,7 +103,6 @@ namespace Zjcs.Presentation.Opening
 
             Camera camera = instance.CreateCamera(data);
             var result = new OpeningBattlefield(rootObject, camera, unitObject.transform, rootOffset,
-                gridOrigin,
                 instance.ReadSize(data), instance.ReadEntry(data), instance.ReadBlocked(data))
             {
                 BatchCount = instance.BatchCount,
@@ -186,7 +185,7 @@ namespace Zjcs.Presentation.Opening
             }
         }
 
-        private Vector3 ReadGridOrigin(Dictionary<string, object> data)
+        private static Vector3 ReadGridOrigin(Dictionary<string, object> data)
         {
             Dictionary<string, object> grid = OpeningJson.Object(data["grid"], "grid");
             List<object> origin = OpeningJson.Array(grid["origin"], "grid origin");
@@ -393,8 +392,7 @@ namespace Zjcs.Presentation.Opening
         /// <summary>Official grid cell to world position inside the stage root.</summary>
         public Vector3 CellToWorld(int x, int y) => GridToWorld(x, y);
 
-        public Vector3 GridToWorld(float x, float y) =>
-            new Vector3(x, y, 0f) + RootOffset + gridOrigin;
+        public Vector3 GridToWorld(float x, float y) => gridProjection.GridToWorld(x, y);
 
         public void Dispose()
         {

@@ -78,11 +78,14 @@ namespace Zjcs.Editor
             yield return null;
             var asset = Resources.Load<TextAsset>("Map14/battle-runtime");
             Require(asset, "Map14 battle Resources payload missing");
-            var data = JsonUtility.FromJson<Map10RuntimeBattleData>(asset.text);
+            var data = Map10RuntimeBattleData.Parse(asset.text);
             Require(data.manifest == "871_156598" && data.mapClassId == 14, "Map14 battle version mismatch");
             Require(data.stages.Length == 217 && data.monsterRosters.Length == 217 && data.battleScenes.Length == 20,
                 "Map14 battle closure counts differ");
             Require(data.entityStageBindings.Length == 909, "Map14 component stage bindings differ");
+            var gridOrigin = data.battleScenes.Single(scene => scene.GameId == 1460).FightGridGroundComponent.OriginPos;
+            Require(gridOrigin.X == 40.5f && gridOrigin.Y == 13.5f && gridOrigin.Z == 0f,
+                "Map14 battle grid lost its exported array origin.");
             int[] periodicPlacements = { 528, 1817, 3030, 3929, 4927, 6531, 7535, 8636 };
             Require(data.entityStageBindings.Count(value => (value.PeriodicityGroupIds?.Length ?? 0) > 0
                 || (value.PlayerPeriodicityGroupIds?.Length ?? 0) > 0) == periodicPlacements.Length,

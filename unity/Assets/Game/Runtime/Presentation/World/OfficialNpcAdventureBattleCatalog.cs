@@ -117,6 +117,7 @@ namespace Zjcs.Presentation.World
             }
             NpcAdventureBattleRuntimeData data = JsonUtility.FromJson<NpcAdventureBattleRuntimeData>(source.text);
             if (data == null) throw new InvalidOperationException("Official NPC Adventure data could not be parsed.");
+            if (data.battleScenes != null) Map10RuntimeBattleScene.ReadGridOrigins(source.text, data.battleScenes);
             return new OfficialNpcAdventureBattleCatalog(data);
         }
 

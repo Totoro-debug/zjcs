@@ -66,6 +66,7 @@ namespace Zjcs.Presentation.Home
                 if (resume && !string.IsNullOrEmpty(state.ActiveBattleCheckpoint))
                 {
                     checkpoint = FightBattleCheckpointSerializer.Load(state.ActiveBattleCheckpoint);
+                    scene.ApplyGridOrigin(checkpoint.Grid);
                     if (checkpoint.StageId != stage.Id)
                         throw new InvalidOperationException("羁绊冒险 checkpoint 关卡不匹配。");
                 }
@@ -176,10 +177,8 @@ namespace Zjcs.Presentation.Home
             Transform playerTransform = host.HomePlayerTransform;
             if (playerTransform == null) throw new InvalidOperationException("主城角色模型不可用。");
             FightBattleUnitState player = checkpoint.Units.First(value => value.Id == 1);
-            Map10RuntimeVector3 origin = scene.FightGridGroundComponent.OriginPos;
-            battleRoot = new GameObject("NpcAdventureBattleWorld").transform;
-            battleRoot.position = playerTransform.position - new Vector3(origin.X + player.X,
-                origin.Y + player.Y, origin.Z);
+            battleRoot = OfficialBattleGridMapper.CreateAnchoredRoot("NpcAdventureBattleWorld", checkpoint.Grid,
+                new FightGridPoint(player.X, player.Y), playerTransform.position);
             OfficialCombatAssetCatalog assets = OfficialCombatAssetCatalog.LoadDefault();
             OfficialCombatSkillIconCatalog skillIcons = OfficialCombatSkillIconCatalog.TryLoadDefault();
             OfficialBattleHudCatalog hudCatalog = OfficialBattleHudCatalog.LoadDefault();

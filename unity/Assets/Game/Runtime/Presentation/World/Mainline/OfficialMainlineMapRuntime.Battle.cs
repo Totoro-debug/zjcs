@@ -276,19 +276,15 @@ namespace Zjcs.Presentation.World
                 return;
             }
             if (checkpoint.StageType == 0) checkpoint.StageType = stage.Type;
+            if (resume != null) scene.ApplyGridOrigin(checkpoint.Grid);
             FightBattleUnitState mainPlayer = checkpoint.Units.FirstOrDefault(value => value.Id == 1);
             Map10RuntimeFactionInfo playerFaction = scene.FightComponent.FactionInfoList.First(value => value.Faction == 0);
             Map10RuntimePoint playerEntry = playerFaction.EntryPosList[0];
             var entryPoint = mainPlayer == null
                 ? new FightGridPoint(playerEntry.X, playerEntry.Y)
                 : new FightGridPoint(mainPlayer.X, mainPlayer.Y);
-            var grid = checkpoint.Grid;
-            Vector3 battlePlayerPoint = new Vector3(grid.OriginX + entryPoint.X,
-                grid.OriginY + entryPoint.Y, grid.OriginZ);
-            var anchorObject = new GameObject("Map10BattleAnchor_" + stage.Id);
-            anchorObject.transform.SetParent(mapRoot, false);
-            anchorObject.transform.position = avatar.transform.position - battlePlayerPoint;
-            battleRoot = anchorObject.transform;
+            battleRoot = OfficialBattleGridMapper.CreateAnchoredRoot("Map10BattleAnchor_" + stage.Id,
+                checkpoint.Grid, entryPoint, avatar.transform.position, mapRoot);
             entityRoot.gameObject.SetActive(false);
 
             battleController = new GameObject("Map10OfficialBattle").AddComponent<OfficialBattleRuntimeController>();

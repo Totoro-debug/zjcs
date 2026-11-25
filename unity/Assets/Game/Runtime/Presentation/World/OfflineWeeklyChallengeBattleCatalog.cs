@@ -38,6 +38,7 @@ namespace Zjcs.Offline.World
             if (value == null || value.manifest != ExpectedManifest || value.stages == null
                 || value.monsterRosters == null || value.battleScenes == null)
                 throw new InvalidDataException("Official weekly battle catalog is invalid.");
+            Map10RuntimeBattleScene.ReadGridOrigins(asset.text, value.battleScenes);
             if (value.stages.Length != 201 || value.battleScenes.Length != 3
                 || value.stages.Select(stage => stage.Id).Distinct().Count() != value.stages.Length)
                 throw new InvalidDataException("Official weekly battle catalog counts are inconsistent.");

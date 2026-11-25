@@ -44,6 +44,7 @@ namespace Zjcs.Presentation.Home
             if (session.TryResumeBattle(stageId, out string savedCheckpoint, out periodStartLocalTicks))
             {
                 checkpoint = FightBattleCheckpointSerializer.Load(savedCheckpoint);
+                scene.ApplyGridOrigin(checkpoint.Grid);
                 if (checkpoint.StageId != stageId)
                     throw new InvalidOperationException("Saved weekly challenge stage does not match its activity entry.");
             }
@@ -59,18 +60,16 @@ namespace Zjcs.Presentation.Home
                 });
                 session.StartBattle(stageId, periodStartLocalTicks, FightBattleCheckpointSerializer.Save(checkpoint));
             }
-            MountBattle(checkpoint, scene, stage);
+            MountBattle(checkpoint, stage);
         }
 
-        private void MountBattle(FightBattleCheckpoint checkpoint, Map10RuntimeBattleScene scene, Map10RuntimeStage stage)
+        private void MountBattle(FightBattleCheckpoint checkpoint, Map10RuntimeStage stage)
         {
             Transform playerTransform = host.HomePlayerTransform;
             if (playerTransform == null) throw new InvalidOperationException("Official home player model is absent.");
-            battleRoot = new GameObject("WeeklyChallengeBattleWorld").transform;
             FightBattleUnitState player = checkpoint.Units.Find(value => value.Id == 1);
-            Map10RuntimeVector3 origin = scene.FightGridGroundComponent.OriginPos;
-            battleRoot.position = playerTransform.position - new Vector3(origin.X + player.X,
-                origin.Y + player.Y, origin.Z);
+            battleRoot = OfficialBattleGridMapper.CreateAnchoredRoot("WeeklyChallengeBattleWorld", checkpoint.Grid,
+                new FightGridPoint(player.X, player.Y), playerTransform.position);
             OfficialCombatAssetCatalog assets = OfficialCombatAssetCatalog.LoadDefault();
             var options = OfficialMapBattleSessionOptionsBuilder.Create(stage, true, 3, 3, player.X, player.Y);
             // The packaged 4800 row disables LeaveInPlaying; the user-confirmed solo

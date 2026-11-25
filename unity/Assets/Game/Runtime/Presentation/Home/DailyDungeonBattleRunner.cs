@@ -293,15 +293,12 @@ namespace Zjcs.Presentation.Home
             OfficialCombatAssetCatalog combatAssets, bool restore, bool isChallenge)
         {
             FightOfficialCombatCatalog combat = combatAssets.Load();
-            var world = new GameObject(isChallenge ? "DailyChallengeBattleWorld" : "DailyDungeonBattleWorld");
-            battleRoot = world.transform;
             Transform playerTransform = battlePlayer;
             if (playerTransform == null) throw new InvalidOperationException("Official home character model is unavailable.");
             FightBattleUnitState player = checkpoint.Units.First(value => value.Id == 1);
-            float[] origin = scene.gridOrigin ?? new[] { 0f, 0f, 0f };
-            Vector3 playerPoint = new Vector3(origin[0] + player.X, origin[1] + player.Y,
-                origin.Length > 2 ? origin[2] : 0f);
-            battleRoot.position = playerTransform.position - playerPoint;
+            battleRoot = OfficialBattleGridMapper.CreateAnchoredRoot(
+                isChallenge ? "DailyChallengeBattleWorld" : "DailyDungeonBattleWorld", checkpoint.Grid,
+                new FightGridPoint(player.X, player.Y), playerTransform.position);
 
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
             OfficialBattleHudCatalog hudCatalog = OfficialBattleHudCatalog.LoadDefault();

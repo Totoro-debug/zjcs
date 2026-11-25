@@ -133,6 +133,7 @@ namespace Zjcs.Presentation.Home
                 RandomSeed = StableSeed(host.ActiveProfileSlotId, stage.Id),
                 UseMonsterProperties = true
             });
+            if (restore) scene.ApplyGridOrigin(checkpoint.Grid);
             MountBattle(checkpoint, scene, stage, restore);
             if (backgroundExecution) progress.SaveBackgroundCheckpoint(entryIndex, checkpoint);
             else progress.SaveForegroundCheckpoint(entryIndex, checkpoint);
@@ -152,12 +153,9 @@ namespace Zjcs.Presentation.Home
             disposed = false;
             Transform playerTransform = host.HomePlayerTransform;
             if (playerTransform == null) throw new InvalidOperationException("Official player model is unavailable.");
-            battleRoot = new GameObject("FantasyTowerBattleWorld").transform;
             FightBattleUnitState player = checkpoint.Units.First(value => value.Id == 1);
-            battleRoot.position = playerTransform.position - new Vector3(
-                scene.FightGridGroundComponent.OriginPos.X + player.X,
-                scene.FightGridGroundComponent.OriginPos.Y + player.Y,
-                scene.FightGridGroundComponent.OriginPos.Z);
+            battleRoot = OfficialBattleGridMapper.CreateAnchoredRoot("FantasyTowerBattleWorld", checkpoint.Grid,
+                new FightGridPoint(player.X, player.Y), playerTransform.position);
 
             OfficialCombatAssetCatalog combatAssets = OfficialCombatAssetCatalog.LoadDefault();
             FightOfficialCombatCatalog combat = combatAssets.Load();

@@ -115,6 +115,7 @@ namespace Zjcs.Presentation.World
             }
             FantasyTowerRuntimeData data = JsonUtility.FromJson<FantasyTowerRuntimeData>(source.text);
             if (data == null) throw new InvalidOperationException("Official Fantasy Tower data could not be parsed.");
+            if (data.battleScenes != null) Map10RuntimeBattleScene.ReadGridOrigins(source.text, data.battleScenes);
             return new OfficialFantasyTowerCatalog(data);
         }
 

@@ -56,12 +56,9 @@ namespace Zjcs.Presentation.World
 
             private void TryMoveToPointer(Vector2 pointer)
             {
-                Vector3 screen = pointer;
-                screen.z = Mathf.Abs(host.worldCamera.transform.position.z);
-                Vector3 world = host.worldCamera.ScreenToWorldPoint(screen);
-                OfficialMapNavigationView.WorldToGrid(host.session.Definition.Navigation,
-                    new OfficialMapVector3 { X = world.x, Y = world.y, Z = 0f }, out int x, out int y);
-                StartMovement(new MapGridPoint(x, y), null);
+                if (!host.mapGridProjection.TryScreenToWorld(host.worldCamera, pointer, out Vector3 world)) return;
+                Vector2Int cell = host.mapGridProjection.WorldToGrid(world);
+                StartMovement(new MapGridPoint(cell.x, cell.y), null);
             }
 
             public void OnEntitySelected(OfficialMap10EntityInfo entity)
@@ -317,11 +314,7 @@ namespace Zjcs.Presentation.World
                 }
             }
 
-            public Vector3 GridToWorld(MapGridPoint point)
-            {
-                OfficialMapVector3 world = OfficialMapNavigationView.GridToWorld(host.session.Definition.Navigation, point.X, point.Y);
-                return new Vector3(world.X, world.Y, world.Z - 0.1f);
-            }
+            public Vector3 GridToWorld(MapGridPoint point) => host.mapGridProjection.GridToWorld(point.X, point.Y, -.1f);
         }
     }
 }

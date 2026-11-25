@@ -671,15 +671,12 @@ namespace Zjcs.Presentation.World
 
         private Vector3 StoryWorldPoint(float x, float y)
         {
-            OfficialMapVector3 origin = session.Definition.Navigation.Origin;
-            return new Vector3(origin.X + x, origin.Y + y, origin.Z - y * 0.001f - 0.1f);
+            return mapGridProjection.GridToWorld(x, y, -y * .001f - .1f);
         }
 
         private Vector2 StoryGridPosition(Vector3 world)
         {
-            OfficialMapNavigationView.WorldToGrid(session.Definition.Navigation,
-                new OfficialMapVector3 { X = world.x, Y = world.y }, out int x, out int y);
-            return new Vector2(x, y);
+            return mapGridProjection.WorldToGrid(world);
         }
 
         private void SetStoryWorldUiHidden(bool hidden)

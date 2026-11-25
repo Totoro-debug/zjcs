@@ -28,7 +28,7 @@ namespace Zjcs.Presentation.Home
         {
             host = runtime ?? throw new ArgumentNullException(nameof(runtime));
             request = settings ?? throw new ArgumentNullException(nameof(settings));
-            var data = JsonUtility.FromJson<Map10RuntimeBattleData>(request.BattleRuntimeJson);
+            var data = Map10RuntimeBattleData.Parse(request.BattleRuntimeJson);
             if (data == null || (data.manifest != "854_156383" && data.manifest != "884_156692"))
                 throw new InvalidOperationException("Original battle data is absent.");
             Map10RuntimeStage stage = data.stages.Single(value => value.Id == request.StageId);
@@ -48,19 +48,16 @@ namespace Zjcs.Presentation.Home
                     EnableMonsterUnlimitHp = request.EnableMonsterUnlimitHp
                 }
             });
-            MountBattle(checkpoint, scene, stage);
+            MountBattle(checkpoint, stage);
         }
 
-        private void MountBattle(FightBattleCheckpoint checkpoint, Map10RuntimeBattleScene scene, Map10RuntimeStage stage)
+        private void MountBattle(FightBattleCheckpoint checkpoint, Map10RuntimeStage stage)
         {
             Transform playerTransform = host.HomePlayerTransform;
             if (playerTransform == null) throw new InvalidOperationException("Official home player model is absent.");
-            battleRoot = new GameObject("SkillDamageTestBattleWorld").transform;
             FightBattleUnitState player = checkpoint.Units.First(value => value.Id == 1);
-            battleRoot.position = playerTransform.position - new Vector3(
-                scene.FightGridGroundComponent.OriginPos.X + player.X,
-                scene.FightGridGroundComponent.OriginPos.Y + player.Y,
-                scene.FightGridGroundComponent.OriginPos.Z);
+            battleRoot = OfficialBattleGridMapper.CreateAnchoredRoot("SkillDamageTestBattleWorld", checkpoint.Grid,
+                new FightGridPoint(player.X, player.Y), playerTransform.position);
             OfficialCombatAssetCatalog assets = OfficialCombatAssetCatalog.LoadDefault();
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
             var battleRequest = new OfficialBattleRequest

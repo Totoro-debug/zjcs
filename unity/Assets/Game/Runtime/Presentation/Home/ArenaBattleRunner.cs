@@ -118,15 +118,11 @@ namespace Zjcs.Presentation.Home
             }
             else checkpoint = BuildCheckpoint(scene, guard, combatAssets, combat);
 
-            var world = new GameObject("ArenaBattleWorld");
-            battleRoot = world.transform;
             Transform playerTransform = host.HomePlayerTransform;
             if (playerTransform == null) throw new InvalidOperationException("Official home character model is unavailable.");
             FightBattleUnitState player = checkpoint.Units.First(value => value.Id == 1);
-            float[] origin = scene.gridOrigin ?? new[] { 0f, 0f, 0f };
-            Vector3 playerPoint = new Vector3(origin[0] + player.X, origin[1] + player.Y,
-                origin.Length > 2 ? origin[2] : 0f);
-            battleRoot.position = playerTransform.position - playerPoint;
+            battleRoot = OfficialBattleGridMapper.CreateAnchoredRoot("ArenaBattleWorld", checkpoint.Grid,
+                new FightGridPoint(player.X, player.Y), playerTransform.position);
 
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
             ArenaRuntimeAppearanceSet guardAppearance = (guard.appendAppearances
@@ -168,10 +164,9 @@ namespace Zjcs.Presentation.Home
                 host.Arena.ActiveGuardSex, guard.profession, skinByType);
             guardTransform = guardModel.transform;
             guardTransform.SetParent(battleRoot, false);
-            int[] guardPosition = scene.factions.First(value => value.id == 1).entryPositions[0];
-            guardTransform.localPosition = new Vector3(origin[0] + guardPosition[0],
-                origin[1] + guardPosition[1], origin.Length > 2 ? origin[2] : 0f);
             FightBattleUnitState guardUnit = checkpoint.Units.First(value => value.Id == 2);
+            var mapper = new OfficialBattleGridMapper(battleRoot, checkpoint.Grid);
+            guardTransform.position = mapper.GridToWorld(new FightGridPoint(guardUnit.X, guardUnit.Y));
             Vector3 guardScale = guardTransform.localScale;
             guardScale.x = Mathf.Abs(guardScale.x) * (guardUnit.Direction == 1 ? -1f : 1f);
             guardTransform.localScale = guardScale;

@@ -31,7 +31,7 @@ def prepare(work):
         if path.is_file() and path.suffix in ('.cs','.asmref','.meta'): copy(path)
     presentation = ROOT/'unity/Assets/Game/Runtime/Presentation/Combat'
     for name in ('OfficialBattleMovementEffects.cs','OfficialBattleGroundEffectLibrary.cs',
-                 'OfficialBattleGridMapper.cs','OfficialBattleSceneBindings.cs'):
+                 'OfficialBattleGridMapper.cs','OfficialBattleSceneBindings.cs','PlanarGridProjection.cs'):
         copy(presentation/name); copy(presentation/(name+'.meta'))
     asmdef = project/'Assets/Game/Runtime/Presentation/Combat/Zjcs.Presentation.Combat.asmdef'
     asmdef.write_bytes(json.dumps(dict(name='Zjcs.Presentation.Combat',autoReferenced=False,

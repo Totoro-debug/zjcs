@@ -1,4 +1,7 @@
 using System;
+using System.IO;
+using Newtonsoft.Json.Linq;
+using UnityEngine;
 using Zjcs.Combat.Official;
 
 namespace Zjcs.Presentation.World
@@ -13,6 +16,13 @@ namespace Zjcs.Presentation.World
         public Map10RuntimeRoster[] monsterRosters;
         public Map10RuntimeBattleScene[] battleScenes;
         public Map10RuntimeBattleEntityStageBinding[] entityStageBindings;
+
+        public static Map10RuntimeBattleData Parse(string json)
+        {
+            var data = JsonUtility.FromJson<Map10RuntimeBattleData>(json);
+            if (data?.battleScenes != null) Map10RuntimeBattleScene.ReadGridOrigins(json, data.battleScenes);
+            return data;
+        }
     }
 
     [Serializable]
@@ -121,6 +131,53 @@ namespace Zjcs.Presentation.World
         public int GameId;
         public Map10RuntimeFightGridGroundComponent FightGridGroundComponent;
         public Map10RuntimeFightComponent FightComponent;
+
+        // The exporters emit both array and object vectors. JsonUtility silently
+        // fills the object with zeroes when the source uses the array form.
+        internal static void ReadGridOrigins(string json, Map10RuntimeBattleScene[] scenes)
+        {
+            var rows = JObject.Parse(json)["battleScenes"] as JArray;
+            if (rows == null || rows.Count != scenes.Length)
+                throw new InvalidDataException("Battle scene bindings differ from the source catalog.");
+            for (int index = 0; index < scenes.Length; index++)
+            {
+                var scene = scenes[index];
+                if (!(rows[index] is JObject row) || scene?.FightGridGroundComponent == null
+                    || row.Value<int>("GameId") != scene.GameId)
+                    throw new InvalidDataException("Battle scene grid binding is invalid.");
+
+                JToken origin = row["FightGridGroundComponent"]?["OriginPos"];
+                if (origin is JArray array && array.Count == 3)
+                    scene.FightGridGroundComponent.OriginPos = ReadOrigin(array[0], array[1], array[2]);
+                else if (origin is JObject vector)
+                    scene.FightGridGroundComponent.OriginPos = ReadOrigin(vector["X"], vector["Y"], vector["Z"]);
+                else
+                    throw new InvalidDataException("Battle scene grid origin is missing or malformed.");
+            }
+        }
+
+        public void ApplyGridOrigin(FightBattleGrid grid)
+        {
+            var origin = FightGridGroundComponent?.OriginPos;
+            if (grid == null || origin == null)
+                throw new InvalidDataException("Battle checkpoint or scene grid origin is missing.");
+            grid.OriginX = origin.X;
+            grid.OriginY = origin.Y;
+            grid.OriginZ = origin.Z;
+        }
+
+        private static Map10RuntimeVector3 ReadOrigin(JToken x, JToken y, JToken z) =>
+            new Map10RuntimeVector3 { X = ReadCoordinate(x), Y = ReadCoordinate(y), Z = ReadCoordinate(z) };
+
+        private static float ReadCoordinate(JToken token)
+        {
+            if (token?.Type != JTokenType.Float && token?.Type != JTokenType.Integer)
+                throw new InvalidDataException("Battle scene grid coordinate is missing or malformed.");
+            float value = token.Value<float>();
+            if (float.IsNaN(value) || float.IsInfinity(value))
+                throw new InvalidDataException("Battle scene grid coordinate is not finite.");
+            return value;
+        }
     }
 
     [Serializable]
