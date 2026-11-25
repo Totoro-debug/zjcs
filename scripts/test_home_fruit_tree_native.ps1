@@ -21,6 +21,12 @@ $running = @(Get-CimInstance Win32_Process -Filter "Name = 'Unity.exe'" | Where-
     $_.CommandLine -and $_.CommandLine.Replace('\','/').Contains($projectPath.Replace('\','/'))
 })
 if ($running.Count) { throw 'Stop the independent project before staging test sources.' }
+$worldSource = Join-Path $repository 'unity/Assets/Game/Runtime/Official/HomeFruitTreeWorld'
+$worldDestination = Join-Path $projectPath 'Assets/Game/Runtime/Official/HomeFruitTreeWorld'
+Get-ChildItem -LiteralPath $worldSource -File | Copy-Item -Destination $worldDestination -Force
+$outputSource = Join-Path $repository 'unity/Assets/Game/Runtime/Official/HomeFruitTreeOutput'
+$outputDestination = Join-Path $projectPath 'Assets/Game/Runtime/Official/HomeFruitTreeOutput'
+Get-ChildItem -LiteralPath $outputSource -File | Copy-Item -Destination $outputDestination -Force
 $receipt = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/home-fruit-tree-native-source-manifest.json') -Raw | ConvertFrom-Json -AsHashtable
 foreach ($relative in $receipt.outputs.Keys) {
     $source = Join-Path $repository $relative
@@ -31,11 +37,13 @@ foreach ($relative in $receipt.outputs.Keys) {
 }
 $fixture = Join-Path $projectPath 'Assets/Editor/HomeFruitTreeNative'
 New-Item -ItemType Directory -Path $fixture -Force | Out-Null
+@{ links = @($receipt.dynamic_prefabs | ForEach-Object { @{ AssetGuid = $_.asset_guid; Prefab = $_.prefab.Substring(6) } }) } |
+    ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $fixture 'fruit-links.json') -Encoding utf8
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_fruit_tree_native_validation.cs') -Destination (Join-Path $fixture 'HomeFruitTreeNativeValidation.cs') -Force
 @{
     name = 'HomeFruitTreeNativeValidation'
     includePlatforms = @('Editor')
-    references = @('spine-unity', 'spine-csharp')
+    references = @('spine-unity', 'spine-csharp', 'Zjcs.Official.HomeFruitTreeWorld', 'Zjcs.Official.HomeFurniture', 'Zjcs.Official.HomeFruitTreeOutput', 'Zjcs.Official.WorldUI')
 } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $fixture 'HomeFruitTreeNativeValidation.asmdef') -Encoding utf8
 $editor = (Get-Content -LiteralPath (Join-Path $repository 'unity-tools.json') -Raw | ConvertFrom-Json).editorExecutable
 $log = Join-Path $work 'fruit-tree-native.log'

@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Fruit_Red_Christmas_Snow_Mask
+  m_Shader: {fileID: 4800000, guid: b67a05d07cd512a82d1bfb060f9969b5, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: null
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+      _MainTex:
+        m_Texture: {fileID: 2800000, guid: f3aeba18ca91a0f1b07e672ec0092241, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _MaskTex:
+        m_Texture: {fileID: 2800000, guid: da6edfdbc6fa36dd9e1f38c1a2434e39, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _SnowDetailTex:
+        m_Texture: {fileID: 2800000, guid: d509d5194250f4435754f0c9da95860f, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: {}
+    m_Floats: {_EdgeSoftness: 0.1, _EnableExternalAlpha: 0, _LightAtten: 0.5, _NoiseIntensity: 0.1, _SnowTileScale: 1}
+    m_Colors:
+      _Color: {r: 1, g: 1, b: 1, a: 1}
+      _Flip: {r: 1, g: 1, b: 1, a: 1}
+      _Param: {r: 0, g: 0, b: 1, a: 1}
+      _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+      _SnowColorTint: {r: 0.8745099, g: 0.93725497, b: 1, a: 1}
+      _SnowColorTint2: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
