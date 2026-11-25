@@ -100,7 +100,7 @@ namespace Zjcs.Presentation.Combat
                 hudView?.RefreshSkillSlots(Checkpoint, skillIconResolver);
                 hudView?.RefreshPet(Checkpoint, statueProgress?.Save?.Player);
                 hudView?.RefreshTimeline(Checkpoint, timelinePortraitResolver, timelineFactionResolver, false, null);
-                hudView?.RefreshBoss(Checkpoint, UnitName);
+                hudView?.RefreshBoss(Checkpoint, UnitName, timelinePortraitResolver);
                 hudView?.RefreshStageStatus(Checkpoint);
             }
         }
@@ -179,11 +179,17 @@ namespace Zjcs.Presentation.Combat
             var petPortraits = Resources.Load<OfficialBattleMonsterPortraitCatalog>("Combat/OfficialBattlePetPortraitCatalog");
             Sprite portraitFallback = resolvedHudCatalog.FindSprite("C_none-fa3e084e40.png");
             if (portraitFallback == null) throw new InvalidOperationException("Official battle fallback portrait is missing.");
+            Sprite MonsterPortrait(FightBattleUnitState unit)
+            {
+                int iconId = combatCatalog.MonsterIconId(unit.MonsterId);
+                return portraits?.Find(iconId) ?? (OfficialBattleHudView.UsesBossHealthBar(unit)
+                    ? resolvedHudCatalog.FindMonsterPortrait(iconId) : null);
+            }
             // GameRoundCharacterItem.RefreshIcon checks FightRolePetEntityComponent
             // before the monster branch and uses GetPetIcon(PetEntityClassId).
             timelinePortrait = unit => portraitOverride?.Invoke(unit) ?? (unit.CharacterType == 7
                 ? petPortraits?.Find(unit.MonsterId) : unit.MonsterId > 0
-                && unit.CharacterType != 1 ? portraits?.Find(combatCatalog.MonsterIconId(unit.MonsterId)) : null)
+                && unit.CharacterType != 1 ? MonsterPortrait(unit) : null)
                 ?? portraitFallback;
             this.statueProgress = statueProgress;
             statueEffectsEnded = false;
@@ -254,7 +260,7 @@ namespace Zjcs.Presentation.Combat
                     nextHud.Refresh(checkpoint);
                     nextHud.RefreshSkillSlots(checkpoint, skillIcon);
                     nextHud.RefreshTimeline(checkpoint, timelinePortrait, timelineFactionIcon, false);
-                    nextHud.RefreshBoss(checkpoint, UnitName);
+                    nextHud.RefreshBoss(checkpoint, UnitName, timelinePortrait);
                     nextHud.RefreshStageStatus(checkpoint);
                 }
                 nextScene.BindMovementActions(nextSkillGraphPlayback);
@@ -387,7 +393,7 @@ namespace Zjcs.Presentation.Combat
                         hudView.RefreshPet(result.Checkpoint, statueProgress?.Save?.Player);
                         hudView.RefreshTimeline(result.Checkpoint, timelinePortraitResolver,
                             timelineFactionResolver, true, result.Event);
-                        hudView.RefreshBoss(result.Checkpoint, UnitName);
+                        hudView.RefreshBoss(result.Checkpoint, UnitName, timelinePortraitResolver);
                         hudView.RefreshStageStatus(result.Checkpoint);
                     }
                     // Install the settled CD snapshot before native zero-delay starts.
@@ -814,7 +820,7 @@ namespace Zjcs.Presentation.Combat
             hudView.Refresh(Checkpoint);
             hudView.RefreshSkillSlots(Checkpoint, skillIconResolver);
             hudView.RefreshTimeline(Checkpoint, timelinePortraitResolver, timelineFactionResolver, false);
-            hudView.RefreshBoss(Checkpoint, UnitName);
+            hudView.RefreshBoss(Checkpoint, UnitName, timelinePortraitResolver);
             hudView.RefreshStageStatus(Checkpoint);
             hudView.RefreshPhase(Phase, sessionOptions);
             hudView.RefreshPrepareCountdown(phases.CountdownRemaining);

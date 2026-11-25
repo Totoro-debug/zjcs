@@ -127,9 +127,17 @@ namespace Zjcs.Presentation.Combat
             GameObject bossParent = renderer.Find("/FightMainPanel/Content/Top/DynamicContent/TopContent");
             if (bossParent == null)
                 throw new InvalidOperationException("Official boss HUD parent is missing.");
-            bossRoot = bossRenderer.Create("boss", bossParent.transform);
-            bossRoot.SetActive(false);
+            MountBoss(bossParent.transform);
             return root;
+        }
+
+        public RectTransform MountBoss(Transform parent)
+        {
+            bossRoot = bossRenderer.Create("boss", parent);
+            ConfigureBossPortrait(BossFrontPath);
+            ConfigureBossPortrait(BossBehindPath);
+            bossRoot.SetActive(false);
+            return (RectTransform)bossRoot.transform;
         }
 
         /// <summary>
@@ -262,34 +270,42 @@ namespace Zjcs.Presentation.Combat
                 resolvedCatalog, shown, stageStatusCheckpoint);
         }
 
+        public static bool UsesBossHealthBar(FightBattleUnitState unit) =>
+            unit.MonsterId > 0 && unit.MonsterType >= 3 && unit.MonsterType <= 5;
+
         public void RefreshBoss(FightBattleCheckpoint checkpoint,
-            Func<FightBattleUnitState, string> nameResolver = null)
+            Func<FightBattleUnitState, string> nameResolver = null,
+            Func<FightBattleUnitState, Sprite> portraitResolver = null)
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
             if (bossRoot == null) return;
             bossUnits.Clear();
             foreach (FightBattleUnitState unit in checkpoint.Units)
             {
-                if (unit == null || unit.Hp <= 0 || unit.Ended || unit.Side == 1 || unit.MonsterId <= 0)
+                if (unit == null || unit.Hp <= 0 || unit.Ended || unit.Side == 1 || !UsesBossHealthBar(unit))
                     continue;
-                if (unit.MonsterType < 3 || unit.MonsterType > 5) continue;
                 if (!IsWaveSpawned(checkpoint, unit.Id)) continue;
                 bossUnits.Add(unit);
                 if (bossUnits.Count >= MaxBossCount) break;
             }
             if (bossUnits.Count == 0)
             {
+                bossHpBarStates.Clear();
                 bossRoot.SetActive(false);
                 return;
             }
             bossRoot.SetActive(true);
-            BindBossItem(BossFrontPath, bossUnits[0], nameResolver);
+            BindBossItem(BossFrontPath, bossUnits[0], nameResolver, portraitResolver);
             if (bossUnits.Count > 1)
             {
                 bossRenderer.SetActive(BossBehindPath, true);
-                BindBossItem(BossBehindPath, bossUnits[1], nameResolver);
+                BindBossItem(BossBehindPath, bossUnits[1], nameResolver, portraitResolver);
             }
-            else bossRenderer.SetActive(BossBehindPath, false);
+            else
+            {
+                bossHpBarStates.Remove(BossBehindPath);
+                bossRenderer.SetActive(BossBehindPath, false);
+            }
         }
 
         /// <summary>
@@ -331,10 +347,37 @@ namespace Zjcs.Presentation.Combat
             return statusRenderer.Create("status_item", parent);
         }
 
+        private void ConfigureBossPortrait(string path)
+        {
+            Image portrait = ImageAt(path + "/ImgeHead");
+            Image bar = ImageAt(path + "/HpBg");
+            if (portrait == null || bar == null) return;
+
+            const float size = 96f;
+            const float gap = 8f;
+            RectTransform barRect = bar.rectTransform;
+            RectTransform portraitRect = portrait.rectTransform;
+            portraitRect.anchorMin = barRect.anchorMin;
+            portraitRect.anchorMax = barRect.anchorMax;
+            portraitRect.pivot = new Vector2(1f, .5f);
+            portraitRect.sizeDelta = new Vector2(size, size);
+            portraitRect.anchoredPosition = barRect.anchoredPosition
+                + new Vector2(barRect.rect.xMin - gap, barRect.rect.center.y);
+            portrait.preserveAspect = true;
+            portrait.raycastTarget = false;
+        }
+
         private void BindBossItem(string path, FightBattleUnitState unit,
-            Func<FightBattleUnitState, string> nameResolver)
+            Func<FightBattleUnitState, string> nameResolver,
+            Func<FightBattleUnitState, Sprite> portraitResolver)
         {
             bossRenderer.SetActive(path, true);
+            Image portrait = ImageAt(path + "/ImgeHead");
+            if (portrait != null)
+            {
+                portrait.sprite = portraitResolver?.Invoke(unit);
+                portrait.enabled = portrait.sprite != null;
+            }
             BossHpBarRuntime hpRuntime = BossHpBarRuntimeFor(path, unit);
             BossHpBarDisplay bar = CalculateBossHpBarDisplay(unit,
                 hpRuntime.DisplayHp, hpRuntime.DisplayTotal);

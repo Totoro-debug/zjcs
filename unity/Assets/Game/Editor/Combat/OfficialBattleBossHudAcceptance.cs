@@ -19,6 +19,7 @@ namespace Zjcs.Editor.Combat
         private static OfficialBattleHudView view;
         private static GameObject canvas, root;
         private static FightBattleCheckpoint checkpoint;
+        private static OfficialBattleHudCatalog catalog;
         private static int stage;
         private static double next;
         private static Camera outputCamera;
@@ -89,13 +90,14 @@ namespace Zjcs.Editor.Combat
                 scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 scaler.referenceResolution = new Vector2(1080, 1920);
                 scaler.matchWidthOrHeight = .5f;
-                view = new OfficialBattleHudView(OfficialBattleHudCatalog.LoadDefault());
+                catalog = OfficialBattleHudCatalog.LoadDefault();
+                view = new OfficialBattleHudView(catalog);
                 root = view.Mount(canvas.transform);
                 checkpoint = new FightBattleCheckpoint { StageId = 1, MaxRound = 14, RandomSeed = 1 };
                 checkpoint.Units.Add(new FightBattleUnitState { Id = 2, MonsterId = 3803,
                     MonsterType = 3, Side = 2, Hp = 1000, MaxHp = 1000, LastMaxHp = 1000, MaxHpPlies = 1 });
                 checkpoint.Units[0].Turn.Id = 2;
-                view.RefreshBoss(checkpoint, _ => "Boss");
+                RefreshBoss();
                 stage = 0;
                 next = EditorApplication.timeSinceStartup + 2;
                 EditorApplication.update += Tick;
@@ -111,10 +113,13 @@ namespace Zjcs.Editor.Combat
                 if (stage == 2)
                 {
                     checkpoint.Units[0].Hp = 0;
-                    view.RefreshBoss(checkpoint);
-                    Require(!root.transform.Find("Content/Top/DynamicContent/TopContent/FightMainPanelBossUI").gameObject.activeSelf,
-                        "Dead Boss bar remained visible.");
-                    Debug.Log("[Boss HUD] Official parent, viewport, original sprite, full/damaged HP, checkpoint restore, death hide and simulated HUD click passed.");
+                    RefreshBoss();
+                    var bossAfterDeath = root.transform.Find("Content/Top/DynamicContent/TopContent/FightMainPanelBossUI");
+                    VerifyPortrait(bossAfterDeath.Find("Anim/FrontItem"), 3613);
+                    checkpoint.Units[1].Hp = 0;
+                    RefreshBoss();
+                    Require(!bossAfterDeath.gameObject.activeSelf, "Dead Boss bar remained visible.");
+                    Debug.Log("[Boss HUD] Large HP, both left portraits, checkpoint restore, death hide and simulated HUD click passed.");
                     Finish(null);
                     return;
                 }
@@ -123,7 +128,7 @@ namespace Zjcs.Editor.Combat
                 Require(boss != null && boss.gameObject.activeInHierarchy, "Boss is absent from the official layout parent.");
                 var fill = boss.Find("Anim/FrontItem/HpBg/TopImg").GetComponent<Image>();
                 Canvas.ForceUpdateCanvases();
-                Capture("boss-geometry.png");
+                VerifyPortrait(boss.Find("Anim/FrontItem"), 3803);
                 var corners = new Vector3[4];
                 fill.rectTransform.GetWorldCorners(corners);
                 foreach (var corner in corners)
@@ -150,18 +155,39 @@ namespace Zjcs.Editor.Combat
                     ExecuteEvents.Execute(button.gameObject, pointer, ExecuteEvents.pointerClickHandler);
                     Require(clicks == 1, "Simulated HUD click failed.");
                     checkpoint.Units[0].Hp = 400;
+                    var second = new FightBattleUnitState { Id = 3, MonsterId = 3613,
+                        MonsterType = 3, Side = 2, Hp = 200, MaxHp = 200, LastMaxHp = 200 };
+                    second.Turn.Id = 3;
+                    checkpoint.Units.Add(second);
                     checkpoint = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
-                    view.RefreshBoss(checkpoint);
+                    RefreshBoss();
                     for (int i = 0; i < 200; i++) view.Tick(.016f);
                     next = EditorApplication.timeSinceStartup + 1;
                     return;
                 }
                 Require(Mathf.Abs(fill.fillAmount - .4f) < .005f, "Restored damaged HP did not update.");
+                VerifyPortrait(boss.Find("Anim/BehindItem"), 3613);
                 Capture("boss-damaged.png");
                 // Let the screenshot reach the render boundary before hiding.
                 next = EditorApplication.timeSinceStartup + 1;
             }
             catch (Exception error) { Finish(error); }
+        }
+
+        private static void RefreshBoss() => view.RefreshBoss(checkpoint, _ => "Boss",
+            unit => catalog.FindMonsterPortrait(unit.MonsterId));
+
+        private static void VerifyPortrait(Transform row, int iconId)
+        {
+            var portrait = row.Find("ImgeHead").GetComponent<Image>();
+            var bar = (RectTransform)row.Find("HpBg");
+            Require(portrait.isActiveAndEnabled && portrait.sprite != null
+                && portrait.sprite == catalog.FindMonsterPortrait(iconId) && !portrait.raycastTarget,
+                "Boss portrait is hidden, wrong or intercepts input: " + iconId);
+            Vector3 right = portrait.rectTransform.TransformPoint(portrait.rectTransform.rect.max);
+            Vector3 left = bar.TransformPoint(bar.rect.min);
+            Require(right.x < left.x && outputCamera.WorldToViewportPoint(right).x > 0,
+                "Boss portrait is not to the left of its large HP bar: " + iconId);
         }
 
         private static void Require(bool value, string message) { if (!value) throw new InvalidOperationException(message); }

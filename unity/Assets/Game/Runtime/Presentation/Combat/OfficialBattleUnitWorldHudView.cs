@@ -102,7 +102,7 @@ namespace Zjcs.Presentation.Combat
             canvasRect.sizeDelta = new Vector2(100f, 100f);
 
             // Bosses use the dedicated top HUD; retain their world status layout.
-            if (unit.MonsterId <= 0 || unit.MonsterType < 3 || unit.MonsterType > 5)
+            if (!OfficialBattleHudView.UsesBossHealthBar(unit))
                 foreach (BattleUnitBarPart part in OrderedParts(binding.parts))
                     CreateBar(part);
             statusRoot = CreateStatusRoot(binding.statusLayout);

@@ -252,6 +252,8 @@ namespace Zjcs.Presentation.Opening
             }
             hud = ui.Create("record_fight_hud");
             hud.SetActive(true);
+            Transform dynamicContent = hud.transform.Find("Content/Top/DynamicContent");
+            if (dynamicContent != null) presentation.MountBossHud(dynamicContent);
             foreach (TMPro.TMP_Text text in hud.GetComponentsInChildren<TMPro.TMP_Text>(true))
             {
                 if (!text.name.EndsWith("RoundText", StringComparison.Ordinal)) continue;

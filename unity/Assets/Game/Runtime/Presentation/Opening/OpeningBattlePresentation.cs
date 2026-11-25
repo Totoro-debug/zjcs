@@ -26,6 +26,9 @@ namespace Zjcs.Presentation.Opening
         private List<object> factions;
         private Dictionary<string, object> colors;
         private OfficialBattleHudCatalog catalog;
+        private OfficialBattleHudView bossHud;
+        private FightOfficialCombatCatalog combatCatalog;
+        private readonly FightBattleCheckpoint bossCheckpoint = new FightBattleCheckpoint();
         private Camera battleCamera;
         public string TimelinePath { get; private set; }
         public float TimelineMinDist { get; private set; }
@@ -56,6 +59,16 @@ namespace Zjcs.Presentation.Opening
             }
         }
 
+        internal void MountBossHud(Transform parent)
+        {
+            bossHud = new OfficialBattleHudView(catalog);
+            RectTransform rect = bossHud.MountBoss(parent);
+            rect.anchorMin = rect.anchorMax = new Vector2(.5f, 1f);
+            rect.pivot = new Vector2(.5f, 1f);
+            rect.anchoredPosition = Vector2.zero;
+            combatCatalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+        }
+
         public void AddUnit(OpeningRecordEntity entity, Transform root)
         {
             if (!catalog.TryGetUnitBar(entity.ClassId, out BattleUnitBarBinding binding))
@@ -64,10 +77,16 @@ namespace Zjcs.Presentation.Opening
             // Bar geometry, colors, material and sorting belong to that module.
             var state = new FightBattleUnitState { Id=entity.EntityId, Side=entity.Faction == 0 ? 1 : 2,
                 RoleEntityId=entity.ClassId, Hp=entity.Hp,
-                MaxHp=entity.MaxHp, LastMaxHp=entity.MaxHp, MonsterId=entity.MonsterId };
+                MaxHp=entity.MaxHp, LastMaxHp=entity.MaxHp, MonsterId=entity.MonsterId,
+                MonsterType=combatCatalog?.MonsterType(entity.MonsterId) ?? 0 };
             var view = OfficialBattleUnitWorldHudView.Create(catalog, state, root);
             view.Root.name = "HpBarGame";
             units.Add(entity.EntityId, new Unit { State=state, View=view });
+            if (OfficialBattleHudView.UsesBossHealthBar(state))
+            {
+                bossCheckpoint.Units.Add(state);
+                RefreshBossHud();
+            }
             if (entity.NpcClassId <= 0) return;
             var head = heads[entity.NpcClassId];
             var layout = OpeningJson.Object(head["nameLayout"], "NPC name layout");
@@ -95,6 +114,7 @@ namespace Zjcs.Presentation.Opening
             // FightDamageComponentImplement.CalcDamageValue: damage is negative, cure positive.
             unit.State.Hp = Math.Max(0, Math.Min(unit.State.MaxHp, unit.State.Hp + signedValue));
             unit.View.Refresh(unit.State);
+            if (OfficialBattleHudView.UsesBossHealthBar(unit.State)) RefreshBossHud();
         }
 
         public void RemoveUnit(int id)
@@ -102,13 +122,21 @@ namespace Zjcs.Presentation.Opening
             if (!units.TryGetValue(id, out Unit unit)) return;
             unit.View.Dispose();
             units.Remove(id);
+            if (bossCheckpoint.Units.Remove(unit.State)) RefreshBossHud();
         }
+
+        private void RefreshBossHud() => bossHud.RefreshBoss(bossCheckpoint,
+            unit => combatCatalog.MonsterName(unit.MonsterId),
+            unit => Portrait(unit.MonsterId));
+
+        private Sprite Portrait(int classId) =>
+            SpriteFile("UnitUI/" + OpeningJson.String(heads[classId], "file"));
 
         public void BindPortrait(GameObject item, OpeningRecordEntity entity)
         {
             Transform root = item.transform;
             int classId = entity.NpcClassId > 0 ? entity.NpcClassId : entity.MonsterId;
-            Sprite icon = SpriteFile("UnitUI/"+OpeningJson.String(heads[classId], "file"));
+            Sprite icon = Portrait(classId);
             var faction = Faction(entity.Faction);
             SetImage(root, "FactionImg", SpriteFile("UnitUI/"+OpeningJson.String(faction, "roundBackground")));
             Transform iconRoot = root.Find("IconGo");
@@ -236,6 +264,7 @@ namespace Zjcs.Presentation.Opening
         private void Update()
         {
             foreach (Unit unit in units.Values) unit.View.Tick(Time.deltaTime);
+            bossHud?.Tick(Time.unscaledDeltaTime);
             damage.RemoveAll(item=>item==null);
         }
         private void OnDestroy()

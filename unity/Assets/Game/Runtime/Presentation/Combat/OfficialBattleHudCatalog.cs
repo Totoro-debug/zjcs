@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
@@ -437,6 +438,16 @@ namespace Zjcs.Presentation.Combat
                 nameMatch = binding.sprite;
             }
             return nameMatch;
+        }
+
+        public Sprite FindMonsterPortrait(int iconId)
+        {
+            if (iconId <= 0) return null;
+            string prefix = "G_" + iconId.ToString(CultureInfo.InvariantCulture) + "-";
+            foreach (BattleHudSpriteBinding binding in sprites)
+                if (binding?.file != null && binding.file.StartsWith(prefix, StringComparison.Ordinal))
+                    return binding.sprite;
+            return null;
         }
 
         public bool TryGetUnitBar(int entityId, out BattleUnitBarBinding binding)

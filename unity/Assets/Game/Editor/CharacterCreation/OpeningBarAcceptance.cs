@@ -51,7 +51,7 @@ namespace Zjcs.Editor.CharacterCreation
                 catch (Exception error) { Debug.LogException(error); Finish(1); yield break; }
                 yield return current;
             }
-            Debug.Log("OPENING_BARS_PASSED: original game_902, all 18 record units, shared foreground material and layer, red enemy pixels, damage and healing.");
+            Debug.Log("OPENING_BARS_PASSED: 18 record units, world small bars, Boss large bar and portrait, damage and healing.");
             Finish(0);
         }
         private IEnumerator Check()
@@ -66,16 +66,29 @@ namespace Zjcs.Editor.CharacterCreation
             if (playback.SpawnedUnits != 18) throw new InvalidDataException("Original 18 opening actors were not spawned.");
             var target = new RenderTexture(900, 1600, 24);
             var camera = battlefield.StageCamera; camera.targetTexture = target;
+            var boss = assets.Record.Entities.Single(e => e.MonsterId == 3803);
+            var bossActor = battlefield.UnitRoot.Find("RecordActor_" + boss.EntityId);
+            var worldHud = bossActor.Find("HpBarGame");
+            if (!worldHud || worldHud.GetComponentsInChildren<Image>(true).Any(i => i.transform.parent?.name == "FillMask"))
+                throw new InvalidDataException("Opening Boss has a small world health bar.");
+            var bossHud = ui.Root.Find("Opening_record_fight_hud/Content/Top/DynamicContent/FightMainPanelBossUI");
+            var portrait = bossHud.Find("Anim/FrontItem/ImgeHead").GetComponent<Image>();
+            var bar = bossHud.Find("Anim/FrontItem/HpBg/TopImg").GetComponent<Image>();
             yield return null; yield return null;
+            if (!portrait.isActiveAndEnabled || !portrait.sprite || portrait.transform.position.x >= bar.transform.position.x)
+                throw new InvalidDataException("Opening Boss portrait is missing or misplaced.");
             Verify(target, camera, "opening-full.png");
             var presentation = battlefield.UnitRoot.GetComponentInChildren<OpeningBattlePresentation>();
             if (!presentation) throw new InvalidDataException("Opening presentation is absent.");
-            var monster = assets.Record.Entities.First(e => e.Faction == 127);
-            presentation.ApplyDamage(monster.EntityId, -monster.MaxHp / 4);
+            presentation.ApplyDamage(boss.EntityId, -boss.MaxHp / 4);
             yield return new WaitForSeconds(.7f);
+            if (Mathf.Abs(bar.fillAmount - .75f) > .025f)
+                throw new InvalidDataException("Opening Boss large health bar did not reflect damage.");
             Verify(target, camera, "opening-damaged.png");
-            presentation.ApplyDamage(monster.EntityId, monster.MaxHp / 4);
+            presentation.ApplyDamage(boss.EntityId, boss.MaxHp / 4);
             yield return new WaitForSeconds(.7f);
+            if (Mathf.Abs(bar.fillAmount - 1f) > .025f)
+                throw new InvalidDataException("Opening Boss large health bar did not reflect healing.");
             Verify(target, camera, "opening-healed.png");
         }
         private void Verify(RenderTexture target, Camera camera, string name)
