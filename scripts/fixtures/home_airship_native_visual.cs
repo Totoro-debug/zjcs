@@ -68,14 +68,20 @@ public class AirshipVisualRunner : MonoBehaviour
     }
     private sealed class BannerServices : IAirShipBannerServices
     {
+        public int LastClicked, Releases;
         public bool HasAirship => true;
         public IDisposable SubscribeRepair(Action callback) => new Empty();
         public IDisposable SubscribeActivities(Action callback) => new Empty();
-        public System.Collections.Generic.IEnumerable<AirshipActivityEntry> ActivityEntries() => Array.Empty<AirshipActivityEntry>();
-        public void ClickActivity(AirshipActivityEntry entry) { throw new Exception("Unexpected activity"); }
-        public string SubtitleKey(AirshipActivityEntry entry) { throw new Exception("Unexpected activity"); }
-        public GameObject LoadActivityBanner(AirshipActivityEntry entry, Transform slot) { throw new Exception("Unexpected activity"); }
-        public void ReleaseBanners() { }
+        public System.Collections.Generic.IEnumerable<AirshipActivityEntry> ActivityEntries()
+        {
+            yield return new AirshipActivityEntry { ActivityId = 10, Order = 2 };
+            yield return new AirshipActivityEntry { ActivityId = 20, Order = 1 };
+        }
+        public void ClickActivity(AirshipActivityEntry entry) { LastClicked = entry.ActivityId; }
+        public string SubtitleKey(AirshipActivityEntry entry) => "fixture_" + entry.ActivityId;
+        public GameObject LoadActivityBanner(AirshipActivityEntry entry, Transform slot)
+        { var go = new GameObject("FixtureBanner"); go.transform.SetParent(slot, false); return go; }
+        public void ReleaseBanners() { Releases++; }
     }
     private sealed class Context : IHomeSceneClickContext { public bool InMyHome => true; public bool AllNoTipWindowsClosed => true; }
     private sealed class Services : IHomeFurnitureServices, IHomeFurniturePlayer
@@ -126,7 +132,8 @@ public class AirshipVisualRunner : MonoBehaviour
             furniture.Services = furnitureServices;
             var airshipServices = new AirshipServices();
             furniture.AirshipServices = airshipServices;
-            foreach (var banner in instance.GetComponentsInChildren<AirShipBanner>(true)) banner.BannerServices = new BannerServices();
+            var bannerServices = new BannerServices();
+            foreach (var banner in instance.GetComponentsInChildren<AirShipBanner>(true)) banner.BannerServices = bannerServices;
             foreach (var text in instance.GetComponentsInChildren<WorldMultiLanguageText>(true)) text.Localizer = key => key;
 
             foreach (ClickableHomeObj clickable in instance.GetComponentsInChildren<ClickableHomeObj>(true)) input.Bind(clickable);
@@ -144,6 +151,20 @@ public class AirshipVisualRunner : MonoBehaviour
                 var texts = banners[0].GetComponentsInChildren<WorldMultiLanguageText>(true);
                 if (Array.Find(texts, text => text.myKey == "ui_airship_billboard_repaired") == null)
                 { AirshipVisualProbe.Finish(new Exception(name + " banner default text missing")); yield break; }
+                var type = typeof(AirShipBanner);
+                var timer = type.GetField("mTimer", BindingFlags.NonPublic | BindingFlags.Instance);
+                var interval = type.GetField("mSwitchBannerInterval", BindingFlags.NonPublic | BindingFlags.Instance);
+                var click = type.GetMethod("OnValidClick", BindingFlags.NonPublic | BindingFlags.Instance);
+                timer.SetValue(banners[0], (int)interval.GetValue(banners[0]) + 1f);
+                yield return null;
+                click.Invoke(banners[0], null);
+                if (bannerServices.LastClicked != 20 || Array.Find(texts, text => text.myKey == "fixture_20") == null)
+                { AirshipVisualProbe.Finish(new Exception(name + " first ordered activity")); yield break; }
+                timer.SetValue(banners[0], (int)interval.GetValue(banners[0]) + 1f);
+                yield return null;
+                click.Invoke(banners[0], null);
+                if (bannerServices.LastClicked != 10 || Array.Find(texts, text => text.myKey == "fixture_10") == null)
+                { AirshipVisualProbe.Finish(new Exception(name + " second ordered activity")); yield break; }
             }
             if (airshipServices.Loads == 0 || airshipServices.AnimationCalls == 0 || airshipServices.OnDisplay == null)
             { AirshipVisualProbe.Finish(new Exception(name + " original controller did not initialize")); yield break; }
