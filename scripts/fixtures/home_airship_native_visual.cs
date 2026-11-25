@@ -66,6 +66,17 @@ public class AirshipVisualRunner : MonoBehaviour
         }
         public void OpenTradePanel() { throw new Exception("Trade is unavailable in this fixture"); }
     }
+    private sealed class BannerServices : IAirShipBannerServices
+    {
+        public bool HasAirship => true;
+        public IDisposable SubscribeRepair(Action callback) => new Empty();
+        public IDisposable SubscribeActivities(Action callback) => new Empty();
+        public System.Collections.Generic.IEnumerable<AirshipActivityEntry> ActivityEntries() => Array.Empty<AirshipActivityEntry>();
+        public void ClickActivity(AirshipActivityEntry entry) { throw new Exception("Unexpected activity"); }
+        public string SubtitleKey(AirshipActivityEntry entry) { throw new Exception("Unexpected activity"); }
+        public GameObject LoadActivityBanner(AirshipActivityEntry entry, Transform slot) { throw new Exception("Unexpected activity"); }
+        public void ReleaseBanners() { }
+    }
     private sealed class Context : IHomeSceneClickContext { public bool InMyHome => true; public bool AllNoTipWindowsClosed => true; }
     private sealed class Services : IHomeFurnitureServices, IHomeFurniturePlayer
     {
@@ -109,12 +120,15 @@ public class AirshipVisualRunner : MonoBehaviour
             var instance = Instantiate(prefab, stage.transform, false);
             foreach (MonoBehaviour script in instance.GetComponentsInChildren<MonoBehaviour>(true))
                 if (!(script is SkeletonAnimation) && !(script is AirshipFurniture) && !(script is RenderExistingMesh) &&
-                    !(script is SkeletonSlotColor) && !(script is SkeletonRendererCustomMaterials)) script.enabled = false;
+                    !(script is SkeletonSlotColor) && !(script is SkeletonRendererCustomMaterials) && !(script is AirShipBanner) && !(script is HomeScrollTextBord) && !(script is WorldMultiLanguageText) && !(script is TMPro.TMP_Text)) script.enabled = false;
             var furniture = instance.GetComponentInChildren<AirshipFurniture>(true);
             var furnitureServices = new Services();
             furniture.Services = furnitureServices;
             var airshipServices = new AirshipServices();
             furniture.AirshipServices = airshipServices;
+            foreach (var banner in instance.GetComponentsInChildren<AirShipBanner>(true)) banner.BannerServices = new BannerServices();
+            foreach (var text in instance.GetComponentsInChildren<WorldMultiLanguageText>(true)) text.Localizer = key => key;
+
             foreach (ClickableHomeObj clickable in instance.GetComponentsInChildren<ClickableHomeObj>(true)) input.Bind(clickable);
             var field = typeof(FurnitureBase).GetField("mStateSwitcher", BindingFlags.NonPublic | BindingFlags.Instance);
             var state = (WorldStateSwitcher<FurnitureBase.EFurnitureState>)field.GetValue(furniture);
@@ -122,6 +136,15 @@ public class AirshipVisualRunner : MonoBehaviour
             stage.SetActive(true);
             yield return null;
             yield return null;
+            var banners = instance.GetComponentsInChildren<AirShipBanner>(true);
+            if (banners.Length != (name.Contains("YellowDuck") ? 0 : 1)) { AirshipVisualProbe.Finish(new Exception(name + " banner count")); yield break; }
+            if (banners.Length == 1)
+            {
+                if (!banners[0].isActiveAndEnabled) { AirshipVisualProbe.Finish(new Exception(name + " banner inactive")); yield break; }
+                var texts = banners[0].GetComponentsInChildren<WorldMultiLanguageText>(true);
+                if (Array.Find(texts, text => text.myKey == "ui_airship_billboard_repaired") == null)
+                { AirshipVisualProbe.Finish(new Exception(name + " banner default text missing")); yield break; }
+            }
             if (airshipServices.Loads == 0 || airshipServices.AnimationCalls == 0 || airshipServices.OnDisplay == null)
             { AirshipVisualProbe.Finish(new Exception(name + " original controller did not initialize")); yield break; }
             var slots = (System.Collections.Generic.List<SpriteRenderer>)typeof(AirshipFurniture)
