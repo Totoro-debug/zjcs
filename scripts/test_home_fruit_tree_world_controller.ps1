@@ -25,13 +25,18 @@ $destination = Join-Path $projectPath 'Assets/Game/Runtime/Official/HomeFruitTre
 New-Item -ItemType Directory -Path $destination -Force | Out-Null
 Get-ChildItem -LiteralPath $source -File | Copy-Item -Destination $destination -Force
 Copy-Item -LiteralPath ($source + '.meta') -Destination ($destination + '.meta') -Force
+$proxySource = Join-Path $repository 'unity/Assets/Game/Runtime/Official/HomeFurnitureProxy'
+$proxyDestination = Join-Path $projectPath 'Assets/Game/Runtime/Official/HomeFurnitureProxy'
+New-Item -ItemType Directory -Path $proxyDestination -Force | Out-Null
+Get-ChildItem -LiteralPath $proxySource -File | Copy-Item -Destination $proxyDestination -Force
+Copy-Item -LiteralPath ($proxySource + '.meta') -Destination ($proxyDestination + '.meta') -Force
 $fixture = Join-Path $projectPath 'Assets/Editor/HomeFruitTreeWorldController'
 New-Item -ItemType Directory -Path $fixture -Force | Out-Null
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_fruit_tree_world_controller_validation.cs') -Destination (Join-Path $fixture 'HomeFruitTreeWorldControllerValidation.cs') -Force
 @{
     name = 'HomeFruitTreeWorldControllerValidation'
     includePlatforms = @('Editor')
-    references = @('Zjcs.Official.HomeFruitTreeWorld', 'Zjcs.Official.HomeFruitTreeNative', 'Zjcs.Official.HomeFurniture', 'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeSceneInput', 'Zjcs.Official.HomeMainUiControls', 'Zjcs.Official.WorldUI', 'Zjcs.Official.ProfessionUI', 'spine-unity', 'Unity.ugui')
+    references = @('Zjcs.Official.HomeFruitTreeWorld', 'Zjcs.Official.HomeFruitTreeNative', 'Zjcs.Official.HomeFurniture', 'Zjcs.Official.HomeFurnitureProxy', 'Zjcs.Official.HomeEntityRuntime', 'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeSceneInput', 'Zjcs.Official.HomeMainUiControls', 'Zjcs.Official.WorldUI', 'Zjcs.Official.ProfessionUI', 'spine-unity', 'Unity.ugui')
 } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $fixture 'HomeFruitTreeWorldControllerValidation.asmdef') -Encoding utf8
 $editor = (Get-Content -LiteralPath (Join-Path $repository 'unity-tools.json') -Raw | ConvertFrom-Json).editorExecutable
 $log = Join-Path $work 'fruit-tree-world-controller.log'

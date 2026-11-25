@@ -4,10 +4,13 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Zjcs.Official.HomeFurniture;
+using Zjcs.Official.HomeFurnitureProxy;
+using Zjcs.Official.HomeEntityRuntime;
 using Zjcs.Official.HomeFruitTreeNative;
 using Zjcs.Official.HomeFruitTreeWorld;
 using Zjcs.Official.HomeMainUiControls;
 using Zjcs.Official.HomeUI;
+using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.WorldUI;
 using Object = UnityEngine.Object;
 
@@ -104,6 +107,15 @@ public static class HomeFruitTreeWorldControllerValidation
             var services = new Services(); var state = new State();
             var production = first.AddComponent<Sub>(); production.Configure(EFurniture.FruitTree, services.Calls, "production");
             var pet = second.AddComponent<Sub>(); pet.Configure(EFurniture.FruitTree2, services.Calls, "pet");
+            var proxy = owner.AddComponent<HomeFurnitureProxy>();
+            proxy.FurnitureProxyDict = new MonoDictionary<EFurniture, FurnitureBase>();
+            proxy.FurnitureProxyDict.Add(EFurniture.FruitTree, production);
+            proxy.FurnitureProxyDict.Add(EFurniture.FruitTree2, pet);
+            IFurnitureProxy<FurnitureBase> proxyContract = proxy;
+            Require(ReferenceEquals(proxyContract.GetComponent(EFurniture.FruitTree), production)
+                && ReferenceEquals(proxyContract.GetComponent(EFurniture.FruitTree2), pet)
+                && proxyContract.GetComponent(EFurniture.Desk) == null,
+                "The original furniture proxy resolves both branches and returns null for absent furniture.");
             var tree = owner.AddComponent<HomeFruitTree>(); tree.InputOperationModule = new Input();
             tree.FurnitureServices = services; tree.Localize = key => "localized:" + key;
             Set(tree, "mSubFurnitureList", new List<HomeFruitTreeSubFurniture> { production, pet });
