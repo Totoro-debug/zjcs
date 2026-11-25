@@ -13,11 +13,6 @@ namespace Zjcs.Presentation.CharacterCreation
     public static class CharacterCreationNativeModelFactory
     {
         private const string SkinVariantPrefix = "__skin__";
-        private static readonly int DyeTextureId = Shader.PropertyToID("_DyeTex");
-        private static readonly int DyeHsv1Id = Shader.PropertyToID("_DyeHsv1");
-        private static readonly int DyeHsv2Id = Shader.PropertyToID("_DyeHsv2");
-        private static readonly int DyeHsv3Id = Shader.PropertyToID("_DyeHsv3");
-
         private static void EnsureNativeAppearance(CharacterNativeAttachmentGeometry geometry, int sex,
             IEnumerable<string> activeSkins)
         {
@@ -196,25 +191,7 @@ namespace Zjcs.Presentation.CharacterCreation
 
         private static void ApplyDyeChannels(GameObject model, IReadOnlyDictionary<int, Vector4[]> channelsByType)
         {
-            var properties = new MaterialPropertyBlock();
-            foreach (Transform child in model.GetComponentsInChildren<Transform>(true))
-            {
-                CharacterCreationDyeMapBinding binding = child.GetComponent<CharacterCreationDyeMapBinding>();
-                Renderer renderer = child.GetComponent<Renderer>();
-                if (binding == null || renderer == null) continue;
-                channelsByType.TryGetValue(binding.SkinType, out Vector4[] channels);
-                properties.Clear();
-                properties.SetTexture(DyeTextureId, binding.DyeMask != null ? binding.DyeMask : Texture2D.blackTexture);
-                properties.SetVector(DyeHsv1Id, Channel(channels, 0));
-                properties.SetVector(DyeHsv2Id, Channel(channels, 1));
-                properties.SetVector(DyeHsv3Id, Channel(channels, 2));
-                renderer.SetPropertyBlock(properties);
-            }
-        }
-
-        private static Vector4 Channel(Vector4[] channels, int index)
-        {
-            return channels != null && index < channels.Length ? channels[index] : Vector4.zero;
+            CharacterCreationDyeMapBinding.ApplyPageDyes(model.GetComponentsInChildren<Renderer>(true), channelsByType);
         }
     }
 }

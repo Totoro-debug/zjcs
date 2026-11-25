@@ -200,7 +200,10 @@ namespace Zjcs.Offline.CharacterCreation
                     if (channel < 1 || channel > channels.Length)
                         throw new InvalidOperationException("Official dye channel is outside the native shader range: " + channel);
                     int valueOffset = ReadInt(target, "VOffset");
-                    channels[channel - 1] = GetDyeHsvChange(dyeType, hex, valueOffset);
+                    Vector4 change = GetDyeHsvChange(dyeType, hex, valueOffset);
+                    // Preserve channel ownership even when the selected color has zero offset.
+                    change.w = 1f;
+                    channels[channel - 1] = change;
                 }
             }
             return channels;

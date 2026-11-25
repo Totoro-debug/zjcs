@@ -33,7 +33,6 @@ namespace Zjcs.Presentation.CharacterCreation
             public Mesh Mesh;
             public Vector3[][] Frames;
             public MeshRenderer Renderer;
-            public CharacterCreationDyeMapBinding DyeBinding;
             public Frame[] SourceFrames;
             public int InitialOrder;
             public bool Frozen;
@@ -48,7 +47,6 @@ namespace Zjcs.Presentation.CharacterCreation
         private readonly List<Instance> instances = new List<Instance>();
         private readonly Dictionary<string, List<Instance>> skinInstances =
             new Dictionary<string, List<Instance>>(StringComparer.Ordinal);
-        private MaterialPropertyBlock dyeProperties;
         private HashSet<string> selected = new HashSet<string>(StringComparer.Ordinal);
         private HashSet<string> availableSkinNames = new HashSet<string>(StringComparer.Ordinal);
         private Dictionary<string, string> hashes;
@@ -133,6 +131,7 @@ namespace Zjcs.Presentation.CharacterCreation
                 skinInstances.Add(skin, parts);
                 instances.AddRange(parts);
             }
+            ApplyDye(dye);
         }
 
         private List<Instance> BuildSkin(string skin, Dictionary<string, SkinEntry> skinEntries)
@@ -156,7 +155,6 @@ namespace Zjcs.Presentation.CharacterCreation
                         Instance instance = CreatePart(part, freeze);
                         parts.Add(instance);
                         if (CurrentFrame != 0) ApplyFrame(instance, CurrentFrame);
-                        ApplyPartDye(instance);
                     }
                 }
                 return parts;
@@ -235,7 +233,7 @@ namespace Zjcs.Presentation.CharacterCreation
             return new Instance
             {
                 Node = node, Mesh = mesh, Frames = frames, SourceFrames = part.frames,
-                Renderer = renderer, InitialOrder = part.order, DyeBinding = binding, Frozen = frozen
+                Renderer = renderer, InitialOrder = part.order, Frozen = frozen
             };
         }
 
@@ -314,24 +312,13 @@ namespace Zjcs.Presentation.CharacterCreation
                 instances.AddRange(skinInstances[skin]);
             for (int index = 0; index < instances.Count; index++)
                 instances[index].Node.transform.SetSiblingIndex(index);
+            ApplyDye(dye);
         }
 
         public void ApplyDye(IReadOnlyDictionary<int, Vector4[]> changes)
         {
             dye = changes;
-            foreach (Instance value in instances) ApplyPartDye(value);
-        }
-
-        private void ApplyPartDye(Instance instance)
-        {
-            dyeProperties ??= new MaterialPropertyBlock();
-            CharacterCreationDyeMapBinding binding = instance.DyeBinding;
-            Vector4[] channels = dye != null && dye.TryGetValue(binding.SkinType, out Vector4[] values) ? values : null;
-            dyeProperties.SetTexture("_DyeTex", binding.DyeMask != null ? binding.DyeMask : Texture2D.blackTexture);
-            dyeProperties.SetVector("_DyeHsv1", channels != null && channels.Length > 0 ? channels[0] : Vector4.zero);
-            dyeProperties.SetVector("_DyeHsv2", channels != null && channels.Length > 1 ? channels[1] : Vector4.zero);
-            dyeProperties.SetVector("_DyeHsv3", channels != null && channels.Length > 2 ? channels[2] : Vector4.zero);
-            instance.Renderer.SetPropertyBlock(dyeProperties);
+            CharacterCreationDyeMapBinding.ApplyPageDyes(instances.Select(value => (Renderer)value.Renderer), dye);
         }
 
         private void Update()
