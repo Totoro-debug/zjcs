@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import re
 
-from official_apk import ROOT
+from official_apk import Apk, ROOT
 from validation_workspace import require_temporary_unity_project
 
 
@@ -20,6 +20,8 @@ def guid(path):
 def prepare(project):
     receipt_path = ROOT / 'assets/reference/home-airship-native-source-manifest.json'
     receipt = json.loads(receipt_path.read_text(encoding='utf8'))
+    if receipt['manifest'] != Apk.current().version:
+        raise ValueError('Airship native assets do not match the current official input')
     sources, sprite_guids = {}, []
     for name in ('SmallPoster_1', 'SmallPoster_2'):
         relative = 'unity/Assets/Official/Home/Airship/Native/Image/Home/Dynamic/Airship/' + name + '.asset'

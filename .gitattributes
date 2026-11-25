@@ -127,3 +127,10 @@ unity/Assets/Official/Combat/ConquerorSkillGraphs.meta text eol=lf
 # Preserve generated native airship receipt bytes across checkout.
 unity/Assets/Official/Home/Airship/** text=auto eol=lf
 unity/Assets/Official/Home/Airship.meta text eol=lf
+
+# Preserve the verified airship sprite catalog and its input bytes.
+scripts/prepare_home_airship_assets.py text eol=lf
+scripts/templates/home_airship/OfflineHomeAirshipAssets.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/HomeAirship/OfflineHomeAirshipAssets.cs* text eol=lf
+unity/Assets/Game/Resources/Home/Airship.meta text eol=lf
+unity/Assets/Game/Resources/Home/Airship/** text eol=lf
