@@ -14,17 +14,7 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output', required=True, help='Output JSON file within the owned validation workspace')
-    args = parser.parse_args()
-    work = validation_directory()
-    if work == ROOT / 'output/validation':
-        raise ValueError('Use an owned validation workspace')
-    output = Path(args.output).resolve()
-    if not output.is_relative_to(work) or output == work:
-        raise ValueError('Output must be inside the owned validation workspace')
-
+def extract():
     apk = Apk.current()
     constructors = Constructors(ROOT / '.tools/source-packages/current' / apk.version / 'official-code')
     tables_source = constructors.source('Tables')
@@ -64,8 +54,21 @@ def main():
                     'ActivityAirshipBannerInfoParser', 'TbFunctionLimitInfo', 'FunctionLimitInfo',
                     'TipDotFunctionUnlockConditionNode', 'AirShipBanner', 'FunctionType')
     provenance = {name: digest(constructors.source(name).encode('utf8')) for name in source_names}
-    result = {'official_manifest': apk.version, 'sources': sources,
-              'source_code_sha256': provenance, 'tables': data}
+    return {'official_manifest': apk.version, 'sources': sources,
+            'source_code_sha256': provenance, 'tables': data}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output', required=True, help='Output JSON file within the owned validation workspace')
+    args = parser.parse_args()
+    work = validation_directory()
+    if work == ROOT / 'output/validation':
+        raise ValueError('Use an owned validation workspace')
+    output = Path(args.output).resolve()
+    if not output.is_relative_to(work) or output == work:
+        raise ValueError('Output must be inside the owned validation workspace')
+    result = extract()
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
     print('Decoded current airship tables to', output)

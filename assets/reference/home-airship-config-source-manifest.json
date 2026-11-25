@@ -1,0 +1,63 @@
+{
+  "official_manifest": "903_156948",
+  "sources": {
+    "activity_airship_banner": {
+      "object": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "4838b38a3b272ae4bd23e89d77cd3b90",
+        "path_id": "4091730377821365720",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/4838b38a3b272ae4bd23e89d77cd3b90.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 2210171,
+        "bundle_sha256": "b87533144cd1777aa13ac24e283d12bafab338b7d4e66a3ea20361504caf795f"
+      },
+      "object_sha256": "b844e2518b2e456a45c0efce67281a99285cbadf63f555fb281434306f2bd9af",
+      "payload_sha256": "a577cd19713ea1129405bf11183e51bcb12f9965d5fa216ebd8c63d29bf80b1e",
+      "constructor": "TbActivityAirshipBannerInfo",
+      "rows": 5
+    },
+    "function_limit": {
+      "object": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "4838b38a3b272ae4bd23e89d77cd3b90",
+        "path_id": "-5263075563552482356",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611201514903/Android/DefaultPackage/4838b38a3b272ae4bd23e89d77cd3b90.bundle",
+        "manifest": "903_156948",
+        "bundle_size": 2210171,
+        "bundle_sha256": "b87533144cd1777aa13ac24e283d12bafab338b7d4e66a3ea20361504caf795f"
+      },
+      "object_sha256": "6d04ba42bcb1441ea52da5516b029927791c0ee03eafcac7a35fa44bae6d4d3f",
+      "payload_sha256": "36c1195d9098bc65b3a50fe2ffd2b4246f433484f0274713bebb58ac0a702965",
+      "constructor": "TbFunctionLimitInfo",
+      "rows": 432
+    }
+  },
+  "source_code_sha256": {
+    "Tables": "072d2616ab5cca7e37edd67fb69fb5901da6862a72ca6779598e18ea9fde6b99",
+    "TbActivityAirshipBannerInfo": "c576b2894a1f00487c889d027fd70916fad7e182179d1f2e7c6c2169eaed45be",
+    "ActivityAirshipBannerInfo": "743d53eab8a90e7e78b7a6960b8cc4f45fa9611499292a1fadbda993dca68878",
+    "ActivityAirshipBannerInfoParser": "067c5f4779850bd1c4d04d4ae453bb3ad6f2da3a5f3d0f6a19d9fb277fb88710",
+    "TbFunctionLimitInfo": "856f6f8e3321a00e7d7fe2927464777af017ae231e531e980e7914f4ca197016",
+    "FunctionLimitInfo": "6afe572fb5734047f81278af09a0f5b606035848ce9a1d902bca3afc4f4c527a",
+    "TipDotFunctionUnlockConditionNode": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "AirShipBanner": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "FunctionType": "69e34b1a140e9624be79247fea33ea0bf354dd7fba8180a14289fa4b18e7b20c"
+  },
+  "inputs": {
+    "scripts/templates/home_airship/OfflineHomeAirshipConfiguration.cs": "2993c18240ca63e448bca1604848be80a1e1bc6a8ebed6108c57938248f800cd",
+    "scripts/prepare_home_airship_activity_config.py": "1451683cb0d46884c25fd58ff1546128c2dddc566f1455b0de094ec21cafcc3d",
+    "scripts/prepare_home_airship_configuration.py": "5c6fb1e1cdcc508cbcaa2116c18914e0cba13088a25be897695038ad079ec338",
+    "unity/Assets/Game/Runtime/Offline/HomeAirship/Zjcs.Offline.HomeAirship.asmdef": "0a52c4372d56e5f574d956959e95d0a5aeeddb627b180304a2668e23e122e694"
+  },
+  "normalized_tool_sha256": {
+    "scripts/official_tables.py": "d8b961d1780da867a8e179c1cdb8fb414473be2d49e82db5192df139d5b274a9"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Offline/HomeAirship/OfflineHomeAirshipConfiguration.cs": "2993c18240ca63e448bca1604848be80a1e1bc6a8ebed6108c57938248f800cd",
+    "unity/Assets/Game/Runtime/Offline/HomeAirship/OfflineHomeAirshipConfiguration.cs.meta": "8beb963a37c0ef077e62a47ac0d6099785d4e6badc5a5654756677d4150a71f0",
+    "unity/Assets/Game/Resources/Home/Airship/airship-config.json": "249ee6fd77610a9a17e7e47e15525cdd0bd386a62cef05dd5a16dd097fc6e93a",
+    "unity/Assets/Game/Resources/Home/Airship/airship-config.json.meta": "32a3342a26ba973fa99c3b870d310e6267c8e7c78611a0e44055482136f75ffd"
+  }
+}

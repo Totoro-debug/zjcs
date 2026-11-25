@@ -1,0 +1,50 @@
+{
+  "tables": {
+    "activity_airship_banner": [
+      {
+        "EntryType": 7,
+        "Id": 0,
+        "Order": 0,
+        "PrefabPath": "Home/Dynamic/Banner/ActivePayItem"
+      },
+      {
+        "EntryType": 18,
+        "Id": 100,
+        "Order": 1,
+        "PrefabPath": "Home/Dynamic/Banner/SeasonPreviewItem1"
+      },
+      {
+        "EntryType": 18,
+        "Id": 101,
+        "Order": 2,
+        "PrefabPath": "Home/Dynamic/Banner/SeasonPreviewItem2"
+      },
+      {
+        "EntryType": 18,
+        "Id": 200,
+        "Order": 3,
+        "PrefabPath": "Home/Dynamic/Banner/SimpleSunnyItemPreview"
+      },
+      {
+        "EntryType": 18,
+        "Id": 202,
+        "Order": 4,
+        "PrefabPath": "Home/Dynamic/Banner/ActivityEntrySummerItem"
+      }
+    ],
+    "function_limit": [
+      {
+        "Type": 83,
+        "Key0": 0,
+        "Key1": 0,
+        "Condition": {
+          "Jumpable": null,
+          "ClassId": 4020,
+          "Count": 1,
+          "Op": ">=",
+          "_type": "HasItemCondition"
+        }
+      }
+    ]
+  }
+}

@@ -47,6 +47,9 @@ def prepare():
 
     receipt = json.loads((ROOT / 'assets/reference/home-airship-native-source-manifest.json').read_text(encoding='utf8'))
     outputs = set(receipt['outputs'])
+    for name in ('home-airship-asset-catalog-source-manifest.json', 'home-airship-config-source-manifest.json'):
+        data = json.loads((ROOT / 'assets/reference' / name).read_text(encoding='utf8'))
+        outputs.update(data['outputs'])
     for name in ('map13-native-pipeline-source-manifest.json', 'map13-pipeline-shaders-source-manifest.json',
                  'map13-pipeline-textures-source-manifest.json'):
         data = json.loads((ROOT / 'assets/reference/official-map' / name).read_text(encoding='utf8'))
@@ -64,8 +67,14 @@ def prepare():
         shutil.copy2(source, target)
     editor = project / 'Assets/Editor'
     editor.mkdir(parents=True, exist_ok=True)
+    streaming = project / 'Assets/StreamingAssets/Home'
+    streaming.mkdir(parents=True, exist_ok=True)
+    for name in ('rules.json', 'rewards.json'):
+        shutil.copy2(ROOT / 'unity/Assets/StreamingAssets/Home' / name, streaming / name)
     for source, target in (('home_airship_native_import.cs', 'AirshipImportProbe.cs'),
-                           ('home_airship_native_visual.cs', 'AirshipVisualProbe.cs')):
+                           ('home_airship_native_visual.cs', 'AirshipVisualProbe.cs'),
+                           ('home_airship_assets_validation.cs', 'AirshipAssetsProbe.cs'),
+                           ('home_airship_configuration_validation.cs', 'AirshipConfigProbe.cs')):
         shutil.copy2(ROOT / 'scripts/fixtures' / source, editor / target)
     print('Staged independent airship Unity validation:', project)
     return project
