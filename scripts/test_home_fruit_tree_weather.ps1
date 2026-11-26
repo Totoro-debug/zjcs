@@ -4,6 +4,7 @@ param(
     [switch]$NaturalProduction,
     [switch]$UnlockStory,
     [switch]$PetUnlockStory,
+    [switch]$PetGachaControls,
     [ValidateRange(5, 120)][int]$TimeoutMinutes = 45
 )
 $ErrorActionPreference = 'Stop'
@@ -65,6 +66,10 @@ foreach ($receiptName in @('home-weather-snow-source-manifest.json', 'home-snow-
 }
 $scoped = @(
     'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.cs',
+    'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.PetGachaControls.cs',
+    'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.PetGachaControls.cs.meta',
+    'Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyImageServices.cs',
+    'Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyImageServices.cs.meta',
     'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.FruitTreeSkins.cs',
     'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.FruitTreeUnlock.cs',
     'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.FruitTreeUnlock.cs.meta',
@@ -96,6 +101,48 @@ $committed = @(
 foreach ($relative in $scoped) {
     Copy-Item -LiteralPath (Join-Path $repository ('unity/' + $relative)) -Destination (Join-Path $project $relative) -Force
 }
+$gachaModule = 'Assets/Game/Runtime/Official/GachaUI'
+$gachaTarget = Join-Path $project $gachaModule
+[void](New-Item -ItemType Directory -Path $gachaTarget -Force)
+Get-ChildItem -LiteralPath (Join-Path $repository ('unity/' + $gachaModule)) -File | ForEach-Object {
+    Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $gachaTarget $_.Name) -Force
+}
+Copy-Item -LiteralPath (Join-Path $repository ('unity/' + $gachaModule + '.meta')) -Destination ($gachaTarget + '.meta') -Force
+if ($PetGachaControls) {
+    $gachaReceiptPath = Join-Path $repository 'assets/reference/pet-gacha-controls-native-source-manifest.json'
+    $gachaReceipt = Get-Content -LiteralPath $gachaReceiptPath -Raw | ConvertFrom-Json
+    foreach ($entry in $gachaReceipt.inputs.PSObject.Properties) {
+        if ((Get-FileHash -LiteralPath (Join-Path $repository $entry.Name) -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.Value) {
+            throw ('Original gacha control input differs: ' + $entry.Name)
+        }
+    }
+    foreach ($entry in $gachaReceipt.runtime_bindings.PSObject.Properties) {
+        if ((Get-FileHash -LiteralPath (Join-Path $repository $entry.Name) -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.Value) {
+            throw ('Gacha control runtime differs: ' + $entry.Name)
+        }
+    }
+    foreach ($entry in $gachaReceipt.script_bindings.PSObject.Properties) {
+        $binding = $entry.Value
+        $source = Join-Path $repository $binding.path
+        if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -ne $binding.sha256 -or
+            (Get-FileHash -LiteralPath ($source + '.meta') -Algorithm SHA256).Hash.ToLowerInvariant() -ne $binding.meta_sha256) {
+            throw ('Native gacha control component differs: ' + $binding.path)
+        }
+        $target = Join-Path $project $binding.path.Substring(6)
+        Copy-Item -LiteralPath $source -Destination $target -Force
+        Copy-Item -LiteralPath ($source + '.meta') -Destination ($target + '.meta') -Force
+    }
+    foreach ($entry in $gachaReceipt.outputs.PSObject.Properties) {
+        $source = Join-Path $repository $entry.Name
+        if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.Value) {
+            throw ('Bound gacha control asset differs: ' + $entry.Name)
+        }
+        $target = Join-Path $project $entry.Name.Substring(6)
+        [void](New-Item -ItemType Directory -Path (Split-Path $target) -Force)
+        Copy-Item -LiteralPath $source -Destination $target -Force
+    }
+    Copy-Item -LiteralPath $gachaReceiptPath -Destination (Join-Path $work 'control-fixture.json')
+}
 foreach ($relative in $committed) {
     $source = & git -C $repository show ('HEAD:unity/' + $relative)
     if ($LASTEXITCODE -ne 0) { throw ('Cannot read committed source: ' + $relative) }
@@ -110,13 +157,14 @@ foreach ($fruitService in @('unity/Assets/Game/Runtime/Offline/Progression/Offli
 }
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
 $log = Join-Path $work 'unity.log'
-$names = @('ZJCS_HOME_ACCEPTANCE_ROOT', 'ZJCS_HOME_ACCEPTANCE_OUTPUT')
+$names = @('ZJCS_HOME_ACCEPTANCE_ROOT', 'ZJCS_HOME_ACCEPTANCE_OUTPUT', 'ZJCS_PET_GACHA_CONTROL_FIXTURE')
 $previous = @{}
 foreach ($name in $names) { $previous[$name] = [Environment]::GetEnvironmentVariable($name) }
 try {
     $env:ZJCS_HOME_ACCEPTANCE_ROOT = Join-Path $work 'profiles'
     $env:ZJCS_HOME_ACCEPTANCE_OUTPUT = $work
-    $modeArguments = if ($PetUnlockStory) { @('-petTreeUnlockAcceptance') } elseif ($UnlockStory) { @('-fruitTreeUnlockAcceptance') } elseif ($NaturalProduction) { @('-fruitTreeNaturalProductionAcceptance') } else { @('-fruitTreeNativeSkinsAcceptance') }
+    if ($PetGachaControls) { $env:ZJCS_PET_GACHA_CONTROL_FIXTURE = Join-Path $work 'control-fixture.json' }
+    $modeArguments = if ($PetGachaControls) { @('-petGachaControlsAcceptance') } elseif ($PetUnlockStory) { @('-petTreeUnlockAcceptance') } elseif ($UnlockStory) { @('-fruitTreeUnlockAcceptance') } elseif ($NaturalProduction) { @('-fruitTreeNaturalProductionAcceptance') } else { @('-fruitTreeNativeSkinsAcceptance') }
     $process = Start-UnityOnInternalDisplay -Editor $Editor -ArgumentList (@(
         '-muteAudio', '-job-worker-count', '2', '-gc-helper-count', '2',
         '-projectPath', ('"' + $project + '"'), '-executeMethod', 'Zjcs.Editor.Home.HomeAcceptanceLauncher.Run',
@@ -141,8 +189,8 @@ if ($process.ExitCode -ne 0 -or -not (Test-Path -LiteralPath $reportPath)) {
     throw ('Fruit-tree weather validation failed: ' + $log)
 }
 $report = Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json
-$requiredPattern = if ($PetUnlockStory) { 'PASS pet-unlock-*' } elseif ($UnlockStory) { 'PASS fruit-unlock-completed*' } elseif ($NaturalProduction) { 'PASS native-fruit-tree-natural-*' } else { 'PASS native-fruit-tree-weather-*' }
-$requiredCount = if ($PetUnlockStory) { 16 } elseif ($UnlockStory) { 1 } elseif ($NaturalProduction) { 2 } else { 12 }
+$requiredPattern = if ($PetGachaControls) { 'PASS pet-gacha-controls-*' } elseif ($PetUnlockStory) { 'PASS pet-unlock-*' } elseif ($UnlockStory) { 'PASS fruit-unlock-completed*' } elseif ($NaturalProduction) { 'PASS native-fruit-tree-natural-*' } else { 'PASS native-fruit-tree-weather-*' }
+$requiredCount = if ($PetGachaControls) { 6 } elseif ($PetUnlockStory) { 16 } elseif ($UnlockStory) { 1 } elseif ($NaturalProduction) { 2 } else { 12 }
 if (-not $report.success -or @($report.lines | Where-Object { $_ -like $requiredPattern }).Count -ne $requiredCount) {
     throw ('The selected fruit-tree flow must pass: ' + $reportPath)
 }

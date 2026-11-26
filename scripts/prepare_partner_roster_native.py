@@ -213,7 +213,7 @@ class PartnerRosterBinding(PartnerGiftBinding):
                                     metadata = Path(str(assembly) + '.meta')
                                     if assembly.is_file() and metadata.is_file():
                                         for path in (assembly, metadata):
-                                            key = path.relative_to(self.cache / 'native-export-all').as_posix()
+                                            key = path.relative_to(self.cache / self.recovery.export_name).as_posix()
                                             if sha(path.read_bytes()) != self.checked[key]:
                                                 raise ValueError('Original animation script assembly changed')
                                             self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
@@ -271,7 +271,7 @@ class PartnerRosterBinding(PartnerGiftBinding):
     def controller(self, source_guid, obj):
         native = self.native_path(source_guid, obj)
         raw = native.read_bytes()
-        receipt_key = native.relative_to(self.cache / 'native-export-all').as_posix()
+        receipt_key = native.relative_to(self.cache / self.recovery.export_name).as_posix()
         metadata = Path(str(native) + '.meta')
         if sha(raw) != self.checked[receipt_key] or sha(metadata.read_bytes()) != self.checked[receipt_key + '.meta']:
             raise ValueError('Native roster animator differs from selected cache')

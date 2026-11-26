@@ -75,7 +75,8 @@ namespace Zjcs.Presentation.Home
             {
                 if (string.IsNullOrEmpty(slotId))
                     throw new InvalidOperationException("The acceptance profile was not created by the launcher.");
-                bool petTreeUnlock = Environment.GetCommandLineArgs().Contains("-petTreeUnlockAcceptance");
+                bool petGachaControls = Environment.GetCommandLineArgs().Contains("-petGachaControlsAcceptance");
+                bool petTreeUnlock = Environment.GetCommandLineArgs().Contains("-petTreeUnlockAcceptance") || petGachaControls;
                 if (Environment.GetCommandLineArgs().Contains("-fruitTreeUnlockAcceptance") || petTreeUnlock)
                 {
                     int unlockLevel = petTreeUnlock ? 50 : 31;
@@ -88,7 +89,15 @@ namespace Zjcs.Presentation.Home
                         save.Player.Level = unlockLevel;
                         save.Player.Experience = OfficialCharacterAssetCatalog.LoadDefault().Load().CumulativeLevelExperience[unlockLevel];
                         save.Player.SubRank = Math.Max(save.Player.SubRank, requiredSubRank);
-                        if (petTreeUnlock) return;
+                        if (petTreeUnlock)
+                        {
+                            if (petGachaControls)
+                            {
+                                save.Player.FruitTree.PetFacilityRepaired = true;
+                                save.Player.FruitTree.PetRepairStorySeen = true;
+                            }
+                            return;
+                        }
                         if (!save.World.Maps.Any(value => value.MapClassId == 11))
                             save.World.Maps.Add(new OfflineMapProgress { MapClassId = 11,
                                 Regions = new List<OfflineRegionProgress> { new OfflineRegionProgress { Region = 0 } } });
@@ -133,7 +142,9 @@ namespace Zjcs.Presentation.Home
                 HideForeignCanvases();
                 DumpFullscreen();
                 bool passed = false;
-                if (Environment.GetCommandLineArgs().Contains("-fruitTreeUnlockAcceptance"))
+                if (Environment.GetCommandLineArgs().Contains("-petGachaControlsAcceptance"))
+                    yield return VerifyPetGachaControls(runtime, value => passed = value);
+                else if (Environment.GetCommandLineArgs().Contains("-fruitTreeUnlockAcceptance"))
                     yield return VerifyNativeFruitTreeUnlock(runtime, value => passed = value);
                 else if (Environment.GetCommandLineArgs().Contains("-petTreeUnlockAcceptance"))
                     yield return VerifyNativePetTreeUnlock(runtime, value => passed = value);
