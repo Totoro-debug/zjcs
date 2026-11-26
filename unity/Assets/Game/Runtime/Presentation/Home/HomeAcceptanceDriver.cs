@@ -706,6 +706,8 @@ namespace Zjcs.Presentation.Home
         private IEnumerator VerifyNativeFruitTree(HomeFeatureRuntime runtime, Action<bool> completed,
             string capturePrefix = "native-fruit-tree", GameObject sourcePrefab = null)
         {
+            bool naturalProduction = Environment.GetCommandLineArgs().Contains("-fruitTreeNaturalProductionAcceptance");
+            int matureCount = naturalProduction ? 1 : 3;
             log.Add("VIEW native-tree-check screen=" + Screen.width + "x" + Screen.height
                 + " camera=" + runtime.Scene.Camera.pixelRect + " target=" + runtime.Scene.Camera.targetTexture
                 + " canvas=" + runtime.Hud.Canvas.pixelRect + " rect=" + ((RectTransform)runtime.Hud.Canvas.transform).rect);
@@ -833,8 +835,8 @@ namespace Zjcs.Presentation.Home
                     state.InitialRewardGranted = true;
                     state.ProductionRepairStorySeen = true;
                     state.CollectionTutorialSeen = true;
-                    state.StoredCount = 3;
-                    state.FractionalCount = 0.25;
+                    state.StoredCount = naturalProduction ? 0 : matureCount;
+                    state.FractionalCount = naturalProduction ? 1.0 - 40.0 / 14400.0 : .25;
                     state.LastUpdateUnixSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                     return true;
                 });
@@ -864,13 +866,39 @@ namespace Zjcs.Presentation.Home
                 produce.UpdateState();
                 Assert(produce.GetState() == Zjcs.Official.HomeFurniture.FurnitureBase.EFurnitureState.Functional,
                     "native production sub-building reaches the functional state");
-                return "test profile now exposes three mature fruits to the original production controller";
+                return "isolated profile starts " + (naturalProduction ? "below the first natural maturity boundary" : "with mature fruit");
             });
+            if (naturalProduction)
+            {
+                passed &= Check("native-fruit-tree-natural-empty", () =>
+                {
+                    Assert(runtime.Profile.Save.Player.FruitTree.StoredCount == 0, "production starts with no mature stock");
+                    Assert(!nativeTree.GetComponentsInChildren<HomeFruitTreeHangUpEffectItem>(true)
+                        .Any(value => value.gameObject.activeInHierarchy), "no mature fruit is rendered before production");
+                    return "no mature inventory or effects before the live production boundary";
+                });
+                yield return Capture(capturePrefix + "-growing.png");
+                float productionDeadline = Time.realtimeSinceStartup + 75f;
+                while (runtime.Profile.Save.Player.FruitTree.StoredCount == 0
+                    && Time.realtimeSinceStartup < productionDeadline) yield return null;
+                yield return null;
+                passed &= Check("native-fruit-tree-natural-maturity", () =>
+                {
+                    runtime.Profile.Reload();
+                    var state = runtime.Profile.Save.Player.FruitTree;
+                    Assert(state.StoredCount == 1 && state.FractionalCount >= 0 && state.FractionalCount < .01,
+                        "unmodified city Update advances the base-rate fractional production into one mature fruit");
+                    Assert(nativeTree.GetComponentsInChildren<HomeFruitTreeHangUpEffectItem>(true)
+                        .Count(value => value.gameObject.activeInHierarchy) == 1,
+                        "original auto-refresh observes new local inventory without a manual Init or state refresh");
+                    return "live wall clock matured the first fruit, native display refreshed, and disk reload retained the remainder";
+                });
+            }
             yield return new WaitForSecondsRealtime(.35f);
             passed &= Check("native-fruit-tree-ripe-slots", () =>
             {
-                runtime.Scene.SetFruitTreeState(Zjcs.Offline.Home.HomeFurnitureState.Functional,
-                    Zjcs.Offline.Home.HomeFurnitureState.Functional, 3);
+                if (!naturalProduction) runtime.Scene.SetFruitTreeState(Zjcs.Offline.Home.HomeFurnitureState.Functional,
+                    Zjcs.Offline.Home.HomeFurnitureState.Functional, matureCount);
                 Transform extracted = runtime.Scene.Root.transform.Find("ExtractedFruitTree");
                 Assert(extracted != null && !extracted.gameObject.activeInHierarchy,
                     "state refresh keeps the extracted tree representation inactive");
@@ -878,8 +906,8 @@ namespace Zjcs.Presentation.Home
                     "extracted skeleton, fruits, ropes and effects do not render over the native tree");
                 int visible = nativeTree.GetComponentsInChildren<HomeFruitTreeHangUpEffectItem>(true)
                     .Count(value => value != null && value.gameObject.activeInHierarchy);
-                Assert(visible == 3, "original fruit display instantiates the three mature slot effects");
-                return "three original fruit effects are visible on configured tree slots";
+                Assert(visible == matureCount, "original fruit display instantiates the expected mature slot effects");
+                return "original fruit effects are visible on the expected configured tree slots";
             });
             yield return Capture(capturePrefix + "-ripe.png");
             passed &= Check("native-fruit-tree-scene-pointer-target", () =>
@@ -945,13 +973,13 @@ namespace Zjcs.Presentation.Home
                 long rewardAfter = runtime.Profile.InventoryCount(OfflineFruitTreeService.RewardItemId);
                 int visible = nativeTree.GetComponentsInChildren<HomeFruitTreeHangUpEffectItem>(true)
                     .Count(value => value != null && value.gameObject.activeInHierarchy);
-                Assert(state.StoredCount == 0 && state.TotalCollected == totalBefore + 3
+                Assert(state.StoredCount == 0 && state.TotalCollected == totalBefore + matureCount
                     && state.CollectionCount == collectionsBefore + 1,
                     "native tree click collection state: stored=" + state.StoredCount + ", total=" + state.TotalCollected
                         + ", collections=" + state.CollectionCount);
-                Assert(rewardAfter == rewardBefore + 3, "fruit collection grants the configured local reward item");
+                Assert(rewardAfter == rewardBefore + matureCount, "fruit collection grants the configured local reward item");
                 Assert(visible == 0, "successful collection resets and hides pooled original fruit effects");
-                return "collected three mature fruits, granted three local rewards, reset native effects, and restored state from disk";
+                return "collected the mature stock, granted the matching local rewards, reset native effects, and restored state from disk";
             });
             yield return new WaitForSecondsRealtime(.25f);
             passed &= Check("native-fruit-tree-award-queue", () =>
@@ -961,15 +989,17 @@ namespace Zjcs.Presentation.Home
                 var row = panel.GetComponentsInChildren<Zjcs.Official.HomeAwardUI.AwardListPanelItem>()
                     .Single(value => value.isActiveAndEnabled);
                 var award = PrivateField<Zjcs.Official.HomeAwardUI.AwardData>(row, "mData");
-                Assert(award != null && award.AwardId == OfflineFruitTreeService.RewardItemId && award.Amount == 3,
+                Assert(award != null && award.AwardId == OfflineFruitTreeService.RewardItemId && award.Amount == matureCount,
                     "original award row receives the committed fruit reward and quantity");
                 string iconPath = row.Services.GetItemInfo(OfflineFruitTreeService.RewardItemId).Icon;
                 Sprite fruitIcon = Zjcs.Official.HomeFastHangUpUI.OfficialHomeFastHangUpAssetCatalog.LoadDefault()
                     .images.Single(value => value.path == iconPath).sprite;
                 Assert(row.GetComponentsInChildren<Image>().Any(value => value.sprite == fruitIcon),
                     "original item icon binds the official fruit sprite");
-                Assert(row.GetComponentsInChildren<TMP_Text>().Any(value => value.text.Contains("命运果实") && value.text.Contains("3")),
-                    "original award row displays the localized fruit name and amount");
+                Assert(row.GetComponentsInChildren<TMP_Text>().Any(value => matureCount == 1
+                        ? value.text == "命运果实"
+                        : value.text.Contains("命运果实") && value.text.Contains(matureCount.ToString())),
+                    "original award row displays the localized name, omitting quantity for a single item");
                 return "original fruit-tree award callback presents the official queue, fruit icon, localized name and quantity";
             });
             yield return Capture(capturePrefix + "-collected.png");

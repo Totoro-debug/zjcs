@@ -1,6 +1,7 @@
 param(
     [Parameter(Mandatory)][string]$ProjectPath,
     [string]$Editor = 'D:/Tool/Unity/Editor/Unity.exe',
+    [switch]$NaturalProduction,
     [ValidateRange(5, 120)][int]$TimeoutMinutes = 45
 )
 $ErrorActionPreference = 'Stop'
@@ -84,12 +85,13 @@ foreach ($name in $names) { $previous[$name] = [Environment]::GetEnvironmentVari
 try {
     $env:ZJCS_HOME_ACCEPTANCE_ROOT = Join-Path $work 'profiles'
     $env:ZJCS_HOME_ACCEPTANCE_OUTPUT = $work
-    $process = Start-UnityOnInternalDisplay -Editor $Editor -ArgumentList @(
+    $modeArguments = if ($NaturalProduction) { @('-fruitTreeNaturalProductionAcceptance') } else { @('-fruitTreeNativeSkinsAcceptance') }
+    $process = Start-UnityOnInternalDisplay -Editor $Editor -ArgumentList (@(
         '-muteAudio', '-job-worker-count', '2', '-gc-helper-count', '2',
         '-projectPath', ('"' + $project + '"'), '-executeMethod', 'Zjcs.Editor.Home.HomeAcceptanceLauncher.Run',
-        '-homeAcceptance', '-fruitTreeNativeAcceptance', '-fruitTreeNativeSkinsAcceptance',
+        '-homeAcceptance', '-fruitTreeNativeAcceptance',
         '-logFile', ('"' + $log + '"')
-    )
+    ) + $modeArguments)
 } finally {
     foreach ($name in $names) { [Environment]::SetEnvironmentVariable($name, $previous[$name]) }
 }
@@ -108,7 +110,9 @@ if ($process.ExitCode -ne 0 -or -not (Test-Path -LiteralPath $reportPath)) {
     throw ('Fruit-tree weather validation failed: ' + $log)
 }
 $report = Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json
-if (-not $report.success -or @($report.lines | Where-Object { $_ -like 'PASS native-fruit-tree-weather-*' }).Count -ne 12) {
-    throw ('All twelve live-weather variants must pass: ' + $reportPath)
+$requiredPattern = if ($NaturalProduction) { 'PASS native-fruit-tree-natural-*' } else { 'PASS native-fruit-tree-weather-*' }
+$requiredCount = if ($NaturalProduction) { 2 } else { 12 }
+if (-not $report.success -or @($report.lines | Where-Object { $_ -like $requiredPattern }).Count -ne $requiredCount) {
+    throw ('The selected fruit-tree flow must pass: ' + $reportPath)
 }
 Write-Output ('FRUIT_TREE_WEATHER_PASSED: ' + $work)
