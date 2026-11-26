@@ -1,4 +1,4 @@
-"""Recheck property-only profession skills against an explicit official source."""
+"""Recheck profession passive properties against an explicit official source."""
 import argparse
 import hashlib
 import json
@@ -22,7 +22,7 @@ def identity(path):
     return dict(path=path.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(raw).hexdigest())
 
 
-def verify(item_id, manifest):
+def verify(item_id, manifest, include_graph_properties=False):
     selected = OfficialSource(manifest)
     code = selected.prepared_path / 'official-code'
     constructors = Constructors(code)
@@ -30,8 +30,10 @@ def verify(item_id, manifest):
     rules = json.loads((runtime / 'rules.json').read_bytes())
     skill_rules = json.loads((runtime / 'skill-rules.json').read_bytes())
     installed = next(row for row in rules['skill'] if row['ClassId'] == item_id)
-    if installed['EcEntityId'] or installed['PassiveStatusIdList'] or not installed['PassivePropFactors']:
-        raise ValueError('This verifier only accepts passive properties without a skill or status entity')
+    if not installed['PassivePropFactors']:
+        raise ValueError('This verifier requires passive property factors')
+    if not include_graph_properties and (installed['EcEntityId'] or installed['PassiveStatusIdList']):
+        raise ValueError('Use --include-graph-properties to verify properties alongside an existing skill/status graph')
     table_inputs = []
     with OfficialBundleReader(selected) as reader:
         bundle = reader.read('DefaultPackage', 'defaultpackage_assets_config_luban.bundle')
@@ -132,9 +134,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--item', type=int, required=True)
     parser.add_argument('--manifest', required=True)
+    parser.add_argument('--include-graph-properties', action='store_true',
+                        help='Verify numeric properties while preserving the installed skill/status binding')
     parser.add_argument('--write', action='store_true')
     args = parser.parse_args()
-    result, payload = verify(args.item, args.manifest)
+    result, payload = verify(args.item, args.manifest, args.include_graph_properties)
     path = ROOT / f'assets/reference/battle-rules/passive-property-{args.item}-source-manifest.json'
     runtime = ROOT / f'unity/Assets/Game/Resources/Combat/SkillRules/{args.item}-passive.json'
     runtime_receipt = runtime.with_name(runtime.stem + '-source-manifest.json')
@@ -146,7 +150,7 @@ def main():
         runtime_receipt.write_text(json.dumps(binding, indent=2) + '\n', encoding='utf-8')
     elif json.loads(path.read_bytes()) != result or runtime.read_bytes() != payload or json.loads(runtime_receipt.read_bytes()) != binding:
         raise ValueError('Passive property source receipt or runtime payload differs')
-    print('Official property-only skill verified:', args.item, args.manifest)
+    print('Official passive properties verified:', args.item, args.manifest)
 
 
 if __name__ == '__main__':

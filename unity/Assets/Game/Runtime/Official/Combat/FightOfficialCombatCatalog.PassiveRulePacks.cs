@@ -30,22 +30,25 @@ namespace Zjcs.Combat.Official
             if (!string.Equals(Convert.ToString(Required(pack, "manifest")), manifest, StringComparison.Ordinal))
                 throw new InvalidOperationException("Passive property pack source differs from its manifest.");
             var skill = Object(Required(pack, "skill"), "passive skill");
-            if (Int(skill, "ClassId") != itemId || Int(skill, "EcEntityId") != 0
-                || IntArray(skill, "PassiveStatusIdList").Length != 0)
-                throw new FormatException("A property-only skill pack cannot replace a skill graph.");
+            int[] statusIds = IntArray(skill, "PassiveStatusIdList");
+            if (Int(skill, "ClassId") != itemId || Int(skill, "EcEntityId") != configured.EntityId
+                || statusIds.Length != configured.PassiveStatusIds.Length)
+                throw new FormatException("A passive property pack cannot replace a skill graph.");
+            for (int index = 0; index < statusIds.Length; index++)
+                if (statusIds[index] != configured.PassiveStatusIds[index])
+                    throw new FormatException("A passive property pack cannot replace a status graph.");
             var item = Object(Required(pack, "item"), "passive item");
             var factors = ReadLongMap(skill, "PassivePropFactors");
-            if (configured.EntityId != 0 || configured.PassiveStatusIds.Length != 0
-                || itemCatalog.ItemTypeFor(itemId) != 101
+            if (itemCatalog.ItemTypeFor(itemId) != 101
                 || configured.PassiveRankPropId != Int(skill, "PassiveRankPropId")
                 || configured.PassiveGroupLevelPropId != Int(skill, "PassiveGroupLevelPropId")
                 || configured.PassiveRankFactorId != Int(skill, "PassiveRankFactorId")
                 || configured.PassivePropFactors.Count != factors.Count
                 || Int(item, "ClassId") != itemId || Int(item, "ItemType") != 101)
-                throw new InvalidOperationException("Selected property-only skill differs from its existing item binding.");
+                throw new InvalidOperationException("Selected passive properties differ from their existing item binding.");
             foreach (var pair in factors)
                 if (!configured.PassivePropFactors.TryGetValue(pair.Key, out long value) || value != pair.Value)
-                    throw new InvalidOperationException("Selected property-only skill factors differ from its item binding.");
+                    throw new InvalidOperationException("Selected passive property factors differ from their item binding.");
             var source = new PassivePropertySource {
                 RankPropId = Int(skill, "PassiveRankPropId"),
                 GroupLevelPropId = Int(skill, "PassiveGroupLevelPropId"),
