@@ -42,6 +42,7 @@ namespace Zjcs.Presentation.Home
         private readonly Dictionary<string, object> report = new Dictionary<string, object>();
         private bool mainlandRequested;
         private readonly List<string> runtimeErrors = new List<string>();
+        private AcceptanceNativePointer nativeScenePointer;
 
         private IEnumerator Start()
         {
@@ -59,7 +60,10 @@ namespace Zjcs.Presentation.Home
             {
                 if (string.IsNullOrEmpty(slotId))
                     throw new InvalidOperationException("The acceptance profile was not created by the launcher.");
-                runtime = HomeFeatureRuntime.Begin(slotId, Root, null, null, () => mainlandRequested = true);
+                nativeScenePointer = Environment.GetCommandLineArgs().Contains("-fruitTreeNativeAcceptance")
+                    ? new AcceptanceNativePointer() : null;
+                runtime = HomeFeatureRuntime.BeginWithNativePointer(slotId, Root, null, nativeScenePointer,
+                    null, () => mainlandRequested = true);
                 runtime.TutorialAutoStartEnabled = false;
             }
             catch (Exception error)
@@ -683,7 +687,12 @@ namespace Zjcs.Presentation.Home
         private IEnumerator VerifyNativeFruitTree(HomeFeatureRuntime runtime, Action<bool> completed)
         {
             GameObject nativeTree = null;
+            HomeFruitTree treeController = null;
             HomeFruitTreeProduceFruit produce = null;
+            Collider nativeTreeClickCollider = null;
+            Vector2 nativeTreeClickScreen = default;
+            bool nativeTreeClickDispatched = false;
+            Action nativeTreeClickListener = null;
             Rect fruitTreeClickBounds = default;
             bool passed = Check("native-fruit-tree-runtime", () =>
             {
@@ -691,6 +700,7 @@ namespace Zjcs.Presentation.Home
                 Assert(nativeTree != null && nativeTree.activeInHierarchy, "native fruit-tree instance is active");
                 Assert(nativeTree.transform.IsChildOf(runtime.Scene.Root.transform), "native tree is parented under the official home scene");
                 HomeFruitTree tree = nativeTree.GetComponentInChildren<HomeFruitTree>(true);
+                treeController = tree;
                 HomeSpineDayNightSwitcher dayNight = nativeTree.GetComponentInChildren<HomeSpineDayNightSwitcher>(true);
                 produce = nativeTree.GetComponentInChildren<HomeFruitTreeProduceFruit>(true);
                 HomeFruitTreePet pet = nativeTree.GetComponentInChildren<HomeFruitTreePet>(true);
@@ -780,10 +790,16 @@ namespace Zjcs.Presentation.Home
                     entry.Owned = true;
                 });
                 Assert(owned, "isolated test home save owns the repaired fruit-tree facility");
+                Assert(runtime.Session.OwnsFurniture(OfflineFruitTreeService.ProductionFurnitureType),
+                    "home progression recognizes the production facility as owned");
                 Assert(runtime.HasFurnitureForSkin(OfflineFruitTreeService.ProductionFurnitureType),
                     "local fruit-tree service recognizes the production facility as repaired");
                 typeof(HomeFeatureRuntime).GetMethod("ReloadContext", BindingFlags.Instance | BindingFlags.NonPublic)
                     .Invoke(runtime, null);
+                object facilityState = typeof(HomeFeatureRuntime).GetMethod("FurnitureState", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(runtime, new object[] { OfflineFruitTreeService.ProductionFurnitureType });
+                Assert(facilityState.ToString() == "Functional",
+                    "home click routing sees the production facility as functional; actual state=" + facilityState);
                 produce.UpdateState();
                 Assert(produce.GetState() == Zjcs.Official.HomeFurniture.FurnitureBase.EFurnitureState.Functional,
                     "native production sub-building reaches the functional state");
@@ -798,27 +814,68 @@ namespace Zjcs.Presentation.Home
                 return "three original fruit effects are visible on configured tree slots";
             });
             yield return Capture("native-fruit-tree-ripe.png");
-            passed &= Check("native-fruit-tree-scene-pointer", () =>
+            passed &= Check("native-fruit-tree-scene-pointer-target", () =>
             {
-                Vector2 point = runtime.Scene.Camera.WorldToScreenPoint(fruitTreeClickBounds.center);
+                Assert(nativeScenePointer != null, "acceptance owns the original native-scene pointer seam");
+                Assert(!runtime.Hud.AnyModalOpen, "native fruit-tree click is not blocked by a modal");
+                Physics.SyncTransforms();
+                foreach (Collider collider in nativeTree.GetComponentsInChildren<Collider>(true)
+                    .Where(value => value != null && value.enabled && value.gameObject.activeInHierarchy))
+                {
+                    if (collider.GetComponentInParent<HomeFruitTreePet>() != null) continue;
+                    Bounds bounds = collider.bounds;
+                    Vector3[] candidates =
+                    {
+                        bounds.center,
+                        bounds.center + Vector3.up * bounds.extents.y * .5f,
+                        bounds.center - Vector3.up * bounds.extents.y * .5f,
+                        bounds.center + Vector3.right * bounds.extents.x * .5f,
+                        bounds.center - Vector3.right * bounds.extents.x * .5f
+                    };
+                    foreach (Vector3 candidate in candidates)
+                    {
+                        Vector3 screen = runtime.Scene.Camera.WorldToScreenPoint(candidate);
+                        if (screen.z <= 0f || !runtime.Scene.Camera.pixelRect.Contains(screen)) continue;
+                        if (!Physics.Raycast(runtime.Scene.Camera.ScreenPointToRay(screen), out RaycastHit hit, 1000f)
+                            || hit.collider == null || !hit.collider.transform.IsChildOf(nativeTree.transform)) continue;
+                        nativeTreeClickCollider = hit.collider;
+                        nativeTreeClickScreen = screen;
+                        break;
+                    }
+                    if (nativeTreeClickCollider != null) break;
+                }
+                Assert(nativeTreeClickCollider != null,
+                    "official native tree has a visible, raycastable production-side collider; candidates="
+                        + nativeTree.GetComponentsInChildren<Collider>(true).Length);
+                Vector2 point = nativeTreeClickScreen;
                 var pointer = new PointerEventData(EventSystem.current) { position = point };
                 var hits = new List<RaycastResult>();
                 EventSystem.current.RaycastAll(pointer, hits);
                 Assert(hits.Count == 0, "native fruit-tree scene input is not covered by UI");
-                int hitType = runtime.Scene.HitTest(runtime.Scene.ScreenToWorld(point));
-                Assert(hitType == OfflineFruitTreeService.ProductionFurnitureType,
-                    "native scene hit test resolves to the fruit-tree facility; actual type=" + hitType + ", point=" + point);
-                object input = PrivateField<object>(runtime, "input");
-                Func<bool> blocked = PrivateField<Func<bool>>(input, "blocked");
-                Assert(!blocked(), "home scene pointer is not blocked by a modal or wish screen");
-                foreach (string method in new[] { "PointerDown", "PointerUp" })
-                    input.GetType().GetMethod(method, BindingFlags.Instance | BindingFlags.NonPublic)
-                        .Invoke(input, new object[] { point, false });
-                return "simulated scene pointer reaches the official native fruit tree";
+                nativeTreeClickDispatched = false;
+                nativeTreeClickListener = () => nativeTreeClickDispatched = true;
+                treeController.OnClickAction.AddListener(nativeTreeClickListener);
+                nativeScenePointer.Press(point);
+                return "native raycast target " + nativeTreeClickCollider.name + " at " + point;
             });
-            yield return new WaitForSecondsRealtime(.5f);
+            yield return null;
+            nativeScenePointer.Hold(nativeTreeClickScreen);
+            yield return null;
+            nativeScenePointer.Release(nativeTreeClickScreen);
+            yield return null;
+            nativeScenePointer.Clear();
+            passed &= Check("native-fruit-tree-scene-pointer", () =>
+            {
+                treeController.OnClickAction.RemoveListener(nativeTreeClickListener);
+                Assert(nativeTreeClickDispatched, "official ClickableHomeObj dispatches the native fruit-tree click");
+                return "official raycast input reached the original tree controller";
+            });
             passed &= Check("native-fruit-tree-collection", () =>
             {
+                TMP_Text toast = PrivateField<TMP_Text>(runtime.Hud, "toast");
+                Assert(toast != null && toast.text.Contains("收取 3 个果实") && toast.text.Contains("× 3"),
+                    "fruit-tree collection emits the expected reward notice text");
+                runtime.Profile.Reload();
                 var state = runtime.Profile.Save.Player.FruitTree;
                 long rewardAfter = runtime.Profile.InventoryCount(OfflineFruitTreeService.RewardItemId);
                 int visible = nativeTree.GetComponentsInChildren<HomeFruitTreeHangUpEffectItem>(true)
@@ -828,7 +885,7 @@ namespace Zjcs.Presentation.Home
                         + ", collections=" + state.CollectionCount);
                 Assert(rewardAfter == rewardBefore + 3, "fruit collection grants the configured local reward item");
                 Assert(visible == 0, "successful collection resets and hides pooled original fruit effects");
-                return "collected three mature fruits, granted three local rewards, and reset the native display";
+                return "collected three mature fruits, granted three local rewards, emitted the reward notice, reset native effects, and restored state from disk";
             });
             yield return Capture("native-fruit-tree-collected.png");
             completed?.Invoke(passed);
@@ -3110,6 +3167,42 @@ namespace Zjcs.Presentation.Home
                 field = type.GetField(name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
             if (field == null) throw new MissingFieldException(target.GetType().FullName, name);
             return (T)field.GetValue(target);
+        }
+
+        private sealed class AcceptanceNativePointer : Zjcs.Official.HomeSceneInput.IHomeSceneClickPointer
+        {
+            public bool LeftDown { get; private set; }
+            public bool LeftUp { get; private set; }
+            public Vector2 Position { get; private set; }
+            public int Width => Screen.width;
+            public int Height => Screen.height;
+
+            public void Press(Vector2 position)
+            {
+                Position = position;
+                LeftDown = true;
+                LeftUp = false;
+            }
+
+            public void Hold(Vector2 position)
+            {
+                Position = position;
+                LeftDown = false;
+                LeftUp = false;
+            }
+
+            public void Release(Vector2 position)
+            {
+                Position = position;
+                LeftDown = false;
+                LeftUp = true;
+            }
+
+            public void Clear()
+            {
+                LeftDown = false;
+                LeftUp = false;
+            }
         }
 
         private static bool IsLayerGroupVisible(HomeSceneView scene, string pathFragment)
