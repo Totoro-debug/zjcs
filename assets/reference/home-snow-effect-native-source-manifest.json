@@ -1,0 +1,660 @@
+{
+  "manifest": "911_156995",
+  "inputs": {
+    "scripts/prepare_current_partner_native.py": "4c821c66c50d30fa6f581063a9c7cbdff0e591e06906728a713252dc36dd4262",
+    "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
+    "scripts/official_manifest.py": "1aae5bd86af587511466e17308719c2e6b356be4117942809c7e6ba89e2d7399",
+    ".tools/source-packages/current/911_156995/home-snow-native-a102ffa8480b4a53978eb0596f5982e0/native-export-source-manifest.json": "49656bdcfb200bcddd5e7c307e3555357fc7a883c50c64a40a6adce2a24852af",
+    ".tools/source-packages/current/911_156995/home-snow-native-a102ffa8480b4a53978eb0596f5982e0/all-assets/windows-textures/source-manifest.json": "81ae818d5e25f91ff3d129b1a4f7953c96d4117843fa56890cef8d839ad38052",
+    ".tools/source-packages/current/911_156995/home-snow-native-a102ffa8480b4a53978eb0596f5982e0/all-assets/windows-shaders/source-manifest.json": "342fa4c230b3bdc0a56bb382c541f8d1c370725bdb21355dbfdfb71c7489d5ef",
+    "unity/Assets/Game/Runtime/Official/HomeWeather/HomeWeatherSnow.cs": "48aaf248c764b47e8ded5466ba10307e187b90d55245de06126daeabdb6c8755",
+    "unity/Assets/Game/Runtime/Official/HomeWeather/HomeWeatherSnow.cs.meta": "322a16403b856693526fae618e81998290ba215be656914c2b13e2d2b58f13b3",
+    ".tools/source-packages/current/911_156995/home-snow-native-a102ffa8480b4a53978eb0596f5982e0/native-export/ExportedProject/Assets/Effect/Materials/Fx_XueHua_0009_Y.mat": "ade6b4dedae4a65f17a5ad509e9b3ef198ba2b655ded7291f5cd2faa75908022",
+    ".tools/source-packages/current/911_156995/home-snow-native-a102ffa8480b4a53978eb0596f5982e0/native-export/ExportedProject/Assets/Effect/Materials/Fx_XueHua_0008_Y.mat": "fd8d230d8f32372a9d623503e9b714e98cb1fbe1b798a1254776182c46c9b071",
+    "scripts/prepare_home_snow_effect_native.py": "e8ae495fa11413bfbb1ec61a4cee78c13786e7d0a9a8783e1ebd9dcb46f82fef",
+    "scripts/home_native_assets.py": "60b182fcdda4607a54fd4ce02c067ec5c564253e22bc59ca15417bf9a475b6c5",
+    "scripts/prepare_partner_card_native.py": "ac84cab88ce4b49b561c0c6a921e132325c6ce24e69e1f57477b07d86db01d1e",
+    "scripts/native_spine_assets.py": "786655177867754c79f969ffd7493806c41e6866006ab3c6c06556bd57423d9b"
+  },
+  "validation_inputs": {
+    "scripts/fixtures/home_snow_effect_native_validation.cs": "87775c675129ba012b29b173c5c81c43d58632213b23b974fd81a373c61f4aa3",
+    "scripts/test_home_snow_effect_native.ps1": "44ca687b3ebb6193c1965d620d6490218e149d1f8c54af34f486f9b56f9d5fd8"
+  },
+  "selections": [
+    {
+      "name": "GroundSnow",
+      "original_ground": "cab-c456ce1e861119826bf2eb5f6f4610d5:-4526742451351598271",
+      "effect": "cab-c456ce1e861119826bf2eb5f6f4610d5:-1537406019560092863",
+      "controller": "cab-c456ce1e861119826bf2eb5f6f4610d5:-406378621713265855",
+      "source_fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -4526742451351598271
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -5365978994473094312
+        },
+        "m_Name": "",
+        "mAppearEffectDuration": 2.0,
+        "mSnowParticleSystems": [
+          {
+            "m_FileID": 0,
+            "m_PathID": -2504780209047876799
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -2965480949453239487
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 397426862424509249
+          }
+        ],
+        "mParticleAppearCurve": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 0.5,
+              "value": 0.20000000298023224,
+              "inSlope": 0.992928147315979,
+              "outSlope": 0.992928147315979,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 2.0,
+              "outSlope": 2.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      },
+      "prefab": {
+        "fileID": 1709254077376921,
+        "guid": "96bc8a46178b40404bf9417752e58825",
+        "type": 3
+      },
+      "resource": "Home/Weather/SnowEffects/GroundSnow",
+      "retained_objects": {
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-1537406019560092863": 1989086511197016,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-238709730868540607": 4384633066921451,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:2060882590539238209": 1104119009767140,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-6186715110333166783": 4736579049359453,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-8859177142765040831": 1968898024499047,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-3266861751302698175": 4170416292883422,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-2504780209047876799": 198071827206040757,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-1282276627983316159": 199334758157960472,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:2252026431557847873": 1881464258438879,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-6151767231003833535": 4689163585402254,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-2965480949453239487": 198278836297130342,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:8854385210960366401": 199067342700448780,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:8533716832505678657": 1909426046791747,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-62456482525295807": 4189504089502092,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:397426862424509249": 198392515493219318,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:5077520497866951489": 199619897860471289
+      },
+      "retained_ground_components": [
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:8432957997417941825",
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-406378621713265855"
+      ]
+    },
+    {
+      "name": "GroundHalloweenSnow",
+      "original_ground": "cab-c456ce1e861119826bf2eb5f6f4610d5:3484127664719592019",
+      "effect": "cab-c456ce1e861119826bf2eb5f6f4610d5:-4297275262689478061",
+      "controller": "cab-c456ce1e861119826bf2eb5f6f4610d5:-8098991918974567853",
+      "source_fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 3484127664719592019
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -5365978994473094312
+        },
+        "m_Name": "",
+        "mAppearEffectDuration": 2.0,
+        "mSnowParticleSystems": [
+          {
+            "m_FileID": 0,
+            "m_PathID": 4502625158299253331
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 690668651494570579
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -5282590247687620013
+          }
+        ],
+        "mParticleAppearCurve": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 2.0,
+              "outSlope": 2.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      },
+      "prefab": {
+        "fileID": 1709254077376921,
+        "guid": "5480db358673a368d53eae7871955f22",
+        "type": 3
+      },
+      "resource": "Home/Weather/SnowEffects/GroundHalloweenSnow",
+      "retained_objects": {
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-4297275262689478061": 1353340443629527,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:5855149161630071379": 4752948452416421,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-8469084046364706221": 1359435272656907,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:855149772572916307": 4522483699356065,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-2447286278184240557": 1986746396254636,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-618502530361001389": 4061856566304833,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:4502625158299253331": 198785866914068086,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:7980240963222698579": 199043822086436995,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-1127678137151784365": 1126042694364515,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:5179681178839743059": 4482330091005650,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:690668651494570579": 198127181451791432,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:7882102212924275283": 199979918062530184,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:4461916717884832339": 1108722078165427,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:6256503002541718099": 4930084051017288,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-5282590247687620013": 198514414536297652,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:2996914410371742291": 199504365323825880
+      },
+      "retained_ground_components": [
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:4072841924150557267",
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-8098991918974567853"
+      ]
+    },
+    {
+      "name": "GroundChineseOdysseySnow",
+      "original_ground": "cab-c456ce1e861119826bf2eb5f6f4610d5:2365307232247084638",
+      "effect": "cab-c456ce1e861119826bf2eb5f6f4610d5:-5151357528141728162",
+      "controller": "cab-c456ce1e861119826bf2eb5f6f4610d5:-2179850387868223906",
+      "source_fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 2365307232247084638
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -5365978994473094312
+        },
+        "m_Name": "",
+        "mAppearEffectDuration": 2.0,
+        "mSnowParticleSystems": [
+          {
+            "m_FileID": 0,
+            "m_PathID": -1341960525797919138
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": 5836374266877310558
+          },
+          {
+            "m_FileID": 0,
+            "m_PathID": -4413303791364213154
+          }
+        ],
+        "mParticleAppearCurve": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 0.5,
+              "value": 0.20000000298023224,
+              "inSlope": 0.992928147315979,
+              "outSlope": 0.992928147315979,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 2.0,
+              "outSlope": 2.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      },
+      "prefab": {
+        "fileID": 1709254077376921,
+        "guid": "0119eaa94a6737cff9aa0816b744985c",
+        "type": 3
+      },
+      "resource": "Home/Weather/SnowEffects/GroundChineseOdysseySnow",
+      "retained_objects": {
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-5151357528141728162": 1858286384160668,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:7422778638584903262": 4754040417984154,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:5508253643029739102": 1967258453572104,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:5856607910153549406": 4066277740905745,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-7408109504308119970": 1412746682036199,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-7079310194995628450": 4531403864476142,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-1341960525797919138": 198886138705098595,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:6325784820502296158": 199075375106187003,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-8239020141647432098": 1432223214076560,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-5896384626135796130": 4327953948702788,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:5836374266877310558": 198575229228051179,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:8872627679806355038": 199371470690536272,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:1180058408410871390": 1151797847433907,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:2995450795668272734": 4045687079563679,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-4413303791364213154": 198426100690460965,
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:1497498107824633438": 199764805894868231
+      },
+      "retained_ground_components": [
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:4032719385349191262",
+        "cab-c456ce1e861119826bf2eb5f6f4610d5:-2179850387868223906"
+      ]
+    }
+  ],
+  "resources": {
+    "cab-c456ce1e861119826bf2eb5f6f4610d5:-4526742451351598271": {
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_home_dynamic_theme_ground.bundle",
+        "bundle_hash": "843dc5d3240529603057f01383eb3fdb",
+        "path_id": "-4526742451351598271",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/843dc5d3240529603057f01383eb3fdb.bundle",
+        "manifest": "911_156995",
+        "bundle_size": 3349032,
+        "bundle_sha256": "874431be0f2622b7eb93179b79242b5b188e83bc647ddb44194aa1058013b8f8"
+      },
+      "original_sha256": "cff4c0bea774b1d9e0b71cb28427e538c8eea0fe060a384d70aaa4dd0ab2b184"
+    },
+    "cab-c456ce1e861119826bf2eb5f6f4610d5:8432957997417941825": {
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_home_dynamic_theme_ground.bundle",
+        "bundle_hash": "843dc5d3240529603057f01383eb3fdb",
+        "path_id": "8432957997417941825",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/843dc5d3240529603057f01383eb3fdb.bundle",
+        "manifest": "911_156995",
+        "bundle_size": 3349032,
+        "bundle_sha256": "874431be0f2622b7eb93179b79242b5b188e83bc647ddb44194aa1058013b8f8"
+      },
+      "original_sha256": "106033462b39d4fe64e5ff2a4a3dc7bbfe6e2971b2e8bd85479458f1787541dd"
+    },
+    "cab-c456ce1e861119826bf2eb5f6f4610d5:-406378621713265855": {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_home_dynamic_theme_ground.bundle",
+        "bundle_hash": "843dc5d3240529603057f01383eb3fdb",
+        "path_id": "-406378621713265855",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/843dc5d3240529603057f01383eb3fdb.bundle",
+        "manifest": "911_156995",
+        "bundle_size": 3349032,
+        "bundle_sha256": "874431be0f2622b7eb93179b79242b5b188e83bc647ddb44194aa1058013b8f8"
+      },
+      "original_sha256": "d462109144fa10919260446ccf0211a19edcdb31d136bf2ceabe3ac4837668a1"
+    },
+    "cab-c456ce1e861119826bf2eb5f6f4610d5:3484127664719592019": {
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_home_dynamic_theme_ground.bundle",
+        "bundle_hash": "843dc5d3240529603057f01383eb3fdb",
+        "path_id": "3484127664719592019",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/843dc5d3240529603057f01383eb3fdb.bundle",
+        "manifest": "911_156995",
+        "bundle_size": 3349032,
+        "bundle_sha256": "874431be0f2622b7eb93179b79242b5b188e83bc647ddb44194aa1058013b8f8"
+      },
+      "original_sha256": "4ae7fe9f9c633dd035891d46d53c4d60002768d40cb157c9ac7ce4a304ace654"
+    },
+    "cab-c456ce1e861119826bf2eb5f6f4610d5:4072841924150557267": {
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_home_dynamic_theme_ground.bundle",
+        "bundle_hash": "843dc5d3240529603057f01383eb3fdb",
+        "path_id": "4072841924150557267",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/843dc5d3240529603057f01383eb3fdb.bundle",
+        "manifest": "911_156995",
+        "bundle_size": 3349032,
+        "bundle_sha256": "874431be0f2622b7eb93179b79242b5b188e83bc647ddb44194aa1058013b8f8"
+      },
+      "original_sha256": "f143edfa31b122e80f8ba686efc35e8d5adc0717385ade74f36df03196b9d340"
+    },
+    "cab-c456ce1e861119826bf2eb5f6f4610d5:-8098991918974567853": {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_home_dynamic_theme_ground.bundle",
+        "bundle_hash": "843dc5d3240529603057f01383eb3fdb",
+        "path_id": "-8098991918974567853",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/843dc5d3240529603057f01383eb3fdb.bundle",
+        "manifest": "911_156995",
+        "bundle_size": 3349032,
+        "bundle_sha256": "874431be0f2622b7eb93179b79242b5b188e83bc647ddb44194aa1058013b8f8"
+      },
+      "original_sha256": "0a09191d483c66dadcd19f1e38e0ea82330d6d574d77a98a44293036eece1b71"
+    },
+    "cab-c456ce1e861119826bf2eb5f6f4610d5:2365307232247084638": {
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_home_dynamic_theme_ground.bundle",
+        "bundle_hash": "843dc5d3240529603057f01383eb3fdb",
+        "path_id": "2365307232247084638",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/843dc5d3240529603057f01383eb3fdb.bundle",
+        "manifest": "911_156995",
+        "bundle_size": 3349032,
+        "bundle_sha256": "874431be0f2622b7eb93179b79242b5b188e83bc647ddb44194aa1058013b8f8"
+      },
+      "original_sha256": "d62fa4ab84f5ed1056bcae1dd2f90a25d456e0ee6bd1f30f596f8917a9ec0901"
+    },
+    "cab-c456ce1e861119826bf2eb5f6f4610d5:4032719385349191262": {
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_home_dynamic_theme_ground.bundle",
+        "bundle_hash": "843dc5d3240529603057f01383eb3fdb",
+        "path_id": "4032719385349191262",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/843dc5d3240529603057f01383eb3fdb.bundle",
+        "manifest": "911_156995",
+        "bundle_size": 3349032,
+        "bundle_sha256": "874431be0f2622b7eb93179b79242b5b188e83bc647ddb44194aa1058013b8f8"
+      },
+      "original_sha256": "68899f21499c4049f09a4ab83f803f18de3c1d370bff3780d41f8c67c8ccf4ad"
+    },
+    "cab-c456ce1e861119826bf2eb5f6f4610d5:-2179850387868223906": {
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_home_dynamic_theme_ground.bundle",
+        "bundle_hash": "843dc5d3240529603057f01383eb3fdb",
+        "path_id": "-2179850387868223906",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/843dc5d3240529603057f01383eb3fdb.bundle",
+        "manifest": "911_156995",
+        "bundle_size": 3349032,
+        "bundle_sha256": "874431be0f2622b7eb93179b79242b5b188e83bc647ddb44194aa1058013b8f8"
+      },
+      "original_sha256": "49e0b92acea31d260246f043889cb60afe2df633520f4ed9c2d7f98e2d64a201"
+    },
+    "cab-18407d950378b6eea7201fb75f86df88:2064091356993307424": {
+      "source": {
+        "bundle": "defaultpackage_share_fc8b792254f506f60513eebd650ba8af.bundle",
+        "bundle_hash": "0069ab0672778c1cbc5f38ab528ad6dc",
+        "path_id": "2064091356993307424",
+        "origin": "apk_zip",
+        "manifest": "911_156995",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+        "apk_entry": "assets/yoo/DefaultPackage/0069ab0672778c1cbc5f38ab528ad6dc.bundle",
+        "raw_size": 7202,
+        "raw_sha256": "9cb58088d669e89d687795be8056bd1648d713946770ac492f081bee94ec4909"
+      },
+      "type": "Material",
+      "original_sha256": "289d3b8f6a2fc624824bfd174e90cdf73322c5c0c49054105ed2dba22d47bfbe",
+      "native_path": ".tools/source-packages/current/911_156995/home-snow-native-a102ffa8480b4a53978eb0596f5982e0/native-export/ExportedProject/Assets/Effect/Materials/Fx_XueHua_0009_Y.mat",
+      "output": "Effect/Materials/Fx_XueHua_0009_Y.mat",
+      "guid": "4697aeedc39fa1884d66fde02feefe89",
+      "geometry": null
+    },
+    "cab-bfacbea947d63525f933f07cd5d173ec:3718439867039833003": {
+      "source": {
+        "bundle": "defaultpackage_share_c85bee3d20d2ab9317721e49ae1fd8b9.bundle",
+        "bundle_hash": "1bd58a6f5b6ab1bb93ebcac4b30dbee1",
+        "path_id": "3718439867039833003",
+        "origin": "apk_zip",
+        "manifest": "911_156995",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+        "apk_entry": "assets/yoo/DefaultPackage/1bd58a6f5b6ab1bb93ebcac4b30dbee1.bundle",
+        "raw_size": 2949,
+        "raw_sha256": "5ef6362e5431358eda590aad3298b0f94e8a8ffaa7238e754166de61e8939123"
+      },
+      "type": "Material",
+      "original_sha256": "93dfd084dc29ab3ad271cd4f725f7c7e34b3403670c7e5a084f453ba65214d58",
+      "native_path": ".tools/source-packages/current/911_156995/home-snow-native-a102ffa8480b4a53978eb0596f5982e0/native-export/ExportedProject/Assets/Effect/Materials/Fx_XueHua_0008_Y.mat",
+      "output": "Effect/Materials/Fx_XueHua_0008_Y.mat",
+      "guid": "bd3d854dcad33d4c48aa122ee8f6f555",
+      "geometry": null
+    },
+    "cab-014000ed2538cb87d1aa4612be612002:-1464726073327024352": {
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "3b6a3003933ca56077e80f8d2dd1f456",
+        "path_id": "-1464726073327024352",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/3b6a3003933ca56077e80f8d2dd1f456.bundle",
+        "manifest": "911_156995",
+        "bundle_size": 2934299,
+        "bundle_sha256": "84cbf86ce11fb98716818e563fd01b4c3989e7b5f713a4621af20c7c2603fd2d"
+      },
+      "type": "Shader",
+      "original_sha256": "1123c0eabc687b465fd70c372618fa088ab2dd5f070336efa2792f6eadf1efb8",
+      "native_path": null,
+      "output": "Converted/59de19d261370c02.shader",
+      "guid": "6fe95eedb1dd5d42389c55ed2d60544b",
+      "geometry": null
+    },
+    "cab-18407d950378b6eea7201fb75f86df88:-6778681139819653232": {
+      "source": {
+        "bundle": "defaultpackage_share_fc8b792254f506f60513eebd650ba8af.bundle",
+        "bundle_hash": "0069ab0672778c1cbc5f38ab528ad6dc",
+        "path_id": "-6778681139819653232",
+        "origin": "apk_zip",
+        "manifest": "911_156995",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+        "apk_entry": "assets/yoo/DefaultPackage/0069ab0672778c1cbc5f38ab528ad6dc.bundle",
+        "raw_size": 7202,
+        "raw_sha256": "9cb58088d669e89d687795be8056bd1648d713946770ac492f081bee94ec4909"
+      },
+      "type": "Texture2D",
+      "original_sha256": "985b818356739f217eba46637cf701027ee67c7047662b09008dd3b06a8a707e",
+      "native_path": null,
+      "output": "Converted/f7957becaac076b4.asset",
+      "guid": "260a73cbdf1eae09eb1c0730616731b1",
+      "geometry": null
+    },
+    "cab-4f7fa9889bade9a1a77b56cfe73fbbcd:-1745413974793481521": {
+      "source": {
+        "bundle": "defaultpackage_share_d4fbfd0ad66702feb020038d5275b2b0.bundle",
+        "bundle_hash": "93984553f74eebfa69d77b5d0df02f97",
+        "path_id": "-1745413974793481521",
+        "origin": "apk_zip",
+        "manifest": "911_156995",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+        "apk_entry": "assets/yoo/DefaultPackage/93984553f74eebfa69d77b5d0df02f97.bundle",
+        "raw_size": 4252,
+        "raw_sha256": "71a9132f54858c0981b41999b18eb55ac5673acfed088da9daa85c142f1a239f"
+      },
+      "type": "Texture2D",
+      "original_sha256": "537151c5a56a32fb9220a661eb10e9b7365b169f1458931c053ffc26cf1674d3",
+      "native_path": null,
+      "output": "Converted/0e4cecb9e14d09cc.asset",
+      "guid": "ebbbe3b6ef83b5f692e711837cf805d2",
+      "geometry": null
+    }
+  },
+  "recovery": {
+    "manifest": "911_156995",
+    "bundle": "defaultpackage_assets_prefabs_home_dynamic_theme_ground.bundle",
+    "stage": "Recovered original hierarchy/fields only; runtime script and resource binding pending",
+    "generator_sha256": "4c821c66c50d30fa6f581063a9c7cbdff0e591e06906728a713252dc36dd4262",
+    "component_cache": {
+      "path": ".tools/source-packages/current/911_156995/home-snow-native-a102ffa8480b4a53978eb0596f5982e0/native-export-source-manifest.json",
+      "sha256": "49656bdcfb200bcddd5e7c307e3555357fc7a883c50c64a40a6adce2a24852af",
+      "decoding": "Original active assembly descriptors; fields decoded on demand"
+    },
+    "prefabs": [
+      {
+        "name": "GroundSnow",
+        "originalRoot": "cab-c456ce1e861119826bf2eb5f6f4610d5:-1537406019560092863",
+        "originalSource": {
+          "bundle": "defaultpackage_assets_prefabs_home_dynamic_theme_ground.bundle",
+          "bundle_hash": "843dc5d3240529603057f01383eb3fdb",
+          "path_id": "-1537406019560092863",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/843dc5d3240529603057f01383eb3fdb.bundle",
+          "manifest": "911_156995",
+          "bundle_size": 3349032,
+          "bundle_sha256": "874431be0f2622b7eb93179b79242b5b188e83bc647ddb44194aa1058013b8f8"
+        },
+        "nativeSource": ".tools/source-packages/current/911_156995/home-snow-native-a102ffa8480b4a53978eb0596f5982e0/native-export/ExportedProject/Assets/Prefabs/Home/Dynamic/Theme/Ground/GroundSnow.prefab",
+        "native_sha256": "7d209dc25d2498f975843a566b6a8bd220c7c655636df1e633fedbc2e8875c7d",
+        "mapped_objects": 16,
+        "recovered_components": 0,
+        "unresolved": 0,
+        "pendingBindings": {},
+        "output": "GroundSnow.json",
+        "subtree": {
+          "original_parent": {
+            "fileID": 4909888333327498
+          },
+          "detached_parent": {
+            "fileID": 0
+          }
+        }
+      },
+      {
+        "name": "GroundHalloweenSnow",
+        "originalRoot": "cab-c456ce1e861119826bf2eb5f6f4610d5:-4297275262689478061",
+        "originalSource": {
+          "bundle": "defaultpackage_assets_prefabs_home_dynamic_theme_ground.bundle",
+          "bundle_hash": "843dc5d3240529603057f01383eb3fdb",
+          "path_id": "-4297275262689478061",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/843dc5d3240529603057f01383eb3fdb.bundle",
+          "manifest": "911_156995",
+          "bundle_size": 3349032,
+          "bundle_sha256": "874431be0f2622b7eb93179b79242b5b188e83bc647ddb44194aa1058013b8f8"
+        },
+        "nativeSource": ".tools/source-packages/current/911_156995/home-snow-native-a102ffa8480b4a53978eb0596f5982e0/native-export/ExportedProject/Assets/Prefabs/Home/Dynamic/Theme/Ground/GroundHalloweenSnow.prefab",
+        "native_sha256": "3371b81ca20cfa3817f0f286da9eca405c9c6508e412ea277c19878757675d25",
+        "mapped_objects": 16,
+        "recovered_components": 0,
+        "unresolved": 0,
+        "pendingBindings": {},
+        "output": "GroundHalloweenSnow.json",
+        "subtree": {
+          "original_parent": {
+            "fileID": 4689876809886907
+          },
+          "detached_parent": {
+            "fileID": 0
+          }
+        }
+      },
+      {
+        "name": "GroundChineseOdysseySnow",
+        "originalRoot": "cab-c456ce1e861119826bf2eb5f6f4610d5:-5151357528141728162",
+        "originalSource": {
+          "bundle": "defaultpackage_assets_prefabs_home_dynamic_theme_ground.bundle",
+          "bundle_hash": "843dc5d3240529603057f01383eb3fdb",
+          "path_id": "-5151357528141728162",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/843dc5d3240529603057f01383eb3fdb.bundle",
+          "manifest": "911_156995",
+          "bundle_size": 3349032,
+          "bundle_sha256": "874431be0f2622b7eb93179b79242b5b188e83bc647ddb44194aa1058013b8f8"
+        },
+        "nativeSource": ".tools/source-packages/current/911_156995/home-snow-native-a102ffa8480b4a53978eb0596f5982e0/native-export/ExportedProject/Assets/Prefabs/Home/Dynamic/Theme/Ground/GroundChineseOdysseySnow.prefab",
+        "native_sha256": "5098930d77e2cf3dac58fe5e63ace65c14749b22e6c3f74633caeafa12332807",
+        "mapped_objects": 16,
+        "recovered_components": 0,
+        "unresolved": 0,
+        "pendingBindings": {},
+        "output": "GroundChineseOdysseySnow.json",
+        "subtree": {
+          "original_parent": {
+            "fileID": 4335036306139620
+          },
+          "detached_parent": {
+            "fileID": 0
+          }
+        }
+      }
+    ],
+    "additional_bundles": [
+      "defaultpackage_assets_prefabs_home_dynamic_theme_ground.bundle"
+    ]
+  },
+  "outputs": {
+    "unity/Assets/Official/Home/WeatherNative/Resources/Home/Weather/SnowEffects/GroundSnow.prefab": "3badff5cf16b40a8220bb0f5959e4c9b286872f7ce7cec2677983479a6018dbd",
+    "unity/Assets/Official/Home/WeatherNative/Resources/Home/Weather/SnowEffects/GroundSnow.prefab.meta": "2fc0591f2b59b82593de697e57c08e9e57bf277e37b08fcb552770279f5e9740",
+    "unity/Assets/Official/Home/WeatherNative/Resources/Home/Weather/SnowEffects.meta": "0bae220bf3f1179bf39d3a56e488ff7d806f9d403ddce04636875beaf3a3a8e0",
+    "unity/Assets/Official/Home/WeatherNative/Resources/Home/Weather.meta": "78506f717eeccfb9d74fa2841f2e11df6bd8870197af9a456ddce56f385a8cc9",
+    "unity/Assets/Official/Home/WeatherNative/Resources/Home.meta": "84d7321c2f1f47ac627312cea6322681b9478c742c7452a1c5ef5b54971ddb3d",
+    "unity/Assets/Official/Home/WeatherNative/Resources.meta": "b7156ce6b7e194779659f46c442d79783e15f5c340aa224e7c2f94d0ee45c166",
+    "unity/Assets/Official/Home/WeatherNative.meta": "58588c3992024529a150da0d94d1aa6103c8337b2a82ae815e35e7a22685c01e",
+    "unity/Assets/Official/Home/WeatherNative/Resources/Home/Weather/SnowEffects/GroundHalloweenSnow.prefab": "11822912ac016b7b004c293c9328a4a260cf6efa594ba9af4b9dc57373fdf20c",
+    "unity/Assets/Official/Home/WeatherNative/Resources/Home/Weather/SnowEffects/GroundHalloweenSnow.prefab.meta": "2353e0ffc02c5dd33917396138ee1d7d297d880e3ff595611869c39f43ff5b52",
+    "unity/Assets/Official/Home/WeatherNative/Resources/Home/Weather/SnowEffects/GroundChineseOdysseySnow.prefab": "fd4b4789c3d992badcfc76970cd030dc1598fb894d2a22ad49848093ee5d487f",
+    "unity/Assets/Official/Home/WeatherNative/Resources/Home/Weather/SnowEffects/GroundChineseOdysseySnow.prefab.meta": "475ebd6baf5c4aeb362ca419634bb0145197782689ccabe7ba77045f36db15e8",
+    "unity/Assets/Official/Home/WeatherNative/Effect/Materials/Fx_XueHua_0009_Y.mat": "ffe98ccc4dbf9d4ac1eb20d2b547ae9248019e7980a13708996f1a89c79eeabe",
+    "unity/Assets/Official/Home/WeatherNative/Effect/Materials/Fx_XueHua_0009_Y.mat.meta": "694750cb0404fddf5a67a861be5096f8b11ab2b7831e58be6ae8f093c02f9973",
+    "unity/Assets/Official/Home/WeatherNative/Effect/Materials.meta": "6b8fbedc9a9460c90371c6d7248a9329c26c5a86e30a9530d8f31d9a2e9c437c",
+    "unity/Assets/Official/Home/WeatherNative/Effect.meta": "d3bfd8339eb45f268c9eee959817efe869f778f092d96c683e7b3f03e4e9db0b",
+    "unity/Assets/Official/Home/WeatherNative/Effect/Materials/Fx_XueHua_0008_Y.mat": "24f0ed44024cf8aaae33ea9823d38b7f50c0a6bbf183999047c9ee6e20fbc049",
+    "unity/Assets/Official/Home/WeatherNative/Effect/Materials/Fx_XueHua_0008_Y.mat.meta": "d1a041a5dea0cd5deb28be5d5ca26bb28ba0c8fb2664ba42d66eed3a0f6dfbe0",
+    "unity/Assets/Official/Home/WeatherNative/Converted/59de19d261370c02.shader": "62239ee2dafef87bdecd73062f9f801edb77e228454921ef6cbeff549475c9f0",
+    "unity/Assets/Official/Home/WeatherNative/Converted/59de19d261370c02.shader.meta": "1474c59e9322623c11ffdb6185ae042621a4e1e617ffddddc6a98923e4948bf2",
+    "unity/Assets/Official/Home/WeatherNative/Converted.meta": "23ce6ec87e7314ef7994272ee6cb0fd95af5f98e194460029e6a2bbe1f7d9f62",
+    "unity/Assets/Official/Home/WeatherNative/Converted/f7957becaac076b4.asset": "f33039af5bbae10c0ae09bce1330e099036bb367f1cfe8e1457e76f2ecab4a68",
+    "unity/Assets/Official/Home/WeatherNative/Converted/f7957becaac076b4.asset.meta": "fec433cc937ad3c2417eb1d34285e1203af8daafad5a70b857b60f0979c50f3d",
+    "unity/Assets/Official/Home/WeatherNative/Converted/0e4cecb9e14d09cc.asset": "44f79f9ab1fb0861015cde5f222b7f3afa19fa997c4f5a3e83422244e2c92143",
+    "unity/Assets/Official/Home/WeatherNative/Converted/0e4cecb9e14d09cc.asset.meta": "a2cdd5af993044626cc0fdca4ec4a96dfec0f8d3317eea7a425130bc31610582"
+  },
+  "adaptations": [
+    "Ground root, transform and HomeWeatherSnow retain their original identity and fields. Only the complete Eff_Home_Snow subtree is included in this effect prefab. Other ground visuals/controllers remain owned by the ground migration and are not replaced."
+  ],
+  "scope": "Original three ground snow particle effects and controller bindings. Full ground prefab and production Home integration require separate validation."
+}
