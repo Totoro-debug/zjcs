@@ -122,7 +122,7 @@ class Constructors:
         path = SOURCE / (name+'.cs')
         if not source:
             return None
-        matches = list(re.finditer(r'public '+re.escape(name)+r'\((ByteBuf _buf[^)]*)\)\s*(?:: base\(_buf\))?\s*\{', source))
+        matches = list(re.finditer(r'public '+re.escape(name)+r'\((ByteBuf _buf[^)]*)\)\s*(?:: base\(([^)]*)\))?\s*\{', source))
         match = next((m for m in matches if len(split_args(m[1])) == argc), None)
         if match is None:
             primary = re.search(r'public struct '+re.escape(name)+r'\(ByteBuf _buf\)\s*\{(.*?)public static', source, re.S)
@@ -146,10 +146,13 @@ class Constructors:
         lines, indent, stack, pending = [], 0, [], None
         def add(line):
             lines.append('    '*indent+line)
-        if ': base(_buf)' in match[0]:
+        if match[2] is not None:
             base = re.search(r'public (?:abstract )?class '+re.escape(name)+r'\s*:\s*(\w+)', source)
             if base:
-                add('inherited = decode('+repr('__base__'+base[1])+', _buf)')
+                # Pooled Luban constructors forward the same dictionary pools
+                # through each base constructor before reading derived fields.
+                arguments = self.expression(match[2])
+                add('inherited = decode('+repr('__base__'+base[1])+', '+arguments+')')
         def statement(value):
             if re.fullmatch(r'\w+\.TrimExcess\(\)', value):
                 return 'pass'
