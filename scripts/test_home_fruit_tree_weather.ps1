@@ -148,6 +148,18 @@ if ($PetGachaControls) {
             throw ('Native gacha control component differs: ' + $binding.path)
         }
         $target = Join-Path $project $binding.path.Substring(6)
+        if ($binding.path.StartsWith('unity/Library/PackageCache/')) {
+            # A fresh source project has no package cache yet. Restore the
+            # complete verified source package, rather than an isolated class.
+            $segments = $binding.path.Substring(6).Split('/')
+            $packageRelative = $segments[0..2] -join '/'
+            $packageTarget = Join-Path $project $packageRelative
+            if (-not (Test-Path -LiteralPath (Join-Path $packageTarget 'package.json'))) {
+                [void](New-Item -ItemType Directory -Path (Split-Path $packageTarget) -Force)
+                Copy-Item -LiteralPath (Join-Path $repository ('unity/' + $packageRelative)) -Destination $packageTarget -Recurse -Force
+            }
+        }
+        [void](New-Item -ItemType Directory -Path (Split-Path $target) -Force)
         Copy-Item -LiteralPath $source -Destination $target -Force
         Copy-Item -LiteralPath ($source + '.meta') -Destination ($target + '.meta') -Force
     }
