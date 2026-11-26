@@ -59,6 +59,12 @@ namespace Zjcs.Presentation.Home
                 // The editor applies the selected Game View size on its first render.
                 // Build the HUD after that render, using the same viewport as later input/captures.
                 yield return new WaitForEndOfFrame();
+#if UNITY_EDITOR
+                Type.GetType("Zjcs.Editor.Home.HomeAcceptanceLauncher, Zjcs.Editor", true)
+                    .GetMethod("ConfigurePortraitGameView", BindingFlags.Static | BindingFlags.NonPublic)
+                    .Invoke(null, new object[] { Screen.width, Screen.height });
+                yield return new WaitForEndOfFrame();
+#endif
                 log.Add("VIEW before home startup " + Screen.width + "x" + Screen.height);
             }
             HomeFeatureRuntime runtime = null;
@@ -699,6 +705,16 @@ namespace Zjcs.Presentation.Home
             log.Add("VIEW native-tree-check screen=" + Screen.width + "x" + Screen.height
                 + " camera=" + runtime.Scene.Camera.pixelRect + " target=" + runtime.Scene.Camera.targetTexture
                 + " canvas=" + runtime.Hud.Canvas.pixelRect + " rect=" + ((RectTransform)runtime.Hud.Canvas.transform).rect);
+            bool viewportPassed = Check("native-fruit-tree-viewport", () =>
+            {
+                Assert(Mathf.Abs(runtime.Scene.Camera.pixelWidth - Screen.width) < 1f
+                    && Mathf.Abs(runtime.Scene.Camera.pixelHeight - Screen.height) < 1f,
+                    "native scene projection matches the rendered portrait viewport");
+                Assert(Mathf.Abs(runtime.Hud.Canvas.pixelRect.width - Screen.width) < 1f
+                    && Mathf.Abs(runtime.Hud.Canvas.pixelRect.height - Screen.height) < 1f,
+                    "native HUD matches the rendered portrait viewport");
+                return "scene, HUD, input and screenshots share the portrait render surface";
+            });
             GameObject nativeTree = null;
             HomeFruitTree treeController = null;
             HomeFruitTreeProduceFruit produce = null;
@@ -933,7 +949,7 @@ namespace Zjcs.Presentation.Home
                 return "original fruit-tree award callback presents the official queue, fruit icon, localized name and quantity";
             });
             yield return Capture("native-fruit-tree-collected.png");
-            completed?.Invoke(passed);
+            completed?.Invoke(passed && viewportPassed);
         }
         private void DumpFullscreen()
         {

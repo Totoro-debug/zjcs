@@ -114,6 +114,23 @@ namespace Zjcs.Editor.Home
             EditorWindow view = EditorWindow.GetWindow(viewType, false, "Game", false);
             viewType.GetProperty("selectedSizeIndex", BindingFlags.Instance | BindingFlags.Public
                 | BindingFlags.NonPublic).SetValue(view, selectedIndex);
+            // A restored Game View can already store this target size while its
+            // native display surface still has the editor's default dimensions.
+            // Synchronize the host directly, without focusing or moving a window.
+            var targetSize = new Vector2(width, height);
+            object hostView = typeof(EditorWindow).GetField("m_Parent", BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetValue(view) ?? throw new InvalidOperationException("The acceptance Game View has no host.");
+            editor.GetType("UnityEditor.GUIView").GetMethod("SetAsLastPlayModeView", BindingFlags.Instance | BindingFlags.NonPublic)
+                .Invoke(hostView, null);
+            typeof(EditorWindow).GetMethod("SetMainPlayModeViewSize", BindingFlags.Instance | BindingFlags.NonPublic)
+                .Invoke(view, new object[] { targetSize });
+            typeof(EditorWindow).GetMethod("SetDisplayViewSize", BindingFlags.Instance | BindingFlags.NonPublic)
+                .Invoke(view, new object[] { 0, targetSize });
+            typeof(Display).GetProperty("activeEditorGameViewTarget", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+                .SetValue(null, 0);
+            Debug.Log("[HomeAcceptance] display surface " + typeof(EditorWindow)
+                .GetMethod("GetDisplayViewSize", BindingFlags.Instance | BindingFlags.NonPublic)
+                .Invoke(view, new object[] { 0 }));
             view.Repaint();
         }
 
