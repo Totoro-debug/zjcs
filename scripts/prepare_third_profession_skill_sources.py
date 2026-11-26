@@ -154,7 +154,14 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
         prop_ids.update(current[key] for key in ('PassiveRankPropId','PassiveRankFactorId'))
         prop_ids.discard(0)
         verified_props = apk.reader.read('WwiseBnk', 'wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile')
-        prop_rows = decode_level_props(verified_props.data, prop_ids)
+        prop_rows = decode_level_props(verified_props.data, prop_ids, include_zero=bool(spec.get('scope_numeric')))
+        if spec.get('scope_numeric'):
+            for row in table('level_prop_default_value', mappings['level_prop_default_value']):
+                if row['ClassId'] not in prop_ids:
+                    continue
+                for props_row in prop_rows[str(row['ClassId'])]['rows'].values():
+                    for property_id in row['PropTypes']:
+                        props_row.setdefault(str(property_id), row['DefaultValue'])
         assert all(skill_rules['props'][key] == value for key,value in prop_rows.items()), 'Current level/rank numeric rows changed'
         numeric = dict(entities=properties, groups=groups, props=prop_rows,
                        source=dict(verified_props.provenance),

@@ -67,7 +67,16 @@ def build(item, spec_path=None):
         prop_ids.discard(0)
         raw = apk.reader.read('WwiseBnk', 'wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile')
         inputs.append(dict(source=dict(raw.provenance), payload_sha256=sha(raw.data)))
-        values = decode_level_props(raw.data, prop_ids)
+        values = decode_level_props(raw.data, prop_ids, include_zero=bool(spec.get('scope_numeric')))
+        if spec.get('scope_numeric'):
+            # Current tables can introduce new level-prop IDs. Materialize their
+            # own parser defaults instead of borrowing the historical runtime list.
+            for row in table('level_prop_default_value'):
+                if row['ClassId'] not in prop_ids:
+                    continue
+                for props_row in values[str(row['ClassId'])]['rows'].values():
+                    for property_id in row['PropTypes']:
+                        props_row.setdefault(str(property_id), row['DefaultValue'])
         os.environ['PATH'] = str(ROOT / '.tools/dotnet') + os.pathsep + os.environ.get('PATH', '')
         schemas = ScriptSchemas(code_root=code)
         visibility, managed_assemblies = {}, set()
