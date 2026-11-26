@@ -161,7 +161,7 @@ namespace Zjcs.Offline.Progression
                     });
                 }
                 if (count == 100 && suppressHundredReminder)
-                    state.HundredReminderSuppressedDayKey = Math.Max(state.HundredReminderSuppressedDayKey, day);
+                    state.HundredReminderSuppressedDayKey = day;
                 TrimHistory(state, nowUnixSeconds);
             });
 
@@ -181,8 +181,7 @@ namespace Zjcs.Offline.Progression
             profile.Reload();
             int day = DayKey(localNow);
             ProgressionResult transaction = profile.ApplyInventoryTransaction(receiptId, save =>
-                save.Player.PetGacha.HundredReminderSuppressedDayKey = Math.Max(
-                    save.Player.PetGacha.HundredReminderSuppressedDayKey, day));
+                save.Player.PetGacha.HundredReminderSuppressedDayKey = day);
             return Result(Map(transaction.Status), transaction.Message);
         }
 

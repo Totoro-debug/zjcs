@@ -352,6 +352,7 @@ namespace Zjcs.Presentation.Home
                 });
                 Destroy(iconImages);
             }
+            yield return VerifyPetHundredConfirm(runtime, Balance, value => passed &= value);
             passed &= Check("pet-gacha-controls-hundred-reminder-clock", () =>
             {
                 DateTime ignored = new DateTime(2030, 4, 10, 12, 0, 0, DateTimeKind.Local);

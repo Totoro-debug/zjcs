@@ -599,10 +599,9 @@ namespace Zjcs.Presentation.Home
         {
             if (host.PetGacha == null) { Notify("结缘规则未载入"); return; }
             DateTime localNow = DateTime.Now;
-            if (count == 100 && !confirmedHundred && host.PetGacha.ShouldConfirmHundred(localNow))
+            if (count == 100 && !confirmedHundred)
             {
-                ShowPetConfirm("百次结缘", "本次将连续结缘100次，确认继续吗？", true,
-                    suppress => RequestPetDraw(count, true, suppress, false));
+                ConfirmPetHundredDraw(count, confirmed => RequestPetDraw(confirmed, true, false, confirmedQuickBuy));
                 return;
             }
 

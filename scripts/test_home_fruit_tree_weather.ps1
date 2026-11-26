@@ -126,6 +126,12 @@ $scoped = @(
     'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.cs',
     'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.PetGachaControls.cs',
     'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.PetGachaControls.cs.meta',
+    'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.PetHundredConfirm.cs',
+    'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.PetHundredConfirm.cs.meta',
+    'Assets/Game/Runtime/Presentation/Home/HomeHudView.cs',
+    'Assets/Game/Runtime/Presentation/Home/HomeHudView.PetHundredReminder.cs',
+    'Assets/Game/Runtime/Presentation/Home/HomeHudView.PetHundredReminder.cs.meta',
+    'Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyWindows.cs',
     'Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyImageServices.cs',
     'Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyImageServices.cs.meta',
     'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.FruitTreeSkins.cs',
@@ -174,6 +180,26 @@ Get-ChildItem -LiteralPath (Join-Path $repository ('unity/' + $scoreModule)) -Fi
 }
 Copy-Item -LiteralPath (Join-Path $repository ('unity/' + $scoreModule + '.meta')) -Destination ($scoreTarget + '.meta') -Force
 if ($PetGachaControls) {
+    $markableNativePath = Join-Path $repository 'assets/reference/markable-confirm-native-source-manifest.json'
+    $markableRuntime = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/markable-confirm-runtime-source-manifest.json') -Raw | ConvertFrom-Json
+    if ((Get-FileHash -LiteralPath $markableNativePath -Algorithm SHA256).Hash.ToLowerInvariant() -ne $markableRuntime.native_source) {
+        throw 'Markable confirmation native receipt differs.'
+    }
+    foreach ($markableReceipt in @((Get-Content -LiteralPath $markableNativePath -Raw | ConvertFrom-Json), $markableRuntime)) {
+      foreach ($section in @('inputs', 'outputs', 'runtime_bindings', 'validation_inputs')) {
+        foreach ($entry in $markableReceipt.$section.PSObject.Properties) {
+            $source = Join-Path $repository $entry.Name
+            if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.Value) {
+                throw ('Original markable confirmation source differs: ' + $entry.Name)
+            }
+            if ($section -eq 'outputs') {
+                $target = Join-Path $project $entry.Name.Substring(6)
+                [void](New-Item -ItemType Directory -Path (Split-Path $target) -Force)
+                Copy-Item -LiteralPath $source -Destination $target -Force
+            }
+        }
+      }
+    }
     $scoreReceipt = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/pet-score-reward-source-manifest.json') -Raw | ConvertFrom-Json
     foreach ($section in @('inputs', 'outputs')) {
         foreach ($entry in $scoreReceipt.$section.PSObject.Properties) {
@@ -280,7 +306,7 @@ if ($process.ExitCode -ne 0 -or -not (Test-Path -LiteralPath $reportPath)) {
 }
 $report = Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json
 $requiredPattern = if ($PetGachaControls) { 'PASS pet-gacha-controls-*' } elseif ($PetUnlockStory) { 'PASS pet-unlock-*' } elseif ($UnlockStory) { 'PASS fruit-unlock-completed*' } elseif ($NaturalProduction) { 'PASS native-fruit-tree-natural-*' } else { 'PASS native-fruit-tree-weather-*' }
-$requiredCount = if ($PetGachaControls) { 11 } elseif ($PetUnlockStory) { 16 } elseif ($UnlockStory) { 1 } elseif ($NaturalProduction) { 2 } else { 12 }
+$requiredCount = if ($PetGachaControls) { 18 } elseif ($PetUnlockStory) { 16 } elseif ($UnlockStory) { 1 } elseif ($NaturalProduction) { 2 } else { 12 }
 if (-not $report.success -or @($report.lines | Where-Object { $_ -like $requiredPattern }).Count -ne $requiredCount) {
     throw ('The selected fruit-tree flow must pass: ' + $reportPath)
 }

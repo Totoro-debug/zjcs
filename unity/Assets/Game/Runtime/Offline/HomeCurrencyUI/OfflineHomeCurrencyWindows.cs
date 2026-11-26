@@ -119,9 +119,14 @@ namespace Zjcs.Offline.HomeCurrencyUI
         }
 
         public void PopupConfirm(Action<WorldConfirmDialog> initialize)
+            => PopupConfirm(OfficialPartnerConfirmAssetCatalog.LoadDefault().Prefab, null, initialize);
+
+        public void PopupConfirm(GameObject prefab, Func<string, string> localize, Action<WorldConfirmDialog> initialize)
         {
-            Create(OfficialPartnerConfirmAssetCatalog.LoadDefault().Prefab, root =>
+            Create(prefab, root =>
             {
+                if (localize != null)
+                    foreach (var text in root.GetComponentsInChildren<WorldMultiLanguageText>(true)) text.Localizer = localize;
                 var dialog = root.GetComponent<WorldConfirmDialog>();
                 dialog.CloseWindow = () => Close(root);
                 initialize(dialog);

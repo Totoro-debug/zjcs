@@ -154,3 +154,19 @@ unity/Assets/Game/Runtime/Official/HomeAirship.meta text eol=lf
 unity/Assets/Game/Runtime/Official/HomeAirship/** text eol=lf
 unity/Assets/Game/Runtime/Official/WorldUI/WorldMultiLanguageSpriteRenderer.cs* text eol=lf
 unity/Assets/Game/Runtime/Official/HomeFunctionMenuUI/ActivityEntryType.cs text eol=lf
+
+# Preserve the exact markable-confirmation payload and binding receipt bytes.
+unity/Assets/Official/Home/PetGacha/MarkableConfirm/** text=auto eol=lf
+unity/Assets/Official/Home/PetGacha/MarkableConfirm.meta text eol=lf
+unity/Assets/Game/Resources/PetGacha/OfficialMarkableConfirmAssetCatalog.asset* text eol=lf
+unity/Assets/Game/Runtime/Official/GachaUI/MarkableConfirmDialog.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/GachaUI/GachaPanelUtils.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/GachaUI/Zjcs.Official.GachaUI.asmdef text eol=lf
+unity/Assets/Game/Runtime/Offline/GachaUI/OfflinePetHundredReminderServices.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/GachaUI/OfficialMarkableConfirmAssetCatalog.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/HomeCurrencyUI/OfflineHomeCurrencyWindows.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.PetHundredReminder.cs* text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.PetHundredConfirm.cs* text eol=lf
+scripts/prepare_markable_confirm_native.py text eol=lf
+scripts/prepare_markable_confirm_runtime.py text eol=lf
+assets/reference/markable-confirm-*-source-manifest.json text eol=lf
