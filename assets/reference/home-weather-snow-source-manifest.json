@@ -4,7 +4,7 @@
     ".tools/source-packages/current/911_156995/code-manifest.json": "a47317188c8d1f947b56ff1af73b4cd811a079860799915cf9103603afc200e9",
     ".tools/source-packages/current/911_156995/official-code/managed/decoded/Assembly-CSharp.dll": "1e7eb15a1cead0c2e618e307a367119908485a5a658815a0fe39d98c0d3f31fe",
     ".tools/source-packages/current/911_156995/official-code/client-source/Home.Skin/HomeWeatherSnow.cs": "ac16fb4f6e6c7629c14df1cc628f12c024373f81a5291c6ba16f5aa565d57dc0",
-    "scripts/prepare_home_weather_snow.py": "94f5ab8453c6bc87dfe056b019a10b0cc6adebbbb4239d67c414926089c427ca"
+    "scripts/prepare_home_weather_snow.py": "6c42afd06207d86fbd9af90c158b43357a0e7eace0d633966c794db2614d0a7c"
   },
   "outputs": {
     "unity/Assets/Game/Runtime/Official/HomeWeather.meta": "f6a630595a8f5c705531f6e9b8951b933d5696e43f7d1e3eb8c3e23f7e21714f",
@@ -14,13 +14,14 @@
     "unity/Assets/Game/Runtime/Official/HomeWeather/Zjcs.Official.HomeWeather.asmdef.meta": "4aee375561b61dbe60f0bbe91a8565aab081069ed69221140102037510728ae6"
   },
   "validation_inputs": {
-    "scripts/fixtures/home_weather_snow_validation.cs": "2bdfe48a03da7ad66c6441cb6ceb66d2903a751210ae0972bc162bd987134daa",
-    "scripts/test_home_weather_snow.ps1": "e5eb61395242b22b7272435f7eba9439176185840d27d3049923d3f95b877790"
+    "scripts/fixtures/home_weather_snow_validation.cs": "b40de1947e35ed7c173127b21561e560c441810d8a453c7238391a7912ac1bbd",
+    "scripts/test_home_weather_snow.ps1": "bed6a06f90be0eba4f4884eeaf571358f6acee468f95e507de6a8c8b57555e73",
+    "assets/reference/home-weather-snow-prefab-source-manifest.json": "f2246f3f49dd174c9902d22224378250a016f45e27cf10075a6dbd9ceb34ca05"
   },
   "adaptations": [
     "Original particle capacity capture, enabled state, photo-mode gate, appearance curve, time-scale duration, delta-time order and shader progression are retained.",
     "Decompiler async state machine is recovered as its readable UniTaskVoid method, with original UniTask.Yield cancellation and timing.",
     "Global dependency injection uses existing environment/view-mode ports; CancellationDisposable uses a cancelling and disposing CancellationTokenSource; the decompiled nested MainModule type is qualified."
   ],
-  "scope": "Shared snow controller. Native weather prefab binding and full scene snow rendering are separate integration work."
+  "scope": "Shared snow controller, including independently exercised original serialized ground snow settings. Native weather prefab binding and full scene snow rendering are separate integration work."
 }

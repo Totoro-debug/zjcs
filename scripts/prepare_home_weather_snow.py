@@ -117,12 +117,14 @@ public class HomeWeatherSnow : MonoBehaviour, IHomeEntityChangeCreateNotify
     inputs = {path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in (
         description_path, assembly, source_path, Path(__file__))}
     validation_inputs = {path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in (
-        ROOT / 'scripts/fixtures/home_weather_snow_validation.cs', ROOT / 'scripts/test_home_weather_snow.ps1')}
+        ROOT / 'scripts/fixtures/home_weather_snow_validation.cs', ROOT / 'scripts/test_home_weather_snow.ps1',
+        ROOT / 'assets/reference/home-weather-snow-prefab-source-manifest.json')}
     receipt = dict(manifest=selected.version, inputs=inputs, outputs=outputs, validation_inputs=validation_inputs, adaptations=[
         'Original particle capacity capture, enabled state, photo-mode gate, appearance curve, time-scale duration, delta-time order and shader progression are retained.',
         'Decompiler async state machine is recovered as its readable UniTaskVoid method, with original UniTask.Yield cancellation and timing.',
         'Global dependency injection uses existing environment/view-mode ports; CancellationDisposable uses a cancelling and disposing CancellationTokenSource; the decompiled nested MainModule type is qualified.'
-    ], scope='Shared snow controller. Native weather prefab binding and full scene snow rendering are separate integration work.')
+    ], scope='Shared snow controller, including independently exercised original serialized ground snow settings. '
+       'Native weather prefab binding and full scene snow rendering are separate integration work.')
     RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
     print('Restored original shared snow controller:', selected.version)
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.IO;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -25,13 +26,74 @@ public static class HomeWeatherSnowValidation
     public static void Run()
     {
         EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+        VerifySerializedCurveBoundary();
         SessionState.SetBool(Active, true);
         EditorApplication.EnterPlaymode();
+    }
+
+    private static void VerifySerializedCurveBoundary()
+    {
+        // Native YAML stores internal infinity modes, not the WrapMode enum.
+        // Prove the mapping with this editor's real serializer before consuming it.
+        const string path = "Assets/Editor/HomeWeatherSnowValidation/CurveBoundaryProbe.prefab";
+        if (File.Exists(path)) throw new InvalidOperationException("Preserve an existing curve probe: " + path);
+        var root = new GameObject("Original curve serialization probe"); root.SetActive(false);
+        try
+        {
+            var snow = root.AddComponent<HomeWeatherSnow>();
+            var curve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+            curve.preWrapMode = WrapMode.ClampForever; curve.postWrapMode = WrapMode.ClampForever;
+            typeof(HomeWeatherSnow).GetField("mParticleAppearCurve", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(snow, curve);
+            PrefabUtility.SaveAsPrefabAsset(root, path);
+            string yaml = File.ReadAllText(path);
+            if (!yaml.Contains("m_PreInfinity: 2") || !yaml.Contains("m_PostInfinity: 2"))
+                throw new InvalidOperationException("Verify native AnimationCurve infinity-mode encoding");
+            Debug.Log("PASS snow: Unity serializer proves original infinity mode 2 means ClampForever");
+        }
+        finally
+        {
+            Object.DestroyImmediate(root);
+            AssetDatabase.DeleteAsset(path);
+        }
     }
 }
 
 public sealed class HomeWeatherSnowValidationRunner : MonoBehaviour
 {
+    [Serializable] private sealed class PrefabPayload { public PrefabConfiguration[] configurations; }
+    [Serializable] private sealed class PrefabConfiguration
+    {
+        public PrefabPath prefab;
+        public float appearance_duration;
+        public PrefabCurve particle_appear_curve;
+        public PrefabParticle[] particles;
+    }
+    [Serializable] private sealed class PrefabPath { public string path; }
+    [Serializable] private sealed class PrefabParticle { public int max_particles; }
+    [Serializable] private sealed class PrefabCurve
+    {
+        public PrefabKey[] m_Curve;
+        public int m_PreInfinity, m_PostInfinity;
+        public AnimationCurve ToCurve()
+        {
+            var keys = new Keyframe[m_Curve.Length];
+            for (int i = 0; i < keys.Length; i++)
+            {
+                PrefabKey key = m_Curve[i];
+                keys[i] = new Keyframe(key.time, key.value, key.inSlope, key.outSlope, key.inWeight, key.outWeight)
+                    { weightedMode = (WeightedMode)key.weightedMode };
+            }
+            if (m_PreInfinity != 2 || m_PostInfinity != 2)
+                throw new InvalidOperationException("Bind additional authored curve infinity modes");
+            return new AnimationCurve(keys) { preWrapMode = WrapMode.ClampForever, postWrapMode = WrapMode.ClampForever };
+        }
+    }
+    [Serializable] private sealed class PrefabKey
+    {
+        public float time, value, inSlope, outSlope, inWeight, outWeight;
+        public int weightedMode;
+    }
     private sealed class Clock : IHomeEnvironmentManager
     {
         public readonly HomeEnvironmentConfig Value = new HomeEnvironmentConfig { HomeTimeScaleRuntime = 2f };
@@ -120,5 +182,54 @@ public sealed class HomeWeatherSnowValidationRunner : MonoBehaviour
         snow.OnChangeCreate(); yield return null; yield return null;
         Require(Snow(1f), "zero duration preserves the enabled state without entering the original loop");
         Object.Destroy(root);
+        IEnumerator native = NativeConfigurations();
+        while (native.MoveNext()) yield return native.Current;
+    }
+
+    private IEnumerator NativeConfigurations()
+    {
+        string path = Environment.GetEnvironmentVariable("ZJCS_SNOW_PREFAB_FIELDS");
+        var payload = JsonUtility.FromJson<PrefabPayload>(File.ReadAllText(path));
+        Require(payload.configurations.Length == 3, "all selected original ground snow configurations were supplied");
+        foreach (PrefabConfiguration configuration in payload.configurations)
+        {
+            string name = Path.GetFileNameWithoutExtension(configuration.prefab.path);
+            var root = new GameObject(name); root.SetActive(false);
+            var particles = new ParticleSystem[configuration.particles.Length];
+            for (int i = 0; i < particles.Length; i++)
+            {
+                particles[i] = new GameObject("Referenced particle " + i).AddComponent<ParticleSystem>();
+                particles[i].transform.SetParent(root.transform, false);
+                var main = particles[i].main; main.maxParticles = configuration.particles[i].max_particles;
+            }
+            var clock = new Clock(); clock.Value.HomeTimeScaleRuntime = 1f;
+            var modes = new Modes { Value = HomeViewMode.Owner };
+            var snow = root.AddComponent<HomeWeatherSnow>();
+            snow.HomeEnvironmentManager = clock; snow.HomeData = modes;
+            Set(snow, "mSnowParticleSystems", particles);
+            Set(snow, "mAppearEffectDuration", configuration.appearance_duration);
+            Set(snow, "mParticleAppearCurve", configuration.particle_appear_curve.ToCurve());
+            root.SetActive(true);
+            Debug.Log("Authored snow " + name + " shader=" + Shader.GetGlobalFloat("_SnowTime")
+                + " capacities=" + string.Join(",", Array.ConvertAll(particles, value => value.main.maxParticles))
+                + " curve(1)=" + configuration.particle_appear_curve.ToCurve().Evaluate(1f));
+            Require(Snow(1f) && particles[0].main.maxParticles == 50 && particles[1].main.maxParticles == 1000
+                && particles[2].main.maxParticles == 100, name + " preserves all three authored particle limits on enable");
+            clock.NextDelta = 1f;
+            snow.OnChangeCreate();
+            Require(Snow(.5f), name + " uses the serialized two-second duration instead of the C# ten-second initializer");
+            float expectedCurve = name == "GroundHalloweenSnow" ? .25f : .2f;
+            Require(particles[0].main.maxParticles == (int)(50 * expectedCurve)
+                && particles[1].main.maxParticles == (int)(1000 * expectedCurve)
+                && particles[2].main.maxParticles == (int)(100 * expectedCurve),
+                name + " evaluates its authored curve and retains particle reference order at half progress");
+            clock.NextDelta = 1f;
+            yield return null; yield return null; yield return null;
+            Require(Snow(1f) && particles[0].main.maxParticles == 50 && particles[1].main.maxParticles == 1000
+                && particles[2].main.maxParticles == 100, name + " reaches its original full capacity");
+            root.SetActive(false);
+            Object.Destroy(root);
+            yield return null;
+        }
     }
 }

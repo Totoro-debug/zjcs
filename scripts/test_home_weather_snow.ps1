@@ -15,7 +15,20 @@ if (@(Get-CimInstance Win32_Process -Filter "Name='Unity.exe'" | Where-Object {
 }).Count -ne 0) { throw 'Do not stage into a running Unity project.' }
 $work = Join-Path $validationBase ('home-weather-snow-' + [Guid]::NewGuid().ToString('N'))
 [void](New-Item -ItemType Directory -Path $work)
+$prefabFields = Join-Path $work 'original-prefab-fields.json'
+Copy-Item -LiteralPath (Join-Path $repository 'assets/reference/home-weather-snow-prefab-source-manifest.json') -Destination $prefabFields
 $receipt = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/home-weather-snow-source-manifest.json') -Raw | ConvertFrom-Json
+foreach ($entry in $receipt.validation_inputs.PSObject.Properties) {
+    if ((Get-FileHash -LiteralPath (Join-Path $repository $entry.Name) -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.Value) {
+        throw ('Snow validation source differs: ' + $entry.Name)
+    }
+}
+$fieldsReceipt = Get-Content -LiteralPath $prefabFields -Raw | ConvertFrom-Json
+foreach ($entry in $fieldsReceipt.inputs.PSObject.Properties) {
+    if ((Get-FileHash -LiteralPath (Join-Path $repository $entry.Name) -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.Value) {
+        throw ('Original snow field extraction input differs: ' + $entry.Name)
+    }
+}
 foreach ($entry in $receipt.outputs.PSObject.Properties) {
     $source = Join-Path $repository $entry.Name
     if (-not $entry.Name.StartsWith('unity/') -or (Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.Value) {
@@ -34,10 +47,14 @@ Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fixtures/home_weather_snow_vali
 ) } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $fixture 'HomeWeatherSnowValidation.asmdef') -Encoding utf8
 . (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
 $log = Join-Path $work 'unity.log'
-$process = Start-UnityOnInternalDisplay -Editor $Editor -ArgumentList @(
-    '-batchmode', '-muteAudio', '-job-worker-count', '2', '-projectPath', ('"' + $project + '"'),
-    '-executeMethod', 'HomeWeatherSnowValidation.Run', '-logFile', ('"' + $log + '"')
-)
+$previousFields = $env:ZJCS_SNOW_PREFAB_FIELDS
+try {
+    $env:ZJCS_SNOW_PREFAB_FIELDS = $prefabFields
+    $process = Start-UnityOnInternalDisplay -Editor $Editor -ArgumentList @(
+        '-batchmode', '-muteAudio', '-job-worker-count', '2', '-projectPath', ('"' + $project + '"'),
+        '-executeMethod', 'HomeWeatherSnowValidation.Run', '-logFile', ('"' + $log + '"')
+    )
+} finally { $env:ZJCS_SNOW_PREFAB_FIELDS = $previousFields }
 Write-Output ('Home weather snow validation PID ' + $process.Id + ', log: ' + $log)
 $process.WaitForExit()
 if ($process.ExitCode -ne 0 -or -not (Select-String -LiteralPath $log -Pattern '^HOME_WEATHER_SNOW_PASSED' -Quiet)) {
