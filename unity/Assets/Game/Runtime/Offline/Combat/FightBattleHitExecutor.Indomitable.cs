@@ -14,15 +14,22 @@ namespace Zjcs.Combat.Official
             if (damage < 0 && targetEntity.Hp > 0 && damage <= -targetEntity.Hp)
                 foreach (var status in new List<FightBattleStatusState>(target.Statuses))
                 {
-                    if (status == null || status.ClassId != 25013 || !status.HasHpLimit
+                    // Listener type 0 is the original target's fatal-hit HP limit.
+                    // The component is shared by several skills; its owning status
+                    // entity must not be baked into hit settlement.
+                    if (status == null || !target.Statuses.Contains(status) || !status.HasHpLimit
                         || status.ForbiddenType != 0 || !FightSkillTriggerPolicy.AllowsStatus(skill, status)
                         || status.HpLimitListenerType != 0 || status.OwnerId != target.Id
-                        || status.HpLimitTriggeredCount >= status.HpLimitMaxCount) continue;
-                    // Confirmed order: preserve one HP at settlement, then original 10990.
+                        || status.HpLimitMaxCount >= 0
+                            && status.HpLimitTriggeredCount >= status.HpLimitMaxCount) continue;
+                    // Clamp first, then execute the status's configured HP-limit
+                    // skills from the owning battle executor.
                     status.HpLimitTriggeredCount++;
                     result.FatalPrevention = status;
-                    return settlement.ApplyWithLowerLimit(damageId, sourceEntity, targetEntity,
+                    FightDamageEvent prevented = settlement.ApplyWithLowerLimit(damageId, sourceEntity, targetEntity,
                         damage, status.HpLimitLowerLimit);
+                    if (status.HpLimitAutoRemove) FightStatusLifecycle.End(target, status);
+                    return prevented;
                 }
             return settlement.Apply(damageId, sourceEntity, targetEntity, damage);
         }

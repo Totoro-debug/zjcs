@@ -12,11 +12,11 @@ namespace Zjcs.Combat.Official
         {
             var source = hit.FatalPrevention;
             if (source == null || statusCatalog == null) return;
-            // Damage has settled to one HP. Recalculate the two missing-HP secrets before
-            // their properties can contribute to the original immediate recovery skill.
+            // Damage has settled to the configured lower HP limit. Rebuild the
+            // holder's live properties before any configured HP-limit skill runs.
             FightStatusTriggerRuntime.RecalculateCurrentHpStackSources(owner, statusCatalog, random);
             RebuildBattleProperties();
-            var invocations = FightStatusTriggerRuntime.CollectIndomitableRecovery(owner, source, units, random);
+            var invocations = FightStatusTriggerRuntime.CollectHpLimitSkills(owner, source, units, random);
             foreach (var invocation in invocations) invocation.Delay = Math.Max(0f, hitDelay);
             ExecuteConfiguredStatusSkills(invocations, casts, damageEvents, movements, ref delay,
                 out float recoveryDuration, out float recoveryActionDuration);
@@ -27,7 +27,7 @@ namespace Zjcs.Combat.Official
 
     public static partial class FightStatusTriggerRuntime
     {
-        internal static List<FightBattleStatusSkillInvocation> CollectIndomitableRecovery(
+        internal static List<FightBattleStatusSkillInvocation> CollectHpLimitSkills(
             FightBattleUnitState owner, FightBattleStatusState source,
             IReadOnlyList<FightBattleUnitState> units, FightRandomStream random)
         {

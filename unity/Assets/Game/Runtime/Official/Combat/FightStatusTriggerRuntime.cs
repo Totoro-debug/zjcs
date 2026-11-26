@@ -1572,7 +1572,12 @@ namespace Zjcs.Combat.Official
             IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
             List<FightBattleStatusSkillInvocation> configuredTriggerSkills)
         {
-            if (status == null || status.ClassId == 25013 || !status.HasHpLimit || (atStart && status.HpLimitMaxCount == 0)
+            // Target listeners are resolved atomically with fatal hit settlement,
+            // where they can preserve their configured lower HP bound. Applying
+            // them as a generic HP threshold would also consume a fatal-only
+            // listener when a nonlethal hit merely leaves the unit at that bound.
+            if (status == null || status.HpLimitListenerType == 0 || !status.HasHpLimit
+                || (atStart && status.HpLimitMaxCount == 0)
                 || status.HpLimitListenerType == 0 && status.OwnerId > 0
                     && status.OwnerId != unit.Id
                 || unit.Hp > status.HpLimitLowerLimit

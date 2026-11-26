@@ -38,6 +38,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
           generator=None, limits=None, graph_roots=None, reference_scripts=None,
           external_scripts=None, source_scripts=None, native_transform=None,
           external_assets=None, native_scripts=None, operation=None, native_preprocess=None,
+          native_script_bindings=None,
           graph_originals=None, native_manifest=None, native_cache=None,
           native_export_name='native-export-all'):
     cache = Path(native_cache).resolve() if native_cache else CACHE
@@ -164,8 +165,15 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         script_records.append(dict(file_id=file_id, original=identity(original),
             migrated=identity(target), migrated_meta=identity(target_meta),
             verification='official source type and namespace; ID bound by active-version prefab reference'))
-    local_scripts = set(script_guids.values())
     native_script_records = []
+    for file_id, binding in (native_script_bindings or {}).items():
+        target = ROOT / binding['runtime']
+        target_meta = Path(str(target) + '.meta')
+        assert target.is_file() and target_meta.is_file()
+        script_guids[file_id] = GUID.search(target_meta.read_text(encoding='utf-8-sig'))[1]
+        native_script_records.append(dict(file_id=file_id, migrated=identity(target),
+            migrated_meta=identity(target_meta), verification='existing migrated local script binding'))
+    local_scripts = set(script_guids.values())
     for relative in native_scripts or ():
         target = ROOT/relative
         sidecar = Path(str(target)+'.meta')

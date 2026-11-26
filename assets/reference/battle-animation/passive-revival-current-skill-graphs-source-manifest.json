@@ -1,0 +1,263 @@
+{
+  "manifest": "911_156995",
+  "official_rules": {
+    "manifest": "911_156995",
+    "source_rules": {
+      "official_tables": {
+        "path": ".tools/source-packages/current/911_156995/official-data/tables.json",
+        "sha256": "3e722b9084187bd7b77d63b492050c178e085b5d75238c24e0b10c80d4da7ea9"
+      },
+      "manifest": "911_156995"
+    },
+    "skill": {
+      "ClassId": 10581,
+      "EcEntityId": 25064,
+      "DirectionEcEntityId": {},
+      "RandomSkillWeightList": [],
+      "RandomSkillEntityId": [],
+      "TryAtStartType": 0,
+      "UpgradeMaterialId": 12001,
+      "Tags": [
+        5,
+        18
+      ],
+      "SkillSortTypes": null,
+      "OuterTag": 0,
+      "PassiveRankPropId": 2001,
+      "PassiveGroupLevelPropId": 3,
+      "PassiveRankFactorId": 2050,
+      "PassivePropFactors": {},
+      "PassiveStatusIdList": [
+        25064
+      ],
+      "InitEnergy": 0,
+      "TriggerNeedEnergy": 0,
+      "ViewPropEntities": [
+        25064,
+        11770
+      ],
+      "ViewPropBlackList": [],
+      "HyperLinkTypes": [
+        0
+      ],
+      "HyperLinkDatas": [
+        "{EntryId:59}"
+      ],
+      "UserType": 1,
+      "Invisible": false,
+      "MaxRankLimit": 0,
+      "AiPriorityId": -1,
+      "LastAiPriorityId": -1
+    },
+    "fatal_listener": {
+      "LowerLimit": 1,
+      "MaxCount": 1,
+      "AutoRemove": false,
+      "StatusList": [],
+      "SkillList": [
+        {
+          "SkillId": 11770,
+          "BasePercent": 1.0,
+          "AffectedByProp": false,
+          "Source": 2,
+          "UseAI": false,
+          "PropTarget": {
+            "IsEnemy": false,
+            "RoleType": [],
+            "IncludeApplicator": false,
+            "PropType": 0,
+            "Heighest": false,
+            "SupportCustomFilter": false
+          },
+          "Target": 2,
+          "TargetPos": 1,
+          "StackedCountToDamageFactor": false,
+          "CustomDamageInfo": {
+            "TargetType": 0,
+            "BaseProp": 0,
+            "BaseCurrentHp": false,
+            "DamageProp": 0,
+            "UpperLimitTarget": 0,
+            "UpperLimitPropType": 0,
+            "UpperLimitPercent": 0
+          },
+          "StatusReplacePropertyValues": [],
+          "TargetWithoutStatusIds": []
+        }
+      ],
+      "InvokeCfgs": [],
+      "ListenerSetting": {
+        "Type": 0,
+        "_type": "FightStatusHpLimitListenerForTargetSetting"
+      }
+    },
+    "recovery_skill": {
+      "SkillType": 3,
+      "SkillTargetType": 4,
+      "HitList": [
+        {
+          "ClassId": 11771,
+          "Delay": 0.0,
+          "ActOnSouce": 0,
+          "IgnoreAICount": false
+        }
+      ],
+      "ActionType": 0,
+      "Duration": 1.3329999446868896,
+      "AllEndedDuration": 0.5
+    },
+    "recovery_hit": {
+      "DamageId": 11772,
+      "DamageType": 1,
+      "DamageBasicProp": 1,
+      "DamageProp": 210,
+      "FixedDamageProp": 170,
+      "DamageParam": 0,
+      "DamageActionType": 5,
+      "DelayDistFactor": 0.0,
+      "Offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "TargetOffset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "IsUseCenterRotation": false,
+      "RotateCenterOffset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "UseDamageFactor": false,
+      "DamageIgnoreShield": false,
+      "IsTrueDamage": false,
+      "AirCombo": {
+        "AirComboStatusId": 0,
+        "BasePercent": 0.0,
+        "AffectedByProp": false
+      },
+      "DestroyDelay": 0.10000000149011612,
+      "IsBreakResilience": false,
+      "Scope": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "Delay": 0.0,
+          "DamageOffset": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "DamageRotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "DamageRotZOffset": 0.0,
+          "FlipBySourceX": true,
+          "FlipByTargetY": true
+        }
+      ]
+    },
+    "recovery_damage": {
+      "Duration": 0.9200000166893005,
+      "DieId": 24000,
+      "ReplaySkillOnTaragetDie": false,
+      "StatusList": [],
+      "MoveCfg": {
+        "MoveBehaviourId": 0,
+        "Delay": 0.0,
+        "Offset": {
+          "X": 0,
+          "Y": 0
+        },
+        "TowardsTargetPos": false,
+        "SkillMoveDirection": 1,
+        "Distance": -1,
+        "BasePercent": 1.0,
+        "AffectedByProp": false,
+        "AiMustMoveTo": false,
+        "AIIgnore": false,
+        "CanExpandOffset": false,
+        "CancelDiagonally": false,
+        "DoMoveConditions": []
+      },
+      "DisperseStatus": {
+        "BasePercent": 1.0,
+        "AffectedByProp": false,
+        "TargetTypes": [
+          2,
+          3,
+          1
+        ],
+        "Count": -1,
+        "IsRandom": false
+      },
+      "SwitchForm": false,
+      "ChildSkillCfg": {
+        "Rate": 1.0,
+        "LessThanHpPer": -1.0,
+        "SkillId": 0
+      },
+      "TriggerExistStateCfg": {
+        "StatusIds": [],
+        "TriggerCount": 0,
+        "IsOnlyTriggerStatusApplyBySelf": false,
+        "ActiveTriggerNotComsumeRound": false,
+        "FilterCondition": null
+      },
+      "StatusListRandomOne": false
+    }
+  },
+  "native_export": {
+    "path": ".tools/source-packages/current/911_156995/passive-revival-10581-full-31632b0d/native-export-source-manifest.json",
+    "sha256": "776f4ec1f673a15151ff92b80ca5b9a48f3f975d3b3ba17e6780763b7d829061"
+  },
+  "conversion_inputs": {
+    "path": ".tools/source-packages/current/911_156995/passive-revival-10581-full-31632b0d/source-manifest.json",
+    "sha256": "9e20f36f883d77e2dcd77546d020742836c0c5bc82d3244923d7c05fd245c75f"
+  },
+  "textures": {
+    "path": ".tools/source-packages/current/911_156995/passive-revival-10581-full-31632b0d/all-assets/windows-textures/source-manifest.json",
+    "sha256": "909c937a6ac94cf9ff8ff8b00de5bbcbd3a624bea33ac0ffe7d078012c114262"
+  },
+  "shaders": {
+    "path": ".tools/source-packages/current/911_156995/passive-revival-10581-full-31632b0d/all-assets/windows-shaders/source-manifest.json",
+    "sha256": "963663bccf6351839ff892b8e5dddd85562b9df1c0f10acb39da52df2b221f8a"
+  },
+  "selected_entities": [
+    25064,
+    11770,
+    11771,
+    11772
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/passive-revival-current-skill-graphs.json",
+      "sha256": "610c1c04c05fc18d432b730bac1600a976f4066bc0593601fa662345b6ef61d0"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/passive-revival-current-skill-graphs.json.meta",
+      "sha256": "3f7a3da18d70a4fc872f23ca02b16166aaa75f9096927178725b38079a3d6514"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/passive-revival-current-skill-graphs-source-manifest.json",
+      "sha256": "e1106c7b5dec9e0f44e6c1dd6d8bb751bb7fc0d555d0490caada8ef4134e4dc6"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/passive-revival-current-skill-graphs-source-manifest.json.meta",
+      "sha256": "1e4a6b25b749379344368f3f2e33cc1c6268e8e5736a7e84f863e29defe906b1"
+    }
+  ],
+  "generated_by": {
+    "path": "scripts/prepare_battle_passive_revival_assets.py",
+    "sha256": "c62bd3ef1aec4059d5d751570dbc5af23098d6b8141281102b91e7c9d03678b6"
+  },
+  "operation": "Restore current official native entity hierarchies and prefab bindings for the fatal listener, cure hit, dispersal damage, and authored recovery playable."
+}
