@@ -63,7 +63,9 @@ public class MyFightHitBase<T, TInfo> : MyComponent<T, TInfo>, IFightGetUsePlaya
 
 
 		base.OnStart(newEntity);
-		UpdateDelayInfo();
+			if (CurrentFightViewLookup.Get<ECFightHitView>(myEntity) != null)
+			{ GetCurrentDelayInfoProvider(); return; }
+			UpdateDelayInfo();
 		mGridTransform = ((Component)this).gameObject.GetComponent<MyGridTransform>();
 		DoBeforeDelay();
 		if (mCoro != null)
@@ -105,12 +107,19 @@ public class MyFightHitBase<T, TInfo> : MyComponent<T, TInfo>, IFightGetUsePlaya
 		{
 			((MonoBehaviour)this).StopCoroutine(mCoro);
 		}
-		mOnHitPosChangeDisposable.Dispose();
+			mOnHitPosChangeDisposable?.Dispose();
 		mOnHitPosChangeDisposable = null;
 		base.OnRemove(userData);
 	}
 
-	private void UpdateDelayInfo()
+		private bool mCurrentDelayInfoReady;
+		public FightHitViewFormula.SkillHitBaseDelayInfoProvider GetCurrentDelayInfoProvider()
+		{
+			if (!mCurrentDelayInfoReady) { UpdateDelayInfo(); mCurrentDelayInfoReady = true; }
+			return DelayInfoProvider;
+		}
+
+		private void UpdateDelayInfo()
 	{
 
 

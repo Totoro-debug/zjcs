@@ -26,6 +26,7 @@ namespace Zjcs.Presentation.Combat
                     if (component is IFightHitViewBinding view)
                     { view.ViewServices = services; view.mMyPlayableManager = scope; count++; }
                 if (count != 1) throw new InvalidOperationException("Native hit prefab requires one original hit view.");
+                OfficialBattleCurrentViewBinding.Prepare(instance, services);
             });
         }
         public int Count => loader.Count;

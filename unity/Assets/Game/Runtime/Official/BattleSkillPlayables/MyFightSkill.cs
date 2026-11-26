@@ -62,8 +62,9 @@ public class MyFightSkill : MyComponent<FightSkillComponent, FightSkillComponent
 		base.OnStart(newEntity);
 		if (!((Object)(object)Source == (Object)null))
 		{
-			DoSourceTurn();
-			if (!Component.Interrupted)
+				bool hasCurrentView = CurrentFightViewLookup.Get<ECFightSkillView>(myEntity) != null;
+				if (!hasCurrentView) DoSourceTurn();
+				if (!hasCurrentView && !Component.Interrupted)
 			{
 				Component.OnInterruped += new Action<FightSkillComponent>(OnSkillInterruped);
 				PlayPlayable();

@@ -36,6 +36,7 @@ public class MyFightDamage : MyComponent<FightDamageComponent, FightDamageCompon
 
 	public override void OnStart(bool newEntity)
 	{
+			if (CurrentFightViewLookup.Get<ECFightDamageView>(myEntity) != null) return;
 		MyEntity entity = ViewServices.GetEntity(Component.TargetId);
 		if ((Object)(object)entity == (Object)null)
 		{

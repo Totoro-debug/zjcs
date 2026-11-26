@@ -428,12 +428,7 @@ namespace Zjcs.Presentation.Combat
             var skill = instance.GetComponent<MyFightSkill>();
             if (!skill) throw new InvalidOperationException("Original skill prefab has no MyFightSkill.");
             skill.ViewServices = this; skill.myPlayableManager = scope;
-            foreach (var driver in instance.GetComponentsInChildren<ECViewDriver>(true))
-            {
-                if (!instance.GetComponent<ECViewEntityBinding>()) instance.AddComponent<NativeMyEntityBinding>();
-                driver.ServiceProvider = this;
-                driver.ClientVisibilitySupporterFactory = new ConstantClientVisibilitySupporterFactory();
-            }
+            OfficialBattleCurrentViewBinding.Prepare(instance, this);
         }
 
         private void PrepareBoundSkill(MyEntity entity)
@@ -450,6 +445,12 @@ namespace Zjcs.Presentation.Combat
         {
             if (value is ECPlayableSupporterView playable)
             { playable.MyPlayableManager = scope; playable.ServiceProvider = this; }
+            else if (value is ECFightSkillView skill)
+            { skill.MyPlayableManager = scope; skill.ViewServices = this; }
+            else if (value is ECFightDamageView damage)
+            { damage.MyPlayableManager = scope; damage.ViewServices = this; }
+            else if (value is ECFightHitView hit)
+            { hit.MyPlayableManager = scope; hit.ViewServices = this; }
             else throw new InvalidOperationException("Unbound original skill entity view: " + value?.GetType().FullName);
         }
 

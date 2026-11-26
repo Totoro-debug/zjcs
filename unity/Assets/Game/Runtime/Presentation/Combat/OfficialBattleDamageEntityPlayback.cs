@@ -30,6 +30,7 @@ namespace Zjcs.Presentation.Combat
                         throw new InvalidOperationException("Original damage prefab requires one damage view.");
                     damage.ViewServices = services;
                     damage.mMyPlayableManager = scope;
+                    OfficialBattleCurrentViewBinding.Prepare(instance, services);
                 }, entity =>
                 {
                     foreach (var view in entity.GetComponents<PlayableOverrideByStatusStack>())

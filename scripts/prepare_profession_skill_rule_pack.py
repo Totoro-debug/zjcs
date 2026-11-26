@@ -79,6 +79,10 @@ def build(item, spec_path=None):
                         props_row.setdefault(str(property_id), row['DefaultValue'])
         os.environ['PATH'] = str(ROOT / '.tools/dotnet') + os.pathsep + os.environ.get('PATH', '')
         schemas = ScriptSchemas(code_root=code)
+        schema_inputs, schema_tools = [], []
+        if spec.get('current_managed_views'):
+            from current_battle_entity_views import current_battle_schemas, battle_view_drivers
+            schemas, schema_inputs, schema_tools = current_battle_schemas()
         visibility, managed_assemblies = {}, set()
         for entity in spec.get('visibility_bundles', ()):
             bundle = str(entity) if str(entity).endswith('.bundle') else f'defaultpackage_assets_prefabs_ecentity_fight_fightskill_{entity}.bundle'
@@ -96,6 +100,18 @@ def build(item, spec_path=None):
                 if str(entity_id) not in wanted:
                     continue
                 fields = schemas.read(obj)
+                if spec.get('current_managed_views'):
+                    drivers = battle_view_drivers(owner)
+                    assert len(drivers) == 1, ('Review current damage view driver count', entity_id)
+                    driver, = drivers
+                    managed = schemas.read(driver)
+                    record, = managed['references']['RefIds']
+                    assert managed['references']['version'] == 2
+                    assert managed['mECViews'] == [dict(rid=record['rid'])]
+                    assert record['type'] == dict(asm='Assembly-CSharp', ns='', **{'class': 'ECFightDamageView'})
+                    fields = dict(myHideDamage=record['data']['mHideDamage'],
+                                  myShowZeroDamage=record['data']['mShowZeroDamage'])
+                    inputs.append(dict(source=apk.provenance(driver), payload_sha256=sha(driver.get_raw_data())))
                 visibility[entity_id] = dict(damage_entity_id=entity_id, hide=bool(fields['myHideDamage']),
                                              show_zero=bool(fields['myShowZeroDamage']))
                 for original in (obj, script, owner):
@@ -121,6 +137,10 @@ def build(item, spec_path=None):
                      managed_reader=[identity(ROOT / 'scripts' / name) for name in ('official_unity_schema.py', 'unity_schema_types.cs')],
                      constructors=[identity(code / 'common-source' / ('Common' if (code / 'common-source/Common' / (name + '.cs')).is_file() else 'Common.LubanGen') / (name + '.cs')) for name in sorted(constructors.sources)],
                      formatters=[identity(path) for path in sorted(set(formats.sources.values()))])
+        if schema_inputs:
+            proof['current_view_schema_inputs'] = schema_inputs
+            proof['current_view_schema_tools'] = schema_tools
+            proof['current_view_reader'] = identity(ROOT / 'scripts/current_battle_entity_views.py')
     return payload, proof
 
 

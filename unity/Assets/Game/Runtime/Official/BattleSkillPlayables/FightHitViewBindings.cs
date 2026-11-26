@@ -17,6 +17,7 @@ namespace Zjcs.Official.BattleSkillPlayables
         IFightHitViewServices ViewServices { get; set; }
         IMyPlayableManager mMyPlayableManager { get; set; }
         FightHitViewFormula.SkillHitBaseDelayInfoProvider DelayInfoProvider { get; }
+        FightHitViewFormula.SkillHitBaseDelayInfoProvider GetCurrentDelayInfoProvider();
     }
 
     // Optional local host observation of the original hit view's actual playback.

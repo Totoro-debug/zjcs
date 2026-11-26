@@ -1,0 +1,94 @@
+{
+  "manifest": "911_156995",
+  "assembly": {
+    "path": ".tools/source-packages/current/911_156995/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "1e7eb15a1cead0c2e618e307a367119908485a5a658815a0fe39d98c0d3f31fe"
+  },
+  "sources": [
+    {
+      "original": {
+        "path": ".tools/source-packages/current/911_156995/official-code/client-source/ECFightSkillView.cs",
+        "sha256": "ea6974b0470638871f51d4dfa1bba095349d8d3d98059d31a3475ab54b61ca94"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ECFightSkillView.cs",
+        "sha256": "c099b85393d69de3bb6a84ea355111c8a468049f837924255220639e1b8b9ce0"
+      },
+      "metadata": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ECFightSkillView.cs.meta",
+        "sha256": "a5f052de814d6c09f6e3ddb9dda3a207a7cd1e1d5d6a27a8e3bd7099070d8ffd"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/911_156995/official-code/client-source/ECFightDamageView.cs",
+        "sha256": "9884f9cbd1718d17d9350f635fb68e9b96d3bd6e958d0b267b7c3e63c4156c31"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ECFightDamageView.cs",
+        "sha256": "dba3a65f9597f26d4ac2945883a31fc17d1026fbc1bc3e439f52a2895488210d"
+      },
+      "metadata": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ECFightDamageView.cs.meta",
+        "sha256": "b193c090d7159844789b0927c249884ccc71c9a26bedab8e30ebdea14475e93d"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/911_156995/official-code/client-source/ECFightHitView.cs",
+        "sha256": "ca94c9356a09d67f25abac64864ec5f16c21b78a09187ab1a0cc9e6605c58bbf"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ECFightHitView.cs",
+        "sha256": "37434fd4d106ce8ec9bf51bed1f27ad18c717e4db8050b8f8d10db83e37a1057"
+      },
+      "metadata": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ECFightHitView.cs.meta",
+        "sha256": "93630635c204060e30924d073e5b3511464cec2ca28f8faa4dae52590f679a10"
+      }
+    }
+  ],
+  "boundaries": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/CurrentFightViewLookup.cs",
+      "sha256": "1bfdac33a3e52df0e4b97f4a97ba097d48363d64d15f929db7dc3d43be63f7c0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightHitViewBindings.cs",
+      "sha256": "43068f91a0c2a5f67a527c00e43841f7da34e018c134b65d83188bef03d32542"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkill.cs",
+      "sha256": "bbb47f6735c4fc6a8dd68d8f931877e918857426acb441cae3a0b4d00c33337a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightHitBase.cs",
+      "sha256": "573850b5ad3a7e11df8771268d6259a3aaaccb9dca8b1bed4c5ebaaff4f830bd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightDamage.cs",
+      "sha256": "d71d88f8525772b3bfb513ac3c23a611f6a7414c34000efd5abf981eee80cc1f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleCurrentViewBinding.cs",
+      "sha256": "1a2437a5d1150f0ed02d76fe33f3d087d1c1c5cc1da601aa1596f8fab0e2d0ba"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs",
+      "sha256": "76547303eb776392937ee5336166e6911568a72abacc556f33fbf585cd0b6b5f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHitEntityPlayback.cs",
+      "sha256": "92a2c346932854dd3d2ab1c8f99a14d36c8dc9ea354bbd5b82661fcc75f025db"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageEntityPlayback.cs",
+      "sha256": "676db338832399bb8fbb10cda15f9b3966a88938223abc4b0add2194b6eaa454"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_current_battle_ec_views.py",
+    "sha256": "8a3f78ee4cd6b990c010a9ec8442b8d9b7d0bc849a907e6a849736fba93ba5b2"
+  },
+  "adaptation": "Retain the complete current official EC view branches and order. Inject the existing entity/grid/playable ports; adapt interruption subscription symmetrically and forward damage notifications through the existing typed event carrier. Only explicitly restored current serialized EC views select this path; unknown managed view types remain rejected."
+}

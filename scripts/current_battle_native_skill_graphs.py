@@ -30,7 +30,7 @@ def verified_noise_mask_binding(cache):
 
 
 def build_current_skill_graphs(*, DEST, DATA, RECEIPT, GROUPS, family, cache_name, generator,
-                               external_assets=None):
+                               external_assets=None, restore_current_views=False):
     source = OfficialSource()
     cache = ROOT / '.tools/source-packages/current' / source.version / cache_name
     legacy_path = ROOT / 'unity/Assets/Game/Resources/Combat/skill-native-graphs.json'
@@ -47,7 +47,23 @@ def build_current_skill_graphs(*, DEST, DATA, RECEIPT, GROUPS, family, cache_nam
             relative = row['entity_resource'].removeprefix('Combat/SkillGraphs/') + '.prefab'
             roots[f'{group}:{row[id_key]}'] = relative
     bindings = shared_bindings()
+    code = cache.parent / 'official-code'
+    # The historical registry also names types removed from newer assemblies.
+    # Leave them unbound: the converter still rejects any selected object that
+    # actually references one, rather than assigning it an old implementation.
+    bindings['MAPPED'] = {key: value for key, value in bindings['MAPPED'].items()
+                          if any((code / folder / (value[1] + '.cs')).is_file()
+                                 for folder in ('client-source', 'game-framework-source/GameFramework'))}
+    bindings['source_scripts'] = {key: value for key, value in bindings['source_scripts'].items()
+                                 if (code / value.get('source_root', 'client-source') / value['source']).is_file()}
     exported = cache / 'native-export/ExportedProject/Assets'
+    managed_views = None
+    if restore_current_views:
+        from current_battle_entity_views import CurrentBattleEntityViews
+        managed_views = CurrentBattleEntityViews(exported, roots.values())
+        for pointer in managed_views.pointer_bindings:
+            relative = (ROOT / pointer['native']['path']).relative_to(exported).as_posix()
+            roots['managed-binding:' + relative] = relative
     native_guids = {}
     for path in exported.rglob('*.prefab.meta'):
         match = re.search(r'(?m)^guid: ([a-f0-9]{32})$', path.read_text('utf-8-sig'))
@@ -83,6 +99,7 @@ def build_current_skill_graphs(*, DEST, DATA, RECEIPT, GROUPS, family, cache_nam
           **bindings, family=family, shader_prefix=family.removesuffix('s') + '_',
           generator=generator, native_manifest=source.version, native_cache=cache,
           native_export_name='native-export', external_assets=external_assets,
+          native_preprocess=managed_views.preprocess if managed_views else None,
           limits=['Each owning skill separately verifies current rules, cultivation, persistence and rendered Windows gameplay.'])
 
     # Read the freshly converted component fields, including current pointer
@@ -117,15 +134,19 @@ def build_current_skill_graphs(*, DEST, DATA, RECEIPT, GROUPS, family, cache_nam
                           if re.search(r'm_Script: \{fileID: 11500000, guid: ' + script_guid, match[2])]
             assert len(components) == 1, ('Missing current native component', path, client_type)
             component_id, fields = components[0]
+            if managed_views:
+                fields.update(managed_views.converted_fields(text, row[id_key]))
             if group == 'skills':
                 actual = dict(skillEntityId=row[id_key], preferredPosToPlayable=bool(fields['PreferredPosToPlayable']),
                               showSkillReplay=bool(fields['ShowSkillReplay']))
-                assert actual == views[row[id_key]], 'Current native skill view requires a scoped field migration'
+                if not managed_views:
+                    assert actual == views[row[id_key]], 'Current native skill view requires a scoped field migration'
                 reused_view_fields.append(actual)
             if group == 'damages':
                 actual = dict(damage_entity_id=row[id_key], hide=bool(fields['myHideDamage']),
                               show_zero=bool(fields['myShowZeroDamage']))
-                assert actual == visibility[row[id_key]], 'Current native damage visibility requires a scoped field migration'
+                if not managed_views:
+                    assert actual == visibility[row[id_key]], 'Current native damage visibility requires a scoped field migration'
                 reused_view_fields.append(actual)
             row['entity_resource'] = f'Combat/{family}/' + Path(relative).with_suffix('').as_posix()
             if 'entity_prefab_sha256' in row:
@@ -163,4 +184,12 @@ def build_current_skill_graphs(*, DEST, DATA, RECEIPT, GROUPS, family, cache_nam
         ('current_battle_native_skill_graphs.py', 'battle_native_script_bindings.py', 'prepare_battle_skill_graph_assets.py', 'battle_skill_entity_prefabs.py')]
     current['historical_catalog_shape'] = [identity(legacy_path), identity(legacy_receipt)]
     current['selected_reference_examples'] = examples
+    if managed_views:
+        # The converter visits every asset once for closure and once for output.
+        assert all(count == 2 for count in managed_views.counts.values()), managed_views.counts
+        current['current_managed_views'] = dict(registrations=managed_views.registrations,
+            pointers=managed_views.pointer_bindings, schema_inputs=managed_views.schema_inputs,
+            schema_tools=managed_views.schema_tools,
+            runtime_receipt=identity(ROOT / 'assets/reference/battle-animation/current-battle-ec-views-source-manifest.json'))
+        current['binding_registry'].append(identity(ROOT / 'scripts/current_battle_entity_views.py'))
     write_changed(RECEIPT, json.dumps(current, ensure_ascii=False, indent=2) + '\n')
