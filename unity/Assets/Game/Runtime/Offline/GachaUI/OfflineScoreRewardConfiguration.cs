@@ -12,8 +12,12 @@ namespace Zjcs.Offline.GachaUI
     {
         private readonly HomeConditionRules rules;
         private readonly Dictionary<string, object> condition;
+        private readonly Dictionary<string, object> groupCondition;
         private readonly Func<IHomeConditionPlayer> player;
         public int[] BatchAchievementTypes { get; }
+        public int PanelShowCount { get; }
+        public int[] SameTypeAchievementTypes { get; }
+        public int[] TopAchievementTypes { get; }
         public OfflineScoreRewardConfiguration(OfficialCurrentHomeRuleAssetCatalog home,
             PartnerConditionRules partnerRules, Func<IHomeConditionPlayer> player)
         {
@@ -22,6 +26,13 @@ namespace Zjcs.Offline.GachaUI
             if (!asset) throw new InvalidOperationException("Original score reward configuration is missing.");
             var data = JObject.Parse(asset.text);
             BatchAchievementTypes = data["batchAchievementTypes"].ToObject<int[]>();
+            PanelShowCount = (int)data["panelShowCount"];
+            SameTypeAchievementTypes = data["sameTypeAchievementTypes"].ToObject<int[]>();
+            TopAchievementTypes = data["topAchievementTypes"].ToObject<int[]>();
+            var group = data["groupFunction"];
+            if ((int)group["Type"] != 136 || (int)group["Key0"] != 0 || (int)group["Key1"] != 0 || PanelShowCount <= 0)
+                throw new InvalidOperationException("Original regular achievement panel configuration differs.");
+            groupCondition = group["Condition"].ToObject<Dictionary<string, object>>();
             var function = data["batchFunction"];
             if ((int)function["Type"] != 189 || (int)function["Key0"] != 0 || (int)function["Key1"] != 0)
                 throw new InvalidOperationException("Original score batch function identity differs.");
@@ -29,5 +40,6 @@ namespace Zjcs.Offline.GachaUI
             rules = home.CreateConditions(partnerRules);
         }
         public bool IsBatchLimited => !rules.IsMet(condition, player());
+        public bool IsGroupLimited => !rules.IsMet(groupCondition, player());
     }
 }

@@ -56,6 +56,14 @@ namespace Zjcs.Presentation.Home
         private IEnumerator VerifyPetGachaControlSteps(HomeFeatureRuntime runtime, Action<bool> completed, List<GameObject> roots)
         {
 #if UNITY_EDITOR
+            if (Environment.GetCommandLineArgs().Contains("-petScoreDialogOnlyAcceptance"))
+            {
+                bool detailPassed = false;
+                yield return VerifyPetScoreDialog(runtime, value => detailPassed = value);
+                runtime.Close();
+                completed(detailPassed);
+                yield break;
+            }
             var proof = JObject.Parse(File.ReadAllText(Environment.GetEnvironmentVariable("ZJCS_PET_GACHA_CONTROL_FIXTURE")));
             var services = new GachaControlFixtureServices(runtime, proof);
             var nativeCosts = PrivateField<IHomeCurrencyWindowServices>(runtime.Hud, "nativeCurrencyServices");
@@ -387,6 +395,7 @@ namespace Zjcs.Presentation.Home
                     "draw saves the actual reminder date while daily counters keep rollback protection");
                 return "original ignore-date comparison, independent save, rollback, 06:00 boundary and real hundred transaction reload verified";
             });
+            yield return VerifyPetScoreDialog(runtime, value => passed &= value);
             foreach (var root in roots) Destroy(root);
             yield return null;
             services.Dispose();

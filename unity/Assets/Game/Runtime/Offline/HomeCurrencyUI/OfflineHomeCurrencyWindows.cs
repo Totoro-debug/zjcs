@@ -38,6 +38,8 @@ namespace Zjcs.Offline.HomeCurrencyUI
             public GameObject Root, Mask;
             public IDisposable Binding;
             public Coroutine Preparation;
+            public Action<GameObject> InitializeAfterActivation;
+            public FontAssetFontService Fonts;
             public bool Closing;
         }
 
@@ -133,6 +135,12 @@ namespace Zjcs.Offline.HomeCurrencyUI
             });
         }
 
+        public GameObject Popup(GameObject prefab, Func<string, string> localize, Action<GameObject> initialize)
+            => Create(prefab, root => {
+                if (localize != null)
+                    foreach (var text in root.GetComponentsInChildren<WorldMultiLanguageText>(true)) text.Localizer = localize;
+            }, initialize ?? throw new ArgumentNullException(nameof(initialize)), true);
+
         private IDisposable Register(GameObject root) => OfflineUiBindingModule.Register(root.transform,
             new OfflineUiBindings {
                 Localize = assets.Text, Font = () => OfflineHomeHudAssets.LoadDefault().defaultFont,
@@ -140,7 +148,7 @@ namespace Zjcs.Offline.HomeCurrencyUI
                 Pool = (scope, prefab, parent, keepWorld) => InstantiateBound(prefab, parent, keepWorld)
             });
 
-        private GameObject InstantiateBound(GameObject prefab, Transform parent, bool keepWorld)
+        private GameObject InstantiateBound(GameObject prefab, Transform parent, bool keepWorld, FontAssetFontService fonts = null)
         {
             var staging = new GameObject("InactiveCurrencyBindings", typeof(RectTransform));
             staging.SetActive(false);
@@ -149,17 +157,17 @@ namespace Zjcs.Offline.HomeCurrencyUI
             {
                 var root = Object.Instantiate(prefab, staging.transform, false);
                 root.SetActive(false);
-                Bind(root);
+                Bind(root, fonts ?? bindings.Fonts);
                 root.transform.SetParent(parent, keepWorld);
                 return root;
             }
             finally { Object.Destroy(staging); }
         }
 
-        private void Bind(GameObject root)
+        private void Bind(GameObject root, FontAssetFontService fonts)
         {
             foreach (var text in root.GetComponentsInChildren<TMP_Text>(true))
-                if (text.font) bindings.Fonts.SetupFont(text.font);
+                if (text.font) fonts.SetupFont(text.font);
             foreach (var text in root.GetComponentsInChildren<WorldMultiLanguageText>(true)) text.Localizer = assets.Text;
             foreach (var safe in root.GetComponentsInChildren<SafeArea>(true)) safe.ScreenAdaptService = bindings.Screen;
             foreach (var sound in root.GetComponentsInChildren<WorldButtonSound>(true)) sound.Post = bindings.PostSound;
@@ -175,14 +183,18 @@ namespace Zjcs.Offline.HomeCurrencyUI
             foreach (var pay in root.GetComponentsInChildren<PayMoneyChangeDialog>(true)) pay.Services = services;
         }
 
-        private void Create(GameObject prefab, Action<GameObject> initialize)
+        private GameObject Create(GameObject prefab, Action<GameObject> initialize, Action<GameObject> afterActivation = null, bool isolatedFonts = false)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfflineHomeCurrencyWindows));
-            var window = new Window();
+            var window = new Window { InitializeAfterActivation = afterActivation };
             windows.Add(window);
             try
             {
-                window.Root = InstantiateBound(prefab, bindings.Canvas.transform, false);
+                // Independently recovered popup closures can contain distinct TMP
+                // assets with the same original name. Keep the original font
+                // service's name-keyed handles within this popup's own lifetime.
+                if (isolatedFonts) { window.Fonts = OfflineHomeHudAssets.LoadDefault().CreateFontService(); window.Fonts.Initialize(); }
+                window.Root = InstantiateBound(prefab, bindings.Canvas.transform, false, window.Fonts);
                 window.Binding = Register(window.Root);
                 initialize(window.Root);
                 var popup = window.Root.GetComponent<WorldPopupWindow>();
@@ -193,6 +205,7 @@ namespace Zjcs.Offline.HomeCurrencyUI
                     throw new InvalidOperationException("Original currency popup requires its selected blur mask.");
                 mask.BlurManager = bindings.BlurManager;
                 window.Preparation = bindings.CoroutineHost.StartCoroutine(Prepare(window, popup, mask));
+                return window.Root;
             }
             catch { Destroy(window); throw; }
         }
@@ -202,6 +215,9 @@ namespace Zjcs.Offline.HomeCurrencyUI
             yield return mask.Prepare(popup, false);
             if (!windows.Contains(window)) yield break;
             window.Root.SetActive(true);
+            try { window.InitializeAfterActivation?.Invoke(window.Root); }
+            catch { window.Preparation = null; Destroy(window); throw; }
+            window.InitializeAfterActivation = null;
             foreach (var button in window.Root.GetComponentsInChildren<CloseWindowBtn>(true)) button.Init(this);
             // Selected WindowContainer.OnWindowShowing assigns sorting only after
             // activation. First activation otherwise restores the prefab Canvas values.
@@ -250,6 +266,7 @@ namespace Zjcs.Offline.HomeCurrencyUI
             var root = window.Root;
             if (root) { root.SetActive(false); Object.Destroy(root); }
             window.Binding?.Dispose();
+            window.Fonts?.Dispose();
             WindowClosed?.Invoke(root);
         }
 

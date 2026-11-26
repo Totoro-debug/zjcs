@@ -35,6 +35,10 @@ def build(check=False):
         settings = table('game_settings', 'TbGameSettings')
         functions = table('function_limit', 'TbFunctionLimitInfo')
         data = dict(batchAchievementTypes=settings['BatchGetAchievementTypes'],
+                    panelShowCount=settings['AchievementPanelShowCount'],
+                    sameTypeAchievementTypes=settings['AchievementTypeListForShowAllInfosInSameType'],
+                    topAchievementTypes=settings['AchievementTopTypeList'],
+                    groupFunction=next(row for row in functions if row['Type'] == 136 and row['Key0'] == row['Key1'] == 0),
                     batchFunction=next(row for row in functions if row['Type'] == 189 and row['Key0'] == row['Key1'] == 0))
         raw = (json.dumps(data, ensure_ascii=False, indent=2) + '\n').encode()
         if check:

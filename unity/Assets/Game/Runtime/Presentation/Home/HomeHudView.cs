@@ -72,7 +72,6 @@ namespace Zjcs.Presentation.Home
         private GameObject petResultLayer;
         private GameObject petConfirmLayer;
         private GameObject petDetailLayer;
-        private GameObject petScoreLayer;
         private HomeUiRenderer petDetailRenderer;
         private int petHistoryPage;
         private bool petHundredSuppressChoice;
@@ -782,6 +781,7 @@ namespace Zjcs.Presentation.Home
         {
             if (canvas == null) return;
             nativeCurrencyPlayer?.SynchronizeCommittedPlayer();
+            petNativeScore?.Rewards.Synchronize();
             RefreshNativeFunctionMenuPlayer();
             foreach (TopBarCurrency currency in canvas.GetComponentsInChildren<TopBarCurrency>(true))
                 currency.Refresh(host);
@@ -816,6 +816,7 @@ namespace Zjcs.Presentation.Home
         public void CloseDialog()
         {
             bool wasOpen = activeDialog != null;
+            CloseNativePetScoreDialog();
             ReleaseNativeBedWindow();
             ReleaseNativeBedOutput();
             ReleaseNativeCartWindow();
@@ -875,10 +876,8 @@ namespace Zjcs.Presentation.Home
             petDetailRenderer = null;
             petHistoryPage = 0;
             petHundredSuppressChoice = false;
-            petScoreRenderer = null;
             petConfirmLayer = null;
             petDetailLayer = null;
-            petScoreLayer = null;
             petResultLayer = null;
             if (wasOpen) OnDialogClosed();
         }

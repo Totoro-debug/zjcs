@@ -33,7 +33,7 @@
     }
   ],
   "inputs": {
-    "scripts/prepare_pet_score_reward.py": "03d7db1f133e81c9918f01b45bd9d0c1fd0bb3fb84b8a26a84313ef81092243c",
+    "scripts/prepare_pet_score_reward.py": "a391d751fe9c65cf0fec7ab9c27af9c205a6a7728f9fdc3748f41765b3ce1544",
     "scripts/official_tables.py": "04d33df654baabe85b07c09dc19a6c7e5014f2847e6f164e11b6afe043639710",
     "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
     "unity/Packages/manifest.json": "28a905793cdc5ac6d64a24c0447ad9e93536e5de1920d1a0e2b1fe5931200d7a",
@@ -43,8 +43,8 @@
     "assets/reference/partner-gift-controller-source-manifest.json": "ec6d837432f91568d5b6933065f4f6c9683e600e1eb413acf63ac21a3123f838",
     "unity/Assets/Game/Resources/Partners/OfficialPartnerProfileAssetCatalog.asset": "f3f58447d6dbe86b8ec76cc17619966ac3644aea3d1b0fa5e2876502314cc188",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflinePetGachaService.cs": "ba3d13e4956d804086ba989502a773ad4224d453503a050bcc3aaabb6391e712",
-    "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.PetGachaControls.cs": "3cbd7d7494926dd2e3e21fa2f5efda32ecc08005f7e148ea5ae86e1dfbdbe378",
-    "scripts/test_home_fruit_tree_weather.ps1": "ea1858cc81aa0349cb297cf36735d89ae52b72abde2f1f5f4b74eb1d80971349",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.PetGachaControls.cs": "4b08936bbef4b4d0bda2adea8043048d49fd5e38f0f363c958007d3c7da4c0e8",
+    "scripts/test_home_fruit_tree_weather.ps1": "baf74b6fe23a6bfd49d2f58cf3d18c8e0c9244040ae5b56c505e93d896b5bdc7",
     "scripts/test_pet_gacha_ui_mesh.ps1": "ed4b47675620196b38049f90cf0e62a97cdfe48dc4e74c90ae3710eef696c95e",
     "scripts/test_unity_compressed_mesh.py": "e73e2d231695e229cf33adc2b216d3bcac0f51e520d12290697215417046adad",
     "unity/Assets/Game/Editor/Home/OfficialUiMeshValidation.cs": "f7d2d603826b02cc24a0405f8e7f7a77ebf2169c68e907837f4cfafd02ce295b",
@@ -265,6 +265,8 @@
     "unity/Assets/Game/Runtime/Official/GachaUI/MarkableConfirmDialog.cs.meta": "c632e946697cd8a3e203de8dafa3f9c160b5b263107976830e44c6eafd33a16d",
     "unity/Assets/Game/Runtime/Official/GachaUI/PlayerOpenSkillChestBtn.cs": "42fa56f5b53b2a4e81613bfd916b9505fffa575455d1eed196c9346cf4f142b9",
     "unity/Assets/Game/Runtime/Official/GachaUI/PlayerOpenSkillChestBtn.cs.meta": "982def0501e38247fc09be736edbeffd52e2eee7feede5e0e347495b49f3c57d",
+    "unity/Assets/Game/Runtime/Official/GachaUI/ScoreRewardDialog.cs": "548938980a2670ce2eb644be2296c50b78dc94292ccdb69be6abd89474d8de91",
+    "unity/Assets/Game/Runtime/Official/GachaUI/ScoreRewardDialog.cs.meta": "f4ddfdb90c9c38f55f56f27f3d0d729c3925855f545788a54f57dcd748913205",
     "unity/Assets/Game/Runtime/Official/GachaUI/ScoreRewardServices.cs": "e24c1ac5737edccbe401b5987143634a5a183752c05e3c0fcd8bc59bde61e7c3",
     "unity/Assets/Game/Runtime/Official/GachaUI/ScoreRewardServices.cs.meta": "d9e95f8c355083854b81a412fe0376d5fdfd10ec7555bd20c5152c26991d92a1",
     "unity/Assets/Game/Runtime/Official/GachaUI/ScoreRewardUI.cs": "4c32a8075aa77a59af52ca4bcc97391136d9c61538e9fe5ae476b7636e21084a",
@@ -273,17 +275,21 @@
     "unity/Assets/Game/Runtime/Official/GachaUI/Zjcs.Official.GachaUI.asmdef.meta": "d159169496ecf1f3982351741788f0a06dd4fc295a56d3beed7420ef96c61817",
     "unity/Assets/Game/Runtime/Offline/GachaUI/OfficialMarkableConfirmAssetCatalog.cs": "46142828ac59c1a2438b5f8de3294bab87b9c14d1d2d7ce6e14f6b59f36339f6",
     "unity/Assets/Game/Runtime/Offline/GachaUI/OfficialMarkableConfirmAssetCatalog.cs.meta": "da64219c7661bc971430cb5e341fb11d728264b0617825b95cfacf4f9cf00b80",
+    "unity/Assets/Game/Runtime/Offline/GachaUI/OfficialScoreRewardDialogAssetCatalog.cs": "95707320434047be98f7c3261f2939ff06b60391f597e41e28e1dc2ff84c6e5c",
+    "unity/Assets/Game/Runtime/Offline/GachaUI/OfficialScoreRewardDialogAssetCatalog.cs.meta": "92b4db43430eb92df08516791d53065c464f79f11bd49815cc9eef5b056cb33c",
+    "unity/Assets/Game/Runtime/Offline/GachaUI/OfflinePetAchievementPanelSource.cs": "e35f7bb1ea3619ca73362c3829a1142cb9b7243587a4125b95e3ed444811b801",
+    "unity/Assets/Game/Runtime/Offline/GachaUI/OfflinePetAchievementPanelSource.cs.meta": "58920343a261bc4700bf6374e42a269c81a06506c3d86c23b4ee9b5feb7883a5",
     "unity/Assets/Game/Runtime/Offline/GachaUI/OfflinePetHundredReminderServices.cs": "831b6fcdd70aa09fea916fa5bb7db03391cf1d691a32b1a286018472840463e2",
     "unity/Assets/Game/Runtime/Offline/GachaUI/OfflinePetHundredReminderServices.cs.meta": "673a881020e2be892a6bf19618ab6a8060a58d031cd1074b356235c2e0b419da",
-    "unity/Assets/Game/Runtime/Offline/GachaUI/OfflinePetScoreRewardServices.cs": "3024a9e47b0b10ce19f04434078953b5207be664dda11ab065dbff9f7758e38a",
+    "unity/Assets/Game/Runtime/Offline/GachaUI/OfflinePetScoreRewardServices.cs": "cacf8f0f6875017d81f3a18f8f43cb1b16ddfbf53d01e2bfbdf1079bbf92ead1",
     "unity/Assets/Game/Runtime/Offline/GachaUI/OfflinePetScoreRewardServices.cs.meta": "295bedf29ab790f6ee336185c938bf59a421b1eb60552ae7c6c0064f6242e342",
-    "unity/Assets/Game/Runtime/Offline/GachaUI/OfflineScoreRewardConfiguration.cs": "56e2b3abac35cfee6c5d93e2ac6225abc097644b5ee69cd07ece0d36dff3c832",
+    "unity/Assets/Game/Runtime/Offline/GachaUI/OfflineScoreRewardConfiguration.cs": "320c6a7164782a290942ca2087cbff343a37f293a8892257352e78e07a98cc43",
     "unity/Assets/Game/Runtime/Offline/GachaUI/OfflineScoreRewardConfiguration.cs.meta": "5e1f6270d27f5accda0efe674b2093c5dc52feaad3063ccc645a491942ac5f38",
     "unity/Assets/Game/Runtime/Offline/GachaUI/Zjcs.Offline.GachaUI.asmdef": "38b5d9d08c9f5c1e6a1b428a559fe18fe7d6eb530a5906d4fbdbdf16986d8f4c",
     "unity/Assets/Game/Runtime/Offline/GachaUI/Zjcs.Offline.GachaUI.asmdef.meta": "a1e218c26d4bfdef33c12b3a09e77550b618fd68cfb2f777bacdd4ba2395bcf5"
   },
   "outputs": {
-    "unity/Assets/Game/Resources/PetGacha/score-reward-ui.json": "b3d07c0a7caea6c7aba6879c68eab907d74ecca8f4bb10dde33153f8b328ccc6",
+    "unity/Assets/Game/Resources/PetGacha/score-reward-ui.json": "cf0d3b95d33035e4accc6e40d8c89ba60c1437328398d38bb8b4d3b45e9c9884",
     "unity/Assets/Game/Resources/PetGacha/score-reward-ui.json.meta": "258494e960463b81cd84006a96aae686cf384b6da078d4b02e10b7358587e3b0"
   },
   "adaptation": "Original score UI branches and configuration; local single and atomic available-group claims. Full detail window and panel remain separate work."

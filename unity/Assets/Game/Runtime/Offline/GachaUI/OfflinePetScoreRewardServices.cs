@@ -85,12 +85,21 @@ namespace Zjcs.Offline.GachaUI
             if (groups == null || groups.Count != 1) throw new NotSupportedException("Only the original score single-group batch request is bound here.");
             Finish(service.ClaimAvailableAchievements(groups[0], Receipt(), DateTimeOffset.UtcNow.ToUnixTimeSeconds()), completed);
         }
-        private void Finish(PetGachaResult result, Action completed)
+        public void ClaimPanelGroup(int group, int count, bool receiveSameType, Action success)
+        {
+            if (group != 16 || count != -1 || service.Catalog.Achievements
+                .Where(row => row.AchievementType == service.Catalog.Gacha.ScoreAchievementType).Select(row => row.Group).Distinct().Count() != 1)
+                throw new NotSupportedException("Only the original pet score detail group claim is bound here.");
+            // This selected type has one group, including ReceiveSameType requests.
+            // AchievementPanelItem subscribes to OnSuccess; ScoreRewardUI uses OnComplete.
+            Finish(service.ClaimAvailableAchievements(group, Receipt(), DateTimeOffset.UtcNow.ToUnixTimeSeconds()), success, true);
+        }
+        private void Finish(PetGachaResult result, Action completed, bool successOnly = false)
         {
             if (result.IsApplied) { Synchronize(); presentation.OnAchievementCommitted(); }
             else presentation.ShowFailure(result);
             // Original RPC OnComplete refreshes on either result.
-            completed?.Invoke();
+            if (!successOnly || result.IsApplied) completed?.Invoke();
         }
         private static string Receipt() => "pet-score:" + Guid.NewGuid().ToString("N");
         private HashSet<(int, int)> ReadClaims() => new HashSet<(int, int)>(service.State.AchievementClaims.Select(row => (row.Group, row.Index)));

@@ -21,7 +21,6 @@ namespace Zjcs.Presentation.Home
         private int petVirtualTotal;
         private int petVirtualFirstVisible = -1;
         private float petVirtualRowHeight;
-        private HomeUiRenderer petScoreRenderer;
         private readonly Queue<int> petNewPetQueue = new Queue<int>();
         private GameObject petNewPetLayer;
         private GameObject petSkillEntryLayer;
@@ -809,31 +808,7 @@ namespace Zjcs.Presentation.Home
 
         private void ShowPetScoreRewards()
         {
-            HomeUiRenderer renderer = CreatePetLayer("pet_gacha_score", out petScoreLayer,
-                ClosePetScoreRewards);
-            renderer.SetActive("/ScoreRewardDialog/BgDialog1/Content", true);
-            renderer.SetTextByName("TitleText", "结缘积分奖励");
-            renderer.SetTextByName("RuleText", "每次结缘获得1积分。当前累计 "
-                + host.PetGacha.State.Score.ToString(CultureInfo.InvariantCulture) + " 积分。");
-            Transform content = renderer.Find("/ScoreRewardDialog/BgDialog1/Content/RewardItemContent/Scroll View/Viewport/RewardItemSlot")?.transform;
-            Transform scrollNode = renderer.Find("/ScoreRewardDialog/BgDialog1/Content/RewardItemContent/Scroll View")?.transform;
-            HomeUiNode source = host.Catalog.Panel("pet_gacha_score_item")?.root;
-            if (content != null && scrollNode != null && source != null)
-            {
-                HomeUiNode template = source;
-                ScrollRect scroll = scrollNode.GetComponent<ScrollRect>();
-                if (scroll == null) scroll = scrollNode.gameObject.AddComponent<ScrollRect>();
-                petScoreRenderer = renderer;
-                PreparePetVirtualList(scroll, content, template, 16);
-            }
-            BindAllNamed(renderer, "CloseBtn", ClosePetScoreRewards);
-        }
-
-        private void ClosePetScoreRewards()
-        {
-            ClearPetVirtualList();
-            ClosePetLayer(ref petScoreLayer);
-            petScoreRenderer = null;
+            OpenNativePetScoreDialog();
         }
 
         private void RefreshPetCountAchievements()
@@ -1029,9 +1004,6 @@ namespace Zjcs.Presentation.Home
             Notify("奖励已领取");
             petVirtualFirstVisible = -1;
             RefreshPetVirtualRows();
-            if (group == 16 && petScoreLayer != null)
-                petScoreRenderer?.SetTextByName("RuleText", "每次结缘获得1积分。当前累计 "
-                    + host.PetGacha.State.Score.ToString(CultureInfo.InvariantCulture) + " 积分。");
         }
 
         private void RefreshPetShop()
