@@ -1,4 +1,5 @@
 using Zjcs.Offline.Home;
+using Zjcs.Offline.Progression;
 
 namespace Zjcs.Presentation.Home
 {
@@ -6,7 +7,10 @@ namespace Zjcs.Presentation.Home
     {
         OfflineHomeBedAwards bedAwards;
         OfflineHomeBedAwards GetBedAwards()
-            => bedAwards ?? (bedAwards = new OfflineHomeBedAwards(host, canvas, PostPartnerPromptSound));
+            => bedAwards ?? (bedAwards = new OfflineHomeBedAwards(host, canvas, PostPartnerPromptSound,
+                new[] { OfflineFruitTreeService.RewardItemId }));
+        internal void ShowHomeAward(int itemId, long count)
+            => GetBedAwards().Show(itemId, count);
         internal void ShowBedAward(OfflineHomeCollectedReward reward)
         {
             GetBedAwards().Show(reward);

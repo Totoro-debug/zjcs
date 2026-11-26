@@ -1474,8 +1474,7 @@ namespace Zjcs.Presentation.Home
                 ReloadContext();
                 hud.RefreshAll();
                 ApplyFurnitureStates();
-                Action showReward = () => hud.ShowNotice("收取 " + collected.CollectedCount + " 个果实，获得 "
-                    + rules.ItemName(OfflineFruitTreeService.RewardItemId) + " × " + collected.CollectedCount);
+                Action showReward = () => storage.PresentFruitTreeAward(collected);
                 bool showCollectionTutorial = pendingFruitTreeCollectionTutorial
                     || !profile.Save.Player.FruitTree.CollectionTutorialSeen;
                 pendingFruitTreeCollectionTutorial = false;

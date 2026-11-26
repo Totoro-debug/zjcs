@@ -786,7 +786,19 @@ namespace Zjcs.Presentation.Home
             }
             public void PopupAward(HomeFruitTreeAward award)
             {
+                if (!(award?.Original is FruitTreeResult result) || !result.IsApplied)
+                    throw new InvalidOperationException("The committed fruit-tree award payload is missing.");
+                home.hud.ShowHomeAward(OfflineFruitTreeService.RewardItemId, result.CollectedCount);
                 home.hud.RefreshAll();
+            }
+            internal void PresentFruitTreeAward(FruitTreeResult result)
+            {
+                var award = new HomeFruitTreeAward {
+                    SourceOperate = 22, // Original SourceOperate.FruitTree.
+                    AwardIds = new[] { OfflineFruitTreeService.RewardItemId }, Original = result };
+                foreach (var handler in fruitTreeAwardHandlers.ToArray())
+                    if (handler(award)) return;
+                throw new InvalidOperationException("The original fruit-tree award handler is not registered.");
             }
             public bool IsPetGachaDisabled() => false;
             public void PopupPetGacha() => home.hud.ShowPetGacha();

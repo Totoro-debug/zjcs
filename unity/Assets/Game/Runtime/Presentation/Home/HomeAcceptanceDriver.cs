@@ -696,6 +696,9 @@ namespace Zjcs.Presentation.Home
 
         private IEnumerator VerifyNativeFruitTree(HomeFeatureRuntime runtime, Action<bool> completed)
         {
+            log.Add("VIEW native-tree-check screen=" + Screen.width + "x" + Screen.height
+                + " camera=" + runtime.Scene.Camera.pixelRect + " target=" + runtime.Scene.Camera.targetTexture
+                + " canvas=" + runtime.Hud.Canvas.pixelRect + " rect=" + ((RectTransform)runtime.Hud.Canvas.transform).rect);
             GameObject nativeTree = null;
             HomeFruitTree treeController = null;
             HomeFruitTreeProduceFruit produce = null;
@@ -898,9 +901,6 @@ namespace Zjcs.Presentation.Home
             });
             passed &= Check("native-fruit-tree-collection", () =>
             {
-                TMP_Text toast = PrivateField<TMP_Text>(runtime.Hud, "toast");
-                Assert(toast != null && toast.text.Contains("收取 3 个果实") && toast.text.Contains("× 3"),
-                    "fruit-tree collection emits the expected reward notice text");
                 runtime.Profile.Reload();
                 var state = runtime.Profile.Save.Player.FruitTree;
                 long rewardAfter = runtime.Profile.InventoryCount(OfflineFruitTreeService.RewardItemId);
@@ -911,7 +911,26 @@ namespace Zjcs.Presentation.Home
                         + ", collections=" + state.CollectionCount);
                 Assert(rewardAfter == rewardBefore + 3, "fruit collection grants the configured local reward item");
                 Assert(visible == 0, "successful collection resets and hides pooled original fruit effects");
-                return "collected three mature fruits, granted three local rewards, emitted the reward notice, reset native effects, and restored state from disk";
+                return "collected three mature fruits, granted three local rewards, reset native effects, and restored state from disk";
+            });
+            yield return new WaitForSecondsRealtime(.25f);
+            passed &= Check("native-fruit-tree-award-queue", () =>
+            {
+                var panel = runtime.Hud.Canvas.GetComponentInChildren<Zjcs.Official.HomeAwardUI.AwardListPanel>();
+                Assert(panel != null && panel.isActiveAndEnabled, "original award queue is open after collection");
+                var row = panel.GetComponentsInChildren<Zjcs.Official.HomeAwardUI.AwardListPanelItem>()
+                    .Single(value => value.isActiveAndEnabled);
+                var award = PrivateField<Zjcs.Official.HomeAwardUI.AwardData>(row, "mData");
+                Assert(award != null && award.AwardId == OfflineFruitTreeService.RewardItemId && award.Amount == 3,
+                    "original award row receives the committed fruit reward and quantity");
+                string iconPath = row.Services.GetItemInfo(OfflineFruitTreeService.RewardItemId).Icon;
+                Sprite fruitIcon = Zjcs.Official.HomeFastHangUpUI.OfficialHomeFastHangUpAssetCatalog.LoadDefault()
+                    .images.Single(value => value.path == iconPath).sprite;
+                Assert(row.GetComponentsInChildren<Image>().Any(value => value.sprite == fruitIcon),
+                    "original item icon binds the official fruit sprite");
+                Assert(row.GetComponentsInChildren<TMP_Text>().Any(value => value.text.Contains("命运果实") && value.text.Contains("3")),
+                    "original award row displays the localized fruit name and amount");
+                return "original fruit-tree award callback presents the official queue, fruit icon, localized name and quantity";
             });
             yield return Capture("native-fruit-tree-collected.png");
             completed?.Invoke(passed);

@@ -116,7 +116,8 @@ namespace Zjcs.Presentation.Home
         public Func<string, string> TryExtraText { get; set; }
         public Action<IProfessionItemInfo, IWindowOperator, long, Action<GameObject>> OpenItemDetail { get; set; }
 
-        public OfflineHomeBedAwards(HomeFeatureRuntime home, Canvas canvas, Action<AudioClip, GameObject> postSound)
+        public OfflineHomeBedAwards(HomeFeatureRuntime home, Canvas canvas, Action<AudioClip, GameObject> postSound,
+            IEnumerable<int> additionalRewardItemIds = null)
         {
             this.home = home ?? throw new ArgumentNullException(nameof(home));
             this.canvas = canvas ? canvas : throw new ArgumentNullException(nameof(canvas));
@@ -158,6 +159,20 @@ namespace Zjcs.Presentation.Home
                 imageCatalog = ScriptableObject.CreateInstance<OfflineProfessionImageCatalog>();
                 imageCatalog.Entries = incomeAssets.images.Select(image => new OfflineProfessionImageCatalog.Entry {
                     Path = "Assets/Image/" + image.path, AssetGuid = image.assetGuid, Asset = image.sprite }).ToArray();
+                foreach (int itemId in additionalRewardItemIds ?? Array.Empty<int>())
+                {
+                    var source = Zjcs.Offline.HomeUI.OfficialCurrentHomeRuleAssetCatalog.LoadDefault()
+                        .Rows("item").Single(row => Convert.ToInt32(row["ClassId"]) == itemId);
+                    var info = new IncomeItem { Source = new Info {
+                        ClassId = itemId, RawIcon = (string)source["RawIcon"], IconEffect = (string)source["IconEffect"],
+                        Quality = Convert.ToInt32(source["Quality"]), ItemType = Convert.ToInt32(source["ItemType"]),
+                        Rank = Convert.ToInt32(source["Rank"]), CanOverlap = Convert.ToBoolean(source["CanOverlap"]) } };
+                    string path = "Assets/Image/" + info.Icon;
+                    if (!string.IsNullOrEmpty(info.IconEffect) || !imageCatalog.Entries.Any(image => image.Path == path && image.Asset))
+                        throw new InvalidOperationException("Bind the original home reward image/effect before presenting item " + itemId);
+                    incomeItems[itemId] = info;
+                    texts[GetItemNameKey(itemId)] = home.ItemName(itemId);
+                }
                 foreach (var item in incomeItems.Values)
                     if (string.IsNullOrEmpty(item.IconEffect) && !imageCatalog.Entries.Any(image =>
                         image.Path == "Assets/Image/" + item.Icon && image.Asset))
@@ -174,6 +189,15 @@ namespace Zjcs.Presentation.Home
 
         public void Show(OfflineHomeCollectedReward reward)
             => Show(new[] { reward });
+
+        public void Show(int itemId, long count)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfflineHomeBedAwards));
+            if (count <= 0) throw new ArgumentOutOfRangeException(nameof(count));
+            GetItemInfo(itemId);
+            AwardListPanel.PopupAwardListPanel(this, new List<AwardData> {
+                new AwardData { Catalog = this, AwardId = itemId, Amount = count } });
+        }
 
         public void Show(IEnumerable<OfflineHomeCollectedReward> rewards)
         {
