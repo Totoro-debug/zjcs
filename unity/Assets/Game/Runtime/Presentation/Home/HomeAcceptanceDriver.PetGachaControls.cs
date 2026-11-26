@@ -26,8 +26,9 @@ namespace Zjcs.Presentation.Home
         private IEnumerator VerifyPetGachaControls(HomeFeatureRuntime runtime, Action<bool> completed)
         {
             bool passed = false;
+            var roots = new List<GameObject>();
             var pending = new Stack<IEnumerator>();
-            pending.Push(VerifyPetGachaControlSteps(runtime, value => passed = value));
+            pending.Push(VerifyPetGachaControlSteps(runtime, value => passed = value, roots));
             while (pending.Count > 0)
             {
                 bool next = false;
@@ -38,7 +39,9 @@ namespace Zjcs.Presentation.Home
                 if (failure != null)
                 {
                     Check("pet-gacha-controls-execution", () => throw failure);
+                    foreach (var root in roots) if (root) root.SetActive(false);
                     while (pending.Count > 0) (pending.Pop() as IDisposable)?.Dispose();
+                    foreach (var root in roots) if (root) Destroy(root);
                     runtime.Close();
                     completed(false);
                     yield break;
@@ -50,7 +53,7 @@ namespace Zjcs.Presentation.Home
             completed(passed);
         }
 
-        private IEnumerator VerifyPetGachaControlSteps(HomeFeatureRuntime runtime, Action<bool> completed)
+        private IEnumerator VerifyPetGachaControlSteps(HomeFeatureRuntime runtime, Action<bool> completed, List<GameObject> roots)
         {
 #if UNITY_EDITOR
             var proof = JObject.Parse(File.ReadAllText(Environment.GetEnvironmentVariable("ZJCS_PET_GACHA_CONTROL_FIXTURE")));
@@ -67,7 +70,6 @@ namespace Zjcs.Presentation.Home
             var quantities = PrivateField<OfflineHomeCurrencyPlayer>(runtime.Hud, "nativeCurrencyPlayer");
             var font = OfflineHomeHudAssets.LoadDefault().defaultFont;
             var texts = (JObject)JObject.Parse(LoadGachaControlAsset<TextAsset>(proof["texts"]).text)["texts"];
-            var roots = new List<GameObject>();
             OfflinePetScoreRewardServices scoreServices = null;
             using var sound = new OfflinePartnerUiSoundScope(id => ((JObject)proof["audio"]).Properties()
                 .Select(row => row.Value).Where(row => (uint)row["event"]["id"] == id)
@@ -99,6 +101,14 @@ namespace Zjcs.Presentation.Home
                     rect.localScale = new Vector3((float)source["m_LocalScale"]["x"], (float)source["m_LocalScale"]["y"], (float)source["m_LocalScale"]["z"]);
                     rect.localRotation = new Quaternion((float)source["m_LocalRotation"]["x"], (float)source["m_LocalRotation"]["y"],
                         (float)source["m_LocalRotation"]["z"], (float)source["m_LocalRotation"]["w"]);
+                    if (ancestor["safe_area"] is JObject safeAreaFields)
+                    {
+                        var safeArea = container.AddComponent<Zjcs.Official.HomeScreenUI.SafeArea>();
+                        safeArea.PaddingTop = (float)safeAreaFields["PaddingTop"];
+                        safeArea.PaddingBottom = (float)safeAreaFields["PaddingBottom"];
+                        safeArea.DisableTopAdapt = (bool)safeAreaFields["DisableTopAdapt"];
+                        safeArea.DisableBottomAdapt = (bool)safeAreaFields["DisableBottomAdapt"];
+                    }
                     parent = rect;
                 }
                 var instance = factory.Instantiate(LoadGachaControlAsset<GameObject>(proof["roots"][name]), parent, false);
@@ -275,11 +285,10 @@ namespace Zjcs.Presentation.Home
                 });
                 var unlock = runtime.Profile.ApplyInventoryTransaction("acceptance:score-batch-map14", save =>
                 {
-                    if (!save.World.Maps.Any(map => map.MapClassId == 14)) save.World.Maps.Add(new OfflineMapProgress { MapClassId = 14 });
                     if (!save.Player.UnlockedMapClassIds.Contains(14)) save.Player.UnlockedMapClassIds.Add(14);
                     save.Player.PetGacha.Score = Math.Max(save.Player.PetGacha.Score, 260);
                 });
-                Assert(unlock.IsApplied, "isolated original map unlock and score fixture commit");
+                Assert(unlock.IsApplied, "isolated original map unlock and score fixture commit: " + unlock.Status + " " + unlock.Message);
                 scoreServices.Synchronize();
                 var ready = runtime.PetGacha.Achievements(16, 0, 20).Where(row => row.IsReady && !row.IsClaimed).ToArray();
                 var expected = ready.SelectMany(row => row.Rewards).GroupBy(row => row.ItemId)
@@ -304,7 +313,9 @@ namespace Zjcs.Presentation.Home
                 });
                 yield return Capture("pet-gacha-controls-score-next-stage.png");
                 int claimsBefore = runtime.PetGacha.State.AchievementClaims.Count;
-                ClickPartnerUi(scoreUI.GetScoreRewardBtn);
+                Assert(!scoreUI.GetScoreRewardBtn.gameObject.activeInHierarchy,
+                    "original unready state hides the native claim input");
+                scoreUI.GetScoreRewardBtn.onClick.Invoke();
                 scoreUI.SetAdditionInfoData(() => true, new GachaTextKeyArgWrap("common_format_args1", "score-tip"));
                 Assert(scoreRoot.GetComponentInChildren<AdditionInfoTip>(true).gameObject.activeSelf, "original additional tip predicate shows its native text");
                 scoreUI.ClearAdditionInfoData();
@@ -314,19 +325,25 @@ namespace Zjcs.Presentation.Home
                 typeof(ScoreRewardUI).GetMethod("RefreshReward", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(scoreUI, null);
                 Assert(scoreUI.ScoreText.Text == runtime.PetGacha.State.Score.ToString() && scoreUI.ProgressImage.fillAmount == 1,
                     "original completed selected-reward branch shows total score and retains the claimed overlay fill order");
-                Assert(scoreUI.RewardSlot.GetComponentInChildren<Zjcs.Official.ProfessionUI.ItemIcon>(true)
+                Assert(scoreUI.RewardSlot.GetComponentInChildren<Zjcs.Official.ProfessionUI.ItemIcon>()
                     .GetAttachment(Zjcs.Official.ProfessionUI.ItemIconAttachmentType.GotTip).gameObject.activeSelf,
                     "original completed reward attaches the native claimed indicator");
                 scoreUI.RefreshInfo();
-                scoreUI.ScoreRewardInfoBtn.onClick.Invoke();
+                ClickPartnerUi(scoreUI.ScoreRewardInfoBtn);
                 scoreRoot.SetActive(false);
                 yield return null;
+                int iconRequestsAfterDisable = scorePresentation.IconRequests;
+                Assert(runtime.Profile.ApplyInventoryTransaction("acceptance:score-after-disable",
+                    save => save.Player.PetGacha.Score++).IsApplied, "isolated score notification after closing");
+                scoreServices.Synchronize();
                 runtime.Profile.Reload();
                 passed &= Check("pet-gacha-controls-score-restore", () =>
                 {
                     Assert(scorePresentation.Commits == 2 && scorePresentation.LastMessage == "AchievementPanel.CanNotGetReward"
                         && runtime.PetGacha.State.AchievementClaims.Count == claimsBefore && expected.All(row => runtime.Profile.InventoryCount(row.Key) == row.Value),
                         "unready click cannot grant twice and reload preserves actual reward records and inventory");
+                    Assert(scorePresentation.IconRequests == iconRequestsAfterDisable,
+                        "disabled native score UI no longer refreshes on local score notifications");
                     Assert(scorePresentation.DetailKey.GroupId == key.GroupId && scorePresentation.DetailRule.Key == rule.Key
                         && scorePresentation.DetailRule.Args.SequenceEqual(rule.Args)
                         && scoreUI.RewardSlot.GetComponentsInChildren<Zjcs.Official.ProfessionUI.ItemIcon>(true).All(icon => !icon.gameObject.activeSelf),

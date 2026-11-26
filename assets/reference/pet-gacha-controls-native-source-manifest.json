@@ -61,7 +61,7 @@
     ".tools/source-packages/current/911_156995/home-pet-gacha-native/native-export/ExportedProject/Assets/Animation/UI/Common/Disabled.anim": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51",
     ".tools/source-packages/current/911_156995/home-pet-gacha-native/native-export/ExportedProject/Assets/Prefabs/UI/Pet/PetGachaPanel.prefab": "afed9bb504dceeef952b4a6f82eadfa28d5077f27545e6ab61f8143f1a73ccd7",
     ".tools/source-packages/current/911_156995/home-pet-gacha-native/native-export/ExportedProject/Assets/Prefabs/UI/Pet/PetGachaPanel.prefab.meta": "f587e0d4c4e44fa3385aa95953053fe002ea8978057581ab213372a5101a7ef8",
-    "scripts/prepare_pet_gacha_controls_native.py": "a5dca0dd2229b98063f2274d802d17036cfb3ee35f670d19133c3fd6df6fecd5",
+    "scripts/prepare_pet_gacha_controls_native.py": "9565628f85708fae3a53fb86eca0aa1ef4aad383685f2717928290c8001f7fb0",
     "scripts/home_native_assets.py": "60b182fcdda4607a54fd4ce02c067ec5c564253e22bc59ca15417bf9a475b6c5",
     "scripts/prepare_partner_roster_native.py": "576bcb36e160d9266ac80705b5ef2540a33e8cc0bca1c1d4709a99f3263a4daa",
     "scripts/unity_compressed_mesh.py": "45436ce798214480bc8a674c0cfefc2fd82b5d47021748391d7b103ae8760797",
@@ -71,6 +71,7 @@
     ".tools/source-packages/current/911_156995/official-code/client-source/ScoreRewardUI.cs": "0090c6c0ff25e84f6af834c0ce419c6f0d98783c74c594495884f871ed973295",
     ".tools/source-packages/current/911_156995/official-code/client-source/AdditionInfoTip.cs": "a28dd1606a7df59c6f3e603807f4ed3fdf8324f288e7ebea3e7b0883316f3666",
     ".tools/source-packages/current/911_156995/official-code/common-source/Common/GachaType.cs": "3347cd9ec819c86a110c68acc4f87f387f8a8417193ac924b172ea767c90563e",
+    ".tools/source-packages/current/911_156995/official-code/framework-firstpass-source/SafeArea.cs": "8c501f0834cf175166489c97298388d95fc32e1a4049edb6e399a3850b2d66f3",
     ".tools/source-packages/current/911_156995/official-code/common-source/Common/GachaClassType.cs": "1ba3533fac2aa447e986606a74dfd91a904a82f640e0f69fc8df7dcc764100b5"
   },
   "recovery": {
@@ -176,7 +177,7 @@
         },
         "output": "PetGachaPanel.json",
         "nativeMeta_sha256": "f587e0d4c4e44fa3385aa95953053fe002ea8978057581ab213372a5101a7ef8",
-        "output_sha256": "0b01c4670028205c8c59765016173748fd132b6e4dc4a54256911cd9ee69ef60"
+        "output_sha256": "2cb036d8265df85b132bbe604b08f6500f7fefe4bb280a9aa90bcd712d62632b"
       }
     ],
     "additional_bundles": [
@@ -499,6 +500,26 @@
               "x": 0,
               "y": 0
             }
+          },
+          "safe_area": {
+            "PaddingTop": 0.0,
+            "PaddingBottom": 0.0,
+            "DisableTopAdapt": 0,
+            "DisableBottomAdapt": 0
+          },
+          "safe_area_source": {
+            "original": "cab-4e4d07c025b4946bc015415b94d99057:1246494070386433056",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ui_pet.bundle",
+              "bundle_hash": "339f95ac96baea7cc99c173bb8f677f9",
+              "path_id": "1246494070386433056",
+              "origin": "official_cdn",
+              "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/339f95ac96baea7cc99c173bb8f677f9.bundle",
+              "manifest": "911_156995",
+              "bundle_size": 2168266,
+              "bundle_sha256": "7e92da351f1a202b7b1399d248cadac156c6d4014978cf0d77a4a880865a8985"
+            },
+            "payload_sha256": "948319e3254a86e523f0809c4933ea1a034ef31364a8863c1764f74f8fdbda88"
           }
         },
         {
@@ -2391,6 +2412,26 @@
               "x": 0,
               "y": 0
             }
+          },
+          "safe_area": {
+            "PaddingTop": 0.0,
+            "PaddingBottom": 0.0,
+            "DisableTopAdapt": 0,
+            "DisableBottomAdapt": 0
+          },
+          "safe_area_source": {
+            "original": "cab-4e4d07c025b4946bc015415b94d99057:1246494070386433056",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ui_pet.bundle",
+              "bundle_hash": "339f95ac96baea7cc99c173bb8f677f9",
+              "path_id": "1246494070386433056",
+              "origin": "official_cdn",
+              "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/339f95ac96baea7cc99c173bb8f677f9.bundle",
+              "manifest": "911_156995",
+              "bundle_size": 2168266,
+              "bundle_sha256": "7e92da351f1a202b7b1399d248cadac156c6d4014978cf0d77a4a880865a8985"
+            },
+            "payload_sha256": "948319e3254a86e523f0809c4933ea1a034ef31364a8863c1764f74f8fdbda88"
           }
         },
         {
@@ -2902,6 +2943,26 @@
               "x": 0,
               "y": 0
             }
+          },
+          "safe_area": {
+            "PaddingTop": 0.0,
+            "PaddingBottom": 0.0,
+            "DisableTopAdapt": 0,
+            "DisableBottomAdapt": 0
+          },
+          "safe_area_source": {
+            "original": "cab-4e4d07c025b4946bc015415b94d99057:1246494070386433056",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ui_pet.bundle",
+              "bundle_hash": "339f95ac96baea7cc99c173bb8f677f9",
+              "path_id": "1246494070386433056",
+              "origin": "official_cdn",
+              "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/339f95ac96baea7cc99c173bb8f677f9.bundle",
+              "manifest": "911_156995",
+              "bundle_size": 2168266,
+              "bundle_sha256": "7e92da351f1a202b7b1399d248cadac156c6d4014978cf0d77a4a880865a8985"
+            },
+            "payload_sha256": "948319e3254a86e523f0809c4933ea1a034ef31364a8863c1764f74f8fdbda88"
           }
         },
         {
@@ -4976,6 +5037,16 @@
       },
       "sha256": "f05f6f9d6856814596e572e56f5dbe56ee31ab76d6b18a6965dd68b0b0b7f1cb",
       "meta_sha256": "8aad5ead563199de195eacfec6308f5e55c9e7555472d234a6755ca44ef1e6fe"
+    },
+    "SafeArea": {
+      "path": "unity/Assets/Game/Runtime/Official/HomeScreenUI/SafeArea.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "f44357fbd59ff79b52eae87ba02038c8",
+        "type": 3
+      },
+      "sha256": "49150d82f5564bbcc6345544021cccbacf3b8f2211dbdb06d165bf48b81cb29a",
+      "meta_sha256": "0c0b73fc12e336b0a65dc0bb654617d98dbf425f8e7a006f02f25304b50703e6"
     },
     "UIMesh": {
       "path": "unity/Assets/Game/Runtime/Official/WorldUI/UIMesh.cs",

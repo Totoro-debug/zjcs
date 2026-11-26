@@ -134,7 +134,18 @@ class PetGachaControlsBinding(HomeCurrencyWindowsBinding):
             ancestor = previous_parent['fileID']
             while ancestor:
                 rect = docs[ancestor]['RectTransform']
-                parents.append(dict(name=docs[rect['m_GameObject']['fileID']]['GameObject']['m_Name'], transform=rect))
+                parent = dict(name=docs[rect['m_GameObject']['fileID']]['GameObject']['m_Name'], transform=rect)
+                safe_areas = [row for row in original['scripts'] if row['type'] == 'SafeArea'
+                              and docs[row['nativeFileID']]['MonoBehaviour']['m_GameObject'] == rect['m_GameObject']]
+                if safe_areas:
+                    safe_area, = safe_areas
+                    owner = self.original(safe_area['original'])
+                    fields = self.recovery.fields(owner)
+                    parent['safe_area'] = {key: fields[key] for key in
+                        ('PaddingTop', 'PaddingBottom', 'DisableTopAdapt', 'DisableBottomAdapt')}
+                    parent['safe_area_source'] = dict(original=safe_area['original'],
+                        source=self.recovery.apk.provenance(owner), payload_sha256=sha(owner.get_raw_data()))
+                parents.append(parent)
                 ancestor = rect['m_Father']['fileID']
 
             def check(value):
@@ -285,6 +296,7 @@ class PetGachaControlsBinding(HomeCurrencyWindowsBinding):
         for relative in ('client-source/GachaBtnContent.cs', 'client-source/PlayerOpenSkillChestBtn.cs',
                          'client-source/GachaTodayCountLimitUI.cs', 'client-source/ScoreRewardUI.cs',
                          'client-source/AdditionInfoTip.cs', 'common-source/Common/GachaType.cs',
+                         'framework-firstpass-source/SafeArea.cs',
                          'common-source/Common/GachaClassType.cs'):
             path = code / relative
             self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
@@ -292,7 +304,7 @@ class PetGachaControlsBinding(HomeCurrencyWindowsBinding):
         for path in folder.rglob('*'):
             if path.is_file() and path.suffix != '.meta' and path.read_bytes().startswith(b'%YAML'):
                 used.update(re.findall(r'm_Script: \{[^\n}]*guid: ([0-9a-f]{32})', path.read_text('utf8')))
-        scripts = {name: row for name, row in self.script_sources.items() if row['pointer']['guid'] in used}
+        scripts = {name: row for name, row in self.script_sources.items() if row['pointer']['guid'] in used or name == 'SafeArea'}
         runtime = ROOT / 'unity/Assets/Game/Runtime/Official/GachaUI'
         return folder, outputs, dict(manifest=self.recovery.apk.version, inputs=self.inputs, recovery=self.recovery.proof,
             selections=self.selections, localization=localization, resources=self.proof, roots=roots,
