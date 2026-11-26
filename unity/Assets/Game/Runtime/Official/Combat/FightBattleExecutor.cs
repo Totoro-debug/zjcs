@@ -521,6 +521,7 @@ namespace Zjcs.Combat.Official
                 lastGlobalRound = globalRoundAfter;
                 FightStageStatusRuntime.ApplyGlobalRound(checkpoint.StageStatus, statusCatalog,
                     units, globalRoundAfter, random);
+                UpdateGlobalRoundStatuses(globalRoundAfter);
             }
             CollectStatusCustomActions(statusCustomActions);
             UpdateOutcome(globalRound);

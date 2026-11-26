@@ -1,0 +1,38 @@
+{
+  "entities": [
+    25113,
+    12150,
+    12151,
+    12152,
+    24389
+  ],
+  "code": [
+    "FightStatusComponentInfo",
+    "FightStatusRoundStartComponentInfo",
+    "FightStatusTriggerSkillCfg",
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "FightStatusGlobalRoundUpdateComponentInfo",
+    "FightStatusChangeSkillCDInvokeCfg",
+    "BattleFormulaHandler"
+  ],
+  "rule_pack_fragments": [
+    "FightSkill_part756.g.bytes",
+    "FightSkill_part106.g.bytes",
+    "FightSkill_part720.g.bytes"
+  ],
+  "visibility_bundles": [
+    "12150"
+  ],
+  "scope_numeric": true,
+  "current_managed_views": true,
+  "runtime_passive_property_pack": "unity/Assets/Game/Resources/Combat/SkillRules/10604-passive.json",
+  "runtime_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10604.json"
+  ],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/quick-casting-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/quick-casting-current-status-graphs-source-manifest.json"
+  ]
+}

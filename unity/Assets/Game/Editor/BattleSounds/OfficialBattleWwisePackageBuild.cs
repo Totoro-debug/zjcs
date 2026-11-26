@@ -18,6 +18,10 @@ namespace Zjcs.Editor
         [Serializable] private sealed class Catalog { public string manifest, sdk_version; public Entry[] packages; }
         [Serializable] private sealed class Output { public string path, sha256; public long bytes; }
         [Serializable] private sealed class Receipt { public string manifest; public Output[] outputs; }
+        [Serializable] private sealed class RoutingOverride
+        { public Output previous_output, output; public string source_package; }
+        [Serializable] private sealed class RoutingReceipt
+        { public string manifest; public Output base_source; public RoutingOverride[] overrides; }
         private const string Prefix = "unity/" + OfflineBattleWwisePackages.AssetDirectory + "/";
         public int callbackOrder => 10000;
 
@@ -33,6 +37,14 @@ namespace Zjcs.Editor
         }
 
         public static void Validate() => ValidatePackages();
+
+        public static void DeliverConfiguredPlayer()
+        {
+            string executable = Environment.GetEnvironmentVariable("ZJCS_WINDOWS_RELEASE_EXE");
+            if (string.IsNullOrWhiteSpace(executable) || !File.Exists(executable))
+                throw new BuildFailedException("Configure an existing Windows player before delivering sound packages.");
+            Deliver(executable);
+        }
 
         public static void Deliver(string executable)
         {
@@ -67,12 +79,13 @@ namespace Zjcs.Editor
         private static List<Output> ValidatePackages()
         {
             string root = Path.GetFullPath(Path.Combine(Application.dataPath, "..", ".."));
-            var receipt = JsonUtility.FromJson<Receipt>(File.ReadAllText(Path.Combine(root,
-                "assets/reference/battle-animation/windows-sound-runtime-source-manifest.json")));
+            string receiptPath = Path.Combine(root,
+                "assets/reference/battle-animation/windows-sound-runtime-source-manifest.json");
+            var receipt = JsonUtility.FromJson<Receipt>(File.ReadAllText(receiptPath));
             var asset = Resources.Load<TextAsset>("Combat/Wwise/catalog");
             if (asset == null) throw new BuildFailedException("Original sound package catalog is missing.");
             var catalog = JsonUtility.FromJson<Catalog>(asset.text);
-            if (receipt.manifest != "884_156692" || receipt.outputs == null
+            if (string.IsNullOrWhiteSpace(receipt.manifest) || receipt.outputs == null
                 || catalog.manifest != receipt.manifest || catalog.sdk_version != "2022.1.18.8567"
                 || catalog.packages == null || catalog.packages.Length == 0)
                 throw new BuildFailedException("Inspect changed original sound package source/version.");
@@ -80,6 +93,7 @@ namespace Zjcs.Editor
             foreach (Output output in receipt.outputs)
                 if (output.path.StartsWith(Prefix, StringComparison.Ordinal) && output.path.EndsWith(".pck", StringComparison.Ordinal))
                     expected.Add(output.path.Substring(Prefix.Length), output);
+            ApplyRoutingOverrides(root, receiptPath, expected);
             if (expected.Count != catalog.packages.Length)
                 throw new BuildFailedException("Original sound package catalog and source receipt disagree.");
             var result = new List<Output>();
@@ -98,6 +112,35 @@ namespace Zjcs.Editor
             if (!minimum || expected.Count != 0)
                 throw new BuildFailedException("The original Minimum/Init package chain is incomplete.");
             return result;
+        }
+
+        private static void ApplyRoutingOverrides(string root, string receiptPath,
+            Dictionary<string, Output> expected)
+        {
+            string routingPath = Path.Combine(root,
+                "assets/reference/battle-animation/windows-sound-routing-source-manifest.json");
+            if (!File.Exists(routingPath)) return;
+            var routing = JsonUtility.FromJson<RoutingReceipt>(File.ReadAllText(routingPath));
+            if (routing == null || string.IsNullOrWhiteSpace(routing.manifest)
+                || routing.base_source == null || routing.overrides == null
+                || routing.base_source.path != "assets/reference/battle-animation/windows-sound-runtime-source-manifest.json")
+                throw new BuildFailedException("Current sound routing source is incomplete.");
+            Verify(receiptPath, routing.base_source);
+            var replaced = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (RoutingOverride replacement in routing.overrides)
+            {
+                Output output = replacement?.output, previous = replacement?.previous_output;
+                if (output == null || previous == null || output.path != previous.path
+                    || string.IsNullOrWhiteSpace(replacement.source_package)
+                    || !output.path.StartsWith(Prefix, StringComparison.Ordinal))
+                    throw new BuildFailedException("Current sound routing package is unbound.");
+                string name = output.path.Substring(Prefix.Length);
+                if (!replaced.Add(name) || !expected.TryGetValue(name, out Output original)
+                    || original.path != previous.path || original.bytes != previous.bytes
+                    || original.sha256 != previous.sha256)
+                    throw new BuildFailedException("Current sound routing does not match its original package.");
+                expected[name] = output;
+            }
         }
 
         private static void Verify(string file, Output expected)

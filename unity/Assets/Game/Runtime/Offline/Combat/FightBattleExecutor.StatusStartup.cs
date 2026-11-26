@@ -198,6 +198,7 @@ namespace Zjcs.Combat.Official
             StartMoveScope(owner, status);
             StartHpStatus(owner, status);
             StartRoundStatus(owner, status);
+            StartGlobalRoundStatus(owner, status);
             OnStatusStackChanged(status);
             if (!status.HasMoveNear || !status.MoveNearTryAtStart || !status.MoveNearRulesSupported
                 || owner.Hp <= 0 && !IsGridSkillSource(owner) || !owner.Statuses.Contains(status)) return;

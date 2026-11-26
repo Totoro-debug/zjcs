@@ -12,6 +12,22 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -eq 10604) {
+        foreach ($file in @('companion-cultivated-save.json','companion-quick-casting-checkpoint.json','companion-quick-casting-receipt.json',
+            'acquired-active-ui-passive-battle.png')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Missing cultivated quick casting battle evidence.' }
+        }
+        if (-not (Select-String -LiteralPath $runtimeLog -SimpleMatch '[Acquired passive combat] 10604 opening cooldown, timing and restore passed.')) {
+            throw 'Cultivated quick casting did not reach the actual opening battle.'
+        }
+        $receipt = Get-Content (Join-Path $Run 'companion-quick-casting-receipt.json') -Raw | ConvertFrom-Json
+        if ($receipt.openers -ne 1 -or $receipt.cooldownActions -ne [int]($receipt.eligibleSlots -gt 0) -or
+            ($receipt.active -eq 10093 -and $receipt.eligibleSlots -lt 1) -or
+            ($receipt.cooldownActions -gt 0 -and [Math]::Abs($receipt.delay - 0.35) -gt 0.0001)) {
+            throw 'Quick casting did not exercise its actual eligible cooldown and authored timing.'
+        }
+        return
+    }
     if ($PassiveId -eq 10525) {
         foreach ($file in @('companion-cultivated-save.json','companion-affinity-checkpoint.json','acquired-active-ui-battle.png')) {
             if (-not (Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Missing cultivated affinity battle evidence.' }
@@ -239,7 +255,7 @@ if ($SkillSkinId -gt 0 -and ((($SkillId -ne 10082 -or $SkillSkinId -ne 39521) -a
 if ($PassiveSave) {
     $PassiveSave = (Get-Item -LiteralPath $PassiveSave).FullName
     if (-not $PassiveSave.StartsWith($workspacePath + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
-        $SkillId -notin @(10017,10028,10032,10035,10047,10068,10084,10088,10089,10091,10093,10095,10096) -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated passive cultivation save with its corresponding active skill.' }
+        $SkillId -notin @(10017,10028,10032,10035,10047,10068,10084,10088,10089,10091,10093,10095,10096,10098) -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated passive cultivation save with its corresponding active skill.' }
     $passiveResult = Get-Content -LiteralPath (Join-Path (Split-Path -Parent $PassiveSave) 'result.json') -Raw | ConvertFrom-Json
     if (-not $passiveResult.passed) { throw 'The original passive cultivation flow has not passed.' }
     $passiveProfile = Get-Content -LiteralPath $PassiveSave -Raw | ConvertFrom-Json

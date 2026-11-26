@@ -135,6 +135,14 @@
     {
       "path": "assets/reference/battle-animation/warlock-explosion-current-skill-graphs-source-manifest.json",
       "sha256": "8e74c1238a5f483bc1a7471e9cedd2f728daad7e0ee068bfc09fb33ed636f62a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/quick-casting-current-skill-graphs.json",
+      "sha256": "2d962223a1d657b790a0599cd8ab769c65eef162c3962718855b5f54db727a59"
+    },
+    {
+      "path": "assets/reference/battle-animation/quick-casting-current-skill-graphs-source-manifest.json",
+      "sha256": "810bf0cc8554ef1c19ac6d9d1165bdc8266c97446573ef7bac79f84353e2b460"
     }
   ],
   "outputs": [
@@ -275,8 +283,16 @@
       "sha256": "4d52f52395f5e4bf1ecd680dfeb012da3f674c3fd50a0a48370c7b36def6fb48"
     },
     {
+      "path": "unity/Assets/Game/Resources/Combat/quick-casting-current-skill-graphs-source-manifest.json",
+      "sha256": "c3502c4fd6dba744bcb88384ab498e51c349d250325b474c811fe7fdfdbfca8d"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/quick-casting-current-skill-graphs-source-manifest.json.meta",
+      "sha256": "6fa64f4a653d11fce61f93edb56b91919affb41809658dc49ed2b6cee1807b91"
+    },
+    {
       "path": "unity/Assets/Game/Resources/Combat/skill-native-graph-sources.json",
-      "sha256": "ce81e6ef4d5140a249f13c02ae3064c925cfed664d1f46a6f18af84a761e10c1"
+      "sha256": "dfc8b7f13f73398fa6f12da9c9d21c2d2f9d47afcafd0a86e67ca1846527db2e"
     },
     {
       "path": "unity/Assets/Game/Resources/Combat/skill-native-graph-sources.json.meta",
@@ -285,7 +301,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_native_graph_sources.py",
-    "sha256": "37b1b062d0b038a37d2b9b94eaf9e12d99ee2ec7088222768f6fd74870edf7ea"
+    "sha256": "e2e412ca08ac3e9f75a52827930d647c06fc5ddef041a1e877e92d463e1eb467"
   },
   "runtime": [
     {

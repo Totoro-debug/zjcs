@@ -215,7 +215,7 @@ namespace Zjcs.Presentation.Combat
                 "Combat/sage-summon-resonance-current-status-graphs",
                 "Combat/sage-summon-restoration-current-status-graphs",
                 "Combat/sage-voodoo-doll-current-status-graphs", "Combat/stone-skin-current-graphs",
-                "Combat/passive-revival-current-status-graphs");
+                "Combat/passive-revival-current-status-graphs", "Combat/quick-casting-current-status-graphs");
             statusViews.Restore();
         }
 

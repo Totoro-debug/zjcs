@@ -367,6 +367,7 @@ namespace Zjcs.Combat.Official
         public FightBattleStatusStackChangeComponentState StackChange;
         public FightBattleStatusHitSummonComponentState HitSummon;
         public FightBattleStatusRoundBeforeEndComponentState RoundBeforeEnd;
+        public FightBattleStatusGlobalRoundUpdateState GlobalRoundUpdate;
 
         public FightBattleStatusComponentState Copy()
         {
@@ -397,7 +398,8 @@ namespace Zjcs.Combat.Official
                 Start = Start?.Copy(),
                 StackChange = StackChange?.Copy(),
                 HitSummon = HitSummon?.Copy(),
-                RoundBeforeEnd = RoundBeforeEnd?.Copy()
+                RoundBeforeEnd = RoundBeforeEnd?.Copy(),
+                GlobalRoundUpdate = GlobalRoundUpdate?.Copy()
             };
         }
     }

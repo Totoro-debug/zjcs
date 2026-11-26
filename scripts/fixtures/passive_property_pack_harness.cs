@@ -39,10 +39,11 @@ public static class PassivePropertyPackHarness
         Check(rejected, "an invalid source binding was accepted");
     }
 
-    public static string Run(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
+    public static string Run(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items, FightDamageFormula formula,
         string json, string sha256, string manifest)
     {
         var item = items.Required(10604);
+        Check(formula.PropertyId("ElementMaster") == 350, "the passive property is not original elemental mastery");
         Check(item.EntityId == 25113 && item.PassiveStatusIds.SequenceEqual(new[] { 25113 }),
             "quick casting graph binding differs");
         string originalStatus = Status(catalog);
@@ -85,10 +86,32 @@ public static class PassivePropertyPackHarness
                 ranks[r], levels[l], subRanks[s], 10604);
             long expected = (long)((long)(levelValues[s, l] * .75) * (rankFactors[r] / 10000.0));
             Check(props.Count == 1 && props[350] == expected,
-                "current critical-hit cultivation differs: " + ranks[r] + "/" + levels[l] + "/" + subRanks[s]);
+                "current elemental mastery cultivation differs: " + ranks[r] + "/" + levels[l] + "/" + subRanks[s]);
+            CheckMasteryDamage(formula, props[350]);
             cases++;
         }
         Reject(catalog, items, json, manifest, pack => { });
         return "Passive property sources passed: " + cases + " graph-backed cultivation cases; graph, shared-source and invalid binding checks.";
+    }
+
+    static void CheckMasteryDamage(FightDamageFormula formula, long mastery)
+    {
+        var source = new Dictionary<int, long> { { formula.PropertyId("Attack"), 1000 },
+            { formula.PropertyId("ElementMaster"), mastery }, { 200, 10000 } };
+        var target = new Dictionary<int, long> { { formula.PropertyId("Defence"), 10 } };
+        foreach (string name in new[] { "BaseElementMaster", "BaseElementResistance", "BaseElementAdd", "BaseElementReduce",
+            "BaseKongFuMaster", "BaseKongFuResistance", "BaseCritRatePercentValue", "BaseCritAvoidPercentValue",
+            "BaseBlockPercentValue", "BaseBlockAvoidPercentValue" })
+        { source[formula.PropertyId(name)] = 10000; target[formula.PropertyId(name)] = 10000; }
+        foreach (int element in new[] { 0, 101, 102, 103, 104, 105 })
+        {
+            var request = new FightDamageFormulaRequest { SourceProps = source, TargetProps = target,
+                SkillDamageBasicPropType = 1, SkillDamagePropType = 200, SkillDamageFixedPropType = 190,
+                SourceType = 1, TargetType = 1, SourceLevel = 70, TargetLevel = 70,
+                SourceSubRank = 8, TargetSubRank = 8, SourceElementType = element };
+            long damage = formula.Calculate(request, new FightDamageTypeData()).Damage;
+            long expected = -(long)(1000m * 1000m / 1010m * (element == 0 ? 1m : 1m + mastery / 10000m));
+            Check(damage == expected, "elemental mastery damage or physical isolation differs: " + element);
+        }
     }
 }

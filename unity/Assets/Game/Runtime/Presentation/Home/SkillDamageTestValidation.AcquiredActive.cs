@@ -916,6 +916,11 @@ namespace Zjcs.Presentation.Home
                     yield return CaptureAcquiredActive(output, "passive-battle");
                     capturedPassive = true;
                 }
+                if (passiveCompanion == 10604 && !capturedPassive && IsNativeSkillParticleVisible("playable12150"))
+                {
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    capturedPassive = true;
+                }
                 if (acquiredGuardian != null && !capturedPassive && acquiredGuardian.Ready(battle.Controller))
                 {
                     yield return CaptureAcquiredActive(output, "passive-battle");
@@ -1125,6 +1130,9 @@ namespace Zjcs.Presentation.Home
                 "The original vortex surge never exercised its inward knockback in the rendered battle.");
             Require(passiveCompanion != 10525 || File.Exists(Path.Combine(output, "companion-affinity-checkpoint.json")),
                 "The cultivated light affinity never affected the rendered battle.");
+            Require(passiveCompanion != 10604 || capturedPassive
+                && File.Exists(Path.Combine(output, "companion-quick-casting-checkpoint.json")),
+                "The cultivated quick casting never reduced cooldowns and rendered its original opener.");
             Require(passiveCompanion != 10606 && passiveCompanion != 10607 || coldHits > 0,
                 "The cultivated passive never applied cold in the rendered battle.");
             Require(passiveCompanion != 10608 || standfastTurns > 0 && capturedPassive,

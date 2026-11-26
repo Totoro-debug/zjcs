@@ -12,6 +12,7 @@ $catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
     [IO.File]::ReadAllText((Join-Path $inputs 'battle-rules.json')), $bp.output_sha256, $bp.manifest)
 $rules = [IO.File]::ReadAllText((Join-Path $inputs 'rules.json'))
 $items = [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load($rules, $rp.output_sha256, $rp.manifest)
+$formula = $catalog.CreateDamageFormula($rules, $rp.output_sha256, $rp.manifest)
 $pack = Join-Path $root 'unity/Assets/Game/Resources/Combat/SkillRules/10604-passive.json'
 $source = Get-Content ($pack -replace '\.json$', '-source-manifest.json') -Raw | ConvertFrom-Json
-[PassivePropertyPackHarness]::Run($catalog, $items, [IO.File]::ReadAllText($pack), $source.output_sha256, $source.manifest)
+[PassivePropertyPackHarness]::Run($catalog, $items, $formula, [IO.File]::ReadAllText($pack), $source.output_sha256, $source.manifest)
