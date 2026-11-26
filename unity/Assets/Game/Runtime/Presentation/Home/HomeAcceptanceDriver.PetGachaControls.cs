@@ -239,7 +239,8 @@ namespace Zjcs.Presentation.Home
                 });
                 var scoreUI = scoreRoot.GetComponent<ScoreRewardUI>();
                 var key = new ScoreRewardKey(runtime.PetGacha.Catalog.Gacha.ScoreAchievementType, 16);
-                var rule = new GachaTextKeyArgWrap("pet_gacha_score_rule", runtime.PetGacha.Catalog.Chest.Rewards[0].Count);
+                var rule = new GachaTextKeyArgWrap(runtime.PetGacha.Catalog.Gacha.ScoreRuleText,
+                    runtime.PetGacha.Catalog.Chest.Rewards[0].Count);
                 scoreUI.Init(key, rule);
                 int blackboardNotifications = 0;
                 var recordedIndices = new List<int>();
@@ -327,6 +328,7 @@ namespace Zjcs.Presentation.Home
                         && runtime.PetGacha.State.AchievementClaims.Count == claimsBefore && expected.All(row => runtime.Profile.InventoryCount(row.Key) == row.Value),
                         "unready click cannot grant twice and reload preserves actual reward records and inventory");
                     Assert(scorePresentation.DetailKey.GroupId == key.GroupId && scorePresentation.DetailRule.Key == rule.Key
+                        && scorePresentation.DetailRule.Args.SequenceEqual(rule.Args)
                         && scoreUI.RewardSlot.GetComponentsInChildren<Zjcs.Official.ProfessionUI.ItemIcon>(true).All(icon => !icon.gameObject.activeSelf),
                         "detail request carries original key/rule and disable recycles native reward icons");
                     return "claim guard, additional tip, detail request, native icon release and profile restore verified; full detail modal remains pending";
