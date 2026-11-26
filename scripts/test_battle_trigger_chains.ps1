@@ -47,6 +47,11 @@ $skillRules.entities['9900800'].FightSkillComponent.TargetType = 0
 $battleRules.entities['9900302'].FightDamageComponent.StatusList = @(@{
     StatusId = 26004; TargetType = 2; BasePercent = 1; AffectedByProp = $false; LessThanHpPer = -1
 })
+# Synthetic listener instances also need catalog entries: the common skill-start
+# dispatcher inspects every live status, including listeners without that hook.
+foreach ($fixtureId in [regex]::Matches([IO.File]::ReadAllText($PSCommandPath), '\b991\d{4}\b').Value | Sort-Object -Unique) {
+    $battleRules.entities[$fixtureId] = @{ FightStatusComponent = $battleRules.entities['26004'].FightStatusComponent }
+}
 $skillJson = $skillRules | ConvertTo-Json -Depth 100 -Compress
 $battleJson = $battleRules | ConvertTo-Json -Depth 100 -Compress
 $sourceVersion = (Read-Rule 'skill-rules-source-manifest' | ConvertFrom-Json).manifest
@@ -103,7 +108,10 @@ function Run-Battle($cp, $restore = $false) {
 
 $chain = Run-Battle (New-Battle (Skill 9900100))
 Assert-Chain (($chain.Event.SkillCasts.SkillEntityId -join ',') -eq '9900200,9900300,9900400,9900500,9900100') "Direct child/extra chain was truncated or reordered: $($chain.Event.SkillCasts.SkillEntityId -join ','); HP $($chain.Checkpoint.Units[1].Hp)"
-Assert-Chain ($chain.Event.DamageEvents.Count -eq 5 -and $chain.Checkpoint.Units[1].Hp -eq 969) 'Multi-level chain did not settle every direct hit'
+# This fixture supplies no reduction properties for 26004; an absent numeric
+# override must not resurrect the old implicit percentage reduction.
+Assert-Chain ($chain.Event.DamageEvents.Count -eq 5 -and $chain.Checkpoint.Units[1].Hp -eq 965 -and
+    @($chain.Event.DamageEvents | Where-Object Damage -ne -7).Count -eq 0) 'Multi-level chain did not settle every direct hit'
 Assert-Chain (@($chain.Event.DamageEvents | Where-Object { $_.SourceId -ne 1 -or $_.TargetId -ne 2 }).Count -eq 0) 'Deep children lost caster or original hit target'
 $buff = $chain.Checkpoint.Units[1].Statuses | Where-Object ClassId -eq 26004 | Select-Object -First 1
 Assert-Chain ($null -ne $buff -and $buff.SourceSkillRank -eq 6 -and $buff.SourceSkillLevel -eq 17 -and $buff.SourceSubRank -eq 10) 'Closed trigger flag suppressed a direct status or lost inherited cultivation'
@@ -187,19 +195,25 @@ $shieldAllowed = Run-Battle (New-Battle $shieldClosed @() @((Shield)))
 $shieldBuff = $shieldAllowed.Checkpoint.Units[1].Statuses | Where-Object ClassId -eq 24658 | Select-Object -First 1
 Assert-Chain ($shieldAllowed.Event.SkillCasts.Count -eq 2 -and $null -ne $shieldBuff -and $shieldBuff.SourceSkillRank -eq 6 -and $shieldBuff.SourceSkillLevel -eq 17 -and $shieldBuff.SourceSubRank -eq 10) 'Whitelisted shield break lost its status cultivation'
 
+$officialRules = Read-Rule 'rules'
+$officialFormula = $catalog.CreateDamageFormula($officialRules, (Hash-Text $officialRules), $sourceVersion)
 # Reactive reduction/falloff gates run before their own chance and progress counters.
 $defender = Unit 2 2 1 1; $attacker = Unit 1 1 0 100
 $reduction = Status 9910050 2
 $reduction.DamageReducePer = [Zjcs.Combat.Official.FightBattleStatusDamageReducePerInfo]::new()
 $reduction.DamageReducePer.Rate = 0.5
+$reduction.DamageReducePer.Supported = $true
+$reduction.DamageReducePer.SkillTargetType = 4
+$reduction.StatusProperties = [Collections.Generic.List[Zjcs.Combat.Official.FightPropertyValue]]::new()
+$reduction.StatusProperties.Add([Zjcs.Combat.Official.FightPropertyValue]@{Id=$officialFormula.PropertyId("StatusDmgReducePer");Value=3000})
 $defender.Statuses.Add($reduction)
 $rng = [Zjcs.Combat.Official.FightRandomStream]::new(12345)
 $dtype = [Zjcs.Combat.Official.FightDamageTypeData]::new()
-$reduced = [Zjcs.Combat.Official.FightBattleStatusDamageReducePerRuntime]::Resolve($attacker, $defender, $closed, $dtype, $false, $rng)
-Assert-Chain ($reduced -eq 0 -and $rng.Seed -eq 12345 -and $reduction.DamageReducePer.ConditionProgress -eq 0 -and $reduction.DamageReducePer.TriggeredCount -eq 0) 'Blocked reduction consumed RNG or condition counts'
+$reduced = [Zjcs.Combat.Official.FightBattleStatusDamageReducePerRuntime]::Resolve($attacker, $defender, $closed, $dtype, $false, $rng, $officialFormula)
+Assert-Chain ($reduced.Apply(-100) -eq -100 -and $rng.Seed -eq 12345 -and $reduction.DamageReducePer.ConditionProgress -eq 0 -and $reduction.DamageReducePer.TriggeredCount -eq 0) 'Blocked reduction consumed RNG or condition counts'
 $closed.CanTriggerStatusEntityIds.Add(9910050); $reduction.DamageReducePer.Rate = 1
-$reduced = [Zjcs.Combat.Official.FightBattleStatusDamageReducePerRuntime]::Resolve($attacker, $defender, $closed, $dtype, $false, $rng)
-Assert-Chain ($reduced -gt 0 -and $reduction.DamageReducePer.TriggeredCount -eq 1) 'Whitelisted reduction did not respond'
+$reduced = [Zjcs.Combat.Official.FightBattleStatusDamageReducePerRuntime]::Resolve($attacker, $defender, $closed, $dtype, $false, $rng, $officialFormula)
+Assert-Chain ($reduced.Apply(-100) -gt -100 -and $reduction.DamageReducePer.TriggeredCount -eq 1) 'Whitelisted reduction did not respond'
 $falloff = Status 9910051 2
 $falloff.CreatorId = 1; $falloff.FalloffTarget = 4; $falloff.IsCheckSkillTrigger = $true
 $falloff.Rate = 0.5; $falloff.FalloffPercent = 5000; $falloff.NumOfStart = 0
@@ -214,8 +228,7 @@ Assert-Chain ($amount -eq -50 -and $falloff.Counts.Count -eq 1) 'Whitelisted fal
 
 # CanTriggerChild=true also enables a status whose component requests the skill trigger check;
 # an empty whitelist must not block all such statuses as the previous implementation did.
-$officialRules = Read-Rule 'rules'
-$officialFormula = $catalog.CreateDamageFormula($officialRules, (Hash-Text $officialRules), $sourceVersion)
+
 $customExecutor = [Zjcs.Combat.Official.FightBattleHitExecutor]::new($officialFormula,
     [Zjcs.Combat.Official.FightDamageSettlement]::new())
 $customHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()

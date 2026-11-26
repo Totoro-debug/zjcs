@@ -36,6 +36,7 @@ def main():
         'sage-voodoo-doll-current-skill-graphs',
         'warlock-explosion-current-skill-graphs',
         'quick-casting-current-skill-graphs',
+        'light-scorch-current-skill-graphs',
     )
     receipts = {
         'skill-native-graphs': 'skill-native-graph-assets-source-manifest',

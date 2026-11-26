@@ -6,12 +6,26 @@ param(
     [Parameter(ParameterSetName='Player')]
     [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
     [string]$PassiveSave,
-    [ValidateSet(0,39521,39523)][int]$SkillSkinId = 0
+    [ValidateSet(0,39521,39523)][int]$SkillSkinId = 0,
+    [ValidateRange(0,2147483646)][int]$BattleSeed = 0
 )
 function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -eq 10577) {
+        foreach ($file in @('companion-cultivated-save.json','companion-light-scorch-checkpoint.json',
+            'companion-light-scorch-receipt.json','acquired-active-ui-passive-battle.png','acquired-active-ui-passive-status.png')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Missing cultivated light scorch battle evidence.' }
+        }
+        $receipt = Get-Content (Join-Path $Run 'companion-light-scorch-receipt.json') -Raw | ConvertFrom-Json
+        if ($receipt.parentHits -lt $receipt.procs -or $receipt.procs -lt 1 -or $receipt.lightDamage -lt 1 -or
+            $receipt.starts -lt 1 -or $receipt.ends -lt 1 -or
+            -not (Select-String -LiteralPath $runtimeLog -SimpleMatch '[Acquired passive combat] 10577 light damage, blinding consumption, hit timing and restore passed.')) {
+            throw 'Light scorch did not exercise its actual light damage, timing, blinding and restoration.'
+        }
+        return
+    }
     if ($PassiveId -eq 10604) {
         foreach ($file in @('companion-cultivated-save.json','companion-quick-casting-checkpoint.json','companion-quick-casting-receipt.json',
             'acquired-active-ui-passive-battle.png')) {
@@ -275,6 +289,7 @@ try {
     Get-ChildItem Env:ZJCS_* | ForEach-Object { Remove-Item ('Env:' + $_.Name) }
     $env:ZJCS_REPOSITORY_ROOT = $repository
     $env:ZJCS_VALIDATION_DIR = $run
+    if ($BattleSeed -gt 0) { $env:ZJCS_SKILLS_BATTLE_SEED = [string]$BattleSeed }
     $env:ZJCS_SKILLS_ACQUIRED_ACTIVE = [string]$SkillId
     if ($SkillSkinId -gt 0) { $env:ZJCS_SKILLS_ACQUIRED_SKIN = [string]$SkillSkinId }
     if ($PassiveSave) { $env:ZJCS_SKILLS_ACQUIRED_PASSIVE_SAVE = $PassiveSave }
@@ -295,12 +310,14 @@ try {
     Write-Output "Acquired active skill-page flow PID=$($process.Id): $run"
     $timer = [Diagnostics.Stopwatch]::StartNew()
     $resultSeenAt = $null
+    # Editor success is followed by native asset unloading and database refresh.
+    $exitGraceSeconds = if ($PSCmdlet.ParameterSetName -eq 'Play') { 600 } else { 120 }
     while (-not $process.WaitForExit(5000)) {
         if ($null -eq $resultSeenAt -and (Test-Path -LiteralPath (Join-Path $run 'result.json'))) {
             $resultSeenAt = $timer.Elapsed.TotalSeconds
         }
         if ($timer.Elapsed.TotalMinutes -gt 25 * $requestedSkills.Count -or ($null -ne $resultSeenAt -and
-            $timer.Elapsed.TotalSeconds - $resultSeenAt -gt 120) -or ((Test-Path -LiteralPath $log) -and
+            $timer.Elapsed.TotalSeconds - $resultSeenAt -gt $exitGraceSeconds) -or ((Test-Path -LiteralPath $log) -and
             (Select-String -LiteralPath $log -Pattern 'error CS\d+'))) {
             Stop-Process -Id $process.Id
             throw "Skill-page flow stopped after timeout or compile failure: $run"

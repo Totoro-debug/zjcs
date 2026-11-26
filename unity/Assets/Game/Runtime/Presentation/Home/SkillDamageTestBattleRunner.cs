@@ -85,6 +85,7 @@ namespace Zjcs.Presentation.Home
                 InitialStepDelay = 0f
             };
             SkillDamageTestValidation.ConfigureGuardianBattleRequest(battleRequest);
+            SkillDamageTestValidation.ConfigureAcquiredBattleRandomInput(checkpoint);
             controller.Begin(battleRequest);
         }
 

@@ -200,7 +200,9 @@ namespace Zjcs.Presentation.Combat
             }
             statusViews = new OfficialBattleStatusPlayback(executor, root, scope, StatusBody, hasStatusIcon,
                 new[] { new OfficialBattleStatusPlayback.CatalogReplacement("Combat/first-promotion-statuses",
-                    "Combat/sage-rock-summon-current-status-graphs", 24216) },
+                    "Combat/sage-rock-summon-current-status-graphs", 24216),
+                    new OfficialBattleStatusPlayback.CatalogReplacement("Combat/star-burst-current-graphs",
+                        "Combat/light-scorch-current-status-graphs", 24234) },
                 "Combat/first-promotion-statuses", "Combat/additional-statuses", "Combat/profession-statuses",
                 "Combat/profession-current-graphs", "Combat/conqueror-current-graphs", "Combat/fear-current-graphs",
                 "Combat/standfast-soul-current-graphs", "Combat/tactical-adaptation-current-graphs",
@@ -215,7 +217,8 @@ namespace Zjcs.Presentation.Combat
                 "Combat/sage-summon-resonance-current-status-graphs",
                 "Combat/sage-summon-restoration-current-status-graphs",
                 "Combat/sage-voodoo-doll-current-status-graphs", "Combat/stone-skin-current-graphs",
-                "Combat/passive-revival-current-status-graphs", "Combat/quick-casting-current-status-graphs");
+                "Combat/passive-revival-current-status-graphs", "Combat/quick-casting-current-status-graphs",
+                "Combat/light-scorch-current-status-graphs");
             statusViews.Restore();
         }
 

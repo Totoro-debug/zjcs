@@ -240,6 +240,7 @@ namespace Zjcs.Combat.Official
                 TargetUnitId = targetId,
                 TargetPositionUnitId = trigger.TargetPos == 1
                     ? targetPositionIsHitTarget ? target.Id : targetId : actor.Id,
+                Delay = movementStartContext?.StatusStartTime ?? 0f,
                 DamageFactor = trigger.StackedCountToDamageFactor ? Math.Max(0, status.StackCount) : 1.0
             });
         }

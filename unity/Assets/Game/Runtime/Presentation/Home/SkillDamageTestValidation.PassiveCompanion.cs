@@ -36,6 +36,7 @@ namespace Zjcs.Presentation.Home
             supported |= active == 10091 && player.Wardrobe.Profession == 13 && itemId == 10597;
             supported |= active == 10093 && player.Wardrobe.Profession == 13 && itemId == 10525;
             supported |= active == 10098 && player.Wardrobe.Profession == 12 && itemId == 10604;
+            supported |= active == 10098 && player.Wardrobe.Profession == 12 && itemId == 10577;
             supported |= active == 10093 && player.Wardrobe.Profession == 13 && itemId == 10604;
             Require(supported && source.Player.Wardrobe.Profession == player.Wardrobe.Profession
                 && source.Player.Level == player.Level && source.Player.SubRank == player.SubRank
@@ -67,6 +68,7 @@ namespace Zjcs.Presentation.Home
                     == (baseline.TryGetValue(pair.Key, out long value) ? value : 0) + pair.Value,
                     "The real battle omitted or duplicated the cultivated passive properties.");
             if (itemId == 10604) PrepareAcquiredQuickCasting(actor);
+            if (itemId == 10577) PrepareAcquiredLightScorch();
         }
 
         private static void VerifyAcquiredPassiveStep(FightBattleStepEvent step, FightBattleCheckpoint checkpoint,
@@ -74,6 +76,11 @@ namespace Zjcs.Presentation.Home
             ref int assaultHits, ref int soulBreakHits, ref int windHits, ref int flameHits,
             ref int fireLifeCures)
         {
+            if (itemId == 10577)
+            {
+                VerifyAcquiredLightScorchStep(step, checkpoint, output);
+                return;
+            }
             if (itemId == 10604)
             {
                 VerifyAcquiredQuickCastingStep(step, checkpoint, output);
