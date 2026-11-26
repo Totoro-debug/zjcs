@@ -2,6 +2,8 @@
 import json
 from pathlib import Path
 import unittest
+import wave
+import yaml
 
 from prepare_current_fruit_tree_stories import ROOT, OUTPUT, RECEIPT, sha
 
@@ -61,6 +63,33 @@ class FruitTreeStorySourceTests(unittest.TestCase):
                     self.assertTrue(text and '\ufffd' not in text)
                     if row['DialogType'] == 1:
                         self.assertTrue(row['VoiceEventKey'])
+
+    def test_native_dialogue_voice_bindings_and_pcm(self):
+        from prepare_fruit_tree_story_audio import RECEIPT as audio_receipt, ASSET, BASE_ASSET
+        proof = json.loads(audio_receipt.read_bytes())
+        for section in ('inputs', 'outputs'):
+            for name, digest in proof[section].items():
+                self.assertEqual(sha((ROOT / name).read_bytes()), digest, name)
+        def asset(path):
+            return yaml.safe_load(path.read_text('utf8').split('--- !u!114 &11400000\n', 1)[1])['MonoBehaviour']
+        native, base = asset(ASSET), asset(BASE_ASSET)
+        self.assertEqual(native['OptionTalkDialog'], base['OptionTalkDialog'])
+        self.assertEqual(native['InvisibleMask'], base['InvisibleMask'])
+        self.assertEqual(native['StorySource']['guid'], yaml.safe_load(Path(str(OUTPUT) + '.meta').read_bytes())['guid'])
+        self.assertIn('NativeFormatImporter', yaml.safe_load(Path(str(ASSET) + '.meta').read_bytes()))
+        keys = {row['VoiceEventKey'] for groups in self.story['dialogues'].values()
+                for rows in groups.values() for row in rows if row['DialogType'] == 1}
+        self.assertEqual(keys, {row['EventKey'] for row in native['Voices']})
+        self.assertEqual(keys, {row['eventKey'] for row in proof['entries']})
+        for row in proof['entries']:
+            matches = [name for name in proof['outputs'] if name.endswith('/' + str(row['media_id']) + '.wav')]
+            self.assertEqual(len(matches), 1)
+            path = ROOT / matches[0]
+            with wave.open(str(path), 'rb') as audio:
+                self.assertEqual(audio.getnframes(), row['format']['frames'])
+                self.assertGreater(audio.getnframes(), 0)
+            binding = next(value for value in native['Voices'] if value['EventKey'] == row['eventKey'])
+            self.assertEqual(binding['Clip']['guid'], yaml.safe_load(Path(str(path) + '.meta').read_bytes())['guid'])
 
 
 if __name__ == '__main__':
