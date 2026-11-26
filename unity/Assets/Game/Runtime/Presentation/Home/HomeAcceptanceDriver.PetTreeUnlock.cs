@@ -56,7 +56,10 @@ namespace Zjcs.Presentation.Home
             });
             if (!passed) { completed(false); yield break; }
             yield return Capture("pet-unlock-repair-window.png");
-            ClickPartnerUi(repair.RepairBtn);
+            bool repairTimeline = false;
+            yield return VerifyUnlockRepairTimeline(runtime, repair, pet, "pet-unlock", value => repairTimeline = value);
+            passed &= repairTimeline;
+            if (!passed) { completed(false); yield break; }
             deadline = Time.realtimeSinceStartup + 15;
             while (!runtime.Profile.Save.Player.FruitTree.PetFacilityRepaired && Time.realtimeSinceStartup < deadline) yield return null;
             passed &= Check("pet-unlock-independent-repair", () =>

@@ -196,6 +196,10 @@ namespace Zjcs.Presentation.Home
             private OfflineHomePetTreeTips petTreeTips;
             private readonly StoryNodeRegisterMgr storyNodes = new StoryNodeRegisterMgr();
             private readonly GAction changed = new GAction();
+            // HomeData.OnPostHomeChange belongs to switching the viewed home.
+            // This owner lives for one local home; inventory/profile refreshes
+            // must not restart native furniture states or their repair effects.
+            private readonly GAction postHomeChanged = new GAction();
             private readonly GAction<HomeViewMode> viewModes = new GAction<HomeViewMode>();
             private readonly GAction<ActionEventData> actions = new GAction<ActionEventData>();
             private readonly GAction bubbleDialogueChanged = new GAction();
@@ -796,7 +800,7 @@ namespace Zjcs.Presentation.Home
             public void PopupRepair(EFurniture furniture, bool isBuild) => home.hud.ShowRepair((int)furniture, isBuild);
             public void RegisterAwardHandler(Func<HomeFurnitureAward, bool> handler) => awardHandlers.Add(handler);
             public void RemoveAwardHandler(Func<HomeFurnitureAward, bool> handler) => awardHandlers.Remove(handler);
-            public IDisposable SubscribePostHomeChange(Action action) => changed.Subscribe(action);
+            public IDisposable SubscribePostHomeChange(Action action) => postHomeChanged.Subscribe(action);
             public void ShowError(int textId) => home.hud.ShowNotice(home.catalog.LocalizedText("TextError." + textId, textId.ToString()));
             public void SystemMessage(string message) => home.hud.ShowNotice(message);
             public bool IsFunctionLimit(int functionType) => home.rules.IsFunctionLimited(functionType);
@@ -941,7 +945,7 @@ namespace Zjcs.Presentation.Home
             public void UpdateAnimation(SkeletonGraphic graphic) { graphic.ApplyAnimation(); graphic.UpdateMesh(); }
 
             IDisposable IHomeNpcBubbleTipServices.SubscribeDialogueChanged(Action action) => bubbleDialogueChanged.Subscribe(action);
-            IDisposable IHomeNpcBubbleTipServices.SubscribePostHomeChange(Action action) => changed.Subscribe(action);
+            IDisposable IHomeNpcBubbleTipServices.SubscribePostHomeChange(Action action) => postHomeChanged.Subscribe(action);
 
             bool IHomeNpcBubbleTipServices.TryFindActiveDialogueNpcClassId(out int npcClassId)
             {

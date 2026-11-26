@@ -22,13 +22,14 @@
     ".tools/source-packages/current/911_156995/official-code/client-source/WaitTabItemStateNode.cs": "42aee357cba1d335f67516df5a090dcc57616469606d51e6b85a496a32bed68a",
     ".tools/source-packages/current/911_156995/official-code/client-source/ClientRunNode.cs": "49b715f4d8ab78f7c43a7ecde0506966401f18d2f98149dd312bd3dcf211be35",
     ".tools/source-packages/current/911_156995/official-code/client-source/StoryUtils.cs": "5e1c8678cb3b6cc4103dd0809e66e66a5c489e1e5e8903f2e14d3300a7ea62eb",
-    ".tools/source-packages/current/911_156995/official-code/common-source/PlayerServiceProxyImpl.cs": "b3c7e39e7f8234d37c9d4d65963bd606191d55cdd43667484d80e0996d78ceec"
+    ".tools/source-packages/current/911_156995/official-code/common-source/PlayerServiceProxyImpl.cs": "b3c7e39e7f8234d37c9d4d65963bd606191d55cdd43667484d80e0996d78ceec",
+    ".tools/source-packages/current/911_156995/official-code/client-source/HomeData.cs": "8b1227c3691996517e7d358b44b5c7e785beca37daf547e0377aee175cd79d71"
   },
   "inputs": {
     "assets/reference/home-fruit-tree-unlock-story-source-manifest.json": "58af6716a1171db1dadd8db43939f7a73618df19a9351a25884467e2dd1920c4",
     "assets/reference/home-fruit-tree-unlock-story-audio-source-manifest.json": "1a9036d69b409e20b62d1c6aceabd590af972fb04bf531b9441a629f1f34cd57",
     "assets/reference/home-pet-achievement-hint-bindings-source-manifest.json": "ca87e151106059e619c6c06eab3c719dee693cb4611d0a6f05805e7c31e30cb4",
-    "scripts/prepare_home_fruit_tree_story_runtime.py": "cf0504045230177ceee6fb08fa527d84d0c8961b9935a4fb074d1f047d901c78"
+    "scripts/prepare_home_fruit_tree_story_runtime.py": "0d346afb66be7260eb93bcb9d764414ec71ddb768f2d996a5131096541aca574"
   },
   "runtime_bindings": {
     "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "76efdaac74e09712574613ee4b5e8f2dfdbd0f06ad9e0437ca273ac119a7ffda",
@@ -42,15 +43,18 @@
     "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef": "27ae97b83afbae6aeff399a570cba516584c27d2ef5b64cdd132a40ccd27b7a9"
   },
   "validation_inputs": {
-    "scripts/test_home_fruit_tree_weather.ps1": "c5cafb90a5e0ef0dec3973f9e5a675c454aa5cd5e9f8876ad1c9ec029251b2a5",
+    "scripts/test_home_fruit_tree_weather.ps1": "7accaca13545fae69608946935e40ae995a5846a5df80986a91dc19abadff167",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.cs": "579a173bea21f12228714005d90d1afe3ee1e85a32b096fcc39f8e6a54453956",
-    "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.FruitTreeUnlock.cs": "4b199141679e8c646771d5fec873667bfbffb7696d95041b09ba51e9b9fa5c75",
-    "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.PetTreeUnlock.cs": "d907f3de80a30884ef1c279a61051f46b8dd0f4667b8861e1ac8821588b0ae96"
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.FruitTreeUnlock.cs": "480730138731d893a3d11848643b7db07a04d8443c98ffed740781329377105c",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.PetTreeUnlock.cs": "05dde4f9b22345c022501c11b70638dff3fa632de845d72b3d3795d971e52f3f"
   },
   "runtime_members": {
     "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs#TryGetFurnitureMaskTarget": "593ba205898b2574a884f1177417478a7c1de19e8fb1e79f07aadf7c6f788344",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs#Install": "38401322d02a2f358ff693f47ad47c4af5b5ec6f046da018ad9f2fd5e42bde2c",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs#Tick": "d91e374bee8859b72daabe6b077de0199a7511be1353f9741fe1552cf172e2e6",
-    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs#Dispose": "6911146e1f01bfb1b0439edf7688402fd5b28fc0f83b3b5c07271ba59e6ad09b"
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs#Dispose": "6911146e1f01bfb1b0439edf7688402fd5b28fc0f83b3b5c07271ba59e6ad09b",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs#private readonly GAction postHomeChanged = new GAction": "2c31d20a15d6dff2254aea69e34230004c6e3a5a52527747319461eb86802c30",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs#public IDisposable SubscribePostHomeChange": "0d87ab21c1c8e7defb723b2627d842d332e6b48bb63094e71b45b1e0c4683619",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs#IDisposable IHomeNpcBubbleTipServices.SubscribePostHomeChange": "6fd8f538a36d978abf0fe3ab67c5340cb98e2f099b89ec85b2f8015a174b5563"
   }
 }

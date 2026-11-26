@@ -142,7 +142,7 @@ if ($process.ExitCode -ne 0 -or -not (Test-Path -LiteralPath $reportPath)) {
 }
 $report = Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json
 $requiredPattern = if ($PetUnlockStory) { 'PASS pet-unlock-*' } elseif ($UnlockStory) { 'PASS fruit-unlock-completed*' } elseif ($NaturalProduction) { 'PASS native-fruit-tree-natural-*' } else { 'PASS native-fruit-tree-weather-*' }
-$requiredCount = if ($PetUnlockStory) { 14 } elseif ($UnlockStory) { 1 } elseif ($NaturalProduction) { 2 } else { 12 }
+$requiredCount = if ($PetUnlockStory) { 16 } elseif ($UnlockStory) { 1 } elseif ($NaturalProduction) { 2 } else { 12 }
 if (-not $report.success -or @($report.lines | Where-Object { $_ -like $requiredPattern }).Count -ne $requiredCount) {
     throw ('The selected fruit-tree flow must pass: ' + $reportPath)
 }

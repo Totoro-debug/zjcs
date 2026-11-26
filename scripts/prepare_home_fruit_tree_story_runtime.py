@@ -20,7 +20,8 @@ def build():
                 if '/client-source/' in path}
     prefix = next(path.rsplit('/client-source/', 1)[0] for path in original)
     for relative in ('client-source/ClientRunNode.cs', 'client-source/StoryUtils.cs',
-                     'common-source/PlayerServiceProxyImpl.cs'):
+                     'common-source/PlayerServiceProxyImpl.cs',
+                     'client-source/HomeData.cs', 'client-source/FurnitureBase.cs'):
         path = prefix + '/' + relative
         original[path] = digest(path)
     for path, expected in original.items():
@@ -62,6 +63,12 @@ def build():
             level += (text[end] == '{') - (text[end] == '}')
             end += 1
         members[shared + '#' + name] = hashlib.sha256(text[offset:end].encode()).hexdigest()
+    for marker in ('private readonly GAction postHomeChanged = new GAction();',
+                   'public IDisposable SubscribePostHomeChange(Action action) => postHomeChanged.Subscribe(action);',
+                   'IDisposable IHomeNpcBubbleTipServices.SubscribePostHomeChange(Action action) => postHomeChanged.Subscribe(action);'):
+        if marker not in text:
+            raise ValueError('Original home-switch notification boundary differs: ' + marker)
+        members[shared + '#' + marker.split('(')[0]] = hashlib.sha256(marker.encode()).hexdigest()
     return dict(manifest=source['manifest'], original_sources=original,
                 inputs={path: digest(path) for path in inputs},
                 runtime_bindings={path: digest(path) for path in runtime},

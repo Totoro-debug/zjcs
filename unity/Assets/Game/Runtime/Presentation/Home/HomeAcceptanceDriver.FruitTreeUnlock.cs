@@ -69,7 +69,11 @@ namespace Zjcs.Presentation.Home
             });
             yield return Capture("fruit-unlock-repair-window.png");
             if (!passed) { completed(false); yield break; }
-            if (repair) ClickPartnerUi(repair.RepairBtn);
+            bool repairTimeline = false;
+            yield return VerifyUnlockRepairTimeline(runtime, repair, tree.GetComponentInChildren<HomeFruitTreeProduceFruit>(true),
+                "fruit-unlock", value => repairTimeline = value);
+            passed &= repairTimeline;
+            if (!passed) { completed(false); yield break; }
             deadline = Time.realtimeSinceStartup + 15;
             while (!runtime.Profile.Save.Player.FruitTree.ProductionRepaired && Time.realtimeSinceStartup < deadline) yield return null;
             passed &= Check("fruit-unlock-repaired", () =>
@@ -133,6 +137,123 @@ namespace Zjcs.Presentation.Home
                 restored.Close();
             }
             completed(passed);
+        }
+
+        private IEnumerator VerifyUnlockRepairTimeline(HomeFeatureRuntime runtime, FurnitureRepairDialog repair,
+            FurnitureBase furniture, string prefix, Action<bool> completed)
+        {
+            const BindingFlags fields = BindingFlags.Instance | BindingFlags.NonPublic;
+            var effect = (GameObject)typeof(FurnitureBase).GetField("mRepairEffect", fields).GetValue(furniture);
+            var stateField = typeof(FurnitureBase).GetField("mFurnitureState", fields);
+            float showTime = (float)typeof(FurnitureBase).GetField("mRepairEffectShowTime", fields).GetValue(furniture);
+            float fullTime = (float)typeof(FurnitureBase).GetField("mRepairEffectFullTime", fields).GetValue(furniture);
+            var initialState = (FurnitureBase.EFurnitureState)stateField.GetValue(furniture);
+            bool setup = Check(prefix + "-repair-timeline-source", () =>
+            {
+                Assert(effect && !effect.activeSelf && Mathf.Abs(showTime - .6f) < .0001f
+                    && Mathf.Abs(fullTime - 1.5f) < .0001f, "original native repair effect and serialized timings are preserved");
+                Assert(initialState == FurnitureBase.EFurnitureState.CanRepair,
+                    "native visual state is repairable before the actual button press");
+                return "original effect reveals at 0.6 seconds and finishes at 1.5 seconds";
+            });
+            if (!setup) { completed(false); yield break; }
+            float started = -1, revealed = -1, finished = -1, largestFrame = 0;
+            int repairEvents = 0, homeSwitches = 0, peakParticles = 0;
+            bool premature = false, earlyActive = false, revealedUnderEffect = false;
+            var frames = new System.Collections.Generic.Dictionary<string, Texture2D>();
+            Action<EFurniture> repaired = type =>
+            {
+                if (type != furniture.Furniture) return;
+                repairEvents++;
+                started = Time.time;
+                premature |= (FurnitureBase.EFurnitureState)stateField.GetValue(furniture) != initialState;
+                earlyActive = effect.activeInHierarchy;
+            };
+            IDisposable switchSubscription = furniture.Services.SubscribePostHomeChange(() => homeSwitches++);
+            furniture.Services.Player.OnRepairFurniture += repaired;
+            try
+            {
+                ClickPartnerUi(repair.RepairBtn);
+                float deadline = Time.realtimeSinceStartup + 12;
+                while (Time.realtimeSinceStartup < deadline)
+                {
+                    yield return new WaitForEndOfFrame();
+                    if (started < 0) continue;
+                    float elapsed = Time.time - started;
+                    largestFrame = Mathf.Max(largestFrame, Time.deltaTime);
+                    bool functional = (FurnitureBase.EFurnitureState)stateField.GetValue(furniture)
+                        == FurnitureBase.EFurnitureState.Functional;
+                    premature |= functional && elapsed + .001f < showTime;
+                    if (functional && revealed < 0)
+                    {
+                        revealed = elapsed;
+                        revealedUnderEffect = effect.activeInHierarchy;
+                    }
+                    peakParticles = Math.Max(peakParticles,
+                        effect.GetComponentsInChildren<ParticleSystem>(true).Sum(value => value.particleCount));
+                    string phase = elapsed < showTime ? "before-reveal" : effect.activeSelf ? "revealed" : "finished";
+                    if (!frames.ContainsKey(phase))
+                    {
+                        frames.Add(phase, CaptureUnlockRepairScene(runtime.Scene.Camera));
+                        log.Add("VIEW " + prefix + "-repair-" + phase + " scaled=" + elapsed.ToString("F3")
+                            + " visual=" + stateField.GetValue(furniture) + " active=" + effect.activeInHierarchy);
+                    }
+                    if (!effect.activeSelf)
+                    {
+                        finished = elapsed;
+                        break;
+                    }
+                }
+            }
+            finally
+            {
+                furniture.Services.Player.OnRepairFurniture -= repaired;
+                switchSubscription.Dispose();
+                foreach (var frame in frames)
+                {
+                    System.IO.File.WriteAllBytes(System.IO.Path.Combine(Output, prefix + "-repair-" + frame.Key + ".png"),
+                        frame.Value.EncodeToPNG());
+                    Destroy(frame.Value);
+                }
+            }
+            completed(Check(prefix + "-repair-timeline", () =>
+            {
+                float tolerance = largestFrame * 2 + .08f;
+                Assert(repairEvents == 1 && homeSwitches == 0, "one committed repair does not masquerade as a home switch");
+                Assert(earlyActive && !premature && frames.Count == 3, "original effect starts over the unrepaired visual state");
+                Assert(revealed >= showTime && revealed <= showTime + tolerance && revealedUnderEffect,
+                    "native model changes under the active effect at its original reveal time");
+                Assert(finished >= fullTime && finished <= fullTime + tolerance && !effect.activeSelf && peakParticles > 0,
+                    "original particles run and the effect root closes at its original full duration");
+                return "repair=" + repairEvents + " homeSwitches=" + homeSwitches + " reveal=" + revealed.ToString("F3")
+                    + " finish=" + finished.ToString("F3") + " maxFrame=" + largestFrame.ToString("F3")
+                    + " peakParticles=" + peakParticles;
+            }));
+        }
+
+        private static Texture2D CaptureUnlockRepairScene(Camera camera)
+        {
+            // Render the actual scene camera without the original notification
+            // overlay obscuring the building. Preserve the live camera surface.
+            RenderTexture original = camera.targetTexture;
+            RenderTexture active = RenderTexture.active;
+            var target = RenderTexture.GetTemporary(Screen.width, Screen.height, 24);
+            try
+            {
+                camera.targetTexture = target;
+                camera.Render();
+                RenderTexture.active = target;
+                var frame = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+                frame.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+                frame.Apply();
+                return frame;
+            }
+            finally
+            {
+                camera.targetTexture = original;
+                RenderTexture.active = active;
+                RenderTexture.ReleaseTemporary(target);
+            }
         }
 
         private IEnumerator CloseUnlockRepairNotification(HomeFeatureRuntime runtime, string prefix, Action<bool> completed)
