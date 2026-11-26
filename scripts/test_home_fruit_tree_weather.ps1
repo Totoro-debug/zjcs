@@ -108,7 +108,26 @@ Get-ChildItem -LiteralPath (Join-Path $repository ('unity/' + $gachaModule)) -Fi
     Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $gachaTarget $_.Name) -Force
 }
 Copy-Item -LiteralPath (Join-Path $repository ('unity/' + $gachaModule + '.meta')) -Destination ($gachaTarget + '.meta') -Force
+$scoreModule = 'Assets/Game/Runtime/Offline/GachaUI'
+$scoreTarget = Join-Path $project $scoreModule
+[void](New-Item -ItemType Directory -Path $scoreTarget -Force)
+Get-ChildItem -LiteralPath (Join-Path $repository ('unity/' + $scoreModule)) -File | ForEach-Object {
+    Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $scoreTarget $_.Name) -Force
+}
+Copy-Item -LiteralPath (Join-Path $repository ('unity/' + $scoreModule + '.meta')) -Destination ($scoreTarget + '.meta') -Force
 if ($PetGachaControls) {
+    $scoreReceipt = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/pet-score-reward-source-manifest.json') -Raw | ConvertFrom-Json
+    foreach ($section in @('inputs', 'outputs')) {
+        foreach ($entry in $scoreReceipt.$section.PSObject.Properties) {
+            $source = Join-Path $repository $entry.Name
+            if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.Value) {
+                throw ('Original score reward source or binding differs: ' + $entry.Name)
+            }
+            if ($section -eq 'outputs') {
+                Copy-Item -LiteralPath $source -Destination (Join-Path $project $entry.Name.Substring(6)) -Force
+            }
+        }
+    }
     $gachaReceiptPath = Join-Path $repository 'assets/reference/pet-gacha-controls-native-source-manifest.json'
     $gachaReceipt = Get-Content -LiteralPath $gachaReceiptPath -Raw | ConvertFrom-Json
     foreach ($entry in $gachaReceipt.inputs.PSObject.Properties) {
@@ -190,7 +209,7 @@ if ($process.ExitCode -ne 0 -or -not (Test-Path -LiteralPath $reportPath)) {
 }
 $report = Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json
 $requiredPattern = if ($PetGachaControls) { 'PASS pet-gacha-controls-*' } elseif ($PetUnlockStory) { 'PASS pet-unlock-*' } elseif ($UnlockStory) { 'PASS fruit-unlock-completed*' } elseif ($NaturalProduction) { 'PASS native-fruit-tree-natural-*' } else { 'PASS native-fruit-tree-weather-*' }
-$requiredCount = if ($PetGachaControls) { 6 } elseif ($PetUnlockStory) { 16 } elseif ($UnlockStory) { 1 } elseif ($NaturalProduction) { 2 } else { 12 }
+$requiredCount = if ($PetGachaControls) { 10 } elseif ($PetUnlockStory) { 16 } elseif ($UnlockStory) { 1 } elseif ($NaturalProduction) { 2 } else { 12 }
 if (-not $report.success -or @($report.lines | Where-Object { $_ -like $requiredPattern }).Count -ne $requiredCount) {
     throw ('The selected fruit-tree flow must pass: ' + $reportPath)
 }

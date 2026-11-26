@@ -254,6 +254,36 @@ namespace Zjcs.Offline.Progression
             return Result(Map(transaction.Status), transaction.Message);
         }
 
+        public PetGachaAchievementEntry GetAchievement(int group, int index) => AchievementAt(group, index);
+
+        // The original score widget requests all available rewards for one group.
+        // Local adaptation commits the grants and claim records atomically.
+        public PetGachaResult ClaimAvailableAchievements(int group, string receiptId, long nowUnixSeconds)
+        {
+            if ((group != 15 && group != 16) || string.IsNullOrWhiteSpace(receiptId)
+                || receiptId.Length > 160 || nowUnixSeconds < 0) return Result(PetGachaResultCode.InvalidArgument);
+            profile.Reload();
+            if (!HasAvailableAchievementReward(group)) return Result(PetGachaResultCode.NotReady, "奖励尚未达成或已领取");
+            ProgressionResult transaction = profile.ApplyInventoryTransaction(receiptId, save =>
+            {
+                var progress = save.Player.PetGacha;
+                var claimed = new HashSet<int>(progress.AchievementClaims.Where(row => row.Group == group).Select(row => row.Index));
+                int independent = catalog.AchievementsFor(group).Count(row => row.CompleteCount > 0 && row.CycleIncrementCount <= 0);
+                bool applied = false;
+                for (int index = 0, count = AchievementCount(group); index < count; index++)
+                {
+                    if (claimed.Contains(index)) continue;
+                    var entry = AchievementAt(group, index, progress);
+                    if (!entry.IsReady) { if (index >= independent) break; continue; }
+                    foreach (var amount in entry.Rewards ?? Array.Empty<PetGachaAmount>()) Grant(save.Player, amount.ItemId, amount.Count);
+                    progress.AchievementClaims.Add(new OfflinePetGachaAchievementClaim { Group = group, Index = index });
+                    applied = true;
+                }
+                if (!applied) throw new InvalidOperationException("结缘奖励状态已变化");
+            });
+            return Result(Map(transaction.Status), transaction.Message);
+        }
+
         public PetGachaResult RefreshShop(long nowUnixSeconds)
         {
             if (nowUnixSeconds < 0) return Result(PetGachaResultCode.InvalidArgument);

@@ -1,4 +1,4 @@
-"""Bind the complete original pet-gacha button and daily-count subtrees."""
+"""Bind complete original pet-gacha controls and score-reward subtrees."""
 import argparse
 import copy
 import hashlib
@@ -7,6 +7,8 @@ import re
 from pathlib import Path
 
 from home_native_assets import install_staged_assets, write_staged_assets
+from home_native_cache_verification import verify_native_cache
+from home_native_furniture_builder import prepare_native_cache
 from official_manifest import read_asset_manifest
 from prepare_current_partner_native import PartnerNativeRecovery
 from prepare_home_currency_windows_native import HomeCurrencyWindowsBinding
@@ -15,6 +17,7 @@ from prepare_map16_story_source import decode_localization
 from prepare_partner_card_native import PartnerCardBinding, ROOT, guid, script_id, sha
 from prepare_selected_wwise_inputs import prepare as prepare_audio
 from validation_workspace import validation_directory
+from unity_compressed_mesh import static_mesh_proof
 
 
 DEST = ROOT / 'unity/Assets/Official/Home/PetGacha/Controls'
@@ -34,7 +37,7 @@ class PetGachaControlsBinding(HomeCurrencyWindowsBinding):
     def register_scripts(self):
         super().register_scripts()
         folder = ROOT / 'unity/Assets/Game/Runtime/Official/GachaUI'
-        for name in ('GachaBtnContent', 'PlayerOpenSkillChestBtn', 'GachaTodayCountLimitUI'):
+        for name in ('GachaBtnContent', 'PlayerOpenSkillChestBtn', 'GachaTodayCountLimitUI', 'ScoreRewardUI', 'AdditionInfoTip'):
             path = folder / (name + '.cs')
             meta = Path(str(path) + '.meta')
             ref = dict(fileID=11500000, guid=guid(meta), type=3)
@@ -51,6 +54,36 @@ class PetGachaControlsBinding(HomeCurrencyWindowsBinding):
                 self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
             return dict(**{'class': 'StateAnimationConfig', 'ns': 'Zjcs.Official.PartnersUI', 'asm': 'Zjcs.Official.PartnersUI'})
         return super().replace(value)
+
+    def load(self, source_guid):
+        result = super().load(source_guid)
+        obj = self.objects.get(source_guid)
+        if obj is not None and obj.type.name == 'Mesh':
+            from prepare_current_partner_native import identity
+            from UnityPy.helpers.MeshHelper import MeshHandler
+            import struct
+            if not hasattr(self, 'mesh_bindings'):
+                self.mesh_bindings = {}
+            key = identity(obj)
+            if key not in self.mesh_bindings:
+                source = self.recovery.fields(obj)
+                if source['m_CompressedMesh']['m_Vertices']['m_NumItems']:
+                    data, = [data for _, token, data in self.queue if token == result['guid']]
+                    file_id, = data
+                    proof = static_mesh_proof(source)
+                    # Cross-check packed vector decoding against the independent
+                    # UnityPy mesh reader before writing native geometry.
+                    mesh = MeshHandler(obj.read(check_read=False))
+                    mesh.decompress_compressed_mesh()
+                    expected = b''.join(struct.pack('<5f', *vertex, *uv) for vertex, uv in zip(mesh.m_Vertices, mesh.m_UV0))
+                    indices = struct.pack('<' + 'H' * len(mesh.m_IndexBuffer), *mesh.m_IndexBuffer)
+                    if (sha(expected) != proof['vertex_stream_sha256'] or sha(indices) != proof['index_stream_sha256']):
+                        raise ValueError('Original packed mesh independent decoding differs: ' + key)
+                    raw = self.native_path(source_guid, obj).read_bytes()
+                    self.queue = [(path, token, raw if token == result['guid'] else payload)
+                                  for path, token, payload in self.queue]
+                    self.mesh_bindings[key] = dict(pointer=result, native_yaml_sha256=sha(raw), **proof)
+        return result
 
     def sound(self, payload, owner):
         if not hasattr(self, 'control_audio_cache'):
@@ -70,10 +103,11 @@ class PetGachaControlsBinding(HomeCurrencyWindowsBinding):
         self.recovery.finalize()
         native, _, original, _ = self.recovery.outputs[0]
         self.selections = {}
-        keys = {'ui_common_free', 'common_format_args1'}
+        keys = {'ui_common_free', 'common_format_args1', 'score_reward_ui_text', 'score_reward_ui_full_text'}
         roots = {}
         prefabs = []
-        for name, kind in [('PetGachaButtons', 'GachaBtnContent'), ('PetGachaDailyCount', 'GachaTodayCountLimitUI')]:
+        for name, kind in [('PetGachaButtons', 'GachaBtnContent'), ('PetGachaDailyCount', 'GachaTodayCountLimitUI'),
+                           ('PetGachaScoreReward', 'ScoreRewardUI')]:
             panel = copy.deepcopy(original)
             docs = panel['documents']
             component, = [row for row in panel['scripts'] if row['type'] == kind]
@@ -167,12 +201,44 @@ class PetGachaControlsBinding(HomeCurrencyWindowsBinding):
         self.bind_dynamic_sprite(record['guid'])
         cost_sprite = dict(item_id=cost_id, path=address, asset_guid=record['guid'],
                            pointer=self.dynamic_sprites_by_guid[record['guid']]['pointer'])
+        reward_ids = {reward['ItemId'] for row in rules['Achievements'] if row['Group'] == 16 for reward in row['Reward']}
+        reward_records = {}
+        for reward_id in sorted(reward_ids):
+            reward_item, = [row for row in rules['Items'] if row['ClassId'] == reward_id]
+            reward_path = 'Assets/Image/' + reward_item['RawIcon']
+            reward_record, = [row for row in records if row.get('address', '').casefold() == reward_path.casefold()
+                              or row['path'].casefold() == (reward_path + '.png').casefold()]
+            reward_records[reward_id] = (reward_path, reward_record)
+        score_cache = self.cache.parent / 'home-pet-score-images-native'
+        if not (score_cache / 'native-export-source-manifest.json').is_file() and not (score_cache / 'native-export').exists():
+            prepare_native_cache(score_cache, sorted({row['bundle'] for _, row in reward_records.values()}))
+        verify_native_cache(score_cache, [], self.recovery.apk.version)
+        score_recovery = PartnerNativeRecovery(native_cache=score_cache, export_name='native-export', bundle=BUNDLE)
+        try:
+            score_binding = PetGachaControlsBinding(self.work, recovery=score_recovery)
+            score_sprites = {}
+            for reward_id, (reward_path, reward_record) in reward_records.items():
+                score_binding.bind_dynamic_sprite(reward_record['guid'])
+                score_sprites[str(reward_id)] = dict(path=reward_path, asset_guid=reward_record['guid'],
+                    pointer=score_binding.dynamic_sprites_by_guid[reward_record['guid']]['pointer'])
+            for _, _, data in score_binding.queue:
+                if isinstance(data, dict):
+                    resolved = score_binding.replace(data)
+                    data.clear()
+                    data.update(resolved)
+            score_assets = score_binding.queue
+            self.inputs.update(score_binding.inputs)
+            self.proof.update(score_binding.proof)
+            self.dynamic_sprites_by_guid.update(score_binding.dynamic_sprites_by_guid)
+        finally:
+            score_recovery.apk.reader.close()
         self.inputs[runtime_rules.relative_to(ROOT).as_posix()] = sha(runtime_rules.read_bytes())
         for _, _, data in self.queue:
             if isinstance(data, dict):
                 resolved = self.replace(data)
                 data.clear()
                 data.update(resolved)
+        self.queue.extend(score_assets)
         self.queue.extend(prefabs)
         texts, localization = decode_localization(self.recovery.apk, keys, keys - {'{0}'})
         text_token = hashlib.md5(b'zjcs:pet-gacha-controls:texts').hexdigest()
@@ -213,11 +279,12 @@ class PetGachaControlsBinding(HomeCurrencyWindowsBinding):
             outputs[path.as_posix()] = sha(raw)
             outputs[path.as_posix() + '.meta'] = sha(meta.read_bytes())
         for path in (native, Path(str(native) + '.meta'), Path(__file__), ROOT / 'scripts/home_native_assets.py',
-                     ROOT / 'scripts/prepare_partner_roster_native.py'):
+                     ROOT / 'scripts/prepare_partner_roster_native.py', ROOT / 'scripts/unity_compressed_mesh.py'):
             self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
         code = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code'
         for relative in ('client-source/GachaBtnContent.cs', 'client-source/PlayerOpenSkillChestBtn.cs',
-                         'client-source/GachaTodayCountLimitUI.cs', 'common-source/Common/GachaType.cs',
+                         'client-source/GachaTodayCountLimitUI.cs', 'client-source/ScoreRewardUI.cs',
+                         'client-source/AdditionInfoTip.cs', 'common-source/Common/GachaType.cs',
                          'common-source/Common/GachaClassType.cs'):
             path = code / relative
             self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
@@ -232,8 +299,10 @@ class PetGachaControlsBinding(HomeCurrencyWindowsBinding):
             script_bindings=scripts, audio=self.audio_proof,
             dynamic_sprites=self.dynamic_sprites_by_guid, animation_root_path_repairs=self.animation_root_paths,
             cost_sprite=remap(cost_sprite),
+            score_reward_sprites=remap(score_sprites),
+            mesh_bindings=remap(getattr(self, 'mesh_bindings', {})),
             texts=remap(text_ref), runtime_bindings={path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in runtime.iterdir() if path.is_file()},
-            scope='Original pet-gacha buttons and daily count. Full panel and result performer remain to be bound.')
+            scope='Original pet-gacha buttons, daily count and score-reward components. Full panel and result performer remain to be bound.')
 
 
 if __name__ == '__main__':
