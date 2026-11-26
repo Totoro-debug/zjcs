@@ -127,6 +127,14 @@
     {
       "path": "assets/reference/battle-animation/sage-voodoo-doll-current-skill-graphs-source-manifest.json",
       "sha256": "74456a6ee07d6240bc98b033f2787d13ab609edf957363605b509814e689ac50"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/warlock-explosion-current-skill-graphs.json",
+      "sha256": "ccb09f3d28318b07b443d5c6341a8e881b14c2962bdd4ae5bd5df075dae3acc2"
+    },
+    {
+      "path": "assets/reference/battle-animation/warlock-explosion-current-skill-graphs-source-manifest.json",
+      "sha256": "8e74c1238a5f483bc1a7471e9cedd2f728daad7e0ee068bfc09fb33ed636f62a"
     }
   ],
   "outputs": [
@@ -259,8 +267,16 @@
       "sha256": "03243d13cd2d0e6ddb37d49e2303e86d728d9266fb48668291504e51ea70502f"
     },
     {
+      "path": "unity/Assets/Game/Resources/Combat/warlock-explosion-current-skill-graphs-source-manifest.json",
+      "sha256": "d780857671e3836a858b91d90391f385e7b7f9c74d6845d5f1696e0afdbd0ce4"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/warlock-explosion-current-skill-graphs-source-manifest.json.meta",
+      "sha256": "4d52f52395f5e4bf1ecd680dfeb012da3f674c3fd50a0a48370c7b36def6fb48"
+    },
+    {
       "path": "unity/Assets/Game/Resources/Combat/skill-native-graph-sources.json",
-      "sha256": "7850d48bdcd37b8bdabda84b81d9fddc564b417d63a7ce4604c93e0b17052863"
+      "sha256": "ce81e6ef4d5140a249f13c02ae3064c925cfed664d1f46a6f18af84a761e10c1"
     },
     {
       "path": "unity/Assets/Game/Resources/Combat/skill-native-graph-sources.json.meta",
@@ -269,24 +285,28 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_native_graph_sources.py",
-    "sha256": "5f54db81257aed7b61ea0078ffe808d482b980743e81e4f25dd6b01766b8153c"
+    "sha256": "37b1b062d0b038a37d2b9b94eaf9e12d99ee2ec7088222768f6fd74870edf7ea"
   },
   "runtime": [
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeGraphSources.cs",
-      "sha256": "742446bb1c83aea83eadb35cfbee1e31cfd18b63db70546244c2a66796df862e"
+      "sha256": "742446bb1c83aea83eadb35cfbee1e31cfd18b63db70546244c2a66796df862e",
+      "normalization": "UTF-8, LF line endings"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs",
-      "sha256": "7e5947335c66eab951339db38ae51b229b3bf467cd371734eab47eb35b99075d"
+      "sha256": "724544e103a3e6c3fe67ae3076f60106930f0473169cd3ed48012e62225d9efd",
+      "normalization": "UTF-8, LF line endings"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphCatalog.cs",
-      "sha256": "5717ebfac15b9fc98c7ef2d78dfd72c8e839d06743522a89daf9ab55a3936824"
+      "sha256": "5717ebfac15b9fc98c7ef2d78dfd72c8e839d06743522a89daf9ab55a3936824",
+      "normalization": "UTF-8, LF line endings"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityViewCatalog.cs",
-      "sha256": "de87563218817080f619bc9281c59a7052f94bd8fcc5c850297988bbefb9746f"
+      "sha256": "de87563218817080f619bc9281c59a7052f94bd8fcc5c850297988bbefb9746f",
+      "normalization": "UTF-8, LF line endings"
     }
   ],
   "operation": "Verify each original native payload against its existing conversion receipt; load source-consistent SHA256-verified catalogs and replace only declared migrated entities. Reject duplicate sources and overlapping migrations without a source-version feature gate."

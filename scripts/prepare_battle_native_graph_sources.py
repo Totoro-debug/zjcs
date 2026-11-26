@@ -1,10 +1,18 @@
 """Bind native graph sources to their existing, independently verified conversion receipts."""
 import argparse
+import hashlib
 import json
 from pathlib import Path
 
 from official_apk import ROOT
 from prepare_battle_scene_appearance_runtime import identity, meta, write_changed
+
+
+def code_identity(path):
+    record = identity(path)
+    record['sha256'] = hashlib.sha256(path.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
+    record['normalization'] = 'UTF-8, LF line endings'
+    return record
 
 
 def main():
@@ -26,6 +34,7 @@ def main():
         'sage-rock-summon-current-skill-graphs',
         'sage-summon-restoration-current-skill-graphs',
         'sage-voodoo-doll-current-skill-graphs',
+        'warlock-explosion-current-skill-graphs',
     )
     receipts = {
         'skill-native-graphs': 'skill-native-graph-assets-source-manifest',
@@ -60,7 +69,7 @@ def main():
     outputs.extend((identity(path), identity(Path(str(path) + '.meta'))))
     runtime = ROOT / 'unity/Assets/Game/Runtime/Presentation/Combat'
     record = dict(inputs=inputs, outputs=outputs, generator=identity(Path(__file__)),
-                  runtime=[identity(runtime / (name + '.cs')) for name in
+                  runtime=[code_identity(runtime / (name + '.cs')) for name in
                            ('OfficialBattleNativeGraphSources', 'OfficialBattleNativeEntityLoader',
                             'OfficialBattleSkillGraphCatalog', 'OfficialBattleSkillEntityViewCatalog')],
                   operation='Verify each original native payload against its existing conversion receipt; '

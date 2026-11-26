@@ -73,6 +73,7 @@ namespace Zjcs.Presentation.Home
             bool spiralWindBlade = skillId == 10091;
             bool battlecry = skillId == 10092;
             bool judgmentThunder = skillId == 10093;
+            bool warlockExplosion = skillId == 10098;
             bool protectiveRunes = skillId == 10102;
             bool chaosRune = skillId == 10059;
             bool rockSummon = skillId == 10095;
@@ -90,11 +91,11 @@ namespace Zjcs.Presentation.Home
             bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard;
             fourthPromotion |= fireLeap || flowingFire;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry || protectiveRunes || psychicWard;
-            bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017;
+            bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017 || warlockExplosion;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
             fourthPromotion |= HasGuardianCompanion(skillId);
-            int profession = fireLeap || flowingFire ? 8 : alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = warlockExplosion ? 12 : fireLeap || flowingFire ? 8 : alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -455,6 +456,7 @@ namespace Zjcs.Presentation.Home
                         : spiralWindBlade ? cast.SkillEntityId == 11960
                         : battlecry ? cast.SkillEntityId == 12010
                         : judgmentThunder ? cast.SkillEntityId == 11970
+                        : warlockExplosion ? cast.SkillEntityId == 12070
                         : protectiveRunes ? cast.SkillEntityId == 12110
                         : chaosRune ? cast.SkillEntityId == 11380
                         : psychicWard ? cast.SkillEntityId == 11760
@@ -525,6 +527,18 @@ namespace Zjcs.Presentation.Home
                     if (protectiveRunes)
                     {
                         VerifyAcquiredProtectiveRunes(checkpoint, output);
+                        hits++;
+                        continue;
+                    }
+                    if (warlockExplosion)
+                    {
+                        Require(damageEvents.Length == 1 && damageEvents[0].TargetId != actor.Id
+                            && damageEvents[0].SkillItemId == 10098 && damageEvents[0].HitEntityId == 12071
+                            && damageEvents[0].DamageEntityId == 10004 && damageEvents[0].ElementType == 102
+                            && damageEvents[0].DamageType == 1 && damageEvents[0].Damage < 0
+                            && !damageEvents[0].TrueDamage && !damageEvents[0].IsCure
+                            && Math.Abs(damageEvents[0].Delay - cast.Delay - .49f) < .0001f,
+                            "The acquired explosion lost its original single fire hit or timing.");
                         hits++;
                         continue;
                     }
@@ -1017,6 +1031,12 @@ namespace Zjcs.Presentation.Home
                     {
                         if (!FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
                             && particle.GetComponentsInParent<Transform>().Any(parent => parent.name.StartsWith("playable11970", StringComparison.Ordinal))))
+                        { yield return null; continue; }
+                    }
+                    else if (warlockExplosion)
+                    {
+                        if (!FindObjectsOfType<ParticleSystem>().Any(particle => particle.particleCount > 0
+                            && particle.GetComponentsInParent<Transform>().Any(parent => parent.name.StartsWith("playable12070", StringComparison.Ordinal))))
                         { yield return null; continue; }
                     }
                     else if (battlecry)

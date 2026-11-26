@@ -1,0 +1,67 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 12070,
+      "entity_resource": "Combat/WarlockExplosionSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12070/12070",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/WarlockExplosionSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12070/playable12070"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 12071,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/WarlockExplosionSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12070/12071"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 10004,
+      "entity_prefab": "Global/10004.prefab",
+      "entity_prefab_sha256": "a7d266068488c2cf2d1a405898bf4b8a738ea5729fb2426b16fc1b5ae5690572",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/WarlockExplosionSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage_noanim"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/WarlockExplosionSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage_wave"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/WarlockExplosionSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/WarlockExplosionSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/WarlockExplosionSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/Global/10004"
+    }
+  ]
+}
