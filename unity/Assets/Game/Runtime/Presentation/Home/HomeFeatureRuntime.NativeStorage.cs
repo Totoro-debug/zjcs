@@ -239,6 +239,7 @@ namespace Zjcs.Presentation.Home
             private LanguageGroupConfig languageGroupConfig;
             private GameObject anchor;
             private GameObject fruitTreeInstance;
+            private Transform fruitTreeSlot;
             private AudioSource clickSound;
             private OfflineProfessionImageResourceLoader npcIconLoader;
             private Dictionary<int, string> npcIconPaths;
@@ -366,10 +367,9 @@ namespace Zjcs.Presentation.Home
                 using var handle = loader.LoadPrefab(location);
                 if (!handle.Result)
                     throw new InvalidOperationException("The original native fruit-tree prefab is missing: " + location);
-                fruitTreeInstance = factory.Instantiate(handle.Result, anchor.transform, false);
+                fruitTreeSlot = HomeNativeSceneSlots.Create(anchor.transform).Find("FruitTreeSlot");
+                fruitTreeInstance = factory.Instantiate(handle.Result, fruitTreeSlot, false);
                 fruitTreeInstance.name = "NativeFruitTree";
-                fruitTreeInstance.transform.localPosition = home.scene.FruitTreePosition;
-                fruitTreeInstance.transform.localScale = Vector3.one * home.scene.FruitTreeScale;
                 home.scene.BindNativeFruitTree(fruitTreeInstance);
             }
 
@@ -392,10 +392,8 @@ namespace Zjcs.Presentation.Home
                 if (!handle.Result)
                     throw new InvalidOperationException("The original native fruit-tree prefab is missing: " + location);
                 if (fruitTreeInstance) Object.Destroy(fruitTreeInstance);
-                fruitTreeInstance = factory.Instantiate(handle.Result, anchor.transform, false);
+                fruitTreeInstance = factory.Instantiate(handle.Result, fruitTreeSlot, false);
                 fruitTreeInstance.name = "NativeFruitTree";
-                fruitTreeInstance.transform.localPosition = home.scene.FruitTreePosition;
-                fruitTreeInstance.transform.localScale = Vector3.one * home.scene.FruitTreeScale;
                 home.scene.BindNativeFruitTree(fruitTreeInstance);
             }
 

@@ -699,6 +699,11 @@ namespace Zjcs.Presentation.Home
                 nativeTree = runtime.NativeFurnitureInstance(Zjcs.Official.HomeUI.EFurniture.FruitTree);
                 Assert(nativeTree != null && nativeTree.activeInHierarchy, "native fruit-tree instance is active");
                 Assert(nativeTree.transform.IsChildOf(runtime.Scene.Root.transform), "native tree is parented under the official home scene");
+                Assert(nativeTree.transform.parent.name == "FruitTreeSlot",
+                    "native tree is mounted on the official outdoor furniture slot");
+                Assert(nativeTree.transform.localPosition.sqrMagnitude < .000001f
+                    && (nativeTree.transform.localScale - Vector3.one).sqrMagnitude < .000001f,
+                    "native prefab retains its original root position and scale");
                 HomeFruitTree tree = nativeTree.GetComponentInChildren<HomeFruitTree>(true);
                 treeController = tree;
                 HomeSpineDayNightSwitcher dayNight = nativeTree.GetComponentInChildren<HomeSpineDayNightSwitcher>(true);
@@ -723,6 +728,10 @@ namespace Zjcs.Presentation.Home
                 Assert(skeletons.Length > 0 && skeletons.Any(value => value.skeletonDataAsset
                     && value.skeletonDataAsset.GetSkeletonData(false)?.Bones.Count > 0),
                     "original tree skeleton data is active and decodes");
+                HomeFruitTreeScene sourceTree = PrivateField<HomeAssetCatalog>(runtime, "catalog").Scene.fruit_tree;
+                var expectedTree = new Vector3(sourceTree.tree_position[0], sourceTree.tree_position[1], sourceTree.tree_position[2]);
+                Assert((skeletons[0].transform.position - runtime.Scene.Root.transform.TransformPoint(expectedTree)).sqrMagnitude < .000001f,
+                    "default native skeleton matches the independently extracted official scene position");
                 Bounds rendered = renderers[0].bounds;
                 foreach (Renderer renderer in renderers.Skip(1)) rendered.Encapsulate(renderer.bounds);
                 bool inFrustum = GeometryUtility.TestPlanesAABB(
@@ -808,6 +817,13 @@ namespace Zjcs.Presentation.Home
             yield return new WaitForSecondsRealtime(.35f);
             passed &= Check("native-fruit-tree-ripe-slots", () =>
             {
+                runtime.Scene.SetFruitTreeState(Zjcs.Offline.Home.HomeFurnitureState.Functional,
+                    Zjcs.Offline.Home.HomeFurnitureState.Functional, 3);
+                Transform extracted = runtime.Scene.Root.transform.Find("ExtractedFruitTree");
+                Assert(extracted != null && !extracted.gameObject.activeInHierarchy,
+                    "state refresh keeps the extracted tree representation inactive");
+                Assert(!extracted.GetComponentsInChildren<Renderer>(true).Any(value => value.enabled && value.gameObject.activeInHierarchy),
+                    "extracted skeleton, fruits, ropes and effects do not render over the native tree");
                 int visible = nativeTree.GetComponentsInChildren<HomeFruitTreeHangUpEffectItem>(true)
                     .Count(value => value != null && value.gameObject.activeInHierarchy);
                 Assert(visible == 3, "original fruit display instantiates the three mature slot effects");

@@ -69,6 +69,7 @@ namespace Zjcs.Presentation.Home
         private HomeTreeAnimation treeAnimation;
         private HomeFruitTreeStateAnimation[] treeStateAnimations;
         private GameObject treeRoot;
+        private GameObject extractedFruitTreeRoot;
         private GameObject fruitTreeParticleRoot;
         private GameObject fruitTreeNightLight;
         private int treeFrameIndex;
@@ -80,15 +81,6 @@ namespace Zjcs.Presentation.Home
         private int moonPhase = -1;
 
         public GameObject Root { get; }
-        public Vector3 FruitTreePosition
-        {
-            get
-            {
-                float[] p = fruitTreeData?.tree_position ?? Array.Empty<float>();
-                return new Vector3(p.Length > 0 ? p[0] : 0f, p.Length > 1 ? p[1] : 0f, p.Length > 2 ? p[2] : 0f);
-            }
-        }
-        public float FruitTreeScale => fruitTreeData == null || fruitTreeData.tree_scale <= 0f ? 1f : fruitTreeData.tree_scale;
         public Camera Camera { get; private set; }
         public IReadOnlyList<NativeHomeBedActor> NativeBedActors => nativeBedActors;
         public Vector3 Position => Camera == null ? Vector3.zero : Camera.transform.position;
@@ -249,6 +241,8 @@ namespace Zjcs.Presentation.Home
         {
             fruitTreeData = catalog.Scene.fruit_tree;
             if (fruitTreeData == null) return;
+            extractedFruitTreeRoot = new GameObject("ExtractedFruitTree");
+            extractedFruitTreeRoot.transform.SetParent(Root.transform, false);
             treeStateAnimations = fruitTreeData.state_animations ?? Array.Empty<HomeFruitTreeStateAnimation>();
 
             foreach (HomeSceneLayer layer in fruitTreeData.layers ?? Array.Empty<HomeSceneLayer>())
@@ -258,7 +252,7 @@ namespace Zjcs.Presentation.Home
                 bool rope = layer.path == "/FruitTree/FruitTree_Rope";
                 bool nightLight = layer.path.EndsWith("/Light_Glow", StringComparison.Ordinal);
                 if (!subFurniture && !rope && !nightLight) continue;
-                GameObject go = CreateQuad(layer, Root.transform, trackLayer: false);
+                GameObject go = CreateQuad(layer, extractedFruitTreeRoot.transform, trackLayer: false);
                 if (go == null) continue;
                 go.name = layer.path;
                 fruitTreeSceneSpriteByPath[NormalizeFruitTreePath(layer.path)] = layer.sprite?.file;
@@ -282,7 +276,7 @@ namespace Zjcs.Presentation.Home
                 if (slot?.position == null || slot.position.Length < 2) continue;
                 Vector3 position = new Vector3(slot.position[0], slot.position[1],
                     slot.position.Length > 2 ? slot.position[2] : 0f);
-                GameObject fruit = CreateQuad(fruitEffect, Root.transform, position, trackLayer: false);
+                GameObject fruit = CreateQuad(fruitEffect, extractedFruitTreeRoot.transform, position, trackLayer: false);
                 if (fruit == null) continue;
                 float[] scale = slot.scale ?? Array.Empty<float>();
                 fruit.transform.localScale = new Vector3(scale.Length > 0 ? scale[0] : 1f,
@@ -293,7 +287,7 @@ namespace Zjcs.Presentation.Home
             }
 
             treeRoot = new GameObject("FruitTreeSkeleton");
-            treeRoot.transform.SetParent(Root.transform, false);
+            treeRoot.transform.SetParent(extractedFruitTreeRoot.transform, false);
             float[] treePosition = fruitTreeData.tree_position ?? Array.Empty<float>();
             treeRoot.transform.localPosition = new Vector3(treePosition.Length > 0 ? treePosition[0] : 0f,
                 treePosition.Length > 1 ? treePosition[1] : 0f,
@@ -373,7 +367,7 @@ namespace Zjcs.Presentation.Home
             GameObject prefab = Resources.Load<GameObject>("Home/FruitTree/Particles");
             if (prefab == null)
                 throw new InvalidOperationException("Official fruit tree particle prefab is unavailable.");
-            fruitTreeParticleRoot = UnityEngine.Object.Instantiate(prefab, Root.transform, false);
+            fruitTreeParticleRoot = UnityEngine.Object.Instantiate(prefab, extractedFruitTreeRoot.transform, false);
             fruitTreeParticleRoot.name = "FruitTree";
             float[] position = fruitTreeData.tree_position ?? Array.Empty<float>();
             fruitTreeParticleRoot.transform.localPosition = new Vector3(position.Length > 0 ? position[0] : 0f,
@@ -689,11 +683,6 @@ namespace Zjcs.Presentation.Home
         internal void BindNativeFruitTree(GameObject instance)
         {
             if (!instance) throw new ArgumentNullException(nameof(instance));
-            if (treeRoot) treeRoot.SetActive(false);
-            if (fruitTreeParticleRoot) fruitTreeParticleRoot.SetActive(false);
-            foreach (var layer in fruitTreeLayers.Values) if (layer) layer.SetActive(false);
-            foreach (var layer in fruitTreeSkinLayerObjects.Values.SelectMany(value => value)) if (layer) layer.SetActive(false);
-            foreach (var fruit in fruitObjects) if (fruit) fruit.SetActive(false);
             BindNativeFurniture(4, instance);
         }
 
@@ -702,6 +691,7 @@ namespace Zjcs.Presentation.Home
             if (!instance) return;
             bool useNative = type == 4 || type == 10 || !replacedHouse;
             instance.SetActive(useNative);
+            if (type == 4 && extractedFruitTreeRoot) extractedFruitTreeRoot.SetActive(!useNative);
             SetObjectsActive(furnitureBaseObjects, type, !useNative && !replacedFurniture.Contains(type));
             SetObjectsActive(furnitureSkinObjects, type, !useNative && replacedFurniture.Contains(type));
         }
@@ -756,7 +746,7 @@ namespace Zjcs.Presentation.Home
                             pair.Value.SetActive(false);
                 }
 
-                GameObject instance = CreateQuad(layer, Root.transform, SlotPosition(entity.slot), trackLayer: false);
+                GameObject instance = CreateQuad(layer, extractedFruitTreeRoot.transform, SlotPosition(entity.slot), trackLayer: false);
                 if (instance == null) continue;
                 instance.name = normalizedPath;
                 if (!fruitTreeSkinLayerObjects.TryGetValue(normalizedPath, out List<GameObject> layers))
