@@ -30,7 +30,7 @@ namespace Zjcs.Presentation.Home
     /// Unity is launched with ``-homeAcceptance`` and drives the real runtime with
     /// an isolated save, captures Game-view screenshots and writes a JSON report.
     /// </summary>
-    public sealed class HomeAcceptanceDriver : MonoBehaviour
+    public sealed partial class HomeAcceptanceDriver : MonoBehaviour
     {
         private static string Root => Environment.GetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_ROOT")
             ?? Path.Combine(Path.GetTempPath(), "zjcs-home-acceptance");
@@ -112,6 +112,8 @@ namespace Zjcs.Presentation.Home
                 DumpFullscreen();
                 bool passed = false;
                 yield return VerifyNativeFruitTree(runtime, value => passed = value);
+                if (passed && Environment.GetCommandLineArgs().Contains("-fruitTreeNativeSkinsAcceptance"))
+                    yield return VerifyNativeFruitTreeSkins(runtime, value => passed &= value);
                 Finish(passed);
                 yield break;
             }
@@ -700,7 +702,8 @@ namespace Zjcs.Presentation.Home
             Finish(passed);
         }
 
-        private IEnumerator VerifyNativeFruitTree(HomeFeatureRuntime runtime, Action<bool> completed)
+        private IEnumerator VerifyNativeFruitTree(HomeFeatureRuntime runtime, Action<bool> completed,
+            string capturePrefix = "native-fruit-tree", GameObject sourcePrefab = null)
         {
             log.Add("VIEW native-tree-check screen=" + Screen.width + "x" + Screen.height
                 + " camera=" + runtime.Scene.Camera.pixelRect + " target=" + runtime.Scene.Camera.targetTexture
@@ -730,8 +733,10 @@ namespace Zjcs.Presentation.Home
                 Assert(nativeTree.transform.IsChildOf(runtime.Scene.Root.transform), "native tree is parented under the official home scene");
                 Assert(nativeTree.transform.parent.name == "FruitTreeSlot",
                     "native tree is mounted on the official outdoor furniture slot");
-                Assert(nativeTree.transform.localPosition.sqrMagnitude < .000001f
-                    && (nativeTree.transform.localScale - Vector3.one).sqrMagnitude < .000001f,
+                Vector3 sourcePosition = sourcePrefab ? sourcePrefab.transform.localPosition : Vector3.zero;
+                Vector3 sourceScale = sourcePrefab ? sourcePrefab.transform.localScale : Vector3.one;
+                Assert((nativeTree.transform.localPosition - sourcePosition).sqrMagnitude < .000001f
+                    && (nativeTree.transform.localScale - sourceScale).sqrMagnitude < .000001f,
                     "native prefab retains its original root position and scale");
                 HomeFruitTree tree = nativeTree.GetComponentInChildren<HomeFruitTree>(true);
                 treeController = tree;
@@ -757,10 +762,22 @@ namespace Zjcs.Presentation.Home
                 Assert(skeletons.Length > 0 && skeletons.Any(value => value.skeletonDataAsset
                     && value.skeletonDataAsset.GetSkeletonData(false)?.Bones.Count > 0),
                     "original tree skeleton data is active and decodes");
-                HomeFruitTreeScene sourceTree = PrivateField<HomeAssetCatalog>(runtime, "catalog").Scene.fruit_tree;
-                var expectedTree = new Vector3(sourceTree.tree_position[0], sourceTree.tree_position[1], sourceTree.tree_position[2]);
-                Assert((skeletons[0].transform.position - runtime.Scene.Root.transform.TransformPoint(expectedTree)).sqrMagnitude < .000001f,
-                    "default native skeleton matches the independently extracted official scene position");
+                if (sourcePrefab)
+                {
+                    SkeletonAnimation sourceSkeleton = sourcePrefab.GetComponentsInChildren<SkeletonAnimation>(true)
+                        .First(value => value.skeletonDataAsset == skeletons[0].skeletonDataAsset);
+                    Vector3 actualPosition = nativeTree.transform.InverseTransformPoint(skeletons[0].transform.position);
+                    Vector3 originalPosition = sourcePrefab.transform.InverseTransformPoint(sourceSkeleton.transform.position);
+                    Assert((actualPosition - originalPosition).sqrMagnitude < .000001f,
+                        "selected original skeleton identity and prefab-relative position are preserved");
+                }
+                else
+                {
+                    HomeFruitTreeScene sourceTree = runtime.Catalog.Scene.fruit_tree;
+                    var expectedTree = new Vector3(sourceTree.tree_position[0], sourceTree.tree_position[1], sourceTree.tree_position[2]);
+                    Assert((skeletons[0].transform.position - runtime.Scene.Root.transform.TransformPoint(expectedTree)).sqrMagnitude < .000001f,
+                        "default native skeleton matches the independently extracted official scene position");
+                }
                 Bounds rendered = renderers[0].bounds;
                 foreach (Renderer renderer in renderers.Skip(1)) rendered.Encapsulate(renderer.bounds);
                 bool inFrustum = GeometryUtility.TestPlanesAABB(
@@ -782,15 +799,18 @@ namespace Zjcs.Presentation.Home
                 Vector2 dragDelta = new Vector2(
                     -(nativeTree.transform.position.x - startPosition.x) / (unitsPerPixel * sensitivity),
                     -(nativeTree.transform.position.y - startPosition.y) / (unitsPerPixel * sensitivity));
-                object input = PrivateField<object>(runtime, "input");
-                Vector2 dragStart = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
-                Type inputType = input.GetType();
-                inputType.GetMethod("PointerDown", BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Invoke(input, new object[] { dragStart, false });
-                inputType.GetMethod("PointerMove", BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Invoke(input, new object[] { dragStart + dragDelta });
-                inputType.GetMethod("PointerUp", BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Invoke(input, new object[] { dragStart + dragDelta, false });
+                if (dragDelta.sqrMagnitude > 1f)
+                {
+                    object input = PrivateField<object>(runtime, "input");
+                    Vector2 dragStart = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+                    Type inputType = input.GetType();
+                    inputType.GetMethod("PointerDown", BindingFlags.Instance | BindingFlags.NonPublic)
+                        .Invoke(input, new object[] { dragStart, false });
+                    inputType.GetMethod("PointerMove", BindingFlags.Instance | BindingFlags.NonPublic)
+                        .Invoke(input, new object[] { dragStart + dragDelta });
+                    inputType.GetMethod("PointerUp", BindingFlags.Instance | BindingFlags.NonPublic)
+                        .Invoke(input, new object[] { dragStart + dragDelta, false });
+                }
             }
             passed &= Check("native-fruit-tree-camera-drag", () =>
             {
@@ -801,6 +821,8 @@ namespace Zjcs.Presentation.Home
                 return "official one-pixel-threshold scene drag brings the fruit tree into view at " + projected;
             });
             long rewardBefore = runtime.Profile.InventoryCount(OfflineFruitTreeService.RewardItemId);
+            long totalBefore = runtime.Profile.Save.Player.FruitTree.TotalCollected;
+            long collectionsBefore = runtime.Profile.Save.Player.FruitTree.CollectionCount;
             passed &= Check("native-fruit-tree-ready-output", () =>
             {
                 var progress = runtime.Profile.ApplyCharacterMutationIfChanged(player =>
@@ -817,7 +839,7 @@ namespace Zjcs.Presentation.Home
                 });
                 Assert(progress.Status == ProgressionResultStatus.Applied,
                     "isolated test profile accepts the mature-fruit fixture");
-                bool owned = runtime.Session.Mutate("acceptance:fruit-tree-native:owned", save =>
+                bool owned = runtime.Session.Mutate("acceptance:fruit-tree-native:owned:" + capturePrefix, save =>
                 {
                     OfflineHomeFurnitureEntry entry = save.Furniture.FirstOrDefault(value => value.Type == OfflineFruitTreeService.ProductionFurnitureType);
                     if (entry == null)
@@ -858,7 +880,7 @@ namespace Zjcs.Presentation.Home
                 Assert(visible == 3, "original fruit display instantiates the three mature slot effects");
                 return "three original fruit effects are visible on configured tree slots";
             });
-            yield return Capture("native-fruit-tree-ripe.png");
+            yield return Capture(capturePrefix + "-ripe.png");
             passed &= Check("native-fruit-tree-scene-pointer-target", () =>
             {
                 Assert(nativeScenePointer != null, "acceptance owns the original native-scene pointer seam");
@@ -922,7 +944,8 @@ namespace Zjcs.Presentation.Home
                 long rewardAfter = runtime.Profile.InventoryCount(OfflineFruitTreeService.RewardItemId);
                 int visible = nativeTree.GetComponentsInChildren<HomeFruitTreeHangUpEffectItem>(true)
                     .Count(value => value != null && value.gameObject.activeInHierarchy);
-                Assert(state.StoredCount == 0 && state.TotalCollected == 3 && state.CollectionCount == 1,
+                Assert(state.StoredCount == 0 && state.TotalCollected == totalBefore + 3
+                    && state.CollectionCount == collectionsBefore + 1,
                     "native tree click collection state: stored=" + state.StoredCount + ", total=" + state.TotalCollected
                         + ", collections=" + state.CollectionCount);
                 Assert(rewardAfter == rewardBefore + 3, "fruit collection grants the configured local reward item");
@@ -948,7 +971,7 @@ namespace Zjcs.Presentation.Home
                     "original award row displays the localized fruit name and amount");
                 return "original fruit-tree award callback presents the official queue, fruit icon, localized name and quantity";
             });
-            yield return Capture("native-fruit-tree-collected.png");
+            yield return Capture(capturePrefix + "-collected.png");
             completed?.Invoke(passed && viewportPassed);
         }
         private void DumpFullscreen()
