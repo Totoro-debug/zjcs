@@ -3,6 +3,7 @@ param(
     [string]$Editor = 'D:/Tool/Unity/Editor/Unity.exe',
     [switch]$NaturalProduction,
     [switch]$UnlockStory,
+    [switch]$PetUnlockStory,
     [ValidateRange(5, 120)][int]$TimeoutMinutes = 45
 )
 $ErrorActionPreference = 'Stop'
@@ -36,6 +37,16 @@ foreach ($entry in $fruitReceipt.outputs.PSObject.Properties) {
 }
 # Reuse the independent source project's decoded official assets; update this
 # flow's source and native weather closure without copying concurrent edits.
+$hintReceipt = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/home-pet-achievement-hint-bindings-source-manifest.json') -Raw | ConvertFrom-Json
+foreach ($entry in $hintReceipt.inputs.PSObject.Properties) {
+    if ((Get-FileHash -LiteralPath (Join-Path $repository $entry.Name) -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.Value) {
+        throw ('Original pet hint source differs: ' + $entry.Name)
+    }
+}
+if ((Get-FileHash -LiteralPath (Join-Path $repository $hintReceipt.output.path) -Algorithm SHA256).Hash.ToLowerInvariant() -ne $hintReceipt.output.sha256 -or
+    (Get-FileHash -LiteralPath (Join-Path $repository ($hintReceipt.output.path + '.meta')) -Algorithm SHA256).Hash.ToLowerInvariant() -ne $hintReceipt.output.meta_sha256) {
+    throw 'Original pet hint configuration differs from its receipt.'
+}
 foreach ($receiptName in @('home-weather-snow-source-manifest.json', 'home-snow-effect-native-source-manifest.json')) {
     $receipt = Get-Content -LiteralPath (Join-Path $repository ('assets/reference/' + $receiptName)) -Raw | ConvertFrom-Json
     foreach ($section in @('inputs', 'validation_inputs', 'runtime_bindings', 'outputs')) {
@@ -57,6 +68,16 @@ $scoped = @(
     'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.FruitTreeSkins.cs',
     'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.FruitTreeUnlock.cs',
     'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.FruitTreeUnlock.cs.meta',
+    'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.PetTreeUnlock.cs',
+    'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.PetTreeUnlock.cs.meta',
+    'Assets/Game/Runtime/Presentation/Home/OfflineHomePetTreeTips.cs',
+    'Assets/Game/Runtime/Presentation/Home/OfflineHomePetTreeTips.cs.meta',
+    'Assets/Game/Runtime/Offline/HomeUI/OfflineHomeFunctionLimits.cs',
+    'Assets/Game/Runtime/Offline/HomeUI/OfflineHomeFunctionLimits.cs.meta',
+    'Assets/Game/Runtime/Offline/Progression/OfflinePetGachaService.cs',
+    'Assets/Game/Resources/Home/pet-achievement-hints.json',
+    'Assets/Game/Resources/Home/pet-achievement-hints.json.meta',
+    'Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef',
     'Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs',
     'Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.FurnitureStories.cs',
     'Assets/Game/Runtime/Presentation/Home/HomeHudView.Tutorial.cs',
@@ -69,7 +90,6 @@ $committed = @(
     'Assets/Game/Runtime/Presentation/Home/HomeNativeSnowEffectView.cs',
     'Assets/Game/Runtime/Presentation/Home/HomeNativeSceneSlots.cs',
     'Assets/Game/Runtime/Presentation/Home/HomeEnvironmentView.cs',
-    'Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef',
     'Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerTipDotRuntime.cs',
     'Assets/Game/Runtime/Official/HomeFurniture/HomeFurnitureServices.cs'
 )
@@ -96,7 +116,7 @@ foreach ($name in $names) { $previous[$name] = [Environment]::GetEnvironmentVari
 try {
     $env:ZJCS_HOME_ACCEPTANCE_ROOT = Join-Path $work 'profiles'
     $env:ZJCS_HOME_ACCEPTANCE_OUTPUT = $work
-    $modeArguments = if ($UnlockStory) { @('-fruitTreeUnlockAcceptance') } elseif ($NaturalProduction) { @('-fruitTreeNaturalProductionAcceptance') } else { @('-fruitTreeNativeSkinsAcceptance') }
+    $modeArguments = if ($PetUnlockStory) { @('-petTreeUnlockAcceptance') } elseif ($UnlockStory) { @('-fruitTreeUnlockAcceptance') } elseif ($NaturalProduction) { @('-fruitTreeNaturalProductionAcceptance') } else { @('-fruitTreeNativeSkinsAcceptance') }
     $process = Start-UnityOnInternalDisplay -Editor $Editor -ArgumentList (@(
         '-muteAudio', '-job-worker-count', '2', '-gc-helper-count', '2',
         '-projectPath', ('"' + $project + '"'), '-executeMethod', 'Zjcs.Editor.Home.HomeAcceptanceLauncher.Run',
@@ -121,8 +141,8 @@ if ($process.ExitCode -ne 0 -or -not (Test-Path -LiteralPath $reportPath)) {
     throw ('Fruit-tree weather validation failed: ' + $log)
 }
 $report = Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json
-$requiredPattern = if ($UnlockStory) { 'PASS fruit-unlock-completed*' } elseif ($NaturalProduction) { 'PASS native-fruit-tree-natural-*' } else { 'PASS native-fruit-tree-weather-*' }
-$requiredCount = if ($UnlockStory) { 1 } elseif ($NaturalProduction) { 2 } else { 12 }
+$requiredPattern = if ($PetUnlockStory) { 'PASS pet-unlock-*' } elseif ($UnlockStory) { 'PASS fruit-unlock-completed*' } elseif ($NaturalProduction) { 'PASS native-fruit-tree-natural-*' } else { 'PASS native-fruit-tree-weather-*' }
+$requiredCount = if ($PetUnlockStory) { 14 } elseif ($UnlockStory) { 1 } elseif ($NaturalProduction) { 2 } else { 12 }
 if (-not $report.success -or @($report.lines | Where-Object { $_ -like $requiredPattern }).Count -ne $requiredCount) {
     throw ('The selected fruit-tree flow must pass: ' + $reportPath)
 }

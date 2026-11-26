@@ -27,21 +27,30 @@
   "inputs": {
     "assets/reference/home-fruit-tree-unlock-story-source-manifest.json": "58af6716a1171db1dadd8db43939f7a73618df19a9351a25884467e2dd1920c4",
     "assets/reference/home-fruit-tree-unlock-story-audio-source-manifest.json": "1a9036d69b409e20b62d1c6aceabd590af972fb04bf531b9441a629f1f34cd57",
-    "scripts/prepare_home_fruit_tree_story_runtime.py": "2a5f3ed8db9ee088cbaf641df42f4a14c6a40324efb1ba9900e6f014d1eb141a"
+    "assets/reference/home-pet-achievement-hint-bindings-source-manifest.json": "ca87e151106059e619c6c06eab3c719dee693cb4611d0a6f05805e7c31e30cb4",
+    "scripts/prepare_home_fruit_tree_story_runtime.py": "cf0504045230177ceee6fb08fa527d84d0c8961b9935a4fb074d1f047d901c78"
   },
   "runtime_bindings": {
     "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "76efdaac74e09712574613ee4b5e8f2dfdbd0f06ad9e0437ca273ac119a7ffda",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.FurnitureStories.cs": "07dbcdd713af5be811a69919eaf84222d836ac8104ea36e6c8b2a147e95ad0a7",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.FurnitureStoryWaits.cs": "f4c1ae35b90ca0ce688866b8390186167f0529705e22a43c307828429bef1e4d",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Tutorial.cs": "a4ecf396d2105a9f820eba8bce5956a6ccbbe51be908b55d7746e6c3eb05c05c",
-    "unity/Assets/Game/Runtime/Offline/HomeStoryDialog/HomeFurnitureStoryDialogNode.cs": "8bf032d5a50e647b51aef28f8a264c620cbfe6307c8ff708937ecb385cae9b6f"
+    "unity/Assets/Game/Runtime/Offline/HomeStoryDialog/HomeFurnitureStoryDialogNode.cs": "8bf032d5a50e647b51aef28f8a264c620cbfe6307c8ff708937ecb385cae9b6f",
+    "unity/Assets/Game/Runtime/Presentation/Home/OfflineHomePetTreeTips.cs": "4b78891c0ec4d31ae58dca1753a201dc2906970a05ac1a8690a5dd0c587a62be",
+    "unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeFunctionLimits.cs": "a1caf5a0e11c2beea021dcbb591c39cc55ab337a6175dc7fecd78228255e3ead",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePetGachaService.cs": "3964a42c522780798ea31a2e0d56860782e1866c21f484887b6747e6812e21d5",
+    "unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef": "27ae97b83afbae6aeff399a570cba516584c27d2ef5b64cdd132a40ccd27b7a9"
   },
   "validation_inputs": {
-    "scripts/test_home_fruit_tree_weather.ps1": "742f5f21aff340fd325895e2e475d3851b6708633b24b91e49a5c88864183ccc",
-    "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.cs": "684121c3f57c5ddb357973cff791de04b02d4041dad1efae08c98a3eeb08cf3c",
-    "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.FruitTreeUnlock.cs": "fa715779f1cbcb1f96eac7b5378385ec2fbb70c1c528bf4dd09036ca28f48f66"
+    "scripts/test_home_fruit_tree_weather.ps1": "c5cafb90a5e0ef0dec3973f9e5a675c454aa5cd5e9f8876ad1c9ec029251b2a5",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.cs": "579a173bea21f12228714005d90d1afe3ee1e85a32b096fcc39f8e6a54453956",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.FruitTreeUnlock.cs": "4b199141679e8c646771d5fec873667bfbffb7696d95041b09ba51e9b9fa5c75",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.PetTreeUnlock.cs": "d907f3de80a30884ef1c279a61051f46b8dd0f4667b8861e1ac8821588b0ae96"
   },
   "runtime_members": {
-    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs#TryGetFurnitureMaskTarget": "0d548e9c093b6e161cde9e307b2e785a8894996b6c09bf2d9078c0ba595f067a"
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs#TryGetFurnitureMaskTarget": "593ba205898b2574a884f1177417478a7c1de19e8fb1e79f07aadf7c6f788344",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs#Install": "38401322d02a2f358ff693f47ad47c4af5b5ec6f046da018ad9f2fd5e42bde2c",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs#Tick": "d91e374bee8859b72daabe6b077de0199a7511be1353f9741fe1552cf172e2e6",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs#Dispose": "6911146e1f01bfb1b0439edf7688402fd5b28fc0f83b3b5c07271ba59e6ad09b"
   }
 }

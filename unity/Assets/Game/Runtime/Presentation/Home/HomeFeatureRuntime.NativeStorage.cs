@@ -193,6 +193,7 @@ namespace Zjcs.Presentation.Home
 
             private readonly HomeFeatureRuntime home;
             private readonly HomeNativePrefabLoader loader = new HomeNativePrefabLoader();
+            private OfflineHomePetTreeTips petTreeTips;
             private readonly StoryNodeRegisterMgr storyNodes = new StoryNodeRegisterMgr();
             private readonly GAction changed = new GAction();
             private readonly GAction<HomeViewMode> viewModes = new GAction<HomeViewMode>();
@@ -523,6 +524,21 @@ namespace Zjcs.Presentation.Home
 
             private void Install(GameObject root)
             {
+                foreach (var ui in root.GetComponentsInChildren<HomePlayerUIBase>(true))
+                    ui.PlayerServices = this;
+                var achievementHints = root.GetComponentsInChildren<Zjcs.Official.HomePetGachaUI.AchievementRedDotItem>(true);
+                var materialHints = root.GetComponentsInChildren<Zjcs.Official.HomePetGachaUI.GachaBlueDotBase>(true);
+                if (achievementHints.Length + materialHints.Length > 0 && petTreeTips == null)
+                {
+                    var limits = new Zjcs.Offline.HomeUI.OfflineHomeFunctionLimits(
+                        Zjcs.Offline.HomeUI.OfficialCurrentHomeRuleAssetCatalog.LoadDefault(),
+                        home.partnerCatalog.Conditions, () => home.furnitureConditionPlayer,
+                        Zjcs.Offline.State.OfflineOpeningPolicy.Evaluate);
+                    petTreeTips = new OfflineHomePetTreeTips(home.petGacha,
+                        () => limits.IsLimited(136), chest => limits.IsLimited(5, chest), home.profile.InventoryCount);
+                }
+                foreach (var hint in achievementHints) hint.AchievementServices = petTreeTips;
+                foreach (var hint in materialHints) hint.GachaServices = petTreeTips;
                 foreach (var tree in root.GetComponentsInChildren<HomeFruitTree>(true))
                 {
                     tree.FurnitureServices = this;
@@ -631,6 +647,7 @@ namespace Zjcs.Presentation.Home
             internal void Tick(float dayPhase)
             {
                 if (disposed) return;
+                petTreeTips?.Synchronize();
                 var next = home.profile.Save.Player;
                 bool playerReplaced = !ReferenceEquals(renderedPlayer, next);
                 if (playerReplaced)
@@ -662,6 +679,7 @@ namespace Zjcs.Presentation.Home
             {
                 if (disposed) return;
                 disposed = true;
+                petTreeTips?.Dispose();
                 snowEffects?.Dispose();
                 snowEffects = null;
                 creator?.ReleaseAll(this);

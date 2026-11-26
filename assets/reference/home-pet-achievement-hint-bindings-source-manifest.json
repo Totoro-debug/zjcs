@@ -1,0 +1,69 @@
+{
+  "manifest": "911_156995",
+  "tables": [
+    {
+      "table": "achievement",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "91d1d216b8937bf6389542ff89cd5d3f",
+        "path_id": "2512796603372558678",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/91d1d216b8937bf6389542ff89cd5d3f.bundle",
+        "manifest": "911_156995",
+        "bundle_size": 2634707,
+        "bundle_sha256": "0fccef621786ed9a8349664658739eb05d9721c7b838680b425e9989eea46aef"
+      },
+      "object_sha256": "39932e40c3f344527fcc00694a9780b6f85190b2dc36efc71d2e531257986cf8",
+      "payload_sha256": "a8c028ebfc3a24ecbebfb47a46b83f2638572b0ec2a9431d9650ce1fc72e4a10"
+    },
+    {
+      "table": "achievement_group",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "91d1d216b8937bf6389542ff89cd5d3f",
+        "path_id": "-8353586998771411927",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/91d1d216b8937bf6389542ff89cd5d3f.bundle",
+        "manifest": "911_156995",
+        "bundle_size": 2634707,
+        "bundle_sha256": "0fccef621786ed9a8349664658739eb05d9721c7b838680b425e9989eea46aef"
+      },
+      "object_sha256": "339d0c615f3211a9d00c5064ff76ac696b33b3a129faa1166f9c115805ca3909",
+      "payload_sha256": "b9d0ccb0d7f0fb80280f7d38ded6ee6364fa11e6d52c070eb7fd406cff90b8b0"
+    },
+    {
+      "table": "game_settings",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "91d1d216b8937bf6389542ff89cd5d3f",
+        "path_id": "-3869022733471997335",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/91d1d216b8937bf6389542ff89cd5d3f.bundle",
+        "manifest": "911_156995",
+        "bundle_size": 2634707,
+        "bundle_sha256": "0fccef621786ed9a8349664658739eb05d9721c7b838680b425e9989eea46aef"
+      },
+      "object_sha256": "a0be7e48c09a2ecf63d07393a688768eabe4bdfbdc3d05213bfb0e64a3efc96f",
+      "payload_sha256": "2e1a3181062eb5a0ebe6bef3adb06ed08b45fac82dbc953a0993d6a8ce9958d8"
+    }
+  ],
+  "inputs": {
+    "scripts/prepare_home_pet_achievement_bindings.py": "624d4f7d4b00f7ccb4f7c00a36ed90961264a1890da6fa1a637a349920a0afc3",
+    "scripts/official_tables.py": "04d33df654baabe85b07c09dc19a6c7e5014f2847e6f164e11b6afe043639710",
+    "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
+    "scripts/prepare_unity_map13_sources.py": "8fb4be17cfa59a40b3020fed6a8a6d5533b6e52c758e8c92d3a3c743cc7d0906",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/AchievementGroupInfo.cs": "66f3dfbb2ccc2029d5468f4118f63e4f0aa9502e8d5a97b7473aaaa61feb99ed",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/AchievementGroupInfoParser.cs": "7764c90a36009923419ec4b5c565f9c13a3c46d4547e96fb42e2d84243dc528d",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/AchievementDataKey.cs": "533c436096be7c9d19e25ac242693bc56c5e1870d62fc3f935319c33b6371139",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/PlayerUtils.cs": "d42ecf412164ea390b19f6437235435261fafe37348cc76ac075e1e2119565ba",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/Player.cs": "e96ddc2bb91a1d310f847ff51c93966d119ac3045db9cd191455fbeda3f983f6",
+    ".tools/source-packages/current/911_156995/official-code/client-source/GachaBlueDotBase.cs": "5ce6508e1161bdbb77d17c3a04a5a33d40ed8863c1f4bdcaad8e29b5c52d47aa",
+    ".tools/source-packages/current/911_156995/official-code/client-source/GachaBlueDotForSetupMinCount.cs": "902d374c14f45f868487635324e4e5432598935de73be8f5d56718cf7b5802c9",
+    ".tools/source-packages/current/911_156995/official-code/client-source/AchievementRedDotItem.cs": "62f9a63c830de50bdf5f80a30ee4e2f64cae7bfb308c69da4d3a709133769395"
+  },
+  "output": {
+    "path": "unity/Assets/Game/Resources/Home/pet-achievement-hints.json",
+    "sha256": "88fd4b958469627777d3bee8a4f589678ed96676dfe12fd6b757abe5e2a766f6",
+    "meta_sha256": "e9f6c31d9b0d10e3e611fa0597a80ed6f606003227cead1ac7ce7820fa629357"
+  }
+}

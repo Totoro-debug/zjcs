@@ -27,6 +27,7 @@ def build():
         if digest(path) != expected:
             raise ValueError('Original story source changed: ' + path)
     inputs = [upstream, 'assets/reference/home-fruit-tree-unlock-story-audio-source-manifest.json',
+              'assets/reference/home-pet-achievement-hint-bindings-source-manifest.json',
               'scripts/prepare_home_fruit_tree_story_runtime.py']
     runtime = [
         'unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs',
@@ -34,24 +35,38 @@ def build():
         'unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.FurnitureStoryWaits.cs',
         'unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Tutorial.cs',
         'unity/Assets/Game/Runtime/Offline/HomeStoryDialog/HomeFurnitureStoryDialogNode.cs',
+        'unity/Assets/Game/Runtime/Presentation/Home/OfflineHomePetTreeTips.cs',
+        'unity/Assets/Game/Runtime/Offline/HomeUI/OfflineHomeFunctionLimits.cs',
+        'unity/Assets/Game/Runtime/Offline/Progression/OfflinePetGachaService.cs',
+        'unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef',
     ]
     validation = [
         'scripts/test_home_fruit_tree_weather.ps1',
         'unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.cs',
         'unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.FruitTreeUnlock.cs',
+        'unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.PetTreeUnlock.cs',
     ]
     # This shared file also contains independent building work. Record the
-    # fruit-tree mask binding member alone, keeping that work out of this port.
+    # relevant members without including unrelated building entries.
     shared = 'unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs'
     text = (ROOT / shared).read_text(encoding='utf-8-sig')
-    start = text.index('            internal bool TryGetFurnitureMaskTarget(')
-    end = text.index('\n            internal ', start + 1)
+    members = {}
+    for name, prefix in [('TryGetFurnitureMaskTarget', 'internal bool'), ('Install', 'private void'),
+                         ('Tick', 'internal void'), ('Dispose', 'public void')]:
+        marker = '            ' + prefix + ' ' + name + '('
+        offset = text.index(marker)
+        brace = text.index('{', offset)
+        level = 1
+        end = brace + 1
+        while level:
+            level += (text[end] == '{') - (text[end] == '}')
+            end += 1
+        members[shared + '#' + name] = hashlib.sha256(text[offset:end].encode()).hexdigest()
     return dict(manifest=source['manifest'], original_sources=original,
                 inputs={path: digest(path) for path in inputs},
                 runtime_bindings={path: digest(path) for path in runtime},
                 validation_inputs={path: digest(path) for path in validation},
-                runtime_members={shared + '#TryGetFurnitureMaskTarget':
-                                 hashlib.sha256(text[start:end].encode()).hexdigest()})
+                runtime_members=members)
 
 
 if __name__ == '__main__':

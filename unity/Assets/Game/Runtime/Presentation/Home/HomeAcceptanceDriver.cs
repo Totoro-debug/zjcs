@@ -75,17 +75,20 @@ namespace Zjcs.Presentation.Home
             {
                 if (string.IsNullOrEmpty(slotId))
                     throw new InvalidOperationException("The acceptance profile was not created by the launcher.");
-                if (Environment.GetCommandLineArgs().Contains("-fruitTreeUnlockAcceptance"))
+                bool petTreeUnlock = Environment.GetCommandLineArgs().Contains("-petTreeUnlockAcceptance");
+                if (Environment.GetCommandLineArgs().Contains("-fruitTreeUnlockAcceptance") || petTreeUnlock)
                 {
+                    int unlockLevel = petTreeUnlock ? 50 : 31;
                     var profile = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
                     int requiredSubRank = Zjcs.Offline.HomeUI.OfficialCurrentHomeRuleAssetCatalog.LoadDefault().Rows("system_level_limit")
-                        .Where(row => Convert.ToInt32(row["PlayerBlessLevel"]) == 0 && Convert.ToInt32(row["PlayerLevel"]) >= 31)
+                        .Where(row => Convert.ToInt32(row["PlayerBlessLevel"]) == 0 && Convert.ToInt32(row["PlayerLevel"]) >= unlockLevel)
                         .Min(row => Convert.ToInt32(row["SubRank"]));
                     var seed = profile.ApplyInventoryTransaction("acceptance:fruit-tree-unlock:conditions", save =>
                     {
-                        save.Player.Level = 31;
-                        save.Player.Experience = OfficialCharacterAssetCatalog.LoadDefault().Load().CumulativeLevelExperience[31];
+                        save.Player.Level = unlockLevel;
+                        save.Player.Experience = OfficialCharacterAssetCatalog.LoadDefault().Load().CumulativeLevelExperience[unlockLevel];
                         save.Player.SubRank = Math.Max(save.Player.SubRank, requiredSubRank);
+                        if (petTreeUnlock) return;
                         if (!save.World.Maps.Any(value => value.MapClassId == 11))
                             save.World.Maps.Add(new OfflineMapProgress { MapClassId = 11,
                                 Regions = new List<OfflineRegionProgress> { new OfflineRegionProgress { Region = 0 } } });
@@ -132,6 +135,8 @@ namespace Zjcs.Presentation.Home
                 bool passed = false;
                 if (Environment.GetCommandLineArgs().Contains("-fruitTreeUnlockAcceptance"))
                     yield return VerifyNativeFruitTreeUnlock(runtime, value => passed = value);
+                else if (Environment.GetCommandLineArgs().Contains("-petTreeUnlockAcceptance"))
+                    yield return VerifyNativePetTreeUnlock(runtime, value => passed = value);
                 else yield return VerifyNativeFruitTree(runtime, value => passed = value);
                 if (passed && Environment.GetCommandLineArgs().Contains("-fruitTreeNativeSkinsAcceptance"))
                     yield return VerifyNativeFruitTreeSkins(runtime, value => passed &= value);

@@ -40,16 +40,7 @@ namespace Zjcs.Presentation.Home
             if (!passed) { completed(false); yield break; }
             // The official graph owns camera placement after starting. Position
             // only this initial input through the already verified drag seam.
-            Vector3 current = runtime.Scene.Camera.transform.position;
-            var input = PrivateField<object>(runtime, "input");
-            float units = 2f * runtime.Scene.OrthographicSize / Screen.height * runtime.Scene.DragSensitivity;
-            Vector2 start = new Vector2(Screen.width * .5f, Screen.height * .5f);
-            Vector2 delta = new Vector2(-(tree.transform.position.x - current.x) / units,
-                -(tree.transform.position.y - current.y) / units);
-            Type inputType = input.GetType();
-            inputType.GetMethod("PointerDown", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(input, new object[] { start, false });
-            inputType.GetMethod("PointerMove", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(input, new object[] { start + delta });
-            inputType.GetMethod("PointerUp", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(input, new object[] { start + delta, false });
+            CenterUnlockTree(runtime, tree);
             yield return ClickUnlockTree(runtime, tree, true);
             float deadline = Time.realtimeSinceStartup + 15;
             while (!runtime.IsFurnitureStoryRunning && Time.realtimeSinceStartup < deadline) yield return null;
@@ -89,35 +80,9 @@ namespace Zjcs.Presentation.Home
                 return "repair and initial output persist before collection";
             });
             if (!passed) { completed(false); yield break; }
-            // Close the original repaired notification via its actual button.
-            deadline = Time.realtimeSinceStartup + 15;
-            FurnitureRepairedNotifyDialog notify;
-            while (Time.realtimeSinceStartup < deadline)
-            {
-                notify = runtime.Hud.Canvas.GetComponentInChildren<FurnitureRepairedNotifyDialog>();
-                if (notify && notify.GetComponent<WorldPopupWindow>().State == WorldPopupWindow.EState.Show) break;
-                yield return null;
-            }
-            notify = runtime.Hud.Canvas.GetComponentInChildren<FurnitureRepairedNotifyDialog>();
-            passed &= Check("fruit-unlock-notification", () =>
-            {
-                Assert(notify, "original fruit-tree repaired notification is active");
-                return "original repaired notification waits for its close interaction";
-            });
-            if (!passed) { completed(false); yield break; }
-            if (notify)
-            {
-                yield return Capture("fruit-unlock-repaired-notification.png");
-                Button close = notify.GetComponentsInChildren<Button>().First(value => value.name.Contains("Close"));
-                ClickPartnerUi(close);
-            }
-            deadline = Time.realtimeSinceStartup + 10;
-            while (notify && Time.realtimeSinceStartup < deadline) yield return null;
-            passed &= Check("fruit-unlock-notification-closed", () =>
-            {
-                Assert(!notify, "simulated close input releases the original repaired notification");
-                return "native repaired notification closes before the next graph dialogue";
-            });
+            bool notification = false;
+            yield return CloseUnlockRepairNotification(runtime, "fruit-unlock", value => notification = value);
+            passed &= notification;
             if (!passed) { completed(false); yield break; }
             bool secondDialog = false;
             yield return AdvanceUnlockDialogue(runtime, "fruit-unlock-after-repair", value => secondDialog = value);
@@ -170,7 +135,58 @@ namespace Zjcs.Presentation.Home
             completed(passed);
         }
 
-        private IEnumerator ClickUnlockTree(HomeFeatureRuntime runtime, GameObject tree, bool repairing)
+        private IEnumerator CloseUnlockRepairNotification(HomeFeatureRuntime runtime, string prefix, Action<bool> completed)
+        {
+            bool passed = true;
+            // Close the original repaired notification via its actual button.
+            float deadline = Time.realtimeSinceStartup + 15;
+            FurnitureRepairedNotifyDialog notify;
+            while (Time.realtimeSinceStartup < deadline)
+            {
+                notify = runtime.Hud.Canvas.GetComponentInChildren<FurnitureRepairedNotifyDialog>();
+                if (notify && notify.GetComponent<WorldPopupWindow>().State == WorldPopupWindow.EState.Show) break;
+                yield return null;
+            }
+            notify = runtime.Hud.Canvas.GetComponentInChildren<FurnitureRepairedNotifyDialog>();
+            passed &= Check(prefix + "-notification", () =>
+            {
+                Assert(notify, "original fruit-tree repaired notification is active");
+                return "original repaired notification waits for its close interaction";
+            });
+            if (!passed) { completed(false); yield break; }
+            if (notify)
+            {
+                yield return Capture(prefix + "-repaired-notification.png");
+                Button close = notify.GetComponentsInChildren<Button>().First(value => value.name.Contains("Close"));
+                ClickPartnerUi(close);
+            }
+            deadline = Time.realtimeSinceStartup + 10;
+            while (notify && Time.realtimeSinceStartup < deadline) yield return null;
+            passed &= Check(prefix + "-notification-closed", () =>
+            {
+                Assert(!notify, "simulated close input releases the original repaired notification");
+                return "native repaired notification closes before the next graph dialogue";
+            });
+            if (!passed) { completed(false); yield break; }
+            completed(passed);
+        }
+
+        private static void CenterUnlockTree(HomeFeatureRuntime runtime, GameObject tree)
+        {
+            Vector3 current = runtime.Scene.Camera.transform.position;
+            var input = PrivateField<object>(runtime, "input");
+            float units = 2f * runtime.Scene.OrthographicSize / Screen.height * runtime.Scene.DragSensitivity;
+            Vector2 start = new Vector2(Screen.width * .5f, Screen.height * .5f);
+            Vector2 delta = new Vector2(-(tree.transform.position.x - current.x) / units,
+                -(tree.transform.position.y - current.y) / units);
+            Type inputType = input.GetType();
+            inputType.GetMethod("PointerDown", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(input, new object[] { start, false });
+            inputType.GetMethod("PointerMove", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(input, new object[] { start + delta });
+            inputType.GetMethod("PointerUp", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(input, new object[] { start + delta, false });
+        }
+
+        private IEnumerator ClickUnlockTree(HomeFeatureRuntime runtime, GameObject tree, bool repairing,
+            EFurniture repairType = EFurniture.FruitTree)
         {
             Physics.SyncTransforms();
             Vector2 point = default;
@@ -178,7 +194,7 @@ namespace Zjcs.Presentation.Home
             foreach (var collider in tree.GetComponentsInChildren<Collider>().Where(value => value.enabled))
             {
                 var sub = collider.GetComponentInParent<HomeFruitTreeSubFurniture>();
-                if (repairing && (!sub || sub.Furniture != EFurniture.FruitTree)) continue;
+                if (repairing && (!sub || sub.Furniture != repairType)) continue;
                 if (!repairing && collider.GetComponentInParent<HomeFruitTreePet>()) continue;
                 foreach (float x in new[] { .5f, .25f, .75f })
                 foreach (float y in new[] { .5f, .25f, .75f })
