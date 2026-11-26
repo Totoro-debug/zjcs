@@ -1,0 +1,43 @@
+{
+  "entities": [
+    25114,
+    12160,
+    12161,
+    12162,
+    24390,
+    12190,
+    12191,
+    12192
+  ],
+  "code": [
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "FightStatusComponentInfo",
+    "FightStatusRoundCheckSkillComponentInfo",
+    "FightStatusRoundCheckSkillComponent",
+    "FightStatusPropComponentInfo",
+    "StatusEndComponentInfo",
+    "StatusEndComponent",
+    "BattleFormulaHandler"
+  ],
+  "rule_pack_fragments": [
+    "FightSkill_part106.g.bytes",
+    "FightSkill_part110.g.bytes",
+    "FightSkill_part720.g.bytes",
+    "FightSkill_part756.g.bytes"
+  ],
+  "visibility_bundles": [
+    "12160",
+    "12190"
+  ],
+  "scope_numeric": true,
+  "current_managed_views": true,
+  "runtime_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10605.json"
+  ],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/ice-guardian-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/ice-guardian-current-status-graphs-source-manifest.json"
+  ]
+}

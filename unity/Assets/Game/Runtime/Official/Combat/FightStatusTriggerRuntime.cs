@@ -291,16 +291,17 @@ namespace Zjcs.Combat.Official
 
         public static List<FightBattleStatusSkillInvocation> CollectRoundCheckSkills(
             FightBattleUnitState listener, IReadOnlyList<FightBattleUnitState> units,
-            FightRandomStream random)
+            FightRandomStream random, bool releasedActiveSkill = false)
         {
             var result = new List<FightBattleStatusSkillInvocation>();
-            if (listener == null || units == null || listener.Statuses == null) return result;
+            if (listener == null || units == null || listener.Statuses == null
+                || releasedActiveSkill || !listener.IsAlive) return result;
             foreach (FightBattleUnitState owner in units)
             {
-                if (owner == null || owner.Statuses == null) continue;
+                if (owner == null || owner.Statuses == null || !owner.IsAlive) continue;
                 foreach (FightBattleStatusState status in owner.Statuses)
                 {
-                    if (status == null || !status.HasRoundCheckSkill
+                    if (status == null || status.ForbiddenType != 0 || !status.HasRoundCheckSkill
                         || !status.RoundCheckSkillRulesSupported
                         || FightStatusLifecycle.ResolveTargetUnitId(status,
                             status.RoundCheckSkillListenTarget, units) != listener.Id) continue;

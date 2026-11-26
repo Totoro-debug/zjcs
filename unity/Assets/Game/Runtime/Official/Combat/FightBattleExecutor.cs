@@ -268,15 +268,7 @@ namespace Zjcs.Combat.Official
                     ExecuteRoundStartTriggers(source, actor);
                     RebuildBattleProperties();
                 }
-                List<FightBattleStatusSkillInvocation> roundCheckInvocations =
-                    FightStatusTriggerRuntime.CollectRoundCheckSkills(actor, units, random);
-                float roundCheckDelay = 0f;
-                ExecuteConfiguredStatusSkills(roundCheckInvocations, casts, damageEvents,
-                    movements, ref roundCheckDelay, out float roundCheckDuration,
-                    out float roundCheckActionDuration);
-                stepDuration = Math.Max(stepDuration, roundCheckDuration + roundCheckDelay);
-                if (roundCheckActionDuration >= 0f)
-                    stepActionDuration = Math.Max(stepActionDuration, roundCheckActionDuration);
+
             }
             ExecutePendingCooldownModifySkills(casts, damageEvents, movements,
                 ref stepDuration, ref stepActionDuration);
@@ -449,6 +441,8 @@ namespace Zjcs.Combat.Official
                 }
 
             ExecuteRoundBeforeEndSkills(actor, casts, damageEvents, movements, ref stepDuration, ref stepActionDuration);
+            ExecuteRoundCheckSkills(actor, ordinaryCastStart, casts, damageEvents, movements,
+                ref stepDuration, ref stepActionDuration);
             if (statusCatalog != null)
             {
                 List<FightBattleStatusSkillInvocation> roundEndSkills =

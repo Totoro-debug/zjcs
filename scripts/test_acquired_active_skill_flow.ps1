@@ -13,6 +13,19 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -eq 10605) {
+        foreach ($file in @('companion-cultivated-save.json','companion-ice-guardian-checkpoint.json',
+            'companion-ice-guardian-receipt.json','acquired-active-ui-passive-battle.png')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Missing cultivated ice guardian battle evidence.' }
+        }
+        $receipt = Get-Content (Join-Path $Run 'companion-ice-guardian-receipt.json') -Raw | ConvertFrom-Json
+        if ($receipt.activeRounds -lt 1 -or $receipt.idleRounds -lt 1 -or $receipt.starts -lt 1 -or
+            $receipt.ends -lt 1 -or $receipt.heals -lt 1 -or $receipt.restoredHp -lt 1 -or
+            -not (Select-String -LiteralPath $runtimeLog -SimpleMatch '[Acquired passive combat] 10605 idle-round protection, thaw healing, cultivation and restore passed.')) {
+            throw 'Ice guardian did not exercise its cultivated protection, active-round suppression, thaw cure or restore.'
+        }
+        return
+    }
     if ($PassiveId -eq 10577) {
         foreach ($file in @('companion-cultivated-save.json','companion-light-scorch-checkpoint.json',
             'companion-light-scorch-receipt.json','acquired-active-ui-passive-battle.png','acquired-active-ui-passive-status.png')) {

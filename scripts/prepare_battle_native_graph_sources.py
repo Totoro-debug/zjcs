@@ -38,6 +38,7 @@ def main():
         'quick-casting-current-skill-graphs',
         'light-scorch-current-skill-graphs',
         'divine-thunder-current-skill-graphs',
+        'ice-guardian-current-skill-graphs',
     )
     receipts = {
         'skill-native-graphs': 'skill-native-graph-assets-source-manifest',

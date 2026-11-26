@@ -116,6 +116,7 @@ namespace Zjcs.Combat.Official
             if (statusCatalog != null && ended != null && ended.HasPropertyComponent)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             RefreshShieldAttackPresence(owner, ended);
+            ExecuteOwnStatusEndActions(owner, ended);
             ExecuteStatusEndReactions(owner, ended);
             if (movementStartContext != null && statusCatalog != null && owner != null && ended != null)
             {
