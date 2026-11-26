@@ -9,12 +9,12 @@ import uuid
 from home_native_assets import install_staged_assets, write_staged_assets
 from native_spine_assets import NativeSpineBinding
 from official_apk import ROOT
+from official_manifest import read_asset_manifest
 from prepare_current_partner_native import PartnerNativeRecovery, documents, identity, pointer
 from prepare_partner_card_native import PartnerCardBinding, guid, script_id, sha
 
 
 BUNDLE = 'defaultpackage_assets_prefabs_home_dynamic_theme_ground.bundle'
-NAMES = ('GroundSnow', 'GroundHalloweenSnow', 'GroundChineseOdysseySnow')
 DEST = ROOT / 'unity/Assets/Official/Home/WeatherNative'
 RECEIPT = ROOT / 'assets/reference/home-snow-effect-native-source-manifest.json'
 
@@ -41,19 +41,46 @@ class SnowEffectBinding(PartnerCardBinding):
 
     def build(self):
         selections = []
-        for name in NAMES:
-            relative = 'Prefabs/Home/Dynamic/Theme/Ground/' + name + '.prefab'
+        assets = read_asset_manifest(self.recovery.apk.source.manifest_bytes('DefaultPackage', self.recovery.apk.archive))
+        grounds = sorted((row for row in assets if row['bundle'] == BUNDLE and row['path'].endswith('.prefab')),
+                         key=lambda row: row['path'])
+        for asset in grounds:
+            relative = asset['path'].removeprefix('Assets/')
+            name = Path(relative).stem
             root = self.recovery.apk.asset(BUNDLE, '/' + name + '.prefab')
             source_transform = root.read().m_Component[0].component.deref()
-            effect, = [child.read().m_GameObject.deref() for child in source_transform.read().m_Children
-                       if child.read().m_GameObject.read().m_Name == 'Eff_Home_Snow']
-            controller, = [entry.component.deref() for entry in root.read().m_Component
-                           if entry.component.type.name == 'MonoBehaviour'
-                           and entry.component.deref().read(check_read=False).m_Script.read().m_ClassName == 'HomeWeatherSnow']
+            controllers = [entry.component.deref() for entry in root.read().m_Component
+                           if entry.component.type.name == 'MonoBehaviour' and
+                           entry.component.deref().read(check_read=False).m_Script.read().m_ClassName == 'HomeWeatherSnow']
             native_path = self.native / relative
+            for path in (native_path, Path(str(native_path) + '.meta')):
+                key = path.relative_to(self.cache / self.recovery.export_name).as_posix()
+                if sha(path.read_bytes()) != self.checked[key]:
+                    raise ValueError('Original ground export differs: ' + key)
+                self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
             native = documents(native_path.read_text('utf8'))
             native_root, = [key for key, value in native.items()
                             if value.get('GameObject', {}).get('m_Name') == name]
+            token = hashlib.md5(('zjcs:home-snow-effect:' + identity(root)).encode()).hexdigest()
+            if not controllers:
+                # Absence is proved from every component on the original root.
+                # Retain that root/transform as the empty weather-effect projection.
+                root_fields = copy.deepcopy(native[native_root]['GameObject'])
+                transform_id = root_fields['m_Component'][0]['component']['fileID']
+                root_fields['m_Component'] = [dict(component=dict(fileID=transform_id))]
+                transform = copy.deepcopy(native[transform_id]); transform['Transform']['m_Children'] = []
+                docs = {native_root: dict(GameObject=root_fields), transform_id: transform}
+                self.queue.append((Path('Resources/Home/Weather/SnowEffects') / (name + '.prefab'), token, docs))
+                for obj in (root, source_transform):
+                    self.proof[identity(obj)] = dict(type=obj.type.name,
+                        source=dict(self.recovery.apk.provenance(obj)), original_sha256=sha(obj.get_raw_data()))
+                selections.append(dict(name=name, original_ground=identity(root), original_asset=asset,
+                    prefab=dict(fileID=native_root, guid=token, type=3),
+                    resource='Home/Weather/SnowEffects/' + name, has_snow_controller=False))
+                continue
+            controller, = controllers
+            effect, = [child.read().m_GameObject.deref() for child in source_transform.read().m_Children
+                       if child.read().m_GameObject.read().m_Name == 'Eff_Home_Snow']
             native_effect, = [key for key, value in native.items()
                               if value.get('GameObject', {}).get('m_Name') == 'Eff_Home_Snow']
             self.recovery.recover(name, self.work / name, bundle=BUNDLE,
@@ -88,16 +115,43 @@ class SnowEffectBinding(PartnerCardBinding):
             docs[native_root] = dict(GameObject=root_fields)
             docs[transform_id] = root_transform
             docs[controller_id] = dict(MonoBehaviour=restored)
-            token = hashlib.md5(('zjcs:home-snow-effect:' + identity(root)).encode()).hexdigest()
             self.queue.append((Path('Resources/Home/Weather/SnowEffects') / (name + '.prefab'), token, docs))
             for obj in (root, source_transform, controller):
                 self.proof[identity(obj)] = dict(type=obj.type.name,
                     source=dict(self.recovery.apk.provenance(obj)), original_sha256=sha(obj.get_raw_data()))
-            selections.append(dict(name=name, original_ground=identity(root), effect=identity(effect),
+            selections.append(dict(name=name, original_ground=identity(root), original_asset=asset,
+                has_snow_controller=True, effect=identity(effect),
                 controller=identity(controller), source_fields=fields,
                 prefab=dict(fileID=native_root, guid=token, type=3),
                 resource='Home/Weather/SnowEffects/' + name, retained_objects=panel['objectMap'],
                 retained_ground_components=[identity(source_transform), identity(controller)]))
+        manager, = [obj for obj in self.recovery.apk.objects('defaultpackage_assets_scenes_main.bundle')
+                    if obj.type.name == 'MonoBehaviour' and obj.read(check_read=False).m_Script.path_id
+                    and obj.read(check_read=False).m_Script.read().m_ClassName == 'HomeEntityManagerMono']
+        slot_row, = [row for row in self.recovery.fields(manager)['HomeThemeSlotDict']['mSerializeBuffer']
+                     if row['Key'] == 4]
+        slot = pointer(slot_row['Value'], manager)
+        chain = []
+        for obj in (manager,):
+            self.proof[identity(obj)] = dict(type=obj.type.name,
+                source=dict(self.recovery.apk.provenance(obj)), original_sha256=sha(obj.get_raw_data()))
+        while slot:
+            value = slot.read()
+            chain.append(dict(name=value.m_GameObject.read().m_Name,
+                position=[value.m_LocalPosition.x, value.m_LocalPosition.y, value.m_LocalPosition.z],
+                rotation=[value.m_LocalRotation.x, value.m_LocalRotation.y, value.m_LocalRotation.z, value.m_LocalRotation.w],
+                scale=[value.m_LocalScale.x, value.m_LocalScale.y, value.m_LocalScale.z], children=[]))
+            for obj in (slot, value.m_GameObject.deref()):
+                self.proof[identity(obj)] = dict(type=obj.type.name,
+                    source=dict(self.recovery.apk.provenance(obj)), original_sha256=sha(obj.get_raw_data()))
+            slot = value.m_Father.deref() if value.m_Father.path_id else None
+        for child, parent in zip(chain, chain[1:]): parent['children'].append(child)
+        catalog = dict(entries=[dict(path=row['original_asset']['path'].removeprefix('Assets/Prefabs/').removesuffix('.prefab'),
+                                    resource=row['resource']) for row in selections])
+        for filename, data in (('catalog.json', catalog), ('ground-slot.json', dict(root=chain[-1]))):
+            self.queue.append((Path('Resources/Home/Weather') / filename,
+                hashlib.md5(('zjcs:home-snow-effect:' + filename).encode()).hexdigest(),
+                (json.dumps(data, ensure_ascii=False, indent=2) + '\n').encode()))
         index = 0
         while index < len(self.queue):
             data = self.queue[index][2]
@@ -133,15 +187,25 @@ def install(cache):
         installed = install_staged_assets(work, staged, outputs, DEST, 'home-snow-effects', previous_outputs=previous)
         validation_inputs = {path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in (
             ROOT / 'scripts/fixtures/home_snow_effect_native_validation.cs',
-            ROOT / 'scripts/test_home_snow_effect_native.ps1')}
+            ROOT / 'scripts/test_home_snow_effect_native.ps1',
+            ROOT / 'scripts/fixtures/home_snow_runtime_validation.cs',
+            ROOT / 'scripts/test_home_snow_runtime.ps1')}
+        runtime_bindings = {path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in (
+            ROOT / 'unity/Assets/Game/Runtime/Presentation/Home/HomeNativeSnowEffectView.cs',
+            ROOT / 'unity/Assets/Game/Runtime/Presentation/Home/HomeNativeSnowEffectView.cs.meta',
+            ROOT / 'unity/Assets/Game/Runtime/Presentation/Home/HomeNativeSceneSlots.cs',
+            ROOT / 'unity/Assets/Game/Runtime/Presentation/Home/HomeEnvironmentView.cs',
+            ROOT / 'unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef')}
         receipt = dict(manifest=recovery.apk.version, inputs=binding.inputs, validation_inputs=validation_inputs,
-            selections=selections,
+            runtime_bindings=runtime_bindings, selections=selections,
             resources=binding.proof, recovery=recovery.proof, outputs=installed,
             adaptations=['Ground root, transform and HomeWeatherSnow retain their original identity and fields. '
                          'Only the complete Eff_Home_Snow subtree is included in this effect prefab. '
-                         'Other ground visuals/controllers remain owned by the ground migration and are not replaced.'],
-            scope='Original three ground snow particle effects and controller bindings. '
-                  'Full ground prefab and production Home integration require separate validation.')
+                         'Other ground visuals/controllers remain owned by the ground migration and are not replaced.',
+                         'Grounds without an original HomeWeatherSnow retain only their authored root/transform in the effect projection. '
+                         'The original ThemeEntityCreator owns all effect projections through a separate loader and the original scene slot chain.'],
+            scope='Original ground weather-effect projections, controller bindings and scene slot chain. '
+                  'Full ground model migration remains separate from this weather owner.')
         RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
         print('Installed original snow effect closures:', len(selections), 'prefabs;', len(installed), 'files')
         print('Owned validation workspace:', work)

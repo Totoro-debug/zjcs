@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Zjcs.Presentation.Home
 {
-    /// <summary>Official outdoor furniture slots, separate from prefab-internal transforms.</summary>
+    /// <summary>Official scene slots, separate from prefab-internal transforms.</summary>
     internal sealed class HomeNativeSceneSlots
     {
         [Serializable]
@@ -22,9 +22,9 @@ namespace Zjcs.Presentation.Home
 
         private readonly Dictionary<string, Transform> slots = new Dictionary<string, Transform>(StringComparer.Ordinal);
 
-        internal static HomeNativeSceneSlots Create(Transform parent)
+        internal static HomeNativeSceneSlots Create(Transform parent, string resourcePath = "Home/native-scene-slots")
         {
-            var asset = Resources.Load<TextAsset>("Home/native-scene-slots");
+            var asset = Resources.Load<TextAsset>(resourcePath);
             if (!asset) throw new InvalidOperationException("The official outdoor furniture slots are missing.");
             var data = JsonUtility.FromJson<Data>(asset.text);
             if (data?.root == null) throw new InvalidOperationException("The official outdoor slot hierarchy is invalid.");

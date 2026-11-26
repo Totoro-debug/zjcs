@@ -253,6 +253,7 @@ namespace Zjcs.Presentation.Home
             private Action<EFurniture> onRepairFurniture;
             private Action<long> onDebugTimeOffset;
             private bool disposed;
+            private HomeNativeSnowEffectView snowEffects;
 
             internal NativeFurniture(HomeFeatureRuntime home)
             {
@@ -358,6 +359,7 @@ namespace Zjcs.Presentation.Home
                         throw new InvalidOperationException("The original native furniture prefab is missing: " + type);
                 }
                 OpenNativeFruitTree();
+                snowEffects = new HomeNativeSnowEffectView(home.scene.Root.transform, this, home.environment, this);
                 nativeTime.Enable();
             }
 
@@ -382,6 +384,7 @@ namespace Zjcs.Presentation.Home
                         creator.OnSkinChanged(type, GetFurnitureSkinId(type), this, out _);
                 }
                 RefreshNativeFruitTree();
+                snowEffects?.Refresh();
             }
 
             private void RefreshNativeFruitTree()
@@ -650,6 +653,8 @@ namespace Zjcs.Presentation.Home
             {
                 if (disposed) return;
                 disposed = true;
+                snowEffects?.Dispose();
+                snowEffects = null;
                 creator?.ReleaseAll(this);
                 foreach (EntityState state in entities.Values)
                 {
