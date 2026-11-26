@@ -12,6 +12,15 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -eq 10525) {
+        foreach ($file in @('companion-cultivated-save.json','companion-affinity-checkpoint.json','acquired-active-ui-battle.png')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Missing cultivated affinity battle evidence.' }
+        }
+        if (-not (Select-String -LiteralPath $runtimeLog -SimpleMatch '[Acquired passive affinity] 10525 actual light damage and restore passed.')) {
+            throw 'Cultivated affinity did not reach the actual battle.'
+        }
+        return
+    }
     if ($PassiveId -in @(10591,10600)) {
         foreach ($file in @('companion-cultivated-save.json', 'acquired-active-ui-passive-battle.png',
             "companion-sage-summon-$PassiveId-checkpoint.json", "companion-sage-summon-$PassiveId-receipt.json")) {
@@ -230,7 +239,7 @@ if ($SkillSkinId -gt 0 -and ((($SkillId -ne 10082 -or $SkillSkinId -ne 39521) -a
 if ($PassiveSave) {
     $PassiveSave = (Get-Item -LiteralPath $PassiveSave).FullName
     if (-not $PassiveSave.StartsWith($workspacePath + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
-        $SkillId -notin @(10017,10028,10032,10035,10047,10068,10084,10088,10089,10091,10095,10096) -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated passive cultivation save with its corresponding active skill.' }
+        $SkillId -notin @(10017,10028,10032,10035,10047,10068,10084,10088,10089,10091,10093,10095,10096) -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated passive cultivation save with its corresponding active skill.' }
     $passiveResult = Get-Content -LiteralPath (Join-Path (Split-Path -Parent $PassiveSave) 'result.json') -Raw | ConvertFrom-Json
     if (-not $passiveResult.passed) { throw 'The original passive cultivation flow has not passed.' }
     $passiveProfile = Get-Content -LiteralPath $PassiveSave -Raw | ConvertFrom-Json

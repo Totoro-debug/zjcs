@@ -1123,6 +1123,8 @@ namespace Zjcs.Presentation.Home
                 "The acquired spiral wind blade never applied, rendered, triggered and expired its original movement laceration.");
             Require(!vortexSurge || vortexMovements > 0,
                 "The original vortex surge never exercised its inward knockback in the rendered battle.");
+            Require(passiveCompanion != 10525 || File.Exists(Path.Combine(output, "companion-affinity-checkpoint.json")),
+                "The cultivated light affinity never affected the rendered battle.");
             Require(passiveCompanion != 10606 && passiveCompanion != 10607 || coldHits > 0,
                 "The cultivated passive never applied cold in the rendered battle.");
             Require(passiveCompanion != 10608 || standfastTurns > 0 && capturedPassive,

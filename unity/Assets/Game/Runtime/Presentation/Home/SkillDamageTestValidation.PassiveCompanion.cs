@@ -34,6 +34,7 @@ namespace Zjcs.Presentation.Home
             supported |= active == 10096 && player.Wardrobe.Profession == 17 && (itemId == 10601 || itemId == 10610 || itemId == 10611);
             supported |= active == 10091 && player.Wardrobe.Profession == 13 && itemId == 10598;
             supported |= active == 10091 && player.Wardrobe.Profession == 13 && itemId == 10597;
+            supported |= active == 10093 && player.Wardrobe.Profession == 13 && itemId == 10525;
             Require(supported && source.Player.Wardrobe.Profession == player.Wardrobe.Profession
                 && source.Player.Level == player.Level && source.Player.SubRank == player.SubRank
                 && plan.ActiveSkills.All(id => id == 0)
@@ -70,6 +71,11 @@ namespace Zjcs.Presentation.Home
             ref int assaultHits, ref int soulBreakHits, ref int windHits, ref int flameHits,
             ref int fireLifeCures)
         {
+            if (itemId == 10525)
+            {
+                VerifyAcquiredAffinityStep(step, checkpoint, output, itemId, 103);
+                return;
+            }
             if (itemId == 10572)
             {
                 int previous = acquiredGuardian.VitalityCureCount;
