@@ -25,4 +25,10 @@ namespace Zjcs.Official.BattleStatusPlayables
         int? ShareId { get; }
         bool HasIcon { get; }
     }
+
+    public interface ICurrentFightStatusPlayableView { void StopAll(); }
+    public interface ICurrentFightStatusPlayableContext
+    {
+        ICurrentFightStatusPlayableView CurrentPlayableView { get; }
+    }
 }

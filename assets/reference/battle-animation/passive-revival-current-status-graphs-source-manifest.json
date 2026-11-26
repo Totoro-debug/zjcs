@@ -1,0 +1,55 @@
+{
+  "inputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/passive-revival-statuses.json",
+      "sha256": "fb888818ced8ef8368f3859e803706e864567c62d533beec76360abfe57fd3e3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/passive-revival-current-skill-graphs.json",
+      "sha256": "610c1c04c05fc18d432b730bac1600a976f4066bc0593601fa662345b6ef61d0"
+    },
+    {
+      "path": "assets/reference/battle-animation/passive-revival-assets-source-manifest.json",
+      "sha256": "19c487fbe11a43ed999d6c71de127e2f525874841d04f67c90091080dfe7021d"
+    },
+    {
+      "path": "assets/reference/battle-animation/passive-revival-current-skill-graphs-source-manifest.json",
+      "sha256": "a3d73950ca267de2846e68fdd4fdb5172416122acef44ab35e267a1bbb7251ee"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyFightStatus.cs.meta",
+      "sha256": "14d89eb5ed4c9723870e218138398c5c055b58399b0c5300f7b944ef581fba0a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PassiveRevival/Resources/Combat/PassiveRevival/Prefabs/EcEntity/Fight/FightSkill/25064/25064.prefab",
+      "sha256": "328a2877f9c9d1f15f9852d6f2f5db2cf0b2c1028ed5cb35d87982197161e2d2"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PassiveRevival/Resources/Combat/PassiveRevival/Prefabs/EcEntity/Fight/FightSkill/11770/11770.prefab",
+      "sha256": "95e7ecd03332d187508d409959579f279451441537c6f2e3283339861700d3c1"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PassiveRevival/Resources/Combat/PassiveRevival/Prefabs/EcEntity/Fight/FightSkill/11770/11771.prefab",
+      "sha256": "02626e9d5633c41b22a29b0a6cd7c72fcf961d1d1d9ec48dfbab36b6f1d97161"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PassiveRevival/Resources/Combat/PassiveRevival/Prefabs/EcEntity/Fight/FightSkill/11770/11772.prefab",
+      "sha256": "fd8381f702a21450128e6be131672b2580e153dc8bbafcdb62dbe662fbf1dd76"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/passive-revival-current-status-graphs.json",
+      "sha256": "7345f471476fe2842ab430eaabdacda43e0463b8fa93d575c31738bc5165d527"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/passive-revival-current-status-graphs.json.meta",
+      "sha256": "c5214d8058b83ab748eb91f1d4b3d657c1e6a81735f49372bd56663a80385f2c"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_status_catalog.py",
+    "sha256": "57800d44172b11e3216f415b26f384380505052d86aa7ae6ac7d481a11c9bf0f"
+  },
+  "operation": "Retain every converted native object; classify character-status roots by the actual migrated status component. Verify all remaining roots against their existing typed skill, hit, damage and movement catalogs."
+}

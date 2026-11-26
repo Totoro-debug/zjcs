@@ -244,6 +244,8 @@ def build():
         generated_by=identity(Path(__file__).resolve()),
         operation='Restore current official native entity hierarchies and prefab bindings for the fatal listener, cure hit, dispersal damage, and authored recovery playable.')
     write_changed(GRAPH_RECEIPT, json.dumps(graph_record, ensure_ascii=False, indent=2) + '\n')
+    from prepare_battle_status_catalog import build as build_status_catalog
+    build_status_catalog()
     print('Potential Rebirth original status and recovery graph assets restored.')
 
 

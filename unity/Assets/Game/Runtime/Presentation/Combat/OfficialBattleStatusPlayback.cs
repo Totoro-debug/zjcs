@@ -13,7 +13,7 @@ using Zjcs.Official.StoryPlayables;
 namespace Zjcs.Presentation.Combat
 {
     /// <summary>Plays complete original character-status entities at their captured transition times.</summary>
-    public sealed class OfficialBattleStatusPlayback : IMyActionEntityLookup, IDisposable
+    public sealed class OfficialBattleStatusPlayback : IMyActionEntityLookup, IServiceProvider, IECViewInjection, IDisposable
     {
         public sealed class CatalogReplacement
         {
@@ -61,7 +61,7 @@ namespace Zjcs.Presentation.Combat
             public void Invoke() => OnInvoked?.Invoke(this);
             public void SharedStackChanged() => OnStatusStackUpdate?.Invoke(this, Value.StackCount, Value.StackCount);
         }
-        private sealed class Context : IFightStatusPlayableContext, IMyActionEntityLookup
+        private sealed class Context : IFightStatusPlayableContext, ICurrentFightStatusPlayableContext, IMyActionEntityLookup
         {
             public State Status;
             public int OwnerId;
@@ -72,6 +72,7 @@ namespace Zjcs.Presentation.Combat
             public MyFightStatusAgent Agent { get; set; }
             public bool HasIcon { get; set; }
             public IFightStatusPlayableState State => Status;
+            public ICurrentFightStatusPlayableView CurrentPlayableView { get; set; }
             public int? ShareId => Status.Value.ShareId > 0 ? (int?)Status.Value.ShareId : null;
             // Removal belongs to this model, even if the scene already replaced it.
             public MyEntity GetEntity(EcEntityIdentifier id)
@@ -107,6 +108,7 @@ namespace Zjcs.Presentation.Combat
                     : typeof(T) == typeof(ActionComponentData) ? Action
                     : typeof(T) == typeof(BattleStatusShieldViewData) ? Status.Shield
                     : typeof(T) == typeof(BattleStatusDamageReduceAbsoluteViewData) ? Status.Absolute
+                    : typeof(T) == typeof(IFightStatusPlayableState) ? Status
                     : typeof(T) == typeof(BattleStatusRoundStartViewData) && Status.Value.HasRoundStart ? Status : null;
                 return result == null ? default : (T)result;
             }
@@ -320,12 +322,14 @@ namespace Zjcs.Presentation.Combat
             SupplySharedStack(agent, snapshot);
             var go = UnityEngine.Object.Instantiate(prefabs[snapshot.ClassId], staging.transform, false);
             var entity = go.GetComponent<MyEntity>(); var view = go.GetComponent<MyFightStatus>();
+            OfficialBattleCurrentViewBinding.Prepare(go, this);
             var state = new State { Value = snapshot };
             state.Shield = new ShieldData { Owner = target };
             state.Absolute = new AbsoluteData { Owner = target, Status = state };
             var context = new Context { Status = state, Owner = target, OwnerId = owner,
                 OwnerEntity = target.GetComponent<MyEntity>(), Creator = Body(snapshot.CreatorId),
-                Master = Body(MasterId(owner)), Agent = agent, HasIcon = hasIcon(snapshot.ClassId) };
+                Master = Body(MasterId(owner)), Agent = agent, HasIcon = hasIcon(snapshot.ClassId),
+                CurrentPlayableView = CurrentStatusViewLookup.Get(view) };
             view.Bind(context, scope);
             foreach (var action in go.GetComponents<MyAction>())
             {
@@ -353,6 +357,13 @@ namespace Zjcs.Presentation.Combat
             // the native client view only chooses its authored stack playable.
             if (snapshot.HasSharedStackCount && snapshot.ShareId > 0)
                 agent.StatusToShareStack[snapshot.ShareId] = snapshot.SharedStackCount;
+        }
+
+        public object GetService(Type type) => null;
+        public void Inject(object value)
+        {
+            if (value is ECFightStatusPlayableView status) status.MyPlayableManager = scope;
+            else throw new InvalidOperationException("Unbound original character-status EC view: " + value?.GetType().FullName);
         }
 
         private void End(long key)

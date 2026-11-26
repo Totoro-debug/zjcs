@@ -1,0 +1,46 @@
+{
+  "manifest": "911_156995",
+  "assembly": {
+    "path": ".tools/source-packages/current/911_156995/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "1e7eb15a1cead0c2e618e307a367119908485a5a658815a0fe39d98c0d3f31fe"
+  },
+  "original": {
+    "path": ".tools/source-packages/current/911_156995/official-code/client-source/ECFightStatusPlayableView.cs",
+    "sha256": "34c998a47abc2cb5815e3d543e95c9219e2d4132c39f9f340d4806eaa6baf6a2"
+  },
+  "runtime": {
+    "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ECFightStatusPlayableView.cs",
+    "sha256": "af94c000557177325d294523a795040b5400eaec6d3faf9c359abb15aee73d8c"
+  },
+  "metadata": {
+    "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ECFightStatusPlayableView.cs.meta",
+    "sha256": "7fee9c95856487e36db1e481e4f2440b110ace70b810ef5d396b2d1d494a2f8a"
+  },
+  "boundaries": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/CurrentStatusViewLookup.cs",
+      "sha256": "f253f7e1fe718bc788ac428a46931355f5e61566b45fe059b8b9058cc2c1e531"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/IFightStatusPlayableContext.cs",
+      "sha256": "89c53b592c04af44ce0ffe8776b334e21ce23c7e8837b776211088080c0035cd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyFightStatus.cs",
+      "sha256": "d53548b6f3b4213697769618e9abe694c5f10fa29e9a7779f6bcdf4f01bfff5e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/Zjcs.Official.BattleStatusPlayables.asmdef",
+      "sha256": "f2bb1298aaa6118c00e9686dcea1f54814d88d6142e1fbedaa7fa54b98c478b8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleStatusPlayback.cs",
+      "sha256": "32b8ff6fdf812c25b8536a2645f745abc1a99f8039222e54bde5b8afe9cfda0b"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_current_status_ec_view.py",
+    "sha256": "1cced456e5a499919e0ed86d48761bac2a31fe7ceac023d12abb62f97be89a70"
+  },
+  "adaptation": "Preserve all current playable, stack, shared-display, forbidden, lifecycle and stop branches. Forward the existing actual status state events symmetrically; use its owner, master, share ID and shared counts. Current serialized status views own visuals, while the original shell retains apply/end agent notifications."
+}

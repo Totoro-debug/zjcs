@@ -93,6 +93,8 @@ public class MyFightStatus : MonoBehaviour
 		{
 			mStatusAgent = Context.Agent;
 			mShareId = Context.ShareId;
+				if ((Context as ICurrentFightStatusPlayableContext)?.CurrentPlayableView != null)
+				{ NotifyStartEvent(); return; }
 			Component.OnStatusStackUpdate += OnStatusStackUpdate;
 			Component.OnInvoked += OnStatusInvoked;
 			Component.OnForbiddenChanged += OnForbiddenChanged;
@@ -103,6 +105,7 @@ public class MyFightStatus : MonoBehaviour
 
 	public void OnEnd()
 	{
+			(Context as ICurrentFightStatusPlayableContext)?.CurrentPlayableView?.StopAll();
 		StopAllPlayable();
 		if (Component != null)
 		{

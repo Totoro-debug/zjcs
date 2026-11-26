@@ -46,7 +46,7 @@ def battle_view_drivers(root):
 
 
 class CurrentBattleEntityViews:
-    TYPES = {'ECFightSkillView', 'ECFightHitView', 'ECFightDamageView'}
+    TYPES = {'ECFightSkillView', 'ECFightHitView', 'ECFightDamageView', 'ECFightStatusPlayableView'}
     ALIASES = {
         'mPlayablePrefab': 'myPlayablePrefab', 'mUpPlayablePrefab': 'UpPlayablePrefab',
         'mDownPlayablePrefab': 'DownPlayablePrefab', 'mLeftPlayablePrefab': 'LeftPlayablePrefab',
@@ -60,6 +60,8 @@ class CurrentBattleEntityViews:
         'mBlockPlayable': 'myBlockPlayable', 'mCritPlayable': 'myCritPlayable',
         'mTriggerStatusPlayable': 'myTriggerStatusPlayable', 'mShowZeroDamage': 'myShowZeroDamage',
         'mHideDamage': 'myHideDamage',
+        'mStackedPlayable': 'StackedPlayablePrefab', 'mStackPlayableMap': 'StackPlayableMap',
+        'mStackPlayable': 'StackPlayable', 'mMasterCastPlayable': 'MasterCastPlayable',
     }
 
     def __init__(self, exported, paths):
@@ -120,7 +122,8 @@ class CurrentBattleEntityViews:
 
                 registry = convert(copy.deepcopy(original['references']))
                 for row in registry['RefIds']:
-                    row['type']['ns'] = row['type']['asm'] = 'Zjcs.Official.BattleSkillPlayables'
+                    namespace = 'Zjcs.Official.BattleStatusPlayables' if row['type']['class'] == 'ECFightStatusPlayableView' else 'Zjcs.Official.BattleSkillPlayables'
+                    row['type']['ns'] = row['type']['asm'] = namespace
                 restored = dict(mECViews=original['mECViews'], references=registry)
                 self.restored[entity] = yaml.safe_dump(restored, sort_keys=False, allow_unicode=True, width=160)
                 self.fields[entity] = {self.ALIASES[key]: value for key, value in registry['RefIds'][0]['data'].items()}
