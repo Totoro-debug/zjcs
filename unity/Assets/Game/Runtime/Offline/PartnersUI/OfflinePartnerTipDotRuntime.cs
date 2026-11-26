@@ -220,6 +220,7 @@ namespace Zjcs.Offline.PartnersUI
         private readonly TipDotSystemController controller;
         private readonly TipDotNodeManager manager;
         private readonly OfflinePartnerAchievementService achievements;
+        private readonly HashSet<string> nativeGraphNames = new HashSet<string>(StringComparer.Ordinal);
         private bool disposed;
 
         public OfflinePartnerTipDotRuntime(OfflineMainlineProgressSession session, OfficialPartnerCatalog catalog,
@@ -250,6 +251,9 @@ namespace Zjcs.Offline.PartnersUI
 
             var assets = OfficialPartnerTipDotAssetCatalog.LoadDefault();
             var extra = (additionalGraphs ?? Enumerable.Empty<PartnerTipDotGraphInfo>()).ToDictionary(value => value.GraphName);
+            foreach (var definition in assets.Definitions)
+                if (definition.Graph) nativeGraphNames.Add(definition.GraphName);
+            foreach (string graphName in extra.Keys) nativeGraphNames.Add(graphName);
             var definitions = assets.GetAllGraphs().Select(value => extra.TryGetValue(value.GraphName, out var replacement) ? replacement : value)
                 .Concat(extra.Values.Where(value => assets.GetGraphType(value.GraphName) == null)).ToArray();
             var graphHandler = new TipDotGraphHandler(name => extra.ContainsKey(name) ? loadAdditionalGraph(name) : assets.LoadGraph(name));
@@ -333,6 +337,9 @@ namespace Zjcs.Offline.PartnersUI
             if (root == null || disposed) return;
             foreach (var linker in root.GetComponentsInChildren<TipDotNodeLinker>(true))
             {
+                // Native furniture can contain links for other, independently
+                // migrated graph owners. Bind only graphs supplied by this host.
+                if (!nativeGraphNames.Contains(linker.ConfiguredNodeKey.GraphName)) continue;
                 linker.Controller = controller;
                 linker.TipDotSystem = system;
             }
