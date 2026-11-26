@@ -22,12 +22,12 @@ CATALOG = ROOT / 'unity/Assets/Game/Resources/PetGacha/OfficialMarkableConfirmAs
 RECEIPT = ROOT / 'assets/reference/markable-confirm-native-source-manifest.json'
 
 
-class MarkableConfirmBinding(PetGachaControlsBinding):
+class OfficialPopupBinding(PetGachaControlsBinding):
+    """Full native popup closure; subclasses select source, scripts and identity."""
     def register_scripts(self):
         super().register_scripts()
-        runtime = ROOT / 'unity/Assets/Game/Runtime/Official'
-        for name, path in {'MarkableConfirmDialog': runtime / 'GachaUI/MarkableConfirmDialog.cs',
-                           'UIToggle': runtime / 'SkillsUI/UIToggle.cs'}.items():
+        for name, relative in self.supplementary_scripts.items():
+            path = ROOT / 'unity/Assets/Game/Runtime/Official' / relative
             meta = Path(str(path) + '.meta')
             pointer = dict(fileID=11500000, guid=guid(meta), type=3)
             self.scripts[name] = pointer
@@ -37,8 +37,8 @@ class MarkableConfirmBinding(PetGachaControlsBinding):
                 sha256=sha(path.read_bytes()), meta_sha256=sha(meta.read_bytes()))
 
     def friendship_templates(self):
-        self.recovery.recover('MarkableConfirmDialog', self.work / 'original',
-                              bundle=BUNDLE, native_relative=PREFAB)
+        self.recovery.recover(self.panel_name, self.work / 'original',
+                              bundle=self.bundle, native_relative=self.prefab)
         self.recovery.finalize()
         native, _, panel, record = self.recovery.outputs[0]
         for item in (native, Path(str(native) + '.meta')):
@@ -76,10 +76,10 @@ class MarkableConfirmBinding(PetGachaControlsBinding):
                 self.sound(original['AkEvent'], owner)
         missing = {'.'.join(filter(None, (row['namespace'], row['type']))) for row in panel['scripts']} - self.scripts.keys()
         if missing:
-            raise ValueError('Migrate original confirmation scripts: ' + repr(missing))
+            raise ValueError('Migrate original popup scripts: ' + repr(missing))
         self.template_selection = dict(source=record['originalRoot'], mapped_objects=len(panel['objectMap']),
-            scope='Complete original shared MarkableConfirmDialog hierarchy and serialized fields.')
-        return [('MarkableConfirmDialog', panel)]
+            scope='Complete original ' + self.panel_name + ' hierarchy and serialized fields.')
+        return [(self.panel_name, panel)]
 
     def build(self):
         roots = {}
@@ -91,7 +91,7 @@ class MarkableConfirmBinding(PetGachaControlsBinding):
                 if row['type'] == 'ButtonSound':
                     owner = self.original(row['original'])
                     fields['ClickEvent'] = self.sound(self.recovery.fields(owner)['ClickEvent'], owner)
-            token = hashlib.md5(('zjcs:markable-confirm:' + name).encode()).hexdigest()
+            token = hashlib.md5(('zjcs:' + self.identity + ':' + name).encode()).hexdigest()
             self.script_guids.add(token)
             roots[name] = dict(fileID=panel['root'], guid=token, type=3)
             prefabs.append((Path(name + '.prefab'), token, self.replace(panel['documents'])))
@@ -119,18 +119,18 @@ class MarkableConfirmBinding(PetGachaControlsBinding):
             native_recovery=self.recovery.proof, objects=self.proof, audio=self.audio_proof,
             script_bindings=self.script_sources, template_selection=self.template_selection)
         keys = {doc['MonoBehaviour']['myKey'] for doc in documents(
-            (folder / 'MarkableConfirmDialog.prefab').read_text('utf8')).values()
+            (folder / (self.panel_name + '.prefab')).read_text('utf8')).values()
             if doc.get('MonoBehaviour', {}).get('myKey')}
-        keys.update(('confirmation', 'confirm', 'cancel', 'ui_pet_gacha_is_times_hundred', 'ui_no_prompts_today'))
-        texts, localization = decode_localization(self.recovery.apk, keys, keys - {'{0}'})
-        token = hashlib.md5(b'zjcs:markable-confirm:texts').hexdigest()
-        outputs = write_staged_assets([(Path('markable-confirm-texts.json'), token,
+        keys.update(self.required_keys)
+        texts, localization = decode_localization(self.recovery.apk, keys, keys - set(self.literal_keys))
+        token = hashlib.md5(('zjcs:' + self.identity + ':texts').encode()).hexdigest()
+        outputs = write_staged_assets([(Path(self.identity + '-texts.json'), token,
             (json.dumps(dict(texts=[dict(key=k, text=v) for k, v in sorted(texts.items())]),
                 ensure_ascii=False, indent=2) + '\n').encode())], folder)
         receipt['outputs'].update(outputs)
         receipt['texts'] = dict(fileID=4900000, guid=token, type=3)
         tokens = {guid(folder / path) for path in receipt['outputs'] if path.endswith('.meta')}
-        rewrites = {key: hashlib.md5(('zjcs:markable-confirm:asset:' + key).encode()).hexdigest() for key in tokens}
+        rewrites = {key: hashlib.md5(('zjcs:' + self.identity + ':asset:' + key).encode()).hexdigest() for key in tokens}
 
         def remap(value):
             if isinstance(value, dict):
@@ -159,20 +159,29 @@ class MarkableConfirmBinding(PetGachaControlsBinding):
         code = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code'
         paths = [Path(__file__), ROOT / 'scripts/home_native_assets.py', ROOT / 'scripts/prepare_home_currency_windows_native.py',
                  ROOT / 'scripts/prepare_pet_gacha_controls_native.py']
-        paths += [code / path for path in ('client-source/MarkableConfirmDialog.cs', 'client-source/ConfirmDialog.cs',
-            'client-source/GachaPanelUtils.cs', 'client-source/GachaBaseSetting.cs',
-            'common-source/Common/TimeUtils.cs', 'framework-firstpass-source/UIToggle.cs')]
+        paths += [code / path for path in self.source_paths]
         receipt['inputs'].update({path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in paths})
         runtime = ROOT / 'unity/Assets/Game/Runtime'
-        paths = [runtime / path for path in ('Official/GachaUI/MarkableConfirmDialog.cs',
-            'Official/GachaUI/MarkableConfirmDialog.cs.meta', 'Official/GachaUI/ScoreRewardServices.cs',
-            'Official/GachaUI/Zjcs.Official.GachaUI.asmdef', 'Official/GachaUI/Zjcs.Official.GachaUI.asmdef.meta',
-            'Offline/GachaUI/OfficialMarkableConfirmAssetCatalog.cs', 'Offline/GachaUI/OfficialMarkableConfirmAssetCatalog.cs.meta')]
+        paths = [runtime / path for path in self.runtime_paths]
         receipt['runtime_bindings'] = {path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in paths}
         receipt.update(generator_sha256=sha(Path(__file__).read_bytes()), localization=localization,
             animation_root_path_repairs=self.animation_root_paths, original_empty_value_restorations=self.empty_restorations,
-            scope='Complete original shared MarkableConfirmDialog native resource closure; runtime integration recorded separately.')
+            scope='Complete original ' + self.panel_name + ' native resource closure; runtime integration recorded separately.')
         return folder, receipt
+
+
+class MarkableConfirmBinding(OfficialPopupBinding):
+    panel_name, bundle, prefab, identity = 'MarkableConfirmDialog', BUNDLE, PREFAB, 'markable-confirm'
+    supplementary_scripts = {'MarkableConfirmDialog': 'GachaUI/MarkableConfirmDialog.cs', 'UIToggle': 'SkillsUI/UIToggle.cs'}
+    required_keys = ('confirmation', 'confirm', 'cancel', 'ui_pet_gacha_is_times_hundred', 'ui_no_prompts_today')
+    literal_keys = ('{0}',)
+    source_paths = ('client-source/MarkableConfirmDialog.cs', 'client-source/ConfirmDialog.cs',
+        'client-source/GachaPanelUtils.cs', 'client-source/GachaBaseSetting.cs',
+        'common-source/Common/TimeUtils.cs', 'framework-firstpass-source/UIToggle.cs')
+    runtime_paths = ('Official/GachaUI/MarkableConfirmDialog.cs', 'Official/GachaUI/MarkableConfirmDialog.cs.meta',
+        'Official/GachaUI/ScoreRewardServices.cs', 'Official/GachaUI/Zjcs.Official.GachaUI.asmdef',
+        'Official/GachaUI/Zjcs.Official.GachaUI.asmdef.meta', 'Offline/GachaUI/OfficialMarkableConfirmAssetCatalog.cs',
+        'Offline/GachaUI/OfficialMarkableConfirmAssetCatalog.cs.meta')
 
 
 def install(work, folder, receipt):
