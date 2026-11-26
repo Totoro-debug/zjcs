@@ -130,6 +130,9 @@ class OfficialPopupBinding(PetGachaControlsBinding):
         receipt['outputs'].update(outputs)
         receipt['texts'] = dict(fileID=4900000, guid=token, type=3)
         tokens = {guid(folder / path) for path in receipt['outputs'] if path.endswith('.meta')}
+        collisions = tokens & {row['pointer']['guid'] for row in self.script_sources.values()}
+        if collisions:
+            raise ValueError('Native popup output identity overlaps a runtime script: ' + repr(collisions))
         rewrites = {key: hashlib.md5(('zjcs:' + self.identity + ':asset:' + key).encode()).hexdigest() for key in tokens}
 
         def remap(value):
@@ -213,6 +216,8 @@ def check():
                 raise ValueError('Markable confirmation source differs: ' + relative)
     for row in receipt['script_bindings'].values():
         path = ROOT / row['path']
+        if guid(Path(str(path) + '.meta')) != row['pointer']['guid']:
+            raise ValueError('Markable confirmation script identity differs: ' + row['path'])
         if sha(path.read_bytes()) != row['sha256'] or sha(Path(str(path) + '.meta').read_bytes()) != row['meta_sha256']:
             raise ValueError('Markable confirmation script binding differs: ' + row['path'])
     print('Original markable confirmation source and resource closure verified')

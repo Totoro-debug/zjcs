@@ -82,6 +82,8 @@ def check():
                 raise ValueError('Original score detail source differs: ' + relative)
     for row in receipt['script_bindings'].values():
         path = ROOT / row['path']
+        if guid(Path(str(path) + '.meta')) != row['pointer']['guid']:
+            raise ValueError('Score detail script identity differs: ' + row['path'])
         if sha(path.read_bytes()) != row['sha256'] or sha(Path(str(path) + '.meta').read_bytes()) != row['meta_sha256']:
             raise ValueError('Original score detail script binding differs: ' + row['path'])
     print('Original score reward dialog source and native closure verified')
