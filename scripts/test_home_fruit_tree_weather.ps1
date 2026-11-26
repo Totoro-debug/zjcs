@@ -28,6 +28,35 @@ if (@(Get-CimInstance Win32_Process -Filter "Name='Unity.exe'" | Where-Object {
 }).Count) { throw 'Do not stage sources into a running Unity project.' }
 $work = Join-Path $validationBase ('fruit-tree-weather-' + [Guid]::NewGuid().ToString('N'))
 [void](New-Item -ItemType Directory -Path $work)
+# Git archive may apply checkout line endings. Keep the exact verified payload
+# bytes when a source project differs solely in line endings. Leave content
+# differences alone, so concurrent resource edits do not enter this fixture.
+$resourceRoot = Join-Path $repository 'unity/Assets'
+$restoredResourceBytes = 0
+$resourceUtf8 = [Text.UTF8Encoding]::new($false, $true)
+foreach ($source in Get-ChildItem -LiteralPath $resourceRoot -Filter '*.json' -File -Recurse) {
+    $relative = [IO.Path]::GetRelativePath((Join-Path $repository 'unity'), $source.FullName)
+    $target = Join-Path $project $relative
+    if (-not (Test-Path -LiteralPath $target)) { continue }
+    $sourceHash = (Get-FileHash -LiteralPath $source.FullName -Algorithm SHA256).Hash
+    if ((Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash -eq $sourceHash) { continue }
+    $sourceText = $resourceUtf8.GetString([IO.File]::ReadAllBytes($source.FullName))
+    $targetText = $resourceUtf8.GetString([IO.File]::ReadAllBytes($target))
+    if (-not [string]::Equals($sourceText.Replace("`r`n", "`n"), $targetText.Replace("`r`n", "`n"), [StringComparison]::Ordinal)) { continue }
+    $manifestPath = Join-Path $source.DirectoryName ($source.BaseName + '-source-manifest.json')
+    if (Test-Path -LiteralPath $manifestPath) {
+        $resourceManifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+        if ($resourceManifest.output_sha256 -and $sourceHash.ToLowerInvariant() -ne $resourceManifest.output_sha256) {
+            throw ('Original resource payload differs from its source manifest: ' + $relative)
+        }
+    }
+    Copy-Item -LiteralPath $source.FullName -Destination $target -Force
+    if ((Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash -ne $sourceHash) {
+        throw ('Resource changed while restoring source bytes: ' + $relative)
+    }
+    $restoredResourceBytes++
+}
+Write-Output ('Restored original JSON resource bytes: ' + $restoredResourceBytes)
 $fruitReceipt = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/home-fruit-tree-native-source-manifest.json') -Raw | ConvertFrom-Json
 foreach ($entry in $fruitReceipt.outputs.PSObject.Properties) {
     $target = Join-Path $project $entry.Name.Substring(6)
