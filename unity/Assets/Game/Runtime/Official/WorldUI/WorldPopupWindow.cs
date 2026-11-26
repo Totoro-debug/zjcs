@@ -56,6 +56,11 @@ namespace Zjcs.Official.WorldUI
             State = EState.Showing;
             OnShowing?.Invoke(this);
             transition = StartCoroutine(Transition(mShowClip, () => { State = EState.Show; OnShow?.Invoke(this); Play(mLoopClip); }, true));
+            // Bind a newly created graph before its first timed frame. A cold
+            // Windows UI load can consume the short show interval before that
+            // first animation evaluation, leaving authored child groups hidden.
+            // Sample time zero without advancing the original clip or timer.
+            if (mShowClip != null) graph.Evaluate(0f);
         }
 
         public void Hide(Action completed)
