@@ -50,6 +50,16 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
     rules = json.loads((COMBAT / 'rules.json').read_bytes())
     skill_rules = json.loads((COMBAT / 'skill-rules.json').read_bytes())
     installed = next(row for row in rules['skill'] if row['ClassId'] == item_id)
+    passive_pack = None
+    if spec.get('runtime_passive_property_pack'):
+        from prepare_passive_property_skill_source import verify as verify_passive_properties
+        path = ROOT / spec['runtime_passive_property_pack']
+        pack = json.loads(path.read_bytes())
+        receipt, encoded = verify_passive_properties(item_id, pack['manifest'], include_graph_properties=True)
+        assert path.read_bytes() == encoded, 'Passive cultivation payload differs from its official source'
+        proof_path = ROOT / f'assets/reference/battle-rules/passive-property-{item_id}-source-manifest.json'
+        assert json.loads(proof_path.read_bytes()) == receipt, 'Passive cultivation source receipt changed'
+        passive_pack = dict(payload=identity(path), receipt=identity(proof_path), manifest=pack['manifest'])
     entities, locations = {}, {}
     for name in ('skill-rules', 'battle-rules'):
         source = json.loads((COMBAT / (name + '-source-manifest.json')).read_bytes())
@@ -85,6 +95,7 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
 
     with Apk.current() as apk:
         assert all(pack['manifest'] == apk.version for pack in rule_packs), 'Skill rule pack source differs'
+        assert passive_pack is None or passive_pack['manifest'] == apk.version, 'Passive cultivation source differs'
         code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
         constructors, formats = Constructors(code), Formats(code)
         table_proofs = []
@@ -145,13 +156,16 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
                 baseline_changes.append(dict(EntityId=entity_id, fields=changes))
         expected_properties = [expected_by_id[row['EntityId']] for row in expected_properties]
         assert sorted(properties, key=lambda row: row['EntityId']) == sorted(expected_properties, key=lambda row: row['EntityId']), 'Current entity cultivation properties changed'
-        group_ids = {row['GroupLevelPropId'] for row in properties} | {current['PassiveGroupLevelPropId']}
+        group_ids = {row['GroupLevelPropId'] for row in properties}
+        if passive_pack is None:
+            group_ids.add(current['PassiveGroupLevelPropId'])
         groups = [row for row in table('entity_prop_group_level', mappings['entity_prop_group_level']) if row['GroupId'] in group_ids]
         expected_groups = [row for row in skill_rules['tables']['entity_prop_group_level'] if row['GroupId'] in group_ids]
         assert sorted(groups, key=lambda row: (row['GroupId'],row['SubRank'])) == sorted(expected_groups, key=lambda row: (row['GroupId'],row['SubRank'])), 'Current cultivation groups changed'
         prop_ids = {row['LevelPropId'] for row in groups}
         prop_ids.update(row[key] for row in properties for key in ('RankPropId','SubRankPropId'))
-        prop_ids.update(current[key] for key in ('PassiveRankPropId','PassiveRankFactorId'))
+        if passive_pack is None:
+            prop_ids.update(current[key] for key in ('PassiveRankPropId','PassiveRankFactorId'))
         prop_ids.discard(0)
         verified_props = apk.reader.read('WwiseBnk', 'wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile')
         prop_rows = decode_level_props(verified_props.data, prop_ids, include_zero=bool(spec.get('scope_numeric')))
@@ -433,6 +447,8 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
             result['skill_skin_bindings'] = skin_bindings
         if rule_packs:
             result['current_rule_packs'] = rule_packs
+        if passive_pack is not None:
+            result['current_passive_property_pack'] = passive_pack
     return result
 
 
