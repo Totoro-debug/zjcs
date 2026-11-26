@@ -1,0 +1,26 @@
+{
+  "entities": [10920, 10921, 10922, 10923, 10924, 10925, 10926, 24100],
+  "code": [
+    "FightSkillComponentInfo",
+    "FightHitRandomTargetComponentInfo",
+    "FightHitRandomTargetComponent",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "FightStatusComponentInfo",
+    "FightStatusDamageFalloffComponentInfo",
+    "FightStatusDamageFalloffComponent",
+    "BattleFormulaHandler",
+    "AiPriorityType",
+    "SkillAiCfg"
+  ],
+  "client_code": ["MyFightHitRandomTarget"],
+  "rule_pack_fragments": ["FightSkill_part46.g.bytes", "FightSkill_part705.g.bytes"],
+  "visibility_bundles": ["10920"],
+  "scope_numeric": true,
+  "current_managed_views": true,
+  "runtime_rule_packs": ["unity/Assets/Game/Resources/Combat/SkillRules/10037.json"],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/divine-thunder-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/divine-thunder-current-status-graphs-source-manifest.json"
+  ]
+}

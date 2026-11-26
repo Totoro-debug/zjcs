@@ -1,0 +1,156 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 10920,
+      "entity_resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10920/10920",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10920/playable10920"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 10921,
+      "client_type": "MyFightHitRandomTarget",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [
+        {
+          "field": "myPlayable",
+          "resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10920/playable10921"
+        }
+      ],
+      "entity_resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10920/10921"
+    },
+    {
+      "hit_entity_id": 10922,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [
+        {
+          "field": "myPlayable",
+          "resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10920/playable10922"
+        }
+      ],
+      "entity_resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10920/10922"
+    },
+    {
+      "hit_entity_id": 10923,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [
+        {
+          "field": "myPlayable",
+          "resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10920/playable10923"
+        }
+      ],
+      "entity_resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10920/10923"
+    },
+    {
+      "hit_entity_id": 10924,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [
+        {
+          "field": "myPlayable",
+          "resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10920/playable10924"
+        }
+      ],
+      "entity_resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10920/10924"
+    },
+    {
+      "hit_entity_id": 10925,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [
+        {
+          "field": "myPlayable",
+          "resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10920/playable10925"
+        }
+      ],
+      "entity_resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10920/10925"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 10926,
+      "entity_prefab": "10920/10926.prefab",
+      "entity_prefab_sha256": "a2379b37b4794f193319cf0cfef9a5b630333bc636f94a2f7be7d4886d3d81d1",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage_light_HitEffect"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/DivineThunderSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10920/10926"
+    }
+  ]
+}

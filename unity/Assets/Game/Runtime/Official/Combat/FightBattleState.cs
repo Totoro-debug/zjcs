@@ -1592,6 +1592,10 @@ namespace Zjcs.Combat.Official
         public int TargetMode;
         public int RandomCount = 1;
         public int RandomTargetGroupId;
+        // The parent minimum belongs to the complete authored group. Older
+        // explicit definitions keep their original per-selection RandomCount.
+        public int RandomTargetGroupSelectionCount;
+        public int RandomTargetGroupMinimumHits;
         public int RandomTargetAnchor;
         public bool RandomTargetNotSameTarget;
         public bool RandomTargetAllowEmptyScope;

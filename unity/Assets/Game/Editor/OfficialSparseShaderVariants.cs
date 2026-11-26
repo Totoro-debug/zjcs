@@ -54,6 +54,7 @@ namespace Zjcs.Editor
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/QuickCastingSkillGraph_Noise_Mask_Pro.shader"] = 272,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/LightScorchSkillGraph_Noise_Mask_Pro.shader"] = 272,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/LightScorchStatus_Noise_Mask_Pro.shader"] = 272,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/DivineThunderSkillGraph_Noise_Mask_Pro.shader"] = 272,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/FireLifeGraph_Noise_Mask_Pro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/FlameSoulGraph_Noise_Mask_Pro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/HurricaneGriefGraph_Noise_Mask_Pro.shader"] = 260,
@@ -138,12 +139,12 @@ namespace Zjcs.Editor
                 stages += selection.PassCount * selection.Programs.Count * 2;
             }
             ValidateCoverage();
-            if (stages != 89560) throw new BuildFailedException("Original shader stage domain changed: " + stages);
+            if (stages != 90648) throw new BuildFailedException("Original shader stage domain changed: " + stages);
             Debug.Log("Original sparse shader domains validated: " + originalPrograms.Count + " assets / " + stages + " GPU stages.");
         }
 
         [MenuItem("Zjcs/Assets/Validate Original Sparse Shader Programs")]
-        public static void Validate() => ValidatePrograms(originalPrograms, 89560);
+        public static void Validate() => ValidatePrograms(originalPrograms, 90648);
 
         public static void ValidateCurrentSkillShaders()
         {

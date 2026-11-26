@@ -102,6 +102,7 @@ namespace Zjcs.Combat.Official
                 public readonly HashSet<int> TargetIds = new HashSet<int>();
                 public readonly HashSet<FightGridPoint> EmptyPositions = new HashSet<FightGridPoint>();
                 public readonly HashSet<FightGridPoint> GridPositions = new HashSet<FightGridPoint>();
+                public int Selections, Hits;
             }
 
             private readonly Dictionary<int, RandomTargetGroupState> randomTargetGroups
@@ -117,9 +118,7 @@ namespace Zjcs.Combat.Official
                 var hitCast = context.Cast; var random = context.Random;
                 // Each authored child reference chooses one centre. The parent minimum
                 // describes the complete set of waves or recipients, not each child.
-                int randomCount = skill?.EntityId == 11200 && hit.EntityId == 11201
-                    || skill?.EntityId == 10910 && hit.EntityId == 10912
-                    ? 1 : hit.RandomCount;
+                int randomCount = hit.RandomTargetGroupSelectionCount > 0 ? 1 : hit.RandomCount;
                 List<FightBattleUnitState> hitTargets;
                 IReadOnlyList<FightHitOccurrence> plannedHits = null;
                 if (!randomTargetGroups.TryGetValue(hit.RandomTargetGroupId,
@@ -128,6 +127,12 @@ namespace Zjcs.Combat.Official
                     groupState = new RandomTargetGroupState();
                     randomTargetGroups.Add(hit.RandomTargetGroupId, groupState);
                 }
+                // Confirmed offline minimum: preserve ordinary draws until every
+                // remaining selection is needed, then select eligible body cells.
+                bool fillMinimum = hit.RandomTargetGroupSelectionCount > 0
+                    && hit.RandomTargetGroupSelectionCount - groupState.Selections
+                        <= hit.RandomTargetGroupMinimumHits - groupState.Hits;
+                groupState.Selections++;
 
                 var selectedTargets = new List<FightBattleUnitState>();
                 var selectedPositions = new List<FightGridPoint>();
@@ -137,15 +142,20 @@ namespace Zjcs.Combat.Official
                     var scopeCenter = FightHitAnchorExtensions.ResolveCenter(hit.RandomTargetAnchor,
                         actor, targetPosition ?? (targets != null && targets.Count > 0 ? targets[0] : null), hitCast);
                     var scopeAnchor = new FightBattleUnitState { X = scopeCenter.X, Y = scopeCenter.Y };
-                    List<FightBattleRandomScopeSelection> selections =
+                    List<FightBattleRandomScopeSelection> SelectScope(bool forceBody) =>
                         FightBattleTargeting.SelectRandomScopePositions(targetingSource, units, skill,
                             scopeAnchor, hit.RandomTargetScope, context.Grid,
-                            randomCount, random, hit.RandomTargetAllowEmptyScope,
+                            randomCount, random, hit.RandomTargetAllowEmptyScope && !forceBody,
                             hit.RandomTargetNotAllowHitEmpty, hit.RandomTargetNotSameTarget,
                             groupState.TargetIds, hit.RandomTargetNotSameEmptyScope,
                             groupState.EmptyPositions, hit.RandomTargetNotSameGrid,
                             groupState.GridPositions,
                             hit.RandomTargetFilterOutOfGroundScope, hit.RandomTargetScopeTransform, hitCast);
+                    var selections = SelectScope(fillMinimum);
+                    // A dead/hidden/excluded roster cannot satisfy a minimum.
+                    // Preserve the authored empty strike without inventing a target.
+                    if (fillMinimum && selections.Count == 0 && hit.RandomTargetAllowEmptyScope)
+                        selections = SelectScope(false);
                     foreach (FightBattleRandomScopeSelection selection in selections)
                     {
                         selectedPositions.Add(selection.Position);
@@ -233,6 +243,7 @@ namespace Zjcs.Combat.Official
                     plannedHits = directOccurrences;
                 }
                 var effectCenters = new List<FightGridPoint>(selectedPositions);
+                if (plannedHits.Count > 0) groupState.Hits++;
                 return new FightHitTargetSelection(hitTargets, plannedHits, selectedPositions, effectCenters);
             }
         }

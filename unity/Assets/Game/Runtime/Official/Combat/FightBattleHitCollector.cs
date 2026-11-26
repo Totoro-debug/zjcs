@@ -75,6 +75,16 @@ namespace Zjcs.Combat.Official
             var result = new List<FightBattleHitDefinition>();
             Collect(entities, rootEntityId, result, new HashSet<int>(), 0, 0, 1, null,
                 ref nextRandomTargetGroupId, incoming, includeRootView: includeRootViews, includeCustomViews: includeRootViews);
+            var groupCounts = new Dictionary<int, int>();
+            foreach (var hit in result)
+                if (hit.RandomTargetGroupId > 0 && hit.RandomTargetScope.Count > 0
+                    && hit.ChainConfiguration == null)
+                    groupCounts[hit.RandomTargetGroupId] = groupCounts.TryGetValue(hit.RandomTargetGroupId,
+                        out int count) ? count + 1 : 1;
+            foreach (var hit in result)
+                if (hit.RandomTargetGroupId > 0 && hit.RandomTargetScope.Count > 0
+                    && hit.ChainConfiguration == null)
+                    hit.RandomTargetGroupSelectionCount = groupCounts[hit.RandomTargetGroupId];
             return result;
         }
 
@@ -137,6 +147,7 @@ namespace Zjcs.Combat.Official
                     ExtApplyDamageScale = entity.ExtApplyDamageScale,
                     TargetMode = targetMode,
                     RandomCount = randomCount,
+                    RandomTargetGroupMinimumHits = randomTargetContext == null ? 0 : randomCount,
                     RandomTargetGroupId = randomTargetContext == null ? 0
                         : randomTargetContext.GroupId,
                     RandomTargetAnchor = randomTargetContext == null ? 0

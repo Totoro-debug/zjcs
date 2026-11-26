@@ -37,6 +37,7 @@ def main():
         'warlock-explosion-current-skill-graphs',
         'quick-casting-current-skill-graphs',
         'light-scorch-current-skill-graphs',
+        'divine-thunder-current-skill-graphs',
     )
     receipts = {
         'skill-native-graphs': 'skill-native-graph-assets-source-manifest',

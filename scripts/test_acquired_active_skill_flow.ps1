@@ -2,9 +2,9 @@ param(
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int]$SkillId = 10026,
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int]$SkillId = 10026,
     [Parameter(ParameterSetName='Player')]
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
     [string]$PassiveSave,
     [ValidateSet(0,39521,39523)][int]$SkillSkinId = 0,
     [ValidateRange(0,2147483646)][int]$BattleSeed = 0
@@ -444,10 +444,22 @@ try {
                 if (-not (Test-Path -LiteralPath (Join-Path $skillRun $file))) { throw 'The cultivated rock emperor did not render and persist its original summon.' }
             }
         }
+        if ($SkillId -eq 10037) {
+            foreach ($file in @('acquired-divine-thunder-checkpoint.json','acquired-divine-thunder-strikes.json',
+                'acquired-active-ui-thunder-hit-1.png','acquired-active-ui-thunder-hit-2.png',
+                'acquired-active-ui-thunder-hit-3.png','acquired-active-ui-thunder-hit-4.png')) {
+                if (-not (Test-Path -LiteralPath (Join-Path $skillRun $file))) { throw 'The cultivated divine thunder evidence is incomplete.' }
+            }
+            $thunder = Get-Content (Join-Path $skillRun 'acquired-divine-thunder-strikes.json') -Raw | ConvertFrom-Json
+            $strikes = @($thunder.HitSelections | Where-Object { $_.HitEntityId -ge 10922 -and $_.HitEntityId -le 10925 })
+            if ($strikes.Count -ne 16 -or -not (Select-String -LiteralPath $log -SimpleMatch '[Acquired active combat] 10037 sixteen lightning centres, minimum, light damage and restore passed.')) {
+                throw 'The cultivated divine thunder lost its original strikes, minimum or restore receipt.'
+            }
+        }
         if ($SkillId -eq 10096 -and -not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-heavenly-rain-checkpoint.json'))) {
             throw 'The original cultivated healing checkpoint was not persisted.'
         }
-        if ($SkillId -in @(10002,10032,10039,10047,10056,10059,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)) {
+        if ($SkillId -in @(10002,10032,10037,10039,10047,10056,10059,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)) {
             # The Player asserts the original effects for each equipped cast.
             Write-Output "Acquired active skill-page flow passed: $skillRun"
             continue

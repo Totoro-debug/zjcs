@@ -1028,12 +1028,12 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleUnitState unit in ScopeCandidates(actor, units,
                     skill.TargetType, skill))
                 {
-                    if (unit.BodyOffsets == null || unit.BodyOffsets.Count == 0)
-                    {
-                        if (ContainsScopePoint(scope, unit.X - centerX, unit.Y - centerY)) count++;
-                        continue;
-                    }
-                    foreach (FightGridPoint offset in unit.BodyOffsets)
+                    // Official priority description counts covered large-body
+                    // cells before the separate ordinary target-count priority.
+                    if (!HasLargeBody(unit)) continue;
+                    var body = new HashSet<FightGridPoint> { new FightGridPoint(0, 0) };
+                    foreach (FightGridPoint offset in unit.BodyOffsets) body.Add(offset);
+                    foreach (FightGridPoint offset in body)
                         if (ContainsScopePoint(scope, unit.X + offset.X - centerX,
                             unit.Y + offset.Y - centerY)) count++;
                 }
