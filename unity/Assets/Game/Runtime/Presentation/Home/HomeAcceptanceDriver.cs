@@ -53,6 +53,14 @@ namespace Zjcs.Presentation.Home
             Directory.CreateDirectory(Output);
             var slots = new ProfileSlotCatalog(Root);
             string slotId = slots.GetSlotIds().FirstOrDefault();
+            bool fruitTreeNativeAcceptance = Environment.GetCommandLineArgs().Contains("-fruitTreeNativeAcceptance");
+            if (fruitTreeNativeAcceptance)
+            {
+                // The editor applies the selected Game View size on its first render.
+                // Build the HUD after that render, using the same viewport as later input/captures.
+                yield return new WaitForEndOfFrame();
+                log.Add("VIEW before home startup " + Screen.width + "x" + Screen.height);
+            }
             HomeFeatureRuntime runtime = null;
             bool ok = true;
             string setupError = null;
@@ -60,7 +68,9 @@ namespace Zjcs.Presentation.Home
             {
                 if (string.IsNullOrEmpty(slotId))
                     throw new InvalidOperationException("The acceptance profile was not created by the launcher.");
-                nativeScenePointer = Environment.GetCommandLineArgs().Contains("-fruitTreeNativeAcceptance")
+                if (fruitTreeNativeAcceptance && Screen.width >= Screen.height)
+                    throw new InvalidOperationException("The acceptance Game View has not rendered its configured portrait size.");
+                nativeScenePointer = fruitTreeNativeAcceptance
                     ? new AcceptanceNativePointer() : null;
                 runtime = HomeFeatureRuntime.BeginWithNativePointer(slotId, Root, null, nativeScenePointer,
                     null, () => mainlandRequested = true);
