@@ -1,0 +1,157 @@
+{
+  "manifest": "911_156995",
+  "inputs": {
+    "scripts/prepare_shared_achievement_panel.py": "c0bbbbff630534f46d937b0599b03e42293e03717e2d4941268535b275c7c449",
+    ".tools/source-packages/current/884_156692/official-data/tables.json": "8d9e905e55967a46ebf59484ac8faf0356515e1c214faaeebcbc303fc03de333",
+    "unity/Assets/Official/Combat/rules.json": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c",
+    "scripts/fixtures/achievement_panel_shared_validation.cs": "dc8fd3eb81b46a72c14a5d5733071b62845dbbe3c80aaa720d6157bc1ac3efea",
+    "scripts/test_shared_achievement_panel.ps1": "08211566c7f4a473e3615e547f62191bc7041f658a3e953c4eed975ef4b8a65c",
+    "scripts/test_profession_achievements.py": "0e5fa56c4064a119c5999c5941a0d565065b5845185303280de8fb6840ef8261",
+    "scripts/fixtures/profession_achievements_harness.cs": "7c21f8db325ba7b0eda6028beac437f07fba43bfdf034841490bf2b3464b5632",
+    ".tools/source-packages/current/911_156995/official-code/client-source/AchievementPanel.cs": "762b74d958387cd677aac9469f775ecb84aeb418f5a9991f08d27533cea52d0c",
+    ".tools/source-packages/current/911_156995/official-code/client-source/AchievementPanelBase.cs": "9777914d37de651b1e3f8d82890d5f0f3c596921a0bbdb3f90b671eff801f297",
+    ".tools/source-packages/current/911_156995/official-code/client-source/AchievementPanelItem.cs": "4f0ce386aa644fecca548ae4e071a6449834e33571f177438c5975de0d26b8dd",
+    ".tools/source-packages/current/911_156995/official-code/client-source/AchievementContentHandler.cs": "4afe916540d8a3dfd083b1fb17fad68e7fdda8ab6d48f6380e5e16c81206409e",
+    ".tools/source-packages/current/911_156995/official-code/framework-firstpass-source/UIBase.cs": "fd029496b78172ec9e9e0710366106bcdaf493c1270dfff6311d1c79400abc61",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/AchievementUtils.cs": "9224bafc1956caaf55a89be92a05cb0cb9774c6a5bd3ea9b2a325682cf8c2528",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/PlayerAchievementRecordDataWrap.cs": "43da17b07a73e326d31aa304e803283a6f421c46632eb97a84ff852ed3c4b1ae",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/AchievementPanel.cs": "7d90d1ccd4371f4863b1a5545cd49c55c002c59b0007d3fe8842b0fc3578c728",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/AchievementPanel.cs.meta": "4a27b02f476834a9a57e89d6f347642cac3d7c8bb86e44184b113c512f3a8651",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/AchievementPanelBase.cs": "0b5c9f770146c3a5ec4e17120753d4358ff3c5eaaa46b2d9b8c2cff556bb23af",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/AchievementPanelBase.cs.meta": "db04213ad92a966d6aee7f998ae895270f583233e6294c572cbad2ecfbd10bc8",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/AchievementPanelItem.cs": "71047be878807f8cf8a91d68b5a5c490b238ad69c605b521fd8d8d1855407a15",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/AchievementPanelItem.cs.meta": "04be5b89624409ef71fe15e3a228956b0328e2a673f6b28f519a8878ea55e463",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/AchievementPanelData.cs": "6d42dffddb12bac9b4973e0e1d22e6d429fb7f519afbfe03bc8b6629b522aedf",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/AchievementPanelData.cs.meta": "7c3903ec8c49e3eb467e6970c1cccb8a4a0a896dd88f984c9b5133f2e6eb6228",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAchievementPanelSource.cs": "e5418d2f07d1ce7dfd83d6cc98f2377f3f68629b54885a519ee27db773528123",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAchievementPanelSource.cs.meta": "8f40db8837e0064ff6f986c45ca2c0ad4ac3a67eca476f53ac54b1b893008818",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/UIBase.cs": "71904439a92bd0bbe189a95f9a7213defc9bd3d9283c8279fa1fc0b9d09b87d8",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/UIBase.cs.meta": "6b537a274548ea8ed6309d9b481bdd693afe13fd6877e83e844f7cc727c1901b",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/Zjcs.Official.ProfessionUI.asmdef": "0500ffc97eeb32df58b633411f36c7e53fcf3e437f8468699ffa93d0fd911964",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialProfessionAchievementRules.cs": "80c17f30cbcdc52459203182f82825e2de71ddc05a0c8afe8a7ae2eb3ecee048",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialPropFormat.cs": "fd34668f6d0008e8e957f2475252c7af8b10f2901c3b14b923b09951728570e1"
+  },
+  "profession_table_rows": [
+    {
+      "Id": 10001,
+      "Group": 10,
+      "AchievementType": 56,
+      "GroupParams": null,
+      "CompleteParams": "{Level:2}",
+      "CycleIncrementParams": "",
+      "CycleCount": 0,
+      "Reward": {
+        "42200": 300
+      }
+    },
+    {
+      "Id": 10002,
+      "Group": 10,
+      "AchievementType": 56,
+      "GroupParams": null,
+      "CompleteParams": "{Level:3}",
+      "CycleIncrementParams": "",
+      "CycleCount": 0,
+      "Reward": {
+        "42200": 300
+      }
+    },
+    {
+      "Id": 10003,
+      "Group": 10,
+      "AchievementType": 56,
+      "GroupParams": null,
+      "CompleteParams": "{Level:4}",
+      "CycleIncrementParams": "",
+      "CycleCount": 0,
+      "Reward": {
+        "42200": 300
+      }
+    },
+    {
+      "Id": 10004,
+      "Group": 10,
+      "AchievementType": 56,
+      "GroupParams": null,
+      "CompleteParams": "{Level:5}",
+      "CycleIncrementParams": "",
+      "CycleCount": 0,
+      "Reward": {
+        "42200": 300
+      }
+    },
+    {
+      "Id": 10005,
+      "Group": 10,
+      "AchievementType": 56,
+      "GroupParams": null,
+      "CompleteParams": "{Level:6}",
+      "CycleIncrementParams": "",
+      "CycleCount": 2000,
+      "Reward": {
+        "303": 2
+      }
+    },
+    {
+      "Id": 10006,
+      "Group": 10,
+      "AchievementType": 56,
+      "GroupParams": null,
+      "CompleteParams": null,
+      "CycleIncrementParams": "{Level:1}",
+      "CycleCount": 0,
+      "Reward": {
+        "301": 2
+      }
+    },
+    {
+      "Id": 10007,
+      "Group": 10,
+      "AchievementType": 56,
+      "GroupParams": null,
+      "CompleteParams": null,
+      "CycleIncrementParams": "{Level:1}",
+      "CycleCount": 0,
+      "Reward": {
+        "301": 2
+      }
+    },
+    {
+      "Id": 10008,
+      "Group": 10,
+      "AchievementType": 56,
+      "GroupParams": null,
+      "CompleteParams": null,
+      "CycleIncrementParams": "{Level:1}",
+      "CycleCount": 0,
+      "Reward": {
+        "302": 2
+      }
+    },
+    {
+      "Id": 10009,
+      "Group": 10,
+      "AchievementType": 56,
+      "GroupParams": null,
+      "CompleteParams": null,
+      "CycleIncrementParams": "{Level:1}",
+      "CycleCount": 0,
+      "Reward": {
+        "301": 2
+      }
+    },
+    {
+      "Id": 10010,
+      "Group": 10,
+      "AchievementType": 56,
+      "GroupParams": null,
+      "CompleteParams": null,
+      "CycleIncrementParams": "{Level:1}",
+      "CycleCount": 0,
+      "Reward": {
+        "303": 2
+      }
+    }
+  ],
+  "scope": "Original regular achievement search/filter/sort/row lifecycle and group claim callback. Existing profession type 56/group 10 adapter retained; data providers resolve other regular keys. Ranking and production score-detail presentation are outside this component proof."
+}

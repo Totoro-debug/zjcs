@@ -8,6 +8,7 @@ import re
 import struct
 from xml.sax.saxutils import escape
 ROOT = Path(__file__).resolve().parents[1]
+RULES = ROOT / 'unity/Assets/Official/Combat/rules.json'
 
 def managed(path):
     raw = path.read_bytes()
@@ -24,13 +25,13 @@ def main():
         includes = ''.join('<Compile Include="' + escape(str(path), {'"': '&quot;'}) + '" />' for path in sources)
         project = '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><EnableDefaultCompileItems>false</EnableDefaultCompileItems></PropertyGroup><ItemGroup>' + includes + '</ItemGroup></Project>'
         (work / 'ProfessionAchievements.csproj').write_text(project, encoding='utf-8')
-        dotnet = shutil.which('dotnet')
+        dotnet = shutil.which('dotnet') or str(ROOT / '.tools/dotnet/dotnet.exe')
         if not dotnet:
             raise FileNotFoundError('The installed .NET runtime was not found.')
         sdk = subprocess.check_output([dotnet, '--list-sdks'], text=True).strip()
         if sdk:
             subprocess.run([dotnet, 'run', '--project', str(work / 'ProfessionAchievements.csproj'), '--',
-                            str(ROOT / 'assets/official/rules.json')], cwd=ROOT, check=True)
+                            str(RULES)], cwd=ROOT, check=True)
         else:
             # Reuse Unity's Roslyn compiler and installed .NET runtime. No SDK download.
             editor = Path('D:/Tool/Unity/Editor/Data')
@@ -50,7 +51,7 @@ def main():
             config = {'runtimeOptions': {'tfm': 'net' + version.split('.')[0] + '.0',
                       'framework': {'name': 'Microsoft.NETCore.App', 'version': version}}}
             output.with_suffix('.runtimeconfig.json').write_text(json.dumps(config), encoding='utf-8')
-            subprocess.run([dotnet, str(output), str(ROOT / 'assets/official/rules.json')], cwd=ROOT, check=True)
+            subprocess.run([dotnet, str(output), str(RULES)], cwd=ROOT, check=True)
 
 
 if __name__ == '__main__':

@@ -27,9 +27,9 @@ namespace Zjcs.Official.ProfessionUI
         void RecycleIcon(IProfessionRewardIcon icon);
         event Action Changed;
     }
-    // AchievementPanelItem's ProfessionTotalLevel path; the original icon manager,
-    // function limit, player state and RPC are supplied by local services.
-    public sealed class AchievementPanelItem : MonoBehaviour
+    // Original regular AchievementPanelItem, including UIBase initialization,
+    // matching blackboard refresh and the original group/-1 claim request.
+    public sealed class AchievementPanelItem : UIBase
     {
         public WorldMultiLanguageText TitleText, ProgressText;
         public Transform RewardSlot;
@@ -37,48 +37,67 @@ namespace Zjcs.Official.ProfessionUI
         public WorldStateSwitcher<OfficialAchievementState> StateSwitcher;
         [SerializeField] private Slider mProgressSlider;
         [SerializeField] private WorldStateSwitcher<bool> mTipDotStateSwitcher;
-        private OfficialProfessionAchievementView row;
-        private IProfessionAchievementData data;
+        private OfficialAchievementState state;
+        private Func<AchievementPanelEntry> read;
+        private IAchievementPanelSource data;
         private Action<int, int> mGetRewardCallBack;
         private Action mItemClick;
         private bool mReceiveSameType, mIsAchievementGroupItem;
         private readonly List<IProfessionRewardIcon> mItemIcons = new List<IProfessionRewardIcon>();
         private void Awake() => GetRewardBtn.onClick.AddListener(OnClickGetRewardBtn);
-        private void OnEnable() { if (row != null && data != null) Refresh(); }
-        private void OnDisable() => RecycleItemIcons();
+        protected override void OnEnableAndInited()
+        {
+            base.OnEnableAndInited();
+            if (data is IAchievementPanelBlackboardSource events) events.BlackboardChanged += OnBlackboardChanged;
+            Refresh();
+        }
+        protected override void OnDisableAndInited()
+        {
+            if (data is IAchievementPanelBlackboardSource events) events.BlackboardChanged -= OnBlackboardChanged;
+            RecycleItemIcons();
+            base.OnDisableAndInited();
+        }
         public void Init(OfficialProfessionAchievementView value, IProfessionAchievementData context,
             Action<int, int> callback, bool receiveSameType = false, Action itemClick = null, bool isAchievementGroup = false)
         {
-            RecycleItemIcons();
-            row = value ?? throw new ArgumentNullException(nameof(value));
-            data = context ?? throw new ArgumentNullException(nameof(context));
-            mGetRewardCallBack = callback;
-            mReceiveSameType = receiveSameType;
-            mItemClick = itemClick;
-            mIsAchievementGroupItem = isAchievementGroup;
-            if (isActiveAndEnabled) Refresh();
+            if (value == null) throw new ArgumentNullException(nameof(value));
+            var source = new ProfessionAchievementPanelSource(context);
+            Init(value.State, () => source.Read(value.Info.Index), source, callback, receiveSameType, itemClick, isAchievementGroup);
+        }
+        internal void Init(OfficialAchievementState value, Func<AchievementPanelEntry> reader, IAchievementPanelSource source,
+            Action<int, int> callback, bool receiveSameType, Action itemClick, bool isAchievementGroup)
+            => InitWrapper(() => {
+                state = value; read = reader; data = source; mGetRewardCallBack = callback;
+                mReceiveSameType = receiveSameType; mItemClick = itemClick; mIsAchievementGroupItem = isAchievementGroup;
+            });
+        private void OnBlackboardChanged(AchievementPanelBlackboardKey key)
+        {
+            var info = read();
+            if (info.ProgressKey.HasValue && info.ProgressKey.Value.Matches(key)) RefreshProgress(info);
         }
         public void Refresh()
         {
             mTipDotStateSwitcher.SetState(mIsAchievementGroupItem ? !data.AchievementGroupLimited : data.AchievementGroupLimited);
-            if (TitleText != null) TitleText.SetKey("ui_achievement_content_TotalProfessionLevel");
-            int max = row.Info.RequiredLevel, current = data.TotalLevel;
-            ProgressText.Format(OfficialPropFormat.Compact(current), OfficialPropFormat.Compact(max));
-            if (mProgressSlider != null)
-            {
-                mProgressSlider.minValue = 0;
-                mProgressSlider.maxValue = max;
-                mProgressSlider.value = current;
-            }
+            var info = read();
+            if (!info.IsInvalid && TitleText != null) TitleText.SetKey(info.Content.key, info.Content.args);
+            RefreshProgress(info);
             RecycleItemIcons();
-            foreach (KeyValuePair<int, long> reward in row.Info.Reward)
+            foreach (KeyValuePair<int, long> reward in info.Reward)
             {
                 IProfessionRewardIcon icon = data.GetIcon(reward.Key, RewardSlot);
                 icon.SetCount(reward.Value);
                 icon.SetClickPopupInfoDialog();
                 mItemIcons.Add(icon);
             }
-            StateSwitcher.SetState(row.State);
+            StateSwitcher.SetState(state);
+        }
+        private void RefreshProgress(AchievementPanelEntry info)
+        {
+            if (!info.Progress.HasValue) return;
+            var progress = info.Progress.Value;
+            ProgressText.Format(data.Compact(progress.currentValue), data.Compact(progress.maxValue));
+            if (mProgressSlider == null) return;
+            mProgressSlider.minValue = 0; mProgressSlider.maxValue = progress.maxValue; mProgressSlider.value = progress.currentValue;
         }
         private void RecycleItemIcons()
         {
@@ -87,11 +106,12 @@ namespace Zjcs.Official.ProfessionUI
         }
         private void OnClickGetRewardBtn()
         {
-            if (!data.CanGetReward(row.Info)) data.ShowSystemMessage("AchievementPanel.CanNotGetReward");
-            else if (data.AlreadyGotReward(row.Info)) data.ShowSystemMessage("AchievementPanel.AlreadyGotReward");
+            var info = read();
+            if (!info.CanGetReward) data.ShowSystemMessage("AchievementPanel.CanNotGetReward");
+            else if (info.AlreadyGotReward) data.ShowSystemMessage("AchievementPanel.AlreadyGotReward");
             else if (mItemClick == null)
             {
-                if (data.ClaimGroup(10, -1, mReceiveSameType)) mGetRewardCallBack?.Invoke(10, -1);
+                data.Claim(info.Group, -1, mReceiveSameType, () => mGetRewardCallBack?.Invoke(info.Group, -1));
             }
             else mItemClick();
         }
