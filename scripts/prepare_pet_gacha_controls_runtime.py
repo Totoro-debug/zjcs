@@ -24,6 +24,9 @@ def build():
                   for relative in native['inputs'] if relative.endswith('/client-source/PlayerOpenSkillChestBtn.cs'))
     sources = [prefix + '/client-source/QuickBuyUtils.cs', prefix + '/common-source/Common/ChestInfo.cs']
     validation = ['scripts/test_home_fruit_tree_weather.ps1',
+                  'unity/Packages/manifest.json',
+                  'unity/Assets/Official/Zjcs.Official.ConvertedSourceDescriptors.asmdef',
+                  'unity/Assets/Official/Zjcs.Official.ConvertedSourceDescriptors.asmdef.meta',
                   'unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.cs',
                   'unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.PetGachaControls.cs',
                   'unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef']

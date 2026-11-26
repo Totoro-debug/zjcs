@@ -28,6 +28,35 @@ if (@(Get-CimInstance Win32_Process -Filter "Name='Unity.exe'" | Where-Object {
 }).Count) { throw 'Do not stage sources into a running Unity project.' }
 $work = Join-Path $validationBase ('fruit-tree-weather-' + [Guid]::NewGuid().ToString('N'))
 [void](New-Item -ItemType Directory -Path $work)
+# Recovered converter declarations are source descriptors, not runtime ports.
+# Keep the same exclusion as the source project instead of compiling dummy UI
+# classes into Assembly-CSharp beside the real Unity UI package.
+$descriptorAssembly = 'Assets/Official/Zjcs.Official.ConvertedSourceDescriptors.asmdef'
+foreach ($suffix in @('', '.meta')) {
+    Copy-Item -LiteralPath (Join-Path $repository ('unity/' + $descriptorAssembly + $suffix)) -Destination (Join-Path $project ($descriptorAssembly + $suffix)) -Force
+}
+# Register the complete uGUI source package explicitly. A manually restored
+# built-in package cache can compile while leaving its MonoScripts unbound.
+$sourcePackageManifest = Get-Content -LiteralPath (Join-Path $repository 'unity/Packages/manifest.json') -Raw | ConvertFrom-Json
+$uguiVersion = $sourcePackageManifest.dependencies.'com.unity.ugui'
+$uguiSource = Join-Path $repository ('unity/Library/PackageCache/com.unity.ugui@' + $uguiVersion)
+$uguiTarget = Join-Path $project 'Packages/com.unity.ugui'
+if (-not (Test-Path -LiteralPath (Join-Path $uguiTarget 'package.json'))) {
+    Copy-Item -LiteralPath $uguiSource -Destination $uguiTarget -Recurse -Force
+}
+$uguiPackage = Get-Content -LiteralPath (Join-Path $uguiTarget 'package.json') -Raw | ConvertFrom-Json
+if ($uguiPackage.name -ne 'com.unity.ugui' -or $uguiPackage.version -ne $uguiVersion) {
+    throw 'Preserve the independent project with a different uGUI source package.'
+}
+$projectPackageManifestPath = Join-Path $project 'Packages/manifest.json'
+$projectPackageManifest = Get-Content -LiteralPath $projectPackageManifestPath -Raw | ConvertFrom-Json
+if ($projectPackageManifest.dependencies.'com.unity.ugui' -ne 'file:com.unity.ugui') {
+    if ($projectPackageManifest.dependencies.'com.unity.ugui' -ne $uguiVersion) {
+        throw 'Preserve the independent project with a different uGUI package version.'
+    }
+    $projectPackageManifest.dependencies.'com.unity.ugui' = 'file:com.unity.ugui'
+    [IO.File]::WriteAllText($projectPackageManifestPath, ($projectPackageManifest | ConvertTo-Json -Depth 100), [Text.UTF8Encoding]::new($false))
+}
 # Git archive may apply checkout line endings. Keep the exact verified payload
 # bytes when a source project differs solely in line endings. Leave content
 # differences alone, so concurrent resource edits do not enter this fixture.
@@ -182,7 +211,8 @@ if ($PetGachaControls) {
             # complete verified source package, rather than an isolated class.
             $segments = $binding.path.Substring(6).Split('/')
             $packageRelative = $segments[0..2] -join '/'
-            $packageTarget = Join-Path $project $packageRelative
+            $packageTarget = if ($segments[2].StartsWith('com.unity.ugui@')) { $uguiTarget } else { Join-Path $project $packageRelative }
+            $target = Join-Path $packageTarget ($segments[3..($segments.Length - 1)] -join '/')
             if (-not (Test-Path -LiteralPath (Join-Path $packageTarget 'package.json'))) {
                 [void](New-Item -ItemType Directory -Path (Split-Path $packageTarget) -Force)
                 Copy-Item -LiteralPath (Join-Path $repository ('unity/' + $packageRelative)) -Destination $packageTarget -Recurse -Force

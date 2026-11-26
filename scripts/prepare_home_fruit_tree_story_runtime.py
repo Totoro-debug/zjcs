@@ -31,6 +31,8 @@ def build():
               'assets/reference/home-pet-achievement-hint-bindings-source-manifest.json',
               'scripts/prepare_home_fruit_tree_story_runtime.py']
     runtime = [
+        'unity/Assets/Official/Zjcs.Official.ConvertedSourceDescriptors.asmdef',
+        'unity/Assets/Official/Zjcs.Official.ConvertedSourceDescriptors.asmdef.meta',
         'unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs',
         'unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.FurnitureStories.cs',
         'unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.FurnitureStoryWaits.cs',
@@ -42,6 +44,7 @@ def build():
         'unity/Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef',
     ]
     validation = [
+        'unity/Packages/manifest.json',
         'scripts/test_home_fruit_tree_weather.ps1',
         'unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.cs',
         'unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.FruitTreeUnlock.cs',

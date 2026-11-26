@@ -46,6 +46,9 @@ def build(check=False):
             OUTPUT.write_bytes(raw)
             meta(OUTPUT)
         paths = [Path(__file__), ROOT / 'scripts/official_tables.py', ROOT / 'scripts/official_apk.py',
+                 ROOT / 'unity/Packages/manifest.json',
+                 ROOT / 'unity/Assets/Official/Zjcs.Official.ConvertedSourceDescriptors.asmdef',
+                 ROOT / 'unity/Assets/Official/Zjcs.Official.ConvertedSourceDescriptors.asmdef.meta',
                  ROOT / 'assets/reference/pet-gacha-controls-native-source-manifest.json',
                  ROOT / 'assets/reference/partner-gift-controller-source-manifest.json',
                  ROOT / 'unity/Assets/Game/Resources/Partners/OfficialPartnerProfileAssetCatalog.asset',
