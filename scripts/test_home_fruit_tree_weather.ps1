@@ -1,0 +1,114 @@
+param(
+    [Parameter(Mandatory)][string]$ProjectPath,
+    [string]$Editor = 'D:/Tool/Unity/Editor/Unity.exe',
+    [ValidateRange(5, 120)][int]$TimeoutMinutes = 45
+)
+$ErrorActionPreference = 'Stop'
+$repository = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+$project = (Get-Item -LiteralPath $ProjectPath).FullName.TrimEnd('\', '/')
+$validationBase = [IO.Path]::GetFullPath((Join-Path $repository 'output/validation'))
+if (-not $project.StartsWith($validationBase + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
+    -not (Test-Path -LiteralPath (Join-Path $project 'ProjectSettings/ProjectVersion.txt'))) {
+    throw 'Use an independent Unity source project under output/validation.'
+}
+$ancestor = [IO.DirectoryInfo]::new($project)
+while ($ancestor.FullName -ne $validationBase) {
+    if ((Test-Path -LiteralPath (Join-Path $ancestor.FullName '.git')) -or
+        ($ancestor.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+        throw 'A worktree or linked source project is forbidden.'
+    }
+    $ancestor = $ancestor.Parent
+}
+if (@(Get-CimInstance Win32_Process -Filter "Name='Unity.exe'" | Where-Object {
+    $_.CommandLine -and $_.CommandLine.Replace('\', '/').Contains($project.Replace('\', '/'))
+}).Count) { throw 'Do not stage sources into a running Unity project.' }
+$work = Join-Path $validationBase ('fruit-tree-weather-' + [Guid]::NewGuid().ToString('N'))
+[void](New-Item -ItemType Directory -Path $work)
+$fruitReceipt = Get-Content -LiteralPath (Join-Path $repository 'assets/reference/home-fruit-tree-native-source-manifest.json') -Raw | ConvertFrom-Json
+foreach ($entry in $fruitReceipt.outputs.PSObject.Properties) {
+    $target = Join-Path $project $entry.Name.Substring(6)
+    if (-not (Test-Path -LiteralPath $target) -or
+        (Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.Value) {
+        throw ('Independent official fruit-tree asset differs: ' + $entry.Name)
+    }
+}
+# Reuse the independent source project's decoded official assets; update this
+# flow's source and native weather closure without copying concurrent edits.
+foreach ($receiptName in @('home-weather-snow-source-manifest.json', 'home-snow-effect-native-source-manifest.json')) {
+    $receipt = Get-Content -LiteralPath (Join-Path $repository ('assets/reference/' + $receiptName)) -Raw | ConvertFrom-Json
+    foreach ($section in @('inputs', 'validation_inputs', 'runtime_bindings', 'outputs')) {
+        foreach ($entry in $receipt.$section.PSObject.Properties) {
+            $source = Join-Path $repository $entry.Name
+            if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.Value) {
+                throw ('Official snow source identity differs: ' + $entry.Name)
+            }
+            if ($section -eq 'outputs' -and $entry.Name.StartsWith('unity/')) {
+                $target = Join-Path $project $entry.Name.Substring(6)
+                [void](New-Item -ItemType Directory -Path (Split-Path $target) -Force)
+                Copy-Item -LiteralPath $source -Destination $target -Force
+            }
+        }
+    }
+}
+$scoped = @(
+    'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.cs',
+    'Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.FruitTreeSkins.cs'
+)
+$committed = @(
+    'Assets/Game/Editor/Home/HomeAcceptanceLauncher.cs',
+    'Assets/Game/Runtime/Presentation/Home/HomeNativeSnowEffectView.cs',
+    'Assets/Game/Runtime/Presentation/Home/HomeNativeSceneSlots.cs',
+    'Assets/Game/Runtime/Presentation/Home/HomeEnvironmentView.cs',
+    'Assets/Game/Runtime/Presentation/Home/Zjcs.Presentation.Home.asmdef',
+    'Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs',
+    'Assets/Game/Runtime/Official/HomeFurniture/HomeFurnitureServices.cs'
+)
+foreach ($relative in $scoped) {
+    Copy-Item -LiteralPath (Join-Path $repository ('unity/' + $relative)) -Destination (Join-Path $project $relative) -Force
+}
+foreach ($relative in $committed) {
+    $source = & git -C $repository show ('HEAD:unity/' + $relative)
+    if ($LASTEXITCODE -ne 0) { throw ('Cannot read committed source: ' + $relative) }
+    [IO.File]::WriteAllText((Join-Path $project $relative), (($source -join "`n") + "`n"), [Text.UTF8Encoding]::new($false))
+}
+$fruitService = 'unity/Assets/Game/Runtime/Offline/Progression/OfflineFruitTreeService.cs'
+$source = & git -C $repository show (':' + $fruitService)
+if ($LASTEXITCODE -ne 0) { throw 'Cannot read staged fruit-tree service.' }
+[IO.File]::WriteAllText((Join-Path $project $fruitService.Substring(6)),
+    (($source -join "`n") + "`n"), [Text.UTF8Encoding]::new($false))
+. (Join-Path $PSScriptRoot 'unity_internal_display.ps1')
+$log = Join-Path $work 'unity.log'
+$names = @('ZJCS_HOME_ACCEPTANCE_ROOT', 'ZJCS_HOME_ACCEPTANCE_OUTPUT')
+$previous = @{}
+foreach ($name in $names) { $previous[$name] = [Environment]::GetEnvironmentVariable($name) }
+try {
+    $env:ZJCS_HOME_ACCEPTANCE_ROOT = Join-Path $work 'profiles'
+    $env:ZJCS_HOME_ACCEPTANCE_OUTPUT = $work
+    $process = Start-UnityOnInternalDisplay -Editor $Editor -ArgumentList @(
+        '-muteAudio', '-job-worker-count', '2', '-gc-helper-count', '2',
+        '-projectPath', ('"' + $project + '"'), '-executeMethod', 'Zjcs.Editor.Home.HomeAcceptanceLauncher.Run',
+        '-homeAcceptance', '-fruitTreeNativeAcceptance', '-fruitTreeNativeSkinsAcceptance',
+        '-logFile', ('"' + $log + '"')
+    )
+} finally {
+    foreach ($name in $names) { [Environment]::SetEnvironmentVariable($name, $previous[$name]) }
+}
+Write-Output ('Fruit-tree weather PID ' + $process.Id + ', log: ' + $log)
+$timer = [Diagnostics.Stopwatch]::StartNew()
+while (-not $process.WaitForExit(30000)) {
+    if ($timer.Elapsed.TotalMinutes -gt $TimeoutMinutes -or ((Test-Path -LiteralPath $log) -and
+        (Select-String -LiteralPath $log -Pattern 'error CS\d+|Scripts have compiler errors' -Quiet))) {
+        Stop-Process -Id $process.Id
+        throw ('Fruit-tree weather validation stopped: ' + $log)
+    }
+}
+$process.Refresh()
+$reportPath = Join-Path $work 'report.json'
+if ($process.ExitCode -ne 0 -or -not (Test-Path -LiteralPath $reportPath)) {
+    throw ('Fruit-tree weather validation failed: ' + $log)
+}
+$report = Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json
+if (-not $report.success -or @($report.lines | Where-Object { $_ -like 'PASS native-fruit-tree-weather-*' }).Count -ne 12) {
+    throw ('All twelve live-weather variants must pass: ' + $reportPath)
+}
+Write-Output ('FRUIT_TREE_WEATHER_PASSED: ' + $work)

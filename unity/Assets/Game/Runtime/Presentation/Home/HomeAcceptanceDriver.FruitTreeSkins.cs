@@ -5,6 +5,7 @@ using UnityEngine;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.HomeNativeAssets;
 using Zjcs.Official.HomeAwardUI;
+using Zjcs.Official.HomeWeather;
 
 namespace Zjcs.Presentation.Home
 {
@@ -43,12 +44,35 @@ namespace Zjcs.Presentation.Home
                         save.Skins.Add(new OfflineHomeSkinSelection { Category = 0, Type = 4, SkinItemId = skin.skinItemId });
                         save.Skins.Add(new OfflineHomeSkinSelection { Category = 2, Type = 1, SkinItemId = season.skinItemId });
                     }), "isolated save selects the original tree skin and weather");
+                    runtime.Scene.ApplyHomeSkins(runtime.Catalog.HomeSkins, runtime.Session.Skins, runtime.Rules);
                     runtime.RefreshNativeFurnitureSkins();
                     return "native furniture refresh selects " + variant;
                 });
                 passed &= switched;
                 if (!switched) continue;
                 yield return null;
+                bool snow = season.prefabName == "WeatherSnow";
+                float snowDeadline = Time.realtimeSinceStartup + 8f;
+                while (snow && Shader.GetGlobalFloat("_SnowTime") < .999f
+                    && Time.realtimeSinceStartup < snowDeadline) yield return null;
+                if (snow) yield return new WaitForSecondsRealtime(.5f);
+                passed &= Check("native-fruit-tree-weather-" + variant, () =>
+                {
+                    HomeWeatherSnow[] controllers = runtime.Scene.Root.GetComponentsInChildren<HomeWeatherSnow>();
+                    Assert(controllers.Length == (snow ? 1 : 0),
+                        "normal weather releases the snow effect and snow weather owns exactly one active original controller");
+                    if (snow)
+                    {
+                        Assert(Shader.GetGlobalFloat("_SnowTime") >= .999f,
+                            "the original live environment clock completes the appearance transition");
+                        Assert(ReferenceEquals(controllers[0].HomeEnvironmentManager, runtime.Environment),
+                            "original snow controller uses this city environment");
+                        Assert(controllers[0].GetComponentsInChildren<ParticleSystem>().Any(value => value.particleCount > 0),
+                            "the original snow effect emits while the selected tree is active");
+                    }
+                    return "scene layers, native tree and live weather share the selected environment; "
+                        + "controllers=" + controllers.Length + ", snow=" + Shader.GetGlobalFloat("_SnowTime");
+                });
                 using var prefab = loader.LoadPrefab("Home/Dynamic/Furniture/FruitTree/" + variant);
                 if (!Check("native-fruit-tree-source-" + variant, () =>
                 {

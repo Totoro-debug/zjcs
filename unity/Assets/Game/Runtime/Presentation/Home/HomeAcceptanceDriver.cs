@@ -48,7 +48,8 @@ namespace Zjcs.Presentation.Home
         {
             AudioListener.volume = 0f;
             Application.runInBackground = true;
-            if (Environment.GetCommandLineArgs().Contains("-homeSourceValidation"))
+            if (Environment.GetCommandLineArgs().Contains("-homeSourceValidation")
+                || Environment.GetCommandLineArgs().Contains("-fruitTreeNativeAcceptance"))
                 Application.logMessageReceived += RecordRuntimeError;
             Directory.CreateDirectory(Output);
             var slots = new ProfileSlotCatalog(Root);
