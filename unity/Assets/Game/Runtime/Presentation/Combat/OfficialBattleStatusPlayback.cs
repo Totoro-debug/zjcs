@@ -9,6 +9,7 @@ using Zjcs.Official.EntityActions;
 using Zjcs.Official.EntityLifecycle;
 using Zjcs.Official.EntityViews;
 using Zjcs.Official.StoryPlayables;
+using Zjcs.Official.StoryPlayableManager;
 
 namespace Zjcs.Presentation.Combat
 {
@@ -359,10 +360,12 @@ namespace Zjcs.Presentation.Combat
                 agent.StatusToShareStack[snapshot.ShareId] = snapshot.SharedStackCount;
         }
 
-        public object GetService(Type type) => null;
+        public object GetService(Type type) => type == typeof(IMyActionEntityLookup) ? this
+            : type == typeof(IMyPlayableManager) ? scope : null;
         public void Inject(object value)
         {
             if (value is ECFightStatusPlayableView status) status.MyPlayableManager = scope;
+            else if (value is ECStatusInvokedEventSourceView) { }
             else throw new InvalidOperationException("Unbound original character-status EC view: " + value?.GetType().FullName);
         }
 

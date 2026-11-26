@@ -9,11 +9,12 @@ using Zjcs.Official.EntityActions;
 using Zjcs.Official.EntityLifecycle;
 using Zjcs.Official.EntityViews;
 using Zjcs.Official.StoryPlayables;
+using Zjcs.Official.StoryPlayableManager;
 
 namespace Zjcs.Presentation.Combat
 {
     /// <summary>Binds confirmed airborne transitions to the complete original status prefabs.</summary>
-    public sealed class OfficialBattleAirComboPlayback : IDisposable
+    public sealed class OfficialBattleAirComboPlayback : IMyActionEntityLookup, IServiceProvider, IECViewInjection, IDisposable
     {
         [Serializable] private sealed class Catalog { public Entry[] graphs; }
         [Serializable] private sealed class Entry { public int id; public string resource; }
@@ -39,7 +40,7 @@ namespace Zjcs.Presentation.Combat
             }
             public void Invoke() => OnInvoked?.Invoke(this);
         }
-        private sealed class Context : IFightStatusPlayableContext
+        private sealed class Context : IFightStatusPlayableContext, ICurrentFightStatusPlayableContext
         {
             public State Status;
             public GameObject Body;
@@ -51,6 +52,7 @@ namespace Zjcs.Presentation.Combat
             public MyFightStatusAgent Agent => StatusAgent;
             public int? ShareId => null; // Neither original state has a share-stack component.
             public bool HasIcon => false; // Original ShowSpriteAbovePlayer is false for both states.
+            public ICurrentFightStatusPlayableView CurrentPlayableView { get; set; }
         }
         private sealed class ActionData : ActionComponentData
         {
@@ -67,9 +69,11 @@ namespace Zjcs.Presentation.Combat
             public override T GetComponent<T>()
             {
                 object result = typeof(T) == typeof(IBattleGridComponentViewData) ? this
+                    : typeof(T) == typeof(IFightStatusPlayableState) ? StatusState
                     : typeof(T) == typeof(ActionComponentData) ? Action : null;
                 return result == null ? default : (T)result;
             }
+            public IFightStatusPlayableState StatusState;
         }
         private sealed class Lease
         {
@@ -84,34 +88,49 @@ namespace Zjcs.Presentation.Combat
         private readonly GameObject staging;
         private readonly OfficialBattleEntityPositionContainer container;
         private readonly Dictionary<int, GameObject> prefabs = new Dictionary<int, GameObject>();
+        private readonly Dictionary<int, Dictionary<int, GameObject>> sourcePrefabs =
+            new Dictionary<int, Dictionary<int, GameObject>>();
         private readonly Dictionary<long, Lease> leases = new Dictionary<long, Lease>();
         private readonly List<MyFightStatusAgent> ownedAgents = new List<MyFightStatusAgent>();
         private bool disposed;
 
         public OfficialBattleAirComboPlayback(FightBattleExecutor executor, Transform root,
-            OfflineBattleNativePlayableScope scope, Func<int, Transform> body)
+            OfflineBattleNativePlayableScope scope, Func<int, Transform> body,
+            IReadOnlyDictionary<int, string> sourceCatalogs = null)
         {
             this.executor = executor ?? throw new ArgumentNullException(nameof(executor));
             this.root = root ?? throw new ArgumentNullException(nameof(root));
             this.scope = scope ?? throw new ArgumentNullException(nameof(scope));
             this.body = body ?? throw new ArgumentNullException(nameof(body));
-            var catalog = Resources.Load<TextAsset>("Combat/air-combo");
-            if (!catalog) throw new InvalidOperationException("Original airborne prefab catalog is missing.");
-            foreach (var entry in JsonUtility.FromJson<Catalog>(catalog.text).graphs)
+            LoadCatalog("Combat/air-combo", prefabs);
+            foreach (var source in sourceCatalogs ?? new Dictionary<int, string>())
             {
-                if (entry.id != 24269 && entry.id != 24270) continue;
-                var prefab = Resources.Load<GameObject>(entry.resource);
-                if (!prefab || !prefab.GetComponent<MyEntity>() || !prefab.GetComponent<MyFightStatus>())
-                    throw new InvalidOperationException("Original airborne status prefab is unbound: " + entry.id);
-                prefabs.Add(entry.id, prefab);
+                if (source.Key <= 0) throw new ArgumentException("An airborne source catalog requires a skill item.");
+                var selected = new Dictionary<int, GameObject>();
+                LoadCatalog(source.Value, selected);
+                sourcePrefabs.Add(source.Key, selected);
             }
-            if (prefabs.Count != 2) throw new InvalidOperationException("Both original airborne status prefabs are required.");
             staging = new GameObject("Inactive original airborne status staging");
             staging.transform.SetParent(root, false); staging.SetActive(false);
             container = staging.AddComponent<OfficialBattleEntityPositionContainer>();
             container.EntitySlot = root;
             executor.StatusSecondsChanged += Changed;
             executor.StatusSecondsInvoked += Invoked;
+        }
+
+        private static void LoadCatalog(string path, Dictionary<int, GameObject> target)
+        {
+            var catalog = Resources.Load<TextAsset>(path);
+            if (!catalog) throw new InvalidOperationException("Original airborne prefab catalog is missing: " + path);
+            foreach (var entry in JsonUtility.FromJson<Catalog>(catalog.text).graphs)
+            {
+                if (entry.id != 24269 && entry.id != 24270) continue;
+                var prefab = Resources.Load<GameObject>(entry.resource);
+                if (!prefab || !prefab.GetComponent<MyEntity>() || !prefab.GetComponent<MyFightStatus>())
+                    throw new InvalidOperationException("Original airborne status prefab is unbound: " + entry.id);
+                target.Add(entry.id, prefab);
+            }
+            if (target.Count != 2) throw new InvalidOperationException("Both original airborne status prefabs are required.");
         }
 
         private static long Key(int owner, int instance) => ((long)owner << 32) | (uint)instance;
@@ -180,15 +199,39 @@ namespace Zjcs.Presentation.Combat
             if (!target) return; // An attached original model can become available on a later frame.
             var agent = target.GetComponent<MyFightStatusAgent>();
             if (!agent) { agent = target.gameObject.AddComponent<MyFightStatusAgent>(); ownedAgents.Add(agent); }
-            var go = UnityEngine.Object.Instantiate(prefabs[status.ClassId], staging.transform, false);
+            var selected = sourcePrefabs.TryGetValue(status.ApplyingSkillItemId, out var bySource) ? bySource : prefabs;
+            var go = UnityEngine.Object.Instantiate(selected[status.ClassId], staging.transform, false);
             var entity = go.GetComponent<MyEntity>();
             var view = go.GetComponent<MyFightStatus>();
             var state = new State(status);
-            view.Bind(new Context { Status = state, Body = target.gameObject, StatusAgent = agent }, scope);
-            entity.Bind(container, new EntityData { Status = status, Action = new ActionData { Owner = ownerId } }, fresh);
+            OfficialBattleCurrentViewBinding.Prepare(go, this);
+            var context = new Context { Status = state, Body = target.gameObject, StatusAgent = agent,
+                CurrentPlayableView = CurrentStatusViewLookup.Get(view) };
+            view.Bind(context, scope);
+            entity.Bind(container, new EntityData { Status = status, StatusState = state,
+                Action = new ActionData { Owner = ownerId } }, fresh);
             leases.Add(key, new Lease { Entity = entity, View = view, State = state });
             go.transform.SetParent(root, false);
-            scope.Dispatch(() => { entity.MyStart(); view.OnStart(fresh); });
+            scope.Dispatch(() => {
+                if (context.CurrentPlayableView != null) { view.OnStart(fresh); entity.MyStart(); }
+                else { entity.MyStart(); view.OnStart(fresh); }
+            });
+        }
+
+        MyEntity IMyActionEntityLookup.GetEntity(EcEntityIdentifier id)
+        {
+            var target = body(id.EntityId);
+            return target ? target.GetComponent<MyEntity>() : null;
+        }
+
+        public object GetService(Type type) => type == typeof(IMyActionEntityLookup) ? this
+            : type == typeof(IMyPlayableManager) ? scope : null;
+
+        public void Inject(object value)
+        {
+            if (value is ECFightStatusPlayableView status) status.MyPlayableManager = scope;
+            else if (value is ECStatusInvokedEventSourceView) { }
+            else throw new InvalidOperationException("Unbound original airborne EC view: " + value?.GetType().FullName);
         }
 
         private void End(long key)

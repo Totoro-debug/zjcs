@@ -1,0 +1,67 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 11130,
+      "entity_resource": "Combat/WindRoarSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11130/11130",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/WindRoarSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11130/playable11130"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11131,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/WindRoarSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11130/11131"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 11132,
+      "entity_prefab": "11130/11132.prefab",
+      "entity_prefab_sha256": "931f7f855f36aef2362e98859e570e0241ca74aabb85bb8e81cffad892139d7b",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/WindRoarSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11130/playable_damage_11132"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/WindRoarSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/WindRoarSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/WindRoarSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/WindRoarSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11130/11132"
+    }
+  ]
+}

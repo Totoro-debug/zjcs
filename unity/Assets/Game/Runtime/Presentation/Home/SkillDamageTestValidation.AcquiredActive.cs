@@ -75,6 +75,7 @@ namespace Zjcs.Presentation.Home
             bool judgmentThunder = skillId == 10093;
             bool warlockExplosion = skillId == 10098;
             bool warlockThunder = skillId == 10037;
+            bool warlockWind = skillId == 10057;
             bool protectiveRunes = skillId == 10102;
             bool chaosRune = skillId == 10059;
             bool rockSummon = skillId == 10095;
@@ -92,11 +93,11 @@ namespace Zjcs.Presentation.Home
             bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard;
             fourthPromotion |= fireLeap || flowingFire;
             bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry || protectiveRunes || psychicWard;
-            bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017 || warlockExplosion || warlockThunder;
+            bool thirdPromotion = crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017 || warlockExplosion || warlockThunder || warlockWind;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
             fourthPromotion |= HasGuardianCompanion(skillId);
-            int profession = warlockExplosion || warlockThunder ? 12 : fireLeap || flowingFire ? 8 : alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = warlockExplosion || warlockThunder || warlockWind ? 12 : fireLeap || flowingFire ? 8 : alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -128,6 +129,7 @@ namespace Zjcs.Presentation.Home
             int passiveCompanion = LoadAcquiredPassiveCompanion(player, skillId, output);
             BeginAcquiredGuardianValidation(passiveCompanion, output);
             var sageRoundSecret = BeginAcquiredSageRoundSecretValidation(passiveCompanion, output);
+            if (warlockWind) PrepareAcquiredWindRoar();
             var sageSummonSecret = passiveCompanion == 10591 || passiveCompanion == 10600
                 ? new AcquiredSageSummonSecret(passiveCompanion, output) : null;
             bool overflowShield = passiveCompanion == 10601;
@@ -459,6 +461,7 @@ namespace Zjcs.Presentation.Home
                         : judgmentThunder ? cast.SkillEntityId == 11970
                         : warlockExplosion ? cast.SkillEntityId == 12070
                         : warlockThunder ? cast.SkillEntityId == 10920
+                        : warlockWind ? cast.SkillEntityId == 11130
                         : protectiveRunes ? cast.SkillEntityId == 12110
                         : chaosRune ? cast.SkillEntityId == 11380
                         : psychicWard ? cast.SkillEntityId == 11760
@@ -530,6 +533,12 @@ namespace Zjcs.Presentation.Home
                     {
                         VerifyAcquiredProtectiveRunes(checkpoint, output);
                         hits++;
+                        continue;
+                    }
+                    if (warlockWind)
+                    {
+                        VerifyAcquiredWindRoar(cast, damageEvents, checkpoint, output);
+                        hits += damageEvents.Count(hit => hit.Damage < 0);
                         continue;
                     }
                     if (warlockThunder)
@@ -924,6 +933,25 @@ namespace Zjcs.Presentation.Home
                     yield return CaptureAcquiredActive(output, "passive-battle");
                     capturedPassive = true;
                 }
+                if (warlockWind)
+                {
+                    bool launchVisible = ObserveAcquiredWindRoarPhase(24269);
+                    if (!windRoar.launchCaptured && launchVisible)
+                    {
+                        yield return CaptureAcquiredActive(output, "airborne-launch");
+                        windRoar.launchCaptured = true;
+                    }
+                    if (!windRoar.recoveryCaptured && ObserveAcquiredWindRoarPhase(24270))
+                    {
+                        yield return CaptureAcquiredActive(output, "airborne-recovery");
+                        windRoar.recoveryCaptured = true;
+                    }
+                    if (!captured && IsNativeSkillParticleVisible("playable11130"))
+                    {
+                        yield return CaptureAcquiredActive(output, "battle");
+                        captured = true;
+                    }
+                }
                 if (passiveCompanion == 10605 && !capturedPassive && iceGuardian.starts > 0
                     && IsNativeSkillParticleVisible("playable24390"))
                 {
@@ -1165,6 +1193,7 @@ namespace Zjcs.Presentation.Home
                 "The original vortex surge never exercised its inward knockback in the rendered battle.");
             Require(passiveCompanion != 10525 || File.Exists(Path.Combine(output, "companion-affinity-checkpoint.json")),
                 "The cultivated light affinity never affected the rendered battle.");
+            if (warlockWind) CompleteAcquiredWindRoar(output);
             if (passiveCompanion == 10605) CompleteAcquiredIceGuardian(capturedPassive);
             if (passiveCompanion == 10577) CompleteAcquiredLightScorch(capturedPassive);
             Require(passiveCompanion != 10604 || capturedPassive

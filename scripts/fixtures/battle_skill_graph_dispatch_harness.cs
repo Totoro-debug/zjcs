@@ -114,10 +114,17 @@ namespace Zjcs.Presentation.Combat
     // Complete character-status entities have separate native lifecycle coverage.
     public sealed class OfficialBattleStatusPlayback : IDisposable
     {
+        public sealed class CatalogReplacement
+        {
+            public CatalogReplacement(string previous, string incoming, params int[] statusIds) {}
+        }
         public static FightBattleExecutor ReboundExecutor;
         public OfficialBattleStatusPlayback(FightBattleExecutor executor, Transform root,
             OfflineBattleNativePlayableScope scope, Func<int, Transform> body, Func<int, bool> icons,
             params string[] catalogs) {}
+        public OfficialBattleStatusPlayback(FightBattleExecutor executor, Transform root,
+            OfflineBattleNativePlayableScope scope, Func<int, Transform> body, Func<int, bool> icons,
+            CatalogReplacement[] replacements, params string[] catalogs) {}
         public float NextDelay => float.PositiveInfinity;
         public void Rebind(FightBattleExecutor executor) { ReboundExecutor = executor; }
         public void Restore(FightBattleCheckpoint state = null) {}
@@ -134,8 +141,10 @@ namespace Zjcs.Presentation.Combat
         public static FightBattleExecutor ReboundExecutor;
         public static FightBattleStatusViewEvent LastNotice;
         public static int Synchronizations;
+        public static IReadOnlyDictionary<int, string> SourceCatalogs;
         public OfficialBattleAirComboPlayback(FightBattleExecutor executor, Transform root,
-            OfflineBattleNativePlayableScope scope, Func<int, Transform> body) {}
+            OfflineBattleNativePlayableScope scope, Func<int, Transform> body,
+            IReadOnlyDictionary<int, string> sourceCatalogs = null) { SourceCatalogs = sourceCatalogs; }
         public void Rebind(FightBattleExecutor executor) { ReboundExecutor = executor; }
         public void ApplySecondsStatus(FightBattleStatusViewEvent value) { LastNotice = value; }
         public void Synchronize() { Synchronizations++; }
@@ -291,6 +300,8 @@ public static class BattleSkillGraphDispatchHarness
         Require(rejectedMissingGrid, "Live grid observation requires the native grid view");
         livePlayback.BindGridEntities(transforms[1], new OfficialBattleGridMapper(), checkpoint, resolve, _ => false);
         livePlayback.BindAirCombo(new FightBattleExecutor(), transforms[1], resolve);
+        Require(OfficialBattleAirComboPlayback.SourceCatalogs[10057] == "Combat/wind-roar-current-status-graphs",
+            "Wind roar must select its declared current airborne source catalog");
         FightBattleUnitLifeEvent observedLife = null;
         livePlayback.BindUnitLife(new OfficialBattleUnitLifePlayback(value => observedLife = value));
         bool summonPresent = false;

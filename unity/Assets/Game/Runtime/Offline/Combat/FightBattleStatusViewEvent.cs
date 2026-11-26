@@ -19,6 +19,7 @@ namespace Zjcs.Combat.Official
     public sealed class FightBattleStatusViewState
     {
         public int InstanceId, ClassId, CreatorId, StackCount, RoundStartRemainingCount;
+        public int ApplyingSkillItemId;
         public bool CanStack, Forbidden, HasRoundStart;
         public int ShareId;
         public bool HasSharedStackCount;
@@ -29,6 +30,7 @@ namespace Zjcs.Combat.Official
         public static FightBattleStatusViewState Capture(FightBattleStatusState status, FightBattleUnitState owner = null)
             => new FightBattleStatusViewState {
                 InstanceId = status.InstanceId, ClassId = status.ClassId, CreatorId = status.CreatorId,
+                ApplyingSkillItemId = status.ApplyingSkillItemId,
                 StackCount = status.StackCount, CanStack = status.IsOpenStack,
                 Forbidden = status.ForbiddenType != 0, ShareId = status.SharedStackId,
                 HasSharedStackCount = owner != null && status.SharedStackId > 0,
@@ -43,7 +45,8 @@ namespace Zjcs.Combat.Official
             };
 
         internal bool SameView(FightBattleStatusViewState other) => other != null
-            && ClassId == other.ClassId && CreatorId == other.CreatorId && StackCount == other.StackCount
+            && ClassId == other.ClassId && CreatorId == other.CreatorId && ApplyingSkillItemId == other.ApplyingSkillItemId
+            && StackCount == other.StackCount
             && CanStack == other.CanStack && Forbidden == other.Forbidden && ShareId == other.ShareId
             && HasSharedStackCount == other.HasSharedStackCount && SharedStackCount == other.SharedStackCount
             && HasRoundStart == other.HasRoundStart && RoundStartRemainingCount == other.RoundStartRemainingCount
