@@ -1,0 +1,18 @@
+{
+  "entities": [11340, 11341, 11342, 11343, 24012],
+  "code": [
+    "FightSkillComponentInfo", "FightHitFixedComponentInfo", "FightDamageComponentInfo",
+    "FightActionSkillMoveComponentInfo", "FightSKillMoveCfg", "FightStatusComponentInfo",
+    "FightStatusAgentRateComponentInfo", "BattleFormulaHandler"
+  ],
+  "client_code": ["ECFightActionSkillMoveView", "MyFightStatusAgentRate"],
+  "rule_pack_fragments": ["FightSkill_part64.g.bytes", "FightSkill_part701.g.bytes"],
+  "visibility_bundles": ["11340", "24012"],
+  "scope_numeric": true,
+  "current_managed_views": true,
+  "runtime_rule_packs": ["unity/Assets/Game/Resources/Combat/SkillRules/10062.json"],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/water-vortex-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/water-vortex-current-status-graphs-source-manifest.json"
+  ]
+}

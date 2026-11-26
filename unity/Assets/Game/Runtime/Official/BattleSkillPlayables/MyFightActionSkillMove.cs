@@ -9,7 +9,7 @@ namespace Zjcs.Official.BattleSkillPlayables
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MyFightActionSkillMove : MyActionBase<FightActionSkillMoveComponent, FightActionSkillMoveComponentInfo>, IFightGetUsePlayable
+public class MyFightActionSkillMove : MyActionBase<FightActionSkillMoveComponent, FightActionSkillMoveComponentInfo>, IFightGetUsePlayable, IFightActionSkillMoveView
 {
 	[Tooltip("移动Playable，source为移动者，target为目标点")]
 	public GameObject myPlayablePrefab;
@@ -35,6 +35,8 @@ public class MyFightActionSkillMove : MyActionBase<FightActionSkillMoveComponent
 
 	public IMyPlayableManager mMyPlayableManager { get; set; }
 	public Transform EntitySlot { get; set; }
+	public IFightActionSkillMoveView CurrentView { get; set; }
+	GameObject IFightActionSkillMoveView.BlockPlayablePrefab => BlockPlayablePrefab;
 
 	// The battle host advances this same original timer at presentation boundaries.
 	public bool ManualTiming { get; set; }
@@ -44,6 +46,7 @@ public class MyFightActionSkillMove : MyActionBase<FightActionSkillMoveComponent
 	public override void OnStart(bool newEntity)
 	{
 		base.OnStart(newEntity);
+		if (CurrentView != null) return;
 		mCurrentPathIndex = 0;
 		PlayMovePlayable();
 	}
@@ -64,6 +67,7 @@ public class MyFightActionSkillMove : MyActionBase<FightActionSkillMoveComponent
 
 	public override void OnEnd(object userData)
 	{
+		if (CurrentView != null) { base.OnEnd(userData); return; }
 		StopMove();
 		StopBlockedPlayable();
 		ResetGridTransform();
@@ -74,7 +78,7 @@ public class MyFightActionSkillMove : MyActionBase<FightActionSkillMoveComponent
 
 	public override void OnImmediateToEnd()
 	{
-		ResetGridTransform();
+		if (CurrentView == null) ResetGridTransform();
 		base.OnImmediateToEnd();
 	}
 

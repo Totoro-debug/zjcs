@@ -40,6 +40,7 @@ def main():
         'divine-thunder-current-skill-graphs',
         'ice-guardian-current-skill-graphs',
         'wind-roar-current-skill-graphs',
+        'water-vortex-current-skill-graphs',
     )
     receipts = {
         'skill-native-graphs': 'skill-native-graph-assets-source-manifest',

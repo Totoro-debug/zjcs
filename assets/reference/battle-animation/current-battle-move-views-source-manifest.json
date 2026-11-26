@@ -1,0 +1,99 @@
+{
+  "manifest": "911_156995",
+  "assembly": {
+    "path": ".tools/source-packages/current/911_156995/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "1e7eb15a1cead0c2e618e307a367119908485a5a658815a0fe39d98c0d3f31fe"
+  },
+  "code_source": {
+    "path": ".tools/source-packages/current/911_156995/code-manifest.json",
+    "sha256": "a47317188c8d1f947b56ff1af73b4cd811a079860799915cf9103603afc200e9"
+  },
+  "originals": [
+    {
+      "path": ".tools/source-packages/current/911_156995/official-code/client-source/ECFightActionSkillMoveView.cs",
+      "sha256": "22d22a534ec90873d1bbd84c033c9fc2ea7c0e771444fb5fb969e983eb052a83"
+    },
+    {
+      "path": ".tools/source-packages/current/911_156995/official-code/client-source/MyFightActionSkillMove.cs",
+      "sha256": "05b779edb5445fedcf2f2197e820b51236dc1b8ff55e92f7cb2e101ddef23fc5"
+    }
+  ],
+  "common_source": {
+    "path": ".tools/source-packages/current/911_156995/official-code/common-source/Common/FightActionSkillMoveComponent.cs",
+    "sha256": "037eb08b5be309b67c159a4b8416001cb583b24d87914fdeee489397950beee3"
+  },
+  "shared_timing": {
+    "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightActionSkillMoveComponent.cs",
+    "sha256": "72c3b93aa4ba0b5b894b713255de75830abd94f08711d8acac45065d3da9aff9",
+    "normalization": "UTF-8, LF line endings"
+  },
+  "timing_methods": [
+    {
+      "signature": "public float GetDuration(",
+      "sha256": "9672ad626fcfe5bac9610ae43c4780ba4752e55e7115abfb845ab3fc81fd70ee"
+    },
+    {
+      "signature": "public bool IsTargetStart(",
+      "sha256": "bda685a2aec2562c6cef18213d6df0610855f147d17c66c6c4092efc0f0cf728"
+    },
+    {
+      "signature": "public float GetMoveSpeed(",
+      "sha256": "62a0c13bc3a15a9c56e7822cb23359e1753b73a50fe2d65f56fd84b4e823ae17"
+    },
+    {
+      "signature": "private float GetTotalMoveDuration(",
+      "sha256": "49d6e8a52d32a9aec067e0581a74527d5f1fb2fa622512adb270dd01d50f2ffc",
+      "adaptation": "Replace the logging backend; preserve both duration branches and the invalid-configuration return."
+    }
+  ],
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ECFightActionSkillMoveView.cs",
+      "sha256": "413167c9ce419db6baf82a4ce13d8a752d4846f4bcffc5e72937d63f68996b25",
+      "normalization": "UTF-8, LF line endings"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/IFightActionSkillMoveView.cs",
+      "sha256": "c1924d005bfee0aa88655c6be6a59ed2244f912b75633e4c6c4202b2b9a9354d",
+      "normalization": "UTF-8, LF line endings"
+    }
+  ],
+  "metadata": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ECFightActionSkillMoveView.cs.meta",
+      "sha256": "add639a6c6ee6429167a70c3e66db2cdbe23fc987a51118ba1315ef0e4db7117"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/IFightActionSkillMoveView.cs.meta",
+      "sha256": "e1888ab9a3b4fbd2c54ecbfbd25acde7b74b527382bc06347f6a8878588d2e01"
+    }
+  ],
+  "adapters": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightActionSkillMove.cs",
+      "sha256": "6f911d00548017acd33e1c6d161ed68c6f4e889080e9ace63d74a6082e1cf2fa",
+      "normalization": "UTF-8, LF line endings"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMoveActionData.cs",
+      "sha256": "628471d7dff701bb49be4de99964d53f318b3908ee0b8b97c4b5c5613c926582",
+      "normalization": "UTF-8, LF line endings"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMoveActionPlayback.cs",
+      "sha256": "86a68895c5fdc9b1fa7d6a928d86b26740103e59c6a64434eba168182b8cd30d",
+      "normalization": "UTF-8, LF line endings"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/current_battle_entity_views.py",
+      "sha256": "068988064153cab5a7dd38c610704431e52ac2872671ff51cb718e3eaccd9fa0"
+    },
+    {
+      "path": "scripts/prepare_current_battle_move_views.py",
+      "sha256": "7080fa6ae36a700785e540f23684cff1001cc84fb14fcf88780ad5322613a194"
+    }
+  ],
+  "operation": "Port original path sequence, movement and blocked playables, timers, direction, source/target binding and transform restoration. The shared presentation clock supplies each original update delta and action lifetime; local action snapshots, entity lookup and the existing entity-slot coordinates replace server component access. Current EC and older Mono views share one clock interface; the original Mono shell delegates when its EC view is present. A local BlockedAction parameter identifies existing collision receipts without changing authored direction."
+}

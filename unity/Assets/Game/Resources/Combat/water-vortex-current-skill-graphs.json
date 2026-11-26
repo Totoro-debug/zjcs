@@ -1,0 +1,83 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 11340,
+      "entity_resource": "Combat/WaterVortexSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11340/11340",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/WaterVortexSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11340/playable11340"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11341,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [
+        {
+          "field": "myPlayable",
+          "resource": "Combat/WaterVortexSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11340/playable11341"
+        }
+      ],
+      "entity_resource": "Combat/WaterVortexSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11340/11341"
+    }
+  ],
+  "moves": [
+    {
+      "action_entity_id": 11343,
+      "entity_resource": "Combat/WaterVortexSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11340/11343",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/WaterVortexSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11340/playable11343"
+        }
+      ]
+    }
+  ],
+  "damages": [
+    {
+      "damage_entity_id": 11342,
+      "entity_prefab": "11340/11342.prefab",
+      "entity_prefab_sha256": "a3c3ba56c5fbcd14d62ebacc90983e15a53f695d848bd557324e09b365bb3f27",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/WaterVortexSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11340/playable11342"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/WaterVortexSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/WaterVortexSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/WaterVortexSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/WaterVortexSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11340/11342"
+    }
+  ]
+}

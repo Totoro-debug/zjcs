@@ -2,9 +2,9 @@ param(
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int]$SkillId = 10026,
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int]$SkillId = 10026,
     [Parameter(ParameterSetName='Player')]
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10066,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
     [string]$PassiveSave,
     [ValidateSet(0,39521,39523)][int]$SkillSkinId = 0,
     [ValidateRange(0,2147483646)][int]$BattleSeed = 0
@@ -457,6 +457,19 @@ try {
                 if (-not (Test-Path -LiteralPath (Join-Path $skillRun $file))) { throw 'The cultivated rock emperor did not render and persist its original summon.' }
             }
         }
+        if ($SkillId -eq 10062) {
+            foreach ($file in @('acquired-water-vortex-checkpoint.json','acquired-water-vortex-strikes.json',
+                'acquired-water-vortex-receipt.json','acquired-active-ui-vortex-formation.png',
+                'acquired-active-ui-vortex-pull.png','acquired-active-ui-wet.png')) {
+                if (-not (Test-Path -LiteralPath (Join-Path $skillRun $file))) { throw 'The cultivated water vortex evidence is incomplete.' }
+            }
+            $water = Get-Content (Join-Path $skillRun 'acquired-water-vortex-receipt.json') -Raw | ConvertFrom-Json
+            if ($water.casts -lt 1 -or $water.hits -lt 1 -or $water.pulls -lt 1 -or $water.wet -lt 1 -or
+                -not $water.moveCaptured -or -not $water.wetCaptured -or -not $water.restored -or
+                -not (Select-String -LiteralPath $log -SimpleMatch '[Acquired active combat] 10062 water damage, current inward movement, wet icon and restore passed.')) {
+                throw 'The cultivated water vortex omitted its original current movement, wet icon or restore receipt.'
+            }
+        }
         if ($SkillId -eq 10057) {
             foreach ($file in @('acquired-wind-roar-checkpoint.json','acquired-wind-roar-strikes.json',
                 'acquired-wind-roar-receipt.json','acquired-active-ui-airborne-launch.png','acquired-active-ui-airborne-recovery.png')) {
@@ -484,7 +497,7 @@ try {
         if ($SkillId -eq 10096 -and -not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-heavenly-rain-checkpoint.json'))) {
             throw 'The original cultivated healing checkpoint was not persisted.'
         }
-        if ($SkillId -in @(10002,10032,10037,10039,10047,10056,10057,10059,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)) {
+        if ($SkillId -in @(10002,10032,10037,10039,10047,10056,10057,10059,10062,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)) {
             # The Player asserts the original effects for each equipped cast.
             Write-Output "Acquired active skill-page flow passed: $skillRun"
             continue

@@ -48,7 +48,8 @@ def battle_view_drivers(root):
 
 
 class CurrentBattleEntityViews:
-    TYPES = {'ECFightSkillView', 'ECFightHitView', 'ECFightDamageView', 'ECFightStatusPlayableView'}
+    TYPES = {'ECFightSkillView', 'ECFightHitView', 'ECFightDamageView', 'ECFightStatusPlayableView',
+             'ECFightActionSkillMoveView'}
     EVENT_TYPES = {'ECStatusInvokedEventSourceView', 'PlayPlayableWithSourceAndTargetHandler',
                    'StatusInvokedArgsToPlayPlayableWithSourceAndTargetDataConverter'}
 
@@ -100,6 +101,7 @@ class CurrentBattleEntityViews:
         cls.primary_record(records)
         return records
     ALIASES = {
+        'mBlockPlayablePrefab': 'BlockPlayablePrefab',
         'mPlayablePrefab': 'myPlayablePrefab', 'mUpPlayablePrefab': 'UpPlayablePrefab',
         'mDownPlayablePrefab': 'DownPlayablePrefab', 'mLeftPlayablePrefab': 'LeftPlayablePrefab',
         'mRightPlayablePrefab': 'RightPlayablePrefab', 'mShowSkillReplay': 'ShowSkillReplay',
