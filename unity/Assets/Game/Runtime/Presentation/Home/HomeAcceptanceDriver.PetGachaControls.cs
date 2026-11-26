@@ -352,6 +352,40 @@ namespace Zjcs.Presentation.Home
                 });
                 Destroy(iconImages);
             }
+            passed &= Check("pet-gacha-controls-hundred-reminder-clock", () =>
+            {
+                DateTime ignored = new DateTime(2030, 4, 10, 12, 0, 0, DateTimeKind.Local);
+                Assert(runtime.Profile.ApplyInventoryTransaction("acceptance:hundred-clock-fixture", save =>
+                {
+                    save.Player.PetGacha.LastObservedLocalDayKey = 20300412;
+                    save.Player.PetGacha.HundredReminderSuppressedDayKey = 0;
+                }).IsApplied, "isolated later daily observation fixture commits");
+                Assert(runtime.PetGacha.ShouldConfirmHundred(ignored), "no ignored date requires confirmation");
+                Assert(runtime.PetGacha.SuppressHundredReminder(ignored, "acceptance:hundred-ignore").IsApplied,
+                    "original selected reminder saves independently of drawing");
+                runtime.Profile.Reload();
+                Assert(runtime.PetGacha.State.HundredReminderSuppressedDayKey == 20300410
+                    && !runtime.PetGacha.ShouldConfirmHundred(ignored)
+                    && !runtime.PetGacha.ShouldConfirmHundred(ignored.AddDays(-1)),
+                    "saved choice uses confirmation day and suppresses same-day and rollback prompts");
+                Assert(!runtime.PetGacha.ShouldConfirmHundred(new DateTime(2030, 4, 11, 5, 59, 59))
+                    && runtime.PetGacha.ShouldConfirmHundred(new DateTime(2030, 4, 11, 6, 0, 0)),
+                    "reminder renews exactly at the shared local 06:00 boundary");
+                int dailyBefore = runtime.PetGacha.DailyCount(ignored);
+                Balance(100);
+                DateTime confirmed = ignored.AddDays(1);
+                Assert(runtime.PetGacha.Draw(100, "acceptance:hundred-clock-draw",
+                    new DateTimeOffset(confirmed).ToUnixTimeSeconds(), confirmHundred: true,
+                    suppressHundredReminder: true).IsApplied, "actual confirmed hundred draw commits");
+                runtime.Profile.Reload();
+                Assert(runtime.PetGacha.State.HundredReminderSuppressedDayKey == 20300411
+                    && runtime.PetGacha.State.LastObservedLocalDayKey == 20300412
+                    && runtime.PetGacha.DailyCount(confirmed) == dailyBefore + 100
+                    && !runtime.PetGacha.ShouldConfirmHundred(confirmed)
+                    && runtime.PetGacha.ShouldConfirmHundred(new DateTime(2030, 4, 12, 6, 0, 0)),
+                    "draw saves the actual reminder date while daily counters keep rollback protection");
+                return "original ignore-date comparison, independent save, rollback, 06:00 boundary and real hundred transaction reload verified";
+            });
             foreach (var root in roots) Destroy(root);
             yield return null;
             services.Dispose();

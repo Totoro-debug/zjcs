@@ -78,7 +78,9 @@ namespace Zjcs.Offline.Progression
 
         public bool ShouldConfirmHundred(DateTime localNow)
         {
-            int day = Math.Max(DayKey(localNow), State.LastObservedLocalDayKey);
+            // The original reminder compares against the last ignored date, even
+            // when the clock precedes a later daily-count observation.
+            int day = DayKey(localNow);
             return day > 0 && State.HundredReminderSuppressedDayKey < day;
         }
 
@@ -159,7 +161,7 @@ namespace Zjcs.Offline.Progression
                     });
                 }
                 if (count == 100 && suppressHundredReminder)
-                    state.HundredReminderSuppressedDayKey = Math.Max(state.HundredReminderSuppressedDayKey, observedDay);
+                    state.HundredReminderSuppressedDayKey = Math.Max(state.HundredReminderSuppressedDayKey, day);
                 TrimHistory(state, nowUnixSeconds);
             });
 
@@ -177,7 +179,7 @@ namespace Zjcs.Offline.Progression
             if (string.IsNullOrWhiteSpace(receiptId) || receiptId.Length > 160 || localNow == default)
                 return Result(PetGachaResultCode.InvalidArgument);
             profile.Reload();
-            int day = Math.Max(DayKey(localNow), State.LastObservedLocalDayKey);
+            int day = DayKey(localNow);
             ProgressionResult transaction = profile.ApplyInventoryTransaction(receiptId, save =>
                 save.Player.PetGacha.HundredReminderSuppressedDayKey = Math.Max(
                     save.Player.PetGacha.HundredReminderSuppressedDayKey, day));

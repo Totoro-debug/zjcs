@@ -66,7 +66,9 @@ def build(check=False):
                   'common-source/Common/AchievementDataPetGachaScoreCount.cs',
                   'common-source/Common/AchievementDataPetGacha.cs',
                   'common-source/Common/BlackboardDataType.cs', 'common-source/Common/BlackboardDataKey.cs',
-                  'client-source/ItemIconManager.cs', 'client-source/ItemIconManagerConfig.cs', 'client-source/IconConfigPool.cs']]
+                  'client-source/ItemIconManager.cs', 'client-source/ItemIconManagerConfig.cs', 'client-source/IconConfigPool.cs',
+                  'client-source/GachaPanelUtils.cs', 'client-source/GachaBaseSetting.cs',
+                  'common-source/Common/TimeUtils.cs']]
         paths += [code / 'common-source/Common' / (name + '.cs') for name in constructors.sources if
                   (code / 'common-source/Common' / (name + '.cs')).is_file()]
         paths += [path for folder in ['Official/GachaUI', 'Offline/GachaUI'] for path in
