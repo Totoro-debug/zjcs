@@ -1,0 +1,26 @@
+{
+  "manifest": "911_156995",
+  "inputs": {
+    ".tools/source-packages/current/911_156995/code-manifest.json": "a47317188c8d1f947b56ff1af73b4cd811a079860799915cf9103603afc200e9",
+    ".tools/source-packages/current/911_156995/official-code/managed/decoded/Assembly-CSharp.dll": "1e7eb15a1cead0c2e618e307a367119908485a5a658815a0fe39d98c0d3f31fe",
+    ".tools/source-packages/current/911_156995/official-code/client-source/Home.Skin/HomeWeatherSnow.cs": "ac16fb4f6e6c7629c14df1cc628f12c024373f81a5291c6ba16f5aa565d57dc0",
+    "scripts/prepare_home_weather_snow.py": "94f5ab8453c6bc87dfe056b019a10b0cc6adebbbb4239d67c414926089c427ca"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/HomeWeather.meta": "f6a630595a8f5c705531f6e9b8951b933d5696e43f7d1e3eb8c3e23f7e21714f",
+    "unity/Assets/Game/Runtime/Official/HomeWeather/HomeWeatherSnow.cs": "48aaf248c764b47e8ded5466ba10307e187b90d55245de06126daeabdb6c8755",
+    "unity/Assets/Game/Runtime/Official/HomeWeather/HomeWeatherSnow.cs.meta": "322a16403b856693526fae618e81998290ba215be656914c2b13e2d2b58f13b3",
+    "unity/Assets/Game/Runtime/Official/HomeWeather/Zjcs.Official.HomeWeather.asmdef": "d14d5755b7239b02711cb694765816f342481761d9b87bc7c4e4beb53abe129a",
+    "unity/Assets/Game/Runtime/Official/HomeWeather/Zjcs.Official.HomeWeather.asmdef.meta": "4aee375561b61dbe60f0bbe91a8565aab081069ed69221140102037510728ae6"
+  },
+  "validation_inputs": {
+    "scripts/fixtures/home_weather_snow_validation.cs": "2bdfe48a03da7ad66c6441cb6ceb66d2903a751210ae0972bc162bd987134daa",
+    "scripts/test_home_weather_snow.ps1": "e5eb61395242b22b7272435f7eba9439176185840d27d3049923d3f95b877790"
+  },
+  "adaptations": [
+    "Original particle capacity capture, enabled state, photo-mode gate, appearance curve, time-scale duration, delta-time order and shader progression are retained.",
+    "Decompiler async state machine is recovered as its readable UniTaskVoid method, with original UniTask.Yield cancellation and timing.",
+    "Global dependency injection uses existing environment/view-mode ports; CancellationDisposable uses a cancelling and disposing CancellationTokenSource; the decompiled nested MainModule type is qualified."
+  ],
+  "scope": "Shared snow controller. Native weather prefab binding and full scene snow rendering are separate integration work."
+}
