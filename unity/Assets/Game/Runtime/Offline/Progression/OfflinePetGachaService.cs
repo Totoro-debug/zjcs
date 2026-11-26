@@ -204,6 +204,21 @@ namespace Zjcs.Offline.Progression
             return checked(independent + cycleItems * cycles);
         }
 
+        public bool HasAvailableAchievementReward(int group)
+        {
+            int count = AchievementCount(group);
+            if (count == 0) return false;
+            var claimed = new HashSet<int>(State.AchievementClaims.Where(row => row.Group == group).Select(row => row.Index));
+            int independent = catalog.AchievementsFor(group).Count(row => row.CompleteCount > 0 && row.CycleIncrementCount <= 0);
+            for (int index = 0; index < independent; index++)
+                if (!claimed.Contains(index) && AchievementAt(group, index)?.IsReady == true) return true;
+            // AchievementAt builds cycles only from positive increments, so
+            // every cycle after the first unclaimed one has a higher target.
+            int firstCycle = independent;
+            while (firstCycle < count && claimed.Contains(firstCycle)) firstCycle++;
+            return firstCycle < count && AchievementAt(group, firstCycle)?.IsReady == true;
+        }
+
         public IReadOnlyList<PetGachaAchievementEntry> Achievements(int group, int page = 0, int pageSize = 5)
         {
             if ((group != 15 && group != 16) || page < 0 || page > 100000 || pageSize <= 0 || pageSize > 100)
