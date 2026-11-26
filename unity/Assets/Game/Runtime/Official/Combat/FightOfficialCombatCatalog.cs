@@ -81,7 +81,9 @@ namespace Zjcs.Combat.Official
             return catalog;
         }
 
-        public bool HasEntityPropertyDefinition(int entityId) => skillEntityProps.ContainsKey(entityId);
+        public bool HasEntityPropertyDefinition(int entityId)
+            => scopedSkillPropertyCatalogs.TryGetValue(entityId, out var selected)
+                ? selected.HasEntityPropertyDefinition(entityId) : skillEntityProps.ContainsKey(entityId);
 
         /// <summary>
         /// Computes the official skill property snapshot for an EC skill entity:
@@ -92,6 +94,8 @@ namespace Zjcs.Combat.Official
         public IReadOnlyDictionary<int, long> CalculateSkillProps(int entityId, int rank, int level,
             int subRank)
         {
+            if (scopedSkillPropertyCatalogs.TryGetValue(entityId, out var selected))
+                return selected.CalculateSkillProps(entityId, rank, level, subRank);
             if (!skillEntityProps.TryGetValue(entityId, out FightOfficialEntityProp prop))
                 return EmptyProps;
             IReadOnlyDictionary<int, long> levelProps = EmptyProps;

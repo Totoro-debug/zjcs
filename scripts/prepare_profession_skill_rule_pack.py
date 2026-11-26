@@ -23,8 +23,8 @@ def identity(path):
     return dict(path=path.relative_to(ROOT).as_posix(), sha256=sha(path.read_bytes()))
 
 
-def build(item):
-    spec_path = ROOT / f'scripts/profession_skill_sources/fourth/{item}.json'
+def build(item, spec_path=None):
+    spec_path = (ROOT / spec_path).resolve() if spec_path is not None else ROOT / f'scripts/profession_skill_sources/fourth/{item}.json'
     spec = json.loads(spec_path.read_bytes())
     baseline = ROOT / 'unity/Assets/Official/Combat'
     skill = json.loads((baseline / 'skill-rules.json').read_bytes())
@@ -72,7 +72,7 @@ def build(item):
         schemas = ScriptSchemas(code_root=code)
         visibility, managed_assemblies = {}, set()
         for entity in spec.get('visibility_bundles', ()):
-            bundle = f'defaultpackage_assets_prefabs_ecentity_fight_fightskill_{entity}.bundle'
+            bundle = str(entity) if str(entity).endswith('.bundle') else f'defaultpackage_assets_prefabs_ecentity_fight_fightskill_{entity}.bundle'
             for obj in apk.objects(bundle):
                 if obj.type.name != 'MonoBehaviour':
                     continue
@@ -94,12 +94,15 @@ def build(item):
         damage_ids = {value['FightHitFixedComponent']['DamageId'] for value in entities.values() if 'FightHitFixedComponent' in value}
         assert visibility.keys() == damage_ids, ('Missing native damage display binding', damage_ids - visibility.keys())
         # Shared cultivation tables must stay unchanged for existing migrations.
-        assert all(skill['props'][key] == value for key, value in values.items()), 'Shared numeric rows changed'
-        assert groups == [row for row in skill['tables']['entity_prop_group_level'] if row['GroupId'] in group_ids], 'Shared cultivation groups changed'
+        if not spec.get('scope_numeric'):
+            assert all(skill['props'][key] == value for key, value in values.items()), 'Shared numeric rows changed'
+            assert groups == [row for row in skill['tables']['entity_prop_group_level'] if row['GroupId'] in group_ids], 'Shared cultivation groups changed'
         result = dict(manifest=apk.version, item_id=item, entities=entities,
                       previous_entities={key: previous.get(key) for key in sorted(wanted)},
                       tables=dict(entity_prop=props, entity_prop_group_level=groups), props=values,
                       damage=[visibility[key] for key in sorted(visibility)])
+        if spec.get('scope_numeric'):
+            result['scope_numeric'] = True
         payload = (json.dumps(result, ensure_ascii=False, separators=(',', ':')) + '\n').encode('utf8')
         proof = dict(manifest=apk.version, item_id=item, output_sha256=sha(payload), inputs=inputs,
                      entity_locations=locations, source_spec=identity(spec_path), generator=identity(Path(__file__)),
@@ -116,8 +119,9 @@ def main():
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument('--item', type=int, required=True)
     parser.add_argument('--write', action='store_true')
+    parser.add_argument('--spec', type=Path)
     args = parser.parse_args()
-    payload, proof = build(args.item)
+    payload, proof = build(args.item, args.spec)
     target = ROOT / f'unity/Assets/Game/Resources/Combat/SkillRules/{args.item}.json'
     receipt = target.with_name(target.stem + '-source-manifest.json')
     if args.write:

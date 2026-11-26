@@ -8,6 +8,9 @@ namespace Zjcs.Combat.Official
         private readonly HashSet<int> skillRulePackEntities = new HashSet<int>();
         private readonly HashSet<int> skillRulePackItems = new HashSet<int>();
 
+        private readonly Dictionary<int, FightOfficialCombatCatalog> scopedSkillPropertyCatalogs =
+            new Dictionary<int, FightOfficialCombatCatalog>();
+
         public bool IsSkillRulePackEntity(int entityId) => skillRulePackEntities.Contains(entityId);
 
         /// <summary>Installs one verified migration without relabelling the older shared catalog.</summary>
@@ -38,10 +41,32 @@ namespace Zjcs.Combat.Official
                 replacements.Add(id, Object(pair.Value, "pack entity " + id));
             }
             var reportParents = ReadReportSkillParentOverrides(pack);
-            ParseSkillPropertyTables(pack);
+            FightOfficialCombatCatalog numeric = null;
+            if (Bool(pack, "scope_numeric"))
+            {
+                numeric = new FightOfficialCombatCatalog { skillPropertyNames = skillPropertyNames };
+                numeric.ParseSkillPropertyTables(pack);
+                foreach (var row in numeric.skillEntityProps)
+                {
+                    if (!replacements.ContainsKey(row.Key))
+                        throw new FormatException("Scoped skill properties refer outside their entity graph.");
+                    var prop = row.Value;
+                    if (prop.RankPropId > 0 && !numeric.skillPropTables.ContainsKey(prop.RankPropId))
+                        throw new FormatException("Scoped skill rank properties are missing.");
+                    if (prop.GroupLevelPropId <= 0) continue;
+                    if (!numeric.skillGroupLevels.TryGetValue(prop.GroupLevelPropId, out var levels))
+                        throw new FormatException("Scoped skill cultivation group is missing.");
+                    foreach (int id in levels.Values)
+                        if (id > 0 && !numeric.skillPropTables.ContainsKey(id))
+                            throw new FormatException("Scoped skill level properties are missing.");
+                }
+            }
+            else ParseSkillPropertyTables(pack);
             foreach (var pair in replacements)
             {
                 entities[pair.Key] = pair.Value;
+                if (numeric != null) scopedSkillPropertyCatalogs[pair.Key] = numeric;
+                else scopedSkillPropertyCatalogs.Remove(pair.Key);
                 skillRulePackEntities.Add(pair.Key);
             }
             foreach (var pair in reportParents) reportSkillParents[pair.Key] = pair.Value;
