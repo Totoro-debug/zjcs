@@ -24,6 +24,10 @@ namespace Zjcs.Presentation.Home
         private readonly Dictionary<GameObject, bool> hiddenTutorialUi = new Dictionary<GameObject, bool>();
 
         public int SelectedTabIndex => selectedTab;
+        internal GameObject StoryBottomBarRoot => bottomRenderer?.Find("/PublicBottomBar");
+        internal GameObject FindStoryUiNode(string key)
+            => key == "PublicBottomBar.HomeTabItem"
+                ? bottomRenderer?.Find("/PublicBottomBar/Content/Group/Home/UnlockObj") : null;
         public string ActivePanelKey => activePanelKey;
         internal bool HasTutorialDialogue => tutorialDialogueLayer != null;
         public bool HasTutorialHomeTab => bottomRenderer != null

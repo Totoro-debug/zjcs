@@ -1,0 +1,47 @@
+{
+  "manifest": "911_156995",
+  "original_sources": {
+    ".tools/source-packages/current/911_156995/official-code/client-source/CameraDragNode.cs": "bb1f73c79a0cbab9e0c06563b78a47bc903a5fb8f640692ebb85f4d9f26c4f75",
+    ".tools/source-packages/current/911_156995/official-code/client-source/CameraMoveNode.cs": "acf871c8f454c222c3308c72c49c3fa154e9136d701f3dd3795576129d2227ce",
+    ".tools/source-packages/current/911_156995/official-code/client-source/CloseMaskNode.cs": "caadcb86afe2bdfc25781af53b19512dfa671094b6b692fd0836569a27ec7a84",
+    ".tools/source-packages/current/911_156995/official-code/client-source/DialogNode.cs": "5a6062f4e7e8fb127e4b3aa7c304edf5d70afd873f0c7a8269fcdbba0832e48f",
+    ".tools/source-packages/current/911_156995/official-code/client-source/FinishStoryConditionNode.cs": "ce301a7c11430e4b32b5075b81d967486ee6cb4534d2a584e86c6ac252005b4c",
+    ".tools/source-packages/current/911_156995/official-code/client-source/FinishStoryNode.cs": "d0fb9cf7fb0d6cf905041c67711cbc4775d9b7bb704522748162b1456d8cdd05",
+    ".tools/source-packages/current/911_156995/official-code/client-source/FurnitureBase.cs": "6d2f169a869341a5fe8e5911e17802c644ad1f16b17fa764d6014981c42263c8",
+    ".tools/source-packages/current/911_156995/official-code/client-source/HomeFruitTree.cs": "927c0bc804707869c32da7816c2444cd32d48b0adc7a812af9f32a674e5121fc",
+    ".tools/source-packages/current/911_156995/official-code/client-source/HomeFruitTreeProduceFruit.cs": "8fc7a2cdccc82019cc984132edb374bfaca406ba4d80074bb3f12e9bd5ebcb9d",
+    ".tools/source-packages/current/911_156995/official-code/client-source/PlayMaskNode.cs": "e59b814e6a15e9d6ed8a8933fdf0d436a6de5800406286268ecabe7e32abcfaa",
+    ".tools/source-packages/current/911_156995/official-code/client-source/RepairFurnitureNode.cs": "3b26bdf13d084d3cbc6382bf7a16bd7fb54b6b7f7f76992dbec98f017b425548",
+    ".tools/source-packages/current/911_156995/official-code/client-source/StartStoryNode.cs": "ead294ad76e3e65d0c0df98c1d80ba39888e0875edba4c21bde43a60a369afcf",
+    ".tools/source-packages/current/911_156995/official-code/client-source/StoryGraph.cs": "d7ba7325b2ffeee2bd5a429cd030fbd49042999e4eae3b78b1f34043481ffddb",
+    ".tools/source-packages/current/911_156995/official-code/client-source/WaitAllNoTipWindowClosedNode.cs": "01fe3d81c05d72423e5b1434c3e46dd3a3318fa0c786e450a4d0cadf2ddbbc0f",
+    ".tools/source-packages/current/911_156995/official-code/client-source/WaitGotFruitTreeRewardNode.cs": "228f1482a28ad35e1ff8552d295fa0e802118596d548ffc9e85cc4f36da69f24",
+    ".tools/source-packages/current/911_156995/official-code/client-source/WaitPublicBottomBarActiveNode.cs": "7b351fd3c70356a3ab724820bb9d112980f17185af1024c5038b5bdb06a2cc5f",
+    ".tools/source-packages/current/911_156995/official-code/client-source/WaitStartStoryNode.cs": "b42b62c58098481c0caa2344c91b01e818e9ca3d6f97e90743b0804b03c4cccb",
+    ".tools/source-packages/current/911_156995/official-code/client-source/WaitStoryUIActiveNode.cs": "fdba482e620719e044e8de7fcef24ab5bdf798c63478bcc597dd59e20428bd4b",
+    ".tools/source-packages/current/911_156995/official-code/client-source/WaitTabItemStateNode.cs": "42aee357cba1d335f67516df5a090dcc57616469606d51e6b85a496a32bed68a",
+    ".tools/source-packages/current/911_156995/official-code/client-source/ClientRunNode.cs": "49b715f4d8ab78f7c43a7ecde0506966401f18d2f98149dd312bd3dcf211be35",
+    ".tools/source-packages/current/911_156995/official-code/client-source/StoryUtils.cs": "5e1c8678cb3b6cc4103dd0809e66e66a5c489e1e5e8903f2e14d3300a7ea62eb",
+    ".tools/source-packages/current/911_156995/official-code/common-source/PlayerServiceProxyImpl.cs": "b3c7e39e7f8234d37c9d4d65963bd606191d55cdd43667484d80e0996d78ceec"
+  },
+  "inputs": {
+    "assets/reference/home-fruit-tree-unlock-story-source-manifest.json": "58af6716a1171db1dadd8db43939f7a73618df19a9351a25884467e2dd1920c4",
+    "assets/reference/home-fruit-tree-unlock-story-audio-source-manifest.json": "1a9036d69b409e20b62d1c6aceabd590af972fb04bf531b9441a629f1f34cd57",
+    "scripts/prepare_home_fruit_tree_story_runtime.py": "2a5f3ed8db9ee088cbaf641df42f4a14c6a40324efb1ba9900e6f014d1eb141a"
+  },
+  "runtime_bindings": {
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs": "76efdaac74e09712574613ee4b5e8f2dfdbd0f06ad9e0437ca273ac119a7ffda",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.FurnitureStories.cs": "07dbcdd713af5be811a69919eaf84222d836ac8104ea36e6c8b2a147e95ad0a7",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.FurnitureStoryWaits.cs": "f4c1ae35b90ca0ce688866b8390186167f0529705e22a43c307828429bef1e4d",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Tutorial.cs": "a4ecf396d2105a9f820eba8bce5956a6ccbbe51be908b55d7746e6c3eb05c05c",
+    "unity/Assets/Game/Runtime/Offline/HomeStoryDialog/HomeFurnitureStoryDialogNode.cs": "8bf032d5a50e647b51aef28f8a264c620cbfe6307c8ff708937ecb385cae9b6f"
+  },
+  "validation_inputs": {
+    "scripts/test_home_fruit_tree_weather.ps1": "742f5f21aff340fd325895e2e475d3851b6708633b24b91e49a5c88864183ccc",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.cs": "684121c3f57c5ddb357973cff791de04b02d4041dad1efae08c98a3eeb08cf3c",
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.FruitTreeUnlock.cs": "fa715779f1cbcb1f96eac7b5378385ec2fbb70c1c528bf4dd09036ca28f48f66"
+  },
+  "runtime_members": {
+    "unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs#TryGetFurnitureMaskTarget": "0d548e9c093b6e161cde9e307b2e785a8894996b6c09bf2d9078c0ba595f067a"
+  }
+}

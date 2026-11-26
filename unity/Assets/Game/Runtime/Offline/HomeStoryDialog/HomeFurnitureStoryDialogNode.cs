@@ -24,7 +24,7 @@ namespace Zjcs.Offline.HomeStoryDialog
             this.window = window ?? throw new ArgumentNullException(nameof(window));
         }
 
-        public void Begin(string story, HomeFurnitureStoryGraph.Node node, Action<int?> completed)
+        public void Begin(string story, HomeFurnitureStoryGraph.Node node, Action<int?> completed, Action opened = null)
         {
             if (pending != null) throw new InvalidOperationException("A furniture story dialogue is already running.");
             if (node == null || completed == null) throw new ArgumentNullException();
@@ -61,11 +61,19 @@ namespace Zjcs.Offline.HomeStoryDialog
             window.Open(panel => panel.Init(story, dialogId, immediately, autoClose, showOptions, options,
                 onOption, onFinished, null, true, autoPlay));
             pending = coroutineHost.StartCoroutine(Wait(run, () => optionNode ? selected.HasValue : finished,
-                () => completed(selected)));
+                () => completed(selected), opened));
         }
 
-        private IEnumerator Wait(int run, Func<bool> ready, Action completed)
+        private IEnumerator Wait(int run, Func<bool> ready, Action completed, Action opened)
         {
+            if (opened != null)
+            {
+                while (run == generation && window.Root
+                    && window.Root.GetComponent<Zjcs.Official.WorldUI.WorldPopupWindow>().State != Zjcs.Official.WorldUI.WorldPopupWindow.EState.Show)
+                    yield return null;
+                if (run != generation) yield break;
+                opened();
+            }
             do { yield return null; } while (run == generation && !ready());
             if (run != generation) yield break;
             pending = null;

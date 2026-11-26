@@ -269,10 +269,19 @@ namespace Zjcs.Presentation.Home
             internal bool TryGetFurnitureMaskTarget(int furnitureType, out GameObject target)
             {
                 target = null;
-                GameObject instance = furnitureType == (int)EFurniture.FruitTree ? fruitTreeInstance
+                GameObject instance = furnitureType == (int)EFurniture.FruitTree || furnitureType == (int)EFurniture.FruitTree2 ? fruitTreeInstance
                     : entities.TryGetValue((EFurniture)furnitureType, out EntityState state) ? state.Instance : null;
                 if (!instance)
                     return false;
+                if (furnitureType == (int)EFurniture.FruitTree || furnitureType == (int)EFurniture.FruitTree2)
+                {
+                    var proxy = instance.GetComponentsInChildren<MonoBehaviour>(true)
+                        .OfType<IFurnitureProxy<FurnitureBase>>().FirstOrDefault();
+                    FurnitureBase component = proxy?.GetComponent((EFurniture)furnitureType);
+                    if (!component) throw new InvalidOperationException("Original fruit-tree furniture proxy binding is missing: " + furnitureType);
+                    target = component.gameObject;
+                    return true;
+                }
                 Collider activeCollider = instance.GetComponentsInChildren<Collider>(true)
                     .FirstOrDefault(collider => collider != null && collider.enabled && collider.gameObject.activeInHierarchy);
                 target = activeCollider != null ? activeCollider.gameObject : instance;

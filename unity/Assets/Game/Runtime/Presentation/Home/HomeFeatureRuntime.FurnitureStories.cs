@@ -35,17 +35,18 @@ namespace Zjcs.Presentation.Home
         /// HUD visibility, <see cref="HomeStoryDialogWindow"/>, and
         /// <see cref="NativeStoryMaskHost"/> across buildings.
         /// </summary>
-        private sealed class FurnitureStories : HomeFurnitureStoryGraph.IHost,
+        private sealed partial class FurnitureStories : HomeFurnitureStoryGraph.IHost,
             IHomeStoryDialogEnvironment, IDisposable
         {
             private const int DefaultPlayerRoleId = 100001;
 
             private readonly HomeFeatureRuntime home;
-            private readonly HomeStoryDialogAssets dialogAssets;
+            private readonly HomeStoryDialogAssets furnitureDialogAssets;
+            private HomeStoryDialogAssets dialogAssets;
             private readonly HomeStoryPortraitAssets portraitAssets;
             private readonly HomeStoryOptionAssets optionAssets;
             private readonly HomeStorySettings settings;
-            private readonly HomeFurnitureStoryGraph graph;
+            private HomeFurnitureStoryGraph graph;
 
             private HomeStoryDialogWindow dialogWindow;
             private HomeFurnitureStoryDialogNode dialogNodeRunner;
@@ -53,6 +54,7 @@ namespace Zjcs.Presentation.Home
             private AudioSource voiceSource;
             private AudioSource soundSource;
             private Coroutine activeCoroutine;
+            private int routineGeneration;
             private string activeStory;
             private Action activeCompleted;
             private bool hidMainUi;
@@ -63,7 +65,7 @@ namespace Zjcs.Presentation.Home
             internal FurnitureStories(HomeFeatureRuntime home)
             {
                 this.home = home ?? throw new ArgumentNullException(nameof(home));
-                dialogAssets = HomeStoryDialogAssets.LoadDefault();
+                furnitureDialogAssets = dialogAssets = HomeStoryDialogAssets.LoadDefault();
                 portraitAssets = HomeStoryPortraitAssets.LoadDefault();
                 optionAssets = HomeStoryOptionAssets.LoadDefault();
                 settings = HomeStorySettings.LoadDefault();
@@ -73,6 +75,18 @@ namespace Zjcs.Presentation.Home
             internal bool TryPlay(string storyName, Action onCompleted = null)
             {
                 if (disposed || string.IsNullOrEmpty(storyName) || graph.IsRunning) return false;
+                HomeStoryDialogAssets selected = IsFruitTreeStory(storyName)
+                    ? Resources.Load<HomeStoryDialogAssets>("Home/HomeFruitTreeStoryAssets") : furnitureDialogAssets;
+                if (!selected || !selected.StorySource) throw new InvalidOperationException("Original story assets are unavailable: " + storyName);
+                if (selected != dialogAssets)
+                {
+                    dialogNodeRunner?.Dispose();
+                    dialogNodeRunner = null;
+                    dialogWindow?.Dispose();
+                    dialogWindow = null;
+                    dialogAssets = selected;
+                    graph = new HomeFurnitureStoryGraph(dialogAssets.StorySource, this);
+                }
                 activeStory = storyName;
                 activeCompleted = onCompleted;
                 hidMainUi = false;
@@ -173,19 +187,23 @@ namespace Zjcs.Presentation.Home
                         break;
                     case "DialogNode":
                     case "OptionDialogNode":
+                        bool restoreMainUi = ((int?)node.Data["IsHideOtherUI"] ?? 1) != 0 && !hidMainUi;
+                        if (restoreMainUi) SetMainUiHidden(true);
                         EnsureDialogWindow();
                         dialogNodeRunner.Begin(story, node, result =>
                         {
                             if (disposed) return;
                             bool autoClose = ((int?)node.Data["AutoCloseDialog"] ?? 0) == 1;
-                            StartRoutine(FinishDialogNodeRoutine(autoClose, result, completed));
-                        });
+                            StartRoutine(FinishDialogNodeRoutine(autoClose, result, completed, restoreMainUi));
+                        }, () => EnsureMaskHost().Manager.Reset());
                         break;
                     case "RepairFurnitureNode":
                         StartRoutine(RepairFurnitureRoutine(node.Data, () => completed(null)));
                         break;
                     default:
-                        throw new NotSupportedException("Unsupported official furniture story node: " + node.Type);
+                        if (!TryExecuteWaitNode(node, completed))
+                            throw new NotSupportedException("Unsupported official furniture story node: " + node.Type);
+                        break;
                 }
             }
 
@@ -193,6 +211,11 @@ namespace Zjcs.Presentation.Home
             {
                 if (!disposed)
                 {
+                    if (IsFruitTreeStory(storyName))
+                    {
+                        home.fruitTree.MarkRepairStorySeen(storyName == "FruitTreeUnlock1" ? 4 : 11);
+                        if (storyName == "FruitTreeUnlock1") home.fruitTree.MarkCollectionTutorialSeen();
+                    }
                     int nextCount = home.StoryCount(storyName) + 1;
                     home.profile?.SetStoryProgress(storyName, nextCount, 2,
                         "home:furniture-story:finish:" + home.slotId + ":" + storyName + ":"
@@ -207,6 +230,8 @@ namespace Zjcs.Presentation.Home
             {
                 activeStory = null;
                 activeCompleted = null;
+                routineGeneration++;
+                ClearStoryWaitSubscriptions();
                 if (activeCoroutine != null && home != null)
                 {
                     home.StopCoroutine(activeCoroutine);
@@ -256,14 +281,17 @@ namespace Zjcs.Presentation.Home
 
             private void StartRoutine(IEnumerator routine)
             {
+                int run = ++routineGeneration;
                 if (activeCoroutine != null && home != null) home.StopCoroutine(activeCoroutine);
-                activeCoroutine = home.StartCoroutine(WrapRoutine(routine));
+                activeCoroutine = null;
+                Coroutine started = home.StartCoroutine(WrapRoutine(run, routine));
+                if (run == routineGeneration) activeCoroutine = started;
             }
 
-            private IEnumerator WrapRoutine(IEnumerator inner)
+            private IEnumerator WrapRoutine(int run, IEnumerator inner)
             {
                 yield return inner;
-                activeCoroutine = null;
+                if (run == routineGeneration) activeCoroutine = null;
             }
 
             private static IEnumerator WaitUntilRoutine(Func<bool> ready, Action completed)
@@ -284,16 +312,23 @@ namespace Zjcs.Presentation.Home
                     float duration = Math.Max(0f, (float?)data["Duration"] ?? 0f);
                     AnimationCurve curveX = ReadCurve(data["MoveXCurve"]);
                     AnimationCurve curveY = ReadCurve(data["MoveYCurve"]);
-                    float startedAt = Time.unscaledTime;
+                    if (duration <= 0f || curveX == null || curveY == null)
+                    {
+                        home.scene.Camera.transform.position = home.scene.Clamp(target);
+                        completed?.Invoke();
+                        yield break;
+                    }
+                    EnsureMaskHost().Manager.Reset();
+                    EnsureMaskHost().Manager.SetInvisibleMask(true);
+                    Vector3 delta = target - start;
+                    delta.z = 0f;
+                    Quaternion rotation = Mathf.Approximately(delta.sqrMagnitude, 0f)
+                        ? Quaternion.identity : Quaternion.FromToRotation(Vector3.up, delta);
+                    float startedAt = Time.time;
                     while (true)
                     {
-                        float percent = duration <= 0f ? 1f : Mathf.Clamp01((Time.unscaledTime - startedAt) / duration);
-                        float x = curveX == null ? percent : curveX.Evaluate(percent);
-                        float y = curveY == null ? percent : curveY.Evaluate(percent);
-                        Vector3 next = new Vector3(
-                            Mathf.LerpUnclamped(start.x, target.x, x),
-                            Mathf.LerpUnclamped(start.y, target.y, y),
-                            start.z);
+                        float percent = Mathf.Clamp01((Time.time - startedAt) / duration);
+                        Vector3 next = start + rotation * new Vector3(curveX.Evaluate(percent), curveY.Evaluate(percent), 0f) * delta.magnitude;
                         home.scene.Camera.transform.position = home.scene.Clamp(next);
                         if (percent >= 1f) break;
                         yield return null;
@@ -302,13 +337,14 @@ namespace Zjcs.Presentation.Home
                 completed?.Invoke();
             }
 
-            private IEnumerator FinishDialogNodeRoutine(bool autoClose, int? result, Action<int?> completed)
+            private IEnumerator FinishDialogNodeRoutine(bool autoClose, int? result, Action<int?> completed, bool restoreMainUi)
             {
                 if (dialogWindow != null && dialogWindow.Root && !autoClose)
                     dialogWindow.Close();
                 while (dialogWindow != null && dialogWindow.Root) yield return null;
                 if (home.hud != null && dialogWindow?.Root != null)
                     home.hud.SetStoryUiPreserved(dialogWindow.Root, false);
+                if (restoreMainUi) SetMainUiHidden(false);
                 completed(result);
             }
 

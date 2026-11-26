@@ -75,6 +75,24 @@ namespace Zjcs.Presentation.Home
             {
                 if (string.IsNullOrEmpty(slotId))
                     throw new InvalidOperationException("The acceptance profile was not created by the launcher.");
+                if (Environment.GetCommandLineArgs().Contains("-fruitTreeUnlockAcceptance"))
+                {
+                    var profile = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
+                    int requiredSubRank = Zjcs.Offline.HomeUI.OfficialCurrentHomeRuleAssetCatalog.LoadDefault().Rows("system_level_limit")
+                        .Where(row => Convert.ToInt32(row["PlayerBlessLevel"]) == 0 && Convert.ToInt32(row["PlayerLevel"]) >= 31)
+                        .Min(row => Convert.ToInt32(row["SubRank"]));
+                    var seed = profile.ApplyInventoryTransaction("acceptance:fruit-tree-unlock:conditions", save =>
+                    {
+                        save.Player.Level = 31;
+                        save.Player.Experience = OfficialCharacterAssetCatalog.LoadDefault().Load().CumulativeLevelExperience[31];
+                        save.Player.SubRank = Math.Max(save.Player.SubRank, requiredSubRank);
+                        if (!save.World.Maps.Any(value => value.MapClassId == 11))
+                            save.World.Maps.Add(new OfflineMapProgress { MapClassId = 11,
+                                Regions = new List<OfflineRegionProgress> { new OfflineRegionProgress { Region = 0 } } });
+                        save.World.ActivatedGoddessRegions.Add(new OfflineMapRegionKey { MapClassId = 11, Region = 0 });
+                    });
+                    if (seed.Status != ProgressionResultStatus.Applied) throw new InvalidOperationException("Cannot seed isolated unlock conditions: " + seed.Status + "; " + seed.Message);
+                }
                 if (fruitTreeNativeAcceptance && Screen.width >= Screen.height)
                     throw new InvalidOperationException("The acceptance Game View has not rendered its configured portrait size.");
                 nativeScenePointer = fruitTreeNativeAcceptance
@@ -112,7 +130,9 @@ namespace Zjcs.Presentation.Home
                 HideForeignCanvases();
                 DumpFullscreen();
                 bool passed = false;
-                yield return VerifyNativeFruitTree(runtime, value => passed = value);
+                if (Environment.GetCommandLineArgs().Contains("-fruitTreeUnlockAcceptance"))
+                    yield return VerifyNativeFruitTreeUnlock(runtime, value => passed = value);
+                else yield return VerifyNativeFruitTree(runtime, value => passed = value);
                 if (passed && Environment.GetCommandLineArgs().Contains("-fruitTreeNativeSkinsAcceptance"))
                     yield return VerifyNativeFruitTreeSkins(runtime, value => passed &= value);
                 Finish(passed);

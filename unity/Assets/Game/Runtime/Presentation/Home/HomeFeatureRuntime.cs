@@ -126,8 +126,6 @@ namespace Zjcs.Presentation.Home
         private long lastAdvanceUnix;
         private bool fruitClockRollbackWarned;
         private string pendingFruitClockRollbackMessage;
-        private int pendingFruitTreeRepairTutorialType = -1;
-        private bool pendingFruitTreeCollectionTutorial;
         private AudioSource fruitTreeTutorialVoiceSource;
         private AudioClip currentFruitTreeTutorialVoice;
         private int fruitTreeTutorialVoiceRequestVersion;
@@ -1284,29 +1282,13 @@ namespace Zjcs.Presentation.Home
                     break;
                 case HomeFurnitureState.CanRepair:
                 {
-                    if (pendingFruitTreeRepairTutorialType == type)
-                    {
-                        pendingFruitTreeRepairTutorialType = -1;
-                        hud.HideFruitTreeTutorialMask();
-                        hud.ShowRepair(type);
-                        hud.ShowFruitTreeRepairButtonMask();
-                        break;
-                    }
-                    OfflineFruitTreeProgress tutorialState = profile.Save.Player.FruitTree;
                     if (type == OfflineFruitTreeService.ProductionFurnitureType
-                        && !tutorialState.ProductionRepairStorySeen)
-                        hud.ShowFruitTreeTutorial("FruitTreeUnlock1", 0, () =>
-                        {
-                            pendingFruitTreeRepairTutorialType = type;
-                            hud.ShowFruitTreeFurnitureMask(type);
-                        });
-                    else if (type == OfflineFruitTreeService.PetFurnitureType
-                        && !tutorialState.PetRepairStorySeen)
-                        hud.ShowFruitTreeTutorial("FruitTreeUnlock2", 0, () =>
-                        {
-                            pendingFruitTreeRepairTutorialType = type;
-                            hud.ShowFruitTreeFurnitureMask(type);
-                        });
+                        || type == OfflineFruitTreeService.PetFurnitureType)
+                    {
+                        if (!IsFurnitureStoryRunning && StoryStatus(record.repairStory) < 2
+                            && TryPlayFurnitureStory(record.repairStory)) break;
+                        hud.ShowRepair(type);
+                    }
                     else if (!string.IsNullOrEmpty(record.repairStory)
                         && StoryStatus(record.repairStory) == 0
                         && TryPlayFurnitureStory(record.repairStory))
@@ -1462,9 +1444,9 @@ namespace Zjcs.Presentation.Home
                 return false;
             }
             OfflineFruitTreeProgress state = profile.Save.Player.FruitTree;
-            if (state.ProductionRepaired && !state.ProductionRepairStorySeen)
+            if (state.ProductionRepaired && !state.CollectionTutorialSeen && !IsFruitTreeUnlockStoryRunning)
             {
-                hud.ShowFruitTreeTutorial("FruitTreeUnlock1", 1, CompleteProductionRepairTutorial);
+                TryPlayFurnitureStory("FruitTreeUnlock1");
                 return false;
             }
             FruitTreeResult collected = fruitTree.Collect("home:fruit-tree:collect:" + slotId + ":"
@@ -1474,18 +1456,10 @@ namespace Zjcs.Presentation.Home
                 ReloadContext();
                 hud.RefreshAll();
                 ApplyFurnitureStates();
-                Action showReward = () => storage.PresentFruitTreeAward(collected);
-                bool showCollectionTutorial = pendingFruitTreeCollectionTutorial
-                    || !profile.Save.Player.FruitTree.CollectionTutorialSeen;
-                pendingFruitTreeCollectionTutorial = false;
+                if (IsFruitTreeUnlockStoryRunning)
+                    FruitTreeRewardCollectedForStory?.Invoke();
                 hud.HideFruitTreeTutorialMask();
-                if (showCollectionTutorial)
-                    hud.ShowFruitTreeTutorial("FruitTreeUnlock1", 2, () =>
-                    {
-                        fruitTree.MarkCollectionTutorialSeen();
-                        showReward();
-                    });
-                else showReward();
+                storage.PresentFruitTreeAward(collected);
                 return true;
             }
 
@@ -1593,25 +1567,12 @@ namespace Zjcs.Presentation.Home
 
         public void OnFruitTreeRepairDialogClosed(int type)
         {
+            if (IsFruitTreeUnlockStoryRunning) return;
             OfflineFruitTreeProgress state = profile.Save.Player.FruitTree;
             if (type == OfflineFruitTreeService.ProductionFurnitureType && !state.ProductionRepairStorySeen)
-                hud.ShowFruitTreeTutorial("FruitTreeUnlock1", 1,
-                    CompleteProductionRepairTutorial);
+                TryPlayFurnitureStory("FruitTreeUnlock1");
             else if (type == OfflineFruitTreeService.PetFurnitureType && !state.PetRepairStorySeen)
-                hud.ShowFruitTreeTutorial("FruitTreeUnlock2", 1,
-                    () => fruitTree.MarkRepairStorySeen(type));
-        }
-
-        private void CompleteProductionRepairTutorial()
-        {
-            FruitTreeResult result = fruitTree.MarkRepairStorySeen(OfflineFruitTreeService.ProductionFurnitureType);
-            if (result.Code != FruitTreeResultCode.Applied && result.Code != FruitTreeResultCode.Unchanged)
-            {
-                hud.ShowNotice("果树教学状态未能保存");
-                return;
-            }
-            pendingFruitTreeCollectionTutorial = true;
-            hud.ShowFruitTreeCollectionMask();
+                TryPlayFurnitureStory("FruitTreeUnlock2");
         }
 
         public long TryCollect(int hangUpId)
