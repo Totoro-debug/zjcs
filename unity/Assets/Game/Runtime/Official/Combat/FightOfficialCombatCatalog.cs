@@ -3547,6 +3547,7 @@ namespace Zjcs.Combat.Official
                     || hit.CustomTargetHitLinks == null || hit.RandomTargetHitLinks == null
                     || hit.ScopeEntries.Count != (hit.IsSummon
                         ? hit.SummonPositions?.Count ?? 0 : hit.Scope?.Count ?? 0)
+                    || hit.IsSummon && (hit.Scope?.Count ?? 0) != hit.ScopeEntries.Count
                     || hit.ChainedHitLinks.Count != (hit.ChainedHits?.Count ?? 0)
                     || hit.CustomTargetHitLinks.Count != (hit.CustomTargetHits?.Count ?? 0)
                     || hit.RandomTargetHitLinks.Count != (hit.RandomTargetHits?.Count ?? 0))
@@ -3554,6 +3555,7 @@ namespace Zjcs.Combat.Official
                     FightBattleHitEntity original = CreateHitEntity(hit.EntityId, components,
                         new Queue<int>(), new Dictionary<int, FightBattleHitReference>());
                     hit.ScopeEntries = original.ScopeEntries;
+                    if (hit.IsSummon) hit.Scope = original.Scope;
                     hit.ChainedHitLinks = original.ChainedHitLinks;
                     hit.CustomTargetHitLinks = original.CustomTargetHitLinks;
                     hit.RandomTargetHitLinks = original.RandomTargetHitLinks;
@@ -3656,6 +3658,9 @@ namespace Zjcs.Combat.Official
                 (int)(10000f * (left.Delay - right.Delay))
                 + Math.Abs(left.Position.X) + Math.Abs(left.Position.Y)
                 - Math.Abs(right.Position.X) - Math.Abs(right.Position.Y));
+            // FightHitSummonComponentInfo.Init exposes the sorted Base scopes to
+            // ordinary hit targeting as well as grid creation.
+            foreach (var scope in output.ScopeEntries) output.Scope.Add(scope.Position);
             output.GridSummonCells.Sort((left, right) =>
                 (int)(10000f * (left.Delay - right.Delay))
                 + Math.Abs(left.ScopePosition.X) + Math.Abs(left.ScopePosition.Y)

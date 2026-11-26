@@ -957,18 +957,19 @@ namespace Zjcs.Combat.Official
                     targetPosition ?? (targets.Count > 0 ? targets[0] : null), castHit,
                     casts, damageEvents, movements, ref lastDelay,
                     ref statusTriggerDuration, ref statusTriggerActionDuration);
-                if (hit.IsSummon)
+                bool summonGrid = hit.IsSummon && (hit.SummonConfigType == "FightHitSummonGridItemCfg"
+                    || hit.SummonConfigType == "FightHitSummonSmartGridItemCfg");
+                if (hit.IsSummon && !summonGrid)
                 {
-                    if (hit.SummonConfigType == "FightHitSummonGridItemCfg"
-                        || hit.SummonConfigType == "FightHitSummonSmartGridItemCfg")
-                    {
-                        lastDelay = Math.Max(lastDelay, SpawnGridItems(actor, skill, hit,
-                            hasRandomTargetContext ? hitTargets : targets, targetPosition));
-                        continue;
-                    }
                     SpawnSummons(actor, skill, hit,
                         hasRandomTargetContext || hit.PreviousCustomHit != null ? hitTargets : targets,
                         hitSelection, castHit, hitReceipt, hitStep.SummonOnSourceFallback);
+                    continue;
+                }
+                if (summonGrid && hit.DamageId <= 0)
+                {
+                    lastDelay = Math.Max(lastDelay, SpawnGridItems(actor, skill, hit,
+                        hasRandomTargetContext ? hitTargets : targets, targetPosition));
                     continue;
                 }
                 decimal hitRemovedHp = 0m;
@@ -1273,6 +1274,9 @@ namespace Zjcs.Combat.Official
                     CleanupGridItems();
                     ApplyChildSkill(actor, target, skill, hit, casts, damageEvents, movements, ref lastDelay, hitDelay);
                 }
+                if (summonGrid)
+                    lastDelay = Math.Max(lastDelay, SpawnGridItems(actor, skill, hit,
+                        hasRandomTargetContext ? hitTargets : targets, targetPosition));
                 ExecuteLogicChildRequests(actor, skill,
                     skillLogic?.CollectHitFinishSkills(hit, hitRemovedHp, hitFinishDelay),
                     casts, damageEvents, movements, ref lastDelay,

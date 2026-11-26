@@ -111,15 +111,17 @@ namespace Zjcs.Presentation.Combat
         private sealed class StatusEntityData : ECViewEntityData, IBattleGridComponentViewData
         {
             private readonly FightBattleGridStatusViewState status;
+            private readonly IFightStatusPlayableState playableState;
             private readonly StatusActionData action;
-            public StatusEntityData(int owner, FightBattleGridStatusViewState status)
-            { this.status = status; action = new StatusActionData { Owner = owner }; }
+            public StatusEntityData(int owner, FightBattleGridStatusViewState status, IFightStatusPlayableState playableState)
+            { this.status = status; this.playableState = playableState; action = new StatusActionData { Owner = owner }; }
             public override int ClassId => status.ClassId;
             public override EcEntityIdentifier Id => new EcEntityIdentifier(4, status.InstanceId);
             public override T GetComponent<T>()
             {
                 object value = typeof(T) == typeof(IBattleGridComponentViewData) ? this
-                    : typeof(T) == typeof(ActionComponentData) ? action : null;
+                    : typeof(T) == typeof(ActionComponentData) ? action
+                    : typeof(T) == typeof(IFightStatusPlayableState) ? playableState : null;
                 return value == null ? default : (T)value;
             }
         }
@@ -187,7 +189,7 @@ namespace Zjcs.Presentation.Combat
             }
         }
 
-        private sealed class StatusContext : IFightStatusPlayableContext
+        private sealed class StatusContext : IFightStatusPlayableContext, ICurrentFightStatusPlayableContext
         {
             public StatusState Status;
             public GameObject OwnerObject, CreatorObject, MasterObject;
@@ -200,6 +202,7 @@ namespace Zjcs.Presentation.Combat
             public MyFightStatusAgent Agent => StatusAgent;
             public int? ShareId => null; // Neither selected original status has a share-stack component.
             public bool HasIcon => Icon;
+            public ICurrentFightStatusPlayableView CurrentPlayableView { get; set; }
         }
     }
 }

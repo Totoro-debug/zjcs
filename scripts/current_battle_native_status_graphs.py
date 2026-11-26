@@ -11,14 +11,18 @@ from prepare_battle_status_orbit_assets import build
 from prepare_battle_scene_appearance_runtime import identity, write_changed
 
 
-def build_current_status_graphs(*, family, catalog_name, cache_name, entities, source_wrappers, generator):
+def build_current_status_graphs(*, family, catalog_name, cache_name, entities, source_wrappers, generator,
+                                entity_paths=None, script_bindings=None):
     source = OfficialSource()
     cache = source.prepared_path / cache_name
     exported = cache / 'native-export/ExportedProject/Assets'
     code = cache.parent / 'official-code'
-    roots = {key: f'Prefabs/EcEntity/Fight/FightSkill/{key}/{key}.prefab' for key in entities}
+    roots = (dict(entity_paths) if entity_paths is not None else
+             {key: f'Prefabs/EcEntity/Fight/FightSkill/{key}/{key}.prefab' for key in entities})
+    assert roots.keys() == set(entities), 'Status prefab paths must cover exactly the selected entities'
     views = CurrentBattleEntityViews(exported, roots.values())
     bindings = shared_bindings()
+    bindings['MAPPED'].update(script_bindings or {})
     bindings['MAPPED'] = {key: row for key, row in bindings['MAPPED'].items()
         if any((code / folder / (row[1] + '.cs')).is_file()
             for folder in ('client-source', 'game-framework-source/GameFramework'))}

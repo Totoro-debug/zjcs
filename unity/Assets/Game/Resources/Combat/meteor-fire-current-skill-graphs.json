@@ -1,0 +1,124 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 11540,
+      "entity_resource": "Combat/MeteorFireSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11540/11540",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/MeteorFireSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11540/playable11540"
+        }
+      ]
+    },
+    {
+      "skill_entity_id": 11600,
+      "entity_resource": "Combat/MeteorFireSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11600/11600",
+      "playables": []
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11541,
+      "client_type": "MyFightHitSummon",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [
+        {
+          "field": "myPlayable",
+          "resource": "Combat/MeteorFireSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11540/playable11541"
+        }
+      ],
+      "entity_resource": "Combat/MeteorFireSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11540/11541"
+    },
+    {
+      "hit_entity_id": 11601,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/MeteorFireSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11600/11601"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 10007,
+      "entity_prefab": "Global/10007.prefab",
+      "entity_prefab_sha256": "dc81218fd94389a48043803b749de794d8cf8e90c6dca4115d178d8e3d478158",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/MeteorFireSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage_fire"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/MeteorFireSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/MeteorFireSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/MeteorFireSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/MeteorFireSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/Global/10007"
+    },
+    {
+      "damage_entity_id": 10021,
+      "entity_prefab": "Global/10021.prefab",
+      "entity_prefab_sha256": "1ef28d68ce2a9826fe52630b5bc25ae095785e44c0af64f68bec89bf07c2f902",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/MeteorFireSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage_burning"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/MeteorFireSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/MeteorFireSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/MeteorFireSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/MeteorFireSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/Global/10021"
+    }
+  ]
+}

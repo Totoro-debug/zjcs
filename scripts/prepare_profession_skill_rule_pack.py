@@ -116,7 +116,10 @@ def build(item, spec_path=None):
                                              show_zero=bool(fields['myShowZeroDamage']))
                 for original in (obj, script, owner):
                     inputs.append(dict(source=apk.provenance(original), payload_sha256=sha(original.get_raw_data())))
-        damage_ids = {value['FightHitFixedComponent']['DamageId'] for value in entities.values() if 'FightHitFixedComponent' in value}
+        damage_ids = {component['DamageId'] for value in entities.values()
+                      for name, component in value.items()
+                      if name.startswith('FightHit') and name.endswith('Component')
+                      and 'DamageId' in component}
         assert visibility.keys() == damage_ids, ('Missing native damage display binding', damage_ids - visibility.keys())
         # Shared cultivation tables must stay unchanged for existing migrations.
         if not spec.get('scope_numeric'):

@@ -50,9 +50,51 @@
       "path": "assets/reference/battle-animation/water-vortex-current-skill-graphs-source-manifest.json",
       "bytes": 459275,
       "sha256": "964850478f66d24d02c1f164e1f2c1abb5d8162a4052940441101871b81b3b9b"
+    },
+    {
+      "path": "assets/reference/battle-animation/meteor-fire-current-skill-graphs-source-manifest.json",
+      "bytes": 512019,
+      "sha256": "38c63f8af1ff93c9defa8de592232d143224f63c0f91b283dcf65ef007f35cd0"
+    },
+    {
+      "path": "assets/reference/battle-animation/meteor-fire-current-status-graphs-source-manifest.json",
+      "bytes": 120563,
+      "sha256": "76d9b30f280b124805d183dcaa391ad9aa4c7878fcf86aa6452002c7384c4ee4"
     }
   ],
   "events": [
+    {
+      "id": 151799422,
+      "name": "Damage_Ally_Fire",
+      "guid": "98EBBEA7-9547-4AD8-B283-2B816A78DAC8",
+      "source": {
+        "path": "unity/Assets/Official/Combat/MeteorFireSkillGraphs/Resources/Combat/MeteorFireSkillGraphs/Wwise/ScriptableObjects/Event/98EBBEA7-9547-4AD8-B283-2B816A78DAC8.asset",
+        "bytes": 516,
+        "sha256": "e181478458813d2dc59524ca14a36ef7970c35730438fc3008f5c572cbaf6350"
+      },
+      "banks": [
+        "Battle_SFX_00"
+      ],
+      "actions": [
+        752434685
+      ]
+    },
+    {
+      "id": 3204580961,
+      "name": "Damage_Fire_1",
+      "guid": "71822687-CB97-4E77-B2D2-9FAD574951E8",
+      "source": {
+        "path": "unity/Assets/Official/Combat/MeteorFireSkillGraphs/Resources/Combat/MeteorFireSkillGraphs/Wwise/ScriptableObjects/Event/71822687-CB97-4E77-B2D2-9FAD574951E8.asset",
+        "bytes": 514,
+        "sha256": "f3f1183369ed4d51ad55bad803f0f3e09a12de26e83964019ca30c08ebfff2a0"
+      },
+      "banks": [
+        "Battle_SFX_00"
+      ],
+      "actions": [
+        434044094
+      ]
+    },
     {
       "id": 3151880999,
       "name": "Damage_Light_1",
@@ -166,6 +208,22 @@
       ]
     },
     {
+      "id": 3844901221,
+      "name": "Skill_10070",
+      "guid": "7AB74D84-CB45-40D8-A673-65687FD5FE6D",
+      "source": {
+        "path": "unity/Assets/Official/Combat/MeteorFireSkillGraphs/Resources/Combat/MeteorFireSkillGraphs/Wwise/ScriptableObjects/Event/7AB74D84-CB45-40D8-A673-65687FD5FE6D.asset",
+        "bytes": 512,
+        "sha256": "3f981892bb7fbf88c6d9c76b7ad39640d1b473bb048a8267606905f150bd3665"
+      },
+      "banks": [
+        "Battle_SFX_02"
+      ],
+      "actions": [
+        21361952
+      ]
+    },
+    {
       "id": 3878456387,
       "name": "Skill_10098",
       "guid": "DD47E086-37EA-4543-8CF1-766A3D2A0A8B",
@@ -247,6 +305,87 @@
     }
   ],
   "actions": [
+    {
+      "id": 21361952,
+      "fields": [
+        [
+          "eHircType",
+          3,
+          "0x03 [Action]"
+        ],
+        [
+          "dwSectionSize",
+          22,
+          "0x16"
+        ],
+        [
+          "ulID",
+          21361952,
+          null
+        ],
+        [
+          "ulActionType",
+          1027,
+          "0x0403 [Play]"
+        ],
+        [
+          "idExt",
+          889949172,
+          null
+        ],
+        [
+          "idExt_4",
+          0,
+          "0x00"
+        ],
+        [
+          "bIsBus",
+          0,
+          null
+        ],
+        [
+          "cProps",
+          0,
+          null
+        ],
+        [
+          "cProps",
+          0,
+          null
+        ],
+        [
+          "byBitVector",
+          4,
+          "0x04"
+        ],
+        [
+          "eFadeCurve",
+          4,
+          "4 [Linear]"
+        ],
+        [
+          "bankID",
+          2732888500,
+          null
+        ],
+        [
+          "bankType",
+          0,
+          "0x00 [User]"
+        ]
+      ],
+      "sources": [
+        {
+          "package": "wwisebnk_assets_wwisedata_android_battle_sfx_02_pck.rawfile",
+          "bankId": 2732888500,
+          "bankOffset": 16762368,
+          "packageOffset": 16762444,
+          "type": 3,
+          "bytes": 27,
+          "sha256": "641ed16c5f1d0f94d3e1532b0d0c224dc89d07f6b88e9e6874bd14bf9bd00969"
+        }
+      ]
+    },
     {
       "id": 76762934,
       "fields": [
@@ -734,6 +873,87 @@
       ]
     },
     {
+      "id": 434044094,
+      "fields": [
+        [
+          "eHircType",
+          3,
+          "0x03 [Action]"
+        ],
+        [
+          "dwSectionSize",
+          22,
+          "0x16"
+        ],
+        [
+          "ulID",
+          434044094,
+          null
+        ],
+        [
+          "ulActionType",
+          1027,
+          "0x0403 [Play]"
+        ],
+        [
+          "idExt",
+          943434972,
+          null
+        ],
+        [
+          "idExt_4",
+          0,
+          "0x00"
+        ],
+        [
+          "bIsBus",
+          0,
+          null
+        ],
+        [
+          "cProps",
+          0,
+          null
+        ],
+        [
+          "cProps",
+          0,
+          null
+        ],
+        [
+          "byBitVector",
+          4,
+          "0x04"
+        ],
+        [
+          "eFadeCurve",
+          4,
+          "4 [Linear]"
+        ],
+        [
+          "bankID",
+          2732888502,
+          null
+        ],
+        [
+          "bankType",
+          0,
+          "0x00 [User]"
+        ]
+      ],
+      "sources": [
+        {
+          "package": "wwisebnk_assets_wwisedata_android_battle_sfx_00_pck.rawfile",
+          "bankId": 2732888502,
+          "bankOffset": 209813,
+          "packageOffset": 209889,
+          "type": 3,
+          "bytes": 27,
+          "sha256": "9802a6bc8e8420ef514ca67d7bd0051e6cbcef634ab272733ad8c2208cafd8fb"
+        }
+      ]
+    },
+    {
       "id": 542519527,
       "fields": [
         [
@@ -973,6 +1193,87 @@
           "type": 3,
           "bytes": 27,
           "sha256": "f40d95eea3751182ff2af794e059723e9547d7d8924f481f6b7e57b6df3c7e63"
+        }
+      ]
+    },
+    {
+      "id": 752434685,
+      "fields": [
+        [
+          "eHircType",
+          3,
+          "0x03 [Action]"
+        ],
+        [
+          "dwSectionSize",
+          22,
+          "0x16"
+        ],
+        [
+          "ulID",
+          752434685,
+          null
+        ],
+        [
+          "ulActionType",
+          1027,
+          "0x0403 [Play]"
+        ],
+        [
+          "idExt",
+          402814661,
+          null
+        ],
+        [
+          "idExt_4",
+          0,
+          "0x00"
+        ],
+        [
+          "bIsBus",
+          0,
+          null
+        ],
+        [
+          "cProps",
+          0,
+          null
+        ],
+        [
+          "cProps",
+          0,
+          null
+        ],
+        [
+          "byBitVector",
+          4,
+          "0x04"
+        ],
+        [
+          "eFadeCurve",
+          4,
+          "4 [Linear]"
+        ],
+        [
+          "bankID",
+          2732888502,
+          null
+        ],
+        [
+          "bankType",
+          0,
+          "0x00 [User]"
+        ]
+      ],
+      "sources": [
+        {
+          "package": "wwisebnk_assets_wwisedata_android_battle_sfx_00_pck.rawfile",
+          "bankId": 2732888502,
+          "bankOffset": 208424,
+          "packageOffset": 208500,
+          "type": 3,
+          "bytes": 27,
+          "sha256": "3ebb82ec164c2d4f759a1810f459266e469d24f9ecfaf51fdc442ecc38301811"
         }
       ]
     },
@@ -2120,6 +2421,259 @@
           "bytes": 46,
           "sha256": "eb446875d9b167b5791f58c12b913ccdb35d48de47862d7e8b7b0d5f440adb87",
           "base64": "ECkAAACyACQFAwBsABYAAAAAAGDBAACgQW8SgzoAAAA/AAAAAAEBAAAAAAAAAA=="
+        }
+      ]
+    },
+    {
+      "id": 100591434,
+      "type": 7,
+      "fields": [
+        [
+          "eHircType",
+          7,
+          "0x07 [Actor-Mixer]"
+        ],
+        [
+          "dwSectionSize",
+          44,
+          "0x2C"
+        ],
+        [
+          "ulID",
+          100591434,
+          null
+        ],
+        [
+          "bIsOverrideParentFX",
+          0,
+          "0x00"
+        ],
+        [
+          "uNumFx",
+          0,
+          null
+        ],
+        [
+          "bIsOverrideParentMetadata",
+          0,
+          "0x00"
+        ],
+        [
+          "uNumFx",
+          0,
+          null
+        ],
+        [
+          "bOverrideAttachmentParams",
+          0,
+          "0x00"
+        ],
+        [
+          "OverrideBusId",
+          0,
+          null
+        ],
+        [
+          "DirectParentID",
+          931392064,
+          null
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bPriorityOverrideParent",
+          0,
+          null
+        ],
+        [
+          "bPriorityApplyDistFactor",
+          0,
+          null
+        ],
+        [
+          "bOverrideMidiEventsBehavior",
+          0,
+          null
+        ],
+        [
+          "bOverrideMidiNoteTracking",
+          0,
+          null
+        ],
+        [
+          "bEnableMidiNoteTracking",
+          0,
+          null
+        ],
+        [
+          "bIsMidiBreakLoopOnNoteOff",
+          0,
+          null
+        ],
+        [
+          "cProps",
+          0,
+          null
+        ],
+        [
+          "cProps",
+          0,
+          null
+        ],
+        [
+          "uBitsPositioning",
+          0,
+          "0x00"
+        ],
+        [
+          "bPositioningInfoOverrideParent",
+          0,
+          null
+        ],
+        [
+          "bHasListenerRelativeRouting",
+          0,
+          null
+        ],
+        [
+          "ePannerType",
+          0,
+          "0 [DirectSpeakerAssignment]"
+        ],
+        [
+          "e3DPositionType",
+          0,
+          "0 [Emitter]"
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bOverrideUserAuxSends",
+          0,
+          null
+        ],
+        [
+          "bHasAux",
+          0,
+          null
+        ],
+        [
+          "bOverrideReflectionsAuxBus",
+          0,
+          null
+        ],
+        [
+          "reflectionsAuxBus",
+          0,
+          null
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bKillNewest",
+          0,
+          null
+        ],
+        [
+          "bUseVirtualBehavior",
+          0,
+          null
+        ],
+        [
+          "bIgnoreParentMaxNumInst",
+          0,
+          null
+        ],
+        [
+          "bIsVVoicesOptOverrideParent",
+          0,
+          null
+        ],
+        [
+          "eVirtualQueueBehavior",
+          1,
+          "0x01 [FromElapsedTime]"
+        ],
+        [
+          "u16MaxNumInstance",
+          0,
+          null
+        ],
+        [
+          "eBelowThresholdBehavior",
+          0,
+          "0x00 [ContinueToPlay]"
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bOverrideHdrEnvelope",
+          0,
+          null
+        ],
+        [
+          "bOverrideAnalysis",
+          0,
+          null
+        ],
+        [
+          "bNormalizeLoudness",
+          0,
+          null
+        ],
+        [
+          "bEnableEnvelope",
+          0,
+          null
+        ],
+        [
+          "ulNumStateProps",
+          0,
+          null
+        ],
+        [
+          "ulNumStateGroups",
+          0,
+          null
+        ],
+        [
+          "uNumCurves",
+          0,
+          null
+        ],
+        [
+          "ulNumChilds",
+          1,
+          null
+        ],
+        [
+          "ulChildID",
+          889949172,
+          null
+        ]
+      ],
+      "rawObjects": [
+        {
+          "package": "wwisebnk_assets_wwisedata_android_battle_sfx_02_pck.rawfile",
+          "bankId": 2732888500,
+          "bankOffset": 16667431,
+          "packageOffset": 16667507,
+          "type": 7,
+          "bytes": 49,
+          "sha256": "53f9c90394bec30f2671663a9860436a5391132de723cac6a6e8b2a1d41ed381",
+          "base64": "BywAAABK5/4FAAAAAAAAAAAAQOqDNwAAAAAAAAAAAAABAAAAAAAAAAABAAAA9IsLNQ=="
         }
       ]
     },
@@ -3297,6 +3851,274 @@
           "bytes": 55,
           "sha256": "a107c7592d534b4b494f1874ed4bb90821167669fe40a14c4b132a6134a8cf7d",
           "base64": "AjIAAAC/SCUKAQAEAAAVsQ8PvA8AAAAAAAAAAAAAAABhBpshAAAAAAAAAAAAAAEAAAAAAAAAAA=="
+        }
+      ]
+    },
+    {
+      "id": 170525597,
+      "type": 7,
+      "fields": [
+        [
+          "eHircType",
+          7,
+          "0x07 [Actor-Mixer]"
+        ],
+        [
+          "dwSectionSize",
+          53,
+          "0x35"
+        ],
+        [
+          "ulID",
+          170525597,
+          null
+        ],
+        [
+          "bIsOverrideParentFX",
+          0,
+          "0x00"
+        ],
+        [
+          "uNumFx",
+          0,
+          null
+        ],
+        [
+          "bIsOverrideParentMetadata",
+          0,
+          "0x00"
+        ],
+        [
+          "uNumFx",
+          0,
+          null
+        ],
+        [
+          "bOverrideAttachmentParams",
+          0,
+          "0x00"
+        ],
+        [
+          "OverrideBusId",
+          1130384899,
+          null
+        ],
+        [
+          "DirectParentID",
+          702007157,
+          null
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bPriorityOverrideParent",
+          0,
+          null
+        ],
+        [
+          "bPriorityApplyDistFactor",
+          0,
+          null
+        ],
+        [
+          "bOverrideMidiEventsBehavior",
+          0,
+          null
+        ],
+        [
+          "bOverrideMidiNoteTracking",
+          0,
+          null
+        ],
+        [
+          "bEnableMidiNoteTracking",
+          0,
+          null
+        ],
+        [
+          "bIsMidiBreakLoopOnNoteOff",
+          0,
+          null
+        ],
+        [
+          "cProps",
+          1,
+          null
+        ],
+        [
+          "pID",
+          7,
+          "0x07 [Priority]"
+        ],
+        [
+          "pValue",
+          1.0,
+          null
+        ],
+        [
+          "cProps",
+          0,
+          null
+        ],
+        [
+          "uBitsPositioning",
+          0,
+          "0x00"
+        ],
+        [
+          "bPositioningInfoOverrideParent",
+          0,
+          null
+        ],
+        [
+          "bHasListenerRelativeRouting",
+          0,
+          null
+        ],
+        [
+          "ePannerType",
+          0,
+          "0 [DirectSpeakerAssignment]"
+        ],
+        [
+          "e3DPositionType",
+          0,
+          "0 [Emitter]"
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bOverrideUserAuxSends",
+          0,
+          null
+        ],
+        [
+          "bHasAux",
+          0,
+          null
+        ],
+        [
+          "bOverrideReflectionsAuxBus",
+          0,
+          null
+        ],
+        [
+          "reflectionsAuxBus",
+          0,
+          null
+        ],
+        [
+          "byBitVector",
+          4,
+          "0x04"
+        ],
+        [
+          "bKillNewest",
+          0,
+          null
+        ],
+        [
+          "bUseVirtualBehavior",
+          0,
+          null
+        ],
+        [
+          "bIgnoreParentMaxNumInst",
+          0,
+          null
+        ],
+        [
+          "bIsVVoicesOptOverrideParent",
+          0,
+          null
+        ],
+        [
+          "eVirtualQueueBehavior",
+          1,
+          "0x01 [FromElapsedTime]"
+        ],
+        [
+          "u16MaxNumInstance",
+          0,
+          null
+        ],
+        [
+          "eBelowThresholdBehavior",
+          0,
+          "0x00 [ContinueToPlay]"
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bOverrideHdrEnvelope",
+          0,
+          null
+        ],
+        [
+          "bOverrideAnalysis",
+          0,
+          null
+        ],
+        [
+          "bNormalizeLoudness",
+          0,
+          null
+        ],
+        [
+          "bEnableEnvelope",
+          0,
+          null
+        ],
+        [
+          "ulNumStateProps",
+          0,
+          null
+        ],
+        [
+          "ulNumStateGroups",
+          0,
+          null
+        ],
+        [
+          "uNumCurves",
+          0,
+          null
+        ],
+        [
+          "ulNumChilds",
+          2,
+          null
+        ],
+        [
+          "ulChildID",
+          478102929,
+          null
+        ],
+        [
+          "ulChildID",
+          1068859941,
+          null
+        ]
+      ],
+      "rawObjects": [
+        {
+          "package": "wwisebnk_assets_wwisedata_android_battle_sfx_00_pck.rawfile",
+          "bankId": 2732888502,
+          "bankOffset": 205388,
+          "packageOffset": 205464,
+          "type": 7,
+          "bytes": 58,
+          "sha256": "21950e076bfde682e18b8a070fa2504ce0a0f5fac497faed68c27d32f3ca8a95",
+          "base64": "BzUAAACdAyoKAAAAAAADTmBDdcfXKQABBwAAgD8AAAAAAAAABAEAAAAAAAAAAAIAAACRRX8cJYK1Pw=="
         }
       ]
     },
@@ -6547,6 +7369,324 @@
       ]
     },
     {
+      "id": 402814661,
+      "type": 2,
+      "fields": [
+        [
+          "eHircType",
+          2,
+          "0x02 [Sound]"
+        ],
+        [
+          "dwSectionSize",
+          60,
+          "0x3C"
+        ],
+        [
+          "ulID",
+          402814661,
+          null
+        ],
+        [
+          "ulPluginID",
+          262145,
+          "0x00040001 [VORBIS]"
+        ],
+        [
+          "type",
+          1,
+          "0x01 [Codec]"
+        ],
+        [
+          "company",
+          0,
+          "0x00 [Audiokinetic]"
+        ],
+        [
+          "StreamType",
+          0,
+          "0x00 [Data/bnk]"
+        ],
+        [
+          "sourceID",
+          142874842,
+          null
+        ],
+        [
+          "uInMemoryMediaSize",
+          2577,
+          "0xA11"
+        ],
+        [
+          "uSourceBits",
+          0,
+          "0x00"
+        ],
+        [
+          "bIsLanguageSpecific",
+          0,
+          null
+        ],
+        [
+          "bPrefetch",
+          0,
+          null
+        ],
+        [
+          "bNonCachable",
+          0,
+          null
+        ],
+        [
+          "bHasSource",
+          0,
+          null
+        ],
+        [
+          "bIsOverrideParentFX",
+          0,
+          "0x00"
+        ],
+        [
+          "uNumFx",
+          0,
+          null
+        ],
+        [
+          "bIsOverrideParentMetadata",
+          0,
+          "0x00"
+        ],
+        [
+          "uNumFx",
+          0,
+          null
+        ],
+        [
+          "bOverrideAttachmentParams",
+          0,
+          "0x00"
+        ],
+        [
+          "OverrideBusId",
+          0,
+          null
+        ],
+        [
+          "DirectParentID",
+          478102929,
+          null
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bPriorityOverrideParent",
+          0,
+          null
+        ],
+        [
+          "bPriorityApplyDistFactor",
+          0,
+          null
+        ],
+        [
+          "bOverrideMidiEventsBehavior",
+          0,
+          null
+        ],
+        [
+          "bOverrideMidiNoteTracking",
+          0,
+          null
+        ],
+        [
+          "bEnableMidiNoteTracking",
+          0,
+          null
+        ],
+        [
+          "bIsMidiBreakLoopOnNoteOff",
+          0,
+          null
+        ],
+        [
+          "cProps",
+          2,
+          null
+        ],
+        [
+          "pID",
+          6,
+          "0x06 [MakeUpGain]"
+        ],
+        [
+          "pValue",
+          -10.0,
+          null
+        ],
+        [
+          "pID",
+          7,
+          "0x07 [Priority]"
+        ],
+        [
+          "pValue",
+          1.0,
+          null
+        ],
+        [
+          "cProps",
+          0,
+          null
+        ],
+        [
+          "uBitsPositioning",
+          0,
+          "0x00"
+        ],
+        [
+          "bPositioningInfoOverrideParent",
+          0,
+          null
+        ],
+        [
+          "bHasListenerRelativeRouting",
+          0,
+          null
+        ],
+        [
+          "ePannerType",
+          0,
+          "0 [DirectSpeakerAssignment]"
+        ],
+        [
+          "e3DPositionType",
+          0,
+          "0 [Emitter]"
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bOverrideUserAuxSends",
+          0,
+          null
+        ],
+        [
+          "bHasAux",
+          0,
+          null
+        ],
+        [
+          "bOverrideReflectionsAuxBus",
+          0,
+          null
+        ],
+        [
+          "reflectionsAuxBus",
+          0,
+          null
+        ],
+        [
+          "byBitVector",
+          4,
+          "0x04"
+        ],
+        [
+          "bKillNewest",
+          0,
+          null
+        ],
+        [
+          "bUseVirtualBehavior",
+          0,
+          null
+        ],
+        [
+          "bIgnoreParentMaxNumInst",
+          0,
+          null
+        ],
+        [
+          "bIsVVoicesOptOverrideParent",
+          0,
+          null
+        ],
+        [
+          "eVirtualQueueBehavior",
+          1,
+          "0x01 [FromElapsedTime]"
+        ],
+        [
+          "u16MaxNumInstance",
+          0,
+          null
+        ],
+        [
+          "eBelowThresholdBehavior",
+          0,
+          "0x00 [ContinueToPlay]"
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bOverrideHdrEnvelope",
+          0,
+          null
+        ],
+        [
+          "bOverrideAnalysis",
+          0,
+          null
+        ],
+        [
+          "bNormalizeLoudness",
+          0,
+          null
+        ],
+        [
+          "bEnableEnvelope",
+          0,
+          null
+        ],
+        [
+          "ulNumStateProps",
+          0,
+          null
+        ],
+        [
+          "ulNumStateGroups",
+          0,
+          null
+        ],
+        [
+          "uNumCurves",
+          0,
+          null
+        ]
+      ],
+      "rawObjects": [
+        {
+          "package": "wwisebnk_assets_wwisedata_android_battle_sfx_00_pck.rawfile",
+          "bankId": 2732888502,
+          "bankOffset": 204866,
+          "packageOffset": 204942,
+          "type": 2,
+          "bytes": 65,
+          "sha256": "0537c6cf3365b832a7c6bb2aafc1350f25711c4e5de6f074ee9616335dc96608",
+          "base64": "AjwAAADFdgIYAQAEAADaGIQIEQoAAAAAAAAAAAAAAACRRX8cAAIGBwAAIMEAAIA/AAAAAAAAAAQBAAAAAAAAAAA="
+        }
+      ]
+    },
+    {
       "id": 406108338,
       "type": 7,
       "fields": [
@@ -7207,6 +8347,299 @@
           "bytes": 80,
           "sha256": "a6cfd1d2230da31215ba5f1d5e04ee9d9d0da21db3a28fbf0c3a68ed64a59c83",
           "base64": "EUsAAAAsWdEbAwBpADgAAAAGAAAAAAAAAAAAj0TNzEZCAQYAAAAAAAAAANCERc3MREIBBgAAAAAAAAAAAPpFZmZAQgEAAAAAAQAAAAAAAAA="
+        }
+      ]
+    },
+    {
+      "id": 478102929,
+      "type": 7,
+      "fields": [
+        [
+          "eHircType",
+          7,
+          "0x07 [Actor-Mixer]"
+        ],
+        [
+          "dwSectionSize",
+          73,
+          "0x49"
+        ],
+        [
+          "ulID",
+          478102929,
+          null
+        ],
+        [
+          "bIsOverrideParentFX",
+          0,
+          "0x00"
+        ],
+        [
+          "uNumFx",
+          0,
+          null
+        ],
+        [
+          "bIsOverrideParentMetadata",
+          0,
+          "0x00"
+        ],
+        [
+          "uNumFx",
+          0,
+          null
+        ],
+        [
+          "bOverrideAttachmentParams",
+          0,
+          "0x00"
+        ],
+        [
+          "OverrideBusId",
+          1130384899,
+          null
+        ],
+        [
+          "DirectParentID",
+          170525597,
+          null
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bPriorityOverrideParent",
+          0,
+          null
+        ],
+        [
+          "bPriorityApplyDistFactor",
+          0,
+          null
+        ],
+        [
+          "bOverrideMidiEventsBehavior",
+          0,
+          null
+        ],
+        [
+          "bOverrideMidiNoteTracking",
+          0,
+          null
+        ],
+        [
+          "bEnableMidiNoteTracking",
+          0,
+          null
+        ],
+        [
+          "bIsMidiBreakLoopOnNoteOff",
+          0,
+          null
+        ],
+        [
+          "cProps",
+          1,
+          null
+        ],
+        [
+          "pID",
+          7,
+          "0x07 [Priority]"
+        ],
+        [
+          "pValue",
+          1.0,
+          null
+        ],
+        [
+          "cProps",
+          0,
+          null
+        ],
+        [
+          "uBitsPositioning",
+          0,
+          "0x00"
+        ],
+        [
+          "bPositioningInfoOverrideParent",
+          0,
+          null
+        ],
+        [
+          "bHasListenerRelativeRouting",
+          0,
+          null
+        ],
+        [
+          "ePannerType",
+          0,
+          "0 [DirectSpeakerAssignment]"
+        ],
+        [
+          "e3DPositionType",
+          0,
+          "0 [Emitter]"
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bOverrideUserAuxSends",
+          0,
+          null
+        ],
+        [
+          "bHasAux",
+          0,
+          null
+        ],
+        [
+          "bOverrideReflectionsAuxBus",
+          0,
+          null
+        ],
+        [
+          "reflectionsAuxBus",
+          0,
+          null
+        ],
+        [
+          "byBitVector",
+          12,
+          "0x0C"
+        ],
+        [
+          "bKillNewest",
+          0,
+          null
+        ],
+        [
+          "bUseVirtualBehavior",
+          0,
+          null
+        ],
+        [
+          "bIgnoreParentMaxNumInst",
+          1,
+          null
+        ],
+        [
+          "bIsVVoicesOptOverrideParent",
+          0,
+          null
+        ],
+        [
+          "eVirtualQueueBehavior",
+          1,
+          "0x01 [FromElapsedTime]"
+        ],
+        [
+          "u16MaxNumInstance",
+          4,
+          null
+        ],
+        [
+          "eBelowThresholdBehavior",
+          0,
+          "0x00 [ContinueToPlay]"
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bOverrideHdrEnvelope",
+          0,
+          null
+        ],
+        [
+          "bOverrideAnalysis",
+          0,
+          null
+        ],
+        [
+          "bNormalizeLoudness",
+          0,
+          null
+        ],
+        [
+          "bEnableEnvelope",
+          0,
+          null
+        ],
+        [
+          "ulNumStateProps",
+          0,
+          null
+        ],
+        [
+          "ulNumStateGroups",
+          0,
+          null
+        ],
+        [
+          "uNumCurves",
+          0,
+          null
+        ],
+        [
+          "ulNumChilds",
+          7,
+          null
+        ],
+        [
+          "ulChildID",
+          39003832,
+          null
+        ],
+        [
+          "ulChildID",
+          294417030,
+          null
+        ],
+        [
+          "ulChildID",
+          402814661,
+          null
+        ],
+        [
+          "ulChildID",
+          719993413,
+          null
+        ],
+        [
+          "ulChildID",
+          954492604,
+          null
+        ],
+        [
+          "ulChildID",
+          971711637,
+          null
+        ],
+        [
+          "ulChildID",
+          1047715617,
+          null
+        ]
+      ],
+      "rawObjects": [
+        {
+          "package": "wwisebnk_assets_wwisedata_android_battle_sfx_00_pck.rawfile",
+          "bankId": 2732888502,
+          "bankOffset": 205191,
+          "packageOffset": 205267,
+          "type": 7,
+          "bytes": 78,
+          "sha256": "afa3046ce0d65967ae7902751aafc3c46179b6bfe08a5bb756833892b2da32e5",
+          "base64": "B0kAAACRRX8cAAAAAAADTmBDnQMqCgABBwAAgD8AAAAAAAAADAEEAAAAAAAAAAcAAAC4JlMChnKMEcV2AhhFOuoqvGbkOJUk6zkh33I+"
         }
       ]
     },
@@ -9333,6 +10766,304 @@
       ]
     },
     {
+      "id": 889949172,
+      "type": 2,
+      "fields": [
+        [
+          "eHircType",
+          2,
+          "0x02 [Sound]"
+        ],
+        [
+          "dwSectionSize",
+          50,
+          "0x32"
+        ],
+        [
+          "ulID",
+          889949172,
+          null
+        ],
+        [
+          "ulPluginID",
+          262145,
+          "0x00040001 [VORBIS]"
+        ],
+        [
+          "type",
+          1,
+          "0x01 [Codec]"
+        ],
+        [
+          "company",
+          0,
+          "0x00 [Audiokinetic]"
+        ],
+        [
+          "StreamType",
+          0,
+          "0x00 [Data/bnk]"
+        ],
+        [
+          "sourceID",
+          1001303295,
+          null
+        ],
+        [
+          "uInMemoryMediaSize",
+          37748,
+          "0x9374"
+        ],
+        [
+          "uSourceBits",
+          0,
+          "0x00"
+        ],
+        [
+          "bIsLanguageSpecific",
+          0,
+          null
+        ],
+        [
+          "bPrefetch",
+          0,
+          null
+        ],
+        [
+          "bNonCachable",
+          0,
+          null
+        ],
+        [
+          "bHasSource",
+          0,
+          null
+        ],
+        [
+          "bIsOverrideParentFX",
+          0,
+          "0x00"
+        ],
+        [
+          "uNumFx",
+          0,
+          null
+        ],
+        [
+          "bIsOverrideParentMetadata",
+          0,
+          "0x00"
+        ],
+        [
+          "uNumFx",
+          0,
+          null
+        ],
+        [
+          "bOverrideAttachmentParams",
+          0,
+          "0x00"
+        ],
+        [
+          "OverrideBusId",
+          0,
+          null
+        ],
+        [
+          "DirectParentID",
+          100591434,
+          null
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bPriorityOverrideParent",
+          0,
+          null
+        ],
+        [
+          "bPriorityApplyDistFactor",
+          0,
+          null
+        ],
+        [
+          "bOverrideMidiEventsBehavior",
+          0,
+          null
+        ],
+        [
+          "bOverrideMidiNoteTracking",
+          0,
+          null
+        ],
+        [
+          "bEnableMidiNoteTracking",
+          0,
+          null
+        ],
+        [
+          "bIsMidiBreakLoopOnNoteOff",
+          0,
+          null
+        ],
+        [
+          "cProps",
+          0,
+          null
+        ],
+        [
+          "cProps",
+          0,
+          null
+        ],
+        [
+          "uBitsPositioning",
+          0,
+          "0x00"
+        ],
+        [
+          "bPositioningInfoOverrideParent",
+          0,
+          null
+        ],
+        [
+          "bHasListenerRelativeRouting",
+          0,
+          null
+        ],
+        [
+          "ePannerType",
+          0,
+          "0 [DirectSpeakerAssignment]"
+        ],
+        [
+          "e3DPositionType",
+          0,
+          "0 [Emitter]"
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bOverrideUserAuxSends",
+          0,
+          null
+        ],
+        [
+          "bHasAux",
+          0,
+          null
+        ],
+        [
+          "bOverrideReflectionsAuxBus",
+          0,
+          null
+        ],
+        [
+          "reflectionsAuxBus",
+          0,
+          null
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bKillNewest",
+          0,
+          null
+        ],
+        [
+          "bUseVirtualBehavior",
+          0,
+          null
+        ],
+        [
+          "bIgnoreParentMaxNumInst",
+          0,
+          null
+        ],
+        [
+          "bIsVVoicesOptOverrideParent",
+          0,
+          null
+        ],
+        [
+          "eVirtualQueueBehavior",
+          1,
+          "0x01 [FromElapsedTime]"
+        ],
+        [
+          "u16MaxNumInstance",
+          0,
+          null
+        ],
+        [
+          "eBelowThresholdBehavior",
+          0,
+          "0x00 [ContinueToPlay]"
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bOverrideHdrEnvelope",
+          0,
+          null
+        ],
+        [
+          "bOverrideAnalysis",
+          0,
+          null
+        ],
+        [
+          "bNormalizeLoudness",
+          0,
+          null
+        ],
+        [
+          "bEnableEnvelope",
+          0,
+          null
+        ],
+        [
+          "ulNumStateProps",
+          0,
+          null
+        ],
+        [
+          "ulNumStateGroups",
+          0,
+          null
+        ],
+        [
+          "uNumCurves",
+          0,
+          null
+        ]
+      ],
+      "rawObjects": [
+        {
+          "package": "wwisebnk_assets_wwisedata_android_battle_sfx_02_pck.rawfile",
+          "bankId": 2732888500,
+          "bankOffset": 16667376,
+          "packageOffset": 16667452,
+          "type": 2,
+          "bytes": 55,
+          "sha256": "03fd9f1b16f5a2a2aaa44b074107451ae3e27bb87abbadbd20db96d5d3f18a2c",
+          "base64": "AjIAAAD0iws1AQAEAAD/rK47dJMAAAAAAAAAAAAAAABK5/4FAAAAAAAAAAAAAAEAAAAAAAAAAA=="
+        }
+      ]
+    },
+    {
       "id": 891873059,
       "type": 7,
       "fields": [
@@ -9860,6 +11591,324 @@
           "bytes": 65,
           "sha256": "e9ff5342b1fd76bf181db93fb3cf7b22f9be14a66303dafef20abaadde8325f4",
           "base64": "BzwAAABA6oM3AAAAAAAAAAAA6nDMEAAAAAAAAAAAAAABAAAAAAAAAAAFAAAASHTUA0rn/gXwZkAQTZqKHr73lTs="
+        }
+      ]
+    },
+    {
+      "id": 943434972,
+      "type": 2,
+      "fields": [
+        [
+          "eHircType",
+          2,
+          "0x02 [Sound]"
+        ],
+        [
+          "dwSectionSize",
+          55,
+          "0x37"
+        ],
+        [
+          "ulID",
+          943434972,
+          null
+        ],
+        [
+          "ulPluginID",
+          262145,
+          "0x00040001 [VORBIS]"
+        ],
+        [
+          "type",
+          1,
+          "0x01 [Codec]"
+        ],
+        [
+          "company",
+          0,
+          "0x00 [Audiokinetic]"
+        ],
+        [
+          "StreamType",
+          0,
+          "0x00 [Data/bnk]"
+        ],
+        [
+          "sourceID",
+          1047816237,
+          null
+        ],
+        [
+          "uInMemoryMediaSize",
+          4657,
+          "0x1231"
+        ],
+        [
+          "uSourceBits",
+          0,
+          "0x00"
+        ],
+        [
+          "bIsLanguageSpecific",
+          0,
+          null
+        ],
+        [
+          "bPrefetch",
+          0,
+          null
+        ],
+        [
+          "bNonCachable",
+          0,
+          null
+        ],
+        [
+          "bHasSource",
+          0,
+          null
+        ],
+        [
+          "bIsOverrideParentFX",
+          0,
+          "0x00"
+        ],
+        [
+          "uNumFx",
+          0,
+          null
+        ],
+        [
+          "bIsOverrideParentMetadata",
+          0,
+          "0x00"
+        ],
+        [
+          "uNumFx",
+          0,
+          null
+        ],
+        [
+          "bOverrideAttachmentParams",
+          0,
+          "0x00"
+        ],
+        [
+          "OverrideBusId",
+          0,
+          null
+        ],
+        [
+          "DirectParentID",
+          563807841,
+          null
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bPriorityOverrideParent",
+          0,
+          null
+        ],
+        [
+          "bPriorityApplyDistFactor",
+          0,
+          null
+        ],
+        [
+          "bOverrideMidiEventsBehavior",
+          0,
+          null
+        ],
+        [
+          "bOverrideMidiNoteTracking",
+          0,
+          null
+        ],
+        [
+          "bEnableMidiNoteTracking",
+          0,
+          null
+        ],
+        [
+          "bIsMidiBreakLoopOnNoteOff",
+          0,
+          null
+        ],
+        [
+          "cProps",
+          1,
+          null
+        ],
+        [
+          "pID",
+          7,
+          "0x07 [Priority]"
+        ],
+        [
+          "pValue",
+          1.0,
+          null
+        ],
+        [
+          "cProps",
+          0,
+          null
+        ],
+        [
+          "uBitsPositioning",
+          0,
+          "0x00"
+        ],
+        [
+          "bPositioningInfoOverrideParent",
+          0,
+          null
+        ],
+        [
+          "bHasListenerRelativeRouting",
+          0,
+          null
+        ],
+        [
+          "ePannerType",
+          0,
+          "0 [DirectSpeakerAssignment]"
+        ],
+        [
+          "e3DPositionType",
+          0,
+          "0 [Emitter]"
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bOverrideUserAuxSends",
+          0,
+          null
+        ],
+        [
+          "bHasAux",
+          0,
+          null
+        ],
+        [
+          "bOverrideReflectionsAuxBus",
+          0,
+          null
+        ],
+        [
+          "reflectionsAuxBus",
+          0,
+          null
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bKillNewest",
+          0,
+          null
+        ],
+        [
+          "bUseVirtualBehavior",
+          0,
+          null
+        ],
+        [
+          "bIgnoreParentMaxNumInst",
+          0,
+          null
+        ],
+        [
+          "bIsVVoicesOptOverrideParent",
+          0,
+          null
+        ],
+        [
+          "eVirtualQueueBehavior",
+          1,
+          "0x01 [FromElapsedTime]"
+        ],
+        [
+          "u16MaxNumInstance",
+          0,
+          null
+        ],
+        [
+          "eBelowThresholdBehavior",
+          0,
+          "0x00 [ContinueToPlay]"
+        ],
+        [
+          "byBitVector",
+          0,
+          "0x00"
+        ],
+        [
+          "bOverrideHdrEnvelope",
+          0,
+          null
+        ],
+        [
+          "bOverrideAnalysis",
+          0,
+          null
+        ],
+        [
+          "bNormalizeLoudness",
+          0,
+          null
+        ],
+        [
+          "bEnableEnvelope",
+          0,
+          null
+        ],
+        [
+          "ulNumStateProps",
+          0,
+          null
+        ],
+        [
+          "ulNumStateGroups",
+          0,
+          null
+        ],
+        [
+          "uNumCurves",
+          0,
+          null
+        ]
+      ],
+      "rawObjects": [
+        {
+          "package": "wwisebnk_assets_wwisedata_android_battle_sfx_00_pck.rawfile",
+          "bankId": 2732888502,
+          "bankOffset": 206924,
+          "packageOffset": 207000,
+          "type": 2,
+          "bytes": 60,
+          "sha256": "694c7ad009d1bddc77ecdc3dd955ce7614098dfe2d2f10015c5dcda4130365ec",
+          "base64": "AjcAAADcrDs4AQAEAAAtaHQ+MRIAAAAAAAAAAAAAAABhBpshAAEHAACAPwAAAAAAAAAAAQAAAAAAAAAA"
+        },
+        {
+          "package": "wwisebnk_assets_wwisedata_android_battle_sfx_02_pck.rawfile",
+          "bankId": 2732888500,
+          "bankOffset": 16735350,
+          "packageOffset": 16735426,
+          "type": 2,
+          "bytes": 60,
+          "sha256": "694c7ad009d1bddc77ecdc3dd955ce7614098dfe2d2f10015c5dcda4130365ec",
+          "base64": "AjcAAADcrDs4AQAEAAAtaHQ+MRIAAAAAAAAAAAAAAABhBpshAAEHAACAPwAAAAAAAAAAAQAAAAAAAAAA"
         }
       ]
     },
@@ -12220,6 +14269,31 @@
       "target": 563807841
     },
     {
+      "source": 402814661,
+      "field": "DirectParentID",
+      "target": 478102929
+    },
+    {
+      "source": 478102929,
+      "field": "OverrideBusId",
+      "target": 1130384899
+    },
+    {
+      "source": 478102929,
+      "field": "DirectParentID",
+      "target": 170525597
+    },
+    {
+      "source": 170525597,
+      "field": "OverrideBusId",
+      "target": 1130384899
+    },
+    {
+      "source": 170525597,
+      "field": "DirectParentID",
+      "target": 702007157
+    },
+    {
       "source": 114904033,
       "field": "DirectParentID",
       "target": 406108338
@@ -12253,6 +14327,11 @@
       "source": 512399949,
       "field": "DirectParentID",
       "target": 931392064
+    },
+    {
+      "source": 943434972,
+      "field": "DirectParentID",
+      "target": 563807841
     },
     {
       "source": 732923897,
@@ -12298,6 +14377,16 @@
       "source": 272656112,
       "field": "DirectParentID",
       "target": 931392064
+    },
+    {
+      "source": 889949172,
+      "field": "DirectParentID",
+      "target": 100591434
+    },
+    {
+      "source": 100591434,
+      "field": "DirectParentID",
+      "target": 931392064
     }
   ],
   "media": [
@@ -12312,6 +14401,21 @@
           "offset": 813804,
           "bytes": 31718,
           "sha256": "00102d691f2f01584b31d4a9c5af039e3b20b1b5377516cfd3ed339ee05ff631",
+          "prefetchFragment": false
+        }
+      ]
+    },
+    {
+      "id": 142874842,
+      "bytes": 2577,
+      "sha256": "6010cb3c5994ee58929721b1c04606b162aab15caf1b3385ec0ccad04fdb9739",
+      "sources": [
+        {
+          "package": "wwisebnk_assets_wwisedata_android_battle_sfx_00_pck.rawfile",
+          "bankId": 2732888502,
+          "offset": 19468,
+          "bytes": 2577,
+          "sha256": "6010cb3c5994ee58929721b1c04606b162aab15caf1b3385ec0ccad04fdb9739",
           "prefetchFragment": false
         }
       ]
@@ -12477,6 +14581,36 @@
           "offset": 15142700,
           "bytes": 27371,
           "sha256": "292aa29a62a49fa1d7d033c2800aa5cab92288ec2ababe704472640e69d731e1",
+          "prefetchFragment": false
+        }
+      ]
+    },
+    {
+      "id": 1001303295,
+      "bytes": 37748,
+      "sha256": "a5112d7c2d2a3955b88dc232a104c07f3653feb4a9f0e5faba0efe6a387ccc94",
+      "sources": [
+        {
+          "package": "wwisebnk_assets_wwisedata_android_battle_sfx_02_pck.rawfile",
+          "bankId": 2732888500,
+          "offset": 15967852,
+          "bytes": 37748,
+          "sha256": "a5112d7c2d2a3955b88dc232a104c07f3653feb4a9f0e5faba0efe6a387ccc94",
+          "prefetchFragment": false
+        }
+      ]
+    },
+    {
+      "id": 1047816237,
+      "bytes": 4657,
+      "sha256": "0089e5a000fea3b1a6e9e8f4ddeb15e323e66c6ed1d9d04b31cbda5d1ff52c3b",
+      "sources": [
+        {
+          "package": "wwisebnk_assets_wwisedata_android_battle_sfx_00_pck.rawfile",
+          "bankId": 2732888502,
+          "offset": 199788,
+          "bytes": 4657,
+          "sha256": "0089e5a000fea3b1a6e9e8f4ddeb15e323e66c6ed1d9d04b31cbda5d1ff52c3b",
           "prefetchFragment": false
         }
       ]

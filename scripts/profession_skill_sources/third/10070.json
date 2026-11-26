@@ -1,0 +1,24 @@
+{
+  "entities": [11540, 11541, 11542, 11600, 11601, 10007, 10021, 24102],
+  "code": [
+    "FightSkillComponentInfo", "FightHitSummonComponentInfo", "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo", "FightHitSummonGridItemCfg", "SummonHitScopCfg",
+    "FightStatusComponentInfo", "FightStatusMoveNearComponentInfo",
+    "StatusEndComponentInfo", "StatusAutoRemoveComponentInfo", "BattleFormulaHandler",
+    "AiPriorityType", "SkillAiCfg"
+  ],
+  "client_code": ["MyFightHitSummon", "MyFightStatusMoveNear"],
+  "rule_pack_fragments": ["FightSkill_part1.g.bytes", "FightSkill_part75.g.bytes", "FightSkill_part78.g.bytes", "FightSkill_part705.g.bytes"],
+  "visibility_bundles": [
+    "11540", "11600",
+    "defaultpackage_assets_prefabs_ecentity_fight_fightskill_global_10007.bundle",
+    "defaultpackage_assets_prefabs_ecentity_fight_fightskill_global_10021.bundle"
+  ],
+  "scope_numeric": true,
+  "current_managed_views": true,
+  "runtime_rule_packs": ["unity/Assets/Game/Resources/Combat/SkillRules/10070.json"],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/meteor-fire-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/meteor-fire-current-status-graphs-source-manifest.json"
+  ]
+}

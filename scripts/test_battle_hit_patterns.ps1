@@ -40,9 +40,9 @@ foreach($action in @(0,5)) {
  $hit.ActionType=$action;$plan=$area.Plan($context)
  Assert-Pattern ($plan.Count -eq 2 -and $plan[0].Target.Id -eq 4 -and $plan[0].ScopeIndex -eq 1 -and $plan[1].Target.Id -eq 3 -and $plan[1].ScopeIndex -eq 3) 'Single-cell status/healing targets did not follow the original scope order.'
 }
-$hit.IsSummon=$true;$summonPlan=$area.Plan($context)
+$hit.DamageId=0;$hit.DamageType=1;$hit.IsSummon=$true;$summonPlan=$area.Plan($context)
 Assert-Pattern ($summonPlan.Count -eq 2 -and @($summonPlan | Where-Object ScopeIndex -ne -1).Count -eq 0) 'Status-cell association changed the original summon selection.'
-$hit.IsSummon=$false
+$hit.IsSummon=$false;$hit.DamageId=4003;$hit.DamageType=8
 [void]$units.Remove($near);$units.Insert(1,$boss)
 $hit.ActionType=4;$skill.SkillType=3
 Assert-Pattern ($area.Plan($context).Count -eq 2) 'Skill-level healing inherited attack-cell multiplication.'

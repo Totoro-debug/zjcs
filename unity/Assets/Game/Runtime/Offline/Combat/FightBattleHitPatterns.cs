@@ -77,8 +77,9 @@ namespace Zjcs.Combat.Official
             {
                 Require(context);
                 var hit = context.Hit;
+                bool summonOnly = hit.IsSummon && hit.DamageId <= 0;
                 bool perCell = hit.ActionType == 4 && context.Skill.SkillType != 3
-                    && !hit.IsSummon && hit.Scope.Count > 1;
+                    && !summonOnly && hit.Scope.Count > 1;
                 // Scope enumerates affected cells for damage, healing and status hits alike.
                 // Explicit random-target counts are applied to the candidates below.
                 var selector = new FightBattleHitDefinition { Anchor = hit.Anchor,
@@ -94,7 +95,7 @@ namespace Zjcs.Combat.Official
                 {
                     // A single authored cell still delays its damage/status occurrence.
                     // Keeping entity-level selection here must not drop HitScopCfg.Delay.
-                    if (hit.Scope.Count == 1 || hit.IsSummon)
+                    if (hit.Scope.Count == 1 || summonOnly)
                     {
                         float delay = hit.Scope.Count == 1 ? ScopeDelay(hit, 0) : 0f;
                         foreach (var target in candidates)

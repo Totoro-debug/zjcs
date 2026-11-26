@@ -9,6 +9,7 @@ using Zjcs.Official.BattleStatusPlayables;
 using Zjcs.Official.EntityLifecycle;
 using Zjcs.Official.EntityViews;
 using Zjcs.Official.StoryPlayables;
+using Zjcs.Official.StoryPlayableManager;
 
 namespace Zjcs.Presentation.Combat
 {
@@ -135,15 +136,34 @@ namespace Zjcs.Presentation.Combat
         }
 
         public Transform TryGetTransform(int id) => grids.TryGetValue(id, out var lease) ? lease.Object.transform : null;
+        public void ReplaceStatusCatalog(string path, params int[] statusIds)
+        {
+            var text = Resources.Load<TextAsset>(path);
+            if (!text) throw new InvalidOperationException("Original grid status catalog is missing: " + path);
+            var expected = new HashSet<int>(statusIds);
+            var replacements = new Dictionary<int, GameObject>();
+            foreach (var entry in JsonUtility.FromJson<Catalog>(text.text).graphs)
+            {
+                var prefab = Resources.Load<GameObject>(entry.resource);
+                if (!expected.Contains(entry.id) || !prefabs.ContainsKey(entry.id)
+                    || !prefab || !prefab.GetComponent<MyEntity>() || !prefab.GetComponent<MyFightStatus>())
+                    throw new InvalidOperationException("Undeclared original grid status replacement: " + entry.id);
+                replacements.Add(entry.id, prefab);
+            }
+            if (!expected.SetEquals(replacements.Keys))
+                throw new InvalidOperationException("Original grid status replacement catalog is incomplete: " + path);
+            foreach (var entry in replacements) prefabs[entry.Key] = entry.Value;
+        }
         public float NextDelay => pending.Count == 0 ? float.PositiveInfinity : pending[0].Remaining;
         public int Count => grids.Count;
-        public object GetService(Type type) => null;
+        public object GetService(Type type) => type == typeof(IMyPlayableManager) ? scope : null;
 
         public void Inject(object value)
         {
             if (value is ECFightRoleCharacterView role)
             { role.MyPlayableManager = scope; role.GamePlayManager = this; role.FightRoot = this; }
             if (value is ECFightRoleStatusDisplayView statuses) statuses.mFightRoot = this;
+            if (value is ECFightStatusPlayableView status) status.MyPlayableManager = scope;
         }
 
         public void Restore()
@@ -279,19 +299,29 @@ namespace Zjcs.Presentation.Combat
             var go = Instantiate(state.ClassId);
             var entity = go.GetComponent<MyEntity>();
             var view = go.GetComponent<MyFightStatus>();
+            OfficialBattleCurrentViewBinding.Prepare(go, this);
             var status = new StatusState(state);
             var context = new StatusContext
             {
                 Status = status, OwnerObject = grid.Object,
                 CreatorObject = EntityObject(state.CreatorId), MasterObject = EntityObject(grid.Data.Snapshot.MasterId),
-                StatusAgent = grid.Object.GetComponent<MyFightStatusAgent>(), Icon = hasStatusIcon(state.ClassId)
+                StatusAgent = grid.Object.GetComponent<MyFightStatusAgent>(), Icon = hasStatusIcon(state.ClassId),
+                CurrentPlayableView = CurrentStatusViewLookup.Get(view)
             };
             view.Bind(context, scope);
-            entity.Bind(container, new StatusEntityData(gridId, state), fresh);
+            entity.Bind(container, new StatusEntityData(gridId, state, status), fresh);
             grid.Statuses.Add(state.InstanceId, new StatusLease { Entity = entity, View = view, State = status, ClassId = state.ClassId });
             grid.Data.Actions.Add(state);
             go.transform.SetParent(root, false);
-            scope.Dispatch(() => { entity.MyStart(); view.OnStart(fresh); grid.Data.Actions.NotifyStart(state.InstanceId); });
+            scope.Dispatch(() =>
+            {
+                // Current EC views load during MyStart and require their context first.
+                // Legacy grid playables retain their original post-entity start order.
+                if (context.CurrentPlayableView != null) view.OnStart(fresh);
+                entity.MyStart();
+                if (context.CurrentPlayableView == null) view.OnStart(fresh);
+                grid.Data.Actions.NotifyStart(state.InstanceId);
+            });
         }
 
         private GameObject EntityObject(int id)

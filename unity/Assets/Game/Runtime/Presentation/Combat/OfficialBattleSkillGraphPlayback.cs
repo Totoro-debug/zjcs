@@ -160,6 +160,7 @@ namespace Zjcs.Presentation.Combat
             this.hasStatusIcon = hasStatusIcon ?? throw new ArgumentNullException(nameof(hasStatusIcon));
             gridViews = new OfficialBattleGridEntityPlayback(root, mapper, scope, entityViews,
                 checkpoint, unitTransform, hasStatusIcon);
+            gridViews.ReplaceStatusCatalog("Combat/meteor-fire-current-status-graphs", 11542);
             gridViews.Restore();
         }
 

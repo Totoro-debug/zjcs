@@ -166,6 +166,7 @@ namespace Zjcs.Presentation.Combat
             FightBattleCheckpoint checkpoint, Func<int, Transform> resolve, Func<int, bool> icons) { Current = this; }
         public float NextDelay => float.PositiveInfinity;
         public Transform TryGetTransform(int id) => null;
+        public void ReplaceStatusCatalog(string path, params int[] statusIds) {}
         public void RefreshSnapshot(FightBattleCheckpoint checkpoint) {}
         internal void AdoptCheckpoint(FightBattleCheckpoint checkpoint) { AdoptedCheckpoint = checkpoint; }
         internal void BindLiveUnits(Func<int, FightBattleUnitState> resolve) { LiveUnits = resolve; }

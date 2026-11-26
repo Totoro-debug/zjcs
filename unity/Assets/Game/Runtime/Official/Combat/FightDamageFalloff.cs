@@ -35,6 +35,17 @@ namespace Zjcs.Combat.Official
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
             FightBattleStatusState status, FightBattleDamageEvent damage)
         {
+            if (source != null && target != null && skill != null && hit != null && status != null && damage != null
+                && !damage.IsCure && !damage.Dodge && !damage.Blinding && !damage.Immunity
+                && status.OwnerId == target.Id && status.Scope != 1 && status.Rate >= 1.0
+                && FightDamageFalloffRules.UsesLifetimeCounter(status))
+            {
+                foreach (var counter in status.Counts)
+                    if (counter != null && counter.CastId == 0 && counter.StatusClassId == status.ClassId) return;
+                FightDamageFalloffRules.For(status).Apply(new FightDamageFalloffContext {
+                    Source = source, Target = target, Skill = skill, Hit = hit, Status = status }, 0);
+                return;
+            }
             if (source == null || target == null || skill == null || hit == null || status == null || damage == null
                 || damage.IsCure || damage.Dodge || damage.Blinding || damage.Immunity
                 || skill.FalloffCastId <= 0 || status.Scope == 1 || status.OwnerId != target.Id

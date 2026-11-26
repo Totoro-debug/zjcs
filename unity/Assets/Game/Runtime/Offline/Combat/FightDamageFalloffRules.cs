@@ -31,6 +31,10 @@ namespace Zjcs.Combat.Official
             return status.Scope == 1 ? AcrossTargets : PerTarget;
         }
 
+        internal static bool UsesLifetimeCounter(FightBattleStatusState status)
+            => status != null && status.DurationRound == 0 && !status.RemoveOnSourceSkillStart
+                && (status.FalloffTarget & 12) == 12;
+
         private sealed class PerTargetRule : Rule
         {
             protected override bool Accepts(FightBattleStatusState status, FightBattleUnitState target)
@@ -72,7 +76,9 @@ namespace Zjcs.Combat.Official
                     && (status.RootSkillId <= 0 || status.RootSkillId != RootSkillId(skill))) return amount;
                 if ((status.FalloffTarget & 2) != 0
                     && (status.SkillEntityClassId <= 0 || status.SkillEntityClassId != ItemId(skill))) return amount;
-                if ((status.FalloffTarget & 4) != 0 && status.CreatorId != source.Id) return amount;
+                if ((status.FalloffTarget & 4) != 0
+                    && FightBattleStatusOrigin.Resolve(status).UnitId
+                        != FightBattleStatusOrigin.Resolve(skill, source.Id).UnitId) return amount;
                 if ((status.FalloffTarget & 8) != 0 && status.ApplyingSkillItemId != ItemId(skill)) return amount;
                 if (status.IsCheckSkillTrigger
                     && !FightSkillTriggerPolicy.AllowsStatus(skill, status)) return amount;
@@ -83,7 +89,7 @@ namespace Zjcs.Combat.Official
 
                 List<FightBattleFalloffCounter> counters;
                 int castId;
-                if (skill != null && skill.FalloffCastId > 0)
+                if (skill != null && skill.FalloffCastId > 0 && !UsesLifetimeCounter(status))
                 {
                     castId = skill.FalloffCastId;
                     counters = CastCounters(skill, target);
