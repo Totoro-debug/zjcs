@@ -92,8 +92,9 @@ namespace Zjcs.Presentation.CharacterCreation
                     var title = FindObjectsOfType<TMPro.TMP_Text>().First(t=>t.name=="SelectSexTitle");
                     var effect = title.GetComponent<TMPro.TMPEffect>();
                     Require(effect != null && effect.outline && effect.outlineWidth==3f,"Original title outline missing");
-                    Click(items[1].gameObject);
-                    Require(items[1].isOn && items[1].transform.Find("Checkmark").gameObject.activeSelf,"Hair pointer selection failed");
+                    var chosen = items.First(item => !item.isOn);
+                    Click(chosen.gameObject);
+                    Require(chosen.isOn && chosen.transform.Find("Checkmark").gameObject.activeSelf,"Hair pointer selection failed");
                     Require(items.Count(t=>t.transform.Find("Checkmark").gameObject.activeSelf)==1,"Multiple hair selections");
                     Invoke(controller,"PersistDraft");
                     var saved = service.OpenDraft(slot);

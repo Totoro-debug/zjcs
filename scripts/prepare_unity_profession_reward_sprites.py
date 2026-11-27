@@ -44,9 +44,10 @@ def fields(value):
     return value
 
 
-def write(kind, name, source, native):
+def write(kind, name, source, native, *, cache=None):
+    cache = Path(cache) if cache is not None else CACHE
     relative = "ProfessionDynamic/" + name + "." + kind.lower() + ".asset"
-    path = CACHE / "typed/dynamic" / relative
+    path = cache / "typed/dynamic" / relative
     path.parent.mkdir(parents=True, exist_ok=True)
     main_id = 2800000 if kind == "Texture2D" else 21300000
     class_id = 28 if kind == "Texture2D" else 213
@@ -61,7 +62,7 @@ def write(kind, name, source, native):
         guid=asset_guid, sha256=sha(raw), meta_sha256=sha(meta.read_bytes()), file_id=main_id)
 
 
-def build(apk, obj):
+def build(apk, obj, *, cache=None):
     sprite = obj.read()
     if sprite.m_SpriteAtlas.path_id or sprite.m_RD.alphaTexture.path_id or sprite.m_RD.secondaryTextures or sprite.m_Bones or sprite.m_PhysicsShape:
         raise ValueError("Restore additional original reward Sprite dependencies")
@@ -80,7 +81,7 @@ def build(apk, obj):
     native_texture["m_PlatformBlob"] = ""
     native_texture["image data"] = len(rgba)
     native_texture["_typelessdata"] = rgba.hex()
-    texture_output = write("Texture2D", sprite.m_Name, texture_obj, native_texture)
+    texture_output = write("Texture2D", sprite.m_Name, texture_obj, native_texture, cache=cache)
     original = copy.deepcopy(obj.read_typetree())
     rd = original["m_RD"]
     rd["texture"] = {"fileID": 0}
@@ -98,7 +99,7 @@ def build(apk, obj):
     native = source_header()
     native.update(fields(original))
     native["m_RD"]["texture"] = dict(fileID=2800000, guid=texture_output["guid"], type=2)
-    sprite_output = write("Sprite", sprite.m_Name, obj, native)
+    sprite_output = write("Sprite", sprite.m_Name, obj, native, cache=cache)
     mesh = MeshHandler(sprite.m_RD, obj.version)
     mesh.process()
     uv = sprite.m_RD.uvTransform

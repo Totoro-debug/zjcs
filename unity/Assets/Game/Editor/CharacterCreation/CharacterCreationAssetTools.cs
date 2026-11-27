@@ -76,6 +76,7 @@ namespace Zjcs.Editor.CharacterCreation
             public AppearanceGroupIconLocalizationSource source_localization;
             public AppearanceGroupIconSourceBundle[] source_bundles;
             public AppearanceGroupIconSourceOutput[] groups;
+            public RecoveredUiOutput[] outputs;
         }
 
         [Serializable]
@@ -112,6 +113,7 @@ namespace Zjcs.Editor.CharacterCreation
             public int item_id;
             public string localized_label;
             public string path;
+            public string texture_path;
             public long bytes;
             public string sha256;
         }
@@ -276,6 +278,33 @@ namespace Zjcs.Editor.CharacterCreation
             Debug.Log("Official character creation catalogs, UI audio, skin icons, appearance group icons, and source hashes validated.");
         }
 
+        public static void RestoreAppearanceGroupIcons()
+        {
+            AssetDatabase.Refresh();
+            TextAsset manifest = AssetDatabase.LoadAssetAtPath<TextAsset>(AppearanceGroupIconManifestPath);
+            if (manifest == null) throw new BuildFailedException("Official appearance group manifest did not import.");
+            ValidateAppearanceGroupIconHashes(manifest.text);
+            var data = ParseAppearanceGroupIconManifest(manifest.text);
+            var catalog = AssetDatabase.LoadAssetAtPath<CharacterCreationAssetCatalog>(CatalogPath);
+            if (catalog == null) throw new BuildFailedException("Official character creation catalog is missing.");
+            var serialized = new SerializedObject(catalog);
+            serialized.FindProperty("appearanceGroupIconSourceManifest").objectReferenceValue = manifest;
+            var icons = serialized.FindProperty("appearanceGroupIcons");
+            icons.arraySize = data.groups.Length;
+            for (int i = 0; i < data.groups.Length; i++)
+            {
+                var group = data.groups[i];
+                var binding = icons.GetArrayElementAtIndex(i);
+                binding.FindPropertyRelative("groupId").intValue = group.group_id;
+                binding.FindPropertyRelative("sex").intValue = group.sex == "male" ? 0 : 1;
+                binding.FindPropertyRelative("sprite").objectReferenceValue = LoadAppearanceGroupIcon(group.path);
+            }
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(catalog);
+            AssetDatabase.SaveAssets();
+            Debug.Log("Official appearance group Sprite bindings restored from verified sources.");
+        }
+
         private static bool ValidHash(string value, int length)
         {
             if (value == null || value.Length != length) return false;
@@ -330,6 +359,13 @@ namespace Zjcs.Editor.CharacterCreation
             if (string.IsNullOrEmpty(path) || !path.StartsWith(root, StringComparison.Ordinal)
                 || Path.GetFileNameWithoutExtension(path) == string.Empty)
                 throw new BuildFailedException("Official appearance group icon path is invalid: " + path);
+            if (path.EndsWith(".asset", StringComparison.Ordinal))
+            {
+                Sprite native = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+                if (native == null || native.texture == null)
+                    throw new BuildFailedException("Official native appearance group icon did not import: " + path);
+                return native;
+            }
             TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
             if (importer == null) throw new BuildFailedException("Official appearance group icon was not imported as a texture: " + path);
             if (importer.textureType != TextureImporterType.Sprite
@@ -351,6 +387,7 @@ namespace Zjcs.Editor.CharacterCreation
         {
             AppearanceGroupIconSourceManifest manifest = ParseAppearanceGroupIconManifest(json);
             var itemIds = new System.Collections.Generic.HashSet<int>();
+            var nativeDependencies = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
             foreach (AppearanceGroupIconSourceOutput output in manifest.groups)
             {
                 string name = "item_" + output.item_id;
@@ -363,7 +400,28 @@ namespace Zjcs.Editor.CharacterCreation
                     || !string.Equals(Hash(File.ReadAllBytes(absolutePath)), output.sha256,
                     StringComparison.OrdinalIgnoreCase))
                     throw new BuildFailedException("Official appearance group icon SHA-256 differs from its source manifest: " + output.path);
+                if (output.path.EndsWith(".asset", StringComparison.Ordinal))
+                {
+                    if (string.IsNullOrEmpty(output.texture_path))
+                        throw new BuildFailedException("Official native group icon texture source is missing.");
+                    nativeDependencies.Add("unity/" + output.path);
+                    nativeDependencies.Add("unity/" + output.texture_path);
+                }
             }
+            foreach (RecoveredUiOutput output in manifest.outputs ?? Array.Empty<RecoveredUiOutput>())
+            {
+                if (output == null || string.IsNullOrEmpty(output.path)
+                    || !output.path.StartsWith("unity/" + RecoveredRoot + "AppearanceGroupIcons/", StringComparison.Ordinal)
+                    || output.path.Contains("..") || !ValidHash(output.sha256, 64))
+                    throw new BuildFailedException("Official native group icon output path is invalid.");
+                string absolute = Path.Combine(Directory.GetParent(Application.dataPath).FullName,
+                    output.path.Substring("unity/".Length));
+                if (!File.Exists(absolute) || Hash(File.ReadAllBytes(absolute)) != output.sha256)
+                    throw new BuildFailedException("Official native group icon dependency SHA-256 differs: " + output.path);
+                nativeDependencies.Remove(output.path);
+            }
+            if (nativeDependencies.Count != 0)
+                throw new BuildFailedException("Official native group icon dependencies have no byte proofs.");
         }
 
         private static SkinIconSourceManifest ParseSkinIconManifest(string json)
