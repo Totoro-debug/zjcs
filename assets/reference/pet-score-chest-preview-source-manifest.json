@@ -68,14 +68,20 @@
     6952
   ],
   "inputs": {
-    "scripts/prepare_pet_score_chest_preview.py": "8fce4eec8839c36c638b6476bea17dd23d5412f77354f9ea195539fcae025849",
+    "scripts/prepare_pet_score_chest_preview.py": "7297ab967bd85bd956f22f382f9f053ac2365177d0177431474204cae5cf3a6c",
     "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
     "scripts/official_tables.py": "04d33df654baabe85b07c09dc19a6c7e5014f2847e6f164e11b6afe043639710",
-    "unity/Assets/Game/Runtime/Offline/Progression/OfficialChestUsePreviewRules.cs": "e8499239703063161097638973419e976ac9e0bd065cd8611e16d38f1d88002d",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialChestUsePreviewRules.cs": "4d7da5d61ca4023fefb421eff54fc92b27989ac04f8014629c0a1a08d4f8142c",
     "unity/Assets/Game/Runtime/Offline/Progression/OfficialChestUsePreviewRules.cs.meta": "6429a70901b9be3f3d41989f536fb31a1b73f275a5ddc137a5a39cf485e11685",
     "unity/Assets/Game/Runtime/Offline/Equipment/OfficialEquipmentJson.cs": "bfe8d1dbcb5476693d25a7c7b266b808df7d35fb8ea751887e4c2b9b8d8507c7",
     "scripts/fixtures/chest_use_preview_validation.cs": "50e383ef72f7e20a99fad4c62ca864c8f38d29b5019181f8299b00a2409f3201",
     "scripts/test_chest_use_preview.ps1": "25b241336a9449bbc9cdf42178ce3688eec402af07ec574c0f619245acb0ac4c",
+    "scripts/fixtures/optional_chest_validation.cs": "4687d221da9debb8014382cd7e36d418167fe21905519af83b5eb3fc6ce1d75b",
+    "scripts/test_optional_chest.ps1": "010ee4b3f6ddf4a5623a941e245131b136fca8e37a32472b46875b027be67173",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineOptionalChestService.cs": "2e9f4ac1a9e9e805f0b4453fa1facc792d9d84bb7c3a68c1923cd108664c1df5",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineOptionalChestService.cs.meta": "63541d37d06b24d327792e73457e92ddd07a207afad921b01d37621280a8d1b1",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineInventoryOperations.cs": "f2d540dd5edeb71593beae3d9d67e56d4e0afb1f5ac0de7b89f1e33cac7b9e76",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs": "dcc84dc338ff4d3badcfb1a2da176563ae8600e4c816ab5eddfd1f7eceeaf4b9",
     ".tools/source-packages/current/911_156995/official-code/client-source/ItemDetailDialogUseResult.cs": "0c1be654ccf118bda58e6d404e6697f52a1ef5b9f538c7f9933344fb73d7b6a2",
     ".tools/source-packages/current/911_156995/official-code/client-source/SkillOptionSortUtils.cs": "21d947db337b68493107d3c8ae203cea78114afa068178aadf2e27b3b5935a9a",
     ".tools/source-packages/current/911_156995/official-code/client-source/ItemDetailDialogFactory.cs": "30ef2a231fd1a90658426a598be3f248505704da2d42fcbbeef0996783b6f1c1",
@@ -241,5 +247,5 @@
     "unity/Assets/Game/Resources/PetGacha/chest-use-preview.json": "482867d5f860e461f778d7bebf0cb53561b5c9e6b4558065a8ff5f008a009add",
     "unity/Assets/Game/Resources/PetGacha/chest-use-preview.json.meta": "933830d926e435f6145d2eaeb3adabb82cca5668a09310383b0b19638d28f0e3"
   },
-  "scope": "Explicit non-skill chest use-result data, optional precedence, original material order and use-count scaling. Native item-use/choose windows and item-use transactions remain separate work."
+  "scope": "Explicit non-skill chest use-result data, optional precedence, original material order and use-count scaling. Local optional chest transactions atomically consume configured costs, grant selected entries and record openings. Native item-use/choose windows remain separate work."
 }

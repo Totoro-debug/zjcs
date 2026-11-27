@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using Zjcs.Offline.Equipment;
@@ -55,6 +56,23 @@ namespace Zjcs.Offline.Progression
             return new ChestUsePreview(itemId, choose ? Int(chest["OptionCount"]) : 0, rewards);
         }
 
+        public OptionalChestDefinition OptionalChest(int itemId)
+        {
+            if (!chests.TryGetValue(itemId, out var chest) || !items.TryGetValue(itemId, out var info))
+                throw new NotSupportedException("Original optional chest configuration is unbound: " + itemId);
+            var optional = Rewards(chest["OptionalRewards"]);
+            int count = Int(chest["OptionCount"]);
+            if (!(bool)info["CanUse"] || Int(info["ItemUseEffectType"]) != 3 || (bool)chest["AutoOpen"]
+                || (bool)chest["PreSelectChest"] || optional.Count == 0 || count <= 0 || count > optional.Count)
+                throw new NotSupportedException("Bind this chest's original use-effect branch before opening it: " + itemId);
+            var costs = Rewards(chest["CostItems"]);
+            if (costs.Count == 0 || costs.Any(pair => pair.Key <= 0 || pair.Value <= 0))
+                throw new FormatException("Original optional chest costs are invalid: " + itemId);
+            return new OptionalChestDefinition(itemId, count, (bool)info["CanUseInBatches"],
+                costs.ToDictionary(pair => pair.Key, pair => pair.Value),
+                optional.ToDictionary(pair => pair.Key, pair => pair.Value));
+        }
+
         private static List<KeyValuePair<int, long>> Rewards(object value)
             => value == null ? new List<KeyValuePair<int, long>>() : Map(value)
                 .Select(pair => new KeyValuePair<int, long>(int.Parse(pair.Key, CultureInfo.InvariantCulture),
@@ -64,6 +82,22 @@ namespace Zjcs.Offline.Progression
         private static Dictionary<string, object> Map(object value)
             => value as Dictionary<string, object> ?? throw new FormatException("Expected an original chest preview data object.");
         private static int Int(object value) => Convert.ToInt32(value, CultureInfo.InvariantCulture);
+    }
+
+    public sealed class OptionalChestDefinition
+    {
+        internal OptionalChestDefinition(int id, int optionCount, bool batches,
+            Dictionary<int, long> costs, Dictionary<int, long> options)
+        {
+            ItemId = id; OptionCount = optionCount; CanUseInBatches = batches;
+            Costs = new ReadOnlyDictionary<int, long>(costs);
+            Options = new ReadOnlyDictionary<int, long>(options);
+        }
+        public int ItemId { get; }
+        public int OptionCount { get; }
+        public bool CanUseInBatches { get; }
+        public IReadOnlyDictionary<int, long> Costs { get; }
+        public IReadOnlyDictionary<int, long> Options { get; }
     }
 
     public sealed class ChestUsePreview

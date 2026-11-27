@@ -7,6 +7,7 @@ from pathlib import Path
 from official_apk import Apk, ROOT
 from official_tables import Constructors
 from prepare_unity_map13_sources import meta
+from prepare_partner_input_dialog import metadata as runtime_metadata
 
 OUTPUT = ROOT / 'unity/Assets/Game/Resources/PetGacha/chest-use-preview.json'
 RECEIPT = ROOT / 'assets/reference/pet-score-chest-preview-source-manifest.json'
@@ -108,9 +109,15 @@ def build(check=False):
                     '  externalObjects: {}\n  serializedVersion: 2\n  defaultReferences: []\n'
                     '  executionOrder: 0\n  icon: {instanceID: 0}\n  userData:\n'
                     '  assetBundleName:\n  assetBundleVariant:\n', 'utf8', newline='\n')
+            runtime_metadata(ROOT / 'unity/Assets/Game/Runtime/Offline/Progression/OfflineOptionalChestService.cs')
         paths = [Path(__file__), ROOT / 'scripts/official_apk.py', ROOT / 'scripts/official_tables.py', RUNTIME,
             Path(str(RUNTIME) + '.meta'), ROOT / 'unity/Assets/Game/Runtime/Offline/Equipment/OfficialEquipmentJson.cs',
             ROOT / 'scripts/fixtures/chest_use_preview_validation.cs', ROOT / 'scripts/test_chest_use_preview.ps1']
+        paths += [ROOT / 'scripts/fixtures/optional_chest_validation.cs', ROOT / 'scripts/test_optional_chest.ps1',
+            ROOT / 'unity/Assets/Game/Runtime/Offline/Progression/OfflineOptionalChestService.cs',
+            ROOT / 'unity/Assets/Game/Runtime/Offline/Progression/OfflineOptionalChestService.cs.meta',
+            ROOT / 'unity/Assets/Game/Runtime/Offline/Progression/OfflineInventoryOperations.cs',
+            ROOT / 'unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs']
         paths += [code / relative for relative in ('client-source/ItemDetailDialogUseResult.cs',
             'client-source/SkillOptionSortUtils.cs', 'client-source/ItemDetailDialogFactory.cs',
             'client-source/ItemUseEffectOpenChest.cs')]
@@ -120,7 +127,7 @@ def build(check=False):
         proof = dict(manifest=apk.version, tables=sources, score_reward_items=sorted(ids),
             inputs={path.relative_to(ROOT).as_posix(): sha(path) for path in paths},
             outputs={path.relative_to(ROOT).as_posix(): sha(path) for path in (OUTPUT, Path(str(OUTPUT) + '.meta'))},
-            scope='Explicit non-skill chest use-result data, optional precedence, original material order and use-count scaling. Native item-use/choose windows and item-use transactions remain separate work.')
+            scope='Explicit non-skill chest use-result data, optional precedence, original material order and use-count scaling. Local optional chest transactions atomically consume configured costs, grant selected entries and record openings. Native item-use/choose windows remain separate work.')
         if check:
             if previous != proof: raise ValueError('Chest preview source boundary differs')
             print('Original score chest use-result data and source verified')
