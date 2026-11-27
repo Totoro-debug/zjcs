@@ -184,6 +184,8 @@ namespace Zjcs.Offline.Progression
             Dictionary<string, object> subRank = catalog.Rows("player_subrank").FirstOrDefault(row =>
                 Integer(row, "SubRank") == player.SubRank);
             int treasureBlessClass = Integer(subRank, "TreasurePropBless");
+            var slots = state.TreasureSlots?.Format == 1
+                ? OfflineTreasureSlotService.CreatePlayer(player, OfflineTreasureSlotCatalog.LoadDefault()) : null;
 
             foreach (OfflineCharacterTreasure owned in OwnedTreasures(player, state))
             {
@@ -195,7 +197,13 @@ namespace Zjcs.Offline.Progression
                 bool inSlot = owned.SlotIndex >= 0;
                 int finalLevel = owned.BaseLevel;
                 int baseLevel = owned.BaseLevel;
-                if (useFinalSlotLevels && inSlot)
+                if (slots != null)
+                {
+                    inSlot = slots.IsTreasureInSlot(owned.ClassId);
+                    baseLevel = slots.GetTreasureBaseLevel(owned.ClassId);
+                    finalLevel = useFinalSlotLevels ? slots.GetTreasureFinalLevel(owned.ClassId) : baseLevel;
+                }
+                else if (useFinalSlotLevels && inSlot)
                 {
                     finalLevel = owned.Level;
                     baseLevel = owned.BaseLevel;
