@@ -315,6 +315,63 @@ class HomeNativeFurnitureBinding(NativeSpineBinding):
         return outputs, staged, prefabs, selections
 
 
+def rebuild_furniture_bundle(*, bundle, prefabs, dest, receipt_path, guid_prefix, install_prefix, script_path, scope):
+    """Rebind an existing building from its verified source without replacing assets."""
+    from retained_native_binding import rebuild
+
+    prior = json.loads(receipt_path.read_bytes())
+    version = prior['manifest']
+    export_key, = [key for key in prior['inputs'] if key.endswith('/native-export-source-manifest.json')]
+    cache = (ROOT / export_key).parent
+    for relative, expected in prior['outputs'].items():
+        if sha((ROOT / relative).read_bytes()) != expected:
+            raise ValueError('Owned furniture resource changed: ' + relative)
+    work = ROOT / 'output/validation' / (install_prefix + '-rebuild-' + uuid.uuid4().hex)
+    work.mkdir(parents=True)
+    (work / '.zjcs-validation.json').write_text(json.dumps(dict(format=1, repository=str(ROOT))), 'utf8')
+
+    class FurnitureReplay(HomeNativeFurnitureBinding):
+        def build(self):
+            outputs, staged, rows, selections = self.build_furniture_prefabs(bundle, prefabs, dest)
+            rebuilt = {}
+            for relative, expected in outputs.items():
+                path = dest / relative
+                key = path.relative_to(ROOT).as_posix()
+                if sha((staged / relative).read_bytes()) != expected or prior['outputs'].get(key) != expected:
+                    raise ValueError('Original furniture rebuild differs: ' + key)
+                rebuilt[key] = expected
+            # Folder importer metadata is installed separately from the native
+            # payload. Every other prior output must have been rebuilt above.
+            for relative, expected in prior['outputs'].items():
+                if sha((ROOT / relative).read_bytes()) != expected:
+                    raise ValueError('Furniture resource changed during rebuild: ' + relative)
+                if relative in rebuilt:
+                    continue
+                path = ROOT / relative
+                if path.suffix != '.meta' or not path.with_suffix('').is_dir() or 'folderAsset: yes' not in path.read_text('utf8'):
+                    raise ValueError('Prior furniture payload was not rebuilt: ' + relative)
+                rebuilt[relative] = expected
+            for path in (script_path, Path(__file__), ROOT / 'scripts/home_native_assets.py', ROOT / 'scripts/native_spine_assets.py'):
+                self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
+            result = dict(manifest=version, inputs=self.inputs, selection=selections[rows[0]['name']],
+                selections=selections, recovery=self.recovery.proof, native_scripts=self.script_sources,
+                resources=self.proof, audio=getattr(self, 'audio_proof', {}), prefab=rows[0]['pointer'],
+                prefabs=rows, outputs=rebuilt, scope=scope)
+            (work / receipt_path.name).write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
+
+    def factory(stage):
+        recovery = PartnerNativeRecovery(native_cache=cache, export_name='native-export', bundle=bundle)
+        try:
+            return FurnitureReplay(stage, recovery=recovery, guid_prefix=guid_prefix)
+        except BaseException:
+            recovery.apk.reader.close()
+            raise
+
+    rebuild(work, receipt_path, factory, generator=script_path, record_unchanged=True,
+        export_name='native-export', identity_sections=('prefabs', 'selections'), script_section='native_scripts')
+    return json.loads(receipt_path.read_bytes())
+
+
 def install_furniture_bundle(*, cache_name: str, bundle: str, prefabs: tuple[str, ...],
                              dest: Path, receipt_path: Path, guid_prefix: str,
                              install_prefix: str, script_path: Path, scope: str,

@@ -15,10 +15,13 @@ def sha(path):
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
-def rebuild(work, receipt_path, binding_factory, *, generator, record_unchanged=False, install=None):
+def rebuild(work, receipt_path, binding_factory, *, generator, record_unchanged=False, install=None,
+            export_name='native-export-all', identity_sections=('roots',), script_section='script_bindings'):
     prior = json.loads(receipt_path.read_bytes())
     version = prior['manifest']
-    export_key, = [key for key in prior['inputs'] if key.endswith('/native-export-all-source-manifest.json')]
+    if export_name not in ('native-export', 'native-export-all'):
+        raise ValueError('Unsupported retained native export layout')
+    export_key, = [key for key in prior['inputs'] if key.endswith('/' + export_name + '-source-manifest.json')]
     export = ROOT / export_key
     cache = export.parent
     if sha(export) != prior['inputs'][export_key]:
@@ -139,10 +142,10 @@ def rebuild(work, receipt_path, binding_factory, *, generator, record_unchanged=
         validation='Existing native export chain, original raw SHA256 and decoded SHA256, pinned bundle MD5 and size.')
     staged.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
     if record_unchanged:
-        if install is not None or result['outputs'] != prior['outputs'] or result['roots'] != prior['roots']:
-            raise ValueError('Recording source bindings requires identical original resource outputs and roots')
-        for name, row in prior['script_bindings'].items():
-            if result['script_bindings'][name]['pointer'] != row['pointer']:
+        if install is not None or result['outputs'] != prior['outputs'] or any(result[key] != prior[key] for key in identity_sections):
+            raise ValueError('Recording source bindings requires identical original resource outputs and object identities')
+        for name, row in prior[script_section].items():
+            if result[script_section][name]['pointer'] != row['pointer']:
                 raise ValueError('Native controller script identity changed: ' + name)
         for section in ('installed_output_sha256', 'folder_meta_sha256'):
             if section not in prior: continue
