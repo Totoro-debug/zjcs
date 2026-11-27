@@ -1,0 +1,47 @@
+{
+  "entities": [
+    25080,
+    24316,
+    11810,
+    11811,
+    10004
+  ],
+  "code": [
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "FightStatusComponentInfo",
+    "FightStatusHitSkillComponentInfo",
+    "StatusStackCountComponentInfo",
+    "FightStatusTriggerSkillCfg",
+    "BattleFormulaHandler"
+  ],
+  "client_code": [
+    "MyFightStatusHitSkill",
+    "MyStatusStackCount"
+  ],
+  "rule_pack_fragments": [
+    "FightSkill_part1.g.bytes",
+    "FightSkill_part91.g.bytes",
+    "FightSkill_part716.g.bytes",
+    "FightSkill_part754.g.bytes"
+  ],
+  "visibility_bundles": [
+    "11810",
+    "24316",
+    "25080",
+    "defaultpackage_assets_prefabs_ecentity_fight_fightskill_global_10004.bundle"
+  ],
+  "scope_numeric": true,
+  "current_managed_views": true,
+  "runtime_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10574.json"
+  ],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/judgment-blade-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/judgment-blade-current-status-graphs-source-manifest.json"
+  ],
+  "baseline_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10098.json"
+  ]
+}

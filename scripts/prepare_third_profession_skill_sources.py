@@ -67,16 +67,12 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
             locations[key] = row['path']
         for key, row in json.loads((COMBAT / (name + '.json')).read_bytes())['entities'].items():
             entities.setdefault(key, {}).update(row)
-    rule_packs = []
-    for relative in spec.get('runtime_rule_packs', ()):
-        path = ROOT / relative
-        pack = json.loads(path.read_bytes())
-        proof_path = path.with_name(path.stem + '-source-manifest.json')
-        proof = json.loads(proof_path.read_bytes())
-        assert identity(path)['sha256'] == proof['output_sha256'], 'Skill rule pack hash changed'
-        for key, expected in pack['previous_entities'].items():
-            assert entities.get(key) == expected, ('Skill rule pack baseline changed', key)
-        entities.update(pack['entities'])
+    from profession_skill_rule_baselines import read_verified_rule_pack, apply_rule_pack_baseline
+    rule_packs, baseline_packs = [], []
+    dependencies = list(spec.get('baseline_rule_packs', ()))
+    for relative in dependencies + list(spec.get('runtime_rule_packs', ())):
+        path, proof_path, pack, proof = read_verified_rule_pack(ROOT, relative)
+        apply_rule_pack_baseline(entities, pack, relative)
         locations.update(proof['entity_locations'])
         for name, rows in pack['tables'].items():
             keys = ('EntityId',) if name == 'entity_prop' else ('GroupId', 'SubRank')
@@ -84,7 +80,8 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
             by_key.update({tuple(row[key] for key in keys): row for row in rows})
             skill_rules['tables'][name] = list(by_key.values())
         skill_rules['props'].update(pack['props'])
-        rule_packs.append(dict(payload=identity(path), receipt=identity(proof_path), manifest=pack['manifest']))
+        selected_packs = baseline_packs if relative in dependencies else rule_packs
+        selected_packs.append(dict(payload=identity(path), receipt=identity(proof_path), manifest=pack['manifest']))
     definitions = {str(key): copy.deepcopy(entities[str(key)]) for key in spec['entities']}
     defaults = []
     for key, components in definitions.items():
@@ -447,6 +444,10 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
             result['skill_skin_bindings'] = skin_bindings
         if rule_packs:
             result['current_rule_packs'] = rule_packs
+        if baseline_packs:
+            result['baseline_rule_packs'] = baseline_packs
+        if rule_packs or baseline_packs:
+            result['rule_pack_reader'] = identity(ROOT / 'scripts/profession_skill_rule_baselines.py')
         if passive_pack is not None:
             result['current_passive_property_pack'] = passive_pack
     return result

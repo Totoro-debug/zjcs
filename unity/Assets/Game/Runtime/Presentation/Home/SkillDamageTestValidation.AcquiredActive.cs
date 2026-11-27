@@ -1047,6 +1047,19 @@ namespace Zjcs.Presentation.Home
                         captured = true;
                     }
                 }
+                if (passiveCompanion == 10574)
+                {
+                    if (!judgmentBlade.markCaptured && IsNativeSkillParticleVisible("playable24316"))
+                    {
+                        yield return CaptureAcquiredActive(output, "passive-mark");
+                        judgmentBlade.markCaptured = true;
+                    }
+                    if (!capturedPassive && judgmentBlade.strikes > 0 && IsNativeSkillParticleVisible("playable11810"))
+                    {
+                        yield return CaptureAcquiredActive(output, "passive-battle");
+                        judgmentBlade.strikeCaptured = capturedPassive = true;
+                    }
+                }
                 if (passiveCompanion == 10519 && !capturedPassive && wildBladeSiphon.cures > 0
                     && IsNativeSkillParticleVisible("playable_cure_lifesteal"))
                 {
@@ -1302,6 +1315,7 @@ namespace Zjcs.Presentation.Home
                 "The acquired/cultivated active skill did not finish its damage battle.");
             if (passiveCompanion == 10547) CompleteAcquiredDesperateValor(output);
             if (passiveCompanion == 10519) CompleteAcquiredWildBladeSiphon(output);
+            if (passiveCompanion == 10574) CompleteAcquiredJudgmentBlade(output);
             if (extinction) CompleteAcquiredExtinctionBlade(output);
             if (asuraHand) CompleteAcquiredAsuraHand(output);
             Require(!flowingFire || flowingFireExtras > 0, "The cultivated flowing fire never performed an extra cast.");

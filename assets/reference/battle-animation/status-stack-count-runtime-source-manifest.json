@@ -1,0 +1,26 @@
+{
+  "manifest": "911_156995",
+  "original": {
+    "path": ".tools/source-packages/current/911_156995/official-code/client-source/MyStatusStackCount.cs",
+    "sha256": "47bd75ef586fef347c6807a1aef6757f39ea68f0480359ecd6ca0c6e8c77319f"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/911_156995/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "1e7eb15a1cead0c2e618e307a367119908485a5a658815a0fe39d98c0d3f31fe"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyStatusStackCount.cs",
+      "sha256": "6dd1465d07fd7254424689d1a695c41e8e2e40bb5acc0dff298d26d4236e631b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleGridItemEntities/MyStatusStackCount.cs.meta",
+      "sha256": "c28fbbdb227fb35566069c03e35de7d906ac5f255b01340af1964e084a1ee453"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_status_stack_count_runtime.py",
+    "sha256": "464f08fbf5f8aa1fe34e9b5a1fb152ad8c084567e5fed013667d34870ce7b2d7"
+  },
+  "adaptation": "The original empty MyComponent wrapper remains empty; its unavailable server component types use the existing shared view-data boundary."
+}

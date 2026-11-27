@@ -47,6 +47,7 @@ def main():
         'asura-hand-current-skill-graphs',
         'wild-blade-siphon-current-skill-graphs',
         'extinction-blade-current-skill-graphs',
+        'judgment-blade-current-skill-graphs',
     )
     receipts = {
         'skill-native-graphs': 'skill-native-graph-assets-source-manifest',
@@ -55,6 +56,7 @@ def main():
         **{name: name + '-source-manifest' for name in migrated_skill_catalogs},
     }
     inputs, outputs = [], []
+    migrated_entities = {group: {} for group in ('skills', 'hits', 'damages', 'moves')}
     for name, receipt in receipts.items():
         path = directory / (name + '.json')
         proof_path = ROOT / 'assets/reference/battle-animation' / (receipt + '.json')
@@ -63,6 +65,15 @@ def main():
         assert identity(path) in proof['outputs'], 'Native catalog differs from its conversion receipt: ' + name
         data = json.loads(path.read_bytes())
         assert data['manifest'] == proof['manifest'], 'Mixed native catalog source: ' + name
+        if name in migrated_skill_catalogs:
+            for group, id_key in (('skills', 'skill_entity_id'), ('hits', 'hit_entity_id'),
+                                  ('damages', 'damage_entity_id'), ('moves', 'action_entity_id')):
+                for row in data[group]:
+                    class_id = row[id_key]
+                    assert class_id > 0 and row['entity_resource'], 'Invalid native entity binding: ' + name
+                    previous = migrated_entities[group].get(class_id)
+                    assert previous is None, f'Overlapping native {group}:{class_id}: {previous}, {name}'
+                    migrated_entities[group][class_id] = name
         expected = dict(manifest=data['manifest'], output_sha256=identity(path)['sha256'])
         target = directory / (name + '-source-manifest.json')
         if args.write:

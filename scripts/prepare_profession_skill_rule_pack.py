@@ -13,6 +13,7 @@ from official_map_codec import unpack
 from official_tables import Constructors
 from official_unity_schema import ScriptSchemas
 from prepare_unity_character_catalog import decode_level_props
+from profession_skill_rule_baselines import read_verified_rule_pack, apply_rule_pack_baseline
 
 
 def sha(raw):
@@ -31,6 +32,12 @@ def build(item, spec_path=None):
     previous = copy.deepcopy(skill['entities'])
     for key, value in json.loads((baseline / 'battle-rules.json').read_bytes())['entities'].items():
         previous.setdefault(key, {}).update(value)
+    baseline_sources = [identity(baseline / (name + '.json')) for name in ('skill-rules', 'battle-rules')]
+    for relative in spec.get('baseline_rule_packs', ()):
+        path, receipt, dependency, source = read_verified_rule_pack(ROOT, relative)
+        assert dependency['item_id'] != item, ('Skill rule pack depends on itself', item)
+        apply_rule_pack_baseline(previous, dependency, relative)
+        baseline_sources.extend((identity(path), identity(receipt)))
     wanted = {str(value) for value in spec.get('rule_pack_entities', spec['entities'])}
     with Apk.current() as apk:
         code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
@@ -134,7 +141,7 @@ def build(item, spec_path=None):
         payload = (json.dumps(result, ensure_ascii=False, separators=(',', ':')) + '\n').encode('utf8')
         proof = dict(manifest=apk.version, item_id=item, output_sha256=sha(payload), inputs=inputs,
                      entity_locations=locations, source_spec=identity(spec_path), generator=identity(Path(__file__)),
-                     baseline=[identity(baseline / (name + '.json')) for name in ('skill-rules', 'battle-rules')],
+                     baseline=baseline_sources,
                      managed_schemas=[dict(name=name, fields=fields) for name, fields in sorted(schemas.records.items())],
                      managed_assemblies=[identity(code / 'managed/decoded' / name) for name in sorted(managed_assemblies)],
                      managed_reader=[identity(ROOT / 'scripts' / name) for name in ('official_unity_schema.py', 'unity_schema_types.cs')],
@@ -144,6 +151,8 @@ def build(item, spec_path=None):
             proof['current_view_schema_inputs'] = schema_inputs
             proof['current_view_schema_tools'] = schema_tools
             proof['current_view_reader'] = identity(ROOT / 'scripts/current_battle_entity_views.py')
+        if spec.get('baseline_rule_packs'):
+            proof['baseline_reader'] = identity(ROOT / 'scripts/profession_skill_rule_baselines.py')
     return payload, proof
 
 

@@ -52,6 +52,18 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -eq 10574) {
+        foreach ($file in @('companion-judgment-blade-checkpoint.json','companion-judgment-blade-receipt.json',
+            'acquired-active-ui-passive-mark.png','acquired-active-ui-passive-battle.png')) {
+            if (-not(Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Judgment Blade original mark/strike evidence is incomplete.' }
+        }
+        $blade = Get-Content (Join-Path $Run 'companion-judgment-blade-receipt.json') -Raw | ConvertFrom-Json
+        if ($blade.hits -lt 10 -or $blade.strikes -lt 1 -or $blade.strikes -ne [Math]::Floor($blade.hits/10) -or
+            -not $blade.restored -or -not $blade.markCaptured -or -not $blade.strikeCaptured) {
+            throw 'Judgment Blade lost its ten-layer mark, consumption or cultivated original strike.'
+        }
+        return
+    }
     if ($PassiveId -eq 10519) {
         foreach ($file in @('companion-cultivated-save.json','companion-wild-blade-siphon-checkpoint.json',
             'companion-wild-blade-siphon-receipt.json','acquired-active-ui-passive-battle.png')) {
