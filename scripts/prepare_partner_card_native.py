@@ -303,7 +303,7 @@ class PartnerCardBinding:
                 obj = PPtr(**source, assetsfile=owner.assets_file).deref()
                 old = self.objects.get(native['guid'])
                 if old is not None and identity(old) != identity(obj):
-                    raise ValueError('One native GUID maps to two original objects')
+                    raise ValueError('One native GUID maps to two original objects: '+native['guid']+' / '+identity(old)+' / '+identity(obj)+' / owner '+identity(owner))
                 self.objects[native['guid']] = obj
         elif isinstance(source, dict) and isinstance(native, dict):
             for key in source.keys() & native.keys():

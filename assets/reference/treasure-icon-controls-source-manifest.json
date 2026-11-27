@@ -1,0 +1,63 @@
+{
+  "manifest": "911_156995",
+  "inputs": {
+    "scripts/prepare_treasure_icon_controls.py": "9048ff4e4b1c4381a46225feb1429c508fef9306237dca1c26119945e53c9f8c",
+    ".tools/source-packages/current/911_156995/code-manifest.json": "a47317188c8d1f947b56ff1af73b4cd811a079860799915cf9103603afc200e9",
+    ".tools/source-packages/current/911_156995/official-code/managed/decoded/Assembly-CSharp.dll": "1e7eb15a1cead0c2e618e307a367119908485a5a658815a0fe39d98c0d3f31fe",
+    ".tools/source-packages/current/911_156995/official-code/managed/decoded/Console.dll": "5ff2019c868764f8e6afa6a5ff3bd569d4e3d39365a39dc0327a738391e8b64d",
+    ".tools/source-packages/current/911_156995/official-code/client-source/PlayerUIBase.cs": "75c025c1a350a752d92962887fa9d978ce7258f5854df6b968145c5420a89a81",
+    ".tools/source-packages/current/911_156995/official-code/client-source/RedDotItemBase.cs": "8270f2bc24effdc5512386aebd2d19f8443856e2ccf5714eee710b56a24d0add",
+    ".tools/source-packages/current/911_156995/official-code/client-source/ItemIconTreasure.cs": "b75af50e6e53494b8888741f9aa3e51433a43f2acabcded594e57189f58d7bd2",
+    ".tools/source-packages/current/911_156995/official-code/client-source/ItemIconTreasurePanel.cs": "d6684a0e98190c0fba0d353c9f52eb1144ae7bf6df277d744a435136a37c1387",
+    ".tools/source-packages/current/911_156995/official-code/client-source/ItemIconTreasureQualityEffect.cs": "eeb9680e1ff7ef8df811b8d74f8f663c8982d7c6675a6daef35f032cb3c76e7c",
+    ".tools/source-packages/current/911_156995/official-code/client-source/TreasureRedDotItem.cs": "ba4bf520d034b3edd9c89eb0d299b78d5c814421f5f2ad9edcd634a5bf085bc8",
+    ".tools/source-packages/current/911_156995/official-code/client-source/TreasureReplaceInfo.cs": "902d42206618613a3bc3f7da3c606f9ef758b3b8e0a163bc05ebccc537e29e26",
+    ".tools/source-packages/current/911_156995/official-code/client-source/ITreasureReplaceEventLisener.cs": "5804c024d5da1645ba3975d0b6cb887241c2f501e2bea338060f2dcbf26705fd",
+    ".tools/source-packages/current/911_156995/official-code/client-source/TreasureReplaceEventLisener.cs": "9a63c16c9f2330ee1f0098e2e71a76a3c97a9ed34b8c0f81b482a4319b92db41",
+    ".tools/source-packages/current/911_156995/official-code/client-source/RedDotMutexItem.cs": "a8f7ec538495f6859ecd2ea58bc4e4e8a5f9e7987fb4a35eee1c746372f6c8d4",
+    "scripts/templates/treasure_ui/ITreasureIconServices.cs": "72cf9dd99350b1df2ee925ba80ea740383c812c31e9cd10a46aa6d71ff01bb02",
+    "scripts/templates/treasure_ui/TreasurePlayerRedDotItemBase.cs": "bf61bb8f001323e3994eaccc6bea76f5147ce1a85368f6253ec73910dd10e49f"
+  },
+  "shared_components": {
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/ItemIcon.cs": "726e72ad27a939377c985cd3fcfdbd8efca22166ff29c9bd7e8603ba1177d1dc",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerUIBase.cs": "25f54a8fd42db3fb9402ca4026e45ac9a4e9260ed404a203629bad45ea19af77",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionRedDotItemBase.cs": "a9b83301f2dc05dffca3138940de20459d9668a2bc2af25d88600a870ffd28fb",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/BlessLevelTextViewChanger.cs": "f72fc62a80bdb78397bf83882d4c6608e31dfb77cacfd627ecd3acc3cc24bac1",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/StarMiniInfo.cs": "42a8a8c671464e315216dc18f54339e0112585a1a15ed861d4798deae31c5779"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerUIBase.cs": "25f54a8fd42db3fb9402ca4026e45ac9a4e9260ed404a203629bad45ea19af77",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionRedDotItemBase.cs": "a9b83301f2dc05dffca3138940de20459d9668a2bc2af25d88600a870ffd28fb",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/ItemIconTreasure.cs": "41d852bbb2a2042c8a6b12a5b9e034575e1fbdf6d5907e9774f23390fb958df9",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/ItemIconTreasurePanel.cs": "30951e8e553513f2123c0d0b0690456417e710c9160a77104439f43f97a065d9",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/ItemIconTreasureQualityEffect.cs": "1f44fccd19fb102a95d8448e9b33002b36d9fee3b9d9bca59fbbc4f3e9503cf4",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/TreasureRedDotItem.cs": "bd7780a724ea8ec231e44439cdac70d3c8c4bf942033e89edb056128e7eb339a",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/TreasureReplaceInfo.cs": "88564f0aac89527e4874a9f90dc9de70c35720782539f15bd8e9c02298fb668d",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/ITreasureReplaceEventLisener.cs": "ee06dd81e17342b94cf3ed876b2fceab02251a073ccda1b1aa77af5f01651f03",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/TreasureReplaceEventLisener.cs": "e067918a34385c72d2b637e9567d63b3124f8e450bca4ca83bece8b62e075a4a",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/RedDotMutexItem.cs": "b518aaa6464c63118830050884a22c53ac68aac671ff6c04d7609709d7ef0921",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/ITreasureIconServices.cs": "72cf9dd99350b1df2ee925ba80ea740383c812c31e9cd10a46aa6d71ff01bb02",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/TreasurePlayerRedDotItemBase.cs": "bf61bb8f001323e3994eaccc6bea76f5147ce1a85368f6253ec73910dd10e49f",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/Zjcs.Official.TreasureIconUI.asmdef": "afc3dfc376494d5b017a2f1be625c30f562927a8024077c70ee6ffb31e33aa5f",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerUIBase.cs.meta": "1b16bf5cf5deaba45600db9b9f74ad88262a6f9a217dc90294bd7566b5fce6c9",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionRedDotItemBase.cs.meta": "6de8da163cdf7718986526410a16b889f9cbbd99bc7f950f52a5c55b3768055d",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/ItemIconTreasure.cs.meta": "a4687011837445de9d3e783b4fe41e406d523e47419d0cb74b02e2dde4a2c0ad",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/ItemIconTreasurePanel.cs.meta": "11bd0b2dc205eceeeecaa35398b05a1af11457cb4b6768643d89c4ec346a8672",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/ItemIconTreasureQualityEffect.cs.meta": "ae2cba55b94200ad8dd5a745f83f3b73d49ed6fed62f835ce35d30860a25df6d",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/TreasureRedDotItem.cs.meta": "8d897db60de716ec6428d82a37af8ee8add55a2f9419a5154a91eafd34ec72d0",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/TreasureReplaceInfo.cs.meta": "7660d0b7a14aef4e380404171800921f3e4f73ef7e7eea55bbc9828376f2fb05",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/ITreasureReplaceEventLisener.cs.meta": "0bf92db3547aa643cd4d35adfe1be5ae41c755483609547d5e2708e57b290a17",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/TreasureReplaceEventLisener.cs.meta": "7b6110c42db2f42668d9ab82a8e7f7fbd887f28673bfa8d2c9a59fea59c364e3",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/RedDotMutexItem.cs.meta": "df04c38680bf754cd1148521e238d9d37aa6323db9dcc157726dbac10ae7ccb0",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/ITreasureIconServices.cs.meta": "96b74d5b354d7e52c6e6e7ee489389650baedc3d87ee200d1d9d9cd28dd2cfb0",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/TreasurePlayerRedDotItemBase.cs.meta": "dec7cc64dac4d51b7d66465fe403da57dccfd0afb71348da92717f53c52e0ade",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI/Zjcs.Official.TreasureIconUI.asmdef.meta": "ba7ce3a0c12d21dac8f15cea510d2fedcaa43c84905841e4df92cb34a0383aaf",
+    "unity/Assets/Game/Runtime/Official/TreasureIconUI.meta": "8420f2644091a4a00879dd318fc6399c48ba2df1965625a62b85fca6ceead169",
+    "assets/reference/profession-ui/upgrade-panel-source-manifest.json": "c4c74d07d97c3d89120bb01d5a22af3649f32e8b0dd519c2b687912767db6288"
+  },
+  "adaptations": [
+    "Complete original icon/star/level/red-dot/replace lifetimes and event order retained.",
+    "Reuse ItemIcon, TreasureStarInfo, BlessLevelTextViewChanger and original shared red-dot base; lifecycle ports preserve existing profession defaults.",
+    "Typed state/config/window/gray/slot ports replace global managers, database subscriptions and network requests."
+  ]
+}

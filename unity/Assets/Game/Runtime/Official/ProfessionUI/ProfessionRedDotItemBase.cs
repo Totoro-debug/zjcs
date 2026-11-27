@@ -11,6 +11,8 @@ public class ProfessionRedDotItemBase : ProfessionPlayerUIBase
 
 	private bool mIsDirty;
 
+    protected virtual IProfessionTipDotSystem TipDotSystem => Bindings.TipDotSystem;
+
 
 	public bool IsShow
 	{
@@ -46,7 +48,7 @@ public class ProfessionRedDotItemBase : ProfessionPlayerUIBase
 	protected override void OnEnableAndInited()
 	{
 		base.OnEnableAndInited();
-		IProfessionTipDotSystem tipDotSystem = Bindings.TipDotSystem;
+		IProfessionTipDotSystem tipDotSystem = TipDotSystem;
 		tipDotSystem.OnTipDotShowChanged = (Action)Delegate.Combine(tipDotSystem.OnTipDotShowChanged, new Action(RefreshTipDotShowState));
 		SetDirty();
 	}
@@ -54,7 +56,7 @@ public class ProfessionRedDotItemBase : ProfessionPlayerUIBase
 	protected override void OnDisableAndInited()
 	{
 		IsMeet = null;
-		IProfessionTipDotSystem tipDotSystem = Bindings.TipDotSystem;
+		IProfessionTipDotSystem tipDotSystem = TipDotSystem;
 		tipDotSystem.OnTipDotShowChanged = (Action)Delegate.Remove(tipDotSystem.OnTipDotShowChanged, new Action(RefreshTipDotShowState));
 		base.OnDisableAndInited();
 	}
@@ -106,7 +108,7 @@ public class ProfessionRedDotItemBase : ProfessionPlayerUIBase
 	{
 		if (!((Object)(object)myRedDotObj == (Object)null))
 		{
-			myRedDotObj.SetActive(Bindings.TipDotSystem.IsShowTipDot & isActive);
+			myRedDotObj.SetActive(TipDotSystem.IsShowTipDot & isActive);
 		}
 	}
 }

@@ -18,7 +18,7 @@
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerUIBase.cs",
-        "sha256": "3d3c2754d8995be7725ba61645d6ab5e7100fc916b8a981c33fa3a104844749f"
+        "sha256": "25f54a8fd42db3fb9402ca4026e45ac9a4e9260ed404a203629bad45ea19af77"
       },
       "meta": {
         "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerUIBase.cs.meta",
@@ -33,7 +33,7 @@
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionRedDotItemBase.cs",
-        "sha256": "ee7f281607592df107a4e96e912a094bbf77a727e77b10555446c52853f7d8eb"
+        "sha256": "a9b83301f2dc05dffca3138940de20459d9668a2bc2af25d88600a870ffd28fb"
       },
       "meta": {
         "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionRedDotItemBase.cs.meta",
@@ -164,5 +164,10 @@
     "path": "unity/Assets/Official/World/Map/13/Source/native-label-language.json",
     "sha256": "e88c4db3b476f650024c1dc9f05b26f9637b5dc7990e17816f03f4d681c87d06"
   },
-  "typed_property_regression": "Existing native upgrade Play Mode passed after replacing the prior string-only property row with its full original typed implementation; original string adapter, FIFO rows, cost/effect/red-dot/input lifecycle remain compatible."
+  "typed_property_regression": "Existing native upgrade Play Mode passed after replacing the prior string-only property row with its full original typed implementation; original string adapter, FIFO rows, cost/effect/red-dot/input lifecycle remain compatible.",
+  "shared_lifecycle_adapter": {
+    "manifest": "911_156995",
+    "source_manifest": "assets/reference/treasure-icon-controls-source-manifest.json",
+    "operation": "Regenerate both shared base classes from current original sources. Virtual player/manager/event/tip ports retain the existing profession defaults; no lifecycle ordering changes."
+  }
 }

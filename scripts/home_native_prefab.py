@@ -46,12 +46,16 @@ def restore_root_animation_curve_paths(binding, owner, native):
             if script.get('fileID') and script_object is None:
                 raise ValueError('Resolve original root animation curve script before restoring its path')
             script_key = identity(script_object) if script_object is not None else None
+            def same_script(row):
+                original=pointer(row['script'],owner) if row['script']['m_PathID'] else None
+                if (identity(original) if original is not None else None)==script_key:return True
+                return original is not None and script_object is not None and hasattr(binding,'same_original_reference') and binding.same_original_reference(original,script_object)
             matches = [row for row in bindings if row['path'] == 0
                 and row['attribute'] == zlib.crc32(curve['attribute'].encode('utf8'))
                 and row['typeID'] == curve['classID'] and row['isPPtrCurve'] == is_pointer
-                and (identity(pointer(row['script'], owner)) if row['script']['m_PathID'] else None) == script_key]
+                and same_script(row)]
             if len(matches) != 1:
-                raise ValueError('Original player binding does not uniquely prove an empty root animation path')
+                raise ValueError('Original player binding does not uniquely prove an empty root animation path: '+str(source.get('m_Name'))+' / '+str(curve['attribute']))
             curve['path'] = ''
             restored.append('/'+group+'/'+str(index)+'/path')
     return restored
@@ -186,7 +190,7 @@ def verify_empty_controller(source, docs, root):
     return {root: 'controller', native_id: 'empty-state-machine'}
 
 
-def bind_prefab(binding, bundle, relative, name, scope, *, source_root=None, native_root_id=None, prepare_component=None):
+def bind_prefab(binding, bundle, relative, name, scope, *, source_root=None, native_root_id=None, prepare_component=None, external_asset_types=()):
     if (source_root is None) != (native_root_id is None):
         raise ValueError('Subtree binding needs both original and native root identities')
     if source_root is None:
@@ -211,7 +215,7 @@ def bind_prefab(binding, bundle, relative, name, scope, *, source_root=None, nat
     binding.recovery.recover(name, binding.work / 'recovered', bundle=bundle,
         native_relative=relative, source_root=root, native_root_id=native_root)
     binding.recovery.finalize(); _, _, panel, _ = binding.recovery.outputs[-1]
-    if any(value['type'] != 'MonoBehaviour' for value in panel['unresolved'].values()):
+    if any(value['type'] not in ('MonoBehaviour', *external_asset_types) for value in panel['unresolved'].values()):
         raise ValueError('Resolve additional original native entity references: ' + name)
     for key, pointer in panel['external'].items():
         binding.objects[pointer['guid']] = binding.original(key)

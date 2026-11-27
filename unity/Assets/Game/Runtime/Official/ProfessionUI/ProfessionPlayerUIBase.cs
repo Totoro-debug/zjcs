@@ -8,32 +8,35 @@ public class ProfessionPlayerUIBase : UIBase
     protected IProfessionUpgradeBindings Bindings => mBindings ?? ProfessionUpgradeBindings.Required;
     public void Configure(IProfessionUpgradeBindings bindings)
     { mBindings = bindings ?? throw new System.ArgumentNullException(nameof(bindings)); }
+    protected virtual bool PlayerAvailable => Bindings.MainPlayer != null;
+    protected virtual bool PlayerManagerAvailable => Bindings.ManagerAvailable;
+    protected virtual SafeAction PlayerUpdateEvent => Bindings.OnPlayerUpdate;
 
 	protected override void Start()
 	{
 		base.Start();
-		if (Bindings.MainPlayer != null)
+		if (PlayerAvailable)
 		{
 			Instance_OnPlayerUpdate();
 		}
-		if (Bindings.ManagerAvailable)
+		if (PlayerManagerAvailable)
 		{
-			Bindings.OnPlayerUpdate.AddListener(Instance_OnPlayerUpdate);
+			PlayerUpdateEvent.AddListener(Instance_OnPlayerUpdate);
 		}
 	}
 
 	protected override void OnDestroy()
 	{
 		base.OnDestroy();
-		if (Bindings.ManagerAvailable)
+		if (PlayerManagerAvailable)
 		{
-			Bindings.OnPlayerUpdate.RemoveListener(Instance_OnPlayerUpdate);
+			PlayerUpdateEvent.RemoveListener(Instance_OnPlayerUpdate);
 		}
 	}
 
 	private void Instance_OnPlayerUpdate()
 	{
-		if (Bindings.MainPlayer == null)
+		if (!PlayerAvailable)
 		{
 			ResetInitState();
 		}
