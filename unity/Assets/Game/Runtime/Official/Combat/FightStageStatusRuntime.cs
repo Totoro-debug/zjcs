@@ -97,10 +97,7 @@ namespace Zjcs.Combat.Official
             foreach (int classId in classIds)
             {
                 if (classId <= 0) continue;
-                int instanceId = 1;
-                foreach (FightBattleStatusState existing in unit.Statuses)
-                    if (existing != null && existing.InstanceId >= instanceId)
-                        instanceId = existing.InstanceId + 1;
+                int instanceId = FightStatusLifecycle.NextInstanceId(unit);
                 FightBattleStatusState template = statuses.CreateStatus(classId, unit.Id, unit.Id,
                     instanceId);
                 FightStatusLifecycle.Apply(unit, template, round, instanceId, random);

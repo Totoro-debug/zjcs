@@ -2737,23 +2737,9 @@ namespace Zjcs.Combat.Official
             if (!AllowsRoleBuffRecipient(skill, owner)) return false;
             if (application.LessThanHpPer >= 0f
                 && owner.Hp / (double)Math.Max(1L, owner.MaxHp) >= application.LessThanHpPer) return false;
-            double chance = application.Chance;
-            bool affectedByProp = application.AffectedByProp;
-            if (application.CharacterTypeRateOverrides != null)
-                foreach (FightBattleStatusRateOverride rateOverride in application.CharacterTypeRateOverrides)
-                    if (rateOverride != null && rateOverride.CharacterType == owner.CharacterType)
-                    {
-                        chance = rateOverride.Rate;
-                        affectedByProp = rateOverride.AffectedByProp;
-                        break;
-                    }
-            chance = statusCatalog.CalculateStatusApplicationRate(actor, owner,
-                application.StatusId, chance, affectedByProp, formula);
-            if (!(random.Next() <= chance)) return false;
-            int instanceId = 1;
-            foreach (FightBattleStatusState existing in owner.Statuses)
-                if (existing != null && existing.InstanceId >= instanceId)
-                    instanceId = existing.InstanceId + 1;
+            if (!FightStatusApplicationRules.Roll(statusCatalog, formula, random, actor, owner, application))
+                return false;
+            int instanceId = FightStatusLifecycle.NextInstanceId(owner);
             long customStatusValue = ResolveStatusCustomValue(application, skillCostHp,
                 actualHpLoss, actor, target);
             FightBattleStatusState template = statusCatalog.CreateStatus(application.StatusId,

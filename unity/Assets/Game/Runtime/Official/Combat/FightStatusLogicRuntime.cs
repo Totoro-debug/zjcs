@@ -417,11 +417,7 @@ namespace Zjcs.Combat.Official
             if (matches.Count == 0 && delta > 0 && Int(handle, "CreateStatusClassId") > 0)
             {
                 if (catalog == null) return false;
-                int instanceId = 1;
-                if (owner.Statuses != null)
-                    foreach (FightBattleStatusState existing in owner.Statuses)
-                        if (existing != null && existing.InstanceId >= instanceId)
-                            instanceId = checked(existing.InstanceId + 1);
+                int instanceId = FightStatusLifecycle.NextInstanceId(owner);
                 bool noSource = Bool(handle, "UseDefaultSourceInfoOnCreate");
                 if (!noSource && mainStatus == null && createFromSkill == null) return false;
                 FightBattleStatusState created = noSource

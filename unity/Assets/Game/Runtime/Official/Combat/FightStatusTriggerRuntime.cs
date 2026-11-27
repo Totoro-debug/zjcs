@@ -364,8 +364,7 @@ namespace Zjcs.Combat.Official
                     sourceStatus.RoleSummonCountLastCount = desired;
                     continue;
                 }
-                int instanceId = owner.Statuses.Count == 0 ? 1
-                    : owner.Statuses.Max(status => status == null ? 0 : status.InstanceId) + 1;
+                int instanceId = FightStatusLifecycle.NextInstanceId(owner);
                 FightBattleStatusState template = catalog.CreateStatus(
                     sourceStatus.RoleSummonCountStatus.EntityId, owner.Id, owner.Id, instanceId,
                     sourceStatus.RootSkillId, sourceStatus.ApplyingSkillItemId,
@@ -459,8 +458,7 @@ namespace Zjcs.Combat.Official
                     continue;
                 FightBattleUnitState target = trigger.ApplyTarget == 5 ? dead : owner;
                 if (target == null) continue;
-                int instanceId = target.Statuses.Count == 0 ? 1
-                    : target.Statuses.Max(status => status == null ? 0 : status.InstanceId) + 1;
+                int instanceId = FightStatusLifecycle.NextInstanceId(target);
                 FightBattleStatusState template = catalog.CreateStatus(trigger.EntityId, target.Id,
                     owner.Id, instanceId, sourceStatus.RootSkillId, sourceStatus.ApplyingSkillItemId,
                     sourceStatus.SourceSkillRank, sourceStatus.SourceSkillLevel,
@@ -616,10 +614,7 @@ namespace Zjcs.Combat.Official
                                 lifecycleTarget, units);
                             FightBattleUnitState target = FindUnit(units, targetId);
                             if (target == null || !FightBattleTargeting.IsSelectable(target)) continue;
-                            int instanceId = 1;
-                            foreach (FightBattleStatusState existing in target.Statuses)
-                                if (existing != null && existing.InstanceId >= instanceId)
-                                    instanceId = existing.InstanceId + 1;
+                            int instanceId = FightStatusLifecycle.NextInstanceId(target);
                             bool passiveSource = status.SkillEndLegacyStatusId > 0;
                             FightBattleStatusState template = catalog.CreateStatus(trigger.EntityId,
                                 target.Id, passiveSource ? status.CreatorId : actor.Id, instanceId,
@@ -751,10 +746,7 @@ namespace Zjcs.Combat.Official
                         continue;
                     }
                     if (applied != null) continue;
-                    int instanceId = 1;
-                    foreach (FightBattleStatusState existing in unit.Statuses)
-                        if (existing != null && existing.InstanceId >= instanceId)
-                            instanceId = existing.InstanceId + 1;
+                    int instanceId = FightStatusLifecycle.NextInstanceId(unit);
                     FightBattleStatusState template = catalog.CreateStatus(source.ActionExistStatusId,
                         unit.Id, source.CreatorId, instanceId, source.RootSkillId,
                         source.ApplyingSkillItemId, source.SourceSkillRank, source.SourceSkillLevel,
@@ -839,10 +831,7 @@ namespace Zjcs.Combat.Official
                 if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
                     || trigger.Target != FightStatusLifecycle.TargetApplicator
                     || !Roll(trigger.BasePercent, random)) continue;
-                int instanceId = 1;
-                foreach (FightBattleStatusState existing in target.Statuses)
-                    if (existing != null && existing.InstanceId >= instanceId)
-                        instanceId = existing.InstanceId + 1;
+                int instanceId = FightStatusLifecycle.NextInstanceId(target);
                 FightBattleStatusState template = catalog.CreateStatus(trigger.EntityId,
                     target.Id, source.CreatorId, instanceId, source.RootSkillId,
                     source.ApplyingSkillItemId, source.SourceSkillRank, source.SourceSkillLevel,
@@ -888,10 +877,7 @@ namespace Zjcs.Combat.Official
                 bool fired = false;
                 if (status.KillSkillStatusEntityId > 0)
                 {
-                    int instanceId = 1;
-                    foreach (FightBattleStatusState existing in killer.Statuses)
-                        if (existing != null && existing.InstanceId >= instanceId)
-                            instanceId = existing.InstanceId + 1;
+                    int instanceId = FightStatusLifecycle.NextInstanceId(killer);
                     FightBattleStatusState template = catalog.CreateStatus(
                         status.KillSkillStatusEntityId, killer.Id, status.CreatorId,
                         instanceId, status.RootSkillId, status.ApplyingSkillItemId,
@@ -1290,9 +1276,7 @@ namespace Zjcs.Combat.Official
             {
                 if (trigger == null || trigger.EntityId <= 0 || !Roll(trigger.BasePercent, random))
                     continue;
-                int instanceId = 1;
-                foreach (FightBattleStatusState existing in owner.Statuses)
-                    if (existing != null && existing.InstanceId >= instanceId) instanceId = existing.InstanceId + 1;
+                int instanceId = FightStatusLifecycle.NextInstanceId(owner);
                 FightBattleStatusState template = catalog.CreateStatus(trigger.EntityId, owner.Id,
                     source.Id, instanceId, sourceStatus.RootSkillId, sourceStatus.ApplyingSkillItemId,
                     sourceStatus.SourceSkillRank, sourceStatus.SourceSkillLevel, sourceStatus.SourceSubRank,
@@ -1376,10 +1360,7 @@ namespace Zjcs.Combat.Official
                             foreach (int statusId in status.HpTriggerStatuses ?? new List<int>())
                             {
                                 if (statusId <= 0) continue;
-                                int instanceId = 1;
-                                foreach (FightBattleStatusState existing in unit.Statuses)
-                                    if (existing != null && existing.InstanceId >= instanceId)
-                                        instanceId = existing.InstanceId + 1;
+                                int instanceId = FightStatusLifecycle.NextInstanceId(unit);
                                 FightBattleStatusState template = catalog.CreateStatus(statusId, unit.Id,
                                     status.CreatorId <= 0 ? unit.Id : status.CreatorId, instanceId,
                                     status.RootSkillId, status.ApplyingSkillItemId, status.SourceSkillRank,
@@ -1556,9 +1537,7 @@ namespace Zjcs.Combat.Official
         {
             if (statusId <= 0 || owner.Statuses.Any(value => value != null && value.ClassId == statusId))
                 return;
-            int instanceId = 1;
-            foreach (FightBattleStatusState existing in owner.Statuses)
-                if (existing != null && existing.InstanceId >= instanceId) instanceId = existing.InstanceId + 1;
+            int instanceId = FightStatusLifecycle.NextInstanceId(owner);
             FightBattleStatusState template = catalog.CreateStatus(statusId, owner.Id, source.CreatorId,
                 instanceId, source.RootSkillId, source.ApplyingSkillItemId, source.SourceSkillRank,
                 source.SourceSkillLevel, source.SourceSubRank, source.SourceProperties, 0,
@@ -1704,9 +1683,7 @@ namespace Zjcs.Combat.Official
                     : FightStatusLifecycle.ResolveTargetUnitId(source, trigger.ApplyTarget, units);
             FightBattleUnitState target = FindUnit(units, targetId) ?? filterTarget;
             if (!FightBattleTargeting.IsSelectable(target) && target.Hp > 0) return false;
-            int instanceId = 1;
-            foreach (FightBattleStatusState existing in target.Statuses)
-                if (existing != null && existing.InstanceId >= instanceId) instanceId = existing.InstanceId + 1;
+            int instanceId = FightStatusLifecycle.NextInstanceId(target);
             FightBattleStatusState template = catalog.CreateStatus(trigger.EntityId, target.Id, source.CreatorId,
                 instanceId, source.RootSkillId, source.ApplyingSkillItemId, source.SourceSkillRank,
                 source.SourceSkillLevel, source.SourceSubRank, source.SourceProperties, 0,
@@ -1828,10 +1805,7 @@ namespace Zjcs.Combat.Official
             {
                 if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
                     || trigger.Target != 2 || !Roll(trigger.BasePercent, random)) continue;
-                int instanceId = 1;
-                foreach (FightBattleStatusState existing in unit.Statuses)
-                    if (existing != null && existing.InstanceId >= instanceId)
-                        instanceId = existing.InstanceId + 1;
+                int instanceId = FightStatusLifecycle.NextInstanceId(unit);
                 FightBattleStatusState template = catalog.CreateStatus(trigger.EntityId, unit.Id,
                     unit.Id, instanceId, source.RootSkillId, source.ApplyingSkillItemId,
                     source.SourceSkillRank, source.SourceSkillLevel, source.SourceSubRank,

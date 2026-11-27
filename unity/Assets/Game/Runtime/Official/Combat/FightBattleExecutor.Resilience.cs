@@ -74,10 +74,7 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState target, FightBattleSkillDefinition skill, int statusId)
         {
             if (statusCatalog == null || statusId <= 0 || target.Hp <= 0) return;
-            int instanceId = 1;
-            foreach (FightBattleStatusState existing in target.Statuses)
-                if (existing != null && existing.InstanceId >= instanceId)
-                    instanceId = existing.InstanceId + 1;
+            int instanceId = FightStatusLifecycle.NextInstanceId(target);
             FightBattleStatusState template = statusCatalog.CreateStatus(statusId,
                 target.Id, actor.Id, instanceId, skill == null ? 0 : skill.EntityId,
                 skill == null ? 0 : skill.ItemId, skill == null ? 1 : skill.Rank,

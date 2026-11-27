@@ -32,9 +32,8 @@ namespace Zjcs.Combat.Official
             var application = hit.AirCombo;
             if (application != null && application.StatusId > 0 && damage.AfterHp > 0)
             {
-                double rate = statusCatalog.CalculateStatusApplicationRate(actor, target,
-                    application.StatusId, application.Chance, application.AffectedByProp, formula);
-                if (random.Next() <= rate)
+                if (FightStatusApplicationRules.Roll(statusCatalog, formula, random, actor,
+                    target, application.StatusId, application.Chance, application.AffectedByProp))
                 {
                     launch = statusCatalog.CreateStatus(application.StatusId, target.Id, actor.Id, 0,
                         skill.RootEntityId > 0 ? skill.RootEntityId : skill.EntityId, skill.ItemId,

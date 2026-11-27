@@ -26,6 +26,15 @@ namespace Zjcs.Combat.Official
         public const int ForbiddenApplicatorDie = 1, ForbiddenMutex = 2,
             ForbiddenStatusTrigger = 4, ForbiddenEffectInSequence = 8;
 
+        public static int NextInstanceId(FightBattleUnitState owner)
+        {
+            int highest = 0;
+            if (owner.Statuses != null)
+                foreach (FightBattleStatusState status in owner.Statuses)
+                    if (status != null && status.InstanceId > highest) highest = status.InstanceId;
+            return checked(highest + 1);
+        }
+
         public static bool SetForbidden(FightBattleUnitState unit, FightBattleStatusState status,
             int type, bool value)
         {

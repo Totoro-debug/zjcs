@@ -107,7 +107,8 @@ namespace Zjcs.Combat.Official
 
                     // The branded target consumes its existing mark before this hit can
                     // apply a replacement. Other damage listeners retain their prior order.
-                    if (status.ClassId == 24052 ? !processDamage : !processOther) continue;
+                    bool breakingBrand = FightStatusSkillDamageMark.IsBreakingBrand(status);
+                    if (breakingBrand ? !processDamage : !processOther) continue;
                     if (TryApplyReturnStrikeStatus(status, owner, target, skill, hit, resolved)) continue;
                     FightBattleStatusDamageSkillComponentState damageSkill = status.Components?.DamageSkill;
                     if (damageSkill != null && status.ForbiddenType == 0 && status.StackCount > 0
@@ -117,10 +118,8 @@ namespace Zjcs.Combat.Official
                             && !resolved.Type.Blinding && !resolved.Type.Immunity)
                         // Confirmed solo rule: non-skill damage leaves the mark for
                         // the next Skill or SkillMove hit.
-                        && (status.ClassId != 24052 || skill != null
-                            && (skill.ActionType == 2 || skill.ActionType == 6) && !resolved.IsCure
-                            && !resolved.Type.Dodge && !resolved.Type.Blinding && !resolved.Type.Immunity)
-                        && (status.ClassId == 24052 || !damageSkill.IsAttackerTarget
+                        && (!breakingBrand || FightStatusSkillDamageMark.IsTriggerHit(skill, resolved))
+                        && (breakingBrand || !damageSkill.IsAttackerTarget
                             ? ReferenceEquals(owner, target) : HitSourceMatches(status, 0, actor))
                         && HitRuleMatches(damageSkill.Rate, damageSkill.Block, damageSkill.Crit,
                             damageSkill.Damage, damageSkill.Cure, false, null,
@@ -270,9 +269,8 @@ namespace Zjcs.Combat.Official
                     if (trigger.PropTarget != null && trigger.PropTarget.PropertyId != 0) continue;
                     if (trigger.ApplyTarget != 1 && trigger.ApplyTarget != 2
                         && trigger.ApplyTarget != 3 && trigger.ApplyTarget != 5) continue;
-                    double rate = statusCatalog.CalculateStatusApplicationRate(actor, destination,
-                        trigger.EntityId, trigger.BasePercent, true, formula);
-                    if (!(random.Next() <= rate)) continue;
+                    if (!FightStatusApplicationRules.Roll(statusCatalog, formula, random, actor,
+                        destination, trigger.EntityId, trigger.BasePercent, true)) continue;
                 }
                 else if (!RollComponent(trigger.BasePercent)) continue;
                 ApplyComponentStatus(source, trigger.EntityId, destination, null,
@@ -286,9 +284,7 @@ namespace Zjcs.Combat.Official
         {
             if (source == null || classId <= 0 || destination == null || statusCatalog == null
                 || destination.Hp <= 0 && !statusCatalog.HasBackToLifeComponent(classId)) return;
-            int instanceId = 1;
-            foreach (FightBattleStatusState existing in destination.Statuses)
-                if (existing != null && existing.InstanceId >= instanceId) instanceId = existing.InstanceId + 1;
+            int instanceId = FightStatusLifecycle.NextInstanceId(destination);
             FightBattleStatusState template = statusCatalog.CreateStatus(classId, destination.Id,
                 source.CreatorId > 0 ? source.CreatorId : source.OwnerId, instanceId,
                 source.RootSkillId, source.ApplyingSkillItemId, source.SourceSkillRank,

@@ -88,9 +88,7 @@ namespace Zjcs.Combat.Official
                 {
                     if (trigger.EntityId <= 0 || trigger.BasePercent <= 0f
                         || trigger.BasePercent < 1f && (random == null || random.Next() >= trigger.BasePercent)) continue;
-                    int instance = 1;
-                    foreach (var existing in actor.Statuses)
-                        if (existing != null && existing.InstanceId >= instance) instance = existing.InstanceId + 1;
+                    int instance = FightStatusLifecycle.NextInstanceId(actor);
                     var template = catalog.CreateStatus(trigger.EntityId, actor.Id, source.CreatorId, instance,
                         source.RootSkillId, source.ApplyingSkillItemId, source.SourceSkillRank,
                         source.SourceSkillLevel, source.SourceSubRank, source.SourceProperties, 0,

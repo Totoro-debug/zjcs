@@ -91,9 +91,7 @@ namespace Zjcs.Combat.Official
         private bool ApplyExplicitStatus(FightBattleUnitState target, int statusId)
         {
             if (target == null || target.Hp <= 0 || target.Ended) return false;
-            int instance = 1;
-            foreach (var existing in target.Statuses)
-                if (existing != null && existing.InstanceId >= instance) instance = existing.InstanceId + 1;
+            int instance = FightStatusLifecycle.NextInstanceId(target);
             var template = CreateStatus(statusId, instance);
             template.OwnerId = target.Id;
             template.RootSkillId = skill.RootEntityId > 0 ? skill.RootEntityId : skill.EntityId;

@@ -88,9 +88,8 @@ namespace Zjcs.Combat.Official
                 foreach (var trigger in component.Statuses)
                 {
                     if (trigger == null || trigger.EntityId <= 0) continue;
-                    double rate = statusCatalog.CalculateStatusApplicationRate(actor, target,
-                        trigger.EntityId, trigger.BasePercent, trigger.AffectedByProp, formula);
-                    if (!(random.Next() <= rate)) continue;
+                    if (!FightStatusApplicationRules.Roll(statusCatalog, formula, random, actor,
+                        target, trigger.EntityId, trigger.BasePercent, trigger.AffectedByProp)) continue;
                     ApplyComponentStatus(status, trigger.EntityId, target, null, trigger.StatusReplacementProperties);
                 }
             }
