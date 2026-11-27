@@ -7,17 +7,65 @@ import argparse
 import gc
 import hashlib
 import json
+import math
+import os
 from pathlib import Path
 import re
+import struct
+import tempfile
 
 from official_apk import ROOT, UnityPy
 from official_source import OfficialSource
 from current_component_schemas import CurrentSchemas
 from prepare_unity_bundle_inputs import serialized_files
+from official_bundle_directory import cab_names
 
 
 def sha(raw):
     return hashlib.sha256(raw).hexdigest()
+
+
+FLOAT_TAG = '$zjcs_ieee754_float64'
+
+
+def encode_fields(value):
+    """Keep nonfinite source values in standard JSON without replacing their value."""
+    if isinstance(value, float) and not math.isfinite(value):
+        return {FLOAT_TAG: struct.pack('>d', value).hex()}
+    if isinstance(value, dict):
+        if FLOAT_TAG in value:
+            raise ValueError('Source field collides with the nonfinite scalar encoding')
+        return {key: encode_fields(child) for key, child in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [encode_fields(child) for child in value]
+    return value
+
+
+def decode_fields(value):
+    """Restore the typed sidecar scalars before projecting native YAML fields."""
+    if isinstance(value, dict):
+        if FLOAT_TAG in value:
+            if set(value) != {FLOAT_TAG} or not isinstance(value[FLOAT_TAG], str) or not re.fullmatch('[0-9a-f]{16}', value[FLOAT_TAG]):
+                raise ValueError('Invalid nonfinite scalar encoding')
+            scalar = struct.unpack('>d', bytes.fromhex(value[FLOAT_TAG]))[0]
+            if math.isfinite(scalar):
+                raise ValueError('Encoded scalar is finite')
+            return scalar
+        return {key: decode_fields(child) for key, child in value.items()}
+    if isinstance(value, list):
+        return [decode_fields(child) for child in value]
+    return value
+
+
+def write_atomic(path, payload):
+    """A stopped extraction must never leave a partially written cache object."""
+    with tempfile.NamedTemporaryFile(dir=path.parent, prefix=path.name+'.', suffix='.tmp', delete=False) as stream:
+        temporary = Path(stream.name)
+        stream.write(payload)
+    try:
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 class BundleReader:
@@ -26,6 +74,15 @@ class BundleReader:
         rows = {r['package']+'/'+r['file']: r for r in receipt['inputs'] if 'package' in r}
         index = json.loads((OfficialSource().cloud_path/'verified-cab-files.json').read_bytes())
         self.owners = {cab.casefold(): rows[paths[0]] for cab, paths in index.items()}
+        for row in receipt['inputs']:
+            if row['format'] != 'UnityFS' or row.get('source_manifest') == receipt['manifest']:
+                continue
+            with (cache/row['output']).open('rb') as stream:
+                for cab in cab_names(stream):
+                    prior = self.owners.get(cab.casefold())
+                    if prior and prior['decoded_sha256'] != row['decoded_sha256']:
+                        raise ValueError('Conflicting APK-only CAB: '+cab)
+                    self.owners[cab.casefold()] = row
         self.builtins = [r for r in receipt['inputs'] if r['format'] == 'builtin']
         self.reset()
 
@@ -66,26 +123,33 @@ class BundleReader:
         return self.loaded[key]
 
 
-def recover(bundle=None, only_class=None, limit=None, unsupported_only=False, all_inputs=False):
+def recover(bundle=None, only_class=None, limit=None, unsupported_only=False, all_inputs=False, repair_staged_fields=False):
     source = OfficialSource()
     cache = ROOT/'.tools/source-packages/current'/source.version/'native-conversion'
     selection_path = cache/('source-manifest.json' if all_inputs else 'changed-inputs-source-manifest.json')
     selection = json.loads(selection_path.read_bytes())
-    schemas = CurrentSchemas()
+    schemas = CurrentSchemas(managed_directory=cache/'inputs/Managed') if all_inputs else CurrentSchemas()
+    apk_schemas = None
     reader = BundleReader(cache, json.loads((cache/'source-manifest.json').read_bytes()))
     rows = [row for row in selection['inputs'] if row['format'] == 'UnityFS' or (all_inputs and row['format'] == 'builtin')]
     required_types = None
     if unsupported_only:
-        export = json.loads((cache/('native-export-all-source-manifest.json' if all_inputs else 'native-export-complete-source-manifest.json')).read_bytes())
+        export_path = cache/('native-export-all-source-manifest.json' if all_inputs else 'native-export-complete-source-manifest.json')
+        if all_inputs and not export_path.exists():
+            export_path = cache/'native-export-source-manifest.json'
+        export = json.loads(export_path.read_bytes())
         required_types = {match[1] for issue in export['conversion_issues']
                           if (match := re.search(r'Could not read MonoBehaviour structure for `([^`]+)`', issue))}
         print('Supplementing unsupported component types:', len(required_types), flush=True)
     if bundle:
-        rows = [row for row in rows if row['name'] == bundle]
+        rows = [row for row in rows if row.get('name') == bundle]
         if not rows:
             raise ValueError('Probe bundle is not in the verified selection')
     output = cache/('component-fields-probe' if bundle or only_class or limit else 'component-fields-all' if all_inputs else 'component-fields')
     output.mkdir(exist_ok=True)
+    completed_manifest = output/'source-manifest.json'
+    if repair_staged_fields and completed_manifest.exists() and json.loads(completed_manifest.read_bytes())['completed']:
+        raise ValueError('Do not rewrite completed field caches')
     directories = {output}
     def ensure(path):
         if path not in directories:
@@ -93,6 +157,10 @@ def recover(bundle=None, only_class=None, limit=None, unsupported_only=False, al
             directories.add(path)
     records, failures = [], []
     for index, row in enumerate(rows, 1):
+        embedded = row.get('source_manifest') == source.apk_version or row['format'] == 'builtin'
+        if embedded and apk_schemas is None:
+            apk_schemas = CurrentSchemas(managed_directory=cache/'inputs/Managed', apk_assemblies=True)
+        selected_schemas = apk_schemas if embedded else schemas
         objects = [obj for file in serialized_files(reader.load(row)) for obj in file.objects.values()]
         for obj in objects:
             if obj.type.name != 'MonoBehaviour':
@@ -110,26 +178,49 @@ def recover(bundle=None, only_class=None, limit=None, unsupported_only=False, al
             digest = sha(raw)
             raw_path = output/'Raw'/(digest+'.bytes')
             ensure(raw_path.parent)
+            previous_raw = None
             if raw_path.exists() and raw_path.read_bytes() != raw:
-                raise ValueError('Content-addressed original component changed')
+                if not repair_staged_fields:
+                    raise ValueError('Content-addressed original component changed: '+str(raw_path))
+                prior = raw_path.read_bytes()
+                previous_raw = sha(prior)
+                previous = output/'Previous'/(previous_raw+'.bytes')
+                ensure(previous.parent)
+                if not previous.exists():
+                    write_atomic(previous, prior)
+                print('Repairing incomplete raw cache:', digest, 'cached bytes:', len(prior), 'source bytes:', len(raw), flush=True)
+                write_atomic(raw_path, raw)
             if not raw_path.exists():
-                raw_path.write_bytes(raw)
+                write_atomic(raw_path, raw)
             record = dict(bundle=row.get('name', Path(row['output']).name), cab=obj.assets_file.name, path_id=str(obj.path_id),
                           assembly=script.m_AssemblyName, type=name, raw_sha256=digest,
                           raw=raw_path.relative_to(output).as_posix())
+            if previous_raw is not None:
+                record['previous_raw_sha256'] = previous_raw
             try:
-                fields = schemas.read(obj)
-                payload = json.dumps(fields, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode('utf8')
+                fields = selected_schemas.read(obj)
+                payload = json.dumps(encode_fields(fields), ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode('utf8')
                 relative = 'Fields/'+obj.assets_file.name+'/'+str(obj.path_id)+'.json'
                 target = output/relative
                 ensure(target.parent)
                 if target.exists() and target.read_bytes() != payload:
-                    raise ValueError('Previously decoded original fields changed')
-                target.write_bytes(payload)
-                record.update(fields=relative, sha256=sha(payload), managed_references=len(fields.get('references', {}).get('RefIds', [])))
+                    if not repair_staged_fields:
+                        raise ValueError('Previously decoded original fields changed')
+                    prior = target.read_bytes()
+                    previous = output/'Previous'/(sha(prior)+'.json')
+                    ensure(previous.parent)
+                    if not previous.exists():
+                        write_atomic(previous, prior)
+                    record['previous_fields_sha256'] = sha(prior)
+                if not target.exists() or target.read_bytes() != payload:
+                    write_atomic(target, payload)
+                record.update(fields=relative, sha256=sha(payload), managed_references=len(fields.get('references', {}).get('RefIds', [])),
+                              source_manifest=row.get('source_manifest', source.apk_version))
             except Exception as error:
                 record['decode_error'] = str(error)
                 failures.append(record)
+                if len(failures) <= 5:
+                    print('UNRESOLVED', name, str(error)[:300], flush=True)
             records.append(record)
             if limit and len(records) >= limit:
                 break
@@ -143,11 +234,12 @@ def recover(bundle=None, only_class=None, limit=None, unsupported_only=False, al
     result = dict(manifest=source.version, selection_sha256=sha(selection_path.read_bytes()),
                   generator_sha256=sha(Path(__file__).read_bytes()), operation=__doc__,
                   supplemental_schema_sha256=sha((ROOT/'scripts/current_component_schemas.py').read_bytes()),
+                  field_encoding='Standard JSON; tagged IEEE754 float64 bits for nonfinite scalars; decode_fields restores numeric values.',
                   scope='Exporter-unsupported component types' if unsupported_only else 'Selected component types',
                   required_types=sorted(required_types) if required_types is not None else None,
                   objects=records, unresolved=failures, completed=not failures,
                   limitations=['Field sidecars retain source CAB/PathID PPtrs. Binding them into native Unity objects still requires exact module object mapping.'])
-    (output/'source-manifest.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', 'utf8')
+    write_atomic(output/'source-manifest.json', (json.dumps(result, ensure_ascii=False, indent=2)+'\n').encode('utf8'))
     print('Decoded components:', len(records)-len(failures), 'unresolved:', len(failures), 'managed references:', sum(r.get('managed_references', 0) for r in records))
     if failures:
         print('First unresolved:', failures[0])
@@ -160,5 +252,6 @@ if __name__ == '__main__':
     parser.add_argument('--limit', type=int)
     parser.add_argument('--unsupported-only', action='store_true')
     parser.add_argument('--all-inputs', action='store_true')
+    parser.add_argument('--repair-staged-fields', action='store_true', help='Preserve and correct fields in an incomplete cache after repairing its decoder')
     args = parser.parse_args()
-    recover(args.bundle, args.only_class, args.limit, args.unsupported_only, args.all_inputs)
+    recover(args.bundle, args.only_class, args.limit, args.unsupported_only, args.all_inputs, args.repair_staged_fields)

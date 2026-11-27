@@ -54,10 +54,49 @@ def record():
         'convert_current_resource_project.py', 'restore_current_empty_atlases.py',
         'convert_current_raw_resources.py', 'recover_current_component_fields.py',
         'current_component_schemas.py', 'official_unity_schema.py', 'official_managed_reference_conversion.py')]
+    result['supporting_scripts'].extend(file(ROOT/'scripts'/name) for name in (
+        'verify_official_apk_extraction.py', 'archive_official_apk_sources.py',
+        'prepare_official_apk_tables.py', 'official_tables.py',
+        'prepare_current_asset_inventory.py', 'convert_current_windows_shaders.py',
+        'prepare_current_windows_validation.py'))
+    apk_code = base/'apk-code-manifest.json'
+    if apk_code.exists():
+        receipt = json.loads(apk_code.read_bytes())
+        if receipt['manifest'] != source.version or receipt['apk_sha256'] != source.apk_sha256:
+            raise ValueError('Embedded APK code belongs to a different source')
+        result['apk_code'] = dict(source_manifest=file(apk_code),
+                                 source_version=receipt['source_manifest'], assemblies=len(receipt['assemblies']),
+                                 csharp_files=sum(row['csharp_files'] for row in receipt['projects']))
+    for name, key in (('apk-tables-source-manifest.json', 'apk_tables'),
+                      ('all-tables-source-manifest.json', 'all_online_tables')):
+        path = base/name
+        if path.exists():
+            receipt = json.loads(path.read_bytes())
+            if receipt['manifest'] != source.version or receipt['apk_sha256'] != source.apk_sha256:
+                raise ValueError('Table archive belongs to a different source')
+            result[key] = dict(source_manifest=file(path), completed=receipt['completed'],
+                               tables=receipt['tables'], bundles=len(receipt['bundles']),
+                               unresolved=receipt['unresolved'],
+                               code_tables_without_payload=receipt['code_tables_without_payload'])
     api = Path(importlib.util.find_spec('TypeTreeGeneratorAPI').origin).parent
     result['type_tree_generator'] = dict(version=importlib.metadata.version('TypeTreeGeneratorAPI'),
                                        binaries=[file(p) for p in sorted(api.rglob('*')) if p.suffix in ('.dll', '.pyd')])
     aot = base/'official-code/aot-metadata/source-manifest.json'
+    inventory = base/'native-conversion/all-assets/inventory.json'
+    if inventory.exists():
+        receipt = json.loads(inventory.read_bytes())
+        if receipt['manifest'] != source.version:
+            raise ValueError('Object inventory belongs to a different source')
+        result['asset_inventory'] = dict(source_manifest=file(inventory), completed=receipt['completed'],
+                                        types=receipt['types'], textures=len(receipt['textures']),
+                                        shaders=len(receipt['shaders']))
+    extraction = base/'apk-extraction-source-manifest.json'
+    if extraction.exists():
+        receipt = json.loads(extraction.read_bytes())
+        if receipt['manifest'] != source.version or receipt['apk_sha256'] != source.apk_sha256:
+            raise ValueError('APK extraction receipt has a different source')
+        result['apk_extraction'] = dict(source_manifest=file(extraction), completed=receipt['completed'],
+                                        files=len(receipt['files']))
     if aot.exists():
         receipt = json.loads(aot.read_bytes())
         result['aot_metadata'] = dict(source_manifest=file(aot), types=receipt['recovered_types'], images=receipt['metadata_images'])
@@ -71,7 +110,8 @@ def record():
                                      files=len(receipt['outputs']),
                                      files_by_extension=dict(Counter(Path(row['path']).suffix for row in receipt['outputs'])),
                                      limitations=receipt.get('limitations', []),
-                                     conversion_issues=receipt.get('conversion_issues', []))
+                                     conversion_issue_counts=dict(Counter(issue.split(' : ', 1)[0] for issue in receipt.get('conversion_issues', []))),
+                                     conversion_errors=dict(Counter(issue for issue in receipt.get('conversion_issues', []) if '[Error]' in issue)))
     raw = base/'native-conversion/raw-resources-source-manifest.json'
     if raw.exists():
         receipt = json.loads(raw.read_bytes())
@@ -81,6 +121,8 @@ def record():
                                       audio_with_loop_metadata=sum(bool(row['metadata'].get('loopingInfo')) for row in receipt['audio'].values()),
                                       limitations=receipt['limitations'])
     components = base/'native-conversion/component-fields/source-manifest.json'
+    if not components.exists():
+        components = base/'native-conversion/component-fields-all/source-manifest.json'
     if components.exists():
         receipt = json.loads(components.read_bytes())
         result['component_fields'] = dict(source_manifest=file(components), completed=receipt['completed'],

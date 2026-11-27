@@ -6,8 +6,8 @@
   "resource_version": "202611252124911",
   "generator": {
     "path": "scripts/record_current_resource_preparation.py",
-    "bytes": 6734,
-    "sha256": "ca61bdc3247155a10c98ba528a9c0d0f3db9cc9b174d8f94803a48425179a3e1"
+    "bytes": 9830,
+    "sha256": "ecf373239a18cb0f66e91fe1776a2dad3fe7f599c5287ff0419e697fc3ceff99"
   },
   "code_manifest": {
     "path": ".tools/source-packages/current/911_156995/code-manifest.json",
@@ -68,8 +68,8 @@
   ],
   "table_payload": {
     "path": ".tools/source-packages/current/911_156995/official-data/tables.json",
-    "bytes": 67252028,
-    "sha256": "24a0200fc0692e7a0e31bead7762da80d9ce845cb55458e78bc8cb802f40729f"
+    "bytes": 72099801,
+    "sha256": "570e9ad783c50535e2a8bcfc8843e55fef6785ba980e21a1bf6d4bc182da542e"
   },
   "luban_inputs": [
     {
@@ -2343,7 +2343,7 @@
       "sha256": "84327552cfcf69721d3b5250ab6db78f7c4bea0354146a3423af02a8c547e75a"
     }
   ],
-  "fully_decoded_tables": 454,
+  "fully_decoded_tables": 622,
   "unresolved_tables": {},
   "converter_inputs": {
     "path": ".tools/source-packages/current/911_156995/native-conversion/source-manifest.json",
@@ -2351,10 +2351,40 @@
     "sha256": "32715d1621129d510d416078f5c0946954e47d73bf4c22ce9fe463b8953cdb76"
   },
   "converter_input_files": 23487,
-  "selected_bundle_and_builtin_inputs": 23487,
+  "selected_bundle_and_builtin_inputs": 16340,
   "catalog_entries": 96439,
   "retained_apk_only_asset_paths": 3014,
   "unavailable_inputs": [],
+  "changed_selection": {
+    "path": ".tools/source-packages/current/911_156995/native-conversion/changed-inputs-source-manifest.json",
+    "bytes": 24997340,
+    "sha256": "a28a61cbbd48914e790ac1e4481417e52ad7930cfc5bd79d3129d66157a20520"
+  },
+  "referenced_unchanged_bundles": 6841,
+  "referenced_changed_bundles": 5091,
+  "referenced_without_byte_proof": 576,
+  "unmatched_retained": [
+    "defaultpackage_share_01c3df7b8f86fb483ea6e7477b556d61.bundle",
+    "defaultpackage_share_051bca2a011309bdb872f729a710f5b8.bundle",
+    "defaultpackage_share_120333c221addf1c7e8dd645b9236e3e.bundle",
+    "defaultpackage_share_5dc44bbbe581c1a4ae80393e2b5e84c0.bundle",
+    "defaultpackage_share_6339bb0606c3656449b0501cb7a9b5e6.bundle",
+    "defaultpackage_share_6e7be29401b87b1a9794239562bc3b43.bundle",
+    "defaultpackage_share_7e1be1383f45d76b7aef4a3c479eaf9c.bundle",
+    "defaultpackage_share_857d8dd21c04a2dfa2bd6b66377bb2c3.bundle",
+    "defaultpackage_share_86d956da82c37f0777b2a26073a7740f.bundle",
+    "defaultpackage_share_8c6a96c90f62809a01406bc53aa79b67.bundle",
+    "defaultpackage_share_9a16fe618d67f73d46b4aabe2d16bc75.bundle",
+    "defaultpackage_share_9e8b5f7a40c2d9174cdd7ec1b7060d78.bundle",
+    "defaultpackage_share_a627e61282e33adfca1fdd40bf209664.bundle",
+    "defaultpackage_share_a73d909c44fffcf4fd2fd97520f1db08.bundle",
+    "defaultpackage_share_bbe9981f24a3c95808ab978645556e94.bundle",
+    "defaultpackage_share_cd3994ff064f14e9c98af7428947398b.bundle",
+    "defaultpackage_share_df40b295888c65d9e874a24887910747.bundle",
+    "defaultpackage_share_e1d2f6dbd85341eabce254b10eb9a691.bundle",
+    "defaultpackage_share_f9f08e68bd0d524ab76d79158499ffc0.bundle",
+    "defaultpackage_share_ff796c3d1464f64dd055d8b45d6feac5.bundle"
+  ],
   "supporting_scripts": [
     {
       "path": "scripts/prepare_official_sources.py",
@@ -2378,8 +2408,8 @@
     },
     {
       "path": "scripts/select_current_resource_changes.py",
-      "bytes": 6574,
-      "sha256": "3324956a1be778f85c1fd2b2939c6b3177e565db2e639746fccf10cbe444292b"
+      "bytes": 6762,
+      "sha256": "e22afff12a001d9d4a5d9d8d91744174c5bfd8c8825a13769c5919c2d2659cf3"
     },
     {
       "path": "scripts/convert_current_resource_project.py",
@@ -2398,13 +2428,13 @@
     },
     {
       "path": "scripts/recover_current_component_fields.py",
-      "bytes": 8597,
-      "sha256": "cd408c457491e527cb47fd9fed281297bfac68df30b9e0966e08aa0df1cef5c6"
+      "bytes": 13550,
+      "sha256": "27d21d77f148b836bd03f0d36a86e3c409741c25dc186d45bee5abe05bd44631"
     },
     {
       "path": "scripts/current_component_schemas.py",
-      "bytes": 2744,
-      "sha256": "78f397ef333511e73749299e131d35b88cc696f926ef722b52d327a6cd3c900f"
+      "bytes": 3771,
+      "sha256": "fa7f09804083eb75bc329930daa5d6e43fc14784c6501a2b2dbba8ceacf705da"
     },
     {
       "path": "scripts/official_unity_schema.py",
@@ -2415,8 +2445,77 @@
       "path": "scripts/official_managed_reference_conversion.py",
       "bytes": 8721,
       "sha256": "4b594a50aa74828bc149bb85749f3fd2f0cac7f5a630e04513280cf814590d7b"
+    },
+    {
+      "path": "scripts/verify_official_apk_extraction.py",
+      "bytes": 2111,
+      "sha256": "99740666ef062d9c9e9f70c099e9f9649b5d4441368aba1f958da583a0fa04e1"
+    },
+    {
+      "path": "scripts/archive_official_apk_sources.py",
+      "bytes": 5603,
+      "sha256": "c48b7171e479925362e2665ba5cade7fbcc7633a0eb8af990190333ac1e9aee6"
+    },
+    {
+      "path": "scripts/prepare_official_apk_tables.py",
+      "bytes": 6099,
+      "sha256": "c443b522097088cce90fcf812983150005e34fe6b6cc2047eae4b5d4eb693a1d"
+    },
+    {
+      "path": "scripts/official_tables.py",
+      "bytes": 16066,
+      "sha256": "df2b357649272fd7883707e1f490d6e7e98ff664224f2e3fecabfd50ce894372"
+    },
+    {
+      "path": "scripts/prepare_current_asset_inventory.py",
+      "bytes": 4157,
+      "sha256": "34339a60ea7c43823cd3f7c3e81819ccc8984e6d05e76dab952fa201f159d27b"
+    },
+    {
+      "path": "scripts/convert_current_windows_shaders.py",
+      "bytes": 34103,
+      "sha256": "41f58ab1e79513ebf1da0544e32a36e13883799e0086c01ce1d1cda84dc8c151"
+    },
+    {
+      "path": "scripts/prepare_current_windows_validation.py",
+      "bytes": 8720,
+      "sha256": "7e340f8d2c89174973525978c8bd5014072c00a442e89af5f10d9091180758a3"
     }
   ],
+  "apk_code": {
+    "source_manifest": {
+      "path": ".tools/source-packages/current/911_156995/apk-code-manifest.json",
+      "bytes": 7710568,
+      "sha256": "c8369a239908a4ac7669160992d8369ae90b67db1647a3fb5fa4fe9ffb0e52f1"
+    },
+    "source_version": "895_156822",
+    "assemblies": 10,
+    "csharp_files": 30272
+  },
+  "apk_tables": {
+    "source_manifest": {
+      "path": ".tools/source-packages/current/911_156995/apk-tables-source-manifest.json",
+      "bytes": 204354,
+      "sha256": "f9aa32b67fddefae1b2129e110b02582788b289d2ee22624564a4e6d018b5739"
+    },
+    "completed": true,
+    "tables": 616,
+    "bundles": 31,
+    "unresolved": {},
+    "code_tables_without_payload": []
+  },
+  "all_online_tables": {
+    "source_manifest": {
+      "path": ".tools/source-packages/current/911_156995/all-tables-source-manifest.json",
+      "bytes": 212366,
+      "sha256": "ab2a354360ecd49d87030b09601e56f89db681d422b6842f63cea43781c11d95"
+    },
+    "completed": true,
+    "tables": 622,
+    "bundles": 31,
+    "unresolved": {},
+    "code_tables_without_payload": []
+  },
   "type_tree_generator": {
     "version": "0.0.10",
     "binaries": [
@@ -2432,6 +2531,101 @@
       }
     ]
   },
+  "asset_inventory": {
+    "source_manifest": {
+      "path": ".tools/source-packages/current/911_156995/native-conversion/all-assets/inventory.json",
+      "bytes": 26041338,
+      "sha256": "8d7a318d6069f9dc307f8a13322acca8dbb6ac88fdbc3bf4ad72b07863b464b9"
+    },
+    "completed": true,
+    "types": {
+      "Animation": 9811,
+      "AnimationClip": 20232,
+      "Animator": 16927,
+      "AnimatorController": 1691,
+      "AnimatorOverrideController": 88,
+      "AssetBundle": 23318,
+      "AudioListener": 7,
+      "AudioManager": 1,
+      "AudioSource": 2,
+      "Avatar": 2,
+      "BoxCollider": 1894,
+      "BoxCollider2D": 1251,
+      "BuildSettings": 1,
+      "Camera": 645,
+      "Canvas": 7972,
+      "CanvasGroup": 20985,
+      "CanvasRenderer": 298090,
+      "ComputeShader": 6,
+      "Cubemap": 1,
+      "DelayedCallManager": 1,
+      "Font": 19,
+      "GameObject": 1097074,
+      "GraphicsSettings": 1,
+      "Grid": 1067,
+      "InputManager": 1,
+      "LightProbes": 1,
+      "LightingSettings": 3,
+      "LightmapSettings": 13,
+      "LineRenderer": 334,
+      "Material": 38878,
+      "Mesh": 13723,
+      "MeshCollider": 6,
+      "MeshFilter": 19320,
+      "MeshRenderer": 33579,
+      "MonoBehaviour": 1100069,
+      "MonoManager": 1,
+      "MonoScript": 171245,
+      "NavMeshProjectSettings": 1,
+      "NavMeshSettings": 13,
+      "ParticleSystem": 248483,
+      "ParticleSystemForceField": 4,
+      "ParticleSystemRenderer": 282062,
+      "Physics2DSettings": 1,
+      "PhysicsManager": 1,
+      "PlayableDirector": 260,
+      "PlayerSettings": 1,
+      "PolygonCollider2D": 9,
+      "PreloadData": 14,
+      "QualitySettings": 1,
+      "RectTransform": 448824,
+      "RenderSettings": 13,
+      "ResourceManager": 1,
+      "RuntimeInitializeOnLoadManager": 1,
+      "ScriptMapper": 1,
+      "Shader": 274,
+      "ShaderVariantCollection": 1,
+      "SortingGroup": 2046,
+      "Sprite": 40826,
+      "SpriteAtlas": 1231,
+      "SpriteMask": 270,
+      "SpriteRenderer": 145095,
+      "StreamingManager": 1,
+      "TagManager": 1,
+      "TextAsset": 8870,
+      "TextMesh": 7,
+      "Texture2D": 37792,
+      "Tilemap": 4804,
+      "TilemapRenderer": 4804,
+      "TimeManager": 1,
+      "TrailRenderer": 1166,
+      "Transform": 648250,
+      "VFXManager": 1,
+      "VideoClip": 44,
+      "VideoPlayer": 25
+    },
+    "textures": 37793,
+    "shaders": 280
+  },
+  "apk_extraction": {
+    "source_manifest": {
+      "path": ".tools/source-packages/current/911_156995/apk-extraction-source-manifest.json",
+      "bytes": 4774802,
+      "sha256": "4d914df7ca3beedfee71748ffb9ae1d330724f571744419267ecfe4f345659ec"
+    },
+    "completed": true,
+    "files": 23315
+  },
   "aot_metadata": {
     "source_manifest": {
       "path": ".tools/source-packages/current/911_156995/official-code/aot-metadata/source-manifest.json",
@@ -2440,5 +2634,69 @@
     },
     "types": 58391,
     "images": 149
+  },
+  "native_export": {
+    "source_manifest": {
+      "path": ".tools/source-packages/current/911_156995/native-conversion/native-export-source-manifest.json",
+      "bytes": 129243198,
+      "sha256": "088c5b1f776f1a588b80aa3faf9f1eddf0122b42225ceaac623876d213149dd9"
+    },
+    "completed": false,
+    "files": 526752,
+    "files_by_extension": {
+      ".json": 1159,
+      ".dll": 591,
+      ".asset": 107151,
+      ".txt": 1096,
+      ".anim": 20232,
+      ".meta": 263130,
+      ".controller": 1691,
+      ".overrideController": 88,
+      ".prefab": 48155,
+      ".csv": 15,
+      ".png": 37729,
+      ".ttf": 8,
+      ".mat": 38862,
+      ".playable": 228,
+      ".bytes": 6555,
+      ".unity": 12,
+      ".shadervariants": 1,
+      ".cs": 2,
+      ".lighting": 3,
+      ".mp4": 44
+    },
+    "limitations": [
+      "Separate native conversion cache; existing game assets retained.",
+      "Script binding, managed-reference registries, Windows shaders, exact texture mips and runtime validation remain module-specific."
+    ],
+    "conversion_issue_counts": {
+      "Export [Warning]": 4,
+      "ExportProgress [Warning]": 4,
+      "ExportProgress": 35,
+      "Import [Warning]": 52877,
+      "Import [Error]": 6
+    },
+    "conversion_errors": {
+      "Import [Error] : Unable to read MonoBehaviour Structure, because script StoryInvokeNode layout mismatched binary content (IndexOutOfRangeException).": 1,
+      "Import [Error] : Unable to read MonoBehaviour Structure, because script SetCountSlider layout mismatched binary content (ArgumentOutOfRangeException).": 1,
+      "Import [Error] : Unable to read MonoBehaviour Structure, because script MyFightStatusDamageReduceAbsolute layout mismatched binary content (read 0 bytes, expected 68 bytes).": 1,
+      "Import [Error] : Unable to read MonoBehaviour Structure, because script MyFightHitFixed layout mismatched binary content (read 56 bytes, expected 60 bytes).": 3
+    }
+  },
+  "raw_resources": {
+    "source_manifest": {
+      "path": ".tools/source-packages/current/911_156995/native-conversion/raw-resources-source-manifest.json",
+      "bytes": 30629432,
+      "sha256": "a9d5f536b121499e5ab76320c7ed5b4281d84027e69591d83aa7995ef27b2dc7"
+    },
+    "completed": true,
+    "packages": 167,
+    "files": 28141,
+    "pcm_audio": 13987,
+    "audio_with_loop_metadata": 46,
+    "limitations": [
+      "Media conversion only. Original Wwise banks/event graphs retained; gain, routing, looping and module runtime binding still require their original consumers.",
+      "Existing game media and unmatched older assets retained. No Unity import or Player audio validation for this cache."
+    ]
   }
 }

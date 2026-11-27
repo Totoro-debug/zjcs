@@ -34,10 +34,10 @@ def split_args(value):
 
 
 class Constructors:
-    def __init__(self, code_root=None):
+    def __init__(self, code_root=None, metadata_path=None):
         code_root = Path(code_root) if code_root is not None else ROOT / '.tools/source-packages/current/884_156692/official-code'
         self.source_root = code_root / 'common-source/Common'
-        self.metadata = Metadata((code_root / 'global-metadata.dat').read_bytes())
+        self.metadata = Metadata((Path(metadata_path) if metadata_path is not None else code_root / 'global-metadata.dat').read_bytes())
         self.cache = {}
         self.sources = {}
 
@@ -298,12 +298,16 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source-root', type=Path, default=ROOT / '.tools/source-packages',
                         help='Directory containing official-code and official-data')
+    parser.add_argument('--code-root', type=Path, help='Explicit code directory for the data source')
+    parser.add_argument('--data-root', type=Path, help='Explicit table directory for the data source')
+    parser.add_argument('--metadata', type=Path, help='Canonical APK metadata shared by its assembly archives')
     args = parser.parse_args()
-    SOURCE = args.source_root / 'official-code/common-source/Common'
-    constructors = Constructors(args.source_root / 'official-code')
+    code_root = args.code_root or args.source_root / 'official-code'
+    SOURCE = code_root / 'common-source/Common'
+    constructors = Constructors(code_root, args.metadata)
     tables_source = (SOURCE/'Tables.cs').read_text(encoding='utf-8-sig')
     mapping = {m[2]: m[1] for m in re.finditer(r'new (Tb\w+)\(loader\("([^"]+)"\)\)', tables_source)}
-    root = args.source_root / 'official-data'
+    root = args.data_root or args.source_root / 'official-data'
     output, failures = {}, {}
     for name, table in mapping.items():
         path = root / (name+'.g.bytes')

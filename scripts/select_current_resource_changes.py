@@ -15,7 +15,7 @@ def files(env):
         yield from serialized_files(loaded)
 
 
-def select(cache):
+def select(cache, stage_inputs=True):
     cache = cache.resolve()
     receipt = json.loads((cache/'source-manifest.json').read_bytes())
     rows = {(r['package'], r['name']): r for r in receipt['inputs'] if 'package' in r}
@@ -62,12 +62,9 @@ def select(cache):
         visit(document)
         if used:
             proofs.append(dict(path=path.relative_to(ROOT).as_posix(), sha256=sha(raw)))
-    owners = {}
-    raw_names = {r['package']+'/'+r['file']: key for key,r in rows.items()}
-    from official_source import OfficialSource
-    cab_index = json.loads((OfficialSource().cloud_path/'verified-cab-files.json').read_bytes())
-    for cab, paths in cab_index.items():
-        owners[cab.casefold()] = raw_names[paths[0]]
+    from recover_current_component_fields import BundleReader
+    reader = BundleReader(cache, receipt)
+    owners = {cab: (row['package'], row['name']) for cab, row in reader.owners.items()}
     builtin_rows = [r for r in receipt['inputs'] if r['format'] == 'builtin']
     builtin_cabs = set()
     for row in builtin_rows:
@@ -104,9 +101,10 @@ def select(cache):
     if missing:
         raise ValueError('Missing CAB dependencies: ' + repr(missing))
     target = cache/'changed-inputs'
-    target.mkdir(exist_ok=True)
+    if stage_inputs:
+        target.mkdir(exist_ok=True)
     staged = [rows[key] for key in sorted(selected)] + builtin_rows
-    for row in staged:
+    for row in staged if stage_inputs else ():
         relative = Path(row['output']).relative_to('inputs')
         destination = target/relative
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -114,7 +112,7 @@ def select(cache):
             os.link(cache/row['output'], destination)
         elif sha(destination.read_bytes()) != row['decoded_sha256']:
             raise ValueError('Retained selected input has different bytes: ' + str(destination))
-    for path in (cache/'inputs/Managed').glob('*.dll'):
+    for path in (cache/'inputs/Managed').glob('*.dll') if stage_inputs else ():
         destination = target/'Managed'/path.name
         destination.parent.mkdir(exist_ok=True)
         if not destination.exists():
@@ -123,7 +121,8 @@ def select(cache):
                   generator_sha256=sha(Path(__file__).read_bytes()), source_proofs=proofs,
                   unchanged_bundles=[list(key) for key in sorted(same)], changed_bundles=[list(key) for key in sorted(changed)],
                   unverified_referenced_bundles=[list(key) for key in sorted(unverified)],
-                  unmatched_retained=sorted(unmatched), inputs=staged, missing_dependencies=missing)
+                  unmatched_retained=sorted(unmatched), inputs=staged, missing_dependencies=missing,
+                  staged_inputs=stage_inputs)
     (cache/'changed-inputs-source-manifest.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', 'utf8')
     print('Unchanged:', len(same), 'changed:', len(changed), 'without byte proof:', len(unverified), 'with dependencies:', len(selected), 'unmatched retained:', len(unmatched), flush=True)
 
@@ -131,4 +130,6 @@ def select(cache):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--cache', type=Path, required=True)
-    select(parser.parse_args().cache)
+    parser.add_argument('--inventory-only', action='store_true', help='Keep one verified input cache; do not create a staged subset')
+    args = parser.parse_args()
+    select(args.cache, stage_inputs=not args.inventory_only)

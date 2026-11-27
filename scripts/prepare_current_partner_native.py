@@ -70,6 +70,8 @@ class PartnerNativeRecovery:
     def __init__(self, *, native_cache=None, export_name='native-export-all', bundle=BUNDLE):
         self.apk = Apk.current()
         self.cache = Path(native_cache).resolve() if native_cache is not None else ROOT / '.tools/source-packages/current' / self.apk.version / 'native-conversion'
+        if export_name == 'native-export-all' and not (self.cache/export_name).exists() and (self.cache/'native-export').exists():
+            export_name = 'native-export'
         self.export_name = export_name
         self.bundle = bundle
         self.native = self.cache / export_name / 'ExportedProject/Assets'
@@ -116,7 +118,8 @@ class PartnerNativeRecovery:
                 raw = (self.field_cache / row['fields']).read_bytes()
                 if digest(raw) != row['sha256'] or digest(obj.get_raw_data()) != row['raw_sha256']:
                     raise ValueError('Recovered official fields changed: ' + key)
-                self.typed[key] = json.loads(raw)
+                from recover_current_component_fields import decode_fields
+                self.typed[key] = decode_fields(json.loads(raw))
             else:
                 try:
                     self.typed[key] = obj.read_typetree()

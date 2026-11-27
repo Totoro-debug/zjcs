@@ -12,7 +12,7 @@ from UnityPy.helpers.TypeTreeGenerator import TypeTreeGenerator
 
 
 class CurrentSchemas(ScriptSchemas):
-    def __init__(self, managed_directory=None):
+    def __init__(self, managed_directory=None, *, apk_assemblies=False):
         source = OfficialSource()
         base = ROOT/'.tools/source-packages/current'/source.version
         code = json.loads((base/'code-manifest.json').read_bytes())
@@ -37,7 +37,24 @@ class CurrentSchemas(ScriptSchemas):
                 self.engine_types[name] = assembly
         self.generator = TypeTreeGenerator('2022.3.57f1', generator='AssetsTools')
         managed = Path(managed_directory) if managed_directory is not None else base/'native-conversion/changed-inputs/Managed'
-        self.generator.load_local_dll_folder(str(managed))
+        if managed_directory is None and not managed.is_dir():
+            managed = base/'native-conversion/inputs/Managed'
+        overrides = {}
+        if apk_assemblies:
+            receipt = json.loads((base/'apk-code-manifest.json').read_bytes())
+            if receipt['manifest'] != source.version or receipt['apk_sha256'] != source.apk_sha256:
+                raise ValueError('Embedded APK assembly identity differs')
+            directory = ROOT/receipt['decoded_directory']
+            for name, row in receipt['assemblies'].items():
+                raw_assembly = (directory/name).read_bytes()
+                if hashlib.sha256(raw_assembly).hexdigest() != row['decoded_sha256']:
+                    raise ValueError('Embedded APK assembly changed: '+name)
+                overrides[name] = raw_assembly
+        for raw_assembly in overrides.values():
+            self.generator.load_dll(raw_assembly)
+        for path in managed.glob('*.dll'):
+            if path.name not in overrides:
+                self.generator.load_dll(path.read_bytes())
         self.cache, self.records = {}, {}
 
     def tree(self, assembly, name):
