@@ -2,8 +2,10 @@
 import argparse
 from pathlib import Path
 
+from official_source import OfficialSource
+
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common'
+SOURCE = OfficialSource().prepared_path / 'official-code/common-source/Common'
 
 
 def method(name, signature):
@@ -87,6 +89,11 @@ public sealed class CombatRatingRefDataBase {
     public Func<Dictionary<PropType, long>, long> Common;
 }
 public static class Formula { public static double Long2Double(long value) { return value / 10000d; } }
+// Allocation adapter for the current client's pooled temporary dictionaries.
+public static class DictionaryPool<TKey, TValue> {
+    public static Dictionary<TKey, TValue> Rent() { return new Dictionary<TKey, TValue>(); }
+    public static void Return(Dictionary<TKey, TValue> value) { value.Clear(); }
+}
 public static class BattleFormula { public static BattleFormulaHandler Instance = new BattleFormulaHandler(); }
 public partial class BattleFormulaHandler {
     public long CalcCombatRatingCommon(int level, SubRank rank, Dictionary<PropType, long> values,

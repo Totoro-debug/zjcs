@@ -5,6 +5,7 @@ from pathlib import Path
 import shutil
 from validation_assemblies import stage_runtime_modules
 from validation_workspace import validation_directory
+from official_source import OfficialSource
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -29,11 +30,13 @@ def prepare():
     packages=project/'Packages'; packages.mkdir(exist_ok=True)
     (packages/'manifest.json').write_text(json.dumps(dict(dependencies={
         'com.unity.nuget.newtonsoft-json':'3.2.1','com.unity.modules.jsonserialize':'1.0.0',
+        'com.unity.modules.assetbundle':'1.0.0',
         'com.unity.modules.animation':'1.0.0','com.unity.modules.audio':'1.0.0',
         'com.unity.modules.physics2d':'1.0.0','com.unity.modules.physics':'1.0.0'})), 'utf8')
+    code=OfficialSource().prepared_path/'official-code/common-source/Common'
     paths=[
-        '.tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerData.cs',
-        '.tools/source-packages/current/884_156692/official-code/common-source/Common/EquipResonanceInfoParser.cs',
+        (code/'PlayerData.cs').relative_to(ROOT).as_posix(),
+        (code/'EquipResonanceInfoParser.cs').relative_to(ROOT).as_posix(),
         'unity/Assets/Official/Equipment/Runtime/equipment-runtime-rules.json',
         'unity/Assets/Game/Resources/Home/no-bless-properties.json',
         'unity/Assets/Game/Runtime/Official/HomeNoBlessRules/EquipResonanceInfoParser.cs',
@@ -45,7 +48,8 @@ def prepare():
         'scripts/fixtures/home_experience_growth_validation.cs',
         'scripts/prepare_home_resonance_profile_validation.py']
     receipt=dict(scope='Reuse the recovered original parser with each catalog\'s own selected rows; persist the original activated field separately from equipment eligibility. No activation UI or server activation transition is supplied.',
-                 equipment_manifest='854_156383', home_manifest='884_156692',
+                 equipment_manifest=json.loads((ROOT/'assets/reference/equipment-runtime-source-manifest.json').read_bytes())['manifest'],
+                 home_manifest=json.loads((ROOT/'unity/Assets/Game/Resources/Home/no-bless-properties.json').read_bytes())['manifest'],
                  sha256={path:hashlib.sha256((ROOT/path).read_bytes()).hexdigest() for path in paths})
     (ROOT/'assets/reference/home-resonance-profile-source-manifest.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n','utf8')
     print('Staged durable resonance profile and shared property source in',project,flush=True)
