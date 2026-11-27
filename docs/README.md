@@ -39,7 +39,7 @@
 | [装备、强化、继承与星石](character/equipment.md) | 未完成 |
 | [行囊、物品与宝箱](character/inventory.md) | 未完成 |
 | [技能目录（一至四阶）](character/skills.md) | 未完成 |
-| [战技与秘法特殊词条](character/skills-glossary.md) | — |
+| [战技、秘法与幻兽特殊词条](character/skills-glossary.md) | — |
 | [战士职业技能详情（一阶）](character/skills-warrior.md) | 已完成 |
 | [法师职业技能详情（一阶）](character/skills-mage.md) | 已完成 |
 | [骑士路线职业技能详情（二至四阶）](character/skills-knight.md) | 未完成 |
@@ -47,6 +47,7 @@
 | [术士路线职业技能详情（二至四阶）](character/skills-warlock.md) | 未完成 |
 | [贤者路线职业技能详情（二至四阶）](character/skills-sage.md) | 未完成 |
 | [幻兽编队、养成与改名](character/pets.md) | 未完成 |
+| [幻兽资料与逐只迁移详情](character/pet-catalog.md) | 未完成 |
 | [古遗物收藏、任务与培养](character/relics.md) | 未完成 |
 | [赛季记录、赐福与装备柜](character/seasons.md) | 未完成 |
 
