@@ -277,7 +277,13 @@ namespace Zjcs.Presentation.CharacterCreation
             yield return new WaitForEndOfFrame(); Capture("name-empty-focused");
             nameInput.ProcessEvent(new Event { type = EventType.KeyDown, character = '测' });
             Require(nameInput.text == "测", "The Windows Player name input rejected a simulated keyboard character.");
+            // Direct synthetic keys need the label refresh normally performed
+            // by TMP_InputField's selected-object event processing.
+            nameInput.ForceLabelUpdate();
             yield return new WaitForSecondsRealtime(.5f);
+            Require(nameInput.textComponent.text.Contains("测")
+                && (nameInput.placeholder == null || !nameInput.placeholder.isActiveAndEnabled),
+                "The simulated name did not reach the visible TMP label.");
             Require(CharacterCreationOfflineService.OpenDefault(ProfileRoot).OpenDraft("slot-16").name == "测",
                 "The simulated name input was not persisted to the isolated draft.");
             yield return new WaitForEndOfFrame(); Capture("name-input-persisted");

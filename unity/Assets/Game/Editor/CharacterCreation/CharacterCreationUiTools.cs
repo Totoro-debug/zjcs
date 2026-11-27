@@ -127,6 +127,14 @@ namespace Zjcs.Editor.CharacterCreation
             sprites.Clear();
             foreach (SpriteInfo entry in data.sprites)
             {
+                if (entry.path.EndsWith(".asset", StringComparison.Ordinal))
+                {
+                    Sprite native = AssetDatabase.LoadAssetAtPath<Sprite>(entry.path);
+                    if (native == null || native.texture == null)
+                        throw new InvalidOperationException("Official native creation sprite did not import: " + entry.path);
+                    sprites.Add(entry.key, native);
+                    continue;
+                }
                 var importer = AssetImporter.GetAtPath(entry.path) as TextureImporter;
                 if (importer == null) throw new InvalidOperationException("Official creation sprite did not import: " + entry.path);
                 Vector4 border = new Vector4(V(entry.border, 0), V(entry.border, 1), V(entry.border, 2), V(entry.border, 3));
