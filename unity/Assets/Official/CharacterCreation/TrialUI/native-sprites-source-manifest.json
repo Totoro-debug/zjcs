@@ -1,0 +1,4805 @@
+{
+  "manifest": "911_156995",
+  "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+  "scope": "Current original trial-item Sprite, atlas, full-mip texture and quality bindings; layout and animation retain their separate source receipt.",
+  "roots": [
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_item.bundle",
+        "bundle_hash": "943eda1075be227be882742856db372c",
+        "path_id": "4167026045645012072",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/943eda1075be227be882742856db372c.bundle",
+        "manifest": "911_156995",
+        "bundle_size": 281435,
+        "bundle_sha256": "cccef4e378eb702f8d08d666a745f521e655e658af1d0936dbea108f1411028e"
+      },
+      "object_sha256": "fdfdc39bdf249422cc18374c0d10be9d0641aae7619649496f9e96423d93710f"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_modules_itemicon.bundle",
+        "bundle_hash": "c2c70980cbcd9503c4ce550b494ff4fc",
+        "path_id": "535786956932159693",
+        "origin": "apk_zip",
+        "manifest": "911_156995",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+        "apk_entry": "assets/yoo/DefaultPackage/c2c70980cbcd9503c4ce550b494ff4fc.bundle",
+        "raw_size": 3076,
+        "raw_sha256": "06c6d9409f670f6b9a96cf1ea1b51929a106ea0861d72fb92cef3b11644a2779"
+      },
+      "object_sha256": "e72ab9fd9108db13299f151caddb89003688da685eac1951edb1599e08ca59ec"
+    }
+  ],
+  "sprites": [
+    {
+      "key": "res://assets/official/sprites/ImgQuality_Blue-d7af3c8915.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_42b8cb9630f88aae.asset",
+      "nodes": [
+        "/ItemIconAppendAppearance/Content/QualityImg",
+        "QualityBgImages[2]"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_Blue-42b8cb9630f8.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/ImgQuality_Blue-42b8cb9630f8.sprite.asset",
+        "guid": "d5f8f74aeb096fee20237b52b0ceb08e",
+        "sha256": "02b005ea6f8babe3854b3fb846a6b229b9f204debe3d7ce7a52206aad94d9b03",
+        "meta_sha256": "d48752600cf742002468c75bba830cc020229533450dff58a39be3d5175a8f2e",
+        "file_id": 21300000,
+        "identity": "CAB-e7f9beabec2f42c12744d3d750a28005:-4751286179582860268",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-4751286179582860268",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "ee8f01b569de96fc85c6ae16a47350a4fc237ffcfa14ca3436fc9b91745e3edd",
+        "texture": "CAB-e7f9beabec2f42c12744d3d750a28005:-2272721207766944018",
+        "atlas": {
+          "source": {
+            "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+            "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+            "path_id": "-998719416609474834",
+            "origin": "apk_zip",
+            "manifest": "911_156995",
+            "apk_manifest": "895_156822",
+            "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+            "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+            "raw_size": 94196,
+            "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+          },
+          "object_sha256": "400233c018f4b55a0d3980ed5c2180fea0973d7c6063dc864a424aae1c526681",
+          "render_data": {
+            "texture": {
+              "m_FileID": 0,
+              "m_PathID": -2272721207766944018
+            },
+            "alphaTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "textureRect": {
+              "x": 0.07612037658691406,
+              "y": 188.0761260986328,
+              "width": 180.84774780273438,
+              "height": 183.84774780273438
+            },
+            "textureRectOffset": {
+              "x": 2.076120376586914,
+              "y": 0.07612049579620361
+            },
+            "atlasRectOffset": {
+              "x": -2.0,
+              "y": 188.0
+            },
+            "uvTransform": {
+              "x": 100.0,
+              "y": 90.0,
+              "z": 100.0,
+              "w": 280.0
+            },
+            "downscaleMultiplier": 1.0,
+            "settingsRaw": 67,
+            "secondaryTextures": []
+          }
+        },
+        "expected": {
+          "name": "ImgQuality_Blue",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_Blue-42b8cb9630f8.sprite.asset",
+          "guid": "d5f8f74aeb096fee20237b52b0ceb08e",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 184.0,
+            "height": 184.0
+          },
+          "pivot": {
+            "x": 92.0,
+            "y": 92.0
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          },
+          "vertices": [
+            {
+              "x": 0.8600000143051147,
+              "y": 0.6200000047683716
+            },
+            {
+              "x": 0.9100000262260437,
+              "y": -0.41999998688697815
+            },
+            {
+              "x": 0.9100000262260437,
+              "y": 0.33000001311302185
+            },
+            {
+              "x": 0.6299999952316284,
+              "y": -0.8299999833106995
+            },
+            {
+              "x": 0.3499999940395355,
+              "y": 0.9200000166893005
+            },
+            {
+              "x": 0.2800000011920929,
+              "y": -0.9200000166893005
+            },
+            {
+              "x": -0.49000000953674316,
+              "y": 0.9200000166893005
+            },
+            {
+              "x": -0.5199999809265137,
+              "y": -0.9200000166893005
+            },
+            {
+              "x": -0.6499999761581421,
+              "y": -0.8999999761581421
+            },
+            {
+              "x": -0.8999999761581421,
+              "y": 0.5400000214576721
+            },
+            {
+              "x": -0.8999999761581421,
+              "y": -0.41999998688697815
+            }
+          ],
+          "triangles": [
+            10,
+            9,
+            8,
+            6,
+            8,
+            9,
+            7,
+            8,
+            6,
+            5,
+            7,
+            6,
+            4,
+            5,
+            6,
+            3,
+            5,
+            4,
+            0,
+            3,
+            4,
+            1,
+            3,
+            0,
+            2,
+            1,
+            0
+          ],
+          "uv": [
+            {
+              "x": 0.17187500139698386,
+              "y": 0.6679687509313226
+            },
+            {
+              "x": 0.17675781506113708,
+              "y": 0.4648437525611371
+            },
+            {
+              "x": 0.17675781506113708,
+              "y": 0.6113281275611371
+            },
+            {
+              "x": 0.1494140620343387,
+              "y": 0.384765628259629
+            },
+            {
+              "x": 0.12207031191792339,
+              "y": 0.726562503259629
+            },
+            {
+              "x": 0.11523437511641532,
+              "y": 0.367187496740371
+            },
+            {
+              "x": 0.040039061568677425,
+              "y": 0.726562503259629
+            },
+            {
+              "x": 0.03710937686264515,
+              "y": 0.367187496740371
+            },
+            {
+              "x": 0.024414064828306437,
+              "y": 0.3710937546566129
+            },
+            {
+              "x": 2.3283064365386963e-09,
+              "y": 0.6523437541909516
+            },
+            {
+              "x": 2.3283064365386963e-09,
+              "y": 0.4648437525611371
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset"
+    },
+    {
+      "key": "res://assets/official/sprites/ImgArrow_2-223d0782c6.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_759294d034e0c651.asset",
+      "nodes": [
+        "/ItemIconAppendAppearance/Content/QualityImg/SelAnimGo/SelectedImg/Img"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgArrow_2-759294d034e0.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/ImgArrow_2-759294d034e0.sprite.asset",
+        "guid": "1b2c9c71ad68a450175c2b7b9ddba586",
+        "sha256": "c01f01b9957178de71e824839ef90e925218a880a878505108c0ac355c9279b2",
+        "meta_sha256": "333f7315bfa4936bb59494cfa072211395ed7b6b5169ad6d7a133ec2075adb13",
+        "file_id": 21300000,
+        "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:5732751846359560646",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_common.bundle",
+          "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+          "path_id": "5732751846359560646",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+          "manifest": "911_156995",
+          "bundle_size": 1332283,
+          "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+        },
+        "object_sha256": "076d80ad2aab0bd37709b4a0870e614c0146f9fbbb189ff2f150574930599950",
+        "texture": "CAB-b162472e6e43e3e3d8cef5582d2f004d:7156034100685763919",
+        "atlas": {
+          "source": {
+            "bundle": "defaultpackage_assets_image_ui_common.bundle",
+            "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+            "path_id": "-7279391711368186545",
+            "origin": "official_cdn",
+            "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+            "manifest": "911_156995",
+            "bundle_size": 1332283,
+            "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+          },
+          "object_sha256": "b9119cdf18e7daf5fae13f2484dac21fea332f706111652201061e2975ecaebb",
+          "render_data": {
+            "texture": {
+              "m_FileID": 0,
+              "m_PathID": 7156034100685763919
+            },
+            "alphaTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "textureRect": {
+              "x": 996.0,
+              "y": 907.0,
+              "width": 40.0,
+              "height": 59.0
+            },
+            "textureRectOffset": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "atlasRectOffset": {
+              "x": 996.0,
+              "y": 907.0
+            },
+            "uvTransform": {
+              "x": 100.0,
+              "y": 1016.0,
+              "z": 100.0,
+              "w": 936.5
+            },
+            "downscaleMultiplier": 1.0,
+            "settingsRaw": 3,
+            "secondaryTextures": []
+          }
+        },
+        "expected": {
+          "name": "ImgArrow_2",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgArrow_2-759294d034e0.sprite.asset",
+          "guid": "1b2c9c71ad68a450175c2b7b9ddba586",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 40.0,
+            "height": 59.0
+          },
+          "pivot": {
+            "x": 20.0,
+            "y": 29.5
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 0.0,
+            "y": 29.0,
+            "z": 0.0,
+            "w": 29.0
+          },
+          "vertices": [
+            {
+              "x": -0.20000000298023224,
+              "y": 0.29499998688697815
+            },
+            {
+              "x": 0.20000000298023224,
+              "y": 0.29499998688697815
+            },
+            {
+              "x": -0.20000000298023224,
+              "y": -0.29499998688697815
+            },
+            {
+              "x": 0.20000000298023224,
+              "y": -0.29499998688697815
+            }
+          ],
+          "triangles": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            {
+              "x": 0.48632812485448085,
+              "y": 0.9433593737194315
+            },
+            {
+              "x": 0.5058593751455192,
+              "y": 0.9433593737194315
+            },
+            {
+              "x": 0.48632812485448085,
+              "y": 0.8857421887805685
+            },
+            {
+              "x": 0.5058593751455192,
+              "y": 0.8857421887805685
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_d64e7abbd8d534a8.asset"
+    },
+    {
+      "key": "res://assets/official/sprites/ImgItemSelect-de48b6abe9.png",
+      "path": "Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_17c983d02d917af1.asset",
+      "nodes": [
+        "/ItemIconAppendAppearance/Content/QualityImg/SelAnimGo/ItemReplaceEffect/Img2"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgItemSelect-17c983d02d91.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/ImgItemSelect-17c983d02d91.sprite.asset",
+        "guid": "16f036cdf1505a4aa0d22e312af58864",
+        "sha256": "0322f1ec4cd712c4a71b7929569029f080377f23c7f0c7bd9b3d8371638cb5fc",
+        "meta_sha256": "5d7a34274388dad22b1a713200f7ad336dfacda9806ff574dce4a8dd2bd6b571",
+        "file_id": 21300000,
+        "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:637357171791320602",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_common.bundle",
+          "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+          "path_id": "637357171791320602",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+          "manifest": "911_156995",
+          "bundle_size": 1332283,
+          "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+        },
+        "object_sha256": "3272303725980c7f6228fec5245ba07a0d2404323b1f487f7318bcbe4d8b8fa5",
+        "texture": "CAB-b162472e6e43e3e3d8cef5582d2f004d:8373551068376853463",
+        "atlas": {
+          "source": {
+            "bundle": "defaultpackage_assets_image_ui_common.bundle",
+            "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+            "path_id": "7027170908951735255",
+            "origin": "official_cdn",
+            "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+            "manifest": "911_156995",
+            "bundle_size": 1332283,
+            "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+          },
+          "object_sha256": "cfa51853f6c5aaa48b2f77865200d09b4baaa63806b1179881266654b18487eb",
+          "render_data": {
+            "texture": {
+              "m_FileID": 0,
+              "m_PathID": 8373551068376853463
+            },
+            "alphaTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "textureRect": {
+              "x": 725.0,
+              "y": 394.0,
+              "width": 200.0,
+              "height": 200.0
+            },
+            "textureRectOffset": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "atlasRectOffset": {
+              "x": 725.0,
+              "y": 394.0
+            },
+            "uvTransform": {
+              "x": 100.0,
+              "y": 825.0,
+              "z": 100.0,
+              "w": 494.0
+            },
+            "downscaleMultiplier": 1.0,
+            "settingsRaw": 67,
+            "secondaryTextures": []
+          }
+        },
+        "expected": {
+          "name": "ImgItemSelect",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgItemSelect-17c983d02d91.sprite.asset",
+          "guid": "16f036cdf1505a4aa0d22e312af58864",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 200.0,
+            "height": 200.0
+          },
+          "pivot": {
+            "x": 100.0,
+            "y": 100.0
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          },
+          "vertices": [
+            {
+              "x": 1.0,
+              "y": 0.5699999928474426
+            },
+            {
+              "x": 0.75,
+              "y": -0.10000000149011612
+            },
+            {
+              "x": 1.0,
+              "y": -1.0
+            },
+            {
+              "x": 0.7400000095367432,
+              "y": 0.10999999940395355
+            },
+            {
+              "x": 0.7200000286102295,
+              "y": 0.20000000298023224
+            },
+            {
+              "x": 0.6600000262260437,
+              "y": 0.3499999940395355
+            },
+            {
+              "x": 0.6399999856948853,
+              "y": 0.8600000143051147
+            },
+            {
+              "x": 0.5699999928474426,
+              "y": 0.47999998927116394
+            },
+            {
+              "x": 0.47999998927116394,
+              "y": 0.5699999928474426
+            },
+            {
+              "x": 0.3700000047683716,
+              "y": 0.6399999856948853
+            },
+            {
+              "x": 0.3100000023841858,
+              "y": 1.0
+            },
+            {
+              "x": 0.2800000011920929,
+              "y": 0.699999988079071
+            },
+            {
+              "x": 0.05000000074505806,
+              "y": 0.75
+            },
+            {
+              "x": 0.03999999910593033,
+              "y": 0.7599999904632568
+            },
+            {
+              "x": -0.12999999523162842,
+              "y": 0.7400000095367432
+            },
+            {
+              "x": -0.23999999463558197,
+              "y": 0.7099999785423279
+            },
+            {
+              "x": -0.3700000047683716,
+              "y": 0.6499999761581421
+            },
+            {
+              "x": -0.41999998688697815,
+              "y": 1.0
+            },
+            {
+              "x": -0.38999998569488525,
+              "y": 0.6299999952316284
+            },
+            {
+              "x": -0.46000000834465027,
+              "y": 0.5899999737739563
+            },
+            {
+              "x": -0.5899999737739563,
+              "y": 0.46000000834465027
+            },
+            {
+              "x": -0.6399999856948853,
+              "y": 0.38999998569488525
+            },
+            {
+              "x": -0.6899999976158142,
+              "y": 0.28999999165534973
+            },
+            {
+              "x": -0.7300000190734863,
+              "y": 0.17000000178813934
+            },
+            {
+              "x": -0.7599999904632568,
+              "y": 0.05999999865889549
+            },
+            {
+              "x": -0.75,
+              "y": 0.07000000029802322
+            },
+            {
+              "x": -1.0,
+              "y": 0.75
+            },
+            {
+              "x": -0.9300000071525574,
+              "y": -1.0
+            },
+            {
+              "x": -1.0,
+              "y": -0.8399999737739563
+            },
+            {
+              "x": 0.7400000095367432,
+              "y": -0.10999999940395355
+            },
+            {
+              "x": 0.7099999785423279,
+              "y": -0.25
+            },
+            {
+              "x": 0.6200000047683716,
+              "y": -0.4000000059604645
+            },
+            {
+              "x": 0.5699999928474426,
+              "y": -0.47999998927116394
+            },
+            {
+              "x": 0.47999998927116394,
+              "y": -0.5699999928474426
+            },
+            {
+              "x": 0.3499999940395355,
+              "y": -0.6600000262260437
+            },
+            {
+              "x": 0.23000000417232513,
+              "y": -0.7099999785423279
+            },
+            {
+              "x": 0.11999999731779099,
+              "y": -0.7400000095367432
+            },
+            {
+              "x": -0.029999999329447746,
+              "y": -0.7599999904632568
+            },
+            {
+              "x": -0.11999999731779099,
+              "y": -0.7400000095367432
+            },
+            {
+              "x": -0.03999999910593033,
+              "y": -0.75
+            },
+            {
+              "x": -0.25999999046325684,
+              "y": -0.699999988079071
+            },
+            {
+              "x": -0.38999998569488525,
+              "y": -0.6299999952316284
+            },
+            {
+              "x": -0.4699999988079071,
+              "y": -0.5799999833106995
+            },
+            {
+              "x": -0.6399999856948853,
+              "y": -0.38999998569488525
+            },
+            {
+              "x": -0.7099999785423279,
+              "y": -0.23999999463558197
+            },
+            {
+              "x": -0.7400000095367432,
+              "y": -0.17000000178813934
+            },
+            {
+              "x": -0.75,
+              "y": -0.07000000029802322
+            }
+          ],
+          "triangles": [
+            24,
+            46,
+            27,
+            45,
+            27,
+            46,
+            44,
+            27,
+            45,
+            43,
+            27,
+            44,
+            42,
+            27,
+            43,
+            41,
+            27,
+            42,
+            40,
+            27,
+            41,
+            38,
+            27,
+            40,
+            2,
+            27,
+            38,
+            37,
+            2,
+            38,
+            39,
+            37,
+            38,
+            36,
+            2,
+            37,
+            35,
+            2,
+            36,
+            34,
+            2,
+            35,
+            33,
+            2,
+            34,
+            32,
+            2,
+            33,
+            31,
+            2,
+            32,
+            30,
+            2,
+            31,
+            29,
+            2,
+            30,
+            1,
+            2,
+            29,
+            28,
+            26,
+            27,
+            24,
+            27,
+            26,
+            23,
+            24,
+            26,
+            22,
+            23,
+            26,
+            17,
+            22,
+            26,
+            25,
+            24,
+            23,
+            21,
+            22,
+            17,
+            20,
+            21,
+            17,
+            19,
+            20,
+            17,
+            18,
+            19,
+            17,
+            16,
+            18,
+            17,
+            10,
+            16,
+            17,
+            15,
+            16,
+            10,
+            14,
+            15,
+            10,
+            13,
+            14,
+            10,
+            12,
+            13,
+            10,
+            11,
+            12,
+            10,
+            9,
+            11,
+            10,
+            6,
+            9,
+            10,
+            8,
+            9,
+            6,
+            7,
+            8,
+            6,
+            5,
+            7,
+            6,
+            0,
+            5,
+            6,
+            4,
+            5,
+            0,
+            3,
+            4,
+            0,
+            1,
+            3,
+            0,
+            2,
+            1,
+            0
+          ],
+          "uv": [
+            {
+              "x": 0.45166015625,
+              "y": 0.26904296840075403
+            },
+            {
+              "x": 0.439453125,
+              "y": 0.23632812492724042
+            },
+            {
+              "x": 0.45166015625,
+              "y": 0.1923828125
+            },
+            {
+              "x": 0.4389648442156613,
+              "y": 0.24658203122089617
+            },
+            {
+              "x": 0.43798828264698386,
+              "y": 0.25097656264551915
+            },
+            {
+              "x": 0.43505859503056854,
+              "y": 0.2583007809589617
+            },
+            {
+              "x": 0.43408203055150807,
+              "y": 0.28320312569849193
+            },
+            {
+              "x": 0.43066406215075403,
+              "y": 0.26464843697613105
+            },
+            {
+              "x": 0.42626953072613105,
+              "y": 0.26904296840075403
+            },
+            {
+              "x": 0.42089843773283064,
+              "y": 0.27246093680150807
+            },
+            {
+              "x": 0.4179687501164153,
+              "y": 0.2900390625
+            },
+            {
+              "x": 0.41650390630820766,
+              "y": 0.2753906244179234
+            },
+            {
+              "x": 0.4052734375363798,
+              "y": 0.27783203125
+            },
+            {
+              "x": 0.40478515620634425,
+              "y": 0.2783203120343387
+            },
+            {
+              "x": 0.39648437523283064,
+              "y": 0.2773437504656613
+            },
+            {
+              "x": 0.3911132815119345,
+              "y": 0.2758789052022621
+            },
+            {
+              "x": 0.38476562476716936,
+              "y": 0.2729492175858468
+            },
+            {
+              "x": 0.38232421939028427,
+              "y": 0.2900390625
+            },
+            {
+              "x": 0.38378906319849193,
+              "y": 0.27197265601716936
+            },
+            {
+              "x": 0.3803710933425464,
+              "y": 0.27001952996943146
+            },
+            {
+              "x": 0.37402343878056854,
+              "y": 0.2636718754074536
+            },
+            {
+              "x": 0.37158203194849193,
+              "y": 0.26025390555150807
+            },
+            {
+              "x": 0.3691406251164153,
+              "y": 0.2553710933425464
+            },
+            {
+              "x": 0.3671874990686774,
+              "y": 0.2495117188373115
+            },
+            {
+              "x": 0.3657226567156613,
+              "y": 0.24414062493451638
+            },
+            {
+              "x": 0.3662109375,
+              "y": 0.24462890626455192
+            },
+            {
+              "x": 0.35400390625,
+              "y": 0.27783203125
+            },
+            {
+              "x": 0.35742187465075403,
+              "y": 0.1923828125
+            },
+            {
+              "x": 0.35400390625,
+              "y": 0.20019531378056854
+            },
+            {
+              "x": 0.4389648442156613,
+              "y": 0.23583984377910383
+            },
+            {
+              "x": 0.4374999989522621,
+              "y": 0.22900390625
+            },
+            {
+              "x": 0.43310546898283064,
+              "y": 0.2216796872089617
+            },
+            {
+              "x": 0.43066406215075403,
+              "y": 0.21777343802386895
+            },
+            {
+              "x": 0.42626953072613105,
+              "y": 0.21337890659924597
+            },
+            {
+              "x": 0.4199218747089617,
+              "y": 0.20898437371943146
+            },
+            {
+              "x": 0.4140625002037268,
+              "y": 0.2065429697977379
+            },
+            {
+              "x": 0.40869140611903276,
+              "y": 0.2050781245343387
+            },
+            {
+              "x": 0.4013671875327418,
+              "y": 0.2041015629656613
+            },
+            {
+              "x": 0.39697265638096724,
+              "y": 0.2050781245343387
+            },
+            {
+              "x": 0.40087890629365575,
+              "y": 0.20458984375
+            },
+            {
+              "x": 0.3901367192156613,
+              "y": 0.2070312505820766
+            },
+            {
+              "x": 0.38378906319849193,
+              "y": 0.21044921898283064
+            },
+            {
+              "x": 0.37988281255820766,
+              "y": 0.21289062581490725
+            },
+            {
+              "x": 0.37158203194849193,
+              "y": 0.22216796944849193
+            },
+            {
+              "x": 0.3681640635477379,
+              "y": 0.22949218776193447
+            },
+            {
+              "x": 0.3666992182843387,
+              "y": 0.2329101561626885
+            },
+            {
+              "x": 0.3662109375,
+              "y": 0.23779296873544808
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_78ac756e57898faa.asset"
+    },
+    {
+      "key": "res://assets/official/sprites/ImgMask-4b8fcf1e08.png",
+      "path": "Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_24a3320123f14d43.asset",
+      "nodes": [
+        "/ItemIconAppendAppearance/Content/mask"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgMask-24a3320123f1.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/ImgMask-24a3320123f1.sprite.asset",
+        "guid": "8155c70cef75b06216a49aa5491f703c",
+        "sha256": "cc0b8337d3d3b72a74fa761dd68bb05edeff25176bc22b387e7b1e1ca1d693ae",
+        "meta_sha256": "b3b9b3d6ed7902e23adc76b3315681fc9a142a181436062c8ee832c6b28b483d",
+        "file_id": 21300000,
+        "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:-3435489076392197362",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_common.bundle",
+          "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+          "path_id": "-3435489076392197362",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+          "manifest": "911_156995",
+          "bundle_size": 1332283,
+          "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+        },
+        "object_sha256": "5608821f45fee86bf26d5fcbe3bb19936a8cf2abdc89c673fcd0dd67ae21cc80",
+        "texture": "CAB-b162472e6e43e3e3d8cef5582d2f004d:-3322258346799168754",
+        "atlas": null,
+        "expected": {
+          "name": "ImgMask",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgMask-24a3320123f1.sprite.asset",
+          "guid": "8155c70cef75b06216a49aa5491f703c",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 143.0,
+            "height": 143.0
+          },
+          "pivot": {
+            "x": 71.5,
+            "y": 71.5
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          },
+          "vertices": [
+            {
+              "x": 0.6850000023841858,
+              "y": 0.5649999976158142
+            },
+            {
+              "x": 0.7149999737739563,
+              "y": -0.42500001192092896
+            },
+            {
+              "x": 0.7149999737739563,
+              "y": 0.42500001192092896
+            },
+            {
+              "x": 0.4950000047683716,
+              "y": 0.7149999737739563
+            },
+            {
+              "x": 0.35499998927116394,
+              "y": -0.7149999737739563
+            },
+            {
+              "x": -0.38499999046325684,
+              "y": 0.7149999737739563
+            },
+            {
+              "x": -0.6150000095367432,
+              "y": -0.7149999737739563
+            },
+            {
+              "x": -0.7149999737739563,
+              "y": 0.574999988079071
+            },
+            {
+              "x": -0.7149999737739563,
+              "y": -0.48500001430511475
+            }
+          ],
+          "triangles": [
+            8,
+            7,
+            6,
+            5,
+            6,
+            7,
+            4,
+            6,
+            5,
+            3,
+            4,
+            5,
+            1,
+            4,
+            3,
+            0,
+            1,
+            3,
+            2,
+            1,
+            0
+          ],
+          "uv": [
+            {
+              "x": 0.9790209806882418,
+              "y": 0.8951048934376323
+            },
+            {
+              "x": 0.9999999816601093,
+              "y": 0.20279719446088884
+            },
+            {
+              "x": 0.9999999816601093,
+              "y": 0.7972028055391112
+            },
+            {
+              "x": 0.8461538494883717,
+              "y": 0.9999999816601093
+            },
+            {
+              "x": 0.7482517407490656,
+              "y": 1.8339890700120193e-08
+            },
+            {
+              "x": 0.23076923743828193,
+              "y": 0.9999999816601093
+            },
+            {
+              "x": 0.06993006326101876,
+              "y": 1.8339890700120193e-08
+            },
+            {
+              "x": 1.8339890700120193e-08,
+              "y": 0.9020978937615881
+            },
+            {
+              "x": 1.8339890700120193e-08,
+              "y": 0.1608391508355841
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_16fc3090f8188569.asset"
+    },
+    {
+      "key": "res://assets/official/sprites/C_none-d73d644cfd.png",
+      "path": "Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_fa3e084e407ed6bf.asset",
+      "nodes": [
+        "/ItemIconAppendAppearance/Content/mask/icon"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/C_none-fa3e084e407e.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/C_none-fa3e084e407e.sprite.asset",
+        "guid": "ec5359fb734602d2595d2e71b2b6a7a4",
+        "sha256": "e086d67e5487ba73293d735676af0fc17413ef7f48fda78cf8f5f2c5cd633460",
+        "meta_sha256": "17b7ee2bd02a0535e921e52d5ae0c62a193b761451674747b373ff9e01bd45cc",
+        "file_id": 21300000,
+        "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:-6201727972171027686",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_common.bundle",
+          "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+          "path_id": "-6201727972171027686",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+          "manifest": "911_156995",
+          "bundle_size": 1332283,
+          "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+        },
+        "object_sha256": "73f8e0b4f17d8d9838fad0f678437b3e0ed26585c7e2525ce6ac4bd90ab90699",
+        "texture": "CAB-b162472e6e43e3e3d8cef5582d2f004d:8373551068376853463",
+        "atlas": {
+          "source": {
+            "bundle": "defaultpackage_assets_image_ui_common.bundle",
+            "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+            "path_id": "7027170908951735255",
+            "origin": "official_cdn",
+            "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+            "manifest": "911_156995",
+            "bundle_size": 1332283,
+            "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+          },
+          "object_sha256": "cfa51853f6c5aaa48b2f77865200d09b4baaa63806b1179881266654b18487eb",
+          "render_data": {
+            "texture": {
+              "m_FileID": 0,
+              "m_PathID": 8373551068376853463
+            },
+            "alphaTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "textureRect": {
+              "x": 978.0,
+              "y": 136.0,
+              "width": 16.0,
+              "height": 16.0
+            },
+            "textureRectOffset": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "atlasRectOffset": {
+              "x": 978.0,
+              "y": 136.0
+            },
+            "uvTransform": {
+              "x": 100.0,
+              "y": 986.0,
+              "z": 100.0,
+              "w": 144.0
+            },
+            "downscaleMultiplier": 1.0,
+            "settingsRaw": 67,
+            "secondaryTextures": []
+          }
+        },
+        "expected": {
+          "name": "C_none",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/C_none-fa3e084e407e.sprite.asset",
+          "guid": "ec5359fb734602d2595d2e71b2b6a7a4",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 16.0,
+            "height": 16.0
+          },
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          },
+          "vertices": [
+            {
+              "x": -0.07999999821186066,
+              "y": 0.07999999821186066
+            },
+            {
+              "x": 0.07999999821186066,
+              "y": 0.07999999821186066
+            },
+            {
+              "x": -0.07999999821186066,
+              "y": -0.07999999821186066
+            },
+            {
+              "x": 0.07999999821186066,
+              "y": -0.07999999821186066
+            }
+          ],
+          "triangles": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            {
+              "x": 0.4775390625873115,
+              "y": 0.07421874991268851
+            },
+            {
+              "x": 0.4853515624126885,
+              "y": 0.07421874991268851
+            },
+            {
+              "x": 0.4775390625873115,
+              "y": 0.06640625008731149
+            },
+            {
+              "x": 0.4853515624126885,
+              "y": 0.06640625008731149
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_78ac756e57898faa.asset"
+    },
+    {
+      "key": "res://assets/official/sprites/ImgQuality_Shadow-2db8da22eb.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_00e2100625e637dd.asset",
+      "nodes": [
+        "/ItemIconAppendAppearance/Content/Shadow"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_Shadow-00e2100625e6.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/ImgQuality_Shadow-00e2100625e6.sprite.asset",
+        "guid": "f2e5d0140c6a8b21f8ad3a7546ff7547",
+        "sha256": "2c8caf5708d446c24c238babad0e3efe0d2f824acaac0941e92c7db79a4ef157",
+        "meta_sha256": "816fc20720b3f9dc873d700af18ec8fd028b7de0be5475312326f06e3a42537c",
+        "file_id": 21300000,
+        "identity": "CAB-e7f9beabec2f42c12744d3d750a28005:2405840242199144779",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "2405840242199144779",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "169ddeb937601545ed2306a07f18d3c63f8ff582647e227436c9d14403f3e4cf",
+        "texture": "CAB-e7f9beabec2f42c12744d3d750a28005:-2272721207766944018",
+        "atlas": {
+          "source": {
+            "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+            "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+            "path_id": "-998719416609474834",
+            "origin": "apk_zip",
+            "manifest": "911_156995",
+            "apk_manifest": "895_156822",
+            "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+            "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+            "raw_size": 94196,
+            "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+          },
+          "object_sha256": "400233c018f4b55a0d3980ed5c2180fea0973d7c6063dc864a424aae1c526681",
+          "render_data": {
+            "texture": {
+              "m_FileID": 0,
+              "m_PathID": -2272721207766944018
+            },
+            "alphaTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "textureRect": {
+              "x": 740.0,
+              "y": 0.0,
+              "width": 158.0,
+              "height": 158.0
+            },
+            "textureRectOffset": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "atlasRectOffset": {
+              "x": 740.0,
+              "y": 0.0
+            },
+            "uvTransform": {
+              "x": 100.0,
+              "y": 819.0,
+              "z": 100.0,
+              "w": 79.0
+            },
+            "downscaleMultiplier": 1.0,
+            "settingsRaw": 67,
+            "secondaryTextures": []
+          }
+        },
+        "expected": {
+          "name": "ImgQuality_Shadow",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_Shadow-00e2100625e6.sprite.asset",
+          "guid": "f2e5d0140c6a8b21f8ad3a7546ff7547",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 158.0,
+            "height": 158.0
+          },
+          "pivot": {
+            "x": 79.0,
+            "y": 79.0
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          },
+          "vertices": [
+            {
+              "x": -0.5199999809265137,
+              "y": -0.44999998807907104
+            },
+            {
+              "x": -0.6000000238418579,
+              "y": -0.3400000035762787
+            },
+            {
+              "x": -0.5199999809265137,
+              "y": -0.46000000834465027
+            },
+            {
+              "x": 0.550000011920929,
+              "y": 0.7900000214576721
+            },
+            {
+              "x": 0.44999998807907104,
+              "y": 0.5199999809265137
+            },
+            {
+              "x": 0.5099999904632568,
+              "y": 0.4699999988079071
+            },
+            {
+              "x": 0.27000001072883606,
+              "y": 0.6399999856948853
+            },
+            {
+              "x": 0.25,
+              "y": 0.6399999856948853
+            },
+            {
+              "x": 0.2199999988079071,
+              "y": 0.6600000262260437
+            },
+            {
+              "x": 0.10999999940395355,
+              "y": 0.6800000071525574
+            },
+            {
+              "x": 0.10000000149011612,
+              "y": 0.6899999976158142
+            },
+            {
+              "x": -0.10999999940395355,
+              "y": 0.6899999976158142
+            },
+            {
+              "x": -0.20999999344348907,
+              "y": 0.6600000262260437
+            },
+            {
+              "x": -0.11999999731779099,
+              "y": 0.6800000071525574
+            },
+            {
+              "x": -0.2800000011920929,
+              "y": 0.6399999856948853
+            },
+            {
+              "x": -0.25999999046325684,
+              "y": 0.6399999856948853
+            },
+            {
+              "x": -0.41999998688697815,
+              "y": 0.550000011920929
+            },
+            {
+              "x": -0.3499999940395355,
+              "y": 0.5899999737739563
+            },
+            {
+              "x": -0.44999998807907104,
+              "y": 0.7900000214576721
+            },
+            {
+              "x": -0.4699999988079071,
+              "y": 0.5099999904632568
+            },
+            {
+              "x": -0.47999998927116394,
+              "y": 0.5099999904632568
+            },
+            {
+              "x": -0.550000011920929,
+              "y": 0.41999998688697815
+            },
+            {
+              "x": -0.5899999737739563,
+              "y": 0.3499999940395355
+            },
+            {
+              "x": -0.6399999856948853,
+              "y": 0.2800000011920929
+            },
+            {
+              "x": -0.6700000166893005,
+              "y": 0.17000000178813934
+            },
+            {
+              "x": -0.6399999856948853,
+              "y": 0.25999999046325684
+            },
+            {
+              "x": -0.6899999976158142,
+              "y": 0.10999999940395355
+            },
+            {
+              "x": -0.6800000071525574,
+              "y": 0.11999999731779099
+            },
+            {
+              "x": -0.7900000214576721,
+              "y": 0.5299999713897705
+            },
+            {
+              "x": -0.6899999976158142,
+              "y": -0.10000000149011612
+            },
+            {
+              "x": 0.7900000214576721,
+              "y": 0.5400000214576721
+            },
+            {
+              "x": 0.6899999976158142,
+              "y": -0.019999999552965164
+            },
+            {
+              "x": 0.7900000214576721,
+              "y": -0.4099999964237213
+            },
+            {
+              "x": 0.6800000071525574,
+              "y": 0.03999999910593033
+            },
+            {
+              "x": 0.6700000166893005,
+              "y": 0.12999999523162842
+            },
+            {
+              "x": 0.6399999856948853,
+              "y": 0.23999999463558197
+            },
+            {
+              "x": 0.5899999737739563,
+              "y": 0.3499999940395355
+            },
+            {
+              "x": 0.5099999904632568,
+              "y": 0.46000000834465027
+            },
+            {
+              "x": 0.6800000071525574,
+              "y": -0.029999999329447746
+            },
+            {
+              "x": 0.6700000166893005,
+              "y": -0.11999999731779099
+            },
+            {
+              "x": 0.6399999856948853,
+              "y": -0.25
+            },
+            {
+              "x": 0.5899999737739563,
+              "y": -0.7900000214576721
+            },
+            {
+              "x": 0.5699999928474426,
+              "y": -0.36000001430511475
+            },
+            {
+              "x": 0.5199999809265137,
+              "y": -0.4399999976158142
+            },
+            {
+              "x": 0.44999998807907104,
+              "y": -0.5199999809265137
+            },
+            {
+              "x": 0.4399999976158142,
+              "y": -0.5199999809265137
+            },
+            {
+              "x": 0.3400000035762787,
+              "y": -0.5899999737739563
+            },
+            {
+              "x": 0.25,
+              "y": -0.6399999856948853
+            },
+            {
+              "x": 0.23000000417232513,
+              "y": -0.6399999856948853
+            },
+            {
+              "x": 0.1599999964237213,
+              "y": -0.6700000166893005
+            },
+            {
+              "x": 0.11999999731779099,
+              "y": -0.6700000166893005
+            },
+            {
+              "x": 0.10999999940395355,
+              "y": -0.6800000071525574
+            },
+            {
+              "x": -0.029999999329447746,
+              "y": -0.6899999976158142
+            },
+            {
+              "x": -0.12999999523162842,
+              "y": -0.6700000166893005
+            },
+            {
+              "x": -0.03999999910593033,
+              "y": -0.6800000071525574
+            },
+            {
+              "x": -0.4099999964237213,
+              "y": -0.7900000214576721
+            },
+            {
+              "x": -0.25999999046325684,
+              "y": -0.6399999856948853
+            },
+            {
+              "x": -0.3700000047683716,
+              "y": -0.5699999928474426
+            },
+            {
+              "x": -0.46000000834465027,
+              "y": -0.5099999904632568
+            },
+            {
+              "x": -0.6399999856948853,
+              "y": -0.25
+            },
+            {
+              "x": -0.6600000262260437,
+              "y": -0.20000000298023224
+            },
+            {
+              "x": -0.6800000071525574,
+              "y": -0.10999999940395355
+            },
+            {
+              "x": -0.7900000214576721,
+              "y": -0.5099999904632568
+            }
+          ],
+          "triangles": [
+            28,
+            29,
+            62,
+            60,
+            62,
+            29,
+            59,
+            62,
+            60,
+            55,
+            62,
+            59,
+            61,
+            60,
+            29,
+            1,
+            55,
+            59,
+            2,
+            55,
+            1,
+            58,
+            55,
+            2,
+            57,
+            55,
+            58,
+            56,
+            55,
+            57,
+            53,
+            55,
+            56,
+            52,
+            55,
+            53,
+            41,
+            55,
+            52,
+            54,
+            52,
+            53,
+            51,
+            41,
+            52,
+            50,
+            41,
+            51,
+            49,
+            41,
+            50,
+            48,
+            41,
+            49,
+            47,
+            41,
+            48,
+            46,
+            41,
+            47,
+            45,
+            41,
+            46,
+            44,
+            41,
+            45,
+            43,
+            41,
+            44,
+            42,
+            41,
+            43,
+            40,
+            41,
+            42,
+            32,
+            41,
+            40,
+            39,
+            32,
+            40,
+            38,
+            32,
+            39,
+            31,
+            32,
+            38,
+            37,
+            5,
+            36,
+            3,
+            36,
+            5,
+            30,
+            36,
+            3,
+            35,
+            36,
+            30,
+            34,
+            35,
+            30,
+            33,
+            34,
+            30,
+            31,
+            33,
+            30,
+            32,
+            31,
+            30,
+            18,
+            23,
+            28,
+            26,
+            28,
+            23,
+            29,
+            28,
+            26,
+            24,
+            26,
+            23,
+            27,
+            26,
+            24,
+            25,
+            24,
+            23,
+            22,
+            23,
+            18,
+            21,
+            22,
+            18,
+            20,
+            21,
+            18,
+            19,
+            20,
+            18,
+            16,
+            19,
+            18,
+            14,
+            16,
+            18,
+            11,
+            14,
+            18,
+            3,
+            11,
+            18,
+            17,
+            16,
+            14,
+            12,
+            14,
+            11,
+            15,
+            14,
+            12,
+            13,
+            12,
+            11,
+            10,
+            11,
+            3,
+            9,
+            10,
+            3,
+            8,
+            9,
+            3,
+            7,
+            8,
+            3,
+            6,
+            7,
+            3,
+            4,
+            6,
+            3,
+            5,
+            4,
+            3,
+            2,
+            1,
+            0
+          ],
+          "uv": [
+            {
+              "x": 0.7490234393626451,
+              "y": 0.06640625232830644
+            },
+            {
+              "x": 0.7412109351716936,
+              "y": 0.08789062430150807
+            },
+            {
+              "x": 0.7490234393626451,
+              "y": 0.0644531233701855
+            },
+            {
+              "x": 0.8535156261641532,
+              "y": 0.3085937541909516
+            },
+            {
+              "x": 0.8437499988358468,
+              "y": 0.2558593712747097
+            },
+            {
+              "x": 0.8496093740686774,
+              "y": 0.24609374976716936
+            },
+            {
+              "x": 0.8261718760477379,
+              "y": 0.2792968722060323
+            },
+            {
+              "x": 0.82421875,
+              "y": 0.2792968722060323
+            },
+            {
+              "x": 0.8212890623835847,
+              "y": 0.28320313012227416
+            },
+            {
+              "x": 0.8105468749417923,
+              "y": 0.28710937639698386
+            },
+            {
+              "x": 0.8095703126455192,
+              "y": 0.2890624995343387
+            },
+            {
+              "x": 0.7890625000582077,
+              "y": 0.2890624995343387
+            },
+            {
+              "x": 0.7792968756402843,
+              "y": 0.28320313012227416
+            },
+            {
+              "x": 0.7880859377619345,
+              "y": 0.28710937639698386
+            },
+            {
+              "x": 0.7724609373835847,
+              "y": 0.2792968722060323
+            },
+            {
+              "x": 0.7744140634313226,
+              "y": 0.2792968722060323
+            },
+            {
+              "x": 0.7587890637805685,
+              "y": 0.26171875232830644
+            },
+            {
+              "x": 0.7656250005820766,
+              "y": 0.26953124487772584
+            },
+            {
+              "x": 0.7558593761641532,
+              "y": 0.3085937541909516
+            },
+            {
+              "x": 0.7539062501164153,
+              "y": 0.25390624813735485
+            },
+            {
+              "x": 0.7529296885477379,
+              "y": 0.25390624813735485
+            },
+            {
+              "x": 0.7460937488358468,
+              "y": 0.23632812243886292
+            },
+            {
+              "x": 0.7421875025611371,
+              "y": 0.22265624883584678
+            },
+            {
+              "x": 0.7373046888969839,
+              "y": 0.20898437523283064
+            },
+            {
+              "x": 0.7343749983701855,
+              "y": 0.18750000034924597
+            },
+            {
+              "x": 0.7373046888969839,
+              "y": 0.20507812313735485
+            },
+            {
+              "x": 0.7324218752328306,
+              "y": 0.17578124988358468
+            },
+            {
+              "x": 0.7333984368015081,
+              "y": 0.17773437447613105
+            },
+            {
+              "x": 0.7226562479045242,
+              "y": 0.25781249441206455
+            },
+            {
+              "x": 0.7324218752328306,
+              "y": 0.1347656247089617
+            },
+            {
+              "x": 0.8769531270954758,
+              "y": 0.2597656291909516
+            },
+            {
+              "x": 0.8671874997671694,
+              "y": 0.1503906250873115
+            },
+            {
+              "x": 0.8769531270954758,
+              "y": 0.07421875069849193
+            },
+            {
+              "x": 0.8662109381984919,
+              "y": 0.16210937482537702
+            },
+            {
+              "x": 0.8652343766298145,
+              "y": 0.17968749906867743
+            },
+            {
+              "x": 0.8623046861030161,
+              "y": 0.2011718739522621
+            },
+            {
+              "x": 0.8574218724388629,
+              "y": 0.22265624883584678
+            },
+            {
+              "x": 0.8496093740686774,
+              "y": 0.2441406266298145
+            },
+            {
+              "x": 0.8662109381984919,
+              "y": 0.14843750013096724
+            },
+            {
+              "x": 0.8652343766298145,
+              "y": 0.13085937552386895
+            },
+            {
+              "x": 0.8623046861030161,
+              "y": 0.10546875
+            },
+            {
+              "x": 0.8574218724388629,
+              "y": -4.190951585769653e-09
+            },
+            {
+              "x": 0.8554687493015081,
+              "y": 0.08398437220603228
+            },
+            {
+              "x": 0.8505859356373549,
+              "y": 0.06835937546566129
+            },
+            {
+              "x": 0.8437499988358468,
+              "y": 0.0527343787252903
+            },
+            {
+              "x": 0.8427734372671694,
+              "y": 0.0527343787252903
+            },
+            {
+              "x": 0.833007812849246,
+              "y": 0.03906250512227416
+            },
+            {
+              "x": 0.82421875,
+              "y": 0.029296877793967724
+            },
+            {
+              "x": 0.8222656254074536,
+              "y": 0.029296877793967724
+            },
+            {
+              "x": 0.815429687150754,
+              "y": 0.02343749674037099
+            },
+            {
+              "x": 0.8115234372380655,
+              "y": 0.02343749674037099
+            },
+            {
+              "x": 0.8105468749417923,
+              "y": 0.021484373603016138
+            },
+            {
+              "x": 0.7968750000654836,
+              "y": 0.019531250465661287
+            },
+            {
+              "x": 0.7871093754656613,
+              "y": 0.02343749674037099
+            },
+            {
+              "x": 0.7958984375873115,
+              "y": 0.021484373603016138
+            },
+            {
+              "x": 0.759765625349246,
+              "y": -4.190951585769653e-09
+            },
+            {
+              "x": 0.7744140634313226,
+              "y": 0.029296877793967724
+            },
+            {
+              "x": 0.7636718745343387,
+              "y": 0.04296875139698386
+            },
+            {
+              "x": 0.7548828116850927,
+              "y": 0.05468750186264515
+            },
+            {
+              "x": 0.7373046888969839,
+              "y": 0.10546875
+            },
+            {
+              "x": 0.7353515599388629,
+              "y": 0.11523437441792339
+            },
+            {
+              "x": 0.7333984368015081,
+              "y": 0.13281250011641532
+            },
+            {
+              "x": 0.7226562479045242,
+              "y": 0.05468750186264515
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset"
+    },
+    {
+      "key": "res://assets/official/sprites/ImgQuality_Mask-95a3f1f08a.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_49ff34b468a83cb0.asset",
+      "nodes": [
+        "/ItemIconAppendAppearance/Content/SexLimit/Mask"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_Mask-49ff34b468a8.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/ImgQuality_Mask-49ff34b468a8.sprite.asset",
+        "guid": "f3c43d2e3f1f7133f01c6ea472b88ea4",
+        "sha256": "cc3c9a2bcca6cf4ad38673392a9c986ff6397dfc5d63e0911eaf4133886a62dc",
+        "meta_sha256": "6b60e249838b87a64cf7570f8bf68af8dff77e4eae8b7de9da668acdafdeb12d",
+        "file_id": 21300000,
+        "identity": "CAB-e7f9beabec2f42c12744d3d750a28005:-9020862499865574848",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-9020862499865574848",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "f062b6127beca0503f825a463eb1f7820e876bd2c79cafff11bb675cb200a732",
+        "texture": "CAB-e7f9beabec2f42c12744d3d750a28005:-2272721207766944018",
+        "atlas": {
+          "source": {
+            "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+            "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+            "path_id": "-998719416609474834",
+            "origin": "apk_zip",
+            "manifest": "911_156995",
+            "apk_manifest": "895_156822",
+            "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+            "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+            "raw_size": 94196,
+            "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+          },
+          "object_sha256": "400233c018f4b55a0d3980ed5c2180fea0973d7c6063dc864a424aae1c526681",
+          "render_data": {
+            "texture": {
+              "m_FileID": 0,
+              "m_PathID": -2272721207766944018
+            },
+            "alphaTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "textureRect": {
+              "x": 555.0,
+              "y": 188.0,
+              "width": 160.0,
+              "height": 160.0
+            },
+            "textureRectOffset": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "atlasRectOffset": {
+              "x": 555.0,
+              "y": 188.0
+            },
+            "uvTransform": {
+              "x": 100.0,
+              "y": 635.0,
+              "z": 100.0,
+              "w": 268.0
+            },
+            "downscaleMultiplier": 1.0,
+            "settingsRaw": 67,
+            "secondaryTextures": []
+          }
+        },
+        "expected": {
+          "name": "ImgQuality_Mask",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_Mask-49ff34b468a8.sprite.asset",
+          "guid": "f3c43d2e3f1f7133f01c6ea472b88ea4",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 160.0,
+            "height": 160.0
+          },
+          "pivot": {
+            "x": 80.0,
+            "y": 80.0
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          },
+          "vertices": [
+            {
+              "x": 0.800000011920929,
+              "y": 0.3499999940395355
+            },
+            {
+              "x": 0.6399999856948853,
+              "y": -0.800000011920929
+            },
+            {
+              "x": 0.800000011920929,
+              "y": -0.4399999976158142
+            },
+            {
+              "x": 0.6100000143051147,
+              "y": 0.7699999809265137
+            },
+            {
+              "x": 0.3799999952316284,
+              "y": 0.800000011920929
+            },
+            {
+              "x": -0.3499999940395355,
+              "y": 0.800000011920929
+            },
+            {
+              "x": -0.6499999761581421,
+              "y": -0.800000011920929
+            },
+            {
+              "x": -0.800000011920929,
+              "y": 0.5600000023841858
+            },
+            {
+              "x": -0.800000011920929,
+              "y": -0.6000000238418579
+            }
+          ],
+          "triangles": [
+            8,
+            7,
+            6,
+            5,
+            6,
+            7,
+            1,
+            6,
+            5,
+            4,
+            1,
+            5,
+            3,
+            1,
+            4,
+            0,
+            1,
+            3,
+            2,
+            1,
+            0
+          ],
+          "uv": [
+            {
+              "x": 0.6982421886641532,
+              "y": 0.5917968738358468
+            },
+            {
+              "x": 0.6826171861030161,
+              "y": 0.36718749767169356
+            },
+            {
+              "x": 0.6982421886641532,
+              "y": 0.4375000004656613
+            },
+            {
+              "x": 0.6796875013969839,
+              "y": 0.6738281212747097
+            },
+            {
+              "x": 0.6572265620343387,
+              "y": 0.6796875023283064
+            },
+            {
+              "x": 0.5859375005820766,
+              "y": 0.6796875023283064
+            },
+            {
+              "x": 0.5566406273283064,
+              "y": 0.36718749767169356
+            },
+            {
+              "x": 0.5419921863358468,
+              "y": 0.6328125004656613
+            },
+            {
+              "x": 0.5419921863358468,
+              "y": 0.4062499953433871
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset"
+    },
+    {
+      "key": "res://assets/official/sprites/ImgItemTipBg-ac615f7615.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_219b4fb11a7aa17b.asset",
+      "nodes": [
+        "/ItemIconAppendAppearance/Content/SexLimit/Bg"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgItemTipBg-219b4fb11a7a.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/ImgItemTipBg-219b4fb11a7a.sprite.asset",
+        "guid": "d48ebe8f3872869be34531858fe72d64",
+        "sha256": "259e1caa359268f057c2510d5cb167089350b645ec503bcea68ff01eb21f262d",
+        "meta_sha256": "2b3539244805b031120f235a11aa207ac7c823afb7002feb8f3719dd9afc576a",
+        "file_id": 21300000,
+        "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:9107272776411977980",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_common.bundle",
+          "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+          "path_id": "9107272776411977980",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+          "manifest": "911_156995",
+          "bundle_size": 1332283,
+          "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+        },
+        "object_sha256": "9a987ddd4ff1cd33d388266b11d4ad90326d604cb2f0d59698aa510cee1bddad",
+        "texture": "CAB-b162472e6e43e3e3d8cef5582d2f004d:8373551068376853463",
+        "atlas": {
+          "source": {
+            "bundle": "defaultpackage_assets_image_ui_common.bundle",
+            "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+            "path_id": "7027170908951735255",
+            "origin": "official_cdn",
+            "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+            "manifest": "911_156995",
+            "bundle_size": 1332283,
+            "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+          },
+          "object_sha256": "cfa51853f6c5aaa48b2f77865200d09b4baaa63806b1179881266654b18487eb",
+          "render_data": {
+            "texture": {
+              "m_FileID": 0,
+              "m_PathID": 8373551068376853463
+            },
+            "alphaTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "textureRect": {
+              "x": 1006.0,
+              "y": 29.0,
+              "width": 16.0,
+              "height": 44.0
+            },
+            "textureRectOffset": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "atlasRectOffset": {
+              "x": 1006.0,
+              "y": 29.0
+            },
+            "uvTransform": {
+              "x": 100.0,
+              "y": 1014.0,
+              "z": 100.0,
+              "w": 51.0
+            },
+            "downscaleMultiplier": 1.0,
+            "settingsRaw": 3,
+            "secondaryTextures": []
+          }
+        },
+        "expected": {
+          "name": "ImgItemTipBg",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgItemTipBg-219b4fb11a7a.sprite.asset",
+          "guid": "d48ebe8f3872869be34531858fe72d64",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 16.0,
+            "height": 44.0
+          },
+          "pivot": {
+            "x": 8.0,
+            "y": 22.0
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 7.0,
+            "y": 0.0,
+            "z": 7.0,
+            "w": 0.0
+          },
+          "vertices": [
+            {
+              "x": -0.07999999821186066,
+              "y": 0.2199999988079071
+            },
+            {
+              "x": 0.07999999821186066,
+              "y": 0.2199999988079071
+            },
+            {
+              "x": -0.07999999821186066,
+              "y": -0.2199999988079071
+            },
+            {
+              "x": 0.07999999821186066,
+              "y": -0.2199999988079071
+            }
+          ],
+          "triangles": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            {
+              "x": 0.4912109375873115,
+              "y": 0.03564453119179234
+            },
+            {
+              "x": 0.4990234374126885,
+              "y": 0.03564453119179234
+            },
+            {
+              "x": 0.4912109375873115,
+              "y": 0.014160156308207661
+            },
+            {
+              "x": 0.4990234374126885,
+              "y": 0.014160156308207661
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_78ac756e57898faa.asset"
+    },
+    {
+      "key": "res://assets/official/sprites/ImgItemIcon_NumBg-3e82a7afe1.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_8659cef7466159cf.asset",
+      "nodes": [
+        "/ItemIconAppendAppearance/Content/BgCountText"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgItemIcon_NumBg-8659cef74661.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/ImgItemIcon_NumBg-8659cef74661.sprite.asset",
+        "guid": "2cdf87d678db6de13baa3ce6873cfc76",
+        "sha256": "c1e04140aaa4a6fc69f17810abf9d6908fbd9240ab5cb606b4732c7106e2dd64",
+        "meta_sha256": "053adf2189b013d85e538bd47433bb5b8cedcde126d0503cb6258e06ce8a8efa",
+        "file_id": 21300000,
+        "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:6381064553429097215",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_common.bundle",
+          "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+          "path_id": "6381064553429097215",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+          "manifest": "911_156995",
+          "bundle_size": 1332283,
+          "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+        },
+        "object_sha256": "e6b648cecdac3da8ebba8360a3a53d41ae1927b3f3ce10d3d646439be13944d9",
+        "texture": "CAB-b162472e6e43e3e3d8cef5582d2f004d:8373551068376853463",
+        "atlas": {
+          "source": {
+            "bundle": "defaultpackage_assets_image_ui_common.bundle",
+            "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+            "path_id": "7027170908951735255",
+            "origin": "official_cdn",
+            "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+            "manifest": "911_156995",
+            "bundle_size": 1332283,
+            "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+          },
+          "object_sha256": "cfa51853f6c5aaa48b2f77865200d09b4baaa63806b1179881266654b18487eb",
+          "render_data": {
+            "texture": {
+              "m_FileID": 0,
+              "m_PathID": 8373551068376853463
+            },
+            "alphaTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "textureRect": {
+              "x": 280.0,
+              "y": 344.0,
+              "width": 24.0,
+              "height": 35.0
+            },
+            "textureRectOffset": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "atlasRectOffset": {
+              "x": 280.0,
+              "y": 344.0
+            },
+            "uvTransform": {
+              "x": 100.0,
+              "y": 292.0,
+              "z": 100.0,
+              "w": 361.5
+            },
+            "downscaleMultiplier": 1.0,
+            "settingsRaw": 3,
+            "secondaryTextures": []
+          }
+        },
+        "expected": {
+          "name": "ImgItemIcon_NumBg",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgItemIcon_NumBg-8659cef74661.sprite.asset",
+          "guid": "2cdf87d678db6de13baa3ce6873cfc76",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 24.0,
+            "height": 35.0
+          },
+          "pivot": {
+            "x": 12.0,
+            "y": 17.5
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 14.0,
+            "y": 17.0,
+            "z": 10.0,
+            "w": 18.0
+          },
+          "vertices": [
+            {
+              "x": -0.11999999731779099,
+              "y": 0.17499999701976776
+            },
+            {
+              "x": 0.11999999731779099,
+              "y": 0.17499999701976776
+            },
+            {
+              "x": -0.11999999731779099,
+              "y": -0.17499999701976776
+            },
+            {
+              "x": 0.11999999731779099,
+              "y": -0.17499999701976776
+            }
+          ],
+          "triangles": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            {
+              "x": 0.13671875013096724,
+              "y": 0.18505859360448085
+            },
+            {
+              "x": 0.14843749986903276,
+              "y": 0.18505859360448085
+            },
+            {
+              "x": 0.13671875013096724,
+              "y": 0.16796875014551915
+            },
+            {
+              "x": 0.14843749986903276,
+              "y": 0.16796875014551915
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_78ac756e57898faa.asset"
+    },
+    {
+      "key": "res://assets/official/sprites/ImgBg_CountText-31498f0e88.png",
+      "path": "Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_43bcc7f5cb4787a2.asset",
+      "nodes": [
+        "/ItemIconAppendAppearance/Content/Progress/BgCountText"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgBg_CountText-43bcc7f5cb47.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/ImgBg_CountText-43bcc7f5cb47.sprite.asset",
+        "guid": "8713fae785f260d31bce9f68f0691abb",
+        "sha256": "381b66692e11d61347b4ea36fcf77ab3217972431a548a10c43111c7014bdd3c",
+        "meta_sha256": "a2d696cbec0d5da5ab581588139986f2d6d2b9ce6e18047d043e1a5a5b525303",
+        "file_id": 21300000,
+        "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:-4098904705157139906",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_common.bundle",
+          "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+          "path_id": "-4098904705157139906",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+          "manifest": "911_156995",
+          "bundle_size": 1332283,
+          "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+        },
+        "object_sha256": "1ebbb0a948aa924ea7ef9e7f07b606962a84cc6985e0526b83cadc79d143a148",
+        "texture": "CAB-b162472e6e43e3e3d8cef5582d2f004d:8373551068376853463",
+        "atlas": {
+          "source": {
+            "bundle": "defaultpackage_assets_image_ui_common.bundle",
+            "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+            "path_id": "7027170908951735255",
+            "origin": "official_cdn",
+            "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+            "manifest": "911_156995",
+            "bundle_size": 1332283,
+            "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+          },
+          "object_sha256": "cfa51853f6c5aaa48b2f77865200d09b4baaa63806b1179881266654b18487eb",
+          "render_data": {
+            "texture": {
+              "m_FileID": 0,
+              "m_PathID": 8373551068376853463
+            },
+            "alphaTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "textureRect": {
+              "x": 912.0,
+              "y": 1720.0,
+              "width": 55.0,
+              "height": 39.0
+            },
+            "textureRectOffset": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "atlasRectOffset": {
+              "x": 912.0,
+              "y": 1720.0
+            },
+            "uvTransform": {
+              "x": 100.0,
+              "y": 939.5,
+              "z": 100.0,
+              "w": 1739.5
+            },
+            "downscaleMultiplier": 1.0,
+            "settingsRaw": 3,
+            "secondaryTextures": []
+          }
+        },
+        "expected": {
+          "name": "ImgBg_CountText",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgBg_CountText-43bcc7f5cb47.sprite.asset",
+          "guid": "8713fae785f260d31bce9f68f0691abb",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 55.0,
+            "height": 39.0
+          },
+          "pivot": {
+            "x": 27.5,
+            "y": 19.5
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 26.0,
+            "y": 18.0,
+            "z": 26.0,
+            "w": 18.0
+          },
+          "vertices": [
+            {
+              "x": -0.2750000059604645,
+              "y": 0.19499999284744263
+            },
+            {
+              "x": 0.2750000059604645,
+              "y": 0.19499999284744263
+            },
+            {
+              "x": -0.2750000059604645,
+              "y": -0.19499999284744263
+            },
+            {
+              "x": 0.2750000059604645,
+              "y": -0.19499999284744263
+            }
+          ],
+          "triangles": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            {
+              "x": 0.4453124997089617,
+              "y": 0.858886718400754
+            },
+            {
+              "x": 0.4721679690410383,
+              "y": 0.858886718400754
+            },
+            {
+              "x": 0.4453124997089617,
+              "y": 0.839843750349246
+            },
+            {
+              "x": 0.4721679690410383,
+              "y": 0.839843750349246
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_78ac756e57898faa.asset"
+    },
+    {
+      "key": "res://assets/official/sprites/ItemPiece2-94d2a86906.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_a7d67a73d7035487.asset",
+      "nodes": [
+        "/ItemIconAppendAppearance/Content/Progress/BgCountText/ItemDebris/Image"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ItemPiece2-a7d67a73d703.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/ItemPiece2-a7d67a73d703.sprite.asset",
+        "guid": "2dac7913e99d839aef0e6ce039472692",
+        "sha256": "06519e86aef149546f306dc1b12f3dc3ccb6fb58cd417445e03dd41140acd700",
+        "meta_sha256": "b6058b7983c233ae8937783234b84c7ca6b2e1407eee75e0869f4b427043c8bf",
+        "file_id": 21300000,
+        "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:1747420131029203034",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_common.bundle",
+          "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+          "path_id": "1747420131029203034",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+          "manifest": "911_156995",
+          "bundle_size": 1332283,
+          "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+        },
+        "object_sha256": "066dfe2c43897f53ef67eba391d6ed7b496408c74e8612ec000b30b65eff16a5",
+        "texture": "CAB-b162472e6e43e3e3d8cef5582d2f004d:7156034100685763919",
+        "atlas": {
+          "source": {
+            "bundle": "defaultpackage_assets_image_ui_common.bundle",
+            "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+            "path_id": "-7279391711368186545",
+            "origin": "official_cdn",
+            "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+            "manifest": "911_156995",
+            "bundle_size": 1332283,
+            "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+          },
+          "object_sha256": "b9119cdf18e7daf5fae13f2484dac21fea332f706111652201061e2975ecaebb",
+          "render_data": {
+            "texture": {
+              "m_FileID": 0,
+              "m_PathID": 7156034100685763919
+            },
+            "alphaTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "textureRect": {
+              "x": 1532.0,
+              "y": 799.0,
+              "width": 25.0,
+              "height": 25.0
+            },
+            "textureRectOffset": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "atlasRectOffset": {
+              "x": 1532.0,
+              "y": 799.0
+            },
+            "uvTransform": {
+              "x": 100.0,
+              "y": 1544.5,
+              "z": 100.0,
+              "w": 811.5
+            },
+            "downscaleMultiplier": 1.0,
+            "settingsRaw": 67,
+            "secondaryTextures": []
+          }
+        },
+        "expected": {
+          "name": "ItemPiece2",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ItemPiece2-a7d67a73d703.sprite.asset",
+          "guid": "2dac7913e99d839aef0e6ce039472692",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 25.0,
+            "height": 25.0
+          },
+          "pivot": {
+            "x": 12.5,
+            "y": 12.5
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          },
+          "vertices": [
+            {
+              "x": -0.125,
+              "y": 0.125
+            },
+            {
+              "x": 0.125,
+              "y": 0.125
+            },
+            {
+              "x": -0.125,
+              "y": -0.125
+            },
+            {
+              "x": 0.125,
+              "y": -0.125
+            }
+          ],
+          "triangles": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            {
+              "x": 0.748046875,
+              "y": 0.8046875
+            },
+            {
+              "x": 0.76025390625,
+              "y": 0.8046875
+            },
+            {
+              "x": 0.748046875,
+              "y": 0.7802734375
+            },
+            {
+              "x": 0.76025390625,
+              "y": 0.7802734375
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_d64e7abbd8d534a8.asset"
+    },
+    {
+      "key": "res://assets/official/sprites/ImgQuality_White-9f7417c1ae.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_031a03cab0fff1f9.asset",
+      "nodes": [
+        "QualityBgImages[0]",
+        "QualityBgImages[1]"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_White-031a03cab0ff.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/ImgQuality_White-031a03cab0ff.sprite.asset",
+        "guid": "bd9cff9ba270fa895ee53fd598ad3d16",
+        "sha256": "1eabf7d9d47b63532ad05d54df89fd6dad9d0e35947b5766253b0794d3a1b11c",
+        "meta_sha256": "056fbf355166ae854c3595adcb2fd6728945c3c37f3a82d14cf48a7ca1fdf4a2",
+        "file_id": 21300000,
+        "identity": "CAB-e7f9beabec2f42c12744d3d750a28005:-1061696376164999677",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-1061696376164999677",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "13e66db1bda3bad75ff4f6d5242fcb2243de531c2a5453e9098164f2e3852bd0",
+        "texture": "CAB-e7f9beabec2f42c12744d3d750a28005:-2272721207766944018",
+        "atlas": {
+          "source": {
+            "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+            "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+            "path_id": "-998719416609474834",
+            "origin": "apk_zip",
+            "manifest": "911_156995",
+            "apk_manifest": "895_156822",
+            "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+            "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+            "raw_size": 94196,
+            "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+          },
+          "object_sha256": "400233c018f4b55a0d3980ed5c2180fea0973d7c6063dc864a424aae1c526681",
+          "render_data": {
+            "texture": {
+              "m_FileID": 0,
+              "m_PathID": -2272721207766944018
+            },
+            "alphaTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "textureRect": {
+              "x": 555.0761108398438,
+              "y": 0.07612049579620361,
+              "width": 180.84774780273438,
+              "height": 183.84774780273438
+            },
+            "textureRectOffset": {
+              "x": 2.076120376586914,
+              "y": 0.07612049579620361
+            },
+            "atlasRectOffset": {
+              "x": 553.0,
+              "y": 0.0
+            },
+            "uvTransform": {
+              "x": 100.0,
+              "y": 645.0,
+              "z": 100.0,
+              "w": 92.0
+            },
+            "downscaleMultiplier": 1.0,
+            "settingsRaw": 67,
+            "secondaryTextures": []
+          }
+        },
+        "expected": {
+          "name": "ImgQuality_White",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_White-031a03cab0ff.sprite.asset",
+          "guid": "bd9cff9ba270fa895ee53fd598ad3d16",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 184.0,
+            "height": 184.0
+          },
+          "pivot": {
+            "x": 92.0,
+            "y": 92.0
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          },
+          "vertices": [
+            {
+              "x": 0.8600000143051147,
+              "y": 0.6200000047683716
+            },
+            {
+              "x": 0.9100000262260437,
+              "y": -0.41999998688697815
+            },
+            {
+              "x": 0.9100000262260437,
+              "y": 0.33000001311302185
+            },
+            {
+              "x": 0.6299999952316284,
+              "y": -0.8299999833106995
+            },
+            {
+              "x": 0.3499999940395355,
+              "y": 0.9200000166893005
+            },
+            {
+              "x": 0.2800000011920929,
+              "y": -0.9200000166893005
+            },
+            {
+              "x": -0.49000000953674316,
+              "y": 0.9200000166893005
+            },
+            {
+              "x": -0.5199999809265137,
+              "y": -0.9200000166893005
+            },
+            {
+              "x": -0.6499999761581421,
+              "y": -0.8999999761581421
+            },
+            {
+              "x": -0.8999999761581421,
+              "y": 0.5400000214576721
+            },
+            {
+              "x": -0.8999999761581421,
+              "y": -0.41999998688697815
+            }
+          ],
+          "triangles": [
+            10,
+            9,
+            8,
+            6,
+            8,
+            9,
+            7,
+            8,
+            6,
+            5,
+            7,
+            6,
+            4,
+            5,
+            6,
+            3,
+            5,
+            4,
+            0,
+            3,
+            4,
+            1,
+            3,
+            0,
+            2,
+            1,
+            0
+          ],
+          "uv": [
+            {
+              "x": 0.7138671888969839,
+              "y": 0.3007812509313226
+            },
+            {
+              "x": 0.7187500025611371,
+              "y": 0.09765625256113708
+            },
+            {
+              "x": 0.7187500025611371,
+              "y": 0.24414062756113708
+            },
+            {
+              "x": 0.6914062495343387,
+              "y": 0.01757812825962901
+            },
+            {
+              "x": 0.6640624994179234,
+              "y": 0.359375003259629
+            },
+            {
+              "x": 0.6572265626164153,
+              "y": -3.259629011154175e-09
+            },
+            {
+              "x": 0.5820312490686774,
+              "y": 0.359375003259629
+            },
+            {
+              "x": 0.5791015643626451,
+              "y": -3.259629011154175e-09
+            },
+            {
+              "x": 0.5664062523283064,
+              "y": 0.003906254656612873
+            },
+            {
+              "x": 0.5419921898283064,
+              "y": 0.2851562541909516
+            },
+            {
+              "x": 0.5419921898283064,
+              "y": 0.09765625256113708
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset"
+    },
+    {
+      "key": "res://assets/official/sprites/ImgQuality_Purple-7d444d87c0.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_0b40a53021595e0f.asset",
+      "nodes": [
+        "QualityBgImages[3]"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_Purple-0b40a5302159.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/ImgQuality_Purple-0b40a5302159.sprite.asset",
+        "guid": "c19f6ad93d9cbc912b9af8d73ad6a94f",
+        "sha256": "4e135017e95c7d7da337767ff7370ae065389a830857fbd4e6f0abddea0f170f",
+        "meta_sha256": "1090e71f84bec00121a1b32b5944a37404fd79da873e96f9ec9ee71de8ca6bbc",
+        "file_id": 21300000,
+        "identity": "CAB-e7f9beabec2f42c12744d3d750a28005:-6257336838115593342",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-6257336838115593342",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "7a77f522d8cb579758da8814897bbc6d8eb30e4bac2add5e194cca3994de3634",
+        "texture": "CAB-e7f9beabec2f42c12744d3d750a28005:-2272721207766944018",
+        "atlas": {
+          "source": {
+            "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+            "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+            "path_id": "-998719416609474834",
+            "origin": "apk_zip",
+            "manifest": "911_156995",
+            "apk_manifest": "895_156822",
+            "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+            "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+            "raw_size": 94196,
+            "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+          },
+          "object_sha256": "400233c018f4b55a0d3980ed5c2180fea0973d7c6063dc864a424aae1c526681",
+          "render_data": {
+            "texture": {
+              "m_FileID": 0,
+              "m_PathID": -2272721207766944018
+            },
+            "alphaTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "textureRect": {
+              "x": 370.07611083984375,
+              "y": 0.07612049579620361,
+              "width": 180.84774780273438,
+              "height": 183.84774780273438
+            },
+            "textureRectOffset": {
+              "x": 2.076120376586914,
+              "y": 0.07612049579620361
+            },
+            "atlasRectOffset": {
+              "x": 368.0,
+              "y": 0.0
+            },
+            "uvTransform": {
+              "x": 100.0,
+              "y": 460.0,
+              "z": 100.0,
+              "w": 92.0
+            },
+            "downscaleMultiplier": 1.0,
+            "settingsRaw": 67,
+            "secondaryTextures": []
+          }
+        },
+        "expected": {
+          "name": "ImgQuality_Purple",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_Purple-0b40a5302159.sprite.asset",
+          "guid": "c19f6ad93d9cbc912b9af8d73ad6a94f",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 184.0,
+            "height": 184.0
+          },
+          "pivot": {
+            "x": 92.0,
+            "y": 92.0
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          },
+          "vertices": [
+            {
+              "x": 0.8600000143051147,
+              "y": 0.6200000047683716
+            },
+            {
+              "x": 0.9100000262260437,
+              "y": -0.41999998688697815
+            },
+            {
+              "x": 0.9100000262260437,
+              "y": 0.33000001311302185
+            },
+            {
+              "x": 0.6299999952316284,
+              "y": -0.8299999833106995
+            },
+            {
+              "x": 0.3499999940395355,
+              "y": 0.9200000166893005
+            },
+            {
+              "x": 0.2800000011920929,
+              "y": -0.9200000166893005
+            },
+            {
+              "x": -0.49000000953674316,
+              "y": 0.9200000166893005
+            },
+            {
+              "x": -0.5199999809265137,
+              "y": -0.9200000166893005
+            },
+            {
+              "x": -0.6499999761581421,
+              "y": -0.8999999761581421
+            },
+            {
+              "x": -0.8999999761581421,
+              "y": 0.5400000214576721
+            },
+            {
+              "x": -0.8999999761581421,
+              "y": -0.41999998688697815
+            }
+          ],
+          "triangles": [
+            10,
+            9,
+            8,
+            6,
+            8,
+            9,
+            7,
+            8,
+            6,
+            5,
+            7,
+            6,
+            4,
+            5,
+            6,
+            3,
+            5,
+            4,
+            0,
+            3,
+            4,
+            1,
+            3,
+            0,
+            2,
+            1,
+            0
+          ],
+          "uv": [
+            {
+              "x": 0.5332031263969839,
+              "y": 0.3007812509313226
+            },
+            {
+              "x": 0.5380859400611371,
+              "y": 0.09765625256113708
+            },
+            {
+              "x": 0.5380859400611371,
+              "y": 0.24414062756113708
+            },
+            {
+              "x": 0.5107421870343387,
+              "y": 0.01757812825962901
+            },
+            {
+              "x": 0.4833984369179234,
+              "y": 0.359375003259629
+            },
+            {
+              "x": 0.4765625001164153,
+              "y": -3.259629011154175e-09
+            },
+            {
+              "x": 0.4013671865686774,
+              "y": 0.359375003259629
+            },
+            {
+              "x": 0.39843750186264515,
+              "y": -3.259629011154175e-09
+            },
+            {
+              "x": 0.38574218982830644,
+              "y": 0.003906254656612873
+            },
+            {
+              "x": 0.36132812732830644,
+              "y": 0.2851562541909516
+            },
+            {
+              "x": 0.36132812732830644,
+              "y": 0.09765625256113708
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset"
+    },
+    {
+      "key": "res://assets/official/sprites/ImgQuality_Orange-062c6607e3.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_78887320b0cb2710.asset",
+      "nodes": [
+        "QualityBgImages[4]"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_Orange-78887320b0cb.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/ImgQuality_Orange-78887320b0cb.sprite.asset",
+        "guid": "b50fd42843b084ec9b1c5f74bc19cfdf",
+        "sha256": "e6e651d894d76b974b1c14c9fbbb5a178692ecf08d91aff1550030614d11219c",
+        "meta_sha256": "31b673e7aad52ad10b5d005bb7baa2a23808e3837aca260b5316fe7ef2583263",
+        "file_id": 21300000,
+        "identity": "CAB-e7f9beabec2f42c12744d3d750a28005:6526364828817696293",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "6526364828817696293",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "33fec576c9bd6ca6ffe93cb2ce175299b5ef1fe100e416c030281a65d0148cbd",
+        "texture": "CAB-e7f9beabec2f42c12744d3d750a28005:-2272721207766944018",
+        "atlas": {
+          "source": {
+            "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+            "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+            "path_id": "-998719416609474834",
+            "origin": "apk_zip",
+            "manifest": "911_156995",
+            "apk_manifest": "895_156822",
+            "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+            "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+            "raw_size": 94196,
+            "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+          },
+          "object_sha256": "400233c018f4b55a0d3980ed5c2180fea0973d7c6063dc864a424aae1c526681",
+          "render_data": {
+            "texture": {
+              "m_FileID": 0,
+              "m_PathID": -2272721207766944018
+            },
+            "alphaTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "textureRect": {
+              "x": 0.07612037658691406,
+              "y": 0.07612049579620361,
+              "width": 180.84774780273438,
+              "height": 183.84774780273438
+            },
+            "textureRectOffset": {
+              "x": 2.076120376586914,
+              "y": 0.07612049579620361
+            },
+            "atlasRectOffset": {
+              "x": -2.0,
+              "y": 0.0
+            },
+            "uvTransform": {
+              "x": 100.0,
+              "y": 90.0,
+              "z": 100.0,
+              "w": 92.0
+            },
+            "downscaleMultiplier": 1.0,
+            "settingsRaw": 67,
+            "secondaryTextures": []
+          }
+        },
+        "expected": {
+          "name": "ImgQuality_Orange",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_Orange-78887320b0cb.sprite.asset",
+          "guid": "b50fd42843b084ec9b1c5f74bc19cfdf",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 184.0,
+            "height": 184.0
+          },
+          "pivot": {
+            "x": 92.0,
+            "y": 92.0
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          },
+          "vertices": [
+            {
+              "x": 0.8600000143051147,
+              "y": 0.6200000047683716
+            },
+            {
+              "x": 0.9100000262260437,
+              "y": -0.41999998688697815
+            },
+            {
+              "x": 0.9100000262260437,
+              "y": 0.33000001311302185
+            },
+            {
+              "x": 0.6299999952316284,
+              "y": -0.8299999833106995
+            },
+            {
+              "x": 0.3499999940395355,
+              "y": 0.9200000166893005
+            },
+            {
+              "x": 0.2800000011920929,
+              "y": -0.9200000166893005
+            },
+            {
+              "x": -0.49000000953674316,
+              "y": 0.9200000166893005
+            },
+            {
+              "x": -0.5199999809265137,
+              "y": -0.9200000166893005
+            },
+            {
+              "x": -0.6499999761581421,
+              "y": -0.8999999761581421
+            },
+            {
+              "x": -0.8999999761581421,
+              "y": 0.5400000214576721
+            },
+            {
+              "x": -0.8999999761581421,
+              "y": -0.41999998688697815
+            }
+          ],
+          "triangles": [
+            10,
+            9,
+            8,
+            6,
+            8,
+            9,
+            7,
+            8,
+            6,
+            5,
+            7,
+            6,
+            4,
+            5,
+            6,
+            3,
+            5,
+            4,
+            0,
+            3,
+            4,
+            1,
+            3,
+            0,
+            2,
+            1,
+            0
+          ],
+          "uv": [
+            {
+              "x": 0.17187500139698386,
+              "y": 0.3007812509313226
+            },
+            {
+              "x": 0.17675781506113708,
+              "y": 0.09765625256113708
+            },
+            {
+              "x": 0.17675781506113708,
+              "y": 0.24414062756113708
+            },
+            {
+              "x": 0.1494140620343387,
+              "y": 0.01757812825962901
+            },
+            {
+              "x": 0.12207031191792339,
+              "y": 0.359375003259629
+            },
+            {
+              "x": 0.11523437511641532,
+              "y": -3.259629011154175e-09
+            },
+            {
+              "x": 0.040039061568677425,
+              "y": 0.359375003259629
+            },
+            {
+              "x": 0.03710937686264515,
+              "y": -3.259629011154175e-09
+            },
+            {
+              "x": 0.024414064828306437,
+              "y": 0.003906254656612873
+            },
+            {
+              "x": 2.3283064365386963e-09,
+              "y": 0.2851562541909516
+            },
+            {
+              "x": 2.3283064365386963e-09,
+              "y": 0.09765625256113708
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset"
+    },
+    {
+      "key": "res://assets/official/sprites/ImgQuality_Gold-b466cfbe99.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_5f018c42e0ce530e.asset",
+      "nodes": [
+        "QualityBgImages[5]"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_Gold-5f018c42e0ce.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/ImgQuality_Gold-5f018c42e0ce.sprite.asset",
+        "guid": "c4dd759ed982578a1153bd033d25a7ee",
+        "sha256": "56661e5ded700647ccaf3ebe2015e675d401d4bc9431e6d4fde4270494447314",
+        "meta_sha256": "9c1234784d4b086bfdfcbdffa7a6a74c6b557d443b284484e0e6f7c0d778988d",
+        "file_id": 21300000,
+        "identity": "CAB-e7f9beabec2f42c12744d3d750a28005:9108522341688220357",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "9108522341688220357",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "e41e6974116a5b7d657a6e3a7d9d8656f897c5828e3132aa8cd8e05d16982188",
+        "texture": "CAB-e7f9beabec2f42c12744d3d750a28005:-2272721207766944018",
+        "atlas": {
+          "source": {
+            "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+            "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+            "path_id": "-998719416609474834",
+            "origin": "apk_zip",
+            "manifest": "911_156995",
+            "apk_manifest": "895_156822",
+            "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+            "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+            "raw_size": 94196,
+            "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+          },
+          "object_sha256": "400233c018f4b55a0d3980ed5c2180fea0973d7c6063dc864a424aae1c526681",
+          "render_data": {
+            "texture": {
+              "m_FileID": 0,
+              "m_PathID": -2272721207766944018
+            },
+            "alphaTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "textureRect": {
+              "x": 370.07611083984375,
+              "y": 188.0761260986328,
+              "width": 180.84774780273438,
+              "height": 183.84774780273438
+            },
+            "textureRectOffset": {
+              "x": 2.076120376586914,
+              "y": 0.07612049579620361
+            },
+            "atlasRectOffset": {
+              "x": 368.0,
+              "y": 188.0
+            },
+            "uvTransform": {
+              "x": 100.0,
+              "y": 460.0,
+              "z": 100.0,
+              "w": 280.0
+            },
+            "downscaleMultiplier": 1.0,
+            "settingsRaw": 67,
+            "secondaryTextures": []
+          }
+        },
+        "expected": {
+          "name": "ImgQuality_Gold",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_Gold-5f018c42e0ce.sprite.asset",
+          "guid": "c4dd759ed982578a1153bd033d25a7ee",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 184.0,
+            "height": 184.0
+          },
+          "pivot": {
+            "x": 92.0,
+            "y": 92.0
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          },
+          "vertices": [
+            {
+              "x": 0.8600000143051147,
+              "y": 0.6200000047683716
+            },
+            {
+              "x": 0.9100000262260437,
+              "y": -0.41999998688697815
+            },
+            {
+              "x": 0.9100000262260437,
+              "y": 0.33000001311302185
+            },
+            {
+              "x": 0.6299999952316284,
+              "y": -0.8299999833106995
+            },
+            {
+              "x": 0.3499999940395355,
+              "y": 0.9200000166893005
+            },
+            {
+              "x": 0.2800000011920929,
+              "y": -0.9200000166893005
+            },
+            {
+              "x": -0.49000000953674316,
+              "y": 0.9200000166893005
+            },
+            {
+              "x": -0.5199999809265137,
+              "y": -0.9200000166893005
+            },
+            {
+              "x": -0.6499999761581421,
+              "y": -0.8999999761581421
+            },
+            {
+              "x": -0.8999999761581421,
+              "y": 0.5400000214576721
+            },
+            {
+              "x": -0.8999999761581421,
+              "y": -0.41999998688697815
+            }
+          ],
+          "triangles": [
+            10,
+            9,
+            8,
+            6,
+            8,
+            9,
+            7,
+            8,
+            6,
+            5,
+            7,
+            6,
+            4,
+            5,
+            6,
+            3,
+            5,
+            4,
+            0,
+            3,
+            4,
+            1,
+            3,
+            0,
+            2,
+            1,
+            0
+          ],
+          "uv": [
+            {
+              "x": 0.5332031263969839,
+              "y": 0.6679687509313226
+            },
+            {
+              "x": 0.5380859400611371,
+              "y": 0.4648437525611371
+            },
+            {
+              "x": 0.5380859400611371,
+              "y": 0.6113281275611371
+            },
+            {
+              "x": 0.5107421870343387,
+              "y": 0.384765628259629
+            },
+            {
+              "x": 0.4833984369179234,
+              "y": 0.726562503259629
+            },
+            {
+              "x": 0.4765625001164153,
+              "y": 0.367187496740371
+            },
+            {
+              "x": 0.4013671865686774,
+              "y": 0.726562503259629
+            },
+            {
+              "x": 0.39843750186264515,
+              "y": 0.367187496740371
+            },
+            {
+              "x": 0.38574218982830644,
+              "y": 0.3710937546566129
+            },
+            {
+              "x": 0.36132812732830644,
+              "y": 0.6523437541909516
+            },
+            {
+              "x": 0.36132812732830644,
+              "y": 0.4648437525611371
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset"
+    },
+    {
+      "key": "res://assets/official/sprites/ImgQuality_Red-fe7cc9d49b.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_caa09e69432a7457.asset",
+      "nodes": [
+        "QualityBgImages[6]"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_Red-caa09e69432a.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/ImgQuality_Red-caa09e69432a.sprite.asset",
+        "guid": "2eec0af116311869632ceb9e1656b0b4",
+        "sha256": "f0c71f1abb00e38859b958a593dddee2d54f1af97966588f4c623a3e6913bd61",
+        "meta_sha256": "a5239f7e5258e1d03b948477316a06b88d804b524f5afa4c60ac91b91028a619",
+        "file_id": 21300000,
+        "identity": "CAB-e7f9beabec2f42c12744d3d750a28005:1529348208687224206",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "1529348208687224206",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "f191c9674f8d4cc3a71f85e38a678b91b2ede6b563d70451330d1bb586ec3c59",
+        "texture": "CAB-e7f9beabec2f42c12744d3d750a28005:-2272721207766944018",
+        "atlas": {
+          "source": {
+            "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+            "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+            "path_id": "-998719416609474834",
+            "origin": "apk_zip",
+            "manifest": "911_156995",
+            "apk_manifest": "895_156822",
+            "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+            "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+            "raw_size": 94196,
+            "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+          },
+          "object_sha256": "400233c018f4b55a0d3980ed5c2180fea0973d7c6063dc864a424aae1c526681",
+          "render_data": {
+            "texture": {
+              "m_FileID": 0,
+              "m_PathID": -2272721207766944018
+            },
+            "alphaTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "textureRect": {
+              "x": 185.0761260986328,
+              "y": 188.0761260986328,
+              "width": 180.84774780273438,
+              "height": 183.84774780273438
+            },
+            "textureRectOffset": {
+              "x": 2.076120376586914,
+              "y": 0.07612049579620361
+            },
+            "atlasRectOffset": {
+              "x": 183.0,
+              "y": 188.0
+            },
+            "uvTransform": {
+              "x": 100.0,
+              "y": 275.0,
+              "z": 100.0,
+              "w": 280.0
+            },
+            "downscaleMultiplier": 1.0,
+            "settingsRaw": 67,
+            "secondaryTextures": []
+          }
+        },
+        "expected": {
+          "name": "ImgQuality_Red",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_Red-caa09e69432a.sprite.asset",
+          "guid": "2eec0af116311869632ceb9e1656b0b4",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 184.0,
+            "height": 184.0
+          },
+          "pivot": {
+            "x": 92.0,
+            "y": 92.0
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          },
+          "vertices": [
+            {
+              "x": 0.8600000143051147,
+              "y": 0.6200000047683716
+            },
+            {
+              "x": 0.9100000262260437,
+              "y": -0.41999998688697815
+            },
+            {
+              "x": 0.9100000262260437,
+              "y": 0.33000001311302185
+            },
+            {
+              "x": 0.6299999952316284,
+              "y": -0.8299999833106995
+            },
+            {
+              "x": 0.3499999940395355,
+              "y": 0.9200000166893005
+            },
+            {
+              "x": 0.2800000011920929,
+              "y": -0.9200000166893005
+            },
+            {
+              "x": -0.49000000953674316,
+              "y": 0.9200000166893005
+            },
+            {
+              "x": -0.5199999809265137,
+              "y": -0.9200000166893005
+            },
+            {
+              "x": -0.6499999761581421,
+              "y": -0.8999999761581421
+            },
+            {
+              "x": -0.8999999761581421,
+              "y": 0.5400000214576721
+            },
+            {
+              "x": -0.8999999761581421,
+              "y": -0.41999998688697815
+            }
+          ],
+          "triangles": [
+            10,
+            9,
+            8,
+            6,
+            8,
+            9,
+            7,
+            8,
+            6,
+            5,
+            7,
+            6,
+            4,
+            5,
+            6,
+            3,
+            5,
+            4,
+            0,
+            3,
+            4,
+            1,
+            3,
+            0,
+            2,
+            1,
+            0
+          ],
+          "uv": [
+            {
+              "x": 0.35253906389698386,
+              "y": 0.6679687509313226
+            },
+            {
+              "x": 0.3574218775611371,
+              "y": 0.4648437525611371
+            },
+            {
+              "x": 0.3574218775611371,
+              "y": 0.6113281275611371
+            },
+            {
+              "x": 0.3300781245343387,
+              "y": 0.384765628259629
+            },
+            {
+              "x": 0.3027343744179234,
+              "y": 0.726562503259629
+            },
+            {
+              "x": 0.2958984376164153,
+              "y": 0.367187496740371
+            },
+            {
+              "x": 0.22070312406867743,
+              "y": 0.726562503259629
+            },
+            {
+              "x": 0.21777343936264515,
+              "y": 0.367187496740371
+            },
+            {
+              "x": 0.20507812732830644,
+              "y": 0.3710937546566129
+            },
+            {
+              "x": 0.18066406482830644,
+              "y": 0.6523437541909516
+            },
+            {
+              "x": 0.18066406482830644,
+              "y": 0.4648437525611371
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset"
+    },
+    {
+      "key": "res://assets/official/sprites/ImgQuality_Multicolour-48c880f195.png",
+      "path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_93374ebc65832dd6.asset",
+      "nodes": [
+        "QualityBgImages[7]"
+      ],
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_Multicolour-93374ebc6583.sprite.asset",
+        "native_relative_path": "ProfessionDynamic/ImgQuality_Multicolour-93374ebc6583.sprite.asset",
+        "guid": "c79698621df812596c92c78e77a2088f",
+        "sha256": "30c46a721881cb2482e82353f122eaf9fc0a6a4a1f6a3d4d23e1fb0c7475b49b",
+        "meta_sha256": "ab4149ab563427ef34fe344aa7ddd8890be8852971e9584e113eeecbe9ecc9ca",
+        "file_id": 21300000,
+        "identity": "CAB-e7f9beabec2f42c12744d3d750a28005:1550197147551074025",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "1550197147551074025",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "da74d621ddfe36be64ff1a72f8a6c80c1e7d9060d3aee11529e1e468a588956a",
+        "texture": "CAB-e7f9beabec2f42c12744d3d750a28005:-2272721207766944018",
+        "atlas": {
+          "source": {
+            "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+            "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+            "path_id": "-998719416609474834",
+            "origin": "apk_zip",
+            "manifest": "911_156995",
+            "apk_manifest": "895_156822",
+            "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+            "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+            "raw_size": 94196,
+            "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+          },
+          "object_sha256": "400233c018f4b55a0d3980ed5c2180fea0973d7c6063dc864a424aae1c526681",
+          "render_data": {
+            "texture": {
+              "m_FileID": 0,
+              "m_PathID": -2272721207766944018
+            },
+            "alphaTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "textureRect": {
+              "x": 185.0761260986328,
+              "y": 0.07612049579620361,
+              "width": 180.84774780273438,
+              "height": 183.84774780273438
+            },
+            "textureRectOffset": {
+              "x": 2.076120376586914,
+              "y": 0.07612049579620361
+            },
+            "atlasRectOffset": {
+              "x": 183.0,
+              "y": 0.0
+            },
+            "uvTransform": {
+              "x": 100.0,
+              "y": 275.0,
+              "z": 100.0,
+              "w": 92.0
+            },
+            "downscaleMultiplier": 1.0,
+            "settingsRaw": 67,
+            "secondaryTextures": []
+          }
+        },
+        "expected": {
+          "name": "ImgQuality_Multicolour",
+          "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgQuality_Multicolour-93374ebc6583.sprite.asset",
+          "guid": "c79698621df812596c92c78e77a2088f",
+          "rect": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 184.0,
+            "height": 184.0
+          },
+          "pivot": {
+            "x": 92.0,
+            "y": 92.0
+          },
+          "ppu": 100.0,
+          "border": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          },
+          "vertices": [
+            {
+              "x": 0.8600000143051147,
+              "y": 0.6200000047683716
+            },
+            {
+              "x": 0.9100000262260437,
+              "y": -0.41999998688697815
+            },
+            {
+              "x": 0.9100000262260437,
+              "y": 0.33000001311302185
+            },
+            {
+              "x": 0.6299999952316284,
+              "y": -0.8299999833106995
+            },
+            {
+              "x": 0.3499999940395355,
+              "y": 0.9200000166893005
+            },
+            {
+              "x": 0.2800000011920929,
+              "y": -0.9200000166893005
+            },
+            {
+              "x": -0.49000000953674316,
+              "y": 0.9200000166893005
+            },
+            {
+              "x": -0.5199999809265137,
+              "y": -0.9200000166893005
+            },
+            {
+              "x": -0.6499999761581421,
+              "y": -0.8999999761581421
+            },
+            {
+              "x": -0.8999999761581421,
+              "y": 0.5400000214576721
+            },
+            {
+              "x": -0.8999999761581421,
+              "y": -0.41999998688697815
+            }
+          ],
+          "triangles": [
+            10,
+            9,
+            8,
+            6,
+            8,
+            9,
+            7,
+            8,
+            6,
+            5,
+            7,
+            6,
+            4,
+            5,
+            6,
+            3,
+            5,
+            4,
+            0,
+            3,
+            4,
+            1,
+            3,
+            0,
+            2,
+            1,
+            0
+          ],
+          "uv": [
+            {
+              "x": 0.35253906389698386,
+              "y": 0.3007812509313226
+            },
+            {
+              "x": 0.3574218775611371,
+              "y": 0.09765625256113708
+            },
+            {
+              "x": 0.3574218775611371,
+              "y": 0.24414062756113708
+            },
+            {
+              "x": 0.3300781245343387,
+              "y": 0.01757812825962901
+            },
+            {
+              "x": 0.3027343744179234,
+              "y": 0.359375003259629
+            },
+            {
+              "x": 0.2958984376164153,
+              "y": -3.259629011154175e-09
+            },
+            {
+              "x": 0.22070312406867743,
+              "y": 0.359375003259629
+            },
+            {
+              "x": 0.21777343936264515,
+              "y": -3.259629011154175e-09
+            },
+            {
+              "x": 0.20507812732830644,
+              "y": 0.003906254656612873
+            },
+            {
+              "x": 0.18066406482830644,
+              "y": 0.2851562541909516
+            },
+            {
+              "x": 0.18066406482830644,
+              "y": 0.09765625256113708
+            }
+          ]
+        }
+      },
+      "texture_path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset"
+    }
+  ],
+  "textures": [
+    {
+      "path": "Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset",
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/sactx-0-1024x512-ASTC 6x6-ItemQuality_Atlas-748d1aea-f1673328b82e.texture2d.asset",
+        "native_relative_path": "ProfessionDynamic/sactx-0-1024x512-ASTC 6x6-ItemQuality_Atlas-748d1aea-f1673328b82e.texture2d.asset",
+        "guid": "34fe4cbdbed79a668623bca7b7fd4688",
+        "sha256": "db9c9f489e7be2529dcb328b7f0af12b6198bf467375547495eb415cc92928b4",
+        "meta_sha256": "82552a4d2231a45d667a7750d77f152a582f15079768e99784657eee70e50dd7",
+        "file_id": 2800000,
+        "identity": "CAB-e7f9beabec2f42c12744d3d750a28005:-2272721207766944018",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-2272721207766944018",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "11c398bcd2d78036adf1a13e81956e0a5e824955b4508439f3411bb283525701",
+        "original_fields": {
+          "m_Name": "sactx-0-1024x512-ASTC 6x6-ItemQuality_Atlas-748d1aea",
+          "m_ForcedFallbackFormat": 4,
+          "m_DownscaleFallback": false,
+          "m_IsAlphaChannelOptional": false,
+          "m_Width": 1024,
+          "m_Height": 512,
+          "m_CompleteImageSize": 235296,
+          "m_MipsStripped": 0,
+          "m_TextureFormat": 50,
+          "m_MipCount": 1,
+          "m_IsReadable": false,
+          "m_IsPreProcessed": false,
+          "m_IgnoreMipmapLimit": false,
+          "m_MipmapLimitGroupName": "",
+          "m_StreamingMipmaps": false,
+          "m_StreamingMipmapsPriority": 0,
+          "m_ImageCount": 1,
+          "m_TextureDimension": 2,
+          "m_TextureSettings": {
+            "m_FilterMode": 1,
+            "m_Aniso": 1,
+            "m_MipBias": 0.0,
+            "m_WrapU": 1,
+            "m_WrapV": 1,
+            "m_WrapW": 1
+          },
+          "m_LightmapFormat": 0,
+          "m_ColorSpace": 1,
+          "m_PlatformBlob": [],
+          "m_StreamData": {
+            "offset": 0,
+            "size": 235296,
+            "path": "archive:/CAB-e7f9beabec2f42c12744d3d750a28005/CAB-e7f9beabec2f42c12744d3d750a28005.resS"
+          }
+        },
+        "encoded_sha256": "5fd3670c38cf4c935fc6b8cc44c488f2a2970631926e91e95b3ad046717f1b5e",
+        "pixels_sha256": "4431f8f75240b21763d5e5b36d5cdb64c6df1e763826122de5e02ee04de7d076",
+        "mips": [
+          {
+            "level": 0,
+            "width": 1024,
+            "height": 512,
+            "astc_offset": 0,
+            "astc_size": 235296,
+            "astc_sha256": "5fd3670c38cf4c935fc6b8cc44c488f2a2970631926e91e95b3ad046717f1b5e",
+            "rgba_offset": 0,
+            "rgba_size": 2097152,
+            "rgba_sha256": "4431f8f75240b21763d5e5b36d5cdb64c6df1e763826122de5e02ee04de7d076"
+          }
+        ],
+        "profile": "LDR_SRGB",
+        "format": 4
+      }
+    },
+    {
+      "path": "Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_d64e7abbd8d534a8.asset",
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/sactx-0-2048x1024-ASTC 6x6-Common2_Atlas-ff2f2c50-d64e7abbd8d5.texture2d.asset",
+        "native_relative_path": "ProfessionDynamic/sactx-0-2048x1024-ASTC 6x6-Common2_Atlas-ff2f2c50-d64e7abbd8d5.texture2d.asset",
+        "guid": "3cf5c1e0ec95f7ecc23b99358ef52465",
+        "sha256": "8b78be1858b8133fc3c2b04778ac652757edf61ed712638ea517c5956275f070",
+        "meta_sha256": "12d1ec360efc4cbb7728d4cb5591137b5d047df88e2cb3b7be0b71fb11b42e56",
+        "file_id": 2800000,
+        "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:7156034100685763919",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_common.bundle",
+          "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+          "path_id": "7156034100685763919",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+          "manifest": "911_156995",
+          "bundle_size": 1332283,
+          "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+        },
+        "object_sha256": "ecdc8da21e962878097a69b502d440ad17b661dc7d1e6c3b5d4d2dbf1c825219",
+        "original_fields": {
+          "m_Name": "sactx-0-2048x1024-ASTC 6x6-Common2_Atlas-ff2f2c50",
+          "m_ForcedFallbackFormat": 4,
+          "m_DownscaleFallback": false,
+          "m_IsAlphaChannelOptional": false,
+          "m_Width": 2048,
+          "m_Height": 1024,
+          "m_CompleteImageSize": 935712,
+          "m_MipsStripped": 0,
+          "m_TextureFormat": 50,
+          "m_MipCount": 1,
+          "m_IsReadable": false,
+          "m_IsPreProcessed": false,
+          "m_IgnoreMipmapLimit": false,
+          "m_MipmapLimitGroupName": "",
+          "m_StreamingMipmaps": false,
+          "m_StreamingMipmapsPriority": 0,
+          "m_ImageCount": 1,
+          "m_TextureDimension": 2,
+          "m_TextureSettings": {
+            "m_FilterMode": 1,
+            "m_Aniso": 1,
+            "m_MipBias": 0.0,
+            "m_WrapU": 1,
+            "m_WrapV": 1,
+            "m_WrapW": 1
+          },
+          "m_LightmapFormat": 0,
+          "m_ColorSpace": 1,
+          "m_PlatformBlob": [],
+          "m_StreamData": {
+            "offset": 2434976,
+            "size": 935712,
+            "path": "archive:/CAB-b162472e6e43e3e3d8cef5582d2f004d/CAB-b162472e6e43e3e3d8cef5582d2f004d.resS"
+          }
+        },
+        "encoded_sha256": "a2e808f6a819541c9900892d7abdeb295b2e78493d7fce2d8923d131435b32e1",
+        "pixels_sha256": "f42d53a4e79aa2cf660e805978ac0c82f3bf4668084b1a42224968cb688df2d8",
+        "mips": [
+          {
+            "level": 0,
+            "width": 2048,
+            "height": 1024,
+            "astc_offset": 0,
+            "astc_size": 935712,
+            "astc_sha256": "a2e808f6a819541c9900892d7abdeb295b2e78493d7fce2d8923d131435b32e1",
+            "rgba_offset": 0,
+            "rgba_size": 8388608,
+            "rgba_sha256": "f42d53a4e79aa2cf660e805978ac0c82f3bf4668084b1a42224968cb688df2d8"
+          }
+        ],
+        "profile": "LDR_SRGB",
+        "format": 4
+      }
+    },
+    {
+      "path": "Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_78ac756e57898faa.asset",
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/sactx-0-2048x2048-ASTC 6x6-Common_Atlas-a05f9d6f-78ac756e5789.texture2d.asset",
+        "native_relative_path": "ProfessionDynamic/sactx-0-2048x2048-ASTC 6x6-Common_Atlas-a05f9d6f-78ac756e5789.texture2d.asset",
+        "guid": "b64d9da11dadfbae09fda14dc68baece",
+        "sha256": "1406cefa788b98f9adaba935485d067084b718be62d3b527fb26487e9fafde1a",
+        "meta_sha256": "a0f01e3e9ba8dc91f49a5bb26107beaf37302c65aa7052569ffbbd9573382be0",
+        "file_id": 2800000,
+        "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:8373551068376853463",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_common.bundle",
+          "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+          "path_id": "8373551068376853463",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+          "manifest": "911_156995",
+          "bundle_size": 1332283,
+          "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+        },
+        "object_sha256": "474a39d0cd480e17a20181ca0a87b2030b1416a52da97cc9bb9ef42d5bda5759",
+        "original_fields": {
+          "m_Name": "sactx-0-2048x2048-ASTC 6x6-Common_Atlas-a05f9d6f",
+          "m_ForcedFallbackFormat": 4,
+          "m_DownscaleFallback": false,
+          "m_IsAlphaChannelOptional": false,
+          "m_Width": 2048,
+          "m_Height": 2048,
+          "m_CompleteImageSize": 1871424,
+          "m_MipsStripped": 0,
+          "m_TextureFormat": 50,
+          "m_MipCount": 1,
+          "m_IsReadable": false,
+          "m_IsPreProcessed": false,
+          "m_IgnoreMipmapLimit": false,
+          "m_MipmapLimitGroupName": "",
+          "m_StreamingMipmaps": false,
+          "m_StreamingMipmapsPriority": 0,
+          "m_ImageCount": 1,
+          "m_TextureDimension": 2,
+          "m_TextureSettings": {
+            "m_FilterMode": 1,
+            "m_Aniso": 1,
+            "m_MipBias": 0.0,
+            "m_WrapU": 1,
+            "m_WrapV": 1,
+            "m_WrapW": 1
+          },
+          "m_LightmapFormat": 0,
+          "m_ColorSpace": 1,
+          "m_PlatformBlob": [],
+          "m_StreamData": {
+            "offset": 3371168,
+            "size": 1871424,
+            "path": "archive:/CAB-b162472e6e43e3e3d8cef5582d2f004d/CAB-b162472e6e43e3e3d8cef5582d2f004d.resS"
+          }
+        },
+        "encoded_sha256": "0c3b8591165ccbbea136624f1a51c6b14c623f6c8f66c016fb7570bd63476887",
+        "pixels_sha256": "7bd95fab0f346b1f36231d21ed22e69b1ddb7316144e5674c98d54b71c8ebb1f",
+        "mips": [
+          {
+            "level": 0,
+            "width": 2048,
+            "height": 2048,
+            "astc_offset": 0,
+            "astc_size": 1871424,
+            "astc_sha256": "0c3b8591165ccbbea136624f1a51c6b14c623f6c8f66c016fb7570bd63476887",
+            "rgba_offset": 0,
+            "rgba_size": 16777216,
+            "rgba_sha256": "7bd95fab0f346b1f36231d21ed22e69b1ddb7316144e5674c98d54b71c8ebb1f"
+          }
+        ],
+        "profile": "LDR_SRGB",
+        "format": 4
+      }
+    },
+    {
+      "path": "Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_16fc3090f8188569.asset",
+      "native": {
+        "path": ".tools/source-packages/current/911_156995/character-creation/trial-sprites/typed/dynamic/ProfessionDynamic/ImgMask-16fc3090f818.texture2d.asset",
+        "native_relative_path": "ProfessionDynamic/ImgMask-16fc3090f818.texture2d.asset",
+        "guid": "8faadcf056ba2b65d9ab21d66fbe5309",
+        "sha256": "f6eb4f2f2c58f607e3ff3a204db770bd060644ba1376b4fda39ecdcb04ee77c0",
+        "meta_sha256": "e5c7921d2b752d55b1330b7f1a6e2a7702792e115de73a01c25155c865b95146",
+        "file_id": 2800000,
+        "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:-3322258346799168754",
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_common.bundle",
+          "bundle_hash": "7371900a5c457449a57e402fd1bd3655",
+          "path_id": "-3322258346799168754",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/7371900a5c457449a57e402fd1bd3655.bundle",
+          "manifest": "911_156995",
+          "bundle_size": 1332283,
+          "bundle_sha256": "cc98983e1adbd4cf1c368e0fb3c00e836811b5247ade6b50b4cd5dd7494c4117"
+        },
+        "object_sha256": "14a16783d1a966cc7aa37bafafd8c2542710baa94b4e7d765e8be3ce860c4bc2",
+        "original_fields": {
+          "m_Name": "ImgMask",
+          "m_ForcedFallbackFormat": 4,
+          "m_DownscaleFallback": false,
+          "m_IsAlphaChannelOptional": false,
+          "m_Width": 143,
+          "m_Height": 143,
+          "m_CompleteImageSize": 81796,
+          "m_MipsStripped": 0,
+          "m_TextureFormat": 4,
+          "m_MipCount": 1,
+          "m_IsReadable": false,
+          "m_IsPreProcessed": false,
+          "m_IgnoreMipmapLimit": false,
+          "m_MipmapLimitGroupName": "",
+          "m_StreamingMipmaps": false,
+          "m_StreamingMipmapsPriority": 0,
+          "m_ImageCount": 1,
+          "m_TextureDimension": 2,
+          "m_TextureSettings": {
+            "m_FilterMode": 1,
+            "m_Aniso": 1,
+            "m_MipBias": 0.0,
+            "m_WrapU": 1,
+            "m_WrapV": 1,
+            "m_WrapW": 1
+          },
+          "m_LightmapFormat": 6,
+          "m_ColorSpace": 1,
+          "m_PlatformBlob": [],
+          "m_StreamData": {
+            "offset": 823616,
+            "size": 81796,
+            "path": "archive:/CAB-b162472e6e43e3e3d8cef5582d2f004d/CAB-b162472e6e43e3e3d8cef5582d2f004d.resS"
+          }
+        },
+        "encoded_sha256": "c76f2dda88c9a666f2f58922e3b06e076af141ff8c6681db4977c2ce28726786",
+        "pixels_sha256": "c76f2dda88c9a666f2f58922e3b06e076af141ff8c6681db4977c2ce28726786",
+        "mips": [
+          {
+            "level": 0,
+            "width": 143,
+            "height": 143,
+            "rgba_offset": 0,
+            "rgba_size": 81796,
+            "rgba_sha256": "c76f2dda88c9a666f2f58922e3b06e076af141ff8c6681db4977c2ce28726786"
+          }
+        ],
+        "profile": "original-uncompressed",
+        "format": 4
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset",
+      "sha256": "db9c9f489e7be2529dcb328b7f0af12b6198bf467375547495eb415cc92928b4"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset.meta",
+      "sha256": "82552a4d2231a45d667a7750d77f152a582f15079768e99784657eee70e50dd7"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_42b8cb9630f88aae.asset",
+      "sha256": "02b005ea6f8babe3854b3fb846a6b229b9f204debe3d7ce7a52206aad94d9b03"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_42b8cb9630f88aae.asset.meta",
+      "sha256": "d48752600cf742002468c75bba830cc020229533450dff58a39be3d5175a8f2e"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_759294d034e0c651.asset",
+      "sha256": "c01f01b9957178de71e824839ef90e925218a880a878505108c0ac355c9279b2"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_759294d034e0c651.asset.meta",
+      "sha256": "333f7315bfa4936bb59494cfa072211395ed7b6b5169ad6d7a133ec2075adb13"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_00e2100625e637dd.asset",
+      "sha256": "2c8caf5708d446c24c238babad0e3efe0d2f824acaac0941e92c7db79a4ef157"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_00e2100625e637dd.asset.meta",
+      "sha256": "816fc20720b3f9dc873d700af18ec8fd028b7de0be5475312326f06e3a42537c"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_49ff34b468a83cb0.asset",
+      "sha256": "cc3c9a2bcca6cf4ad38673392a9c986ff6397dfc5d63e0911eaf4133886a62dc"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_49ff34b468a83cb0.asset.meta",
+      "sha256": "6b60e249838b87a64cf7570f8bf68af8dff77e4eae8b7de9da668acdafdeb12d"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_219b4fb11a7aa17b.asset",
+      "sha256": "259e1caa359268f057c2510d5cb167089350b645ec503bcea68ff01eb21f262d"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_219b4fb11a7aa17b.asset.meta",
+      "sha256": "2b3539244805b031120f235a11aa207ac7c823afb7002feb8f3719dd9afc576a"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_8659cef7466159cf.asset",
+      "sha256": "c1e04140aaa4a6fc69f17810abf9d6908fbd9240ab5cb606b4732c7106e2dd64"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_8659cef7466159cf.asset.meta",
+      "sha256": "053adf2189b013d85e538bd47433bb5b8cedcde126d0503cb6258e06ce8a8efa"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_a7d67a73d7035487.asset",
+      "sha256": "06519e86aef149546f306dc1b12f3dc3ccb6fb58cd417445e03dd41140acd700"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_a7d67a73d7035487.asset.meta",
+      "sha256": "b6058b7983c233ae8937783234b84c7ca6b2e1407eee75e0869f4b427043c8bf"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_031a03cab0fff1f9.asset",
+      "sha256": "1eabf7d9d47b63532ad05d54df89fd6dad9d0e35947b5766253b0794d3a1b11c"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_031a03cab0fff1f9.asset.meta",
+      "sha256": "056fbf355166ae854c3595adcb2fd6728945c3c37f3a82d14cf48a7ca1fdf4a2"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_0b40a53021595e0f.asset",
+      "sha256": "4e135017e95c7d7da337767ff7370ae065389a830857fbd4e6f0abddea0f170f"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_0b40a53021595e0f.asset.meta",
+      "sha256": "1090e71f84bec00121a1b32b5944a37404fd79da873e96f9ec9ee71de8ca6bbc"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_78887320b0cb2710.asset",
+      "sha256": "e6e651d894d76b974b1c14c9fbbb5a178692ecf08d91aff1550030614d11219c"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_78887320b0cb2710.asset.meta",
+      "sha256": "31b673e7aad52ad10b5d005bb7baa2a23808e3837aca260b5316fe7ef2583263"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_5f018c42e0ce530e.asset",
+      "sha256": "56661e5ded700647ccaf3ebe2015e675d401d4bc9431e6d4fde4270494447314"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_5f018c42e0ce530e.asset.meta",
+      "sha256": "9c1234784d4b086bfdfcbdffa7a6a74c6b557d443b284484e0e6f7c0d778988d"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_caa09e69432a7457.asset",
+      "sha256": "f0c71f1abb00e38859b958a593dddee2d54f1af97966588f4c623a3e6913bd61"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_caa09e69432a7457.asset.meta",
+      "sha256": "a5239f7e5258e1d03b948477316a06b88d804b524f5afa4c60ac91b91028a619"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_93374ebc65832dd6.asset",
+      "sha256": "30c46a721881cb2482e82353f122eaf9fc0a6a4a1f6a3d4d23e1fb0c7475b49b"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_93374ebc65832dd6.asset.meta",
+      "sha256": "ab4149ab563427ef34fe344aa7ddd8890be8852971e9584e113eeecbe9ecc9ca"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites.meta",
+      "sha256": "9b2f99c428b7baa9a46ee33543444119b719ac4eace965574b5940d7f251ff33"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures.meta",
+      "sha256": "aafd1f216280ed9cc4ff0dc18af04a0399acf48a055964ebc667478e82e7809f"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/native-sprites-source-manifest.json.meta",
+      "sha256": "442b2c62c2fff5127d34d05b7099377d118540ebbbeb1617296f6220f93ae7bc"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/trial-ui.json",
+      "sha256": "f778211368c277cc10d8e6b24325f6e32e958ec15c520a1209c9325c152d90c5"
+    }
+  ],
+  "canonical_dependencies": [
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_d64e7abbd8d534a8.asset",
+      "sha256": "8b78be1858b8133fc3c2b04778ac652757edf61ed712638ea517c5956275f070"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_d64e7abbd8d534a8.asset.meta",
+      "sha256": "12d1ec360efc4cbb7728d4cb5591137b5d047df88e2cb3b7be0b71fb11b42e56"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_78ac756e57898faa.asset",
+      "sha256": "1406cefa788b98f9adaba935485d067084b718be62d3b527fb26487e9fafde1a"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_78ac756e57898faa.asset.meta",
+      "sha256": "a0f01e3e9ba8dc91f49a5bb26107beaf37302c65aa7052569ffbbd9573382be0"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_16fc3090f8188569.asset",
+      "sha256": "f6eb4f2f2c58f607e3ff3a204db770bd060644ba1376b4fda39ecdcb04ee77c0"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/Textures/texture_16fc3090f8188569.asset.meta",
+      "sha256": "e5c7921d2b752d55b1330b7f1a6e2a7702792e115de73a01c25155c865b95146"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_17c983d02d917af1.asset",
+      "sha256": "0322f1ec4cd712c4a71b7929569029f080377f23c7f0c7bd9b3d8371638cb5fc"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_17c983d02d917af1.asset.meta",
+      "sha256": "5d7a34274388dad22b1a713200f7ad336dfacda9806ff574dce4a8dd2bd6b571"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_24a3320123f14d43.asset",
+      "sha256": "cc0b8337d3d3b72a74fa761dd68bb05edeff25176bc22b387e7b1e1ca1d693ae"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_24a3320123f14d43.asset.meta",
+      "sha256": "b3b9b3d6ed7902e23adc76b3315681fc9a142a181436062c8ee832c6b28b483d"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_fa3e084e407ed6bf.asset",
+      "sha256": "e086d67e5487ba73293d735676af0fc17413ef7f48fda78cf8f5f2c5cd633460"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_fa3e084e407ed6bf.asset.meta",
+      "sha256": "17b7ee2bd02a0535e921e52d5ae0c62a193b761451674747b373ff9e01bd45cc"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_43bcc7f5cb4787a2.asset",
+      "sha256": "381b66692e11d61347b4ea36fcf77ab3217972431a548a10c43111c7014bdd3c"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_43bcc7f5cb4787a2.asset.meta",
+      "sha256": "a2d696cbec0d5da5ab581588139986f2d6d2b9ce6e18047d043e1a5a5b525303"
+    }
+  ],
+  "previous_layout_sha256": "ae5a48c910f9a5b1453121082ffdde360e7c455a37f1bd4a98c45a9e652442d0",
+  "item_table_sha256": "570e9ad783c50535e2a8bcfc8843e55fef6785ba980e21a1bf6d4bc182da542e",
+  "generator_sha256": "d2e671e104322e17e175ef2b59dd9f167622d921811875d7b1d8ddb20a4f169c",
+  "binding_outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item35506.prefab",
+      "sha256": "4794408a2054f961fa584e80a3bb049454b7ba19794903d5b1f5d6916b4ab948"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item35506.prefab.meta",
+      "sha256": "08a4f13a2be63da61711cf8d2f0c8f230454a9d38e33b7515ad83577488c9e0b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item35556.prefab",
+      "sha256": "b9c26794a3d6da2a8cb604af8d3313870a4379bad55671f954963e91fb722db6"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item35556.prefab.meta",
+      "sha256": "53ae9a62ffda56b299d209bfb74d45a57ba5289087b59af3cc3b3fe49105ccd0"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item35599.prefab",
+      "sha256": "5523aef6e70a43da8b8fc51e2a0fc0bd5ff5ea5bd39b1c164263c5869bc4f58a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item35599.prefab.meta",
+      "sha256": "10d68b5d9242ef55b8244b35c286e0c8e22029aeca1acf51314cdd063a888c5e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item35600.prefab",
+      "sha256": "e8be5273a72ff53a93e033040d8cb57bb4443ebb2ea2be394e85f9327097b139"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item35600.prefab.meta",
+      "sha256": "3acf2810b7c852fb3fb44eba469c449d0f48665dd623ed74a9400f1d1b3efca7"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item35891.prefab",
+      "sha256": "42ee21ab1e6da887facc36b80d856468001128b6e9edf8dc59e027c1a95756ce"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item35891.prefab.meta",
+      "sha256": "1d16b10b4dec85de496579c440936d89d4b48aeb39b090b576a90f93a3b90341"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item35893.prefab",
+      "sha256": "169a09071dd01aa6deb5834eff50b5083358537f82df19a576c679f964864392"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item35893.prefab.meta",
+      "sha256": "4ae4f9969e70ebff8bba8ee46b5edd7c5aad50c3c1012904f9915118b23f596f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item36001.prefab",
+      "sha256": "d53f554b71de0043cb7ac21e87e84731bf8e2d46156d534b18631e0bc4d828c2"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item36001.prefab.meta",
+      "sha256": "b572ed0d7cb58f978f57e3495da4f78513f624d7b816975ee11def9fd7204289"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item36008.prefab",
+      "sha256": "2f4cc09867a244102981fb653ffabafc76d5a823391bca266cbd4b3e0273938e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item36008.prefab.meta",
+      "sha256": "d3523f55b73ea2159aa69bb6642ec42c250a2eee17acc08effc69dc44d0b86d1"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item36101.prefab",
+      "sha256": "8d777a50d067bb781841bd96d296ca612e411184e86e74dc523b65270f89e642"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item36101.prefab.meta",
+      "sha256": "f7b8f2eb6dad8a66000903db52192f09430e2101b0274e1688251cff2a68fecb"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item36108.prefab",
+      "sha256": "097e49e681445699990bb66482a9a7d482c23cf52f4d1b3e8d2797f06a3262ec"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item36108.prefab.meta",
+      "sha256": "e738ed77ec654a0c43897adb7e9408884a4f25b3cd8687388f949998af0767d4"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item39815.prefab",
+      "sha256": "f1736af7a31dbcb06fd04a0ca0d35635e7927d7a72a6e5601b112d789876019d"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item39815.prefab.meta",
+      "sha256": "878c7a68f55a6697777a0c509810922145c67b9c00eb684c0226c176e1fd929c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item39816.prefab",
+      "sha256": "2710b9bfd0bc46e3f04772aec2f4eb7615ad5ca9c6c6a908f020c7542df9cd4a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/CharacterCreation/Trial/Item39816.prefab.meta",
+      "sha256": "258caf6184272a7471d38f599a7b059e61d9dee1aa2f05ac1164d58bcde15b20"
+    }
+  ],
+  "editor_binding_sha256": "10395577c0b4759978c28a138532fed0936ee30c140622b0f4a0f5fd6b65d0ba"
+}

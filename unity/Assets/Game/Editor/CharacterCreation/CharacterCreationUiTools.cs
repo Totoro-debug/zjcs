@@ -54,6 +54,13 @@ namespace Zjcs.Editor.CharacterCreation
             sprites.Clear();
             foreach (SpriteInfo entry in data.sprites)
             {
+                if (entry.path.EndsWith(".asset", StringComparison.OrdinalIgnoreCase))
+                {
+                    Sprite native = AssetDatabase.LoadAssetAtPath<Sprite>(entry.path);
+                    if (native == null) throw new InvalidOperationException("Official native trial sprite is missing: " + entry.path);
+                    sprites.Add(entry.key, native);
+                    continue;
+                }
                 var importer = (TextureImporter)AssetImporter.GetAtPath(entry.path);
                 importer.textureType = TextureImporterType.Sprite;
                 importer.textureShape = TextureImporterShape.Texture2D;
