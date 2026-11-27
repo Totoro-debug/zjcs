@@ -130,6 +130,7 @@ public static partial class TreasureCultivationValidation
         var emptyMerge = coldService.Checks.GetTreasureUpgradeMaterial(new Dictionary<int, long>(), true, coldService);
         Check(emptyMerge.Count == 0, "default automatic merge owner executes the original empty-cost path");
         CheckItemMerge();
+        CheckTransactions(slots, slot);
     }
 
     static ItemInfo ReadItem(int id) => items.TryGetValue(id, out var row) ? row : null;

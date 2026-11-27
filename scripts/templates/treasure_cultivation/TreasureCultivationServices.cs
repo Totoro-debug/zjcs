@@ -4,14 +4,14 @@ namespace Zjcs.Official.TreasureCultivation
 {
     public enum ItemType { TreasurePiece = 306, CommonTreasureMaterial = 427 }
 
-    public sealed class ItemInfo { public int ClassId, Quality; public ItemType ItemType; }
+    public sealed class ItemInfo { public int ClassId, Quality; public ItemType ItemType; public TreasureInfo PartInfo; }
     public sealed class TreasureInfo
     {
         public int StarMax;
         public bool LimitUseCommonMaterial;
         public int UpgradeMaxStar => StarMax - 1;
     }
-    public sealed class TreasureState { public bool Active; public int Star; }
+    public sealed class TreasureState { public bool Active; public int Star, HitCount; }
     public sealed class TreasureItem
     {
         public int Id;
@@ -33,6 +33,13 @@ namespace Zjcs.Official.TreasureCultivation
         long GetItemAmount(int id);
         bool HasItem(int id, long count);
         bool HasItems(Dictionary<int, long> costs);
+    }
+
+    public interface ITreasureTransitionNotifications
+    {
+        void Active(TreasureItem item);
+        void Refresh(TreasureItem item, bool isNew);
+        void UpgradeStar(TreasureItem item, int previousStar, int currentStar);
     }
 
     // These are the exact parser/merge operations consumed by TreasureHelper.

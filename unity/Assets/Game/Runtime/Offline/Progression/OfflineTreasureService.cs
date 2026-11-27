@@ -10,7 +10,7 @@ namespace Zjcs.Offline.Progression
         ref Dictionary<int, long> costs, Dictionary<int, long> requested);
 
     // Saved-player/parser boundary for the original promotion checks.
-    public sealed class OfflineTreasureService : ITreasureCultivationPlayer, ITreasureCultivationTables
+    public sealed partial class OfflineTreasureService : ITreasureCultivationPlayer, ITreasureCultivationTables
     {
         private readonly OfflineMainlineProgressSession session;
         private readonly OfflineTreasureCatalog catalog;
@@ -53,13 +53,16 @@ namespace Zjcs.Offline.Progression
             => Checks.CanTreasureUpgrade(id, materials, this, autoMergeMaterial, canUseCommonMaterial);
 
         public TreasureItem GetItemById(int id)
+            => SnapshotItem(session.Save.Player, id);
+
+        private TreasureItem SnapshotItem(OfflinePlayerProgress player, int id)
         {
             // Original GetItemById chooses the first actual stack, independently of Count.
-            var stack = session.Save.Player.Inventory.FirstOrDefault(row => row.ItemId == id);
+            var stack = player.Inventory.FirstOrDefault(row => row.ItemId == id);
             if (stack == null) return null;
-            var state = session.Save.Player.CharacterProperties.Treasures.FirstOrDefault(row => row.ClassId == id);
+            var state = player.CharacterProperties.Treasures.FirstOrDefault(row => row.ClassId == id);
             return new TreasureItem { Id = id, Count = stack.Count, Info = GetItemInfo(id),
-                State = state == null ? null : new TreasureState { Active = state.Active, Star = state.Star } };
+                State = state == null ? null : new TreasureState { Active = state.Active, Star = state.Star, HitCount = state.HitCount } };
         }
 
         public long GetItemAmount(int id) => session.InventoryCount(id);
@@ -74,7 +77,7 @@ namespace Zjcs.Offline.Progression
         public ItemInfo GetItemInfo(int id)
         {
             var row = readItem(id);
-            return row == null ? null : new ItemInfo { ClassId = row.ClassId, Quality = row.Quality, ItemType = row.ItemType };
+            return row == null ? null : new ItemInfo { ClassId = row.ClassId, Quality = row.Quality, ItemType = row.ItemType, PartInfo = GetTreasure(id) };
         }
         public TreasureInfo GetTreasure(int id)
         {

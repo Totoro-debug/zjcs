@@ -7,7 +7,7 @@ namespace TreasureOracle
     // Parser containers and saved-state inputs for untouched original methods.
     public enum Quality { }
     public enum ItemType { TreasurePiece = 306, CommonTreasureMaterial = 427 }
-    public sealed class ItemInfo { public int ClassId; public Quality Quality; public ItemType ItemType; }
+    public sealed class ItemInfo { public int ClassId; public Quality Quality; public ItemType ItemType; public object PartInfo; }
     public sealed class TreasureInfo
     {
         public int StarMax, TreasurePieceId;
@@ -20,7 +20,13 @@ namespace TreasureOracle
         public int PieceCount, SpecialPieceCount;
         public Dictionary<int, long> Materials;
     }
-    public sealed class PlayerItemParamTreasureWrap { public bool Active; public int Star; }
+    public sealed class PlayerItemParamTreasureWrap { public bool Active; public int Star, HitCount; }
+    public sealed partial class OriginalTreasureStateTransitions
+    {
+        public event Action<PlayerItemDataWrap, int, int> OnTreasureUpgradeStar;
+        public event Action<PlayerItemDataWrap, bool> OnTreasureRefresh;
+        public event Action<PlayerItemDataWrap> OnTreasureActive;
+    }
     public sealed class PlayerItemDataWrap
     {
         public int Id;

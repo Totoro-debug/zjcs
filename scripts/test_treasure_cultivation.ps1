@@ -33,6 +33,8 @@ foreach ($relative in @(
     'Assets/Game/Resources/ItemMerge', 'Assets/Game/Resources/ItemMerge.meta',
     'Assets/Game/Runtime/Offline/Progression/OfflineTreasureService.cs',
     'Assets/Game/Runtime/Offline/Progression/OfflineTreasureService.cs.meta',
+    'Assets/Game/Runtime/Offline/Progression/OfflineTreasureService.Transactions.cs',
+    'Assets/Game/Runtime/Offline/Progression/OfflineTreasureService.Transactions.cs.meta',
     'Assets/Game/Runtime/Offline/Progression/OfflineTreasureCostRules.cs',
     'Assets/Game/Runtime/Offline/Progression/OfflineTreasureCostRules.cs.meta',
     'Assets/Game/Runtime/Offline/Progression/OfflineTreasureCatalog.cs',
@@ -66,6 +68,7 @@ foreach ($pair in @(
     @((Join-Path $work 'OriginalTreasureChecks.cs'), 'OriginalTreasureChecks.cs'),
     @((Join-Path $PSScriptRoot 'fixtures/treasure_cultivation_validation.cs'), 'TreasureCultivationValidation.cs'),
     @((Join-Path $PSScriptRoot 'fixtures/treasure_cultivation_oracle.cs'), 'TreasureCultivationOracle.cs'),
+    @((Join-Path $PSScriptRoot 'fixtures/treasure_transactions_validation.cs'), 'TreasureTransactionsValidation.cs'),
     @((Join-Path $work 'OriginalItemMergeRules.cs'), 'OriginalItemMergeRules.cs'),
     @((Join-Path $PSScriptRoot 'fixtures/item_merge_validation.cs'), 'ItemMergeValidation.cs'),
     @((Join-Path $PSScriptRoot 'fixtures/item_merge_oracle.cs'), 'ItemMergeOracle.cs')
