@@ -41,11 +41,17 @@ class OfficialPopupBinding(PetGachaControlsBinding):
                               bundle=self.bundle, native_relative=self.prefab)
         self.recovery.finalize()
         native, _, panel, record = self.recovery.outputs[0]
+        self.empty_restorations = []
+        self.prepare_popup_template(native, panel, record)
+        self.template_selection = dict(source=record['originalRoot'], mapped_objects=len(panel['objectMap']),
+            scope='Complete original ' + self.panel_name + ' hierarchy and serialized fields.')
+        return [(self.panel_name, panel)]
+
+    def prepare_popup_template(self, native, panel, record):
         for item in (native, Path(str(native) + '.meta')):
             self.inputs[item.relative_to(ROOT).as_posix()] = sha(item.read_bytes())
         cache = self.recovery.proof['component_cache']
         self.inputs[cache['path']] = cache['sha256']
-        self.empty_restorations = []
 
         def restore(source, target, address):
             if isinstance(source, dict) and isinstance(target, dict):
@@ -77,9 +83,6 @@ class OfficialPopupBinding(PetGachaControlsBinding):
         missing = {'.'.join(filter(None, (row['namespace'], row['type']))) for row in panel['scripts']} - self.scripts.keys()
         if missing:
             raise ValueError('Migrate original popup scripts: ' + repr(missing))
-        self.template_selection = dict(source=record['originalRoot'], mapped_objects=len(panel['objectMap']),
-            scope='Complete original ' + self.panel_name + ' hierarchy and serialized fields.')
-        return [(self.panel_name, panel)]
 
     def build(self):
         roots = {}
@@ -118,8 +121,8 @@ class OfficialPopupBinding(PetGachaControlsBinding):
         receipt = dict(manifest=self.recovery.apk.version, inputs=self.inputs, roots=roots, outputs=outputs,
             native_recovery=self.recovery.proof, objects=self.proof, audio=self.audio_proof,
             script_bindings=self.script_sources, template_selection=self.template_selection)
-        keys = {doc['MonoBehaviour']['myKey'] for doc in documents(
-            (folder / (self.panel_name + '.prefab')).read_text('utf8')).values()
+        keys = {doc['MonoBehaviour']['myKey'] for name in roots for doc in documents(
+            (folder / (name + '.prefab')).read_text('utf8')).values()
             if doc.get('MonoBehaviour', {}).get('myKey')}
         keys.update(self.required_keys)
         texts, localization = decode_localization(self.recovery.apk, keys, keys - set(self.literal_keys))
