@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Zjcs.Official.TreasureCultivation;
+using Zjcs.Official.ItemMerge;
 
 namespace Zjcs.Offline.Progression
 {
@@ -27,7 +28,13 @@ namespace Zjcs.Offline.Progression
             this.session = session ?? throw new ArgumentNullException(nameof(session));
             this.catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
             this.readItem = readItem ?? throw new ArgumentNullException(nameof(readItem));
-            this.mergeCosts = mergeCosts;
+            if (mergeCosts != null) this.mergeCosts = mergeCosts;
+            else
+            {
+                var merge = OfflineItemMergeCatalog.LoadDefault().CreateRules();
+                this.mergeCosts = (ITreasureCultivationPlayer player, ref Dictionary<int, long> result, Dictionary<int, long> requested)
+                    => merge.CalcMergeCost(new MergeInventory(player), ref result, requested);
+            }
             costs = new OfflineTreasureCostRules(catalog, id => GetItemInfo(id).Quality);
             treasureByPiece = catalog.Treasures.ToDictionary(row => row.TreasurePieceId, row => row.ClassId);
             upgradeMaterials = new HashSet<int>(catalog.UpgradeMaterials.SelectMany(row => row.Materials).Select(row => row.ItemId));
@@ -109,8 +116,13 @@ namespace Zjcs.Offline.Progression
         public bool IsLevelMaterial(int id) => levelMaterials.Contains(id);
         public void CalcMergeCost(ITreasureCultivationPlayer player, ref Dictionary<int, long> result, Dictionary<int, long> requested)
         {
-            if (mergeCosts == null) throw new InvalidOperationException("The recursive item-merge owner is required for automatic treasure material merging.");
             mergeCosts(player, ref result, requested);
+        }
+        private sealed class MergeInventory : IItemMergeInventory
+        {
+            private readonly ITreasureCultivationPlayer player;
+            internal MergeInventory(ITreasureCultivationPlayer player) { this.player = player; }
+            public long GetItemAmount(int id) => player.GetItemAmount(id);
         }
     }
 }

@@ -22,9 +22,15 @@ $work = Join-Path $validation ('treasure-checks-' + [Guid]::NewGuid().ToString('
 @{format=1;repository=$repository;ownerPid=$PID} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $work '.zjcs-validation.json') -Encoding utf8
 & $Python (Join-Path $PSScriptRoot 'prepare_treasure_cultivation_rules.py') --check
 if ($LASTEXITCODE -ne 0) { throw 'Original Treasure check source verification failed.' }
+& $Python (Join-Path $PSScriptRoot 'prepare_item_merge_rules.py') --check
+if ($LASTEXITCODE -ne 0) { throw 'Original item merge verification failed.' }
 $sources = @{}
 foreach ($relative in @(
     'Assets/Game/Runtime/Official/TreasureCultivation', 'Assets/Game/Runtime/Official/TreasureCultivation.meta',
+    'Assets/Game/Runtime/Official/ItemMerge', 'Assets/Game/Runtime/Official/ItemMerge.meta',
+    'Assets/Game/Runtime/Offline/Progression/OfflineItemMergeCatalog.cs',
+    'Assets/Game/Runtime/Offline/Progression/OfflineItemMergeCatalog.cs.meta',
+    'Assets/Game/Resources/ItemMerge', 'Assets/Game/Resources/ItemMerge.meta',
     'Assets/Game/Runtime/Offline/Progression/OfflineTreasureService.cs',
     'Assets/Game/Runtime/Offline/Progression/OfflineTreasureService.cs.meta',
     'Assets/Game/Runtime/Offline/Progression/OfflineTreasureCostRules.cs',
@@ -52,20 +58,25 @@ foreach ($relative in @(
 if ($LASTEXITCODE -ne 0) { throw 'Original Treasure helper extraction failed.' }
 & $Python (Join-Path $PSScriptRoot 'prepare_treasure_rules.py') --oracle (Join-Path $work 'OriginalTreasureRules.cs')
 if ($LASTEXITCODE -ne 0) { throw 'Original Treasure table extraction failed.' }
+& $Python (Join-Path $PSScriptRoot 'prepare_item_merge_rules.py') --oracle (Join-Path $work 'OriginalItemMergeRules.cs')
+if ($LASTEXITCODE -ne 0) { throw 'Original item merge extraction failed.' }
 $fixture = Join-Path $project 'Assets/Editor/TreasureCultivationValidation'
 [void](New-Item -ItemType Directory -Path $fixture -Force)
 foreach ($pair in @(
     @((Join-Path $work 'OriginalTreasureChecks.cs'), 'OriginalTreasureChecks.cs'),
     @((Join-Path $PSScriptRoot 'fixtures/treasure_cultivation_validation.cs'), 'TreasureCultivationValidation.cs'),
-    @((Join-Path $PSScriptRoot 'fixtures/treasure_cultivation_oracle.cs'), 'TreasureCultivationOracle.cs')
+    @((Join-Path $PSScriptRoot 'fixtures/treasure_cultivation_oracle.cs'), 'TreasureCultivationOracle.cs'),
+    @((Join-Path $work 'OriginalItemMergeRules.cs'), 'OriginalItemMergeRules.cs'),
+    @((Join-Path $PSScriptRoot 'fixtures/item_merge_validation.cs'), 'ItemMergeValidation.cs'),
+    @((Join-Path $PSScriptRoot 'fixtures/item_merge_oracle.cs'), 'ItemMergeOracle.cs')
 )) {
     Copy-Item -LiteralPath $pair[0] -Destination (Join-Path $fixture $pair[1]) -Force
     $sources[$pair[0]] = (Get-FileHash -LiteralPath $pair[0] -Algorithm SHA256).Hash.ToLowerInvariant()
 }
 @{name='TreasureCultivationValidation'; includePlatforms=@('Editor'); references=@(
-    'Zjcs.Offline.Progression','Zjcs.Offline.State','Zjcs.Offline.CharacterCreation','Zjcs.Official.TreasureCultivation'
+    'Zjcs.Offline.Progression','Zjcs.Offline.State','Zjcs.Offline.CharacterCreation','Zjcs.Official.TreasureCultivation','Zjcs.Official.ItemMerge'
 )} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $fixture 'TreasureCultivationValidation.asmdef') -Encoding utf8
-foreach ($name in @('OriginalTreasureRules.json','TreasureCultivationItems.json')) {
+foreach ($name in @('OriginalTreasureRules.json','TreasureCultivationItems.json','OriginalItemMergeRules.json')) {
     $sources[$name] = (Get-FileHash -LiteralPath (Join-Path $work $name) -Algorithm SHA256).Hash.ToLowerInvariant()
 }
 $sources | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $work 'source-fixture.json') -Encoding utf8

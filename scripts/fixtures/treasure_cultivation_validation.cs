@@ -11,7 +11,7 @@ using Zjcs.Offline.State;
 using Zjcs.Official.TreasureCultivation;
 using O = TreasureOracle;
 
-public static class TreasureCultivationValidation
+public static partial class TreasureCultivationValidation
 {
     static string Work => Environment.GetEnvironmentVariable("ZJCS_TREASURE_CHECK_OUTPUT");
     static int checks, cases;
@@ -127,10 +127,9 @@ public static class TreasureCultivationValidation
         var cold = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
         var coldService = new OfflineTreasureService(cold, catalog, ReadItem);
         Check(coldService.CanActivateTreasure(selectedId) == 1224, "actual cold profile restores the original already-active error");
-        bool missingOwner = false;
-        try { coldService.Checks.GetTreasureUpgradeMaterial(new Dictionary<int, long>(), true, coldService); }
-        catch (InvalidOperationException) { missingOwner = true; }
-        Check(missingOwner, "automatic merging requires its actual owner instead of pretending materials exist");
+        var emptyMerge = coldService.Checks.GetTreasureUpgradeMaterial(new Dictionary<int, long>(), true, coldService);
+        Check(emptyMerge.Count == 0, "default automatic merge owner executes the original empty-cost path");
+        CheckItemMerge();
     }
 
     static ItemInfo ReadItem(int id) => items.TryGetValue(id, out var row) ? row : null;
