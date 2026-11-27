@@ -125,6 +125,7 @@ public class Validator { public int Maximum; public int GetCharacterMaxCount()=>
     local=ROOT/'unity/Assets/Game/Runtime/Offline/TreasureUI'
     outputs[local/'Zjcs.Offline.TreasureUI.asmdef']=(json.dumps(dict(name='Zjcs.Offline.TreasureUI',references=[
         'Zjcs.Offline.Progression','Zjcs.Offline.State','Zjcs.Offline.CharacterCreation','Zjcs.Official.TreasureCultivation',
+        'Zjcs.Official.TreasureIconUI','Zjcs.Official.TreasureSlotsUI','Zjcs.Official.HomeMainUiControls','Zjcs.Official.HomeHudUI',
         'Zjcs.Official.BattlePlanRules','Zjcs.Official.BattlePlanUI','Zjcs.Official.ProfessionUI','Zjcs.Official.SkillRules',
         'Zjcs.Official.WorldUI','Unity.TextMeshPro']),indent=2)+'\n').encode()
     folder_token=hashlib.md5(('zjcs:battle-plan:'+local.relative_to(ROOT).as_posix()).encode()).hexdigest()
@@ -138,6 +139,7 @@ public class Validator { public int Maximum; public int GetCharacterMaxCount()=>
         'Offline/TreasureUI/OfflineTreasurePlanWidgetServices.cs','Offline/Progression/OfflineTreasurePlanNameService.cs',
         'Offline/TreasureUI/OfflineTreasurePlanWidget.cs',
         'Offline/TreasureUI/OfflineTreasurePlanActions.cs',
+        'Offline/TreasureUI/OfflineTreasurePlanRequests.cs',
         'Offline/Progression/OfflineCharacterPropertyProgress.cs','Offline/Progression/Zjcs.Offline.Progression.asmdef')]
     for path in runtime[:4]:
         token=hashlib.md5(('zjcs:battle-plan:'+path.relative_to(ROOT).as_posix()).encode()).hexdigest()

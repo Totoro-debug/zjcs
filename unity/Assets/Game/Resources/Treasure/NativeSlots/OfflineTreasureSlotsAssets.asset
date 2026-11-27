@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ca5794b767afeb75e5e54a9d231db3b, type: 3}
+  m_Name: OfflineTreasureSlotsAssets
+  m_EditorClassIdentifier: ''
+  Sprites:
+  - Guid: 13b6f1ac9df045b4291af2e0b6818456
+    Sprite: {fileID: 21300000, guid: ea49c52d23a17e241911d7fe017c8365, type: 2}
+  - Guid: 477a36fbdf240df449e7b8fcc34a9212
+    Sprite: {fileID: 21300000, guid: f423e84413b61cb196c46f023fff47d0, type: 2}
+  - Guid: 4bdd675da04d4de4196c2ed3c66358d3
+    Sprite: {fileID: 21300000, guid: aea5dd558c1e100c70390232326b77fc, type: 2}
+  - Guid: 5f93ef232c6fc8040a1016c6e3597f03
+    Sprite: {fileID: 21300000, guid: 746283bc6e39e0e1651bb74d0482d320, type: 2}
+  - Guid: f7817723c787ff6419b8cf67aa8be070
+    Sprite: {fileID: 21300000, guid: 4e1c83b3ce1d62826964bf3bee8f178f, type: 2}
+  Texts:
+  - {Key: treasure_common_has_item, Value: 已拥有}
+  - {Key: ui_ItemIcon_centerHint_canGet, Value: 可获取}
+  - {Key: ui_ItemIcon_limited_tip, Value: 限定}
+  - {Key: ui_ItemIcon_not_got, Value: 未获得}
+  - {Key: ui_new_mark_text, Value: 新}
+  - {Key: ui_treasure_prop_up_desc, Value: 当前陈列古遗物元素属性和效果额外增强20%}
+  - {Key: ui_treasure_share_level_desc, Value: '共鸣等级：{0}级'}

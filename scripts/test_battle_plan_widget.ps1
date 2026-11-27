@@ -25,8 +25,9 @@ $work=Join-Path $validation ('battle-plan-widget-runtime-'+[Guid]::NewGuid().ToS
 $sources=@{}
 $controls=Get-Content -LiteralPath (Join-Path $repository 'assets/reference/battle-plan-widget-source-manifest.json') -Raw | ConvertFrom-Json
 $native=Get-Content -LiteralPath (Join-Path $repository 'assets/reference/battle-plan-widget-native-source-manifest.json') -Raw | ConvertFrom-Json
+$slotControls=Get-Content -LiteralPath (Join-Path $repository 'assets/reference/treasure-slots-ui-source-manifest.json') -Raw | ConvertFrom-Json
 $wanted=@{}
-foreach($table in @($controls.outputs,$controls.runtime_bindings,$native.outputs)) {
+foreach($table in @($controls.outputs,$controls.runtime_bindings,$native.outputs,$slotControls.outputs)) {
     foreach($entry in $table.PSObject.Properties) {
         if($entry.Name.StartsWith('unity/')) { $wanted[$entry.Name]=$entry.Value }
     }
