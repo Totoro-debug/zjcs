@@ -7,9 +7,8 @@ using Zjcs.Official.World.NativeLabelUI.Framework;
 
 namespace Zjcs.Official.ItemDetailUI
 {
-    // ItemDetailDialog's original ordinary-item path. Usable/expiring inventory
-    // objects require their original use/expiry adapters before entering here.
-    public sealed class ItemDetailDialog : UIBase
+    // Original item details; selected use/result loaders are explicitly bound.
+    public sealed class ItemDetailDialog : UIBase, IItemDetailDialog
     {
         private enum ShowItemCountType { ItemCountNormal, ItemCountLimit, ItemCountMoreThanLimit }
         public Image ItemImage;
@@ -23,7 +22,7 @@ namespace Zjcs.Official.ItemDetailUI
         [SerializeField] private WorldMultiLanguageText mItemMaxCountText;
         public GameObject ItemSourceObj;
         public ItemSourceGo ItemSourceGo;
-        [SerializeField] private Component mItemUseDetailDialog;
+        [SerializeField] private ItemUseDetailDialog mItemUseDetailDialog;
         [SerializeField] private ItemDetailDialogUseResult mItemDetailDialogUseResult;
         [SerializeField] private bool mIsSmall;
         [SerializeField] private ItemDetailDialogAddition mAdditionDetail;
@@ -33,18 +32,21 @@ namespace Zjcs.Official.ItemDetailUI
         private IItemDetailBindings bindings;
         private ItemDetailDefinition definition;
         public IProfessionItemInfo ItemInfo => definition?.Info;
+        public IProfessionItemData ItemData;
         public long RequireCount { get; private set; }
         public void Bind(IItemDetailBindings value)
         {
             bindings = value ?? throw new ArgumentNullException(nameof(value));
             if (ItemSourceGo) ItemSourceGo.Bind(value);
+            if (mItemDetailDialogUseResult && value is IItemUseResultBindings result) mItemDetailDialogUseResult.Bind(result);
         }
+        public void Init(IProfessionItemData data, long requireCount = 0)
+        { ItemData = data; Init(data.Id, requireCount); }
         public void Init(int itemId, long requireCount = 0)
         {
             if (bindings == null) throw new InvalidOperationException("Bind original item details before Init.");
             definition = bindings.Detail(itemId) ?? throw new InvalidOperationException("Original item definition is absent.");
             if (definition.Info == null) throw new InvalidOperationException("Original item info is absent.");
-            if (mItemUseDetailDialog) throw new NotSupportedException("Bind the original item-use dialog before showing usable items.");
             if (mItemDetailDialogUseResult)
                 mItemDetailDialogUseResult.gameObject.SetActive(mItemDetailDialogUseResult.TryInit(definition));
             ItemItem();
@@ -53,6 +55,11 @@ namespace Zjcs.Official.ItemDetailUI
                 Debug.LogError("食材的需求量大于10000");
             RequireCount = requireCount;
             InitSourceData();
+            if (mItemUseDetailDialog)
+            {
+                mItemUseDetailDialog.OnUseCountChangedEvent -= OnUseCountChanged;
+                mItemUseDetailDialog.OnUseCountChangedEvent += OnUseCountChanged;
+            }
             if (mAdditionDetail) mAdditionDetail.Init(definition);
             mRemainTimeStateSwitcher.SetState(false);
         }
@@ -70,6 +77,18 @@ namespace Zjcs.Official.ItemDetailUI
             if (ItemInfo != null && item.Info.ClassId == ItemInfo.ClassId && ItemCountGo && ItemCountGo.activeSelf)
                 RefreshCountContent(item.Count);
         }
+        protected override void OnDestroy()
+        {
+            if (mItemUseDetailDialog) mItemUseDetailDialog.OnUseCountChangedEvent -= OnUseCountChanged;
+            base.OnDestroy();
+        }
+        private void OnUseCountChanged(long count)
+        {
+            if (FuncDescText && bindings is IItemUseDescriptionBindings descriptions)
+                descriptions.SetFunctionDescription(FuncDescText, definition,
+                    mItemDetailDialogUseResult.IsRandom ? count : mItemDetailDialogUseResult.PerUseCount);
+            mItemDetailDialogUseResult.UseCount = count;
+        }
         private void ItemItem()
         {
             if (ItemImage)
@@ -84,7 +103,11 @@ namespace Zjcs.Official.ItemDetailUI
             bool function = false, description = false;
             if (FuncDescText)
             {
-                FuncDescText.SetKey(definition.FunctionDescriptionKey, definition.FunctionDescriptionArguments);
+                if (bindings is IItemUseDescriptionBindings descriptions)
+                    descriptions.SetFunctionDescription(FuncDescText, definition,
+                        mItemDetailDialogUseResult && mItemDetailDialogUseResult.IsRandom
+                            ? mItemDetailDialogUseResult.UseCount : mItemDetailDialogUseResult ? mItemDetailDialogUseResult.PerUseCount : 0);
+                else FuncDescText.SetKey(definition.FunctionDescriptionKey, definition.FunctionDescriptionArguments);
                 function = bindings.ContainsText(definition.FunctionDescriptionKey);
                 FuncDescText.gameObject.SetActive(function);
             }
@@ -96,7 +119,7 @@ namespace Zjcs.Official.ItemDetailUI
             }
             if (DetailGo) DetailGo.SetActive(function | description);
             if (TypeText) TypeText.SetKey(definition.TypeKey);
-            SetQuality(ItemInfo.Quality);
+            SetQuality(ItemData == null ? ItemInfo.Quality : ItemData.GetQuality());
             if (ItemCountGo)
             {
                 bool show = ItemInfo.CanOverlap && definition.ShowPlayerItemCount;

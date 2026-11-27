@@ -32,6 +32,7 @@ public enum ItemIconAttachmentType
 	MaskWithMismatchText = 24,
 	RankMismatchTip = 25,
 	Using = 26,
+	GMDisabled = 27,
 	Linkage = 28,
 	GotCenterTip = 29,
 	SexLimit = 30,
@@ -46,6 +47,7 @@ public enum ItemIconAttachmentType
 	ExpireTip = 39,
 	ActivityLimitTip = 40,
 	AwakenedCenterTip = 41,
+	LimitedTreasureTip = 42,
 	None = 999
 }
 

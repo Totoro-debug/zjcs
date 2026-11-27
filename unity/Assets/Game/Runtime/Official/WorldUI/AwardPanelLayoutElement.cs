@@ -60,6 +60,8 @@ public class AwardPanelLayoutElement : UIBehaviour, ILayoutElement
 
 	public int layoutPriority => mLayoutPriority;
 
+	public GridLayoutGroup ContentLayoutGroup => mContentLayoutGroup;
+
 	protected override void OnEnable()
 	{
 		mIsDirty = true;
@@ -132,6 +134,12 @@ public class AwardPanelLayoutElement : UIBehaviour, ILayoutElement
 			mCurrentCellNum = cellNum;
 			SetDirty();
 		}
+	}
+
+	public void MarkHeightDirty()
+	{
+		mIsDirty = true;
+		if (IsActive()) LayoutRebuilder.MarkLayoutForRebuild((RectTransform)transform);
 	}
 
 	protected void SetDirty()
