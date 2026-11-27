@@ -13,6 +13,18 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -eq 10581) {
+        foreach ($file in @('companion-cultivated-save.json','companion-potential-rebirth-checkpoint.json',
+            'companion-potential-rebirth-receipt.json','acquired-active-ui-passive-battle.png')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Missing cultivated Potential Rebirth battle evidence.' }
+        }
+        $receipt = Get-Content (Join-Path $Run 'companion-potential-rebirth-receipt.json') -Raw | ConvertFrom-Json
+        if ($receipt.cures -ne 1 -or $receipt.healed -lt 1 -or -not $receipt.restored -or
+            -not (Select-String -LiteralPath $runtimeLog -SimpleMatch '[Acquired passive combat] 10581 fatal survival, cultivated healing, dispersal and restore passed.')) {
+            throw 'Potential Rebirth did not exercise its single cultivated cure, dispersal and restoration.'
+        }
+        return
+    }
     if ($PassiveId -eq 10605) {
         foreach ($file in @('companion-cultivated-save.json','companion-ice-guardian-checkpoint.json',
             'companion-ice-guardian-receipt.json','acquired-active-ui-passive-battle.png')) {

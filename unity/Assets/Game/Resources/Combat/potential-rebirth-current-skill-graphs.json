@@ -1,0 +1,50 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 11770,
+      "entity_resource": "Combat/PotentialRebirthSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11770/11770",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/PotentialRebirthSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11770/playable11770"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11771,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/PotentialRebirthSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11770/11771"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 11772,
+      "entity_prefab": "11770/11772.prefab",
+      "entity_prefab_sha256": "c93e4fa78e773d36fc545802337b0cd961a7bfc8f19dd0aad3e69617b84c1589",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": false,
+        "myHideDamage": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/PotentialRebirthSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11770/11772"
+    }
+  ]
+}

@@ -1022,6 +1022,12 @@ namespace Zjcs.Presentation.Home
                         lightScorchStatusCaptured = true;
                     }
                 }
+                if (passiveCompanion == 10581 && !capturedPassive && potentialRebirth.cures > 0
+                    && IsNativeSkillParticleVisible("playable11770"))
+                {
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    capturedPassive = true;
+                }
                 if (passiveCompanion == 10604 && !capturedPassive && IsNativeSkillParticleVisible("playable12150"))
                 {
                     yield return CaptureAcquiredActive(output, "passive-battle");
@@ -1247,6 +1253,7 @@ namespace Zjcs.Presentation.Home
             if (warlockWater) CompleteAcquiredWaterVortex(output);
             if (warlockMeteor) CompleteAcquiredMeteorFire(checkpoint, output);
             if (passiveCompanion == 10605) CompleteAcquiredIceGuardian(capturedPassive);
+            if (passiveCompanion == 10581) CompleteAcquiredPotentialRebirth(capturedPassive);
             if (passiveCompanion == 10577) CompleteAcquiredLightScorch(capturedPassive);
             Require(passiveCompanion != 10604 || capturedPassive
                 && File.Exists(Path.Combine(output, "companion-quick-casting-checkpoint.json")),

@@ -219,7 +219,7 @@ namespace Zjcs.Presentation.Combat
                 "Combat/sage-summon-resonance-current-status-graphs",
                 "Combat/sage-summon-restoration-current-status-graphs",
                 "Combat/sage-voodoo-doll-current-status-graphs", "Combat/stone-skin-current-graphs",
-                "Combat/passive-revival-current-status-graphs", "Combat/quick-casting-current-status-graphs",
+                "Combat/potential-rebirth-current-status-graphs", "Combat/quick-casting-current-status-graphs",
                 "Combat/light-scorch-current-status-graphs", "Combat/divine-thunder-current-status-graphs", "Combat/ice-guardian-current-status-graphs", "Combat/water-vortex-current-status-graphs");
             statusViews.Restore();
         }
