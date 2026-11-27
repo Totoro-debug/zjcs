@@ -58,7 +58,8 @@ def record():
         'verify_official_apk_extraction.py', 'archive_official_apk_sources.py',
         'prepare_official_apk_tables.py', 'official_tables.py',
         'prepare_current_asset_inventory.py', 'convert_current_windows_shaders.py', 'convert_current_texture_mips.py',
-        'prepare_current_windows_validation.py'))
+        'prepare_current_windows_validation.py', 'convert_current_wwise_packages.py',
+        'convert_wwise_android_package.py'))
     apk_code = base/'apk-code-manifest.json'
     if apk_code.exists():
         receipt = json.loads(apk_code.read_bytes())
@@ -137,6 +138,20 @@ def record():
                                       audio_with_loop_metadata=sum(bool(row['metadata'].get('loopingInfo')) for row in receipt['audio'].values()),
                                       limitations=receipt['limitations'])
     all_components = base/'native-conversion/component-fields-all/source-manifest.json'
+    windows_audio = base/'native-conversion/windows-wwise/source-manifest.json'
+    if windows_audio.exists():
+        receipt = json.loads(windows_audio.read_bytes())
+        if receipt['manifest'] != source.version or receipt['apk_sha256'] != source.apk_sha256:
+            raise ValueError('Windows Wwise packages belong to a different source')
+        if receipt['input_manifest_sha256'] != result['converter_inputs']['sha256'] or receipt['raw_manifest_sha256'] != file(raw)['sha256']:
+            raise ValueError('Windows Wwise packages use different original inputs')
+        for key, name in (('generator_sha256', 'convert_current_wwise_packages.py'),
+                          ('converter_sha256', 'convert_wwise_android_package.py')):
+            if receipt[key] != file(ROOT/'scripts'/name)['sha256']:
+                raise ValueError('Windows Wwise converter differs from its completed receipt')
+        result['windows_wwise'] = dict(source_manifest=file(windows_audio), completed=receipt['completed'],
+                                      packages=len(receipt['packages']), scope=receipt['scope'],
+                                      payloads=sum(len(row['entries']) for row in receipt['packages']))
     components = all_components
     if not components.exists():
         components = base/'native-conversion/component-fields/source-manifest.json'

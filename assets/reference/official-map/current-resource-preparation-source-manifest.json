@@ -6,8 +6,8 @@
   "resource_version": "202611252124911",
   "generator": {
     "path": "scripts/record_current_resource_preparation.py",
-    "bytes": 12348,
-    "sha256": "73c7659f042232497f3d61318bdafa8b22ec8e5128d1f60149f4788db227b623"
+    "bytes": 13646,
+    "sha256": "09ad9cca86633e38a3e0cb5cb2f00ba700917be33a3321a195b592a36d302ea5"
   },
   "code_manifest": {
     "path": ".tools/source-packages/current/911_156995/code-manifest.json",
@@ -2485,6 +2485,16 @@
       "path": "scripts/prepare_current_windows_validation.py",
       "bytes": 8720,
       "sha256": "7e340f8d2c89174973525978c8bd5014072c00a442e89af5f10d9091180758a3"
+    },
+    {
+      "path": "scripts/convert_current_wwise_packages.py",
+      "bytes": 5242,
+      "sha256": "129d16bff2e4a5f5a3479dc936c415671f9678ec90f92685bd120b7f7c797c28"
+    },
+    {
+      "path": "scripts/convert_wwise_android_package.py",
+      "bytes": 4781,
+      "sha256": "6cf16e035b1bb010ec62ec974f36bd7e4994615e064b29562bc6f79b1b0d65f7"
     }
   ],
   "apk_code": {
@@ -2742,6 +2752,17 @@
       "Media conversion only. Original Wwise banks/event graphs retained; gain, routing, looping and module runtime binding still require their original consumers.",
       "Existing game media and unmatched older assets retained. No Unity import or Player audio validation for this cache."
     ]
+  },
+  "windows_wwise": {
+    "source_manifest": {
+      "path": ".tools/source-packages/current/911_156995/native-conversion/windows-wwise/source-manifest.json",
+      "bytes": 1264263,
+      "sha256": "95ebeceefabec4609a5f261fa1acb95314a0def56ed7b5eac04ba6f82adecafc"
+    },
+    "completed": true,
+    "packages": 153,
+    "scope": "All current Wwise package language/index conversion; native engine playback and per-module event bindings remain separate.",
+    "payloads": 5092
   },
   "component_fields": {
     "source_manifest": {
