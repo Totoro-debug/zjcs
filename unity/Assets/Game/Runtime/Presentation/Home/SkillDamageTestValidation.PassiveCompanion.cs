@@ -42,6 +42,7 @@ namespace Zjcs.Presentation.Home
             supported |= active == 10065 && player.Wardrobe.Profession == 7 && itemId == 10547;
             supported |= active == 10065 && player.Wardrobe.Profession == 7 && itemId == 10519;
             supported |= active == 10065 && player.Wardrobe.Profession == 7 && itemId == 10574;
+            supported |= active == 10065 && player.Wardrobe.Profession == 7 && itemId == 10590;
             supported |= active == 10093 && player.Wardrobe.Profession == 13 && itemId == 10604;
             Require(supported && source.Player.Wardrobe.Profession == player.Wardrobe.Profession
                 && source.Player.Level == player.Level && source.Player.SubRank == player.SubRank
@@ -79,6 +80,7 @@ namespace Zjcs.Presentation.Home
             if (itemId == 10547) PrepareAcquiredDesperateValor(actor);
             if (itemId == 10519) PrepareAcquiredWildBladeSiphon(actor);
             if (itemId == 10574) PrepareAcquiredJudgmentBlade();
+            if (itemId == 10590) PrepareAcquiredSoulGuardian(actor);
         }
 
         private static void VerifyAcquiredPassiveStep(FightBattleStepEvent step, FightBattleCheckpoint checkpoint,
@@ -86,6 +88,11 @@ namespace Zjcs.Presentation.Home
             ref int assaultHits, ref int soulBreakHits, ref int windHits, ref int flameHits,
             ref int fireLifeCures)
         {
+            if (itemId == 10590)
+            {
+                VerifyAcquiredSoulGuardianStep(step, checkpoint, output);
+                return;
+            }
             if (itemId == 10574)
             {
                 VerifyAcquiredJudgmentBladeStep(step, checkpoint, output);

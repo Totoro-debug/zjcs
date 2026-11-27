@@ -1678,6 +1678,10 @@ namespace Zjcs.Combat.Official
             FightBattleSkillDefinition skill)
         {
             if (skill == null || actor == null) return null;
+            if (skill.CostType == 1 && skill.Properties != null && skill.Properties.Any(value => value != null
+                && (value.Id == formula.PropertyId("SkillCostByCurHp")
+                    || value.Id == formula.PropertyId("SkillCostByMaxHp"))))
+                skill.SkillCost = formula.CalculateSkillCostHp(skill.Properties, actor.Hp, actor.MaxHp);
             if (skill.CostType == 1 && skill.SkillCost > 0)
             {
                 if (checkpoint.DamageTest != null && checkpoint.DamageTest.UnlimitedHp(checkpoint.StageType, actor)) return null;

@@ -1,0 +1,42 @@
+{
+  "entities": [
+    25093,
+    11870,
+    11871,
+    11872,
+    24372
+  ],
+  "code": [
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "FightStatusComponentInfo",
+    "FightStatusRoundStartComponentInfo",
+    "FightStatusPropComponentInfo",
+    "FightStatusTriggerSkillCfg",
+    "BattleFormulaHandler"
+  ],
+  "client_code": [
+    "MyFightStatusRoundStart",
+    "MyFightStatusProp"
+  ],
+  "rule_pack_fragments": [
+    "FightSkill_part94.g.bytes",
+    "FightSkill_part719.g.bytes",
+    "FightSkill_part755.g.bytes"
+  ],
+  "visibility_bundles": [
+    "11870",
+    "24372",
+    "25093"
+  ],
+  "scope_numeric": true,
+  "current_managed_views": true,
+  "runtime_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10590.json"
+  ],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/soul-guardian-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/soul-guardian-current-status-graphs-source-manifest.json"
+  ]
+}

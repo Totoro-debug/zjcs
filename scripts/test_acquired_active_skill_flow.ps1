@@ -52,6 +52,15 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -eq 10590) {
+        foreach ($file in @('companion-soul-guardian-checkpoint.json','companion-soul-guardian-receipt.json','acquired-active-ui-passive-battle.png')) {
+            if (-not(Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Soul Guardian actual cost, protection or native cast evidence is missing.' }
+        }
+        $guard = Get-Content (Join-Path $Run 'companion-soul-guardian-receipt.json') -Raw | ConvertFrom-Json
+        if ($guard.casts -ne 1 -or $guard.costEvents -ne 1 -or $guard.paid -le 0 -or $guard.reducedHits -lt 1 -or
+            -not $guard.restored -or -not $guard.castCaptured) { throw 'Soul Guardian lost its once-only cost, actual damage reduction or restoration.' }
+        return
+    }
     if ($PassiveId -eq 10574) {
         foreach ($file in @('companion-judgment-blade-checkpoint.json','companion-judgment-blade-receipt.json',
             'acquired-active-ui-passive-mark.png','acquired-active-ui-passive-battle.png')) {

@@ -1,0 +1,50 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 11870,
+      "entity_resource": "Combat/SoulGuardianSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11870/11870",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/SoulGuardianSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11870/playable11870"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11871,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/SoulGuardianSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11870/11871"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 11872,
+      "entity_prefab": "11870/11872.prefab",
+      "entity_prefab_sha256": "a69a9030ee968dc24a4d7f5ec53ea599b025c2a43d82b0ce71ca77e67171e0a3",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": false,
+        "myHideDamage": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/SoulGuardianSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11870/11872"
+    }
+  ]
+}

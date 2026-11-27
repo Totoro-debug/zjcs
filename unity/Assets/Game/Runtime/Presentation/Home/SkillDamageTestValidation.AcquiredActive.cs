@@ -317,7 +317,7 @@ namespace Zjcs.Presentation.Home
                 if (setting == "MonsterHp" && (waterBlade || soulPiercer || chaosRune || rockSummon || sageDarkBlast))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
-                if (setting == "MonsterHurt" && (overloadProtection || psychicWard || passiveCompanion == 10580 || passiveCompanion == 10600))
+                if (setting == "MonsterHurt" && (overloadProtection || psychicWard || passiveCompanion == 10580 || passiveCompanion == 10600 || passiveCompanion == 10590))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
                 if (setting == "Round" && (passiveCompanion == 10611 || vortexSurge || passiveCompanion == 10607 || passiveCompanion == 10594 || passiveCompanion == 10543 || dreadShadow || starBurst || spiralWindBlade || battlecry))
@@ -340,12 +340,12 @@ namespace Zjcs.Presentation.Home
             if (extinction) PrepareAcquiredExtinctionBlade(actor);
             if (fireCore) SetAcquiredBattleProperty(actor, "CritRatePercent", 100000);
             if (iceCrystal || chaosRune) SetAcquiredBattleProperty(actor, "EffectRate", 1000000);
-            if (overloadProtection || psychicWard || passiveCompanion == 10580)
+            if (overloadProtection || psychicWard || passiveCompanion == 10580 || passiveCompanion == 10590)
             {
                 Require(!checkpoint.DamageTest.EnableMonsterOneDamage,
                     "The defensive skill diagnostic requires the original normal monster damage option.");
                 foreach (var enemy in checkpoint.Units.Where(unit => unit.Side != actor.Side))
-                    SetAcquiredBattleProperty(enemy, "Attack", actor.MaxHp / (psychicWard ? 6 : 3));
+                    SetAcquiredBattleProperty(enemy, "Attack", actor.MaxHp / (passiveCompanion == 10590 ? 12 : psychicWard ? 6 : 3));
             }
             Require(active.ItemId == skillId && active.Rank == cultivatedRank && active.Level == 2
                 && active.SubRank == progression.Player.SubRank && actor.Profession == profession,
@@ -399,6 +399,7 @@ namespace Zjcs.Presentation.Home
             int confusionApplications = 0, confusionEnds = 0;
             var rock = rockSummon ? new AcquiredRockSummon() : null;
             var doll = voodooDoll ? new AcquiredVoodooDoll() : null;
+            if (passiveCompanion == 10590) PrepareAcquiredSoulGuardianCheckpoint(checkpoint);
             battle.Controller.StepCompleted += step => {
                 if (swiftWind) VerifyAcquiredSwiftWindStep(step.Event, checkpoint);
                 if (asuraHand) VerifyAcquiredAsuraStep(step.Event, checkpoint, output);
@@ -1062,6 +1063,12 @@ namespace Zjcs.Presentation.Home
                         captured = true;
                     }
                 }
+                if (passiveCompanion == 10590 && !capturedPassive && soulGuardian.paid > 0
+                    && IsNativeSkillParticleVisible("playable11870"))
+                {
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    soulGuardian.castCaptured = capturedPassive = true;
+                }
                 if (passiveCompanion == 10574)
                 {
                     if (!judgmentBlade.markCaptured && IsNativeSkillParticleVisible("playable24316"))
@@ -1335,6 +1342,7 @@ namespace Zjcs.Presentation.Home
             if (passiveCompanion == 10547) CompleteAcquiredDesperateValor(output);
             if (passiveCompanion == 10519) CompleteAcquiredWildBladeSiphon(output);
             if (passiveCompanion == 10574) CompleteAcquiredJudgmentBlade(output);
+            if (passiveCompanion == 10590) CompleteAcquiredSoulGuardian(output);
             if (swiftWind) CompleteAcquiredSwiftWindDance(output);
             if (extinction) CompleteAcquiredExtinctionBlade(output);
             if (asuraHand) CompleteAcquiredAsuraHand(output);

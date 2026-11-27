@@ -228,6 +228,7 @@ namespace Zjcs.Presentation.Combat
                 "Combat/extinction-blade-current-status-graphs",
                 "Combat/judgment-blade-current-status-graphs",
                 "Combat/swift-wind-dance-current-status-graphs",
+                "Combat/soul-guardian-current-status-graphs",
                 "Combat/potential-rebirth-current-status-graphs", "Combat/quick-casting-current-status-graphs",
                 "Combat/light-scorch-current-status-graphs", "Combat/divine-thunder-current-status-graphs", "Combat/ice-guardian-current-status-graphs", "Combat/water-vortex-current-status-graphs");
             statusViews.Restore();
