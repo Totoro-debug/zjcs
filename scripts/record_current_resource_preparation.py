@@ -57,7 +57,7 @@ def record():
     result['supporting_scripts'].extend(file(ROOT/'scripts'/name) for name in (
         'verify_official_apk_extraction.py', 'archive_official_apk_sources.py',
         'prepare_official_apk_tables.py', 'official_tables.py',
-        'prepare_current_asset_inventory.py', 'convert_current_windows_shaders.py',
+        'prepare_current_asset_inventory.py', 'convert_current_windows_shaders.py', 'convert_current_texture_mips.py',
         'prepare_current_windows_validation.py'))
     apk_code = base/'apk-code-manifest.json'
     if apk_code.exists():
@@ -97,6 +97,22 @@ def record():
             raise ValueError('APK extraction receipt has a different source')
         result['apk_extraction'] = dict(source_manifest=file(extraction), completed=receipt['completed'],
                                         files=len(receipt['files']))
+    shaders = base/'native-conversion/all-assets/windows-shaders/source-manifest.json'
+    if shaders.exists():
+        receipt = json.loads(shaders.read_bytes())
+        if receipt['manifest'] != source.version:
+            raise ValueError('Windows shaders belong to a different source')
+        result['windows_shaders'] = dict(source_manifest=file(shaders), completed=receipt['completed'],
+                                        shaders=len(receipt['shaders']), engine_bindings=len(receipt['native_engine_bindings']),
+                                        programs=sum(len(row['programs']) for row in receipt['shaders']),
+                                        unresolved=len(receipt['unresolved']))
+    textures = base/'native-conversion/all-assets/windows-textures/source-manifest.json'
+    if textures.exists():
+        receipt = json.loads(textures.read_bytes())
+        if receipt['manifest'] != source.version:
+            raise ValueError('Windows textures belong to a different source')
+        result['windows_textures'] = dict(source_manifest=file(textures), completed=receipt['completed'],
+                                         counts=receipt['counts'], unresolved=len(receipt['unresolved']))
     if aot.exists():
         receipt = json.loads(aot.read_bytes())
         result['aot_metadata'] = dict(source_manifest=file(aot), types=receipt['recovered_types'], images=receipt['metadata_images'])

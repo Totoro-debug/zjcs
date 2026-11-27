@@ -6,8 +6,8 @@
   "resource_version": "202611252124911",
   "generator": {
     "path": "scripts/record_current_resource_preparation.py",
-    "bytes": 9830,
-    "sha256": "ecf373239a18cb0f66e91fe1776a2dad3fe7f599c5287ff0419e697fc3ceff99"
+    "bytes": 11080,
+    "sha256": "e089593ada1fa99fa0f9cddf196346d0e0002c1b4c94878438f6a3a2795a0358"
   },
   "code_manifest": {
     "path": ".tools/source-packages/current/911_156995/code-manifest.json",
@@ -2477,6 +2477,11 @@
       "sha256": "41f58ab1e79513ebf1da0544e32a36e13883799e0086c01ce1d1cda84dc8c151"
     },
     {
+      "path": "scripts/convert_current_texture_mips.py",
+      "bytes": 11747,
+      "sha256": "56697a503021614dfd26553e035ad16485db6effefbd17d94583531c15736af7"
+    },
+    {
       "path": "scripts/prepare_current_windows_validation.py",
       "bytes": 8720,
       "sha256": "7e340f8d2c89174973525978c8bd5014072c00a442e89af5f10d9091180758a3"
@@ -2625,6 +2630,45 @@
     },
     "completed": true,
     "files": 23315
+  },
+  "windows_shaders": {
+    "source_manifest": {
+      "path": ".tools/source-packages/current/911_156995/native-conversion/all-assets/windows-shaders/source-manifest.json",
+      "bytes": 2178780,
+      "sha256": "4089ae3dd571fc347e62a7c04de33efa58d45b8a3f27210e266c76c2dae086e2"
+    },
+    "completed": true,
+    "shaders": 270,
+    "engine_bindings": 10,
+    "programs": 3730,
+    "unresolved": 0
+  },
+  "windows_textures": {
+    "source_manifest": {
+      "path": ".tools/source-packages/current/911_156995/native-conversion/all-assets/windows-textures/source-manifest.json",
+      "bytes": 151976168,
+      "sha256": "824cbce0b14a01f988f8307e213d88dc8c0f97879abe7a85ca96e9057b0cac52"
+    },
+    "completed": true,
+    "counts": {
+      "textures": 37793,
+      "mip_levels": 110168,
+      "pixel_bytes": 34097780426,
+      "formats": {
+        "RGBA32": 112,
+        "ASTC_RGB_6x6": 30714,
+        "ASTC_RGB_8x8": 502,
+        "ASTC_RGB_4x4": 6248,
+        "ASTC_RGB_10x10": 6,
+        "ASTC_RGB_12x12": 18,
+        "Alpha8": 99,
+        "RGB24": 6,
+        "ETC2_RGBA8": 51,
+        "ETC_RGB4": 3,
+        "RGBA4444": 34
+      }
+    },
+    "unresolved": 0
   },
   "aot_metadata": {
     "source_manifest": {

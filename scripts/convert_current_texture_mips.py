@@ -6,7 +6,10 @@ import copy
 import gc
 import hashlib
 import json
+import os
 from pathlib import Path
+import shutil
+import tempfile
 from types import SimpleNamespace
 
 import UnityPy
@@ -18,6 +21,16 @@ from prepare_current_asset_inventory import sha
 from prepare_unity_bundle_inputs import serialized_files
 from prepare_unity_map13_native_scene import decode_mips
 from prepare_unity_profession_reward_sprites import Dumper, fields, source_header
+
+
+def write_atomic(path, payload):
+    with tempfile.NamedTemporaryFile(dir=path.parent, prefix=path.name+'.', suffix='.tmp', delete=False) as stream:
+        temporary = Path(stream.name)
+        stream.write(payload)
+    try:
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def decode(texture, obj):
@@ -129,15 +142,15 @@ def convert_one(cache, output, row, obj):
             prior = output / 'Previous' / sha(existing)
             prior.parent.mkdir(exist_ok=True)
             if not prior.exists():
-                prior.write_bytes(existing)
-        path.write_bytes(data)
+                write_atomic(prior, existing)
+        write_atomic(path, data)
         outputs.append(dict(path=path.relative_to(output).as_posix(), bytes=len(data), sha256=sha(data)))
     result = dict(source=row, generator_sha256=sha(Path(__file__).read_bytes()),
                   original_fields=original_fields, native_format=int(native_format), profile=profile,
                   guid=guid, file_id=file_id, pixels_sha256=sha(pixels), pixel_bytes=len(pixels),
                   mips=mips, outputs=outputs)
     receipt.parent.mkdir(exist_ok=True)
-    receipt.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    write_atomic(receipt, (json.dumps(result, ensure_ascii=False, indent=2) + '\n').encode('utf8'))
     return result
 
 
@@ -157,6 +170,8 @@ def build(cache, workers=2):
     results, failures = [], []
     with ThreadPoolExecutor(max_workers=workers) as pool:
         for index, (source, rows) in enumerate(grouped.items()):
+            if shutil.disk_usage(output).free < 10 * 1024**3:
+                raise OSError('Texture conversion paused with less than 10 GiB free; completed per-texture receipts can resume.')
             path = cache / source
             raw = path.read_bytes()
             if sha(raw) != inputs[source]['decoded_sha256']:
@@ -183,7 +198,7 @@ def build(cache, workers=2):
                   counts=dict(textures=len(results), mip_levels=sum(len(r['mips']) for r in results),
                               pixel_bytes=sum(r['pixel_bytes'] for r in results), formats=dict(Counter(r['source']['format_name'] for r in results))),
                   completed=not failures)
-    (output / 'source-manifest.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    write_atomic(output/'source-manifest.json', (json.dumps(result, ensure_ascii=False, indent=2)+'\n').encode('utf8'))
     print('Texture result', result['counts'], 'unresolved', len(failures), flush=True)
 
 
