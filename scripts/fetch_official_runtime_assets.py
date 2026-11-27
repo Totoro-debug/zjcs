@@ -148,10 +148,10 @@ def main():
     if args.verify_cache and (not APK.exists() or APK.stat().st_size != SIZE):
         raise ValueError('Offline verification requires the complete pinned APK')
     download()
+    official = OfficialSource()
     if args.verify_cache:
-        source = OfficialSource()
-        resource_version = source.profile['resource_version']
-        destination = source.cloud_path
+        resource_version = official.profile['resource_version']
+        destination = official.cloud_path
         recorded = json.loads((destination / 'inventory.json').read_text(encoding='utf-8'))
         raw = (destination / 'server-config.json').read_bytes()
         if (recorded['resource_version'] != resource_version or recorded['apk_sha256'] != SHA256 or
@@ -160,7 +160,8 @@ def main():
         roots = recorded['roots']
     else:
         raw, resource_version, roots = configuration()
-    destination = CACHE / 'cloud/runtime' / resource_version
+        destination = (official.cloud_path if resource_version == official.profile['resource_version']
+                       else CACHE / 'cloud/runtime' / resource_version)
     destination.mkdir(parents=True, exist_ok=True)
     (destination / 'server-config.json').write_bytes(raw)
     manifests, provenance = [], []

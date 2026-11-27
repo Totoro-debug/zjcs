@@ -69,6 +69,7 @@ def download():
                 time.sleep(2)
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
         parts = list(pool.map(chunk, range((SIZE + chunk_size - 1) // chunk_size)))
+    APK.parent.mkdir(parents=True, exist_ok=True)
     temporary = APK.with_suffix('.apk.tmp')
     digest = hashlib.sha256()
     with temporary.open('wb') as out:
