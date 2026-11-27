@@ -22,6 +22,7 @@ namespace Zjcs.Offline.Progression
         public List<OfflineCharacterTreasure> Treasures = new List<OfflineCharacterTreasure>();
         public List<OfflineTreasureElementLevel> TreasureElementLevels = new List<OfflineTreasureElementLevel>();
         public OfflineTreasureSlotProgress TreasureSlots = new OfflineTreasureSlotProgress();
+        public List<OfflineTreasurePlanName> TreasurePlanNames = new List<OfflineTreasurePlanName>();
         public List<OfflinePeriodicCard> PeriodicCards = new List<OfflinePeriodicCard>();
         public List<OfflineLegionMapSkill> LegionMapSkills = new List<OfflineLegionMapSkill>();
         public List<OfflineEquipCabinetSeasonScore> EquipCabinetScores = new List<OfflineEquipCabinetSeasonScore>();
@@ -70,6 +71,7 @@ namespace Zjcs.Offline.Progression
             if (progress.TreasureElementLevels == null)
                 progress.TreasureElementLevels = new List<OfflineTreasureElementLevel>();
             if (progress.TreasureSlots == null) progress.TreasureSlots = new OfflineTreasureSlotProgress();
+            if (progress.TreasurePlanNames == null) progress.TreasurePlanNames = new List<OfflineTreasurePlanName>();
             if (progress.TreasureSlots.BlessRecordFormat == 0 && progress.TreasureSlots.BlessRecords == null)
                 progress.TreasureSlots.BlessRecords = new List<OfflineTreasureSlotBlessRecord>();
             if (progress.TreasureSlots.Format == 0)
@@ -100,6 +102,7 @@ namespace Zjcs.Offline.Progression
                 || progress.Treasures == null || progress.Treasures.Count > 5000
                 || progress.TreasureElementLevels == null || progress.TreasureElementLevels.Count > 100
                 || !OfflineTreasureSlotProgress.IsValid(progress.TreasureSlots)
+                || !OfflineTreasurePlanName.IsValid(progress.TreasurePlanNames)
                 || progress.PeriodicCards == null || progress.PeriodicCards.Count > 100
                 || progress.LegionMapSkills == null || progress.LegionMapSkills.Count > 1000
                 || progress.EquipCabinetScores == null || progress.EquipCabinetScores.Count > 100) return false;

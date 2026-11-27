@@ -186,9 +186,14 @@ def verify_empty_controller(source, docs, root):
     return {root: 'controller', native_id: 'empty-state-machine'}
 
 
-def bind_prefab(binding, bundle, relative, name, scope):
-    root, = [pointer.deref() for path, pointer in binding.recovery.apk.container(bundle)
-        if path.casefold() == ('Assets/' + relative).casefold() and pointer.deref().type.name == 'GameObject']
+def bind_prefab(binding, bundle, relative, name, scope, *, source_root=None, native_root_id=None, prepare_component=None):
+    if (source_root is None) != (native_root_id is None):
+        raise ValueError('Subtree binding needs both original and native root identities')
+    if source_root is None:
+        root, = [pointer.deref() for path, pointer in binding.recovery.apk.container(bundle)
+            if path.casefold() == ('Assets/' + relative).casefold() and pointer.deref().type.name == 'GameObject']
+    else:
+        root = source_root
     native = documents((binding.native / relative).read_text('utf8'))
     roots = []
     for key, value in native.items():
@@ -199,7 +204,8 @@ def bind_prefab(binding, bundle, relative, name, scope):
         transform = component.get('Transform') or component.get('RectTransform')
         if transform is None:
             raise ValueError('Original native root has no Transform or RectTransform: ' + relative)
-        if transform['m_Father']['fileID'] == 0:
+        if ((native_root_id is None and transform['m_Father']['fileID'] == 0)
+                or (native_root_id is not None and key == native_root_id)):
             roots.append(key)
     native_root, = roots
     binding.recovery.recover(name, binding.work / 'recovered', bundle=bundle,
@@ -217,6 +223,13 @@ def bind_prefab(binding, bundle, relative, name, scope):
         if full_name not in binding.scripts:
             raise ValueError('Migrate the actual native entity component: ' + full_name)
         panel['documents'][script['nativeFileID']]['MonoBehaviour']['m_Script'] = binding.scripts[full_name]
+        if prepare_component is not None:
+            prepare_component(binding, script, panel['documents'][script['nativeFileID']]['MonoBehaviour'])
+    queued_tokens = {token for _, token, _ in binding.queue}
+    for path, (token, raw) in getattr(binding, 'audio_outputs', {}).items():
+        if token not in queued_tokens:
+            binding.queue.append((path, token, raw))
+            queued_tokens.add(token)
     resolved = binding.replace(panel['documents']); index = 0
     while index < len(binding.queue):
         _, _, data = binding.queue[index]
