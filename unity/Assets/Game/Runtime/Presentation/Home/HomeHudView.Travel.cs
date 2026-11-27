@@ -640,10 +640,6 @@ namespace Zjcs.Presentation.Home
         private Sprite TravelCategoryIcon(string kind, int id) =>
             CatalogTravelIcon("travel-" + kind + "-" + id);
 
-        private bool IsNpcTravelBlocked(int npcId, HashSet<int> travelingNpcIds) =>
-            travelingNpcIds.Contains(npcId) || host.NpcTravel.State.NpcDailyCounts.Any(value => value.NpcId == npcId
-                && value.Count >= host.NpcTravelCatalog.Data.npc_daily_limit);
-
         private int NpcTravelSelectionOrder(int npcId, HashSet<int> travelingNpcIds)
         {
             if (selectedTravelNpcIds.Contains(npcId)) return 3;

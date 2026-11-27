@@ -164,12 +164,6 @@ namespace Zjcs.Offline.Progression
         public bool TryGetMaterial(int id, out MaterialGatheringMaterial row) => materials.TryGetValue(id, out row);
         public bool TryGetReward(int id, out MaterialGatheringRewardRule row) => rewards.TryGetValue(id, out row);
 
-        public IReadOnlyList<MaterialGatheringStageLocation> StageLocations(int stageId)
-        {
-            return stageLocations.TryGetValue(stageId, out MaterialGatheringStageLocation[] rows)
-                ? rows : Array.Empty<MaterialGatheringStageLocation>();
-        }
-
         public float LevelMultiplier(int id, int subRank)
         {
             if (id <= 0) return 1f;

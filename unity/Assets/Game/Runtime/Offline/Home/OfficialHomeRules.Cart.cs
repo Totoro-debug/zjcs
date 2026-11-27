@@ -6,11 +6,6 @@ namespace Zjcs.Offline.Home
 {
     public sealed partial class OfficialHomeRules
     {
-        public IReadOnlyList<HomeRewardRuleRecord> RewardRulesOf(int rewardRuleId)
-            => rewardRules.TryGetValue(rewardRuleId, out List<HomeRewardRuleRecord> rows)
-                ? rows
-                : Array.Empty<HomeRewardRuleRecord>();
-
         public void RegisterRuntimeFurnitureSkin(HomeFurnitureSkinRecord skin)
         {
             if (skin == null || skin.skinItemId <= 0) return;

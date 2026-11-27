@@ -41,26 +41,6 @@ namespace Zjcs.Offline.Progression
         public bool HasVisitedStatueOn(string localDate) =>
             !string.IsNullOrWhiteSpace(localDate) && Save.Player.StatueVisitDate == localDate;
 
-        public ProgressionResult RecordStatueVisit(string localDate, string kind, int mapClassId,
-            int placementId, string eventId)
-        {
-            if (!DateTime.TryParseExact(localDate, "yyyyMMdd", CultureInfo.InvariantCulture,
-                    DateTimeStyles.None, out _) || string.IsNullOrWhiteSpace(kind) || kind.Length > 64
-                || mapClassId <= 0 || placementId <= 0 || string.IsNullOrWhiteSpace(eventId)
-                || eventId.Length > 160)
-                return Result(ProgressionResultStatus.InvalidState, message: "A statue visit date, type and receipt are required.");
-            Reload();
-            if (HasVisitedStatueOn(localDate))
-                return Result(ProgressionResultStatus.NotReady, message: "A statue has already been visited today.");
-            return ApplyInventoryTransaction(eventId, save =>
-            {
-                save.Player.StatueVisitDate = localDate;
-                save.Player.StatueVisitKind = kind;
-                save.Player.StatueVisitMapClassId = mapClassId;
-                save.Player.StatueVisitPlacementId = placementId;
-            });
-        }
-
         public ProgressionResult ApplyWitchActivation(int mapClassId, int placementId, string eventId,
             float hpPercentChange, IReadOnlyList<int> statusEffectClassIds,
             IReadOnlyList<OfflineItemStack> awards, long acquiredAtUnixSeconds)

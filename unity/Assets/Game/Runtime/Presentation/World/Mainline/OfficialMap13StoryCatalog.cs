@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Zjcs.Offline.Progression;
 using UnityEngine;
 
 namespace Zjcs.Presentation.World
@@ -37,95 +36,6 @@ namespace Zjcs.Presentation.World
 
         public bool TryGetStory(string key, out Map10RuntimeStory story) => stories.TryGetValue(key, out story)
             || subgraphs.TryGetValue(key, out story);
-
-        public bool TryGetSubgraph(string key, out Map10RuntimeStory story) => subgraphs.TryGetValue(key, out story);
-
-        public bool CanConfirmHandIn(OfflineMainlineProgressSession progress, string slotId, int itemId)
-        {
-            if (progress == null || string.IsNullOrWhiteSpace(slotId)) return false;
-            Map13RuntimeHandInItem config = Data.handInItems.FirstOrDefault(value => value.Id == itemId);
-            if (config == null) return false;
-            int claim = NextHandInClaim(progress, slotId, itemId, config.CanHandTimes);
-            if (claim < 0) return false;
-            return config.Items.All(required => (progress.Save.Player.Inventory ?? new List<OfflineItemStack>()).Any(stack => stack != null
-                && stack.ItemId == required.ItemId && stack.Count >= required.Count));
-        }
-
-        public ProgressionResult ConfirmHandIn(OfflineMainlineProgressSession progress, string slotId, int itemId)
-        {
-            if (progress == null || string.IsNullOrWhiteSpace(slotId))
-                throw new ArgumentException("Map13 hand-in requires a local progress session and slot.");
-            Map13RuntimeHandInItem config = Data.handInItems.FirstOrDefault(value => value.Id == itemId);
-            if (config == null) throw new InvalidDataException("Official Map13 hand-in item is missing: " + itemId);
-            int claim = NextHandInClaim(progress, slotId, itemId, config.CanHandTimes);
-            if (claim < 0) return new ProgressionResult { Status = ProgressionResultStatus.Unchanged };
-            string receipt = HandInReceipt(slotId, itemId, claim);
-            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            return progress.ApplyInventoryTransaction(receipt, save =>
-            {
-                foreach (Map10RuntimeAwardItem required in config.Items)
-                {
-                    InventoryOperationResult consumed = OfflineInventoryOperations.Consume(save.Player,
-                        required.ItemId, required.Count, now);
-                    if (!consumed.IsApplied)
-                        throw new InvalidOperationException("Map13 hand-in requirements changed before confirmation.");
-                }
-            });
-        }
-
-        public bool CanClaimFixedReward(OfflineMainlineProgressSession progress, string slotId, int rewardId)
-        {
-            if (progress == null || string.IsNullOrWhiteSpace(slotId)) return false;
-            Map10RuntimeFixedReward config = Data.fixedRewards.FirstOrDefault(value => value != null && value.Id == rewardId);
-            return config != null && NextFixedRewardClaim(progress, slotId, rewardId, config.CanGetTimes) >= 0;
-        }
-
-        public ProgressionResult ClaimFixedReward(OfflineMainlineProgressSession progress, string slotId, int rewardId)
-        {
-            if (progress == null || string.IsNullOrWhiteSpace(slotId))
-                throw new ArgumentException("Map13 fixed reward requires a local progress session and slot.");
-            Map10RuntimeFixedReward config = Data.fixedRewards.FirstOrDefault(value => value != null && value.Id == rewardId);
-            if (config == null) throw new InvalidDataException("Official Map13 fixed reward is missing: " + rewardId);
-            int claim = NextFixedRewardClaim(progress, slotId, rewardId, config.CanGetTimes);
-            if (claim < 0) return new ProgressionResult { Status = ProgressionResultStatus.Unchanged };
-
-            string receipt = FixedRewardReceipt(slotId, rewardId, claim);
-            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            return progress.ApplyInventoryTransaction(receipt, save =>
-            {
-                foreach (Map10RuntimeAwardItem item in config.Items)
-                {
-                    InventoryOperationResult granted = OfflineInventoryOperations.Grant(save.Player,
-                        item.ItemId, item.Count, now);
-                    if (!granted.IsApplied)
-                        throw new InvalidOperationException("Map13 fixed reward could not be applied: " + item.ItemId);
-                }
-            });
-        }
-
-        private static int NextHandInClaim(OfflineMainlineProgressSession progress, string slotId,
-            int itemId, int maximum)
-        {
-            for (int claim = 0; claim < maximum; claim++)
-                if (!progress.Save.Player.AppliedInventoryEventIds.Contains(HandInReceipt(slotId, itemId, claim)))
-                    return claim;
-            return -1;
-        }
-
-        private static int NextFixedRewardClaim(OfflineMainlineProgressSession progress, string slotId,
-            int rewardId, int maximum)
-        {
-            for (int claim = 0; claim < maximum; claim++)
-                if (!progress.Save.Player.AppliedInventoryEventIds.Contains(FixedRewardReceipt(slotId, rewardId, claim)))
-                    return claim;
-            return -1;
-        }
-
-        private static string HandInReceipt(string slotId, int itemId, int claim) =>
-            "map13:" + slotId + ":hand-in:" + itemId + ":" + claim;
-
-        private static string FixedRewardReceipt(string slotId, int rewardId, int claim) =>
-            "map13:" + slotId + ":fixed-reward:" + rewardId + ":" + claim;
 
         private void Validate()
         {

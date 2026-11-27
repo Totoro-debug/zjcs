@@ -157,8 +157,6 @@ namespace Zjcs.Presentation.World
             return true;
         }
 
-        public bool ContainsMap(int mapClassId) => maps.ContainsKey(mapClassId);
         public int NextMap(int mapClassId) => maps.TryGetValue(mapClassId, out MapReference map) ? map.NextMapClassId : 0;
-        public bool TryGetTemplate(int entityClassId, out EntityTemplate template) => templates.TryGetValue(entityClassId, out template);
     }
 }

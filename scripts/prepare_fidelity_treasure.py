@@ -65,34 +65,3 @@ def extract_treasure_bindings(exporter, panels, sources, keys=None, classes=None
     for key in keys:
         enrich(panels[key]['root'])
     sources['treasure_bindings'] = receipts
-
-
-def extract_treasure_filters(exporter, panel, sources):
-    values = {}
-    receipts = []
-    for obj in exporter.apk.objects(panel['source']['bundle']):
-        if obj.type.name != 'MonoBehaviour':
-            continue
-        cls, raw, basic = exporter.mono(obj)
-        if cls not in ['FilterGroupItemForRank', 'FilterGroupItemForProperty', 'TreasureSortGroupItem']:
-            continue
-        offset = (32 + len(basic.m_Name.encode()) + 3) & ~3
-        if cls != 'TreasureSortGroupItem' and len(raw) != offset + 4:
-            raise ValueError('Unexpected original filter fields: ' + cls)
-        fields = {'kind': cls, 'value': struct.unpack_from('<i', raw, offset)[0]}
-        if cls == 'TreasureSortGroupItem':
-            fields['reverse'] = bool(raw[offset + 4])
-        path = exporter.object_path(basic.m_GameObject)
-        values[path] = fields
-        receipts.append(dict(exporter.apk.provenance(obj), object_path=path, script=cls,
-                             sha256=hashlib.sha256(raw).hexdigest(), field_offset=offset,
-                             operation='Original FilterType / SortType enum and IsReverse fields'))
-
-    def enrich(node):
-        if node['path'] in values:
-            node['treasure_filter'] = values[node['path']]
-        for child in node['children']:
-            enrich(child)
-
-    enrich(panel['root'])
-    sources['treasure_filter_fields'] = receipts

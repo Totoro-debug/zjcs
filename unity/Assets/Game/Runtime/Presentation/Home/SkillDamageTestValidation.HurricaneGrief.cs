@@ -11,14 +11,6 @@ namespace Zjcs.Presentation.Home
 {
     public sealed partial class SkillDamageTestValidation
     {
-        private static bool HasHurricaneGriefCompanion(int active)
-        {
-            string path = Environment.GetEnvironmentVariable("ZJCS_SKILLS_ACQUIRED_PASSIVE_SAVE");
-            if (active != 10091 || string.IsNullOrWhiteSpace(path)) return false;
-            var save = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(path));
-            return save.Player.Skills.Plans[save.Player.Skills.SelectedPlan].PassiveSkills[0] == 10598;
-        }
-
         private static bool IsHurricaneGriefVisible()
         {
             var camera = Camera.main;

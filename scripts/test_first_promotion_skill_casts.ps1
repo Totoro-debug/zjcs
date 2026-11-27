@@ -3,7 +3,6 @@ $ErrorActionPreference='Stop'
 Add-Type -Path (Get-FightCombatSources)
 $root=Split-Path -Parent $PSScriptRoot
 function Read-Input($name) { [IO.File]::ReadAllText((Join-Path $root "unity/Assets/Official/Combat/$name.json")) }
-function Hash-Input($name) { (Get-FileHash (Join-Path $root "unity/Assets/Official/Combat/$name.json")).Hash.ToLowerInvariant() }
 function Check($ok,$message) { if(-not $ok) { throw $message } }
 $skillProof=Get-Content (Join-Path $root 'unity/Assets/Official/Combat/skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
 $battleProof=Get-Content (Join-Path $root 'unity/Assets/Official/Combat/battle-rules-source-manifest.json') -Raw | ConvertFrom-Json

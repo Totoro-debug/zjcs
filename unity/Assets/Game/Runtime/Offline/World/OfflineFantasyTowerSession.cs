@@ -229,32 +229,6 @@ namespace Zjcs.Offline.World
             return FantasyTowerResult.Applied;
         }
 
-        public FightBattleCheckpoint LoadBackgroundCheckpoint(int entryIndex, int stageId)
-        {
-            FantasyTowerEntrySave entry = GetEntry(entryIndex);
-            if (!entry.autoPushEnabled || string.IsNullOrEmpty(entry.backgroundCheckpoint)) return null;
-            FightBattleCheckpoint checkpoint = FightBattleCheckpointSerializer.Load(entry.backgroundCheckpoint);
-            if (checkpoint.StageId != stageId || checkpoint.Finished) return null;
-            return checkpoint;
-        }
-
-        public FantasyTowerResult RecordBackgroundResult(FantasyTowerPushResult result)
-        {
-            if (!IsValidResult(result)) return FantasyTowerResult.InvalidState;
-            FantasyTowerEntrySave current = GetEntry(result.entryIndex);
-            if (result.startLayer != current.clearedLayer + 1
-                || result.endLayer > MaxLayer(result.entryIndex)) return FantasyTowerResult.InvalidState;
-            FantasyTowerSave next = Clone(save);
-            FantasyTowerEntrySave entry = FindOrAdd(next, result.entryIndex);
-            if (entry.pendingResults.Any(value => value.id == result.id)) return FantasyTowerResult.Unchanged;
-            entry.pendingResults.Add(Clone(result));
-            entry.backgroundCheckpoint = string.Empty;
-            if (result.won) entry.clearedLayer = Math.Max(entry.clearedLayer, result.endLayer);
-            if (!result.won || result.towerCompleted) entry.autoPushEnabled = false;
-            Persist(next);
-            return FantasyTowerResult.Applied;
-        }
-
         public FantasyTowerResult CompleteBackgroundLayer(int entryIndex, int layer, int stageId,
             bool won, IReadOnlyList<FantasyTowerReward> rewards, long nowUnixSeconds)
         {
@@ -288,20 +262,6 @@ namespace Zjcs.Offline.World
                 AddBackgroundResult(entry, entryIndex, won, completed, nowUnixSeconds);
                 entry.autoPushEnabled = false;
             }
-            Persist(next);
-            return FantasyTowerResult.Applied;
-        }
-
-        public FantasyTowerResult StopBackgroundPush(int entryIndex, long nowUnixSeconds)
-        {
-            if (!IsTowerEntry(entryIndex) || nowUnixSeconds <= 0) return FantasyTowerResult.InvalidState;
-            FantasyTowerEntrySave current = GetEntry(entryIndex);
-            if (!current.autoPushEnabled) return FantasyTowerResult.Unchanged;
-            FantasyTowerSave next = Clone(save);
-            FantasyTowerEntrySave entry = Find(next, entryIndex);
-            FinishBackgroundBatch(entry, entryIndex, nowUnixSeconds);
-            entry.autoPushEnabled = false;
-            entry.backgroundCheckpoint = string.Empty;
             Persist(next);
             return FantasyTowerResult.Applied;
         }
