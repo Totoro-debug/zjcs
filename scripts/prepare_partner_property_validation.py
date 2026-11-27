@@ -13,7 +13,10 @@ def main():
     project = prepare(work)
     assets = project / 'Assets'
     source = ROOT / 'unity/Assets/Game/Resources/Partners'
-    shutil.copytree(source, assets / 'Resources/Partners')
+    target=assets/'Resources/Partners'
+    target.mkdir(parents=True)
+    for suffix in ('', '.meta'):
+        shutil.copy2(source/('OfficialPartnerAssetCatalog.asset'+suffix), target/('OfficialPartnerAssetCatalog.asset'+suffix))
     for name in ('partner-rules.json', 'partner-rules.json.meta', 'partner-properties.json', 'partner-properties.json.meta'):
         destination = assets / 'Official/Partners' / name
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -27,6 +30,7 @@ def main():
         text = text.replace('using Framework.Logging', 'using PartnerPropertyReference.Framework.Logging')
         (assets / 'Editor' / ('Reference' + name + '.cs')).write_text(text, 'utf8', newline='\n')
     shutil.copy2(ROOT / 'scripts/fixtures/partner_property_catalog_validation.cs', assets / 'Editor/PartnerPropertyCatalogValidation.cs')
+    shutil.copy2(ROOT / 'scripts/fixtures/partner_condition_validation.cs', assets / 'Editor/PartnerConditionValidation.cs')
     print(project)
 
 

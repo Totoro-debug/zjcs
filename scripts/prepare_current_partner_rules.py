@@ -7,6 +7,7 @@ import re
 
 from official_apk import Apk, ROOT
 from official_tables import Constructors
+from official_source import OfficialSource
 
 
 TABLES = (
@@ -145,12 +146,12 @@ def build(work):
         path = code / 'common-source/Common' / (name + '.cs')
         if not path.is_file() or name in ('Pos2d', 'Vector2', 'Vector3'):
             path = code / 'common-source/Common.LubanGen' / (name + '.cs')
-        if path.read_bytes() != (ROOT / '.tools/source-packages/current/884_156692/official-code' / path.relative_to(code)).read_bytes():
-            raise ValueError('Working official source differs: ' + name)
         sources[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
+    sources.update(OfficialSource().verify_code_files(ROOT / path for path in sources))
     metadata_path = code / 'global-metadata.dat'
     sources[metadata_path.relative_to(ROOT).as_posix()] = sha(metadata_path.read_bytes())
-    for path in (ROOT / 'scripts/official_tables.py', ROOT / 'scripts/official_metadata.py'):
+    for path in (ROOT / 'scripts/official_tables.py', ROOT / 'scripts/official_metadata.py',
+                 ROOT / 'scripts/official_source.py'):
         sources[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
     validation = validate(tables)
     output = encoded(dict(manifest=apk.version, tables=tables))

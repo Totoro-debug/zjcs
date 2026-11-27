@@ -3,31 +3,26 @@ import json
 import os
 from pathlib import Path
 import shutil
+from validation_assemblies import stage_runtime_modules
 
 ROOT = Path(__file__).resolve().parents[1]
 
 def prepare(work):
     project = work / 'unity'
     assets = project / 'Assets'
-    modules = ('Offline/Progression', 'Offline/Equipment', 'Offline/Skills', 'Offline/State',
-               'Official/SkillRules', 'Official/Partners', 'Official/PlayerHealth')
-    for module in modules:
-        source = ROOT / 'unity/Assets/Game/Runtime' / module
-        for path in source.rglob('*'):
-            if path.is_file() and (path.suffix in ('.cs', '.asmdef', '.meta')):
-                destination = assets / module / path.relative_to(source)
-                destination.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(path, destination)
+    if project.exists():
+        raise FileExistsError('Keep the existing partner validation project')
+    stage_runtime_modules(project, ROOT / 'unity/Assets/Game/Runtime', ['Zjcs.Offline.Progression'],
+                          runtime_destination='Assets', allowed_external={'Unity.Newtonsoft.Json'})
     (assets / 'Editor').mkdir(parents=True)
-    destination = assets / 'Resources/Map14/world-alone-preparation.json'
-    destination.parent.mkdir(parents=True)
-    shutil.copy2(ROOT / 'unity/Assets/Game/Resources/Map14/world-alone-preparation.json', destination)
     shutil.copy2(ROOT / 'scripts/fixtures/partner_gift_transaction_validation.cs', assets / 'Editor/PartnerGiftTransactionValidation.cs')
     shutil.copy2(ROOT / 'scripts/fixtures/partner_roster_transaction_validation.cs', assets / 'Editor/PartnerRosterTransactionValidation.cs')
     (assets / 'Editor/Validation.asmdef').write_text(json.dumps(dict(name='PartnerGiftValidation', includePlatforms=['Editor'],
-        references=['Zjcs.Offline.Progression', 'Zjcs.Offline.State', 'Zjcs.Official.Partners'])), encoding='utf8')
-    (project / 'Packages').mkdir()
-    (project / 'Packages/manifest.json').write_text('{"dependencies":{"com.unity.modules.jsonserialize":"1.0.0","com.unity.modules.animation":"1.0.0","com.unity.modules.audio":"1.0.0","com.unity.nuget.newtonsoft-json":"3.2.1"}}', encoding='utf8')
+        references=['Zjcs.Offline.Progression', 'Zjcs.Offline.State', 'Zjcs.Official.Partners', 'Unity.Newtonsoft.Json'])), encoding='utf8')
+    dependencies=json.loads((ROOT/'unity/Packages/manifest.json').read_bytes())['dependencies']
+    packages=project/'Packages';packages.mkdir()
+    (packages/'manifest.json').write_text(json.dumps(dict(dependencies={name:version for name,version in dependencies.items()
+        if name.startswith('com.unity.modules.') or name=='com.unity.nuget.newtonsoft-json'})), 'utf8')
     (project / 'ProjectSettings').mkdir()
     shutil.copy2(ROOT / 'unity/ProjectSettings/ProjectVersion.txt', project / 'ProjectSettings/ProjectVersion.txt')
     return project

@@ -64,6 +64,7 @@ class AssemblyStagingTests(unittest.TestCase):
         self.assembly("Serialization", "Zjcs.Official.SharedSerialization")
         self.assembly("Progression", "Zjcs.Offline.Progression", guid="b" * 32)
         inputs = ["Assets/Official/World/Map/14/SharedSerialization/MessagePack.dll",
+                  "Assets/Game/Resources/Home/item-auto-increase.json",
                   "Assets/Game/Resources/Map14/world-alone-preparation.json",
                   "Assets/Game/Resources/Map16/world-alone-configuration.json"]
         for relative in inputs:
@@ -77,6 +78,20 @@ class AssemblyStagingTests(unittest.TestCase):
             for suffix in ("", ".meta"):
                 self.assertEqual((self.project / (relative + suffix)).read_bytes(),
                                  (self.runtime.parents[2] / (relative + suffix)).read_bytes())
+
+    def test_existing_fixture_layout_keeps_transitive_modules_and_identities(self):
+        self.assembly("Offline/Root", "Root", ["Dependency"])
+        self.assembly("Official/Dependency", "Dependency", guid="b" * 32)
+        stage_runtime_modules(self.project, self.runtime, ["Root"], runtime_destination="Assets")
+        for relative in ("Offline/Root/Code.cs", "Offline/Root/Code.cs.meta", "Official/Dependency/Code.cs"):
+            self.assertEqual((self.project / "Assets" / relative).read_bytes(), (self.runtime / relative).read_bytes())
+        self.assertFalse((self.project / "Assets/Game/Runtime").exists())
+
+    def test_runtime_destination_cannot_escape_project_assets(self):
+        self.assembly("Root", "Root")
+        with self.assertRaisesRegex(ValueError, "inside the validation project Assets"):
+            stage_runtime_modules(self.project, self.runtime, ["Root"], runtime_destination="../outside")
+        self.assertFalse(self.project.exists())
 
 
 if __name__ == "__main__":

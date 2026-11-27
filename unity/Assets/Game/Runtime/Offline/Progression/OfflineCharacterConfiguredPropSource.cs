@@ -124,7 +124,7 @@ namespace Zjcs.Offline.Progression
             foreach (OfflineNpcFriendship friendship in state.NpcFriendships)
             {
                 if (friendship == null || friendship.Level <= 0) continue;
-                Dictionary<string, object> npc = catalog.Find("npc", friendship.NpcClassId, "Id");
+                Dictionary<string, object> npc = catalog.FindPartner("npc", friendship.NpcClassId, "Id");
                 if (npc == null) continue;
                 IReadOnlyDictionary<int, long> props = catalog.GetLevelProps(Integer(npc, "LevelPropId"),
                     friendship.Level);

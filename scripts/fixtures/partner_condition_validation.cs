@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEngine;
 using Zjcs.Offline.Progression;
@@ -36,7 +37,7 @@ public static class PartnerConditionValidation
         try { Check(); Debug.Log("PARTNER_CURRENT_CONDITIONS_PASSED"); EditorApplication.Exit(0); }
         catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
     }
-    private static void Check()
+    public static void Check()
     {
         string repo = Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT"), work = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
         Require(Path.GetFullPath(Application.dataPath).StartsWith(Path.GetFullPath(work) + Path.DirectorySeparatorChar), "Owned validation project");
@@ -79,8 +80,9 @@ public static class PartnerConditionValidation
 
         var catalog = OfficialCharacterCatalog.Parse(read("Character/character-progression.json"), read("Character/item-time-limits.json"),
             read("CharacterCreation/wardrobe.json"), read("CharacterCreation/wardrobe-rules.json"), read("Character/character-overview.json"), selected);
-        Require(catalog.HasCurrentPartnerRules && catalog.PartnerRows("npc").Count == 148
-            && catalog.PartnerRows("conditions").Count == 4496, "Selected scoped tables");
+        var proof=JObject.Parse(File.ReadAllText(Path.Combine(repo,"assets/reference/partner-rules-source-manifest.json")));
+        Require(catalog.HasCurrentPartnerRules && catalog.PartnerRows("npc").Count == (int)proof["tables"]["npc"]["rows"]
+            && catalog.PartnerRows("conditions").Count == (int)proof["tables"]["conditions"]["rows"], "Selected scoped tables");
         var slots = new ProfileSlotCatalog(Path.Combine(work, "condition-profiles")); string slot = slots.CreateSlot();
         var tasks = OfficialMainlineTaskCatalog.Load(File.ReadAllText(Path.Combine(repo, "unity/Assets/Game/Resources/Official/Progression/mainline-tasks.json")),
             File.ReadAllText(Path.Combine(repo, "unity/Assets/Game/Resources/Official/Progression/mainline-tasks-source-manifest.json")));

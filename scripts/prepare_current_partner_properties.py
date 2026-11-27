@@ -16,13 +16,15 @@ def sha(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
-def build(work):
+def build(work, rules_path=None):
     apk = Apk.current()
-    rules_path = ROOT / 'unity/Assets/Official/Partners/partner-rules.json'
+    staged_rules = rules_path is not None
+    rules_path = rules_path or ROOT / 'unity/Assets/Official/Partners/partner-rules.json'
     rules = json.loads(rules_path.read_bytes())
     if rules['manifest'] != apk.version:
         raise ValueError('Partner rules and property binary versions must match')
-    prior = json.loads((ROOT / 'assets/reference/partner-rules-source-manifest.json').read_bytes())
+    prior_path = rules_path.with_name('partner-rules-source-manifest.json') if staged_rules else ROOT / 'assets/reference/partner-rules-source-manifest.json'
+    prior = json.loads(prior_path.read_bytes())
     if prior['output']['sha256'] != sha(rules_path.read_bytes()):
         raise ValueError('Partner table provenance changed')
     name = 'wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile'
@@ -55,17 +57,16 @@ def build(work):
         path = code / 'common-source/Common' / (name + '.cs')
         if not path.is_file():
             path = code / 'common-source/Common.LubanGen' / (name + '.cs')
-        if path.read_bytes() != (ROOT / '.tools/source-packages/current/884_156692/official-code' / path.relative_to(code)).read_bytes():
-            raise ValueError('Working official constructor differs: ' + name)
         sources[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
     for name in ('LevelPropBinaryReader', 'LevelPropParser', 'NpcInfoParser', 'NpcFriendshipLevelInfoParser', 'PropType'):
         path = code / 'common-source/Common' / (name + '.cs')
-        if path.read_bytes() != (ROOT / '.tools/source-packages/current/884_156692/official-code' / path.relative_to(code)).read_bytes():
-            raise ValueError('Working official property source differs: ' + name)
         sources[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
+    sources.update(apk.source.verify_code_files(ROOT / path for path in sources
+                    if path.endswith('.cs')))
     for path in (code / 'global-metadata.dat', ROOT / 'scripts/official_tables.py',
                  ROOT / 'scripts/official_metadata.py', ROOT / 'scripts/prepare_unity_character_catalog.py',
-                 ROOT / 'scripts/prepare_current_partner_rules.py', ROOT / 'scripts/prepare_partner_ui_helpers.py'):
+                 ROOT / 'scripts/prepare_current_partner_rules.py', ROOT / 'scripts/prepare_partner_ui_helpers.py',
+                 ROOT / 'scripts/official_source.py'):
         sources[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
     target = ROOT / 'unity/Assets/Official/Partners/partner-properties.json'
     known_properties = {row['PropType'] for row in tables['prop_cfg']}
@@ -76,8 +77,8 @@ def build(work):
     baseline = json.loads(baseline_path.read_bytes())
     old_ids = {row['Id']: row['LevelPropId'] for row in baseline['rules']['npc']}
     new_ids = {row['Id']: row['LevelPropId'] for row in rules['tables']['npc']}
-    if old_ids != new_ids:
-        raise ValueError('Review NPC property identity before extending the character catalog')
+    if any(new_ids.get(identity) != value for identity, value in old_ids.items()):
+        raise ValueError('Review changed existing NPC property identity before extending the character catalog')
     output = encoded(dict(manifest=apk.version, level_prop=classes, tables=tables))
     (work / target.name).write_bytes(output)
     receipt = dict(manifest=apk.version, generator_sha256=sha(Path(__file__).read_bytes()), source_sha256=sources,
@@ -135,19 +136,27 @@ def install(work, receipt):
              script, Path(str(script) + '.meta')]
     receipt['installed_sha256'] = {path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in files}
     receipt['runtime_source_sha256'] = {path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in
-        (script, script.with_name('OfficialCharacterAssetCatalog.cs'))}
+        (script, script.with_name('OfficialCharacterAssetCatalog.cs'),
+         script.with_name('OfflineCharacterConfiguredPropSource.cs'))}
     receipt['migrated_methods'] = ['LevelPropParser.GetConfigProps', 'LevelPropParser.TryGetPropDict',
         'NpcInfoParser.GetFriendshipLevelPropDiff']
     receipt['validation_source_sha256'] = {path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in
-        (ROOT / 'scripts/prepare_partner_property_validation.py', ROOT / 'scripts/fixtures/partner_property_catalog_validation.cs')}
+        (ROOT / 'scripts/prepare_partner_property_validation.py', ROOT / 'scripts/prepare_partner_gift_validation.py',
+         ROOT / 'scripts/validation_assemblies.py', ROOT / 'scripts/fixtures/partner_property_catalog_validation.cs',
+         ROOT / 'scripts/fixtures/partner_gift_transaction_validation.cs',
+         ROOT / 'scripts/fixtures/partner_condition_validation.cs',
+         ROOT / 'scripts/fixtures/partner_roster_transaction_validation.cs')}
     proof.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument('--install', action='store_true')
+    parser.add_argument('--rules', type=Path, help='Verify properties against staged partner rules before installing either payload')
     args = parser.parse_args()
+    if args.install and args.rules:
+        parser.error('Install partner rules first, then regenerate the final property receipt from the installed rules')
     work = validation_directory()
-    receipt = build(work)
+    receipt = build(work, args.rules)
     if args.install:
         install(work, receipt)

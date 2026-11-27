@@ -37,12 +37,14 @@ namespace Zjcs.Offline.Progression
         }
         private readonly Dictionary<string, List<Dictionary<string, object>>> tables;
         private readonly Dictionary<int, PropertyClass> classes;
+        private readonly string manifest;
         private Zjcs.Official.Partners.PartnerConditionRules conditions;
         public Zjcs.Official.Partners.PartnerConditionRules Conditions => conditions ??
             (conditions = new Zjcs.Official.Partners.PartnerConditionRules(name => Rows(name)));
         private OfficialPartnerCatalog(Dictionary<string, List<Dictionary<string, object>>> tables,
-            Dictionary<int, PropertyClass> classes) { this.tables = tables; this.classes = classes; }
-        public string Manifest => "884_156692";
+            Dictionary<int, PropertyClass> classes, string manifest)
+        { this.tables = tables; this.classes = classes; this.manifest = manifest; }
+        public string Manifest => manifest;
         public IReadOnlyCollection<int> PropertyClassIds => classes.Keys;
         public IReadOnlyList<Dictionary<string, object>> Rows(string table) => tables.TryGetValue(table, out var rows)
             ? rows : throw new KeyNotFoundException("Selected partner table is missing: " + table);
@@ -77,8 +79,11 @@ namespace Zjcs.Offline.Progression
         {
             var rules = Map(OfficialEquipmentJson.Parse(rulesJson));
             var properties = Map(OfficialEquipmentJson.Parse(propertiesJson));
-            if ((string)rules["manifest"] != "884_156692" || (string)properties["manifest"] != "884_156692")
-                throw new FormatException("Partner rules and properties must both be pinned to 884_156692.");
+            if (!rules.TryGetValue("manifest", out object rulesSource) || !(rulesSource is string manifest)
+                || string.IsNullOrWhiteSpace(manifest)
+                || !properties.TryGetValue("manifest", out object propertySource)
+                || !string.Equals(manifest, propertySource as string, StringComparison.Ordinal))
+                throw new FormatException("Partner rules and properties must belong to the same recorded source.");
             var tables = new Dictionary<string, List<Dictionary<string, object>>>(StringComparer.Ordinal);
             foreach (var entry in Map(rules["tables"]))
                 tables.Add(entry.Key, entry.Value is List<object> rows ? rows.Select(Map).ToList()
@@ -106,7 +111,7 @@ namespace Zjcs.Offline.Progression
             foreach (var npc in tables["npc"])
                 if (Int(npc["LevelPropId"]) > 0 && !classes.ContainsKey(Int(npc["LevelPropId"])))
                     throw new FormatException("Selected NPC friendship properties are incomplete: " + npc["Id"]);
-            return new OfficialPartnerCatalog(tables, classes);
+            return new OfficialPartnerCatalog(tables, classes, manifest);
         }
         private static Dictionary<string, object> Map(object value) => value as Dictionary<string, object>
             ?? throw new FormatException("Expected an official partner data object.");

@@ -5,7 +5,8 @@ import re
 import shutil
 
 
-def stage_runtime_modules(project, runtime, roots, *, allowed_external=None, excluded=()):
+def stage_runtime_modules(project, runtime, roots, *, allowed_external=None, excluded=(),
+                          runtime_destination='Assets/Game/Runtime'):
     """Copy a dependency closure and return its runtime assembly names.
 
     None preserves fixtures that delegate external dependencies to their packages.
@@ -16,7 +17,7 @@ def stage_runtime_modules(project, runtime, roots, *, allowed_external=None, exc
     modules, selected, external = resolve_runtime_modules(runtime, roots, excluded=excluded)
     if allowed_external is not None and external - set(allowed_external):
         raise ValueError("Unresolved validation assemblies: " + repr(sorted(external - set(allowed_external))))
-    copy_modules(project, runtime, modules, selected)
+    copy_modules(project, runtime, modules, selected, runtime_destination=runtime_destination)
     return selected
 
 
@@ -37,7 +38,10 @@ def resolve_runtime_modules(runtime, roots, *, excluded=()):
     return modules, selected, external
 
 
-def copy_modules(project, runtime, modules, selected):
+def copy_modules(project, runtime, modules, selected, *, runtime_destination='Assets/Game/Runtime'):
+    destination = (project / runtime_destination).resolve()
+    if not destination.is_relative_to((project / 'Assets').resolve()):
+        raise ValueError('Runtime modules must stay inside the validation project Assets')
     module_guids = {re.search(r'(?m)^guid: ([0-9a-f]{32})', Path(str(path) + '.meta').read_text('utf8'))[1]: name
                     for name, path in modules.items()}
     folders = [modules[name].parent for name in selected]
@@ -57,7 +61,7 @@ def copy_modules(project, runtime, modules, selected):
                 continue
             if source.suffix == '.meta' and Path(str(source)[:-5]).suffix not in ('.cs', '.asmdef', '.asmref'):
                 continue
-            target = project / 'Assets/Game/Runtime' / source.relative_to(runtime)
+            target = destination / source.relative_to(runtime)
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source, target)
     # These assemblies load their local inputs at runtime; asmdef references
