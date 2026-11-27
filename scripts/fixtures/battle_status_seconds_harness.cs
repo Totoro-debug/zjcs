@@ -38,7 +38,78 @@ public static class BattleStatusSecondsHarness
     }
     static FightBattleStatusSeconds Clock(FightBattleCheckpoint cp,FightOfficialCombatCatalog c) =>
         new FightBattleStatusSeconds(cp,c,new FightRandomStream(cp.RandomSeed));
+    static void CheckConfiguredEndReasons()
+    {
+        const int initialStatus = 900001;
+        const int successorStatus = 900002;
+        const string statuses = @"{
+            ""entities"": {
+                ""900001"": { ""FightStatusComponent"": { ""DurationRound"": -1, ""OfflineEndActionReasons"": 4 } },
+                ""900002"": { ""FightStatusComponent"": { ""DurationRound"": -1 } }
+            },
+            ""props"": {}, ""prop_names"": {},
+            ""tables"": {
+                ""entity_prop"": [], ""entity_prop_group_level"": [], ""summon_monster_fix_prop"": [],
+                ""summon_monster_add_prop"": [], ""summon_rank_additive_factor"": []
+            }
+        }";
+        const string battle = "{\"entities\":{},\"props\":{},\"tables\":{}}";
+        string Digest(string value)
+        {
+            using var sha = System.Security.Cryptography.SHA256.Create();
+            return BitConverter.ToString(sha.ComputeHash(System.Text.Encoding.UTF8.GetBytes(value))).Replace("-", "");
+        }
+        var catalog = FightOfficialCombatCatalog.Load(statuses, Digest(statuses), null, battle, Digest(battle), null);
+        foreach (bool blocked in new[] { false, true })
+        {
+            var checkpoint = new FightBattleCheckpoint { StageId = 1, RandomSeed = 73, MaxRound = 5,
+                Grid = new FightBattleGrid { Width = 3, Height = 3 } };
+            var unit = new FightBattleUnitState { Id = 1, Side = 1, Hp = 100, MaxHp = 100 };
+            unit.Turn.Id = 1;
+            unit.Turn.Hp = 100;
+            checkpoint.Units.Add(unit);
+            var template = catalog.CreateStatus(initialStatus, 1, 1, 1, 900003, 900004);
+            Check(template.EndActionReasons == FightStatusEndReason.TimerExpired,
+                "End reason filter was not loaded from the status definition");
+            template.Components.Seconds = new FightBattleStatusSecondsState
+            {
+                DefinitionResolved = true, DurationSeconds = 1d, EndOnBlockDamage = true,
+                Successors = { new FightBattleStatusStateTrigger { EntityId = successorStatus } }
+            };
+            var clock = Clock(checkpoint, catalog);
+            clock.Enqueue(0d, unit.Id, true, false, false, template);
+            clock.Advance(0d);
+            checkpoint = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+            unit = checkpoint.Units.Single();
+            var active = unit.Statuses.Single();
+            Check(active.EndActionReasons == FightStatusEndReason.TimerExpired,
+                "Live status lost its end filter after checkpoint restore");
+            var endSignals = new List<FightStatusEndReason>();
+            clock = Clock(checkpoint, catalog);
+            clock.StatusChanged += (owner, status, started) =>
+            {
+                if (!started) endSignals.Add(FightBattleStatusViewState.Capture(status, owner).EndReason);
+            };
+            if (blocked) clock.Enqueue(.5d, unit.Id, true, true, false);
+            clock.Advance(2d);
+            Check(endSignals.SequenceEqual(new[] { blocked ? FightStatusEndReason.Consumed : FightStatusEndReason.TimerExpired }),
+                "Status did not report its actual timer end reason exactly once");
+            if (blocked)
+                Check(unit.Statuses.Count == 0, "Expiry-only successor ran on consumption");
+            else
+            {
+                var successor = unit.Statuses.Single();
+                Check(successor.ClassId == successorStatus && successor.CreatorId == 1
+                    && successor.RootSkillId == 900003 && successor.ApplyingSkillItemId == 900004,
+                    "Expiry successor was lost or changed its origin");
+            }
+            Check(!FightStatusLifecycle.End(unit, active, FightStatusEndReason.Replaced),
+                "An already ended status emitted a second end");
+        }
+    }
+
     public static void Run(FightOfficialCombatCatalog c,FightDamageFormula f,FightOfficialSkillItemCatalog items) {
+        CheckConfiguredEndReasons();
         var definition=Launch(c).Components.Seconds;
         Near(definition.DurationSeconds,.7,"Original airborne duration");
         Check(definition.ResetOnNonMoveDamage&&definition.EndOnBlockDamage&&!definition.Started,

@@ -872,6 +872,9 @@ namespace Zjcs.Combat.Official
         public FightBattleStatusOrigin Origin;
         public FightBattleStatusComponentState Components = new FightBattleStatusComponentState();
         public bool RemoveApplyEntityOnEnd;
+        // An empty mask on existing definitions allows every end reason.
+        public FightStatusEndReason EndActionReasons;
+        [NonSerialized] internal FightStatusEndReason EndReason;
         public int InstanceId;
         public int ClassId;
         public int StatusType;

@@ -118,7 +118,8 @@ namespace Zjcs.Combat.Official
             RefreshShieldAttackPresence(owner, ended);
             ExecuteOwnStatusEndActions(owner, ended);
             ExecuteStatusEndReactions(owner, ended);
-            if (movementStartContext != null && statusCatalog != null && owner != null && ended != null)
+            if (movementStartContext != null && statusCatalog != null && owner != null && ended != null
+                && FightStatusLifecycle.AllowsEndAction(ended))
             {
                 var logicInvocations = FightStatusLogicRuntime.Apply(owner, ended,
                     FightStatusLogicEvent.StatusEnd, owner, owner, null, null, units,

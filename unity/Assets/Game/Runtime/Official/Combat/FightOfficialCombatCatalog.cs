@@ -1141,6 +1141,7 @@ namespace Zjcs.Combat.Official
                 LogicRulesSupported = logicComponent != null,
                 LogicDefinitionJson = logicComponent == null ? null : OfficialJson.Stringify(logicComponent),
                 SkillReplay = ReadStatusReplay(components),
+                EndActionReasons = ReadEndActionReasons(status),
                 DurationRound = durationRound,
                 CurDurationRound = durationRound,
                 StartRound = -1,

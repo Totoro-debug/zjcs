@@ -13,7 +13,7 @@ namespace Zjcs.Combat.Official
             foreach (var previous in new List<FightBattleStatusState>(owner.Statuses))
                 if (previous != null && previous.ClassId == 24210
                     && !FightBattleStatusOrigin.Matches(FightBattleStatusOrigin.Resolve(previous), origin))
-                    FightStatusLifecycle.End(owner, previous);
+                    FightStatusLifecycle.End(owner, previous, FightStatusEndReason.Replaced);
         }
     }
 }

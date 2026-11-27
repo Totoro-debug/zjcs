@@ -312,7 +312,7 @@ namespace Zjcs.Combat.Official
             if (target?.Statuses == null || actions == null) return;
             foreach (FightBattleStatusState status in new List<FightBattleStatusState>(target.Statuses))
                 if (status != null && actions.Contains(status.ActionType))
-                    FightStatusLifecycle.End(target, status);
+                    FightStatusLifecycle.End(target, status, FightStatusEndReason.Dispelled);
         }
 
         private void ApplyMissingStatusStart(FightBattleUnitState owner,

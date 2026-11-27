@@ -20,6 +20,7 @@ namespace Zjcs.Combat.Official
     {
         public int InstanceId, ClassId, CreatorId, StackCount, RoundStartRemainingCount;
         public int ApplyingSkillItemId;
+        public FightStatusEndReason EndReason;
         public bool CanStack, Forbidden, HasRoundStart;
         public int ShareId;
         public bool HasSharedStackCount;
@@ -30,7 +31,7 @@ namespace Zjcs.Combat.Official
         public static FightBattleStatusViewState Capture(FightBattleStatusState status, FightBattleUnitState owner = null)
             => new FightBattleStatusViewState {
                 InstanceId = status.InstanceId, ClassId = status.ClassId, CreatorId = status.CreatorId,
-                ApplyingSkillItemId = status.ApplyingSkillItemId,
+                ApplyingSkillItemId = status.ApplyingSkillItemId, EndReason = status.EndReason,
                 StackCount = status.StackCount, CanStack = status.IsOpenStack,
                 Forbidden = status.ForbiddenType != 0, ShareId = status.SharedStackId,
                 HasSharedStackCount = owner != null && status.SharedStackId > 0,

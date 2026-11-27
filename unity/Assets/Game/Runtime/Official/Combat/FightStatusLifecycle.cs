@@ -3,6 +3,19 @@ using System.Collections.Generic;
 
 namespace Zjcs.Combat.Official
 {
+    [Flags]
+    public enum FightStatusEndReason
+    {
+        None = 0,
+        Removed = 1,
+        RoundExpired = 2,
+        TimerExpired = 4,
+        Expired = RoundExpired | TimerExpired,
+        Dispelled = 8,
+        Replaced = 16,
+        Consumed = 32
+    }
+
     /// <summary>
     /// Base status lifetime and stack arithmetic from <c>FightStatusComponentInfo</c>, with the
     /// user-confirmed offline source identity/renewal policy. Component effects use their handlers.
@@ -221,6 +234,7 @@ namespace Zjcs.Combat.Official
                 ClassId = template.ClassId,
                 StatusType = template.StatusType,
                 RemoveApplyEntityOnEnd = template.RemoveApplyEntityOnEnd,
+                EndActionReasons = template.EndActionReasons,
                 ActionType = template.ActionType,
                 HasBackToLifeComponent = template.HasBackToLifeComponent,
                 SkillReplay = template.SkillReplay?.Copy(),
@@ -768,11 +782,15 @@ namespace Zjcs.Combat.Official
         }
 
         public static bool End(FightBattleUnitState unit, FightBattleStatusState status, bool naturallyExpired = false)
+            => End(unit, status, naturallyExpired ? FightStatusEndReason.RoundExpired : FightStatusEndReason.Removed);
+
+        public static bool End(FightBattleUnitState unit, FightBattleStatusState status, FightStatusEndReason reason)
         {
             if (unit == null || status == null || unit.Statuses == null || !unit.Statuses.Remove(status)) return false;
+            status.EndReason = reason;
             if (status.AccumulatedDamage != null && status.AccumulatedDamage.RulesSupported)
                 unit.EndedAccumulatedDamageStatuses.Add(status);
-            if (naturallyExpired && status.ClassId == 24435
+            if (reason == FightStatusEndReason.RoundExpired && status.ClassId == 24435
                 && status.Components?.ShieldExpiry?.Supported == true && status.ShieldRemainValue > 0)
             {
                 if (unit.EndedShieldExpiryStatuses == null)
@@ -783,6 +801,10 @@ namespace Zjcs.Combat.Official
             unit.StatusEnded?.Invoke(unit, status);
             return true;
         }
+
+        internal static bool AllowsEndAction(FightBattleStatusState status)
+            => status.EndActionReasons == FightStatusEndReason.None
+                || (status.EndActionReasons & status.EndReason) != 0;
 
         private static List<int> Copy(List<int> values)
         {

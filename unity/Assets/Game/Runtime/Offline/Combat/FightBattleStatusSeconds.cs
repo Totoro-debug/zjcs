@@ -159,7 +159,7 @@ namespace Zjcs.Combat.Official
                     foreach (var status in new List<FightBattleStatusState>(owner.Statuses))
                         if (status.Components?.Seconds is FightBattleStatusSecondsState state
                             && state.Started && state.RemainingSeconds <= 0d)
-                            End(owner, status);
+                            End(owner, status, FightStatusEndReason.TimerExpired);
                 while (clock.PendingHits.Count > 0 && clock.PendingHits[0].DueSeconds <= next)
                 {
                     var hit = clock.PendingHits[0];
@@ -191,7 +191,7 @@ namespace Zjcs.Combat.Official
             {
                 var state = status.Components?.Seconds;
                 if (state == null || !state.Started || status.ForbiddenType != 0 || status.StackCount <= 0) continue;
-                if (hit.Block && state.EndOnBlockDamage) End(owner, status);
+                if (hit.Block && state.EndOnBlockDamage) End(owner, status, FightStatusEndReason.Consumed);
                 else if (status != created && !hit.Displacement && state.ResetOnNonMoveDamage)
                 {
                     state.RemainingSeconds = state.DurationSeconds;
@@ -209,11 +209,11 @@ namespace Zjcs.Combat.Official
             StatusChanged?.Invoke(owner, status, true);
         }
 
-        private void End(FightBattleUnitState owner, FightBattleStatusState status)
+        private void End(FightBattleUnitState owner, FightBattleStatusState status, FightStatusEndReason reason)
         {
-            if (!owner.Statuses.Contains(status)) return;
-            FightStatusLifecycle.End(owner, status);
+            if (!FightStatusLifecycle.End(owner, status, reason)) return;
             StatusChanged?.Invoke(owner, status, false);
+            if (!FightStatusLifecycle.AllowsEndAction(status)) return;
             foreach (var successor in status.Components.Seconds.Successors)
             {
                 var template = catalog.CreateStatus(successor.EntityId, owner.Id,

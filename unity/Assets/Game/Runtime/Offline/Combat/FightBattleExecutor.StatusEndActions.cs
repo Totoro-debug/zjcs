@@ -9,6 +9,7 @@ namespace Zjcs.Combat.Official
         {
             var context = movementStartContext;
             if (context == null || owner == null || ended == null || statusCatalog == null
+                || !FightStatusLifecycle.AllowsEndAction(ended)
                 || !statusCatalog.TryReadOwnStatusEndActions(ended.ClassId, out bool checkAlive,
                     out var skills, out var statuses) || checkAlive && !owner.IsAlive) return;
             ApplyComponentStatuses(ended, statuses, owner, owner);
@@ -26,6 +27,16 @@ namespace Zjcs.Combat.Official
 
     public sealed partial class FightOfficialCombatCatalog
     {
+        private static FightStatusEndReason ReadEndActionReasons(Dictionary<string, object> status)
+        {
+            var reasons = (FightStatusEndReason)Int(status, "OfflineEndActionReasons");
+            const FightStatusEndReason supported = FightStatusEndReason.Removed | FightStatusEndReason.Expired
+                | FightStatusEndReason.Dispelled | FightStatusEndReason.Replaced | FightStatusEndReason.Consumed;
+            if ((reasons & ~supported) != FightStatusEndReason.None)
+                throw new FormatException("Invalid status end reason mask.");
+            return reasons;
+        }
+
         internal bool TryReadOwnStatusEndActions(int classId, out bool checkAlive,
             out List<FightBattleStatusStateTrigger> skills, out List<FightBattleStatusStateTrigger> statuses)
         {

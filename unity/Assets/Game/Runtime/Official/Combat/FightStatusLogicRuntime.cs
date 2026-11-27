@@ -450,7 +450,8 @@ namespace Zjcs.Combat.Official
                     appliedDelta = -(int)Math.Min(-(long)delta, Math.Max(0, layers));
                 }
                 int changed = FightStatusLifecycle.AddStack(owner, candidate, appliedDelta);
-                if (changed < 0 && candidate.StackCount == 0) FightStatusLifecycle.End(owner, candidate);
+                if (changed < 0 && candidate.StackCount == 0)
+                    FightStatusLifecycle.End(owner, candidate, FightStatusEndReason.Consumed);
                 if (changed < 0 && Bool(handle, "InvokeConsumeEvent"))
                     FightStatusTriggerRuntime.NotifyStackConsumed(owner, candidate.ClassId,
                         -changed, catalog, random, skill);

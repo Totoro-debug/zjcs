@@ -2664,7 +2664,8 @@ namespace Zjcs.Combat.Official
                     candidates[i] = selected;
                 }
             }
-            for (int i = 0; i < count; i++) FightStatusLifecycle.End(target, candidates[i]);
+            for (int i = 0; i < count; i++)
+                FightStatusLifecycle.End(target, candidates[i], FightStatusEndReason.Dispelled);
             // Confirmed local notification rule: successful removal only, once for this operation.
             if (count > 0 && currentStepDispersedUnitIds != null)
             {

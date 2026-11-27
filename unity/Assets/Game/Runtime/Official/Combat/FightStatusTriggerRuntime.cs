@@ -781,7 +781,7 @@ namespace Zjcs.Combat.Official
             int previous = status.StackCount;
             status.StackCount -= consumed;
             FightStatusPropertyRuntime.OnStackChanged(status, previous);
-            if (status.StackCount == 0) FightStatusLifecycle.End(owner, status);
+            if (status.StackCount == 0) FightStatusLifecycle.End(owner, status, FightStatusEndReason.Consumed);
             NotifyStackConsumed(owner, status.ClassId, consumed, catalog, random, skill);
             return consumed;
         }
