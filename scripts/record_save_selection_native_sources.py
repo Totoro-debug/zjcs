@@ -31,8 +31,9 @@ paths.extend(ROOT / path for path in [
     'unity/Assets/Game/Runtime/Presentation/Character/CharacterCreationNativeModelFactory.cs',
     'unity/Assets/Game/Runtime/Presentation/Character/CharacterNativePortraitCapture.cs',
 ])
+source_receipt = json.loads((ROOT / 'assets/reference/save-selection/source-manifest.json').read_bytes())
 receipt = dict(
-    manifest='854_156383', source_unity='2022.3.57f1', target_unity='2022.3.57f1c2',
+    manifest=source_receipt['manifest'], source_unity='2022.3.57f1', target_unity='2022.3.57f1c2',
     source_receipt_sha256=sha(ROOT / 'assets/reference/save-selection/source-manifest.json'),
     resource_binding='SaveSelection/OfficialSaveSelectionAssets',
     shared_bindings=['Startup/OfficialStartupAssets.themeCanvas', 'World/Mainline/ScreenBlur',
@@ -43,5 +44,9 @@ receipt = dict(
     outputs=[dict(path=p.relative_to(ROOT).as_posix(), sha256=sha(p)) for p in sorted(set(paths))],
 )
 target = ROOT / 'assets/reference/save-selection/native-source-manifest.json'
+if target.exists():
+    previous = json.loads(target.read_bytes())
+    if previous.get('retired_cache_files'):
+        receipt['retired_cache_files'] = previous['retired_cache_files']
 target.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
 print('Recorded', len(receipt['outputs']), 'native save selection files')

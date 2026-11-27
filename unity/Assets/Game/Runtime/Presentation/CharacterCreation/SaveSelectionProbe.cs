@@ -80,14 +80,18 @@ namespace Zjcs.Presentation.CharacterCreation
 
         private IEnumerator Guard(IEnumerator routine)
         {
-            while (true)
+            var pending = new Stack<IEnumerator>();
+            pending.Push(routine);
+            while (pending.Count != 0)
             {
                 object next;
                 try
                 {
                     Require(Time.realtimeSinceStartup < deadline, "Save selection probe timed out.");
-                    if (!routine.MoveNext()) break;
-                    next = routine.Current;
+                    IEnumerator current = pending.Peek();
+                    if (!current.MoveNext()) { pending.Pop(); continue; }
+                    next = current.Current;
+                    if (next is IEnumerator nested) { pending.Push(nested); continue; }
                 }
                 catch (Exception error)
                 {
@@ -117,8 +121,24 @@ namespace Zjcs.Presentation.CharacterCreation
                 yield return null;
                 Require(GameObject.Find("OfficialCreatePlayerPanel") != null, "Cold restart did not resume the saved draft.");
                 yield return new WaitForSecondsRealtime(2f);
-                Transform buttons = GameObject.Find("OfficialCreatePlayerPanel").transform
-                    .Find("Content/BottomContent/SelectSexContent/SexGo");
+                Transform resumed = GameObject.Find("OfficialCreatePlayerPanel").transform;
+                CharacterCreationDraft recovered = CharacterCreationOfflineService.OpenDefault(ProfileRoot).OpenDraft("slot-16");
+                Require(recovered.body_type == "female", "Cold restart lost the saved body selection.");
+                if (recovered.page == "name")
+                {
+                    yield return WaitForCreationPage(resumed, "SetNameContent");
+                    Require(FindDescendant(resumed, "NameInput").GetComponent<TMP_InputField>().text == recovered.name,
+                        "Cold restart lost the saved name input.");
+                    yield return new WaitForEndOfFrame(); Capture("restart-name");
+                    Click(FindActiveButton(resumed, "BackBtn", "CloseBtn_dark").gameObject);
+                    yield return WaitForCreationPage(resumed, "DIYContent");
+                }
+                if (recovered.page != "body")
+                {
+                    Click(FindActiveButton(resumed, "BackBtn", "CloseBtn_dark").gameObject);
+                    yield return WaitForCreationPage(resumed, "SelectSexContent");
+                }
+                Transform buttons = resumed.Find("Content/BottomContent/SelectSexContent/SexGo");
                 Require(buttons.Find("MaleBtn/Nor").gameObject.activeInHierarchy
                     && buttons.Find("FemaleBtn/Sel").gameObject.activeInHierarchy
                     && !buttons.Find("MaleBtn/Sel").gameObject.activeInHierarchy
@@ -239,11 +259,21 @@ namespace Zjcs.Presentation.CharacterCreation
 
             TMP_InputField nameInput = FindDescendant(creationPanel, "NameInput").GetComponent<TMP_InputField>();
             Require(nameInput != null, "The official character name input was not imported in the Player.");
+            double focusDeadline = Time.realtimeSinceStartupAsDouble + 10;
+            while (Time.realtimeSinceStartupAsDouble < focusDeadline
+                && (EventSystem.current == null || !EventSystem.current.isActiveAndEnabled
+                    || EventSystem.current.currentInputModule == null || !EventSystem.current.currentInputModule.isActiveAndEnabled
+                    || EventSystem.current.currentSelectedGameObject != nameInput.gameObject || !nameInput.isFocused))
+                yield return null;
             Require(EventSystem.current != null && EventSystem.current.isActiveAndEnabled
                 && EventSystem.current.currentInputModule != null
                 && EventSystem.current.currentInputModule.isActiveAndEnabled
                 && EventSystem.current.currentSelectedGameObject == nameInput.gameObject && nameInput.isFocused,
-                "The Windows Player did not focus the name input with an active UI input module.");
+                "The Windows Player did not focus the name input with an active UI input module. "
+                + "events=" + (EventSystem.current == null ? "null" : EventSystem.current.isActiveAndEnabled + "/" + EventSystem.current.isFocused)
+                + " module=" + (EventSystem.current?.currentInputModule == null ? "null" : EventSystem.current.currentInputModule.GetType().Name + "/" + EventSystem.current.currentInputModule.isActiveAndEnabled)
+                + " selected=" + (EventSystem.current?.currentSelectedGameObject == null ? "null" : EventSystem.current.currentSelectedGameObject.name)
+                + " fieldFocused=" + nameInput.isFocused);
             yield return new WaitForEndOfFrame(); Capture("name-empty-focused");
             nameInput.ProcessEvent(new Event { type = EventType.KeyDown, character = '测' });
             Require(nameInput.text == "测", "The Windows Player name input rejected a simulated keyboard character.");
@@ -260,11 +290,11 @@ namespace Zjcs.Presentation.CharacterCreation
             if (required) Require(button != null, "Missing button " + text);
             return button == null ? null : button.gameObject;
         }
-        private static Button FindActiveButton(Transform parent, string name)
+        private static Button FindActiveButton(Transform parent, params string[] names)
         {
             Button button = parent.GetComponentsInChildren<Button>(true)
-                .FirstOrDefault(value => value.gameObject.activeInHierarchy && value.name == name);
-            Require(button != null, "Missing active creation button " + name + ".");
+                .FirstOrDefault(value => value.gameObject.activeInHierarchy && names.Contains(value.name));
+            Require(button != null, "Missing active creation button " + string.Join("/", names) + ".");
             return button;
         }
         private static Transform FindDescendant(Transform parent, string name)

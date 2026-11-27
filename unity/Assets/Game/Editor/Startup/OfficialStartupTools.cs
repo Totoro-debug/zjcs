@@ -25,7 +25,7 @@ namespace Zjcs.Editor.Startup
         [Serializable] private sealed class Root { public string name; public int node; }
         [Serializable] private sealed class Node { public string name, transform_json, SafeArea, CanvasWidthAdjuster, text_effect, animator; public bool active, rect; public int parent, id, transform_id, layer, language_sprite_id; public Part[] components; }
         [Serializable] private sealed class Part { public int id; public string type, json; }
-        [Serializable] private sealed class Ref { public int id; public string kind, path, name, shader, native_shader, json; public float[] border, pivot; public Vector2[] vertices; public int[] triangles; public float ppu, bias; public bool sRGB, multiAtlas, clearOnBuild; public int width, height, padding, renderMode, population, material_id, texture_id, filter, wrapU, wrapV, aniso; public int[] atlas_ids; public string[] keywords; public Float[] floats; public Tint[] colors; }
+        [Serializable] private sealed class Ref { public int id; public string kind, path, name, shader, native_shader, json; public float[] border, pivot, source_rect, sprite_offset, texture_rect, texture_offset, atlas_offset; public Vector2[] vertices; public int[] triangles; public float ppu, bias, downscale; public bool sRGB, multiAtlas, clearOnBuild; public int width, height, padding, renderMode, population, material_id, texture_id, filter, wrapU, wrapV, aniso, sprite_settings; public int[] atlas_ids; public string[] keywords; public Float[] floats; public Tint[] colors; }
         [Serializable] private sealed class Float { public string key; public float value; }
         [Serializable] private sealed class Tint { public string key; public Color value; }
         [Serializable] private sealed class Text { public string key, value; }
@@ -59,12 +59,15 @@ namespace Zjcs.Editor.Startup
                 importer.maxTextureSize = 4096;
                 if (row.kind == "Sprite")
                 {
-                    importer.textureType = TextureImporterType.Sprite;
-                    importer.spriteImportMode = SpriteImportMode.Single;
-                    importer.spriteBorder = new Vector4(row.border[0], row.border[1], row.border[2], row.border[3]);
-                    importer.spritePivot = new Vector2(row.pivot[0], row.pivot[1]);
-                    importer.spritePixelsPerUnit = row.ppu;
-                    importer.alphaIsTransparency = true;
+                    importer.textureType = TextureImporterType.Default;
+                    importer.maxTextureSize = Mathf.NextPowerOfTwo(Mathf.Max(row.width, row.height));
+                    importer.sRGBTexture = row.sRGB;
+                    importer.alphaIsTransparency = false;
+                    importer.filterMode = (FilterMode)row.filter;
+                    importer.wrapModeU = (TextureWrapMode)row.wrapU;
+                    importer.wrapModeV = (TextureWrapMode)row.wrapV;
+                    importer.anisoLevel = row.aniso;
+                    importer.mipMapBias = row.bias;
                 }
                 else
                 {
@@ -89,14 +92,26 @@ namespace Zjcs.Editor.Startup
                     replacement.SetVertexCount(row.vertices.Length);
                     using (var positions = new NativeArray<Vector3>(row.vertices.Select(v => new Vector3(v.x, v.y, 0)).ToArray(), Allocator.Temp))
                     using (var uv = new NativeArray<Vector2>(row.vertices.Select(v => new Vector2(
-                        (v.x * row.ppu + texture.width * row.pivot[0]) / texture.width,
-                        (v.y * row.ppu + texture.height * row.pivot[1]) / texture.height)).ToArray(), Allocator.Temp))
+                        (v.x * row.ppu + row.source_rect[2] * row.pivot[0] + row.texture_rect[0] - row.texture_offset[0]) / texture.width,
+                        (v.y * row.ppu + row.source_rect[3] * row.pivot[1] + row.texture_rect[1] - row.texture_offset[1]) / texture.height)).ToArray(), Allocator.Temp))
                     using (var indices = new NativeArray<ushort>(row.triangles.Select(v => (ushort)v).ToArray(), Allocator.Temp))
                     {
                         replacement.SetVertexAttribute(VertexAttribute.Position, positions);
                         replacement.SetVertexAttribute(VertexAttribute.TexCoord0, uv);
                         replacement.SetIndices(indices);
                     }
+                    var native = new SerializedObject(replacement);
+                    native.FindProperty("m_Rect").rectValue = new Rect(row.source_rect[0], row.source_rect[1], row.source_rect[2], row.source_rect[3]);
+                    native.FindProperty("m_Offset").vector2Value = new Vector2(row.sprite_offset[0], row.sprite_offset[1]);
+                    native.FindProperty("m_RD.textureRect").rectValue = new Rect(row.texture_rect[0], row.texture_rect[1], row.texture_rect[2], row.texture_rect[3]);
+                    native.FindProperty("m_RD.textureRectOffset").vector2Value = new Vector2(row.texture_offset[0], row.texture_offset[1]);
+                    native.FindProperty("m_RD.atlasRectOffset").vector2Value = new Vector2(row.atlas_offset[0], row.atlas_offset[1]);
+                    native.FindProperty("m_RD.uvTransform").vector4Value = new Vector4(row.ppu,
+                        row.source_rect[2] * row.pivot[0] + row.texture_rect[0] - row.texture_offset[0], row.ppu,
+                        row.source_rect[3] * row.pivot[1] + row.texture_rect[1] - row.texture_offset[1]);
+                    native.FindProperty("m_RD.settingsRaw").intValue = row.sprite_settings;
+                    native.FindProperty("m_RD.downscaleMultiplier").floatValue = row.downscale;
+                    native.ApplyModifiedPropertiesWithoutUndo();
                     Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
                     if (sprite == null)
                     {
@@ -108,7 +123,7 @@ namespace Zjcs.Editor.Startup
                         EditorUtility.CopySerialized(replacement, sprite);
                         Object.DestroyImmediate(replacement);
                     }
-                    if (sprite.texture != texture || sprite.vertices.Length != row.vertices.Length ||
+                    if (sprite.texture != texture || sprite.rect.size != new Vector2(row.source_rect[2], row.source_rect[3]) || sprite.vertices.Length != row.vertices.Length ||
                         sprite.vertices.Where((v, i) => Vector2.Distance(v, row.vertices[i]) > .0001f).Any() ||
                         !sprite.triangles.SequenceEqual(row.triangles.Select(v => (ushort)v)))
                         throw new InvalidDataException("Startup sprite geometry or texture was not restored: " + row.id);

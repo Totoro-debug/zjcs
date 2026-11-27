@@ -413,10 +413,19 @@ def _build_from_reader(source, apk, reader, save_selection):
         obj = objects[row['id']]
         if obj.type.name == 'Sprite':
             sprite = obj.read()
-            filename = re.sub(r'[^a-zA-Z0-9_-]', '_', sprite.m_Name) + '-' + row['source']['object_sha256'][:10] + '.png'
-            target = ART / 'Sprites' / filename
+            render_data = sprite.m_RD
+            if sprite.m_SpriteAtlas:
+                atlas = sprite.m_SpriteAtlas.read()
+                render_data = next(value for key, value in atlas.m_RenderDataMap if key == sprite.m_RenderDataKey)
+            if (render_data.settingsRaw >> 2) & 15:
+                raise ValueError('Restore the original rotated startup atlas coordinates: ' + sprite.m_Name)
+            texture_obj = render_data.texture.deref()
+            texture = texture_obj.read()
+            texture_source = record(texture_obj)
+            texture_art = ROOT / 'unity/Assets/Official/Startup' if texture_source['bundle'].startswith(('boot_', 'launch_')) else ART
+            target = texture_art / 'Textures' / (texture_source['object_sha256'] + '.png')
             target.parent.mkdir(parents=True, exist_ok=True)
-            sprite.image.save(target)
+            texture.image.save(target)
             rd = obj.read_typetree()['m_RD']
             vertex = rd['m_VertexData']
             if vertex['m_Channels'][0] != dict(stream=0, offset=0, format=0, dimension=3):
@@ -428,6 +437,17 @@ def _build_from_reader(source, apk, reader, save_selection):
                        vertices=geometry, triangles=triangles,
                        border=[getattr(sprite.m_Border, a) for a in 'xyzw'],
                        pivot=[sprite.m_Pivot.x, sprite.m_Pivot.y], ppu=sprite.m_PixelsToUnits,
+                       source_rect=[sprite.m_Rect.x, sprite.m_Rect.y, sprite.m_Rect.width, sprite.m_Rect.height],
+                       sprite_offset=[sprite.m_Offset.x, sprite.m_Offset.y],
+                       texture_rect=[render_data.textureRect.x, render_data.textureRect.y, render_data.textureRect.width, render_data.textureRect.height],
+                       texture_offset=[render_data.textureRectOffset.x, render_data.textureRectOffset.y],
+                       atlas_offset=[render_data.atlasRectOffset.x, render_data.atlasRectOffset.y],
+                       sprite_settings=render_data.settingsRaw, downscale=render_data.downscaleMultiplier,
+                       width=texture.m_Width, height=texture.m_Height,
+                       sRGB=texture.m_ColorSpace == 1, filter=texture.m_TextureSettings.m_FilterMode,
+                       wrapU=texture.m_TextureSettings.m_WrapU, wrapV=texture.m_TextureSettings.m_WrapV,
+                       aniso=texture.m_TextureSettings.m_Aniso, bias=texture.m_TextureSettings.m_MipBias,
+                       texture_source=texture_source,
                        sha256=digest(target.read_bytes()))
             sprites.append(row)
         elif obj.type.name == 'MonoBehaviour':
