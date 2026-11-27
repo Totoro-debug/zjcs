@@ -45,6 +45,7 @@ def main():
         'potential-rebirth-current-skill-graphs',
         'eclipse-slashes-current-skill-graphs',
         'asura-hand-current-skill-graphs',
+        'wild-blade-siphon-current-skill-graphs',
     )
     receipts = {
         'skill-native-graphs': 'skill-native-graph-assets-source-manifest',

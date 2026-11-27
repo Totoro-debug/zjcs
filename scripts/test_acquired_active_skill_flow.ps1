@@ -52,6 +52,19 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -eq 10519) {
+        foreach ($file in @('companion-cultivated-save.json','companion-wild-blade-siphon-checkpoint.json',
+            'companion-wild-blade-siphon-receipt.json','acquired-active-ui-passive-battle.png')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Missing cultivated Wild Blade Siphon battle evidence.' }
+        }
+        $receipt = Get-Content (Join-Path $Run 'companion-wild-blade-siphon-receipt.json') -Raw | ConvertFrom-Json
+        if ($receipt.cures -lt 6 -or $receipt.cures -ne $receipt.criticals -or $receipt.healed -lt 1 -or
+            -not $receipt.restored -or -not $receipt.captured -or
+            -not (Select-String -LiteralPath $runtimeLog -SimpleMatch '[Acquired passive combat] 10519 cultivated critical self-healing, original native cure and restore replay passed.')) {
+            throw 'Wild Blade Siphon did not exercise cultivated critical healing, its native view and restoration.'
+        }
+        return
+    }
     if ($PassiveId -eq 10547) {
         foreach ($file in @('companion-cultivated-save.json','companion-desperate-valor-checkpoint.json',
             'companion-desperate-valor-receipt.json','acquired-active-ui-passive-battle.png')) {

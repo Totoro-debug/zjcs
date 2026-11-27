@@ -1,0 +1,55 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 10960,
+      "entity_resource": "Combat/WildBladeSiphonSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10960/10960",
+      "playables": []
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 10961,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [
+        {
+          "field": "myScopePlayable",
+          "resource": "Combat/WildBladeSiphonSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10960/playable10961"
+        }
+      ],
+      "entity_resource": "Combat/WildBladeSiphonSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10960/10961"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 10028,
+      "entity_prefab": "Global/10028.prefab",
+      "entity_prefab_sha256": "795fd518cde90fdb6641dec0bebb42dde8db4f944bb8729a358438e7576e5ea1",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": false,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/WildBladeSiphonSkillGraphs/GameObject/playable_cure_lifesteal"
+        }
+      ],
+      "entity_resource": "Combat/WildBladeSiphonSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/Global/10028"
+    }
+  ]
+}

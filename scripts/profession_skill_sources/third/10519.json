@@ -1,0 +1,38 @@
+{
+  "entities": [
+    25009,
+    10960,
+    10961,
+    10028
+  ],
+  "code": [
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "FightStatusComponentInfo",
+    "FightStatusHitSkillComponentInfo",
+    "FightStatusTriggerSkillCfg",
+    "BattleFormulaHandler"
+  ],
+  "client_code": [
+    "MyFightStatusHitSkill"
+  ],
+  "rule_pack_fragments": [
+    "FightSkill_part2.g.bytes",
+    "FightSkill_part46.g.bytes",
+    "FightSkill_part751.g.bytes"
+  ],
+  "visibility_bundles": [
+    "10960",
+    "defaultpackage_assets_prefabs_ecentity_fight_fightskill_global_10028.bundle"
+  ],
+  "scope_numeric": true,
+  "current_managed_views": true,
+  "runtime_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10519.json"
+  ],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/wild-blade-siphon-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/wild-blade-siphon-current-status-graphs-source-manifest.json"
+  ]
+}

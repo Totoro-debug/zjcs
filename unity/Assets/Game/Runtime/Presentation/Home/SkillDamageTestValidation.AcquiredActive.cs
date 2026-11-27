@@ -1020,6 +1020,12 @@ namespace Zjcs.Presentation.Home
                         captured = true;
                     }
                 }
+                if (passiveCompanion == 10519 && !capturedPassive && wildBladeSiphon.cures > 0
+                    && IsNativeSkillParticleVisible("playable_cure_lifesteal"))
+                {
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    wildBladeSiphon.captured = capturedPassive = true;
+                }
                 if (passiveCompanion == 10547 && !capturedPassive && desperateValor.hits > 0
                     && IsNativeSkillParticleVisible("playable24242"))
                 {
@@ -1264,6 +1270,7 @@ namespace Zjcs.Presentation.Home
             Require(checkpoint.Finished && casts > 0 && hits > 0 && captured,
                 "The acquired/cultivated active skill did not finish its damage battle.");
             if (passiveCompanion == 10547) CompleteAcquiredDesperateValor(output);
+            if (passiveCompanion == 10519) CompleteAcquiredWildBladeSiphon(output);
             if (asuraHand) CompleteAcquiredAsuraHand(output);
             Require(!flowingFire || flowingFireExtras > 0, "The cultivated flowing fire never performed an extra cast.");
             Require(!overflowShield || overflowShields > 0 && capturedPassive,

@@ -59,12 +59,15 @@ def build_current_skill_graphs(*, DEST, DATA, RECEIPT, GROUPS, family, cache_nam
                                  if (code / value.get('source_root', 'client-source') / value['source']).is_file()}
     exported = cache / 'native-export/ExportedProject/Assets'
     managed_views = None
+    unbundled_originals = {}
     if restore_current_views:
         from current_battle_entity_views import CurrentBattleEntityViews
         managed_views = CurrentBattleEntityViews(exported, roots.values())
         for pointer in managed_views.pointer_bindings:
             relative = (ROOT / pointer['native']['path']).relative_to(exported).as_posix()
             roots['managed-binding:' + relative] = relative
+            if pointer.get('unbundled_original'):
+                unbundled_originals[relative] = pointer
     native_guids = {}
     for path in exported.rglob('*.prefab.meta'):
         match = re.search(r'(?m)^guid: ([a-f0-9]{32})$', path.read_text('utf-8-sig'))
@@ -97,6 +100,8 @@ def build_current_skill_graphs(*, DEST, DATA, RECEIPT, GROUPS, family, cache_nam
                 # the selected graph closure; unknown scripts still fail build.
                 del bindings['reference_scripts'][key]
     build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS={}, graph_roots=roots,
+          graph_originals={key: unbundled_originals[path] for key, path in roots.items()
+                           if path in unbundled_originals},
           **bindings, family=family, shader_prefix=family.removesuffix('s') + '_',
           generator=generator, native_manifest=source.version, native_cache=cache,
           native_export_name='native-export', external_assets=external_assets,
