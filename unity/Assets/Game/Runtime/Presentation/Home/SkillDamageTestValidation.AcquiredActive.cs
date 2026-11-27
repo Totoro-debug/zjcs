@@ -1010,6 +1010,12 @@ namespace Zjcs.Presentation.Home
                         captured = true;
                     }
                 }
+                if (passiveCompanion == 10547 && !capturedPassive && desperateValor.hits > 0
+                    && IsNativeSkillParticleVisible("playable24242"))
+                {
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    desperateValor.captured = capturedPassive = true;
+                }
                 if (passiveCompanion == 10605 && !capturedPassive && iceGuardian.starts > 0
                     && IsNativeSkillParticleVisible("playable24390"))
                 {
@@ -1236,6 +1242,7 @@ namespace Zjcs.Presentation.Home
                     FightBattleCheckpointSerializer.Save(checkpoint));
             Require(checkpoint.Finished && casts > 0 && hits > 0 && captured,
                 "The acquired/cultivated active skill did not finish its damage battle.");
+            if (passiveCompanion == 10547) CompleteAcquiredDesperateValor(output);
             Require(!flowingFire || flowingFireExtras > 0, "The cultivated flowing fire never performed an extra cast.");
             Require(!overflowShield || overflowShields > 0 && capturedPassive,
                 "The cultivated overflow shield never settled and rendered its original protective effect.");

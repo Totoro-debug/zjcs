@@ -31,9 +31,9 @@ public static class BattleFighterHpStacksHarness
         throw new Exception("No fixture cast: "+entity);
     }
     public static void Run(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
-        FightDamageFormula formula)
+        FightDamageFormula formula, int[][] selected = null)
     {
-        foreach(var pair in new[] {new[]{25063,24299,10582},new[]{25094,24379,10589}})
+        foreach(var pair in selected ?? new[] {new[]{25063,24299,10582},new[]{25094,24379,10589}})
         {
             var unit=Unit(1);var source=Attach(catalog,unit,pair[0],pair[2]);
             source.Components.HpIncreaseUnit.AccumulatedHp=149;

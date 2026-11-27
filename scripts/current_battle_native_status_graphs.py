@@ -12,7 +12,7 @@ from prepare_battle_scene_appearance_runtime import identity, write_changed
 
 
 def build_current_status_graphs(*, family, catalog_name, cache_name, entities, source_wrappers, generator,
-                                entity_paths=None, script_bindings=None):
+                                entity_paths=None, script_bindings=None, external_assets=None):
     source = OfficialSource()
     cache = source.prepared_path / cache_name
     exported = cache / 'native-export/ExportedProject/Assets'
@@ -46,7 +46,7 @@ def build_current_status_graphs(*, family, catalog_name, cache_name, entities, s
     build(DEST=target, DATA=data, RECEIPT=receipt, ROOTS={}, graph_roots=roots, **bindings,
         family=family, shader_prefix=family.removesuffix('Graphs') + '_', generator=generator,
         native_manifest=source.version, native_cache=cache, native_export_name='native-export',
-        native_preprocess=views.preprocess,
+        native_preprocess=views.preprocess, external_assets=external_assets,
         limits=['Owning skill separately verifies current cultivation, complete rules, rendered Windows gameplay and checkpoint replay.'])
     assert all(count == 2 for count in views.counts.values()), views.counts
     proof = json.loads(receipt.read_bytes())

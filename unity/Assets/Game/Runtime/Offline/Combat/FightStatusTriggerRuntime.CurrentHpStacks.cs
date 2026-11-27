@@ -5,10 +5,10 @@ namespace Zjcs.Combat.Official
 {
     public static partial class FightStatusTriggerRuntime
     {
-        // User-confirmed offline rule for 10582/10589. The original HP-unit components
+        // Shared current-HP layer rule for 10547/10582/10589. The original HP-unit components
         // supply the percentage and target entities, but contain no server execution body.
         private static bool IsCurrentHpStackSource(FightBattleStatusState source) =>
-            source != null && (source.ClassId == 25063 || source.ClassId == 25094);
+            source != null && (source.ClassId == 25034 || source.ClassId == 25063 || source.ClassId == 25094);
 
         internal static void RecalculateCurrentHpStackSources(FightBattleUnitState owner,
             FightOfficialCombatCatalog catalog, FightRandomStream random)
@@ -27,12 +27,17 @@ namespace Zjcs.Combat.Official
                 || atStart && !source.HpTriggerAtStart) return 0;
             // Older checkpoints may still contain a healing remainder from the former path.
             if (source.Components?.HpIncreaseUnit != null) source.Components.HpIncreaseUnit.AccumulatedHp = 0;
-            int entityId = source.ClassId == 25063 ? 24299 : 24379;
-            if (!source.HpTriggerStatuses.Contains(entityId)) return 0;
+            if (source.HpTriggerStatuses.Count != 1) return 0;
+            int entityId = source.HpTriggerStatuses[0];
+            var template = catalog.CreateStatus(entityId, owner.Id, source.CreatorId,
+                0, source.RootSkillId, source.ApplyingSkillItemId, source.SourceSkillRank,
+                source.SourceSkillLevel, source.SourceSubRank, source.SourceProperties, 0,
+                source.ReplacementProperties, source.BlessPropertyScales);
+            if (!template.IsOpenStack || template.MaxStackedCount <= 0) return 0;
             decimal missing = Math.Max(0m, (decimal)owner.MaxHp - owner.Hp);
             decimal unit = owner.MaxHp * (decimal)source.HpTriggerPer;
             // Decimal conversion preserves the configured 15%, including exact tier boundaries.
-            int layers = (int)Math.Min(5m, decimal.Floor(missing / unit));
+            int layers = (int)Math.Min((decimal)template.MaxStackedCount, decimal.Floor(missing / unit));
             FightBattleStatusState current = null;
             int instanceId = 1;
             foreach (var status in owner.Statuses)
@@ -51,10 +56,7 @@ namespace Zjcs.Combat.Official
                 return 1;
             }
             if (layers == 0) return 0;
-            var template = catalog.CreateStatus(entityId, owner.Id, source.CreatorId,
-                instanceId, source.RootSkillId, source.ApplyingSkillItemId, source.SourceSkillRank,
-                source.SourceSkillLevel, source.SourceSubRank, source.SourceProperties, 0,
-                source.ReplacementProperties, source.BlessPropertyScales);
+            template.InstanceId = instanceId;
             template.ReportSource = FightBattleStatusReportSource.Resolve(source).Copy();
             template.Origin = FightBattleStatusOrigin.Resolve(source).Copy();
             template.StackCount = Math.Min(layers, template.MaxStackedCount);
