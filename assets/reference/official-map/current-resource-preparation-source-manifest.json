@@ -6,8 +6,8 @@
   "resource_version": "202611252124911",
   "generator": {
     "path": "scripts/record_current_resource_preparation.py",
-    "bytes": 11080,
-    "sha256": "e089593ada1fa99fa0f9cddf196346d0e0002c1b4c94878438f6a3a2795a0358"
+    "bytes": 12348,
+    "sha256": "73c7659f042232497f3d61318bdafa8b22ec8e5128d1f60149f4788db227b623"
   },
   "code_manifest": {
     "path": ".tools/source-packages/current/911_156995/code-manifest.json",
@@ -2742,5 +2742,21 @@
       "Media conversion only. Original Wwise banks/event graphs retained; gain, routing, looping and module runtime binding still require their original consumers.",
       "Existing game media and unmatched older assets retained. No Unity import or Player audio validation for this cache."
     ]
+  },
+  "component_fields": {
+    "source_manifest": {
+      "path": ".tools/source-packages/current/911_156995/native-conversion/component-fields-all/source-manifest.json",
+      "bytes": 754041336,
+      "sha256": "d98cccda099686a282de1603515520f57751c4459e01a1fd30cf540d49062b77"
+    },
+    "completed": true,
+    "scope": "All script-bearing MonoBehaviour objects",
+    "objects": 1100031,
+    "unresolved": 0,
+    "managed_references": 97852,
+    "limitations": [
+      "Field sidecars retain source CAB/PathID PPtrs. Binding them into native Unity objects still requires exact module object mapping."
+    ],
+    "objects_without_script_reference": 38
   }
 }

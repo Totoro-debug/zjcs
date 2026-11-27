@@ -136,16 +136,31 @@ def record():
                                       pcm_audio=len(receipt['audio']),
                                       audio_with_loop_metadata=sum(bool(row['metadata'].get('loopingInfo')) for row in receipt['audio'].values()),
                                       limitations=receipt['limitations'])
-    components = base/'native-conversion/component-fields/source-manifest.json'
+    all_components = base/'native-conversion/component-fields-all/source-manifest.json'
+    components = all_components
     if not components.exists():
-        components = base/'native-conversion/component-fields-all/source-manifest.json'
+        components = base/'native-conversion/component-fields/source-manifest.json'
     if components.exists():
         receipt = json.loads(components.read_bytes())
+        if receipt['manifest'] != source.version:
+            raise ValueError('Component fields belong to a different source')
+        if receipt['generator_sha256'] != file(ROOT/'scripts/recover_current_component_fields.py')['sha256']:
+            raise ValueError('Component field decoder differs from its completed receipt')
+        if receipt['supplemental_schema_sha256'] != file(ROOT/'scripts/current_component_schemas.py')['sha256']:
+            raise ValueError('Component field schemas differ from their completed receipt')
+        if components == all_components and receipt['selection_sha256'] != result['converter_inputs']['sha256']:
+            raise ValueError('All component fields use a different original input set')
         result['component_fields'] = dict(source_manifest=file(components), completed=receipt['completed'],
-                                         scope=receipt['scope'], objects=len(receipt['objects']),
+                                         scope='All script-bearing MonoBehaviour objects' if components == all_components else receipt['scope'],
+                                         objects=len(receipt['objects']),
                                          unresolved=len(receipt['unresolved']),
                                          managed_references=sum(row.get('managed_references', 0) for row in receipt['objects']),
                                          limitations=receipt['limitations'])
+        if components == all_components and 'asset_inventory' in result:
+            count = result['asset_inventory']['types']['MonoBehaviour'] - len(receipt['objects'])
+            if count < 0:
+                raise ValueError('Component field count exceeds the original object inventory')
+            result['component_fields']['objects_without_script_reference'] = count
     path = ROOT/'assets/reference/official-map/current-resource-preparation-source-manifest.json'
     path.write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', 'utf8')
     return result
