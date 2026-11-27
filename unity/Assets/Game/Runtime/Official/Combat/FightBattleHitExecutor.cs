@@ -3,6 +3,20 @@ using System.Collections.Generic;
 
 namespace Zjcs.Combat.Official
 {
+    // Numeric values are serialized in the battle data and checkpoints.
+    internal enum FightHitDamageKind
+    {
+        None = 0,
+        Property = 1,
+        Custom = 2,
+        SourceLostHp = 3,
+        SourceCurrentHp = 4,
+        TargetCurrentHp = 5,
+        SkillCost = 6,
+        TargetLostHp = 7,
+        CustomWithoutFormula = 8
+    }
+
     // Mutable values for the confirmed skill-graph stage before shield/HP settlement.
     public sealed class FightBattleTransientDamageContext
     {
@@ -92,7 +106,8 @@ namespace Zjcs.Combat.Official
                 onTransient?.Invoke(result.Type);
                 return result;
             }
-            long? custom = CustomDamage(actor, target, skill, hit, sourceProps, targetProps);
+            var damageKind = (FightHitDamageKind)hit.DamageType;
+            long? custom = CustomDamage(actor, target, skill, hit, sourceProps);
 
             if (skill != null && skill.ShieldConversionCost)
             {
@@ -104,7 +119,7 @@ namespace Zjcs.Combat.Official
             {
                 result.IsCure = true;
                 conditionalProperties?.Merge(target, hit, result.Type, true, random, sourceProps);
-                custom = CustomDamage(actor, target, skill, hit, sourceProps, targetProps);
+                custom = CustomDamage(actor, target, skill, hit, sourceProps);
                 var reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
                     skill, result.Type, true, random, formula);
                 long? customCure = skill?.HasCustomCure == true ? (long?)skill.CustomCure : custom;
@@ -128,14 +143,14 @@ namespace Zjcs.Combat.Official
                 result.Settlement = settlement.Apply(damageId, sourceEntity, targetEntity,
                     result.Cure.Cure);
             }
-            else if (hit.DamageType == 0)
+            else if (damageKind == FightHitDamageKind.None)
             {
                 result.Formula = new FightDamageFormulaResult();
                 long zeroDamage = 0, zeroAbsolute = 0;
                 ProcessTransient(result.Type, ref zeroDamage, ref zeroAbsolute, false, onTransient, onTransientDamage);
                 result.Settlement = settlement.Apply(damageId, sourceEntity, targetEntity, 0);
             }
-            else if (hit.DamageType == 8 || skill?.DamageSharingTransfer == true)
+            else if (damageKind == FightHitDamageKind.CustomWithoutFormula || skill?.DamageSharingTransfer == true)
             {
                 long direct = custom.HasValue ? custom.Value : 0;
                 direct = direct == Int64.MinValue ? Int64.MinValue + 1 : -Math.Abs(direct);
@@ -158,12 +173,9 @@ namespace Zjcs.Combat.Official
                     ref direct, ref absoluteDirect, random);
                 if (damageTest != null) direct = damageTest.Damage(stageType, actor, target, direct);
                 ProcessTransient(result.Type, ref direct, ref absoluteDirect, false, onTransient, onTransientDamage);
-                long absorbed = FightBattleShieldRuntime.AbsorbDamage(random, target, hit,
-                    direct, out result.ShieldDamage, result.TriggeredStatusSkills, skill,
-                    result.TriggeredStatusSkillInvocations, result.BrokenShields);
-                result.Formula = new FightDamageFormulaResult { Damage = absorbed, AbsoluteDamage = absoluteDirect };
-                result.Settlement = SettleDamage(damageId, sourceEntity, targetEntity, target, skill,
-                    absorbed, stageType, result);
+                result.Formula = new FightDamageFormulaResult { AbsoluteDamage = absoluteDirect };
+                SettleHitDamage(random, damageId, sourceEntity, targetEntity, target, skill, hit,
+                    stageType, result, direct);
             }
             else
             {
@@ -196,18 +208,18 @@ namespace Zjcs.Combat.Official
                 result.Type = FightBattleHitComponentRuntime.ApplyDamageGetType(target, skill,
                     skill == null ? 0 : skill.ElementType, result.Type, random);
                 conditionalProperties?.Merge(target, hit, result.Type, false, random, sourceProps);
-                custom = CustomDamage(actor, target, skill, hit, sourceProps, targetProps);
+                custom = CustomDamage(actor, target, skill, hit, sourceProps);
                 var reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
                     skill, result.Type, false, random, formula);
                 formula.AddPropertyValue(targetProps, "StatusDmgReducePer", reduction.Percent);
                 formula.AddPropertyValue(targetProps, "FixedStatusDmgReduce", reduction.Fixed);
                 Func<double, double> customProps = skill != null && skill.CostType == 2
-                    && hit.DamageType == 6 ? null
+                    && damageKind == FightHitDamageKind.SkillCost ? null
                     : amount => ApplyDamageCustomProps(random, target, skill, amount);
                 result.Formula = formula.Calculate(request, result.Type, custom, elementConfrontation,
                     customProps);
                 long damage = result.Formula.Damage;
-                if (skill != null && skill.CostType == 2 && hit.DamageType == 6
+                if (skill != null && skill.CostType == 2 && damageKind == FightHitDamageKind.SkillCost
                     && !result.Type.Blinding && !result.Type.Dodge && !result.Type.Immunity)
                 {
                     damage = skill.SkillCost == Int64.MinValue ? Int64.MinValue + 1
@@ -225,10 +237,10 @@ namespace Zjcs.Combat.Official
                     damage = (long)(damage * hit.DamageRate);
                     result.Formula.AbsoluteDamage = (long)(result.Formula.AbsoluteDamage * hit.DamageRate);
                 }
-                if (hit.DamageType != 0 && !result.Type.Blinding && !result.Type.Dodge && !result.Type.Immunity)
+                if (!result.Type.Blinding && !result.Type.Dodge && !result.Type.Immunity)
                     damage = FightDamageFalloff.Apply(random, actor, target, skill, hit, damage,
                         processedFalloffStatuses);
-                if (hit.DamageType != 0 && !result.Type.Blinding && !result.Type.Dodge && !result.Type.Immunity)
+                if (!result.Type.Blinding && !result.Type.Dodge && !result.Type.Immunity)
                 {
                     damage = FightStatusDamageProcessRuntime.BeforeShield(actor, target, damage, formula, 1);
                     damage = FightStatusCreatorDamageBoostRuntime.BeforeShield(actor, target, damage, formula);
@@ -240,15 +252,36 @@ namespace Zjcs.Combat.Official
                 if (damageTest != null) damage = damageTest.Damage(stageType, actor, target, damage);
                 ProcessTransient(result.Type, ref damage, ref result.Formula.AbsoluteDamage,
                     false, onTransient, onTransientDamage);
-                damage = FightBattleShieldRuntime.AbsorbDamage(random, target, hit, damage,
-                    out result.ShieldDamage, result.TriggeredStatusSkills, skill,
-                    result.TriggeredStatusSkillInvocations, result.BrokenShields);
-                result.Formula.Damage = damage;
-                result.Settlement = SettleDamage(damageId, sourceEntity, targetEntity, target, skill,
-                    damage, stageType, result);
+                SettleHitDamage(random, damageId, sourceEntity, targetEntity, target, skill, hit,
+                    stageType, result, damage);
             }
 
             target.Hp = targetEntity.Hp;
+            return result;
+        }
+
+        private void SettleHitDamage(FightRandomStream random, int damageId,
+            FightEntityState source, FightEntityState destination, FightBattleUnitState target,
+            FightBattleSkillDefinition skill, FightBattleHitDefinition hit, int stageType,
+            FightBattleHitResult result, long damage)
+        {
+            result.Formula.Damage = FightBattleShieldRuntime.AbsorbDamage(random, target, hit, damage,
+                out result.ShieldDamage, result.TriggeredStatusSkills, skill,
+                result.TriggeredStatusSkillInvocations, result.BrokenShields);
+            result.Settlement = SettleDamage(damageId, source, destination, target, skill,
+                result.Formula.Damage, stageType, result);
+        }
+
+        // Life changes configured as direct HP loss (for example linked damage) have
+        // their own battle responses and presentation. Share the HP clamp and receipt.
+        internal FightDamageEvent ApplyDirectHpLoss(int damageId, FightBattleUnitState actor,
+            FightBattleUnitState target, long amount)
+        {
+            if (amount < 0) throw new ArgumentOutOfRangeException(nameof(amount));
+            var destination = target.EntityState();
+            FightDamageEvent result = settlement.ApplyWithoutHit(damageId, actor.EntityState(),
+                destination, -amount);
+            target.Hp = destination.Hp;
             return result;
         }
 
@@ -284,22 +317,23 @@ namespace Zjcs.Combat.Official
 
         private long? CustomDamage(FightBattleUnitState actor, FightBattleUnitState target,
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
-            IDictionary<int, long> source, IDictionary<int, long> targetProps)
+            IDictionary<int, long> source)
         {
-            if (skill != null && skill.CostType == 2 && hit.DamageType == 6)
+            var damageKind = (FightHitDamageKind)hit.DamageType;
+            if (skill != null && skill.CostType == 2 && damageKind == FightHitDamageKind.SkillCost)
                 return skill.SkillCost;
             if (skill != null && skill.HasCustomDamage) return skill.CustomDamage;
             if (hit.HasCustomDamage) return hit.CustomDamage;
             int prop = hit.DamageProperty;
             double coefficient = formula.ReadProperty(source, prop);
-            switch (hit.DamageType)
+            switch (damageKind)
             {
-                case 3: return (long)((actor.MaxHp - actor.Hp) * coefficient);
-                case 4: return (long)(actor.Hp * coefficient);
-                case 5: return (long)(target.Hp * coefficient);
-                case 6: return (long)((skill == null ? 0L : skill.SkillCost) * coefficient);
-                case 7: return (long)((target.MaxHp - target.Hp) * coefficient);
-                case 8: return hit.DamageParam;
+                case FightHitDamageKind.SourceLostHp: return (long)((actor.MaxHp - actor.Hp) * coefficient);
+                case FightHitDamageKind.SourceCurrentHp: return (long)(actor.Hp * coefficient);
+                case FightHitDamageKind.TargetCurrentHp: return (long)(target.Hp * coefficient);
+                case FightHitDamageKind.SkillCost: return (long)((skill == null ? 0L : skill.SkillCost) * coefficient);
+                case FightHitDamageKind.TargetLostHp: return (long)((target.MaxHp - target.Hp) * coefficient);
+                case FightHitDamageKind.CustomWithoutFormula: return hit.DamageParam;
                 default: return null;
             }
         }

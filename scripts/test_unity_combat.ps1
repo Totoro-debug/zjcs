@@ -784,11 +784,31 @@ $events = [System.Collections.Generic.List[string]]::new()
 $settlement.add_TargetDamaged([Action[Zjcs.Combat.Official.FightDamageEvent]]{ param($event) $events.Add('target') })
 $settlement.add_SourceHit([Action[Zjcs.Combat.Official.FightDamageEvent]]{ param($event) $events.Add('source') })
 $settlement.add_BattleDamaged([Action[Zjcs.Combat.Official.FightDamageEvent]]{ param($event) $events.Add('battle') })
-$resolver = [Zjcs.Combat.Official.FightDamageResolver]::new($formula, $settlement)
-$source = [Zjcs.Combat.Official.FightEntityState]::new(1, 1000, 1000)
-$target = [Zjcs.Combat.Official.FightEntityState]::new(2, 1000, 1000)
-$resolved = $resolver.Resolve([Zjcs.Combat.Official.FightRandomStream]::new(1), $request, 700, $source, $target, 3)
-Assert-Combat ($resolved.Formula.Damage -eq $firstVector.expected.damage -and $resolved.Settlement.RealDamageValue -eq $firstVector.expected.damage -and $target.Hp -eq (1000 + $firstVector.expected.damage)) 'Formula-to-entity hit execution mismatch'
+$source = [Zjcs.Combat.Official.FightBattleUnitState]@{
+    Id = 1; Hp = 10000; MaxHp = 10000; CharacterType = $request.SourceType;
+    Level = $request.SourceLevel; SubRank = $request.SourceSubRank; Profession = $request.SourceProfession
+}
+$target = [Zjcs.Combat.Official.FightBattleUnitState]@{
+    Id = 2; Hp = $request.TargetHp; MaxHp = 20000; CharacterType = $request.TargetType;
+    Level = $request.TargetLevel; SubRank = $request.TargetSubRank; Profession = $request.TargetProfession;
+    MonsterType = $request.TargetMonsterType
+}
+foreach ($prop in $request.SourceProps.GetEnumerator()) {
+    $source.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $prop.Key; Value = $prop.Value })
+}
+foreach ($prop in $request.TargetProps.GetEnumerator()) {
+    $target.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $prop.Key; Value = $prop.Value })
+}
+$hit = [Zjcs.Combat.Official.FightBattleHitDefinition]@{
+    ActionType = 4; DamageType = 1; BasicProperty = $request.SkillDamageBasicPropType;
+    DamageProperty = $request.SkillDamagePropType; FixedDamageProperty = $request.SkillDamageFixedPropType
+}
+$executor = [Zjcs.Combat.Official.FightBattleHitExecutor]::new($formula, $settlement)
+$resolved = $executor.Apply([Zjcs.Combat.Official.FightRandomStream]::new(1), 700, $source, $target, $null,
+    $hit, $request.StageType, $request.IsPvp)
+Assert-Combat ($resolved.Formula.Damage -eq $firstVector.expected.damage -and
+    $resolved.Settlement.RealDamageValue -eq $firstVector.expected.damage -and
+    $target.Hp -eq ($request.TargetHp + $firstVector.expected.damage)) 'Formula-to-entity hit execution mismatch'
 Assert-Combat (($events -join ',') -eq 'target,source,battle') 'Official damage callback ordering mismatch'
 
 $combatUnit = [Zjcs.Combat.Official.FightBattleUnitState]::new()

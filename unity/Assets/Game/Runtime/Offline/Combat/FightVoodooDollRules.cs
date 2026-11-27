@@ -20,7 +20,8 @@ namespace Zjcs.Combat.Official
     public static class FightVoodooDollRules
     {
         public static FightBattleDamageEvent Transmit(FightBattleUnitState doll,
-            FightBattleUnitState target, FightBattleDamageEvent suffered, int damageId)
+            FightBattleUnitState target, FightBattleDamageEvent suffered, int damageId,
+            FightBattleHitExecutor hitExecutor)
         {
             if (doll == null || !doll.IsVoodooDoll || target == null || target.Hp <= 0 || target.Ended
                 || suffered == null || suffered.IsCure || !suffered.HasDamageValue
@@ -30,14 +31,14 @@ namespace Zjcs.Combat.Official
             // This explicitly bypasses shields, affinity, immunity and all damage multipliers.
             long amount = suffered.DamageValue == long.MinValue ? long.MaxValue : -suffered.DamageValue;
             long before = target.Hp;
-            target.Hp = amount >= before ? 0 : before - amount;
+            FightDamageEvent applied = hitExecutor.ApplyDirectHpLoss(damageId, doll, target, amount);
             return new FightBattleDamageEvent {
                 DamageId = damageId, SourceId = doll.Id, TargetId = target.Id,
                 SkillEntityId = doll.VoodooDoll.SyncSkillEntityId,
                 HitEntityId = doll.VoodooDoll.SyncHitEntityId,
                 DamageEntityId = doll.VoodooDoll.SyncDamageEntityId,
-                DamageType = 8, TrueDamage = true, IgnoreShield = true,
-                HasDamageValue = true, DamageValue = -amount, Damage = target.Hp - before,
+                DamageType = (int)FightHitDamageKind.CustomWithoutFormula, TrueDamage = true, IgnoreShield = true,
+                HasDamageValue = true, DamageValue = applied.DamageValue, Damage = applied.RealDamageValue,
                 HasAbsoluteDamage = true, AbsoluteDamage = amount,
                 BeforeHp = before, AfterHp = target.Hp, MaxHp = target.MaxHp,
                 Delay = suffered.Delay

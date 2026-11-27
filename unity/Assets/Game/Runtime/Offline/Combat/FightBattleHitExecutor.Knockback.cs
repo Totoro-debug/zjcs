@@ -17,7 +17,8 @@ namespace Zjcs.Combat.Official
             if (hit == null) throw new ArgumentNullException(nameof(hit));
             if (actor.Hp <= 0 || target.Hp <= 0)
                 throw new InvalidOperationException("Fight hit source and target must be alive.");
-            if (skill.EntityId != 10100 || hit.EntityId != 10101 || hit.DamageId != 10006 || hit.DamageType != 8)
+            if (skill.EntityId != 10100 || hit.EntityId != 10101 || hit.DamageId != 10006
+                || (FightHitDamageKind)hit.DamageType != FightHitDamageKind.CustomWithoutFormula)
                 throw new ArgumentException("The original blocked-skill hit is required.", nameof(hit));
 
             long damage = -FightKnockbackCollision.Damage(target.MaxHp, sourceAttack);
@@ -26,13 +27,9 @@ namespace Zjcs.Combat.Official
             var result = new FightBattleHitResult { Type = new FightDamageTypeData() };
             var context = new FightBattleTransientDamageContext(result.Type, damage, damage, false);
             beforeShield?.Invoke(context);
-            damage = context.Damage;
-            long remaining = FightBattleShieldRuntime.AbsorbDamage(random, target, hit, damage,
-                out result.ShieldDamage, result.TriggeredStatusSkills, skill,
-                result.TriggeredStatusSkillInvocations, result.BrokenShields);
-            result.Formula = new FightDamageFormulaResult { Damage = remaining, AbsoluteDamage = context.AbsoluteDamage };
-            result.Settlement = SettleDamage(damageId, source, destination, target, skill,
-                remaining, stageType, result);
+            result.Formula = new FightDamageFormulaResult { AbsoluteDamage = context.AbsoluteDamage };
+            SettleHitDamage(random, damageId, source, destination, target, skill, hit,
+                stageType, result, context.Damage);
             target.Hp = destination.Hp;
             return result;
         }

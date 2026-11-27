@@ -47,7 +47,7 @@ namespace Zjcs.Combat.Official
             if (!visited.Add(doll.Id)) throw new InvalidOperationException("Cyclic substitute link.");
             if (!unitById.TryGetValue(doll.VoodooDoll.TargetId, out var target)) return;
             FightBattleDamageEvent damage = FightVoodooDollRules.Transmit(doll, target, suffered,
-                NextDamageId());
+                NextDamageId(), hitExecutor);
             if (damage == null) return;
             var syncTriggerContext = statusCatalog?.CreateSkillTriggerContext(damage.SkillEntityId);
             var syncSkill = statusCatalog.CreateSkill(damage.SkillEntityId, -1, 0, 1,

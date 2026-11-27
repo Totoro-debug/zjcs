@@ -63,8 +63,12 @@ namespace Zjcs.Combat.Official
         internal FightDamageEvent ApplyPreservingHp(int damageId, FightEntityState source,
             FightEntityState target, long damageValue) => ApplyCore(damageId, source, target, damageValue, true);
 
+        internal FightDamageEvent ApplyWithoutHit(int damageId, FightEntityState source,
+            FightEntityState target, long damageValue)
+            => ApplyCore(damageId, source, target, damageValue, false, notifyHit: false);
+
         private FightDamageEvent ApplyCore(int damageId, FightEntityState source, FightEntityState target,
-            long damageValue, bool preserveHp, long lowerLimit = 0)
+            long damageValue, bool preserveHp, long lowerLimit = 0, bool notifyHit = true)
         {
             if (target == null)
                 throw new ArgumentNullException(nameof(target));
@@ -86,6 +90,8 @@ namespace Zjcs.Combat.Official
 
             var result = new FightDamageEvent(damageId, source?.Id ?? 0, target.Id,
                 realDamage, damageValue, killed);
+
+            if (!notifyHit) return result;
 
             // Preserve FireEvents ordering from the official implementation.
             TargetDamaged?.Invoke(result);

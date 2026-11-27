@@ -195,7 +195,9 @@ namespace Zjcs.Combat.Official
             IDictionary<int, long> source, IDictionary<int, long> target, int hitType)
         {
             var result = new FightDamageTypeData();
-            if (hitType != 1 && hitType != 2 && hitType != 6) return result;
+            var damageKind = (FightHitDamageKind)hitType;
+            if (damageKind != FightHitDamageKind.Property && damageKind != FightHitDamageKind.Custom
+                && damageKind != FightHitDamageKind.SkillCost) return result;
 
             result.Blinding = (float)random.Next() <= Prop(source, "BlindingPercent");
             result.Dodge = (float)random.Next() <= Prop(target, "DodgePercent");

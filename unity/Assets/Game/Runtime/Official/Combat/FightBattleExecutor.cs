@@ -1023,14 +1023,16 @@ namespace Zjcs.Combat.Official
                     bool elementConfrontationResolved = true;
                     if (!chaosInvasionWipe && statusCatalog != null
                         && hit.ActionType != 0 && hit.ActionType != 5
-                        && skill.SkillType != 3 && hit.DamageType >= 1 && hit.DamageType <= 7)
+                        && skill.SkillType != 3
+                        && hit.DamageType >= (int)FightHitDamageKind.Property
+                        && hit.DamageType <= (int)FightHitDamageKind.TargetLostHp)
                         elementConfrontationResolved = statusCatalog.TryResolveElementConfrontation(
                             target, skill.ElementType, out elementConfrontation);
                     var damageShares = new List<FightBattleStatusSkillInvocation>();
                     FightBattleHitResult resolved;
                     if (chaosInvasionWipe)
                     {
-                        target.Hp = 0;
+                        FightDamageEvent defeat = hitExecutor.ApplyDirectHpLoss(damageId, actor, target, beforeHp);
                         SynchronizeTurn(target);
                         resolved = new FightBattleHitResult
                         {
@@ -1039,7 +1041,8 @@ namespace Zjcs.Combat.Official
                             {
                                 Damage = beforeHp,
                                 AbsoluteDamage = beforeHp
-                            }
+                            },
+                            Settlement = defeat
                         };
                     }
                     else
