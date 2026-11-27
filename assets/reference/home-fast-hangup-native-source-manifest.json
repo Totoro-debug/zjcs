@@ -1,7 +1,7 @@
 {
   "manifest": "884_156692",
   "inputs": {
-    "scripts/prepare_current_partner_native.py": "21eed29e19b3b3fbd370eb0736c10fa663d35c749b7fa1f9686a57774c6d2cea",
+    "scripts/prepare_current_partner_native.py": "4c821c66c50d30fa6f581063a9c7cbdff0e591e06906728a713252dc36dd4262",
     "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
     "scripts/official_manifest.py": "1aae5bd86af587511466e17308719c2e6b356be4117942809c7e6ba89e2d7399",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c",
@@ -10,6 +10,8 @@
     ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/SlicedFilledImage.cs": "731443346f17466545343156653d4b9b65246599cffd0aaec2b99ff6a3005571",
     ".tools/source-packages/current/884_156692/official-code/framework-source/UGUIJszx/VerticalLayoutGroupJSZX.cs": "2cfd6ab0f9afd82ee6335a61c282d01f32fd937d03d0b0c08b7142ff2188efbc",
     ".tools/source-packages/current/884_156692/official-code/framework-source/UGUIJszx/HorizontalLayoutGroupJSZX.cs": "465e4bbb2bc0b4b71a9945ff0d45306e5e68b1b62ee592cdb28b7d901c75bc67",
+    "unity/Assets/Game/Runtime/Official/HomeCountControlsUI/SetUseCountSlider.cs": "95bfc0686817e92fd48adab9b2190e7945dd0e2f9a58472a9862951e5c5d1363",
+    "unity/Assets/Game/Runtime/Official/HomeCountControlsUI/SetUseCountSlider.cs.meta": "20aee7f495043481c04bd86b1a43a70afec22217ac032b904170aa7d8ccd7e16",
     ".tools/source-packages/WwiseBnk/wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365",
     ".tools/source-packages/WwiseBnk/wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile": "a7e72b9478ce455a7ef12974f16e3f78e684ded497b7750f7901dacb66eacfad",
     "scripts/npc_travel_language.py": "5c03df02e09d6b443520407928478018b0f74f959fc081e6bb00f033b65d1232",
@@ -195,7 +197,7 @@
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemEffectWrapItem.cs": "b411505be181c04a3c47d309866e28621588fc9f8aaff1a761ff4181f4fe8fc5",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemEffectAutoIncrease.cs": "a13e64a337dac83fd309fc312f58adba1a0f955fc043e97f13b611c661557a8c",
     ".tools/source-packages/current/884_156692/official-code/global-metadata.dat": "c0fe5e062fb3ed1814781e54fd1b4859757970632655138adc091820ded88e0e",
-    "scripts/official_tables.py": "77762a9b2aba2d92a6ad3ebd8ce5f7d0bb42a6b4cfc872ae7094c1d10b1e0473",
+    "scripts/official_tables.py": "04d33df654baabe85b07c09dc19a6c7e5014f2847e6f164e11b6afe043639710",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Money/Money_50_Exp.asset": "59545475b18598f1d9a904ebac4707542850e15649f95cb80e2d187cfb8540dc",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Other/Common_NoAtlas/item_115.asset": "426f2ef33d1db4da84b26d5aa50189981415d2f59794bb61d6a4994da35225b4",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/Money/Money_57_Tili.asset": "f1731dfb34d1c44089fa76158bcdf0761c21541f6e89e0a636de865b5ce76872",
@@ -275,9 +277,9 @@
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/Common/Pressed_0.anim": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/Common/Selected_0.anim": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/Common/Disabled_0.anim": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51",
-    "scripts/prepare_partner_card_native.py": "5ad35ae36dafa53961576f3c5b2a2c76eddfb98a398c74fba96a4697ef464093",
+    "scripts/prepare_partner_card_native.py": "ac84cab88ce4b49b561c0c6a921e132325c6ce24e69e1f57477b07d86db01d1e",
     "unity/Assets/Official/World/Map/13/Source/native-text-gradient.json": "084ccb449e6f0bde213c07b5990821afa4eaec04aa400a3917a72b2c7e1d6909",
-    "scripts/prepare_home_fast_hangup_native.py": "599a1bda5eb0b64967cf7d8b6b50e658c9bb0760e43cbed62481b970c365b811",
+    "scripts/prepare_home_fast_hangup_native.py": "37af60fe54dcc96f72baeaca9994cbfa29b0216909dacc4c5d646d257352e8ce",
     "scripts/prepare_home_currency_windows_native.py": "2f48bd9034ddccd038b924cc536ff1d00952cfa425ab7959e9a28393a4d6a74f",
     "scripts/deduplicate_unity_textures.py": "bbcf0baeaa60356cb78c72f570d3be8ffd195db79ae64bd53b6279a4a0c4ed33",
     "unity/Assets/Official/Combat/DemonResult/Converted/2bc97c94df17e484.asset": "0c561ba3f3d41ec927874fa4158dc79995a7305b03fb7aed9a22fd2942ce83e8",
@@ -288,7 +290,25 @@
     "unity/Assets/Official/Combat/DemonResult/Converted/7d459a01380ba650.asset.meta": "4aef866481ce7737ba7596f4b6dcd29b750955ce5363f46f680074114323fec7",
     "unity/Assets/Official/Combat/DemonResult/Converted/8cfce01f900d0ca8.asset": "db9c9f489e7be2529dcb328b7f0af12b6198bf467375547495eb415cc92928b4",
     "unity/Assets/Official/Combat/DemonResult/Converted/8cfce01f900d0ca8.asset.meta": "09d4fc6119dc4aaec40a8006865eb0ca239778849386c7e3de7a928db746bfed",
-    "assets/reference/shared-textures-source-manifest.json": "107974d29475e709db47d851839fb20f50f95ce0c00c3c3709add22eb8dc250b"
+    "assets/reference/shared-textures-source-manifest.json": "107974d29475e709db47d851839fb20f50f95ce0c00c3c3709add22eb8dc250b",
+    ".tools/source-packages/current/884_156692/native-conversion/inputs/DefaultPackage/defaultpackage_assets_prefabs_ui_npc.bundle": "a8847b99610c4b5e86ee8699e912c7cbcba059b065cef6a3ec0f3680861bebcb",
+    ".tools/source-packages/current/884_156692/native-conversion/inputs/Managed/Assembly-CSharp.dll": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d",
+    ".tools/source-packages/current/884_156692/native-conversion/inputs/Managed/Console.dll": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6",
+    ".tools/source-packages/current/884_156692/native-conversion/inputs/Managed/CustomWater.dll": "2079df13caa06ae56758042d7c3f844be32e649c3d035deb20c4c7a94862252f",
+    ".tools/source-packages/current/884_156692/native-conversion/inputs/Managed/Framework.dll": "19a952a1e686e76db0a34556062e4b928fc0d0ae6d33158912542147638af4fb",
+    ".tools/source-packages/current/884_156692/native-conversion/inputs/Managed/Framework.FirstPass.Runtime.dll": "e4af045ab17cc6cb3a80403913c03ef5f15a736875c57bf67f3e44cff415627e",
+    ".tools/source-packages/current/884_156692/native-conversion/inputs/Managed/GameFramework.Runtime.dll": "737c1e6b4313b330530aa84b6d9b59dd01a470c69937d95a6cf69cd13c61e253",
+    ".tools/source-packages/current/884_156692/native-conversion/inputs/Managed/GFrameCore.Extensions.Cloneable.dll": "ca192aac91b530e725ecc56d15399cfc0acdbb5a90c86ac8ad23557956704c12",
+    ".tools/source-packages/current/884_156692/native-conversion/inputs/Managed/Launch.dll": "3a5405399f8932ba7319384183423648811d4ef48c87c17fe367f1995e138b1f",
+    ".tools/source-packages/current/884_156692/native-conversion/inputs/Managed/LoopScrollRect.Runtime.dll": "f917dcb08554f98530c581f3ee13a3ad7fa0ede3abd867f95c06b722dcc9b7a3",
+    ".tools/source-packages/current/884_156692/native-conversion/inputs/Managed/Luban.dll": "de6598af27d573ba225e3d60c57a07034552b2a2b8f399fdead46b0c22b393b2",
+    ".tools/source-packages/current/884_156692/code-manifest.json": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4",
+    ".tools/source-packages/current/884_156692/native-conversion/inputs/DefaultPackage/defaultpackage_assets_image_itemicon_box_equip_map11_noatlas.bundle": "3cf978ffe58da580213a727ffb1e6399277fbdb088233a4b26b042c70bfcd553",
+    ".tools/source-packages/current/884_156692/native-conversion/inputs/DefaultPackage/defaultpackage_assets_image_itemicon_box_equip_map19_noatlas.bundle": "c71641b612fcd988e06c3521a8f47554e07c4af5c32b2368899e0625e856ebd6",
+    ".tools/source-packages/current/884_156692/native-conversion/inputs/DefaultPackage/defaultpackage_assets_image_itemicon_box_equip_map21_noatlas.bundle": "2ca3351c8efecc3f74eeb9b4984854efa7e9fa331deec912f23f2da74fedcb9c",
+    ".tools/source-packages/current/884_156692/native-conversion/inputs/DefaultPackage/defaultpackage_assets_image_itemicon_box_equip_map23_noatlas.bundle": "22d44e669dc3aef8d903212e9f2c78a78c742f4ccf3a7f1aedac965c033f0728",
+    "scripts/rebuild_home_fast_hangup_native.py": "6192e78d6f5336556565771a574f9f7e6c09b6aaa9b966d01c5e1c3d47eaa1da",
+    ".tools/source-packages/current/884_156692/native-conversion/source-manifest.json": "c444d983cb42aa33bd6b1a3e5d826b8bf5fe24e84871e667589ef6874c9824ae"
   },
   "objects": {
     "cab-1970340db11a5e220b85d9fb5417d4ae:535786956932159693": {
@@ -2557,7 +2577,7 @@
     "manifest": "884_156692",
     "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
     "stage": "Recovered original hierarchy/fields only; runtime script and resource binding pending",
-    "generator_sha256": "21eed29e19b3b3fbd370eb0736c10fa663d35c749b7fa1f9686a57774c6d2cea",
+    "generator_sha256": "4c821c66c50d30fa6f581063a9c7cbdff0e591e06906728a713252dc36dd4262",
     "component_cache": {
       "path": ".tools/source-packages/current/884_156692/native-conversion/component-fields-all/source-manifest.json",
       "sha256": "c82db6a6903d36856807688d11573793cdaef98d1da13d0d6108b6f3f04aeec5"
@@ -2789,7 +2809,7 @@
         "guid": "231cab3c6fd951b7a2d14633a5465cbf",
         "type": 3
       },
-      "sha256": "99a73c950330a27ca9a3ccce31905c4c8aef70deba9e76c8fd377535aded9cef",
+      "sha256": "64bb36a9f1d97f693309d6dc8733e556b97ec5e6e0ba3b40cc6b8e5091a757d7",
       "meta_sha256": "b3800ddfd9284bb2c13282b37175e83c6b21673564bc1683db546fc6cd6e2d38"
     },
     "MaintainGlobalScaleUI": {
@@ -3029,7 +3049,7 @@
         "guid": "e1b834f19a20cf248af2603124f3bb8f",
         "type": 3
       },
-      "sha256": "eba6e02e821cab22d7d1150df531a33a99586bff57db89ba6c163ece06f1504f",
+      "sha256": "d1540693fcbf15e0a380ed4e0882f128f5f8db5bc7423ab4f1f8aa913841751d",
       "meta_sha256": "611a232d5d05455ec089274856956e29195c4441c91367a6869400b30266921a"
     },
     "PopupWindowSound": {
@@ -3179,13 +3199,13 @@
         "guid": "46ab05fed1da4c34b338cd061a27544a",
         "type": 3
       },
-      "sha256": "d8eaf23722c0bbeb2ab067ac2313422c68bcc79c8122c13c109bc0fd08b7f2c3",
+      "sha256": "0688bcd3c8b429bf36392c05acbf658d9a84468dad05b1851c654223b9789d7b",
       "meta_sha256": "d01b7e5574063edf906077a235dbe61f9044f5aae81b3f0f96f5240b5c03b5c6"
     }
   },
   "gradient_aot_methods": [],
   "gradient_observations": "Selected AOT: all eight methods inspected. Preserve inclusive line character bounds, all four vertices, rotated X/unrotated line extents, alpha-one keys, renderMode=255 and ForceMeshUpdate(false,false).",
-  "generator_sha256": "599a1bda5eb0b64967cf7d8b6b50e658c9bb0760e43cbed62481b970c365b811",
+  "generator_sha256": "37af60fe54dcc96f72baeaca9994cbfa29b0216909dacc4c5d646d257352e8ce",
   "audio": {
     "cab-8ede2c00df79c3aff9bab2859b047085:-3184072659325268223": {
       "event": {
@@ -52216,6 +52236,17 @@
       }
     }
   ],
+  "retained_raw_input_replay": {
+    "source": "884_156692",
+    "raw_inputs": {
+      ".tools/source-packages/current/884_156692/native-conversion/inputs/DefaultPackage/defaultpackage_assets_prefabs_ui_npc.bundle": "a8847b99610c4b5e86ee8699e912c7cbcba059b065cef6a3ec0f3680861bebcb",
+      ".tools/source-packages/current/884_156692/native-conversion/inputs/DefaultPackage/defaultpackage_assets_image_itemicon_box_equip_map11_noatlas.bundle": "3cf978ffe58da580213a727ffb1e6399277fbdb088233a4b26b042c70bfcd553",
+      ".tools/source-packages/current/884_156692/native-conversion/inputs/DefaultPackage/defaultpackage_assets_image_itemicon_box_equip_map19_noatlas.bundle": "c71641b612fcd988e06c3521a8f47554e07c4af5c32b2368899e0625e856ebd6",
+      ".tools/source-packages/current/884_156692/native-conversion/inputs/DefaultPackage/defaultpackage_assets_image_itemicon_box_equip_map21_noatlas.bundle": "2ca3351c8efecc3f74eeb9b4984854efa7e9fa331deec912f23f2da74fedcb9c",
+      ".tools/source-packages/current/884_156692/native-conversion/inputs/DefaultPackage/defaultpackage_assets_image_itemicon_box_equip_map23_noatlas.bundle": "22d44e669dc3aef8d903212e9f2c78a78c742f4ccf3a7f1aedac965c033f0728"
+    },
+    "validation": "Existing native export chain, original raw SHA256 and decoded SHA256, pinned bundle MD5 and size."
+  },
   "installed_output_sha256": {
     "unity/Assets/Official/Home/UI/FastHangUp/Image/ItemIcon/Other/Common_NoAtlas/item_115.asset": "9563ca30df58f4b21871709595b30c103d0c25dbcea6fb0a6ce36df7c24ea9d9",
     "unity/Assets/Official/Home/UI/FastHangUp/Image/ItemIcon/Other/Common_NoAtlas/item_115.asset.meta": "a1a3ed02d75c81ac109ae66dfe704b27784b16f613be51cfd554e636b07c70fb",

@@ -1,0 +1,23 @@
+{
+  "manifest": "911_156995",
+  "inputs": {
+    "scripts/prepare_shared_use_count.py": "69429b9c818f35fe20f810379b1ddce736148e954d805da13af4fff73d171419",
+    ".tools/source-packages/current/911_156995/official-code/client-source/SetUseCountSlider.cs": "8489b35549ac87998e92390fd985cd0bcd301d7e93d4d6350222711c59f2f3d9",
+    ".tools/source-packages/current/911_156995/official-code/client-source/SetCountSlider.cs": "87a05dfeb7e916ea1762f888b600c0b7fb5fc9cc335f5cc4b6b9c8541d0c5a43",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/MathUtils.cs": "b4d5ece000054b6758671d22bc75473faa97067e0c0c076fcbb686a393bc49f1",
+    "scripts/fixtures/item_use_count_validation.cs": "9db5572e12422b51e39933a326ffff95ceb696b3924acb1b77ad997bc390ac75",
+    "scripts/test_item_use_count.ps1": "3137cab64febc937fde89d492b160b82d9744973d66dfd6c4aba5d679eadf02a",
+    "scripts/fixtures/home_fast_hangup_native_validation.cs": "ed70b5715792b7148b87a9df9a3eed94655ab22a69256d5b1a4491a7f390fdb6",
+    "assets/reference/home-fast-hangup-native-source-manifest.json": "d828d4a19fd515773c500abd42e7736e8c8313913171fbad84a14a40645c4e92",
+    "unity/Assets/Game/Runtime/Official/HomeCountControlsUI/SetUseCountSlider.cs": "95bfc0686817e92fd48adab9b2190e7945dd0e2f9a58472a9862951e5c5d1363",
+    "unity/Assets/Game/Runtime/Official/HomeCountControlsUI/SetUseCountSlider.cs.meta": "20aee7f495043481c04bd86b1a43a70afec22217ac032b904170aa7d8ccd7e16",
+    "unity/Assets/Game/Runtime/Official/HomeCountControlsUI/SetCountSlider.cs": "863929187983c857cdaea38d6a2f28cce6b57b2d156fca25a308fd9372a996f0",
+    "unity/Assets/Game/Runtime/Official/HomeCountControlsUI/IHomeCountColors.cs": "c1f9c04f1be97e8166de36601725b1c9b29095acb437f5fe25f6f72f94c318b4",
+    "unity/Assets/Game/Runtime/Official/HomeCountControlsUI/Zjcs.Official.HomeCountControlsUI.asmdef": "b0bc10ee991e872bf7e6a6a07b76218ba8a56fc63d4b6b77412186bc46b22598",
+    "unity/Assets/Game/Runtime/Official/HomeFastHangUpUI/SetUseCountSlider.cs": "0688bcd3c8b429bf36392c05acbf658d9a84468dad05b1851c654223b9789d7b",
+    "unity/Assets/Game/Runtime/Official/HomeFastHangUpUI/SetUseCountSlider.cs.meta": "d01b7e5574063edf906077a235dbe61f9044f5aae81b3f0f96f5240b5c03b5c6",
+    "unity/Assets/Game/Runtime/Official/HomeFastHangUpUI/HomeFastHangUpServices.cs": "6a4993512944c0bd1be81b477578313e71ae06a3030ac9691210bb33418be7c4",
+    "unity/Assets/Game/Runtime/Official/HomeFastHangUpUI/Zjcs.Official.HomeFastHangUpUI.asmdef": "81e76574891e5f070462c66a30647d0392d4683388a717dff287658cb97ba568"
+  },
+  "scope": "Original use-count clamping, slider/button updates and message cooldown shared by item use and acceleration. Existing acceleration native script identity and services preserved. Complete item-use windows validated separately."
+}

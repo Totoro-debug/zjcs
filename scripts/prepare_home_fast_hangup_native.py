@@ -24,6 +24,9 @@ DESTINATION = ROOT/'unity/Assets/Official/Home/UI/FastHangUp'
 class HomeFastHangUpBinding(HomeCurrencyWindowsBinding):
     def register_scripts(self):
         super().register_scripts()
+        for suffix in ('.cs', '.cs.meta'):
+            path = ROOT/'unity/Assets/Game/Runtime/Official/HomeCountControlsUI'/('SetUseCountSlider'+suffix)
+            self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
         for name in ('FurnitureFastHangUpDialog', 'FurnitureUseItemSliderGroup', 'SetUseCountSlider'):
             path = ROOT/'unity/Assets/Game/Runtime/Official/HomeFastHangUpUI'/(name+'.cs')
             meta = Path(str(path)+'.meta')
