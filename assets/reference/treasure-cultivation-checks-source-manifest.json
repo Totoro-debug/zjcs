@@ -1,0 +1,72 @@
+{
+  "manifest": "911_156995",
+  "catalog_manifest": "903_156948",
+  "item_metadata": {
+    "source": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "91d1d216b8937bf6389542ff89cd5d3f",
+      "path_id": "3644532119292667704",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/91d1d216b8937bf6389542ff89cd5d3f.bundle",
+      "manifest": "911_156995",
+      "bundle_size": 2634707,
+      "bundle_sha256": "0fccef621786ed9a8349664658739eb05d9721c7b838680b425e9989eea46aef"
+    },
+    "decoded_sha256": "0f777902783fc584a8043fc14a2df8fe0f07bbb3fcd3887e564657c2f17e285d",
+    "metadata_sha256": "d03adb637ea810e42251233d8be8e8fe5dc79e3d2d20c34ad59e200491c6fee4"
+  },
+  "inputs": {
+    ".tools/source-packages/current/911_156995/code-manifest.json": "a47317188c8d1f947b56ff1af73b4cd811a079860799915cf9103603afc200e9",
+    ".tools/source-packages/current/911_156995/official-code/managed/decoded/Console.dll": "5ff2019c868764f8e6afa6a5ff3bd569d4e3d39365a39dc0327a738391e8b64d",
+    ".tools/source-packages/current/911_156995/official-code/common-source/TreasureHelper.cs": "d7f27b00d6126e69619605e7980cfd72c4362763cbb377cf1b4d8cddd6a7bc2b",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/ItemType.cs": "8a1a33483ed28de00b9bc37dd60899ae0cb2fa7d7bd821b42f6e43cdcb3dbcaf",
+    "scripts/templates/treasure_cultivation/TreasureCultivationServices.cs": "0bbb5a18da11b654084baa6c17003c8582fd6a1702a67b8015e925e4dad82370",
+    "scripts/prepare_treasure_cultivation_rules.py": "e2aff85bf4da13b398b9f58aa253d8ab087d5a8d9a4e8c241ed9b9c82d3e3c0b",
+    "assets/reference/treasure-rules-source-manifest.json": "442ceb32ded0e8ca49a06e11f3d3ae9d3fdddf8a201498dfbde96183df3d2c02",
+    ".tools/source-packages/current/903_156948/official-code/common-source/TreasureHelper.cs": "aa5060f47b855010fc368be09034dc7c2192cce57019d466f985dae0c6f6f151",
+    ".tools/source-packages/current/903_156948/official-code/common-source/Common/TreasureUpgradeInfoParser.cs": "dfd402026d8397938707663d936d058a310aec3666a721c2bf6fdff61d5bd8ac",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/TreasureUpgradeInfoParser.cs": "dfd402026d8397938707663d936d058a310aec3666a721c2bf6fdff61d5bd8ac",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/PlayerItemManagerExt.cs": "9e5ef2768208f2c04427a4cb17691c0abedfc8476be16457b04e31b12ebf9bc9",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/Formula.cs": "3c91df3a23dd30e2646fe608317d595f648282156a28aeafbac9095c221fa5a1",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/TreasureInfoParser.cs": "268440e78cbabee3605b7d4aab9a8296c044785d2890a8ec29cfafc02f8499ce",
+    ".tools/source-packages/current/911_156995/official-code/global-metadata.dat": "63bd8bf025bd9be326653d33caddba72ccbd51efe00ce9014801058d877d2831",
+    "scripts/official_tables.py": "04d33df654baabe85b07c09dc19a6c7e5014f2847e6f164e11b6afe043639710",
+    "scripts/official_apk.py": "4525f07b1ff359fc52d7c33005833985e4210877bb41219ef03314fcf39571fb",
+    "scripts/prepare_pet_score_chest_preview.py": "7297ab967bd85bd956f22f382f9f053ac2365177d0177431474204cae5cf3a6c",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/TbItemInfo.cs": "45527afad5dfc59ad9a71e78d3ab1bab5701c0fc621c8d918f61c3bffdc947e3",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/ItemInfo.cs": "c3b71fe9b9ca0f4bbe7cf8913c1b3db52a9b06a7cf6e91a0842ec130fceb7227",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/ItemEffect.cs": "bad642dadc92e47e31a231691b3739dfe066f9cda973432decf492b637c19ea6",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/ItemEffectWrapItem.cs": "b411505be181c04a3c47d309866e28621588fc9f8aaff1a761ff4181f4fe8fc5",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/ItemEffectAutoIncrease.cs": "a13e64a337dac83fd309fc312f58adba1a0f955fc043e97f13b611c661557a8c"
+  },
+  "runtime_bindings": {
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureService.cs": "3bc739277b21273438559c6eb422dfebc1d6ed8b2de9e6abc9388656024d35e9",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureService.cs.meta": "07a2fccdec42fa6d9995a25761fc095f09fc53238f87769a8665bca2e7dcba9b",
+    "unity/Assets/Game/Runtime/Offline/Progression/Zjcs.Offline.Progression.asmdef": "35844b96dbbe40199f85e96356856b3b8ce150e0faed1ce46b2b5fb3bda937de",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureCatalog.cs": "b5cabfb46040d377a69466679fa3eabe595519553da5e1fa43e5623536640060",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureCatalog.cs.meta": "d57308d76a07c8630a7fdc298d4e1458fff69c666e1edc9883b5bf6603e11e69",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureCostRules.cs": "1ecc97085ffeff49eb2ece1654008f7492d2500a0ebba957cde2a1361de2b5a1",
+    "scripts/fixtures/treasure_cultivation_validation.cs": "b238147c9e625c9b8e2a87a54dfd4567efbfdc0f92fb3522b584d10e14283c47",
+    "scripts/fixtures/treasure_cultivation_oracle.cs": "8096af3dfcffcc6ad0bac14290c6c83a605f82e1db39627d4ed10687b2bf461b",
+    "scripts/test_treasure_cultivation.ps1": "d3160254d1cb75fddef0cfe66fec24d9f97e4d967d32e35529387a73d2a43d9d"
+  },
+  "methods": {
+    "public static int CanActivateTreasure(": "942d745a291e734a20602c255b9d69a31b58b0c65544d898c8efda46055fcea1",
+    "public static int CanMergeTreasure(": "f8eb5cd8d0ca13fdb1b39664f987a4908a7de1921ec6dd49c197c6ec6e6535fe",
+    "public static bool PieceCanMerge(": "90f29e83cfae130e989dc3a42ce2c63f70adfcfe7672bfa64b13ead96522d418",
+    "public static Dictionary<int, long> GetTreasureUpgradeMaterial(": "413d6bf1cd21ffedccacc8cb4455c9212edb88b47f0675a77efb145d121bbeb2",
+    "public static int GetTreasureNextLevelUpgradeMaterial(": "cfff8128fa86dbae07ef0f128d76be6057e6d061224174fac66172401409c6e6",
+    "public static int CanTreasureUpgrade(": "96e0ef9b4f00f7c31f68ea4ea559e097369cffcd6c5079f7e165774135174eab",
+    "public static bool IsItemEffectTreasurePromote(": "6fcdefb56081f494bef1bc329e45a5e8ee0c7abdd7f6428eac4a05d37733d26b"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/TreasureCultivation/OfficialTreasureCultivationRules.cs": "cc880dbf40aa9eec8e5f6a71ae70efce50a11ce1a971f6daf0003ad4d7cf8983",
+    "unity/Assets/Game/Runtime/Official/TreasureCultivation/TreasureCultivationServices.cs": "0bbb5a18da11b654084baa6c17003c8582fd6a1702a67b8015e925e4dad82370",
+    "unity/Assets/Game/Runtime/Official/TreasureCultivation/Zjcs.Official.TreasureCultivation.asmdef": "2d5bf4f8c61572b98cc8f1e7403eec3cca2a7334ea12035039cc0dc1488c12b3",
+    "unity/Assets/Game/Runtime/Official/TreasureCultivation/OfficialTreasureCultivationRules.cs.meta": "c907c2b58b574ba26d82dc376902e76c459c45c40381f461016b96747ace4de0",
+    "unity/Assets/Game/Runtime/Official/TreasureCultivation/TreasureCultivationServices.cs.meta": "f77201feaa6dd4ef8e1c59694a39e82a5f79c9703788d089df61b10bd842c924",
+    "unity/Assets/Game/Runtime/Official/TreasureCultivation/Zjcs.Official.TreasureCultivation.asmdef.meta": "21dfd88d0d319566165d7252f2fc564d8e26b441772b3caefa9a795641b458e4",
+    "unity/Assets/Game/Runtime/Official/TreasureCultivation.meta": "3c70630f93b12210386ef8e8b3acd1952bcc95227213cd185dc53fb44657e086"
+  },
+  "scope": "Original activation, merge, piece hint, star-up material selection and eligibility checks. Slot-level rules, transactions and native UI are separate owners."
+}
