@@ -46,6 +46,7 @@ namespace Zjcs.Editor.CharacterCreation
             public SkinIconSourceBundle source_bundle;
             public int required_option_icon_count;
             public SkinIconSourceOutput[] sprites;
+            public RecoveredUiOutput[] outputs;
         }
 
         [Serializable]
@@ -65,6 +66,7 @@ namespace Zjcs.Editor.CharacterCreation
         {
             public string name;
             public string path;
+            public string texture_path;
             public long bytes;
             public string sha256;
         }
@@ -305,6 +307,32 @@ namespace Zjcs.Editor.CharacterCreation
             Debug.Log("Official appearance group Sprite bindings restored from verified sources.");
         }
 
+        public static void RestoreSkinIcons()
+        {
+            AssetDatabase.Refresh();
+            var manifest = AssetDatabase.LoadAssetAtPath<TextAsset>(SkinIconManifestPath);
+            if (manifest == null) throw new BuildFailedException("Official skin icon manifest did not import.");
+            ValidateSkinIconHashes(manifest.text);
+            var data = ParseSkinIconManifest(manifest.text);
+            var catalog = AssetDatabase.LoadAssetAtPath<CharacterCreationAssetCatalog>(CatalogPath);
+            if (catalog == null) throw new BuildFailedException("Official character creation catalog is missing.");
+            var serialized = new SerializedObject(catalog);
+            serialized.FindProperty("skinIconSourceManifest").objectReferenceValue = manifest;
+            var icons = serialized.FindProperty("skinIcons");
+            icons.arraySize = data.sprites.Length;
+            for (int i = 0; i < data.sprites.Length; i++)
+            {
+                var source = data.sprites[i];
+                var binding = icons.GetArrayElementAtIndex(i);
+                binding.FindPropertyRelative("skinName").stringValue = source.name;
+                binding.FindPropertyRelative("sprite").objectReferenceValue = LoadSkinIcon(source.path);
+            }
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(catalog);
+            AssetDatabase.SaveAssets();
+            Debug.Log("Official skin icon Sprite bindings restored from verified sources.");
+        }
+
         private static bool ValidHash(string value, int length)
         {
             if (value == null || value.Length != length) return false;
@@ -445,6 +473,13 @@ namespace Zjcs.Editor.CharacterCreation
                 || !path.StartsWith(RecoveredRoot + "PlayerSkinIcons/", StringComparison.Ordinal)
                 || Path.GetFileNameWithoutExtension(path) == string.Empty)
                 throw new BuildFailedException("Official player skin icon path is invalid: " + path);
+            if (path.EndsWith(".asset", StringComparison.Ordinal))
+            {
+                Sprite native = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+                if (native == null || native.texture == null)
+                    throw new BuildFailedException("Official native skin icon did not import: " + path);
+                return native;
+            }
             TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
             if (importer == null) throw new BuildFailedException("Official player skin icon was not imported as a texture: " + path);
             if (importer.textureType != TextureImporterType.Sprite
@@ -466,6 +501,7 @@ namespace Zjcs.Editor.CharacterCreation
         {
             SkinIconSourceManifest manifest = ParseSkinIconManifest(json);
             var names = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var nativeDependencies = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
             foreach (SkinIconSourceOutput output in manifest.sprites)
             {
                 if (output == null || string.IsNullOrEmpty(output.name) || string.IsNullOrEmpty(output.path)
@@ -479,7 +515,28 @@ namespace Zjcs.Editor.CharacterCreation
                     || !string.Equals(Hash(File.ReadAllBytes(absolutePath)), output.sha256,
                     StringComparison.OrdinalIgnoreCase))
                     throw new BuildFailedException("Official player skin icon SHA-256 differs from its source manifest: " + output.path);
+                if (output.path.EndsWith(".asset", StringComparison.Ordinal))
+                {
+                    if (string.IsNullOrEmpty(output.texture_path))
+                        throw new BuildFailedException("Official native skin icon texture source is missing.");
+                    nativeDependencies.Add("unity/" + output.path);
+                    nativeDependencies.Add("unity/" + output.texture_path);
+                }
             }
+            foreach (RecoveredUiOutput output in manifest.outputs ?? Array.Empty<RecoveredUiOutput>())
+            {
+                if (output == null || string.IsNullOrEmpty(output.path)
+                    || !output.path.StartsWith("unity/" + RecoveredRoot + "PlayerSkinIcons/", StringComparison.Ordinal)
+                    || output.path.Contains("..") || !ValidHash(output.sha256, 64))
+                    throw new BuildFailedException("Official native skin icon output path is invalid.");
+                string absolute = Path.Combine(Directory.GetParent(Application.dataPath).FullName,
+                    output.path.Substring("unity/".Length));
+                if (!File.Exists(absolute) || Hash(File.ReadAllBytes(absolute)) != output.sha256)
+                    throw new BuildFailedException("Official native skin icon dependency SHA-256 differs: " + output.path);
+                nativeDependencies.Remove(output.path);
+            }
+            if (nativeDependencies.Count != 0)
+                throw new BuildFailedException("Official native skin icon dependencies have no byte proofs.");
         }
 
         [MenuItem("Zjcs/Character Creation/Build and Validate")]
