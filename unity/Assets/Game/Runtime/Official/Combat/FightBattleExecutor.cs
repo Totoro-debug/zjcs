@@ -117,7 +117,7 @@ namespace Zjcs.Combat.Official
                         }
             if (!unitById.ContainsKey(1))
                 throw new ArgumentException("Fight roster does not contain the main player unit.", nameof(checkpoint));
-            turns = new FightTurnQueue(checkpoint.Timeline, Turns());
+            turns = new FightTurnQueue(checkpoint.Timeline, Turns(), FinalTurnSpeed);
             lastGlobalRound = turns.GlobalRound();
             random = new FightRandomStream(checkpoint.RandomSeed);
             if (!initialize) NormalizeVoodooDeathStatuses();

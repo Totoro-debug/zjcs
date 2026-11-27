@@ -1,0 +1,55 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 11930,
+      "entity_resource": "Combat/SwiftWindDanceSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11930/11930",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/SwiftWindDanceSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11930/playable11930"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11931,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/SwiftWindDanceSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11930/11931"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 11932,
+      "entity_prefab": "11930/11932.prefab",
+      "entity_prefab_sha256": "256e31faa2b4383b81c036fbdfd989c49c9731353b669313c53609f6c7d9fddc",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": false,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/SwiftWindDanceSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11930/playable11932"
+        }
+      ],
+      "entity_resource": "Combat/SwiftWindDanceSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11930/11932"
+    }
+  ]
+}

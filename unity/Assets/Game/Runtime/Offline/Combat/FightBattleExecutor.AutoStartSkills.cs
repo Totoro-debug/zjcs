@@ -31,7 +31,7 @@ namespace Zjcs.Combat.Official
             // User-confirmed offline order: opening passives settle first, then
             // effective speed and equipped slot order; stable ties use roster order.
             var owners = units.Where(owner => owner != null && !owner.Ended)
-                .OrderByDescending(owner => (long)Math.Max(1, owner.Turn.Speed)
+                .OrderByDescending(owner => (double)Math.Max(1L, FinalTurnSpeed(owner.Turn))
                     * Math.Max(1, owner.Turn.RankSpeedScale)).ToArray();
             foreach (var owner in owners)
             {

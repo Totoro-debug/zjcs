@@ -53,10 +53,13 @@ namespace Zjcs.Combat.Official
         private readonly FightTurnQueueState state;
         private readonly Dictionary<int, FightTurnUnit> units;
         private readonly List<FightTurnUnit> unitOrder = new List<FightTurnUnit>();
+        private readonly Func<FightTurnUnit, long> finalSpeed;
 
-        public FightTurnQueue(FightTurnQueueState state, IEnumerable<FightTurnUnit> roster)
+        public FightTurnQueue(FightTurnQueueState state, IEnumerable<FightTurnUnit> roster,
+            Func<FightTurnUnit, long> finalSpeed = null)
         {
             this.state = state ?? throw new ArgumentNullException(nameof(state));
+            this.finalSpeed = finalSpeed;
             if (state.Entries == null) state.Entries = new List<FightTurnEntry>();
             if (state.PendingChanges == null) state.PendingChanges = new List<FightRoundIntervalChange>();
             units = new Dictionary<int, FightTurnUnit>();
@@ -190,7 +193,8 @@ namespace Zjcs.Combat.Official
 
         private long IntervalTicks(FightTurnUnit unit)
         {
-            double speed = Math.Max(1, unit.Speed) * (double)Math.Max(1, unit.RankSpeedScale);
+            double speed = Math.Max(1L, finalSpeed?.Invoke(unit) ?? unit.Speed)
+                * (double)Math.Max(1, unit.RankSpeedScale);
             double milliseconds = 100000.0 / Math.Sqrt(speed);
             return Math.Max(1L, (long)Math.Floor(milliseconds * 1000.0 + 0.5));
         }

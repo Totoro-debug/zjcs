@@ -2,9 +2,9 @@ param(
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10063,10065,10066,10069,10070,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int]$SkillId = 10026,
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10063,10065,10066,10069,10070,10068,10073,10077,10079,10082,10083,10084,10085,10086,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int]$SkillId = 10026,
     [Parameter(ParameterSetName='Player')]
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10063,10065,10066,10069,10070,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10063,10065,10066,10069,10070,10068,10073,10077,10079,10082,10083,10084,10085,10086,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
     [string]$PassiveSave,
     [string]$ActiveSave,
     [ValidateSet(0,39521,39523)][int]$SkillSkinId = 0,
@@ -479,7 +479,7 @@ try {
         $rankQuery = "import json,sys; c=json.load(open(sys.argv[1],encoding='utf-8')); s=json.load(open(sys.argv[2],encoding='utf-8')); rows=[x for x in c['item'] if x['ClassId']==int(sys.argv[3])]; assert len(rows)==1; print(min(x['Rank'] for x in s['RankDisplays'] if x['Quality']==rows[0]['Quality'])+1)"
         $cultivatedRank = & python -B -c $rankQuery (Join-Path $repository 'unity/Assets/Official/Combat/rules.json') (Join-Path $repository 'unity/Assets/Official/Skills/skill-runtime-rules.json') $SkillId
         if ($LASTEXITCODE -ne 0 -or $cultivatedRank -notmatch '^\d+$') { throw "The original skill rank could not be resolved: $SkillId" }
-        $kind = if ($SkillId -in @(10024,10032,10046,10051,10063,10066,10068,10077,10092,10102)) { 'status' } else { 'damage' }
+        $kind = if ($SkillId -in @(10024,10032,10046,10051,10063,10066,10068,10077,10086,10092,10102)) { 'status' } else { 'damage' }
         foreach ($text in @(
             "[Acquired active UI] $SkillId fragment acquisition, original slot input, level/rank cultivation and disk reload passed.",
             "[Acquired active UI] $SkillId saved rank=$cultivatedRank level=2, original $kind/result/return and unchanged save passed.")) {
@@ -563,6 +563,15 @@ try {
         }
         if ($SkillId -eq 10063) { Assert-AcquiredAsuraHandEvidence $skillRun }
         if ($SkillId -eq 10065) { Assert-AcquiredEclipseSlashesEvidence $skillRun }
+        if ($SkillId -eq 10086) {
+            foreach ($file in @('acquired-swift-wind-dance-checkpoint.json','acquired-swift-wind-dance-receipt.json',
+                'acquired-active-ui-swift-buff.png')) {
+                if (-not(Test-Path -LiteralPath (Join-Path $skillRun $file))) { throw 'Swift Wind Dance evidence is incomplete.' }
+            }
+            $wind = Get-Content (Join-Path $skillRun 'acquired-swift-wind-dance-receipt.json') -Raw | ConvertFrom-Json
+            if ($wind.casts -lt 1 -or $wind.ends -lt 2 -or $wind.intervals -lt 2 -or $wind.restoredBaseIntervals -lt 1 -or
+                -not $wind.restored -or -not $wind.buffCaptured) { throw 'Swift Wind Dance lost its original buff, expiry or current final-speed intervals.' }
+        }
         if ($SkillId -eq 10069) {
             foreach ($file in @('acquired-extinction-blade-checkpoint.json','acquired-extinction-blade-receipt.json',
                 'acquired-active-ui-airborne-launch.png','acquired-active-ui-airborne-recovery.png','acquired-active-ui-armour.png')) {
@@ -626,7 +635,7 @@ try {
         if ($SkillId -eq 10096 -and -not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-heavenly-rain-checkpoint.json'))) {
             throw 'The original cultivated healing checkpoint was not persisted.'
         }
-        if ($SkillId -in @(10002,10032,10037,10039,10047,10056,10057,10059,10062,10063,10065,10068,10069,10070,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)) {
+        if ($SkillId -in @(10002,10032,10037,10039,10047,10056,10057,10059,10062,10063,10065,10068,10069,10070,10073,10077,10079,10082,10083,10084,10085,10086,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)) {
             # The Player asserts the original effects for each equipped cast.
             Write-Output "Acquired active skill-page flow passed: $skillRun"
             continue
