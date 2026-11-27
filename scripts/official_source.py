@@ -51,6 +51,51 @@ class OfficialSource:
     def manifest(self, package, archive=None):
         return read_manifest(self.manifest_bytes(package, archive))
 
+    def verify_code_files(self, paths):
+        """Verify consumed C# against the selected assembly/decompilation receipts."""
+        code_path = self.prepared_path / 'code-manifest.json'
+        archive_path = self.prepared_path / 'client-decompilation-manifest.json'
+        code_raw, archive_raw = code_path.read_bytes(), archive_path.read_bytes()
+        code, archive = json.loads(code_raw), json.loads(archive_raw)
+        for document in (code, archive):
+            if document['manifest'] != self.version or document['apk_sha256'] != self.apk_sha256:
+                raise ValueError('Official code receipt belongs to a different source')
+        if (archive['input_receipt']['path'] != code_path.relative_to(ROOT).as_posix()
+                or archive['input_receipt']['sha256'] != hashlib.sha256(code_raw).hexdigest()
+                or archive['assemblies'] != code['assemblies']):
+            raise ValueError('Official decompilation and assembly receipts differ')
+        records, owners = {}, {}
+        for project in archive['projects']:
+            for record in project['files']:
+                if record['path'] in records:
+                    raise ValueError('Duplicate official code identity: ' + record['path'])
+                records[record['path']] = record
+                owners[record['path']] = project['assembly']
+        result = {
+            code_path.relative_to(ROOT).as_posix(): hashlib.sha256(code_raw).hexdigest(),
+            archive_path.relative_to(ROOT).as_posix(): hashlib.sha256(archive_raw).hexdigest(),
+        }
+        assemblies = set()
+        for value in paths:
+            path = Path(value).resolve()
+            if not path.is_relative_to((self.prepared_path / 'official-code').resolve()):
+                raise ValueError('Consumed code is outside the selected source: ' + str(path))
+            name = path.relative_to(ROOT).as_posix()
+            record = records.get(name)
+            raw = path.read_bytes()
+            digest = hashlib.sha256(raw).hexdigest()
+            if not record or len(raw) != record['bytes'] or digest != record['sha256']:
+                raise ValueError('Consumed code differs from its official decompilation: ' + name)
+            result[name] = digest
+            assemblies.add(owners[name])
+        for name in sorted(assemblies):
+            path = self.prepared_path / 'official-code/managed/decoded' / name
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            if digest != code['assemblies'][name]['decoded_sha256']:
+                raise ValueError('Decoded official assembly changed: ' + name)
+            result[path.relative_to(ROOT).as_posix()] = digest
+        return result
+
     def inventory(self, verify_packaged=False):
         packages, bundles = {}, []
         with zipfile.ZipFile(self.apk) as archive:
