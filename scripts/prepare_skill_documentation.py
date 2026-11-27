@@ -20,7 +20,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PAGES = ("warrior", "mage", "knight", "fighter", "warlock", "sage")
 SCOPE = {1, 10, 2, 6, 11, 15}
 RECEIPT = ROOT / "assets/reference/skill-documentation-source-manifest.json"
-HEADER = "| 技能类型 | 技能 ID | 技能名 | 技能描述 | 特殊词条解释 | 是否完成 | 实现要点 |"
+HEADER = "| 技能类型 | 技能 ID | 技能名 | 技能描述 | 特殊词条 | 是否完成 | 实现要点 |"
+GLOSSARY_PAGE = "skills-glossary.md"
 NOTES = {
     10026: "四向范围、逐格命中时序、存档恢复、原生动作特效音效及正常合成培养流程均通过 Windows 验证；官方迁移与交付已完成。",
     10016: "按已确认单机方案补齐选点与直线冲刺；四向实战、读档、原生动作特效音效及正常合成培养流程均通过 Windows 验证；官方迁移与交付已完成。",
@@ -100,11 +101,10 @@ def build(write):
                 r"^### (.*?Rank=(\d+), Profession=(\d+).*?)$", old, re.M)]
         if not routes[page]:
             raise ValueError("No explicit profession/rank routing in " + str(path))
-        if HEADER in old:
-            for line in old.splitlines():
-                fields = [value.strip() for value in line.strip("|").split("|")]
-                if len(fields) == 7 and fields[1].isdigit():
-                    existing_notes[int(fields[1])] = (fields[5], fields[6])
+        for line in old.splitlines():
+            fields = [value.strip() for value in line.strip("|").split("|")]
+            if len(fields) == 7 and fields[1].isdigit():
+                existing_notes[int(fields[1])] = (fields[5], fields[6])
 
     rows_by_id = {}
     scope_ids = {item for prof in SCOPE for item in professions[prof]["Skills"] + professions[prof]["FightUsedSkills"]}
@@ -112,9 +112,9 @@ def build(write):
         raise ValueError("Review the requested first/second profession scope.")
     documents = {}
     page_complete = {}
+    glossary = {}
     for page in PAGES:
         lines = [titles[page], "", "[总索引](../README.md) · [技能目录](skills.md)", "", "状态：未完成", ""]
-        glossary = {}
         scoped_statuses = []
         for rank, profession, title in routes[page]:
             prof = professions[profession]
@@ -144,8 +144,10 @@ def build(write):
                             # Its summoning skill's exact wording still explains the named unit.
                             term_desc = description
                     anchor = f"term-{kind}-{term_id}"
-                    glossary[anchor] = (term_name, term_desc)
-                    terms.append(f"[{cell(term_name)}](#{anchor})")
+                    term = (cell(term_name), cell(term_desc))
+                    if glossary.setdefault(anchor, term) != term:
+                        raise ValueError(f"Conflicting explanations for {anchor} (skill {item_id}).")
+                    terms.append(f"[{term[0]}]({GLOSSARY_PAGE}#{anchor})")
                 if item_id in NOTES:
                     note = NOTES[item_id]
                 elif profession not in SCOPE:
@@ -168,18 +170,19 @@ def build(write):
                 rows_by_id[item_id] = {"id": item_id, "name": name, "description": description,
                     "hyperlink_types": skill["HyperLinkTypes"], "hyperlink_data": skill["HyperLinkDatas"]}
             lines.append("")
-        lines.extend(["## 特殊词条解释", "", "| 特殊词条 | 解释 |", "| --- | --- |"])
-        for anchor, (name, description) in glossary.items():
-            lines.append(f'| <a id="{anchor}"></a>{cell(name)} | {cell(description)} |')
-        lines.append("")
         if not scoped_statuses:
             raise ValueError("No requested skills routed to " + page)
         page_complete[page] = all(status == "已完成" for status in scoped_statuses)
         lines[4] = "状态：" + ("已完成" if page_complete[page] else "未完成")
         documents[f"docs/character/skills-{page}.md"] = "\n".join(lines).encode("utf8")
-    common = ["# 技能目录", "", "[总索引](../README.md)", "", "状态：未完成", "",
+    glossary_lines = ["# 战技与秘法特殊词条", "", "[总索引](../README.md) · [技能目录](skills.md)", "",
+                      "| 特殊词条 | 解释 |", "| --- | --- |"]
+    for anchor, (name, description) in glossary.items():
+        glossary_lines.append(f'| <a id="{anchor}"></a>{name} | {description} |')
+    documents[f"docs/character/{GLOSSARY_PAGE}"] = "\n".join(glossary_lines + [""]).encode("utf8")
+    common = ["# 技能目录", "", f"[总索引](../README.md) · [战技与秘法特殊词条]({GLOSSARY_PAGE})", "", "状态：未完成", "",
               "本次迁移范围：一阶初始职业与二阶首次转职的全部技能，共 104 项；转职后继承前置职业技能。", "",
-              "技能记录仅包含技能类型、技能 ID、技能名、官方描述、特殊词条解释、是否完成与实现要点。", "",
+              "技能记录包含技能类型、技能 ID、技能名、官方描述、特殊词条链接、是否完成与实现要点。", "",
               "| 职业技能 | 是否完成 |", "| --- | --- |"]
     labels = {"warrior": "战士（一阶）", "mage": "法师（一阶）", "knight": "骑士（二阶）",
               "fighter": "斗士（二阶）", "warlock": "术士（二阶）", "sage": "贤者（二阶）"}
