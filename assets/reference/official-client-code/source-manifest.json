@@ -1,8 +1,8 @@
 {
   "format": 1,
-  "manifest": "884_156692",
-  "apk_manifest": "881_156673",
-  "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+  "manifest": "911_156995",
+  "apk_manifest": "895_156822",
+  "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
   "operation": "Static IL decompilation; no source adaptation or game assembly execution",
   "tools": {
     "version": "ilspycmd: 11.1.0.9782\nICSharpCode.Decompiler: 11.1.0.9782",
@@ -19,57 +19,59 @@
   },
   "generator": {
     "path": "scripts/archive_official_client_sources.py",
-    "bytes": 6952,
-    "sha256": "88ad741eae3a7e62ec77f09b8257b1f2c55879fdfe05f339ccd0762944050d28"
+    "bytes": 6820,
+    "sha256": "b6f172cc67c17132a9ae84ac2bc2ddd3684d22ac2d241b35e529fb40dd756cd2"
   },
   "input_receipt": {
-    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
-    "bytes": 6939,
-    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+    "path": ".tools/source-packages/current/911_156995/code-manifest.json",
+    "bytes": 8127,
+    "sha256": "a47317188c8d1f947b56ff1af73b4cd811a079860799915cf9103603afc200e9"
   },
   "aot_scope": "Native IL2CPP inputs and existing type stubs are separate; no recovered AOT method bodies claimed",
   "archive_manifest": {
-    "path": ".tools/source-packages/current/884_156692/client-decompilation-manifest.json",
-    "bytes": 7858920,
-    "sha256": "4a203396ca1aa7b924038134239f3e203a26ac5e1c879ad52076167912cb6ebe"
+    "path": ".tools/source-packages/current/911_156995/client-decompilation-manifest.json",
+    "bytes": 8197980,
+    "sha256": "d18ccfe361df375cbea9f8e44a40f67e76bf0b0af3e49533376b21d6aa95e9d5"
   },
   "projects": [
     {
       "assembly": "Assembly-CSharp.dll",
       "folder": "client-source",
-      "files": 10578,
-      "csharp_files": 10577,
+      "files": 10748,
+      "csharp_files": 10747,
       "source": {
         "bundle": "hybridclr_assets_hybridclrdata_dlls_assembly-csharp_dll.bundle",
-        "bundle_hash": "be1e8ec99036ebc241982594b7ffe88a",
+        "bundle_hash": "7d9a7f248cae69a46554f9a5440f4ac1",
         "path_id": "49683184131557060",
         "source": {
           "origin": "official_cdn",
-          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/HybridCLR/be1e8ec99036ebc241982594b7ffe88a.bundle",
-          "manifest": "884_156692",
-          "size": 17007252,
-          "sha256": "9fd843744c525db63fcef8b7743f54b573daf2abbccafe9ae7317982e95fe064"
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/HybridCLR/7d9a7f248cae69a46554f9a5440f4ac1.bundle",
+          "manifest": "911_156995",
+          "size": 7567271,
+          "sha256": "83b3c68f0b3edba27c6e4eb95508013cb4806088ee559e792c3fcbc85b278e4d"
         },
-        "text_asset_sha256": "a1006cd987bdf5bef5cc20baa87468bd2120473ceabc498e67f89eb6e20a5dfa",
-        "decoded_sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+        "text_asset_sha256": "c534bc616e4d57cdcdfd47b0113c2385e8e60e7bb2e7cd27a77094c2edc57a4f",
+        "decoded_sha256": "1e7eb15a1cead0c2e618e307a367119908485a5a658815a0fe39d98c0d3f31fe"
       }
     },
     {
       "assembly": "Console.dll",
       "folder": "common-source",
-      "files": 18145,
-      "csharp_files": 18144,
+      "files": 19170,
+      "csharp_files": 19169,
       "source": {
         "bundle": "hybridclr_assets_hybridclrdata_dlls_console_dll.bundle",
-        "bundle_hash": "8e77859720bfe42d9270e88d5ecf87f5",
+        "bundle_hash": "98d5f8919abd3627b72f1026548563e3",
         "path_id": "-7462651629129428820",
         "source": {
-          "origin": "apk_zip",
-          "apk_entry": "assets/yoo/HybridCLR/8e77859720bfe42d9270e88d5ecf87f5.bundle",
-          "manifest": "884_156692"
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/HybridCLR/98d5f8919abd3627b72f1026548563e3.bundle",
+          "manifest": "911_156995",
+          "size": 6375164,
+          "sha256": "cc69556ac7d6462182a1ac410ef681ec564b8f52334b771c0e7490e324f0c4cd"
         },
-        "text_asset_sha256": "51a48961e43813e50429b2e30547b389fac2360d272773c1cc124cfafc94fa8f",
-        "decoded_sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
+        "text_asset_sha256": "177cf927ffdac7e92dae09d65d128adbc253ef7a65f285ce4bbd49879f48fe0a",
+        "decoded_sha256": "5ff2019c868764f8e6afa6a5ff3bd569d4e3d39365a39dc0327a738391e8b64d"
       }
     },
     {
@@ -79,69 +81,77 @@
       "csharp_files": 99,
       "source": {
         "bundle": "hybridclr_assets_hybridclrdata_dlls_framework_dll.bundle",
-        "bundle_hash": "f6a7d662f379d27099c4ba882993853a",
+        "bundle_hash": "e77824736487aa81cf833d40e606b4bc",
         "path_id": "1180966160763857177",
         "source": {
-          "origin": "apk_zip",
-          "apk_entry": "assets/yoo/HybridCLR/f6a7d662f379d27099c4ba882993853a.bundle",
-          "manifest": "884_156692"
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/HybridCLR/e77824736487aa81cf833d40e606b4bc.bundle",
+          "manifest": "911_156995",
+          "size": 52863,
+          "sha256": "1fca414540c8eec76abc8c3e70a7ddb76567a1c7747e0be68f77625d8eb6ad70"
         },
-        "text_asset_sha256": "8727055996c30a36f0d48dbfac7b0d4289bd63a8433887977a9d347e4852dee8",
-        "decoded_sha256": "19a952a1e686e76db0a34556062e4b928fc0d0ae6d33158912542147638af4fb"
+        "text_asset_sha256": "2feb59245d1f72111d66ac644e0137a122cc85462ecb06ea6a1556351fb8b75a",
+        "decoded_sha256": "d6e7c0150c87e4e659ab882444e0be87e38c5cb29e2020c4a19742f2ea23bc13"
       }
     },
     {
       "assembly": "Launch.dll",
       "folder": "launch-source",
-      "files": 325,
-      "csharp_files": 324,
+      "files": 326,
+      "csharp_files": 325,
       "source": {
         "bundle": "hybridclr_assets_hybridclrdata_dlls_launch_dll.bundle",
-        "bundle_hash": "245259f50108ee62eac3a2acab14e45f",
+        "bundle_hash": "4399be0a95a7d69f27d4b064ce38083c",
         "path_id": "-7513514334865028087",
         "source": {
-          "origin": "apk_zip",
-          "apk_entry": "assets/yoo/HybridCLR/245259f50108ee62eac3a2acab14e45f.bundle",
-          "manifest": "884_156692"
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/HybridCLR/4399be0a95a7d69f27d4b064ce38083c.bundle",
+          "manifest": "911_156995",
+          "size": 202400,
+          "sha256": "0039881857a9296e7ace97580725e7b65d6a8bee4ce31171ae78bc6b9225b419"
         },
-        "text_asset_sha256": "3a5405399f8932ba7319384183423648811d4ef48c87c17fe367f1995e138b1f",
-        "decoded_sha256": "3a5405399f8932ba7319384183423648811d4ef48c87c17fe367f1995e138b1f"
+        "text_asset_sha256": "8c826fe16e65171c236a7ae9bf64680ca0ad703f5d592b5e9a471367e6caf854",
+        "decoded_sha256": "8c826fe16e65171c236a7ae9bf64680ca0ad703f5d592b5e9a471367e6caf854"
       }
     },
     {
       "assembly": "Framework.FirstPass.Runtime.dll",
       "folder": "framework-firstpass-source",
-      "files": 345,
-      "csharp_files": 344,
+      "files": 347,
+      "csharp_files": 346,
       "source": {
         "bundle": "hybridclr_assets_hybridclrdata_dlls_framework_firstpass_runtime_dll.bundle",
-        "bundle_hash": "7e79ad59fba646dee22a54a3e8e4b9c1",
+        "bundle_hash": "30dd192beee9fc6ce3ef5cec0b5fc577",
         "path_id": "3294158994123699936",
         "source": {
-          "origin": "apk_zip",
-          "apk_entry": "assets/yoo/HybridCLR/7e79ad59fba646dee22a54a3e8e4b9c1.bundle",
-          "manifest": "884_156692"
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/HybridCLR/30dd192beee9fc6ce3ef5cec0b5fc577.bundle",
+          "manifest": "911_156995",
+          "size": 205344,
+          "sha256": "a264f206bb0da05c13ca52e1d7fbddd7ab4ccdf7f769d0a31eaeb3c1e5071929"
         },
-        "text_asset_sha256": "e4af045ab17cc6cb3a80403913c03ef5f15a736875c57bf67f3e44cff415627e",
-        "decoded_sha256": "e4af045ab17cc6cb3a80403913c03ef5f15a736875c57bf67f3e44cff415627e"
+        "text_asset_sha256": "83726b46a0dd9720f06a83258e5462979f9e0da8c09365495a1966f7c22caf09",
+        "decoded_sha256": "83726b46a0dd9720f06a83258e5462979f9e0da8c09365495a1966f7c22caf09"
       }
     },
     {
       "assembly": "CustomWater.dll",
       "folder": "custom-water-source",
-      "files": 11,
-      "csharp_files": 10,
+      "files": 17,
+      "csharp_files": 16,
       "source": {
         "bundle": "hybridclr_assets_hybridclrdata_dlls_customwater_dll.bundle",
-        "bundle_hash": "5541847680b376975c525dbc6f0de6ad",
+        "bundle_hash": "7531d16911cf4bfbf2dff6f7f1d31656",
         "path_id": "-711126512220388104",
         "source": {
-          "origin": "apk_zip",
-          "apk_entry": "assets/yoo/HybridCLR/5541847680b376975c525dbc6f0de6ad.bundle",
-          "manifest": "884_156692"
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/HybridCLR/7531d16911cf4bfbf2dff6f7f1d31656.bundle",
+          "manifest": "911_156995",
+          "size": 18271,
+          "sha256": "a5efb3562d0150a8a46920a01a4a4529de3aa2ef6b8580049bee65d03a9673bb"
         },
-        "text_asset_sha256": "c5a2dfe4466f26513e0901dca0749edd552f309094c160375b9a28a10d2a63be",
-        "decoded_sha256": "2079df13caa06ae56758042d7c3f844be32e649c3d035deb20c4c7a94862252f"
+        "text_asset_sha256": "4f22e8871d8874293144a0a5de35e8e6ec99971e8de2c063c8229026b779772e",
+        "decoded_sha256": "82d7bc40445467e8985aabecaa76790656bd3f081b1b76c6d0e163c9f6891779"
       }
     },
     {
@@ -151,15 +161,17 @@
       "csharp_files": 70,
       "source": {
         "bundle": "hybridclr_assets_hybridclrdata_dlls_gameframework_runtime_dll.bundle",
-        "bundle_hash": "d04648066c43ce854b266cf2b42373dd",
+        "bundle_hash": "683c2ff1046300480be2e4798a5d9812",
         "path_id": "-2510671864390960019",
         "source": {
-          "origin": "apk_zip",
-          "apk_entry": "assets/yoo/HybridCLR/d04648066c43ce854b266cf2b42373dd.bundle",
-          "manifest": "884_156692"
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/HybridCLR/683c2ff1046300480be2e4798a5d9812.bundle",
+          "manifest": "911_156995",
+          "size": 42978,
+          "sha256": "5c8d742a269791307b4095aaaafbc999c0844a4ac3928b5b85decb0f165c0c31"
         },
-        "text_asset_sha256": "5a8037d47ac522058aa344dc91defda25485400d48ec2b097bd16e1c74a2cada",
-        "decoded_sha256": "737c1e6b4313b330530aa84b6d9b59dd01a470c69937d95a6cf69cd13c61e253"
+        "text_asset_sha256": "4b380420e26eb6f1833880ddba5ec6c38dbbe411f63f0d130ef968feec22688d",
+        "decoded_sha256": "dea4118726c8287ac50656ead5c773fb2a95175686fc79363eaea2665bb59941"
       }
     },
     {
@@ -169,15 +181,17 @@
       "csharp_files": 40,
       "source": {
         "bundle": "hybridclr_assets_hybridclrdata_dlls_gframecore_extensions_cloneable_dll.bundle",
-        "bundle_hash": "9e2e18bb7ac91e8b5da38de2f7243855",
+        "bundle_hash": "35d5e46873d1ec3c266b01b14b0c8eac",
         "path_id": "7358072109420933046",
         "source": {
-          "origin": "apk_zip",
-          "apk_entry": "assets/yoo/HybridCLR/9e2e18bb7ac91e8b5da38de2f7243855.bundle",
-          "manifest": "884_156692"
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/HybridCLR/35d5e46873d1ec3c266b01b14b0c8eac.bundle",
+          "manifest": "911_156995",
+          "size": 19860,
+          "sha256": "cd4b49f26ae92e0a67afcca7d830bafe2851a2f2e77b75338a44bae5999fdad3"
         },
-        "text_asset_sha256": "ac4b322bbbaf4d41048ea138e98970a89a1c915a87cb6f288992882841eb8591",
-        "decoded_sha256": "ca192aac91b530e725ecc56d15399cfc0acdbb5a90c86ac8ad23557956704c12"
+        "text_asset_sha256": "aa1aff71b26b1df2e263bfce6b9db5582bdeffd70726ac2188158fb0495a6176",
+        "decoded_sha256": "77a823e31a5c84ff805f5659700a91f686345f90c35f6fe8429071615a7e6c58"
       }
     },
     {
@@ -187,15 +201,17 @@
       "csharp_files": 17,
       "source": {
         "bundle": "hybridclr_assets_hybridclrdata_dlls_loopscrollrect_runtime_dll.bundle",
-        "bundle_hash": "510709c430c4209db49a1f4767c93647",
+        "bundle_hash": "d0402e2aec75f2fde58a5eb4aaa143e2",
         "path_id": "799541944023928020",
         "source": {
-          "origin": "apk_zip",
-          "apk_entry": "assets/yoo/HybridCLR/510709c430c4209db49a1f4767c93647.bundle",
-          "manifest": "884_156692"
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/HybridCLR/d0402e2aec75f2fde58a5eb4aaa143e2.bundle",
+          "manifest": "911_156995",
+          "size": 25903,
+          "sha256": "07acbe6cdb6809c1553d1d30d9d1da8b1d0fa9478f593e3333ea44e01293288f"
         },
-        "text_asset_sha256": "2120ce2d9d68c315fbd1d8c5b2801d9e275d52b967e81635cfbbe33382dd29d4",
-        "decoded_sha256": "f917dcb08554f98530c581f3ee13a3ad7fa0ede3abd867f95c06b722dcc9b7a3"
+        "text_asset_sha256": "ef22fafdcaf36f027f2fcfa6b6a2e25baed0d4aa84c5d0e067ae816063a8a7e3",
+        "decoded_sha256": "d34212bce79f99d641f5d00c9c0bfa3a0a288f17cf293efc10ae3ceb2f5eb8fc"
       }
     },
     {
@@ -205,14 +221,18 @@
       "csharp_files": 9,
       "source": {
         "bundle": "hybridclr_assets_hybridclrdata_dlls_luban_dll.bundle",
-        "bundle_hash": "c4f18ac18a09bd6ea6b1477ed29d3e60",
+        "bundle_hash": "4cdec2899d53ae455be8063d5b17b59b",
         "path_id": "1330498193742632353",
         "source": {
           "origin": "apk_zip",
-          "apk_entry": "assets/yoo/HybridCLR/c4f18ac18a09bd6ea6b1477ed29d3e60.bundle",
-          "manifest": "884_156692"
+          "apk_entry": "assets/yoo/HybridCLR/4cdec2899d53ae455be8063d5b17b59b.bundle",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "raw_size": 12331,
+          "raw_sha256": "166144f9699f56bcdc2dcca6f6747db06ceb8ee90d14ddaeb29a2a04d6519233"
         },
-        "text_asset_sha256": "6deff3f8e5ccea18f5b91fe0961adca35e2ccc9efa1ed6b875897626ae61a73d",
+        "text_asset_sha256": "7b2f1d20afa5efb8f9da556efb242c1fc0ccc542d6ddd3afdcc569fb2f3c6a92",
         "decoded_sha256": "de6598af27d573ba225e3d60c57a07034552b2a2b8f399fdead46b0c22b393b2"
       }
     }

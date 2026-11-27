@@ -14,13 +14,15 @@ def record():
     base = ROOT/'.tools/source-packages/current'/source.version
     def file(path):
         raw = path.read_bytes()
-        return dict(path=path.relative_to(ROOT).as_posix(), bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
+        name = path.relative_to(ROOT).as_posix() if path.is_relative_to(ROOT) else path.as_posix()
+        return dict(path=name, bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
     code = json.loads((base/'code-manifest.json').read_bytes())
     inputs = json.loads((base/'native-conversion/source-manifest.json').read_bytes())
-    selection = json.loads((base/'native-conversion/changed-inputs-source-manifest.json').read_bytes())
-    if any(d['manifest'] != source.version for d in (code, inputs, selection)):
+    selection_path = base/'native-conversion/changed-inputs-source-manifest.json'
+    selection = json.loads(selection_path.read_bytes()) if selection_path.exists() else None
+    if any(d['manifest'] != source.version for d in (code, inputs) + ((selection,) if selection else ())):
         raise ValueError('Preparation cache versions differ')
-    if selection['input_manifest_sha256'] != file(base/'native-conversion/source-manifest.json')['sha256']:
+    if selection and selection['input_manifest_sha256'] != file(base/'native-conversion/source-manifest.json')['sha256']:
         raise ValueError('Changed selection uses a different source manifest')
     config = base/'official-data'
     failures = json.loads((config/'table-failures.json').read_bytes())
@@ -30,21 +32,22 @@ def record():
                   apk_sha256=source.apk_sha256, resource_version=source.profile['resource_version'],
                   generator=file(Path(__file__)), code_manifest=file(base/'code-manifest.json'),
                   decoded_assemblies=[file(base/'official-code/managed/decoded'/name) for name in sorted(code['assemblies'])],
-                  merged_cache_manifest=file(ROOT/'.tools/source-packages/prepared-code-source-manifest.json'),
                   table_payload=file(config/'tables.json'),
                   luban_inputs=[file(path) for path in sorted(config.glob('*.bytes'))],
                   fully_decoded_tables=len(json.loads((config/'tables.json').read_bytes())),
                   unresolved_tables=failures,
                   converter_inputs=file(base/'native-conversion/source-manifest.json'),
                   converter_input_files=len(inputs['inputs']),
-                  changed_selection=file(base/'native-conversion/changed-inputs-source-manifest.json'),
-                  referenced_unchanged_bundles=len(selection['unchanged_bundles']),
-                  referenced_changed_bundles=len(selection['changed_bundles']),
-                  referenced_without_byte_proof=len(selection.get('unverified_referenced_bundles', [])),
-                  selected_bundle_and_builtin_inputs=len(selection['inputs']),
+                  selected_bundle_and_builtin_inputs=len(selection['inputs'] if selection else inputs['inputs']),
                   catalog_entries=sum(len(c['merged']) for c in inputs['catalogs'].values()),
                   retained_apk_only_asset_paths=sum(len({(a['path'], a['address']) for a in c['apk']}-{(a['path'], a['address']) for a in c['current']}) for c in inputs['catalogs'].values()),
-                  unmatched_retained=selection['unmatched_retained'])
+                  unavailable_inputs=inputs['unavailable_original_bundles'])
+    if selection:
+        result.update(changed_selection=file(selection_path),
+                      referenced_unchanged_bundles=len(selection['unchanged_bundles']),
+                      referenced_changed_bundles=len(selection['changed_bundles']),
+                      referenced_without_byte_proof=len(selection.get('unverified_referenced_bundles', [])),
+                      unmatched_retained=selection['unmatched_retained'])
     result['supporting_scripts'] = [file(ROOT/'scripts'/name) for name in (
         'prepare_official_sources.py', 'recover_official_native.py', 'prepare_current_aot_metadata.py',
         'prepare_current_resource_inputs.py', 'select_current_resource_changes.py',
@@ -59,13 +62,16 @@ def record():
         receipt = json.loads(aot.read_bytes())
         result['aot_metadata'] = dict(source_manifest=file(aot), types=receipt['recovered_types'], images=receipt['metadata_images'])
     native = base/'native-conversion/native-export-complete-source-manifest.json'
+    if not native.exists():
+        native = base/'native-conversion/native-export-source-manifest.json'
     if native.exists():
         receipt = json.loads(native.read_bytes())
         from collections import Counter
         result['native_export'] = dict(source_manifest=file(native), completed=receipt.get('completed', False),
                                      files=len(receipt['outputs']),
                                      files_by_extension=dict(Counter(Path(row['path']).suffix for row in receipt['outputs'])),
-                                     limitations=receipt.get('limitations', []))
+                                     limitations=receipt.get('limitations', []),
+                                     conversion_issues=receipt.get('conversion_issues', []))
     raw = base/'native-conversion/raw-resources-source-manifest.json'
     if raw.exists():
         receipt = json.loads(raw.read_bytes())

@@ -117,7 +117,8 @@ def convert():
         def decode(entry):
             digest, item = entry
             original = output/item['original']
-            info = subprocess.run([str(decoder), '-m', '-I', str(original)], check=True, capture_output=True, text=True)
+            info = subprocess.run([str(decoder), '-m', '-I', str(original)], check=True, capture_output=True, text=True,
+                                  creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
             metadata = json.loads(info.stdout)
             wav = work/(digest+'.wav')
             subprocess.run([str(decoder), '-i', '-L', '-W', '4', '-o', str(wav), str(original)], check=True,
