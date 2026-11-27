@@ -55,6 +55,7 @@ namespace Zjcs.Presentation.Home
         public GameObject NativeStorageInstance => storage?.GetInstance(EFurniture.StorageBox);
         public GameObject NativeFurnitureInstance(EFurniture furniture) => storage?.GetInstance(furniture);
         public IStoryNodeRegisterMgr NativeStorageStoryNodes => storage?.StoryNodes;
+        internal void OpenTreasurePanelFromHome() => OpenFurniture((int)EFurniture.Desk);
         public void RefreshNativeFurnitureSkins() => storage?.RefreshSkin();
         public void SetHomeViewMode(HomeViewMode mode) => storage?.SetViewMode(mode);
         public void PublishHomeActionEvent(ActionEventData data) => storage?.PublishActionEvent(data);
@@ -100,6 +101,7 @@ namespace Zjcs.Presentation.Home
                 EFurniture.StorageBox,
                 EFurniture.DiningTable,
                 EFurniture.Cart,
+                EFurniture.Desk
             };
 
             private sealed class HangUpAwardMessage : IHomeHangUpAwardMessage
@@ -797,6 +799,7 @@ namespace Zjcs.Presentation.Home
             public bool HasFurniture(EFurniture furniture) => home.HasFurnitureForSkin((int)furniture);
             public bool CheckFunctionDisabled(EFurniture furniture) => home.hud.IsClosedByNetworkPolicy((int)furniture);
             public void PopupPlayerBag() => home.hud.ShowStorage();
+            public void PopupTreasurePanel() => home.OpenTreasurePanelFromHome();
             public void PopupRepair(EFurniture furniture, bool isBuild) => home.hud.ShowRepair((int)furniture, isBuild);
             public void RegisterAwardHandler(Func<HomeFurnitureAward, bool> handler) => awardHandlers.Add(handler);
             public void RemoveAwardHandler(Func<HomeFurnitureAward, bool> handler) => awardHandlers.Remove(handler);

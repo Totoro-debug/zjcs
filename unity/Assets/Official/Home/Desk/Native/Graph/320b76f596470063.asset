@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: a60585f4089d5ba88818d9d94dc296aa, type: 3}
+  m_Name: '[3][State]馈赠是否有提示'
+  graph: {fileID: 11400000, guid: 20ce636256863661817707138fc9791b, type: 2}
+  position: {x: 1672.0, y: 1240.0}
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000, guid: fec24372f47862d6e9c03a086c099103, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: 24411d81ea5dd72533a8bafb0d0d6653, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000, guid: fec24372f47862d6e9c03a086c099103, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: e5122b08f46aa2079eeb99c066fd3aec, type: 2}
+        reroutePoints: []
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: 5e8409f2d97668609198bc7cde3b0039, type: 2}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono: ''
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: 馈赠是否有提示
+  SelectedType: ''
+  NodeName: AchievementHasTip
+  TipDotNodeId: 3
+  TipDotNode: {rid: 4800080014460846805}
+  RuntimeTipDotNode: {rid: -2}
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 0
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels: []
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: '', ns: '', asm: ''}
+    - rid: 4800080014460846805
+      type: {class: TipDotCommonNode, ns: Zjcs.Official.ProfessionUI, asm: Zjcs.Official.ProfessionUI}
+      data:
+        Parents: []
+        Childs: []
+        NodeKey: {GraphName: Treasure, NodeName: AchievementHasTip}
+        TipDotInfo: {TipLevel: 0, Data: ''}
+        IsShowTip: 0

@@ -10,12 +10,7 @@ namespace Zjcs.Official.PartnersUI
     public interface IPartnerTipDotNode { IPartnerTipDotServices Services { get; set; } }
     // The exact player/parser operations consumed by the original graph nodes.
     // The owner supplies the current save and condition subscriptions per graph.
-    public interface IPartnerDynamicTipDotNodeManager : ITipDotNodeManager
-    {
-        Action<TipDotNodeKey> OnAddNode { get; set; }
-        Action<TipDotNodeKey> OnReduceNode { get; set; }
-        void ConnectNodes(TipDotNodeKey parent, List<TipDotNodeKey> children);
-    }
+    public interface IPartnerDynamicTipDotNodeManager : IDynamicTipDotNodeManager { }
 
     public sealed class PartnerTipDotNpc
     {

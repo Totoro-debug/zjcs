@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.Progression;
+using Zjcs.Official.BattleSkillPlayables;
 using Zjcs.Official.HomeTipDots;
 using Zjcs.Official.HomeUI;
 using Zjcs.Official.ProfessionUI;
@@ -36,6 +37,9 @@ namespace Zjcs.Offline.HomeTipDots
         private readonly HashSet<int> observedUnlockedHangUps = new HashSet<int>();
         private readonly Dictionary<int, int> observedHangUpLevels = new Dictionary<int, int>();
         private readonly List<Action> newDaySubscribers = new List<Action>();
+        private readonly List<Action> treasureSettingSubscribers = new List<Action>();
+        private bool autoMergeWhenLevelUp;
+        private bool awakeAutoMergeEnable;
         private DateTime observedDay;
         private int observedPlayerLevel;
         private int observedBlessingLevel;
@@ -120,6 +124,54 @@ namespace Zjcs.Offline.HomeTipDots
         public event Action OnGoddessUpdate;
         public event Action<long> OnDebugTimeOffset;
         public event Action<HomeTipItemData, long, object> OnItemCountUpdate;
+        public event Action<HomeTipItemData, bool> OnTreasureRefresh;
+
+        public Func<ElementType, List<TreasureRedDotEnum>, bool, bool, bool> TreasureRedDotEvaluator { get; set; }
+        public Func<List<TreasureRedDotEnum>, bool, bool, bool> AnyTreasureRedDotEvaluator { get; set; }
+        public Func<ElementType, bool> TreasurePieceRedDotEvaluator { get; set; }
+        public Func<int, bool> IsItemEffectTreasurePromoteEvaluator { get; set; }
+        public bool AutoMergeWhenLevelUp
+        {
+            get => autoMergeWhenLevelUp;
+            set { if (autoMergeWhenLevelUp == value) return; autoMergeWhenLevelUp = value; NotifyTreasureSettingUpdate(); }
+        }
+        public bool AwakeAutoMergeEnable
+        {
+            get => awakeAutoMergeEnable;
+            set { if (awakeAutoMergeEnable == value) return; awakeAutoMergeEnable = value; NotifyTreasureSettingUpdate(); }
+        }
+
+        public bool TreasureRedDot(ElementType elementType, List<TreasureRedDotEnum> tipTypes, bool autoMergeWhenLevelUp, bool awakeAutoMergeEnable)
+            => TreasureRedDotEvaluator != null && TreasureRedDotEvaluator(elementType, tipTypes, autoMergeWhenLevelUp, awakeAutoMergeEnable);
+
+        public bool AnyTreasureRedDot(List<TreasureRedDotEnum> redDots, bool autoMergeWhenLevelUp, bool awakeAutoMergeEnable)
+            => AnyTreasureRedDotEvaluator != null && AnyTreasureRedDotEvaluator(redDots, autoMergeWhenLevelUp, awakeAutoMergeEnable);
+
+        public bool TreasurePieceRedDot(ElementType elementType)
+            => TreasurePieceRedDotEvaluator != null && TreasurePieceRedDotEvaluator(elementType);
+
+        public bool IsItemEffectTreasurePromote(HomeTipItemData itemData)
+            => itemData?.Info != null && IsItemEffectTreasurePromoteEvaluator != null && IsItemEffectTreasurePromoteEvaluator(itemData.Info.ClassId);
+
+        public IDisposable SubscribeTreasureSettingUpdate(Action callback)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfflineHomeTipDotServices));
+            if (callback == null) throw new ArgumentNullException(nameof(callback));
+            treasureSettingSubscribers.Add(callback);
+            return new Subscription(() => treasureSettingSubscribers.Remove(callback));
+        }
+
+        private void NotifyTreasureSettingUpdate()
+        {
+            if (disposed) return;
+            foreach (Action callback in treasureSettingSubscribers.ToArray()) callback();
+        }
+
+        public void NotifyTreasureRefresh(int classId = 0, bool isNew = false)
+        {
+            if (disposed) return;
+            OnTreasureRefresh?.Invoke(new HomeTipItemData { Info = new HomeTipItemInfo { ClassId = classId } }, isNew);
+        }
 
         public void BindNode(TipDotNodeBase node)
         {
@@ -309,6 +361,7 @@ namespace Zjcs.Offline.HomeTipDots
             if (disposed) return;
             disposed = true;
             newDaySubscribers.Clear();
+            treasureSettingSubscribers.Clear();
             OnHangUpUnlock = null;
             OnHangUpLevelUp = null;
             OnFastHangUp = null;
@@ -316,6 +369,7 @@ namespace Zjcs.Offline.HomeTipDots
             OnGoddessUpdate = null;
             OnDebugTimeOffset = null;
             OnItemCountUpdate = null;
+            OnTreasureRefresh = null;
         }
     }
 }

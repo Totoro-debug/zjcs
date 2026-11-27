@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: a60585f4089d5ba88818d9d94dc296aa, type: 3}
+  m_Name: '[2][State]是否有古遗物可以升级'
+  graph: {fileID: 11400000, guid: e6dcfe1900373daebf3bc036aceff4dd, type: 2}
+  position: {x: 456.0, y: -856.0}
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000, guid: a81649d82a9cbeb0b27f0f6d97458527, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: e43b0cfb148428e483dbb0b74932fea0, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000, guid: a81649d82a9cbeb0b27f0f6d97458527, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: a8a85d04500184b3a88c3ee3861b4284, type: 2}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono: ''
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: 是否有古遗物可以升级
+  SelectedType: ''
+  NodeName: HasTreasureCanLevelUp
+  TipDotNodeId: 2
+  TipDotNode: {rid: 4800080026086408195}
+  RuntimeTipDotNode: {rid: -2}
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 2
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels: []
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: '', ns: '', asm: ''}
+    - rid: 4800080026086408195
+      type: {class: TipDotCommonNode, ns: Zjcs.Official.ProfessionUI, asm: Zjcs.Official.ProfessionUI}
+      data:
+        Parents: []
+        Childs: []
+        NodeKey: {GraphName: TreasureElementItem, NodeName: HasTreasureCanLevelUp}
+        TipDotInfo: {TipLevel: 0, Data: ''}
+        IsShowTip: 0

@@ -65,6 +65,7 @@ namespace Zjcs.Official.HomeFurniture
         void ShowError(int textId);
         void PopupRepair(EFurniture furniture, bool isBuild);
         void PopupPlayerBag();
+        void PopupTreasurePanel();
         void DoStoryAction(Action action);
         IHomeFurnitureStoryContext CreateStoryContext(string owner);
         void PlayStory(IHomeFurnitureStoryContext context, string storyName);

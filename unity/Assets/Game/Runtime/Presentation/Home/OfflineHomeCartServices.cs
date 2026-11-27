@@ -118,6 +118,7 @@ namespace Zjcs.Presentation.Home
             public bool HasFurniture(EFurniture furniture) => owner.home.HasFurnitureForSkin((int)furniture);
             public bool CheckFunctionDisabled(EFurniture furniture) => false;
             public void PopupPlayerBag() { }
+            public void PopupTreasurePanel() => owner.home.OpenTreasurePanelFromHome();
             public void PopupRepair(EFurniture furniture, bool isBuild) { }
             public void RegisterAwardHandler(Func<HomeFurnitureAward, bool> handler) { }
             public void RemoveAwardHandler(Func<HomeFurnitureAward, bool> handler) { }

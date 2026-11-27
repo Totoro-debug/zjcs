@@ -25,7 +25,8 @@ def replace(text, old, new):
 
 
 def prepare():
-    source = OfficialSource()
+    selected = json.loads(RECEIPT.read_bytes()) if RECEIPT.exists() else None
+    source = OfficialSource(selected['manifest'] if selected else None)
     code = ROOT / '.tools/source-packages/current' / source.version / 'official-code'
     receipt = code.parent / 'code-manifest.json'
     identity = json.loads(receipt.read_bytes())
@@ -170,6 +171,14 @@ using Object = UnityEngine.Object;
     text = text.replace('BroadcastManager.Instance.SystemMsg(', 'Services.SystemMessage(')
     emit('HomeNotice', text)
     emit('StoreBoxFurniture', read('StoreBoxFurniture').replace('WindowManager.Instance.Popup<PlayerBagPanel>()', 'Services.PopupPlayerBag()'))
+    _ = read('DeskFurniture')
+    emit('DeskFurniture', """public class DeskFurniture : FurnitureBase
+{
+	protected override void OnClick()
+	{
+		Services?.PopupTreasurePanel();
+	}
+}""")
     _ = read('BaseHangUpFurniture')
     emit('BaseHangUpFurniture', """public abstract class BaseHangUpFurniture : FurnitureBase
 {

@@ -656,6 +656,7 @@ public sealed partial class HomeFurnitureControllerChecks : MonoBehaviour
         public void ShowError(int textId) => Calls.Add("error:" + textId);
         public void PopupRepair(EFurniture furniture, bool isBuild) => Calls.Add("repair:" + furniture + ":" + isBuild);
         public void PopupPlayerBag() => Calls.Add("bag");
+        public void PopupTreasurePanel() => Calls.Add("treasure");
         public void DoStoryAction(Action action) { Calls.Add("story-action"); action(); }
         sealed class Story : IHomeFurnitureStoryContext { }
         public IHomeFurnitureStoryContext CreateStoryContext(string owner) { Calls.Add("context:" + owner); return new Story(); }

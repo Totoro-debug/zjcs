@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 73d1312f954855f99cd6cbba7a148413, type: 3}
+  m_Name: '[6][Cnd]检查古遗物元素类型是否有提示'
+  graph: {fileID: 11400000, guid: e6dcfe1900373daebf3bc036aceff4dd, type: 2}
+  position: {x: 1096.0, y: -840.0}
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000, guid: a8a85d04500184b3a88c3ee3861b4284, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: a81649d82a9cbeb0b27f0f6d97458527, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000, guid: a8a85d04500184b3a88c3ee3861b4284, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono: ''
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: ''
+  SelectedType: ''
+  NodeName: ''
+  TipDotNodeId: 6
+  TipDotNode: {rid: 4800080026086408200}
+  RuntimeTipDotNode: {rid: -2}
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 4
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels: []
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: '', ns: '', asm: ''}
+    - rid: 4800080026086408200
+      type: {class: TipDotTreasureElementTypeHasTipConditionNode, ns: Zjcs.Official.HomeTipDots, asm: Zjcs.Official.HomeTipDots}
+      data:
+        Parents: []
+        Childs: []
+        NodeKey: {GraphName: TreasureElementItem, NodeName: 9145e48f-feb4-499e-8a24-1089c05fb7ae}
+        TipDotInfo: {TipLevel: 0, Data: ''}
+        IsShowTip: 0
+        ElementType: 0
+        TipType:
+        - 2

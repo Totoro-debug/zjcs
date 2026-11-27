@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 470ff18f5f06dc419f26859ff7e55db7, type: 3}
+  m_Name: '[6][State]古遗物各元素类型是否有提示'
+  graph: {fileID: 11400000, guid: 20ce636256863661817707138fc9791b, type: 2}
+  position: {x: 2232.0, y: 168.0}
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000, guid: a23ee323dd0c9408010c4a27ffce52a4, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: acc1884754a44a041e42aa24f8d13d6b, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000, guid: a23ee323dd0c9408010c4a27ffce52a4, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono: ''
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: 古遗物各元素类型是否有提示
+  SelectedType: ''
+  NodeName: TreasureElementTypesHasTip
+  TipDotNodeId: 6
+  TipDotNode: {rid: 4800080026086408208}
+  RuntimeTipDotNode: {rid: -2}
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 0
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels: []
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: '', ns: '', asm: ''}
+    - rid: 4800080026086408208
+      type: {class: TipDotLinkTreasureElementItemNode, ns: Zjcs.Official.HomeTipDots, asm: Zjcs.Official.HomeTipDots}
+      data:
+        Parents: []
+        Childs: []
+        NodeKey: {GraphName: Treasure, NodeName: TreasureElementTypesHasTip}
+        TipDotInfo: {TipLevel: 0, Data: ''}
+        IsShowTip: 0
+        mNodeSelector:
+          GraphNode: {fileID: 11400000, guid: e43b0cfb148428e483dbb0b74932fea0, type: 2}
+        Elements:
+        - 103
+        - 100
+        - 104
+        - 101
+        - 102

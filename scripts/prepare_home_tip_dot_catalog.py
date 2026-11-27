@@ -17,6 +17,7 @@ MANIFEST_SOURCES = (
     ROOT / 'assets/reference/home-bed-native-source-manifest.json',
     ROOT / 'assets/reference/home-cart-native-source-manifest.json',
     ROOT / 'assets/reference/home-cart-windows-native-source-manifest.json',
+    ROOT / 'assets/reference/home-desk-native-source-manifest.json',
 )
 GRAPH_SCRIPT_GUID = '8e5b2be808a35cf8a8914701067cfea8'
 

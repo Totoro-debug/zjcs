@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 73d1312f954855f99cd6cbba7a148413, type: 3}
+  m_Name: '[8][Cnd]馈赠任务是否可以领奖'
+  graph: {fileID: 11400000, guid: 20ce636256863661817707138fc9791b, type: 2}
+  position: {x: 2824.0, y: 1640.0}
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000, guid: d44c9de9ef34f5fad21defa47647da14, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: 5e8409f2d97668609198bc7cde3b0039, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000, guid: d44c9de9ef34f5fad21defa47647da14, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono: ''
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: ''
+  SelectedType: ''
+  NodeName: ''
+  TipDotNodeId: 8
+  TipDotNode: {rid: 4800080026086408210}
+  RuntimeTipDotNode: {rid: -2}
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 4
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels: []
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: '', ns: '', asm: ''}
+    - rid: 4800080026086408210
+      type: {class: TipDotAchievementConditionNode, ns: Zjcs.Official.ProfessionUI, asm: Zjcs.Official.ProfessionUI}
+      data:
+        Parents: []
+        Childs: []
+        NodeKey: {GraphName: Treasure, NodeName: 7db44245-c1f2-4da5-bc75-c8a1ead87e83}
+        TipDotInfo: {TipLevel: 0, Data: ''}
+        IsShowTip: 0
+        AchievementTypeAndParamList:
+        - {AchievementType: 15, JsonParam: ''}

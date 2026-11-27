@@ -56,7 +56,7 @@ class HomeNativeFurnitureBinding(NativeSpineBinding):
         paths = {name: runtime / 'Official/HomeFurniture' / (name + '.cs') for name in (
             'EntityClickSound', 'StoreBoxFurniture', 'HomeNotice', 'HomeWeaponRack',
             'HomeViewModeControl', 'HomeSwitcherActionEventHandler', 'BaseHangUpFurniture', 'BedFurniture',
-            'CartFurniture', 'HomeDayNight', 'HomeNpcChatEntry', 'DiningTableNpcPopClick', 'HomeNpcBubbleTip')}
+            'CartFurniture', 'DeskFurniture', 'HomeDayNight', 'HomeNpcChatEntry', 'DiningTableNpcPopClick', 'HomeNpcBubbleTip')}
         paths.update({
             'Home.ActorBehaviour.HomeBindingAuthoring': runtime / 'Official/HomeEntityBindings/HomeBindingAuthoring.cs',
             'HomeEntityDataProvider': runtime / 'Official/HomeEntityBindings/HomeEntityDataProvider.cs',
@@ -182,6 +182,8 @@ class HomeNativeFurnitureBinding(NativeSpineBinding):
                 return dict(value, ns='Zjcs.Official.HomeTipDots', asm='Zjcs.Official.HomeTipDots')
             if value['class'] == 'HomeMutex':
                 return dict(value, ns='Zjcs.Official.HomeRelations', asm='Zjcs.Official.HomeRelations')
+            if value['class'] == 'TipDotAchievementConditionNode':
+                return dict(value, ns='Zjcs.Official.ProfessionUI', asm='Zjcs.Official.ProfessionUI')
         return super().replace(value)
 
     def build_furniture_prefabs(self, bundle: str, prefab_relatives: tuple[str, ...], dest: Path,

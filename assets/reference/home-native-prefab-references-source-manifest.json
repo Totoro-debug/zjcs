@@ -61,6 +61,19 @@
     "unity/Assets/Official/Home/Cart/Native/CartMaidCafe.prefab.meta": "ae36bde140dc67bdba34fab2c39b19685654669a2739ea70b309624003555d00",
     "unity/Assets/Official/Home/Cart/Native/CartMaidCafeSnow.prefab": "53ac869379b77b595162b36163c6231ccae35359046b63907a9bc2137e08a05b",
     "unity/Assets/Official/Home/Cart/Native/CartMaidCafeSnow.prefab.meta": "5c8a72c9fb01a6e4e1337a67cb5254d1de4608a85d453b4cc100974caaf3b242",
+    "assets/reference/home-desk-native-source-manifest.json": "026eea71972ad7737e4b8370cb5d6a0557be46ce8b687abebbf95260ca14c663",
+    "unity/Assets/Official/Home/Desk/Native/Desk.prefab": "227039505064c9057819ff14509950aa0eb78a4ce322259860e5a1cba55f4695",
+    "unity/Assets/Official/Home/Desk/Native/Desk.prefab.meta": "48e47c6d9c36b80f1172e7586c87f38e53ed0efd0fe720965afba99c4ee225ef",
+    "unity/Assets/Official/Home/Desk/Native/Desk1stAnniversary.prefab": "7d6da88a5fab88a9dda2146761746a196032be5e7d23b014528fa9f1a6281106",
+    "unity/Assets/Official/Home/Desk/Native/Desk1stAnniversary.prefab.meta": "77d337c10b3fe06bcb7a881fcaddeb2fb463be57768fa54e7966ce20cc67e253",
+    "unity/Assets/Official/Home/Desk/Native/DeskChineseOdyssey.prefab": "c8fc2d45f2d9eabc6fc4ca7bd2f868a4ce2c409b710f5911fcdddc67c6f453a2",
+    "unity/Assets/Official/Home/Desk/Native/DeskChineseOdyssey.prefab.meta": "9f01577f32a51a53fd8beded1bb45a926b557f42f0e210d71661fcac1c318481",
+    "unity/Assets/Official/Home/Desk/Native/DeskChineseStyle.prefab": "d243e658791f20f207d6abbf8bce2449dff1d21f4f14d450f532f1967f599e77",
+    "unity/Assets/Official/Home/Desk/Native/DeskChineseStyle.prefab.meta": "d6665a2e298ed238075f94cfe49b99679bc0ff5bf8fa8578d28940094117c2d1",
+    "unity/Assets/Official/Home/Desk/Native/DeskChristmas.prefab": "af97749be034385c89d1dcbe66e57a333ae92e9d82aa786d5a5eb584b831d78d",
+    "unity/Assets/Official/Home/Desk/Native/DeskChristmas.prefab.meta": "176293f20e5d17e7bc478bea06323053ed3bb05c3f5c22413dad98c96396283f",
+    "unity/Assets/Official/Home/Desk/Native/DeskHalloween.prefab": "8a7e4941ca5a57691746348e34fcba79a09d787e47c1265b40355a4d09a9f535",
+    "unity/Assets/Official/Home/Desk/Native/DeskHalloween.prefab.meta": "f690eff3e0ca7ec11416cfd7279d974efb1c0e3e21f1551e56099d97f9a822f0",
     "assets/reference/home-weapon-parts-source-manifest.json": "a6fe4bad16c2320ee31bca1b34ad71483925d1e57849ff62f031cc83193804a0",
     "unity/Assets/Official/Home/WeaponParts/Prefabs/Appearance/PlayerPart/pWeapon_100_G_015/pWeapon_100_G_015_Home.prefab": "50d028e59883de66ea647367cd37acf98e3a5494ca0e2f759b6b3e499b9c3ecb",
     "unity/Assets/Official/Home/WeaponParts/Prefabs/Appearance/PlayerPart/pWeapon_100_G_015/pWeapon_100_G_015_Home.prefab.meta": "e85edbe0807f749f85edf75f6155fe290a66c6d6e11b9591e7cd5269ef913fcd",
@@ -2120,8 +2133,8 @@
     "unity/Assets/Official/Home/WeaponParts/Prefabs/Appearance/PlayerPart/sWeapon_21_10306/sWeapon_21_10306_Home.prefab.meta": "28553e2076af8eed274e3049fa3a22a1dd45b17bbad7f63f32c90700b1614934",
     "unity/Assets/Official/Home/WeaponParts/Prefabs/Appearance/PlayerPart/sWeapon_21_10708/sWeapon_21_10708_Home.prefab": "4fc2a1e99163d76fa4b778eda1f13b9db5e635052055a9304b6efb577213ef1d",
     "unity/Assets/Official/Home/WeaponParts/Prefabs/Appearance/PlayerPart/sWeapon_21_10708/sWeapon_21_10708_Home.prefab.meta": "3dd03a2576d305c90b4a79f46eaca5ed21738d112b5f2715b9b77d5317269756",
-    "scripts/prepare_home_native_prefab_references.py": "6fc6eb759b9e68c8b73140bd49e9b574df081c02c613c880460e4c7c4b0e51a1",
-    "scripts/prepare_partner_card_native.py": "0ec78aa2ba59c9f87c794d76067476ed63043a20b1da7a18df984319ff2f957d",
+    "scripts/prepare_home_native_prefab_references.py": "231e1c175776c9f07e9bc0d56fefef8b64f219608edaef5c8a3d1f37bc8656bd",
+    "scripts/prepare_partner_card_native.py": "ac84cab88ce4b49b561c0c6a921e132325c6ce24e69e1f57477b07d86db01d1e",
     "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePartPaths.cs": "d874e4e911bc387a025ebd03bb6440e131925d5d63525fafa9c00b7b34f72124",
     "unity/Assets/Game/Runtime/Official/HomeEntityCreation/HomeEntityPrefabPaths.cs": "c619304f05fad91eb414914fb7c129ad9b54f8646117ef77700514de8e20e37b"
   },
@@ -2150,6 +2163,11 @@
       "manifest": "903_156948",
       "receipt": "assets/reference/home-cart-native-source-manifest.json",
       "sha256": "e7233d0674a5afbc9371ada116c8c4eea6e8b5a4bb73d543cdd3f285612a896a"
+    },
+    "home-desk-native": {
+      "manifest": "903_156948",
+      "receipt": "assets/reference/home-desk-native-source-manifest.json",
+      "sha256": "026eea71972ad7737e4b8370cb5d6a0557be46ce8b687abebbf95260ca14c663"
     },
     "home-weapon-parts": {
       "manifest": "903_156948",
@@ -2469,6 +2487,78 @@
         "type": 3
       },
       "source": "home-cart-native"
+    },
+    {
+      "location": "Home/Dynamic/Furniture/Desk/Desk",
+      "resource": "Home/NativePrefabs/a2b751abc4ec48621f9bebda6689a313a5dc15f9c4fdc04f866cb6777c299448",
+      "reference": "unity/Assets/Game/Resources/Home/NativePrefabs/a2b751abc4ec48621f9bebda6689a313a5dc15f9c4fdc04f866cb6777c299448.asset",
+      "prefab": "unity/Assets/Official/Home/Desk/Native/Desk.prefab",
+      "pointer": {
+        "fileID": 1709254077376921,
+        "guid": "33d4ca66bf4386de346b688fed142178",
+        "type": 3
+      },
+      "source": "home-desk-native"
+    },
+    {
+      "location": "Home/Dynamic/Furniture/Desk/Desk1stAnniversary",
+      "resource": "Home/NativePrefabs/51c4ee107ef3ad6779e0771e66fcda46202a972dffbae213fee5e609cb82d36d",
+      "reference": "unity/Assets/Game/Resources/Home/NativePrefabs/51c4ee107ef3ad6779e0771e66fcda46202a972dffbae213fee5e609cb82d36d.asset",
+      "prefab": "unity/Assets/Official/Home/Desk/Native/Desk1stAnniversary.prefab",
+      "pointer": {
+        "fileID": 1709254077376921,
+        "guid": "7f0c01de55a70eff73dbbf45324da19c",
+        "type": 3
+      },
+      "source": "home-desk-native"
+    },
+    {
+      "location": "Home/Dynamic/Furniture/Desk/DeskChineseOdyssey",
+      "resource": "Home/NativePrefabs/de13429dec63fefdea606c72a175739dacef2a18602577b056f38a6a24c9476a",
+      "reference": "unity/Assets/Game/Resources/Home/NativePrefabs/de13429dec63fefdea606c72a175739dacef2a18602577b056f38a6a24c9476a.asset",
+      "prefab": "unity/Assets/Official/Home/Desk/Native/DeskChineseOdyssey.prefab",
+      "pointer": {
+        "fileID": 1709254077376921,
+        "guid": "43470fb95f37c4e63791484af41213fc",
+        "type": 3
+      },
+      "source": "home-desk-native"
+    },
+    {
+      "location": "Home/Dynamic/Furniture/Desk/DeskChineseStyle",
+      "resource": "Home/NativePrefabs/37a018311f94b05853b172aefebecc538128ee18399ca1d03cf904ed311dc018",
+      "reference": "unity/Assets/Game/Resources/Home/NativePrefabs/37a018311f94b05853b172aefebecc538128ee18399ca1d03cf904ed311dc018.asset",
+      "prefab": "unity/Assets/Official/Home/Desk/Native/DeskChineseStyle.prefab",
+      "pointer": {
+        "fileID": 1709254077376921,
+        "guid": "c9b42f03bcdd4205465611bf505e1d3c",
+        "type": 3
+      },
+      "source": "home-desk-native"
+    },
+    {
+      "location": "Home/Dynamic/Furniture/Desk/DeskChristmas",
+      "resource": "Home/NativePrefabs/e456efac5d0c7a9a1213f04ed5b767a966f50a1ce6f7e6afa48b6e6aea5a0385",
+      "reference": "unity/Assets/Game/Resources/Home/NativePrefabs/e456efac5d0c7a9a1213f04ed5b767a966f50a1ce6f7e6afa48b6e6aea5a0385.asset",
+      "prefab": "unity/Assets/Official/Home/Desk/Native/DeskChristmas.prefab",
+      "pointer": {
+        "fileID": 1709254077376921,
+        "guid": "0028733bd8bb06c0606d4bb53a2db4a1",
+        "type": 3
+      },
+      "source": "home-desk-native"
+    },
+    {
+      "location": "Home/Dynamic/Furniture/Desk/DeskHalloween",
+      "resource": "Home/NativePrefabs/867fb4a2de732b7eb11a44a1ec43a5f2b53d876a050de0486ef459e19f675005",
+      "reference": "unity/Assets/Game/Resources/Home/NativePrefabs/867fb4a2de732b7eb11a44a1ec43a5f2b53d876a050de0486ef459e19f675005.asset",
+      "prefab": "unity/Assets/Official/Home/Desk/Native/DeskHalloween.prefab",
+      "pointer": {
+        "fileID": 1709254077376921,
+        "guid": "558fdf2d971986f3aad86a9e5a58b0e2",
+        "type": 3
+      },
+      "source": "home-desk-native"
     },
     {
       "location": "Appearance/PlayerPart/pWeapon_100_G_015/pWeapon_100_G_015_Home",
@@ -14884,6 +14974,18 @@
     "unity/Assets/Game/Resources/Home/NativePrefabs/afa9084769352cdf46a21f17e878691d49ca6b14a81390036e6d3a9cba5ae8cd.asset.meta": "ca03644648dcaef71427a1d930ce8cc66fdc58cf8d7ab2a8281bd9bded54e42e",
     "unity/Assets/Game/Resources/Home/NativePrefabs/189534bb200e6c6984094c2fc632146b1b74a749d5b9c6d2279726ee9d3c0df4.asset": "053df2954e54875aed4374abdfe3a19050337b7ceb9b8e06f6fc3bf654f3fe0d",
     "unity/Assets/Game/Resources/Home/NativePrefabs/189534bb200e6c6984094c2fc632146b1b74a749d5b9c6d2279726ee9d3c0df4.asset.meta": "d6a220bd9d0048c7b745369cc3f4fa4b4a1da25e8143c86dea1e51793626521b",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/a2b751abc4ec48621f9bebda6689a313a5dc15f9c4fdc04f866cb6777c299448.asset": "3b89bd62326f22ade5d856397c8abeadf28ce7c216c80e8e8b26d83778e80024",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/a2b751abc4ec48621f9bebda6689a313a5dc15f9c4fdc04f866cb6777c299448.asset.meta": "7097de9c6e9a71d342d745762643672053fac45b1b050b8421847b682a9d5ab6",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/51c4ee107ef3ad6779e0771e66fcda46202a972dffbae213fee5e609cb82d36d.asset": "1841e1dad39c3385f2a0d64abd7bf3195990483c503bf4dbe2d1019c12db50cb",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/51c4ee107ef3ad6779e0771e66fcda46202a972dffbae213fee5e609cb82d36d.asset.meta": "58518f8f4b8453ba6515d9d3eb006affcc46211fa9845996ae56732f95168931",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/de13429dec63fefdea606c72a175739dacef2a18602577b056f38a6a24c9476a.asset": "f0a48c5f57682470faf1d5bb7820a47879cee827c44797fe4666d591d46169cc",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/de13429dec63fefdea606c72a175739dacef2a18602577b056f38a6a24c9476a.asset.meta": "960574c38c37f05499abbded3ddd2f939af6248cb62dab808a58917556b676e6",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/37a018311f94b05853b172aefebecc538128ee18399ca1d03cf904ed311dc018.asset": "de1fed313d68569902321211a228a1b84dbdd4e0af5f8096247793e82cf385a9",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/37a018311f94b05853b172aefebecc538128ee18399ca1d03cf904ed311dc018.asset.meta": "c8a0cd975fbc32b74828affe3f7fc10a5f586d3ec0c4ab7d16cce39b2c361e66",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/e456efac5d0c7a9a1213f04ed5b767a966f50a1ce6f7e6afa48b6e6aea5a0385.asset": "d7c4acb1e7225962d9eda69d8c3c349789d850311bc9471626a3284da3cc2536",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/e456efac5d0c7a9a1213f04ed5b767a966f50a1ce6f7e6afa48b6e6aea5a0385.asset.meta": "b9ac5ae6ec92520482522599e39d643ab4369871d3c3d7354bbb3881c51c8b85",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/867fb4a2de732b7eb11a44a1ec43a5f2b53d876a050de0486ef459e19f675005.asset": "4233339d92616a3d36d957ce0f0a55e4d136568d7fdc9b7047fb60b8a06e4e0f",
+    "unity/Assets/Game/Resources/Home/NativePrefabs/867fb4a2de732b7eb11a44a1ec43a5f2b53d876a050de0486ef459e19f675005.asset.meta": "a260a7f3fa7d7ee845aaba8aa19f1ceed0facdcf1f9caa5f5d1494174fdca1ba",
     "unity/Assets/Game/Resources/Home/NativePrefabs/631141b93e2677d408b064044654cee5e5340c92204e55e9aa96c0a5af85d7f7.asset": "026a5c4137cda852e34a4029e11aa232b0074a4a2770367aabdd8eabbb0996ae",
     "unity/Assets/Game/Resources/Home/NativePrefabs/631141b93e2677d408b064044654cee5e5340c92204e55e9aa96c0a5af85d7f7.asset.meta": "08d3a062f0d900642e0c83487c56278586c783dca294c97cacd6525a96fcc08b",
     "unity/Assets/Game/Resources/Home/NativePrefabs/bc553a0cb87d8da4aa8f2d2696c27b2dc8494529c242741354ae6bc68f2d7363.asset": "fc2c47a64413cda6ae1de011a197a44da046b4879a84ee974add0d47d8a0470e",

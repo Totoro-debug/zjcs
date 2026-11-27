@@ -19,7 +19,7 @@
 | --- | --- |
 | [建筑修复、解锁、升级与装潢](buildings/management.md) | 部分完成 |
 | [床](buildings/bed.md) | 部分完成 |
-| [工作台](buildings/workbench.md) | 未完成 |
+| [工作台](buildings/workbench.md) | 部分完成 |
 | [餐桌电话](buildings/dining-table.md) | 部分完成 |
 | [炼金炉料理](buildings/cooking.md) | 部分完成 |
 | [命运之树：生产与领取](buildings/fruit-tree.md) | 部分完成 |

@@ -16,6 +16,10 @@ NODES = (
     'TipDotHasItemFastHangUpTimesConditionNode',
     'TipDotHangUpItemCanUnlockConditionNode',
     'TipDotHangUpItemCanLevelUpConditionNode',
+    'TipDotTreasureElementTypeHasTipConditionNode',
+    'TipDotTreasurePieceElementTypeHasTipConditionNode',
+    'TipDotTreasureStateHasTipConditionNode',
+    'TipDotLinkTreasureElementItemNode',
 )
 
 
@@ -29,8 +33,9 @@ def replace(text: str, before: str, after: str) -> str:
     return text.replace(before, after)
 
 
-def prepare():
-    source = OfficialSource()
+def prepare(*, check=False):
+    selected = json.loads(RECEIPT.read_bytes()) if RECEIPT.exists() else None
+    source = OfficialSource(selected['manifest'] if selected else None)
     code = ROOT / '.tools/source-packages/current' / source.version / 'official-code'
     manifest = code.parent / 'code-manifest.json'
     identity = json.loads(manifest.read_bytes())
@@ -38,15 +43,35 @@ def prepare():
     if identity['manifest'] != source.version or sha(assembly.read_bytes()) != identity['assemblies']['Assembly-CSharp.dll']['decoded_sha256']:
         raise ValueError('Selected Home tip condition assembly differs')
     inputs = {p.relative_to(ROOT).as_posix(): sha(p.read_bytes()) for p in (manifest, assembly)}
+    for enum_name, local_path in (
+        ('ElementType', ROOT / 'unity/Assets/Game/Runtime/Official/BattleSkillPlayables/ElementType.cs'),
+        ('TreasureRedDotEnum', TEMPLATE)):
+        original_path = code / 'common-source/Common' / (enum_name + '.cs')
+        values = []
+        for path in (original_path, local_path):
+            raw = path.read_bytes()
+            inputs[path.relative_to(ROOT).as_posix()] = sha(raw)
+            body = re.search(r'\benum\s+' + enum_name + r'\s*\{([^}]+)\}', raw.decode('utf-8-sig'))
+            if not body:
+                raise ValueError('Resolve the complete original Home tip enum: ' + enum_name)
+            values.append(dict(re.findall(r'\b(\w+)\s*=\s*(-?\d+)', body[1])))
+        if not values[0] or values[0] != values[1]:
+            raise ValueError('Home tip enum differs from its original serialized values: ' + enum_name)
     previous = json.loads(RECEIPT.read_bytes())['outputs'] if RECEIPT.exists() else {}
     outputs = {}
 
     def write(path: Path, raw: bytes):
         key = path.relative_to(ROOT).as_posix()
-        if path.exists() and path.read_bytes() != raw and sha(path.read_bytes()) != previous.get(key):
-            raise ValueError('Preserve another Home tip edit: ' + key)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(raw)
+        if path.exists():
+            current = path.read_bytes()
+            if current != raw and sha(current) != previous.get(key) and sha(current.replace(b'\r\n', b'\n')) != previous.get(key):
+                raise ValueError('Preserve another Home tip edit: ' + key)
+        if check:
+            if not path.is_file() or path.read_bytes() != raw:
+                raise ValueError('Generated Home tip source differs: ' + key)
+        else:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(raw)
         outputs[key] = sha(raw)
 
     def metadata(path: Path, folder: bool = False):
@@ -71,6 +96,8 @@ def prepare():
             '// Selected original Home TipDot condition body; explicit local ports.\n'
             'using System;\n'
             'using System.Collections.Generic;\n'
+            'using UnityEngine;\n'
+            'using Zjcs.Official.BattleSkillPlayables;\n'
             'using Zjcs.Official.HomeUI;\n'
             'using Zjcs.Official.ProfessionUI;\n'
             'namespace Zjcs.Official.HomeTipDots\n{\n'
@@ -83,8 +110,12 @@ def prepare():
     for name in NODES:
         text = read(name)
         text = text.replace(', IFillable<TipDotNodeBase>', '')
-        text = replace(text, 'public class ' + name + ' : TipDotConditionNodeBase',
-            '[Serializable]\npublic class ' + name + ' : TipDotConditionNodeBase, IHomeTipDotNode')
+        if ' : TipDotConditionNodeBase' in text:
+            text = replace(text, 'public class ' + name + ' : TipDotConditionNodeBase',
+                '[Serializable]\npublic class ' + name + ' : TipDotConditionNodeBase, IHomeTipDotNode')
+        elif ' : TipDotDynamicLinkNodeBase' in text:
+            text = replace(text, 'public class ' + name + ' : TipDotDynamicLinkNodeBase',
+                '[Serializable]\npublic class ' + name + ' : TipDotDynamicLinkNodeBase, IHomeTipDotNode')
         opening = text.index('{', text.index('public class ' + name)) + 1
         text = text[:opening] + '\n\tpublic IHomeTipDotServices Services { get; set; }\n' + text[opening:]
         text = text.replace('List<FastHangUpInfo>', 'List<HomeTipFastHangUpInfo>')
@@ -198,24 +229,76 @@ def prepare():
 \t\t\t\t}
 \t\t\t}
 \t\t}""")
+        elif name in ('TipDotTreasureElementTypeHasTipConditionNode', 'TipDotTreasureStateHasTipConditionNode'):
+            text = text.replace('private DisposableBag mDisposableBag;', 'private IDisposable mSettingSub;')
+            text = text.replace('private ISubscriber<TreasureClientSetting> Subscriber { get; set; }', '')
+            text = text.replace('private IPersistentState<TreasureClientSetting> PersistentState { get; set; }', '')
+            text = text.replace(
+                '\t\tmDisposableBag = default;\n\t\tDisposable.AddTo<IDisposable>(SubscriberExtensions.Subscribe<TreasureClientSetting>(Subscriber, (Action<TreasureClientSetting>)OnSettingUpdate, Array.Empty<MessageHandlerFilter<TreasureClientSetting>>()), ref mDisposableBag);',
+                '\t\tmSettingSub = Services.SubscribeTreasureSettingUpdate(OnSettingUpdate);')
+            text = text.replace('\t\tmDisposableBag.Dispose();', '\t\tmSettingSub?.Dispose();\n\t\tmSettingSub = null;')
+            text = text.replace('OnSettingUpdate(TreasureClientSetting settings)', 'OnSettingUpdate()')
+            text = text.replace('PersistentState.State.AutoMergeWhenLevelUp', 'Services.AutoMergeWhenLevelUp')
+            text = text.replace('Services.Player.TreasureSlotData.AwakeAutoMergeEnable', 'Services.Player.AwakeAutoMergeEnable')
+            text = text.replace('PlayerItemDataWrap itemData', 'HomeTipItemData itemData')
+            text = text.replace('TreasureHelper.IsItemEffectTreasurePromote(itemData)', 'Services.IsItemEffectTreasurePromote(itemData)')
+            text = text.replace('ClonerResolver.Instance.GetClonerWithVerify<List<TreasureRedDotEnum>>().Fill(ref TipType, obj.TipType);',
+                'TipType = obj.TipType != null ? new List<TreasureRedDotEnum>(obj.TipType) : null;')
+            text = text.replace('ClonerResolver.Instance.GetClonerWithVerify<List<TreasureRedDotEnum>>().Fill(ref mRedDots, obj.mRedDots);',
+                'mRedDots = obj.mRedDots != null ? new List<TreasureRedDotEnum>(obj.mRedDots) : null;')
+        elif name == 'TipDotTreasurePieceElementTypeHasTipConditionNode':
+            text = text.replace('TreasureHelper.IsItemEffectTreasurePromote(itemData)', 'Services.IsItemEffectTreasurePromote(itemData)')
+            text = text.replace('ClonerResolver.Instance.GetClonerWithVerify<List<TreasureRedDotEnum>>().Fill(ref TipType, obj.TipType);', '')
+        elif name == 'TipDotLinkTreasureElementItemNode':
+            text = text.replace('NodeManager.ConnectNodes(NodeKey, list);',
+                '((IDynamicTipDotNodeManager)NodeManager).ConnectNodes(NodeKey, list);')
+            text = text.replace('ClonerResolver.Instance.GetClonerWithVerify<List<ElementType>>().Fill(ref Elements, obj.Elements);',
+                'Elements = obj.Elements != null ? new List<ElementType>(obj.Elements) : null;')
+            text = text.replace('CloneableHelper.Fill<TipDotGraphNodeSelector, TipDotGraphNodeSelector>(ref mNodeSelector, obj.mNodeSelector);',
+                'mNodeSelector = obj.mNodeSelector?.Clone();')
         emit(name, text)
 
     emit('HangUpNodeInstanceInfo', read('HangUpNodeInstanceInfo'))
+    emit('TreasureElementNodeInstanceInfo', read('TreasureElementNodeInstanceInfo'))
+    out_link = read('TipDotOutLinkNode')
+    out_link = re.sub(r'^\s*\[(?:DisplayNodeJump|IgnoreMember)[^\n]*\]\n', '', out_link, flags=re.M)
+    out_link = out_link.replace(', IFillable<TipDotNodeBase>', '')
+    out_link = out_link.replace('CloneableHelper.ThrowException(source == null, GetType().Name);',
+        'throw new ArgumentException(GetType().Name, nameof(source));')
+    out_link = out_link.replace('CloneableHelper.Fill<TipDotGraphNodeSelector, TipDotGraphNodeSelector>(ref mNodeSelector, obj.mNodeSelector);',
+        'mNodeSelector = obj.mNodeSelector?.Clone();')
+    emit('TipDotOutLinkNode', out_link)
+    dyn_link = read('TipDotDynamicLinkNodeBase')
+    dyn_link = dyn_link.replace('ITipDotNodeManager ', 'IDynamicTipDotNodeManager ')
+    dyn_link = dyn_link.replace('= NodeManager;', '= (IDynamicTipDotNodeManager)NodeManager;')
+    emit('TipDotDynamicLinkNodeBase', dyn_link)
 
     inputs[TEMPLATE.relative_to(ROOT).as_posix()] = sha(TEMPLATE.read_bytes())
+    for relative in ('common-source/Common/PlayerItemData.cs', 'common-source/Common/PlayerItemDataWrap.cs'):
+        path = code / relative
+        inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
     write(DEST / TEMPLATE.name, TEMPLATE.read_bytes())
     metadata(DEST / TEMPLATE.name)
     definition = DEST / 'Zjcs.Official.HomeTipDots.asmdef'
     write(definition, (json.dumps(dict(
         name='Zjcs.Official.HomeTipDots',
-        references=['Zjcs.Official.ProfessionUI', 'Zjcs.Official.HomeUI'],
+        references=['Zjcs.Official.ProfessionUI', 'Zjcs.Official.HomeUI', 'Zjcs.Official.BattleSkillPlayables'],
     ), indent=2) + '\n').encode('utf-8'))
     metadata(definition)
     metadata(DEST, True)
     inputs[Path(__file__).relative_to(ROOT).as_posix()] = sha(Path(__file__).read_bytes())
+    for relative in (
+        'unity/Assets/Game/Runtime/Official/ProfessionUI/IDynamicTipDotNodeManager.cs',
+        'unity/Assets/Game/Runtime/Official/ProfessionUI/IDynamicTipDotNodeManager.cs.meta',
+        'unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/PartnerTipDotServices.cs',
+        'unity/Assets/Game/Runtime/Offline/HomeTipDots/OfflineHomeTipDotServices.cs',
+        'unity/Assets/Game/Runtime/Offline/HomeTipDots/Zjcs.Offline.HomeTipDots.asmdef',
+        'scripts/fixtures/home_desk_runtime_validation.cs', 'scripts/prepare_home_desk_validation.py',
+        'scripts/test_home_desk_runtime.ps1'):
+        path = ROOT / relative
+        inputs[relative] = sha(path.read_bytes())
 
-    RECEIPT.parent.mkdir(parents=True, exist_ok=True)
-    RECEIPT.write_text(json.dumps(dict(
+    raw = (json.dumps(dict(
         manifest=source.version,
         inputs=inputs,
         outputs=outputs,
@@ -224,10 +307,19 @@ def prepare():
             'Preserves official CheckShowTip formulas, HangUp unlock/item/new-day subscriptions, and numeric TipDotInfo.Data text formatting.',
             'Replaces MeManager/Parsers/MessagePipe with explicit IHomeTipDotServices and IHomeTipDotPlayer ports.',
         ],
-        scope='Home fast-hangup TipDot condition nodes consumed by native HomeBed and FurnitureCart TipDotNodeGraph assets.',
-    ), ensure_ascii=False, indent=2) + '\n', 'utf-8', newline='\n')
+        scope='Original Home fast-hangup and treasure condition/link nodes; dynamic graph operations share the manager contract used by the native Home graph host. Gameplay evaluators belong to their local feature owners.',
+    ), ensure_ascii=False, indent=2) + '\n').encode('utf8')
+    if check:
+        if RECEIPT.read_bytes() != raw:
+            raise ValueError('Home tip source receipt differs')
+    else:
+        RECEIPT.parent.mkdir(parents=True, exist_ok=True)
+        RECEIPT.write_bytes(raw)
     print('Restored original Home tip conditions:', len(outputs), 'outputs')
 
 
 if __name__ == '__main__':
-    prepare()
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--check', action='store_true')
+    prepare(check=parser.parse_args().check)

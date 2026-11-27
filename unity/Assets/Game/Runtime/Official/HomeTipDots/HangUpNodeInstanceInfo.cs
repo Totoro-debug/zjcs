@@ -1,6 +1,8 @@
 // Selected original Home TipDot condition body; explicit local ports.
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using Zjcs.Official.BattleSkillPlayables;
 using Zjcs.Official.HomeUI;
 using Zjcs.Official.ProfessionUI;
 namespace Zjcs.Official.HomeTipDots
