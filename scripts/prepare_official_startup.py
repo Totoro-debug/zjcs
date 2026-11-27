@@ -56,6 +56,7 @@ def build(save_selection=False):
 
 
 def _build_from_reader(source, apk, reader, save_selection):
+    code_root = source.prepared_path / 'official-code'
     archive = reader.archive
     env = apk.env
     provenance, inputs, containers = {}, [], {}
@@ -88,18 +89,19 @@ def _build_from_reader(source, apk, reader, save_selection):
     schemas.generator = TypeTreeGenerator('2022.3.57f1', generator='AssetsTools')
     schemas.cache, schemas.records = {}, {}
     loaded_dlls = set()
-    for folder in [ROOT / '.tools/source-packages/current/884_156692/official-code/managed/decoded',
+    for folder in [code_root / 'managed/decoded',
                    editor / 'Managed/UnityEngine', ROOT / 'unity/Library/Bee/PlayerScriptAssemblies',
+                   ROOT / 'unity/Library/ScriptAssemblies',
                    editor / 'NetStandard/ref/2.1.0', editor / 'MonoBleedingEdge/lib/mono/4.5']:
         for dll in folder.glob('*.dll'):
             if dll.name in loaded_dlls:
                 continue
-            if folder.name == 'PlayerScriptAssemblies' and dll.name not in ['UnityEngine.UI.dll', 'Unity.TextMeshPro.dll']:
+            if folder.name in ('PlayerScriptAssemblies', 'ScriptAssemblies') and dll.name not in ['UnityEngine.UI.dll', 'Unity.TextMeshPro.dll']:
                 continue
             schemas.generator.load_dll(dll.read_bytes())
             loaded_dlls.add(dll.name)
     # Reuse the verified native TMP schema from element-feedback migration.
-    font_schemas = ScriptSchemas()
+    font_schemas = ScriptSchemas(code_root=code_root)
     font_schemas.generator = TypeTreeGenerator('2022.3.57f1', generator='AssetsTools')
     font_schemas.generator.load_local_dll_folder(str(editor / 'Managed/UnityEngine'))
     font_schemas.generator.load_local_dll_folder(str(ROOT / 'unity/Library/ScriptAssemblies'))
@@ -120,7 +122,7 @@ def _build_from_reader(source, apk, reader, save_selection):
             font_nodes.extend(dict(level=1, type='int', name='psd_import_setting_' + str(i), flags=0) for i in range(3))
         font_nodes.append(item)
     font_schemas.cache[font_key] = font_nodes
-    effect_schemas = ScriptSchemas()
+    effect_schemas = ScriptSchemas(code_root=code_root)
 
     def asset(suffix):
         return next(ptr.deref() for path, ptr in containers.items() if path.endswith(suffix))
@@ -389,7 +391,7 @@ def _build_from_reader(source, apk, reader, save_selection):
 
     localized.update(['Game_Initializing', 'YooAsset_Init'])
     from npc_travel_language import language
-    texts, language_sources = language(localized)
+    texts, language_sources = language(localized, source=source)
     missing = localized - texts.keys()
     if missing:
         raise ValueError('Official Chinese text missing: ' + repr(missing))
@@ -486,7 +488,7 @@ def _build_from_reader(source, apk, reader, save_selection):
               size=head['Size'], offset=[head['mOffset'][a] for a in 'xyz'], depth=head['mDepthBuffer'],
               captureParticles=bool(head['mCaptureParticle']), excludes=head['mExcludeSkinTypes'],
               animation=request['mAnimationName'], near=camera_fields['near clip plane'], far=camera_fields['far clip plane']))
-    result = dict(roots=roots, nodes=nodes, refs=refs, animations=animations, special=special, default_portrait_id=default_portrait_id,
+    result = dict(manifest=source.version, roots=roots, nodes=nodes, refs=refs, animations=animations, special=special, default_portrait_id=default_portrait_id,
                   texts=[dict(key=k, value=v) for k, v in sorted(texts.items())])
     write(ART / ('save-selection-ui.json' if save_selection else 'startup-ui.json'), result)
     inputs = [row for row in provenance.values() if row['bundle'] in used]
@@ -497,13 +499,13 @@ def _build_from_reader(source, apk, reader, save_selection):
                    operation=('Recover APK PlanesListPanel and embedded PlanesRoleItem, original UGUI fields, sprite proxy, TMP and role state bindings; replace online providers with local profiles.' if save_selection else 'Deserialize original BootSplash, ThemeCanvas, LaunchRoot/LaunchCanvas and AgeTipsDialog; restore native components with exact PPtr bindings; decode original sprites and animation curves.'),
                    inputs=inputs, language_sources=language_sources,
                    code_sources=[dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes())) for p in [
-                       ROOT / '.tools/source-packages/current/884_156692/official-code/launch-source/LaunchPanel.cs',
-                       ROOT / '.tools/source-packages/current/884_156692/official-code/launch-source/LaunchUIRoot.cs',
-                       ROOT / '.tools/source-packages/current/884_156692/official-code/launch-source/ThemeCanvas.cs',
-                       ROOT / '.tools/source-packages/current/884_156692/official-code/launch-source/Launch/AgeTipGo.cs',
-                       ROOT / '.tools/source-packages/current/884_156692/official-code/launch-source/AgeTipsDialog.cs',
-                       ROOT / '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/CanvasWidthAdjuster.cs',
-                       ROOT / '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/PopupWindow.cs']],
+                       code_root / 'launch-source/LaunchPanel.cs',
+                       code_root / 'launch-source/LaunchUIRoot.cs',
+                       code_root / 'launch-source/ThemeCanvas.cs',
+                       code_root / 'launch-source/Launch/AgeTipGo.cs',
+                       code_root / 'launch-source/AgeTipsDialog.cs',
+                       code_root / 'framework-firstpass-source/CanvasWidthAdjuster.cs',
+                       code_root / 'framework-firstpass-source/PopupWindow.cs']],
                    native_text_effect={k: effect_evidence[k] for k in ['native_methods', 'native_image_sha256', 'metadata_sha256', 'native_outline']},
                    source_font=dict(path=font_path.relative_to(ROOT).as_posix(), sha256=digest(font_bytes), bytes=len(font_bytes)),
                    converters=[dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes())) for p in [
@@ -513,16 +515,16 @@ def _build_from_reader(source, apk, reader, save_selection):
                             for p in sorted(ART.rglob('*')) if p.is_file() and p.suffix != '.meta' and p.name != 'source-manifest.json'])
     if save_selection:
         receipt['code_sources'].extend(dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes())) for p in [
-            ROOT / '.tools/source-packages/current/884_156692/official-code/client-source' / (name + '.cs') for name in [
+            code_root / 'client-source' / (name + '.cs') for name in [
                 'PlanesListPanel', 'PlanesRoleListContent', 'PlanesInfoItemBase', 'PlanesInfoItemWithRoleInfo',
                 'PlayerInfoUI', 'PlayerPortraitSettings', 'HeadCharacterPortrait', 'HeadCharacterPortraitBuilder',
                 'UnityEngine.UI.Ext/TabAnimatorTransition']])
         receipt['converters'].append(dict(path='scripts/prepare_official_save_selection.py',
                                          sha256=digest((ROOT / 'scripts/prepare_official_save_selection.py').read_bytes())))
         receipt['code_sources'].extend(dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes())) for p in [
-            ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/BgDialogElement.cs',
-            ROOT / '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/WindowBlurMask.cs',
-            ROOT / '.tools/source-packages/current/884_156692/official-code/framework-firstpass-source/MultiLanguageFontService.cs'])
+            code_root / 'client-source/BgDialogElement.cs',
+            code_root / 'framework-firstpass-source/WindowBlurMask.cs',
+            code_root / 'framework-firstpass-source/MultiLanguageFontService.cs'])
         receipt['operation'] += ' Chinese font follows MultiLanguageFontService; native role head photography and launch blur mask are recovered from the same APK.'
     write(REF / 'source-manifest.json', receipt)
     write(ART / 'source-manifest.json', receipt)

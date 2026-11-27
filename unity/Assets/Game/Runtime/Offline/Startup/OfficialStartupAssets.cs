@@ -6,6 +6,7 @@ namespace Zjcs.Offline.Startup
     {
         public GameObject bootSplash, themeCanvas, launchCanvas, ageTipsDialog;
         public string resourceStatus, initializationStatus;
+        public string sourceVersion;
         public const string ResourcePath = "Startup/OfficialStartupAssets";
     }
 }

@@ -1,0 +1,878 @@
+{
+  "manifest": "911_156995",
+  "target_unity": "2022.3.57f1c2",
+  "generator_sha256": "3b690c2313e26b51d5f22d096dfe1b2ae57d1a185903a368bd6a8b45ebe04b1b",
+  "source_receipt_sha256": "0975f46e842f85a923a99ffed32b8a62e1316e8b026dda865ecf6ff39d2ad665",
+  "resource_binding": "Startup/OfficialStartupAssets",
+  "operation": "Original prefab/component fields and explicit object references; native Sprite geometry, TMP fonts/materials, legacy boot clips and original button Animator graphs; Windows/offline launch host.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Editor/Startup/OfficialStartupTools.cs",
+      "sha256": "e79b868f93da2794d1b485d93c19efc85e3020990462bd223c8b8c2b349a107b"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Startup/OfficialStartupTools.cs.meta",
+      "sha256": "eea895f0a840e9dff7c25a8376ff9703d919dc558f14ace9c06038c8fa0d19c8"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Startup/SaveSelectionPlayModeValidation.cs",
+      "sha256": "187258ed9520f2dea923f61eeb9d49f0e643ca79257de2dcea31edf32d13e166"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Startup/SaveSelectionPlayModeValidation.cs.meta",
+      "sha256": "9a7ea967c816ffbef801b97cef82d700d7432ff500f39874c56f122e21407879"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Startup/SaveSelectionWindowsBuild.cs",
+      "sha256": "6e36024e7254be6620ace567b2778560968b665cb6a32820fc34f2c138d26528"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Startup/SaveSelectionWindowsBuild.cs.meta",
+      "sha256": "3def9df318912a0cb7a2445aaa1c7ad618dac8932aeb71b592916941c948f274"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Startup/StartupPlayModeValidation.cs",
+      "sha256": "a00fc11f9e4b37a743141aa2f348f5dd832d0f18e466f6460ebc22f2a0cbf77b"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Startup/StartupPlayModeValidation.cs.meta",
+      "sha256": "5f7f92d841284551f7f4f35bf46474d08a4f62a655667d9efb16279702041f79"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Startup/Zjcs.Editor.Startup.asmdef",
+      "sha256": "8dc61c46f7fd24af09250bd9dce0a266add3b81a2779f086af5ac70717ae3e88"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Startup/Zjcs.Editor.Startup.asmdef.meta",
+      "sha256": "5f62a80ab20ce607c29d35e30e5c24cd8462d4b9f2e3f18b0baaee5acefd99ef"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Startup.meta",
+      "sha256": "31bda88f81efbcd145aa3694816311620a8ba58a77f24034882704d59327f7ec"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/0-BootSplashFadeIn.anim",
+      "sha256": "3bccdf83d60f857fc8e24dad80a6ef0289e35c2769bed98a2b135cc158896592"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/0-BootSplashFadeIn.anim.meta",
+      "sha256": "3cbe9afa9f7686382e2c536f7cd4f497b9ff4549690f2b3856230200c7223e9e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/0-BootSplashFadeOut.anim",
+      "sha256": "c8c0e73a6a68106720f4b6bace0469e03b3b29c0f179927f3f7f5a2541477a48"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/0-BootSplashFadeOut.anim.meta",
+      "sha256": "cff57fa11b53b3924660fe6b73b96a01b4cf9ad0bc488d0ef46b78e028f74d04"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/49-Disabled.anim",
+      "sha256": "42418fe452bbad02ad9708fa77389c2f66b5a2da174dd90930037e0a6aaa6cc6"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/49-Disabled.anim.meta",
+      "sha256": "7787f683fc51f415c646f9c8c0b3684dbc873489168b58ae68f37ddfae1eedbb"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/49-Highlighted.anim",
+      "sha256": "e78f4759df3bf32c4f46c2979c4c2f978a7387a8ef8194688f23ed93984241cd"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/49-Highlighted.anim.meta",
+      "sha256": "d61401733beff33dac7baafec8ab28db7923b3f30efe601e3e4eea06ce1bdc54"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/49-Normal.anim",
+      "sha256": "568ae2865763ce71aba7892bfe7f60df920d0e7bc473cd479d56c5e9d16a90de"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/49-Normal.anim.meta",
+      "sha256": "b1b2c27a6a00a56893f00a6abac44f5dfb49f1376e157a5d8dcd0768773a4e11"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/49-Pressed.anim",
+      "sha256": "21633a0765f0fa824d35693cc87bf7d2688f7df8dfff6346ccaf6297cb631540"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/49-Pressed.anim.meta",
+      "sha256": "e16aeb8b01db373716da2752f0483b9d5d48d8d41ab6f63ed7c5641fc6d9684b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/49-Selected.anim",
+      "sha256": "6e047ebdff69172cf52d76d8856fc81e2d4982f9d58e0b1eec2017a405dbfbbf"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/49-Selected.anim.meta",
+      "sha256": "341684748bfcba1cd4d60d06dbe0dddcc7271c3b4fb21689f6202b2376f3a185"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/49.controller",
+      "sha256": "183fd77c47249d2ada8317b4513d0605fc10a2812e8bb199571405e6ba0e9136"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/49.controller.meta",
+      "sha256": "50dcc08f1c70756674c04f72ae368c9d3ed29b2a0208a096f6420a57e9bee6b2"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/74-Disabled.anim",
+      "sha256": "42418fe452bbad02ad9708fa77389c2f66b5a2da174dd90930037e0a6aaa6cc6"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/74-Disabled.anim.meta",
+      "sha256": "a3e6629ae7904624a37e6d0a3aa9c7948112b8d2e27627fefd7387dc90fc1203"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/74-Highlighted.anim",
+      "sha256": "e78f4759df3bf32c4f46c2979c4c2f978a7387a8ef8194688f23ed93984241cd"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/74-Highlighted.anim.meta",
+      "sha256": "5139674d3b0665b95f7d380489e849b93bbdbfadd11e6a18a697c15f823efab2"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/74-Normal.anim",
+      "sha256": "568ae2865763ce71aba7892bfe7f60df920d0e7bc473cd479d56c5e9d16a90de"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/74-Normal.anim.meta",
+      "sha256": "088e2d68ca5889eaa93c5b8d27c43b240e82c93c46b132ad2e2d171d62b2a339"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/74-Pressed.anim",
+      "sha256": "21633a0765f0fa824d35693cc87bf7d2688f7df8dfff6346ccaf6297cb631540"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/74-Pressed.anim.meta",
+      "sha256": "203099b51846b90796fda9e9d6ebbfaaf3423749982bc71bdb822efcbdee7c9d"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/74-Selected.anim",
+      "sha256": "6e047ebdff69172cf52d76d8856fc81e2d4982f9d58e0b1eec2017a405dbfbbf"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/74-Selected.anim.meta",
+      "sha256": "e8940f87d56d1a4923d60721647b7424dc35a9a0c9cf212d72d52b87b7c4bac1"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/74.controller",
+      "sha256": "8190939d1451ab8c3f11dfafb8e6d557bb5dd4a3ddc6f81c5aa421f6b505fe56"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/74.controller.meta",
+      "sha256": "44564588901137d0a1c78de53c311f4d6c47db8cfd8fbec0be2bbacdcbf4eedf"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/AgeTipsDialog.prefab",
+      "sha256": "9d4ff7894b98bdd60578722297192a16f0a0c2505c316042ae0de1f327ec4882"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/AgeTipsDialog.prefab.meta",
+      "sha256": "6f4e6391507393a846f1b8e1bc0853d9303adb70ed4838aaf0093bd02e273ee4"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/BootSplash.prefab",
+      "sha256": "8d2ccf5e4924eb20778a18e9571ef4959b1fbf3075a6e7466a93e5b29367bc36"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/BootSplash.prefab.meta",
+      "sha256": "b5e8adaca6e38fa80766faf2d71ef3d3891ade49f13a2dc2117652c69987e903"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Font-123.asset",
+      "sha256": "79264903d0e754ce10384afbad3e1f5d847b02f60e5be52c0f578508ffd517b5"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Font-123.asset.meta",
+      "sha256": "24d596f70f62bab1e54099f61463a8899e5643ab304be703b9055f09b78d4358"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Font-85.asset",
+      "sha256": "dd330a82c3803550821d600c92be5e9081ac6d28894bedff4644b899a6eb643d"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Font-85.asset.meta",
+      "sha256": "ac33edefc18ed6b7ce68d6a037da3d49c00c535bbe6bf6230f00b7e7b25a7c4f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/LaunchRoot.prefab",
+      "sha256": "d35f16cad77e735a840dfdc5d6d5752fb21d0fd6586119d2aec5e811c2511e97"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/LaunchRoot.prefab.meta",
+      "sha256": "e03be3dedd02ae30bb0117bd671a97bde3868b4593db5c2f94c384fd160771f6"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Materials/124.mat",
+      "sha256": "2bcc24bd25c9ae8f57ecde80348e3a38f40505a1f611b5c3d101c155c9329ca0"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Materials/124.mat.meta",
+      "sha256": "445bcfdcc66231a820d4c8620fdf37a203036eb9a5768d7f55d50a7e250c50f2"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Materials/86.mat",
+      "sha256": "3183b9e55f888fd62f547a119f28e1bc3f9af7d39b5274cdb2b489993df7d2d5"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Materials/86.mat.meta",
+      "sha256": "d41cc0da73e1d86efc75e940527425020d7524a24619f93c5c81730b2735c41e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Materials/Effect-21.mat",
+      "sha256": "47e4a6f1c4a79eb1795d9e2a7b786a59529afa3b52c208cf98415e1d2ce98744"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Materials/Effect-21.mat.meta",
+      "sha256": "e49ceccb4b3596a193d64bddb7bd9b470c65522f4d186bebb9ab1fca324854b5"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Materials/Effect-31.mat",
+      "sha256": "0d32a2a33416ef1e9ef6bf26cad5680e4243343a10385b1c4a968f9a1692f8fc"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Materials/Effect-31.mat.meta",
+      "sha256": "61f24bce41cb47ce479c16b86a94944f56396292fab191b01d90c56e3458a75a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Materials/Effect-35.mat",
+      "sha256": "bedefae9cacac08c25a1776f993e89f2138b13e6b49436b4aab54b6d740c253a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Materials/Effect-35.mat.meta",
+      "sha256": "c04a11470bf0f3d477bc7cac91407f81828cb9f91560131821571a26976a5fcb"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Materials/Effect-38.mat",
+      "sha256": "bedefae9cacac08c25a1776f993e89f2138b13e6b49436b4aab54b6d740c253a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Materials/Effect-38.mat.meta",
+      "sha256": "8325a07cd5437c53af8d4615186c9cfca5493991e9d72400eb2df877e5b5cf4a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Materials.meta",
+      "sha256": "6279f8ed0cbf5332b3d5cf58e5bc61994593bc3137e36d69b7094500aab2c7a2"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/OfficialStartupAssets.asset",
+      "sha256": "180f98590a13cdaabf476119fb7f195d955dc2aced1c0fb8aacdb8a86dfb8fa6"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/OfficialStartupAssets.asset.meta",
+      "sha256": "c78b4725e98fa051f82eafe8d53494acb5fe1b01c40d580d2c9ce2227f9542d4"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/107.asset",
+      "sha256": "6f6ad1d46b71141b8899bcaf5eae1b942e431db683a2fcc3b34f62b663703e1c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/107.asset.meta",
+      "sha256": "2554bd41984e86777f19f9f09ef0208b94dfd43cfede6e4d7b9d69bcf9c6e5cc"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/110.asset",
+      "sha256": "553ffca1a810fa3b55f7f6fa58d0de7ef58be0d7bec0f086b139cc933057f5f2"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/110.asset.meta",
+      "sha256": "884ccb96c57e68c40ea2e7334d62422e2be6433b328350d2ed17d30f1d689be1"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/117.asset",
+      "sha256": "b76afb1fa8ba66edd3bc1d51407b6d9eabd88d3cce7426d94d435129800eaceb"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/117.asset.meta",
+      "sha256": "fc5b14196bb16b0de7ee838ab57a3e3d8991de508bcd3d7350efdee6cb4c8637"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/120.asset",
+      "sha256": "8ff0c9709fa76d8f1b614eb27b2c16f97b908443353a11f503da01f89ba54376"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/120.asset.meta",
+      "sha256": "12c079be53394562f6f8fc7f2e8aa83743b0319f3a9c3a72342cea46401d8e2a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/131.asset",
+      "sha256": "ffd134e6a2e21b9e1e74a9bb35fd90f82ba16e2e0eeb409082831cfe70f71183"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/131.asset.meta",
+      "sha256": "28a2ba163de7caf3139a692df4e89ba5b400481ef07b9dda3d02b13df1b5e9ba"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/135.asset",
+      "sha256": "c5b0da2d0f0d0bbda1cc947e1e726fa3aefff74b56ff357748906cdeff55d334"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/135.asset.meta",
+      "sha256": "bce0e7eff4829cc6ea4ce6fe6024e65914170d1a287ebe012723cd6a7bceac1f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/146.asset",
+      "sha256": "0239731b4f5f238c4fb536f3c641ef7f2605b44cef6e641529e2fcfa82f73bd4"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/146.asset.meta",
+      "sha256": "8fb3bac0552c4a3dac3e807ec64929be37c9cfcd26c2922e5211719352443be0"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/157.asset",
+      "sha256": "6da4c1c7062245485e4ab9f33e6b60991e254d4e2efe22fe273f30477e61caed"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/157.asset.meta",
+      "sha256": "271153589b5309bf61e831fea7245176dee52195e8b4dd3c541e9861b43fc3c9"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/168.asset",
+      "sha256": "72645e0a5a2631b4f31ee61eb76328f3432485ec47e6054b20bb93ee7776d5dc"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/168.asset.meta",
+      "sha256": "6f6d3f7011f1fadd6829801f62ee672b0ea292fbb37ebe51c67afeb554f32801"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/17.asset",
+      "sha256": "9b174da3695f11a096aba311f45b165ea1da177995e3ea0bb472048cf8bf21a5"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/17.asset.meta",
+      "sha256": "80f8f3861eb0e9ed23d077c01f5f803f061fd7841c77b789e4d2b08b697e589d"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/172.asset",
+      "sha256": "cc71a0cffd3005bc9e83bdb0446eee85cc47b2f7a77d0e2f3911e3bf6591c718"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/172.asset.meta",
+      "sha256": "c8875f61faeaddf28d99b5132dd6288ec1b2a1dfc846e090a7a42e0efddffae7"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/176.asset",
+      "sha256": "b2513b7dfc0667973919e04e0d297f910ecf9602e34fbba5f7f04f9b2cf94f4f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/176.asset.meta",
+      "sha256": "83004788b14e794e73626fe88711b5beddebf397b287033b0fdb65328c947780"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/180.asset",
+      "sha256": "5053ed9547ff06465fbfbbe32e3f1ef711bd8104a6a246801b822452dfc9f21b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/180.asset.meta",
+      "sha256": "34d60e9144fc87dad2d0e1780ae8edd8274e14f36927458b279510c86e47f192"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/194.asset",
+      "sha256": "63e883a2d7fd683a6c4776eb6132545ec6996b235b7a992c0d8b8bced50ec29d"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/194.asset.meta",
+      "sha256": "86a9f67ee55c4b9edb7fdbd84079a518eb094e2ca13a9fb08bacf0ba84204940"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/213.asset",
+      "sha256": "43c62b8a101f94b59040b6b5f692304ec405a748f9fd90da91e34ac9d15c9b82"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/213.asset.meta",
+      "sha256": "dcc5b841765d8659df95a32a398d8b77c468018bb6b80a210320050d62b3e368"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/246.asset",
+      "sha256": "9a6fdbc4397967a08bc2187c2f5d60e7bb31822e0d5822c54211e23b5edb8a0e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/246.asset.meta",
+      "sha256": "06f65f16a033f735db48336fc79b57c48fc1d4d1524123de453d17305fa440a8"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/251.asset",
+      "sha256": "86c059f5d04021d15d0020712d5348d98be2c4a5bdfabd9d7bc56ceece959847"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/251.asset.meta",
+      "sha256": "acc8b423c002d9696f7ff890cea66c00b513dc16e135ebbcd31b73913db2aad6"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/255.asset",
+      "sha256": "f330d318b3d965559f9407229d2934e3b3962162b4cd4e5c724c37a9e3552998"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/255.asset.meta",
+      "sha256": "3c6ef46ddd7fc005892e6916df7631471fea0a94ec1e3840062062efcd0e9ccc"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/279.asset",
+      "sha256": "17b41a0471679d38268fca24b39f1cfc195f1fdd863e375e1250383bf9eea5bc"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/279.asset.meta",
+      "sha256": "61320983cd52be1d8fbc2b046e3fbdcd93ee8c586b7e9f30da8370d13c236ef7"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/35.asset",
+      "sha256": "9e408a6c7890595e1d1225ed86e9ecf031ece14083b8927248ee957edece3912"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/35.asset.meta",
+      "sha256": "1672fb0c19ef74440891ed2a5b866d0b95d831edb8c0d7213e6c804e1d8ebbc8"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/40.asset",
+      "sha256": "ce51e384fd4698d3563d55a2590a979b9ee18fa72b9be8c411909b741f482ebd"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/40.asset.meta",
+      "sha256": "a7651013e02e5395a5b79b7c1ec16228488adda83ac868f9b33f034d89bd7de4"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/44.asset",
+      "sha256": "461fc866084c45a610d712cd1faa729aeb08fc9cb1d0556f6fb66ef5f367dad7"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/44.asset.meta",
+      "sha256": "567efdf7e968d33ea58fa557bdbbbd7ba4bccde48010eff368d03db73858ff0f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/48.asset",
+      "sha256": "21d37eefbaf4c4c6a46ef94033784d2465781153e94e5ad4bcfa590499249140"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/48.asset.meta",
+      "sha256": "8a4d2a9b459e7bbee6ff82738d62c38745c8814779e059f487ce95def548ff53"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/56.asset",
+      "sha256": "701a9f9c4539adb57e1112a3ebe3ada3077e30d6d14eb837b6fd5110ce3cd499"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites/56.asset.meta",
+      "sha256": "aecd3d3290a5f7536510e45e1b09a84d19228b2478807c7d34246d0da0c506ec"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/Sprites.meta",
+      "sha256": "c760ecaea36ecea0931425a9ddb1954de5073355eaeb4675c623221beb7b6168"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/ThemeCanvas.prefab",
+      "sha256": "e33e49105beefb506a26aed191cf45ccba7c63feef34c94e18846f17f07a1f14"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup/ThemeCanvas.prefab.meta",
+      "sha256": "90e735ae66bd6acb58faa75e09d46316d5cf021f2b9e5ec21cf7d39ad3e302f4"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Startup.meta",
+      "sha256": "1a10fcfab17497b3a3204defaca1c248d24feb6d53fb388d4d2439d1fac2f4a3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup/AgeTipGo.cs",
+      "sha256": "1ba126fa4ad70f34b15d361c7847a41f20d00a862222cf5ddedbb5dfb82d902f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup/AgeTipGo.cs.meta",
+      "sha256": "d1e0a2e81f23312f272fa666a6f48c72bbd564c23e1db8005f5bb7e99a2470a8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup/AgeTipsDialog.cs",
+      "sha256": "dd4482f8cc7f1f738c08b52ad8c99dd7cc9e8080a63bd53ea1beec9fdc5ac3fa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup/AgeTipsDialog.cs.meta",
+      "sha256": "2b790c794889998d41e856514f06f219daedc9abb9f7d43ca71f2870d35f6535"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup/LaunchPanel.cs",
+      "sha256": "0128f7d564c1e909edb80a5735c02a8875c4af3638bae1dddd5b74e7e9d2d26f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup/LaunchPanel.cs.meta",
+      "sha256": "2c6a9822da1c3817ef3b067912144fb577efad634dd5a099b99a3a4f76b707f3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup/LaunchUIRoot.cs",
+      "sha256": "c193537fc2fbcd04c0c72575a3c2c79e72de08ca14316b7342d2b97747efa6e2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup/LaunchUIRoot.cs.meta",
+      "sha256": "73d7e69c17bd567ca78f196cda5a69ec42898791feda30292a7c3847af9481bc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup/PlanesInfoItemWithRoleInfo.cs",
+      "sha256": "4b471f006757f0b43dab9469e188bdf61e227438e7a9640929797fc70079fa1f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup/PlanesInfoItemWithRoleInfo.cs.meta",
+      "sha256": "90d0c5fa35c3d06f2792dd61d8ec9e23dca0fc76fe5c19b2969675b821493a60"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup/PlanesListPanel.cs",
+      "sha256": "d72fbed3b48c428b68a42d7948db873fea1f7749da3fcf4df526f3a3e5953216"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup/PlanesListPanel.cs.meta",
+      "sha256": "74a816650ed5516209936f2aa8ef506fe98b134dac297be08b8b10fc29ac484c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup/StartupTextMeshPro.shader",
+      "sha256": "01684a333d7b293fa2d2d2866b370f646f5c0285ae622a32d7dcfad12979aa92"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup/StartupTextMeshPro.shader.meta",
+      "sha256": "42bf0a839a3df71674183cfda5c25bd35d273066759a40c10211bddd3a9987ed"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup/Zjcs.Official.Startup.asmdef",
+      "sha256": "c845e8f6ac287390cae1f5bea7848eb605422fb5efb8f3c0545bb49e193821ec"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup/Zjcs.Official.Startup.asmdef.meta",
+      "sha256": "98dc6a11f7cd03023bc5fa3f099d4c3b0d50d905152b061cda82acba25791590"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Startup.meta",
+      "sha256": "3567657737ee27089cc115b50600099825efc40d131df7292a9e81bbc999bd40"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Startup/OfficialSaveSelectionAssets.cs",
+      "sha256": "050e3a9619a36264a585ca950498162fe641c5bae450b4514d1b6bc5024b2d82"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Startup/OfficialSaveSelectionAssets.cs.meta",
+      "sha256": "3a5e391092a01abe0864680e8c0949734e1ad1b01568fb13fb9c2de29c86d8f6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Startup/OfficialStartupAssets.cs",
+      "sha256": "ccac9b39820d575c17cbf5be7964322f26d3e035aae6854d6a34af92d9bfb2db"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Startup/OfficialStartupAssets.cs.meta",
+      "sha256": "71654a02fdece8837000444ddce5dadced187f864f9450f98487dc676336173c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Startup/OfflineStartupFlow.cs",
+      "sha256": "a56985c39252871ffd0a778b110288607245c1112a30b5afc2462e322f2612e5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Startup/OfflineStartupFlow.cs.meta",
+      "sha256": "10bc2b8aa090300f4fea299c72f729215910d1a003690ab96cc6eaa746f841dc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Startup/StartupCanvasWidthAdjuster.cs",
+      "sha256": "40ba6e18c2c210d61c865d1621f3880dd84af0007aad4e2e78e49ecdd851b59b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Startup/StartupCanvasWidthAdjuster.cs.meta",
+      "sha256": "f1c34cf55b96e4ff5863f302b6d0a24b1bec3870d34681f5d9683815f3084941"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Startup/StartupPlayerValidation.cs",
+      "sha256": "44f3c54e0952fcc1914a31d24a9a692b4d11974f6e7e47cf8a99ead779cabbe7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Startup/StartupPlayerValidation.cs.meta",
+      "sha256": "3f67836aea16b73e87dad079e7bb88058891e9f2156d06cb889c5a4e5083a011"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Startup/Zjcs.Offline.Startup.asmdef",
+      "sha256": "2a7481fe40c1a75f1a732daa4d3a2b87b265a8a4cf8cca9b641b1f46a5ace749"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Startup/Zjcs.Offline.Startup.asmdef.meta",
+      "sha256": "33368e7f1c2791202d096c634e4e1b32cf794382288bc9169fe10ea0e276c18a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Startup.meta",
+      "sha256": "c95f9297ec4db7ce976dfef4f6d54b0051744fccd5103e6bba6ff9078edb60b6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs",
+      "sha256": "2dec04c36846a78c179f35e2300125d70df468aafd3729ad7e2aecf89c2fec93"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/CharacterCreation/Zjcs.Presentation.CharacterCreation.asmdef",
+      "sha256": "816120b0339714255fb6c3cfb94d46776eabfcdeb04aef28a2b78fdc34a6e1ed"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Fonts/298.png",
+      "sha256": "5693faf2c0c65c2ff6f6bbede20da78393047168350daa4a6b11cde3a8e2bb06"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Fonts/298.png.meta",
+      "sha256": "41439098bbe5694ed3fb7812212f7145c8e92a07b361c017e27f079707a6a6ef"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Fonts/299.png",
+      "sha256": "afb4363aca18725703705f7719a892588eceda84faccbf6bf655ae4a4f7d0f57"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Fonts/299.png.meta",
+      "sha256": "a821667620d7ef1d21ab7646e8ee680151d9784ae93613a85f495e0a52f2f4ed"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Fonts.meta",
+      "sha256": "efdcf5cdc0e4a3f1b825bc59d63d04b2e8d19b9a7c45d6a42b169528511786a9"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/source-manifest.json",
+      "sha256": "0975f46e842f85a923a99ffed32b8a62e1316e8b026dda865ecf6ff39d2ad665"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/source-manifest.json.meta",
+      "sha256": "69aee695b620d1d15f5a43a1febeb76fd98bdca736d600af7621653a6b3ab9cd"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/agetips-cd34681d93.png",
+      "sha256": "373c36d1a3146bca54130fba94befafbf4c5c993d76af87b009c6884fdb43773"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/agetips-cd34681d93.png.meta",
+      "sha256": "31035aed65a5d8fde660930538271aefee993b2c03044673bf42bc0d29c83a79"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/agetips_kr-c73d19209e.png",
+      "sha256": "aea8d9a9623fc26513b23d43fdb659ea96ec871bc1316246072f13682a569bcb"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/agetips_kr-c73d19209e.png.meta",
+      "sha256": "80e5f878168a5412c5f9b74e642d44f8d96d4da894098e98347badbf79239cff"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/Boot_Healthy_Tip-f631eb2010.png",
+      "sha256": "ebb21bc818e624276b174ee770294a7f9c4ad40c88155fc6759b54134ddc5ddf"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/Boot_Healthy_Tip-f631eb2010.png.meta",
+      "sha256": "45e84e241301e1dd0706ce0ee97c4afc702ab0f5d300ad106aabeac26925517f"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/BtnOk-141f78248b.png",
+      "sha256": "d2f4d4fc23d16f7fececbba4ac11e98ced143b46c61aa8ea6052ac84174c8824"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/BtnOk-141f78248b.png.meta",
+      "sha256": "d8a99b4c905aa96cd3cc9beb31cc4b13c02451ef1941b5f13f6fb4ed57509d7c"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/C_none-73f8e0b4f1.png",
+      "sha256": "b1053f89bb82a79f8d33fe961fb79364943688d6fa733b1de98be88f04359cbb"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/C_none-73f8e0b4f1.png.meta",
+      "sha256": "6a9ab22671451576350103601a8727fd5e1b6c1de5cc92cb97874491e18e6e7d"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_JianBian-9a9e24a58c.png",
+      "sha256": "3afad280b3f4b2806a691faa47dfe73c10de87ff24684c556450f4d8a6204326"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_JianBian-9a9e24a58c.png.meta",
+      "sha256": "656e111f1320e99b6d1a95b4eaa223ec685a572116cf834019a88cf2e2b573da"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_loading-ba568ef094.png",
+      "sha256": "18db2bccdedd64fa1699a0155cffc77769cde1380243091415ddc7e7a88b1526"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_loading-ba568ef094.png.meta",
+      "sha256": "a18d36d517a6af30981f6485e2e8b1e8360d205256190228deb758db37337d89"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_Login-b427b79b77.png",
+      "sha256": "a3c7ac827d3871bdd2873f53d895edfbba97eb8124b00ab871e5b1aaaf7efb85"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_Login-b427b79b77.png.meta",
+      "sha256": "53b069b14b274cc088509b7471381b788200449dbd73ae665e716ca5d2181ee9"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_PopUps-1d715624fd.png",
+      "sha256": "4f4700506e42e5d9b9ab5ef402dc3db5b52236e5f9452c1b0e7c0b9a42543e2f"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_PopUps-1d715624fd.png.meta",
+      "sha256": "4550fb8156c0e32c26e4c6b2f50c002840962a5868af72d57a0d800d4081be30"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_PopUpsTitle-73eb1bc615.png",
+      "sha256": "a00a2414d13e67f6a6a18b2daacc97e39f23e7dde1c37e09bf9fcc65c6a5fe86"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_PopUpsTitle-73eb1bc615.png.meta",
+      "sha256": "493e8944243f39a4d82c67a150a92dd09a5204cfac8bfbbc9f7e049ee343b50a"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_PopUpsWenLi-54b3440f2d.png",
+      "sha256": "68058e4df2fc9aa171d0e654156dedd97995be2187490d9e0a0c798b4d3a5339"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_PopUpsWenLi-54b3440f2d.png.meta",
+      "sha256": "90a448e3c2630202b00f7525fc6f5ba7f0a85b3da5214f1a9d664f421c0d8a8f"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBgYuan-567f7fab34.png",
+      "sha256": "27cc3aec78acd5e123d9620172140b34b8672d9e7aaadeb5d57207dae27ab994"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBgYuan-567f7fab34.png.meta",
+      "sha256": "7dca177acaed16b9512e5f2f952d51899223abec9ce1775be62ac386f438e750"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBgYuan-75ccb6972b.png",
+      "sha256": "83de70d11eb3aabbf04408f3e2c5e1fb1866a98bee39381edf546d606fc32209"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBgYuan-75ccb6972b.png.meta",
+      "sha256": "0067e31eec887f4e713b0430fc9a269dc7e1560f23585bf0f142eb994b216871"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBurst-8304fff71c.png",
+      "sha256": "07e5cd46c7b2df3d4a493e4e14128558f5c202b4b1642c0aa1edc620fd326e51"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBurst-8304fff71c.png.meta",
+      "sha256": "66dfed3f181abbd4af9e18614108eb598b846e513435de87228ad24e2b3bc330"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBurst-c08b33efb1.png",
+      "sha256": "add0bc8351357c0c1a2964e5d67eb37939f8a86d168ac71d40647c7f97ceede7"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBurst-c08b33efb1.png.meta",
+      "sha256": "5f55ba5b5c531913f52a286ceefbe773b458133b82d04ac966412323c6001145"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBusy-731c0729eb.png",
+      "sha256": "cbec1ac9cf0fe762025e01e04b0b17c335cc53440cf30d956b2d37ee3dc33a98"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBusy-731c0729eb.png.meta",
+      "sha256": "05a90882b3f32e689b6dee9ccbfdc2ae992a9444d71bb8c304f7d3afc71c266b"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBusy-dac328df0e.png",
+      "sha256": "9566ac22e0087d097ff061376b1d83d9390bedef72553208a8609c0eaae76542"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBusy-dac328df0e.png.meta",
+      "sha256": "8919fcb1f26ec51d44e6e4ed264f7a73cd118a8eb553d013f8a1e7fb5f959fbd"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgFlow-0a9a5f877d.png",
+      "sha256": "2024df91df331f2325df2e2fc4b325dbbc1c166e8921b6c3690ba28b1ebff9c7"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgFlow-0a9a5f877d.png.meta",
+      "sha256": "620fb26167ef1d8ee62118c89ca95cce565643b948a7fae65c73184db027cd95"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgFlow-ad3d28a912.png",
+      "sha256": "9392411f1db06ba07cbe0c64bc17cce7d70e7f1d58b2d307eddb0183dfd8578e"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgFlow-ad3d28a912.png.meta",
+      "sha256": "88962e77e5f8dc7831ea937eb83a580a7bb61f5f0f4db33a676940b11aa16e1d"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgFunction_Bg2-aca7f0b2e7.png",
+      "sha256": "a74396c4796ccfdadaeaffdc01245d9c6a9c9de8e2f83c64b3da3d76fd3cd812"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgFunction_Bg2-aca7f0b2e7.png.meta",
+      "sha256": "2d4ccef24b0fd8836d2cb1aa9faa531b05e7ee5dc38f4470ee98242663599fcf"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgIcon_Measure-03bb3aa115.png",
+      "sha256": "4c2964e7e13375da69c8b5822363af91a48a8057edf7342412daeb01f9a6dd5c"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgIcon_Measure-03bb3aa115.png.meta",
+      "sha256": "c2ac00465e866308283ed03b23ce5a2ab734728d5bb8a8ac840a27b035ebb74e"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgIcon_Repair-d622d9f7a6.png",
+      "sha256": "3a8240d0151a48f5e2f1a60d10f018a3e9f2834ed411b5bca187a8d6a4e0a373"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgIcon_Repair-d622d9f7a6.png.meta",
+      "sha256": "6e61581928d71c7c3b19257044316cb1de5ddbdfe32470da694e70bb529c5b8e"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgLine-8f9c31eec1.png",
+      "sha256": "42c5b4ddf82eb29a0e46ca15226d7ef30734a2707dd008b16b4339faf4afe940"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgLine-8f9c31eec1.png.meta",
+      "sha256": "ff294b2ef0fc0fb9fb95ad05e1823551df302a0ec7a6c287b62662b505599bf6"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgLoad_Bg-06765eff38.png",
+      "sha256": "153a032b6230d40b84951b8c9d59c28db36c5dcf870a771897f71f1d3905d9ba"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgLoad_Bg-06765eff38.png.meta",
+      "sha256": "decde8b1d4a13d66cb986a7a44d20938f9e968c0a824fde1e4080127c3c72331"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgLoad_Load-15e3db8d95.png",
+      "sha256": "a9b3824da4631232841c3b9a935b1170196d52ab5da31ca758b2c1c6d3bacfd6"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgLoad_Load-15e3db8d95.png.meta",
+      "sha256": "83551645260f08d528688f8067f37424d001e766a238a435192738ec1d289c75"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgMaintain-59d2df91f8.png",
+      "sha256": "2d11259b620a9d548e36f277bb318563cadcaf47cb8a4b697945af31cb7c8b0a"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgMaintain-59d2df91f8.png.meta",
+      "sha256": "90fd524ae2e9bec4ce35b117cfce4fb31b413dafeafeeb6bfa6837c4f6553a86"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgName-a3dedf9d17.png",
+      "sha256": "a8687ffd585bc33adecf8bcc1a822d9da6ca658311de119a1790abe5d9c278ba"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgName-a3dedf9d17.png.meta",
+      "sha256": "62a9cb450e0a37be26e218e7b0c5894ed56c35d60a3bcaadf362ede3bb843dc6"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/LOGO-70e2ae9e16.png",
+      "sha256": "da706a619b19202aabc12ac59885e0c645d31bddf32f951d032e10c1cba0f20c"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/LOGO-70e2ae9e16.png.meta",
+      "sha256": "d8c7c8e712e9295b1da93a7d189a7cb15ee21f5881f4fe0700b5e613181203fa"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites.meta",
+      "sha256": "7699b61dc02834ee072b6b02d3f3809aa079332292120d94d0377881cbac6676"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/startup-ui.json",
+      "sha256": "480bc52ac49083d1470c2ad7da5bffbb9fec83cd68cae4e4917afc00c1a72b1f"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/startup-ui.json.meta",
+      "sha256": "a5b0e30d2b9930e04fbd3a7094cd30678ff6db37cee6c1cc6718e26c8c4f7ec0"
+    },
+    {
+      "path": "unity/Assets/Official/Startup.meta",
+      "sha256": "4eb5c5c90525851cb1b347c75b699143b0738120cb7f6f009a6296e9b1be83c6"
+    }
+  ],
+  "retired_cache_files": [
+    {
+      "path": ".tools/source-packages/Boot/boot_assets_boot_region_cn.bundle",
+      "sha256": "f2e2fd08ad7bb275a7354921f366ce659b0e654e0fd4ff4720ef5787e6ac894f",
+      "manifest": "884_156692",
+      "replacement_manifest": "911_156995"
+    }
+  ]
+}

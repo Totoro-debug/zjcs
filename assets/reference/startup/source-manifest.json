@@ -1,0 +1,435 @@
+{
+  "manifest": "911_156995",
+  "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+  "source_unity": "2022.3.57f1",
+  "target_unity": "2022.3.57f1c2",
+  "operation": "Deserialize original BootSplash, ThemeCanvas, LaunchRoot/LaunchCanvas and AgeTipsDialog; restore native components with exact PPtr bindings; decode original sprites and animation curves.",
+  "inputs": [
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/Boot/8b19c9cf5413f797c32543cb60b72b5a.bundle",
+      "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+      "raw_size": 53558,
+      "raw_sha256": "f2e2fd08ad7bb275a7354921f366ce659b0e654e0fd4ff4720ef5787e6ac894f",
+      "package": "Boot",
+      "bundle": "boot_assets_boot_region_cn.bundle",
+      "bytes": 53558,
+      "md5": "8b19c9cf5413f797c32543cb60b72b5a",
+      "sha256": "f2e2fd08ad7bb275a7354921f366ce659b0e654e0fd4ff4720ef5787e6ac894f"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/Launch/a17212d0714c9dffe0ceb7fe719a767e.bundle",
+      "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+      "raw_size": 966,
+      "raw_sha256": "2669e24bf4b67436bfc74e9195c2b18114b923bde9c909caac832e38e0a79ae8",
+      "package": "Launch",
+      "bundle": "launch_assets_launch_scriptableconfig_launchlogolanguageconfig.bundle",
+      "bytes": 966,
+      "md5": "a17212d0714c9dffe0ceb7fe719a767e",
+      "sha256": "2669e24bf4b67436bfc74e9195c2b18114b923bde9c909caac832e38e0a79ae8"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/Launch/5d0e43be4e4bea48ae0fa2d0ba4c063a.bundle",
+      "size": 12559,
+      "sha256": "ce018a3db071d5155dd0044de70be454a71a02b3a41c42f8a9a32f5b58859014",
+      "package": "Launch",
+      "bundle": "launch_assets_launch_prefabs_launchroot.bundle",
+      "bytes": 12559,
+      "md5": "5d0e43be4e4bea48ae0fa2d0ba4c063a"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/Launch/c61a522e374f42833137511d6d3f0430.bundle",
+      "size": 45556,
+      "sha256": "c9ce5e6bc5851e5130b473e32acd3c2cd0fa6c49fb27bb722a50b942bf94049b",
+      "package": "Launch",
+      "bundle": "launch_assets_launch_prefabs_ui.bundle",
+      "bytes": 45556,
+      "md5": "c61a522e374f42833137511d6d3f0430"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/Launch/1890413b5d9296f7438054674b39ff92.bundle",
+      "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+      "raw_size": 110470,
+      "raw_sha256": "54f749cb0efa596ddd3a186390ac32e7f2e9ed97686c680d6b301ea995544551",
+      "package": "Launch",
+      "bundle": "launch_assets_launch_image_language_zh_cn_ui_icon.bundle",
+      "bytes": 110470,
+      "md5": "1890413b5d9296f7438054674b39ff92",
+      "sha256": "54f749cb0efa596ddd3a186390ac32e7f2e9ed97686c680d6b301ea995544551"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/Launch/86f212da7d7e1a975980d4e2eaac7c71.bundle",
+      "size": 558425,
+      "sha256": "ccf46df7a94d9e3d48b4ad58e32acbf6d81fd82291d56d03a933c625f61d77da",
+      "package": "Launch",
+      "bundle": "launch_unityshaders.bundle",
+      "bytes": 558425,
+      "md5": "86f212da7d7e1a975980d4e2eaac7c71"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/Launch/af763e62831414792cc4d617d8839ec8.bundle",
+      "size": 393294,
+      "sha256": "af0d198d27e6e517a456ea0ef8a7eedcdd09c9d6fdd652b4036c259e917a284e",
+      "package": "Launch",
+      "bundle": "launch_share_0e0ad9e41ffabb44e9c7793542909c4c_atlas.bundle",
+      "bytes": 393294,
+      "md5": "af763e62831414792cc4d617d8839ec8"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/Launch/901788a50621fe05e4f46fabf67c8108.bundle",
+      "size": 27611,
+      "sha256": "16d3e0412a3a33650532d7883ffeec5a2fb3a3a82f1de4e43205caa960f58d39",
+      "package": "Launch",
+      "bundle": "launch_share_ac532e04c8c56c14c87197a6e4530e7e_atlas.bundle",
+      "bytes": 27611,
+      "md5": "901788a50621fe05e4f46fabf67c8108"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/Launch/58ceb9e8643e68cb7f62d99fc966190e.bundle",
+      "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+      "raw_size": 341195,
+      "raw_sha256": "ad9fc61dd0293c22701a86af8e3a33e60d90c87c6b1bfabbe8d200ae770dddc8",
+      "package": "Launch",
+      "bundle": "launch_share_7ef7f4b4ad9f08a4d91b037f9a409483_atlas.bundle",
+      "bytes": 341195,
+      "md5": "58ceb9e8643e68cb7f62d99fc966190e",
+      "sha256": "ad9fc61dd0293c22701a86af8e3a33e60d90c87c6b1bfabbe8d200ae770dddc8"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/Launch/67621d9a6723c515956d1c69db567f9d.bundle",
+      "size": 330012,
+      "sha256": "5987a755a4122c8da37dd98776d0ca4d020b3e95a919791cbd25aeaa5c3d34ab",
+      "package": "Launch",
+      "bundle": "launch_share_09e8f12fc20c7ef4b975f55d1be38133_atlas.bundle",
+      "bytes": 330012,
+      "md5": "67621d9a6723c515956d1c69db567f9d"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/Launch/8f72d1b071982f38d2bf6ecd4d1d5c9a.bundle",
+      "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+      "raw_size": 23256,
+      "raw_sha256": "b0bb4c85283bc0e0a332a21849ff941b71ce8cdcd6fb35aaa568763b56ba7389",
+      "package": "Launch",
+      "bundle": "launch_share_7bd5ffd7904549917439555c394d6e1c.bundle",
+      "bytes": 23256,
+      "md5": "8f72d1b071982f38d2bf6ecd4d1d5c9a",
+      "sha256": "b0bb4c85283bc0e0a332a21849ff941b71ce8cdcd6fb35aaa568763b56ba7389"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/Launch/2104281b5b2395cd61f428a64f4115f8.bundle",
+      "size": 436324,
+      "sha256": "dae8c532f5990cc4da575a770c51e9b68323f106e7edd85aa466eb50818a5db9",
+      "package": "Launch",
+      "bundle": "launch_share_8ef3fcb38b0ed3939ce91d2d5186503e.bundle",
+      "bytes": 436324,
+      "md5": "2104281b5b2395cd61f428a64f4115f8"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/Launch/afe3bcd2d05428ea9e9552a19e81ebd0.bundle",
+      "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+      "raw_size": 1673,
+      "raw_sha256": "dcc3815365c7bb1e00f95c3cdea389bddf4722fb498169620bacb227858f5ee4",
+      "package": "Launch",
+      "bundle": "launch_share_49fccee63be64e9d48b43d1685591933.bundle",
+      "bytes": 1673,
+      "md5": "afe3bcd2d05428ea9e9552a19e81ebd0",
+      "sha256": "dcc3815365c7bb1e00f95c3cdea389bddf4722fb498169620bacb227858f5ee4"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/Launch/d14f6302dfc82ceb216d467c65b95c75.bundle",
+      "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+      "raw_size": 1211928,
+      "raw_sha256": "563e251c59c4aec1f37e2c85cc0d754e14e90c7a266dedeb53a1977223bff907",
+      "package": "Launch",
+      "bundle": "launch_share_d4c38ad3a658da4b6ce64d2607caeabb.bundle",
+      "bytes": 1211928,
+      "md5": "d14f6302dfc82ceb216d467c65b95c75",
+      "sha256": "563e251c59c4aec1f37e2c85cc0d754e14e90c7a266dedeb53a1977223bff907"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/Launch/dae5bf9a44121b2110f0d85fa12246a9.bundle",
+      "size": 187494,
+      "sha256": "344b8a3b837b2918cc8f5f141ac6bf85d5314e9819abdbdebe0bd8161a847213",
+      "package": "Launch",
+      "bundle": "launch_share_1ca64e4346ac70445b0101e91bbf2800_atlas.bundle",
+      "bytes": 187494,
+      "md5": "dae5bf9a44121b2110f0d85fa12246a9"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/Launch/70aeb60843bad7d00000863e07e02b98.bundle",
+      "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+      "raw_size": 8864,
+      "raw_sha256": "28b6eea2ad9c9f12a352c4470bbf749f0ef06ff287d62f86d694d4e63156e89b",
+      "package": "Launch",
+      "bundle": "launch_share_fc099288fbff7e80c46a1639d8de123e.bundle",
+      "bytes": 8864,
+      "md5": "70aeb60843bad7d00000863e07e02b98",
+      "sha256": "28b6eea2ad9c9f12a352c4470bbf749f0ef06ff287d62f86d694d4e63156e89b"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/21b128d62ad3efaa58f4f7fc04aa979f.bundle",
+      "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+      "raw_size": 945,
+      "raw_sha256": "7a34d3bf237df94442a7e5681b52e83c2785228c1f6a54560a2d27e4f9338ceb",
+      "package": "DefaultPackage",
+      "bundle": "defaultpackage_assets_textmesh_pro_rawfonts_fontassetfontconfig.bundle",
+      "bytes": 945,
+      "md5": "21b128d62ad3efaa58f4f7fc04aa979f",
+      "sha256": "7a34d3bf237df94442a7e5681b52e83c2785228c1f6a54560a2d27e4f9338ceb"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/6337290371bee9c6f8e3522d04e03398.bundle",
+      "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+      "raw_size": 7243892,
+      "raw_sha256": "3da36712ce086258d1898c6b099fcea1ae33bb46f450cfb61811834dffe42695",
+      "package": "DefaultPackage",
+      "bundle": "defaultpackage_assets_textmesh_pro_rawfonts_fzy4k.bundle",
+      "bytes": 7243892,
+      "md5": "6337290371bee9c6f8e3522d04e03398",
+      "sha256": "3da36712ce086258d1898c6b099fcea1ae33bb46f450cfb61811834dffe42695"
+    }
+  ],
+  "language_sources": {
+    "wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile": {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/WwiseBnk/495eff606d09ccff377d3b54ba4c1bc4.rawfile",
+      "manifest": "911_156995",
+      "apk_manifest": "895_156822",
+      "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+      "raw_size": 5556,
+      "raw_sha256": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365",
+      "sha256": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365"
+    },
+    "wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile": {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/WwiseBnk/70b7320eb60b7ed662804cf712d4ea53.rawfile",
+      "manifest": "911_156995",
+      "size": 5862572,
+      "sha256": "2c702b912d9a7c18125af79c25a3aa9d28ffe120c1c12a44da80acf570f22e2f"
+    }
+  },
+  "code_sources": [
+    {
+      "path": ".tools/source-packages/current/911_156995/official-code/launch-source/LaunchPanel.cs",
+      "sha256": "77f30455f6266b484dae3e2048fffb9372a9f93f15e551e2f03aafce70325c49"
+    },
+    {
+      "path": ".tools/source-packages/current/911_156995/official-code/launch-source/LaunchUIRoot.cs",
+      "sha256": "3ca8420b614858a8771c5efc4bac7661b9cba5438c6c70e9b20b21c0f292c2df"
+    },
+    {
+      "path": ".tools/source-packages/current/911_156995/official-code/launch-source/ThemeCanvas.cs",
+      "sha256": "8494927b69593a13db60cebca233826390c3f5a702c978484f8a44d7d904b5b2"
+    },
+    {
+      "path": ".tools/source-packages/current/911_156995/official-code/launch-source/Launch/AgeTipGo.cs",
+      "sha256": "80d8797db273c883447b43346fab14b7b8018a0f5eaa76cdf4dd597b89c71e01"
+    },
+    {
+      "path": ".tools/source-packages/current/911_156995/official-code/launch-source/AgeTipsDialog.cs",
+      "sha256": "2ee76d20bc23813a7ca254a18faabce6ac0ae8888a0e1b2ec095642a00588e28"
+    },
+    {
+      "path": ".tools/source-packages/current/911_156995/official-code/framework-firstpass-source/CanvasWidthAdjuster.cs",
+      "sha256": "a2c229aa1c8d8cee9098a9c54c96beabfc7361608881c91818562dd7978b430c"
+    },
+    {
+      "path": ".tools/source-packages/current/911_156995/official-code/framework-firstpass-source/PopupWindow.cs",
+      "sha256": "10b8ac6305f45ec01dc6a0a66bb062cd4ff567d4d3a7b447570a2ca348b7873a"
+    }
+  ],
+  "native_text_effect": {
+    "native_methods": [
+      {
+        "name": "TMPro.TMPEffect.DoSetup",
+        "metadata_index": 296788,
+        "address": "0x1122f780",
+        "length": 1196,
+        "sha256": "ae100fbe328d01be3778c5a0b733f5b02811290b2885348baa93d7c1511489ff"
+      },
+      {
+        "name": "TMPro.TMPEffect.<DoSetup>b__62_0",
+        "metadata_index": 296792,
+        "address": "0x1123083c",
+        "length": 1256,
+        "sha256": "38362dec716db9c0536463b5bce3ba9223637ec31fcd547a032e6fc477d97142"
+      },
+      {
+        "name": "TMPro.TMP_FontAsset.get_atlasPadding",
+        "metadata_index": 297074,
+        "address": "0x11239748",
+        "length": 8,
+        "sha256": "fe29e07ddf5edce7b50ce3141e9adc3a4db85b30edda1d1582cbbf995cb47992"
+      }
+    ],
+    "native_image_sha256": "8e49906e085ba3819c4b47fd3bd12dcdd594ff0fcc75d418a87ac35a4566305b",
+    "metadata_sha256": "58884b94b56ef35665f44d3f186fce8b8c854cf3bab0a74e4733a18b6a9175b4",
+    "native_outline": "TMPEffect.DoSetup normalizes outlineWidth by faceInfo.pointSize / fontSize / atlasPadding and clamps to [0,1]. Its callback enables OUTLINE_ON and writes the original outline color without linear conversion. Only the active single-outline branch of these six prefabs is ported; other active effect branches are rejected."
+  },
+  "source_font": {
+    "path": "unity/Assets/Official/Commerce/Art/fonts/FZY4K.ttf",
+    "sha256": "90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386",
+    "bytes": 10017464
+  },
+  "converters": [
+    {
+      "path": "scripts/prepare_official_startup.py",
+      "sha256": "2605c24c6fe4de654a101f9816f00e7f353aad7591d39e906d75d572752390d1"
+    },
+    {
+      "path": "scripts/prepare_battle_world_shaders.py",
+      "sha256": "60c4e3822d7e3974c1563442d3e77f34f049f0c35dbac7e0f607276b94f20d79"
+    },
+    {
+      "path": "scripts/commerce_animation.py",
+      "sha256": "c4d0fe5947741204e95c11827e4d806285de2ea888706aacf1d5fc7231cecb7e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Startup/OfficialStartupTools.cs",
+      "sha256": "e79b868f93da2794d1b485d93c19efc85e3020990462bd223c8b8c2b349a107b"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/Startup/Fonts/298.png",
+      "sha256": "5693faf2c0c65c2ff6f6bbede20da78393047168350daa4a6b11cde3a8e2bb06"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Fonts/299.png",
+      "sha256": "afb4363aca18725703705f7719a892588eceda84faccbf6bf655ae4a4f7d0f57"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/agetips-cd34681d93.png",
+      "sha256": "373c36d1a3146bca54130fba94befafbf4c5c993d76af87b009c6884fdb43773"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/agetips_kr-c73d19209e.png",
+      "sha256": "aea8d9a9623fc26513b23d43fdb659ea96ec871bc1316246072f13682a569bcb"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/Boot_Healthy_Tip-f631eb2010.png",
+      "sha256": "ebb21bc818e624276b174ee770294a7f9c4ad40c88155fc6759b54134ddc5ddf"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/BtnOk-141f78248b.png",
+      "sha256": "d2f4d4fc23d16f7fececbba4ac11e98ced143b46c61aa8ea6052ac84174c8824"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/C_none-73f8e0b4f1.png",
+      "sha256": "b1053f89bb82a79f8d33fe961fb79364943688d6fa733b1de98be88f04359cbb"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_JianBian-9a9e24a58c.png",
+      "sha256": "3afad280b3f4b2806a691faa47dfe73c10de87ff24684c556450f4d8a6204326"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_loading-ba568ef094.png",
+      "sha256": "18db2bccdedd64fa1699a0155cffc77769cde1380243091415ddc7e7a88b1526"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_Login-b427b79b77.png",
+      "sha256": "a3c7ac827d3871bdd2873f53d895edfbba97eb8124b00ab871e5b1aaaf7efb85"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_PopUps-1d715624fd.png",
+      "sha256": "4f4700506e42e5d9b9ab5ef402dc3db5b52236e5f9452c1b0e7c0b9a42543e2f"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_PopUpsTitle-73eb1bc615.png",
+      "sha256": "a00a2414d13e67f6a6a18b2daacc97e39f23e7dde1c37e09bf9fcc65c6a5fe86"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBg_PopUpsWenLi-54b3440f2d.png",
+      "sha256": "68058e4df2fc9aa171d0e654156dedd97995be2187490d9e0a0c798b4d3a5339"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBgYuan-567f7fab34.png",
+      "sha256": "27cc3aec78acd5e123d9620172140b34b8672d9e7aaadeb5d57207dae27ab994"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBgYuan-75ccb6972b.png",
+      "sha256": "83de70d11eb3aabbf04408f3e2c5e1fb1866a98bee39381edf546d606fc32209"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBurst-8304fff71c.png",
+      "sha256": "07e5cd46c7b2df3d4a493e4e14128558f5c202b4b1642c0aa1edc620fd326e51"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBurst-c08b33efb1.png",
+      "sha256": "add0bc8351357c0c1a2964e5d67eb37939f8a86d168ac71d40647c7f97ceede7"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBusy-731c0729eb.png",
+      "sha256": "cbec1ac9cf0fe762025e01e04b0b17c335cc53440cf30d956b2d37ee3dc33a98"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgBusy-dac328df0e.png",
+      "sha256": "9566ac22e0087d097ff061376b1d83d9390bedef72553208a8609c0eaae76542"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgFlow-0a9a5f877d.png",
+      "sha256": "2024df91df331f2325df2e2fc4b325dbbc1c166e8921b6c3690ba28b1ebff9c7"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgFlow-ad3d28a912.png",
+      "sha256": "9392411f1db06ba07cbe0c64bc17cce7d70e7f1d58b2d307eddb0183dfd8578e"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgFunction_Bg2-aca7f0b2e7.png",
+      "sha256": "a74396c4796ccfdadaeaffdc01245d9c6a9c9de8e2f83c64b3da3d76fd3cd812"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgIcon_Measure-03bb3aa115.png",
+      "sha256": "4c2964e7e13375da69c8b5822363af91a48a8057edf7342412daeb01f9a6dd5c"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgIcon_Repair-d622d9f7a6.png",
+      "sha256": "3a8240d0151a48f5e2f1a60d10f018a3e9f2834ed411b5bca187a8d6a4e0a373"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgLine-8f9c31eec1.png",
+      "sha256": "42c5b4ddf82eb29a0e46ca15226d7ef30734a2707dd008b16b4339faf4afe940"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgLoad_Bg-06765eff38.png",
+      "sha256": "153a032b6230d40b84951b8c9d59c28db36c5dcf870a771897f71f1d3905d9ba"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgLoad_Load-15e3db8d95.png",
+      "sha256": "a9b3824da4631232841c3b9a935b1170196d52ab5da31ca758b2c1c6d3bacfd6"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgMaintain-59d2df91f8.png",
+      "sha256": "2d11259b620a9d548e36f277bb318563cadcaf47cb8a4b697945af31cb7c8b0a"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/ImgName-a3dedf9d17.png",
+      "sha256": "a8687ffd585bc33adecf8bcc1a822d9da6ca658311de119a1790abe5d9c278ba"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/Sprites/LOGO-70e2ae9e16.png",
+      "sha256": "da706a619b19202aabc12ac59885e0c645d31bddf32f951d032e10c1cba0f20c"
+    },
+    {
+      "path": "unity/Assets/Official/Startup/startup-ui.json",
+      "sha256": "480bc52ac49083d1470c2ad7da5bffbb9fec83cd68cae4e4917afc00c1a72b1f"
+    }
+  ]
+}

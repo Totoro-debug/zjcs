@@ -13,13 +13,20 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def language(keys):
+def language(keys, source=None):
     result, sources = {}, {}
     wanted = {xxhash.xxh64_intdigest(key.encode()): key for key in keys}
-    for name in ['wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile',
-                 'wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile']:
-        path = ROOT / '.tools/source-packages/WwiseBnk' / name
-        raw = path.read_bytes()
+    names = ['wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile',
+             'wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile']
+    if source is not None:
+        from official_bundle_reader import OfficialBundleReader
+        with OfficialBundleReader(source) as reader:
+            payloads = [(name, reader.read('WwiseBnk', name)) for name in names]
+        inputs = [(name, item.data, dict(item.provenance)) for name, item in payloads]
+    else:
+        inputs = [(str(ROOT / '.tools/source-packages/WwiseBnk' / name),
+                   (ROOT / '.tools/source-packages/WwiseBnk' / name).read_bytes(), None) for name in names]
+    for name, raw, provenance in inputs:
         count = struct.unpack_from('<i', raw)[0]
         start = 4 + count * 12
         for index in range(count):
@@ -29,5 +36,8 @@ def language(keys):
             pos = start + offset
             size = struct.unpack_from('<H', raw, pos)[0]
             result[wanted[key]] = raw[pos + 2:pos + 2 + size].decode('utf8')
-        sources[path.relative_to(ROOT).as_posix()] = digest(path)
+        if provenance is None:
+            sources[Path(name).relative_to(ROOT).as_posix()] = hashlib.sha256(raw).hexdigest()
+        else:
+            sources[name] = dict(provenance, sha256=hashlib.sha256(raw).hexdigest())
     return result, sources

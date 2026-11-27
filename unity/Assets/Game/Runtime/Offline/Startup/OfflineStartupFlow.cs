@@ -50,7 +50,7 @@ namespace Zjcs.Offline.Startup
             panel.Find("Content/DefaultUniverseSetter").gameObject.SetActive(false);
             panel.Find("Content/RightTop").gameObject.SetActive(false);
             panel.Find("LaunchBg/Content/AgeTipGo/LowPerformanceTipGo").gameObject.SetActive(false);
-            panel.Find("LaunchBg/Content/Version").GetComponent<TMP_Text>().text = "854.156383 · 离线版";
+            panel.Find("LaunchBg/Content/Version").GetComponent<TMP_Text>().text = assets.sourceVersion.Replace('_', '.') + " · 离线版";
             panel.Find("LaunchBg/Content/AgeTipGo").GetComponent<AgeTipGo>().OpenDialog = OpenAgeTips;
             progress = launchPanel.ProgressSlider;
             status = launchPanel.StatusText;

@@ -6,7 +6,10 @@ using System.Text.RegularExpressions;
 using TMPro;
 using UnityEditor;
 using UnityEditor.Animations;
+using Unity.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.U2D;
 using UnityEngine.TextCore.LowLevel;
 using UnityEngine.UI;
 using Zjcs.Offline.Startup;
@@ -18,7 +21,7 @@ namespace Zjcs.Editor.Startup
     public static class OfficialStartupTools
     {
         private static string Output = "Assets/Game/Resources/Startup";
-        [Serializable] private sealed class Data { public Root[] roots; public Node[] nodes; public Ref[] refs; public Clip[] animations; public Text[] texts; public int default_portrait_id; }
+        [Serializable] private sealed class Data { public string manifest; public Root[] roots; public Node[] nodes; public Ref[] refs; public Clip[] animations; public Text[] texts; public int default_portrait_id; }
         [Serializable] private sealed class Root { public string name; public int node; }
         [Serializable] private sealed class Node { public string name, transform_json, SafeArea, CanvasWidthAdjuster, text_effect, animator; public bool active, rect; public int parent, id, transform_id, layer, language_sprite_id; public Part[] components; }
         [Serializable] private sealed class Part { public int id; public string type, json; }
@@ -80,14 +83,35 @@ namespace Zjcs.Editor.Startup
                 {
                     string path = Output + "/Sprites/" + row.id + ".asset";
                     Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(row.path);
+                    Sprite replacement = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(row.pivot[0], row.pivot[1]),
+                        row.ppu, 0, SpriteMeshType.FullRect, new Vector4(row.border[0], row.border[1], row.border[2], row.border[3]));
+                    replacement.name = row.id.ToString();
+                    replacement.SetVertexCount(row.vertices.Length);
+                    using (var positions = new NativeArray<Vector3>(row.vertices.Select(v => new Vector3(v.x, v.y, 0)).ToArray(), Allocator.Temp))
+                    using (var uv = new NativeArray<Vector2>(row.vertices.Select(v => new Vector2(
+                        (v.x * row.ppu + texture.width * row.pivot[0]) / texture.width,
+                        (v.y * row.ppu + texture.height * row.pivot[1]) / texture.height)).ToArray(), Allocator.Temp))
+                    using (var indices = new NativeArray<ushort>(row.triangles.Select(v => (ushort)v).ToArray(), Allocator.Temp))
+                    {
+                        replacement.SetVertexAttribute(VertexAttribute.Position, positions);
+                        replacement.SetVertexAttribute(VertexAttribute.TexCoord0, uv);
+                        replacement.SetIndices(indices);
+                    }
                     Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
                     if (sprite == null)
                     {
-                        sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(row.pivot[0], row.pivot[1]),
-                            row.ppu, 0, SpriteMeshType.FullRect, new Vector4(row.border[0], row.border[1], row.border[2], row.border[3]));
+                        sprite = replacement;
                         AssetDatabase.CreateAsset(sprite, path);
                     }
-                    sprite.OverrideGeometry(row.vertices, row.triangles.Select(v => (ushort)v).ToArray());
+                    else
+                    {
+                        EditorUtility.CopySerialized(replacement, sprite);
+                        Object.DestroyImmediate(replacement);
+                    }
+                    if (sprite.texture != texture || sprite.vertices.Length != row.vertices.Length ||
+                        sprite.vertices.Where((v, i) => Vector2.Distance(v, row.vertices[i]) > .0001f).Any() ||
+                        !sprite.triangles.SequenceEqual(row.triangles.Select(v => (ushort)v)))
+                        throw new InvalidDataException("Startup sprite geometry or texture was not restored: " + row.id);
                     bindings[row.id] = sprite;
                     EditorUtility.SetDirty(sprite);
                 }
@@ -314,6 +338,7 @@ namespace Zjcs.Editor.Startup
             }
             if (catalog != null)
             {
+                catalog.sourceVersion = data.manifest;
                 catalog.resourceStatus = data.texts.Single(t => t.key == "YooAsset_Init").value;
                 catalog.initializationStatus = data.texts.Single(t => t.key == "Game_Initializing").value;
                 EditorUtility.SetDirty(catalog);
