@@ -47,7 +47,7 @@ namespace Zjcs.Offline.Progression
             TreasureSlotElementTypes = data.TreasureSlotElementTypes.Select(id => (S.ElementType)id).ToList() };
     }
 
-    public sealed class OfflineTreasureSlotService
+    public sealed partial class OfflineTreasureSlotService
     {
         private readonly OfflineMainlineProgressSession session;
         private readonly OfflineTreasureSlotCatalog catalog;
@@ -98,7 +98,9 @@ namespace Zjcs.Offline.Progression
             if (player == null || catalog == null) throw new ArgumentNullException();
             var settings = catalog.CreateSettings();
             var result = new S.Player(settings, id => player.Inventory.Any(row => row.ItemId == id)
-                && catalog.TryGetElement(id, out int element) ? new S.SlotItem { Info = new S.SlotItemInfo { ElementType = (S.ElementType)element } } : null,
+                && catalog.TryGetElement(id, out int element) ? new S.SlotItem { Id = id,
+                    Count = player.Inventory.First(row => row.ItemId == id).Count,
+                    Info = new S.SlotItemInfo { ElementType = (S.ElementType)element } } : null,
                 message => Debug.LogError(message));
             var data = player.CharacterProperties.TreasureSlots;
             if (!OfflineTreasureSlotProgress.IsValid(data)) throw new FormatException("Treasure slot save data is invalid.");
@@ -141,6 +143,7 @@ namespace Zjcs.Offline.Progression
         {
             if (data.ActivePlanIndex >= catalog.MaxPlanCount) throw new FormatException("Treasure active plan index is invalid.");
             player.ActivePlanIndex = data.ActivePlanIndex;
+            player.BlessRecordFormat = data.BlessRecordFormat;
             player.TreasureSlotData.SeasonId = data.SeasonId;
             player.TreasureSlotData.UpgradeUseCommonMaterailEnable = data.UpgradeUseCommonMaterailEnable;
             player.TreasureSlotData.AwakeAutoMergeEnable = data.AwakeAutoMergeEnable;
@@ -169,6 +172,22 @@ namespace Zjcs.Offline.Progression
                     content.Data.TreasureSlots.Add((S.ElementType)element.ElementType, slots);
                 }
             }
+            foreach (var record in data.BlessRecords)
+            {
+                var restored = new S.PlayerSeasonRecordPlayerBlessTreasureRecordDataWrap(player.Settings, message => Debug.LogError(message));
+                foreach (var element in record.Elements)
+                {
+                    if (!catalog.AllowsElement(element.ElementType)) throw new FormatException("Treasure blessing record element is unknown.");
+                    var group = new S.PlayerSeasonRecordPlayerTreasureBlessRecordDataWrap();
+                    foreach (var slot in element.Slots)
+                    {
+                        if (slot.Index >= catalog.MaxSlotCount) throw new FormatException("Treasure blessing record index is invalid.");
+                        group.TreasureSlotBlessLevelDict.Add(slot.Index, slot.Level);
+                    }
+                    restored.ElementTreasureSlotBlessDataDict.Add((S.ElementType)element.ElementType, group);
+                }
+                player.BlessRecords.Add(record.SeasonId, restored);
+            }
         }
 
         private static void RequireSlot(OfflineTreasureSlotCatalog catalog, int element, int index, int treasure)
@@ -182,7 +201,7 @@ namespace Zjcs.Offline.Progression
         {
             var result = new OfflineTreasureSlotProgress { Format = 1, ActivePlanIndex = player.ActivePlanIndex,
                 SeasonId = player.TreasureSlotData.SeasonId, UpgradeUseCommonMaterailEnable = player.TreasureSlotData.UpgradeUseCommonMaterailEnable,
-                AwakeAutoMergeEnable = player.TreasureSlotData.AwakeAutoMergeEnable };
+                AwakeAutoMergeEnable = player.TreasureSlotData.AwakeAutoMergeEnable, BlessRecordFormat = player.BlessRecordFormat };
             foreach (var element in player.TreasureSlotData.TreasureSlotDataDict)
                 result.Elements.Add(new OfflineTreasureElementSlots { ElementType = (int)element.Key,
                     ShareLevel = element.Value.ShareLevel, BaseShareLevel = element.Value.BaseShareLevel,
@@ -192,6 +211,11 @@ namespace Zjcs.Offline.Progression
                 result.Plans.Add(new OfflineTreasureSlotPlan { Index = plan.Key,
                     Elements = plan.Value.Data.TreasureSlots.Select(element => new OfflineTreasurePlanElement { ElementType = (int)element.Key,
                         Slots = element.Value.Select(slot => new OfflineTreasurePlanSlot { Index = slot.Key, TreasureClassId = slot.Value }).ToList() }).ToList() });
+            foreach (var record in player.BlessRecords)
+                result.BlessRecords.Add(new OfflineTreasureSlotBlessRecord { SeasonId = record.Key,
+                    Elements = record.Value.ElementTreasureSlotBlessDataDict.Select(element => new OfflineTreasureSlotBlessElement {
+                        ElementType = (int)element.Key, Slots = element.Value.TreasureSlotBlessLevelDict.Select(slot =>
+                            new OfflineTreasureSlotBlessLevel { Index = slot.Key, Level = slot.Value }).ToList() }).ToList() });
             if (!OfflineTreasureSlotProgress.IsValid(result)) throw new FormatException("Original treasure slot operation produced invalid local data.");
             return result;
         }

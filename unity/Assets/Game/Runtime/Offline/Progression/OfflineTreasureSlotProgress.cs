@@ -12,14 +12,26 @@ namespace Zjcs.Offline.Progression
         public bool UpgradeUseCommonMaterailEnable, AwakeAutoMergeEnable;
         public List<OfflineTreasureElementSlots> Elements = new List<OfflineTreasureElementSlots>();
         public List<OfflineTreasureSlotPlan> Plans = new List<OfflineTreasureSlotPlan>();
+        public int BlessRecordFormat;
+        public List<OfflineTreasureSlotBlessRecord> BlessRecords = new List<OfflineTreasureSlotBlessRecord>();
 
         public static bool IsValid(OfflineTreasureSlotProgress data)
         {
             if (data == null || data.Format < 0 || data.Format > 1 || data.SeasonId < 0
                 || data.ActivePlanIndex < 0 || data.ActivePlanIndex >= 32 || data.Elements == null
-                || data.Elements.Count > 16 || data.Plans == null || data.Plans.Count > 32) return false;
+                || data.Elements.Count > 16 || data.Plans == null || data.Plans.Count > 32
+                || data.BlessRecordFormat < 0 || data.BlessRecordFormat > 1 || data.BlessRecords == null
+                || data.BlessRecords.Count > 100 || data.BlessRecordFormat == 0 && data.BlessRecords.Count != 0
+                || data.BlessRecords.Any(record => record == null || record.SeasonId <= 0 || record.Elements == null
+                    || record.Elements.Count > 16 || record.Elements.Any(element => element == null || element.ElementType < 0
+                        || element.Slots == null || element.Slots.Count > 32 || element.Slots.Any(slot => slot == null
+                            || slot.Index < 0 || slot.Index >= 32 || slot.Level < 0)
+                        || element.Slots.Select(slot => slot.Index).Distinct().Count() != element.Slots.Count)
+                    || record.Elements.Select(element => element.ElementType).Distinct().Count() != record.Elements.Count)
+                || data.BlessRecords.Select(record => record.SeasonId).Distinct().Count() != data.BlessRecords.Count) return false;
             if (data.Format == 0) return data.Elements.Count == 0 && data.Plans.Count == 0
-                && data.SeasonId == 0 && data.ActivePlanIndex == 0 && !data.UpgradeUseCommonMaterailEnable && !data.AwakeAutoMergeEnable;
+                && data.SeasonId == 0 && data.ActivePlanIndex == 0 && !data.UpgradeUseCommonMaterailEnable && !data.AwakeAutoMergeEnable
+                && data.BlessRecordFormat == 0;
             if (data.Elements.Any(row => row == null || row.ElementType < 0 || row.ShareLevel < 1
                 || row.BaseShareLevel < 1 || row.ShareLevel < row.BaseShareLevel || row.Slots == null
                 || row.Slots.Count > 32 || row.Slots.Any(slot => slot == null || slot.Index < 0 || slot.Index >= 32
@@ -58,4 +70,15 @@ namespace Zjcs.Offline.Progression
         public List<OfflineTreasurePlanSlot> Slots = new List<OfflineTreasurePlanSlot>();
     }
     [Serializable] public sealed class OfflineTreasurePlanSlot { public int Index, TreasureClassId; }
+    [Serializable] public sealed class OfflineTreasureSlotBlessRecord
+    {
+        public int SeasonId;
+        public List<OfflineTreasureSlotBlessElement> Elements = new List<OfflineTreasureSlotBlessElement>();
+    }
+    [Serializable] public sealed class OfflineTreasureSlotBlessElement
+    {
+        public int ElementType;
+        public List<OfflineTreasureSlotBlessLevel> Slots = new List<OfflineTreasureSlotBlessLevel>();
+    }
+    [Serializable] public sealed class OfflineTreasureSlotBlessLevel { public int Index, Level; }
 }

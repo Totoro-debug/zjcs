@@ -70,6 +70,8 @@ namespace Zjcs.Offline.Progression
             if (progress.TreasureElementLevels == null)
                 progress.TreasureElementLevels = new List<OfflineTreasureElementLevel>();
             if (progress.TreasureSlots == null) progress.TreasureSlots = new OfflineTreasureSlotProgress();
+            if (progress.TreasureSlots.BlessRecordFormat == 0 && progress.TreasureSlots.BlessRecords == null)
+                progress.TreasureSlots.BlessRecords = new List<OfflineTreasureSlotBlessRecord>();
             if (progress.TreasureSlots.Format == 0)
             {
                 progress.TreasureSlots.Elements ??= new List<OfflineTreasureElementSlots>();

@@ -117,7 +117,7 @@ def prepare(check=False, oracle=None):
         text = text.replace('CreateNew(TreasureSlotSettings settings, Action<string> reportError)',
             'CreateNew()').replace('=> new PlayerTreasureElementSlotsDataWrap(settings, reportError);',
             '=> new PlayerTreasureElementSlotsDataWrap(Parsers.GameSettings, null);')
-        text += '\nnamespace TreasureSlotOracle {\npublic static class Parsers { public static TreasureSlotSettings GameSettings; }\n'
+        text += '\nnamespace TreasureSlotOracle {\npublic static partial class Parsers { public static TreasureSlotSettings GameSettings; }\n'
         text += 'public struct GLoggerErrorInterpolatedStringHandler { public GLoggerErrorInterpolatedStringHandler(int a,int b,out bool enabled) { enabled=false; } public void AppendLiteral(string s) {} public void AppendFormatted<T>(T value,int a,object b,string name) {} }\n'
         text += 'public static class Log { public static int Errors; public static void Error(ref GLoggerErrorInterpolatedStringHandler m,object e,string member,string path,int line) { Errors++; } }\n}\n'
         oracle.parent.mkdir(parents=True, exist_ok=True)

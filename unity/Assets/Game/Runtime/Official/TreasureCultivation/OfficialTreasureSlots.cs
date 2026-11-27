@@ -15,7 +15,7 @@ namespace Zjcs.Official.TreasureSlots
         public List<ElementType> TreasureSlotElementTypes;
     }
     public sealed class SlotItemInfo { public ElementType ElementType; }
-    public sealed class SlotItem { public SlotItemInfo Info; }
+    public sealed class SlotItem { public int Id; public long Count; public SlotItemInfo Info; }
 
     public class PlayerTreasureSlotItemDataWrap
     {
@@ -260,7 +260,7 @@ public bool RemoveTreasureInSlot(ElementType type, int index)
         public PlayerBattlePlanTreasureSlotsWrap TreasureSlots => new PlayerBattlePlanTreasureSlotsWrap(Data.TreasureSlots);
     }
 
-    public sealed class Player
+    public sealed partial class Player
     {
         public long Id;
         private readonly TreasureSlotSettings settings;
@@ -503,7 +503,7 @@ private static int GetWornTreasureClassId(this Player player, ElementType elemen
 		return value.TreasureClassId;
 	}
     }
-    public static class TreasureHelper
+    public static partial class TreasureHelper
     {
         public static bool CanSetupTreasureSlot(Player player, int treasureClassId, int slotIndex)
 	{
