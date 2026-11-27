@@ -25,30 +25,13 @@ def sha(path):
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
-def convert(cache, inputs_subdir='inputs', export_name='native-export'):
-    cache = cache.resolve()
+def prepare_managed_inputs(cache, inputs_subdir='inputs'):
+    """Stage verified original hot-update and AOT descriptors for native field decoding."""
+    cache = Path(cache).resolve()
     version = OfficialSource().version
     allowed = (ROOT / '.tools/source-packages/current' / version).resolve()
     if not cache.is_relative_to(allowed):
-        raise ValueError('Use the selected current conversion cache')
-    receipt_path = cache / 'source-manifest.json'
-    receipt = json.loads(receipt_path.read_bytes())
-    selection_path = cache / 'changed-inputs-source-manifest.json'
-    if inputs_subdir == 'changed-inputs':
-        selection = json.loads(selection_path.read_bytes())
-        if selection['manifest'] != version or selection['input_manifest_sha256'] != sha(receipt_path):
-            raise ValueError('Changed input selection differs from current source')
-        receipt = dict(receipt, inputs=selection['inputs'])
-    if receipt['manifest'] != version:
-        raise ValueError('Converter source version differs')
-    if not re.fullmatch(r'native-export(?:-[a-z0-9]+)?', export_name):
-        raise ValueError('Use a native-export cache name')
-    destination = cache / export_name
-    if destination.exists():
-        raise FileExistsError('Retain the existing native export; do not overwrite it')
-    for row in receipt['inputs']:
-        if sha(cache / row['output']) != row['decoded_sha256']:
-            raise ValueError('Converter input changed: ' + row['output'])
+        raise ValueError('Use the selected current managed input cache')
     code = allowed / 'code-manifest.json'
     assemblies = json.loads(code.read_bytes())
     if assemblies['manifest'] != version:
@@ -95,6 +78,34 @@ def convert(cache, inputs_subdir='inputs', export_name='native-export'):
                                        role='original-aot-type-descriptor' if original.is_relative_to(aot) else 'editor-type-fallback'))
     if not any(Path(row['path']).name == 'UnityEngine.CoreModule.dll' for row in dependency_records):
         raise FileNotFoundError('Matching editor UnityEngine.CoreModule.dll is required for script fields')
+    return code, dependency_records, aot / 'source-manifest.json'
+
+
+def convert(cache, inputs_subdir='inputs', export_name='native-export'):
+    cache = cache.resolve()
+    version = OfficialSource().version
+    allowed = (ROOT / '.tools/source-packages/current' / version).resolve()
+    if not cache.is_relative_to(allowed):
+        raise ValueError('Use the selected current conversion cache')
+    receipt_path = cache / 'source-manifest.json'
+    receipt = json.loads(receipt_path.read_bytes())
+    selection_path = cache / 'changed-inputs-source-manifest.json'
+    if inputs_subdir == 'changed-inputs':
+        selection = json.loads(selection_path.read_bytes())
+        if selection['manifest'] != version or selection['input_manifest_sha256'] != sha(receipt_path):
+            raise ValueError('Changed input selection differs from current source')
+        receipt = dict(receipt, inputs=selection['inputs'])
+    if receipt['manifest'] != version:
+        raise ValueError('Converter source version differs')
+    if not re.fullmatch(r'native-export(?:-[a-z0-9]+)?', export_name):
+        raise ValueError('Use a native-export cache name')
+    destination = cache / export_name
+    if destination.exists():
+        raise FileExistsError('Retain the existing native export; do not overwrite it')
+    for row in receipt['inputs']:
+        if sha(cache / row['output']) != row['decoded_sha256']:
+            raise ValueError('Converter input changed: ' + row['output'])
+    code, dependency_records, aot_manifest_path = prepare_managed_inputs(cache, inputs_subdir)
     with temporary_validation_directory('official-resource-export-') as temporary:
         work = Path(temporary)
         runner = work / 'runner'
@@ -150,7 +161,7 @@ def convert(cache, inputs_subdir='inputs', export_name='native-export'):
             raise ValueError('Native output move is outside the verified workspace/cache')
         exported.rename(destination)
         result = dict(manifest=version, input_manifest_sha256=sha(receipt_path), code_manifest_sha256=sha(code),
-                      type_dependencies=dependency_records, aot_manifest_sha256=sha(aot/'source-manifest.json'),
+                      type_dependencies=dependency_records, aot_manifest_sha256=sha(aot_manifest_path),
                       selected_inputs=inputs_subdir, selection_sha256=sha(selection_path) if inputs_subdir == 'changed-inputs' else None,
                       generator_sha256=sha(Path(__file__)), exporter_sha256=sha(runner/'AssetRipper.GUI.Free.exe'),
                       settings=settings, outputs=files, conversion_issues=issues, export_directory=export_name,
