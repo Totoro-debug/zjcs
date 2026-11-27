@@ -80,10 +80,15 @@ def verify_controller(binding, owner, docs, root):
         raise ValueError('Original UI default state differs')
     parameters = constants['m_Values']['data']['m_ValueArray']
     if len(parameters) != len(controller['m_AnimatorParameters']):
-        raise ValueError('Original UI trigger count differs')
+        raise ValueError('Original UI parameter count differs')
     for expected, found in zip(parameters, controller['m_AnimatorParameters']):
-        if expected['m_Type'] != 9 or found['m_Type'] != 9 or found['m_Name'] != names[expected['m_ID']]:
-            raise ValueError('Original UI trigger parameter differs')
+        if expected['m_Type'] not in (4, 9) or found['m_Type'] != expected['m_Type'] or found['m_Name'] != names[expected['m_ID']]:
+            raise ValueError('Original UI bool/trigger parameter differs')
+        if expected['m_Type'] == 4:
+            defaults = constants['m_DefaultValues']['data']['m_BoolValues']
+            if (found['m_DefaultBool'] != defaults[expected['m_Index']]
+                    or found['m_DefaultFloat'] != 0 or found['m_DefaultInt'] != 0):
+                raise ValueError('Original UI bool parameter default differs')
     if set(docs) - visited.keys() - {100100000}:
         raise ValueError('Unverified original UI animator subassets')
     return visited

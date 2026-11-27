@@ -1,0 +1,29 @@
+{
+  "manifest": "911_156995",
+  "inputs": {
+    ".tools/source-packages/current/911_156995/code-manifest.json": "a47317188c8d1f947b56ff1af73b4cd811a079860799915cf9103603afc200e9",
+    ".tools/source-packages/current/911_156995/official-code/managed/decoded/Assembly-CSharp.dll": "1e7eb15a1cead0c2e618e307a367119908485a5a658815a0fe39d98c0d3f31fe",
+    ".tools/source-packages/current/911_156995/official-code/client-source/TreasureStarInfo.cs": "d16cc755fe02930232eeabe01dbfe0227aebbeaa103a971ce11207f75ced83dc",
+    "scripts/prepare_treasure_ui_controls.py": "d31b49d5e5fe5f6848c36f5764ec2b6ae8613a2aaa8b3be4eb56e8ccd9559805",
+    ".tools/source-packages/current/911_156995/official-code/client-source/StarMiniInfo.cs": "626b07cc5d4739d067016813e743d33b1fb7e8e4d78873ec87de18ee17c4b10a",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/Quality.cs": "5d309081493dd97b6cf42c4c995092abcd427ca4ae9efa0259c3af9e57401fa3"
+  },
+  "shared_components": {
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/StarMiniInfo.cs": "42a8a8c671464e315216dc18f54339e0112585a1a15ed861d4798deae31c5779",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/MonoDictionary.cs": "9034874590728c38801ad7ef9e53f57cfe2a0010879661b51ff85b11be7a0217",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/MonoKeyValuePair.cs": "5c57ebdca71c204dc18648bf172900b06cbca5f2d2a1a8b7cf3dbf8e56cd50ee",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/Quality.cs": "872b3d959d28c2458c804d03f15760ecdb156ef99d478f2f6a165cccdc7c7388",
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldStateSwitcher.cs": "e2fd20a63aa5e3b82ab98ec3d17cc8c973c3558bb0b2083ef54a2bf80188a2dc"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/TreasureUI/TreasureStarInfo.cs": "3cce815c196c095623b27304daa2a3bd448ddfbd03ca90cc90a4bd8b7263f42e",
+    "unity/Assets/Game/Runtime/Official/TreasureUI/Zjcs.Official.TreasureUI.asmdef": "bc9df2b36d3dcf6c28a823f23da31c746c33ca0f39c4cee944535afb2d7bc074",
+    "unity/Assets/Game/Runtime/Official/TreasureUI/TreasureStarInfo.cs.meta": "1039275b1fbd90c394e00246aa9b7f9cd397bfba7632641c57e6ff6eee2518df",
+    "unity/Assets/Game/Runtime/Official/TreasureUI/Zjcs.Official.TreasureUI.asmdef.meta": "540001cbd877700a0a890523651804b322b4c55250b5ed4ec86784632c4c8b7a",
+    "unity/Assets/Game/Runtime/Official/TreasureUI.meta": "3ed897f8a62c1363141a1111f108ccaaa16b747ae260acd8e23238d95998d597"
+  },
+  "adaptations": [
+    "Public namespaced component; original control flow, fields, call order and arguments retained.",
+    "Reuse shared original StarMiniInfo, Quality, MonoDictionary and bool state selector; native managed references are rebound explicitly."
+  ]
+}

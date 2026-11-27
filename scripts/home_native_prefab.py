@@ -1,12 +1,60 @@
 """Shared exact prefab/resource binding for native home entities."""
 import hashlib
+import zlib
 from collections import Counter
 from pathlib import Path
 
 from home_native_assets import write_staged_assets
 from official_apk import ROOT
-from prepare_current_partner_native import documents, identity
+from prepare_current_partner_native import documents, identity, pointer
 from prepare_partner_card_native import guid, sha, script_id
+
+
+def restore_original_empty_values(source, native, address=''):
+    """Restore only proven empty values lost by YAML parsing; Unity reads literal 'null' as a string."""
+    restored = []
+    if isinstance(source, dict) and isinstance(native, dict):
+        for key in source.keys() & native.keys():
+            current = address + '/' + str(key)
+            if native[key] is None and source[key] in ('', [], {}):
+                native[key] = source[key]
+                restored.append(current)
+            else:
+                restored.extend(restore_original_empty_values(source[key], native[key], current))
+    elif isinstance(source, list) and isinstance(native, list) and len(source) == len(native):
+        for index, (original, converted) in enumerate(zip(source, native)):
+            current = address+'/'+str(index)
+            if converted is None and original in ('', [], {}):
+                native[index] = original
+                restored.append(current)
+            else:
+                restored.extend(restore_original_empty_values(original, converted, current))
+    return restored
+
+
+def restore_root_animation_curve_paths(binding, owner, native):
+    """Recover empty authoring paths only when original player bindings prove the same root/property/script."""
+    source = binding.recovery.fields(owner)
+    bindings = source['m_ClipBindingConstant']['genericBindings']
+    restored = []
+    for group, is_pointer in (('m_FloatCurves', 0), ('m_PPtrCurves', 1)):
+        for index, curve in enumerate(native[group]):
+            if curve['path'] is not None:
+                continue
+            script = curve.get('script', {})
+            script_object = binding.objects.get(script.get('guid')) if script.get('fileID') else None
+            if script.get('fileID') and script_object is None:
+                raise ValueError('Resolve original root animation curve script before restoring its path')
+            script_key = identity(script_object) if script_object is not None else None
+            matches = [row for row in bindings if row['path'] == 0
+                and row['attribute'] == zlib.crc32(curve['attribute'].encode('utf8'))
+                and row['typeID'] == curve['classID'] and row['isPPtrCurve'] == is_pointer
+                and (identity(pointer(row['script'], owner)) if row['script']['m_PathID'] else None) == script_key]
+            if len(matches) != 1:
+                raise ValueError('Original player binding does not uniquely prove an empty root animation path')
+            curve['path'] = ''
+            restored.append('/'+group+'/'+str(index)+'/path')
+    return restored
 
 
 def register_script(binding, full_name, path):
@@ -142,8 +190,18 @@ def bind_prefab(binding, bundle, relative, name, scope):
     root, = [pointer.deref() for path, pointer in binding.recovery.apk.container(bundle)
         if path.casefold() == ('Assets/' + relative).casefold() and pointer.deref().type.name == 'GameObject']
     native = documents((binding.native / relative).read_text('utf8'))
-    native_root, = [key for key, value in native.items() if value.get('GameObject', {}).get('m_Name') == root.read().m_Name
-        and native[value['GameObject']['m_Component'][0]['component']['fileID']]['Transform']['m_Father']['fileID'] == 0]
+    roots = []
+    for key, value in native.items():
+        game_object = value.get('GameObject')
+        if game_object is None or game_object.get('m_Name') != root.read().m_Name:
+            continue
+        component = native[game_object['m_Component'][0]['component']['fileID']]
+        transform = component.get('Transform') or component.get('RectTransform')
+        if transform is None:
+            raise ValueError('Original native root has no Transform or RectTransform: ' + relative)
+        if transform['m_Father']['fileID'] == 0:
+            roots.append(key)
+    native_root, = roots
     binding.recovery.recover(name, binding.work / 'recovered', bundle=bundle,
         native_relative=relative, source_root=root, native_root_id=native_root)
     binding.recovery.finalize(); _, _, panel, _ = binding.recovery.outputs[-1]
