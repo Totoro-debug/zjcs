@@ -1,8 +1,6 @@
 """Extract official opening story-fight data and story UI for the offline flow.
 
 Inputs come from the current official source. Outputs:
-  assets/official/character-creation/opening-story.json
-  assets/official/character-creation/opening-stage.json
   unity/Assets/StreamingAssets/Opening/*.json|*.bytes
   unity/Assets/StreamingAssets/Opening/ui/*.png + opening-ui.json
   assets/reference/character-creation/opening-source-manifest.json
@@ -24,7 +22,6 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 MODEL_IDENTITIES = ROOT / "unity/Assets/Official/Combat/Presentation/model-identities.json"
-OFFICIAL_DATA = ROOT / "assets/official/character-creation"
 PAYLOAD = ROOT / "unity/Assets/StreamingAssets/Opening"
 REFERENCE = ROOT / "assets/reference/character-creation/opening-source-manifest.json"
 
@@ -960,9 +957,9 @@ def pack_atlas(sprite_cache, target):
 
 
 def ui_payload(apk, target_dir, story):
-    from official_unity_schema import ScriptSchemas
+    from current_component_schemas import CurrentSchemas
 
-    schemas = ScriptSchemas()
+    schemas = CurrentSchemas()
     sprites = SpriteCache(apk)
     prefabs = []
     for key, (path, bundle) in UI_PANELS.items():
@@ -1087,18 +1084,15 @@ def main():
     record = record_payload(apk)
     stage = stage_payload(apk)
 
-    OFFICIAL_DATA.mkdir(parents=True, exist_ok=True)
     PAYLOAD.mkdir(parents=True, exist_ok=True)
     outputs = []
     runtime_stage = {key: value for key, value in stage.items() if key not in ("source", "grid_source")}
-    outputs.append(write_with_meta(OFFICIAL_DATA / "opening-stage.json", json_bytes(runtime_stage)))
     outputs.append(write_with_meta(PAYLOAD / "opening-stage.json", json_bytes(runtime_stage)))
     outputs.append(write_with_meta(PAYLOAD / "opening-record.bytes", record["bytes"]))
 
     ui, atlas_paths, texture_outputs, failures, atlas_sprites, portrait_sources, ui_sources = ui_payload(
         apk, PAYLOAD / "ui", story)
     runtime_story = {key: value for key, value in story.items() if key != "provenance"}
-    outputs.append(write_with_meta(OFFICIAL_DATA / "opening-story.json", json_bytes(runtime_story)))
     outputs.append(write_with_meta(PAYLOAD / "opening-story.json", json_bytes(runtime_story)))
     outputs.append(write_with_meta(PAYLOAD / "ui" / "opening-ui.json", json_bytes(ui)))
     for atlas_path in atlas_paths:
@@ -1135,7 +1129,17 @@ def main():
     manifest = {key: value if key == 'manifest' else without_source_versions(value)
                 for key, value in manifest.items()}
     REFERENCE.parent.mkdir(parents=True, exist_ok=True)
+    if REFERENCE.exists():
+        previous = json.loads(REFERENCE.read_bytes())
+        replaced = {entry["path"] for entry in manifest["outputs"]}
+        ui_prefix = (PAYLOAD / "ui").relative_to(ROOT).as_posix() + "/"
+        previous_outputs = [entry for entry in previous["outputs"]
+                            if entry["path"] not in replaced
+                            and not entry["path"].startswith((ui_prefix, "assets/official/character-creation/opening-"))]
+        manifest["outputs"] = sorted(manifest["outputs"] + previous_outputs, key=lambda entry: entry["path"])
+        manifest = {**previous, **manifest}
     REFERENCE.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    restore_ui_layout(apk)
     print(json.dumps({"record": record["summary"], "stories": list(story["graphs"]),
                       "dialogues": len(story["dialogues"]), "stage": stage["scene"],
                       "ui_sprites": atlas_sprites, "ui_unresolved": len(failures),
