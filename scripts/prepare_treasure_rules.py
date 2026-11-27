@@ -18,7 +18,7 @@ def write_oracle(destination):
     prior = json.loads(RECEIPT.read_bytes())
     code = ROOT / '.tools/source-packages/current' / prior['manifest'] / 'official-code/common-source/Common'
     texts = {}
-    for name in ('TreasureInfo', 'TreasureSuitInfoParser'):
+    for name in ('TreasureInfo', 'TreasureSuitInfoParser', 'TreasureUpgradeInfoParser', 'Formula'):
         path = code / (name + '.cs')
         if sha(path.read_bytes()) != prior['decoder_inputs'][path.relative_to(ROOT).as_posix()]:
             raise ValueError('Original Treasure oracle source differs: ' + name)
@@ -30,6 +30,13 @@ def write_oracle(destination):
         result += original_method(texts['TreasureInfo'], signature) + '\n'
     result += '}\npublic sealed class OriginalTreasureSuitParser { public void Process(TreasureSuitInfo value) { processInfo(value); }\n'
     result += original_method(texts['TreasureSuitInfoParser'], 'private void processInfo(') + '\n}\n'
+    result += 'public sealed partial class OriginalTreasureCostParser {\n'
+    for signature in ('public Dictionary<int, long> GetMergeMaterials(',
+                      'public Dictionary<int, long> GetUpgradeMaterials(int treasureClassId,',
+                      'public Dictionary<int, long> GetSpecialUpgradeMaterials('):
+        result += original_method(texts['TreasureUpgradeInfoParser'], signature) + '\n'
+    result += '}\npublic static class Formula {\n'
+    result += original_method(texts['Formula'], 'public static int GetPieceIdByTreasureId(') + '\n}\n'
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(result, 'utf8', newline='\n')
     apk = Apk(prior['manifest'], reuse_current_cache=True)
@@ -40,16 +47,22 @@ def write_oracle(destination):
             ('treasure', 'TbTreasureInfo'), ('treasure_suit', 'TbTreasureSuitInfo'),
             ('treasure_levelup_material', 'TbTreasureLevelInfo'), ('treasure_upgrade_material', 'TbTreasureUpgradeInfo'),
             ('treasure_bless', 'TbTreasureBlessInfo'), ('random_treasure_exchange', 'TbRandomTreasureExchangeInfo')):
-            raw = apk.asset('defaultpackage_assets_config_luban.bundle', name + '.g.bytes').read().m_Script.encode('utf8', 'surrogateescape')
+            raw = apk.asset('defaultpackage_assets_config_luban.bundle', '/' + name + '.g.bytes').read().m_Script.encode('utf8', 'surrogateescape')
             if sha(raw) != prior['inputs'][name + '.g.bytes']:
                 raise ValueError('Original oracle table differs: ' + name)
             rows[name] = constructors.table(raw, kind)
-        raw = apk.asset('defaultpackage_assets_config_luban.bundle', 'game_settings.g.bytes').read().m_Script.encode('utf8', 'surrogateescape')
+        raw = apk.asset('defaultpackage_assets_config_luban.bundle', '/game_settings.g.bytes').read().m_Script.encode('utf8', 'surrogateescape')
         if sha(raw) != prior['inputs']['game_settings.g.bytes']:
             raise ValueError('Original oracle settings differ')
         settings = constructors.table(raw, 'TbGameSettings')
         rows['settings'] = {key: settings[key] for key in ('TreasureMaxSlotCount', 'TreasureSlotElementTypes',
             'TreasureSlotPropAddRate', 'TreasureMaxLevel', 'TreasurePlanMaxCount', 'TreasureSettings')}
+        raw = apk.asset('defaultpackage_assets_config_luban.bundle', '/item.g.bytes').read().m_Script.encode('utf8', 'surrogateescape')
+        if sha(raw) != prior['inputs']['item.g.bytes']:
+            raise ValueError('Original oracle item table differs')
+        treasure_ids = {row['ClassId'] for row in rows['treasure']}
+        rows['items'] = [{'ClassId': row['ClassId'], 'Quality': row['Quality']}
+                         for row in constructors.table(raw, 'TbItemInfo') if row['ClassId'] in treasure_ids]
     finally:
         apk.reader.close()
     destination.with_suffix('.json').write_text(json.dumps(rows, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
@@ -75,7 +88,7 @@ def prepare(*, check=False):
     table_sources = {}
 
     def load_table(filename: str, table_name: str):
-        obj = apk.asset(bundle, filename)
+        obj = apk.asset(bundle, '/' + filename)
         raw = obj.read().m_Script.encode('utf8', 'surrogateescape')
         table_sources[filename] = dict(source=apk.provenance(obj), object_sha256=sha(obj.get_raw_data()))
         return constructors.table(raw, table_name), sha(raw)
@@ -88,6 +101,7 @@ def prepare(*, check=False):
         treasure_rows, treasure_sha = load_table('treasure.g.bytes', 'TbTreasureInfo')
         suit_rows, suit_sha = load_table('treasure_suit.g.bytes', 'TbTreasureSuitInfo')
         gs, gs_sha = load_table('game_settings.g.bytes', 'TbGameSettings')
+        _, item_sha = load_table('item.g.bytes', 'TbItemInfo')
     finally:
         apk.reader.close()
 
@@ -213,6 +227,7 @@ def prepare(*, check=False):
             'treasure.g.bytes': treasure_sha,
             'treasure_suit.g.bytes': suit_sha,
             'game_settings.g.bytes': gs_sha,
+            'item.g.bytes': item_sha,
         },
         'outputs': {
             DEST.relative_to(ROOT).as_posix(): sha(encoded),
@@ -230,17 +245,19 @@ def prepare(*, check=False):
             path = constructors.source_root.parent / 'Common.LubanGen' / (name + '.cs')
         if text:
             receipt['decoder_inputs'][path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
-    for name in ('TreasureInfo', 'TreasureSuitInfoParser'):
+    for name in ('TreasureInfo', 'TreasureSuitInfoParser', 'TreasureUpgradeInfoParser', 'Formula'):
         path = constructors.source_root / (name + '.cs')
         receipt['decoder_inputs'][path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
     receipt['outputs'][Path(str(DEST) + '.meta').relative_to(ROOT).as_posix()] = sha(meta.encode())
     receipt['runtime_bindings'] = {path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in (
         ROOT / 'unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureCatalog.cs',
         ROOT / 'unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureCatalog.cs.meta',
+        ROOT / 'unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureCostRules.cs',
+        ROOT / 'unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureCostRules.cs.meta',
         ROOT / 'scripts/fixtures/treasure_catalog_validation.cs', ROOT / 'scripts/test_treasure_catalog.ps1',
         ROOT / 'scripts/official_tables.py', ROOT / 'scripts/official_apk.py',
         ROOT / 'scripts/prepare_pet_score_chest_preview.py')}
-    receipt['scope'] = 'Selected original treasure cultivation/suit/settings tables and lookup helpers. Cultivation transactions, native windows, HUD and production entry are not validated by this catalog.'
+    receipt['scope'] = 'Selected original treasure cultivation/suit/settings tables, lookup helpers and original merge/cumulative promotion material queries. Cultivation transactions, native windows, HUD and production entry are not validated by these queries.'
     receipt_raw = (json.dumps(receipt, ensure_ascii=False, indent=2) + '\n').encode('utf8')
     if check:
         if not prior or receipt_raw != RECEIPT.read_bytes() or encoded != DEST.read_bytes() or meta.encode() != Path(str(DEST) + '.meta').read_bytes():
@@ -248,7 +265,7 @@ def prepare(*, check=False):
         print('Verified original Treasure tables, order, decoder sources and runtime payload.')
         return
     if prior:
-        if receipt['inputs'] != prior['inputs']:
+        if any(receipt['inputs'].get(name) != digest for name, digest in prior['inputs'].items()):
             raise ValueError('Selected original Treasure table hashes changed.')
         for path, expected in prior['outputs'].items():
             if sha((ROOT / path).read_bytes()) != expected:

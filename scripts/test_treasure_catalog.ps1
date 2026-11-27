@@ -17,6 +17,8 @@ $sources = @{}
 foreach ($pair in @(
     @('unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureCatalog.cs', 'Assets/OfflineTreasureCatalog.cs'),
     @('unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureCatalog.cs.meta', 'Assets/OfflineTreasureCatalog.cs.meta'),
+    @('unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureCostRules.cs', 'Assets/OfflineTreasureCostRules.cs'),
+    @('unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureCostRules.cs.meta', 'Assets/OfflineTreasureCostRules.cs.meta'),
     @('unity/Assets/Game/Resources/Treasure/treasure-rules.json', 'Assets/Resources/Treasure/treasure-rules.json'),
     @('unity/Assets/Game/Resources/Treasure/treasure-rules.json.meta', 'Assets/Resources/Treasure/treasure-rules.json.meta'),
     @('unity/ProjectSettings/ProjectVersion.txt', 'ProjectSettings/ProjectVersion.txt'),

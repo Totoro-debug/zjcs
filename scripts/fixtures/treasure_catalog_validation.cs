@@ -27,6 +27,7 @@ public static class TreasureCatalogValidation
     {
         var catalog = OfflineTreasureCatalog.Load();
         var raw = JObject.Parse(File.ReadAllText(Path.Combine(output, "OriginalTreasureRules.json")));
+        ValidateCosts(catalog, raw);
         Check(catalog.Treasures.Count == ((JArray)raw["treasure"]).Count && catalog.Suits.Count == ((JArray)raw["treasure_suit"]).Count,
             "complete selected treasure and suit tables load through Unity Resources");
         var settings = raw["settings"];
@@ -126,6 +127,70 @@ public static class TreasureCatalogValidation
                 "actual original season lookup, negative clamp, fallback and diagnostic: " + item.ClassId + "/" + season);
         }
     }
+    static void ValidateCosts(OfflineTreasureCatalog catalog, JObject raw)
+    {
+        var parsers = Parsers.Instance;
+        parsers.ItemInfoParser.Rows = raw["items"].ToDictionary(row => (int)row["ClassId"],
+            row => new ItemInfo { Quality = (Quality)(int)row["Quality"] });
+        parsers.TreasureInfoParser.Rows = raw["treasure"].ToDictionary(row => (int)row["ClassId"],
+            row => new TreasureInfo { StarMax = (int)row["StarMax"], TreasurePieceId = (int)row["TreasurePieceId"],
+                ItemInfo = parsers.ItemInfoParser.Get((int)row["ClassId"]) });
+        parsers.Costs.Rows = raw["treasure_upgrade_material"].ToDictionary(row => ((Quality)(int)row["Quality"], (int)row["Star"]),
+            row => new TreasureUpgradeInfo { PieceCount = (int)row["PieceCount"], SpecialPieceCount = (int)row["SpecialPieceCount"],
+                Materials = row["Materials"].ToObject<Dictionary<int, long>>() });
+        var rules = new OfflineTreasureCostRules(catalog, id => (int)parsers.ItemInfoParser.Get(id).Quality);
+        foreach (var treasure in catalog.Treasures)
+        {
+            int id = treasure.ClassId;
+            Check(CostsEqual(rules.GetMergeMaterials(id), parsers.Costs.GetMergeMaterials(id)), "original merge costs and order: " + id);
+            for (int current = -1; current <= treasure.StarMax; current++)
+            {
+                for (int target = 0; target <= treasure.StarMax + 1; target++)
+                    if (!CostsEqual(rules.GetUpgradeMaterials(id, current, target), parsers.Costs.GetUpgradeMaterials(id, current, target)))
+                        throw new Exception("Original cumulative promotion mismatch: " + id + "/" + current + "/" + target);
+                int quality = (int)parsers.ItemInfoParser.Get(id).Quality;
+                Check(CostsEqual(rules.GetSpecialUpgradeMaterials(id, current, quality),
+                    parsers.Costs.GetSpecialUpgradeMaterials(id, current, (Quality)quality)), "original special promotion delta and missing row: " + id + "/" + current);
+            }
+            Check(true, "original all promotion ranges, initial -1, same/lower target and max clamp: " + id);
+            var detached = rules.GetMergeMaterials(id);
+            detached.Clear();
+            Check(CostsEqual(rules.GetMergeMaterials(id), parsers.Costs.GetMergeMaterials(id)), "cost query returns independent dictionary: " + id);
+        }
+        // Original methods preserve zero and negative special differences and use
+        // unchecked accumulation. Exercise those branches using the same raw-row
+        // containers on both sides, without changing the shipped configuration.
+        int probe = catalog.Treasures.First().ClassId;
+        int q = (int)parsers.ItemInfoParser.Get(probe).Quality;
+        var source = catalog.GetUpgradeRule(q, 0);
+        var next = catalog.GetUpgradeRule(q, 1);
+        var originalSource = parsers.Costs.Get((Quality)q, 0);
+        var originalNext = parsers.Costs.Get((Quality)q, 1);
+        int oldSpecial = next.SpecialPieceCount;
+        var oldSource = source.Materials; var oldNext = next.Materials;
+        var oldOriginalSource = originalSource.Materials; var oldOriginalNext = originalNext.Materials;
+        try
+        {
+            foreach (int delta in new[] { 0, -1 })
+            {
+                next.SpecialPieceCount = originalNext.SpecialPieceCount = source.SpecialPieceCount + delta;
+                Check(CostsEqual(rules.GetSpecialUpgradeMaterials(probe, 0, q), parsers.Costs.GetSpecialUpgradeMaterials(probe, 0, (Quality)q)), "special cost preserves delta " + delta);
+            }
+            source.Materials = new List<TreasureRuleItemAmount> { new TreasureRuleItemAmount { ItemId = 7, Count = long.MaxValue }, new TreasureRuleItemAmount { ItemId = 8, Count = 0 } };
+            next.Materials = new List<TreasureRuleItemAmount> { new TreasureRuleItemAmount { ItemId = 7, Count = 1 }, new TreasureRuleItemAmount { ItemId = 9, Count = -3 } };
+            originalSource.Materials = new Dictionary<int, long> { { 7, long.MaxValue }, { 8, 0 } };
+            originalNext.Materials = new Dictionary<int, long> { { 7, 1 }, { 9, -3 } };
+            Check(CostsEqual(rules.GetMergeMaterials(probe), parsers.Costs.GetMergeMaterials(probe)), "merge preserves zero material and dictionary order");
+            Check(CostsEqual(rules.GetUpgradeMaterials(probe, -1, 1), parsers.Costs.GetUpgradeMaterials(probe, -1, 1)), "promotion skips zero, preserves negative cost and original overflow");
+        }
+        finally
+        {
+            next.SpecialPieceCount = originalNext.SpecialPieceCount = oldSpecial;
+            source.Materials = oldSource; next.Materials = oldNext;
+            originalSource.Materials = oldOriginalSource; originalNext.Materials = oldOriginalNext;
+        }
+    }
+    static bool CostsEqual(Dictionary<int, long> actual, Dictionary<int, long> expected) => actual.SequenceEqual(expected);
     static bool Materials(List<TreasureRuleItemAmount> actual, JToken raw)
     {
         var values = raw.Type == JTokenType.Null ? Array.Empty<JProperty>() : ((JObject)raw).Properties().ToArray();
@@ -152,4 +217,22 @@ public sealed class TreasureSuitInfo
     public Dictionary<TreasureSuitPropCondition, int> Props;
     public List<List<PropType>> PropTypes;
     public Dictionary<TreasureSuitPropCondition, (int, List<PropType>)> PropData;
+}
+public enum Quality { }
+public sealed class ItemInfo { public Quality Quality; }
+public sealed class TreasureInfo { public int StarMax, TreasurePieceId; public ItemInfo ItemInfo; }
+public sealed class TreasureUpgradeInfo { public int PieceCount, SpecialPieceCount; public Dictionary<int, long> Materials; }
+public sealed class OriginalItemParser { public Dictionary<int, ItemInfo> Rows; public ItemInfo Get(int id) => Rows.TryGetValue(id, out var value) ? value : null; }
+public sealed class OriginalTreasureParser { public Dictionary<int, TreasureInfo> Rows; public TreasureInfo Get(int id) => Rows.TryGetValue(id, out var value) ? value : null; }
+public sealed partial class OriginalTreasureCostParser
+{
+    public Dictionary<(Quality, int), TreasureUpgradeInfo> Rows;
+    public TreasureUpgradeInfo Get(Quality quality, int star) => Rows.TryGetValue((quality, star), out var value) ? value : null;
+}
+public sealed class Parsers
+{
+    public static readonly Parsers Instance = new Parsers();
+    public readonly OriginalItemParser ItemInfoParser = new OriginalItemParser();
+    public readonly OriginalTreasureParser TreasureInfoParser = new OriginalTreasureParser();
+    public readonly OriginalTreasureCostParser Costs = new OriginalTreasureCostParser();
 }
