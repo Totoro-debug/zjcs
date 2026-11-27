@@ -341,7 +341,7 @@ namespace Zjcs.Combat.Official
                 }
                 if (actor.Hp <= 0) break;
                 FightBattleUnitState dashPosition = null;
-                if (skill.EntityId == 10670 && skill.ItemId == 10015
+                if (FightSkillJumpPolicy.UsesStandableLanding(skill, statusCatalog)
                     && !FightBattleTargeting.TryPlanJumpSlash(actor, units, skill, checkpoint.Grid,
                         out dashPosition, out targets))
                 {
@@ -1750,7 +1750,7 @@ namespace Zjcs.Combat.Official
                         if (!TryRequiredSourceLanding(actor, target, skill, move, out var landing, targetPosition)) continue;
                         var start = new FightGridPoint(actor.X, actor.Y);
                         if (landing.Equals(start)) continue;
-                        if (FightSkillJumpPolicy.UsesDirectPath(skill))
+                        if (FightSkillJumpPolicy.UsesDirectPath(skill, statusCatalog))
                         {
                             var movement = new FightBattleMovementEvent { UnitId = actor.Id,
                                 HasDirection = true, Direction = actor.Direction };
@@ -2931,7 +2931,7 @@ namespace Zjcs.Combat.Official
         private bool MoveIntoSkillRange(FightBattleUnitState actor,
             FightBattleSkillDefinition skill, List<FightBattleMovementEvent> movements)
         {
-            if (skill.EntityId == 10670 && skill.ItemId == 10015
+            if (FightSkillJumpPolicy.UsesStandableLanding(skill, statusCatalog)
                 && FightBattleTargeting.TryPlanJumpSlash(actor, units, skill, checkpoint.Grid, out _, out _)) return false;
             if (IsStraightDash(skill) && TryPlanStraightDash(actor, skill, out _, out _)) return false;
             FightBattleGrid grid = checkpoint.Grid;

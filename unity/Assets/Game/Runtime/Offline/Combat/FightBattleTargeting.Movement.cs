@@ -126,7 +126,7 @@ namespace Zjcs.Combat.Official
         }
 
         // The confirmed offline attack priorities also apply to the original
-        // 10670 standable point: score its actual landing and hit footprint.
+        // standable jump points: score their actual landing and hit footprint.
         internal static bool TryPlanJumpSlash(FightBattleUnitState actor,
             IReadOnlyList<FightBattleUnitState> units, FightBattleSkillDefinition skill,
             FightBattleGrid grid, out FightBattleUnitState position, out List<FightBattleUnitState> targets)

@@ -10,9 +10,23 @@ namespace Zjcs.Combat.Official
         internal static bool LandsBesideTarget(FightBattleSkillDefinition skill)
             => skill != null && skill.EntityId == 12100 && skill.ItemId == 10101;
 
-        internal static bool UsesDirectPath(FightBattleSkillDefinition skill)
+        internal static bool UsesStandableLanding(FightBattleSkillDefinition skill, FightOfficialCombatCatalog catalog)
+        {
+            if (skill != null && skill.EntityId == 10670 && skill.ItemId == 10015) return true;
+            if (skill == null || catalog == null || skill.SkillTargetType != 2 || skill.SourceMoves == null
+                || skill.SourceMoves.Count != 1) return false;
+            var move = skill.SourceMoves[0];
+            // A current PosCanStand action with unrestricted pass height chooses an empty
+            // landing first; the action retains its authored timing and movement data.
+            return move != null && move.AiMustMoveTo && !move.AIIgnore && !move.CanExpandOffset
+                && move.TowardsTargetPos && move.Direction == 1 && move.Distance == -1
+                && move.OffsetX == 0 && move.OffsetY == 0 && move.MoveBehaviourId > 0
+                && catalog.SkillMovePassHeight(move.MoveBehaviourId) == 999;
+        }
+
+        internal static bool UsesDirectPath(FightBattleSkillDefinition skill, FightOfficialCombatCatalog catalog)
             => skill != null && (skill.MoveByTeleport
-                || skill.EntityId == 10670 && skill.ItemId == 10015 || LandsBesideTarget(skill));
+                || UsesStandableLanding(skill, catalog) || LandsBesideTarget(skill));
 
         internal static void RestoreTargetRange(FightBattleSkillDefinition skill)
         {

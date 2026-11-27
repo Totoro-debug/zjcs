@@ -189,7 +189,8 @@ namespace Zjcs.Presentation.Combat
         {
             if (airComboViews != null) throw new InvalidOperationException("Original airborne status views are already bound.");
             airComboViews = new OfficialBattleAirComboPlayback(executor, root, scope, StatusBody,
-                new Dictionary<int, string> { { 10057, "Combat/wind-roar-current-status-graphs" } });
+                new Dictionary<int, string> { { 10057, "Combat/wind-roar-current-status-graphs" },
+                    { 10069, "Combat/wind-roar-current-status-graphs" } });
             airComboViews.Synchronize();
             // A newly summoned model can receive its initial statuses before its
             // first cast binds the native role entity. Bind that same entity here
@@ -204,7 +205,9 @@ namespace Zjcs.Presentation.Combat
                 new[] { new OfficialBattleStatusPlayback.CatalogReplacement("Combat/first-promotion-statuses",
                     "Combat/sage-rock-summon-current-status-graphs", 24216),
                     new OfficialBattleStatusPlayback.CatalogReplacement("Combat/star-burst-current-graphs",
-                        "Combat/light-scorch-current-status-graphs", 24234) },
+                        "Combat/light-scorch-current-status-graphs", 24234),
+                    new OfficialBattleStatusPlayback.CatalogReplacement("Combat/first-promotion-statuses",
+                        "Combat/extinction-blade-current-status-graphs", 24113) },
                 "Combat/first-promotion-statuses", "Combat/additional-statuses", "Combat/profession-statuses",
                 "Combat/profession-current-graphs", "Combat/conqueror-current-graphs", "Combat/fear-current-graphs",
                 "Combat/standfast-soul-current-graphs", "Combat/tactical-adaptation-current-graphs",
@@ -222,6 +225,7 @@ namespace Zjcs.Presentation.Combat
                 "Combat/desperate-valor-current-status-graphs",
                 "Combat/asura-hand-current-status-graphs",
                 "Combat/wild-blade-siphon-current-status-graphs",
+                "Combat/extinction-blade-current-status-graphs",
                 "Combat/potential-rebirth-current-status-graphs", "Combat/quick-casting-current-status-graphs",
                 "Combat/light-scorch-current-status-graphs", "Combat/divine-thunder-current-status-graphs", "Combat/ice-guardian-current-status-graphs", "Combat/water-vortex-current-status-graphs");
             statusViews.Restore();

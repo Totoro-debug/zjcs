@@ -1,0 +1,78 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 11530,
+      "entity_resource": "Combat/ExtinctionBladeSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11530/11530",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/ExtinctionBladeSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11530/playable11530"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11531,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/ExtinctionBladeSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11530/11531"
+    }
+  ],
+  "moves": [
+    {
+      "action_entity_id": 11532,
+      "entity_resource": "Combat/ExtinctionBladeSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11530/11532",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/ExtinctionBladeSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11530/playable11532_move"
+        }
+      ]
+    }
+  ],
+  "damages": [
+    {
+      "damage_entity_id": 11534,
+      "entity_prefab": "11530/11534.prefab",
+      "entity_prefab_sha256": "ecf5fb974efb9a24dde3542fa4f20c7acbf1e8b1affacfcf2fd96b7116b6e0bc",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/ExtinctionBladeSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage_dark_HitEffect"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/ExtinctionBladeSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/ExtinctionBladeSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/ExtinctionBladeSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/ExtinctionBladeSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11530/11534"
+    }
+  ]
+}

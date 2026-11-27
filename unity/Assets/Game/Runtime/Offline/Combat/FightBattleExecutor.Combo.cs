@@ -152,7 +152,7 @@ namespace Zjcs.Combat.Official
                 var body = actor.BodyOffsets == null || actor.BodyOffsets.Count == 0
                     ? new List<FightGridPoint> { new FightGridPoint() } : actor.BodyOffsets;
                 if (body.Any(offset => !checkpoint.Grid.CanStand(position + offset, actor.MoveMask, occupied))) continue;
-                if (FightSkillJumpPolicy.UsesDirectPath(skill)
+                if (FightSkillJumpPolicy.UsesDirectPath(skill, statusCatalog)
                     || position.Equals(new FightGridPoint(actor.X, actor.Y)))
                 { landing = position; return true; }
                 var path = checkpoint.Grid.FindPath(new FightGridPoint(actor.X, actor.Y), position,

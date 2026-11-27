@@ -1,0 +1,49 @@
+{
+  "entities": [
+    11530,
+    11531,
+    11532,
+    11534,
+    24113,
+    24269,
+    24270
+  ],
+  "code": [
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "FightActionSkillMoveComponentInfo",
+    "FightSKillMoveCfg",
+    "FightStatusComponentInfo",
+    "FightStatusPropComponentInfo",
+    "FightStatusDamageSkillComponentInfo",
+    "FightStatusDamageRemoveComponentInfo",
+    "StatusAutoRemoveComponentInfo",
+    "BattleFormulaHandler"
+  ],
+  "client_code": [
+    "MyFightStatusProp",
+    "MyFightStatusDamageSkill",
+    "MyFightStatusDamageRemove",
+    "MyStatusAutoRemove"
+  ],
+  "rule_pack_fragments": [
+    "FightSkill_part75.g.bytes",
+    "FightSkill_part705.g.bytes",
+    "FightSkill_part714.g.bytes"
+  ],
+  "visibility_bundles": [
+    "11530",
+    "24113"
+  ],
+  "scope_numeric": true,
+  "current_managed_views": true,
+  "runtime_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10069.json"
+  ],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/extinction-blade-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/extinction-blade-current-status-graphs-source-manifest.json",
+    "assets/reference/battle-animation/wind-roar-current-status-graphs-source-manifest.json"
+  ]
+}
