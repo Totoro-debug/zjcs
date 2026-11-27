@@ -2,13 +2,28 @@ param(
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10065,10066,10070,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int]$SkillId = 10026,
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10063,10065,10066,10070,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int]$SkillId = 10026,
     [Parameter(ParameterSetName='Player')]
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10065,10066,10070,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10063,10065,10066,10070,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
     [string]$PassiveSave,
+    [string]$ActiveSave,
     [ValidateSet(0,39521,39523)][int]$SkillSkinId = 0,
     [ValidateRange(0,2147483646)][int]$BattleSeed = 0
 )
+function Assert-AcquiredAsuraHandEvidence([string]$Run) {
+    foreach ($file in @('acquired-asura-hand-checkpoint.json','acquired-asura-hand-receipt.json',
+        'companion-active-cultivated-save.json','acquired-active-ui-battle.png','acquired-active-ui-asura-attack.png')) {
+        if (-not (Test-Path (Join-Path $Run $file))) { throw 'The cultivated Asura Hand evidence is incomplete.' }
+    }
+    $receipt = Get-Content (Join-Path $Run 'acquired-asura-hand-receipt.json') -Raw | ConvertFrom-Json
+    if ($receipt.buffs -lt 1 -or $receipt.convertedHits -lt 6 -or
+        -not $receipt.restored -or -not $receipt.attackCaptured) {
+        throw 'Asura Hand lost its buff, full skill conversion, consumption or restoration.'
+    }
+    if (-not (Select-String -LiteralPath (Join-Path $Run 'runtime.log') -SimpleMatch '[Acquired active combat] 10063 cultivated self buff, six-hit breaking conversion, consumption and restoration passed.')) {
+        throw 'The real Asura Hand battle assertion did not pass.'
+    }
+}
 function Assert-AcquiredEclipseSlashesEvidence([string]$Run) {
     $result = Get-Content (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     $exit = Get-Content (Join-Path $Run 'process-exit.json') -Raw | ConvertFrom-Json
@@ -336,6 +351,21 @@ if ($PassiveSave) {
     $passiveProfile = Get-Content -LiteralPath $PassiveSave -Raw | ConvertFrom-Json
     $passiveId = $passiveProfile.Player.Skills.Plans[$passiveProfile.Player.Skills.SelectedPlan].PassiveSkills[0]
 }
+if ($ActiveSave) {
+    $ActiveSave = (Get-Item -LiteralPath $ActiveSave).FullName
+    if ($SkillId -ne 10063 -or $PassiveSave -or $AdditionalSkillIds.Count -gt 0 -or
+        -not $ActiveSave.StartsWith($workspacePath + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'Use the actual isolated Eclipse cultivation save as the Asura companion.'
+    }
+    $sourceDirectory = Split-Path -Parent $ActiveSave
+    while ($sourceDirectory.StartsWith($workspacePath + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -and
+        -not (Test-Path (Join-Path $sourceDirectory 'result.json'))) {
+        $sourceDirectory = Split-Path -Parent $sourceDirectory
+    }
+    $sourceResult = Get-Content (Join-Path $sourceDirectory 'result.json') -Raw | ConvertFrom-Json
+    if (-not $sourceResult.passed) { throw 'The active companion acquisition/cultivation flow has not passed.' }
+}
+if ($SkillId -eq 10063 -and -not $ActiveSave) { throw 'Asura Hand requires its actual cultivated active companion save.' }
 if ($PSCmdlet.ParameterSetName -eq 'Play') {
     $projectPath = (Get-Item -LiteralPath $Project).FullName
     $executable = 'D:/Tool/Unity/Editor/Unity.exe'
@@ -354,6 +384,7 @@ try {
     $env:ZJCS_SKILLS_ACQUIRED_ACTIVE = [string]$SkillId
     if ($SkillSkinId -gt 0) { $env:ZJCS_SKILLS_ACQUIRED_SKIN = [string]$SkillSkinId }
     if ($PassiveSave) { $env:ZJCS_SKILLS_ACQUIRED_PASSIVE_SAVE = $PassiveSave }
+    if ($ActiveSave) { $env:ZJCS_SKILLS_ACQUIRED_ACTIVE_SAVE = $ActiveSave }
     if ($requestedSkills.Count -gt 1) {
         $env:ZJCS_SKILLS_ACQUIRED_ACTIVE_SEQUENCE = $requestedSkills -join ','
     }
@@ -423,7 +454,7 @@ try {
         $rankQuery = "import json,sys; c=json.load(open(sys.argv[1],encoding='utf-8')); s=json.load(open(sys.argv[2],encoding='utf-8')); rows=[x for x in c['item'] if x['ClassId']==int(sys.argv[3])]; assert len(rows)==1; print(min(x['Rank'] for x in s['RankDisplays'] if x['Quality']==rows[0]['Quality'])+1)"
         $cultivatedRank = & python -B -c $rankQuery (Join-Path $repository 'unity/Assets/Official/Combat/rules.json') (Join-Path $repository 'unity/Assets/Official/Skills/skill-runtime-rules.json') $SkillId
         if ($LASTEXITCODE -ne 0 -or $cultivatedRank -notmatch '^\d+$') { throw "The original skill rank could not be resolved: $SkillId" }
-        $kind = if ($SkillId -in @(10024,10032,10046,10051,10066,10068,10077,10092,10102)) { 'status' } else { 'damage' }
+        $kind = if ($SkillId -in @(10024,10032,10046,10051,10063,10066,10068,10077,10092,10102)) { 'status' } else { 'damage' }
         foreach ($text in @(
             "[Acquired active UI] $SkillId fragment acquisition, original slot input, level/rank cultivation and disk reload passed.",
             "[Acquired active UI] $SkillId saved rank=$cultivatedRank level=2, original $kind/result/return and unchanged save passed.")) {
@@ -505,6 +536,7 @@ try {
                 if (-not (Test-Path -LiteralPath (Join-Path $skillRun $file))) { throw 'The cultivated rock emperor did not render and persist its original summon.' }
             }
         }
+        if ($SkillId -eq 10063) { Assert-AcquiredAsuraHandEvidence $skillRun }
         if ($SkillId -eq 10065) { Assert-AcquiredEclipseSlashesEvidence $skillRun }
         if ($SkillId -eq 10070) {
             foreach ($file in @('acquired-meteor-fire-checkpoint.json','acquired-meteor-fire-strikes.json',
@@ -558,7 +590,7 @@ try {
         if ($SkillId -eq 10096 -and -not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-heavenly-rain-checkpoint.json'))) {
             throw 'The original cultivated healing checkpoint was not persisted.'
         }
-        if ($SkillId -in @(10002,10032,10037,10039,10047,10056,10057,10059,10062,10065,10068,10070,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)) {
+        if ($SkillId -in @(10002,10032,10037,10039,10047,10056,10057,10059,10062,10063,10065,10068,10070,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)) {
             # The Player asserts the original effects for each equipped cast.
             Write-Output "Acquired active skill-page flow passed: $skillRun"
             continue

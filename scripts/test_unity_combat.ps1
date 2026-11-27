@@ -194,7 +194,12 @@ $preservedTrajectory = $legacyDirectHit.Trajectory
 $restoreHitMetadata.Invoke($officialCatalog, @($legacyDirectSkill))
 Assert-Combat ([object]::ReferenceEquals($preservedTrajectory, $legacyDirectHit.Trajectory)) 'Restoring metadata replaced an explicitly supplied trajectory'
 $summonScopeHit = $officialCatalog.CreateSkill(11540, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 11541 } | Select-Object -First 1
-Assert-Combat ($summonScopeHit.ScopeEntries.Count -eq 9 -and $summonScopeHit.Scope.Count -eq 0 -and $summonScopeHit.ScopeEntries[0].Position.X -eq 0 -and $summonScopeHit.ScopeEntries[0].Position.Y -eq 0 -and $summonScopeHit.ScopeEntries[0].Delay -eq 0.5) 'Summon BaseScopes were not reconstructed in original Init order'
+Assert-Combat ($summonScopeHit.ScopeEntries.Count -eq 9 -and $summonScopeHit.Scope.Count -eq $summonScopeHit.ScopeEntries.Count -and $summonScopeHit.ScopeEntries[0].Position.X -eq 0 -and $summonScopeHit.ScopeEntries[0].Position.Y -eq 0 -and $summonScopeHit.ScopeEntries[0].Delay -eq 0.5) 'Summon BaseScopes were not reconstructed in original Init order'
+for ($scopeIndex = 0; $scopeIndex -lt $summonScopeHit.Scope.Count; $scopeIndex++) {
+    Assert-Combat ($summonScopeHit.Scope[$scopeIndex].X -eq $summonScopeHit.ScopeEntries[$scopeIndex].Position.X -and
+        $summonScopeHit.Scope[$scopeIndex].Y -eq $summonScopeHit.ScopeEntries[$scopeIndex].Position.Y) 'Summon targeting and native scope positions diverged'
+}
+
 $fixedOrderHit = $officialCatalog.CreateSkill(10780, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 10781 } | Select-Object -First 1
 $fixedOrderPositions = @($fixedOrderHit.ScopeEntries | ForEach-Object { '{0},{1}' -f $_.Position.X, $_.Position.Y })
 Assert-Combat ($fixedOrderPositions.Count -eq 6 -and ($fixedOrderPositions -join '|') -eq '1,1|1,2|0,1|0,2|-1,1|-1,2' -and [Math]::Abs($fixedOrderHit.ScopeEntries[0].Delay - 0.03) -lt 0.0001 -and [Math]::Abs($fixedOrderHit.ScopeEntries[2].Delay - 0.07) -lt 0.0001 -and [Math]::Abs($fixedOrderHit.ScopeEntries[4].Delay - 0.12) -lt 0.0001) 'Fixed hit scope Init lost original delay and Manhattan-distance ordering'
@@ -618,6 +623,9 @@ Assert-Combat ($falloffApplied.Formula.Damage -eq -4899 -and $falloffTarget.Hp -
 Assert-Combat ($falloffTarget.FalloffCounts.Count -eq 0 -and $falloffSkill.FalloffCastId -eq 0) 'Completed action retained transient falloff counters'
 
 $damageCustomStatus = $officialCatalog.CreateStatus(24181, 72, 71, 1)
+$damageCustomStatus.StatusProperties = [System.Collections.Generic.List[Zjcs.Combat.Official.FightPropertyValue]]::new()
+$damageCustomStatus.StatusProperties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $schema.Id('StatusDmgReducePer'); Value = 5000 })
+
 Assert-Combat ($schema.Id('StatusDmgReducePer') -eq 232 -and $damageCustomStatus.HasDamageCustomProps -and $damageCustomStatus.DamageCustomPropsPhase -eq 1 -and $damageCustomStatus.DamageCustomPropsPropertyId -eq 232 -and [Math]::Abs($damageCustomStatus.DamageCustomPropsDmgGreaterMaxHpPer - 0.04) -lt 0.00001 -and $damageCustomStatus.DamageCustomPropsMaxCount -eq 1 -and $damageCustomStatus.DamageCustomPropsAutoRemove -and -not $damageCustomStatus.DamageCustomPropsCheckSkillTrigger) 'Official status damage custom property configuration mismatch'
 $reductionActor = [Zjcs.Combat.Official.FightBattleUnitState]::new()
 $reductionActor.Id = 71; $reductionActor.Hp = 10000; $reductionActor.MaxHp = 10000; $reductionActor.CharacterType = 2
@@ -632,6 +640,9 @@ $reductionResult = $hitExecutor.Apply([Zjcs.Combat.Official.FightRandomStream]::
     $reductionActor, $reductionTarget, $null, $reductionHit, 0, $false)
 Assert-Combat ($reductionResult.Settlement.RealDamageValue -eq -533 -and $reductionTarget.Statuses.Count -eq 0 -and $appliedReduction.DamageCustomPropsTriggeredCount -eq 1) 'Status 24181 did not reduce one eligible damage segment and consume its configured trigger'
 $belowThreshold = $officialCatalog.CreateStatus(24181, 74, 73, 1)
+$belowThreshold.StatusProperties = [System.Collections.Generic.List[Zjcs.Combat.Official.FightPropertyValue]]::new()
+$belowThreshold.StatusProperties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $schema.Id('StatusDmgReducePer'); Value = 5000 })
+
 $belowThresholdActor = [Zjcs.Combat.Official.FightBattleUnitState]::new()
 $belowThresholdActor.Id = 73; $belowThresholdActor.Hp = 10000; $belowThresholdActor.MaxHp = 10000; $belowThresholdActor.CharacterType = 2
 $belowThresholdActor.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $schema.Id('Attack'); Value = 1000 })

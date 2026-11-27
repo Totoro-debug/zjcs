@@ -623,7 +623,10 @@ namespace Zjcs.Combat.Official
                 MinBlockValuePercent = Number(battleSettings, "MinBlockValuePercent", 0.0),
                 MaxLevelOffsetDamageScale = Int(battleSettings, "MaxLevelOffsetDamageScale"),
                 CureAddSoftCapThreshold = Number(battleSettings, "CureAddSoftCapThreshold", 0.0) / 10000.0,
-                CureAddOverflowScale = Number(battleSettings, "CureAddOverflowScale", 0.0) / 10000.0
+                CureAddOverflowScale = Number(battleSettings, "CureAddOverflowScale", 0.0) / 10000.0,
+                TrueDamageAddPerWhenHasShield = Convert.ToSingle(Required(battleSettings, "TrueDamageAddPerWhenHasShield"), CultureInfo.InvariantCulture),
+                TrueDamageAddPerWhenIsSummon = Convert.ToSingle(Required(battleSettings, "TrueDamageAddPerWhenIsSummon"), CultureInfo.InvariantCulture),
+                TrueDamageCharacterTypes = new List<int>(IntArray(battleSettings, "TrueDamageCharacterTypes"))
             };
             AddTable(config.LevelOffsetDamage, battleTables, "fight_level_offset_damage", "LevelOffset", "DamageScale");
             AddTable(config.RankOffsetDamage, battleTables, "fight_rank_offset_damage", "Rank", "DamageScale");

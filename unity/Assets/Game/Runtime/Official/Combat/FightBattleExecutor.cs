@@ -911,7 +911,7 @@ namespace Zjcs.Combat.Official
 
             while (hitExecution.TryTake(out var hitStep))
             {
-                FightBattleHitDefinition hit = hitStep.Hit;
+                FightBattleHitDefinition hit = conditionalHitProperties?.ResolveHitForCast(hitStep.Hit) ?? hitStep.Hit;
                 var castHit = hitStep.Cast;
                 if (!allowDeadSource && actor.Hp <= 0) break;
                 ApplySourceMoves(actor, skill, targets, movements, ref lastDelay,

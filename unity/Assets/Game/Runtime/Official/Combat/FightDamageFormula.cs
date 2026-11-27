@@ -48,6 +48,9 @@ namespace Zjcs.Combat.Official
         public int MaxLevelOffsetDamageScale;
         public double CureAddSoftCapThreshold;
         public double CureAddOverflowScale;
+        public float TrueDamageAddPerWhenHasShield;
+        public float TrueDamageAddPerWhenIsSummon;
+        public List<int> TrueDamageCharacterTypes = new List<int>();
         public List<FightFormulaTableRow> LevelOffsetDamage = new List<FightFormulaTableRow>();
         public List<FightFormulaTableRow> RankOffsetDamage = new List<FightFormulaTableRow>();
         public List<FightFormulaTableRow> DemonRankOffsetDamage = new List<FightFormulaTableRow>();
@@ -276,47 +279,13 @@ namespace Zjcs.Combat.Official
             }
 
             string element = ElementName(request.SourceElementType);
-            double baseElementAdd = Prop(source, "BaseElementAdd");
-            double baseElementReduce = Prop(target, "BaseElementReduce");
-            double elementAdd = 0;
-            double elementReduce = 0;
-            double scaledElementAdd = 0;
-            double scaledElementReduce = 0;
-            if (baseElementAdd != 0 && baseElementReduce != 0)
-            {
-                if (request.SourceElementType == 0)
-                {
-                    foreach (string name in Elements)
-                    {
-                        elementAdd += Prop(source, name + "DamageAdd");
-                        elementReduce += Prop(target, name + "DamageReduce");
-                    }
-                    elementAdd /= 5.0 * baseElementAdd;
-                    elementReduce /= 5.0 * baseElementReduce;
-                }
-                else if (element != null)
-                {
-                    elementAdd = Prop(source, element + "DamageAdd") / baseElementAdd;
-                    elementReduce = Prop(target, element + "DamageReduce") / baseElementReduce;
-                }
-                scaledElementAdd = elementAdd * Math.Pow(baseElementAdd / baseElementReduce, 1.0);
-                scaledElementReduce = elementReduce * Math.Pow(baseElementReduce / baseElementAdd, 1.0);
-            }
-
-            string mastery = request.SourceElementType == 0 ? "KongFu" : "Element";
-            double baseMastery = Prop(source, "Base" + mastery + "Master");
-            double baseResistance = Prop(target, "Base" + mastery + "Resistance");
-            double masteryValue = 0;
-            double resistanceValue = 0;
-            if (baseMastery != 0 && baseResistance != 0)
-            {
-                masteryValue = Math.Max(0, Prop(source, mastery + "Master") / baseMastery
-                    * Math.Pow(baseMastery / baseResistance, 1.0));
-                resistanceValue = Math.Max(0, Prop(target, mastery + "Resistance") / baseResistance
-                    * Math.Pow(baseResistance / baseMastery, 1.0));
-            }
-            amount *= (1.0 + scaledElementAdd + masteryValue) / (1.0 + scaledElementReduce + resistanceValue);
-            absolute *= 1.0 + scaledElementAdd + masteryValue;
+            DamageAffinity affinity = request.SourceElementType == 0
+                ? CalculatePhysicalDamage(source, target)
+                : CalculateElementDamage(source, target, element);
+            double elementAdd = affinity.ElementAdd;
+            amount *= (1.0 + affinity.ScaledElementAdd + affinity.Mastery)
+                / (1.0 + affinity.ScaledElementReduce + affinity.Resistance);
+            absolute *= 1.0 + affinity.ScaledElementAdd + affinity.Mastery;
 
             double increase = Prop(source, "DmgAddPercent") + Prop(target, "DmgVulnerable");
             double kindAdd = targetCharacter ? Prop(source, "PlayerDmgAddScale")

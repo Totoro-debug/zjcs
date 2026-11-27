@@ -50,6 +50,7 @@ namespace Zjcs.Presentation.Home
             bool crisisGuard = skillId == 10032;
             bool starShatteringSlash = skillId == 10039;
             bool eclipseSlashes = skillId == 10065;
+            bool asuraHand = skillId == 10063;
             bool shieldCharge = skillId == 10073;
             bool holyPurification = skillId == 10079;
             bool surgingTide = skillId == 10047;
@@ -95,12 +96,12 @@ namespace Zjcs.Presentation.Home
             bool destroyer = starBurst || doomTorrent || spiralWindBlade || battlecry || judgmentThunder || protectiveRunes || destroyerCompanion > 0;
             bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard;
             fourthPromotion |= fireLeap || flowingFire;
-            bool statusSkill = crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry || protectiveRunes || psychicWard;
-            bool thirdPromotion = eclipseSlashes || crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017 || warlockExplosion || warlockThunder || warlockWind || warlockWater || warlockMeteor;
+            bool statusSkill = asuraHand || crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry || protectiveRunes || psychicWard;
+            bool thirdPromotion = asuraHand || eclipseSlashes || crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017 || warlockExplosion || warlockThunder || warlockWind || warlockWater || warlockMeteor;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
             fourthPromotion |= HasGuardianCompanion(skillId);
-            int profession = eclipseSlashes ? 7 : warlockExplosion || warlockThunder || warlockWind || warlockWater || warlockMeteor ? 12 : fireLeap || flowingFire ? 8 : alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = asuraHand || eclipseSlashes ? 7 : warlockExplosion || warlockThunder || warlockWind || warlockWater || warlockMeteor ? 12 : fireLeap || flowingFire ? 8 : alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -129,6 +130,7 @@ namespace Zjcs.Presentation.Home
             player.InitialWeaponType = profession == 10 || profession == 13 || profession == 17
                 ? Zjcs.Offline.CharacterCreation.CharacterCreationOfflineService.WandInitialWeaponType : 200;
             player.Wardrobe.Profession = profession;
+            if (asuraHand) PrepareAcquiredAsuraHand(player, output);
             int passiveCompanion = LoadAcquiredPassiveCompanion(player, skillId, output);
             BeginAcquiredGuardianValidation(passiveCompanion, output);
             var sageRoundSecret = BeginAcquiredSageRoundSecretValidation(passiveCompanion, output);
@@ -394,6 +396,7 @@ namespace Zjcs.Presentation.Home
             var rock = rockSummon ? new AcquiredRockSummon() : null;
             var doll = voodooDoll ? new AcquiredVoodooDoll() : null;
             battle.Controller.StepCompleted += step => {
+                if (asuraHand) VerifyAcquiredAsuraStep(step.Event, checkpoint, output);
                 if (spiralWindBlade)
                 {
                     tearEnds += step.Event.StatusViewEvents.Count(view => view.Status.ClassId == 24376
@@ -482,6 +485,7 @@ namespace Zjcs.Presentation.Home
                         : skillId == 10051 ? cast.SkillEntityId == 11260
                         : skillId == 10053 ? cast.SkillEntityId == 11250
                         : skillId == 10066 ? cast.SkillEntityId == 11550
+                        : asuraHand ? cast.SkillEntityId == 11400
                         : eclipseSlashes ? cast.SkillEntityId == 11440
                         : shieldCharge ? cast.SkillEntityId == 11730
                         : holyPurification ? cast.SkillEntityId == 11860
@@ -489,6 +493,12 @@ namespace Zjcs.Presentation.Home
                         "The acquired active skill selected a foreign entity: " + cast.SkillEntityId);
                     var damageEvents = step.Event.DamageEvents.Where(value => value.SourceId == 1
                         && value.SkillEntityId == (skillId == 10017 ? 10970 : cast.SkillEntityId)).ToArray();
+                    if (asuraHand)
+                    {
+                        VerifyAcquiredAsuraBuff(cast, damageEvents, step.Event, actor);
+                        hits++;
+                        continue;
+                    }
                     if (eclipseSlashes)
                     {
                         VerifyAcquiredEclipseSlashes(cast, damageEvents, checkpoint, output);
@@ -1111,6 +1121,12 @@ namespace Zjcs.Presentation.Home
                         "The original status prefab did not render all four opening orbiters.");
                     yield return CaptureAcquiredActive(output, "opening"); capturedOpening = true;
                 }
+                if (asuraHand && !asuraHandValidation.attackCaptured && asuraHandValidation.convertedHits > 0
+                    && IsNativeSkillParticleVisible("playable11440"))
+                {
+                    yield return CaptureAcquiredActive(output, "asura-attack");
+                    asuraHandValidation.attackCaptured = true;
+                }
                 if (!captured && hits > 0)
                 {
                     if (skillId == 10028)
@@ -1124,6 +1140,11 @@ namespace Zjcs.Presentation.Home
                     else if (flowingFire)
                     {
                         if (flowingFireExtras == 0 || !IsNativeSkillParticleVisible(fireSkin ? "playable13590" : "playable12090"))
+                        { yield return null; continue; }
+                    }
+                    else if (asuraHand)
+                    {
+                        if (!IsNativeSkillParticleVisible("playable11400") && !IsNativeSkillParticleVisible("playable24227"))
                         { yield return null; continue; }
                     }
                     else if (eclipseSlashes)
@@ -1243,6 +1264,7 @@ namespace Zjcs.Presentation.Home
             Require(checkpoint.Finished && casts > 0 && hits > 0 && captured,
                 "The acquired/cultivated active skill did not finish its damage battle.");
             if (passiveCompanion == 10547) CompleteAcquiredDesperateValor(output);
+            if (asuraHand) CompleteAcquiredAsuraHand(output);
             Require(!flowingFire || flowingFireExtras > 0, "The cultivated flowing fire never performed an extra cast.");
             Require(!overflowShield || overflowShields > 0 && capturedPassive,
                 "The cultivated overflow shield never settled and rendered its original protective effect.");

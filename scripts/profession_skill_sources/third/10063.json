@@ -1,0 +1,38 @@
+{
+  "entities": [
+    11400,
+    11401,
+    11402,
+    24227
+  ],
+  "code": [
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "FightStatusComponentInfo",
+    "FightStatusHitBaseComponentInfo",
+    "FightStatusHitDmgAddPerComponentInfo",
+    "BattleFormulaHandler",
+    "BattleSettings"
+  ],
+  "client_code": [
+    "MyFightStatusHitDmgAddPer"
+  ],
+  "rule_pack_fragments": [
+    "FightSkill_part68.g.bytes",
+    "FightSkill_part712.g.bytes"
+  ],
+  "visibility_bundles": [
+    "11400",
+    "24227"
+  ],
+  "scope_numeric": true,
+  "current_managed_views": true,
+  "runtime_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10063.json"
+  ],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/asura-hand-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/asura-hand-current-status-graphs-source-manifest.json"
+  ]
+}

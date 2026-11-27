@@ -1,0 +1,50 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 11400,
+      "entity_resource": "Combat/AsuraHandSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11400/11400",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/AsuraHandSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11400/playable11400"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11401,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/AsuraHandSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11400/11401"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 11402,
+      "entity_prefab": "11400/11402.prefab",
+      "entity_prefab_sha256": "40f63d44f56f51bec6e3c55b7366415325a8197cb395c75c399483ec224e41ed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": false,
+        "myHideDamage": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/AsuraHandSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11400/11402"
+    }
+  ]
+}

@@ -137,8 +137,7 @@ namespace Zjcs.Combat.Official
             }
             else if (damageKind == FightHitDamageKind.CustomWithoutFormula || skill?.DamageSharingTransfer == true)
             {
-                long direct = custom.HasValue ? custom.Value : 0;
-                direct = direct == Int64.MinValue ? Int64.MinValue + 1 : -Math.Abs(direct);
+                long direct = formula.CalculateFixedTrueDamage(custom.GetValueOrDefault());
                 direct = ScaleDamage(direct, skillDamageScale);
                 direct = ApplyExtDamageScale(target, hit, direct);
                 result.Type = FightBattleHitComponentRuntime.ApplyDamageGetType(target, skill,
@@ -158,6 +157,7 @@ namespace Zjcs.Combat.Official
                     ref direct, ref absoluteDirect, random);
                 if (damageTest != null) direct = damageTest.Damage(stageType, actor, target, direct);
                 ProcessTransient(result.Type, ref direct, ref absoluteDirect, false, onTransient, onTransientDamage);
+                direct = ApplyDamageTypeEffects(target, skill, hit, direct);
                 result.Formula = new FightDamageFormulaResult { AbsoluteDamage = absoluteDirect };
                 SettleHitDamage(random, damageId, sourceEntity, targetEntity, target, skill, hit,
                     stageType, result, direct);
@@ -237,6 +237,7 @@ namespace Zjcs.Combat.Official
                 if (damageTest != null) damage = damageTest.Damage(stageType, actor, target, damage);
                 ProcessTransient(result.Type, ref damage, ref result.Formula.AbsoluteDamage,
                     false, onTransient, onTransientDamage);
+                damage = ApplyDamageTypeEffects(target, skill, hit, damage);
                 SettleHitDamage(random, damageId, sourceEntity, targetEntity, target, skill, hit,
                     stageType, result, damage);
             }
@@ -419,6 +420,24 @@ namespace Zjcs.Combat.Official
             status.ShieldRemainValue = value;
             status.ShieldRemainCount = status.ShieldInitialCount;
             status.ShieldInitialized = true;
+        }
+
+        public static long TotalShieldValue(FightBattleUnitState unit)
+        {
+            if (unit?.Statuses == null) return 0;
+            long total = 0;
+            foreach (var status in unit.Statuses)
+            {
+                if (status == null || status.ShieldIgnoreValue
+                    || status.ShieldKind == FightBattleShieldKind.None
+                    || status.ShieldKind == FightBattleShieldKind.Invincible
+                    || (status.ShieldKind == FightBattleShieldKind.Counted
+                        || status.ShieldKind == FightBattleShieldKind.Disposable) && status.ShieldRemainCount == 0)
+                    continue;
+                long value = status.ShieldInitialized ? status.ShieldRemainValue : status.ShieldValue;
+                if (value > 0) total = value > long.MaxValue - total ? long.MaxValue : total + value;
+            }
+            return total;
         }
 
         public static long PersistentShieldTotal(FightBattleUnitState unit)

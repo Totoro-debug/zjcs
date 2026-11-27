@@ -21,6 +21,32 @@ namespace Zjcs.Combat.Official
             FightOfficialCombatCatalog catalog = null, IReadOnlyList<FightBattleGridItemState> gridItems = null)
         { this.actor=actor; this.skill=skill; this.items=items; this.units=units; this.catalog=catalog; this.gridItems=gridItems; }
 
+        public FightBattleHitDefinition ResolveHitForCast(FightBattleHitDefinition hit)
+        {
+            if (hit == null || hit.TrueDamage || hit.ActionType != 4 || hit.DamageType == 0
+                || hit.DamageType == 8 || actor?.Statuses == null || skill == null) return hit;
+            foreach (var status in actor.Statuses)
+            {
+                var c = status?.Components?.HitDmgAddPer;
+                // The finite next-cast modifier changes the complete matching skill,
+                // including every hit, without altering the catalog's authored flags.
+                if (c == null || !c.DefinitionResolved || !c.IsTrueDamage || c.HitSourceType != 2
+                    || status.ForbiddenType != 0 || c.DurationSkillCount <= 0 || !c.Damage || c.Cure
+                    || c.Rate != 1f || c.ConditionCount != 1 || c.Block || c.Crit || c.IsApplyOneHit
+                    || c.MaxInvokeCount >= 0 || c.ConsumeStatusId > 0 || c.RoundResetCount > 0
+                    || c.HasUnsupportedStatusLogicTags || c.ScalePropByStatusTypeCount
+                    || c.StatusFilter != null && c.StatusFilter.Target != 0
+                    || c.TargetActionTypes.Count > 0 || c.TargetHpPercent >= 0f
+                    || !Matches(c.OnlySkillActions, skill.ActionType) || skill.SkillType != c.OnlySkillType
+                    || !Matches(c.HitSkillElementTypes, skill.ElementType)
+                    || !Matches(c.HitSkillEntityClassIds, skill.EntityId) || !SkillSortMatches(c.HitSkillTypes)) continue;
+                var converted = hit.AtDelay(hit.Delay);
+                converted.TrueDamage = true;
+                return converted;
+            }
+            return hit;
+        }
+
         public void MergeTypeProperty(FightBattleUnitState target, FightBattleHitDefinition hit,
             int propertyId, Dictionary<int, long> properties)
         {
