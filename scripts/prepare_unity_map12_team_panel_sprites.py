@@ -98,7 +98,7 @@ class NativeTeamSprites:
             atlas_source = dict(source=self.apk.provenance(atlas), object_sha256=sha(atlas.get_raw_data()),
                                 render_data=copy.deepcopy(atlas_rd))
         if (runtime_rd.alphaTexture.path_id or runtime_rd.secondaryTextures or sprite.m_Bones
-                or sprite.m_PhysicsShape or sprite.m_RD.m_Bindpose):
+                or sprite.m_RD.m_Bindpose):
             raise ValueError('Resolve additional original team Sprite dependencies')
         if (runtime_rd.settingsRaw >> 2) & 15:
             raise ValueError('Resolve original team Sprite packed rotation before baking atlas UV')
@@ -146,6 +146,8 @@ class NativeTeamSprites:
                 pivot=dict(x=sprite.m_Pivot.x * sprite.m_Rect.width, y=sprite.m_Pivot.y * sprite.m_Rect.height),
                 ppu=sprite.m_PixelsToUnits, border={key: getattr(sprite.m_Border, key) for key in 'xyzw'},
                 vertices=[dict(x=vertex[0], y=vertex[1]) for vertex in vertices], triangles=list(mesh.m_IndexBuffer),
-                uv=[dict(x=u, y=v) for u, v in uvs]))
+                uv=[dict(x=u, y=v) for u, v in uvs],
+                physics_shapes=[dict(points=[dict(x=point.x, y=point.y) for point in shape])
+                                for shape in sprite.m_PhysicsShape]))
         self.sprites[identity] = output
         return output

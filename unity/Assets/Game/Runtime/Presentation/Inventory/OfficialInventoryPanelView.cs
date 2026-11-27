@@ -357,8 +357,8 @@ namespace Zjcs.Presentation.Inventory
                 && node.parent != null && node.parent.parent == progress);
             RectTransform requiredNode = iconNodes.Values.FirstOrDefault(node => node.name == "RightTxt"
                 && node.parent != null && node.parent.parent == progress);
-            Text current = currentNode == null ? null : currentNode.GetComponent<Text>();
-            Text required = requiredNode == null ? null : requiredNode.GetComponent<Text>();
+            TMP_Text current = currentNode == null ? null : currentNode.GetComponent<TMP_Text>();
+            TMP_Text required = requiredNode == null ? null : requiredNode.GetComponent<TMP_Text>();
             if (current == null || required == null)
                 throw new FormatException("Original item icon merge progress labels are missing: " + item.ItemType);
             current.text = FormatCount(item.Count);
