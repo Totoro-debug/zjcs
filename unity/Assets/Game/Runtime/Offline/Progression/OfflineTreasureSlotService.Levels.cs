@@ -178,7 +178,7 @@ namespace Zjcs.Offline.Progression
                             throw new InvalidOperationException("Treasure slot material debit failed.");
                     player.TreasureSlotLevelUp((S.ElementType)element, index, 1);
                     if (slot.GetFinalLevel() != before + 1) throw new InvalidOperationException("Treasure seasonal record did not accept the upgrade.");
-                    StoreLevelPlayer(next.Player, player);
+                    StorePlayer(next.Player, player);
                 });
             }
             catch (IOException error) { return new TreasureCultivationResult(ProgressionResultStatus.InvalidState, message: error.Message); }
@@ -202,7 +202,7 @@ namespace Zjcs.Offline.Progression
                 var snapshot = CreateLevelPlayer(session.Save.Player, nowUnixSeconds, null);
                 if (JsonUtility.ToJson(Capture(snapshot)) == JsonUtility.ToJson(session.Save.Player.CharacterProperties.TreasureSlots))
                     return Result(ProgressionResultStatus.Unchanged);
-                result = session.ApplyInventoryTransaction(receipt, next => StoreLevelPlayer(next.Player, CreateLevelPlayer(next.Player, nowUnixSeconds, events)));
+                result = session.ApplyInventoryTransaction(receipt, next => StorePlayer(next.Player, CreateLevelPlayer(next.Player, nowUnixSeconds, events)));
             }
             catch (IOException error) { return Result(ProgressionResultStatus.InvalidState, error.Message); }
             catch (UnauthorizedAccessException error) { return Result(ProgressionResultStatus.InvalidState, error.Message); }
@@ -271,12 +271,6 @@ namespace Zjcs.Offline.Progression
         {
             var record = new S.PlayerSeasonRecordPlayerBlessTreasureRecordDataWrap(player.Settings, message => Debug.LogError(message));
             record.Init(player, player.Rank); return record;
-        }
-        private static void StoreLevelPlayer(OfflinePlayerProgress player, S.Player view)
-        {
-            player.CharacterProperties.TreasureSlots = Capture(view);
-            player.CharacterProperties.TreasureElementLevels.Clear();
-            foreach (var item in player.CharacterProperties.Treasures) { item.SlotIndex = -1; item.Level = 1; item.BaseLevel = 1; }
         }
     }
 }

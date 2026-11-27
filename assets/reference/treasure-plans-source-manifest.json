@@ -1,0 +1,61 @@
+{
+  "manifest": "911_156995",
+  "inputs": {
+    ".tools/source-packages/current/911_156995/code-manifest.json": "a47317188c8d1f947b56ff1af73b4cd811a079860799915cf9103603afc200e9",
+    ".tools/source-packages/current/911_156995/official-code/managed/decoded/Console.dll": "5ff2019c868764f8e6afa6a5ff3bd569d4e3d39365a39dc0327a738391e8b64d",
+    "scripts/templates/treasure_cultivation/TreasurePlanPorts.cs": "c8bd5e41074ce476a68c960bc1de0464540ca5db8b23c01433a5a428e29a199e",
+    "scripts/prepare_treasure_plans.py": "78b73c25ce3feadb9e2bdfb31c9f1f1401dae0a080183b72d04112ea208c3f52",
+    "scripts/prepare_treasure_slots.py": "4051b8d6f7679d26ddb99a46f8ad00687a51b97fe96e4f708d6595c019427d24",
+    ".tools/source-packages/current/911_156995/official-code/managed/decoded/Framework.FirstPass.Runtime.dll": "83726b46a0dd9720f06a83258e5462979f9e0da8c09365495a1966f7c22caf09",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/ItemType.cs": "8a1a33483ed28de00b9bc37dd60899ae0cb2fa7d7bd821b42f6e43cdcb3dbcaf",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/PlayerTreasurePlanExt.cs": "deb2560abb4ffea6deabd478dd3b46b5a48c7211b57093ce121bf17e4b1f4f3e",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/BattlePlanAccessor.cs": "9e5bb0d90f4b76579019c42b6830286d45a18507d512e3755868928b39ee0471",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/Player.cs": "e96ddc2bb91a1d310f847ff51c93966d119ac3045db9cd191455fbeda3f983f6",
+    ".tools/source-packages/current/911_156995/official-code/common-source/PlayerServiceProxyImpl.cs": "b3c7e39e7f8234d37c9d4d65963bd606191d55cdd43667484d80e0996d78ceec",
+    ".tools/source-packages/current/911_156995/official-code/framework-firstpass-source/Framework/GAction.cs": "896ae865897ff6d24e7a98b399964baad789ea14c9a1adb8b7b8f3d81b27da79",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/PlayerBattlePlanTreasurePlanContentWrap.cs": "7b07e81f2e60ae1983c72cb0d37989d73b8b1d4dd39e93f17b64530eed84599b",
+    ".tools/source-packages/current/911_156995/official-code/client-source/TreasureSlotsPanelContent.cs": "39e6db3a56bf4c2e0b314a46fa282dd8cd6c45ca042969351f7e4846a4e47347"
+  },
+  "methods": {
+    "common-source/Common/PlayerTreasurePlanExt.cs:public static bool TryGetTreasurePlanSlots(": "84a51ba332af4bc1b38250e818325bb86145378cd71ac823cb23e8105da655cb",
+    "common-source/Common/PlayerTreasurePlanExt.cs:public static void ParseTreasurePlanSlots(": "cdd67948710086a62c053f6350985691636bf9f80a32a27f82a46030d0974a3d",
+    "common-source/Common/PlayerTreasurePlanExt.cs:public static bool HasTreasurePlanSlot(": "5fa51345c847c029c12b313dd905aff15d829f0411030c9efd71046da4201bca",
+    "common-source/Common/PlayerTreasurePlanExt.cs:public static Dictionary<int, int> ReadWornTreasureSlots(": "551121f303537ed0d3a9cf15d7acf28c9d81d758796204fb88f0afb48e5539e3",
+    "common-source/Common/PlayerTreasurePlanExt.cs:public static void ApplyWornTreasureTargetState(": "8722a3a44202bfb327022272ea9762e5fad86d5c839763f311c67c237676e5e4",
+    "common-source/Common/PlayerTreasurePlanExt.cs:public static int RemoveTreasureFromAllPlans(": "a757e3cae09baa788cfe1846b1f69dd4d7999048cbba9c58dc3ed4465f33e094",
+    "common-source/Common/BattlePlanAccessor.cs:public static bool ClearPlanContent(": "55e72844afe89a1ff6c3248b44fb484d8198cc91d00affdff088551346298f43",
+    "common-source/Common/Player.cs:public void FireOnBattlePlanContentCleared(": "21b0bfabf82dd8d3f4593a41a6454470267e47773958694e34f3cdd9ea62c0cc",
+    "common-source/PlayerServiceProxyImpl.cs:protected override void OperPlayerApplyBattlePlanCallback(": "5deec70e4c3b0bcd37f6670a766b3569789aa478cb39703ff403131b158ed23a",
+    "common-source/PlayerServiceProxyImpl.cs:protected override void OperPlayerClearBattlePlanCallback(": "e7b9c5cbd2a9369a611fd897e5bfe9a9eba34195e572ba902034df7dd4a9a642",
+    "common-source/PlayerServiceProxyImpl.cs:private static void ClearWornWhenActivePlanCleared(": "cae2e669d118bb66dca48051f28ee0332d46ff3efc4b43f41fcc56baf20f33e6",
+    "framework-firstpass-source/Framework/GAction.cs:public sealed class GAction<T1, T2>": "e6d9913cf150cc3fb83744e8618dbc4133d2fbd6cb75fa024c235083cfa3c5b4"
+  },
+  "contracts": {
+    "common-source/Common/Player.cs:private void Player_OnTreasureActive(": "9b186d2625fc80e8988634d9951d0394cb709f44112ab87bf687cdba7f656c08",
+    "common-source/Common/Player.cs:private async void Player_OnTreasureListChanged(": "721a57c2806a980805dd24832133683adfcd002dc83fd2d9a952ed00fce753b7",
+    "common-source/Common/Player.cs:private void Player_OnItemCountUpdate1(": "40ab58ed1281ade61a33f62b1406b413497ff5ca90b081b8f0bb9d30c8c1eaa8",
+    "common-source/Common/Player.cs:private UniTask AutoSetupTreasure(": "f6d7dfd455f51cb40460afa0fb33fc8bbdba04ae2f607ff6ecbe062c5a6e160f",
+    "common-source/Common/Player.cs:public int GetCanSetupTreasureSlotIndex(": "e6dc9044943b91546d8097cf7ff775368a705c5eb5ea739684836645ef3af9d7",
+    "common-source/Common/BattlePlanAccessor.cs:public static bool EnsurePlanEntries(": "f87176a0a38b20e8e4ed8aad8dc5f3a8abe803c85c4e04a451c07e241c19ca34",
+    "common-source/Common/BattlePlanAccessor.cs:public static bool SetActivePlanIndex(": "c2e54720f2cc255521ad39f68084873908e90fc95eaf49c32993e549a302a6bd",
+    "common-source/Common/BattlePlanAccessor.cs:public static bool TryGetPlanContent(": "17996317345b054abc40cd34251eace9987f0eec30dbc61d0ed237b3f88e1086",
+    "common-source/Common/PlayerBattlePlanTreasurePlanContentWrap.cs:public override void Clear(": "9ee81ab35a19c2891cd75419530f2321cfb8222b69fa0394730566ab8898cb03",
+    "client-source/TreasureSlotsPanelContent.cs:private void OnTreasurePlanChanged(": "e85ff4c92352277083cbc2a74acd12b8de1804d7fe9ce3e2f51001dffc65ef8e",
+    "client-source/TreasureSlotsPanelContent.cs:private void ConfirmClearTreasurePlan(": "e496bca5a1b12308f6e4c11bed5f4263e9b074193108f897f363f2fa75187556",
+    "AutoSetupTreasure:state-machine": "2052ff8e835e7d0ade2467e50f5fb3ef7951311ea81fa621c1d69074e3127d24"
+  },
+  "runtime_bindings": {
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureSlotService.Plans.cs": "43178ce202c317e291a61d7493b01f3182d4822e281072caa3e8ce90ccc0b993",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureSlotService.Plans.cs.meta": "bb6bfea11392a1c7e047341fc30fcb7ed9a4d88027ac769b46710347f2f09e7c",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureSlotService.cs": "973564387e49bd13504f7cc294201f1e6a122e79cdd360bb28c0d0dc23a7f40d",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureAutoSetup.cs": "fe689fffe5eee3c86d9423a00aa76382998d40f5044ffa6ce2bb7741aa4517c4",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureAutoSetup.cs.meta": "4eddcf3f77830100ae43c766df73eda3c8bf8c4dfc2e69af5767b0b0c60f1ca2",
+    "scripts/fixtures/treasure_plans_validation.cs": "f8249e9eb8c7c7413291b30e52cc33b94a96ec5e6b737f757a6d7a396b9f2b61",
+    "scripts/test_treasure_plans.ps1": "af901e4dea12f07df0d177538b8263b0b94a75d4174d3b15599fb69c04ae09df"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/TreasureCultivation/OfficialTreasurePlans.cs": "3bb42e2fe591ba31d0717ade614631617f3e58767666298c1caf62a487f1b422",
+    "unity/Assets/Game/Runtime/Official/TreasureCultivation/OfficialTreasurePlans.cs.meta": "301d004dea3068a8ad772f302148dd573e759bcabda01ffbeabe844a31b847bf"
+  },
+  "scope": "Original treasure plan projection/application/removal/clear transitions and Treasure-only client callback branches; activation-driven next-frame auto-setup uses original free-index and manual setup paths. Names, battle-use plan groups and native widgets are separate owners."
+}

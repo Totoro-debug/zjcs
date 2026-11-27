@@ -61,6 +61,7 @@ namespace Zjcs.Official.TreasureSlots
         public int this[int key] { get => slots[key]; set => slots[key] = value; }
         public int Count => slots.Count;
         public void Clear() => slots.Clear();
+        public bool Remove(int index) => slots.Remove(index);
     }
     public sealed class PlayerBattlePlanTreasureSlotsWrap
     {
@@ -68,12 +69,15 @@ namespace Zjcs.Official.TreasureSlots
         public PlayerBattlePlanTreasureSlotsWrap(Dictionary<ElementType, Dictionary<int, int>> data) { RawData = data; }
         public void Add(ElementType key, Dictionary<int, int> data) => RawData.Add(key, data);
         public bool Remove(ElementType key) => RawData.Remove(key);
+        public void Clear() => RawData.Clear();
         public PlayerBattlePlanTreasureSlotsSubValueWrap this[ElementType key] => new PlayerBattlePlanTreasureSlotsSubValueWrap(RawData[key]);
     }
-    public sealed class PlayerBattlePlanTreasurePlanContentWrap
+    public abstract class PlayerBattlePlanContentBaseWrap { public abstract void Clear(); }
+    public sealed class PlayerBattlePlanTreasurePlanContentWrap : PlayerBattlePlanContentBaseWrap
     {
         public TreasurePlanContent Data = new TreasurePlanContent();
         public PlayerBattlePlanTreasureSlotsWrap TreasureSlots => new PlayerBattlePlanTreasureSlotsWrap(Data.TreasureSlots);
+        public override void Clear() { TreasureSlots.Clear(); }
     }
 
     public sealed partial class Player
@@ -102,7 +106,7 @@ namespace Zjcs.Official.TreasureSlots
         }
         /*Player*/
     }
-    public static class PlayerTreasurePlanExt
+    public static partial class PlayerTreasurePlanExt
     {
         /*PlayerTreasurePlanExt*/
     }

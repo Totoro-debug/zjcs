@@ -79,11 +79,7 @@ namespace Zjcs.Offline.Progression
                     int origin = player.GetTreasureInSlotIndex(treasureId);
                     player.SetupTreasureInSlot(treasureId, (S.ElementType)element, origin, targetIndex);
                     S.PlayerTreasurePlanExt.WriteWornTreasureElementToActivePlan(player, (S.ElementType)element);
-                    next.Player.CharacterProperties.TreasureSlots = Capture(player);
-                    // Legacy fields are import-only. Canonical slots now own equipment and levels.
-                    next.Player.CharacterProperties.TreasureElementLevels.Clear();
-                    foreach (var item in next.Player.CharacterProperties.Treasures)
-                    { item.SlotIndex = -1; item.Level = 1; item.BaseLevel = 1; }
+                    StorePlayer(next.Player, player);
                 });
             }
             catch (IOException error) { return Result(ProgressionResultStatus.InvalidState, error.Message); }
@@ -218,6 +214,13 @@ namespace Zjcs.Offline.Progression
                             new OfflineTreasureSlotBlessLevel { Index = slot.Key, Level = slot.Value }).ToList() }).ToList() });
             if (!OfflineTreasureSlotProgress.IsValid(result)) throw new FormatException("Original treasure slot operation produced invalid local data.");
             return result;
+        }
+        private static void StorePlayer(OfflinePlayerProgress player, S.Player view)
+        {
+            player.CharacterProperties.TreasureSlots = Capture(view);
+            // Legacy fields are import-only. Canonical slots own equipment and training.
+            player.CharacterProperties.TreasureElementLevels.Clear();
+            foreach (var item in player.CharacterProperties.Treasures) { item.SlotIndex = -1; item.Level = 1; item.BaseLevel = 1; }
         }
         private static ProgressionResult Result(ProgressionResultStatus status, string message = null)
             => new ProgressionResult { Status = status, Message = message ?? string.Empty };
