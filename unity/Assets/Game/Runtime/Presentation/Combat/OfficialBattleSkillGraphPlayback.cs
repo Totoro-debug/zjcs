@@ -190,7 +190,8 @@ namespace Zjcs.Presentation.Combat
             if (airComboViews != null) throw new InvalidOperationException("Original airborne status views are already bound.");
             airComboViews = new OfficialBattleAirComboPlayback(executor, root, scope, StatusBody,
                 new Dictionary<int, string> { { 10057, "Combat/wind-roar-current-status-graphs" },
-                    { 10069, "Combat/wind-roar-current-status-graphs" } });
+                    { 10069, "Combat/wind-roar-current-status-graphs" },
+                    { 10074, "Combat/wind-roar-current-status-graphs" } });
             airComboViews.Synchronize();
             // A newly summoned model can receive its initial statuses before its
             // first cast binds the native role entity. Bind that same entity here

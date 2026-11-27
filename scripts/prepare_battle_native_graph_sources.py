@@ -50,6 +50,7 @@ def main():
         'judgment-blade-current-skill-graphs',
         'swift-wind-dance-current-skill-graphs',
         'soul-guardian-current-skill-graphs',
+        'hunt-judgment-current-skill-graphs',
     )
     receipts = {
         'skill-native-graphs': 'skill-native-graph-assets-source-manifest',

@@ -354,7 +354,7 @@ namespace Zjcs.Combat.Official
             if (transform == null || scope == null) return scope;
             int facing = cast == null ? actor.Direction : cast.FacingIndex;
             // Local Pos2d.FourDirs is Down/Left/Up/Right; Common.Direction is Up/Down/Left/Right.
-            int direction = facing == 0 ? 1 : facing == 1 ? 2 : facing == 2 ? 0 : facing;
+            int direction = FightGridTransformMath.DirectionFromFacingIndex(facing);
             bool flip = cast == null ? (actor.HasFlipX ? actor.FlipX : facing == 1) : cast.FlipX;
             var result = new List<FightGridPoint>(scope.Count);
             foreach (FightGridPoint position in scope)

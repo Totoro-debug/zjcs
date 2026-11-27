@@ -8,6 +8,7 @@ namespace Zjcs.Combat.Official
         public FightBattleUnitState Target;
         public FightBattleUnitState SkillTarget;
         public FightBattleHitDefinition Hit;
+        public FightBattleSkillCastPresentation Cast;
         public FightBattleGrid Grid;
         public ISet<FightGridPoint> Occupied;
     }
@@ -27,9 +28,16 @@ namespace Zjcs.Combat.Official
             {58642, 58643}, {58927, 58928}, {59274, 59275}, {59494, 59495},
             {59634, 59635}, {61564, 59635}, {61647, 61648}, {61994, 61995},
             {65014, 65015}, {16452, 16453}, {16642, 16643}, {10702, 10703},
-            {10972, 10973}, {11832, 11833}
+            {10972, 10973}
         };
-        private static readonly IFightHitMovementRule Approach = new ApproachRule();
+        // User-confirmed Hunt Judgment adaptation: rotate the source offset
+        // with the captured release facing before applying the exact landing rule.
+        private static readonly Dictionary<int, int> FacingSourcePullActions = new Dictionary<int, int>
+        {
+            {11832, 11833}
+        };
+        private static readonly IFightHitMovementRule Approach = new ApproachRule(false);
+        private static readonly IFightHitMovementRule FacingApproach = new ApproachRule(true);
         private static readonly Dictionary<int, int> TargetPullActions = new Dictionary<int, int>
         {
             {59972, 59973}, {15543, 10584}, {10583, 10584}, {11342, 11343}, {11352, 11353}
@@ -100,6 +108,8 @@ namespace Zjcs.Combat.Official
             FightBattleSkillMove move = hit?.HitMove;
             if (move == null || move.Distance != -1 || !move.TowardsTargetPos
                 || move.CanExpandOffset || move.CancelDiagonally) return null;
+            if (move.Direction == 0 && FacingSourcePullActions.TryGetValue(hit.DamageId, out int facingAction)
+                && move.MoveBehaviourId == facingAction) return FacingApproach;
             Dictionary<int, int> actions = move.Direction == 0 ? SourcePullActions
                 : move.Direction == 1 ? TargetPullActions : null;
             return actions != null && actions.TryGetValue(hit.DamageId, out int actionId)
@@ -108,6 +118,9 @@ namespace Zjcs.Combat.Official
 
         private sealed class ApproachRule : IFightHitMovementRule
         {
+            private readonly bool facingOffset;
+            public ApproachRule(bool facingOffset) { this.facingOffset = facingOffset; }
+
             public IReadOnlyList<FightGridPoint> Plan(FightHitMovementContext context)
             {
                 if (context?.Source == null || context.Target == null || context.Grid == null
@@ -118,8 +131,15 @@ namespace Zjcs.Combat.Official
                 FightBattleUnitState referenceUnit = move.Direction == 0 ? context.Source : context.SkillTarget;
                 if (referenceUnit == null) return null;
                 var start = new FightGridPoint(target.X, target.Y);
-                var reference = new FightGridPoint(referenceUnit.X + move.OffsetX,
-                    referenceUnit.Y + move.OffsetY);
+                var landingOffset = new FightGridPoint(move.OffsetX, move.OffsetY);
+                if (facingOffset)
+                {
+                    if (context.Cast == null || context.Cast.FacingIndex < 0 || context.Cast.FacingIndex > 3)
+                        return null;
+                    landingOffset = FightGridTransformMath.CalcLocalToWorldPos(landingOffset, new FightGridPoint(0, 0),
+                        0f, 0f, FightGridTransformMath.DirectionFromFacingIndex(context.Cast.FacingIndex), context.Cast.FlipX);
+                }
+                var reference = new FightGridPoint(referenceUnit.X + landingOffset.X, referenceUnit.Y + landingOffset.Y);
                 bool exact = move.OffsetX != 0 || move.OffsetY != 0;
                 // Include the origin even when a legacy body's offsets omitted it.
                 var body = new List<FightGridPoint> { new FightGridPoint(0, 0) };

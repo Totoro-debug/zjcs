@@ -72,28 +72,6 @@ namespace Zjcs.Presentation.Home
             File.WriteAllText(Path.Combine(output, "acquired-extinction-blade-checkpoint.json"), saved);
         }
 
-        private static bool ObserveAcquiredExtinctionPhase(int id)
-        {
-            foreach (var status in FindObjectsOfType<MyFightStatus>())
-            {
-                var entity = status.GetComponent<MyEntity>();
-                if (!entity || entity.Entity == null || entity.Entity.ClassId != id || !status.Context?.Owner) continue;
-                var owner = status.Context.Owner;
-                var body = owner.GetComponent<MyEntity>();
-                if (!body || body.Id.EntityId != 2) continue;
-                Require(CurrentStatusViewLookup.Get(status) != null,
-                    "Extinction Blade lost the declared current status view.");
-                var renderer = owner.GetComponentInChildren<BattleNativeMonsterRenderer>();
-                var mesh = renderer ? renderer.GetComponent<MeshFilter>()?.sharedMesh : null;
-                var visible = renderer ? renderer.GetComponent<MeshRenderer>() : null;
-                if (!renderer || !mesh || mesh.vertexCount == 0 || !visible || !visible.isVisible
-                    || !visible.enabled || visible.forceRenderingOff) continue;
-                if (id == 24269 && renderer.Animation != "floating_01") continue;
-                return true;
-            }
-            return false;
-        }
-
         private static void CompleteAcquiredExtinctionBlade(string output)
         {
             Require(extinctionBlade.casts > 0 && extinctionBlade.hits > 0 && extinctionBlade.armour > 0

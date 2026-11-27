@@ -192,12 +192,16 @@ Write-Output 'Battle hit displacement checks passed: official mapping, probabili
 
 # Exercise catalog -> graph expansion -> executor -> movement receipt. Keep the official
 # move configuration and normalize only the hit damage/range in this isolated fixture.
-function Invoke-GraphMove($skillId, $moveId, $distance, $conditionDistance = -1, $restore = $false) {
+function Invoke-GraphMove($skillId, $moveId, $distance, $conditionDistance = -1, $restore = $false,
+    [switch]$SelectedTargetAnchor) {
     $original = $catalog.CreateSkill($skillId, 0, $skillId, 1, 1, 0, $null)
     $node = $original.HitGraphEntities | Where-Object {
         $null -ne $_.HitMove -and $_.HitMove.MoveBehaviourId -eq $moveId
     } | Select-Object -First 1
     Assert-Move ($null -ne $node) "Missing original movement $moveId"
+    # A source-anchored hit uses its real hit origin as the relative target.
+    # Normalize this input only for the separate selected-unit target contract.
+    if ($SelectedTargetAnchor) { $node.Anchor = 0 }
     if ($conditionDistance -ge 0) {
         $node.HitMove.HasConditions = $true
         $node.HitMove.Conditions.Add([Zjcs.Combat.Official.FightBattleSkillMoveCondition]@{
@@ -234,7 +238,10 @@ $timedMove = Invoke-MoveBattle $timedSkill (New-Unit 1 1 0 0 1000) (New-Unit 2 2
 Assert-Move ($timedMove.Event.Movements.Count -eq 1 -and
     [Math]::Abs($timedMove.Event.Movements[0].MoveDuration - 0.32) -lt 0.000001 -and
     [Math]::Abs($timedMove.Event.Duration - 0.64) -lt 0.000001) 'Per-segment hit movement duration was lost'
-$fixedMove = Invoke-GraphMove 64360 64363 3
+$sourceOriginMove = Invoke-GraphMove 64360 64363 3
+Assert-Move ($sourceOriginMove.Event.Movements.Count -eq 1 -and
+    $sourceOriginMove.Event.Movements[0].Path[-1].X -eq 1) 'Source-anchored relative movement lost its actual hit-origin reference'
+$fixedMove = Invoke-GraphMove 64360 64363 3 -SelectedTargetAnchor
 Assert-Move ($fixedMove.Event.Movements.Count -eq 0) 'Target-relative displacement moved the selected target toward itself'
 $graphCondition = Invoke-GraphMove 13550 13553 1 1
 Assert-Move ($graphCondition.Event.Movements.Count -eq 1) 'Graph move condition failed at the distance boundary'

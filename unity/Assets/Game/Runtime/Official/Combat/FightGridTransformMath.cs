@@ -7,6 +7,10 @@ namespace Zjcs.Combat.Official
     /// Keep the original float arithmetic, flip-before-rotation and Math.Round conversion.</summary>
     public static class FightGridTransformMath
     {
+        // Pos2d.FourDirs: Down/Left/Up/Right -> Common.Direction: Up/Down/Left/Right.
+        public static int DirectionFromFacingIndex(int facing) =>
+            facing == 0 ? 1 : facing == 1 ? 2 : facing == 2 ? 0 : facing;
+
         public static FightGridPoint CalcLocalToWorldPos(FightGridPoint local, FightGridPoint origin,
             float realCenterX, float realCenterY, int direction, bool flipX)
         {

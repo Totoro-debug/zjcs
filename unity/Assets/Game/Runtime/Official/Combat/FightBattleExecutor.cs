@@ -2436,7 +2436,7 @@ namespace Zjcs.Combat.Official
             if (movementRule != null)
             {
                 IReadOnlyList<FightGridPoint> path = movementRule.Plan(new FightHitMovementContext {
-                    Source = actor, Target = target, SkillTarget = skillTarget, Hit = hit, Grid = checkpoint.Grid,
+                    Source = actor, Target = target, SkillTarget = skillTarget, Hit = hit, Cast = cast, Grid = checkpoint.Grid,
                     Occupied = OccupiedPositions(target.Id)
                 });
                 int movementIndex = movements.Count;

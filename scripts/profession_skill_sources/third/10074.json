@@ -1,0 +1,49 @@
+{
+  "entities": [
+    11820,
+    11821,
+    11822,
+    11823,
+    11824,
+    11830,
+    11831,
+    11832,
+    11833,
+    24269,
+    24270
+  ],
+  "code": [
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "FightActionSkillMoveComponentInfo",
+    "FightSKillMoveCfg",
+    "FightStatusComponentInfo",
+    "FightStatusDamageSkillComponentInfo",
+    "FightStatusDamageRemoveComponentInfo",
+    "StatusAutoRemoveComponentInfo",
+    "BattleFormulaHandler"
+  ],
+  "client_code": [
+    "MyFightStatusDamageSkill",
+    "MyFightStatusDamageRemove",
+    "MyStatusAutoRemove"
+  ],
+  "rule_pack_fragments": [
+    "FightSkill_part91.g.bytes",
+    "FightSkill_part714.g.bytes"
+  ],
+  "visibility_bundles": [
+    "11820",
+    "11830"
+  ],
+  "scope_numeric": true,
+  "current_managed_views": true,
+  "runtime_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10074.json"
+  ],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/hunt-judgment-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/wind-roar-current-status-graphs-source-manifest.json"
+  ]
+}

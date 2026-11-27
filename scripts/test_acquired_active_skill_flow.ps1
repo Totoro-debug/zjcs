@@ -2,9 +2,9 @@ param(
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10063,10065,10066,10069,10070,10068,10073,10077,10079,10082,10083,10084,10085,10086,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int]$SkillId = 10026,
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10063,10065,10066,10069,10070,10068,10073,10074,10077,10079,10082,10083,10084,10085,10086,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int]$SkillId = 10026,
     [Parameter(ParameterSetName='Player')]
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10063,10065,10066,10069,10070,10068,10073,10077,10079,10082,10083,10084,10085,10086,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10063,10065,10066,10069,10070,10068,10073,10074,10077,10079,10082,10083,10084,10085,10086,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
     [string]$PassiveSave,
     [string]$ActiveSave,
     [ValidateSet(0,39521,39523)][int]$SkillSkinId = 0,
@@ -572,6 +572,17 @@ try {
         }
         if ($SkillId -eq 10063) { Assert-AcquiredAsuraHandEvidence $skillRun }
         if ($SkillId -eq 10065) { Assert-AcquiredEclipseSlashesEvidence $skillRun }
+        if ($SkillId -eq 10074) {
+            foreach ($file in @('acquired-hunt-judgment-checkpoint.json','acquired-hunt-judgment-receipt.json',
+                'acquired-active-ui-hunt-pull.png','acquired-active-ui-airborne-launch.png','acquired-active-ui-airborne-recovery.png')) {
+                if (-not(Test-Path -LiteralPath (Join-Path $run $file))) { throw 'Hunt Judgment original grab, pull, strike or airborne evidence is missing.' }
+            }
+            $hunt = Get-Content (Join-Path $run 'acquired-hunt-judgment-receipt.json') -Raw | ConvertFrom-Json
+            if ($hunt.casts -lt 1 -or $hunt.hits -lt 3 -or $hunt.pulls -lt 1 -or -not $hunt.restored -or
+                -not $hunt.castCaptured -or -not $hunt.pullCaptured -or -not $hunt.launchCaptured -or -not $hunt.recoveryCaptured) {
+                throw 'Hunt Judgment lost its actual facing-relative pull, three strikes or original airborne phases.'
+            }
+        }
         if ($SkillId -eq 10086) {
             foreach ($file in @('acquired-swift-wind-dance-checkpoint.json','acquired-swift-wind-dance-receipt.json',
                 'acquired-active-ui-swift-buff.png')) {
@@ -644,7 +655,7 @@ try {
         if ($SkillId -eq 10096 -and -not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-heavenly-rain-checkpoint.json'))) {
             throw 'The original cultivated healing checkpoint was not persisted.'
         }
-        if ($SkillId -in @(10002,10032,10037,10039,10047,10056,10057,10059,10062,10063,10065,10068,10069,10070,10073,10077,10079,10082,10083,10084,10085,10086,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)) {
+        if ($SkillId -in @(10002,10032,10037,10039,10047,10056,10057,10059,10062,10063,10065,10068,10069,10070,10073,10074,10077,10079,10082,10083,10084,10085,10086,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)) {
             # The Player asserts the original effects for each equipped cast.
             Write-Output "Acquired active skill-page flow passed: $skillRun"
             continue

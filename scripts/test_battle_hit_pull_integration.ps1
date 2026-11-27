@@ -29,7 +29,7 @@ Assert-Move ($original.Event.Movements.Count -eq 1 -and
     $original.Event.Movements[0].MoveBehaviourId -eq 12878) 'Official 12875 -> 12876 -> 12877 did not execute its pull'
 Assert-Move ([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($original.Checkpoint) -eq
     [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($originalRestored.Checkpoint)) 'Original pull changed after checkpoint restore'
-$selectedTarget = Invoke-GraphMove 59970 59973 4
+$selectedTarget = Invoke-GraphMove 59970 59973 4 -SelectedTargetAnchor
 Assert-Move ($selectedTarget.Event.Movements.Count -eq 0) 'A target-relative pull moved the selected target toward itself'
 $method = [Zjcs.Combat.Official.FightBattleExecutor].GetMethod('ApplyHitMove',
     [Reflection.BindingFlags]'Instance,NonPublic')
