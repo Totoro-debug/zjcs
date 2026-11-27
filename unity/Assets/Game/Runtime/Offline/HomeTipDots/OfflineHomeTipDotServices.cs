@@ -130,6 +130,13 @@ namespace Zjcs.Offline.HomeTipDots
         public Func<List<TreasureRedDotEnum>, bool, bool, bool> AnyTreasureRedDotEvaluator { get; set; }
         public Func<ElementType, bool> TreasurePieceRedDotEvaluator { get; set; }
         public Func<int, bool> IsItemEffectTreasurePromoteEvaluator { get; set; }
+        public void ObserveItemCounts(IEnumerable<int> itemIds)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfflineHomeTipDotServices));
+            if (itemIds == null) throw new ArgumentNullException(nameof(itemIds));
+            foreach (int id in itemIds)
+                if (watchedItems.Add(id)) observedItemCounts[id] = GetItemAmount(id);
+        }
         public bool AutoMergeWhenLevelUp
         {
             get => autoMergeWhenLevelUp;

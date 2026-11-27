@@ -28,6 +28,7 @@ public static partial class HomeDeskRuntimeValidation
     private static IEnumerator RunDeskChecks()
     {
         checksCount = 0;
+        CheckTreasureTipRules();
         string saveRoot = Path.Combine(Work, "isolated-saves");
         var creation = CharacterCreationOfflineService.OpenDefault(saveRoot);
         string slot = creation.CreateSlot();
@@ -43,6 +44,8 @@ public static partial class HomeDeskRuntimeValidation
             Require(profile.ApplyCharacterMutation(p => {
                 p.Level = value; p.Experience = character.CumulativeLevelExperience[value];
                 p.SubRank = value >= 30 ? 4 : value >= 20 ? 3 : value >= 10 ? 2 : 1; p.Rank = 1;
+                // This fixture seeds both progression dimensions; production player upgrades never advance the world.
+                p.CharacterProperties.TreasurePlaneRank = (int)Zjcs.Official.TreasureSlots.EnumExt.ToRank((Zjcs.Official.TreasureSlots.SubRank)p.SubRank);
                 if (!p.UnlockedMapClassIds.Contains(11)) p.UnlockedMapClassIds.Add(11);
             }).IsApplied, "seed isolated level " + value);
         };
@@ -60,15 +63,19 @@ public static partial class HomeDeskRuntimeValidation
         // treasure is owned, independently of the level-thirty branch.
         int treasureId = OfflineTreasureCatalog.Load().Treasures.First().ClassId;
         profile.Reload();
-        Require(profile.ApplyInventoryTransaction("desk:owned-treasure", save =>
-            save.Player.Inventory.Add(new OfflineItemStack { ItemId = treasureId, Count = 1 })).IsApplied, "seed an actual configured treasure");
+        Require(profile.ApplyInventoryTransaction("desk:owned-treasure", save => {
+            save.Player.Inventory.Add(new OfflineItemStack { ItemId = treasureId, Count = 1 });
+            save.Player.CharacterProperties.Treasures.Add(new OfflineCharacterTreasure { ClassId = treasureId, Active = true, Star = 1 });
+        }).IsApplied, "seed an actual configured treasure and original parameter state");
         home = OpenHome(slot, saveRoot, pointer); yield return WaitFrames(8); FocusDesk();
         Require(Desk.GetState() == FurnitureBase.EFurnitureState.CanRepair, "owned treasure unlocks workbench repair at level one");
         yield return Capture("02-desk-owned-treasure-unlock.png");
         home.Close(); home = null; yield return WaitFrames(3);
         profile.Reload();
-        Require(profile.ApplyInventoryTransaction("desk:remove-fixture-treasure", save =>
-            save.Player.Inventory.RemoveAll(row => row.ItemId == treasureId)).IsApplied, "clear the treasure branch fixture");
+        Require(profile.ApplyInventoryTransaction("desk:remove-fixture-treasure", save => {
+            save.Player.Inventory.RemoveAll(row => row.ItemId == treasureId);
+            save.Player.CharacterProperties.Treasures.RemoveAll(row => row.ClassId == treasureId);
+        }).IsApplied, "clear the treasure branch fixture");
 
         level(18);
         home = OpenHome(slot, saveRoot, pointer); yield return WaitFrames(8); FocusDesk();
@@ -142,7 +149,7 @@ public static partial class HomeDeskRuntimeValidation
             Require(live.GetComponentsInChildren<Renderer>(true).Any(value => value.sharedMaterials.Any(material => material != null)), "skin binds actual original materials: " + skin.skinItemId);
             yield return Capture("08-desk-skin-" + skin.skinItemId + ".png");
         }
-        home.Close(); home = null; yield return WaitFrames(3);
+        yield return CheckTreasureTipScene(profile, slot);
     }
 
     private sealed class DynamicProbe : Zjcs.Official.HomeTipDots.TipDotDynamicLinkNodeBase

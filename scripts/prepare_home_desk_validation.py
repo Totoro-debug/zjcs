@@ -31,8 +31,12 @@ def prepare(project, work):
     fixture.mkdir(parents=True, exist_ok=True)
     (fixture / 'HomeDeskRuntimeValidation.cs').write_text(text, 'utf8', newline='\n')
     (fixture / 'HomeDeskRuntimeChecks.cs').write_bytes(checks.read_bytes())
+    tips = ROOT / 'scripts/fixtures/treasure_tips_validation.cs'
+    (fixture / 'TreasureTipsValidation.cs').write_bytes(tips.read_bytes())
+    from prepare_treasure_tip_rules import prepare as prepare_tip_rules
+    prepare_tip_rules(oracle=fixture/'OriginalTreasureTips.cs')
     references = ['Launch', 'Zjcs.Editor', 'Zjcs.Presentation.Home', 'Zjcs.Presentation.World',
-        'Zjcs.Offline.Progression', 'Zjcs.Offline.State', 'Zjcs.Offline.CharacterCreation',
+        'Zjcs.Offline.Progression', 'Zjcs.Offline.State', 'Zjcs.Offline.CharacterCreation', 'Zjcs.Official.TreasureCultivation',
         'Zjcs.Offline.Home', 'Zjcs.Offline.HomeSceneInput', 'Zjcs.Offline.PartnersUI', 'Zjcs.Offline.HomeTipDots',
         'Zjcs.Official.HomeFurniture', 'Zjcs.Official.HomeHudUI', 'Zjcs.Official.HomeUI', 'Zjcs.Official.HomeSceneInput',
         'Zjcs.Official.HomeMainUiControls', 'Zjcs.Official.HomeStoryDialog', 'Zjcs.Official.HomeTipDots',
@@ -42,7 +46,7 @@ def prepare(project, work):
         'spine-unity', 'Unity.TextMeshPro', 'Unity.ugui']
     (fixture / 'HomeDeskValidation.asmdef').write_text(json.dumps(dict(name='HomeDeskValidation',
         includePlatforms=['Editor'], references=references), indent=2) + '\n', 'utf8', newline='\n')
-    paths = [base, checks, Path(__file__)] + list(fixture.glob('*'))
+    paths = [base, checks, tips, Path(__file__)] + list(fixture.glob('*'))
     (work / 'source-fixture.json').write_text(json.dumps({str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
         for path in paths}, indent=2) + '\n', 'utf8', newline='\n')
     print('Prepared native Desk validation:', fixture)

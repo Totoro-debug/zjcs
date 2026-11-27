@@ -23,6 +23,7 @@ namespace Zjcs.Offline.Progression
         public List<OfflineTreasureElementLevel> TreasureElementLevels = new List<OfflineTreasureElementLevel>();
         public OfflineTreasureSlotProgress TreasureSlots = new OfflineTreasureSlotProgress();
         public List<OfflineTreasurePlanName> TreasurePlanNames = new List<OfflineTreasurePlanName>();
+        public bool TreasureAutoMergeWhenLevelUp = true;
         public List<OfflinePeriodicCard> PeriodicCards = new List<OfflinePeriodicCard>();
         public List<OfflineLegionMapSkill> LegionMapSkills = new List<OfflineLegionMapSkill>();
         public List<OfflineEquipCabinetSeasonScore> EquipCabinetScores = new List<OfflineEquipCabinetSeasonScore>();

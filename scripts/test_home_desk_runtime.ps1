@@ -25,6 +25,11 @@ $work=Join-Path $validation ('desk-runtime-'+[Guid]::NewGuid().ToString('N'))
 $staged=@{}
 foreach($relative in @(
     'Assets/Game/Runtime/Official/HomeTipDots', 'Assets/Game/Runtime/Offline/HomeTipDots',
+    'Assets/Game/Runtime/Official/TreasureCultivation',
+    'Assets/Game/Runtime/Offline/Progression/OfflineTreasureTipService.cs',
+    'Assets/Game/Runtime/Offline/Progression/OfflineTreasureTipService.cs.meta',
+    'Assets/Game/Runtime/Offline/Progression/OfflineCharacterPropertyProgress.cs',
+    'Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.HomeTipDots.cs',
     'Assets/Game/Runtime/Official/HomeFurniture',
     'Assets/Game/Runtime/Official/ProfessionUI/IDynamicTipDotNodeManager.cs',
     'Assets/Game/Runtime/Official/ProfessionUI/IDynamicTipDotNodeManager.cs.meta',
@@ -45,7 +50,7 @@ foreach($relative in @(
         $staged['unity/'+$path.Replace('\','/')]=$hash
     }
 }
-foreach($name in @('home-desk-native','home-native-prefab-references','home-tip-dot-catalog')) {
+foreach($name in @('home-desk-native','home-native-prefab-references','home-tip-dot-catalog','treasure-tips')) {
     $receipt=Get-Content -LiteralPath (Join-Path $repository ('assets/reference/'+$name+'-source-manifest.json')) -Raw | ConvertFrom-Json
     foreach($entry in $receipt.outputs.PSObject.Properties) {
         if(-not $entry.Name.StartsWith('unity/')) { continue }
