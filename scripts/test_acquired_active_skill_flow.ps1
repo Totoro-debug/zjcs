@@ -2,13 +2,37 @@ param(
     [Parameter(Mandatory, ParameterSetName='Player')][string]$Player,
     [Parameter(Mandatory, ParameterSetName='Play')][string]$Project,
     [Parameter(Mandatory)][string]$Workspace,
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10066,10070,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int]$SkillId = 10026,
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10065,10066,10070,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int]$SkillId = 10026,
     [Parameter(ParameterSetName='Player')]
-    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10066,10070,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
+    [ValidateSet(10000,10002,10008,10009,10010,10011,10012,10013,10014,10015,10016,10017,10018,10024,10026,10028,10032,10035,10037,10039,10043,10044,10046,10047,10048,10049,10051,10053,10056,10057,10059,10062,10065,10066,10070,10068,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)][int[]]$AdditionalSkillIds = @(),
     [string]$PassiveSave,
     [ValidateSet(0,39521,39523)][int]$SkillSkinId = 0,
     [ValidateRange(0,2147483646)][int]$BattleSeed = 0
 )
+function Assert-AcquiredEclipseSlashesEvidence([string]$Run) {
+    $result = Get-Content (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
+    $exit = Get-Content (Join-Path $Run 'process-exit.json') -Raw | ConvertFrom-Json
+    if (-not $result.passed -or $exit.ExitCode -ne 0) { throw 'The actual Eclipse Slashes run did not complete.' }
+    foreach ($file in @('acquired-eclipse-slashes-checkpoint.json','acquired-active-ui-battle.png')) {
+        if (-not (Test-Path (Join-Path $Run $file))) { throw 'Missing cultivated Eclipse Slashes battle evidence.' }
+    }
+    $checkpoint = Get-Content (Join-Path $Run 'acquired-eclipse-slashes-checkpoint.json') -Raw | ConvertFrom-Json
+    $casts = 0
+    foreach ($receipt in $checkpoint.checkpoint.Receipts) {
+        foreach ($cast in $receipt.Event.SkillCasts | Where-Object { $_.SkillItemId -eq 10065 -and $_.Slot -eq 0 }) {
+            $damage = @($receipt.Event.DamageEvents | Where-Object { $_.DamageId -in $cast.DamageEventIds })
+            if ($cast.SkillEntityId -ne 11440 -or $damage.Count -ne 6 -or
+                @($damage | Where-Object { $_.ElementType -ne 0 -or $_.DamageType -ne 1 -or $_.TrueDamage -or $_.IsCure }).Count) {
+                throw 'Eclipse Slashes lost one of its original six physical damage receipts.'
+            }
+            $casts++
+        }
+    }
+    $verified = Select-String -LiteralPath (Join-Path $Run 'runtime.log') -SimpleMatch -Pattern '[Acquired active combat] 10065 cultivated six physical hits, final strike, timing and restoration passed.'
+    if ($casts -lt 1 -or -not $verified) {
+        throw 'The actual Eclipse Slashes cultivation, hit timing or restore verification was not recorded.'
+    }
+}
 function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
@@ -469,6 +493,7 @@ try {
                 if (-not (Test-Path -LiteralPath (Join-Path $skillRun $file))) { throw 'The cultivated rock emperor did not render and persist its original summon.' }
             }
         }
+        if ($SkillId -eq 10065) { Assert-AcquiredEclipseSlashesEvidence $skillRun }
         if ($SkillId -eq 10070) {
             foreach ($file in @('acquired-meteor-fire-checkpoint.json','acquired-meteor-fire-strikes.json',
                 'acquired-meteor-fire-receipt.json','acquired-active-ui-meteor-formation.png','acquired-active-ui-meteor-burning.png')) {
@@ -521,7 +546,7 @@ try {
         if ($SkillId -eq 10096 -and -not (Test-Path -LiteralPath (Join-Path $skillRun 'acquired-heavenly-rain-checkpoint.json'))) {
             throw 'The original cultivated healing checkpoint was not persisted.'
         }
-        if ($SkillId -in @(10002,10032,10037,10039,10047,10056,10057,10059,10062,10068,10070,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)) {
+        if ($SkillId -in @(10002,10032,10037,10039,10047,10056,10057,10059,10062,10065,10068,10070,10073,10077,10079,10082,10083,10084,10085,10088,10089,10091,10092,10093,10095,10096,10097,10098,10099,10100,10101,10102,10103,10104)) {
             # The Player asserts the original effects for each equipped cast.
             Write-Output "Acquired active skill-page flow passed: $skillRun"
             continue

@@ -1,0 +1,118 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 11440,
+      "entity_resource": "Combat/EclipseSlashesSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11440/11440",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/EclipseSlashesSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11440/playable11440"
+        },
+        {
+          "field": "DownPlayablePrefab",
+          "resource": "Combat/EclipseSlashesSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11440/playable11440_down"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11441,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/EclipseSlashesSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11440/11441"
+    },
+    {
+      "hit_entity_id": 11442,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/EclipseSlashesSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11440/11442"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 11443,
+      "entity_prefab": "11440/11443.prefab",
+      "entity_prefab_sha256": "daa917bf403f050c1ab6549f2f9cef194d02b25ccf191d09cc5b0925f8dca4f9",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/EclipseSlashesSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11440/playable_damage_11443"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/EclipseSlashesSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/EclipseSlashesSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/EclipseSlashesSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/EclipseSlashesSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11440/11443"
+    },
+    {
+      "damage_entity_id": 10020,
+      "entity_prefab": "Global/10020.prefab",
+      "entity_prefab_sha256": "19f96e1121d4af237a2397dc93ba66d0e2958cdbcfc632bdc803439cde932989",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/EclipseSlashesSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage_noeff"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/EclipseSlashesSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/EclipseSlashesSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/EclipseSlashesSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/EclipseSlashesSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/Global/10020"
+    }
+  ]
+}
