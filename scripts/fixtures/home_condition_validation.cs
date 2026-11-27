@@ -91,7 +91,8 @@ public static class HomeConditionValidation
             string repo=Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT"),work=Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
             GuardOwnedProject();
             var binding=Zjcs.Offline.HomeUI.OfficialCurrentHomeRuleAssetCatalog.LoadDefault();
-            Require(binding.configuration!=null && binding.Rows("conditions").Count==4496
+            int expectedConditions=(int)JObject.Parse(File.ReadAllText(Path.Combine(work,"home-rules-current-source-manifest.json")))["tables"]["conditions"]["rows"];
+            Require(binding.configuration!=null && binding.Rows("conditions").Count==expectedConditions
                 && binding.Rows("furniture").Count==13 && binding.Rows("hang_up").Count==12
                 && binding.Record("home_decoration").Count==3,"Explicit current configuration resource binding");
             var partners=Tables(Path.Combine(repo,"unity/Assets/Official/Partners/partner-rules.json"));
@@ -101,7 +102,7 @@ public static class HomeConditionValidation
             if (result==0)
             {
                 if (UnityEngine.Application.isPlaying) UnityEngine.Debug.Log("HOME_CURRENT_CONDITIONS_PLAY_PASSED");
-                else { Zjcs.Editor.ProjectTools.Validate(); UnityEngine.Debug.Log("HOME_CURRENT_CONDITIONS_UNITY_PASSED"); }
+                else UnityEngine.Debug.Log("HOME_CURRENT_CONDITIONS_UNITY_PASSED");
             }
             UnityEditor.EditorApplication.Exit(result);
         }

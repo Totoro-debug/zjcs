@@ -553,7 +553,10 @@ namespace Zjcs.Official.HomeConditions
     Match3GamePassLevel = 291,
     CelebrationPhotoAlbumPersonalNpcInRange = 292,
     MapCurrentRegionActived = 293,
-    ArenaGroupPlanesCount = 294
+    ArenaGroupPlanesCount = 294,
+    LegionDonateCount = 295,
+    BattlePassLevel = 296,
+    ServerTime = 297
 }
         public enum SubRank
 {

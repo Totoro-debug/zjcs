@@ -2,9 +2,12 @@
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
+import tempfile
 
 from official_apk import ROOT
+from official_source import OfficialSource
 from validation_workspace import validation_directory
 
 
@@ -22,6 +25,20 @@ def metadata(name,importer='DefaultImporter'):
             '  userData:\n  assetBundleName:\n  assetBundleVariant:\n').encode()
 
 
+def write_payload(path, raw):
+    if path.is_file() and path.read_bytes() == raw:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    handle, name = tempfile.mkstemp(prefix='.current-home-', suffix='.tmp', dir=path.parent)
+    temporary = Path(name)
+    try:
+        with os.fdopen(handle, 'wb') as stream:
+            stream.write(raw)
+        temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
 def main():
     parser=argparse.ArgumentParser(__doc__)
     parser.add_argument('--install',action='store_true')
@@ -29,7 +46,7 @@ def main():
     work=validation_directory()
     configuration=json.loads((work/'home-rules-current-source-manifest.json').read_bytes())
     conditions=json.loads((work/'home-condition-source-manifest.json').read_bytes())
-    if configuration['manifest']!=conditions['manifest'] or conditions['manifest']!='884_156692':
+    if configuration['manifest']!=conditions['manifest'] or conditions['manifest']!=OfficialSource().version:
         raise ValueError('Selected home versions differ')
     for receipt in (configuration,conditions):
         for path,expected in receipt['source_sha256'].items():
@@ -91,7 +108,7 @@ MonoBehaviour:
             raise ValueError('Preserve edited home output: '+path)
     if args.install:
         for path,raw in outputs.items():
-            installed=ROOT/path;installed.parent.mkdir(parents=True,exist_ok=True);installed.write_bytes(raw)
+            write_payload(ROOT/path,raw)
         for name,receipt in receipts:
             receipt['installed_outputs']={path:sha(raw) for path,raw in outputs.items() if
                 (path.startswith(runtime) or path==binding or path==binding+'.meta')==(name=='home-condition-source-manifest.json')}
@@ -101,7 +118,7 @@ MonoBehaviour:
                 ('scripts/fixtures/home_condition_validation.cs','scripts/validate_home_conditions.py',
                  'scripts/prepare_home_conditions_validation.py')}
             receipt['installer_sha256']=sha(Path(__file__).read_bytes())
-            (ROOT/'assets/reference'/name).write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
+            write_payload(ROOT/'assets/reference'/name,(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n').encode('utf8'))
     print('Prepared current home outputs:',len(outputs),'installed:',args.install)
 
 
