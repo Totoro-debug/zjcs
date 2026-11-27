@@ -402,6 +402,7 @@ namespace Zjcs.Presentation.Home
             var rock = rockSummon ? new AcquiredRockSummon() : null;
             var doll = voodooDoll ? new AcquiredVoodooDoll() : null;
             if (passiveCompanion == 10590) PrepareAcquiredSoulGuardianCheckpoint(checkpoint);
+            PrepareAcquiredAffinity(checkpoint, passiveCompanion);
             battle.Controller.StepCompleted += step => {
                 if (swiftWind) VerifyAcquiredSwiftWindStep(step.Event, checkpoint);
                 if (asuraHand) VerifyAcquiredAsuraStep(step.Event, checkpoint, output);

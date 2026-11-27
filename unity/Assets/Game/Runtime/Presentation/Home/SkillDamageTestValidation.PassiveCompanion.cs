@@ -44,6 +44,7 @@ namespace Zjcs.Presentation.Home
             supported |= active == 10065 && player.Wardrobe.Profession == 7 && itemId == 10574;
             supported |= active == 10065 && player.Wardrobe.Profession == 7 && itemId == 10590;
             supported |= active == 10093 && player.Wardrobe.Profession == 13 && itemId == 10604;
+            supported |= active == 10103 && player.Wardrobe.Profession == 17 && itemId == 10528;
             Require(supported && source.Player.Wardrobe.Profession == player.Wardrobe.Profession
                 && source.Player.Level == player.Level && source.Player.SubRank == player.SubRank
                 && plan.ActiveSkills.All(id => id == 0)
@@ -73,6 +74,7 @@ namespace Zjcs.Presentation.Home
                 Require(actor.Properties.Single(value => value.Id == pair.Key).Value
                     == (baseline.TryGetValue(pair.Key, out long value) ? value : 0) + pair.Value,
                     "The real battle omitted or duplicated the cultivated passive properties.");
+            acquiredAffinityBonus = itemId == 10528 ? bonus[414] : 0;
             if (itemId == 10604) PrepareAcquiredQuickCasting(actor);
             if (itemId == 10577) PrepareAcquiredLightScorch();
             if (itemId == 10605) PrepareAcquiredIceGuardian(actor);
@@ -128,9 +130,9 @@ namespace Zjcs.Presentation.Home
                 VerifyAcquiredQuickCastingStep(step, checkpoint, output);
                 return;
             }
-            if (itemId == 10525)
+            if (itemId == 10525 || itemId == 10528)
             {
-                VerifyAcquiredAffinityStep(step, checkpoint, output, itemId, 103);
+                VerifyAcquiredAffinityStep(step, checkpoint, output, itemId, itemId == 10528 ? 104 : 103);
                 return;
             }
             if (itemId == 10572)

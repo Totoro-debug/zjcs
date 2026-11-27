@@ -94,6 +94,58 @@ public static class PassivePropertyPackHarness
         return "Passive property sources passed: " + cases + " graph-backed cultivation cases; graph, shared-source and invalid binding checks.";
     }
 
+    public static string RunDarkAffinity(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
+        FightDamageFormula formula, string json, string sha256, string manifest)
+    {
+        var item = items.Required(10528);
+        Check(formula.PropertyId("DarkDamageAdd") == 414 && item.EntityId == 0
+            && item.PassiveStatusIds.Length == 0, "dark affinity must remain an original numeric passive");
+        var shared = items.Required(10604);
+        var previousMastery = catalog.CalculatePassiveSkillProps(shared.PassiveRankPropId,
+            shared.PassiveGroupLevelPropId, shared.PassiveRankFactorId, shared.PassivePropFactors,
+            4, 20, 26, 10604).OrderBy(pair => pair.Key).ToArray();
+        catalog.ApplyPassiveSkillRulePack(json, sha256, manifest, items);
+        Check(previousMastery.SequenceEqual(catalog.CalculatePassiveSkillProps(shared.PassiveRankPropId,
+            shared.PassiveGroupLevelPropId, shared.PassiveRankFactorId, shared.PassivePropFactors,
+            4, 20, 26, 10604).OrderBy(pair => pair.Key)),
+            "loading dark affinity changed another item's shared cultivation tables");
+        int[] subRanks = { 5, 8, 11, 14, 17, 20, 23, 26 };
+        long[,] values = { { 595, 605, 780 }, { 595, 605, 780 }, { 595, 605, 780 },
+            { 476, 480, 552 }, { 1038, 1041, 1095 }, { 232, 232, 232 },
+            { 512, 513, 531 }, { 612, 613, 631 } };
+        int[] ranks = { 1, 2, 4, 7, 26 };
+        long[] rankFactors = { 2800, 3000, 5100, 8800, 42000 };
+        int[] levels = { 1, 2, 20 };
+        int cases = 0;
+        for (int s = 0; s < subRanks.Length; s++)
+        for (int r = 0; r < ranks.Length; r++)
+        for (int l = 0; l < levels.Length; l++)
+        {
+            var bonus = catalog.CalculatePassiveSkillProps(item.PassiveRankPropId, item.PassiveGroupLevelPropId,
+                item.PassiveRankFactorId, item.PassivePropFactors, ranks[r], levels[l], subRanks[s], 10528);
+            long expected = (long)(values[s, l] * (rankFactors[r] / 10000.0));
+            Check(bonus.Count == 1 && bonus[414] == expected, "current dark affinity cultivation differs");
+            var source = new Dictionary<int, long> { { formula.PropertyId("Attack"), 10000 }, { 200, 10000 }, { 414, expected } };
+            var target = new Dictionary<int, long>();
+            foreach (string name in new[] { "BaseElementMaster", "BaseElementResistance", "BaseElementAdd", "BaseElementReduce",
+                "BaseKongFuMaster", "BaseKongFuResistance" })
+            { source[formula.PropertyId(name)] = 10000; target[formula.PropertyId(name)] = 10000; }
+            foreach (int element in new[] { 0, 101, 102, 103, 104, 105 })
+            {
+                var request = new FightDamageFormulaRequest { SourceProps = source, TargetProps = target,
+                    SkillDamageBasicPropType = 1, SkillDamagePropType = 200, SkillDamageFixedPropType = 190,
+                    SourceType = 1, TargetType = 1, SourceLevel = 70, TargetLevel = 70,
+                    SourceSubRank = 8, TargetSubRank = 8, SourceElementType = element };
+                long damage = formula.Calculate(request, new FightDamageTypeData()).Damage;
+                // The original physical channel averages all five elemental affinities.
+                double scale = element == 104 ? expected / 10000.0 : element == 0 ? expected / 50000.0 : 0.0;
+                Check(damage == -(long)(10000 * (1.0 + scale)), "dark affinity channel or physical average differs: " + element);
+                cases++;
+            }
+        }
+        return "Dark affinity sources passed: " + cases + " cultivated damage channels; original physical average and other elements preserved.";
+    }
+
     static void CheckMasteryDamage(FightDamageFormula formula, long mastery)
     {
         var source = new Dictionary<int, long> { { formula.PropertyId("Attack"), 1000 },
