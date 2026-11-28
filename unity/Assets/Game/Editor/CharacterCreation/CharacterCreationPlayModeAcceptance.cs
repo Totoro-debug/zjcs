@@ -26,6 +26,7 @@ namespace Zjcs.Editor.CharacterCreation
         private const string ResultKey = "Zjcs.CharacterCreation.Acceptance.Result";
         private const string DeadlineKey = "Zjcs.CharacterCreation.Acceptance.Deadline";
         private const string BodySelectionOnlyKey = "Zjcs.CharacterCreation.Acceptance.BodySelectionOnly";
+        private const string LayoutOnlyKey = "Zjcs.CharacterCreation.Acceptance.LayoutOnly";
         private static bool started;
         private static double nextRefresh;
         private const string RetryKey = "Zjcs.CharacterCreation.Acceptance.Retry";
@@ -57,6 +58,12 @@ namespace Zjcs.Editor.CharacterCreation
             Run(true);
         }
 
+        public static void RunLayouts()
+        {
+            Run(false);
+            SessionState.SetBool(LayoutOnlyKey, true);
+        }
+
         private static void Run(bool bodySelectionOnly)
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
@@ -71,6 +78,7 @@ namespace Zjcs.Editor.CharacterCreation
                 : Path.Combine(Path.GetFullPath(validationRoot), "character-creation-smoke");
             SessionState.SetString(PathKey, testRoot);
             SessionState.SetBool(BodySelectionOnlyKey, bodySelectionOnly);
+            SessionState.SetBool(LayoutOnlyKey, false);
             SessionState.SetInt(ResultKey, 2);
             SessionState.SetFloat(DeadlineKey, (float)EditorApplication.timeSinceStartup + 300f);
             SessionState.SetBool(ActiveKey, true);
@@ -253,7 +261,10 @@ namespace Zjcs.Editor.CharacterCreation
                 "The official font or save creation labels are missing.");
             foreach (TMP_Text label in initialLabels)
             {
-                Require(label.font == officialFont, "The official font was not applied to save creation label '"
+                // The title owns a font instance for its original outline effect.
+                bool originalTitleFont = label.name == "SelectSexTitle" && label.font != null
+                    && label.font.sourceFontFile != null && label.font.sourceFontFile == officialFont.sourceFontFile;
+                Require(label.font == officialFont || originalTitleFont, "The official font was not applied to save creation label '"
                     + label.text + "': " + (label.font == null ? "null" : label.font.name));
                 string visibleText = label.text.Replace("\u200b", string.Empty).Replace("\n", string.Empty).Replace("\r", string.Empty);
                 Require(officialFont.HasCharacters(visibleText, out uint[] missingGlyphs, false, true),
@@ -469,7 +480,9 @@ namespace Zjcs.Editor.CharacterCreation
             ClickOfficial(controller, "CloseBtn_dark");
             yield return WaitUntil(() => Screen(controller).name == "Screen_选择存档", "Returning to the save list timed out.");
 
-            ClickByLabel(Screen(controller), "新角色 · 存档 1");
+            yield return WaitUntil(() => Screen(controller)?.GetComponent<OfficialSaveSelectionView>()?.IsReady == true,
+                "The official save selection did not finish reopening.");
+            ClickByLabel(Screen(controller), "存档 1");
             yield return WaitForPage(controller, "body");
             yield return WaitForTransition(controller);
             ClickOfficial(controller, "NextBtn");
@@ -501,6 +514,13 @@ namespace Zjcs.Editor.CharacterCreation
             GameObject submissionDialog = (GameObject)Field(controller, "activeConfirmation").GetValue(controller);
             Require(service.HasCharacter(slotId), "Submitting the named character did not persist it: "
                 + (submissionDialog == null ? CurrentStatus(controller) : string.Join(";", Array.ConvertAll(submissionDialog.GetComponentsInChildren<TMP_Text>(), label => label.text))));
+            if (SessionState.GetBool(LayoutOnlyKey, false))
+            {
+                Require(service.GetCharacterName(slotId) == "测试法师", "Submitted name was not persisted.");
+                Debug.Log("CREATION_LAYOUTS_PASSED: body, trial appearance, dye, name input, confirmation and draft restoration.");
+                Finish(true, null);
+                yield break;
+            }
             yield return AdvanceToWeapon(controller);
             ClickByLabel(Screen(controller), "法师");
             Require(Screen(controller).name == "Screen_角色创建完成",
@@ -1360,7 +1380,7 @@ namespace Zjcs.Editor.CharacterCreation
 
         private static FieldInfo Field(object target, string name)
         {
-            FieldInfo field = target.GetType().GetField(name, BindingFlags.Instance | BindingFlags.NonPublic);
+            FieldInfo field = target.GetType().GetField(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (field == null) throw new MissingFieldException(target.GetType().FullName, name);
             return field;
         }

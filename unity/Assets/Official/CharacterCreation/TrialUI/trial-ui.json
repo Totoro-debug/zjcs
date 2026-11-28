@@ -1,5 +1,5 @@
 {
-  "manifest": "884_156692",
+  "manifest": "911_156995",
   "nodes": [
     {
       "name": "ItemIconAppendAppearance",
@@ -37,6 +37,15 @@
         "ItemIconAppendAppearance"
       ],
       "button": true,
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [
+        1
+      ],
       "has_image": false,
       "has_text": false,
       "has_layout_element": false,
@@ -47,10 +56,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": [
-        1
-      ]
+      "alpha": 1
     },
     {
       "name": "Content",
@@ -83,17 +89,12 @@
       ],
       "rotation": 0.0,
       "scripts": [],
-      "has_image": false,
-      "has_text": false,
-      "has_layout_element": false,
-      "has_layout": false,
-      "has_grid": false,
-      "has_aspect_fitter": false,
-      "has_size_fitter": false,
-      "has_scroll": false,
-      "has_safe_area": false,
-      "has_canvas_group": false,
-      "show_mask_graphic": false,
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
       "child_ids": [
         2,
         3,
@@ -104,7 +105,18 @@
         18,
         20,
         21
-      ]
+      ],
+      "has_image": false,
+      "has_text": false,
+      "has_layout_element": false,
+      "has_layout": false,
+      "has_grid": false,
+      "has_aspect_fitter": false,
+      "has_size_fitter": false,
+      "has_scroll": false,
+      "has_safe_area": false,
+      "has_canvas_group": false,
+      "alpha": 1
     },
     {
       "name": "BgContent",
@@ -137,6 +149,13 @@
       ],
       "rotation": 0.0,
       "scripts": [],
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [],
       "has_image": false,
       "has_text": false,
       "has_layout_element": false,
@@ -147,8 +166,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": []
+      "alpha": 1
     },
     {
       "name": "QualityImg",
@@ -187,8 +205,8 @@
         "sprite": {
           "file": "res://assets/official/sprites/ImgQuality_Blue-d7af3c8915.png",
           "name": "ImgQuality_Blue",
-          "width": 184,
-          "height": 184,
+          "width": 184.0,
+          "height": 184.0,
           "border": [
             0.0,
             0.0,
@@ -213,6 +231,15 @@
         "raycast_target": true,
         "maskable": true
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [
+        4
+      ],
       "has_image": true,
       "has_text": false,
       "has_layout_element": false,
@@ -223,10 +250,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": [
-        4
-      ]
+      "alpha": 1
     },
     {
       "name": "SelAnimGo",
@@ -270,9 +294,9 @@
             "bundle_hash": "b26a1caf33c2e92cdb82ef54ef4e523b",
             "path_id": "6454616307450028461",
             "origin": "apk_zip",
-            "manifest": "884_156692",
-            "apk_manifest": "881_156673",
-            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "manifest": "911_156995",
+            "apk_manifest": "895_156822",
+            "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
             "apk_entry": "assets/yoo/DefaultPackage/b26a1caf33c2e92cdb82ef54ef4e523b.bundle",
             "raw_size": 955,
             "raw_sha256": "46be48cf3a660aaaa7dc17954ba5c03aa41b8db7d09d68bffa8ee952969bbffb"
@@ -404,6 +428,16 @@
           "unconverted_bindings": []
         }
       ],
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [
+        5,
+        7
+      ],
       "has_image": false,
       "has_text": false,
       "has_layout_element": false,
@@ -414,11 +448,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": [
-        5,
-        7
-      ]
+      "alpha": 1
     },
     {
       "name": "SelectedImg",
@@ -451,6 +481,15 @@
       ],
       "rotation": 90.0,
       "scripts": [],
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [
+        6
+      ],
       "has_image": false,
       "has_text": false,
       "has_layout_element": false,
@@ -461,10 +500,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": [
-        6
-      ]
+      "alpha": 1
     },
     {
       "name": "Img",
@@ -503,8 +539,8 @@
         "sprite": {
           "file": "res://assets/official/sprites/ImgArrow_2-223d0782c6.png",
           "name": "ImgArrow_2",
-          "width": 40,
-          "height": 59,
+          "width": 40.0,
+          "height": 59.0,
           "border": [
             0.0,
             29.0,
@@ -529,6 +565,13 @@
         "raycast_target": false,
         "maskable": true
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [],
       "has_image": true,
       "has_text": false,
       "has_layout_element": false,
@@ -539,8 +582,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": []
+      "alpha": 1
     },
     {
       "name": "ItemReplaceEffect",
@@ -573,6 +615,15 @@
       ],
       "rotation": -0.0,
       "scripts": [],
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [
+        8
+      ],
       "has_image": false,
       "has_text": false,
       "has_layout_element": false,
@@ -583,10 +634,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": [
-        8
-      ]
+      "alpha": 1
     },
     {
       "name": "Img2",
@@ -625,8 +673,8 @@
         "sprite": {
           "file": "res://assets/official/sprites/ImgItemSelect-de48b6abe9.png",
           "name": "ImgItemSelect",
-          "width": 200,
-          "height": 200,
+          "width": 200.0,
+          "height": 200.0,
           "border": [
             0.0,
             0.0,
@@ -651,6 +699,13 @@
         "raycast_target": false,
         "maskable": true
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [],
       "has_image": true,
       "has_text": false,
       "has_layout_element": false,
@@ -661,8 +716,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": []
+      "alpha": 1
     },
     {
       "name": "mask",
@@ -702,8 +756,8 @@
         "sprite": {
           "file": "res://assets/official/sprites/ImgMask-4b8fcf1e08.png",
           "name": "ImgMask",
-          "width": 143,
-          "height": 143,
+          "width": 143.0,
+          "height": 143.0,
           "border": [
             0.0,
             0.0,
@@ -729,6 +783,17 @@
         "maskable": true
       },
       "mask": true,
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "show_mask_graphic": false,
+      "child_ids": [
+        10,
+        11
+      ],
       "has_image": true,
       "has_text": false,
       "has_layout_element": false,
@@ -739,11 +804,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": [
-        10,
-        11
-      ]
+      "alpha": 1
     },
     {
       "name": "icon",
@@ -782,8 +843,8 @@
         "sprite": {
           "file": "res://assets/official/sprites/C_none-d73d644cfd.png",
           "name": "C_none",
-          "width": 16,
-          "height": 16,
+          "width": 16.0,
+          "height": 16.0,
           "border": [
             0.0,
             0.0,
@@ -808,6 +869,13 @@
         "raycast_target": true,
         "maskable": true
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [],
       "has_image": true,
       "has_text": false,
       "has_layout_element": false,
@@ -818,8 +886,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": []
+      "alpha": 1
     },
     {
       "name": "FakeIcon",
@@ -876,6 +943,13 @@
           0.0
         ]
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [],
       "has_image": false,
       "has_text": true,
       "has_layout_element": false,
@@ -886,8 +960,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": []
+      "alpha": 1
     },
     {
       "name": "Shadow",
@@ -926,8 +999,8 @@
         "sprite": {
           "file": "res://assets/official/sprites/ImgQuality_Shadow-2db8da22eb.png",
           "name": "ImgQuality_Shadow",
-          "width": 158,
-          "height": 158,
+          "width": 158.0,
+          "height": 158.0,
           "border": [
             0.0,
             0.0,
@@ -952,6 +1025,13 @@
         "raycast_target": false,
         "maskable": true
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [],
       "has_image": true,
       "has_text": false,
       "has_layout_element": false,
@@ -962,8 +1042,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": []
+      "alpha": 1
     },
     {
       "name": "ItemIconAttachment",
@@ -998,6 +1077,13 @@
       "scripts": [
         "ItemIconAttachment"
       ],
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [],
       "has_image": false,
       "has_text": false,
       "has_layout_element": false,
@@ -1008,8 +1094,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": []
+      "alpha": 1
     },
     {
       "name": "SexLimit",
@@ -1042,6 +1127,17 @@
       ],
       "rotation": -0.0,
       "scripts": [],
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [
+        15,
+        16,
+        17
+      ],
       "has_image": false,
       "has_text": false,
       "has_layout_element": false,
@@ -1052,12 +1148,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": [
-        15,
-        16,
-        17
-      ]
+      "alpha": 1
     },
     {
       "name": "Mask",
@@ -1096,8 +1187,8 @@
         "sprite": {
           "file": "res://assets/official/sprites/ImgQuality_Mask-95a3f1f08a.png",
           "name": "ImgQuality_Mask",
-          "width": 160,
-          "height": 160,
+          "width": 160.0,
+          "height": 160.0,
           "border": [
             0.0,
             0.0,
@@ -1122,6 +1213,13 @@
         "raycast_target": false,
         "maskable": true
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [],
       "has_image": true,
       "has_text": false,
       "has_layout_element": false,
@@ -1132,8 +1230,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": []
+      "alpha": 1
     },
     {
       "name": "Bg",
@@ -1172,8 +1269,8 @@
         "sprite": {
           "file": "res://assets/official/sprites/ImgItemTipBg-ac615f7615.png",
           "name": "ImgItemTipBg",
-          "width": 16,
-          "height": 44,
+          "width": 16.0,
+          "height": 44.0,
           "border": [
             7.0,
             0.0,
@@ -1198,6 +1295,13 @@
         "raycast_target": false,
         "maskable": true
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [],
       "has_image": true,
       "has_text": false,
       "has_layout_element": false,
@@ -1208,8 +1312,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": []
+      "alpha": 1
     },
     {
       "name": "Text",
@@ -1265,6 +1368,13 @@
           0.0
         ]
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [],
       "has_image": false,
       "has_text": true,
       "has_layout_element": false,
@@ -1275,8 +1385,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": []
+      "alpha": 1
     },
     {
       "name": "BgCountText",
@@ -1317,8 +1426,8 @@
         "sprite": {
           "file": "res://assets/official/sprites/ImgItemIcon_NumBg-3e82a7afe1.png",
           "name": "ImgItemIcon_NumBg",
-          "width": 24,
-          "height": 35,
+          "width": 24.0,
+          "height": 35.0,
           "border": [
             14.0,
             17.0,
@@ -1371,6 +1480,15 @@
         2,
         2
       ],
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [
+        19
+      ],
       "has_image": true,
       "has_text": false,
       "has_layout_element": false,
@@ -1381,10 +1499,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": [
-        19
-      ]
+      "alpha": 1
     },
     {
       "name": "CountText",
@@ -1440,6 +1555,13 @@
           0.0
         ]
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [],
       "has_image": false,
       "has_text": true,
       "has_layout_element": false,
@@ -1450,8 +1572,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": []
+      "alpha": 1
     },
     {
       "name": "BottomText",
@@ -1508,6 +1629,13 @@
           0.0
         ]
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [],
       "has_image": false,
       "has_text": true,
       "has_layout_element": false,
@@ -1518,8 +1646,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": []
+      "alpha": 1
     },
     {
       "name": "Progress",
@@ -1554,6 +1681,15 @@
       "scripts": [
         "ItemProgress"
       ],
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [
+        22
+      ],
       "has_image": false,
       "has_text": false,
       "has_layout_element": false,
@@ -1564,10 +1700,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": [
-        22
-      ]
+      "alpha": 1
     },
     {
       "name": "BgCountText",
@@ -1609,8 +1742,8 @@
         "sprite": {
           "file": "res://assets/official/sprites/ImgBg_CountText-31498f0e88.png",
           "name": "ImgBg_CountText",
-          "width": 55,
-          "height": 39,
+          "width": 55.0,
+          "height": 39.0,
           "border": [
             26.0,
             18.0,
@@ -1678,6 +1811,18 @@
           -1.0
         ]
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [
+        23,
+        25,
+        26,
+        27
+      ],
       "has_image": true,
       "has_text": false,
       "has_layout_element": true,
@@ -1688,13 +1833,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": [
-        23,
-        25,
-        26,
-        27
-      ]
+      "alpha": 1
     },
     {
       "name": "ItemDebris",
@@ -1744,6 +1883,15 @@
           -1.0
         ]
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [
+        24
+      ],
       "has_image": false,
       "has_text": false,
       "has_layout_element": true,
@@ -1754,10 +1902,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": [
-        24
-      ]
+      "alpha": 1
     },
     {
       "name": "Image",
@@ -1796,8 +1941,8 @@
         "sprite": {
           "file": "res://assets/official/sprites/ItemPiece2-94d2a86906.png",
           "name": "ItemPiece2",
-          "width": 25,
-          "height": 25,
+          "width": 25.0,
+          "height": 25.0,
           "border": [
             0.0,
             0.0,
@@ -1822,6 +1967,13 @@
         "raycast_target": false,
         "maskable": true
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [],
       "has_image": true,
       "has_text": false,
       "has_layout_element": false,
@@ -1832,8 +1984,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": []
+      "alpha": 1
     },
     {
       "name": "LeftTxt",
@@ -1889,6 +2040,13 @@
           0.0
         ]
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [],
       "has_image": false,
       "has_text": true,
       "has_layout_element": false,
@@ -1899,8 +2057,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": []
+      "alpha": 1
     },
     {
       "name": "Sign",
@@ -1956,6 +2113,13 @@
           0.0
         ]
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [],
       "has_image": false,
       "has_text": true,
       "has_layout_element": false,
@@ -1966,8 +2130,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": []
+      "alpha": 1
     },
     {
       "name": "RightTxt",
@@ -2023,6 +2186,13 @@
           0.0
         ]
       },
+      "transform_type": "RectTransform",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "child_ids": [],
       "has_image": false,
       "has_text": true,
       "has_layout_element": false,
@@ -2033,8 +2203,7 @@
       "has_scroll": false,
       "has_safe_area": false,
       "has_canvas_group": false,
-      "show_mask_graphic": false,
-      "child_ids": []
+      "alpha": 1
     }
   ],
   "creation_root": 0,
@@ -2287,5 +2456,6 @@
       "quality": 4
     }
   ],
-  "sprite_source_manifest": "Assets/Official/CharacterCreation/TrialUI/native-sprites-source-manifest.json"
+  "sprite_source_manifest": "Assets/Official/CharacterCreation/TrialUI/native-sprites-source-manifest.json",
+  "layout_source_manifest": "Assets/Official/CharacterCreation/TrialUI/current-layout-source-manifest.json"
 }

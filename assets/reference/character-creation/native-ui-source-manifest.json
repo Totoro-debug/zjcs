@@ -1,0 +1,419 @@
+{
+    "operation": "Rebuild original serialized UGUI/TMP fields, layout and sprite imports; bind the original FZY4K TTF through its dynamic TMP asset.",
+    "inputs": [
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/runtime-ui.json",
+            "sha256": "ca46c46f53792cbfd4120a473f4a452f220c4dde6d506160419e22d1e4f2d5ca"
+        },
+        {
+            "path": "unity/Assets/Official/Commerce/Art/fonts/FZY4K.ttf",
+            "sha256": "90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386"
+        },
+        {
+            "path": "unity/Assets/Game/Editor/CharacterCreation/CharacterCreationUiTools.cs",
+            "sha256": "90fc825ebcf309b22971cfe87f4e6fc63873d7391cd79c412762c752a5ec99e3"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_e046a83a1215032c.asset",
+            "sha256": "cb27dc8da550ef563b40ea7f8928009203e0c100a6f9407bfd1626831894219a"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_aa425a44c4f1ea0a.asset",
+            "sha256": "3485f9b394f7537d505432a1ea8ce363c5e86eff711088663bad0638a4846ab2"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_623eab01b4c3ce7a.asset",
+            "sha256": "b227674009675c3127485ed4e334f3bf664e260277cf351232a87699fb932111"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_c4385d711d45ef1f.asset",
+            "sha256": "64ceec4f9c38e93d26f9a93aeb99d26127550d67c51156676c18935250fb5c74"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_ff071085b0c9ec09.asset",
+            "sha256": "e4a61dd6be835084fdcebdd81cb167684b164237c983e83d5b6e05e28b5693c3"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_23022cdc9df1a795.asset",
+            "sha256": "8e183e68c697bd6d790c7b2522da8f4685483ba88b8e849be2932daf72b964d4"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_b88506563109a5ce.asset",
+            "sha256": "04ba045d8dcb9d00178c0024ca025f8db1d61b38eb1ef1dd68c964015fe834e8"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_fa3e084e407ed6bf.asset",
+            "sha256": "e086d67e5487ba73293d735676af0fc17413ef7f48fda78cf8f5f2c5cd633460"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_3849b09bfdbc8252.asset",
+            "sha256": "99d98ad67cca9ad1d4223b7774d38288bd3140fb85a66cfa98804653a9f3f937"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_7bd840c5a2d74990.asset",
+            "sha256": "5d43539a0373494446f0b29f595ff0a4008c311a40fe4b278ec9f659813ef1b6"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_176665b9c3dfe4bd.asset",
+            "sha256": "c676d9e7fbbf1972ae51b732de159d480ab6ce7b27d7821567c0caf452d4b888"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_e2bb932c72d1ce06.asset",
+            "sha256": "afc032d263de4bf90ac2dfa654e1629062761ae992a38c24f4556dda8e5e62eb"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_43bcc7f5cb4787a2.asset",
+            "sha256": "381b66692e11d61347b4ea36fcf77ab3217972431a548a10c43111c7014bdd3c"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_22529459e8595c1f.asset",
+            "sha256": "72e29fd86c2f5dd889434a5762e48dfb9e479987c37c5d57a7e4609521e94474"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_50a1e65068aa226e.asset",
+            "sha256": "b3ea78034b089f41414379ad8cf4c0a7fd7c34b5a358da1e01b7a7667d98bfcd"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_e69fb4d9d055192c.asset",
+            "sha256": "2a9fbdce314da0fcdd5a6c943ac6d1df9b53651dda9f28f3b81f8a514b188569"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_2cf247fc1251db5d.asset",
+            "sha256": "a5d76bdc06707705900809a33a23c073da43bea0b7aff9d1131c994c3ee5e43c"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_181c6dd282ea3a8b.asset",
+            "sha256": "627b1b952520859b917a74fa27a88b701f6a62c6ddb31d8969ef0b34996a9d70"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_3b6593e074465724.asset",
+            "sha256": "1de736936ba7f07248c4d09afb04aec55d8fa8f92a111f285a3f6358f867ae8c"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_797552ab98d619e7.asset",
+            "sha256": "91c1023f8db6b6e869a42633a4c6a6336eca8bd374a27ec7260240cf9bf944b5"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_a28b58f9f619122d.asset",
+            "sha256": "eb18f67a1f7a4581203ed5ba854cd9ad2da4295ddae474af816b682fc2a526b9"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_12b45e09721695ca.asset",
+            "sha256": "de029e5ef39cffd37b3614def67e1719f79ecbb94f8b1364924df47dbfa05b24"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_6e7eade017a270e0.asset",
+            "sha256": "aa871112a9e46ddd7e7506cec99d068129534211e5e9efb2654eb10793d1453e"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_4ed3349f248c7065.asset",
+            "sha256": "9c6869885f2ae7eb86b170b0b8cf797608a2dcc8dfc7009f714bf62f8a2f6e2a"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_99dba7ef2358c080.asset",
+            "sha256": "a25295a4660d04a0c9a9420487ddc33a041396db877d7e159ddd9c6fb01630f9"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_d81887d6327977fe.asset",
+            "sha256": "df5d06d5dfa826133c44fbbdb63108a63f69c60be8a186d0520bda572adbfed7"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_bb637dad29044469.asset",
+            "sha256": "cf4cae1235ca999eeab6ec53ece870044a6369f7560c137a5ab048b22b5e811e"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_6d92bd0b6bd1e2d3.asset",
+            "sha256": "f91435241fcd9ef5db8cd963a9e50381feddd285ef076bcc71b1e9a813785b06"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_300a74c7db022b01.asset",
+            "sha256": "18e929694166d3b78c69c3b6225bec4000fbac29ff43041a15b507f5734edd49"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_17c983d02d917af1.asset",
+            "sha256": "0322f1ec4cd712c4a71b7929569029f080377f23c7f0c7bd9b3d8371638cb5fc"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_3dc3678e90856ac4.asset",
+            "sha256": "3a5507176b9cf33d8c716859347a7dfb7c11449c070c8f4fc60e8ce36b885e7c"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_24a3320123f14d43.asset",
+            "sha256": "cc0b8337d3d3b72a74fa761dd68bb05edeff25176bc22b387e7b1e1ca1d693ae"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_9b7c346dacdb6b4a.asset",
+            "sha256": "d1375603986831eeb2b3ddefa090273e7209372ee04417af9c85076d0870fbf7"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_8154d7a8c29b65bd.asset",
+            "sha256": "25ef59bbb2db315f11a884cb65ebe1d02ebb8e404f0f302879bcbd60d013ed67"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_48efaa6e6b10b9cd.asset",
+            "sha256": "8144eef010a17818ab1e0463c833ed3444962716b8d3c09baed8fc5ef5ae9ac1"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_25d824248ccba92e.asset",
+            "sha256": "ff80729dc00e6ef16a46810b4a793b765b8931afdefed7181095eeed8ecb0e3d"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_49e8988709f85fa8.asset",
+            "sha256": "389dfb30453a5eefaef896faa1e421fc6b15fa82499843dbed1b82a8f6d69d3c"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_f13908db32d92260.asset",
+            "sha256": "77fc0d94989c0f5e16b1cd248fdd52e70d9186a752ece3b9d286bcf67cfa3181"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_686e37346e4571be.asset",
+            "sha256": "1023ac106d58b1c56adcbafcc54596ab3ce7479a519b8b0908bc464f20ef46cf"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_4c04ad180865f67f.asset",
+            "sha256": "5987084450623c5736a650c34f6c4fc2c64e1e604a688c87bae24bc8e2611542"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_b37938e7d2879286.asset",
+            "sha256": "17fedcd2671ddec695252dacc2ffc7adb3920e80fddfd024f5deeab1ebab1e4a"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_6a7a1ff5e6f2cfba.asset",
+            "sha256": "ba77a16a04ab799a2f634ba4d0b2d939f03a5405931e8c05437a06a3d346fd66"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_f33b212ca77626dc.asset",
+            "sha256": "f1188d85b4acac33693ef576dfc3898fed9fb26f1bf32068cc3d9e83a7171547"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_ec447a23a0024276.asset",
+            "sha256": "ea7ba7c70a99ac847b738b863841ce2ab57eb81dfa678d21b8c859d99672475f"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/Recovered/PlayerSkinIcons/Native/eye_F_01.asset",
+            "sha256": "bdc0467f659df697942be7775fff4c0096c0e263ce04c32b606f450701c1efb9"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/Recovered/PlayerSkinIcons/Native/hair_M_01.asset",
+            "sha256": "9f661592800ac38004db8594b6fbcb0b3ce1a697fed97fbd93979058528b8a74"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_057cf0758bb92601.asset",
+            "sha256": "6a1b57f345b0a4e50adc0b44914916fe282392babf7c76e9b6ae4cda04bbe374"
+        }
+    ],
+    "outputs": [
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/CreatePlayerPanel.prefab",
+            "sha256": "fea392732bceacd8b24ec462daa887e2d7a85740a88b04844e8f076f268f4e3c"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/CreatePlayerPanel.prefab.meta",
+            "sha256": "b455d72adab134fb97c931ca242fc15beb40eb5e7b08eb90c266782cf24d47b2"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/CreatePlayerPanelDIYContent.prefab",
+            "sha256": "c005bad4951923ebb0cda6be6132fed8ec074b10d75be365a9a019c08bc633af"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/CreatePlayerPanelDIYContent.prefab.meta",
+            "sha256": "92a6b2bf6897cdca3e1f07f448b3a187ed3d32c7ccccc61ccc6a5667f7b46fa5"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/ConfirmDialog.prefab",
+            "sha256": "7d13102b2c9d79b89570a985825c2a1b8abb227a7395d92ffcd270ff7471dcfb"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/ConfirmDialog.prefab.meta",
+            "sha256": "72f0c22616016afc84923d0942edf514c4fa995bd0a1760814160188e3bac6f3"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_e046a83a1215032c.asset.meta",
+            "sha256": "b09fe8b10ee5b3fead13093c759d3b279223866b7bdb5f2f6dd0a3a2e4efa2ba"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_aa425a44c4f1ea0a.asset.meta",
+            "sha256": "bb13f4669230f5dfb5caae10a3fe64a85c441bc69d34c0e2f7534f622bd9cdec"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_623eab01b4c3ce7a.asset.meta",
+            "sha256": "0da2bd29c5c86c5cc5616d152abafadb1bc155a270f8e72a984b48bcf04e9081"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_c4385d711d45ef1f.asset.meta",
+            "sha256": "7cd9b90f8ee5e2f1d2a815eae8277b4ad5e9f07ce93518876eca2c83b75a4f01"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_ff071085b0c9ec09.asset.meta",
+            "sha256": "fd9c97ab43477c4bd4c44765dcb0037c9cdf2399a96b37d0e4e9413705a17d90"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_23022cdc9df1a795.asset.meta",
+            "sha256": "7649928efff7fb019c8e485a5bf8472692b76baa4e7814001e3c93980b9bdf7c"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_b88506563109a5ce.asset.meta",
+            "sha256": "7d06f759c5461f88a7bae4fe47ae18be1fff53cb2ccf176f071aab760fd2c43e"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_fa3e084e407ed6bf.asset.meta",
+            "sha256": "17b7ee2bd02a0535e921e52d5ae0c62a193b761451674747b373ff9e01bd45cc"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_3849b09bfdbc8252.asset.meta",
+            "sha256": "9f40c98db4855ad4e7f370a4d1cbe66777e4cebc33f553254180a290c06d71a6"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_7bd840c5a2d74990.asset.meta",
+            "sha256": "2a44fa56bdc7e5fd5b83a56bb4346a3b89fe2f572c4dda7f705c84b83a01d885"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_176665b9c3dfe4bd.asset.meta",
+            "sha256": "dc725161f02e156e3dfa03a2263b3c5955e53711bdf5398e141804dc7dbde4e1"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_e2bb932c72d1ce06.asset.meta",
+            "sha256": "7fda01942e389649a4196175087dc24d37ad974eb41b7c24a13de8838f33a581"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_43bcc7f5cb4787a2.asset.meta",
+            "sha256": "a2d696cbec0d5da5ab581588139986f2d6d2b9ce6e18047d043e1a5a5b525303"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_22529459e8595c1f.asset.meta",
+            "sha256": "14d82fed2a4866aaf9e37ccc30dadff66ee6e156a0d39ec7eb42f5eda5b5b611"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_50a1e65068aa226e.asset.meta",
+            "sha256": "c33a41543862f19e236ce7c9b7c444d8115366bbad8c99e0c46e158069aa2013"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_e69fb4d9d055192c.asset.meta",
+            "sha256": "79db32e52663618ff848aa845f4ff9f4a882792cb96977b07b463f640cd7acf5"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_2cf247fc1251db5d.asset.meta",
+            "sha256": "38d679578a7e53f7a357402be70ee93a651eae4c4b51f8b4f0745706a8ffbe30"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_181c6dd282ea3a8b.asset.meta",
+            "sha256": "29c9d8f1ac8bfc6f3cc5cd3c17e44135068c6a9bee38ed6de2fe92e237399a53"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_3b6593e074465724.asset.meta",
+            "sha256": "d33196c37abc7ddd69cb132f83ef59a1d9c9560d40d884fa006dd7f9f0e3f2d1"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_797552ab98d619e7.asset.meta",
+            "sha256": "dc975fe74f1ccca77863771e948514c28971d1ae6a837b40071c7920a8a969e3"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_a28b58f9f619122d.asset.meta",
+            "sha256": "1a95987b8c693667b6071e5bdeeac66dbb427d4deb362a50686f8800c5764bfd"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_12b45e09721695ca.asset.meta",
+            "sha256": "5f4994701909482b90563a54a57426a43a1b2af71de0d1c3f2e424d0724b656a"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_6e7eade017a270e0.asset.meta",
+            "sha256": "5644261ad6fd304cdc75cc7fec21290b087b00ec22bf801887c02ca2d6bf7197"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_4ed3349f248c7065.asset.meta",
+            "sha256": "dcfad0b5056768b4d86091a1337cefac4fa0737ae56893fd6ad78faa74f00b4e"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_99dba7ef2358c080.asset.meta",
+            "sha256": "e9cc02c483d483459992ac82918326d567b578405cb2016fddc9b2bfa57a99df"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_d81887d6327977fe.asset.meta",
+            "sha256": "2526af0d79841026ce7b3117c9aafd3adc7ff8afe9b421c3c9cff44f6a357986"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_bb637dad29044469.asset.meta",
+            "sha256": "fc6c539c7d04b5c34a82368217d36d00aae6420b1bf8d3f8d2eabadb7dbe72fc"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_6d92bd0b6bd1e2d3.asset.meta",
+            "sha256": "76127690eab6c08fa32e86850149a26d1eaa78659f9318c8c82928068bd448fc"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_300a74c7db022b01.asset.meta",
+            "sha256": "30fb8491640efaa2856d152c78ff0f6129b8d8c6e7b0f464b4b005196110ad2c"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_17c983d02d917af1.asset.meta",
+            "sha256": "5d7a34274388dad22b1a713200f7ad336dfacda9806ff574dce4a8dd2bd6b571"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_3dc3678e90856ac4.asset.meta",
+            "sha256": "323b68c1fd22100b2061e9f1076f3c7930faa1e7029b65ad4d326a5e9f4a0006"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_24a3320123f14d43.asset.meta",
+            "sha256": "b3b9b3d6ed7902e23adc76b3315681fc9a142a181436062c8ee832c6b28b483d"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_9b7c346dacdb6b4a.asset.meta",
+            "sha256": "d196a00da0dd232c6141801f17748128df1f3c32e517e3fbaf4460e990cbed58"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_8154d7a8c29b65bd.asset.meta",
+            "sha256": "7dc47f77a32c40e5114b6d44f57cdc46c5b068a7bf2c8f3f6b3db63606c7bb40"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_48efaa6e6b10b9cd.asset.meta",
+            "sha256": "b5bb4c535720280dda2d1962c053c6b0994439bf0a8d01237fb19275e1954de0"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_25d824248ccba92e.asset.meta",
+            "sha256": "aca98b5c173191eaefbe6a4e3dcccaa3c46206eac8190398284b70512194408a"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_49e8988709f85fa8.asset.meta",
+            "sha256": "b707e0190caf8be7d2e9f6343ebaeb65097ec4105811bf3960b38e8ed29bf100"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_f13908db32d92260.asset.meta",
+            "sha256": "d069e8436635996c4403e8481e3b81cd6cab597a0338ce9501edbb112a9591d6"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_686e37346e4571be.asset.meta",
+            "sha256": "050f4c9862b7b250ce315051e8bccfe87c810cc9c0b580db72ab8a792f381284"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_4c04ad180865f67f.asset.meta",
+            "sha256": "ffbfee673a0116bb6d2ce72550462cddea49c9f379f667a743dddae3fa7880f8"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_b37938e7d2879286.asset.meta",
+            "sha256": "40b826ad72fcadecf12b98f6c47fac4781b46743320439e14aff4b656672428e"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_6a7a1ff5e6f2cfba.asset.meta",
+            "sha256": "1309532ed3c81048f1190ff4bcfb6223b700be843be180148464c11c4a6a15cb"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_f33b212ca77626dc.asset.meta",
+            "sha256": "92831e6e909db8435ac61cc5dbf26ab37fc229856831187e2c699e495c8cf2a4"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_ec447a23a0024276.asset.meta",
+            "sha256": "540b3bdcb103d2dd516bb488897fdfc365e770b17dae579182e3483137458fbe"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/Recovered/PlayerSkinIcons/Native/eye_F_01.asset.meta",
+            "sha256": "a2fb22592269b1c3c26ef3ca8ec44437cd0835cdd6622da406bef2307b471fde"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/Recovered/PlayerSkinIcons/Native/hair_M_01.asset.meta",
+            "sha256": "d298fb683296a2bf84b60adcf4b6faab12393973d7cc9882cb87eed21f297b22"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/NativeSprites/sprite_057cf0758bb92601.asset.meta",
+            "sha256": "0ef371c3200031823c60e8fa203bd0281a55825acc7f83af636a9e8763b05168"
+        }
+    ]
+}

@@ -1,0 +1,115 @@
+{
+  "manifest": "911_156995",
+  "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+  "scope": "Current existing UGUI widget layouts and image bindings. Full animation curves are archived; performance playback assets and audio retain separate provenance.",
+  "decoded_source": {
+    "path": ".tools/source-packages/current/911_156995/character-creation/layouts/source-manifest.json",
+    "sha256": "c42e4761f1bebd5e5ddd25e86c687d06785d7dd57281495f91e7c53b963d6254"
+  },
+  "decoded_layouts_sha256": "c85b4ec77dc06c7b6bf7fa6008ef3c6d1641352d55f49812920d5b3704eb92fb",
+  "generator_sha256": "f5afe4b4dbdb8c8ca7d83dbac63fade6d8cbdbc7a8ee4d12f1cfd5a9e7dc1646",
+  "roots": [
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_createplayer.bundle",
+      "bundle_hash": "3d82c94c3c9027adca5d39b26a1853a8",
+      "path_id": "-7824690915205803825",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/3d82c94c3c9027adca5d39b26a1853a8.bundle",
+      "manifest": "911_156995",
+      "bundle_size": 169206,
+      "bundle_sha256": "2eae2d0db183ea1aa8da8daaefe8bb027d3a02d14614606ad905aae23729628c"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_createplayer.bundle",
+      "bundle_hash": "3d82c94c3c9027adca5d39b26a1853a8",
+      "path_id": "8531859976246292307",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/3d82c94c3c9027adca5d39b26a1853a8.bundle",
+      "manifest": "911_156995",
+      "bundle_size": 169206,
+      "bundle_sha256": "2eae2d0db183ea1aa8da8daaefe8bb027d3a02d14614606ad905aae23729628c"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_confirmdialog.bundle",
+      "bundle_hash": "e4d671c45f8e99ade7a4b66312d8ea70",
+      "path_id": "5569979765835515756",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202611252124911/Android/DefaultPackage/e4d671c45f8e99ade7a4b66312d8ea70.bundle",
+      "manifest": "911_156995",
+      "bundle_size": 181751,
+      "bundle_sha256": "aa8544a44854404fd1f098e68961358f8e7d39cb3270050004fa333f7d3600a0"
+    }
+  ],
+  "original_safe_area_source": {
+    "path": ".tools/source-packages/current/911_156995/official-code/framework-firstpass-source/SafeArea.cs",
+    "sha256": "8c501f0834cf175166489c97298388d95fc32e1a4049edb6e399a3850b2d66f3"
+  },
+  "widgets": 655,
+  "deferred_audio_nodes": [
+    "/ConfirmDialog/SFX",
+    "/CreatePlayerPanel/Music"
+  ],
+  "previous_layout_sha256": "fb5e8b17a3e67cf38ef579aeb28834143690c5e14749b88541e9c82b0a615830",
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/runtime-ui.json",
+      "sha256": "ca46c46f53792cbfd4120a473f4a452f220c4dde6d506160419e22d1e4f2d5ca"
+    }
+  ],
+  "binding_outputs": [
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/CreatePlayerPanel.prefab",
+      "sha256": "fea392732bceacd8b24ec462daa887e2d7a85740a88b04844e8f076f268f4e3c"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/CreatePlayerPanel.prefab.meta",
+      "sha256": "b455d72adab134fb97c931ca242fc15beb40eb5e7b08eb90c266782cf24d47b2"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/CreatePlayerPanelDIYContent.prefab",
+      "sha256": "c005bad4951923ebb0cda6be6132fed8ec074b10d75be365a9a019c08bc633af"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/CreatePlayerPanelDIYContent.prefab.meta",
+      "sha256": "92a6b2bf6897cdca3e1f07f448b3a187ed3d32c7ccccc61ccc6a5667f7b46fa5"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/ConfirmDialog.prefab",
+      "sha256": "7d13102b2c9d79b89570a985825c2a1b8abb227a7395d92ffcd270ff7471dcfb"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/ConfirmDialog.prefab.meta",
+      "sha256": "72f0c22616016afc84923d0942edf514c4fa995bd0a1760814160188e3bac6f3"
+    }
+  ],
+  "binding_code": [
+    {
+      "path": "unity/Assets/Game/Editor/CharacterCreation/CharacterCreationUiTools.cs",
+      "sha256": "90fc825ebcf309b22971cfe87f4e6fc63873d7391cd79c412762c752a5ec99e3"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/CharacterCreation/Zjcs.Editor.CharacterCreation.asmdef",
+      "sha256": "25d669e62317e1e406c5d8bf1c7c0a14ac04bc90d0b3d4a32c47595164e2bed2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/HomeScreenUI/SafeArea.cs",
+      "sha256": "49150d82f5564bbcc6345544021cccbacf3b8f2211dbdb06d165bf48b81cb29a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/HomeScreenUI/ScreenMetrics.cs",
+      "sha256": "b1139f773863682d41386482b627e57b20903fb8e3334468622f1fe6c7f1d420"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/HomeScreenUI/ScreenWidthAdapterUtils.cs",
+      "sha256": "53d68908a3f5db93e9d75f829c3399051068e2e1987761fb10ae7ed755d8e05c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/HomeScreenUI/CanvasWidthAdjuster.cs",
+      "sha256": "c7db4821b74de53f30f2a87a0dd770bba2bd762fc0b3df48b3843835c3abdee9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/LoopScroll/LoopScrollGridLayoutGroup.cs",
+      "sha256": "98f2cbcd596f5e32e8afcb2e274410db7b108d595cf46f10c651b2a33c379f7c"
+    }
+  ]
+}
