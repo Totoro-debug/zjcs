@@ -287,7 +287,10 @@ def verify():
     source = OfficialSource()
     if proof['manifest'] != source.version or proof['apk_sha256'] != source.apk_sha256:
         raise ValueError('Installed HUD images use another official source')
-    for row in [proof['generator'],*proof['inputs'],*proof['dependencies'],*proof['outputs'],*proof['consumer_receipts']]:
+    from conversion_provenance import verify_recorded_source
+    for row in [proof['generator'],*proof['dependencies']]:
+        verify_recorded_source(row)
+    for row in [*proof['inputs'],*proof['outputs'],*proof['consumer_receipts']]:
         if identity(ROOT/row['path'])['sha256'] != row['sha256']:
             raise ValueError('Current HUD image input or output changed: '+row['path'])
     for row in proof['removals']:
