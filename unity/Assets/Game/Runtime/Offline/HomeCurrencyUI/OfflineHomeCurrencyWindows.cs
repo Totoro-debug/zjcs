@@ -59,6 +59,7 @@ namespace Zjcs.Offline.HomeCurrencyUI
 
         public event Action<GameObject> WindowOpened;
         public event Action<GameObject> WindowClosed;
+        public event Action<GameObject> WindowClosing;
         public int WindowCount => windows.Count;
 
         public OfflineHomeCurrencyWindows(OfflineHomeCurrencyWindowBindings bindings,
@@ -245,6 +246,7 @@ namespace Zjcs.Offline.HomeCurrencyUI
             var window = windows.Find(value => value.Root == root);
             if (window == null || window.Closing) return;
             window.Closing = true;
+            WindowClosing?.Invoke(root);
             RestoreSortingOrder();
             if (window.Preparation != null) { Destroy(window); return; }
             root.GetComponent<WorldPopupWindow>().Hide(() => Destroy(window));

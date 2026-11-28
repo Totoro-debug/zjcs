@@ -2,7 +2,9 @@
 import argparse
 import hashlib
 import json
+import os
 import re
+import uuid
 from pathlib import Path
 from official_apk import Apk
 from official_source import ROOT,OfficialSource
@@ -30,10 +32,13 @@ def prepare(check=False):
             table_sources[name]=dict(source=apk.provenance(obj),decoded_sha256=sha(raw),constructor=mapping[name])
         properties=json.loads((ROOT/'unity/Assets/Game/Resources/Treasure/treasure-properties.json').read_bytes())
         rules=json.loads((ROOT/'unity/Assets/Game/Resources/Treasure/treasure-rules.json').read_bytes())
+        levels=json.loads((ROOT/'unity/Assets/Game/Resources/Treasure/treasure-slot-levels.json').read_bytes())
         treasure_ids={row['ClassId'] for row in tables['treasure']}
         wanted=treasure_ids|{row['TreasurePieceId'] for row in tables['treasure']}
         wanted.update(row['ItemId'] for rule in rules['UpgradeMaterials'] for row in rule['Materials'])
         wanted.update(row['ItemId'] for rule in rules['LevelUpMaterials'] for row in rule['Materials'])
+        wanted.update(int(key) for row in levels['LevelCosts'] for key in row['Materials'])
+        wanted.update(int(key) for row in levels['BlessCosts'] for key in row['LevelCostItems'])
         type_names=enum_names(code/'common-source/Common/ItemType.cs')
         quality_names=enum_names(code/'common-source/Common/Quality.cs')
         treasure_by_item={}
@@ -60,7 +65,7 @@ def prepare(check=False):
         image_paths.update('Assets/Image/'+row['SmallIcon'] for row in props if row['SmallIcon'])
         image_paths.update('Assets/Image/'+row['Icon'] for row in entries if row['Icon'])
         image_paths.update('Assets/Image/UI/ItemDetailDialog/Img'+quality_names[row['Quality']]+'_PopUps' for row in items)
-        keys={'{0}','{0}/{1}','{0}{1}','+{0}','treasuredetail_piece_count','treasure_func_npc_desc',
+        keys={'{0}','{0}/{1}','{0}{1}','+{0}','treasuredetail_piece_count','treasure_func_npc_desc','treasure_common_hitcount_limit',
             'ui_space_before_value','ui_common_prop_plus','ui_blessing_level','ui_blessing_treasure_level_tip_0',
             'ui_blessing_treasure_level_tip_1','ui_blessing_treasure_level_tip_3','ui_blessing_player_level_tip_2',
             'ui_bless_prop_not_effect','ui_daily_equip_suit_extra_rank_desc','ui_equip_attribuate_prop_ PropArg',
@@ -112,7 +117,8 @@ def prepare(check=False):
         paths += [code/'common-source/Common'/(name+'.cs') for name in ('ItemType','Quality','PropType','LanguageUtils','TreasureInfoParser')]
         inputs=source.verify_code_files(paths)
         for path in (Path(__file__),ROOT/'scripts/npc_travel_language.py',original,
-            ROOT/'unity/Assets/Game/Resources/Treasure/treasure-properties.json',ROOT/'unity/Assets/Game/Resources/Treasure/treasure-rules.json'):
+            ROOT/'unity/Assets/Game/Resources/Treasure/treasure-properties.json',ROOT/'unity/Assets/Game/Resources/Treasure/treasure-rules.json',
+            ROOT/'unity/Assets/Game/Resources/Treasure/treasure-slot-levels.json'):
             inputs[path.relative_to(ROOT).as_posix()]=sha(path.read_bytes())
         outputs={DEST:raw,Path(str(DEST)+'.meta'):meta}
         inputs.update({p.relative_to(ROOT).as_posix():sha(p.read_bytes()) for p in managed.glob('*.dll')})
@@ -121,13 +127,18 @@ def prepare(check=False):
             outputs={p.relative_to(ROOT).as_posix():sha(v) for p,v in outputs.items()})
         prior=json.loads(RECEIPT.read_bytes()) if RECEIPT.exists() else {}
         outputs[RECEIPT]=(json.dumps(record,ensure_ascii=False,indent=2)+'\n').encode()
+        work=None
         for path,value in outputs.items():
             if check:
                 if not path.is_file() or path.read_bytes()!=value:raise ValueError('Original detail configuration differs: '+str(path))
             else:
                 if path!=RECEIPT and path.exists() and path.read_bytes()!=value and sha(path.read_bytes())!=prior.get('outputs',{}).get(path.relative_to(ROOT).as_posix()):
                     raise ValueError('Preserve another detail configuration edit: '+str(path))
-                path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(value)
+                if path.exists() and path.read_bytes()==value:continue
+                if work is None:
+                    work=ROOT/'output/validation'/('treasure-detail-metadata-'+uuid.uuid4().hex);work.mkdir(parents=True)
+                    (work/'.zjcs-validation.json').write_text(json.dumps(dict(format=1,repository=str(ROOT)))+'\n','utf8')
+                path.parent.mkdir(parents=True,exist_ok=True);temporary=work/'replacement';temporary.write_bytes(value);os.replace(temporary,path)
         print('Prepared selected original detail metadata, texts and dynamic image addresses',flush=True)
     finally:apk.reader.close()
 

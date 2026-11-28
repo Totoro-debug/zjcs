@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Zjcs.Presentation.Home
@@ -26,7 +27,7 @@ namespace Zjcs.Presentation.Home
         {
             var asset = Resources.Load<TextAsset>(resourcePath);
             if (!asset) throw new InvalidOperationException("The official outdoor furniture slots are missing.");
-            var data = JsonUtility.FromJson<Data>(asset.text);
+            var data = JsonConvert.DeserializeObject<Data>(asset.text);
             if (data?.root == null) throw new InvalidOperationException("The official outdoor slot hierarchy is invalid.");
             var catalog = new HomeNativeSceneSlots();
             catalog.Build(data.root, parent);

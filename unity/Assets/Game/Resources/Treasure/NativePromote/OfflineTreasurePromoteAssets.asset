@@ -1,0 +1,250 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc3d0353ee3262a541afefe7ab6a5e20, type: 3}
+  m_Name: OfflineTreasurePromoteAssets
+  m_EditorClassIdentifier: ''
+  Prefab: {fileID: 1709254077376921, guid: ee6a703679d4fad2663182c23be4f257, type: 3}
+  AwakeMaterialPrefab: {fileID: 1709254077376921, guid: a69d0fd69d5effc79dc2a3118726ded3, type: 3}
+  DefaultIconPrefab: {fileID: 1709254077376921, guid: 955d923b6b0663a5524fcf440bd7436b, type: 3}
+  ItemTypes:
+  - Id: 0
+    Prefab: {fileID: 0}
+  - Id: 100
+    Prefab: {fileID: 0}
+  - Id: 101
+    Prefab: {fileID: 0}
+  - Id: 111
+    Prefab: {fileID: 0}
+  - Id: 112
+    Prefab: {fileID: 0}
+  - Id: 200
+    Prefab: {fileID: 0}
+  - Id: 201
+    Prefab: {fileID: 0}
+  - Id: 202
+    Prefab: {fileID: 0}
+  - Id: 203
+    Prefab: {fileID: 0}
+  - Id: 204
+    Prefab: {fileID: 0}
+  - Id: 205
+    Prefab: {fileID: 0}
+  - Id: 210
+    Prefab: {fileID: 0}
+  - Id: 211
+    Prefab: {fileID: 0}
+  - Id: 212
+    Prefab: {fileID: 0}
+  - Id: 309
+    Prefab: {fileID: 0}
+  - Id: 305
+    Prefab: {fileID: 0}
+  - Id: 306
+    Prefab: {fileID: 1709254077376921, guid: 06b90eae9571be1742ed6735e2395a0b, type: 3}
+  - Id: 113
+    Prefab: {fileID: 0}
+  - Id: 114
+    Prefab: {fileID: 0}
+  - Id: 317
+    Prefab: {fileID: 0}
+  - Id: 318
+    Prefab: {fileID: 0}
+  - Id: 319
+    Prefab: {fileID: 0}
+  - Id: 330
+    Prefab: {fileID: 0}
+  - Id: 331
+    Prefab: {fileID: 0}
+  - Id: 332
+    Prefab: {fileID: 0}
+  - Id: 333
+    Prefab: {fileID: 0}
+  - Id: 344
+    Prefab: {fileID: 0}
+  - Id: 337
+    Prefab: {fileID: 0}
+  - Id: 326
+    Prefab: {fileID: 0}
+  - Id: 323
+    Prefab: {fileID: 0}
+  - Id: 402
+    Prefab: {fileID: 0}
+  - Id: 334
+    Prefab: {fileID: 0}
+  - Id: 404
+    Prefab: {fileID: 0}
+  - Id: 415
+    Prefab: {fileID: 0}
+  - Id: 416
+    Prefab: {fileID: 0}
+  - Id: 417
+    Prefab: {fileID: 0}
+  - Id: 418
+    Prefab: {fileID: 0}
+  - Id: 419
+    Prefab: {fileID: 0}
+  - Id: 420
+    Prefab: {fileID: 0}
+  - Id: 421
+    Prefab: {fileID: 0}
+  - Id: 435
+    Prefab: {fileID: 0}
+  - Id: 422
+    Prefab: {fileID: 0}
+  - Id: 423
+    Prefab: {fileID: 0}
+  - Id: 338
+    Prefab: {fileID: 0}
+  - Id: 425
+    Prefab: {fileID: 0}
+  - Id: 405
+    Prefab: {fileID: 0}
+  - Id: 340
+    Prefab: {fileID: 0}
+  ItemOverrides: []
+  IconConfig: {fileID: 11400000, guid: 772bdda50ba267080bd5c4f1147112cd, type: 2}
+  LightRed: {r: 0.9686274528503418, g: 0.32156863808631897, b: 0.21568627655506134, a: 1.0}
+  Images: {fileID: 11400000, guid: 2c2faf5b56ea854f1a206f8a1d6c6a69, type: 2}
+  Currencies:
+  - type: 19
+    itemId: 41400
+    icon: {fileID: 21300000, guid: e5c8ddefae6d7f198459755dbbbbf1de, type: 2}
+  CurrencyItems:
+  - {Type: 19, ItemId: 41400, HasAutoIncrease: 0}
+  Texts:
+  - {Key: CommonMaterialAddTip, Value: 添加想交换的物品}
+  - {Key: SubRank.Angel1, Value: 天使下位}
+  - {Key: SubRank.Angel2, Value: 天使中位}
+  - {Key: SubRank.Angel3, Value: 天使上位}
+  - {Key: SubRank.Blackiron1, Value: 初心下位}
+  - {Key: SubRank.Blackiron2, Value: 初心中位}
+  - {Key: SubRank.Blackiron3, Value: 初心上位}
+  - {Key: SubRank.Bronze1, Value: 勇者下位}
+  - {Key: SubRank.Bronze2, Value: 勇者中位}
+  - {Key: SubRank.Bronze3, Value: 勇者上位}
+  - {Key: SubRank.Chaos1_1, Value: 混沌一阶}
+  - {Key: SubRank.Chaos1_2, Value: 混沌二阶}
+  - {Key: SubRank.Chaos1_3, Value: 混沌三阶}
+  - {Key: SubRank.Chaos2_1, Value: 混沌四阶}
+  - {Key: SubRank.Chaos2_2, Value: 混沌五阶}
+  - {Key: SubRank.Chaos2_3, Value: 混沌六阶}
+  - {Key: SubRank.Chaos3_1, Value: 混沌七阶}
+  - {Key: SubRank.Chaos3_2, Value: 混沌八阶}
+  - {Key: SubRank.Chaos3_3, Value: 混沌九阶}
+  - {Key: SubRank.Demigod1_1, Value: 半神一阶}
+  - {Key: SubRank.Demigod1_2, Value: 半神二阶}
+  - {Key: SubRank.Demigod1_3, Value: 半神三阶}
+  - {Key: SubRank.Demigod2_1, Value: 半神四阶}
+  - {Key: SubRank.Demigod2_2, Value: 半神五阶}
+  - {Key: SubRank.Demigod2_3, Value: 半神六阶}
+  - {Key: SubRank.Demigod3_1, Value: 半神七阶}
+  - {Key: SubRank.Demigod3_2, Value: 半神八阶}
+  - {Key: SubRank.Demigod3_3, Value: 半神九阶}
+  - {Key: SubRank.Eternal1_1, Value: 永恒一阶}
+  - {Key: SubRank.Eternal1_2, Value: 永恒二阶}
+  - {Key: SubRank.Eternal1_3, Value: 永恒三阶}
+  - {Key: SubRank.Eternal2_1, Value: 永恒四阶}
+  - {Key: SubRank.Eternal2_2, Value: 永恒五阶}
+  - {Key: SubRank.Eternal2_3, Value: 永恒六阶}
+  - {Key: SubRank.Eternal3_1, Value: 永恒七阶}
+  - {Key: SubRank.Eternal3_2, Value: 永恒八阶}
+  - {Key: SubRank.Eternal3_3, Value: 永恒九阶}
+  - {Key: SubRank.Godtouched1_1, Value: 神裔一阶}
+  - {Key: SubRank.Godtouched1_2, Value: 神裔二阶}
+  - {Key: SubRank.Godtouched1_3, Value: 神裔三阶}
+  - {Key: SubRank.Godtouched2_1, Value: 神裔四阶}
+  - {Key: SubRank.Godtouched2_2, Value: 神裔五阶}
+  - {Key: SubRank.Godtouched2_3, Value: 神裔六阶}
+  - {Key: SubRank.Godtouched3_1, Value: 神裔七阶}
+  - {Key: SubRank.Godtouched3_2, Value: 神裔八阶}
+  - {Key: SubRank.Godtouched3_3, Value: 神裔九阶}
+  - {Key: SubRank.Gold1, Value: 超凡下位}
+  - {Key: SubRank.Gold2, Value: 超凡中位}
+  - {Key: SubRank.Gold3, Value: 超凡上位}
+  - {Key: SubRank.Legend1, Value: 传奇下位}
+  - {Key: SubRank.Legend2, Value: 传奇中位}
+  - {Key: SubRank.Legend3, Value: 传奇上位}
+  - {Key: SubRank.Lordgod1_1, Value: 主宰一阶}
+  - {Key: SubRank.Lordgod1_2, Value: 主宰二阶}
+  - {Key: SubRank.Lordgod1_3, Value: 主宰三阶}
+  - {Key: SubRank.Lordgod2_1, Value: 主宰四阶}
+  - {Key: SubRank.Lordgod2_2, Value: 主宰五阶}
+  - {Key: SubRank.Lordgod2_3, Value: 主宰六阶}
+  - {Key: SubRank.Lordgod3_1, Value: 主宰七阶}
+  - {Key: SubRank.Lordgod3_2, Value: 主宰八阶}
+  - {Key: SubRank.Lordgod3_3, Value: 主宰九阶}
+  - {Key: SubRank.Nihility1_1, Value: 虚无一阶}
+  - {Key: SubRank.Nihility1_2, Value: 虚无二阶}
+  - {Key: SubRank.Nihility1_3, Value: 虚无三阶}
+  - {Key: SubRank.Nihility2_1, Value: 虚无四阶}
+  - {Key: SubRank.Nihility2_2, Value: 虚无五阶}
+  - {Key: SubRank.Nihility2_3, Value: 虚无六阶}
+  - {Key: SubRank.Nihility3_1, Value: 虚无七阶}
+  - {Key: SubRank.Nihility3_2, Value: 虚无八阶}
+  - {Key: SubRank.Nihility3_3, Value: 虚无九阶}
+  - {Key: SubRank.Norank, Value: 无位阶}
+  - {Key: SubRank.Saint1, Value: 圣域下位}
+  - {Key: SubRank.Saint2, Value: 圣域中位}
+  - {Key: SubRank.Saint3, Value: 圣域上位}
+  - {Key: SubRank.Silver1, Value: 英雄下位}
+  - {Key: SubRank.Silver2, Value: 英雄中位}
+  - {Key: SubRank.Silver3, Value: 英雄上位}
+  - {Key: SubRank.Stargod1_1, Value: 星神一阶}
+  - {Key: SubRank.Stargod1_2, Value: 星神二阶}
+  - {Key: SubRank.Stargod1_3, Value: 星神三阶}
+  - {Key: SubRank.Stargod2_1, Value: 星神四阶}
+  - {Key: SubRank.Stargod2_2, Value: 星神五阶}
+  - {Key: SubRank.Stargod2_3, Value: 星神六阶}
+  - {Key: SubRank.Stargod3_1, Value: 星神七阶}
+  - {Key: SubRank.Stargod3_2, Value: 星神八阶}
+  - {Key: SubRank.Stargod3_3, Value: 星神九阶}
+  - {Key: TreasureAwakeMaterialPanelSelectEmptyTip, Value: 没有多余的材料}
+  - {Key: TreasureAwakeMaterialPanelSelectTip, Value: 已选择}
+  - {Key: TreasurePromotePanel.AutoMergeWhenLack, Value: 材料不足时自动合成}
+  - {Key: TreasurePromotePanel.LevelUp.CostTitle, Value: 消耗材料}
+  - {Key: TreasurePromotePanel.LevelUp.Title, Value: 古遗物强化}
+  - {Key: TreasurePromotePanel.RankUp.Max, Value: 已觉醒}
+  - {Key: TreasurePromotePanel.RankUp.Title, Value: 古遗物升华}
+  - {Key: TreasurePromotePanel.Upgrade.CostTitle, Value: 消耗材料}
+  - {Key: TreasurePromotePanel.UseCommonMaterial, Value: 使用通用材料进阶}
+  - {Key: astrological_season_1_name, Value: 逢魔时至}
+  - {Key: astrological_season_2_name, Value: 渊虹邂羽}
+  - {Key: astrological_season_3_name, Value: 混沌终焉}
+  - {Key: astrological_season_4_name, Value: 怪诞剧场}
+  - {Key: astrological_season_5_name, Value: 霜焰之歌}
+  - {Key: astrological_season_6_name, Value: 闪耀羁绊}
+  - {Key: astrological_season_7_name, Value: 末世曙光}
+  - {Key: astrological_season_8_name, Value: S8赛季}
+  - {Key: confirmation, Value: 确认}
+  - {Key: function_limit_season, Value: '{0}解锁'}
+  - {Key: function_limit_subrank, Value: '{0}解锁'}
+  - {Key: treasure_common_has_item, Value: 已拥有}
+  - {Key: treasure_common_levelup, Value: 强化}
+  - {Key: treasure_common_single_promote, Value: '每层增加{0}'}
+  - {Key: treasure_common_total_promote, Value: '合计增加{0}'}
+  - {Key: treasure_common_upgrade, Value: 升华}
+  - {Key: treasure_common_upgrade_last, Value: 觉醒}
+  - {Key: treasure_limit_player_level, Value: '角色等级{0}级解锁'}
+  - {Key: ui_common_count_plus, Value: '{0}+'}
+  - {Key: ui_common_level_style_8, Value: '+{0}'}
+  - {Key: ui_confirm, Value: 确认}
+  - {Key: ui_level_max_text, Value: 已满级}
+  - {Key: ui_new_mark_text, Value: 新}
+  - {Key: ui_rank_up_text, Value: 进阶}
+  - {Key: ui_treasure_limit_gap_level, Value: '全元素古遗物共鸣等级超过{0}级解锁'}
+  - {Key: ui_treasure_piece_choose, Value: 一键选择}
+  - {Key: ui_treasure_piece_empty, Value: 暂无多余的同品质五星古遗物碎片}
+  - {Key: ui_treasure_piece_info, Value: '只有古遗物升华至五星，且碎片数量超过自身觉醒需求
+
+      剩余碎片才可作为通用觉醒碎片使用。'}
+  - {Key: ui_treasure_share_level_up_limit1, Value: 所有已陈列古遗物强化满级后解锁赛季强化等级}
+  - {Key: ui_treasure_share_level_up_limit2, Value: 只有陈列中的古遗物才可进行强化}

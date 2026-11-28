@@ -1,13 +1,14 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "ccd39cc7138a7d1db192b9427bb60efb62e9839aabf7b25692dab2c67ab77dca",
+  "generator_sha256": "1830ec1074c58b4a39751ad03e52053b093e5ee9ba99efbb69889ea88eab4aca",
   "inputs": {
     ".tools/source-packages/current/884_156692/official-code/client-source/IPlayerItemUIHandler.cs": "be2be7384b29f1a1da30e46283ace0162ba475b5de8c1c45a873918bca6707d3",
     ".tools/source-packages/current/884_156692/official-code/client-source/PlayerDefaultItemUIHandler.cs": "609f71fc1110d4a3fe60ce8c2b50bcb48b5184fa0088a05c38ba53b84f3dc859",
     ".tools/source-packages/current/884_156692/official-code/client-source/PlayerItemQuickyShopHandler.cs": "241e95808ce7a50924a849ab155106a864e2b64e0e4414fcff722e3ff1ece9ad",
     ".tools/source-packages/current/884_156692/official-code/client-source/PlayerDiamondItemUIHandler.cs": "8cc55ce2a1a594c91f204a5f7d2765567fb1bd7a39f67b88c4cf293f353b6e3f",
     ".tools/source-packages/current/884_156692/official-code/client-source/PlayerFlareStarItemUIHandler.cs": "048838578b8ad2a4cea9514416a1ab404d1e819dea4eb3295c83155fdb9250e8",
-    ".tools/source-packages/current/884_156692/official-code/client-source/PlayerItemUIHandlerFactory.cs": "953ca2f29ac225766f9a20e53fa7280af729d06b829920bfb123abb4f66b75d7"
+    ".tools/source-packages/current/884_156692/official-code/client-source/PlayerItemUIHandlerFactory.cs": "953ca2f29ac225766f9a20e53fa7280af729d06b829920bfb123abb4f66b75d7",
+    ".tools/source-packages/current/911_156995/official-code/client-source/PlayerItemUIHandlerFactory.cs": "953ca2f29ac225766f9a20e53fa7280af729d06b829920bfb123abb4f66b75d7"
   },
   "outputs": {
     "unity/Assets/Game/Runtime/Official/HomeCurrencyActionsUI/PlayerDefaultItemUIHandler.cs": "1576b59425961a378af7560d88e8eda2084a2b9b435f8e5c3f25b8ab2302ea5b",
@@ -18,7 +19,7 @@
     "unity/Assets/Game/Runtime/Official/HomeCurrencyActionsUI/PlayerDiamondItemUIHandler.cs.meta": "a81845d66bbcb4fe4c27e5e9269931f2a094defa6648a00ce40cfba5fbaf7a85",
     "unity/Assets/Game/Runtime/Official/HomeCurrencyActionsUI/PlayerFlareStarItemUIHandler.cs": "1ba4bbbb0d63a5f0812df60d2f2d5bb96923e0b7c983cb3e427cfe42c7c986ae",
     "unity/Assets/Game/Runtime/Official/HomeCurrencyActionsUI/PlayerFlareStarItemUIHandler.cs.meta": "71526031b0862c6df719db9dac2f340bfa40c51af4b444da411e82ebed8dd75d",
-    "unity/Assets/Game/Runtime/Official/HomeCurrencyActionsUI/HomeCurrencyActionFactory.cs": "2e3a33b0c0b7b815cc9deac788ad81aeec001d145f1d366409910819287fd38b",
+    "unity/Assets/Game/Runtime/Official/HomeCurrencyActionsUI/HomeCurrencyActionFactory.cs": "0df0a62ea74f45d543d5e1df61cdad0aab128a7f3d50dd9f1020b061d61bd246",
     "unity/Assets/Game/Runtime/Official/HomeCurrencyActionsUI/HomeCurrencyActionFactory.cs.meta": "679e21f6d6ae4e53836367eb3a07041aa4e3744bfa990eefddbd585303230c85",
     "unity/Assets/Game/Runtime/Official/HomeCurrencyActionsUI/IHomeCurrencyActionServices.cs": "86cc885593ff292aacb27b5ace2b2ae4d5ef3a44b7d662f91a9269fab3ee4739",
     "unity/Assets/Game/Runtime/Official/HomeCurrencyActionsUI/IHomeCurrencyActionServices.cs.meta": "f8de082ac8510fb1b85f2f47653f38e967f7c4282d69974991733ebc2a6eabf8",
@@ -26,5 +27,11 @@
     "unity/Assets/Game/Runtime/Official/HomeCurrencyActionsUI/Zjcs.Official.HomeCurrencyActionsUI.asmdef.meta": "0edb12f0bb88cd6816b6d7e75b9d78de3b80f90f4d9c96541d46ef963106e02e",
     "unity/Assets/Game/Runtime/Official/HomeCurrencyActionsUI.meta": "d01df9b2bec929bc005d8ba97c58408afca75736b47c56c02a9ef04f104de2ad"
   },
-  "scope": "HomeUI selected Money/Diamon/TiliId and its exchange popup FlareStar factory branch, original click/add/limit/confirmation order. Local data, original popup windows and the direct-pay page must be supplied by the production host."
+  "scope": "HomeUI selected Money/Diamon/TiliId and its exchange popup FlareStar factory branch, original click/add/limit/confirmation order. Local data, original popup windows and the direct-pay page must be supplied by the production host.",
+  "extensions": [
+    {
+      "manifest": "911_156995",
+      "scope": "SandsOfTime uses the original default item handler branch; historical home/exchange handlers retain their prior source."
+    }
+  ]
 }

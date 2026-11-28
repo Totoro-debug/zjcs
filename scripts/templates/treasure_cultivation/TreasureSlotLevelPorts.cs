@@ -17,11 +17,12 @@ namespace Zjcs.Official.TreasureSlots
     }
     public sealed class SystemLevelLimitInfoParser
     {
+        private readonly SystemLevelLimitInfo[] configs;
         private readonly Dictionary<SubRank, Dictionary<int, Dictionary<int, SystemLevelLimitInfo>>> mLevelLimitCaches = new Dictionary<SubRank, Dictionary<int, Dictionary<int, SystemLevelLimitInfo>>>();
         private readonly Dictionary<SubRank,int> mTreasureBaseLevelLimitByRank = new Dictionary<SubRank,int>();
         private readonly Dictionary<SubRank,int> mTreasureBlessLevelLimitByRank = new Dictionary<SubRank,int>();
         public SystemLevelLimitInfoParser(IEnumerable<SystemLevelLimitInfo> rows)
-        { foreach(var row in rows) { SetInfo(row); SetTreasureMaxLevelLimit(row); } }
+        { configs=rows.ToArray();foreach(var row in configs) { SetInfo(row); SetTreasureMaxLevelLimit(row); } }
         /*SystemLevelLimitInfoParser*/
     }
     public sealed class SystemLevelGapLimitInfo

@@ -93,9 +93,9 @@
     "scripts/prepare_treasure_icon_native.py": "f582279b7a6cc2e51ae51bb86ba4393171decc15dcd6a64395396c95d5a0ad5f",
     "unity/Assets/Game/Runtime/Offline/TreasureUI/OfflineTreasureDetailAssets.cs": "1a2181316f9b8c55aaea09751461f6217cc1d5223ad40d0be2acd31198d5838f",
     "unity/Assets/Game/Runtime/Offline/TreasureUI/OfflineTreasureDetailAssets.cs.meta": "de075305bdf1c7ef2b9d9a30f9b13392492cd8ca55dac7bfabbe6715a7301d1d",
-    "unity/Assets/Game/Resources/Treasure/treasure-detail.json": "7e754cd87414176c586aa72f220e4f9d15a921b3e5671f09e46dfe933ea9dc9e",
+    "unity/Assets/Game/Resources/Treasure/treasure-detail.json": "d1d882ee7056555783a4d9d0e73cf8d0af7444f37d54e5b6df3d7ca076cc8060",
     "unity/Assets/Game/Resources/Treasure/treasure-detail.json.meta": "d37974cb932f22c391b6569dc80ff525bb9f34ca9bb08bd6f2677bc05bd2bd58",
-    "assets/reference/treasure-detail-configuration-source-manifest.json": "af8d16baf80d97d20c6a6c0d461f79e63c417982c302d990510cce60674a11e1",
+    "assets/reference/treasure-detail-configuration-source-manifest.json": "5c4649814200c14f04fc6073a43d9f1d1a6ae5e47679b11dc46ee94e00de9bf7",
     "scripts/prepare_current_creation_ui_sprites.py": "965201e4062a5cb19ccde89377d25a595d521f6dcd47fb1b207f7151de7c14e4",
     "scripts/prepare_current_creation_skin_icons.py": "d08905b7c0e565fa25e36eb2700dcb96393c5a2d17ff95ecd8e82a8fea1ad1bb",
     "scripts/prepare_unity_map12_team_panel_sprites.py": "00ebfb4f98a436ff93a581f6b3c70797f16af405a7f4c637937b8c9ef98a20d8",
@@ -9798,6 +9798,16 @@
       "sha256": "55fdb91cf9ce78b12dc49173067c8d25049c10c0ed715b4d5b4a81038e781cd0",
       "meta_sha256": "653cb123fd72e11d452e76196f641e663dc88d292c22409506c4d509e177d177"
     },
+    "IProfessionMaterialServices": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionMaterialServices.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "0fe3b873664d2f607146eab193b36a90",
+        "type": 3
+      },
+      "sha256": "139d3687dc40656eac24324e29e0a968b6627948feb43f4ab4acdf036467c0d8",
+      "meta_sha256": "950e508ff6b3eb60f79530ce7569d04b9fdab9d506554a084aa71c9a3cf5c988"
+    },
     "IProfessionRuleTipData": {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionRuleTipData.cs",
       "pointer": {
@@ -10598,6 +10608,16 @@
       "sha256": "4d328d9a166e11f1a7052feb1df31aa7133cd903589ba2e49f4349051ab551a2",
       "meta_sha256": "df2973c7e16e313429221a43936b2c75596efc40f10e9c4d969425078a74ac12"
     },
+    "ProfessionCommonMaterial": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionCommonMaterial.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "f1591026696eb59441dfde4f980294f9",
+        "type": 3
+      },
+      "sha256": "f929a0ac070df4a6d3a974ba6f25587499cc4af2519097024027da1c283c6dd9",
+      "meta_sha256": "d0174ee1bf841cbefc48c9305a63d3b25232a74bac9855455b37512d639bbea3"
+    },
     "ProfessionComplexProp": {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionComplexProp.cs",
       "pointer": {
@@ -10607,6 +10627,16 @@
       },
       "sha256": "96792eafad321b2d1665f39f6b4c0d03967a5507a9619c62675e28154689eec5",
       "meta_sha256": "6f6ea14372e08fe2a705d8258e7d8d00590dd74937642963a9c683799301026a"
+    },
+    "ProfessionDebugUIHandler": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionDebugUIHandler.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "ec17fe6515cd128e7242a2955a9578de",
+        "type": 3
+      },
+      "sha256": "00367dec5f1025a1aaeab1bd8d3fcc305f1102c6973d34b146f2965d9f05face",
+      "meta_sha256": "e383c1a788e5f888870a185565eca98b2c1b40eceea7b55c8d2f46019fcc460a"
     },
     "ProfessionDetailBindings": {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionDetailBindings.cs",
@@ -10898,6 +10928,26 @@
       "sha256": "18aadbe80fac44b07b291c3cc1bd72b1eb85578733202aab66582cb0dae793ce",
       "meta_sha256": "2b96a9b44edb21fa6b1fdf8178057c11cc47d7313bfe019660a8569b6f117ca5"
     },
+    "ProfessionPropEffectPlayAgent": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropEffectPlayAgent.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "36de1d9acf973d9697079cabdf8c443f",
+        "type": 3
+      },
+      "sha256": "fde90339e7d9194817c604c8a16298740184e89a7c1e1bba396c628ecbeb49b6",
+      "meta_sha256": "4f657cb4c7ae202a5f39c5c228c6d899c1007a290491241e4f26b4867ed86ad7"
+    },
+    "ProfessionPropEffectPlayAgentBase": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropEffectPlayAgentBase.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "329d15a5001596dfad3939e78eca61d8",
+        "type": 3
+      },
+      "sha256": "e94532e60fb74483c2b0dfb0a65de529e93a834fb36ae503cfc1cd5a15f528f0",
+      "meta_sha256": "964614f232fb60d8a8f71943a4108c1b9478c84494c48087f4bea63fe736484c"
+    },
     "ProfessionPropertyBindings": {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropertyBindings.cs",
       "pointer": {
@@ -10978,6 +11028,16 @@
       "sha256": "a9b83301f2dc05dffca3138940de20459d9668a2bc2af25d88600a870ffd28fb",
       "meta_sha256": "6de8da163cdf7718986526410a16b889f9cbbd99bc7f950f52a5c55b3768055d"
     },
+    "ProfessionRedDotMultiItem": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionRedDotMultiItem.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "5769af72b2dc6a5bd10993bbbc9a2ca1",
+        "type": 3
+      },
+      "sha256": "35b8b040af6f7683c164b727982711a7798282a79b868955a5cabe5878db4095",
+      "meta_sha256": "8978c0da6bb56b9b62795c5e9914040dc817af57eb2f9ea71989a71a5886169f"
+    },
     "ProfessionSkillBadgeRewarder": {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionSkillBadgeRewarder.cs",
       "pointer": {
@@ -11047,6 +11107,16 @@
       },
       "sha256": "7ec023744c518897ec09dca7936048dd0a179a9d0bb0cc209e2c60e2f5dc709f",
       "meta_sha256": "98b970402706c2f041de886cc8ebc9e6f8aa90d86a8533d5d002d52ec58e893b"
+    },
+    "ProfessionUseItemSliderGroup": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionUseItemSliderGroup.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "d1f51490b04b457563919c3925df05c4",
+        "type": 3
+      },
+      "sha256": "25fbd5aedaae74211c9883eb50cb83a3ddeacb8a16b49c6ec8807ab71c179f23",
+      "meta_sha256": "f1387b0524775e57ec4ad0cb5d3dbbe6b867909075aa0c4164bc2b8f5ada065f"
     },
     "ProfessionUseItemTransformExtensions": {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionUseItemTransformExtensions.cs",
@@ -12205,11 +12275,11 @@
       "guid": "74accc325978edc5fdb286ea51bd6737",
       "geometry": null,
       "restored_original_empty_values": [
-        "/m_SourceFontFileGUID",
         "/m_fontInfo/Name",
-        "/m_CreationSettings/characterSequence",
         "/m_CreationSettings/referencedTextAssetGUID",
-        "/m_CreationSettings/sourceFontFileName"
+        "/m_CreationSettings/characterSequence",
+        "/m_CreationSettings/sourceFontFileName",
+        "/m_SourceFontFileGUID"
       ]
     },
     "cab-43221b4d126447a2b398f3477e814a2c:8668477128756491714": {
@@ -12272,12 +12342,12 @@
       "guid": "fc8221d37afcdc9df7d450937acdda44",
       "geometry": null,
       "restored_original_empty_values": [
-        "/m_SourceFontFileGUID",
         "/m_fontInfo/Name",
-        "/m_CreationSettings/characterSequence",
         "/m_CreationSettings/referencedTextAssetGUID",
+        "/m_CreationSettings/characterSequence",
         "/m_CreationSettings/referencedFontAssetGUID",
-        "/m_CreationSettings/sourceFontFileName"
+        "/m_CreationSettings/sourceFontFileName",
+        "/m_SourceFontFileGUID"
       ]
     },
     "cab-43221b4d126447a2b398f3477e814a2c:-3668330291226905850": {

@@ -14,6 +14,7 @@ public static class HomeCurrencyActionFactory
             case PlayerItemType.Money: return new PlayerItemQuickyShopHandler(id.ItemId, services);
             case PlayerItemType.Diamon: return new PlayerDiamondItemUIHandler(id.ItemId, services);
             case PlayerItemType.TiliId: return new PlayerDefaultItemUIHandler(id.ItemId, services);
+            case PlayerItemType.SandsOfTime: return new PlayerDefaultItemUIHandler(id.ItemId, services);
             case PlayerItemType.FlareStar: return new PlayerFlareStarItemUIHandler(id.ItemId,
                 services as IHomeFlareStarActionServices ?? throw new ArgumentException("Original direct-pay confirmation services are required.", nameof(services)));
             default: throw new ArgumentOutOfRangeException(nameof(type));

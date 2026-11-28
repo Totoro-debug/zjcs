@@ -3,8 +3,8 @@
   "inputs": {
     ".tools/source-packages/current/911_156995/code-manifest.json": "a47317188c8d1f947b56ff1af73b4cd811a079860799915cf9103603afc200e9",
     ".tools/source-packages/current/911_156995/official-code/managed/decoded/Console.dll": "5ff2019c868764f8e6afa6a5ff3bd569d4e3d39365a39dc0327a738391e8b64d",
-    "scripts/templates/treasure_cultivation/TreasureSlotLevelPorts.cs": "c8c955f185df43baa3f76c40b4fd7de6be2731d758b789a6194834c6b9bd0486",
-    "scripts/prepare_treasure_slot_levels.py": "20e9252293aff69755b878d0e7a04b54f8ec993af360d53cc3182c9d391bf886",
+    "scripts/templates/treasure_cultivation/TreasureSlotLevelPorts.cs": "aeabf630ffbbbaa02fd65e41b6284531fb0ea2b4f5c0c3d19bd9b1e0ce3df5c1",
+    "scripts/prepare_treasure_slot_levels.py": "7cbcd143094bef008fa7c5631466b39c7b2ccf2f171a23539c47346668de6b8c",
     "scripts/prepare_treasure_slots.py": "4051b8d6f7679d26ddb99a46f8ad00687a51b97fe96e4f708d6595c019427d24",
     ".tools/source-packages/current/911_156995/official-code/common-source/TreasureHelper.cs": "d7f27b00d6126e69619605e7980cfd72c4362763cbb377cf1b4d8cddd6a7bc2b",
     ".tools/source-packages/current/911_156995/official-code/common-source/Common/Player.cs": "e96ddc2bb91a1d310f847ff51c93966d119ac3045db9cd191455fbeda3f983f6",
@@ -165,6 +165,7 @@
     "SystemLevelLimitInfoParser:public SystemLevelLimitInfo GetLevelLimitInfo(": "7aed6f54ceed4d87d95341deee3c6c4aa9883bd61e4154c104573a5af4c26c2e",
     "SystemLevelLimitInfoParser:public int GetTreasureBaseLevelLimit(": "e5cb110bcf5d4f2b60b9d1ba0a468de551efec9cf92085cf55a4dd05a208bc61",
     "SystemLevelLimitInfoParser:public int GetTreasureBlessLevelLimit(": "eb26aac9aa87dd0f72b9c3f21aed880686df917e2cd6ec4c1e8a6a610ca898c5",
+    "SystemLevelLimitInfoParser:public int GetMinSystemLimitInfo(": "976c603e2024710d41df12d8d1e8025ef667781c2f707cb04140a0ac1e2e8996",
     "SystemLevelGapLimitInfoParser:public override void PostParse(": "2bc4e58f9aa72dd357618742a3d7ece288e3bb68307c1ed460bf4c198d602399",
     "SystemLevelGapLimitInfoParser:public bool TryGetSystemLevelGapInfo(": "d148fbc706e88aa6b27e20a24cdfaa19319f242e31a525afaa5403dbc99d5dfd",
     "SystemLevelGapLimitInfoParser:public bool IsBlessLevelGapLimit(": "ba55a7420b8eaf89d2e1358dcf28317ae8e82eba320188d47fc2ddf24e623087",
@@ -313,14 +314,14 @@
   "runtime_bindings": {
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureSlotService.Levels.cs": "c48d53a463418dc59d533b652efef678eb3dbad7a8baf2ddc22a246df90550ea",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureSlotService.Levels.cs.meta": "331018336a37e3bb8ccdacda9f3bc41dd05e5e5df695ad1b9258421b63f46c28",
-    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterPropertyProgress.cs": "4a64cbc3732aa1a4ea3de42e75d8af8579abe6a4ec98f4aa99319f930ae05c1d",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterPropertyProgress.cs": "9b69e4c6103a4d601493ef5a778ee104ba8c7a021d3e302ae52fc5bd445736e5",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureSlotProgress.cs": "29858b56f2cff4399fb65e28e9306a49f73c04e63e220b2f4af412d8d5d244d0",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureSlotService.cs": "973564387e49bd13504f7cc294201f1e6a122e79cdd360bb28c0d0dc23a7f40d",
     "scripts/fixtures/treasure_slot_levels_validation.cs": "addbdcdc9af257aca94aea2c1edb322650f0cb2b5e32f795bce0ba492bb3af41",
     "scripts/test_treasure_slot_levels.ps1": "f42292c757bd7f4452705288ec7d1bc45edabf915b6c7e644a394b35e92e90f3"
   },
   "outputs": {
-    "unity/Assets/Game/Runtime/Official/TreasureCultivation/OfficialTreasureSlotLevels.cs": "5147183929a5f9f540f8ccca01fb39015f2b5180ee9cce8320ceb6ac55ea7a5f",
+    "unity/Assets/Game/Runtime/Official/TreasureCultivation/OfficialTreasureSlotLevels.cs": "aa09da79f0346993cd2bc66f010f9d4882348b0d0e264b6de2330afef81800cf",
     "unity/Assets/Game/Resources/Treasure/treasure-slot-levels.json": "9843cfd2d4896cc62ccf9b728dff9c8f79cf4d45d6c9552a043f16408a231963",
     "unity/Assets/Game/Runtime/Official/TreasureCultivation/OfficialTreasureSlotLevels.cs.meta": "2fbab9de2eb98b7d707ed9bf4500809df41dd9353b7e39f767c2292c8d3ecc05",
     "unity/Assets/Game/Resources/Treasure/treasure-slot-levels.json.meta": "7809d47eb9bb6d923ea9f2fa5ea3fd6064ad0d62f38af3b8d1ac8d723bd31c4a"

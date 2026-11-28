@@ -54,6 +54,10 @@ def build():
         assert all(token not in text for token in ('Parsers.', 'MeManager.', 'WindowManager.', 'MoneyUtils.'))
         emit(name,text)
     factory = read('PlayerItemUIHandlerFactory')
+    current_factory=ROOT/'.tools/source-packages/current/911_156995/official-code/client-source/PlayerItemUIHandlerFactory.cs'
+    inputs[current_factory.relative_to(ROOT).as_posix()]=sha(current_factory)
+    current_text=current_factory.read_text('utf-8-sig').replace('\r\n','\n')
+    assert 'case PlayerItemType.SandsOfTime:' not in current_text and 'default:\n\t\t\treturn new PlayerDefaultItemUIHandler(playerItemUIItemIdProvider.ItemId);' in current_text
     assert 'case PlayerItemType.Diamon:\n\t\t\treturn new PlayerDiamondItemUIHandler(playerItemUIItemIdProvider.ItemId);' in factory
     assert 'case PlayerItemType.Money:' in factory and 'return new PlayerItemQuickyShopHandler(playerItemUIItemIdProvider.ItemId);' in factory
     emit('HomeCurrencyActionFactory', '''public static class HomeCurrencyActionFactory
@@ -66,6 +70,7 @@ def build():
             case PlayerItemType.Money: return new PlayerItemQuickyShopHandler(id.ItemId, services);
             case PlayerItemType.Diamon: return new PlayerDiamondItemUIHandler(id.ItemId, services);
             case PlayerItemType.TiliId: return new PlayerDefaultItemUIHandler(id.ItemId, services);
+            case PlayerItemType.SandsOfTime: return new PlayerDefaultItemUIHandler(id.ItemId, services);
             case PlayerItemType.FlareStar: return new PlayerFlareStarItemUIHandler(id.ItemId,
                 services as IHomeFlareStarActionServices ?? throw new ArgumentException("Original direct-pay confirmation services are required.", nameof(services)));
             default: throw new ArgumentOutOfRangeException(nameof(type));
@@ -95,6 +100,7 @@ public interface IHomeCurrencyActionServices
     path.write_text(json.dumps(dict(name='Zjcs.Official.HomeCurrencyActionsUI', references=['Zjcs.Official.ProfessionUI']),indent=2)+'\n','utf8',newline='\n')
     for item in (path, metadata(path), metadata(DEST,True)): outputs[item.relative_to(ROOT).as_posix()]=sha(item)
     receipt=dict(manifest='884_156692',generator_sha256=sha(Path(__file__)),inputs=inputs,outputs=outputs,
+        extensions=[dict(manifest='911_156995',scope='SandsOfTime uses the original default item handler branch; historical home/exchange handlers retain their prior source.')],
         scope='HomeUI selected Money/Diamon/TiliId and its exchange popup FlareStar factory branch, original click/add/limit/confirmation order. Local data, original popup windows and the direct-pay page must be supplied by the production host.')
     (ROOT/'assets/reference/home-currency-actions-runtime-source-manifest.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n','utf8',newline='\n')
     print('Original selected home currency actions:',len(outputs),'outputs',flush=True)

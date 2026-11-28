@@ -120,6 +120,17 @@ namespace Zjcs.Editor.Home
             var targetSize = new Vector2(width, height);
             object hostView = typeof(EditorWindow).GetField("m_Parent", BindingFlags.Instance | BindingFlags.NonPublic)
                 .GetValue(view) ?? throw new InvalidOperationException("The acceptance Game View has no host.");
+            // Select its existing dock tab without raising focus events or activating an OS window.
+            // A hidden Game View otherwise leaves background coroutine/frame captures waiting for a render.
+            var panes = hostView.GetType().GetField("m_Panes", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                ?.GetValue(hostView) as System.Collections.IList;
+            if (panes != null)
+            {
+                int paneIndex = panes.IndexOf(view);
+                if (paneIndex < 0) throw new InvalidOperationException("The acceptance Game View is missing from its host.");
+                hostView.GetType().GetMethod("SetSelectedPrivate", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(hostView, new object[] { paneIndex, false });
+            }
             editor.GetType("UnityEditor.GUIView").GetMethod("SetAsLastPlayModeView", BindingFlags.Instance | BindingFlags.NonPublic)
                 .Invoke(hostView, null);
             typeof(EditorWindow).GetMethod("SetMainPlayModeViewSize", BindingFlags.Instance | BindingFlags.NonPublic)

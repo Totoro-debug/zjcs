@@ -155,11 +155,12 @@ public enum DevelopType
     }
     public sealed class SystemLevelLimitInfoParser
     {
+        private readonly SystemLevelLimitInfo[] configs;
         private readonly Dictionary<SubRank, Dictionary<int, Dictionary<int, SystemLevelLimitInfo>>> mLevelLimitCaches = new Dictionary<SubRank, Dictionary<int, Dictionary<int, SystemLevelLimitInfo>>>();
         private readonly Dictionary<SubRank,int> mTreasureBaseLevelLimitByRank = new Dictionary<SubRank,int>();
         private readonly Dictionary<SubRank,int> mTreasureBlessLevelLimitByRank = new Dictionary<SubRank,int>();
         public SystemLevelLimitInfoParser(IEnumerable<SystemLevelLimitInfo> rows)
-        { foreach(var row in rows) { SetInfo(row); SetTreasureMaxLevelLimit(row); } }
+        { configs=rows.ToArray();foreach(var row in configs) { SetInfo(row); SetTreasureMaxLevelLimit(row); } }
         private void SetInfo(SystemLevelLimitInfo info)
 	{
 		SubRank subRank = info.SubRank;
@@ -231,6 +232,30 @@ public int GetTreasureBlessLevelLimit(SubRank subRank)
 			return value;
 		}
 		return 0;
+	}
+
+public int GetMinSystemLimitInfo(int totalLevel, SubRank playerSubRank, int playerLevel, Rank serverRank, Func<SystemLevelLimitInfo, int> getTotalSystemLevel, out SystemLevelLimitInfo selectedInfo)
+	{
+		selectedInfo = null;
+		SystemLevelLimitInfo[] array = configs;
+		foreach (SystemLevelLimitInfo systemLevelLimitInfo in array)
+		{
+			if (systemLevelLimitInfo.SubRank >= playerSubRank && systemLevelLimitInfo.PlayerLevel + systemLevelLimitInfo.PlayerBlessLevel >= playerLevel && getTotalSystemLevel(systemLevelLimitInfo) >= totalLevel)
+			{
+				selectedInfo = systemLevelLimitInfo;
+				Rank rank = systemLevelLimitInfo.SubRank.ToRank();
+				if (rank > serverRank)
+				{
+					return 61804;
+				}
+				if (rank > playerSubRank.ToRank())
+				{
+					return 61802;
+				}
+				return 61801;
+			}
+		}
+		return 61804;
 	}
     }
     public sealed class SystemLevelGapLimitInfo

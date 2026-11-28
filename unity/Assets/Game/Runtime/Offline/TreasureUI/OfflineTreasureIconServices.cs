@@ -26,7 +26,7 @@ namespace Zjcs.Offline.TreasureUI
         private Dictionary<int,string> states;
         private string slotState;
         private int baseCap;
-        private bool autoMerge,awake,disposed;
+        private bool autoMerge,awake,useCommon,disposed;
         private event Action SettingsChanged;
         public SafeAction PlayerUpdated { get; }=new SafeAction();
         public IProfessionTipDotSystem TipDotSystem { get; }
@@ -47,6 +47,7 @@ namespace Zjcs.Offline.TreasureUI
             this.gray=gray??throw new ArgumentNullException(nameof(gray));this.failed=failed??throw new ArgumentNullException(nameof(failed));
             this.canGetFromMap=canGetFromMap??throw new ArgumentNullException(nameof(canGetFromMap));
             counts=Counts();states=States();slotState=Slots();baseCap=readBaseCap();autoMerge=AutoMergeWhenLevelUp;awake=AwakeAutoMergeEnable;
+            useCommon=session.Save.Player.CharacterProperties.TreasureSlots.UpgradeUseCommonMaterailEnable;
             tips.Cultivation.OnTreasureRefresh+=CultivationRefresh;
             slots.OnTreasureRefresh+=SlotRefresh;slots.OnTreasureSlotShareLevelUpdate+=ShareLevel;
             slots.OnAllTreasureBlessUpdate+=AllBless;
@@ -120,8 +121,16 @@ namespace Zjcs.Offline.TreasureUI
                     OnTreasureRefresh?.Invoke(GetItem(id),!previous.ContainsKey(id));
             string current=Slots();int currentCap=readBaseCap();
             if(current!=slotState||currentCap!=baseCap){slotState=current;baseCap=currentCap;OnAllTreasureBlessUpdate?.Invoke();}
-            if(autoMerge!=AutoMergeWhenLevelUp||awake!=AwakeAutoMergeEnable)
-            {autoMerge=AutoMergeWhenLevelUp;awake=AwakeAutoMergeEnable;SettingsChanged?.Invoke();}
+            if(autoMerge!=AutoMergeWhenLevelUp||awake!=AwakeAutoMergeEnable||useCommon!=session.Save.Player.CharacterProperties.TreasureSlots.UpgradeUseCommonMaterailEnable)
+                PublishSettings();
+        }
+        // The source publishes its setting notification after the successful local callback, including unchanged settings.
+        public void PublishSettings()
+        {
+            if(disposed)throw new ObjectDisposedException(nameof(OfflineTreasureIconServices));
+            autoMerge=AutoMergeWhenLevelUp;awake=AwakeAutoMergeEnable;
+            useCommon=session.Save.Player.CharacterProperties.TreasureSlots.UpgradeUseCommonMaterailEnable;
+            SettingsChanged?.Invoke();
         }
         public void Dispose()
         {
