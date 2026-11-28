@@ -5,7 +5,6 @@ import json
 from pathlib import Path
 import re
 import subprocess
-import shutil
 
 import yaml
 
@@ -243,13 +242,8 @@ def activate(work):
     for row in proof['outputs']:
         if row['previous_sha256'] is not None: before[row['path']] = dict(path=row['path'],sha256=row['previous_sha256'])
     for row in proof['previous_receipts']: before[row['path']] = row
-    backup = work/'previous-installation'
-    if backup.exists(): raise FileExistsError('Retain the completed NPC snapshot: '+str(backup))
-    backup.mkdir()
-    for row in before.values():
-        target = backup/row['path']; target.parent.mkdir(parents=True,exist_ok=True); shutil.copyfile(ROOT/row['path'],target)
-        if identity(target)['sha256'] != row['sha256']: raise ValueError('NPC snapshot differs: '+row['path'])
-    (backup/'snapshot.json').write_text(json.dumps(dict(completed=True,files=list(before.values())),indent=2)+'\n',encoding='utf-8')
+    # Keep only identities of the replaced files. The user's migration policy
+    # explicitly retires old material without creating payload backups.
     for row in proof['outputs']:
         path = ROOT/row['path']; path.parent.mkdir(parents=True,exist_ok=True); path.write_bytes((ROOT/row['staged']).read_bytes())
     for row in proof['removals']:
@@ -290,7 +284,10 @@ def verify():
     proof = json.loads(RECEIPT.read_bytes())
     from official_source import OfficialSource
     if proof['manifest'] != OfficialSource().version: raise ValueError('Current NPC resource source differs')
-    for row in [proof['generator'],proof['code_receipt'],proof['assembly'],*proof['constructors'],*proof['dependencies'],*proof['outputs']]:
+    from conversion_provenance import verify_recorded_source
+    for row in [proof['generator'],*proof['dependencies']]:
+        verify_recorded_source(row)
+    for row in [proof['code_receipt'],proof['assembly'],*proof['constructors'],*proof['outputs']]:
         if identity(ROOT/row['path']) != row: raise ValueError('NPC source or installed payload differs: '+row['path'])
     for row in proof['removals']:
         if (ROOT/row['path']).exists(): raise ValueError('An obsolete NPC payload remains: '+row['path'])

@@ -369,3 +369,6 @@ unity/Assets/Official/Combat/RepellingWindStatusGraphs.meta -text
 unity/Assets/Game/Resources/Combat/repelling-wind-current-status-graphs* -text
 assets/reference/battle-animation/repelling-wind-current-status-graphs-source-manifest.json -text
 scripts/prepare_repelling_wind_status_graphs.py -text
+
+# Native HUD texture payloads use the existing Git LFS mechanism.
+unity/Assets/Official/Combat/HUD/Images/*.texture2d.asset filter=lfs diff=lfs merge=lfs -text

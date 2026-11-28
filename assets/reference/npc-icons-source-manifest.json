@@ -71201,7 +71201,7 @@
     },
     {
       "path": "unity/Assets/Game/Resources/Combat/OfficialBattleHudCatalog.asset",
-      "sha256": "3f116170db885bdca93a04b9d46e97163d95070be60d02911b255a9af5b7a1e3"
+      "sha256": "10984dc72a21e291f6d2bb6644be977b30a42d3f4dc6c0ee60db336192663ca4"
     },
     {
       "path": "unity/Assets/Official/Shared/NpcImages.meta",
@@ -76362,7 +76362,7 @@
     "unity/Assets/Official/Combat/NpcPortraits/Resources/Combat/OfficialBattleNpcPortraitCatalog.asset": "5923e26f15dae31f97a94981f3195f84eeb60b461891d536fb1204b217adb6b1",
     "unity/Assets/Official/Combat/NpcPortraits/Resources/Combat/battle-npc-portraits.json": "28b48c8280412f319b152b35009a715510ede504577f8b944ab268ba0167cbac",
     "unity/Assets/Game/Resources/Partners/OfficialPartnerNpcIconImages.asset": "c47cfa99f1d3f1415644659ea49cf035e63fc13769e8536d912c5e5a08c28e28",
-    "unity/Assets/Game/Resources/Combat/OfficialBattleHudCatalog.asset": "3f116170db885bdca93a04b9d46e97163d95070be60d02911b255a9af5b7a1e3",
+    "unity/Assets/Game/Resources/Combat/OfficialBattleHudCatalog.asset": "10984dc72a21e291f6d2bb6644be977b30a42d3f4dc6c0ee60db336192663ca4",
     "unity/Assets/Official/Shared/NpcImages.meta": "52a7878a38e79532b9e679d7b202b1a37eb413e192f85a064529f008ebb6c042",
     "unity/Assets/Official/Shared.meta": "8c04f72c909efce2ed01099494751eab6220921c8fedab45a6f986efb060b542"
   },
@@ -80201,5 +80201,22 @@
       "sha256": "3f28c0f05f519da4091808d5a502a746e5e231c45c04c2810cb6dad1fa053e63"
     }
   ],
-  "scope": "Current NPC/profession image addresses and complete native Sprite/atlas/mip data shared by battle, HUD and partner catalogs. Existing closed-content rules remain owned by their feature."
+  "scope": "Current NPC/profession image addresses and complete native Sprite/atlas/mip data shared by battle, HUD and partner catalogs. Existing closed-content rules remain owned by their feature.",
+  "consumer_resource_updates": [
+    {
+      "generator": {
+        "path": "scripts/prepare_current_hud_images.py",
+        "sha256": "f009025a3d759d4b22f80268904039f3ba5acfba2ee0c2937afe1a4b2073ccd4"
+      },
+      "receipt": "assets/reference/battle-hud/current-images-source-manifest.json",
+      "input_receipt": {
+        "path": "assets/reference/npc-icons-source-manifest.json",
+        "sha256": "fd84b3cd2b81f7b910c94e5ed61bfd9853277596e84f0883e2ccbb7bd048f702"
+      },
+      "path": "unity/Assets/Game/Resources/Combat/OfficialBattleHudCatalog.asset",
+      "previous_sha256": "3f116170db885bdca93a04b9d46e97163d95070be60d02911b255a9af5b7a1e3",
+      "sha256": "10984dc72a21e291f6d2bb6644be977b30a42d3f4dc6c0ee60db336192663ca4",
+      "operation": "Keep every NPC image alias and native pointer unchanged while composing current HUD image bindings into the shared consumer catalog."
+    }
+  ]
 }
