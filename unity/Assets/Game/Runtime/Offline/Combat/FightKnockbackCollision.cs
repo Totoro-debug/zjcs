@@ -19,12 +19,37 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState source, FightBattleUnitState mover, FightGridPoint destination,
             out FightKnockbackCollision collision)
         {
+            if (mover == null) throw new ArgumentNullException(nameof(mover));
+            return TryCreateAt(grid, units, source, mover, new FightGridPoint(mover.X, mover.Y), destination, out collision);
+        }
+
+        public static List<FightGridPoint> Trace(FightBattleGrid grid, IReadOnlyList<FightBattleUnitState> units,
+            FightBattleUnitState source, FightBattleUnitState mover, int stepX, int stepY, int distance,
+            out FightKnockbackCollision collision)
+        {
+            if (distance <= 0 || Math.Abs(stepX) > 1 || Math.Abs(stepY) > 1 || stepX == 0 && stepY == 0)
+                throw new ArgumentOutOfRangeException(nameof(distance));
+            var path = new List<FightGridPoint> { new FightGridPoint(mover.X, mover.Y) };
+            collision = null;
+            for (int index = 0; index < distance; index++)
+            {
+                var start = path[path.Count - 1];
+                var next = new FightGridPoint(start.X + stepX, start.Y + stepY);
+                if (TryCreateAt(grid, units, source, mover, start, next, out collision)) break;
+                path.Add(next);
+            }
+            return path;
+        }
+
+        private static bool TryCreateAt(FightBattleGrid grid, IReadOnlyList<FightBattleUnitState> units,
+            FightBattleUnitState source, FightBattleUnitState mover, FightGridPoint start, FightGridPoint destination,
+            out FightKnockbackCollision collision)
+        {
             if (grid == null) throw new ArgumentNullException(nameof(grid));
             if (units == null) throw new ArgumentNullException(nameof(units));
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (mover == null) throw new ArgumentNullException(nameof(mover));
             collision = null;
-            var start = new FightGridPoint(mover.X, mover.Y);
             long dx = (long)destination.X - start.X, dy = (long)destination.Y - start.Y;
             if (Math.Abs(dx) > 1 || Math.Abs(dy) > 1 || dx == 0 && dy == 0)
                 throw new ArgumentException("A collision requires the next adjacent push position.", nameof(destination));

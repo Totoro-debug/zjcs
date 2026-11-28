@@ -362,3 +362,10 @@ unity/Assets/Game/Resources/Combat/repelling-wind-current-skill-graphs* -text
 unity/Assets/Game/Runtime/Presentation/Combat/Shaders/RepellingWindSkillGraph_* -text
 assets/reference/battle-animation/repelling-wind-current-skill-graphs-source-manifest.json text eol=lf
 scripts/prepare_repelling_wind_skill_graphs.py -text
+
+# Preserve the original Repelling Wind listener graph and source identities.
+unity/Assets/Official/Combat/RepellingWindStatusGraphs/** -text whitespace=-blank-at-eol
+unity/Assets/Official/Combat/RepellingWindStatusGraphs.meta -text
+unity/Assets/Game/Resources/Combat/repelling-wind-current-status-graphs* -text
+assets/reference/battle-animation/repelling-wind-current-status-graphs-source-manifest.json -text
+scripts/prepare_repelling_wind_status_graphs.py -text

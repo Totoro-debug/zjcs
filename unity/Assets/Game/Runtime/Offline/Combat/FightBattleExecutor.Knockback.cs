@@ -19,32 +19,41 @@ namespace Zjcs.Combat.Official
         {
             bool windBlade = hit.EntityId == 10641 && hit.DamageId == 10642 && move.MoveBehaviourId == 10643;
             bool unstableAura = hit.EntityId == 10851 && hit.DamageId == 10852 && move.MoveBehaviourId == 10853;
-            if (move.Distance != 1
+            if (move.Distance < 1
                 || move.OffsetX != 0 || move.OffsetY != 0 || statusCatalog == null || checkpoint.Grid == null
                 || movementStartContext == null
                 || !statusCatalog.UsesStandardKnockbackCollision(move.MoveBehaviourId)) return false;
             bool diagonal = stepX != 0 && stepY != 0;
             var start = new FightGridPoint(target.X, target.Y);
-            var desired = new FightGridPoint(start.X + stepX, start.Y + stepY);
-            if (!FightKnockbackCollision.TryCreate(checkpoint.Grid, units, actor, target, desired,
-                out FightKnockbackCollision collision))
+            var path = FightKnockbackCollision.Trace(checkpoint.Grid, units, actor, target,
+                stepX, stepY, move.Distance, out FightKnockbackCollision collision);
+            if (collision == null)
             {
-                if (!diagonal) return false;
+                if (!diagonal && move.Distance == 1) return false;
                 int index = movements.Count;
-                if (ApplyMovementPath(target, new[] { start, desired }, 1, movements))
+                if (ApplyMovementPath(target, path, path.Count - 1, movements))
                     ApplyMovementAction(movements, index, move, parent, originDelay: hitDelay);
                 return true;
             }
             var movementObserver = ImpactGate as IFightBattleBlockedMovementObserver;
             var impactObserver = ImpactGate as IFightBattleBlockedImpactObserver;
             bool observesContact = movementObserver != null && movementObserver.ObservesBlockedMovements && impactObserver != null;
-            if (!observesContact && (!unstableAura || ImpactGate != null)) return diagonal;
+            if (move.Distance == 1 && !observesContact && (!unstableAura || ImpactGate != null)) return diagonal;
 
-            var movement = new FightBattleMovementEvent { UnitId = target.Id,
-                HasDirection = true, Direction = target.Direction };
-            movement.Path.Add(start); movement.Path.Add(start);
             int movementIndex = movements.Count;
-            movements.Add(movement);
+            FightBattleMovementEvent movement;
+            if (path.Count > 1)
+            {
+                ApplyMovementPath(target, path, path.Count - 1, movements);
+                movement = movements[movementIndex];
+            }
+            else
+            {
+                movement = new FightBattleMovementEvent { UnitId = target.Id,
+                    HasDirection = true, Direction = target.Direction };
+                movement.Path.Add(start); movement.Path.Add(start);
+                movements.Add(movement);
+            }
             var context = movementStartContext;
             void ResolveCollision()
             {

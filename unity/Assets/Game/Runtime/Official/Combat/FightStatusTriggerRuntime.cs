@@ -890,6 +890,8 @@ namespace Zjcs.Combat.Official
                         || status.ForbiddenType != 0
                         || !status.HasMoveNear || !status.MoveNearRulesSupported
                         || !MoveNearEventEnabled(status, eventKind)
+                        || eventKind == MoveNearEventEnterRange && status.MoveNearEnterRangeCauseFilter != 0
+                            && (movement == null || (int)movement.MoveCause != status.MoveNearEnterRangeCauseFilter)
                         || status.MoveNearMaxCount >= 0
                             && status.MoveNearTriggeredCount >= status.MoveNearMaxCount
                         || status.MoveNearMaxCountEachRound > 0

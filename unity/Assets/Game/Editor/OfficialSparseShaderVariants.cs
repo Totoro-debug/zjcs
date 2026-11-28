@@ -23,8 +23,8 @@ namespace Zjcs.Editor
             ["Assets/Game/Resources/Dungeons/UI/884_156692/Native/Playables/Converted/59de19d261370c02.shader"] = 260,
             ["Assets/Game/Runtime/Official/World/NativeWater/Shaders/EnvironmentNoise.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Home/Shaders/FruitTree_59de19d261370c02.shader"] = 260,
-            ["Assets/Official/Home/DiningTable/Native/Converted/59de19d261370c02.shader"] = 260,
-            ["Assets/Official/Home/Bed/Native/Converted/59de19d261370c02.shader"] = 260,
+            ["Assets/Official/Home/DiningTable/Native/Converted/59de19d261370c02.shader"] = 272,
+            ["Assets/Official/Home/Bed/Native/Converted/59de19d261370c02.shader"] = 272,
             ["Assets/Official/Home/Airship/Native/Converted/59de19d261370c02.shader"] = 260,
             ["Assets/Official/Home/Cart/Native/Converted/59de19d261370c02.shader"] = 260,
             ["Assets/Official/Home/UI/CartWindows/Converted/59de19d261370c02.shader"] = 260,
@@ -61,6 +61,7 @@ namespace Zjcs.Editor
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/WaterVortexSkillGraph_Noise_Mask_Pro.shader"] = 272,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/MeteorFireSkillGraph_Noise_Mask_Pro.shader"] = 272,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/PotentialRebirthSkillGraph_Noise_Mask_Pro.shader"] = 272,
+            ["Assets/Game/Runtime/Presentation/Combat/Shaders/RepellingWindSkillGraph_Noise_Mask_Pro.shader"] = 272,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/FireLifeGraph_Noise_Mask_Pro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/FlameSoulGraph_Noise_Mask_Pro.shader"] = 260,
             ["Assets/Game/Runtime/Presentation/Combat/Shaders/HurricaneGriefGraph_Noise_Mask_Pro.shader"] = 260,
@@ -148,12 +149,12 @@ namespace Zjcs.Editor
                 stages += selection.PassCount * selection.Programs.Count * 2;
             }
             ValidateCoverage();
-            if (stages != 101336) throw new BuildFailedException("Original shader stage domain changed: " + stages);
+            if (stages != 102520) throw new BuildFailedException("Original shader stage domain changed: " + stages);
             Debug.Log("Original sparse shader domains validated: " + originalPrograms.Count + " assets / " + stages + " GPU stages.");
         }
 
         [MenuItem("Zjcs/Assets/Validate Original Sparse Shader Programs")]
-        public static void Validate() => ValidatePrograms(originalPrograms, 101336);
+        public static void Validate() => ValidatePrograms(originalPrograms, 102520);
 
         public static void ValidateCurrentSkillShaders()
         {
@@ -167,14 +168,14 @@ namespace Zjcs.Editor
 
         public static void ValidateHomeFurnitureShaders() => ValidatePrograms(originalPrograms.Where(row =>
             row.Key.StartsWith("Assets/Official/Home/", StringComparison.Ordinal))
-            .ToDictionary(row => row.Key, row => row.Value), 8320, validateProject: false);
+            .ToDictionary(row => row.Key, row => row.Value), 8416, validateProject: false);
 
         public static void ValidateDiningTableShaders()
         {
             ValidateCoverage();
             ValidatePrograms(originalPrograms.Where(row => row.Key.StartsWith(
                 "Assets/Official/Home/DiningTable/", StringComparison.Ordinal))
-                .ToDictionary(row => row.Key, row => row.Value), 1040, validateProject: false);
+                .ToDictionary(row => row.Key, row => row.Value), 1088, validateProject: false);
         }
 
         public static void ValidateProtectiveRunes() => ValidatePrograms(originalPrograms.Where(row =>

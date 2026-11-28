@@ -146,6 +146,18 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
         }
         return
     }
+    if ($PassiveId -eq 10566) {
+        foreach ($file in @('companion-cultivated-save.json','companion-repelling-wind-checkpoint.json',
+            'companion-repelling-wind-receipt.json','acquired-active-ui-passive-battle.png')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Missing cultivated repelling wind battle evidence.' }
+        }
+        $receipt = Get-Content (Join-Path $Run 'companion-repelling-wind-receipt.json') -Raw | ConvertFrom-Json
+        if ($receipt.procs -lt 1 -or $receipt.pushes -lt 1 -or $receipt.windDamage -lt 1 -or -not $receipt.restored -or
+            -not (Select-String -LiteralPath $runtimeLog -SimpleMatch '[Acquired passive combat] 10566 active entry, wind damage, knockback, cultivation and restore passed.')) {
+            throw 'Repelling wind did not exercise active entry, its cultivated wind hit, displacement and restoration.'
+        }
+        return
+    }
     if ($PassiveId -eq 10605) {
         foreach ($file in @('companion-cultivated-save.json','companion-ice-guardian-checkpoint.json',
             'companion-ice-guardian-receipt.json','acquired-active-ui-passive-battle.png')) {

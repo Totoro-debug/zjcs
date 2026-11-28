@@ -2598,6 +2598,8 @@ namespace Zjcs.Combat.Official
             List<FightBattleMovementEvent> movements, FightBattleSkillDefinition sourceSkill = null,
             bool activeMove = false, FightGridPoint? blockedPosition = null)
         {
+            if (movement != null)
+                movement.MoveCause = activeMove ? EEntityMoveCause.SelfMove : EEntityMoveCause.Displaced;
             if (statusCatalog == null || movement == null
                 || !unitById.TryGetValue(movement.UnitId, out FightBattleUnitState mover)) return;
             statusCatalog.ApplyMovementFacing(mover, movement);

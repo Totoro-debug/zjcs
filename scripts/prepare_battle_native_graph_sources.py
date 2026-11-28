@@ -57,6 +57,7 @@ def main():
         'mana-burst-current-skill-graphs',
         'extra-healing-current-skill-graphs',
         'doom-link-current-skill-graphs',
+        'repelling-wind-current-skill-graphs',
     )
     receipts = {
         'skill-native-graphs': 'skill-native-graph-assets-source-manifest',

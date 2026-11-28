@@ -2012,6 +2012,7 @@ namespace Zjcs.Combat.Official
     public sealed class FightBattleMovementEvent
     {
         public int UnitId;
+        public EEntityMoveCause MoveCause;
         public int MoveBehaviourId;
         public int MoveSkillEntityId;
         // Ordinary movement owns a separate skill entity before its action starts.

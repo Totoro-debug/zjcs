@@ -1184,6 +1184,12 @@ namespace Zjcs.Presentation.Home
                     yield return CaptureAcquiredActive(output, "passive-battle");
                     desperateValor.captured = capturedPassive = true;
                 }
+                if (passiveCompanion == 10566 && !capturedPassive && repellingWind.procs > 0
+                    && IsNativeSkillParticleVisible("playable11370"))
+                {
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    capturedPassive = true;
+                }
                 if (passiveCompanion == 10605 && !capturedPassive && iceGuardian.starts > 0
                     && IsNativeSkillParticleVisible("playable24390"))
                 {
@@ -1489,6 +1495,7 @@ namespace Zjcs.Presentation.Home
             if (passiveCompanion == 10605) CompleteAcquiredIceGuardian(capturedPassive);
             if (passiveCompanion == 10581) CompleteAcquiredPotentialRebirth(capturedPassive);
             if (passiveCompanion == 10577) CompleteAcquiredLightScorch(capturedPassive);
+            if (passiveCompanion == 10566) CompleteAcquiredRepellingWind(capturedPassive);
             Require(passiveCompanion != 10604 || capturedPassive
                 && File.Exists(Path.Combine(output, "companion-quick-casting-checkpoint.json")),
                 "The cultivated quick casting never reduced cooldowns and rendered its original opener.");
