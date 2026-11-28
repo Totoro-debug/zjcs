@@ -1,0 +1,72 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 11750,
+      "entity_resource": "Combat/FinalShadowSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11750/11750",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/FinalShadowSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11750/playable11750"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11751,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": true
+      },
+      "playables": [
+        {
+          "field": "myPlayable",
+          "resource": "Combat/FinalShadowSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11750/playable11751"
+        }
+      ],
+      "entity_resource": "Combat/FinalShadowSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11750/11751"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 11752,
+      "entity_prefab": "11750/11752.prefab",
+      "entity_prefab_sha256": "08586296ee85ebc5b8d9f2f95ec5436ee014a5da9031eca85496625cdd612c54",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/FinalShadowSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11720/playable_damage_11722"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/FinalShadowSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/FinalShadowSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/FinalShadowSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/FinalShadowSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11750/11752"
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 10840,
+      "entity_resource": "Combat/WaterSummonSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10840/10840",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/WaterSummonSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10840/playable10840"
+        }
+      ]
+    },
+    {
+      "skill_entity_id": 16250,
+      "entity_resource": "Combat/WaterSummonSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/16250/16250",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/WaterSummonSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/16250/playable16250"
+        }
+      ]
+    },
+    {
+      "skill_entity_id": 16260,
+      "entity_resource": "Combat/WaterSummonSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/16260/16260",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/WaterSummonSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/16260/playable16260"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 10841,
+      "client_type": "MyFightHitSummon",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/WaterSummonSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10840/10841"
+    },
+    {
+      "hit_entity_id": 16251,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [
+        {
+          "field": "myScopePlayable",
+          "resource": "Combat/WaterSummonSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/16250/playable16251"
+        }
+      ],
+      "entity_resource": "Combat/WaterSummonSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/16250/16251"
+    },
+    {
+      "hit_entity_id": 16261,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/WaterSummonSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/16260/16261"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 16252,
+      "entity_prefab": "16250/16252.prefab",
+      "entity_prefab_sha256": "955804b1fc3356b7802dfe57dd21bcc88ee0c870cf7ef960930a14c140d102bb",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": false,
+        "myHideDamage": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/WaterSummonSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/16250/16252"
+    },
+    {
+      "damage_entity_id": 16262,
+      "entity_prefab": "16260/16262.prefab",
+      "entity_prefab_sha256": "892dca8ca2dbabe2684ec1179bbd83644ab76da2439b1c2d47138fd3080ca697",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": false,
+        "myHideDamage": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/WaterSummonSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/16260/16262"
+    }
+  ]
+}

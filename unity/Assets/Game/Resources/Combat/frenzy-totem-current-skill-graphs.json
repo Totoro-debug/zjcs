@@ -1,0 +1,108 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 12060,
+      "entity_resource": "Combat/FrenzyTotemSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12060/12060",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/FrenzyTotemSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12060/playable12060"
+        }
+      ]
+    },
+    {
+      "skill_entity_id": 56790,
+      "entity_resource": "Combat/FrenzyTotemSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/56790/56790",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/FrenzyTotemSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/56790/playable56790"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 12061,
+      "client_type": "MyFightHitSummon",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/FrenzyTotemSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12060/12061"
+    },
+    {
+      "hit_entity_id": 12063,
+      "client_type": "MyFightHitCustomTarget",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/FrenzyTotemSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12060/12063"
+    },
+    {
+      "hit_entity_id": 56791,
+      "client_type": "MyFightHitRandomTarget",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/FrenzyTotemSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/56790/56791"
+    },
+    {
+      "hit_entity_id": 56792,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/FrenzyTotemSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/56790/56792"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 56793,
+      "entity_prefab": "56790/56793.prefab",
+      "entity_prefab_sha256": "6ab6e6e526bc36862d8dd065c330873a3fb56017f8b870ac0bad4eff364b8a8d",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": false,
+        "myHideDamage": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/FrenzyTotemSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/56790/56793"
+    }
+  ]
+}

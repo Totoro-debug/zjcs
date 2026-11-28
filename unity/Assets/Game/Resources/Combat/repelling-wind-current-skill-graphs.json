@@ -1,0 +1,82 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 11370,
+      "entity_resource": "Combat/RepellingWindSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11370/11370",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/RepellingWindSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11370/playable11370"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11371,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/RepellingWindSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11370/11371"
+    }
+  ],
+  "moves": [
+    {
+      "action_entity_id": 11373,
+      "entity_resource": "Combat/RepellingWindSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11370/11373",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/RepellingWindSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11370/playable11373_move"
+        },
+        {
+          "field": "BlockPlayablePrefab",
+          "resource": "Combat/RepellingWindSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_move_blocked"
+        }
+      ]
+    }
+  ],
+  "damages": [
+    {
+      "damage_entity_id": 11372,
+      "entity_prefab": "11370/11372.prefab",
+      "entity_prefab_sha256": "84e89280b21caeda20fe0ba02872536720619e7c63bf87f127b2807ca2e3b6cd",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/RepellingWindSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11370/playable11372"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/RepellingWindSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/RepellingWindSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/RepellingWindSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/RepellingWindSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11370/11372"
+    }
+  ]
+}
