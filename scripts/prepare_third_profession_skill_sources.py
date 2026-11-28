@@ -154,14 +154,16 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
         expected_properties = [expected_by_id[row['EntityId']] for row in expected_properties]
         assert sorted(properties, key=lambda row: row['EntityId']) == sorted(expected_properties, key=lambda row: row['EntityId']), 'Current entity cultivation properties changed'
         group_ids = {row['GroupLevelPropId'] for row in properties}
-        if passive_pack is None:
+        # Status-only secrets obtain cultivation from their EC entities. An empty
+        # PassivePropFactors map does not read the item's passive numeric group.
+        if passive_pack is None and current['PassivePropFactors']:
             group_ids.add(current['PassiveGroupLevelPropId'])
         groups = [row for row in table('entity_prop_group_level', mappings['entity_prop_group_level']) if row['GroupId'] in group_ids]
         expected_groups = [row for row in skill_rules['tables']['entity_prop_group_level'] if row['GroupId'] in group_ids]
         assert sorted(groups, key=lambda row: (row['GroupId'],row['SubRank'])) == sorted(expected_groups, key=lambda row: (row['GroupId'],row['SubRank'])), 'Current cultivation groups changed'
         prop_ids = {row['LevelPropId'] for row in groups}
         prop_ids.update(row[key] for row in properties for key in ('RankPropId','SubRankPropId'))
-        if passive_pack is None:
+        if passive_pack is None and current['PassivePropFactors']:
             prop_ids.update(current[key] for key in ('PassiveRankPropId','PassiveRankFactorId'))
         prop_ids.discard(0)
         verified_props = apk.reader.read('WwiseBnk', 'wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile')

@@ -52,6 +52,14 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -eq 10527) {
+        foreach ($file in @('companion-summon-fury-checkpoint.json','companion-summon-fury-receipt.json','acquired-active-ui-opening.png','acquired-active-ui-battle.png')) {
+            if (-not(Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Summon Fury original summon or damage evidence is missing.' }
+        }
+        $fury = Get-Content (Join-Path $Run 'companion-summon-fury-receipt.json') -Raw | ConvertFrom-Json
+        if ($fury.summons -lt 1 -or $fury.comparisons -lt 1 -or -not $fury.restored -or -not $fury.captured) { throw 'Summon Fury lost its actual attack bonus, original damage or restoration.' }
+        return
+    }
     if ($PassiveId -eq 10545) {
         foreach ($file in @('companion-soul-splash-checkpoint.json','companion-soul-splash-receipt.json',
             'acquired-active-ui-splash-formation.png','acquired-active-ui-passive-battle.png')) {
