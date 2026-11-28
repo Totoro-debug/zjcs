@@ -10,7 +10,7 @@ from prepare_current_battle_hud import work_directory
 from validation_assemblies import stage_runtime_modules
 
 
-def stage(work):
+def stage(work, npc_source=None):
     work = work_directory(work)
     project = prepare(work)
     runtime = ROOT/'unity/Assets/Game/Runtime'
@@ -51,13 +51,32 @@ def stage(work):
     obsolete = project/'Assets/Game/Editor/BattleMovementEffects'
     if not obsolete.resolve().is_relative_to(work): raise ValueError('Unexpected validation editor directory')
     shutil.rmtree(obsolete)
-    portraits = project/'Assets/Resources/RoundTest'; portraits.mkdir(parents=True, exist_ok=True)
-    for npc_id in (8411,11001,11002):
-        path, = (ROOT/'unity/Assets/Official/Combat/HUD/Sprites').glob('npc_icon_'+str(npc_id)+'-*.png')
-        shutil.copyfile(path, portraits/('Npc_'+str(npc_id)+'.png'))
-        shutil.copyfile(Path(str(path)+'.meta'), portraits/('Npc_'+str(npc_id)+'.png.meta'))
     editor = project/'Assets/Editor'; editor.mkdir(exist_ok=True)
-    shutil.copyfile(ROOT/'scripts/fixtures/battle_round_ui_native_validation.cs', editor/'CurrentRoundUiValidation.cs')
+    fixture = (ROOT/'scripts/fixtures/battle_round_ui_native_validation.cs').read_text('utf-8-sig')
+    canonical = Path(npc_source) if npc_source else ROOT/'assets/reference/npc-icons-source-manifest.json'
+    if canonical.exists():
+        npc = json.loads(canonical.read_bytes())
+        rows = {row['path']:row for row in npc['outputs']}
+        selected_inputs = [name for name in rows if name.startswith('unity/Assets/Official/Shared/NpcImages') or name.startswith('unity/Assets/Official/Combat/NpcPortraits/Resources/') or name.startswith('unity/Assets/Game/Resources/Partners/OfficialPartnerNpcIconImages.asset')]
+        for name in selected_inputs:
+            row = rows[name]; source = ROOT/row.get('staged',name)
+            target = project/Path(name).relative_to('unity'); target.parent.mkdir(parents=True,exist_ok=True)
+            shutil.copyfile(source,target)
+            meta_name = name+'.meta'
+            if not name.endswith('.meta') and meta_name not in rows and (ROOT/meta_name).is_file():
+                shutil.copyfile(ROOT/meta_name,Path(str(target)+'.meta'))
+        source = ROOT/'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNpcPortraitCatalog.cs'
+        shutil.copyfile(source,editor/source.name); shutil.copyfile(Path(str(source)+'.meta'),editor/(source.name+'.meta'))
+        original = 'Resources.Load<Sprite>("RoundTest/Npc_" + id)'
+        if fixture.count(original) != 1: raise ValueError('Review the native round NPC fixture lookup')
+        fixture = fixture.replace(original,'Zjcs.Presentation.Combat.OfficialBattleNpcPortraitCatalog.Load().Find(id)')
+    else:
+        portraits = project/'Assets/Resources/RoundTest'; portraits.mkdir(parents=True, exist_ok=True)
+        for npc_id in (8411,11001,11002):
+            path, = (ROOT/'unity/Assets/Official/Combat/HUD/Sprites').glob('npc_icon_'+str(npc_id)+'-*.png')
+            shutil.copyfile(path,portraits/('Npc_'+str(npc_id)+'.png'))
+            shutil.copyfile(Path(str(path)+'.meta'),portraits/('Npc_'+str(npc_id)+'.png.meta'))
+    (editor/'CurrentRoundUiValidation.cs').write_text(fixture,encoding='utf-8')
     (editor/'RoundUiValidation.asmdef').write_text(json.dumps(dict(name='RoundUiValidation', includePlatforms=['Editor'],
         references=sorted(selected|{'Unity.ugui'})),indent=2),encoding='utf-8')
     print('Prepared current round UI:',len(selected),'assemblies;',project,flush=True)
