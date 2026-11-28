@@ -82,7 +82,7 @@ namespace Zjcs.Presentation.Combat
             using (var sha = SHA256.Create())
                 hash = BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(itemQualities.text)))
                     .Replace("-", "").ToLowerInvariant();
-            if (receipt == null || receipt.manifest != "854_156383" || receipt.output_sha256 != hash
+            if (receipt == null || receipt.manifest != "911_156995" || receipt.output_sha256 != hash
                 || data == null || data.manifest != receipt.manifest || data.items == null)
                 throw new InvalidOperationException("Official skill quality source hashes differ.");
             var loaded = new Dictionary<int, int>();

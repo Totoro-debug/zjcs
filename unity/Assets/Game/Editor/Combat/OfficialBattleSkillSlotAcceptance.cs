@@ -16,7 +16,7 @@ namespace Zjcs.Editor.Combat
         public static void Run()
         {
             OfficialBattleSkillQualityAcceptance.Run();
-            var canvas = new GameObject("BattleSkillSlotFixture", typeof(RectTransform), typeof(Canvas));
+            var canvas = new GameObject("BattleSkillSlotFixture", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
             canvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
             try
             {
