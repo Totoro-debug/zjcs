@@ -91,10 +91,10 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
             skill_rules['tables'][name] = list(by_key.values())
         pack_summons = {row['EntityId'] for row in pack['tables'].get('summon_monster_fix_prop', ())}
         if pack_summons:
-            assert pack_summons <= selected_summons, 'Undeclared summon inheritance entities'
+            assert relative in dependencies or pack_summons <= selected_summons, 'Undeclared summon inheritance entities'
             from verify_current_summon_properties import verify as verify_summon_properties
             summon_inputs.append(verify_summon_properties(sorted(pack_summons), relative))
-            verified_summons.update(pack_summons)
+            verified_summons.update(pack_summons & selected_summons)
         skill_rules['props'].update(pack['props'])
         selected_packs = baseline_packs if relative in dependencies else rule_packs
         selected_packs.append(dict(payload=identity(path), receipt=identity(proof_path), manifest=pack['manifest']))

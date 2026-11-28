@@ -68,9 +68,23 @@ def build(item, spec_path=None):
             return json.loads(json.dumps(constructors.table(raw, mappings[name])))
         props = [row for row in table('entity_prop') if str(row['EntityId']) in wanted]
         group_ids = {row['GroupLevelPropId'] for row in props}
+        summon_tables = {}
+        summon_ids = set(spec.get('summon_inheritance_entities', ()))
+        if summon_ids:
+            assert spec.get('scope_numeric') and all(str(value) in wanted for value in summon_ids)
+            fixed = [row for row in table('summon_monster_fix_prop') if row['EntityId'] in summon_ids]
+            additions = [row for row in table('summon_monster_add_prop') if row['ClassId'] in summon_ids]
+            assert {row['EntityId'] for row in fixed} == summon_ids
+            assert {row['ClassId'] for row in additions} == summon_ids
+            rank_groups = {row['RankGroup'] for row in additions}
+            summon_tables = dict(summon_monster_fix_prop=fixed, summon_monster_add_prop=additions,
+                                 summon_rank_additive_factor=[row for row in table('summon_rank_additive_factor')
+                                                              if row['RankGroup'] in rank_groups])
+            group_ids.update(row['GroupLevelPropId'] for row in fixed)
         groups = [row for row in table('entity_prop_group_level') if row['GroupId'] in group_ids]
         prop_ids = {row['LevelPropId'] for row in groups}
         prop_ids.update(row[key] for row in props for key in ('RankPropId', 'SubRankPropId'))
+        prop_ids.update(row['RankPropId'] for row in summon_tables.get('summon_monster_fix_prop', ()))
         prop_ids.discard(0)
         raw = apk.reader.read('WwiseBnk', 'wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile')
         inputs.append(dict(source=dict(raw.provenance), payload_sha256=sha(raw.data)))
@@ -126,7 +140,7 @@ def build(item, spec_path=None):
         damage_ids = {component['DamageId'] for value in entities.values()
                       for name, component in value.items()
                       if name.startswith('FightHit') and name.endswith('Component')
-                      and 'DamageId' in component}
+                      and component.get('DamageId', 0) > 0}
         assert visibility.keys() == damage_ids, ('Missing native damage display binding', damage_ids - visibility.keys())
         # Shared cultivation tables must stay unchanged for existing migrations.
         if not spec.get('scope_numeric'):
@@ -134,7 +148,7 @@ def build(item, spec_path=None):
             assert groups == [row for row in skill['tables']['entity_prop_group_level'] if row['GroupId'] in group_ids], 'Shared cultivation groups changed'
         result = dict(manifest=apk.version, item_id=item, entities=entities,
                       previous_entities={key: previous.get(key) for key in sorted(wanted)},
-                      tables=dict(entity_prop=props, entity_prop_group_level=groups), props=values,
+                      tables=dict(entity_prop=props, entity_prop_group_level=groups, **summon_tables), props=values,
                       damage=[visibility[key] for key in sorted(visibility)])
         if spec.get('scope_numeric'):
             result['scope_numeric'] = True
