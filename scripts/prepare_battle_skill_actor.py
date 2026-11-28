@@ -20,7 +20,8 @@ from verify_current_summon_properties import verify as verify_summon_properties
 
 def build(entity, *, cache, destination, resource_root, receipt_prefix, generator,
           lifecycle_names=None, combat_tables=None, verify_inherited_properties=True,
-          reuse_verified_shader=True, reuse_verified_playable_shader=True, entity_paths=None):
+          reuse_verified_shader=True, reuse_verified_playable_shader=True, entity_paths=None,
+          inheritance_rule_pack=None, isolate_animator_guids=False):
     work = validation_directory()
     source = OfficialSource()
     managed = cache / 'inputs/Managed'
@@ -30,7 +31,7 @@ def build(entity, *, cache, destination, resource_root, receipt_prefix, generato
     def receipt(kind):
         return receipts / (receipt_prefix + '-current-' + kind + '-source-manifest.json')
 
-    summon_properties = verify_summon_properties([entity]) if verify_inherited_properties else None
+    summon_properties = verify_summon_properties([entity], rule_pack=inheritance_rule_pack) if verify_inherited_properties else None
     template_record = json.loads((receipts / 'live-monsters-source-manifest.json').read_bytes())['serializer_template_source']
     template = ROOT / template_record['path']
     if identity(template)['sha256'] != template_record['sha256']:
@@ -44,7 +45,7 @@ def build(entity, *, cache, destination, resource_root, receipt_prefix, generato
     model_receipt = receipt('actor')
     install_model(destination=destination, receipt_path=model_receipt, resource_path=resource_root + '/catalog',
         presentation_resource_root=resource_root, reuse_verified_shader=reuse_verified_shader,
-        shader_cache=cache / 'all-assets/windows-shaders')
+        shader_cache=cache / 'all-assets/windows-shaders', isolate_animator_guids=isolate_animator_guids)
     appearance_receipt = receipt('appearance')
     appearance = build_appearance([entity], destination=destination, native_root=destination,
         model_receipt=model_receipt, catalog_path='Resources/' + resource_root + '/appearance.asset',

@@ -3,6 +3,7 @@ import copy
 import hashlib
 import json
 from pathlib import Path
+import re
 import shutil
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / ".tools/python-packages"))
@@ -14,7 +15,8 @@ from prepare_battle_live_monsters import sha, encoded
 
 
 def build(*, destination=None, resource_path="Combat/NativeMonsters/catalog", receipt_path=None,
-          reuse_verified_shader=False, presentation_resource_root=None, shader_cache=None):
+          reuse_verified_shader=False, presentation_resource_root=None, shader_cache=None,
+          isolate_animator_guids=False):
     work = validation_directory()
     source = work / "live-monsters"
     proof_path = work / "live-monsters-source-manifest.json"
@@ -70,12 +72,28 @@ def build(*, destination=None, resource_path="Combat/NativeMonsters/catalog", re
                 textures[identity] = dict(file=relative, mips=mips, profile=profile, rgba_sha256=sha(rgba), source=original)
             row["file"] = textures[identity]["file"]
             row.pop("imageBytes")
+    animator_guids = {}
+    if isolate_animator_guids:
+        for file in proof["outputs"]:
+            if file.startswith("animators/") and file.endswith(".meta"):
+                original, = re.findall(r"(?m)^guid: ([0-9a-f]{32})$", (source / file).read_text("utf-8"))
+                relocated = sha(("zjcs:installed-monster-animator:" +
+                    (destination / file.removesuffix(".meta")).relative_to(ROOT).as_posix()).encode())[:32]
+                if original in animator_guids:
+                    raise ValueError("Duplicate verified monster Animator identity")
+                animator_guids[original] = relocated
     for file in proof["outputs"]:
         if file.startswith("animators/") and not file.endswith(".meta"):
             target = destination / file
             target.parent.mkdir(parents=True, exist_ok=True)
             for item in (file, file + ".meta"):
                 raw = (source / item).read_bytes()
+                if isolate_animator_guids:
+                    def relocate(match):
+                        if match[1] not in animator_guids:
+                            raise ValueError("Unbound original monster Animator reference: " + match[1])
+                        return "guid: " + animator_guids[match[1]]
+                    raw = re.sub(r"guid: ([0-9a-f]{32})", relocate, raw.decode("utf-8")).encode("utf-8")
                 installed = destination / item
                 if installed.exists() and installed.read_bytes() != raw: raise ValueError("Preserve changed original monster Animator")
                 installed.write_bytes(raw)
@@ -135,7 +153,11 @@ def build(*, destination=None, resource_path="Combat/NativeMonsters/catalog", re
                if parent.is_relative_to(destination)}
     for folder in sorted(folders):
         sidecar = Path(str(folder) + ".meta")
-        if not sidecar.exists(): meta(folder, folder=True)
+        if not sidecar.exists():
+            meta(folder, folder=True)
+            with sidecar.open("a", encoding="utf-8", newline="\n") as stream:
+                stream.write("DefaultImporter:\n  externalObjects: {}\n  userData: \n"
+                             "  assetBundleName: \n  assetBundleVariant: \n")
         outputs[sidecar.relative_to(ROOT).as_posix()] = sha(sidecar.read_bytes())
     receipt = dict(manifest=apk.version, source_extraction=proof, generator_sha256=sha(Path(__file__).read_bytes()),
         implementation={path: sha((ROOT / path).read_bytes()) for path in (
@@ -150,6 +172,8 @@ def build(*, destination=None, resource_path="Combat/NativeMonsters/catalog", re
             converter_sha256=sha((ROOT / "scripts/prepare_unity_map13_native_scene.py").read_bytes())),
         shader=dict(receipt_sha256=sha(shader_proof.read_bytes()), source=shader, additional_sources=additional_shaders), textures=textures, outputs=outputs,
         operation="Preserve full original skeletons, controller closure, prefab bindings and materials. Decode every original ASTC mip to native Unity RGBA32, retaining source texture flags, mip count, color space and sampling. Explicitly bind local Unity assets; no sampled mesh animation.")
+    if isolate_animator_guids:
+        receipt["installed_animator_guid_remap"] = animator_guids
     receipt_path.write_bytes(encoded(receipt))
     apk.archive.close()
     print("Installed original live monsters:", len(catalog["models"]), "textures:", len(textures), "files:", len(outputs))
