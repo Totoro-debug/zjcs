@@ -37,6 +37,13 @@ namespace Zjcs.Editor.Combat
         [MenuItem("Zjcs/Combat/Import and Validate Official HUD")]
         public static void ImportAndValidate()
         {
+            if (Directory.Exists("Assets/Official/Combat/HUD/Images")
+                || File.Exists(OfficialCurrentNativeImageValidation.HudReceipt))
+            {
+                AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+                ValidateRenderer();
+                return;
+            }
             TextAsset runtime = AssetDatabase.LoadAssetAtPath<TextAsset>(RuntimePath);
             TextAsset original = AssetDatabase.LoadAssetAtPath<TextAsset>(OriginalPath);
             TextAsset sourceManifest = AssetDatabase.LoadAssetAtPath<TextAsset>(SourceManifestPath);

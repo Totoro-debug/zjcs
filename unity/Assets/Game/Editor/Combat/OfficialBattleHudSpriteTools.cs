@@ -17,6 +17,13 @@ namespace Zjcs.Editor.Combat
         [MenuItem("Zjcs/Combat/Restore Official HUD Sprite Metadata")]
         public static void Restore()
         {
+            if (Directory.Exists("Assets/Official/Combat/HUD/Images")
+                || File.Exists(OfficialCurrentNativeImageValidation.HudReceipt))
+            {
+                AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+                Validate();
+                return;
+            }
             var sources = Sources();
             int changed = 0;
             foreach (KeyValuePair<string, BattleHudNode> pair in sources)
@@ -62,9 +69,15 @@ namespace Zjcs.Editor.Combat
         public static void Validate()
         {
             var catalog = OfficialBattleHudCatalog.LoadDefault();
+            var current = OfficialCurrentNativeImageValidation.ValidateAll();
             foreach (KeyValuePair<string, BattleHudNode> pair in Sources())
             {
                 Sprite sprite = catalog.FindSprite(pair.Key);
+                if (current.ByAlias.TryGetValue(pair.Key, out Sprite native))
+                {
+                    if (sprite != native) throw new InvalidDataException("Current native HUD Sprite binding changed: " + pair.Key);
+                    continue;
+                }
                 BattleHudNode node = pair.Value;
                 if (sprite == null || sprite.rect.width != node.image_sprite_width || sprite.rect.height != node.image_sprite_height
                     || sprite.border != Border(node) || Vector2.Distance(sprite.pivot, new Vector2(node.image_sprite_pivot[0], node.image_sprite_pivot[1])) > .001f

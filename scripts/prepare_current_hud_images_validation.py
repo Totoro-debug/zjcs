@@ -11,9 +11,12 @@ from prepare_current_round_ui_validation import stage
 
 
 def prepare(work):
-    proof = json.loads((work/'current-hud-images-source-manifest.json').read_bytes())
+    proof_path = work/'current-hud-images-source-manifest.json'
+    if not proof_path.exists():
+        proof_path = ROOT/'assets/reference/battle-hud/current-images-source-manifest.json'
+    proof = json.loads(proof_path.read_bytes())
     project = stage(work)
-    staged = {row['path']:ROOT/row['staged'] for row in proof['outputs']}
+    staged = {row['path']:ROOT/row.get('staged',row['path']) for row in proof['outputs']}
     metas = subprocess.check_output(['rg','--no-heading','--with-filename',r'^guid: [a-f0-9]{32}\r?$',
         'unity/Assets','unity/Library/PackageCache','-g','*.meta'],cwd=ROOT,text=True,encoding='utf-8').splitlines()
     index = {}

@@ -29,6 +29,7 @@ namespace Zjcs.Editor.Combat
         [MenuItem("Zjcs/Combat/Validate NPC Timeline Portraits")]
         public static void Validate()
         {
+            var current = OfficialCurrentNativeImageValidation.Validate(OfficialCurrentNativeImageValidation.NpcReceipt);
             var source = JsonUtility.FromJson<Source>(Resources.Load<TextAsset>("Combat/battle-npc-portraits").text);
             OfficialBattleNpcPortraitCatalog catalog = OfficialBattleNpcPortraitCatalog.Load();
             if (catalog.bindings.Length != source.bindings.Length)
@@ -47,6 +48,13 @@ namespace Zjcs.Editor.Combat
                 }
                 Image image = images[row.sprite];
                 Sprite sprite = binding.sprite;
+                if (current.ByPath.TryGetValue(row.sprite, out Sprite native))
+                {
+                    if (sprite != native || catalog.Find(row.npcClassId) != native
+                        || AssetDatabase.AssetPathToGUID(row.sprite) != image.guid || sprite.name != image.name)
+                        throw new InvalidDataException("Current native NPC portrait mapping changed: " + row.npcClassId);
+                    continue;
+                }
                 var importer = AssetImporter.GetAtPath(row.sprite) as TextureImporter;
                 using (SHA256 hash = SHA256.Create())
                     if (BitConverter.ToString(hash.ComputeHash(File.ReadAllBytes(row.sprite))).Replace("-", "").ToLowerInvariant() != image.sha256)
