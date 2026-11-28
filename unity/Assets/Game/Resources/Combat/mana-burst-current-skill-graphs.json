@@ -1,0 +1,136 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 11390,
+      "entity_resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11390/11390",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11390/playable11390"
+        }
+      ]
+    },
+    {
+      "skill_entity_id": 12560,
+      "entity_resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12560/12560",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11360/playable11360"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11391,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [
+        {
+          "field": "myPlayable",
+          "resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11390/playable11391_1"
+        },
+        {
+          "field": "SourceToMePlayable",
+          "resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11390/playable11391_2"
+        }
+      ],
+      "entity_resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11390/11391"
+    },
+    {
+      "hit_entity_id": 12561,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12560/12561"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 11392,
+      "entity_prefab": "11390/11392.prefab",
+      "entity_prefab_sha256": "558e8ac6c9b171efc6862ac39d68e5b4cc830a0c45f8c56a34f088f3e7cdf203",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11390/playable_damage_11392"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11390/11392"
+    },
+    {
+      "damage_entity_id": 10027,
+      "entity_prefab": "Global/10027.prefab",
+      "entity_prefab_sha256": "231b0981ede1cc500b5de91d0881cbad28d13cef507f88dc42f7f5405a864e56",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage_dark_HitEffect"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/ManaBurstSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/Global/10027",
+      "skill_item_ids": [
+        10064
+      ]
+    }
+  ]
+}

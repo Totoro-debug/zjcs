@@ -279,6 +279,14 @@
     {
       "path": "assets/reference/battle-animation/abyssal-hand-current-skill-graphs-source-manifest.json",
       "sha256": "aff38d9a1d345f26c70b59c23ee3e61d1ddaac62dec17eb7da2b337f949e4bb6"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/mana-burst-current-skill-graphs.json",
+      "sha256": "65b844332dbe6181a9ccf73383f247f7861082a9d9e5d9120b43efb591da6cb7"
+    },
+    {
+      "path": "assets/reference/battle-animation/mana-burst-current-skill-graphs-source-manifest.json",
+      "sha256": "f450c5ae78b0ed8980c8fa7a98ce4690383f3cee873396649f92a9929a9a1de7"
     }
   ],
   "outputs": [
@@ -563,8 +571,16 @@
       "sha256": "1f55a4490f86c752c5d7776e93ccf7550b9ed5e5431b539959fe418a187a85cd"
     },
     {
+      "path": "unity/Assets/Game/Resources/Combat/mana-burst-current-skill-graphs-source-manifest.json",
+      "sha256": "93b68ffecac55cc053b96a2d1b473adf630dbd9e69cc87d80b206061365a14cd"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/mana-burst-current-skill-graphs-source-manifest.json.meta",
+      "sha256": "10c996888ea8dde824a224b5cb2674b36ad931bd4f184970040fdc0efa09eb6e"
+    },
+    {
       "path": "unity/Assets/Game/Resources/Combat/skill-native-graph-sources.json",
-      "sha256": "6abae872ca0de44553bbd10b8e3e80aa4a186f3f310a8372c50116e70d3fe9a6"
+      "sha256": "b11958af756753fb6273d7b1c48245830feaa2de1c573c1bab8fa5208fa0a97b"
     },
     {
       "path": "unity/Assets/Game/Resources/Combat/skill-native-graph-sources.json.meta",
@@ -573,7 +589,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_native_graph_sources.py",
-    "sha256": "f238806ee2175fa9213d5917cfe3ead5f81b3ced93637f5d025d07f447d29f2e"
+    "sha256": "2d7070c25f0c05d771e316fa181851e2277d22b034633dd313feb0ebe9423bef"
   },
   "runtime": [
     {

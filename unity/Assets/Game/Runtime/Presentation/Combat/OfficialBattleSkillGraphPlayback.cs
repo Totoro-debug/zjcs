@@ -232,6 +232,7 @@ namespace Zjcs.Presentation.Combat
                 "Combat/soul-guardian-current-status-graphs",
                 "Combat/soul-splash-current-status-graphs",
                 "Combat/abyssal-hand-current-status-graphs",
+                "Combat/mana-burst-current-status-graphs",
                 "Combat/potential-rebirth-current-status-graphs", "Combat/quick-casting-current-status-graphs",
                 "Combat/light-scorch-current-status-graphs", "Combat/divine-thunder-current-status-graphs", "Combat/ice-guardian-current-status-graphs", "Combat/water-vortex-current-status-graphs");
             statusViews.Restore();

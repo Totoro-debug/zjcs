@@ -235,27 +235,30 @@ namespace Zjcs.Editor.Combat
             targetRole.FireDamageEvent(null); sourceRole.FireHitEvent(null);
             targetRole.OnDamage += onDamage; sourceRole.OnHit += onHit;
             damages = new OfficialBattleDamageEntityPlayback(root, root.GetComponentInChildren<MyContainer>(), services, scope);
-            var scopedCatalog = Resources.Load<TextAsset>("Combat/soul-splash-current-skill-graphs");
-            if (scopedCatalog)
+            foreach (var selection in new[] {
+                new { Catalog = "Combat/soul-splash-current-skill-graphs", Shared = "Combat/conqueror-passive-current-skill-graphs", Item = 10545, Damage = 10023 },
+                new { Catalog = "Combat/mana-burst-current-skill-graphs", Shared = "Combat/skill-native-graphs", Item = 10064, Damage = 10027 } })
             {
+                var scopedCatalog = Resources.Load<TextAsset>(selection.Catalog);
+                if (!scopedCatalog) continue;
                 var current = JsonUtility.FromJson<Catalog>(scopedCatalog.text).damages
-                    .Single(binding => binding.damage_entity_id == 10023);
+                    .Single(binding => binding.damage_entity_id == selection.Damage);
                 var currentPrefab = Resources.Load<GameObject>(current.entity_resource).GetComponent<MyFightDamage>();
                 var sharedCatalog = JsonUtility.FromJson<Catalog>(Resources.Load<TextAsset>(
-                    "Combat/conqueror-passive-current-skill-graphs").text);
-                var shared = sharedCatalog.damages.Single(binding => binding.damage_entity_id == 10023);
+                    selection.Shared).text);
+                var shared = sharedCatalog.damages.Single(binding => binding.damage_entity_id == selection.Damage);
                 var sharedPrefab = Resources.Load<GameObject>(shared.entity_resource).GetComponent<MyFightDamage>();
                 Require(currentPrefab.myCommonPlayable != sharedPrefab.myCommonPlayable,
-                    "The scoped regression requires distinct current and historical fire graph payloads.");
+                    "The scoped regression requires distinct current and historical native graph payloads.");
                 var scopedPool = new Dictionary<int, MyEntity>();
-                foreach (int item in new[] { 0, 10545, 0, 10545 })
+                foreach (int item in new[] { 0, selection.Item, 0, selection.Item })
                 {
                     played.Clear(); services.Notifications.Clear();
-                    var state = new OfficialBattleDamageEntityData(new EcEntityIdentifier(7, ++serial), 10023,
+                    var state = new OfficialBattleDamageEntityData(new EcEntityIdentifier(7, ++serial), selection.Damage,
                         skillEntity.Id, targetEntity.Id, false, false, false,
                         target.localPosition, Quaternion.identity, Vector3.one, new Grid());
                     var entity = damages.Create(state, skillItemId: item);
-                    var expected = item == 10545 ? currentPrefab : sharedPrefab;
+                    var expected = item == selection.Item ? currentPrefab : sharedPrefab;
                     var view = entity.GetComponent<MyFightDamage>();
                     Require(view.myCommonPlayable == expected.myCommonPlayable
                         && view.myDamagePlayable == expected.myDamagePlayable
@@ -266,19 +269,20 @@ namespace Zjcs.Editor.Combat
                         Require(ReferenceEquals(prior, entity), "Each skill scope retains its original FIFO pool.");
                     scopedPool[item] = entity;
                     if (scopedPool.Count == 2)
-                        Require(!ReferenceEquals(scopedPool[0], scopedPool[10545]),
+                        Require(!ReferenceEquals(scopedPool[0], scopedPool[selection.Item]),
                             "Shared damage identities must not mix native instances between skill scopes.");
                     Require(damages.Count == 1 && damages.GetEntity(state.Id) == entity
                         && services.Notifications.SequenceEqual(new[] { "target", "source" }),
                         "Scoped native damage retains live identity and original role notifications.");
                     for (int frame = 0; frame < 15; frame++) { scope.Tick(1f / 60f); yield return null; }
-                    if (item == 10545) Capture("damage-scoped-fire-10545.png");
+                    if (item == selection.Item) Capture("damage-scoped-" + selection.Item + ".png");
                     damages.Remove(state.Id);
                     Require(damages.Count == 0 && damages.GetEntity(state.Id) == null && !entity.gameObject.activeSelf,
                         "Scoped native damage removes the correct instance to its own pool.");
                     for (int frame = 0; frame < 45; frame++) { scope.Tick(1f / 60f); yield return null; }
                 }
-                Debug.Log("Scoped native damage passed: current and historical fire bindings, role notifications, isolated FIFO reuse and rendered current fire graph.");
+                Debug.Log("Scoped native damage passed: skill=" + selection.Item
+                    + ", current and historical bindings, role notifications, isolated FIFO reuse and rendered current graph.");
             }
             var catalog = JsonUtility.FromJson<Catalog>(Resources.Load<TextAsset>("Combat/skill-native-graphs").text);
             Require(catalog.damages.Length == 1368, "Complete selected original damage entity catalog, including Global.");

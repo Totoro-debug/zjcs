@@ -1,0 +1,43 @@
+{
+  "entities": [
+    11390,
+    11391,
+    11392,
+    24474,
+    12560,
+    12561,
+    10027
+  ],
+  "code": [
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "FightStatusComponentInfo",
+    "FightStatusRoundStartComponentInfo",
+    "FightGameplayTagComponentInfo",
+    "BattleFormulaHandler",
+    "SkillPropChunck",
+    "LevelPropParser"
+  ],
+  "rule_pack_fragments": [
+    "FightSkill_part2.g.bytes",
+    "FightSkill_part68.g.bytes",
+    "FightSkill_part127.g.bytes",
+    "FightSkill_part724.g.bytes"
+  ],
+  "visibility_bundles": [
+    "11390",
+    "24474",
+    "12560",
+    "defaultpackage_assets_prefabs_ecentity_fight_fightskill_global_10027.bundle"
+  ],
+  "scope_numeric": true,
+  "current_managed_views": true,
+  "runtime_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10064.json"
+  ],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/mana-burst-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/mana-burst-current-status-graphs-source-manifest.json"
+  ]
+}
