@@ -25,9 +25,9 @@ def main():
     binary = Path(observed['path'])
     assert identity(binary)['sha256'] == observed['sha256']
     fixture = ROOT / 'scripts/fixtures/partner_player_physics_reference.txt'
-    assert identity(fixture)['sha256'] == observed['output_sha256']
-    assert observed['cases'] == 34 and observed['frames'] == 4080
-    for sex, count in (('male', 1543), ('female', 1807)):
+    assert hashlib.sha256(fixture.read_bytes().replace(b'\r\n', b'\n')).hexdigest() == observed['output_sha256']
+    assert observed['cases'] == 46 and observed['frames'] == 5520
+    for sex, count in (('male', 1592), ('female', 1866)):
         row = observed['player_assets'][sex]
         assert row['constraints'] == count and row['checks'] == count * 120
         assert row['source'] == identity(ROOT / row['source']['path'])
@@ -40,7 +40,7 @@ def main():
         'scripts/fixtures/partner_player_physics_asset_reference.cs',
         'scripts/fixtures/partner_player_physics_validation.cs',
         'scripts/fixtures/partner_player_physics_reference.txt')]
-    result = dict(manifest='884_156692',
+    result = dict(manifest='911_156995',
         original_player_data=identity(ROOT / 'assets/reference/battle-animation/scene-core-source-manifest.json'),
         reference_binary=identity(binary),
         recorded_observations=dict(cases=observed['cases'], frames=observed['frames'], fixture=identity(fixture),
@@ -52,9 +52,9 @@ def main():
             'The game, native conversion and recorded-observation regression test have no reference-runtime dependency.',
             'C rows bind an initial world pose and clock; D rows record an initially inactive constraint whose first active pose is bound before subsequent updates.',
             'Reference asset checks supply each individual constraint input matrix; they do not verify the independent hierarchy, pose controller, rendered animation or Windows Player.'
-        ], supported_channels=['x', 'y', 'rotate'],
+        ], supported_channels=['x', 'y', 'rotate', 'scaleX', 'shearX'],
         host_responsibilities=['source constraint order', 'skin activation', 'initial pose and skeleton clock',
-            'pose sampling', 'replay and skin lifecycle', 'reject unimplemented scaleX/shearX channels'])
+            'pose sampling', 'replay and skin lifecycle'])
     target = ROOT / 'assets/reference/partner-player-physics-source-manifest.json'
     target.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf8', newline='\n')
     print('Recorded selected player physics sources and independent implementation hashes.')

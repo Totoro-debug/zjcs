@@ -2,6 +2,7 @@
 
 The test and production assembly do not load or compile any Spine SDK code.
 """
+import argparse
 import json
 import subprocess
 from pathlib import Path
@@ -12,6 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def main():
+    parser = argparse.ArgumentParser(__doc__)
+    parser.add_argument('--fixture', type=Path, default=ROOT / 'scripts/fixtures/partner_player_physics_reference.txt')
+    args = parser.parse_args()
     workspace = validation_directory() / 'player-physics-rules'
     workspace.mkdir(exist_ok=True)
     config = json.loads((ROOT / 'unity-tools.json').read_bytes())
@@ -24,7 +28,7 @@ def main():
         str(ROOT / 'unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSpringConstraint.cs'),
         str(ROOT / 'scripts/fixtures/partner_player_physics_validation.cs')], check=True)
     subprocess.run([str(mono), str(output),
-        str(ROOT / 'scripts/fixtures/partner_player_physics_reference.txt')], check=True)
+        str(args.fixture.resolve())], check=True)
 
 
 if __name__ == '__main__':

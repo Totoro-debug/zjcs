@@ -2,7 +2,7 @@ using System;
 
 namespace Zjcs.Offline.ProfessionUI
 {
-    // Independent planar spring dynamics for the translation and rotation
+    // Independent planar spring dynamics for translation, rotation, axial scale and shear
     // channels present in the selected player assets. The host owns constraint
     // ordering, animation sampling, skin activation and the skeleton clock.
     public sealed class ProfessionNativeSpringConstraint
@@ -11,6 +11,7 @@ namespace Zjcs.Offline.ProfessionUI
         {
             public float Step, X, Y, Turn, Limit, Inertia, Strength, Damping;
             public float InverseMass, Wind, Gravity, Mix, Reference;
+            public float ScaleX, ShearX;
         }
 
         public struct Affine
@@ -21,12 +22,14 @@ namespace Zjcs.Offline.ProfessionUI
         private bool initialized;
         private float lastTime, residual, previousX, previousY, physicalX, physicalY, tipX, tipY;
         private float offsetX, offsetY, angle, velocityX, velocityY, angularVelocity;
+        private float stretch, stretchVelocity;
 
         public void Reset(Affine pose, float time)
         {
             Validate(pose); ValidateTime(time);
             lastTime = time;
             residual = offsetX = offsetY = angle = velocityX = velocityY = angularVelocity = 0;
+            stretch = stretchVelocity = 0;
             physicalX = previousX = pose.X; physicalY = previousY = pose.Y;
             tipX = pose.A * pose.Length; tipY = pose.C * pose.Length;
             initialized = true;
@@ -88,12 +91,26 @@ namespace Zjcs.Offline.ProfessionUI
             dx = Clamp(physicalX - pose.X, p.Limit * dt); dy = Clamp(physicalY - pose.Y, p.Limit * dt);
             physicalX = pose.X; physicalY = pose.Y;
             float direction = (float)Math.Atan2(tipY + dy, tipX + dx);
-            angle += Wrap(direction - baseAngle - angle * p.Mix * p.Turn) * p.Inertia;
+            float turnAndShear = p.Turn + p.ShearX;
+            angle += Wrap(direction - baseAngle - angle * p.Mix * turnAndShear) * p.Inertia;
+            if (p.ScaleX > 0)
+            {
+                float axisLength = pose.Length * (float)Math.Sqrt(pose.A * pose.A + pose.C * pose.C);
+                float heading = baseAngle + angle * p.Mix * turnAndShear;
+                if (axisLength > 0)
+                    stretch += (dx * (float)Math.Cos(heading) + dy * (float)Math.Sin(heading)) * p.Inertia / axisLength;
+            }
 
             for (int index = 0; index < steps; index++)
             {
-                float applied = baseAngle + angle * p.Mix * p.Turn;
+                float applied = baseAngle + angle * p.Mix * turnAndShear;
                 float force = (-p.Wind * (float)Math.Sin(applied) - p.Gravity * (float)Math.Cos(applied)) * pose.Length / p.Reference;
+                if (p.ScaleX > 0)
+                {
+                    float axialForce = p.Wind * (float)Math.Cos(applied) - p.Gravity * (float)Math.Sin(applied);
+                    stretchVelocity = stretchVelocity * damping + (axialForce - stretch * p.Strength) * p.InverseMass * p.Step;
+                    stretch += stretchVelocity * p.Step;
+                }
                 angularVelocity = angularVelocity * damping + (force - angle * p.Strength) * p.InverseMass * p.Step;
                 angle += angularVelocity * p.Step;
             }
@@ -112,10 +129,16 @@ namespace Zjcs.Offline.ProfessionUI
             if (p.Mix == 0) return pose;
             pose.X += offsetX * p.Mix * p.X; pose.Y += offsetY * p.Mix * p.Y;
             float rotation = angle * p.Mix * p.Turn;
-            float cosine = (float)Math.Cos(rotation), sine = (float)Math.Sin(rotation);
-            float a = pose.A * cosine - pose.C * sine, b = pose.B * cosine - pose.D * sine;
-            pose.C = pose.A * sine + pose.C * cosine; pose.D = pose.B * sine + pose.D * cosine;
+            float xRotation = rotation + angle * p.Mix * p.ShearX;
+            float cosine = (float)Math.Cos(xRotation), sine = (float)Math.Sin(xRotation);
+            float a = pose.A * cosine - pose.C * sine;
+            pose.C = pose.A * sine + pose.C * cosine;
+            cosine = (float)Math.Cos(rotation); sine = (float)Math.Sin(rotation);
+            float b = pose.B * cosine - pose.D * sine;
+            pose.D = pose.B * sine + pose.D * cosine;
             pose.A = a; pose.B = b;
+            float axialScale = 1 + stretch * p.Mix * p.ScaleX;
+            pose.A *= axialScale; pose.C *= axialScale;
             Validate(pose);
             return pose;
         }
@@ -144,6 +167,7 @@ namespace Zjcs.Offline.ProfessionUI
             Finite(p.Step); Finite(p.X); Finite(p.Y); Finite(p.Turn); Finite(p.Limit);
             Finite(p.Inertia); Finite(p.Strength); Finite(p.Damping); Finite(p.InverseMass);
             Finite(p.Wind); Finite(p.Gravity); Finite(p.Mix); Finite(p.Reference);
+            Finite(p.ScaleX); Finite(p.ShearX);
             if (p.Step <= 0 || p.Reference <= 0 || p.Limit < 0 || p.Damping < 0)
                 throw new ArgumentOutOfRangeException(nameof(p));
         }

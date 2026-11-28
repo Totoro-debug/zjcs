@@ -12,6 +12,7 @@
 
 - 已接入自动结识、伙伴名册、详情与角色展示、好感和送礼、称谓、档案、餐桌通话与历史；通话确认、奖励及进度由本地事务处理。
 - 伙伴配置、好感和天赋等级属性按项目固定来源提取，运行目录核对两份载荷的来源一致性。见[配置来源](../../../assets/reference/partner-rules-source-manifest.json)和[等级属性来源](../../../assets/reference/partner-properties-source-manifest.json)；窗口、美术和专属投影仍按各自来源继续迁移。
+- 伙伴界面中玩家模型的 High 贴图、染色图及加载映射按固定官方来源更新，使用通用资源目录，并与场景角色共享经核验的占位贴图。见[贴图来源](../../../assets/reference/partner-ui-high-textures-source-manifest.json)。
 - 已有官方伙伴窗口、立绘与模型、对话播放和音频接线；对话中的静态超链接当前没有查询和跳转处理，相关交互尚未完成。
 - 待核实各伙伴展示、送礼溢出确认、通话分支和回看、跨日与冷读恢复的完整 Windows Player 流程；[NPC助战](../../combat/npc-assistance.md)与[伙伴旅行](../../travel-notes/partner-travel.md)归各自模块。
 

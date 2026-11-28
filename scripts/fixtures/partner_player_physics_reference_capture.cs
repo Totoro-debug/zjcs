@@ -43,7 +43,7 @@ public static class PartnerPlayerPhysicsReferenceCapture
                 writer.WriteLine("F|" + Format(p.Data.Step, p.Data.X, p.Data.Y, p.Data.Rotate, p.Data.Limit,
                     p.Inertia, p.Strength, p.Damping, p.MassInverse, p.Wind, p.Gravity, p.Mix, data.ReferenceScale,
                     a, b, c, d, x, y, bone.Data.Length, skeleton.Time,
-                    bone.A, bone.B, bone.C, bone.D, bone.WorldX, bone.WorldY));
+                    bone.A, bone.B, bone.C, bone.D, bone.WorldX, bone.WorldY, p.Data.ScaleX, p.Data.ShearX));
             }
         }
         return 0;

@@ -33,7 +33,7 @@ namespace Zjcs.Editor.Combat
 
         public static void RunSceneCoreSources()
         {
-            Run();
+            Begin(false);
             SessionState.SetBool(Key + ".sceneCoreSources", true);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 600);
         }
@@ -119,7 +119,7 @@ namespace Zjcs.Editor.Combat
                     + " skins, " + count.animations + " complete animations and version separation passed.");
                 yield return null;
             }
-            Require(animations == 903 && samples == 2709, "complete current character animation coverage");
+            Require(animations == 1026 && samples == 3078, "complete current character animation coverage");
             Debug.Log("[Current scene sources] " + animations + " animations, " + samples + " local-pose samples; no production rendering claim.");
         }
 

@@ -7,7 +7,7 @@ namespace Zjcs.Offline.ProfessionUI
     // The current scene input stays separate from the historical profession data.
     public sealed class ProfessionNativeSceneCharacterAsset : ScriptableObject
     {
-        public const string SourceManifest = "884_156692";
+        public const string SourceManifest = "911_156995";
         [SerializeField] private string sex, skeletonSha256, atlasSha256;
         [SerializeField] private TextAsset payload, hierarchy;
         private ProfessionNativeSkeletonData data;

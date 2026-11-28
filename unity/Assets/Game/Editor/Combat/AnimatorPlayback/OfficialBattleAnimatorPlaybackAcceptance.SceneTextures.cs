@@ -20,8 +20,14 @@ namespace Zjcs.Editor.Combat
     {
         public static void RunSceneTextures()
         {
-            Run(); SessionState.SetBool(Key + ".sceneTextures", true);
+            Begin(false); SessionState.SetBool(Key + ".sceneTextures", true);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 1200);
+        }
+
+        public static void RunPartnerHighTextures()
+        {
+            RunSceneTextures();
+            SessionState.SetBool(Key + ".partnerHighTextures", true);
         }
 
         private static Dictionary<string, object> SceneTextureObject(object value) => (Dictionary<string, object>)value;
@@ -32,15 +38,18 @@ namespace Zjcs.Editor.Combat
         private static IEnumerator SceneTextureSteps()
         {
             var folder = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
-            var fixture = SceneTextureObject(OfficialEquipmentJson.Parse(File.ReadAllText(Path.Combine(folder, "scene-textures-fixture.json"))));
-            var catalog = Resources.Load<ProfessionNativeSceneAppearanceResources>("Combat/SceneCharacters/appearance-resources");
-            Require(catalog && catalog.TextureCount == 977 && catalog.Skins.SkinTextureConfigList.Count == 764
-                && catalog.Loader.placeholderMap.Length == 702, "complete current Low, skin and lazy texture bindings");
-            Require((int)catalog.Loader.LevelOfResolution == 1 && catalog.Loader.atlasAsset == null && catalog.Loader.skeletonDataAsset == null
-                && catalog.Loader.PlaceholderPath == "Atlas/Placeholder" && catalog.Loader.TargetTexturePath == "Atlas/Low"
-                && catalog.Loader.DyeTexturePath == "ColorMap/Low", "original common Low loader fields");
+            bool high = SessionState.GetBool(Key + ".partnerHighTextures", false);
+            var fixture = SceneTextureObject(OfficialEquipmentJson.Parse(File.ReadAllText(Path.Combine(folder,
+                high ? "partner-high-textures-fixture.json" : "scene-textures-fixture.json"))));
+            var catalog = Resources.Load<ProfessionNativeSceneAppearanceResources>(high
+                ? "Partners/appearance-resources" : "Combat/SceneCharacters/appearance-resources");
+            Require(catalog && catalog.TextureCount == 1028 && catalog.Skins.SkinTextureConfigList.Count == 804
+                && catalog.Loader.placeholderMap.Length == 742, "complete current Low, skin and lazy texture bindings");
+            Require((int)catalog.Loader.LevelOfResolution == (high ? 2 : 1) && catalog.Loader.atlasAsset == null && catalog.Loader.skeletonDataAsset == null
+                && catalog.Loader.PlaceholderPath == "Atlas/Placeholder" && catalog.Loader.TargetTexturePath == (high ? "Atlas/High" : "Atlas/Low")
+                && catalog.Loader.DyeTexturePath == (high ? "ColorMap/High" : "ColorMap/Low"), "original selected loader fields");
             catalog.Loader.TryInit();
-            Require(catalog.Loader.PlaceholderTextureIndexDict.Count == 702, "every original placeholder identity is unique");
+            Require(catalog.Loader.PlaceholderTextureIndexDict.Count == 742, "every original placeholder identity is unique");
             var loaderSerialized = new SerializedObject(catalog.Loader).FindProperty("placeholderMap");
             var mappings = SceneTextureArray(fixture["mappings"]);
             for (int i = 0; i < mappings.Count; i++)
@@ -54,7 +63,7 @@ namespace Zjcs.Editor.Combat
             {
                 Require(model.Asset == ProfessionNativeSceneCharacterAsset.LoadResource(model.Sex)
                     && model.Asset.Data.Manifest == ProfessionNativeSceneCharacterAsset.SourceManifest, "current original model identity");
-                Require(model.Atlas.MaterialCount == (model.Sex == "male" ? 468 : 469) && model.Pages.Length == model.Atlas.MaterialCount, "complete ordered current atlas");
+                Require(model.Atlas.MaterialCount == (model.Sex == "male" ? 496 : 499) && model.Pages.Length == model.Atlas.MaterialCount, "complete ordered current atlas");
                 for (int i = 0; i < model.Pages.Length; i++)
                     Require(model.Atlas.MaterialAt(i).mainTexture.name == model.Pages[i] + "_placeholder"
                         && catalog.MaterialForPage(model.Asset, model.Pages[i]) == model.Atlas.MaterialAt(i), "original ordered page and material identity");
@@ -125,7 +134,7 @@ namespace Zjcs.Editor.Combat
                 {
                     var row = SceneTextureObject(item); var original = SceneTextureObject(row["original_fields"]);
                     var material = AssetDatabase.LoadAssetAtPath<Material>((string)row["path"]);
-                    Require(material && material.name == (string)original["m_Name"] && material.shader.name == "Zjcs/Official/ProfessionUI/SceneWeaponSkeletonDye2D"
+                    Require(material && material.name == (string)original["m_Name"] && material.shader.name == "Zjcs/Official/ProfessionUI/SceneCharacterSkeletonDye2D"
                         && material.renderQueue == (SceneTextureInt(original["m_CustomRenderQueue"]) == -1 ? material.shader.renderQueue : SceneTextureInt(original["m_CustomRenderQueue"])), "actual current original material and world shader");
                     var keywords = SceneTextureArray(original["m_ValidKeywords"]).Concat(SceneTextureArray(original["m_InvalidKeywords"])).Cast<string>().OrderBy(s => s).ToArray();
                     Require(material.shaderKeywords.OrderBy(s => s).SequenceEqual(keywords), "all original current material keywords retained");
@@ -160,7 +169,7 @@ namespace Zjcs.Editor.Combat
                     }
                     checkedMaterials++;
                 }
-                Debug.Log("[Current scene resources] " + checkedTextures + " textures / " + checkedMips + " original mip GPU hashes, " + checkedMaterials + " original material identities, keywords and parameters; 702 Low mappings, 764 skin configurations and 977 lazy GUIDs.");
+                Debug.Log("[Current " + (high ? "High" : "Low") + " resources] " + checkedTextures + " textures / " + checkedMips + " original mip GPU hashes, " + checkedMaterials + " original material identities, keywords and parameters; 742 mappings, 804 skin configurations and 1028 lazy GUIDs.");
                 var previous = ProfessionAppearanceTextureBindings.Current;
                 ProfessionAppearanceTextureBindings.Current = resources;
                 try
@@ -197,7 +206,7 @@ namespace Zjcs.Editor.Combat
                                         clones.Add(batch.Page, material);
                                     }
                                 backend.Render(geometry.Batches, Array.Empty<int>(), b => clones[b.Page]);
-                                CaptureSeparator(separator, "current-" + model.Sex + "-" + group);
+                                CaptureSeparator(separator, (high ? "current-high-" : "current-") + model.Sex + "-" + group);
                             }
                         }
                         finally

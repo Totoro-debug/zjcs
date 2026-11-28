@@ -45,7 +45,12 @@ def main():
         ('damping', {'damping': .5, 'mass': 2}), ('zero-mix', {'mix': 0}),
         ('wind-partial', {'wind': 2, 'gravity': 3, 'rotate': .3}),
         ('force-combined', {'wind': 2, 'gravity': 3, 'mix': .4, 'x': .5, 'y': .25, 'rotate': .5}),
-        ('fps30', {'fps': 30}), ('fps100', {'fps': 100})]
+        ('fps30', {'fps': 30}), ('fps100', {'fps': 100}),
+        ('shear', {'rotate': 0, 'shearX': 1}), ('scale', {'rotate': 0, 'scaleX': 1}),
+        ('rotate-shear', {'rotate': .3, 'shearX': .6}),
+        ('rotate-scale', {'rotate': .4, 'scaleX': .7}),
+        ('all-channels', {'rotate': .25, 'shearX': .4, 'scaleX': .8, 'x': .5, 'y': .25, 'wind': 2, 'gravity': 3}),
+        ('limited-scale-shear', {'rotate': 0, 'shearX': .5, 'scaleX': .6, 'mix': .4, 'limit': 1})]
     for name, patch in variants:
         for motion in ('harmonic', 'mix-flip'):
             value = json.loads(json.dumps(base))
@@ -83,7 +88,7 @@ def main():
             assert stream.read(8) == b'ZJCSPROF' and struct.unpack('<I', stream.read(4))[0] == 1
             def text():
                 return stream.read(struct.unpack('<I', stream.read(4))[0]).decode('utf8')
-            assert text() == '884_156692' and text() == sex
+            assert text() == '911_156995' and text() == sex
             struct.unpack('<f', stream.read(4))
             size = struct.unpack('<I', stream.read(4))[0]
             digest = stream.read(32)

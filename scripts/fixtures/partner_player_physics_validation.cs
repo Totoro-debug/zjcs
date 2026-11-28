@@ -52,12 +52,13 @@ public static class PartnerPlayerPhysicsValidation
             }
             else
             {
-                if (fields[0] != "F" || values.Length != 27 || cases == 0)
+                if (fields[0] != "F" || (values.Length != 27 && values.Length != 29) || cases == 0)
                     throw new FormatException("Original physics observation is incomplete.");
                 p = new ProfessionNativeSpringConstraint.Parameters { Step = values[0], X = values[1],
                     Y = values[2], Turn = values[3], Limit = values[4], Inertia = values[5], Strength = values[6],
                     Damping = values[7], InverseMass = values[8], Wind = values[9], Gravity = values[10],
-                    Mix = values[11], Reference = values[12] };
+                    Mix = values[11], Reference = values[12],
+                    ScaleX = values.Length == 29 ? values[27] : 0, ShearX = values.Length == 29 ? values[28] : 0 };
                 var pose = Pose(values, 13);
                 bool bindThisFrame = awaitingFirstActivePose && p.Mix != 0;
                 if (bindThisFrame)
@@ -86,7 +87,7 @@ public static class PartnerPlayerPhysicsValidation
                 frames++;
             }
         }
-        if (cases != 34 || frames != 4080) throw new Exception("Original physics observation coverage differs.");
+        if (cases != 46 || frames != 5520) throw new Exception("Original physics observation coverage differs.");
         Console.WriteLine("Player physics observations passed: " + cases + " cases, " + frames
             + " frames, max error " + maximum.ToString("R", CultureInfo.InvariantCulture));
     }

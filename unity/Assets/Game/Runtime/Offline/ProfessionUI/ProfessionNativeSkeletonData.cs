@@ -61,8 +61,8 @@ namespace Zjcs.Offline.ProfessionUI
         public static ProfessionNativeSkeletonData Load(byte[] data, string expectedManifest)
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
-            if (expectedManifest != "871_156598" && expectedManifest != "884_156692")
-                throw new ArgumentException("Unsupported original skeleton source version.", nameof(expectedManifest));
+            if (string.IsNullOrEmpty(expectedManifest))
+                throw new ArgumentException("An explicit original skeleton source identity is required.", nameof(expectedManifest));
             using (var stream = new MemoryStream(data, false))
             using (var reader = new BinaryReader(stream, new UTF8Encoding(false, true)))
             {

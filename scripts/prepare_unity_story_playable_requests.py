@@ -148,8 +148,11 @@ def build():
     # Reuse the already verified original R3 bag behavior through its existing
     # native resource port, retaining ascending and reentrant disposal semantics.
     bag_source = ROOT / "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionImageResourceBridge.cs"
-    bag = bag_source.read_text(encoding="utf8"); start = bag.index("    internal sealed class ProfessionResourceOperationBag")
-    bag = bag[start:bag.rfind("}")].replace("internal sealed class ProfessionResourceOperationBag", "internal sealed class StoryPlayableResourceBag")
+    bag = bag_source.read_text(encoding="utf8")
+    declaration = re.search(r"    (?:internal|public) sealed class ProfessionResourceOperationBag", bag)
+    assert declaration, "Original native resource bag declaration is missing"
+    bag = re.sub(r"(?:internal|public) sealed class ProfessionResourceOperationBag",
+        "internal sealed class StoryPlayableResourceBag", bag[declaration.start():bag.rfind("}")])
     target = OUTPUT / "StoryPlayableResourceBag.cs"; write(target, ("using System;\nusing System.Collections.Generic;\nnamespace " + NAMESPACE + "\n{\n" + bag + "}\n").encode()); runtime_meta(target)
     outputs.extend([target, Path(str(target) + ".meta")])
     target = OUTPUT / "StoryPlayableRequestNode.cs"; write(target, CONTRACTS.encode()); runtime_meta(target)

@@ -50,7 +50,7 @@ def decoded_input(sex, workspace):
 def main():
     global apk
     apk = Apk.current()
-    if apk.version != "884_156692":
+    if apk.version != "911_156995":
         raise ValueError("Review the scene character source version before reproduction")
     code_base = ROOT / ".tools/source-packages/current" / apk.version
     code_receipt = code_base / "code-manifest.json"

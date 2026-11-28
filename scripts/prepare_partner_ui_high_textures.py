@@ -28,7 +28,7 @@ def main():
     work = validation_directory()
     assert (work / '.zjcs-validation.json').is_file()
     apk = Apk.current()
-    assert apk.version == '884_156692'
+    assert apk.version == '911_156995'
     schemas = CurrentSchemas()
     table_raw = apk.source.manifest_bytes('DefaultPackage', apk.archive)
     table = {row['guid']: row for row in read_asset_manifest(table_raw) if row['guid']}
@@ -46,13 +46,13 @@ def main():
     known_objects = {(row['source']['bundle_hash'], row['source']['path_id']): row for row in scene['textures']}
     previous_path = ROOT / 'assets/reference/partner-ui-high-textures-source-manifest.json'
     previous = json.loads(previous_path.read_bytes()) if previous_path.is_file() else {}
-    previous_textures = {(row['source']['bundle_hash'], row['source']['path_id']): row
+    previous_textures = {(row['source']['bundle'], row['source']['path_id']): row
                          for row in previous.get('textures', [])}
     root = ROOT / 'unity/Assets/Official/Partners/Appearance'
     destination = root / 'HighTextures'
     payloads = destination / 'Resources/Partners/HighTexturePayloads'
     outputs, textures, reused = [], [], []
-    for folder in (destination, destination / 'Bindings', destination / 'Resources',
+    for folder in (destination, destination / 'Bindings', destination / 'Textures', destination / 'Resources',
                    destination / 'Resources/Partners', payloads):
         folder.mkdir(parents=True, exist_ok=True)
         meta(folder, folder=True)
@@ -78,7 +78,9 @@ def main():
 
     def checked_reuse(row):
         path = ROOT / row['output']['path']
-        assert identity(path) == row['output']
+        actual = identity(path)
+        if actual != row['output']:
+            assert sha(path.read_bytes().replace(b'\r\n', b'\n')) == row['output']['sha256'], str(path)
         return path
 
     cache = {}
@@ -93,19 +95,18 @@ def main():
         prior = known.get(digest) if resource else known_objects.get(object_key)
         data = obj.read()
         encoded = data.get_image_data()
-        existing = previous_textures.get(object_key) if resource else None
+        existing = previous_textures.get((provenance['bundle'], provenance['path_id']))
         if existing is not None and existing['payload_sha256'] == digest and existing['encoded_sha256'] == sha(encoded):
             path = checked_reuse(existing)
-            row = dict(existing)
+            row = dict(existing, source=provenance, output=identity(path))
             textures.append(row)
             outputs.extend((path, Path(str(path) + '.meta')))
         elif prior is not None and prior['payload_sha256'] == digest and prior['encoded_sha256'] == sha(encoded) and (not resource or prior.get('resource')):
             checked_reuse(prior)
-            row = dict(prior)
+            row = dict(prior, source=provenance, output=identity(ROOT / prior['output']['path']))
             reused.append(dict(source=apk.provenance(obj), payload_sha256=digest, native=prior['output'],
                 meta=identity(Path(str(ROOT / prior['output']['path']) + '.meta'))))
         else:
-            assert resource, 'High loader placeholder differs from the verified current original atlas'
             fields_original = obj.read_typetree()
             fields_original.pop('image data')
             assert not data.m_MipsStripped and data.m_ImageCount == 1 and data.m_TextureDimension == 2
@@ -123,9 +124,13 @@ def main():
                         rgba_size=count, rgba_sha256=sha(pixels[offset:offset + count])))
                     offset += count
                 assert offset == len(pixels)
-            key = obj.assets_file.name + ':' + str(obj.path_id)
-            token = uuid.uuid5(uuid.NAMESPACE_URL, 'zjcs/partner-ui-high/884/' + key).hex
-            path = payloads / (token + '.asset')
+            if existing is not None and bool(existing.get('resource')) == resource:
+                path = checked_reuse(existing)
+            else:
+                key = provenance['bundle'] + ':' + provenance['path_id']
+                token = uuid.uuid5(uuid.NAMESPACE_URL, 'zjcs/partner-ui-high/' + key).hex
+                path = (payloads if resource else destination / 'Textures') / (token + '.asset')
+            assert path.is_relative_to(destination)
             value = dict(source_header(), **fields(copy.deepcopy(fields_original)))
             value.update(serializedVersion=2, m_TextureFormat=fmt, m_CompleteImageSize=len(pixels),
                 m_PlatformBlob='', m_StreamData=dict(serializedVersion=2, offset=0, size=0, path=''))
@@ -135,8 +140,9 @@ def main():
             binding = native(path, 28, 2800000, value)
             row = dict(source=apk.provenance(obj), payload_sha256=digest, original_fields=fields_original,
                 encoded_sha256=sha(encoded), profile=profile, target_format=fmt, mips=mips,
-                pixels_sha256=sha(pixels), binding=binding, output=identity(path),
-                resource='Partners/HighTexturePayloads/' + token)
+                pixels_sha256=sha(pixels), binding=binding, output=identity(path))
+            if resource:
+                row['resource'] = 'Partners/HighTexturePayloads/' + path.stem
             textures.append(row)
         cache[object_key] = row
         return row
@@ -177,8 +183,9 @@ def main():
         current_scene_receipt=identity(scene_proof), scene_catalog=identity(source_catalog),
         mappings=len(mappings), texture_addresses=catalog['textures'], textures=textures, reused=reused,
         outputs=[identity(path) for path in outputs], generator=identity(Path(__file__)),
-        decoder=dict(module=identity(Path(astc_encoder.__file__)),
-            binaries=[identity(path) for path in sorted(Path(astc_encoder.__file__).parent.rglob('*.pyd'))]),
+        decoder=dict(module=dict(path=Path(astc_encoder.__file__).as_posix(), sha256=sha(Path(astc_encoder.__file__).read_bytes())),
+            binaries=[dict(path=path.as_posix(), sha256=sha(path.read_bytes()))
+                for path in sorted(Path(astc_encoder.__file__).parent.rglob('*.pyd'))]),
         helpers=[identity(ROOT / 'scripts' / name) for name in ('current_component_schemas.py',
             'prepare_unity_map13_native_scene.py', 'prepare_unity_profession_reward_sprites.py')],
         operation='APK first and matching verified cache: preserve all original High mappings/GUIDs/loader fields. Reuse only raw-object and encoded-image-identical current texture payloads. Decode every remaining original High ASTC mip to Windows RGBA32 with original samplers/color spaces. Reuse the same verified current skins, skeletons and placeholder atlases; no Low target is substituted.')

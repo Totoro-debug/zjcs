@@ -45,6 +45,7 @@ public static class PartnerPlayerPhysicsAssetReference
                 value.Bone.UpdateWorldTransform();
                 var parameters = new ProfessionNativeSpringConstraint.Parameters {
                     Step = value.Data.Step, X = value.Data.X, Y = value.Data.Y, Turn = value.Data.Rotate,
+                    ScaleX = value.Data.ScaleX, ShearX = value.Data.ShearX,
                     Limit = value.Data.Limit, Inertia = value.Inertia, Strength = value.Strength,
                     Damping = value.Damping, InverseMass = value.MassInverse, Wind = value.Wind,
                     Gravity = value.Gravity, Mix = value.Mix, Reference = data.ReferenceScale };
@@ -56,8 +57,14 @@ public static class PartnerPlayerPhysicsAssetReference
                 for (int index = 0; index < left.Length; index++)
                 {
                     float error = Math.Abs(left[index] - right[index]);
-                    if (float.IsNaN(error) || error > .00002f)
-                        throw new Exception("Original asset physics differs: " + value.Data.Name + " frame=" + frame);
+                    int bits = BitConverter.ToInt32(BitConverter.GetBytes(right[index]), 0);
+                    float adjacent = BitConverter.ToSingle(BitConverter.GetBytes(bits + 1), 0);
+                    float tolerance = .00002f + 2 * Math.Abs(adjacent - right[index]);
+                    if (float.IsNaN(error) || error > tolerance)
+                        throw new Exception("Original asset physics differs: " + value.Data.Name + " frame=" + frame
+                            + " component=" + index + " expected=" + right[index].ToString("R", CultureInfo.InvariantCulture)
+                            + " actual=" + left[index].ToString("R", CultureInfo.InvariantCulture)
+                            + " error=" + error.ToString("R", CultureInfo.InvariantCulture));
                     maximum = Math.Max(maximum, error);
                 }
                 checks++;

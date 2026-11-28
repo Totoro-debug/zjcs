@@ -32,7 +32,7 @@ namespace Zjcs.Official.ProfessionUI
     // APK R3.DisposableBag.Clear 0x108d1bc0 / Dispose 0x108d1cd4:
     // ascending disposal using the current count; clear storage/count afterwards,
     // and set the disposed flag after Clear. Preserve reentrant additions.
-    internal sealed class ProfessionResourceOperationBag : IDisposable
+    public sealed class ProfessionResourceOperationBag : IDisposable
     {
         private List<IDisposable> values;
         private int count;

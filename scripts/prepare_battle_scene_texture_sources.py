@@ -29,18 +29,20 @@ def sha(raw):
 
 def main():
     apk = Apk.current()
-    assert apk.version == "884_156692"
+    assert apk.version == "911_156995"
     workspace = Path(os.environ["ZJCS_VALIDATION_DIR"]).resolve()
     assert workspace.parent == (ROOT / "output/validation").resolve()
     assert Path(json.loads((workspace / ".zjcs-validation.json").read_text(encoding="utf-8-sig"))["repository"]).resolve() == ROOT.resolve()
     core_path = ROOT / "assets/reference/battle-animation/scene-core-source-manifest.json"
     core = json.loads(core_path.read_bytes())
     assert core["manifest"] == apk.version
-    weapons_path = ROOT / "assets/reference/battle-animation/scene-weapon-source-manifest.json"
-    weapons = json.loads(weapons_path.read_bytes())
-    shader = weapons["current_shader_conversions"][0]
-    shader_path = checked(shader["output"])
-    shader_sha = shader["source"]["payload_sha256"]
+    shader_cache_path = apk.source.prepared_path / "native-conversion/all-assets/windows-shaders/source-manifest.json"
+    shader_cache = json.loads(shader_cache_path.read_bytes())
+    assert shader_cache["manifest"] == apk.version and shader_cache["completed"]
+    shader_sources = {row["source"]["object_sha256"]: row for row in shader_cache["shaders"]}
+    shader_path = ROOT / "unity/Assets/Game/Runtime/Official/ProfessionUI/SceneCharacterSkeletonDye2D.shader"
+    shader_sha = None
+    shader_conversion = None
     table_raw = apk.source.manifest_bytes("DefaultPackage", apk.archive)
     assert sha(table_raw) == core["asset_table_sha256"]
     table = {row["guid"]: row for row in read_asset_manifest(table_raw) if row["guid"]}
@@ -54,6 +56,12 @@ def main():
     outputs = [p.with_name(p.name + ".meta") for p in (destination, destination / "Bindings", destination / "Materials",
         destination / "Textures", destination / "Resources", destination / "Resources/Combat", payloads)]
     sources, textures, materials, reused = [], [], [], []
+    previous_path = ROOT / "assets/reference/battle-animation/scene-texture-source-manifest.json"
+    previous = json.loads(previous_path.read_bytes())
+    def object_key(row):
+        return row["source"]["bundle"], row["source"]["path_id"]
+    prior_textures = {object_key(row): row for row in previous["textures"]}
+    prior_materials = {object_key(row): row for row in previous["materials"]}
     old_receipts, known = [], {}
     for name in ("character-textures", "weapon-texture-loader"):
         path = ROOT / ("assets/reference/profession-ui/" + name + "-source-manifest.json")
@@ -163,8 +171,13 @@ def main():
             reused_input = identity(path)
             reused.append(dict(input=reused_input, meta=identity(path.with_name(path.name + ".meta")), prior_source=previous["source"]))
         else:
-            token = uuid.uuid5(uuid.NAMESPACE_URL, "zjcs/scene-texture/884/" + key[0] + ":" + key[1]).hex
-            path = (payloads if resource else destination / "Textures") / (token + ".asset")
+            prior = prior_textures.get(object_key(src))
+            if prior is not None and bool(prior.get("resource")) == resource and (ROOT / prior["output"]["path"]).is_relative_to(destination):
+                path = ROOT / prior["output"]["path"]
+                assert path.is_relative_to(destination)
+            else:
+                token = uuid.uuid5(uuid.NAMESPACE_URL, "zjcs/scene-texture/" + ":".join(object_key(src))).hex
+                path = (payloads if resource else destination / "Textures") / (token + ".asset")
             value = source_header()
             value.update(fields(copy.deepcopy(original)))
             value.update(serializedVersion=2, m_TextureFormat=fmt, m_CompleteImageSize=len(pixels), m_PlatformBlob="",
@@ -245,7 +258,24 @@ def main():
             if key not in material_cache:
                 src = source(obj, original)
                 shader_obj = pointer(obj, original["m_Shader"])
-                assert sha(shader_obj.get_raw_data()) == shader_sha
+                digest = sha(shader_obj.get_raw_data())
+                if shader_sha is None:
+                    cached = shader_sources[digest]
+                    cached_path = shader_cache_path.parent / cached["path"]
+                    assert sha(cached_path.read_bytes()) == cached["sha256"]
+                    text = cached_path.read_text(encoding="utf-8")
+                    original_name = shader_obj.read().m_ParsedForm.m_Name
+                    assert text.startswith('Shader "' + original_name + '"')
+                    text = text.replace('Shader "' + original_name + '"',
+                        'Shader "Zjcs/Official/ProfessionUI/SceneCharacterSkeletonDye2D"', 1)
+                    write_changed(shader_path, text)
+                    meta(shader_path)
+                    outputs.extend((shader_path, shader_path.with_name(shader_path.name + ".meta")))
+                    shader_sha = digest
+                    shader_conversion = dict(source=source(shader_obj), cache=identity(cached_path),
+                        cache_receipt=identity(shader_cache_path), output=identity(shader_path),
+                        programs=cached["programs"], stripped_passes=cached["stripped_passes"])
+                assert digest == shader_sha
                 value = copy.deepcopy(original)
                 value["m_Shader"] = dict(fileID=4800000, guid=guid(shader_path), type=3)
                 texture_bindings = []
@@ -258,8 +288,10 @@ def main():
                 value = dict(source_header(), **fields(value), serializedVersion=8)
                 value["m_SavedProperties"] = dict(serializedVersion=3,
                     **{name: [{k: v} for k, v in entries] for name, entries in value["m_SavedProperties"].items()})
-                token = uuid.uuid5(uuid.NAMESPACE_URL, "zjcs/scene-material/884/" + key[0] + ":" + key[1]).hex
-                path = destination / "Materials" / (token + ".mat")
+                prior = prior_materials.get(object_key(src))
+                token = uuid.uuid5(uuid.NAMESPACE_URL, "zjcs/scene-material/" + ":".join(object_key(src))).hex
+                path = ROOT / prior["output"]["path"] if prior else destination / "Materials" / (token + ".mat")
+                assert path.is_relative_to(destination / "Materials")
                 material_cache[key] = native(path, 21, 2100000, value)
                 materials.append(dict(**src, output=identity(path), texture_bindings=texture_bindings))
             bindings.append(material_cache[key])
@@ -284,17 +316,20 @@ def main():
     fixture = dict(textures=[dict(path=r["output"]["path"].removeprefix("unity/"), resource=r.get("resource", ""),
         format=r["target_format"], mips=r["mips"], original_fields=r["original_fields"]) for r in textures],
         materials=[dict(path=r["output"]["path"].removeprefix("unity/"), original_fields=r["fields"], texture_bindings=r["texture_bindings"]) for r in materials],
-        mappings=mapping_fixture)
+        mappings=mapping_fixture, source_counts=dict(texture_addresses=len(addresses), skin_configs=len(configs),
+            placeholder_mappings=len(mappings), atlas_materials={model["Sex"]: len(model["Pages"]) for model in models}))
     fixture_bytes = (json.dumps(fixture, ensure_ascii=False, separators=(",", ":"), allow_nan=False) + "\n").encode()
     (workspace / "scene-textures-fixture.json").write_bytes(fixture_bytes)
     proof = dict(manifest=apk.version, apk_manifest=apk.source.apk_version, apk_sha256=apk.source.apk_sha256,
-        core=identity(core_path), weapons=identity(weapons_path), shader=identity(shader_path), previous_texture_receipts=old_receipts,
+        core=identity(core_path), shader=identity(shader_path), shader_conversion=shader_conversion,
+        previous_texture_receipts=old_receipts,
         asset_table_sha256=sha(table_raw), sources=sources, textures=textures, materials=materials, reused=reused,
         models=models, texture_addresses=[dict(Guid=g, Resource=p) for g, p in sorted(addresses.items())],
         outputs=[identity(p) for p in outputs], runtime=[identity(p) for p in runtime], validation=identity(validation),
         validation_assembly=identity(validation.parent / "Zjcs.Editor.Combat.AnimatorPlayback.asmdef"), generator=identity(Path(__file__).resolve()),
         helpers=[identity(ROOT / "scripts" / name) for name in ("prepare_battle_scene_appearance_runtime.py", "prepare_unity_profession_reward_sprites.py", "prepare_unity_map13_native_scene.py")],
-        decoder=dict(version="0.1.12", binaries=[identity(p) for p in sorted(Path(astc_encoder.__file__).parent.rglob("*.pyd"))]),
+        decoder=dict(version="0.1.12", binaries=[dict(path=p.as_posix(), sha256=sha(p.read_bytes()))
+            for p in sorted(Path(astc_encoder.__file__).parent.rglob("*.pyd"))]),
         fixture_sha256=sha(fixture_bytes),
         operation="APK-first every current original scene Low GUID and placeholder mapping, complete skin configuration and both ordered atlases/materials. Decode original ASTC mips to native Windows RGBA32 without re-compression; preserve texture flags, color spaces and samplers. Bind exact current shader bytes. Lazy per-page Resources addresses retain original asset GUID requests, separate from historical High resources.",
         limits=["Production scene/Mecanim/cache, physics/mixing and battle/Windows Player integration are not supplied by these resource bindings."])

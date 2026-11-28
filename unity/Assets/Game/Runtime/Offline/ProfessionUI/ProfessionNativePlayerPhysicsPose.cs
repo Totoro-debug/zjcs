@@ -121,8 +121,6 @@ namespace Zjcs.Offline.ProfessionUI
             foreach (var state in physics)
             {
                 if (state.Order <= lastOther) throw new NotSupportedException("Restore interleaved original player physics ordering.");
-                if (state.ScaleX != 0 || state.ShearX != 0)
-                    throw new NotSupportedException("Restore original player physics scale/shear channels: " + state.Name);
             }
             bool nextOwner = !ReferenceEquals(owner, skeleton);
             float next = (nextOwner ? 0 : clock) + deltaTime;
@@ -147,7 +145,8 @@ namespace Zjcs.Offline.ProfessionUI
                     continue;
                 }
                 var parameters = new ProfessionNativeSpringConstraint.Parameters { X = state.X, Y = state.Y,
-                    Turn = state.Rotate, Limit = state.Limit, Step = state.Step, Inertia = state.Inertia,
+                    Turn = state.Rotate, ScaleX = state.ScaleX, ShearX = state.ShearX,
+                    Limit = state.Limit, Step = state.Step, Inertia = state.Inertia,
                     Strength = state.Strength, Damping = state.Damping, InverseMass = state.MassInverse,
                     Wind = state.Wind, Gravity = state.Gravity, Mix = state.Mix, Reference = reference };
                 var result = updatePhysics ? history.Solver.Evaluate(input, parameters, next) : history.Solver.Pose(input, parameters);
