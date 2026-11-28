@@ -52,6 +52,15 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -eq 10585) {
+        foreach ($file in @('companion-doom-link-checkpoint.json','companion-doom-link-receipt.json','acquired-active-ui-doom-erosion-status.png','acquired-active-ui-doom-erosion-child.png')) {
+            if (-not(Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Doom Link original erosion or dark child evidence is missing.' }
+        }
+        $doom = Get-Content (Join-Path $Run 'companion-doom-link-receipt.json') -Raw | ConvertFrom-Json
+        if ($doom.primaryApplications -lt 1 -or $doom.extraApplications -lt 1 -or $doom.children -lt 1 -or $doom.ends -lt 1 -or
+            -not $doom.restored -or -not $doom.statusCaptured -or -not $doom.childCaptured) { throw 'Doom Link lost its real probability, cultivated erosion, native render or restoration.' }
+        return
+    }
     if ($PassiveId -eq 10570) {
         foreach ($file in @('companion-extra-healing-checkpoint.json','companion-extra-healing-receipt.json','acquired-active-ui-extra-healing.png')) {
             if (-not(Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Extra Healing original cure or native particle evidence is missing.' }
@@ -408,7 +417,7 @@ if ($SkillSkinId -gt 0 -and ((($SkillId -ne 10082 -or $SkillSkinId -ne 39521) -a
 if ($PassiveSave) {
     $PassiveSave = (Get-Item -LiteralPath $PassiveSave).FullName
     if (-not $PassiveSave.StartsWith($workspacePath + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
-        $SkillId -notin @(10008,10017,10028,10032,10035,10047,10065,10068,10084,10088,10089,10091,10093,10095,10096,10098,10103) -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated passive cultivation save with its corresponding active skill.' }
+        $SkillId -notin @(10008,10017,10028,10032,10035,10047,10064,10065,10068,10084,10088,10089,10091,10093,10095,10096,10098,10103) -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated passive cultivation save with its corresponding active skill.' }
     $passiveResult = Get-Content -LiteralPath (Join-Path (Split-Path -Parent $PassiveSave) 'result.json') -Raw | ConvertFrom-Json
     if (-not $passiveResult.passed) { throw 'The original passive cultivation flow has not passed.' }
     $passiveProfile = Get-Content -LiteralPath $PassiveSave -Raw | ConvertFrom-Json

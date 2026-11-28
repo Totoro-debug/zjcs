@@ -1,0 +1,70 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 12540,
+      "entity_resource": "Combat/DoomLinkSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12540/12540",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/DoomLinkSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11360/playable11360"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 12541,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [],
+      "entity_resource": "Combat/DoomLinkSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/12540/12541"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 10027,
+      "entity_prefab": "Global/10027.prefab",
+      "entity_prefab_sha256": "86818efcc15da4f253053cbf034891c51718db49562c2b0b12b2d85bd2ed6182",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/DoomLinkSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage_dark_HitEffect"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/DoomLinkSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/DoomLinkSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/DoomLinkSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/DoomLinkSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/Global/10027",
+      "skill_item_ids": [
+        10585
+      ]
+    }
+  ]
+}

@@ -8,27 +8,47 @@ namespace Zjcs.Combat.Official
     {
         private const int FreezeStatusId = 24215;
         private const int IceCrystalEndListenerId = 24487;
+        private int targetStatusReactionDepth;
+        private readonly Dictionary<FightBattleStatusState, Dictionary<int, int>> targetStatusReactionCounts =
+            new Dictionary<FightBattleStatusState, Dictionary<int, int>>();
 
         private void ApplyTargetStatusReactions(FightBattleUnitState target, FightBattleStatusState applied)
         {
             if (movementStartContext == null || statusCatalog == null || applied == null
                 || !FightBattleTargeting.IsSelectable(target) || !target.Statuses.Contains(applied)) return;
 
-            // The last successful freeze application owns the eventual thaw. Keep the existing
-            // status durations and drop the previous source's listener even if the new source has no secret.
-            if (applied.ClassId == FreezeStatusId)
-                foreach (var previous in target.Statuses.Where(value => value?.ClassId == IceCrystalEndListenerId).ToArray())
-                    FightStatusLifecycle.End(target, previous);
-
-            var source = ResolveUnit(applied.CreatorId);
-            if (!FightBattleTargeting.IsSelectable(source) || source.Side == target.Side) return;
-            foreach (var listener in source.Statuses.ToArray())
+            targetStatusReactionDepth++;
+            try
             {
-                if (listener == null || listener.ForbiddenType != 0 || !source.Statuses.Contains(listener)
-                    || !statusCatalog.TryReadTargetStatusReaction(listener.ClassId, applied.ClassId, out int statusId, out float rate)
-                    || !FightSkillTriggerPolicy.AllowsStatus(statusCatalog.GetStatusApplicationSkillContext(applied.RootSkillId), listener)
-                    || !RollComponent(rate)) continue;
-                ApplyComponentStatus(listener, statusId, target, null);
+                // The last successful freeze application owns the eventual thaw. Keep the existing
+                // status durations and drop the previous source's listener even if the new source has no secret.
+                if (applied.ClassId == FreezeStatusId)
+                    foreach (var previous in target.Statuses.Where(value => value?.ClassId == IceCrystalEndListenerId).ToArray())
+                        FightStatusLifecycle.End(target, previous);
+
+                var source = ResolveUnit(applied.CreatorId);
+                if (!FightBattleTargeting.IsSelectable(source) || source.Side == target.Side) return;
+                foreach (var listener in source.Statuses.ToArray())
+                {
+                    if (listener == null || listener.ForbiddenType != 0 || !source.Statuses.Contains(listener)
+                        || !statusCatalog.TryReadTargetStatusReaction(listener.ClassId, applied.ClassId,
+                            out int statusId, out float rate, out int perTargetLimit)
+                        || !FightSkillTriggerPolicy.AllowsStatus(statusCatalog.GetStatusApplicationSkillContext(applied.RootSkillId), listener))
+                        continue;
+                    targetStatusReactionCounts.TryGetValue(listener, out var targets);
+                    int count = targets != null && targets.TryGetValue(target.Id, out int previousCount) ? previousCount : 0;
+                    if (count >= perTargetLimit || !RollComponent(rate)) continue;
+                    if (targets == null)
+                        targetStatusReactionCounts.Add(listener, targets = new Dictionary<int, int>());
+                    // Original MaxCountPerTargetOnceTrigger guards the entire synchronous
+                    // application chain, including a newly applied status matching this filter.
+                    targets[target.Id] = count + 1;
+                    ApplyComponentStatus(listener, statusId, target, null);
+                }
+            }
+            finally
+            {
+                if (--targetStatusReactionDepth == 0) targetStatusReactionCounts.Clear();
             }
         }
 
@@ -75,17 +95,20 @@ namespace Zjcs.Combat.Official
             return CreateSkillTriggerContext(skillId);
         }
 
-        internal bool TryReadTargetStatusReaction(int listenerId, int appliedId, out int statusId, out float rate)
+        internal bool TryReadTargetStatusReaction(int listenerId, int appliedId, out int statusId,
+            out float rate, out int perTargetLimit)
         {
             statusId = 0;
             rate = 0;
+            perTargetLimit = 0;
             if (!entities.TryGetValue(listenerId, out var entity)) return false;
             var reaction = Component(entity, "StatusApplyTargetHandleComponent");
-            if (reaction == null || Int(reaction, "MaxCount") != -1 || Bool(reaction, "ResetMaxCountEveryRound")
-                || Int(reaction, "MaxCountPerTargetOnceTrigger") != 1 || ArrayCount(reaction, "StatusReplacePropertyValues") != 0
+            // A round reset has no effect on an unlimited (-1) lifetime count.
+            if (reaction == null || Int(reaction, "MaxCount") != -1
+                || Int(reaction, "MaxCountPerTargetOnceTrigger", 1) <= 0 || ArrayCount(reaction, "StatusReplacePropertyValues") != 0
                 || ArrayCount(reaction, "HandleSettings") != 1) return false;
             var filter = Component(reaction, "FilterCondition");
-            if (!IsReactionType(filter, "StatusClassIdFilter") || Int(filter, "StatusClassId") != appliedId) return false;
+            if (!MatchesAppliedStatusReactionFilter(filter, appliedId)) return false;
             var handler = Object(Array(reaction["HandleSettings"], "StatusApplyTargetHandleComponent.HandleSettings")[0], "target status application handler");
             if (!IsReactionType(handler, "StatusApplyTargetAddStatusHandleSetting") || Int(handler, "HandleType") != 0
                 || Bool(handler, "AddByStatusSource") || Bool(handler, "AffectedByProp")) return false;
@@ -93,7 +116,19 @@ namespace Zjcs.Combat.Official
             if (!IsReactionType(resolver, "FixedStatusIdResolver")) return false;
             statusId = Int(resolver, "StatusClassId");
             rate = Float(handler, "Rate", 1f);
+            perTargetLimit = Int(reaction, "MaxCountPerTargetOnceTrigger", 1);
             return statusId > 0 && rate > 0f;
+        }
+
+        private bool MatchesAppliedStatusReactionFilter(Dictionary<string, object> filter, int appliedId)
+        {
+            if (filter == null) return true;
+            if (IsReactionType(filter, "StatusClassIdFilter")) return Int(filter, "StatusClassId") == appliedId;
+            var clauses = new List<FightGameplayTagClause>();
+            if (!ReadSourceSkillTagFilter(filter, clauses)
+                || !entities.TryGetValue(appliedId, out var applied)) return false;
+            long[] tags = ReadGameplayTags(applied);
+            return clauses.TrueForAll(clause => clause.Matches(tags));
         }
 
         internal bool TryReadStatusEndReaction(int listenerId, int endedId, out int[] statusIds,

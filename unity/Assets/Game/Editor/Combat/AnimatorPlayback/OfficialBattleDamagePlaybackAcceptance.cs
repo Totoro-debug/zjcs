@@ -237,7 +237,8 @@ namespace Zjcs.Editor.Combat
             damages = new OfficialBattleDamageEntityPlayback(root, root.GetComponentInChildren<MyContainer>(), services, scope);
             foreach (var selection in new[] {
                 new { Catalog = "Combat/soul-splash-current-skill-graphs", Shared = "Combat/conqueror-passive-current-skill-graphs", Item = 10545, Damage = 10023 },
-                new { Catalog = "Combat/mana-burst-current-skill-graphs", Shared = "Combat/skill-native-graphs", Item = 10064, Damage = 10027 } })
+                new { Catalog = "Combat/mana-burst-current-skill-graphs", Shared = "Combat/skill-native-graphs", Item = 10064, Damage = 10027 },
+                new { Catalog = "Combat/doom-link-current-skill-graphs", Shared = "Combat/skill-native-graphs", Item = 10585, Damage = 10027 } })
             {
                 var scopedCatalog = Resources.Load<TextAsset>(selection.Catalog);
                 if (!scopedCatalog) continue;

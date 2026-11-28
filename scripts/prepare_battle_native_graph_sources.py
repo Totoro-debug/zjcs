@@ -55,6 +55,7 @@ def main():
         'abyssal-hand-current-skill-graphs',
         'mana-burst-current-skill-graphs',
         'extra-healing-current-skill-graphs',
+        'doom-link-current-skill-graphs',
     )
     receipts = {
         'skill-native-graphs': 'skill-native-graph-assets-source-manifest',

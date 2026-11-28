@@ -46,6 +46,7 @@ namespace Zjcs.Presentation.Home
             supported |= active == 10008 && player.Wardrobe.Profession == 7 && itemId == 10545;
             supported |= active == 10093 && player.Wardrobe.Profession == 13 && itemId == 10604;
             supported |= active == 10103 && player.Wardrobe.Profession == 17 && itemId == 10528;
+            supported |= active == 10064 && player.Wardrobe.Profession == 16 && itemId == 10585;
             Require(supported && source.Player.Wardrobe.Profession == player.Wardrobe.Profession
                 && source.Player.Level == player.Level && source.Player.SubRank == player.SubRank
                 && plan.ActiveSkills.All(id => id == 0)
@@ -91,6 +92,7 @@ namespace Zjcs.Presentation.Home
             ref int assaultHits, ref int soulBreakHits, ref int windHits, ref int flameHits,
             ref int fireLifeCures)
         {
+            if (itemId == 10585) return;
             if (itemId == 10570) return;
             if (itemId == 10527) return;
             if (itemId == 10545)
