@@ -192,7 +192,7 @@ def finalize(root, candidate, refresh_sources=False, include_new=False, refresh_
             archive.writestr(info, manifest)
     archive_hash = asset_pack.digest(candidate)
 
-    # Fingerprint the code that exists at finalization, and retain its exact bytes.
+    # Fingerprint the code that exists at finalization; Git retains source history.
     # Code may have advanced while compression ran; no asset mismatch is accepted.
     code_files = {name for name in layout['code_files'] if not name.startswith('unity/Assets/Game/')}
     code_files.add('scripts/finalize_current_asset_snapshot.py')
@@ -201,23 +201,9 @@ def finalize(root, candidate, refresh_sources=False, include_new=False, refresh_
                           for path in (root / 'unity/Assets/Game').rglob('*' + suffix))
     layout['code_files'] = sorted(code_files)
     asset_pack.atomic_write(root / 'asset-pack/layout.json', asset_pack.encode(layout))
-    cache = root / '.tools/source-packages/history/converted'
-    cache.mkdir(parents=True, exist_ok=True)
-    code = {}
-    code_sources = {}
-    for name in layout['code_files']:
-        raw = (root / name).read_bytes()
-        digest = hashlib.sha256(raw).hexdigest()
-        preserved = cache / (digest + '.bin')
-        if preserved.exists():
-            if asset_pack.digest(preserved) != digest:
-                raise ValueError('Preserved code cache differs from its SHA256')
-        else:
-            preserved.write_bytes(raw)
-        code[name] = digest
-        code_sources[name] = preserved.relative_to(root).as_posix()
+    code = asset_pack.code_hashes(root, layout)
     if asset_pack.code_hashes(root, layout) != code:
-        raise ValueError('Code changed while capturing its exact source bytes')
+        raise ValueError('Code changed while capturing its source hashes')
     filename = 'zjcs-assets-' + layout['source_manifests'][0] + '-' + archive_hash[:16] + '.zip'
     destination = output_dir / filename
     if destination.exists():
@@ -226,8 +212,7 @@ def finalize(root, candidate, refresh_sources=False, include_new=False, refresh_
             'archive_bytes': candidate.stat().st_size, 'inventory_sha256': hashlib.sha256(manifest).hexdigest(),
             'files': len(records), 'uncompressed_bytes': sum(value['bytes'] for value in records.values()),
             'source_manifests': layout['source_manifests'],
-            'layout_sha256': asset_pack.digest(root / 'asset-pack/layout.json'), 'code_sha256': code,
-            'preserved_code_sources': code_sources}
+            'layout_sha256': asset_pack.digest(root / 'asset-pack/layout.json'), 'code_sha256': code}
     candidate.replace(destination)
     asset_pack.atomic_write(output_dir / (filename + '.manifest.json'), manifest)
     asset_pack.atomic_write(root / 'asset-pack/lock.json', asset_pack.encode(lock))

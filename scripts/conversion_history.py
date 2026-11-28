@@ -12,15 +12,10 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 def preserve(path):
+    """Record the previous file identity without retaining another payload copy."""
     raw = path.read_bytes()
-    backup = ROOT / '.tools/source-packages/history/converted' / (sha(raw) + '.bin')
-    backup.parent.mkdir(parents=True, exist_ok=True)
-    if backup.exists() and backup.read_bytes() != raw:
-        raise ValueError('Historical conversion hash collision: ' + str(path))
-    if not backup.exists():
-        backup.write_bytes(raw)
-    return {'path': path.relative_to(ROOT).as_posix(), 'sha256': sha(raw),
-            'preserved': backup.relative_to(ROOT).as_posix()}
+    return {'path': path.relative_to(ROOT).as_posix(), 'sha256': sha(raw)}
+
 
 def load_skeleton(version, sex='male'):
     root = ROOT / '.tools/source-packages/current' / version / 'skeletons' / sex

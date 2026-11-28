@@ -94,7 +94,9 @@ def extract(pattern, package='DefaultPackage', manifest=None, quiet=False):
     from official_bundle_reader import OfficialBundleReader
 
     selected = OfficialSource(manifest)
-    extraction_root = CACHE if selected.version == OfficialSource().version else CACHE / 'history' / selected.version
+    if selected.version != OfficialSource().version:
+        raise ValueError('Raw extraction only supports the active official source profile')
+    extraction_root = CACHE
     destination = extraction_root / ('extracted' if package == 'DefaultPackage' else package)
     destination.mkdir(exist_ok=True)
     with OfficialBundleReader(selected) as reader:
