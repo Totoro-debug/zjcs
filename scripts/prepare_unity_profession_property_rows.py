@@ -108,11 +108,11 @@ def build():
     row = adapt(read('client-source/PlayerPropItem.cs'))
     row = row.replace('class PlayerPropItem', 'class ProfessionPlayerPropItem')
     row = row.replace('private BlessPropBtn mBlessPropBtn', 'private ProfessionBlessPropBtn mBlessPropBtn')
-    row = replace(row, 'protected DisposableBag mDisposableBag;', 'private ProfessionResourceOperationBag mDisposableBag;')
+    row = replace(row, 'protected DisposableBag mDisposableBag;', 'protected ProfessionResourceOperationBag mDisposableBag;')
     row = replace(row, 'mDisposableBag = default;', 'mDisposableBag = new ProfessionResourceOperationBag();')
     row = replace(row, '\t[Inject]\n\tprotected IResourceLoader ResourceLoader { get; set; }', '''
     private IProfessionPropertyBindings mBindings;
-    private IProfessionPropertyBindings Bindings => mBindings ?? ProfessionPropertyBindings.Required;
+    protected IProfessionPropertyBindings Bindings => mBindings ?? ProfessionPropertyBindings.Required;
     public void Configure(IProfessionPropertyBindings bindings)
     { mBindings = bindings ?? throw new ArgumentNullException(nameof(bindings)); }
 ''')

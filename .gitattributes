@@ -304,3 +304,21 @@ unity/Assets/Game/Resources/Treasure/NativeSuit.meta text eol=lf
 assets/reference/battle-plan-widget-source-manifest.json text eol=lf
 scripts/prepare_battle_plan_widget.py text eol=lf
 unity/Assets/Game/Runtime/Offline/TreasureUI/Zjcs.Offline.TreasureUI.asmdef text eol=lf
+
+# Exact-byte original treasure detail sources and native resources.
+assets/reference/treasure-detail-*-source-manifest.json text eol=lf
+scripts/prepare_treasure_detail*.py text eol=lf
+scripts/test_treasure_detail_native.ps1 text eol=lf
+scripts/fixtures/treasure_detail_native_validation.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/TreasureUI/OfflineTreasureDetail* text eol=lf
+unity/Assets/Game/Runtime/Offline/TreasureUI/OfflineTreasureItemDetail* text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionPropertyScope* text eol=lf
+unity/Assets/Game/Resources/Treasure/treasure-detail.json* text eol=lf
+unity/Assets/Game/Resources/Treasure/NativeDetail/** -text whitespace=-blank-at-eol
+unity/Assets/Game/Resources/Treasure/NativeDetail.meta text eol=lf
+unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerPropItem.cs text eol=lf
+scripts/prepare_unity_profession_property_rows.py text eol=lf
+assets/reference/profession-ui/property-rows-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/WorldUI/WorldNativeGradientData.cs* text eol=lf
+unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.NativeStorage.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/WorldTextReplacer.cs* text eol=lf

@@ -127,7 +127,8 @@ public class Validator { public int Maximum; public int GetCharacterMaxCount()=>
         'Zjcs.Offline.Progression','Zjcs.Offline.State','Zjcs.Offline.CharacterCreation','Zjcs.Official.TreasureCultivation',
         'Zjcs.Official.TreasureIconUI','Zjcs.Official.TreasureSlotsUI','Zjcs.Official.HomeMainUiControls','Zjcs.Official.HomeHudUI',
         'Zjcs.Official.BattlePlanRules','Zjcs.Official.BattlePlanUI','Zjcs.Official.ProfessionUI','Zjcs.Official.SkillRules',
-        'Zjcs.Official.WorldUI','Zjcs.Official.TreasureDetailUI','Zjcs.Offline.ProfessionUI','Unity.TextMeshPro']),indent=2)+'\n').encode()
+        'Zjcs.Official.WorldUI','Zjcs.Official.World.NativeLabelUI','Zjcs.Official.TreasureDetailUI',
+        'Zjcs.Official.ItemDetailUI','Zjcs.Offline.ProfessionUI','Zjcs.Offline.PartnersUI','Zjcs.Offline.HomeCurrencyUI','Unity.ugui','Unity.TextMeshPro']),indent=2)+'\n').encode()
     folder_token=hashlib.md5(('zjcs:battle-plan:'+local.relative_to(ROOT).as_posix()).encode()).hexdigest()
     outputs[Path(str(local)+'.meta')]=('fileFormatVersion: 2\nguid: '+folder_token+'\nfolderAsset: yes\nDefaultImporter:\n  externalObjects: {}\n').encode()
     for path in list(outputs):

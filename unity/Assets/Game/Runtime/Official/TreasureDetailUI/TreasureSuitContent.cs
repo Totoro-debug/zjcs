@@ -28,6 +28,7 @@ namespace Zjcs.Official.TreasureDetailUI {
         private ITreasureSuitViewServices Services;
         private int TreasureClassId;
         private bool mCanOperation;
+        public void SetCanOperation(bool value)=>mCanOperation=value;
         public void Configure(ITreasureSuitViewServices services) => Services=services??throw new ArgumentNullException(nameof(services));
         public void Show(int treasureClassId,bool canOperation,TreasureSuitInfo suit,Dictionary<int,int> activatedStars)
         {

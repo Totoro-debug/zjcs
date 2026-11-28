@@ -136,9 +136,14 @@ namespace Zjcs.Offline.HomeCurrencyUI
         }
 
         public GameObject Popup(GameObject prefab, Func<string, string> localize, Action<GameObject> initialize)
+            =>Popup(prefab,localize,null,initialize);
+
+        public GameObject Popup(GameObject prefab, Func<string, string> localize, Action<GameObject> bindBeforeActivation,
+            Action<GameObject> initialize)
             => Create(prefab, root => {
                 if (localize != null)
                     foreach (var text in root.GetComponentsInChildren<WorldMultiLanguageText>(true)) text.Localizer = localize;
+                bindBeforeActivation?.Invoke(root);
             }, initialize ?? throw new ArgumentNullException(nameof(initialize)), true);
 
         private IDisposable Register(GameObject root) => OfflineUiBindingModule.Register(root.transform,

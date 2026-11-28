@@ -41,4 +41,8 @@ namespace Zjcs.Official.ItemDetailUI
         GameObject InstantiateUi(GameObject prefab, Transform parent);
         void Close(GameObject window);
     }
+    public interface IItemDetailQualityBindings
+    {
+        void SetQualityText(Zjcs.Official.WorldUI.WorldMultiLanguageText text,Quality quality);
+    }
 }

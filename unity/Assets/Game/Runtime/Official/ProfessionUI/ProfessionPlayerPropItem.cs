@@ -81,7 +81,7 @@ public class ProfessionPlayerPropItem : MonoBehaviour, IGameObjectPoolItem, IWin
 
 	private string mFormatKey = "{0}";
 
-	private ProfessionResourceOperationBag mDisposableBag;
+	protected ProfessionResourceOperationBag mDisposableBag;
 
 	private bool mNeedSpaceBeforeValue;
 
@@ -89,7 +89,7 @@ public class ProfessionPlayerPropItem : MonoBehaviour, IGameObjectPoolItem, IWin
 
 
     private IProfessionPropertyBindings mBindings;
-    private IProfessionPropertyBindings Bindings => mBindings ?? ProfessionPropertyBindings.Required;
+    protected IProfessionPropertyBindings Bindings => mBindings ?? ProfessionPropertyBindings.Required;
     public void Configure(IProfessionPropertyBindings bindings)
     { mBindings = bindings ?? throw new ArgumentNullException(nameof(bindings)); }
 

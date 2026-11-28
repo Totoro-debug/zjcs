@@ -101,6 +101,7 @@ namespace Zjcs.Official.TreasureDetailUI {
         private ITreasureSuitViewServices Services;
         private int TreasureClassId;
         private bool mCanOperation;
+        public void SetCanOperation(bool value)=>mCanOperation=value;
         public void Configure(ITreasureSuitViewServices services) => Services=services??throw new ArgumentNullException(nameof(services));
         public void Show(int treasureClassId,bool canOperation,TreasureSuitInfo suit,Dictionary<int,int> activatedStars)
         {
@@ -123,7 +124,9 @@ namespace Zjcs.Official.TreasureDetailUI {
                                   ('TreasureSuitContent', content), ('TreasureSuitLanguage', language), ('TreasureSuitQueries', queries))}
     outputs[DEST/'Zjcs.Official.TreasureDetailUI.asmdef'] = (json.dumps(dict(name='Zjcs.Official.TreasureDetailUI', references=[
         'Zjcs.Official.ProfessionUI', 'Zjcs.Official.WorldUI', 'Zjcs.Official.World.NativeLabelUI',
-        'Zjcs.Official.TreasureCultivation', 'Unity.ugui']), indent=2)+'\n').encode()
+        'Zjcs.Official.TreasureCultivation', 'Zjcs.Official.TreasureUI', 'Zjcs.Official.TreasureIconUI',
+        'Zjcs.Official.ItemDetailUI', 'Zjcs.Official.HomeCurrencyWindowsUI', 'Zjcs.Official.HomePlayerInfoUI',
+        'Unity.ugui']), indent=2)+'\n').encode()
     for path in list(outputs):
         token=hashlib.md5(('zjcs:treasure-suit-ui:'+path.relative_to(ROOT).as_posix()).encode()).hexdigest()
         outputs[Path(str(path)+'.meta')]=('fileFormatVersion: 2\nguid: '+token+'\n'+

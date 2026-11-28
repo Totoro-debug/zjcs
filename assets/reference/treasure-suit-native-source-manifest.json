@@ -33,7 +33,7 @@
     ".tools/source-packages/current/911_156995/home-treasure-ui-native/native-export/ExportedProject/Assets/Image/ItemIcon/Props/Props_Atlas/P_MaxHp.asset": "a71c45e14508585269a8a988bd5d29eae288fcd728a8fa0e4be1eb1d4766b43e",
     ".tools/source-packages/current/911_156995/home-treasure-ui-native/native-export/ExportedProject/Assets/Image/ItemIcon/Props/Props_Atlas/P_Speed.asset": "fafa3f5a36ec643176050157190cc65d18824eca581bcc0c322440fce2b67f2a",
     "scripts/prepare_treasure_suit_native.py": "7be0d1e1ae48e6194108c7c9e3ce7ff09aa6127a7a10005e4117e78ba2fa1f8a",
-    "scripts/prepare_treasure_suit_ui.py": "202c06b3d1f81a48c3fcb8f50cf8f8ea17725731a8bca0cb9ce7d9eba5b0ac27",
+    "scripts/prepare_treasure_suit_ui.py": "bcff24ff0268888a548ff5e88c3ad1aa1395c33a5ddfa54268e56f3d744a0209",
     "scripts/prepare_treasure_icon_native.py": "f582279b7a6cc2e51ae51bb86ba4393171decc15dcd6a64395396c95d5a0ad5f",
     "unity/Assets/Game/Runtime/Offline/TreasureUI/OfflineTreasureSuitAssets.cs": "d8982159cfb19abadd744575dffef032656a8e264434b199e500b9c0d87dfc4c",
     "unity/Assets/Game/Runtime/Offline/TreasureUI/OfflineTreasureSuitAssets.cs.meta": "de19e916106aa5ff2011cd3f783b39e1c295024520743780eac12d99ade52daa",
@@ -2812,7 +2812,7 @@
         "guid": "3981d5a29cdfecef426152aa28e39d19",
         "type": 3
       },
-      "sha256": "e776ab80dbe0557f9ae2a1077dcc409de2abeb604eb5030cc741a0753b7ef9ca",
+      "sha256": "d6bfb98da5178171502e811fd7daa84bf1d874617281689bc36c3f8017ca33af",
       "meta_sha256": "d1f04b22b9f7ae97e10a347fb14e57b12972d6ef99d3b551a00ff1dc2a17b213"
     },
     "AppearanceSystem.SkeletonBoneController": {
@@ -3512,7 +3512,7 @@
         "guid": "b9a9c167af91b4a6278bd7e28d69fd77",
         "type": 3
       },
-      "sha256": "0c2ff22910be96a5decb7f9a21501b4f04afaaf7da6977fab1d4535989581be8",
+      "sha256": "ceb113e33b00790f63e7a6ea402ec7cabb439443eca5557d5834739bcbfd0917",
       "meta_sha256": "5b406d641eca67c9abfbddbb1285d0a6e2d0e1789179a010ffd46bdb0d93a655"
     },
     "AppearanceMaterialUtils": {
@@ -3562,7 +3562,7 @@
         "guid": "ff5eaacd0ce7de3bf334fe5b32b7ab10",
         "type": 3
       },
-      "sha256": "b7b880b2f49fecf6765dc403593814c7b154626fd4b526d72d5a3189c5dc9a19",
+      "sha256": "826c6b392aa652164ac7fef266141903b5eeba8e46854fd19733a6bf056ddc61",
       "meta_sha256": "e85bca6bc927468e1fa02e1ca6de72e2caa5a18ef2cde50ca93c304d829f7c01"
     },
     "AppearanceOverrideType": {
@@ -3572,7 +3572,7 @@
         "guid": "c972e82f2953f153cebc31f0202d016a",
         "type": 3
       },
-      "sha256": "32035eaa5c93b9b18ebb31753c45c54b2e37bd215ceb514baffe877537b2a55b",
+      "sha256": "23778e95d7ba7fbec064cef4d603365d48949bf2d8ae0917827b7a18856e8b22",
       "meta_sha256": "dd610d2878e294bba36b6b5fdadffcd4353836e22a907abaa6acafe091b26cc1"
     },
     "AppearancePartConfig": {
@@ -3582,7 +3582,7 @@
         "guid": "fab82f2ed60c9923e5f60f7d9d2565c3",
         "type": 3
       },
-      "sha256": "451b05c0ab50e2babe2accc49020e54759920b5656621a707ce425c325e0bedd",
+      "sha256": "8d58d65ecae33261fc0da41aae4d21de465c15169ab79a33c5f17f6852a464ca",
       "meta_sha256": "2a8d957ad2ba10d38cc057e20d36daedbc4049009f1c8e102cfc87026c50a87a"
     },
     "AppearancePartHandler": {
@@ -3604,6 +3604,26 @@
       },
       "sha256": "69343a0f094199a3bad9b700804a8d0df3131c530ba19f3c5a938369a7c2d1f3",
       "meta_sha256": "5d888da3e5e389bfcf1fb677c50306770588566b3c81e5fecd199fea4057e021"
+    },
+    "AppearancePreset": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearancePreset.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "e5759cfe0819eb21108285720803f02b",
+        "type": 3
+      },
+      "sha256": "5f9e72a4493f4c693f8c76c0802e8a884028bda8b76c41a96371a488bd988918",
+      "meta_sha256": "a5efe47b0d3cc9397c87b3dd66d3d69ec53a2f64c5f8379afd233460db24502f"
+    },
+    "AppearancePresetDye": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearancePresetDye.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "20456e2240ebf2ca5f21a6ef8b7d36c8",
+        "type": 3
+      },
+      "sha256": "b5e45bdb49b84bceed1e8b5baaed7bfc7413748d6192a42a6d33e8abf390244e",
+      "meta_sha256": "400f027ba947398bc36fccef5074b8d9b47702f6c6c48c02a21c83226b3f99c1"
     },
     "AppearanceRendererLite": {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRendererLite.cs",
@@ -3682,7 +3702,7 @@
         "guid": "377547dcac0072c76328accb6f5f3b6a",
         "type": 3
       },
-      "sha256": "2c2261980acffd81360b5202bb3982f0453aa0e398901acf49b54a69a930acd9",
+      "sha256": "ba53f303431a7ecf7a5583a6f1d31b35b3a8ee0dd1d3d8fe29c730924e691aba",
       "meta_sha256": "2a11458711584027957b061062af305b1c5ad7661d9b29a9500d09a8add1c7c4"
     },
     "AppearanceSkinClip": {
@@ -3742,7 +3762,7 @@
         "guid": "4cd2fe0e58f159ad90f3d5b94a36b077",
         "type": 3
       },
-      "sha256": "940cf9b008936bb621b40d334246915b85e9f92a4544cc564ee7aff0d7a1a21d",
+      "sha256": "ba9a72d1d270c2bc4795b0d010d32e30428580437bd6aefb6d11d56a5c2ad474",
       "meta_sha256": "f0951e6a48f33f13e4b935ec9c9cb9e349a7c8134ad3b068db1149fbe105ef37"
     },
     "AppendSkinType": {
@@ -3752,7 +3772,7 @@
         "guid": "2be7d9ade03890306c511e1665b57253",
         "type": 3
       },
-      "sha256": "b1e038ea96381d9537888be49d1aa18dd3c2c2a8f24cea4c79d15ab50ab24ebc",
+      "sha256": "21290e20b3aa55a733bdd76c77e5c35ffa00c8c43560971062903861d049ef22",
       "meta_sha256": "2d286ddc206e6b2e0ba8e5bc7bae6a83df971d5578b5ed3d0524608b46504db5"
     },
     "APropEffectPlayAgent": {
@@ -4832,7 +4852,7 @@
         "guid": "ca8c2f02fffe5824792692252d54540a",
         "type": 3
       },
-      "sha256": "0a6b9825eabb369c45b6a0a75e588c5f3108c434bcc87a70515c9296eb21619e",
+      "sha256": "3db7b4a029a91abb01b813b5b72309e846b332c3044858e3694e67db187cc037",
       "meta_sha256": "8cd9f237879dc1002c6f468eae1b9aa591d9aa5eef2f988823280778148a31f4"
     },
     "PartEntry": {
@@ -4972,7 +4992,7 @@
         "guid": "61a7fbfbf2535905e32e447828fe230e",
         "type": 3
       },
-      "sha256": "6da982e0dc52f63ede3cf93cba811de71c95ad6915d40a65974a66da5e6f8d73",
+      "sha256": "fa56048c2020afc02e7b2ad029c0f9521b5177a3656b272918a68d3728f6e380",
       "meta_sha256": "18ca7e0a6d2c8507db0fd764701ba52e742a06146ca28088e0f24e1ce4ac3a37"
     },
     "PlayerUseItemContent": {
@@ -5392,7 +5412,7 @@
         "guid": "f9f2eb85f8b6dd3fc8065525d5f4584e",
         "type": 3
       },
-      "sha256": "acdb7d8a803632b80a5dc4140676980e2fb1e9b596a155ba6b704cf4632dd412",
+      "sha256": "2969ce4f68f61e9e11e47382629c07e37e2d79bb0ad68468bb33323a5ad8e458",
       "meta_sha256": "50d6255c87e3bb532fce0514e04e8fad0e786f826e657b822ce26ba3b231aa64"
     },
     "ProfessionInfoBindings": {
@@ -5522,7 +5542,7 @@
         "guid": "724b62b42146b5624624aa85b288ab3b",
         "type": 3
       },
-      "sha256": "14f5c8eebfd5c4f7e873a388b560849f6ea3b3199232d6b117332ebe468da9bc",
+      "sha256": "284cf7ab4da20fc07dddcada2ad5da309303ab56598961c35302a7286f445fbd",
       "meta_sha256": "58c5e748982303567a619487116d4c0698fa483761112b6cadd3a93a13185568"
     },
     "ProfessionPlayerUIBase": {
@@ -6402,7 +6422,7 @@
         "guid": "3c7b2ff1817aa2e0e16fa58bc50433ce",
         "type": 3
       },
-      "sha256": "37f1a6d1fbd30563e65fb09f4f38959d7d101c377aaa83b5d44b1a9b06521e35",
+      "sha256": "261ed3e4cce907b99bacbbba7684f47b6cb7a5cb3e81dbed4f2e199107893398",
       "meta_sha256": "71ffa5b49c6da258b393e602feacceccb18e4b604dd4919c34fab1c1d7454b51"
     },
     "PlayerPropItem": {
@@ -6412,7 +6432,7 @@
         "guid": "724b62b42146b5624624aa85b288ab3b",
         "type": 3
       },
-      "sha256": "14f5c8eebfd5c4f7e873a388b560849f6ea3b3199232d6b117332ebe468da9bc",
+      "sha256": "284cf7ab4da20fc07dddcada2ad5da309303ab56598961c35302a7286f445fbd",
       "meta_sha256": "58c5e748982303567a619487116d4c0698fa483761112b6cadd3a93a13185568"
     },
     "UGUIJszx.VerticalLayoutGroupJSZX": {
@@ -6455,11 +6475,11 @@
       "guid": "bf3b0bf1a88df0baf11b125946623ad0",
       "geometry": null,
       "restored_original_empty_values": [
-        "/m_fontInfo/Name",
         "/m_CreationSettings/characterSequence",
         "/m_CreationSettings/sourceFontFileName",
         "/m_CreationSettings/referencedFontAssetGUID",
         "/m_CreationSettings/referencedTextAssetGUID",
+        "/m_fontInfo/Name",
         "/m_SourceFontFileGUID"
       ]
     },
@@ -6612,10 +6632,10 @@
       "guid": "e30ad8c4163956c85b5b13389ac02abf",
       "geometry": null,
       "restored_original_empty_values": [
-        "/m_fontInfo/Name",
         "/m_CreationSettings/characterSequence",
         "/m_CreationSettings/sourceFontFileName",
         "/m_CreationSettings/referencedTextAssetGUID",
+        "/m_fontInfo/Name",
         "/m_SourceFontFileGUID"
       ]
     },

@@ -599,6 +599,9 @@ namespace Zjcs.Presentation.Home
                 {
                     if (text.FontProvider == null) text.FontProvider = () => home.catalog.Font;
                     if (text.Localizer == null) text.Localizer = LocalizeUiText;
+                    var target = text.GetComponent<TMPro.TMP_Text>();
+                    var font = text.FontProvider();
+                    if (target && font) target.font = font;
                 }
                 foreach (var tmpController in root.GetComponentsInChildren<MultiLanguageTMPControler>(true))
                 {

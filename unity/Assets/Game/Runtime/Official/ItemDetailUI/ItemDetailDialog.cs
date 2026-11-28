@@ -34,6 +34,16 @@ namespace Zjcs.Official.ItemDetailUI
         public IProfessionItemInfo ItemInfo => definition?.Info;
         public IProfessionItemData ItemData;
         public long RequireCount { get; private set; }
+        public delegate void TextModifierDelegate(WorldMultiLanguageText text);
+        private TextModifierDelegate mNameTextModifier;
+        public ItemDetailDialog SetNameTextModifier(TextModifierDelegate action)
+        { mNameTextModifier=action;return this; }
+        public void UpdateItemNameText()
+        {
+            if(!NameText)return;
+            if(mNameTextModifier!=null)mNameTextModifier.Invoke(NameText);
+            else NameText.SetKey(definition.NameKey);
+        }
         public void Bind(IItemDetailBindings value)
         {
             bindings = value ?? throw new ArgumentNullException(nameof(value));
@@ -99,7 +109,7 @@ namespace Zjcs.Official.ItemDetailUI
                 FakeItemIcon.gameObject.SetActive(fake); ItemImage.gameObject.SetActive(!fake);
                 if (fake) FakeItemIcon.SetKey("{0}", ItemInfo.GetFakeIcon());
             }
-            if (NameText) NameText.SetKey(definition.NameKey);
+            UpdateItemNameText();
             bool function = false, description = false;
             if (FuncDescText)
             {
@@ -138,8 +148,12 @@ namespace Zjcs.Official.ItemDetailUI
         {
             if (QualityText)
             {
-                QualityText.SetKey("Quality." + quality);
-                QualityText.Color = bindings.QualityTextColor(quality);
+                if(bindings is IItemDetailQualityBindings colors)colors.SetQualityText(QualityText,quality);
+                else
+                {
+                    QualityText.SetKey("Quality." + quality);
+                    QualityText.Color = bindings.QualityTextColor(quality);
+                }
             }
             if (QualityBg) QualityBg.sprite = bindings.QualityBackground(quality, mIsSmall);
         }
