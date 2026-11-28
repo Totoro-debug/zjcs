@@ -44,7 +44,7 @@ namespace Zjcs.Editor.ProfessionUI
         [Serializable] private sealed class RankRow { public int Rank, RankAddition, Quality; }
         [Serializable] private sealed class ProfessionRow { public int Profession; public int[] Skills; }
         [Serializable] private sealed class Skin { public int ClassId, SkillId; }
-        [Serializable] private sealed class Fixture { public ExpectedSprite[] sprites; public ExpectedTexture[] textures; }
+        [Serializable] private sealed class Fixture { public int items, professions; public Palette global_colors; public FontFixture font; public ExpectedSprite[] sprites; public ExpectedTexture[] textures; }
         [Serializable] private sealed class SourceRect { public float x, y, width, height; }
         [Serializable] private sealed class ExpectedSprite
         {
@@ -199,24 +199,30 @@ namespace Zjcs.Editor.ProfessionUI
             EditorApplication.playModeStateChanged += state => { if (state == PlayModeStateChange.EnteredPlayMode) ready = true; };
         }
         public static void Run()
+            => Begin(false);
+        public static void RunCurrentResourceIcons()
+            => Begin(true);
+        private static void Begin(bool currentResources)
         {
             try
             {
-                ProfessionValidationWorkspace.AssertIsolatedProject();
+                if(currentResources) ProfessionValidationWorkspace.AssertSourceProject();
+                else ProfessionValidationWorkspace.AssertIsolatedProject();
+                SessionState.SetBool(Active + ".CurrentResources", currentResources);
                 AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
                 ValidateNative();
                 EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
                 Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
                 Application.runInBackground = true; EditorApplication.isPaused = false;
                 SessionState.SetBool(Active, true);
-                SessionState.SetFloat(Active + ".Deadline", (float)(EditorApplication.timeSinceStartup + 240));
+                SessionState.SetFloat(Active + ".Deadline", (float)(EditorApplication.timeSinceStartup + 480));
                 EditorApplication.EnterPlaymode();
             }
             catch (Exception e) { Debug.LogException(e); Finish(1); }
         }
         private static void ValidateNative()
         {
-            var expected = JsonUtility.FromJson<Fixture>(File.ReadAllText(Path.Combine(Cache, "skill-icons-fixture.json")));
+            var expected = ReadFixture();
             long gpuBytes = 0;
             foreach (var e in expected.textures)
             {
@@ -250,15 +256,21 @@ namespace Zjcs.Editor.ProfessionUI
             }
             Debug.Log("Profession skill resources validated: " + expected.sprites.Length + " native Sprite meshes/UVs; " + expected.textures.Length + " full textures; " + gpuBytes + " exact GPU mip bytes.");
         }
+        private static Fixture ReadFixture() => JsonUtility.FromJson<Fixture>(File.ReadAllText(
+            SessionState.GetBool(Active + ".CurrentResources", false)
+                ? Path.Combine(ProfessionValidationWorkspace.DirectoryPath, "profession-skill-icons-fixture.json")
+                : Path.Combine(Cache, "skill-icons-fixture.json")));
         private static void Initialize()
         {
             initialized = true;
             data = JsonUtility.FromJson<Data>(Resources.Load<TextAsset>("ProfessionUI/info-config").text);
-            Require(data.items.Length == 412 && data.professions.Length == 31, "complete selected original skill/skin data");
+            var expected = ReadFixture();
+            Require(data.items.Length == (expected.items == 0 ? 412 : expected.items) && data.professions.Length == (expected.professions == 0 ? 31 : expected.professions), "complete selected original skill/skin data");
+            AudioListener.volume = 0;
             services = new Services { Config = AssetDatabase.LoadAssetAtPath<ItemIconConfig>(Native + "ScriptableConfig/Modules/ItemIcon/ItemIconConfig.asset"),
-                Colors = JsonUtility.FromJson<PaletteFixture>(File.ReadAllText(Path.Combine(Cache, "item-icon-fixture.json"))).global_colors };
+                Colors = expected.global_colors ?? JsonUtility.FromJson<PaletteFixture>(File.ReadAllText(Path.Combine(Cache, "item-icon-fixture.json"))).global_colors };
             var catalog = Object.Instantiate(Resources.Load<OfflineProfessionImageCatalog>("ProfessionUI/skill-images"));
-            var font = JsonUtility.FromJson<FontFixture>(File.ReadAllText(Path.Combine(Cache, "font-service-fixture.json")));
+            var font = expected.font ?? JsonUtility.FromJson<FontFixture>(File.ReadAllText(Path.Combine(Cache, "font-service-fixture.json")));
             catalog.Entries = catalog.Entries.Concat(AssetDatabase.LoadAssetAtPath<OfflineProfessionImageCatalog>(font.resource_catalog).Entries)
                 .Concat(AssetDatabase.LoadAssetAtPath<OfflineProfessionImageCatalog>("Assets/Official/ProfessionUI/Catalogs/ProfessionItemImages.asset").Entries).ToArray();
             loader = new OfflineProfessionImageResourceLoader(catalog);
@@ -399,7 +411,7 @@ namespace Zjcs.Editor.ProfessionUI
                     slot.OnGameObjectPoolClear(); slot.OnGameObjectPoolReset(); Require(services.Returns == services.Borrows, "pool callbacks do not double-return");
                     row.SetActive(true); index = 0; PrepareItem(); Require(services.Creates == 1, "disable/re-enable reuses native icon");
                     slot.OnGameObjectPoolReset(); Require(services.Returns == services.Borrows && services.Subscribers == 0, "pool reset releases active icon exactly once");
-                    Debug.Log("Profession skill information Play Mode passed: 412 native skill/skin icon bindings, 31 profession sort lists, original star threshold/blessing/debug/skin events, pooled slot/attachment lifetimes and three actual simulated popup clicks. Numeric localization/player/window endpoints are fixtures; full information page and popup contents are not covered.");
+                    Debug.Log("Profession skill information Play Mode passed: " + data.items.Length + " native skill/skin icon bindings, " + data.professions.Length + " profession sort lists, original star threshold/blessing/debug/skin events, pooled slot/attachment lifetimes and three actual simulated popup clicks. Numeric localization/player/window endpoints are fixtures; full information page and popup contents are not covered.");
                     Finish(0);
                 }
             }
@@ -417,7 +429,7 @@ namespace Zjcs.Editor.ProfessionUI
             Canvas.ForceUpdateCanvases(); camera.Render(); var old = RenderTexture.active; RenderTexture.active = target;
             var texture = new Texture2D(512, 512, TextureFormat.RGBA32, false, true); texture.ReadPixels(new Rect(0, 0, 512, 512), 0, 0); texture.Apply(); RenderTexture.active = old;
             Require(texture.GetPixels32().Count(p => p.a != 0) > 100, "native skill prefab GPU render");
-            File.WriteAllBytes(ProfessionValidationWorkspace.Output(name + ".png"), texture.EncodeToPNG()); Object.Destroy(texture);
+            File.WriteAllBytes(Path.Combine(ProfessionValidationWorkspace.DirectoryPath, name + ".png"), texture.EncodeToPNG()); Object.Destroy(texture);
         }
         private static object Get(object target, string name) => target.GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Instance).GetValue(target);
         private static void Set(object target, string name, object value) => target.GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Instance).SetValue(target, value);
