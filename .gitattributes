@@ -288,3 +288,17 @@ scripts/prepare_treasure_descriptions.py text eol=lf
 scripts/prepare_treasure_description_validation.py text eol=lf
 scripts/test_treasure_descriptions.ps1 text eol=lf
 scripts/fixtures/treasure_descriptions_validation.cs text eol=lf
+
+# Exact-byte original treasure suit sources and native resources.
+assets/reference/treasure-suit-*-source-manifest.json text eol=lf
+scripts/prepare_treasure_suit*.py text eol=lf
+scripts/test_treasure_suits_native.ps1 text eol=lf
+scripts/fixtures/treasure_suits_native_validation.cs text eol=lf
+unity/Assets/Game/Runtime/Official/TreasureDetailUI/** text eol=lf
+unity/Assets/Game/Runtime/Official/TreasureDetailUI.meta text eol=lf
+unity/Assets/Game/Runtime/Offline/TreasureUI/OfflineTreasureSuit* text eol=lf
+unity/Assets/Game/Resources/Treasure/NativeSuit/** text=auto eol=lf whitespace=-blank-at-eol
+unity/Assets/Game/Resources/Treasure/NativeSuit.meta text eol=lf
+assets/reference/battle-plan-widget-source-manifest.json text eol=lf
+scripts/prepare_battle_plan_widget.py text eol=lf
+unity/Assets/Game/Runtime/Offline/TreasureUI/Zjcs.Offline.TreasureUI.asmdef text eol=lf
