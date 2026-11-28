@@ -16,7 +16,7 @@ from prepare_battle_live_monsters import sha, encoded
 
 def build(*, destination=None, resource_path="Combat/NativeMonsters/catalog", receipt_path=None,
           reuse_verified_shader=False, presentation_resource_root=None, shader_cache=None,
-          isolate_animator_guids=False):
+          isolate_animator_guids=False, replace_common_entities=()):
     work = validation_directory()
     source = work / "live-monsters"
     proof_path = work / "live-monsters-source-manifest.json"
@@ -147,6 +147,23 @@ def build(*, destination=None, resource_path="Combat/NativeMonsters/catalog", re
         bindings=[dict(File=file, Asset=dict(fileID=kind, guid=guid(destination / file), type=3 if kind == 4900000 else 2)) for file, kind in sorted(files.items())])
     if presentation_resource_root is not None:
         payload["presentationResourceRoot"] = presentation_resource_root
+    if replace_common_entities:
+        common_root = ROOT / "unity/Assets/Official/Combat/NativeMonsters"
+        common_inventory = common_root / "inventory.json"
+        common_ids = {row["entityId"] for row in json.loads(common_inventory.read_bytes())["models"]}
+        selected_ids = {row["entityId"] for row in catalog["models"]}
+        replacement_ids = sorted(set(replace_common_entities))
+        if len(replacement_ids) != len(replace_common_entities) or not set(replacement_ids) <= common_ids & selected_ids:
+            raise ValueError("Declare unique installed common entities present in the new actor catalog")
+        common_catalog = common_root / "Resources/Combat/NativeMonsters/catalog.asset"
+        common_proof_path = ROOT / "assets/reference/battle-animation/live-monsters-source-manifest.json"
+        common_proof = json.loads(common_proof_path.read_bytes())
+        common_bindings = (common_inventory, common_catalog, Path(str(common_catalog) + ".meta"))
+        for binding in common_bindings:
+            if sha(binding.read_bytes()) != common_proof["outputs"][binding.relative_to(ROOT).as_posix()]:
+                raise ValueError("Verified common actor replacement baseline differs: " + str(binding))
+        payload["replacesCommonCatalog"] = dict(fileID=11400000, guid=guid(common_catalog), type=2)
+        payload["replacesCommonEntities"] = replacement_ids
     asset(target, "Original full-binary battle monsters", script, payload)
     for path in (target, Path(str(target) + ".meta")): outputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
     folders = {parent for name in outputs for parent in (ROOT / name).parents
@@ -174,6 +191,12 @@ def build(*, destination=None, resource_path="Combat/NativeMonsters/catalog", re
         operation="Preserve full original skeletons, controller closure, prefab bindings and materials. Decode every original ASTC mip to native Unity RGBA32, retaining source texture flags, mip count, color space and sampling. Explicitly bind local Unity assets; no sampled mesh animation.")
     if isolate_animator_guids:
         receipt["installed_animator_guid_remap"] = animator_guids
+    if replace_common_entities:
+        receipt["common_actor_replacement"] = dict(entities=replacement_ids,
+            receipt=dict(path=common_proof_path.relative_to(ROOT).as_posix(), sha256=sha(common_proof_path.read_bytes())),
+            catalog_meta=dict(path=Path(str(common_catalog) + ".meta").relative_to(ROOT).as_posix(), sha256=sha(Path(str(common_catalog) + ".meta").read_bytes())),
+            catalog=dict(path=common_catalog.relative_to(ROOT).as_posix(), sha256=sha(common_catalog.read_bytes())),
+            inventory=dict(path=common_inventory.relative_to(ROOT).as_posix(), sha256=sha(common_inventory.read_bytes())))
     receipt_path.write_bytes(encoded(receipt))
     apk.archive.close()
     print("Installed original live monsters:", len(catalog["models"]), "textures:", len(textures), "files:", len(outputs))

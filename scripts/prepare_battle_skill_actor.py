@@ -21,7 +21,7 @@ from verify_current_summon_properties import verify as verify_summon_properties
 def build(entity, *, cache, destination, resource_root, receipt_prefix, generator,
           lifecycle_names=None, combat_tables=None, verify_inherited_properties=True,
           reuse_verified_shader=True, reuse_verified_playable_shader=True, entity_paths=None,
-          inheritance_rule_pack=None, isolate_animator_guids=False):
+          inheritance_rule_pack=None, isolate_animator_guids=False, replace_common_entities=()):
     work = validation_directory()
     source = OfficialSource()
     managed = cache / 'inputs/Managed'
@@ -45,7 +45,8 @@ def build(entity, *, cache, destination, resource_root, receipt_prefix, generato
     model_receipt = receipt('actor')
     install_model(destination=destination, receipt_path=model_receipt, resource_path=resource_root + '/catalog',
         presentation_resource_root=resource_root, reuse_verified_shader=reuse_verified_shader,
-        shader_cache=cache / 'all-assets/windows-shaders', isolate_animator_guids=isolate_animator_guids)
+        shader_cache=cache / 'all-assets/windows-shaders', isolate_animator_guids=isolate_animator_guids,
+        replace_common_entities=replace_common_entities)
     appearance_receipt = receipt('appearance')
     appearance = build_appearance([entity], destination=destination, native_root=destination,
         model_receipt=model_receipt, catalog_path='Resources/' + resource_root + '/appearance.asset',

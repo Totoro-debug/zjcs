@@ -18,6 +18,8 @@ namespace Zjcs.Offline.ProfessionUI
         [SerializeField] private Binding[] bindings = Array.Empty<Binding>();
         [SerializeField] private ShaderBinding[] shaderBindings = Array.Empty<ShaderBinding>();
         [SerializeField] private string presentationResourceRoot;
+        [SerializeField] private BattleNativeMonsterAssets replacesCommonCatalog;
+        [SerializeField] private int[] replacesCommonEntities = Array.Empty<int>();
         private Dictionary<string, Object> files;
         private Dictionary<int, Dictionary<string, object>> models;
         private string manifest;
@@ -38,7 +40,7 @@ namespace Zjcs.Offline.ProfessionUI
         public static BattleNativeMonsterAssets Locate(int entityId)
         {
             var common = Resources.Load<BattleNativeMonsterAssets>(ResourcePath);
-            if (common && common.Find(entityId) != null) return common;
+            bool hasCommon = common && common.Find(entityId) != null;
             BattleNativeMonsterAssets match = null;
             foreach (var candidate in Resources.LoadAll<BattleNativeMonsterAssets>(SkillActorFolder))
             {
@@ -46,6 +48,10 @@ namespace Zjcs.Offline.ProfessionUI
                 if (match) throw new InvalidDataException("Duplicate original skill actor binding: " + entityId);
                 match = candidate;
             }
+            if (!match) return hasCommon ? common : null;
+            if (hasCommon && (match.replacesCommonCatalog != common
+                || Array.IndexOf(match.replacesCommonEntities, entityId) < 0))
+                throw new InvalidDataException("Original skill actor requires an explicit common binding replacement: " + entityId);
             return match;
         }
         public Dictionary<string, object> Find(int entityId)
@@ -78,6 +84,12 @@ namespace Zjcs.Offline.ProfessionUI
                 if (id <= 0) throw new InvalidDataException("Invalid original monster identity.");
                 nextModels.Add(id, row);
             }
+            var replacements = new HashSet<int>();
+            foreach (int id in replacesCommonEntities)
+                if (!replacesCommonCatalog || replacesCommonCatalog == this || !nextModels.ContainsKey(id)
+                    || replacesCommonCatalog != Resources.Load<BattleNativeMonsterAssets>(ResourcePath)
+                    || !replacements.Add(id) || replacesCommonCatalog.Find(id) == null)
+                    throw new InvalidDataException("Invalid original skill actor common binding replacement: " + id);
             manifest = nextManifest;
             files = nextFiles; models = nextModels;
         }
