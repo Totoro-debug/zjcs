@@ -1,0 +1,25 @@
+{
+  "manifest": "911_156995",
+  "inputs": {
+    ".tools/source-packages/current/911_156995/code-manifest.json": "a47317188c8d1f947b56ff1af73b4cd811a079860799915cf9103603afc200e9",
+    ".tools/source-packages/current/911_156995/client-decompilation-manifest.json": "d18ccfe361df375cbea9f8e44a40f67e76bf0b0af3e49533376b21d6aa95e9d5",
+    ".tools/source-packages/current/911_156995/official-code/client-source/TreasureConfigUtils.cs": "9b16368e8f2167474e7ef5f422f51a981130dc858a9a63f765f2287b61ac37ae",
+    ".tools/source-packages/current/911_156995/official-code/client-source/TreasurePropDisplayOption.cs": "622b9b5da25743334f18026ded98ca5eb23c2d334194f97791f1d23972b86203",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/LanguageUtils.cs": "9247a48d4b6bc6616ca676576ffdc7898e4c74b44aace89fb36f000a910d24b3",
+    ".tools/source-packages/current/911_156995/official-code/managed/decoded/Assembly-CSharp.dll": "1e7eb15a1cead0c2e618e307a367119908485a5a658815a0fe39d98c0d3f31fe",
+    ".tools/source-packages/current/911_156995/official-code/managed/decoded/Console.dll": "5ff2019c868764f8e6afa6a5ff3bd569d4e3d39365a39dc0327a738391e8b64d",
+    "scripts/prepare_treasure_descriptions.py": "b5068a72197195e6ece161b5b415a76aa9e835619efd79ae0f0840acf08f6b17",
+    "scripts/prepare_pet_score_chest_preview.py": "7297ab967bd85bd956f22f382f9f053ac2365177d0177431474204cae5cf3a6c",
+    "unity/Assets/Game/Runtime/Official/TreasureCultivation/OfficialTreasureProperties.cs": "bc588c3c5c496a6a0d22c19a74de06fa993b33f3d38e34151b7203c1f3d55c82",
+    "assets/reference/treasure-properties-source-manifest.json": "e82033034a7492c0f0e20cac989514c429319cbd5a4c10222c883151e998e4cd"
+  },
+  "adaptations": [
+    "Inject tables, current player and season, and the existing UI argument factories.",
+    "Keep the original null parameter array, provider override, task/default branches and argument order.",
+    "Keep scratch storage per query owner rather than across unrelated windows."
+  ],
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/TreasureCultivation/OfficialTreasureDescriptions.cs": "9115b2ad180017634121735736bfd2748eb4190271c6eda30a9aa221b281422a",
+    "unity/Assets/Game/Runtime/Official/TreasureCultivation/OfficialTreasureDescriptions.cs.meta": "c4d1c0e29cbd81c999c4e5aaec4aea528bf150c2c0df347854595c60216a10eb"
+  }
+}
