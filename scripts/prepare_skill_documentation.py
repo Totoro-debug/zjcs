@@ -13,7 +13,7 @@ import xxhash
 from official_apk import Apk
 from official_source import OfficialSource
 from official_tables import Constructors
-from refresh_current_localization import language
+from official_language_reader import language
 from verify_first_second_promotion_skills import verify as verify_skill_migration
 
 ROOT = Path(__file__).resolve().parents[1]

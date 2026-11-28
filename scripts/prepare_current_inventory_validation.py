@@ -6,7 +6,7 @@ from pathlib import Path
 
 from official_apk import ROOT
 from official_source import OfficialSource
-from install_current_inventory_sprites import PROOF, verify_output
+from inventory_sprite_support import PROOF, verify_output
 
 
 def prepare(output):

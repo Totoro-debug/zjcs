@@ -15,7 +15,7 @@ import uuid
 from official_apk import ROOT, CACHE
 from official_source import OfficialSource
 from prepare_official_sources import build
-from refresh_current_character_meshes import preserve
+from conversion_history import preserve
 
 
 FOLDERS = {

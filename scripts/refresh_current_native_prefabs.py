@@ -10,7 +10,7 @@ import struct
 
 from official_apk import ROOT
 from official_source import OfficialSource
-from refresh_current_character_meshes import load_skeleton, preserve
+from conversion_history import load_skeleton, preserve
 
 
 def sha(data):

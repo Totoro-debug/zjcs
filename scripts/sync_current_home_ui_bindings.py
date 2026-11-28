@@ -9,8 +9,8 @@ import xxhash
 from current_conversion_state import activated_receipt, records
 from official_apk import ROOT
 from official_source import OfficialSource
-from refresh_current_character_meshes import preserve
-from refresh_current_localization import language, sha
+from conversion_history import preserve
+from official_language_reader import language, sha
 
 
 FIELDS = {'graphic_flags', 'raycast_target', 'maskable', 'has_tab_group',

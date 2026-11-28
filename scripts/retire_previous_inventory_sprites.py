@@ -7,8 +7,8 @@ import re
 import subprocess
 
 from official_apk import ROOT
-from install_current_inventory_sprites import PROOF, PAYLOAD, atomic_write
-from refresh_current_character_meshes import preserve
+from inventory_sprite_support import PROOF, PAYLOAD, atomic_write
+from conversion_history import preserve
 
 
 def sha(raw):

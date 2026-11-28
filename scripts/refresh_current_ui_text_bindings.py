@@ -11,8 +11,8 @@ from activate_current_payloads import activate
 from current_conversion_state import activated_receipt
 from official_apk import ROOT
 from official_source import OfficialSource
-from refresh_current_localization import language, sha
-from refresh_current_character_meshes import preserve
+from official_language_reader import language, sha
+from conversion_history import preserve
 
 
 def build(activate_outputs=False):

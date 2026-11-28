@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 
 from official_apk import Apk, ROOT
-from refresh_current_character_meshes import preserve
+from conversion_history import preserve
 from UnityPy.helpers.MeshHelper import MeshHandler
 
 

@@ -132,7 +132,7 @@ def stage():
             continue
         add_record(path, converted, changes)
 
-    # Reuse each module's projection logic. Verify the old projection against
+    # Reuse the Home projection logic. Verify the old projection against
     # the installed field before replacing it, retaining unrelated local work.
     import prepare_unity_home_runtime as home
     original_read = home.read
@@ -193,29 +193,6 @@ def stage():
     project_fields(ROOT / 'unity/Assets/StreamingAssets/Home/rules.json', before, after,
                    'scripts/prepare_unity_home_runtime.py')
 
-    import prepare_unity_commerce_catalog as commerce
-    before = commerce.build()
-    original_payload, original_manifest = commerce.PAYLOAD, commerce.MANIFEST
-    commerce_stage = output / 'commerce-inputs'
-    commerce_stage.mkdir(exist_ok=True)
-    receipt = json.loads(original_manifest.read_bytes())
-    for entry in receipt['files']:
-        name = Path(entry['path']).name
-        original = original_payload / name
-        if not original.exists():
-            continue
-        row = staged_by_path.get(original.relative_to(ROOT).as_posix())
-        content = (ROOT / row['staged']).read_bytes() if row else original.read_bytes()
-        (commerce_stage / name).write_bytes(content)
-        entry['sha256'] = hashlib.sha256(content).hexdigest()
-    (commerce_stage / 'source-manifest.json').write_bytes(encode(receipt))
-    commerce.PAYLOAD, commerce.MANIFEST = commerce_stage, commerce_stage / 'source-manifest.json'
-    try:
-        after = commerce.build()
-    finally:
-        commerce.PAYLOAD, commerce.MANIFEST = original_payload, original_manifest
-    project_fields(ROOT / 'unity/Assets/Game/Resources/Commerce/commerce-runtime.json', before, after,
-                   'scripts/prepare_unity_commerce_catalog.py')
     receipt = {'manifest': profile.version, 'base_manifest': profile.apk_version,
                'operation': __doc__, 'inputs': [
                    {'path': path.relative_to(ROOT).as_posix(), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}

@@ -51,7 +51,7 @@ class ResourceUnionTests(unittest.TestCase):
                 return dict(path=path.relative_to(root).as_posix())
             with patch.object(converter, 'ROOT', root), patch.object(converter, 'CACHE', cache_root), \
                  patch('official_source.OfficialSource', return_value=SimpleNamespace(version='test', prepared_path=cache)), \
-                 patch('refresh_current_character_meshes.preserve', side_effect=preserve):
+                 patch('conversion_history.preserve', side_effect=preserve):
                 converter.activate_prepared(source)
             self.assertEqual((cache/'official-code/shared.cs').read_bytes(), b'new')
             self.assertEqual((cache/'official-code/added.cs').read_bytes(), b'added')

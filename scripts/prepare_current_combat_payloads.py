@@ -152,7 +152,7 @@ def build():
 
 if __name__ == '__main__':
     import argparse
-    from refresh_current_character_meshes import preserve
+    from conversion_history import preserve
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--activate', action='store_true')
     options = parser.parse_args()

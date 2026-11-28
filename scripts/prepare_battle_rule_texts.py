@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from official_apk import ROOT
 from official_source import OfficialSource
-from refresh_current_localization import language
+from official_language_reader import language
 import xxhash
 
 

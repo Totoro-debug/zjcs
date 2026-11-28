@@ -61,7 +61,6 @@ def refresh_runtime():
             data['generator_sha256']=sha(ROOT/'scripts/prepare_battle_damage_display.py')
             data['remaining']='Status-specific display distinctions and complete per-event timing remain incomplete. See damage-visibility-source-manifest.json for restored zero/hide filters and element-feedback-source-manifest.json for element labels and animations.'
         if name=='battle-hud/element-feedback-source-manifest.json':
-            data['generator_sha256']=sha(ROOT/'scripts/prepare_battle_element_feedback.py')
             data['remaining']='Floating-text kinds, merge/source rules, timing dependencies, audio and general TMPEffect branches remain incomplete. Original zero/hide filters are recorded separately in damage-visibility-source-manifest.json.'
         path.write_bytes((json.dumps(data,ensure_ascii=(name in ['battle-hud/element-feedback-source-manifest.json','battle-hud/world-damage-source-manifest.json']),indent=2)+'\n').encode())
 

@@ -163,7 +163,7 @@ def stage(work):
 
 
 def activate(work):
-    from refresh_current_character_meshes import preserve
+    from conversion_history import preserve
     work = work.resolve()
     if work.parent != (ROOT / 'output/validation').resolve():
         raise ValueError('Use a direct owned validation workspace')

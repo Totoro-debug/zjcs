@@ -10,7 +10,7 @@ from official_apk import Apk, ROOT
 from prepare_current_creation_ui_sprites import CurrentUiSprites
 from prepare_current_combat_skill_icons import document, identity, owned, sha, HEADER
 from prepare_unity_profession_reward_sprites import Dumper
-from refresh_current_character_meshes import preserve
+from conversion_history import preserve
 
 
 SOURCE = ROOT / 'unity/Assets/Official/CharacterCreation/TrialUI/native-sprites-source-manifest.json'

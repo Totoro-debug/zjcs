@@ -14,7 +14,7 @@ from official_apk import Apk, ROOT
 from official_unity_schema import ScriptSchemas
 from official_battle_spine_component import read_component
 from official_manifest import read_asset_manifest
-from prepare_character_creation_native_data import read_aligned_string, parse_split_binary_object
+from official_spine_binary_reader import read_aligned_string, parse_split_binary_object
 from prepare_character_creation_opening import json_bytes, write_with_meta, REFERENCE, without_source_versions
 from UnityPy.classes.PPtr import PPtr
 

@@ -112,7 +112,7 @@ def bind_official_table_extensions():
             extensions[name] = current['tables'].pop(name)
         if current != old or not extensions:
             raise ValueError('Shared payload has changes beyond verified additional tables: ' + row['path'])
-        from refresh_current_character_meshes import preserve
+        from conversion_history import preserve
         converted.append({'path': row['path'], 'previous_sha256': row['sha256'],
                           'sha256': sha(raw), 'official_tables': sorted(extensions),
                           'preserved': preserve(ROOT / row['path'])})
@@ -127,7 +127,7 @@ def bind_official_table_extensions():
         previous = json.loads(destination.read_bytes())
         if previous['outputs'] == converted:
             return previous
-        from refresh_current_character_meshes import preserve
+        from conversion_history import preserve
         result['previous_receipt'] = preserve(destination)
     destination.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', 'utf8')
     return result

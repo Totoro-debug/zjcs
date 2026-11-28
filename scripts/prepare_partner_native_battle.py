@@ -18,7 +18,7 @@ from official_battle_spine_component import read_component
 from official_unity_schema import ScriptSchemas
 from current_component_schemas import CurrentSchemas
 from official_manifest import read_asset_manifest
-from prepare_character_creation_native_data import read_aligned_string
+from official_spine_binary_reader import read_aligned_string
 from prepare_native_character_geometry import atlas_regions
 from validation_workspace import validation_directory
 

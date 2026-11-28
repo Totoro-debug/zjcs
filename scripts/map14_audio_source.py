@@ -11,7 +11,7 @@ from official_source import OfficialSource
 from official_bundle_reader import OfficialBundleReader
 from prepare_character_creation_opening_audio import parse_pck, read_field
 from prepare_unity_map14_audio import fields
-from verify_current_audio_sources import mapping
+from official_wwise_reader import mapping
 ROOT = Path(__file__).resolve().parents[1]
 def sha(raw): return hashlib.sha256(raw).hexdigest()
 class AudioSource:

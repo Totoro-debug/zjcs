@@ -515,7 +515,7 @@ def record(work):
     proof['outputs'] = outputs
     raw = (json.dumps(proof, ensure_ascii=False, indent=2)+'\n').replace('\n', '\r\n').encode('utf-8')
     if RECEIPT.is_file() and RECEIPT.read_bytes() != raw:
-        from refresh_current_character_meshes import preserve
+        from conversion_history import preserve
         preserve(RECEIPT)
     RECEIPT.write_bytes(raw)
     print('Recorded verified current HUD source inputs; runtime installation remains a separate step.', flush=True)

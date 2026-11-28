@@ -59,7 +59,7 @@ def extract_native(destination):
             target = destination/'official-code/native'/abi/'libil2cpp.so'
             target.parent.mkdir(parents=True, exist_ok=True)
             if target.exists() and target.read_bytes() != raw:
-                from refresh_current_character_meshes import preserve
+                from conversion_history import preserve
                 preserve(target)
             target.write_bytes(raw)
             records.append(dict(apk_entry=entry, path=target.relative_to(ROOT).as_posix(),
@@ -72,7 +72,7 @@ def extract_native(destination):
 def activate_prepared(destination):
     """Install verified code/data in the selected version's single cache."""
     from official_source import OfficialSource
-    from refresh_current_character_meshes import preserve
+    from conversion_history import preserve
     destination = Path(destination).resolve()
     receipt = json.loads((destination / 'code-manifest.json').read_bytes())
     selected = OfficialSource()

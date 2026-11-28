@@ -7,7 +7,7 @@ from official_apk import ROOT
 from official_bundle_reader import OfficialBundleReader
 from official_source import OfficialSource
 from prepare_character_creation_opening_audio import parse_pck
-from verify_current_audio_sources import inspect
+from official_wwise_reader import inspect
 from convert_current_raw_resources import media_entries
 
 
@@ -94,7 +94,7 @@ def prepare(destination, names):
             package['control_objects'] = inspect(raw)['objects']
             packages.append(package)
     tools = [Path(__file__), ROOT / 'scripts/prepare_character_creation_opening_audio.py',
-        ROOT / 'scripts/verify_current_audio_sources.py', ROOT / 'scripts/convert_current_raw_resources.py']
+        ROOT / 'scripts/official_wwise_reader.py', ROOT / 'scripts/convert_current_raw_resources.py']
     result = dict(manifest=source.version, selection=names, packages=packages, audio=media,
         outputs=outputs, completed=True, tools={p.relative_to(ROOT).as_posix(): sha(p.read_bytes()) for p in tools},
         operation=__doc__, scope='Selected package/bank/WEM extraction only; event graphs, gain and PCM decoding belong to their original event consumer.')

@@ -13,7 +13,7 @@ import yaml
 from official_apk import Apk, ROOT
 from prepare_battle_scene_player_appearance import CurrentConstructors
 from prepare_unity_profession_reward_sprites import Dumper
-from refresh_current_character_meshes import preserve
+from conversion_history import preserve
 
 
 SOURCE = ROOT / 'assets/reference/profession-ui/skill-icons-source-manifest.json'

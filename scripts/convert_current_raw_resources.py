@@ -13,7 +13,7 @@ from concurrent.futures import ThreadPoolExecutor
 from official_apk import ROOT
 from official_source import OfficialSource
 from prepare_character_creation_opening_audio import parse_pck
-from verify_current_audio_sources import mapping, inspect
+from official_wwise_reader import mapping, inspect
 from validation_workspace import temporary_validation_directory
 
 

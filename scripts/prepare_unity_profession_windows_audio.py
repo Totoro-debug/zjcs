@@ -14,7 +14,7 @@ from official_source import OfficialSource
 from official_native_yaml_verification import documents
 from prepare_character_creation_opening_audio import parse_pck, read_field
 from prepare_unity_profession_native_inputs import CACHE
-from verify_current_audio_sources import mapping
+from official_wwise_reader import mapping
 
 WORK = ROOT / ".tools/source-packages/current/871_156598/profession-ui/audio"
 OUTPUT = ROOT / "unity/Assets/Official/ProfessionAudio"
@@ -195,7 +195,7 @@ def build():
         package_manifest_sha256=sha(selected.manifest_bytes("WwiseBnk")), packages=package_sources,
         events=events, outputs=outputs, generator=source_file(Path(__file__)),
         tools=[source_file(WWISER), source_file(VGMSTREAM)] + [source_file(ROOT / "scripts" / name) for name in
-            ("official_source.py", "official_cloud_cache.py", "verify_current_audio_sources.py", "prepare_character_creation_opening_audio.py")],
+            ("official_source.py", "official_cloud_cache.py", "official_wwise_reader.py", "prepare_character_creation_opening_audio.py")],
         runtime=[source_file(path) for path in sorted((ROOT / "unity/Assets/Game/Runtime/Offline/ProfessionUI").iterdir()) if path.is_file()],
         validation=source_file(ROOT / "unity/Assets/Game/Editor/ProfessionUI/ProfessionAudioPlaybackValidation.cs"),
         operation="Resolve all five native SDK references through current EventBankMapping and actual APK banks. Preserve event/action/sound/media identity; wwiser zero master gain, original bus/voice gain baked via vgmstream to uncompressed PCM; native Unity importer preserves channels/rate with no normalization or second lossy compression.",

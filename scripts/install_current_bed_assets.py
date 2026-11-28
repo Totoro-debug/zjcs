@@ -9,7 +9,7 @@ from home_native_assets import install_staged_assets
 from official_apk import ROOT
 from official_source import OfficialSource
 from prepare_home_bed_native import DEST, RECEIPT
-from refresh_current_character_meshes import preserve
+from conversion_history import preserve
 
 
 def sha(raw):

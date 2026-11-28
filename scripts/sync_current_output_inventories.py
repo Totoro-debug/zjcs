@@ -8,7 +8,7 @@ from pathlib import Path
 
 from official_apk import ROOT
 from official_source import OfficialSource
-from refresh_current_character_meshes import preserve
+from conversion_history import preserve
 
 
 def sha(raw):

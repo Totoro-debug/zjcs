@@ -8,7 +8,7 @@ import subprocess
 
 from official_apk import ROOT
 from prepare_home_bed_native import DEST, RECEIPT
-from refresh_current_character_meshes import preserve
+from conversion_history import preserve
 
 
 def sha(raw):

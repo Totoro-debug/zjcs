@@ -3,7 +3,7 @@ import json
 import unittest
 from pathlib import Path
 
-from prepare_unity_battle_assets import build_unit_bars_runtime
+from battle_hud_data import build_unit_bars_runtime
 
 
 ROOT = Path(__file__).resolve().parents[1]

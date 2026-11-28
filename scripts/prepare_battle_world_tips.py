@@ -12,7 +12,7 @@ from official_apk import Apk,ROOT
 from official_unity_schema import ScriptSchemas
 from UnityPy.helpers.TypeTreeGenerator import TypeTreeGenerator
 from UnityPy.classes.PPtr import PPtr
-from prepare_unity_battle_assets import normalize_world_float_node,localize_hud_node,normalize_hud_animation
+from battle_hud_data import normalize_world_float_node,localize_hud_node,normalize_hud_animation
 from official_animation import mecanim_tracks
 from prepare_unity_map11_ui import animation_record
 

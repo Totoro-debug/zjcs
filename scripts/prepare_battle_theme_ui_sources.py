@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 import uuid
 from official_source import OfficialSource
-from refresh_current_character_meshes import preserve
+from conversion_history import preserve
 
 ROOT = Path(__file__).resolve().parents[1]
 SELECTED = OfficialSource()

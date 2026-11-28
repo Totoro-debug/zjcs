@@ -16,7 +16,7 @@ from prepare_current_partner_native import documents, identity, pointer
 from prepare_partner_detail_actor_native import PartnerDetailActorBinding
 from npc_travel_language import language
 from validation_workspace import validation_directory
-from prepare_character_creation_native_data import read_aligned_string
+from official_spine_binary_reader import read_aligned_string
 from prepare_native_character_geometry import atlas_regions
 from prepare_partner_native_battle import package
 from convert_official_skeletons import reader_type, WHEEL_SHA256

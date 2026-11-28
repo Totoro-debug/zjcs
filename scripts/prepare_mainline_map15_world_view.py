@@ -10,7 +10,7 @@ from official_unity_schema import ScriptSchemas
 from prepare_unity_map13_sources import encode, write
 from prepare_unity_map13_water_components import import_meta
 from prepare_mainline_map15_configurations import record, sha
-from refresh_current_localization import language
+from official_language_reader import language
 
 
 def build(map_id=15):

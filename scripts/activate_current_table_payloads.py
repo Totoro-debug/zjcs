@@ -8,7 +8,7 @@ import re
 
 from official_apk import Apk, ROOT
 from official_tables import Constructors
-from refresh_current_character_meshes import preserve
+from conversion_history import preserve
 
 
 def sha(raw):
