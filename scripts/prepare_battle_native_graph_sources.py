@@ -32,6 +32,7 @@ def main():
         'sage-psychic-ward-current-skill-graphs',
         'sage-dark-blast-current-skill-graphs',
         'sage-rock-summon-current-skill-graphs',
+        'common-movement-current-skill-graphs',
         'sage-summon-restoration-current-skill-graphs',
         'sage-voodoo-doll-current-skill-graphs',
         'warlock-explosion-current-skill-graphs',
