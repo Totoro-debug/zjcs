@@ -123,6 +123,7 @@ namespace Zjcs.Editor.Combat
                 yield return null; yield return null;
                 var cards = hud.GetComponentsInChildren<WorldGameSkillIcon>(true).OrderBy(card => card.SkillIndex).ToArray();
                 Require(cards.Length == samples.Length && cards.Select((card, i) => card.Icon.sprite == icons.Find(samples[i])).All(value => value), "actual HUD binds old, appearance and newly configured skill icons");
+                OfficialBattleSkillQualityAcceptance.VerifyActual(hud, checkpoint);
                 foreach (var card in cards)
                 {
                     var corners = new Vector3[4]; card.Icon.rectTransform.GetWorldCorners(corners);

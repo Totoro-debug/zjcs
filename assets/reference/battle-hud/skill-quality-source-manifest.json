@@ -1,457 +1,2075 @@
 {
-  "manifest": "854_156383",
-  "generator_sha256": "4bb4f99ca145b84a92ac7ba0229e4ffa5fcd0f0fc5a97e6dffd714f81d8210df",
-  "rules_sha256": "f8c0f515d2f44c5d0847d5422b49d8823578d55de69f59f2d10ec5db83091256",
-  "items": 1910,
+  "manifest": "911_156995",
+  "canonical": {
+    "path": "unity/Assets/Official/CharacterCreation/TrialUI/native-sprites-source-manifest.json",
+    "sha256": "9b1c490bebd1ba45cf8a9726b5befa8d45651489fb1de2dca8bccf213d26febd"
+  },
+  "dependencies": [
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_031a03cab0fff1f9.asset",
+      "sha256": "1eabf7d9d47b63532ad05d54df89fd6dad9d0e35947b5766253b0794d3a1b11c"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_031a03cab0fff1f9.asset.meta",
+      "sha256": "056fbf355166ae854c3595adcb2fd6728945c3c37f3a82d14cf48a7ca1fdf4a2"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset",
+      "sha256": "db9c9f489e7be2529dcb328b7f0af12b6198bf467375547495eb415cc92928b4"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset.meta",
+      "sha256": "82552a4d2231a45d667a7750d77f152a582f15079768e99784657eee70e50dd7"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_42b8cb9630f88aae.asset",
+      "sha256": "02b005ea6f8babe3854b3fb846a6b229b9f204debe3d7ce7a52206aad94d9b03"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_42b8cb9630f88aae.asset.meta",
+      "sha256": "d48752600cf742002468c75bba830cc020229533450dff58a39be3d5175a8f2e"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_0b40a53021595e0f.asset",
+      "sha256": "4e135017e95c7d7da337767ff7370ae065389a830857fbd4e6f0abddea0f170f"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_0b40a53021595e0f.asset.meta",
+      "sha256": "1090e71f84bec00121a1b32b5944a37404fd79da873e96f9ec9ee71de8ca6bbc"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_78887320b0cb2710.asset",
+      "sha256": "e6e651d894d76b974b1c14c9fbbb5a178692ecf08d91aff1550030614d11219c"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_78887320b0cb2710.asset.meta",
+      "sha256": "31b673e7aad52ad10b5d005bb7baa2a23808e3837aca260b5316fe7ef2583263"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_5f018c42e0ce530e.asset",
+      "sha256": "56661e5ded700647ccaf3ebe2015e675d401d4bc9431e6d4fde4270494447314"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_5f018c42e0ce530e.asset.meta",
+      "sha256": "9c1234784d4b086bfdfcbdffa7a6a74c6b557d443b284484e0e6f7c0d778988d"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_caa09e69432a7457.asset",
+      "sha256": "f0c71f1abb00e38859b958a593dddee2d54f1af97966588f4c623a3e6913bd61"
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_caa09e69432a7457.asset.meta",
+      "sha256": "a5239f7e5258e1d03b948477316a06b88d804b524f5afa4c60ac91b91028a619"
+    }
+  ],
+  "source_code": [
+    {
+      "path": ".tools/source-packages/current/911_156995/official-code/common-source/Common/LanguageUtils.cs",
+      "sha256": "9247a48d4b6bc6616ca676576ffdc7898e4c74b44aace89fb36f000a910d24b3"
+    },
+    {
+      "path": ".tools/source-packages/current/911_156995/official-code/common-source/Common/Quality.cs",
+      "sha256": "5d309081493dd97b6cf42c4c995092abcd427ca4ae9efa0259c3af9e57401fa3"
+    },
+    {
+      "path": ".tools/source-packages/current/911_156995/code-manifest.json",
+      "sha256": "a47317188c8d1f947b56ff1af73b4cd811a079860799915cf9103603afc200e9"
+    },
+    {
+      "path": ".tools/source-packages/current/911_156995/official-code/managed/decoded/Console.dll",
+      "sha256": "5ff2019c868764f8e6afa6a5ff3bd569d4e3d39365a39dc0327a738391e8b64d"
+    }
+  ],
   "sprites": [
     {
-      "quality": 3,
-      "name": "ImgQuality_Purple",
-      "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Purple-7d444d87c0.png",
-      "guid": "85e30f59a9dfa244498c8dd90575a9da",
-      "png_sha256": "7d444d87c09fb7ec19312d1e2570399002dfa897c8e94f82689acefa0d734699",
-      "meta_sha256": "d02e5639bbbb29e9fd968a417ca255d94d294a7cb70a305a48d1cfcafb7de6f9",
-      "verified_existing_png": "unity/Assets/Official/Commerce/Art/sprites/ImgQuality_Purple-7d444d87c0.png",
-      "width": 181,
-      "height": 184,
-      "pivot": [
-        0.5,
-        0.5
-      ],
-      "ppu": 100.0,
-      "geometry": {
-        "sourceSize": [
-          184.0,
-          184.0
+      "quality": 1,
+      "name": "ImgQuality_White",
+      "sprite": {
+        "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_031a03cab0fff1f9.asset",
+        "sha256": "1eabf7d9d47b63532ad05d54df89fd6dad9d0e35947b5766253b0794d3a1b11c"
+      },
+      "texture_path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+        "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+        "path_id": "-1061696376164999677",
+        "origin": "apk_zip",
+        "manifest": "911_156995",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+        "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+        "raw_size": 94196,
+        "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+      },
+      "object_sha256": "13e66db1bda3bad75ff4f6d5242fcb2243de531c2a5453e9098164f2e3852bd0",
+      "atlas": {
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-998719416609474834",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "400233c018f4b55a0d3980ed5c2180fea0973d7c6063dc864a424aae1c526681",
+        "render_data": {
+          "texture": {
+            "m_FileID": 0,
+            "m_PathID": -2272721207766944018
+          },
+          "alphaTexture": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "textureRect": {
+            "x": 555.0761108398438,
+            "y": 0.07612049579620361,
+            "width": 180.84774780273438,
+            "height": 183.84774780273438
+          },
+          "textureRectOffset": {
+            "x": 2.076120376586914,
+            "y": 0.07612049579620361
+          },
+          "atlasRectOffset": {
+            "x": 553.0,
+            "y": 0.0
+          },
+          "uvTransform": {
+            "x": 100.0,
+            "y": 645.0,
+            "z": 100.0,
+            "w": 92.0
+          },
+          "downscaleMultiplier": 1.0,
+          "settingsRaw": 67,
+          "secondaryTextures": []
+        }
+      },
+      "expected": {
+        "name": "ImgQuality_White",
+        "guid": "bd9cff9ba270fa895ee53fd598ad3d16",
+        "rect": {
+          "x": 0.0,
+          "y": 0.0,
+          "width": 184.0,
+          "height": 184.0
+        },
+        "pivot": {
+          "x": 92.0,
+          "y": 92.0
+        },
+        "ppu": 100.0,
+        "border": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 0.0
+        },
+        "vertices": [
+          {
+            "x": 0.8600000143051147,
+            "y": 0.6200000047683716
+          },
+          {
+            "x": 0.9100000262260437,
+            "y": -0.41999998688697815
+          },
+          {
+            "x": 0.9100000262260437,
+            "y": 0.33000001311302185
+          },
+          {
+            "x": 0.6299999952316284,
+            "y": -0.8299999833106995
+          },
+          {
+            "x": 0.3499999940395355,
+            "y": 0.9200000166893005
+          },
+          {
+            "x": 0.2800000011920929,
+            "y": -0.9200000166893005
+          },
+          {
+            "x": -0.49000000953674316,
+            "y": 0.9200000166893005
+          },
+          {
+            "x": -0.5199999809265137,
+            "y": -0.9200000166893005
+          },
+          {
+            "x": -0.6499999761581421,
+            "y": -0.8999999761581421
+          },
+          {
+            "x": -0.8999999761581421,
+            "y": 0.5400000214576721
+          },
+          {
+            "x": -0.8999999761581421,
+            "y": -0.41999998688697815
+          }
         ],
-        "trimOffset": [
-          2.076120376586914,
-          0.07612049579620361
+        "triangles": [
+          10,
+          9,
+          8,
+          6,
+          8,
+          9,
+          7,
+          8,
+          6,
+          5,
+          7,
+          6,
+          4,
+          5,
+          6,
+          3,
+          5,
+          4,
+          0,
+          3,
+          4,
+          1,
+          3,
+          0,
+          2,
+          1,
+          0
         ],
-        "trimSize": [
-          180.84774780273438,
-          183.84774780273438
+        "uv": [
+          {
+            "x": 0.7138671888969839,
+            "y": 0.3007812509313226
+          },
+          {
+            "x": 0.7187500025611371,
+            "y": 0.09765625256113708
+          },
+          {
+            "x": 0.7187500025611371,
+            "y": 0.24414062756113708
+          },
+          {
+            "x": 0.6914062495343387,
+            "y": 0.01757812825962901
+          },
+          {
+            "x": 0.6640624994179234,
+            "y": 0.359375003259629
+          },
+          {
+            "x": 0.6572265626164153,
+            "y": -3.259629011154175e-09
+          },
+          {
+            "x": 0.5820312490686774,
+            "y": 0.359375003259629
+          },
+          {
+            "x": 0.5791015643626451,
+            "y": -3.259629011154175e-09
+          },
+          {
+            "x": 0.5664062523283064,
+            "y": 0.003906254656612873
+          },
+          {
+            "x": 0.5419921898283064,
+            "y": 0.2851562541909516
+          },
+          {
+            "x": 0.5419921898283064,
+            "y": 0.09765625256113708
+          }
         ],
-        "uvMin": [
-          0.000420501877589779,
-          0.0004136983467184979
+        "physics_shapes": []
+      },
+      "texture": {
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-2272721207766944018",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "11c398bcd2d78036adf1a13e81956e0a5e824955b4508439f3411bb283525701",
+        "original_fields": {
+          "m_Name": "sactx-0-1024x512-ASTC 6x6-ItemQuality_Atlas-748d1aea",
+          "m_ForcedFallbackFormat": 4,
+          "m_DownscaleFallback": false,
+          "m_IsAlphaChannelOptional": false,
+          "m_Width": 1024,
+          "m_Height": 512,
+          "m_CompleteImageSize": 235296,
+          "m_MipsStripped": 0,
+          "m_TextureFormat": 50,
+          "m_MipCount": 1,
+          "m_IsReadable": false,
+          "m_IsPreProcessed": false,
+          "m_IgnoreMipmapLimit": false,
+          "m_MipmapLimitGroupName": "",
+          "m_StreamingMipmaps": false,
+          "m_StreamingMipmapsPriority": 0,
+          "m_ImageCount": 1,
+          "m_TextureDimension": 2,
+          "m_TextureSettings": {
+            "m_FilterMode": 1,
+            "m_Aniso": 1,
+            "m_MipBias": 0.0,
+            "m_WrapU": 1,
+            "m_WrapV": 1,
+            "m_WrapW": 1
+          },
+          "m_LightmapFormat": 0,
+          "m_ColorSpace": 1,
+          "m_PlatformBlob": [],
+          "m_StreamData": {
+            "offset": 0,
+            "size": 235296,
+            "path": "archive:/CAB-e7f9beabec2f42c12744d3d750a28005/CAB-e7f9beabec2f42c12744d3d750a28005.resS"
+          }
+        },
+        "mips": [
+          {
+            "level": 0,
+            "width": 1024,
+            "height": 512,
+            "astc_offset": 0,
+            "astc_size": 235296,
+            "astc_sha256": "5fd3670c38cf4c935fc6b8cc44c488f2a2970631926e91e95b3ad046717f1b5e",
+            "rgba_offset": 0,
+            "rgba_size": 2097152,
+            "rgba_sha256": "4431f8f75240b21763d5e5b36d5cdb64c6df1e763826122de5e02ee04de7d076"
+          }
         ],
-        "uvMax": [
-          0.9995793295170062,
-          0.9995862407528836
-        ]
+        "pixels_sha256": "4431f8f75240b21763d5e5b36d5cdb64c6df1e763826122de5e02ee04de7d076"
       }
     },
     {
       "quality": 2,
       "name": "ImgQuality_Blue",
-      "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Blue-42b8cb9630.png",
-      "guid": "f577b4c718795908b62ca2a4bef29bc5",
-      "png_sha256": "d7af3c8915139d2d876cb2f85ca24e63135c48c028cd83474a8248802ab5a93f",
-      "meta_sha256": "87537ce39a2c10c202d493d1bfa4beb581257324b8f3fe2173bef5550ed09aa1",
-      "verified_existing_png": "unity/Assets/Official/Commerce/Art/sprites/ImgQuality_Blue-42b8cb9630.png",
-      "width": 181,
-      "height": 184,
-      "pivot": [
-        0.5,
-        0.5
-      ],
-      "ppu": 100.0,
-      "geometry": {
-        "sourceSize": [
-          184.0,
-          184.0
+      "sprite": {
+        "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_42b8cb9630f88aae.asset",
+        "sha256": "02b005ea6f8babe3854b3fb846a6b229b9f204debe3d7ce7a52206aad94d9b03"
+      },
+      "texture_path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+        "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+        "path_id": "-4751286179582860268",
+        "origin": "apk_zip",
+        "manifest": "911_156995",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+        "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+        "raw_size": 94196,
+        "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+      },
+      "object_sha256": "ee8f01b569de96fc85c6ae16a47350a4fc237ffcfa14ca3436fc9b91745e3edd",
+      "atlas": {
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-998719416609474834",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "400233c018f4b55a0d3980ed5c2180fea0973d7c6063dc864a424aae1c526681",
+        "render_data": {
+          "texture": {
+            "m_FileID": 0,
+            "m_PathID": -2272721207766944018
+          },
+          "alphaTexture": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "textureRect": {
+            "x": 0.07612037658691406,
+            "y": 188.0761260986328,
+            "width": 180.84774780273438,
+            "height": 183.84774780273438
+          },
+          "textureRectOffset": {
+            "x": 2.076120376586914,
+            "y": 0.07612049579620361
+          },
+          "atlasRectOffset": {
+            "x": -2.0,
+            "y": 188.0
+          },
+          "uvTransform": {
+            "x": 100.0,
+            "y": 90.0,
+            "z": 100.0,
+            "w": 280.0
+          },
+          "downscaleMultiplier": 1.0,
+          "settingsRaw": 67,
+          "secondaryTextures": []
+        }
+      },
+      "expected": {
+        "name": "ImgQuality_Blue",
+        "guid": "d5f8f74aeb096fee20237b52b0ceb08e",
+        "rect": {
+          "x": 0.0,
+          "y": 0.0,
+          "width": 184.0,
+          "height": 184.0
+        },
+        "pivot": {
+          "x": 92.0,
+          "y": 92.0
+        },
+        "ppu": 100.0,
+        "border": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 0.0
+        },
+        "vertices": [
+          {
+            "x": 0.8600000143051147,
+            "y": 0.6200000047683716
+          },
+          {
+            "x": 0.9100000262260437,
+            "y": -0.41999998688697815
+          },
+          {
+            "x": 0.9100000262260437,
+            "y": 0.33000001311302185
+          },
+          {
+            "x": 0.6299999952316284,
+            "y": -0.8299999833106995
+          },
+          {
+            "x": 0.3499999940395355,
+            "y": 0.9200000166893005
+          },
+          {
+            "x": 0.2800000011920929,
+            "y": -0.9200000166893005
+          },
+          {
+            "x": -0.49000000953674316,
+            "y": 0.9200000166893005
+          },
+          {
+            "x": -0.5199999809265137,
+            "y": -0.9200000166893005
+          },
+          {
+            "x": -0.6499999761581421,
+            "y": -0.8999999761581421
+          },
+          {
+            "x": -0.8999999761581421,
+            "y": 0.5400000214576721
+          },
+          {
+            "x": -0.8999999761581421,
+            "y": -0.41999998688697815
+          }
         ],
-        "trimOffset": [
-          2.076120376586914,
-          0.07612049579620361
+        "triangles": [
+          10,
+          9,
+          8,
+          6,
+          8,
+          9,
+          7,
+          8,
+          6,
+          5,
+          7,
+          6,
+          4,
+          5,
+          6,
+          3,
+          5,
+          4,
+          0,
+          3,
+          4,
+          1,
+          3,
+          0,
+          2,
+          1,
+          0
         ],
-        "trimSize": [
-          180.84774780273438,
-          183.84774780273438
+        "uv": [
+          {
+            "x": 0.17187500139698386,
+            "y": 0.6679687509313226
+          },
+          {
+            "x": 0.17675781506113708,
+            "y": 0.4648437525611371
+          },
+          {
+            "x": 0.17675781506113708,
+            "y": 0.6113281275611371
+          },
+          {
+            "x": 0.1494140620343387,
+            "y": 0.384765628259629
+          },
+          {
+            "x": 0.12207031191792339,
+            "y": 0.726562503259629
+          },
+          {
+            "x": 0.11523437511641532,
+            "y": 0.367187496740371
+          },
+          {
+            "x": 0.040039061568677425,
+            "y": 0.726562503259629
+          },
+          {
+            "x": 0.03710937686264515,
+            "y": 0.367187496740371
+          },
+          {
+            "x": 0.024414064828306437,
+            "y": 0.3710937546566129
+          },
+          {
+            "x": 2.3283064365386963e-09,
+            "y": 0.6523437541909516
+          },
+          {
+            "x": 2.3283064365386963e-09,
+            "y": 0.4648437525611371
+          }
         ],
-        "uvMin": [
-          0.00042055456677853075,
-          0.00041372879691745925
+        "physics_shapes": []
+      },
+      "texture": {
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-2272721207766944018",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "11c398bcd2d78036adf1a13e81956e0a5e824955b4508439f3411bb283525701",
+        "original_fields": {
+          "m_Name": "sactx-0-1024x512-ASTC 6x6-ItemQuality_Atlas-748d1aea",
+          "m_ForcedFallbackFormat": 4,
+          "m_DownscaleFallback": false,
+          "m_IsAlphaChannelOptional": false,
+          "m_Width": 1024,
+          "m_Height": 512,
+          "m_CompleteImageSize": 235296,
+          "m_MipsStripped": 0,
+          "m_TextureFormat": 50,
+          "m_MipCount": 1,
+          "m_IsReadable": false,
+          "m_IsPreProcessed": false,
+          "m_IgnoreMipmapLimit": false,
+          "m_MipmapLimitGroupName": "",
+          "m_StreamingMipmaps": false,
+          "m_StreamingMipmapsPriority": 0,
+          "m_ImageCount": 1,
+          "m_TextureDimension": 2,
+          "m_TextureSettings": {
+            "m_FilterMode": 1,
+            "m_Aniso": 1,
+            "m_MipBias": 0.0,
+            "m_WrapU": 1,
+            "m_WrapV": 1,
+            "m_WrapW": 1
+          },
+          "m_LightmapFormat": 0,
+          "m_ColorSpace": 1,
+          "m_PlatformBlob": [],
+          "m_StreamData": {
+            "offset": 0,
+            "size": 235296,
+            "path": "archive:/CAB-e7f9beabec2f42c12744d3d750a28005/CAB-e7f9beabec2f42c12744d3d750a28005.resS"
+          }
+        },
+        "mips": [
+          {
+            "level": 0,
+            "width": 1024,
+            "height": 512,
+            "astc_offset": 0,
+            "astc_size": 235296,
+            "astc_sha256": "5fd3670c38cf4c935fc6b8cc44c488f2a2970631926e91e95b3ad046717f1b5e",
+            "rgba_offset": 0,
+            "rgba_size": 2097152,
+            "rgba_sha256": "4431f8f75240b21763d5e5b36d5cdb64c6df1e763826122de5e02ee04de7d076"
+          }
         ],
-        "uvMax": [
-          0.999579382206195,
-          0.9995862712030825
-        ]
+        "pixels_sha256": "4431f8f75240b21763d5e5b36d5cdb64c6df1e763826122de5e02ee04de7d076"
       }
     },
     {
-      "quality": 1,
-      "name": "ImgQuality_White",
-      "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_White-9f7417c1ae.png",
-      "guid": "e5792843d97fd19a2564021fcf0f1525",
-      "png_sha256": "9f7417c1aea3778b1dfd9f845dbcff09e58a7e0f9451e4e3f2a0976d4ccf6bbf",
-      "meta_sha256": "b7e4a9cfd2fca1a59584ef76c0594c92c866466840f837b1f18c33626263bc67",
-      "verified_existing_png": "unity/Assets/Official/Commerce/Art/sprites/ImgQuality_White-9f7417c1ae.png",
-      "width": 181,
-      "height": 184,
-      "pivot": [
-        0.5,
-        0.5
-      ],
-      "ppu": 100.0,
-      "geometry": {
-        "sourceSize": [
-          184.0,
-          184.0
+      "quality": 3,
+      "name": "ImgQuality_Purple",
+      "sprite": {
+        "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_0b40a53021595e0f.asset",
+        "sha256": "4e135017e95c7d7da337767ff7370ae065389a830857fbd4e6f0abddea0f170f"
+      },
+      "texture_path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+        "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+        "path_id": "-6257336838115593342",
+        "origin": "apk_zip",
+        "manifest": "911_156995",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+        "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+        "raw_size": 94196,
+        "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+      },
+      "object_sha256": "7a77f522d8cb579758da8814897bbc6d8eb30e4bac2add5e194cca3994de3634",
+      "atlas": {
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-998719416609474834",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "400233c018f4b55a0d3980ed5c2180fea0973d7c6063dc864a424aae1c526681",
+        "render_data": {
+          "texture": {
+            "m_FileID": 0,
+            "m_PathID": -2272721207766944018
+          },
+          "alphaTexture": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "textureRect": {
+            "x": 370.07611083984375,
+            "y": 0.07612049579620361,
+            "width": 180.84774780273438,
+            "height": 183.84774780273438
+          },
+          "textureRectOffset": {
+            "x": 2.076120376586914,
+            "y": 0.07612049579620361
+          },
+          "atlasRectOffset": {
+            "x": 368.0,
+            "y": 0.0
+          },
+          "uvTransform": {
+            "x": 100.0,
+            "y": 460.0,
+            "z": 100.0,
+            "w": 92.0
+          },
+          "downscaleMultiplier": 1.0,
+          "settingsRaw": 67,
+          "secondaryTextures": []
+        }
+      },
+      "expected": {
+        "name": "ImgQuality_Purple",
+        "guid": "c19f6ad93d9cbc912b9af8d73ad6a94f",
+        "rect": {
+          "x": 0.0,
+          "y": 0.0,
+          "width": 184.0,
+          "height": 184.0
+        },
+        "pivot": {
+          "x": 92.0,
+          "y": 92.0
+        },
+        "ppu": 100.0,
+        "border": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 0.0
+        },
+        "vertices": [
+          {
+            "x": 0.8600000143051147,
+            "y": 0.6200000047683716
+          },
+          {
+            "x": 0.9100000262260437,
+            "y": -0.41999998688697815
+          },
+          {
+            "x": 0.9100000262260437,
+            "y": 0.33000001311302185
+          },
+          {
+            "x": 0.6299999952316284,
+            "y": -0.8299999833106995
+          },
+          {
+            "x": 0.3499999940395355,
+            "y": 0.9200000166893005
+          },
+          {
+            "x": 0.2800000011920929,
+            "y": -0.9200000166893005
+          },
+          {
+            "x": -0.49000000953674316,
+            "y": 0.9200000166893005
+          },
+          {
+            "x": -0.5199999809265137,
+            "y": -0.9200000166893005
+          },
+          {
+            "x": -0.6499999761581421,
+            "y": -0.8999999761581421
+          },
+          {
+            "x": -0.8999999761581421,
+            "y": 0.5400000214576721
+          },
+          {
+            "x": -0.8999999761581421,
+            "y": -0.41999998688697815
+          }
         ],
-        "trimOffset": [
-          2.076120376586914,
-          0.07612049579620361
+        "triangles": [
+          10,
+          9,
+          8,
+          6,
+          8,
+          9,
+          7,
+          8,
+          6,
+          5,
+          7,
+          6,
+          4,
+          5,
+          6,
+          3,
+          5,
+          4,
+          0,
+          3,
+          4,
+          1,
+          3,
+          0,
+          2,
+          1,
+          0
         ],
-        "trimSize": [
-          180.84774780273438,
-          183.84774780273438
+        "uv": [
+          {
+            "x": 0.5332031263969839,
+            "y": 0.3007812509313226
+          },
+          {
+            "x": 0.5380859400611371,
+            "y": 0.09765625256113708
+          },
+          {
+            "x": 0.5380859400611371,
+            "y": 0.24414062756113708
+          },
+          {
+            "x": 0.5107421870343387,
+            "y": 0.01757812825962901
+          },
+          {
+            "x": 0.4833984369179234,
+            "y": 0.359375003259629
+          },
+          {
+            "x": 0.4765625001164153,
+            "y": -3.259629011154175e-09
+          },
+          {
+            "x": 0.4013671865686774,
+            "y": 0.359375003259629
+          },
+          {
+            "x": 0.39843750186264515,
+            "y": -3.259629011154175e-09
+          },
+          {
+            "x": 0.38574218982830644,
+            "y": 0.003906254656612873
+          },
+          {
+            "x": 0.36132812732830644,
+            "y": 0.2851562541909516
+          },
+          {
+            "x": 0.36132812732830644,
+            "y": 0.09765625256113708
+          }
         ],
-        "uvMin": [
-          0.000420501877589779,
-          0.0004136983467184979
+        "physics_shapes": []
+      },
+      "texture": {
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-2272721207766944018",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "11c398bcd2d78036adf1a13e81956e0a5e824955b4508439f3411bb283525701",
+        "original_fields": {
+          "m_Name": "sactx-0-1024x512-ASTC 6x6-ItemQuality_Atlas-748d1aea",
+          "m_ForcedFallbackFormat": 4,
+          "m_DownscaleFallback": false,
+          "m_IsAlphaChannelOptional": false,
+          "m_Width": 1024,
+          "m_Height": 512,
+          "m_CompleteImageSize": 235296,
+          "m_MipsStripped": 0,
+          "m_TextureFormat": 50,
+          "m_MipCount": 1,
+          "m_IsReadable": false,
+          "m_IsPreProcessed": false,
+          "m_IgnoreMipmapLimit": false,
+          "m_MipmapLimitGroupName": "",
+          "m_StreamingMipmaps": false,
+          "m_StreamingMipmapsPriority": 0,
+          "m_ImageCount": 1,
+          "m_TextureDimension": 2,
+          "m_TextureSettings": {
+            "m_FilterMode": 1,
+            "m_Aniso": 1,
+            "m_MipBias": 0.0,
+            "m_WrapU": 1,
+            "m_WrapV": 1,
+            "m_WrapW": 1
+          },
+          "m_LightmapFormat": 0,
+          "m_ColorSpace": 1,
+          "m_PlatformBlob": [],
+          "m_StreamData": {
+            "offset": 0,
+            "size": 235296,
+            "path": "archive:/CAB-e7f9beabec2f42c12744d3d750a28005/CAB-e7f9beabec2f42c12744d3d750a28005.resS"
+          }
+        },
+        "mips": [
+          {
+            "level": 0,
+            "width": 1024,
+            "height": 512,
+            "astc_offset": 0,
+            "astc_size": 235296,
+            "astc_sha256": "5fd3670c38cf4c935fc6b8cc44c488f2a2970631926e91e95b3ad046717f1b5e",
+            "rgba_offset": 0,
+            "rgba_size": 2097152,
+            "rgba_sha256": "4431f8f75240b21763d5e5b36d5cdb64c6df1e763826122de5e02ee04de7d076"
+          }
         ],
-        "uvMax": [
-          0.9995793295170062,
-          0.9995862407528836
-        ]
-      }
-    },
-    {
-      "quality": 6,
-      "name": "ImgQuality_Red",
-      "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Red-fe7cc9d49b.png",
-      "guid": "e2c4121b36982603f3da5195baf45a3c",
-      "png_sha256": "fe7cc9d49b6aa82a73c7cc23b24268ece2431e80bf2b3f7b8ce78308002488cc",
-      "meta_sha256": "52cfa9cc4bc1b64a8d752f3cd37ced359dfe1975b2d87c70e0fca84b7a174ee2",
-      "verified_existing_png": "unity/Assets/Official/Commerce/Art/sprites/ImgQuality_Red-fe7cc9d49b.png",
-      "width": 181,
-      "height": 184,
-      "pivot": [
-        0.5,
-        0.5
-      ],
-      "ppu": 100.0,
-      "geometry": {
-        "sourceSize": [
-          184.0,
-          184.0
-        ],
-        "trimOffset": [
-          2.076120376586914,
-          0.07612049579620361
-        ],
-        "trimSize": [
-          180.84774780273438,
-          183.84774780273438
-        ],
-        "uvMin": [
-          0.00042058618029178175,
-          0.00041372879691745925
-        ],
-        "uvMax": [
-          0.9995794138197083,
-          0.9995862712030825
-        ]
+        "pixels_sha256": "4431f8f75240b21763d5e5b36d5cdb64c6df1e763826122de5e02ee04de7d076"
       }
     },
     {
       "quality": 4,
       "name": "ImgQuality_Orange",
-      "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Orange-062c6607e3.png",
-      "guid": "3e13ce5daa852da8d672827941ca870f",
-      "png_sha256": "062c6607e362f475331c72fd86330e63aa5e0bc1bb5678a8e880419c6bff6ce2",
-      "meta_sha256": "7adb3ef4ea3e946ee8ad1bbdf8ddf2c84c1324130ee5c481f3c97e4a24abdeeb",
-      "verified_existing_png": "unity/Assets/Official/Commerce/Art/sprites/ImgQuality_Orange-062c6607e3.png",
-      "width": 181,
-      "height": 184,
-      "pivot": [
-        0.5,
-        0.5
-      ],
-      "ppu": 100.0,
-      "geometry": {
-        "sourceSize": [
-          184.0,
-          184.0
+      "sprite": {
+        "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_78887320b0cb2710.asset",
+        "sha256": "e6e651d894d76b974b1c14c9fbbb5a178692ecf08d91aff1550030614d11219c"
+      },
+      "texture_path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+        "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+        "path_id": "6526364828817696293",
+        "origin": "apk_zip",
+        "manifest": "911_156995",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+        "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+        "raw_size": 94196,
+        "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+      },
+      "object_sha256": "33fec576c9bd6ca6ffe93cb2ce175299b5ef1fe100e416c030281a65d0148cbd",
+      "atlas": {
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-998719416609474834",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "400233c018f4b55a0d3980ed5c2180fea0973d7c6063dc864a424aae1c526681",
+        "render_data": {
+          "texture": {
+            "m_FileID": 0,
+            "m_PathID": -2272721207766944018
+          },
+          "alphaTexture": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "textureRect": {
+            "x": 0.07612037658691406,
+            "y": 0.07612049579620361,
+            "width": 180.84774780273438,
+            "height": 183.84774780273438
+          },
+          "textureRectOffset": {
+            "x": 2.076120376586914,
+            "y": 0.07612049579620361
+          },
+          "atlasRectOffset": {
+            "x": -2.0,
+            "y": 0.0
+          },
+          "uvTransform": {
+            "x": 100.0,
+            "y": 90.0,
+            "z": 100.0,
+            "w": 92.0
+          },
+          "downscaleMultiplier": 1.0,
+          "settingsRaw": 67,
+          "secondaryTextures": []
+        }
+      },
+      "expected": {
+        "name": "ImgQuality_Orange",
+        "guid": "b50fd42843b084ec9b1c5f74bc19cfdf",
+        "rect": {
+          "x": 0.0,
+          "y": 0.0,
+          "width": 184.0,
+          "height": 184.0
+        },
+        "pivot": {
+          "x": 92.0,
+          "y": 92.0
+        },
+        "ppu": 100.0,
+        "border": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 0.0
+        },
+        "vertices": [
+          {
+            "x": 0.8600000143051147,
+            "y": 0.6200000047683716
+          },
+          {
+            "x": 0.9100000262260437,
+            "y": -0.41999998688697815
+          },
+          {
+            "x": 0.9100000262260437,
+            "y": 0.33000001311302185
+          },
+          {
+            "x": 0.6299999952316284,
+            "y": -0.8299999833106995
+          },
+          {
+            "x": 0.3499999940395355,
+            "y": 0.9200000166893005
+          },
+          {
+            "x": 0.2800000011920929,
+            "y": -0.9200000166893005
+          },
+          {
+            "x": -0.49000000953674316,
+            "y": 0.9200000166893005
+          },
+          {
+            "x": -0.5199999809265137,
+            "y": -0.9200000166893005
+          },
+          {
+            "x": -0.6499999761581421,
+            "y": -0.8999999761581421
+          },
+          {
+            "x": -0.8999999761581421,
+            "y": 0.5400000214576721
+          },
+          {
+            "x": -0.8999999761581421,
+            "y": -0.41999998688697815
+          }
         ],
-        "trimOffset": [
-          2.076120376586914,
-          0.07612049579620361
+        "triangles": [
+          10,
+          9,
+          8,
+          6,
+          8,
+          9,
+          7,
+          8,
+          6,
+          5,
+          7,
+          6,
+          4,
+          5,
+          6,
+          3,
+          5,
+          4,
+          0,
+          3,
+          4,
+          1,
+          3,
+          0,
+          2,
+          1,
+          0
         ],
-        "trimSize": [
-          180.84774780273438,
-          183.84774780273438
+        "uv": [
+          {
+            "x": 0.17187500139698386,
+            "y": 0.3007812509313226
+          },
+          {
+            "x": 0.17675781506113708,
+            "y": 0.09765625256113708
+          },
+          {
+            "x": 0.17675781506113708,
+            "y": 0.24414062756113708
+          },
+          {
+            "x": 0.1494140620343387,
+            "y": 0.01757812825962901
+          },
+          {
+            "x": 0.12207031191792339,
+            "y": 0.359375003259629
+          },
+          {
+            "x": 0.11523437511641532,
+            "y": -3.259629011154175e-09
+          },
+          {
+            "x": 0.040039061568677425,
+            "y": 0.359375003259629
+          },
+          {
+            "x": 0.03710937686264515,
+            "y": -3.259629011154175e-09
+          },
+          {
+            "x": 0.024414064828306437,
+            "y": 0.003906254656612873
+          },
+          {
+            "x": 2.3283064365386963e-09,
+            "y": 0.2851562541909516
+          },
+          {
+            "x": 2.3283064365386963e-09,
+            "y": 0.09765625256113708
+          }
         ],
-        "uvMin": [
-          0.00042055456677853075,
-          0.0004136983467184979
+        "physics_shapes": []
+      },
+      "texture": {
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-2272721207766944018",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "11c398bcd2d78036adf1a13e81956e0a5e824955b4508439f3411bb283525701",
+        "original_fields": {
+          "m_Name": "sactx-0-1024x512-ASTC 6x6-ItemQuality_Atlas-748d1aea",
+          "m_ForcedFallbackFormat": 4,
+          "m_DownscaleFallback": false,
+          "m_IsAlphaChannelOptional": false,
+          "m_Width": 1024,
+          "m_Height": 512,
+          "m_CompleteImageSize": 235296,
+          "m_MipsStripped": 0,
+          "m_TextureFormat": 50,
+          "m_MipCount": 1,
+          "m_IsReadable": false,
+          "m_IsPreProcessed": false,
+          "m_IgnoreMipmapLimit": false,
+          "m_MipmapLimitGroupName": "",
+          "m_StreamingMipmaps": false,
+          "m_StreamingMipmapsPriority": 0,
+          "m_ImageCount": 1,
+          "m_TextureDimension": 2,
+          "m_TextureSettings": {
+            "m_FilterMode": 1,
+            "m_Aniso": 1,
+            "m_MipBias": 0.0,
+            "m_WrapU": 1,
+            "m_WrapV": 1,
+            "m_WrapW": 1
+          },
+          "m_LightmapFormat": 0,
+          "m_ColorSpace": 1,
+          "m_PlatformBlob": [],
+          "m_StreamData": {
+            "offset": 0,
+            "size": 235296,
+            "path": "archive:/CAB-e7f9beabec2f42c12744d3d750a28005/CAB-e7f9beabec2f42c12744d3d750a28005.resS"
+          }
+        },
+        "mips": [
+          {
+            "level": 0,
+            "width": 1024,
+            "height": 512,
+            "astc_offset": 0,
+            "astc_size": 235296,
+            "astc_sha256": "5fd3670c38cf4c935fc6b8cc44c488f2a2970631926e91e95b3ad046717f1b5e",
+            "rgba_offset": 0,
+            "rgba_size": 2097152,
+            "rgba_sha256": "4431f8f75240b21763d5e5b36d5cdb64c6df1e763826122de5e02ee04de7d076"
+          }
         ],
-        "uvMax": [
-          0.999579382206195,
-          0.9995862407528836
-        ]
+        "pixels_sha256": "4431f8f75240b21763d5e5b36d5cdb64c6df1e763826122de5e02ee04de7d076"
       }
     },
     {
       "quality": 5,
       "name": "ImgQuality_Gold",
-      "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Gold-b466cfbe99.png",
-      "guid": "7fc6abe8f036519b2405cb1efa6bb06c",
-      "png_sha256": "b466cfbe9974111bf5a6bacd2898627c3ef3a5ad51c7a31b0cd01e0a4217f6a4",
-      "meta_sha256": "8603cfb0be0c2d998998ced157b28b72bc7e1294e4e7bbb73c659ce572b48724",
-      "verified_existing_png": "unity/Assets/Official/Commerce/Art/sprites/ImgQuality_Gold-b466cfbe99.png",
-      "width": 181,
-      "height": 184,
-      "pivot": [
-        0.5,
-        0.5
-      ],
-      "ppu": 100.0,
-      "geometry": {
-        "sourceSize": [
-          184.0,
-          184.0
+      "sprite": {
+        "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_5f018c42e0ce530e.asset",
+        "sha256": "56661e5ded700647ccaf3ebe2015e675d401d4bc9431e6d4fde4270494447314"
+      },
+      "texture_path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+        "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+        "path_id": "9108522341688220357",
+        "origin": "apk_zip",
+        "manifest": "911_156995",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+        "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+        "raw_size": 94196,
+        "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+      },
+      "object_sha256": "e41e6974116a5b7d657a6e3a7d9d8656f897c5828e3132aa8cd8e05d16982188",
+      "atlas": {
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-998719416609474834",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "400233c018f4b55a0d3980ed5c2180fea0973d7c6063dc864a424aae1c526681",
+        "render_data": {
+          "texture": {
+            "m_FileID": 0,
+            "m_PathID": -2272721207766944018
+          },
+          "alphaTexture": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "textureRect": {
+            "x": 370.07611083984375,
+            "y": 188.0761260986328,
+            "width": 180.84774780273438,
+            "height": 183.84774780273438
+          },
+          "textureRectOffset": {
+            "x": 2.076120376586914,
+            "y": 0.07612049579620361
+          },
+          "atlasRectOffset": {
+            "x": 368.0,
+            "y": 188.0
+          },
+          "uvTransform": {
+            "x": 100.0,
+            "y": 460.0,
+            "z": 100.0,
+            "w": 280.0
+          },
+          "downscaleMultiplier": 1.0,
+          "settingsRaw": 67,
+          "secondaryTextures": []
+        }
+      },
+      "expected": {
+        "name": "ImgQuality_Gold",
+        "guid": "c4dd759ed982578a1153bd033d25a7ee",
+        "rect": {
+          "x": 0.0,
+          "y": 0.0,
+          "width": 184.0,
+          "height": 184.0
+        },
+        "pivot": {
+          "x": 92.0,
+          "y": 92.0
+        },
+        "ppu": 100.0,
+        "border": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 0.0
+        },
+        "vertices": [
+          {
+            "x": 0.8600000143051147,
+            "y": 0.6200000047683716
+          },
+          {
+            "x": 0.9100000262260437,
+            "y": -0.41999998688697815
+          },
+          {
+            "x": 0.9100000262260437,
+            "y": 0.33000001311302185
+          },
+          {
+            "x": 0.6299999952316284,
+            "y": -0.8299999833106995
+          },
+          {
+            "x": 0.3499999940395355,
+            "y": 0.9200000166893005
+          },
+          {
+            "x": 0.2800000011920929,
+            "y": -0.9200000166893005
+          },
+          {
+            "x": -0.49000000953674316,
+            "y": 0.9200000166893005
+          },
+          {
+            "x": -0.5199999809265137,
+            "y": -0.9200000166893005
+          },
+          {
+            "x": -0.6499999761581421,
+            "y": -0.8999999761581421
+          },
+          {
+            "x": -0.8999999761581421,
+            "y": 0.5400000214576721
+          },
+          {
+            "x": -0.8999999761581421,
+            "y": -0.41999998688697815
+          }
         ],
-        "trimOffset": [
-          2.076120376586914,
-          0.07612049579620361
+        "triangles": [
+          10,
+          9,
+          8,
+          6,
+          8,
+          9,
+          7,
+          8,
+          6,
+          5,
+          7,
+          6,
+          4,
+          5,
+          6,
+          3,
+          5,
+          4,
+          0,
+          3,
+          4,
+          1,
+          3,
+          0,
+          2,
+          1,
+          0
         ],
-        "trimSize": [
-          180.84774780273438,
-          183.84774780273438
+        "uv": [
+          {
+            "x": 0.5332031263969839,
+            "y": 0.6679687509313226
+          },
+          {
+            "x": 0.5380859400611371,
+            "y": 0.4648437525611371
+          },
+          {
+            "x": 0.5380859400611371,
+            "y": 0.6113281275611371
+          },
+          {
+            "x": 0.5107421870343387,
+            "y": 0.384765628259629
+          },
+          {
+            "x": 0.4833984369179234,
+            "y": 0.726562503259629
+          },
+          {
+            "x": 0.4765625001164153,
+            "y": 0.367187496740371
+          },
+          {
+            "x": 0.4013671865686774,
+            "y": 0.726562503259629
+          },
+          {
+            "x": 0.39843750186264515,
+            "y": 0.367187496740371
+          },
+          {
+            "x": 0.38574218982830644,
+            "y": 0.3710937546566129
+          },
+          {
+            "x": 0.36132812732830644,
+            "y": 0.6523437541909516
+          },
+          {
+            "x": 0.36132812732830644,
+            "y": 0.4648437525611371
+          }
         ],
-        "uvMin": [
-          0.000420501877589779,
-          0.00041372879691745925
+        "physics_shapes": []
+      },
+      "texture": {
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-2272721207766944018",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "11c398bcd2d78036adf1a13e81956e0a5e824955b4508439f3411bb283525701",
+        "original_fields": {
+          "m_Name": "sactx-0-1024x512-ASTC 6x6-ItemQuality_Atlas-748d1aea",
+          "m_ForcedFallbackFormat": 4,
+          "m_DownscaleFallback": false,
+          "m_IsAlphaChannelOptional": false,
+          "m_Width": 1024,
+          "m_Height": 512,
+          "m_CompleteImageSize": 235296,
+          "m_MipsStripped": 0,
+          "m_TextureFormat": 50,
+          "m_MipCount": 1,
+          "m_IsReadable": false,
+          "m_IsPreProcessed": false,
+          "m_IgnoreMipmapLimit": false,
+          "m_MipmapLimitGroupName": "",
+          "m_StreamingMipmaps": false,
+          "m_StreamingMipmapsPriority": 0,
+          "m_ImageCount": 1,
+          "m_TextureDimension": 2,
+          "m_TextureSettings": {
+            "m_FilterMode": 1,
+            "m_Aniso": 1,
+            "m_MipBias": 0.0,
+            "m_WrapU": 1,
+            "m_WrapV": 1,
+            "m_WrapW": 1
+          },
+          "m_LightmapFormat": 0,
+          "m_ColorSpace": 1,
+          "m_PlatformBlob": [],
+          "m_StreamData": {
+            "offset": 0,
+            "size": 235296,
+            "path": "archive:/CAB-e7f9beabec2f42c12744d3d750a28005/CAB-e7f9beabec2f42c12744d3d750a28005.resS"
+          }
+        },
+        "mips": [
+          {
+            "level": 0,
+            "width": 1024,
+            "height": 512,
+            "astc_offset": 0,
+            "astc_size": 235296,
+            "astc_sha256": "5fd3670c38cf4c935fc6b8cc44c488f2a2970631926e91e95b3ad046717f1b5e",
+            "rgba_offset": 0,
+            "rgba_size": 2097152,
+            "rgba_sha256": "4431f8f75240b21763d5e5b36d5cdb64c6df1e763826122de5e02ee04de7d076"
+          }
         ],
-        "uvMax": [
-          0.9995793295170062,
-          0.9995862712030825
-        ]
+        "pixels_sha256": "4431f8f75240b21763d5e5b36d5cdb64c6df1e763826122de5e02ee04de7d076"
+      }
+    },
+    {
+      "quality": 6,
+      "name": "ImgQuality_Red",
+      "sprite": {
+        "path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/sprite_caa09e69432a7457.asset",
+        "sha256": "f0c71f1abb00e38859b958a593dddee2d54f1af97966588f4c623a3e6913bd61"
+      },
+      "texture_path": "unity/Assets/Official/CharacterCreation/TrialUI/NativeSprites/Textures/texture_f1673328b82e55cf.asset",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+        "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+        "path_id": "1529348208687224206",
+        "origin": "apk_zip",
+        "manifest": "911_156995",
+        "apk_manifest": "895_156822",
+        "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+        "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+        "raw_size": 94196,
+        "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+      },
+      "object_sha256": "f191c9674f8d4cc3a71f85e38a678b91b2ede6b563d70451330d1bb586ec3c59",
+      "atlas": {
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-998719416609474834",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "400233c018f4b55a0d3980ed5c2180fea0973d7c6063dc864a424aae1c526681",
+        "render_data": {
+          "texture": {
+            "m_FileID": 0,
+            "m_PathID": -2272721207766944018
+          },
+          "alphaTexture": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "textureRect": {
+            "x": 185.0761260986328,
+            "y": 188.0761260986328,
+            "width": 180.84774780273438,
+            "height": 183.84774780273438
+          },
+          "textureRectOffset": {
+            "x": 2.076120376586914,
+            "y": 0.07612049579620361
+          },
+          "atlasRectOffset": {
+            "x": 183.0,
+            "y": 188.0
+          },
+          "uvTransform": {
+            "x": 100.0,
+            "y": 275.0,
+            "z": 100.0,
+            "w": 280.0
+          },
+          "downscaleMultiplier": 1.0,
+          "settingsRaw": 67,
+          "secondaryTextures": []
+        }
+      },
+      "expected": {
+        "name": "ImgQuality_Red",
+        "guid": "2eec0af116311869632ceb9e1656b0b4",
+        "rect": {
+          "x": 0.0,
+          "y": 0.0,
+          "width": 184.0,
+          "height": 184.0
+        },
+        "pivot": {
+          "x": 92.0,
+          "y": 92.0
+        },
+        "ppu": 100.0,
+        "border": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 0.0
+        },
+        "vertices": [
+          {
+            "x": 0.8600000143051147,
+            "y": 0.6200000047683716
+          },
+          {
+            "x": 0.9100000262260437,
+            "y": -0.41999998688697815
+          },
+          {
+            "x": 0.9100000262260437,
+            "y": 0.33000001311302185
+          },
+          {
+            "x": 0.6299999952316284,
+            "y": -0.8299999833106995
+          },
+          {
+            "x": 0.3499999940395355,
+            "y": 0.9200000166893005
+          },
+          {
+            "x": 0.2800000011920929,
+            "y": -0.9200000166893005
+          },
+          {
+            "x": -0.49000000953674316,
+            "y": 0.9200000166893005
+          },
+          {
+            "x": -0.5199999809265137,
+            "y": -0.9200000166893005
+          },
+          {
+            "x": -0.6499999761581421,
+            "y": -0.8999999761581421
+          },
+          {
+            "x": -0.8999999761581421,
+            "y": 0.5400000214576721
+          },
+          {
+            "x": -0.8999999761581421,
+            "y": -0.41999998688697815
+          }
+        ],
+        "triangles": [
+          10,
+          9,
+          8,
+          6,
+          8,
+          9,
+          7,
+          8,
+          6,
+          5,
+          7,
+          6,
+          4,
+          5,
+          6,
+          3,
+          5,
+          4,
+          0,
+          3,
+          4,
+          1,
+          3,
+          0,
+          2,
+          1,
+          0
+        ],
+        "uv": [
+          {
+            "x": 0.35253906389698386,
+            "y": 0.6679687509313226
+          },
+          {
+            "x": 0.3574218775611371,
+            "y": 0.4648437525611371
+          },
+          {
+            "x": 0.3574218775611371,
+            "y": 0.6113281275611371
+          },
+          {
+            "x": 0.3300781245343387,
+            "y": 0.384765628259629
+          },
+          {
+            "x": 0.3027343744179234,
+            "y": 0.726562503259629
+          },
+          {
+            "x": 0.2958984376164153,
+            "y": 0.367187496740371
+          },
+          {
+            "x": 0.22070312406867743,
+            "y": 0.726562503259629
+          },
+          {
+            "x": 0.21777343936264515,
+            "y": 0.367187496740371
+          },
+          {
+            "x": 0.20507812732830644,
+            "y": 0.3710937546566129
+          },
+          {
+            "x": 0.18066406482830644,
+            "y": 0.6523437541909516
+          },
+          {
+            "x": 0.18066406482830644,
+            "y": 0.4648437525611371
+          }
+        ],
+        "physics_shapes": []
+      },
+      "texture": {
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+          "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+          "path_id": "-2272721207766944018",
+          "origin": "apk_zip",
+          "manifest": "911_156995",
+          "apk_manifest": "895_156822",
+          "apk_sha256": "1d43825452decf0f14e7f8a72fc88d2782a4defb85a11f134b638f9ef018c0fb",
+          "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
+          "raw_size": 94196,
+          "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c"
+        },
+        "object_sha256": "11c398bcd2d78036adf1a13e81956e0a5e824955b4508439f3411bb283525701",
+        "original_fields": {
+          "m_Name": "sactx-0-1024x512-ASTC 6x6-ItemQuality_Atlas-748d1aea",
+          "m_ForcedFallbackFormat": 4,
+          "m_DownscaleFallback": false,
+          "m_IsAlphaChannelOptional": false,
+          "m_Width": 1024,
+          "m_Height": 512,
+          "m_CompleteImageSize": 235296,
+          "m_MipsStripped": 0,
+          "m_TextureFormat": 50,
+          "m_MipCount": 1,
+          "m_IsReadable": false,
+          "m_IsPreProcessed": false,
+          "m_IgnoreMipmapLimit": false,
+          "m_MipmapLimitGroupName": "",
+          "m_StreamingMipmaps": false,
+          "m_StreamingMipmapsPriority": 0,
+          "m_ImageCount": 1,
+          "m_TextureDimension": 2,
+          "m_TextureSettings": {
+            "m_FilterMode": 1,
+            "m_Aniso": 1,
+            "m_MipBias": 0.0,
+            "m_WrapU": 1,
+            "m_WrapV": 1,
+            "m_WrapW": 1
+          },
+          "m_LightmapFormat": 0,
+          "m_ColorSpace": 1,
+          "m_PlatformBlob": [],
+          "m_StreamData": {
+            "offset": 0,
+            "size": 235296,
+            "path": "archive:/CAB-e7f9beabec2f42c12744d3d750a28005/CAB-e7f9beabec2f42c12744d3d750a28005.resS"
+          }
+        },
+        "mips": [
+          {
+            "level": 0,
+            "width": 1024,
+            "height": 512,
+            "astc_offset": 0,
+            "astc_size": 235296,
+            "astc_sha256": "5fd3670c38cf4c935fc6b8cc44c488f2a2970631926e91e95b3ad046717f1b5e",
+            "rgba_offset": 0,
+            "rgba_size": 2097152,
+            "rgba_sha256": "4431f8f75240b21763d5e5b36d5cdb64c6df1e763826122de5e02ee04de7d076"
+          }
+        ],
+        "pixels_sha256": "4431f8f75240b21763d5e5b36d5cdb64c6df1e763826122de5e02ee04de7d076"
       }
     }
   ],
-  "inputs": [
+  "bindings": [
     {
-      "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
-      "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
-      "path_id": "-6257336838115593342",
-      "origin": "apk_zip",
-      "manifest": "854_156383",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-      "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
-      "raw_size": 94196,
-      "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c",
-      "object_sha256": "7a77f522d8cb579758da8814897bbc6d8eb30e4bac2add5e194cca3994de3634"
+      "quality": 1,
+      "sprite": {
+        "fileID": 21300000,
+        "guid": "bd9cff9ba270fa895ee53fd598ad3d16",
+        "type": 2
+      },
+      "sourceSize": {
+        "x": 184.0,
+        "y": 184.0
+      },
+      "trimOffset": {
+        "x": 2.076120376586914,
+        "y": 0.07612049579620361
+      },
+      "trimSize": {
+        "x": 180.84774780273438,
+        "y": 183.84774780273438
+      },
+      "uvMin": {
+        "x": 0.5420665144920349,
+        "y": 0.00014867284335196018
+      },
+      "uvMax": {
+        "x": 0.7186756432056427,
+        "y": 0.35922630527056754
+      }
     },
     {
-      "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
-      "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
-      "path_id": "-4751286179582860268",
-      "origin": "apk_zip",
-      "manifest": "854_156383",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-      "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
-      "raw_size": 94196,
-      "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c",
-      "object_sha256": "ee8f01b569de96fc85c6ae16a47350a4fc237ffcfa14ca3436fc9b91745e3edd"
+      "quality": 2,
+      "sprite": {
+        "fileID": 21300000,
+        "guid": "d5f8f74aeb096fee20237b52b0ceb08e",
+        "type": 2
+      },
+      "sourceSize": {
+        "x": 184.0,
+        "y": 184.0
+      },
+      "trimOffset": {
+        "x": 2.076120376586914,
+        "y": 0.07612049579620361
+      },
+      "trimSize": {
+        "x": 180.84774780273438,
+        "y": 183.84774780273438
+      },
+      "uvMin": {
+        "x": 7.433630526065826e-05,
+        "y": 0.3673361837863922
+      },
+      "uvMax": {
+        "x": 0.17668346501886845,
+        "y": 0.7264138162136078
+      }
     },
     {
-      "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
-      "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
-      "path_id": "-1061696376164999677",
-      "origin": "apk_zip",
-      "manifest": "854_156383",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-      "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
-      "raw_size": 94196,
-      "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c",
-      "object_sha256": "13e66db1bda3bad75ff4f6d5242fcb2243de531c2a5453e9098164f2e3852bd0"
+      "quality": 3,
+      "sprite": {
+        "fileID": 21300000,
+        "guid": "c19f6ad93d9cbc912b9af8d73ad6a94f",
+        "type": 2
+      },
+      "sourceSize": {
+        "x": 184.0,
+        "y": 184.0
+      },
+      "trimOffset": {
+        "x": 2.076120376586914,
+        "y": 0.07612049579620361
+      },
+      "trimSize": {
+        "x": 180.84774780273438,
+        "y": 183.84774780273438
+      },
+      "uvMin": {
+        "x": 0.3614024519920349,
+        "y": 0.00014867284335196018
+      },
+      "uvMax": {
+        "x": 0.5380115807056427,
+        "y": 0.35922630527056754
+      }
     },
     {
-      "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
-      "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
-      "path_id": "1529348208687224206",
-      "origin": "apk_zip",
-      "manifest": "854_156383",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-      "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
-      "raw_size": 94196,
-      "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c",
-      "object_sha256": "f191c9674f8d4cc3a71f85e38a678b91b2ede6b563d70451330d1bb586ec3c59"
+      "quality": 4,
+      "sprite": {
+        "fileID": 21300000,
+        "guid": "b50fd42843b084ec9b1c5f74bc19cfdf",
+        "type": 2
+      },
+      "sourceSize": {
+        "x": 184.0,
+        "y": 184.0
+      },
+      "trimOffset": {
+        "x": 2.076120376586914,
+        "y": 0.07612049579620361
+      },
+      "trimSize": {
+        "x": 180.84774780273438,
+        "y": 183.84774780273438
+      },
+      "uvMin": {
+        "x": 7.433630526065826e-05,
+        "y": 0.00014867284335196018
+      },
+      "uvMax": {
+        "x": 0.17668346501886845,
+        "y": 0.35922630527056754
+      }
     },
     {
-      "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
-      "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
-      "path_id": "6526364828817696293",
-      "origin": "apk_zip",
-      "manifest": "854_156383",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-      "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
-      "raw_size": 94196,
-      "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c",
-      "object_sha256": "33fec576c9bd6ca6ffe93cb2ce175299b5ef1fe100e416c030281a65d0148cbd"
+      "quality": 5,
+      "sprite": {
+        "fileID": 21300000,
+        "guid": "c4dd759ed982578a1153bd033d25a7ee",
+        "type": 2
+      },
+      "sourceSize": {
+        "x": 184.0,
+        "y": 184.0
+      },
+      "trimOffset": {
+        "x": 2.076120376586914,
+        "y": 0.07612049579620361
+      },
+      "trimSize": {
+        "x": 180.84774780273438,
+        "y": 183.84774780273438
+      },
+      "uvMin": {
+        "x": 0.3614024519920349,
+        "y": 0.3673361837863922
+      },
+      "uvMax": {
+        "x": 0.5380115807056427,
+        "y": 0.7264138162136078
+      }
     },
     {
-      "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
-      "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
-      "path_id": "9108522341688220357",
-      "origin": "apk_zip",
-      "manifest": "854_156383",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-      "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
-      "raw_size": 94196,
-      "raw_sha256": "e344cbfdaf728c15ff6eba090e1810e3a73644ed2738ee7f7004a01c64fdec6c",
-      "object_sha256": "e41e6974116a5b7d657a6e3a7d9d8656f897c5828e3132aa8cd8e05d16982188"
+      "quality": 6,
+      "sprite": {
+        "fileID": 21300000,
+        "guid": "2eec0af116311869632ceb9e1656b0b4",
+        "type": 2
+      },
+      "sourceSize": {
+        "x": 184.0,
+        "y": 184.0
+      },
+      "trimOffset": {
+        "x": 2.076120376586914,
+        "y": 0.07612049579620361
+      },
+      "trimSize": {
+        "x": 180.84774780273438,
+        "y": 183.84774780273438
+      },
+      "uvMin": {
+        "x": 0.1807384043931961,
+        "y": 0.3673361837863922
+      },
+      "uvMax": {
+        "x": 0.3573475331068039,
+        "y": 0.7264138162136078
+      }
     }
   ],
-  "dependencies": [
-    {
-      "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
-      "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
-      "path_id": "-6257336838115593342",
-      "origin": "apk_zip",
-      "manifest": "854_156383",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-      "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
-      "raw_size": 94196,
-      "raw_sha256": "7a77f522d8cb579758da8814897bbc6d8eb30e4bac2add5e194cca3994de3634",
-      "kind": "Sprite"
-    },
-    {
-      "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
-      "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
-      "path_id": "-998719416609474834",
-      "origin": "apk_zip",
-      "manifest": "854_156383",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-      "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
-      "raw_size": 94196,
-      "raw_sha256": "400233c018f4b55a0d3980ed5c2180fea0973d7c6063dc864a424aae1c526681",
-      "kind": "SpriteAtlas"
-    },
-    {
-      "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
-      "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
-      "path_id": "-2272721207766944018",
-      "origin": "apk_zip",
-      "manifest": "854_156383",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-      "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
-      "raw_size": 94196,
-      "raw_sha256": "11c398bcd2d78036adf1a13e81956e0a5e824955b4508439f3411bb283525701",
-      "kind": "Texture2D"
-    },
-    {
-      "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
-      "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
-      "path_id": "-4751286179582860268",
-      "origin": "apk_zip",
-      "manifest": "854_156383",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-      "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
-      "raw_size": 94196,
-      "raw_sha256": "ee8f01b569de96fc85c6ae16a47350a4fc237ffcfa14ca3436fc9b91745e3edd",
-      "kind": "Sprite"
-    },
-    {
-      "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
-      "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
-      "path_id": "-1061696376164999677",
-      "origin": "apk_zip",
-      "manifest": "854_156383",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-      "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
-      "raw_size": 94196,
-      "raw_sha256": "13e66db1bda3bad75ff4f6d5242fcb2243de531c2a5453e9098164f2e3852bd0",
-      "kind": "Sprite"
-    },
-    {
-      "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
-      "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
-      "path_id": "1529348208687224206",
-      "origin": "apk_zip",
-      "manifest": "854_156383",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-      "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
-      "raw_size": 94196,
-      "raw_sha256": "f191c9674f8d4cc3a71f85e38a678b91b2ede6b563d70451330d1bb586ec3c59",
-      "kind": "Sprite"
-    },
-    {
-      "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
-      "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
-      "path_id": "6526364828817696293",
-      "origin": "apk_zip",
-      "manifest": "854_156383",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-      "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
-      "raw_size": 94196,
-      "raw_sha256": "33fec576c9bd6ca6ffe93cb2ce175299b5ef1fe100e416c030281a65d0148cbd",
-      "kind": "Sprite"
-    },
-    {
-      "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
-      "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
-      "path_id": "9108522341688220357",
-      "origin": "apk_zip",
-      "manifest": "854_156383",
-      "apk_manifest": "854_156383",
-      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-      "apk_entry": "assets/yoo/DefaultPackage/74e6afc6b39b88d0e8977d8f12267b52.bundle",
-      "raw_size": 94196,
-      "raw_sha256": "e41e6974116a5b7d657a6e3a7d9d8656f897c5828e3132aa8cd8e05d16982188",
-      "kind": "Sprite"
-    }
-  ],
-  "official_code": {
-    "client-source/GameSkillIcon.cs": "b0c964f5e3c189af345260ff8de09e24ecbdd57e4a132728e96087a560218ce0",
-    "common-source/Common/LanguageUtils.cs": "1b6de15f2b3a90a5a6ba1920c8475af10bc783141fa7bccd8a14492ac935f6b7",
-    "common-source/Common/Quality.cs": "5d309081493dd97b6cf42c4c995092abcd427ca4ae9efa0259c3af9e57401fa3",
-    "common-source/Common/ItemType.cs": "8a1a33483ed28de00b9bc37dd60899ae0cb2fa7d7bd821b42f6e43cdcb3dbcaf"
+  "unsupported": {
+    "quality": 7,
+    "source_name": "ImgQuality_Rainbow",
+    "present_in_quality_bundle": false,
+    "bundle_sprite_names": [
+      "ImgQuality_Blue",
+      "ImgQuality_Gold",
+      "ImgQuality_Mask",
+      "ImgQuality_Multicolour",
+      "ImgQuality_Orange",
+      "ImgQuality_Purple",
+      "ImgQuality_Red",
+      "ImgQuality_Shadow",
+      "ImgQuality_Star",
+      "ImgQuality_Star2",
+      "ImgQuality_Star3",
+      "ImgQuality_Star4",
+      "ImgQuality_Star5",
+      "ImgQuality_Star6",
+      "ImgQuality_StarMul",
+      "ImgQuality_White",
+      "ImgRelic_Bg",
+      "ImgRelic_Star",
+      "ImgRelic_StarMul",
+      "ImgStar_Bg"
+    ],
+    "behavior": "Keep the existing explicit unsupported branch; never infer Rainbow from Multicolour."
+  },
+  "generator": {
+    "path": "scripts/prepare_current_battle_skill_qualities.py",
+    "sha256": "d34e55fc7b751e03880e36c585ab5a79f34518dae37796a2a04d412ff6e5b317"
   },
   "runtime": {
-    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillQualityCatalog.cs": "49e32941493dfb8c2013d63fc2b7100289e3c426982337abd42fdd4675e9ccf2",
-    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillQualityGeometry.cs": "e6a6137d2d8dd5aaa21298b77c7ee6be74487be5f1ec46bac48890714e7ac56a",
-    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs": "807314be115607109164f825e4bfbb8fe0883682d9b3c11ac5abaddd779ae9f9"
+    "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillQualityGeometry.cs",
+    "sha256": "b7253fd6fd1ab0444c98bc609d63d46aae5fcb2a22ff7d2c0113fc62dc001530"
   },
-  "outputs": {
-    "unity/Assets/Game/Resources/Combat/battle-skill-qualities.json": "17a279dee3b104213058a9305c0a358b6abf702c121e3bb6a0142480edaa6277",
-    "unity/Assets/Game/Resources/Combat/battle-skill-qualities.json.meta": "c87306829bf0e61ed20e6a0ca16b0ca5f9b7984c64652c650d5c9e5b56f3ed3d",
-    "unity/Assets/Game/Resources/Combat/battle-skill-qualities-source-manifest.json": "8741374513778df6f5767a479fc6396095f681b3b618c12894948eb6a9a0b50c",
-    "unity/Assets/Game/Resources/Combat/battle-skill-qualities-source-manifest.json.meta": "4ad8ad8d713afaf19c7b17ceecbb2512f69bfc29476a382689badfab8c9f98c2",
-    "unity/Assets/Game/Resources/Combat/OfficialBattleSkillQualityCatalog.asset": "ccd0dda2efafeb65e30dedbc9fc9d3dd38146469f67d656098820651eb010ad6",
-    "unity/Assets/Game/Resources/Combat/OfficialBattleSkillQualityCatalog.asset.meta": "728556fd7cb735e5fbb0800a43ce61d28065c7da8cad64c6d8ad6c7371435521",
-    "unity/Assets/Official/Combat/SkillQualities.meta": "2c4006d8b5aafafe63904a151fc568648c361983fa10fee73ec4c3048ccf677c",
-    "unity/Assets/Official/Combat/SkillQualities/Sprites.meta": "8eddc1b902daf860c880b335ac905f759ec67035097b459ba68a19df4bca0b36",
-    "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Purple-7d444d87c0.png": "7d444d87c09fb7ec19312d1e2570399002dfa897c8e94f82689acefa0d734699",
-    "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Purple-7d444d87c0.png.meta": "d02e5639bbbb29e9fd968a417ca255d94d294a7cb70a305a48d1cfcafb7de6f9",
-    "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Blue-42b8cb9630.png": "d7af3c8915139d2d876cb2f85ca24e63135c48c028cd83474a8248802ab5a93f",
-    "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Blue-42b8cb9630.png.meta": "87537ce39a2c10c202d493d1bfa4beb581257324b8f3fe2173bef5550ed09aa1",
-    "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_White-9f7417c1ae.png": "9f7417c1aea3778b1dfd9f845dbcff09e58a7e0f9451e4e3f2a0976d4ccf6bbf",
-    "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_White-9f7417c1ae.png.meta": "b7e4a9cfd2fca1a59584ef76c0594c92c866466840f837b1f18c33626263bc67",
-    "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Red-fe7cc9d49b.png": "fe7cc9d49b6aa82a73c7cc23b24268ece2431e80bf2b3f7b8ce78308002488cc",
-    "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Red-fe7cc9d49b.png.meta": "52cfa9cc4bc1b64a8d752f3cd37ced359dfe1975b2d87c70e0fca84b7a174ee2",
-    "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Orange-062c6607e3.png": "062c6607e362f475331c72fd86330e63aa5e0bc1bb5678a8e880419c6bff6ce2",
-    "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Orange-062c6607e3.png.meta": "7adb3ef4ea3e946ee8ad1bbdf8ddf2c84c1324130ee5c481f3c97e4a24abdeeb",
-    "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Gold-b466cfbe99.png": "b466cfbe9974111bf5a6bacd2898627c3ef3a5ad51c7a31b0cd01e0a4217f6a4",
-    "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Gold-b466cfbe99.png.meta": "8603cfb0be0c2d998998ced157b28b72bc7e1294e4e7bbb73c659ce572b48724"
+  "validation": {
+    "path": "unity/Assets/Game/Editor/Combat/OfficialBattleSkillQualityAcceptance.cs",
+    "sha256": "7ab68a6eada3302463252b81f5b4e67925f76a3712b6a668ad91c538cd328228"
   },
-  "operation": "Decode the pinned APK Sprite/atlas objects through Sprite.image, verify exact PNG bytes against existing native sprites, and import independent FullRect RGBA32 Sprites with the original sampler, no secondary compression or alpha dilation. Restore the original Simple Image padding and fractional UVs from the atlas textureRect/offset and original m_Rect; do not truncate floats or stretch the trimmed image. No new or substitute artwork.",
-  "remaining": "Quality 7 (Rainbow) has no direct ImgQuality_Rainbow Sprite in this bundle; it is not mapped to Multicolour by inference. No current player active skill or skill skin requires quality 7."
+  "converters": [
+    {
+      "path": "scripts/prepare_current_creation_ui_sprites.py",
+      "sha256": "965201e4062a5cb19ccde89377d25a595d521f6dcd47fb1b207f7151de7c14e4"
+    },
+    {
+      "path": "scripts/prepare_current_creation_skin_icons.py",
+      "sha256": "d08905b7c0e565fa25e36eb2700dcb96393c5a2d17ff95ecd8e82a8fea1ad1bb"
+    },
+    {
+      "path": "scripts/prepare_unity_map12_team_panel_sprites.py",
+      "sha256": "00ebfb4f98a436ff93a581f6b3c70797f16af405a7f4c637937b8c9ef98a20d8"
+    },
+    {
+      "path": "scripts/prepare_unity_profession_reward_sprites.py",
+      "sha256": "a8acb5dced661effb281da83c8318af5aa5a944f2f32c2df616b8b84ed857f5a"
+    }
+  ],
+  "replacement": {
+    "previous_files": [
+      {
+        "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Blue-42b8cb9630.png",
+        "sha256": "d7af3c8915139d2d876cb2f85ca24e63135c48c028cd83474a8248802ab5a93f",
+        "preserved": ".tools/source-packages/history/converted/d7af3c8915139d2d876cb2f85ca24e63135c48c028cd83474a8248802ab5a93f.bin"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Blue-42b8cb9630.png.meta",
+        "sha256": "87537ce39a2c10c202d493d1bfa4beb581257324b8f3fe2173bef5550ed09aa1",
+        "preserved": ".tools/source-packages/history/converted/87537ce39a2c10c202d493d1bfa4beb581257324b8f3fe2173bef5550ed09aa1.bin"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Gold-b466cfbe99.png",
+        "sha256": "b466cfbe9974111bf5a6bacd2898627c3ef3a5ad51c7a31b0cd01e0a4217f6a4",
+        "preserved": ".tools/source-packages/history/converted/b466cfbe9974111bf5a6bacd2898627c3ef3a5ad51c7a31b0cd01e0a4217f6a4.bin"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Gold-b466cfbe99.png.meta",
+        "sha256": "8603cfb0be0c2d998998ced157b28b72bc7e1294e4e7bbb73c659ce572b48724",
+        "preserved": ".tools/source-packages/history/converted/8603cfb0be0c2d998998ced157b28b72bc7e1294e4e7bbb73c659ce572b48724.bin"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Orange-062c6607e3.png",
+        "sha256": "062c6607e362f475331c72fd86330e63aa5e0bc1bb5678a8e880419c6bff6ce2",
+        "preserved": ".tools/source-packages/history/converted/062c6607e362f475331c72fd86330e63aa5e0bc1bb5678a8e880419c6bff6ce2.bin"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Orange-062c6607e3.png.meta",
+        "sha256": "7adb3ef4ea3e946ee8ad1bbdf8ddf2c84c1324130ee5c481f3c97e4a24abdeeb",
+        "preserved": ".tools/source-packages/history/converted/7adb3ef4ea3e946ee8ad1bbdf8ddf2c84c1324130ee5c481f3c97e4a24abdeeb.bin"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Purple-7d444d87c0.png",
+        "sha256": "7d444d87c09fb7ec19312d1e2570399002dfa897c8e94f82689acefa0d734699",
+        "preserved": ".tools/source-packages/history/converted/7d444d87c09fb7ec19312d1e2570399002dfa897c8e94f82689acefa0d734699.bin"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Purple-7d444d87c0.png.meta",
+        "sha256": "d02e5639bbbb29e9fd968a417ca255d94d294a7cb70a305a48d1cfcafb7de6f9",
+        "preserved": ".tools/source-packages/history/converted/d02e5639bbbb29e9fd968a417ca255d94d294a7cb70a305a48d1cfcafb7de6f9.bin"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Red-fe7cc9d49b.png",
+        "sha256": "fe7cc9d49b6aa82a73c7cc23b24268ece2431e80bf2b3f7b8ce78308002488cc",
+        "preserved": ".tools/source-packages/history/converted/fe7cc9d49b6aa82a73c7cc23b24268ece2431e80bf2b3f7b8ce78308002488cc.bin"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_Red-fe7cc9d49b.png.meta",
+        "sha256": "52cfa9cc4bc1b64a8d752f3cd37ced359dfe1975b2d87c70e0fca84b7a174ee2",
+        "preserved": ".tools/source-packages/history/converted/52cfa9cc4bc1b64a8d752f3cd37ced359dfe1975b2d87c70e0fca84b7a174ee2.bin"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_White-9f7417c1ae.png",
+        "sha256": "9f7417c1aea3778b1dfd9f845dbcff09e58a7e0f9451e4e3f2a0976d4ccf6bbf",
+        "preserved": ".tools/source-packages/history/converted/9f7417c1aea3778b1dfd9f845dbcff09e58a7e0f9451e4e3f2a0976d4ccf6bbf.bin"
+      },
+      {
+        "path": "unity/Assets/Official/Combat/SkillQualities/Sprites/ImgQuality_White-9f7417c1ae.png.meta",
+        "sha256": "b7e4a9cfd2fca1a59584ef76c0594c92c866466840f837b1f18c33626263bc67",
+        "preserved": ".tools/source-packages/history/converted/b7e4a9cfd2fca1a59584ef76c0594c92c866466840f837b1f18c33626263bc67.bin"
+      },
+      {
+        "path": "unity/Assets/Game/Resources/Combat/OfficialBattleSkillQualityCatalog.asset",
+        "sha256": "ccd0dda2efafeb65e30dedbc9fc9d3dd38146469f67d656098820651eb010ad6",
+        "preserved": ".tools/source-packages/history/converted/ccd0dda2efafeb65e30dedbc9fc9d3dd38146469f67d656098820651eb010ad6.bin"
+      },
+      {
+        "path": "assets/reference/battle-hud/skill-quality-source-manifest.json",
+        "sha256": "cc3b4bce8806b38e048e5f3f38713161e8136b21a95b05d75c4614b3b6d06e07",
+        "preserved": ".tools/source-packages/history/converted/cc3b4bce8806b38e048e5f3f38713161e8136b21a95b05d75c4614b3b6d06e07.bin"
+      },
+      {
+        "path": "assets/reference/battle-animation/skill-icons-source-manifest.json",
+        "sha256": "02448b7be208f2fc5bfaa7b66dbe7e363c1970152c51d157e727af4c4b745ec8",
+        "preserved": ".tools/source-packages/history/converted/02448b7be208f2fc5bfaa7b66dbe7e363c1970152c51d157e727af4c4b745ec8.bin"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/OfficialBattleSkillQualityCatalog.asset",
+      "sha256": "3429df28e16356443a31002cb8ccdb4aa750ff71f08eb2918b09b96d22a76d1e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/OfficialBattleSkillQualityCatalog.asset.meta",
+      "sha256": "728556fd7cb735e5fbb0800a43ce61d28065c7da8cad64c6d8ad6c7371435521"
+    }
+  ],
+  "quality_items_source": {
+    "path": "assets/reference/battle-animation/skill-icons-source-manifest.json",
+    "sha256": "0bfb4db7173cd2b1306f10d3765809e7163c75d3a33861990811fd1c86a53f6b"
+  },
+  "operation": "Resolve original enum image names to current byte-verified native Sprites. Share the complete decoded atlas and retain original Simple Image padding, floating packed rectangle UVs, color and quad order. Retire six old cropped PNGs only after their sole consumer has been rebound."
 }

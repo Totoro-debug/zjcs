@@ -6,7 +6,7 @@ namespace Zjcs.Presentation.Combat
 {
     /// <summary>
     /// Restores Image.GenerateSimpleSprite's original padding and fractional atlas UVs after
-    /// decoding the packed Sprite to a native cropped PNG. The original Image and mask remain.
+    /// binding the packed Sprite to its complete native atlas. The original Image and mask remain.
     /// </summary>
     [DisallowMultipleComponent, RequireComponent(typeof(Image))]
     public sealed class OfficialBattleSkillQualityGeometry : BaseMeshEffect
@@ -33,11 +33,8 @@ namespace Zjcs.Presentation.Combat
                 binding.trimOffset.x / binding.sourceSize.x, binding.trimOffset.y / binding.sourceSize.y));
             Vector2 max = min + Vector2.Scale(rect.size, new Vector2(
                 binding.trimSize.x / binding.sourceSize.x, binding.trimSize.y / binding.sourceSize.y));
-            Vector4 outer = UnityEngine.Sprites.DataUtility.GetOuterUV(binding.sprite);
-            var uvMin = new Vector2(Mathf.Lerp(outer.x, outer.z, binding.uvMin.x),
-                Mathf.Lerp(outer.y, outer.w, binding.uvMin.y));
-            var uvMax = new Vector2(Mathf.Lerp(outer.x, outer.z, binding.uvMax.x),
-                Mathf.Lerp(outer.y, outer.w, binding.uvMax.y));
+            Vector2 uvMin = binding.uvMin;
+            Vector2 uvMax = binding.uvMax;
             UIVertex vertex = default;
             vertices.PopulateUIVertex(ref vertex, 0);
             vertices.Clear();
