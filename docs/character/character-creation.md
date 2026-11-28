@@ -10,6 +10,8 @@
 
 创角界面、试穿品质底框与遮罩、外观分组及细节选项图标从项目固定来源迁移，保留官方 Sprite 的完整矩形、网格、UV、完整图集和贴图采样设置。创角、外观编辑、确认框及试穿控件布局按固定来源恢复，保留安全区、网格及变换参数；动画与音频沿各自来源凭据继续迁移。
 
+职业展示、头像与战斗使用同一固定来源的外观配置，保留原始外观预设及染色参数；见[外观配置来源](../../assets/reference/profession-ui/appearance-config-source-manifest.json)。
+
 开场的剧情配置、录像、对白语音及界面图集采用固定来源，保留官方肖像绑定和窗口布局。见[开场资源来源](../../assets/reference/character-creation/opening-source-manifest.json)。
 
 ## 自定义实现

@@ -16,19 +16,28 @@ namespace Zjcs.Editor.ProfessionUI
     {
         private const string Active = "Zjcs.ProfessionAppearanceConfig.Active";
         private static bool ready;
-        [Serializable] private sealed class Fixture { public string path; public Original original; }
+        [Serializable] private sealed class Fixture { public string manifest, path; public string[] paths; public Original original; }
+        [Serializable] private sealed class WorkspaceMarker { public int format; public string repository; }
         [Serializable] private sealed class Original
         {
             public Skin[] mPlayerSkinTypes;
             public Append[] mAppendSkinConfigs;
             public AppearancePartConfig[] mPartConfigs;
             public AppearanceOverrideConfig[] mAppearanceOverrideConfigs;
+            public Preset[] mAppearancePresets;
             public AppearanceHashValue[] mAppearanceHashConfigs;
             public AppearanceSkeletonPath[] mAppearanceSkeletonPaths;
             public Color MimicsMonsterColor;
         }
         [Serializable] private sealed class Skin { public int mSkinType, mBaseSkin, mCanNormalSet; }
         [Serializable] private sealed class Append { public int mAppendSkinType; public string[] mAppendSkins; }
+        [Serializable] private sealed class Preset
+        {
+            public string mId;
+            public int mSex;
+            public string[] mSkinNames, mAppendSkins;
+            public AppearancePresetDye[] mDyes;
+        }
 
         static ProfessionAppearanceConfigValidation()
         {
@@ -40,13 +49,33 @@ namespace Zjcs.Editor.ProfessionUI
             try
             {
                 ProfessionValidationWorkspace.AssertIsolatedProject();
-                EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-                Application.runInBackground = true;
-                SessionState.SetBool(Active, true);
-                SessionState.SetFloat(Active + ".Deadline", (float)(EditorApplication.timeSinceStartup + 120));
-                EditorApplication.EnterPlaymode();
+                Begin(Path.Combine(ProfessionValidationWorkspace.DirectoryPath, "appearance-config-validation.json"));
             }
             catch (Exception exception) { Debug.LogException(exception); Finish(1); }
+        }
+        public static void RunCurrentResourceConfig()
+        {
+            try
+            {
+                string repository = Path.GetFullPath(Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT"));
+                string workspace = Path.GetFullPath(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"));
+                Require(string.Equals(Directory.GetParent(workspace)?.FullName, Path.Combine(repository, "output", "validation"), StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(Path.GetFullPath(Application.dataPath), Path.Combine(repository, "unity", "Assets"), StringComparison.OrdinalIgnoreCase), "owned source project and validation directory");
+                var marker = JsonUtility.FromJson<WorkspaceMarker>(File.ReadAllText(Path.Combine(workspace, ".zjcs-validation.json")));
+                Require(marker != null && marker.format == 1 && string.Equals(Path.GetFullPath(marker.repository), repository, StringComparison.OrdinalIgnoreCase), "owned workspace marker");
+                Begin(Path.Combine(workspace, "appearance-config-validation.json"));
+            }
+            catch (Exception exception) { Debug.LogException(exception); Finish(1); }
+        }
+        private static void Begin(string fixture)
+        {
+            ready = false;
+            SessionState.SetString(Active + ".Fixture", fixture);
+            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            Application.runInBackground = true;
+            SessionState.SetBool(Active, true);
+            SessionState.SetFloat(Active + ".Deadline", (float)(EditorApplication.timeSinceStartup + 120));
+            EditorApplication.EnterPlaymode();
         }
         private static void Update()
         {
@@ -56,17 +85,22 @@ namespace Zjcs.Editor.ProfessionUI
                 if (EditorApplication.timeSinceStartup > SessionState.GetFloat(Active + ".Deadline", 0)) throw new TimeoutException("Appearance configuration fixture did not finish.");
                 if (!ready || !EditorApplication.isPlaying) return;
                 Validate();
-                Debug.Log("Profession original appearance configuration passed: every original field, 13 skin types, four append groups, all part animation aliases/overrides, 1742 signed hashes and 466 skeleton paths; original lazy dictionaries, duplicate failures and hash mutations. Character rendering and the profession page are not covered.");
+                Debug.Log("Profession original appearance configuration passed: selected fields and presets, ordered lookups, lazy dictionaries, duplicate failures and clone-only hash mutations. Rendering is checked by consuming UI and battle flows.");
                 Finish(0);
             }
             catch (Exception exception) { Debug.LogException(exception); Finish(1); }
         }
         private static void Validate()
         {
-            var fixture = JsonUtility.FromJson<Fixture>(File.ReadAllText(ProfessionValidationWorkspace.Fixture("appearance-config-validation.json")));
-            var asset = AssetDatabase.LoadAssetAtPath<AppearanceConfig>(fixture.path);
-            var e = fixture.original;
-            Require(asset != null && e.mPlayerSkinTypes.Length == 13 && e.mAppearanceHashConfigs.Length == 1742 && e.mAppearanceSkeletonPaths.Length == 466, "original native import and expected complete scope");
+            var fixture = JsonUtility.FromJson<Fixture>(File.ReadAllText(SessionState.GetString(Active + ".Fixture", "")));
+            Require(fixture.manifest == "911_156995" && fixture.paths.Length == 2, "selected original source and both configuration copies");
+            foreach (string path in fixture.paths)
+                ValidateAsset(AssetDatabase.LoadAssetAtPath<AppearanceConfig>(path), fixture.original);
+            Debug.Log("Current appearance configuration passed: both native copies, all fields, preset sex/skin/append/dye values, signed hashes, ordered lookups and clone-only mutations.");
+        }
+        private static void ValidateAsset(AppearanceConfig asset, Original e)
+        {
+            Require(asset != null && e.mPlayerSkinTypes.Length == 13 && e.mAppearanceHashConfigs.Length == 1909 && e.mAppearanceSkeletonPaths.Length == 502 && e.mAppearancePresets.Length == 4, "original native import and expected complete scope");
             Require(asset.MimicsMonsterColor.Equals(e.MimicsMonsterColor), "original color components");
             Require(asset.PlayerSkinTypes.Count == e.mPlayerSkinTypes.Length, "complete ordered skin list");
             for (int i = 0; i < e.mPlayerSkinTypes.Length; i++)
@@ -113,6 +147,22 @@ namespace Zjcs.Editor.ProfessionUI
                 Require(ReferenceEquals(asset.GetOverrideConfig(actual.Type), actual), "original override lookup identity");
             }
             Require(asset.GetOverrideConfig((AppearanceOverrideType)1000) == null, "missing override returns null");
+            var presets = Field<List<AppearancePreset>>(asset, "mAppearancePresets");
+            Require(presets.Count == e.mAppearancePresets.Length, "all original appearance presets");
+            for (int i = 0; i < presets.Count; i++)
+            {
+                var actual = presets[i]; var expected = e.mAppearancePresets[i];
+                Require(actual.Id == expected.mId && (int)actual.Sex == expected.mSex
+                    && actual.SkinNames.SequenceEqual(expected.mSkinNames) && actual.AppendSkins.SequenceEqual(expected.mAppendSkins), "original ordered preset identity, sex and skins");
+                Require(ReferenceEquals(asset.GetAppearancePreset(actual.Id), presets.First(preset => preset.Id == actual.Id)), "original first matching preset identity");
+                Require(actual.Dyes.Count == expected.mDyes.Length, "all preset dyes");
+                for (int j = 0; j < actual.Dyes.Count; j++)
+                {
+                    var dye = actual.Dyes[j]; var original = expected.mDyes[j];
+                    Require(dye.DyeType == original.DyeType && dye.H == original.H && dye.S == original.S && dye.V == original.V, "unmodified preset dye channel and HSV integers");
+                }
+            }
+            Require(asset.GetAppearancePreset("not-an-original-preset") == null, "missing preset returns null");
             Require(asset.AppearanceToHash.Count == e.mAppearanceHashConfigs.Length, "complete original skin hash list");
             for (int i = 0; i < e.mAppearanceHashConfigs.Length; i++)
                 Require(asset.AppearanceToHash[i].SkinName == e.mAppearanceHashConfigs[i].SkinName && asset.AppearanceToHash[i].HashValue == e.mAppearanceHashConfigs[i].HashValue, "exact ordered signed 64-bit original hash");
@@ -124,6 +174,11 @@ namespace Zjcs.Editor.ProfessionUI
             var clone = Object.Instantiate(asset);
             try
             {
+                var copiedPresets = Field<List<AppearancePreset>>(clone, "mAppearancePresets");
+                var duplicatePreset = JsonUtility.FromJson<AppearancePreset>(JsonUtility.ToJson(copiedPresets[copiedPresets.Count - 1]));
+                copiedPresets.Insert(0, duplicatePreset);
+                Require(ReferenceEquals(clone.GetAppearancePreset(duplicatePreset.Id), duplicatePreset)
+                    && Field<List<AppearancePreset>>(asset, "mAppearancePresets").Count == e.mAppearancePresets.Length, "first matching preset and clone-owned list");
                 string removed = e.mAppearanceHashConfigs[0].SkinName;
                 clone.AddAppearanceHash(new Dictionary<string, long> { { removed, -77 }, { "fixture-z-last", long.MinValue }, { "fixture-a-first", long.MaxValue } });
                 Require(clone.AppearanceToHash.Count == asset.AppearanceToHash.Count + 3 && clone.AppearanceToHash.Count(x => x.SkinName == removed) == 2, "original hash addition retains duplicates");

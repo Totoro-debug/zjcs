@@ -18,6 +18,9 @@ public class AppearanceConfig : ScriptableObject
 	private List<AppearanceOverrideConfig> mAppearanceOverrideConfigs;
 
 	[SerializeField]
+	private List<AppearancePreset> mAppearancePresets;
+
+	[SerializeField]
 	private List<AppearanceHashValue> mAppearanceHashConfigs;
 
 	[SerializeField]
@@ -84,6 +87,22 @@ public class AppearanceConfig : ScriptableObject
 			if (mAppearanceOverrideConfig.Type == type)
 			{
 				return mAppearanceOverrideConfig;
+			}
+		}
+		return null;
+	}
+
+	public AppearancePreset GetAppearancePreset(string id)
+	{
+		if (mAppearancePresets == null)
+		{
+			return null;
+		}
+		foreach (AppearancePreset mAppearancePreset in mAppearancePresets)
+		{
+			if (mAppearancePreset.Id == id)
+			{
+				return mAppearancePreset;
 			}
 		}
 		return null;

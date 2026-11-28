@@ -60,8 +60,95 @@ MonoBehaviour:
     - 20206
     - 33201
     - 34000
+  mAppearancePresets:
+  - mId: Doushi
+    mSex: 0
+    mSkinNames:
+    - body_0_M_01
+    - brow_M_01
+    - eye_M_01
+    - faceShape_M_01
+    - hair_M_01
+    - faceShape_M_01
+    - mouth_M_01
+    - pWeapon_100_G_001
+    - sWeapon_11_001
+    mAppendSkins:
+    - performFace
+    mDyes:
+    - {DyeType: 1, H: 23, S: 10, V: 98}
+    - {DyeType: 2, H: 325, S: 3, V: 95}
+    - {DyeType: 3, H: 6, S: 47, V: 95}
+  - mId: Huwei
+    mSex: 0
+    mSkinNames:
+    - body_0_M_01
+    - brow_M_01
+    - eye_M_01
+    - faceShape_M_01
+    - hair_M_01
+    - faceShape_M_01
+    - mouth_M_01
+    - pWeapon_100_G_001
+    - sWeapon_12_001
+    mAppendSkins:
+    - performFace
+    mDyes:
+    - {DyeType: 1, H: 23, S: 10, V: 98}
+    - {DyeType: 2, H: 325, S: 3, V: 95}
+    - {DyeType: 3, H: 6, S: 47, V: 95}
+  - mId: Xianzhe
+    mSex: 0
+    mSkinNames:
+    - body_0_M_01
+    - brow_M_01
+    - eye_M_01
+    - faceShape_M_01
+    - hair_M_01
+    - faceShape_M_01
+    - mouth_M_01
+    - pWeapon_200_G_001
+    - sWeapon_21_001
+    mAppendSkins:
+    - performFace
+    mDyes:
+    - {DyeType: 1, H: 23, S: 10, V: 98}
+    - {DyeType: 2, H: 325, S: 3, V: 95}
+    - {DyeType: 3, H: 6, S: 47, V: 95}
+  - mId: Shushi
+    mSex: 0
+    mSkinNames:
+    - body_0_M_01
+    - brow_M_01
+    - eye_M_01
+    - faceShape_M_01
+    - hair_M_01
+    - faceShape_M_01
+    - mouth_M_01
+    - pWeapon_200_G_001
+    - sWeapon_22_001
+    mAppendSkins:
+    - performFace
+    mDyes:
+    - {DyeType: 1, H: 23, S: 10, V: 98}
+    - {DyeType: 2, H: 325, S: 3, V: 95}
+    - {DyeType: 3, H: 6, S: 47, V: 95}
   mAppearanceHashConfigs:
   - {SkinName: backDecoration_01, HashValue: -3237451968379395823}
+  - {SkinName: backDecoration_02, HashValue: 6046957791572122692}
+  - {SkinName: backDecoration_03, HashValue: 6194974003045274126}
+  - {SkinName: backDecoration_04, HashValue: 1297446753814407740}
+  - {SkinName: backDecoration_05, HashValue: 2125781262611719650}
+  - {SkinName: backDecoration_06, HashValue: -7738463091751604228}
+  - {SkinName: backDecoration_07, HashValue: -5302495774595754128}
+  - {SkinName: backDecoration_08, HashValue: 5374749528525039463}
+  - {SkinName: backDecoration_09, HashValue: -3524002242383209565}
+  - {SkinName: backDecoration_10, HashValue: 633640885718915551}
+  - {SkinName: backDecoration_11, HashValue: 1178986855154470622}
+  - {SkinName: backDecoration_12, HashValue: 7442441214458204082}
+  - {SkinName: backDecoration_13, HashValue: -1456879401692704189}
+  - {SkinName: backDecoration_14, HashValue: 2684970949607557648}
+  - {SkinName: backDecoration_15, HashValue: -3259764618241500649}
   - {SkinName: body_0_F_002, HashValue: -4998729927163369451}
   - {SkinName: body_0_F_003, HashValue: -6352189773400956757}
   - {SkinName: body_0_F_004, HashValue: 6292261130286932130}
@@ -70,11 +157,11 @@ MonoBehaviour:
   - {SkinName: body_0_F_007, HashValue: -7059319323230774634}
   - {SkinName: body_0_F_008, HashValue: 7791312141023634241}
   - {SkinName: body_0_F_009, HashValue: -8646455619803721981}
-  - {SkinName: body_0_F_01, HashValue: 1909200394623650459}
+  - {SkinName: body_0_F_01, HashValue: 4046074575688789479}
   - {SkinName: body_0_F_010, HashValue: 2113726865308625433}
   - {SkinName: body_0_F_011, HashValue: -7258051199808704218}
   - {SkinName: body_0_F_012, HashValue: -4356595491248497560}
-  - {SkinName: body_0_F_013, HashValue: 6526500342526440625}
+  - {SkinName: body_0_F_013, HashValue: 1490849711469073345}
   - {SkinName: body_0_F_014, HashValue: -3037072713401883335}
   - {SkinName: body_0_F_015, HashValue: -279994983469997872}
   - {SkinName: body_0_F_016, HashValue: 1883001979053125917}
@@ -146,13 +233,17 @@ MonoBehaviour:
   - {SkinName: body_0_F_082, HashValue: -3765327983446964837}
   - {SkinName: body_0_F_083, HashValue: -2981176597750864356}
   - {SkinName: body_0_F_084, HashValue: 4165942154604576833}
+  - {SkinName: body_0_F_085_XY_01, HashValue: -6461176904924711578}
   - {SkinName: body_0_F_086, HashValue: 4222185992957328370}
   - {SkinName: body_0_F_087, HashValue: 8845982317333211741}
+  - {SkinName: body_0_F_088, HashValue: 6372963401536191618}
+  - {SkinName: body_0_F_089_XY_02, HashValue: -9114643560888966481}
+  - {SkinName: body_0_F_090, HashValue: 6754420048636495695}
   - {SkinName: body_0_F_shou, HashValue: -900642687115572676}
   - {SkinName: body_0_G_001, HashValue: -4941731183743954862}
   - {SkinName: body_0_G_002, HashValue: 8591905847350425288}
   - {SkinName: body_0_G_003, HashValue: 7293866138657508624}
-  - {SkinName: body_0_G_004, HashValue: -782357344486329}
+  - {SkinName: body_0_G_004, HashValue: -7687948150380776109}
   - {SkinName: body_0_G_005, HashValue: 1330683325777225693}
   - {SkinName: body_0_G_006, HashValue: -2824603860256145295}
   - {SkinName: body_0_G_007, HashValue: -2785433538298284903}
@@ -167,6 +258,8 @@ MonoBehaviour:
   - {SkinName: body_0_G_016, HashValue: -8266091817921019359}
   - {SkinName: body_0_G_017, HashValue: 2626121047167355162}
   - {SkinName: body_0_G_018, HashValue: 2208019932403005964}
+  - {SkinName: body_0_G_019, HashValue: -9066383226650011253}
+  - {SkinName: body_0_G_020, HashValue: -2874649299156640404}
   - {SkinName: body_0_M_002, HashValue: -8215116237308273464}
   - {SkinName: body_0_M_003, HashValue: -4073604129029756246}
   - {SkinName: body_0_M_004, HashValue: 1814632927357997394}
@@ -249,8 +342,12 @@ MonoBehaviour:
   - {SkinName: body_0_M_081, HashValue: -7630885039284890071}
   - {SkinName: body_0_M_082, HashValue: 2609255673923843252}
   - {SkinName: body_0_M_083, HashValue: -3097006599604043762}
+  - {SkinName: body_0_M_084_JH_01, HashValue: 2210774492285418644}
   - {SkinName: body_0_M_085, HashValue: 8123513304848593654}
-  - {SkinName: body_0_M_086, HashValue: -6029620536024629018}
+  - {SkinName: body_0_M_086, HashValue: 3364640756052015032}
+  - {SkinName: body_0_M_087, HashValue: -1303210491296462345}
+  - {SkinName: body_0_M_088_XY_02, HashValue: -7672286260223076689}
+  - {SkinName: body_0_M_089, HashValue: 1876888394295025449}
   - {SkinName: body_0_M_shou, HashValue: -900642687115572676}
   - {SkinName: body_100_F_01, HashValue: -1410518886055589512}
   - {SkinName: body_100_F_02, HashValue: -3728993618669823046}
@@ -278,7 +375,7 @@ MonoBehaviour:
   - {SkinName: brow_M_05, HashValue: -6232303522848024299}
   - {SkinName: brow_M_06, HashValue: -6232303522848024299}
   - {SkinName: brow_M_07, HashValue: -6232303522848024299}
-  - {SkinName: emptySkin, HashValue: 5945987766898360003}
+  - {SkinName: emptySkin, HashValue: -1887151292803891578}
   - {SkinName: ethnicity_G_01, HashValue: -3894491363980553883}
   - {SkinName: ethnicity_G_02, HashValue: 306505696434147540}
   - {SkinName: ethnicity_G_03, HashValue: 5033340579956396859}
@@ -314,30 +411,30 @@ MonoBehaviour:
   - {SkinName: ethnicity_G_33, HashValue: 3171858462348654067}
   - {SkinName: ethnicity_G_34, HashValue: -4251679115246475111}
   - {SkinName: ethnicity_M_01, HashValue: 289695846264873838}
-  - {SkinName: eye_F_01, HashValue: -6077340516476547555}
-  - {SkinName: eye_F_02, HashValue: -6077340516476547555}
-  - {SkinName: eye_F_03, HashValue: -6077340516476547555}
-  - {SkinName: eye_F_04, HashValue: -6077340516476547555}
-  - {SkinName: eye_F_05, HashValue: -6077340516476547555}
-  - {SkinName: eye_F_06, HashValue: -6077340516476547555}
-  - {SkinName: eye_F_07, HashValue: -6077340516476547555}
-  - {SkinName: eye_F_08, HashValue: -6077340516476547555}
-  - {SkinName: eye_F_09, HashValue: -6077340516476547555}
-  - {SkinName: eye_F_10, HashValue: -6077340516476547555}
-  - {SkinName: eye_F_11, HashValue: -6077340516476547555}
-  - {SkinName: eye_F_12, HashValue: -6077340516476547555}
-  - {SkinName: eye_M_01, HashValue: 5945987766898360003}
-  - {SkinName: eye_M_02, HashValue: 5945987766898360003}
-  - {SkinName: eye_M_03, HashValue: 5945987766898360003}
-  - {SkinName: eye_M_04, HashValue: 5945987766898360003}
-  - {SkinName: eye_M_05, HashValue: 5945987766898360003}
-  - {SkinName: eye_M_06, HashValue: 5945987766898360003}
-  - {SkinName: eye_M_07, HashValue: 5945987766898360003}
-  - {SkinName: eye_M_08, HashValue: 5945987766898360003}
-  - {SkinName: eye_M_09, HashValue: 5945987766898360003}
-  - {SkinName: eye_M_10, HashValue: 5945987766898360003}
-  - {SkinName: eye_M_11, HashValue: 5945987766898360003}
-  - {SkinName: eye_M_12, HashValue: 5945987766898360003}
+  - {SkinName: eye_F_01, HashValue: 4476020207086736470}
+  - {SkinName: eye_F_02, HashValue: 4476020207086736470}
+  - {SkinName: eye_F_03, HashValue: 4476020207086736470}
+  - {SkinName: eye_F_04, HashValue: 4476020207086736470}
+  - {SkinName: eye_F_05, HashValue: 4476020207086736470}
+  - {SkinName: eye_F_06, HashValue: 4476020207086736470}
+  - {SkinName: eye_F_07, HashValue: 4476020207086736470}
+  - {SkinName: eye_F_08, HashValue: 4476020207086736470}
+  - {SkinName: eye_F_09, HashValue: 4476020207086736470}
+  - {SkinName: eye_F_10, HashValue: 4476020207086736470}
+  - {SkinName: eye_F_11, HashValue: 4476020207086736470}
+  - {SkinName: eye_F_12, HashValue: 4476020207086736470}
+  - {SkinName: eye_M_01, HashValue: -1887151292803891578}
+  - {SkinName: eye_M_02, HashValue: -1887151292803891578}
+  - {SkinName: eye_M_03, HashValue: -1887151292803891578}
+  - {SkinName: eye_M_04, HashValue: -1887151292803891578}
+  - {SkinName: eye_M_05, HashValue: -1887151292803891578}
+  - {SkinName: eye_M_06, HashValue: -1887151292803891578}
+  - {SkinName: eye_M_07, HashValue: -1887151292803891578}
+  - {SkinName: eye_M_08, HashValue: -1887151292803891578}
+  - {SkinName: eye_M_09, HashValue: -1887151292803891578}
+  - {SkinName: eye_M_10, HashValue: -1887151292803891578}
+  - {SkinName: eye_M_11, HashValue: -1887151292803891578}
+  - {SkinName: eye_M_12, HashValue: -1887151292803891578}
   - {SkinName: faceDecoration_1_F_001, HashValue: 1570538417992406098}
   - {SkinName: faceDecoration_1_G_001, HashValue: -3383019280978080982}
   - {SkinName: faceDecoration_1_G_002, HashValue: -6554722995142675208}
@@ -360,6 +457,8 @@ MonoBehaviour:
   - {SkinName: faceDecoration_1_G_019, HashValue: -879913352599470665}
   - {SkinName: faceDecoration_1_G_020, HashValue: -8081144204827101345}
   - {SkinName: faceDecoration_1_G_021, HashValue: 9069129151763530945}
+  - {SkinName: faceDecoration_1_G_022, HashValue: 6319144298130378378}
+  - {SkinName: faceDecoration_1_G_023, HashValue: 777025004600926739}
   - {SkinName: faceDecoration_1_M_001, HashValue: 2221173877091622034}
   - {SkinName: faceDecoration_1_M_002, HashValue: -7511313222872917921}
   - {SkinName: faceDecoration_1_M_013, HashValue: -6897668526423908094}
@@ -392,16 +491,19 @@ MonoBehaviour:
   - {SkinName: faceDecoration_2_G_025, HashValue: 8687800888981482313}
   - {SkinName: faceDecoration_2_G_026, HashValue: -4552880967316703027}
   - {SkinName: faceDecoration_2_G_027, HashValue: 5999756604385924114}
+  - {SkinName: faceDecoration_2_G_028, HashValue: 1332340093404013407}
   - {SkinName: faceDecoration_2_M_001, HashValue: 3762775445364565936}
   - {SkinName: faceDecoration_2_M_002, HashValue: 7027524305869750092}
   - {SkinName: faceDecoration_2_M_003, HashValue: -1293687005734380177}
   - {SkinName: faceDecoration_2_M_004, HashValue: 8167946973843128755}
+  - {SkinName: faceDecoration_2_M_005_XY_02, HashValue: 3947444195818836856}
   - {SkinName: faceDecoration_3_F_001, HashValue: -223184551741338656}
   - {SkinName: faceDecoration_3_G_001, HashValue: -6554722995142675208}
   - {SkinName: faceDecoration_3_G_002, HashValue: 4044564102244665119}
   - {SkinName: faceDecoration_3_G_003, HashValue: 3666306931587941176}
   - {SkinName: faceDecoration_3_G_004, HashValue: -1375918709224656871}
   - {SkinName: faceDecoration_3_G_005, HashValue: -6834617281576425626}
+  - {SkinName: faceDecoration_3_G_006, HashValue: -9205885355592043246}
   - {SkinName: faceDecoration_3_M_001, HashValue: 2242572196598619474}
   - {SkinName: facePaint_F_001, HashValue: 2282381957463591337}
   - {SkinName: facePaint_F_002, HashValue: -7687379542447104809}
@@ -438,8 +540,8 @@ MonoBehaviour:
   - {SkinName: facePaint_M_008, HashValue: -4985801810326157647}
   - {SkinName: facePaint_M_009, HashValue: -4985801810326157647}
   - {SkinName: facePaint_M_010, HashValue: -4985801810326157647}
-  - {SkinName: faceShape_F_01, HashValue: -6077340516476547555}
-  - {SkinName: faceShape_M_01, HashValue: 5945987766898360003}
+  - {SkinName: faceShape_F_01, HashValue: 4476020207086736470}
+  - {SkinName: faceShape_M_01, HashValue: -1887151292803891578}
   - {SkinName: hair_F_01, HashValue: 7318773462947246296}
   - {SkinName: hair_F_02, HashValue: 7503155441319628699}
   - {SkinName: hair_F_03, HashValue: 3736755472513686470}
@@ -450,6 +552,10 @@ MonoBehaviour:
   - {SkinName: hair_F_08, HashValue: 2579255616379399994}
   - {SkinName: hair_F_09, HashValue: 4206171174820215486}
   - {SkinName: hair_F_10, HashValue: 1281280341937902757}
+  - {SkinName: hair_F_100, HashValue: -457942124251166722}
+  - {SkinName: hair_F_101, HashValue: -4113940240806578546}
+  - {SkinName: hair_F_102, HashValue: -3040975398400340047}
+  - {SkinName: hair_F_103_XY_02, HashValue: 3713020422447918821}
   - {SkinName: hair_F_11, HashValue: 6383313793267438359}
   - {SkinName: hair_F_12, HashValue: 1296415203799494686}
   - {SkinName: hair_F_13, HashValue: 9181213190707348652}
@@ -536,6 +642,7 @@ MonoBehaviour:
   - {SkinName: hair_F_94, HashValue: 1515033817270574339}
   - {SkinName: hair_F_95, HashValue: -771785725472686062}
   - {SkinName: hair_F_96, HashValue: 5163252674196928048}
+  - {SkinName: hair_F_97_XY_01, HashValue: -6495801680548827874}
   - {SkinName: hair_F_98, HashValue: 4173435208508186164}
   - {SkinName: hair_F_99, HashValue: 7234700113628846406}
   - {SkinName: hair_G_01, HashValue: 730192140471100415}
@@ -548,7 +655,7 @@ MonoBehaviour:
   - {SkinName: hair_G_08, HashValue: 8636494481898809268}
   - {SkinName: hair_G_09, HashValue: 9143114605639972542}
   - {SkinName: hair_G_10, HashValue: -3723220092169948989}
-  - {SkinName: hair_G_11, HashValue: 598277772146443819}
+  - {SkinName: hair_G_11, HashValue: 6204365115326725126}
   - {SkinName: hair_G_12, HashValue: -885709129249357201}
   - {SkinName: hair_G_13, HashValue: -5410015044473269283}
   - {SkinName: hair_G_14, HashValue: -7798634695328927947}
@@ -556,6 +663,9 @@ MonoBehaviour:
   - {SkinName: hair_G_16, HashValue: -8947698060651397187}
   - {SkinName: hair_G_17, HashValue: -8976248777802119460}
   - {SkinName: hair_G_18, HashValue: -2295946924279547738}
+  - {SkinName: hair_G_19, HashValue: 5177217849448351659}
+  - {SkinName: hair_G_20, HashValue: -6511276880857332192}
+  - {SkinName: hair_G_21, HashValue: -6511276880857332192}
   - {SkinName: hair_M_01, HashValue: 8963058878130087346}
   - {SkinName: hair_M_02, HashValue: 3064270182232656116}
   - {SkinName: hair_M_03, HashValue: -7319483950566790171}
@@ -566,6 +676,8 @@ MonoBehaviour:
   - {SkinName: hair_M_08, HashValue: 5586933215542261357}
   - {SkinName: hair_M_09, HashValue: -5969835905986462990}
   - {SkinName: hair_M_10, HashValue: -1994765524862115701}
+  - {SkinName: hair_M_100, HashValue: 5343710233969100992}
+  - {SkinName: hair_M_101_XY_02, HashValue: 6483462010906595133}
   - {SkinName: hair_M_11, HashValue: 3755649811882289201}
   - {SkinName: hair_M_12, HashValue: -1485996086130686853}
   - {SkinName: hair_M_13, HashValue: 4692492080192571410}
@@ -652,8 +764,9 @@ MonoBehaviour:
   - {SkinName: hair_M_94, HashValue: -7410650100645621301}
   - {SkinName: hair_M_95, HashValue: 3917647141822686109}
   - {SkinName: hair_M_96, HashValue: 175814282724585723}
+  - {SkinName: hair_M_97_JH_01, HashValue: 4094368111448716617}
   - {SkinName: hair_M_98, HashValue: -2230490168170805382}
-  - {SkinName: hair_M_99, HashValue: -1680022380740829709}
+  - {SkinName: hair_M_99, HashValue: 1585670464650594505}
   - {SkinName: headOrnament_1_F_001, HashValue: 1687342812790432100}
   - {SkinName: headOrnament_1_F_002, HashValue: -5973179682581303388}
   - {SkinName: headOrnament_1_F_003, HashValue: 2477193204732361942}
@@ -666,6 +779,8 @@ MonoBehaviour:
   - {SkinName: headOrnament_1_F_010, HashValue: 9085261357743903356}
   - {SkinName: headOrnament_1_F_011, HashValue: -442488168856789086}
   - {SkinName: headOrnament_1_F_012, HashValue: 4834867005764907119}
+  - {SkinName: headOrnament_1_F_013_XY_01, HashValue: 6611875168954924381}
+  - {SkinName: headOrnament_1_F_014_XY_02, HashValue: 4819241958509309123}
   - {SkinName: headOrnament_1_G_001, HashValue: 2965347579152085168}
   - {SkinName: headOrnament_1_G_002, HashValue: 5997831052907535111}
   - {SkinName: headOrnament_1_G_003, HashValue: -4123360158864993220}
@@ -674,6 +789,8 @@ MonoBehaviour:
   - {SkinName: headOrnament_1_G_006, HashValue: -3177363403251581458}
   - {SkinName: headOrnament_1_G_007, HashValue: -8896699520680463229}
   - {SkinName: headOrnament_1_G_008, HashValue: 7273131552830287908}
+  - {SkinName: headOrnament_1_G_009, HashValue: -2756996369950185307}
+  - {SkinName: headOrnament_1_G_010, HashValue: 4992219042126517778}
   - {SkinName: headOrnament_1_M_001, HashValue: -176819903439675793}
   - {SkinName: headOrnament_1_M_002, HashValue: -6375517629411257893}
   - {SkinName: headOrnament_1_M_003, HashValue: -6258834782240078916}
@@ -686,6 +803,7 @@ MonoBehaviour:
   - {SkinName: headOrnament_1_M_010, HashValue: 8712075310816751177}
   - {SkinName: headOrnament_1_M_011, HashValue: -3487391629813623581}
   - {SkinName: headOrnament_1_M_012, HashValue: 570360327019806976}
+  - {SkinName: headOrnament_1_M_013_JH_01, HashValue: -3530587889285939881}
   - {SkinName: headOrnament_2_F_001, HashValue: -76826775395419022}
   - {SkinName: headOrnament_2_F_002, HashValue: 6486681554831726050}
   - {SkinName: headOrnament_2_F_003, HashValue: -7162571132257212635}
@@ -808,6 +926,15 @@ MonoBehaviour:
   - {SkinName: headOrnament_2_G_096, HashValue: 5756343709148739345}
   - {SkinName: headOrnament_2_G_097, HashValue: -7571027541044092640}
   - {SkinName: headOrnament_2_G_098, HashValue: -9007859052292452950}
+  - {SkinName: headOrnament_2_G_099, HashValue: -3021838773367855174}
+  - {SkinName: headOrnament_2_G_100, HashValue: -5517312642013371957}
+  - {SkinName: headOrnament_2_G_101, HashValue: 2359488797868708197}
+  - {SkinName: headOrnament_2_G_102, HashValue: 8506322915842966802}
+  - {SkinName: headOrnament_2_G_103, HashValue: -800452979989107676}
+  - {SkinName: headOrnament_2_G_104, HashValue: -5002439481616383431}
+  - {SkinName: headOrnament_2_G_105, HashValue: 8398168361703959603}
+  - {SkinName: headOrnament_2_G_106, HashValue: -102650825309057910}
+  - {SkinName: headOrnament_2_G_107, HashValue: 5125413546034514650}
   - {SkinName: headOrnament_2_M_001, HashValue: 1985380311784963066}
   - {SkinName: headOrnament_2_M_002, HashValue: -2501001143641599125}
   - {SkinName: headOrnament_2_M_003, HashValue: -3892108690847277281}
@@ -828,30 +955,31 @@ MonoBehaviour:
   - {SkinName: headOrnament_2_M_018, HashValue: 6546020252247952539}
   - {SkinName: headOrnament_2_M_019, HashValue: 2246711392341155611}
   - {SkinName: headOrnament_2_M_020, HashValue: 5680109692765800828}
-  - {SkinName: map_01, HashValue: 2293831327146765935}
-  - {SkinName: mouth_F_01, HashValue: -6077340516476547555}
-  - {SkinName: mouth_F_02, HashValue: -6077340516476547555}
-  - {SkinName: mouth_F_03, HashValue: -6077340516476547555}
-  - {SkinName: mouth_F_04, HashValue: -6077340516476547555}
-  - {SkinName: mouth_F_05, HashValue: -6077340516476547555}
-  - {SkinName: mouth_F_06, HashValue: -6077340516476547555}
-  - {SkinName: mouth_F_07, HashValue: -6077340516476547555}
-  - {SkinName: mouth_F_08, HashValue: -6077340516476547555}
-  - {SkinName: mouth_M_01, HashValue: 5945987766898360003}
-  - {SkinName: mouth_M_02, HashValue: 5945987766898360003}
-  - {SkinName: mouth_M_03, HashValue: 5945987766898360003}
-  - {SkinName: mouth_M_04, HashValue: 5945987766898360003}
-  - {SkinName: mouth_M_05, HashValue: 5945987766898360003}
-  - {SkinName: mouth_M_06, HashValue: 5945987766898360003}
-  - {SkinName: mouth_M_07, HashValue: 5945987766898360003}
-  - {SkinName: mouth_M_08, HashValue: 5945987766898360003}
-  - {SkinName: performFace, HashValue: 5945987766898360003}
+  - {SkinName: map_01, HashValue: 2714475991856487969}
+  - {SkinName: mouth_F_01, HashValue: 4476020207086736470}
+  - {SkinName: mouth_F_02, HashValue: 4476020207086736470}
+  - {SkinName: mouth_F_03, HashValue: 4476020207086736470}
+  - {SkinName: mouth_F_04, HashValue: 4476020207086736470}
+  - {SkinName: mouth_F_05, HashValue: 4476020207086736470}
+  - {SkinName: mouth_F_06, HashValue: 4476020207086736470}
+  - {SkinName: mouth_F_07, HashValue: 4476020207086736470}
+  - {SkinName: mouth_F_08, HashValue: 4476020207086736470}
+  - {SkinName: mouth_M_01, HashValue: -1887151292803891578}
+  - {SkinName: mouth_M_02, HashValue: -1887151292803891578}
+  - {SkinName: mouth_M_03, HashValue: -1887151292803891578}
+  - {SkinName: mouth_M_04, HashValue: -1887151292803891578}
+  - {SkinName: mouth_M_05, HashValue: -1887151292803891578}
+  - {SkinName: mouth_M_06, HashValue: -1887151292803891578}
+  - {SkinName: mouth_M_07, HashValue: -1887151292803891578}
+  - {SkinName: mouth_M_08, HashValue: -1887151292803891578}
+  - {SkinName: performFace, HashValue: -1887151292803891578}
   - {SkinName: pWeapon_100_10111, HashValue: -2448158107043967914}
   - {SkinName: pWeapon_100_10113, HashValue: 8527226012947318182}
   - {SkinName: pWeapon_100_10114, HashValue: 168208855796859048}
   - {SkinName: pWeapon_100_10206, HashValue: 6236463411627613645}
   - {SkinName: pWeapon_100_10408, HashValue: 2060354960474719367}
   - {SkinName: pWeapon_100_10411, HashValue: 2554250289429059431}
+  - {SkinName: pWeapon_100_10417, HashValue: 54892742222855310}
   - {SkinName: pWeapon_100_10501, HashValue: 9053974433136146221}
   - {SkinName: pWeapon_100_10505, HashValue: -4611560338071312661}
   - {SkinName: pWeapon_100_10507, HashValue: -4348674204719428980}
@@ -867,6 +995,9 @@ MonoBehaviour:
   - {SkinName: pWeapon_100_10802, HashValue: -2238999586618246725}
   - {SkinName: pWeapon_100_10806, HashValue: -8858845162931679358}
   - {SkinName: pWeapon_100_10807, HashValue: 7781507363785110583}
+  - {SkinName: pWeapon_100_10901, HashValue: -5136376580678113161}
+  - {SkinName: pWeapon_100_10902, HashValue: -2791068912884228290}
+  - {SkinName: pWeapon_100_10904, HashValue: -2195276157501132387}
   - {SkinName: pWeapon_100_11001_1, HashValue: 6366156852356857915}
   - {SkinName: pWeapon_100_11001_2, HashValue: -6055980017418441448}
   - {SkinName: pWeapon_100_11001_3, HashValue: 3631488390707550071}
@@ -1038,6 +1169,21 @@ MonoBehaviour:
   - {SkinName: pWeapon_100_G_152, HashValue: 7739296829668432270}
   - {SkinName: pWeapon_100_G_153, HashValue: 5388236017588191186}
   - {SkinName: pWeapon_100_G_154, HashValue: -855765722717719123}
+  - {SkinName: pWeapon_100_G_155, HashValue: 3009358890924979010}
+  - {SkinName: pWeapon_100_G_156, HashValue: -6762063254531460198}
+  - {SkinName: pWeapon_100_G_157, HashValue: 3389157298482016483}
+  - {SkinName: pWeapon_100_G_158, HashValue: -1855334904359178536}
+  - {SkinName: pWeapon_100_G_159, HashValue: -7932467050837975171}
+  - {SkinName: pWeapon_100_G_160, HashValue: 7788717559948677510}
+  - {SkinName: pWeapon_100_G_161, HashValue: -869275879635540471}
+  - {SkinName: pWeapon_100_G_162, HashValue: 5215567074438833848}
+  - {SkinName: pWeapon_100_G_163, HashValue: 914323244904427980}
+  - {SkinName: pWeapon_100_G_164, HashValue: -8565094966660398084}
+  - {SkinName: pWeapon_100_G_165, HashValue: 1644286875793506416}
+  - {SkinName: pWeapon_100_G_166, HashValue: 7711180445763276642}
+  - {SkinName: pWeapon_100_G_167, HashValue: -3437953822405313245}
+  - {SkinName: pWeapon_100_G_168, HashValue: -55002425282274596}
+  - {SkinName: pWeapon_100_G_169, HashValue: 3395939980014627087}
   - {SkinName: pWeapon_100_M_001, HashValue: 2219971690627322456}
   - {SkinName: pWeapon_100_M_002, HashValue: 6991238620664089675}
   - {SkinName: pWeapon_100_M_003, HashValue: 4717912470822445224}
@@ -1046,6 +1192,7 @@ MonoBehaviour:
   - {SkinName: pWeapon_100_M_006, HashValue: -7949738316003598795}
   - {SkinName: pWeapon_100_M_007, HashValue: 291229430406948336}
   - {SkinName: pWeapon_100_M_008, HashValue: -9163064778795858012}
+  - {SkinName: pWeapon_100_M_009, HashValue: -2883825226962375126}
   - {SkinName: pWeapon_200_10109, HashValue: -8239290111050136247}
   - {SkinName: pWeapon_200_10110, HashValue: -5266120976913155588}
   - {SkinName: pWeapon_200_10112, HashValue: 488771357689847907}
@@ -1068,6 +1215,8 @@ MonoBehaviour:
   - {SkinName: pWeapon_200_10803, HashValue: 2685228203492191088}
   - {SkinName: pWeapon_200_10804, HashValue: 2597146085679125495}
   - {SkinName: pWeapon_200_10805, HashValue: 715550502900569554}
+  - {SkinName: pWeapon_200_10903, HashValue: -347106506931828632}
+  - {SkinName: pWeapon_200_10905, HashValue: -6767477193363591142}
   - {SkinName: pWeapon_200_11002, HashValue: 8794302876363196861}
   - {SkinName: pWeapon_200_11004, HashValue: -4838764626061374977}
   - {SkinName: pWeapon_200_11027, HashValue: -7537152582413827669}
@@ -1235,6 +1384,21 @@ MonoBehaviour:
   - {SkinName: pWeapon_200_G_152, HashValue: 4095216889877013743}
   - {SkinName: pWeapon_200_G_153, HashValue: 6734458851368157857}
   - {SkinName: pWeapon_200_G_154, HashValue: 6627056755377618856}
+  - {SkinName: pWeapon_200_G_155, HashValue: -2672766856839727360}
+  - {SkinName: pWeapon_200_G_156, HashValue: -5563533042616378920}
+  - {SkinName: pWeapon_200_G_157, HashValue: 9089428686366266383}
+  - {SkinName: pWeapon_200_G_158, HashValue: -1925885978762498710}
+  - {SkinName: pWeapon_200_G_159, HashValue: 6360183919760857859}
+  - {SkinName: pWeapon_200_G_160, HashValue: -3956629269575377950}
+  - {SkinName: pWeapon_200_G_161, HashValue: -8146603074082914883}
+  - {SkinName: pWeapon_200_G_162, HashValue: 9148568090320874401}
+  - {SkinName: pWeapon_200_G_163, HashValue: -7916313520704158770}
+  - {SkinName: pWeapon_200_G_164, HashValue: 5094288842786916705}
+  - {SkinName: pWeapon_200_G_165, HashValue: -2939140676715486263}
+  - {SkinName: pWeapon_200_G_166, HashValue: -7605197508604457291}
+  - {SkinName: pWeapon_200_G_167, HashValue: 7032858808897753340}
+  - {SkinName: pWeapon_200_G_168, HashValue: 8197333203136710191}
+  - {SkinName: pWeapon_200_G_169, HashValue: -1181685768937185052}
   - {SkinName: pWeapon_200_M_001, HashValue: 5167304642466493122}
   - {SkinName: pWeapon_200_M_002, HashValue: -660582492343774592}
   - {SkinName: pWeapon_200_M_003, HashValue: 7945116943455324740}
@@ -1245,6 +1409,7 @@ MonoBehaviour:
   - {SkinName: pWeapon_200_M_008, HashValue: -2677041443032189540}
   - {SkinName: pWeapon_200_M_009, HashValue: 5496048714362278414}
   - {SkinName: pWeapon_200_M_010, HashValue: -5039189680904470872}
+  - {SkinName: pWeapon_200_M_011, HashValue: -1826462527269887308}
   - {SkinName: sWeapon_11_001, HashValue: -4309811013216766110}
   - {SkinName: sWeapon_11_002, HashValue: -3573803139391114019}
   - {SkinName: sWeapon_11_003, HashValue: -4158019908127646558}
@@ -1351,6 +1516,7 @@ MonoBehaviour:
   - {SkinName: sWeapon_11_103, HashValue: 4872101527184660153}
   - {SkinName: sWeapon_11_104, HashValue: -7229950891656651867}
   - {SkinName: sWeapon_11_10408, HashValue: -8125443929603347999}
+  - {SkinName: sWeapon_11_10417, HashValue: 2210375793722206627}
   - {SkinName: sWeapon_11_105, HashValue: 5757957181992764420}
   - {SkinName: sWeapon_11_10501, HashValue: -933890050584212200}
   - {SkinName: sWeapon_11_10507, HashValue: -5796163637562801805}
@@ -1363,6 +1529,8 @@ MonoBehaviour:
   - {SkinName: sWeapon_11_108, HashValue: -4006941369813803942}
   - {SkinName: sWeapon_11_10807, HashValue: 4393761306858919713}
   - {SkinName: sWeapon_11_109, HashValue: 6772793863297275977}
+  - {SkinName: sWeapon_11_10901, HashValue: 8293068951710935008}
+  - {SkinName: sWeapon_11_10902, HashValue: 470030533057923165}
   - {SkinName: sWeapon_11_110, HashValue: 8383137997100875307}
   - {SkinName: sWeapon_11_111, HashValue: -8824425588268858191}
   - {SkinName: sWeapon_11_112, HashValue: 6949469700534876439}
@@ -1375,6 +1543,20 @@ MonoBehaviour:
   - {SkinName: sWeapon_11_119, HashValue: -4969167050508530027}
   - {SkinName: sWeapon_11_120, HashValue: 5973659953755960506}
   - {SkinName: sWeapon_11_121, HashValue: -476777376193666936}
+  - {SkinName: sWeapon_11_122, HashValue: 5498107013061529748}
+  - {SkinName: sWeapon_11_123, HashValue: 5771969985748855802}
+  - {SkinName: sWeapon_11_124, HashValue: -2902609828797811822}
+  - {SkinName: sWeapon_11_125, HashValue: -4610585513684648106}
+  - {SkinName: sWeapon_11_126, HashValue: -12249708048802139}
+  - {SkinName: sWeapon_11_127, HashValue: 960201203076738419}
+  - {SkinName: sWeapon_11_128, HashValue: 5982245859429527312}
+  - {SkinName: sWeapon_11_129, HashValue: 3943125865028541808}
+  - {SkinName: sWeapon_11_130, HashValue: -9086718683842544997}
+  - {SkinName: sWeapon_11_131, HashValue: -4678016602551885908}
+  - {SkinName: sWeapon_11_132, HashValue: -1033438689700154533}
+  - {SkinName: sWeapon_11_133, HashValue: 1178515376721975524}
+  - {SkinName: sWeapon_11_134, HashValue: -1452123261908395437}
+  - {SkinName: sWeapon_11_135, HashValue: -3127511677462006277}
   - {SkinName: sWeapon_11_8411, HashValue: 8022678798074261889}
   - {SkinName: sWeapon_11_8422, HashValue: 5033845725376450631}
   - {SkinName: sWeapon_11_8427, HashValue: 4590270703809560507}
@@ -1386,6 +1568,7 @@ MonoBehaviour:
   - {SkinName: sWeapon_11_M_003, HashValue: 7683441376151020114}
   - {SkinName: sWeapon_11_M_004, HashValue: -5846183976342170196}
   - {SkinName: sWeapon_11_M_005, HashValue: -2568982182660667089}
+  - {SkinName: sWeapon_11_M_006, HashValue: -49840011339312527}
   - {SkinName: sWeapon_12_001, HashValue: -4131789518955064701}
   - {SkinName: sWeapon_12_002, HashValue: -8883162027047966769}
   - {SkinName: sWeapon_12_003, HashValue: 1435186491363011936}
@@ -1503,6 +1686,7 @@ MonoBehaviour:
   - {SkinName: sWeapon_12_10801, HashValue: -4660310125604221045}
   - {SkinName: sWeapon_12_10802, HashValue: -5830095721628739011}
   - {SkinName: sWeapon_12_109, HashValue: -1015539476942608931}
+  - {SkinName: sWeapon_12_10904, HashValue: 1083583062331488227}
   - {SkinName: sWeapon_12_110, HashValue: 3046644210321840178}
   - {SkinName: sWeapon_12_111, HashValue: -8699123115379979538}
   - {SkinName: sWeapon_12_112, HashValue: -2216445033866774466}
@@ -1515,6 +1699,20 @@ MonoBehaviour:
   - {SkinName: sWeapon_12_119, HashValue: 5599825351309402102}
   - {SkinName: sWeapon_12_120, HashValue: -3406745364221906928}
   - {SkinName: sWeapon_12_121, HashValue: -8930780378000368047}
+  - {SkinName: sWeapon_12_122, HashValue: -3206077725333169587}
+  - {SkinName: sWeapon_12_123, HashValue: 6253779974153331004}
+  - {SkinName: sWeapon_12_124, HashValue: -7163533447278293549}
+  - {SkinName: sWeapon_12_125, HashValue: -9025909091326658677}
+  - {SkinName: sWeapon_12_126, HashValue: 195430892238157213}
+  - {SkinName: sWeapon_12_127, HashValue: -4969429187591692305}
+  - {SkinName: sWeapon_12_128, HashValue: -7412029862733893446}
+  - {SkinName: sWeapon_12_129, HashValue: 9089481810204572754}
+  - {SkinName: sWeapon_12_130, HashValue: 5751846780051114102}
+  - {SkinName: sWeapon_12_131, HashValue: -6640883095546037340}
+  - {SkinName: sWeapon_12_132, HashValue: 7482299753370336915}
+  - {SkinName: sWeapon_12_133, HashValue: -6227747823420109303}
+  - {SkinName: sWeapon_12_134, HashValue: -4646420442534981346}
+  - {SkinName: sWeapon_12_135, HashValue: -9030768324086294355}
   - {SkinName: sWeapon_12_8408, HashValue: -7110117587923908293}
   - {SkinName: sWeapon_12_8421, HashValue: 2852928662368125684}
   - {SkinName: sWeapon_12_8423, HashValue: -8655248517622255067}
@@ -1528,6 +1726,7 @@ MonoBehaviour:
   - {SkinName: sWeapon_12_M_003, HashValue: -2458838998970870419}
   - {SkinName: sWeapon_12_M_004, HashValue: 9110969850090510500}
   - {SkinName: sWeapon_12_M_005, HashValue: -5776850591748050868}
+  - {SkinName: sWeapon_12_M_006, HashValue: -8743573058380489732}
   - {SkinName: sWeapon_21_001, HashValue: -2188510627896499245}
   - {SkinName: sWeapon_21_002, HashValue: 3232286335639677821}
   - {SkinName: sWeapon_21_003, HashValue: -7194444811985511593}
@@ -1650,6 +1849,7 @@ MonoBehaviour:
   - {SkinName: sWeapon_21_10803, HashValue: -579091302058565644}
   - {SkinName: sWeapon_21_10805, HashValue: -4731774409738765618}
   - {SkinName: sWeapon_21_109, HashValue: 7416721121741146190}
+  - {SkinName: sWeapon_21_10905, HashValue: 1670437158062020044}
   - {SkinName: sWeapon_21_110, HashValue: -3621906956342982768}
   - {SkinName: sWeapon_21_111, HashValue: -2114248002671287379}
   - {SkinName: sWeapon_21_112, HashValue: 8231773146445544000}
@@ -1657,11 +1857,25 @@ MonoBehaviour:
   - {SkinName: sWeapon_21_114, HashValue: -299042224039998539}
   - {SkinName: sWeapon_21_115, HashValue: 2492092566266233108}
   - {SkinName: sWeapon_21_116, HashValue: 3510912160174145572}
-  - {SkinName: sWeapon_21_117, HashValue: -6594681780653737928}
+  - {SkinName: sWeapon_21_117, HashValue: 867067422675778658}
   - {SkinName: sWeapon_21_118, HashValue: -1700992365877331550}
   - {SkinName: sWeapon_21_119, HashValue: -7507430316267985627}
   - {SkinName: sWeapon_21_120, HashValue: 8485909735374461142}
-  - {SkinName: sWeapon_21_121, HashValue: -8372090114781449086}
+  - {SkinName: sWeapon_21_121, HashValue: -3738339993344006699}
+  - {SkinName: sWeapon_21_122, HashValue: 8266743495888899211}
+  - {SkinName: sWeapon_21_123, HashValue: -7312748715518873227}
+  - {SkinName: sWeapon_21_124, HashValue: -6925782358327384975}
+  - {SkinName: sWeapon_21_125, HashValue: -2528467228469378627}
+  - {SkinName: sWeapon_21_126, HashValue: -5903388368949398256}
+  - {SkinName: sWeapon_21_127, HashValue: -4417118100956580287}
+  - {SkinName: sWeapon_21_128, HashValue: 4598505376786412769}
+  - {SkinName: sWeapon_21_129, HashValue: 1767885097294109791}
+  - {SkinName: sWeapon_21_130, HashValue: 1385957979594207994}
+  - {SkinName: sWeapon_21_131, HashValue: 4179954056786003489}
+  - {SkinName: sWeapon_21_132, HashValue: 3438529038875078271}
+  - {SkinName: sWeapon_21_133, HashValue: -2265117688305038122}
+  - {SkinName: sWeapon_21_134, HashValue: -1080286751778973873}
+  - {SkinName: sWeapon_21_135, HashValue: 7688961172467338562}
   - {SkinName: sWeapon_21_8404, HashValue: 5282185802820841575}
   - {SkinName: sWeapon_21_8409, HashValue: -5854660891583495927}
   - {SkinName: sWeapon_21_8439, HashValue: -6661611748967435355}
@@ -1672,6 +1886,7 @@ MonoBehaviour:
   - {SkinName: sWeapon_21_M_003, HashValue: 3503956486913910553}
   - {SkinName: sWeapon_21_M_004, HashValue: -5049508229919716320}
   - {SkinName: sWeapon_21_M_005, HashValue: 5260197871100018547}
+  - {SkinName: sWeapon_21_M_006, HashValue: 2460685921595142942}
   - {SkinName: sWeapon_22_001, HashValue: 1551257558332268100}
   - {SkinName: sWeapon_22_002, HashValue: 4040018608718401492}
   - {SkinName: sWeapon_22_003, HashValue: 710199505413665289}
@@ -1775,6 +1990,7 @@ MonoBehaviour:
   - {SkinName: sWeapon_22_10110, HashValue: 8106524716093254269}
   - {SkinName: sWeapon_22_102, HashValue: -1863981142027135851}
   - {SkinName: sWeapon_22_103, HashValue: -7116438428309527244}
+  - {SkinName: sWeapon_22_10306, HashValue: -7240068015521955344}
   - {SkinName: sWeapon_22_104, HashValue: -8666713356722010042}
   - {SkinName: sWeapon_22_10409, HashValue: 3832253265602848579}
   - {SkinName: sWeapon_22_105, HashValue: 444824594910221270}
@@ -1788,6 +2004,7 @@ MonoBehaviour:
   - {SkinName: sWeapon_22_108, HashValue: -4495894583880868079}
   - {SkinName: sWeapon_22_10804, HashValue: -4338669321464253773}
   - {SkinName: sWeapon_22_109, HashValue: 7871997471334532587}
+  - {SkinName: sWeapon_22_10903, HashValue: 6417403462466002676}
   - {SkinName: sWeapon_22_110, HashValue: 2701321796892044214}
   - {SkinName: sWeapon_22_111, HashValue: 2402546941473933444}
   - {SkinName: sWeapon_22_112, HashValue: 9057265871747698591}
@@ -1795,11 +2012,25 @@ MonoBehaviour:
   - {SkinName: sWeapon_22_114, HashValue: -1049437931617410046}
   - {SkinName: sWeapon_22_115, HashValue: -6470025242752909684}
   - {SkinName: sWeapon_22_116, HashValue: 8910835033919947219}
-  - {SkinName: sWeapon_22_117, HashValue: 2124553065795459068}
+  - {SkinName: sWeapon_22_117, HashValue: -4963172610150478256}
   - {SkinName: sWeapon_22_118, HashValue: -515617051793125780}
   - {SkinName: sWeapon_22_119, HashValue: -8701849112546414374}
   - {SkinName: sWeapon_22_120, HashValue: -1521274103068417084}
   - {SkinName: sWeapon_22_121, HashValue: -7381060804720494683}
+  - {SkinName: sWeapon_22_122, HashValue: -7501539297704486530}
+  - {SkinName: sWeapon_22_123, HashValue: -6599839027011195576}
+  - {SkinName: sWeapon_22_124, HashValue: 6754142966417809528}
+  - {SkinName: sWeapon_22_125, HashValue: 37359828036678418}
+  - {SkinName: sWeapon_22_126, HashValue: 8091493511111864565}
+  - {SkinName: sWeapon_22_127, HashValue: 5717502602271937254}
+  - {SkinName: sWeapon_22_128, HashValue: 5404148524706054985}
+  - {SkinName: sWeapon_22_129, HashValue: -456601183147164696}
+  - {SkinName: sWeapon_22_130, HashValue: 5732983641392728648}
+  - {SkinName: sWeapon_22_131, HashValue: -1491676620400037387}
+  - {SkinName: sWeapon_22_132, HashValue: 3433014566940964490}
+  - {SkinName: sWeapon_22_133, HashValue: 3103597201497180337}
+  - {SkinName: sWeapon_22_134, HashValue: 949244918511059209}
+  - {SkinName: sWeapon_22_135, HashValue: 6775522657806481605}
   - {SkinName: sWeapon_22_8406, HashValue: -6199233524411441727}
   - {SkinName: sWeapon_22_8424, HashValue: -1477671292946375707}
   - {SkinName: sWeapon_22_8441, HashValue: -8895945898017272490}
@@ -1810,6 +2041,7 @@ MonoBehaviour:
   - {SkinName: sWeapon_22_M_003, HashValue: 6019661026394952220}
   - {SkinName: sWeapon_22_M_004, HashValue: -4889309217320421028}
   - {SkinName: sWeapon_22_M_005, HashValue: -4266321958486199561}
+  - {SkinName: sWeapon_22_M_006, HashValue: 5775935499030605639}
   - {SkinName: tail_G_01, HashValue: -4961049228169544116}
   mAppearanceSkeletonPaths:
   - {SkeletonName: backDecoration, Path: Assets/AppearanceAssets/Character/backDecoration}
@@ -1987,6 +2219,21 @@ MonoBehaviour:
   - {SkeletonName: monster_3379, Path: Assets/AppearanceAssets/Monster/monster_3379}
   - {SkeletonName: monster_3380, Path: Assets/AppearanceAssets/Monster/monster_3380}
   - {SkeletonName: monster_3381, Path: Assets/AppearanceAssets/Monster/monster_3381}
+  - {SkeletonName: monster_3382, Path: Assets/AppearanceAssets/Monster/monster_3382}
+  - {SkeletonName: monster_3383, Path: Assets/AppearanceAssets/Monster/monster_3383}
+  - {SkeletonName: monster_3384, Path: Assets/AppearanceAssets/Monster/monster_3384}
+  - {SkeletonName: monster_3385, Path: Assets/AppearanceAssets/Monster/monster_3385}
+  - {SkeletonName: monster_3386, Path: Assets/AppearanceAssets/Monster/monster_3386}
+  - {SkeletonName: monster_3387, Path: Assets/AppearanceAssets/Monster/monster_3387}
+  - {SkeletonName: monster_3388, Path: Assets/AppearanceAssets/Monster/monster_3388}
+  - {SkeletonName: monster_3389, Path: Assets/AppearanceAssets/Monster/monster_3389}
+  - {SkeletonName: monster_3390, Path: Assets/AppearanceAssets/Monster/monster_3390}
+  - {SkeletonName: monster_3391, Path: Assets/AppearanceAssets/Monster/monster_3391}
+  - {SkeletonName: monster_3392, Path: Assets/AppearanceAssets/Monster/monster_3392}
+  - {SkeletonName: monster_3393, Path: Assets/AppearanceAssets/Monster/monster_3393}
+  - {SkeletonName: monster_3394, Path: Assets/AppearanceAssets/Monster/monster_3394}
+  - {SkeletonName: monster_3395, Path: Assets/AppearanceAssets/Monster/monster_3395}
+  - {SkeletonName: monster_3396, Path: Assets/AppearanceAssets/Monster/monster_3396}
   - {SkeletonName: monster_3401, Path: Assets/AppearanceAssets/Monster/monster_3401}
   - {SkeletonName: monster_3402, Path: Assets/AppearanceAssets/Monster/monster_3402}
   - {SkeletonName: monster_3403, Path: Assets/AppearanceAssets/Monster/monster_3403}
@@ -2092,6 +2339,15 @@ MonoBehaviour:
   - {SkeletonName: monster_3532, Path: Assets/AppearanceAssets/Monster/monster_3532}
   - {SkeletonName: monster_3533, Path: Assets/AppearanceAssets/Monster/monster_3533}
   - {SkeletonName: monster_3534, Path: Assets/AppearanceAssets/Monster/monster_3534}
+  - {SkeletonName: monster_3535, Path: Assets/AppearanceAssets/Monster/monster_3535}
+  - {SkeletonName: monster_3536, Path: Assets/AppearanceAssets/Monster/monster_3536}
+  - {SkeletonName: monster_3537, Path: Assets/AppearanceAssets/Monster/monster_3537}
+  - {SkeletonName: monster_3538, Path: Assets/AppearanceAssets/Monster/monster_3538}
+  - {SkeletonName: monster_3539, Path: Assets/AppearanceAssets/Monster/monster_3539}
+  - {SkeletonName: monster_3540, Path: Assets/AppearanceAssets/Monster/monster_3540}
+  - {SkeletonName: monster_3541, Path: Assets/AppearanceAssets/Monster/monster_3541}
+  - {SkeletonName: monster_3542, Path: Assets/AppearanceAssets/Monster/monster_3542}
+  - {SkeletonName: monster_3543, Path: Assets/AppearanceAssets/Monster/monster_3543}
   - {SkeletonName: monster_3601, Path: Assets/AppearanceAssets/Monster/monster_3601}
   - {SkeletonName: monster_3602, Path: Assets/AppearanceAssets/Monster/monster_3602}
   - {SkeletonName: monster_3607, Path: Assets/AppearanceAssets/Monster/monster_3607}
@@ -2149,7 +2405,14 @@ MonoBehaviour:
   - {SkeletonName: monster_3666, Path: Assets/AppearanceAssets/Monster/monster_3666}
   - {SkeletonName: monster_3667, Path: Assets/AppearanceAssets/Monster/monster_3667}
   - {SkeletonName: monster_3668, Path: Assets/AppearanceAssets/Monster/monster_3668}
+  - {SkeletonName: monster_3669, Path: Assets/AppearanceAssets/Monster/monster_3669}
   - {SkeletonName: monster_3670, Path: Assets/AppearanceAssets/Monster/monster_3670}
+  - {SkeletonName: monster_3671, Path: Assets/AppearanceAssets/Monster/monster_3671}
+  - {SkeletonName: monster_3672, Path: Assets/AppearanceAssets/Monster/monster_3672}
+  - {SkeletonName: monster_3673, Path: Assets/AppearanceAssets/Monster/monster_3673}
+  - {SkeletonName: monster_3674, Path: Assets/AppearanceAssets/Monster/monster_3674}
+  - {SkeletonName: monster_3675, Path: Assets/AppearanceAssets/Monster/monster_3675}
+  - {SkeletonName: monster_3676, Path: Assets/AppearanceAssets/Monster/monster_3676}
   - {SkeletonName: monster_3703, Path: Assets/AppearanceAssets/Monster/monster_3703}
   - {SkeletonName: monster_3704, Path: Assets/AppearanceAssets/Monster/monster_3704}
   - {SkeletonName: monster_3705, Path: Assets/AppearanceAssets/Monster/monster_3705}
@@ -2172,6 +2435,9 @@ MonoBehaviour:
   - {SkeletonName: npc_10801, Path: Assets/AppearanceAssets/Npc/npc_10801}
   - {SkeletonName: npc_10807, Path: Assets/AppearanceAssets/Npc/npc_10807}
   - {SkeletonName: npc_10810, Path: Assets/AppearanceAssets/Npc/npc_10810}
+  - {SkeletonName: npc_10901, Path: Assets/AppearanceAssets/Npc/npc_10901}
+  - {SkeletonName: npc_10906, Path: Assets/AppearanceAssets/Npc/npc_10906}
+  - {SkeletonName: npc_10914, Path: Assets/AppearanceAssets/Npc/npc_10914}
   - {SkeletonName: npc_11001, Path: Assets/AppearanceAssets/Npc/npc_11001}
   - {SkeletonName: npc_11002, Path: Assets/AppearanceAssets/Npc/npc_11002}
   - {SkeletonName: npc_11003, Path: Assets/AppearanceAssets/Npc/npc_11003}
@@ -2278,5 +2544,7 @@ MonoBehaviour:
   - {SkeletonName: summons_3933, Path: Assets/AppearanceAssets/Summons/summons_3933}
   - {SkeletonName: summons_3935, Path: Assets/AppearanceAssets/Summons/summons_3935}
   - {SkeletonName: summons_3936, Path: Assets/AppearanceAssets/Summons/summons_3936}
+  - {SkeletonName: summons_3950, Path: Assets/AppearanceAssets/Summons/summons_3950}
+  - {SkeletonName: summons_3951, Path: Assets/AppearanceAssets/Summons/summons_3951}
   MimicsMonsterColor: {r: 0.3962264060974121, g: 0.3962264060974121, b: 0.3962264060974121, a: 1.0}
   m_EditorClassIdentifier: ''

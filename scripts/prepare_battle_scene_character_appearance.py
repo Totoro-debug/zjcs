@@ -12,7 +12,7 @@ from pathlib import Path
 import yaml
 from current_component_schemas import CurrentSchemas
 from official_apk import Apk
-from prepare_battle_scene_appearance_runtime import ROOT, SOURCE, common, identity, meta, write_changed
+from prepare_battle_scene_appearance_runtime import ROOT, common, identity, meta, write_changed
 from prepare_unity_profession_character_resources import guid
 from prepare_unity_profession_reward_sprites import Dumper, fields, source_header
 
@@ -44,12 +44,13 @@ def character(source):
 
 def main():
     apk = Apk.current()
-    assert apk.version == "884_156692"
-    code_receipt = ROOT / ".tools/source-packages/current/884_156692/code-manifest.json"
+    assert apk.version == "911_156995"
+    code_receipt = apk.source.prepared_path / "code-manifest.json"
     code = json.loads(code_receipt.read_bytes())
     assembly = code_receipt.parent / "official-code/managed/decoded/Assembly-CSharp.dll"
     assert identity(assembly)["sha256"] == code["assemblies"][assembly.name]["decoded_sha256"]
-    original = SOURCE / "AppearanceSystem.Runtime/AppearanceCharacter.cs"
+    source_root = code_receipt.parent / "official-code/client-source"
+    original = source_root / "AppearanceSystem.Runtime/AppearanceCharacter.cs"
     runtime = ROOT / "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs"
     write_changed(runtime, character(original)); meta(runtime)
     source = apk.asset("defaultpackage_assets_scriptableconfig_modules_appearance.bundle", "/AppearanceConfig.asset")
@@ -68,7 +69,7 @@ def main():
     ports = []
     for prior in old["ports"]:
         name = Path(prior["source"]["path"]).name
-        current = SOURCE.parent / "common-source" / name
+        current = source_root.parent / "common-source" / name
         assert identity(current)["sha256"] == prior["source"]["sha256"], "Review changed current configuration type: " + name
         migrated = identity(ROOT / prior["runtime"]["path"])
         raw = (ROOT / migrated["path"]).read_bytes()
