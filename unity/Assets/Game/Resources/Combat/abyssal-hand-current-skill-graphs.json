@@ -1,0 +1,76 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 10950,
+      "entity_resource": "Combat/AbyssalHandSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10950/10950",
+      "playables": [
+        {
+          "field": "myPlayablePrefab",
+          "resource": "Combat/AbyssalHandSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10950/playable10950"
+        }
+      ]
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 10951,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [
+        {
+          "field": "myPlayable",
+          "resource": "Combat/AbyssalHandSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10950/playable10951_1"
+        },
+        {
+          "field": "SourceToMePlayable",
+          "resource": "Combat/AbyssalHandSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10950/playable10951_2"
+        }
+      ],
+      "entity_resource": "Combat/AbyssalHandSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10950/10951"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 10952,
+      "entity_prefab": "10950/10952.prefab",
+      "entity_prefab_sha256": "2ca6f249fc273a5c37a3383b5eab10ef8702321d1e8efbd6dd4520bb77b01e71",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/AbyssalHandSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10950/playable_damage_10952"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/AbyssalHandSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/AbyssalHandSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/AbyssalHandSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/AbyssalHandSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/10950/10952"
+    }
+  ]
+}

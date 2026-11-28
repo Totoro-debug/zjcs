@@ -90,6 +90,7 @@ namespace Zjcs.Presentation.Home
             bool heavenlyRain = skillId == 10096;
             bool psychicWard = skillId == 10077;
             bool sageDarkBlast = skillId == 10103;
+            bool abyssalHand = skillId == 10040;
             int fighterCompanion = FighterActiveCompanion(skillId);
             int destroyerCompanion = DestroyerActiveCompanion(skillId);
             bool flameSoul = destroyerCompanion == 10599;
@@ -101,11 +102,11 @@ namespace Zjcs.Presentation.Home
             bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard;
             fourthPromotion |= fireLeap || flowingFire;
             bool statusSkill = swiftWind || asuraHand || crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry || protectiveRunes || psychicWard;
-            bool thirdPromotion = fighterCompanion > 0 || hunt || swiftWind || extinction || asuraHand || eclipseSlashes || crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017 || warlockExplosion || warlockThunder || warlockWind || warlockWater || warlockMeteor;
+            bool thirdPromotion = abyssalHand || fighterCompanion > 0 || hunt || swiftWind || extinction || asuraHand || eclipseSlashes || crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017 || warlockExplosion || warlockThunder || warlockWind || warlockWater || warlockMeteor;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
             fourthPromotion |= HasGuardianCompanion(skillId);
-            int profession = fighterCompanion > 0 || hunt || swiftWind || extinction || asuraHand || eclipseSlashes ? 7 : warlockExplosion || warlockThunder || warlockWind || warlockWater || warlockMeteor ? 12 : fireLeap || flowingFire ? 8 : alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = abyssalHand ? 16 : fighterCompanion > 0 || hunt || swiftWind || extinction || asuraHand || eclipseSlashes ? 7 : warlockExplosion || warlockThunder || warlockWind || warlockWater || warlockMeteor ? 12 : fireLeap || flowingFire ? 8 : alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -298,9 +299,9 @@ namespace Zjcs.Presentation.Home
             click(FlameFlowButton(value => value.name == "StageDamageTestBtn"));
             yield return new WaitForSecondsRealtime(.5f);
             var settings = FindObjectsOfType<Transform>().Single(value => value.name == "damage_test");
-            if (passiveCompanion == 10609 || warlockWater || warlockMeteor || passiveCompanion == 10545)
+            if (abyssalHand || passiveCompanion == 10609 || warlockWater || warlockMeteor || passiveCompanion == 10545)
             {
-                int formation = passiveCompanion == 10545 ? 2 : warlockWater || warlockMeteor ? 4 : 3;
+                int formation = passiveCompanion == 10545 || abyssalHand ? 2 : warlockWater || warlockMeteor ? 4 : 3;
                 var dropdown = settings.GetComponentsInChildren<Zjcs.Official.WorldUI.WorldUIDropdown>().Single();
                 Require(dropdown.ItemsKey.Count > formation, "The original group formation is missing.");
                 click(dropdown.DropdownButton);
@@ -405,8 +406,11 @@ namespace Zjcs.Presentation.Home
             var doll = voodooDoll ? new AcquiredVoodooDoll() : null;
             if (passiveCompanion == 10590) PrepareAcquiredSoulGuardianCheckpoint(checkpoint);
             soulSplash?.Prepare(checkpoint);
+            var abyssal = abyssalHand ? new AcquiredAbyssalHand(output) : null;
+            abyssal?.Prepare(checkpoint);
             PrepareAcquiredAffinity(checkpoint, passiveCompanion);
             battle.Controller.StepCompleted += step => {
+                abyssal?.Observe(step.Event, checkpoint);
                 if (swiftWind) VerifyAcquiredSwiftWindStep(step.Event, checkpoint);
                 if (asuraHand) VerifyAcquiredAsuraStep(step.Event, checkpoint, output);
                 if (spiralWindBlade)
@@ -459,6 +463,7 @@ namespace Zjcs.Presentation.Home
                         : crisisGuard ? cast.SkillEntityId == 11170
                         : skillId == 10035 ? cast.SkillEntityId == 10900
                         : starShatteringSlash ? cast.SkillEntityId == 10940
+                        : abyssalHand ? cast.SkillEntityId == 10950
                         : skillId == 10043 ? cast.SkillEntityId == 10590
                         : skillId == 10044 ? cast.SkillEntityId == 10750
                         : skillId == 10046 ? cast.SkillEntityId == 11160
@@ -553,6 +558,11 @@ namespace Zjcs.Presentation.Home
                     if (chaosRune)
                     {
                         VerifyAcquiredChaosRune(step.Event, cast, damageEvents, checkpoint, output, ref confusionApplications);
+                        hits += damageEvents.Length;
+                        continue;
+                    }
+                    if (abyssalHand)
+                    {
                         hits += damageEvents.Length;
                         continue;
                     }
@@ -1343,6 +1353,11 @@ namespace Zjcs.Presentation.Home
                         if (!IsNativeSkillParticleVisible("playable11380") && !IsNativeSkillParticleVisible("playable_damage_11382"))
                         { yield return null; continue; }
                     }
+                    else if (abyssalHand)
+                    {
+                        if (!IsNativeSkillParticleVisible("playable10950") && !IsNativeSkillParticleVisible("playable10951"))
+                        { yield return null; continue; }
+                    }
                     else if (sageDarkBlast)
                     {
                         if (!IsNativeSkillParticleVisible("playable12120")) { yield return null; continue; }
@@ -1388,6 +1403,7 @@ namespace Zjcs.Presentation.Home
             soulSplash?.Complete(capturedPassive);
             if (swiftWind) CompleteAcquiredSwiftWindDance(output);
             if (hunt) CompleteAcquiredHuntJudgment(output);
+            abyssal?.Complete(captured);
             if (extinction) CompleteAcquiredExtinctionBlade(output);
             if (asuraHand) CompleteAcquiredAsuraHand(output);
             Require(!flowingFire || flowingFireExtras > 0, "The cultivated flowing fire never performed an extra cast.");

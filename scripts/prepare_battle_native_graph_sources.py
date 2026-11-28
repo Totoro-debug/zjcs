@@ -52,6 +52,7 @@ def main():
         'soul-guardian-current-skill-graphs',
         'hunt-judgment-current-skill-graphs',
         'soul-splash-current-skill-graphs',
+        'abyssal-hand-current-skill-graphs',
     )
     receipts = {
         'skill-native-graphs': 'skill-native-graph-assets-source-manifest',
