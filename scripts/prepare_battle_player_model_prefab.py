@@ -30,11 +30,12 @@ SCRIPTS = {
 
 
 def restore_default_controller(apk, original):
-    cache = ROOT / '.tools/source-packages/current/884_156692/native-conversion'
-    receipt_path = cache / 'native-export-all-source-manifest.json'
+    cache = apk.source.prepared_path / 'native-conversion'
+    receipt_path = cache / 'native-export-source-manifest.json'
     receipt = json.loads(receipt_path.read_bytes())
-    assert receipt['completed'] and receipt['manifest'] == apk.version
+    assert receipt['manifest'] == apk.version
     assert identity(cache / 'source-manifest.json')['sha256'] == receipt['input_manifest_sha256']
+    assert identity(apk.source.prepared_path / 'code-manifest.json')['sha256'] == receipt['code_manifest_sha256']
     export = cache / receipt['export_directory']
     base = export / 'ExportedProject/Assets/AppearanceAssets/Character/Model/Female_1/Anim'
     native = base / (original.read().m_Name + '.controller')
@@ -89,12 +90,20 @@ def restore_default_controller(apk, original):
         for first, last in ((path, target), (path.with_name(path.name + '.meta'), target.with_name(target.name + '.meta'))):
             text = GUID.sub(lambda m: 'guid: ' + remap[m[1]], first.read_text(encoding='utf-8'))
             text = '\n'.join(line.rstrip() for line in text.splitlines()) + '\n'
+            if last.suffix == '.meta' and last.exists():
+                created = next((line for line in last.read_text(encoding='utf-8').splitlines()
+                    if line.startswith('timeCreated: ')), None)
+                if created:
+                    text = '\n'.join(created if line.startswith('timeCreated: ') else line
+                        for line in text.splitlines()) + '\n'
             write_changed(last, text); outputs.append(last)
         inputs.append(dict(native=identity(path), source=apk.provenance(obj), payload_sha256=hashlib.sha256(obj.get_raw_data()).hexdigest()))
     for parent in {p.parent for p in outputs}:
         while parent.is_relative_to(dest):
             meta(parent, folder=True); outputs.append(parent.with_name(parent.name + '.meta')); parent = parent.parent
-    return dest / native.relative_to(base), dict(native_receipt=identity(receipt_path), graph=graph, inputs=inputs), sorted(set(outputs))
+    return dest / native.relative_to(base), dict(native_receipt=identity(receipt_path),
+        export_complete=receipt['completed'], selected_files_verified=len(closure) * 2,
+        graph=graph, inputs=inputs), sorted(set(outputs))
 
 
 def main():
@@ -103,7 +112,7 @@ def main():
     core = ROOT / 'assets/reference/battle-animation/scene-core-source-manifest.json'
     assert json.loads(core.read_bytes())['hierarchy'] == identity(source)
     apk, schemas = Apk.current(), CurrentSchemas()
-    assert apk.version == '884_156692'
+    assert apk.version == '911_156995'
     objects = {str(o.path_id): o for o in apk.objects('defaultpackage_assets_prefabs_appearance_player.bundle')}
     inputs = []
     controller = None
@@ -126,7 +135,7 @@ def main():
     controller['binding'] = identity(controller_path)
     export_receipt = controller_proof['native_receipt']
     native_receipt = json.loads((ROOT / export_receipt['path']).read_bytes())
-    export = ROOT / '.tools/source-packages/current/884_156692/native-conversion' / native_receipt['export_directory']
+    export = apk.source.prepared_path / 'native-conversion' / native_receipt['export_directory']
     native_prefab = export / 'ExportedProject/Assets/Prefabs/Appearance/Player/PlayerModel_Game.prefab'
     assert identity(native_prefab)['sha256'] == next(row['sha256'] for row in native_receipt['outputs']
         if row['path'] == native_prefab.relative_to(export).as_posix())
@@ -187,7 +196,7 @@ def main():
     for kind, obj_id, name, fields in docs:
         text += f'--- !u!{kind} &{obj_id}\n' + yaml.safe_dump({name: fields}, sort_keys=False, allow_unicode=True, width=120)
     write_changed(DEST, text); meta(DEST)
-    code = ROOT / '.tools/source-packages/current/884_156692/official-code'
+    code = apk.source.prepared_path / 'official-code'
     code_receipt = code.parent / 'code-manifest.json'
     assembly = code / 'managed/decoded/Assembly-CSharp.dll'
     assert identity(assembly)['sha256'] == json.loads(code_receipt.read_bytes())['assemblies'][assembly.name]['decoded_sha256']

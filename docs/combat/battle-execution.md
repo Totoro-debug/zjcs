@@ -8,7 +8,7 @@
 
 所有剧情、地图和玩法战斗共用官方规则、原生演出、战报及可恢复检查点；专属奖励与退出结算归对应玩法。
 
-战斗场景的男女角色骨骼、拆分动画、图集、染色贴图及加载映射统一按固定官方来源更新，沿用通用资源入口。来源凭据见[角色原始数据](../../assets/reference/battle-animation/scene-core-source-manifest.json)与[场景贴图绑定](../../assets/reference/battle-animation/scene-texture-source-manifest.json)。 玩家物理约束保留位移、旋转、X 轴缩放和剪切通道，独立求解器按原始约束逐帧核对，见[物理来源](../../assets/reference/partner-player-physics-source-manifest.json)。
+战斗场景的男女角色骨骼、角色模型预制体、拆分动画、图集、染色贴图及加载映射统一按固定官方来源更新，沿用通用资源入口。来源凭据见[角色原始数据](../../assets/reference/battle-animation/scene-core-source-manifest.json)、[角色模型绑定](../../assets/reference/battle-animation/player-model-prefab-source-manifest.json)及[场景贴图绑定](../../assets/reference/battle-animation/scene-texture-source-manifest.json)。 玩家物理约束保留位移、旋转、X 轴缩放和剪切通道，独立求解器按原始约束逐帧核对，见[物理来源](../../assets/reference/partner-player-physics-source-manifest.json)。
 
 格心和指针投影以地形所在的局部坐标系为准。战场读取兼容数组和对象格式的原点，恢复战斗时从对应场景校正原点，保留检查点中的逻辑格坐标。技能测试和各玩法的战斗入口将当前入场格锚定到玩家位置。开场剧情的旧地形导出使用不同的格心偏移，接入共同投影前由开场场景转换。
 
