@@ -31,7 +31,7 @@ namespace Zjcs.Presentation.Home
             supported |= active == 10035 && player.Wardrobe.Profession == 13 && itemId == 10557;
             supported |= active == 10028 && player.Wardrobe.Profession == 17 && itemId == 10579;
             supported |= active == 10095 && player.Wardrobe.Profession == 17 && (itemId == 10591 || itemId == 10600 || itemId == 10527);
-            supported |= active == 10096 && player.Wardrobe.Profession == 17 && (itemId == 10601 || itemId == 10610 || itemId == 10611);
+            supported |= active == 10096 && player.Wardrobe.Profession == 17 && (itemId == 10601 || itemId == 10610 || itemId == 10611 || itemId == 10570);
             supported |= active == 10091 && player.Wardrobe.Profession == 13 && itemId == 10598;
             supported |= active == 10091 && player.Wardrobe.Profession == 13 && itemId == 10597;
             supported |= active == 10093 && player.Wardrobe.Profession == 13 && itemId == 10525;
@@ -91,6 +91,7 @@ namespace Zjcs.Presentation.Home
             ref int assaultHits, ref int soulBreakHits, ref int windHits, ref int flameHits,
             ref int fireLifeCures)
         {
+            if (itemId == 10570) return;
             if (itemId == 10527) return;
             if (itemId == 10545)
             {

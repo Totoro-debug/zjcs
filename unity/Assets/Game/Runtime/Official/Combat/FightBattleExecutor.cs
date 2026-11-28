@@ -2203,8 +2203,8 @@ namespace Zjcs.Combat.Official
                     int level = trigger.SourceSkillLevel > 0 ? trigger.SourceSkillLevel : Math.Max(1, source.Level);
                     int subRank = trigger.SourceSubRank > 0 ? trigger.SourceSubRank : Math.Max(1, source.SubRank);
                     skill = statusCatalog.CreateSkill(trigger.EntityId, -1, trigger.SourceSkillItemId,
-                        rank, level, subRank, ToPropertyList(statusCatalog.CalculateSkillProps(
-                            trigger.EntityId, rank, level, subRank)));
+                        rank, level, subRank, ToPropertyList(statusCatalog.CalculateSkillPropsOnBattle(
+                            trigger.EntityId, rank, level, subRank, checkpoint.IsPvp)));
                 }
                 catch (InvalidOperationException)
                 {

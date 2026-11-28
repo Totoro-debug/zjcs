@@ -1904,6 +1904,7 @@ namespace Zjcs.Combat.Official
         private sealed class FightOfficialEntityProp
         {
             public int EntityId;
+            public long PvpPropScale = 10000;
             public int RankPropId;
             public int GroupLevelPropId;
             public Dictionary<int, long> PropFactors = new Dictionary<int, long>();
@@ -2018,6 +2019,7 @@ namespace Zjcs.Combat.Official
                 skillEntityProps[entityId] = new FightOfficialEntityProp
                 {
                     EntityId = entityId,
+                    PvpPropScale = Long(row, "PvpPropScale", 10000),
                     RankPropId = Int(row, "RankPropId"),
                     GroupLevelPropId = Int(row, "GroupLevelPropId"),
                     PropFactors = ReadLongMap(row, "PropFactors")

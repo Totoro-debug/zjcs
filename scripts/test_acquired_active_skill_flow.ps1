@@ -52,6 +52,14 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -eq 10570) {
+        foreach ($file in @('companion-extra-healing-checkpoint.json','companion-extra-healing-receipt.json','acquired-active-ui-extra-healing.png')) {
+            if (-not(Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Extra Healing original cure or native particle evidence is missing.' }
+        }
+        $healing = Get-Content (Join-Path $Run 'companion-extra-healing-receipt.json') -Raw | ConvertFrom-Json
+        if ($healing.casts -lt 1 -or $healing.cures -lt 1 -or -not $healing.restored -or -not $healing.captured) { throw 'Extra Healing lost its real probability, cultivated cure, render or restoration.' }
+        return
+    }
     if ($PassiveId -eq 10527) {
         foreach ($file in @('companion-summon-fury-checkpoint.json','companion-summon-fury-receipt.json','acquired-active-ui-opening.png','acquired-active-ui-battle.png')) {
             if (-not(Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Summon Fury original summon or damage evidence is missing.' }

@@ -287,6 +287,14 @@
     {
       "path": "assets/reference/battle-animation/mana-burst-current-skill-graphs-source-manifest.json",
       "sha256": "f450c5ae78b0ed8980c8fa7a98ce4690383f3cee873396649f92a9929a9a1de7"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/extra-healing-current-skill-graphs.json",
+      "sha256": "ceaf0b21a1a445e633946ea51ca91ac7577bb0e780aafb409e7edc70f97b9ddc"
+    },
+    {
+      "path": "assets/reference/battle-animation/extra-healing-current-skill-graphs-source-manifest.json",
+      "sha256": "222fa8cad8977142c1081425adc42133eb2d414506e949bf1c0931d6ec989116"
     }
   ],
   "outputs": [
@@ -579,8 +587,16 @@
       "sha256": "10c996888ea8dde824a224b5cb2674b36ad931bd4f184970040fdc0efa09eb6e"
     },
     {
+      "path": "unity/Assets/Game/Resources/Combat/extra-healing-current-skill-graphs-source-manifest.json",
+      "sha256": "6af6e5d9bb08ed1a68a6f872af2c56f0deeee33520fba7151da2498940904b5c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/extra-healing-current-skill-graphs-source-manifest.json.meta",
+      "sha256": "29f50c21cfc63befe11a0f3557dfcaa2e53a56af238496f841e74c448d74a333"
+    },
+    {
       "path": "unity/Assets/Game/Resources/Combat/skill-native-graph-sources.json",
-      "sha256": "b11958af756753fb6273d7b1c48245830feaa2de1c573c1bab8fa5208fa0a97b"
+      "sha256": "4a7471c944d54b613115ef91e73a4132655250710984660928f77f6e03397c36"
     },
     {
       "path": "unity/Assets/Game/Resources/Combat/skill-native-graph-sources.json.meta",
@@ -589,7 +605,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_native_graph_sources.py",
-    "sha256": "2d7070c25f0c05d771e316fa181851e2277d22b034633dd313feb0ebe9423bef"
+    "sha256": "b52ac01d29916ee8aeb1eee8bcc483044375a19a6371afb601413f1325ace889"
   },
   "runtime": [
     {

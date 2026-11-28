@@ -1,0 +1,55 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 11430,
+      "entity_resource": "Combat/ExtraHealingSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11430/11430",
+      "playables": []
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11431,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [
+        {
+          "field": "myPlayable",
+          "resource": "Combat/ExtraHealingSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11430/playable11431"
+        }
+      ],
+      "entity_resource": "Combat/ExtraHealingSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11430/11431"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 11432,
+      "entity_prefab": "11430/11432.prefab",
+      "entity_prefab_sha256": "54f3bc6f318375d0bd9a53da13d491a178fc81c0a1f1746db9a111ec6b46b17e",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": false,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/ExtraHealingSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11430/playable11432"
+        }
+      ],
+      "entity_resource": "Combat/ExtraHealingSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11430/11432"
+    }
+  ]
+}

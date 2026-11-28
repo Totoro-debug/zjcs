@@ -1,0 +1,43 @@
+{
+  "entities": [
+    25039,
+    11430,
+    11431,
+    11432
+  ],
+  "code": [
+    "FightStatusComponentInfo",
+    "FightStatusHitSkillComponentInfo",
+    "FightStatusTriggerSkillCfg",
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "SkillActionTypeFilter",
+    "LogicFilter",
+    "LogicFilterType",
+    "BattleFormulaHandler",
+    "DefaultSkillPropsScaleOnBattleProcessor",
+    "PVPSkillPropsScaleOnBattleProcessor",
+    "SkillEntityData"
+  ],
+  "client_code": [
+    "MyFightStatusHitSkill"
+  ],
+  "rule_pack_fragments": [
+    "FightSkill_part752.g.bytes",
+    "FightSkill_part71.g.bytes"
+  ],
+  "visibility_bundles": [
+    "25039",
+    "11430"
+  ],
+  "scope_numeric": true,
+  "current_managed_views": true,
+  "runtime_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10570.json"
+  ],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/extra-healing-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/extra-healing-current-status-graphs-source-manifest.json"
+  ]
+}

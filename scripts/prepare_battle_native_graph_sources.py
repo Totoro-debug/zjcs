@@ -54,6 +54,7 @@ def main():
         'soul-splash-current-skill-graphs',
         'abyssal-hand-current-skill-graphs',
         'mana-burst-current-skill-graphs',
+        'extra-healing-current-skill-graphs',
     )
     receipts = {
         'skill-native-graphs': 'skill-native-graph-assets-source-manifest',

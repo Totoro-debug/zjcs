@@ -405,6 +405,7 @@ namespace Zjcs.Presentation.Home
             int confusionApplications = 0, confusionEnds = 0;
             var rock = rockSummon ? new AcquiredRockSummon() : null;
             var summonFury = passiveCompanion == 10527 ? new AcquiredSummonFury(output) : null;
+            var extraHealing = passiveCompanion == 10570 ? new AcquiredExtraHealing(output) : null;
             var doll = voodooDoll ? new AcquiredVoodooDoll() : null;
             if (passiveCompanion == 10590) PrepareAcquiredSoulGuardianCheckpoint(checkpoint);
             soulSplash?.Prepare(checkpoint);
@@ -920,6 +921,7 @@ namespace Zjcs.Presentation.Home
                 if (rock != null) hits += rock.VerifyAttacks(step.Event, checkpoint);
                 sageSummonSecret?.Observe(step.Event, checkpoint, rock);
                 summonFury?.Observe(step.Event, checkpoint);
+                extraHealing?.Observe(step.Event, checkpoint);
                 if (doll != null) hits += doll.Observe(step.Event, checkpoint, output);
             };
             yield return CaptureAcquiredActive(output, "preparation");
@@ -931,6 +933,12 @@ namespace Zjcs.Presentation.Home
             bool capturedTacticalAttack = false, capturedTacticalDefence = false;
             while (battle != null)
             {
+                if (extraHealing?.NeedsCapture == true && (IsNativeSkillParticleVisible("playable11431")
+                    || IsNativeSkillParticleVisible("playable11432")))
+                {
+                    yield return CaptureAcquiredActive(output, "extra-healing");
+                    extraHealing.Captured();
+                }
                 if (mana != null && mana.NeedsStatusCapture && IsNativeSkillParticleVisible("playable24222"))
                 {
                     yield return CaptureAcquiredActive(output, "mana-erosion-status");
@@ -1434,6 +1442,7 @@ namespace Zjcs.Presentation.Home
             abyssal?.Complete(captured);
             mana?.Complete(captured);
             summonFury?.Complete(captured && capturedOpening);
+            extraHealing?.Complete();
             if (extinction) CompleteAcquiredExtinctionBlade(output);
             if (asuraHand) CompleteAcquiredAsuraHand(output);
             Require(!flowingFire || flowingFireExtras > 0, "The cultivated flowing fire never performed an extra cast.");
