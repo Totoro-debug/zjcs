@@ -24,10 +24,19 @@ namespace Zjcs.Editor.ProfessionUI
         {
             try
             {
-                ProfessionValidationWorkspace.AssertIsolatedProject();EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);
-                SessionState.SetBool(Active,true);SessionState.SetFloat(Active+".Deadline",(float)(EditorApplication.timeSinceStartup+120));EditorApplication.EnterPlaymode();
+                ProfessionValidationWorkspace.AssertIsolatedProject();Begin();
             }
             catch(Exception e){Debug.LogException(e);Finish(1);}
+        }
+        public static void RunCurrentResourcePlayer()
+        {
+            try{ProfessionValidationWorkspace.AssertSourceProject();Begin();}
+            catch(Exception e){Debug.LogException(e);Finish(1);}
+        }
+        private static void Begin()
+        {
+            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);
+            SessionState.SetBool(Active,true);SessionState.SetFloat(Active+".Deadline",(float)(EditorApplication.timeSinceStartup+120));EditorApplication.EnterPlaymode();
         }
         private static void Update()
         {
@@ -36,14 +45,14 @@ namespace Zjcs.Editor.ProfessionUI
             {
                 if(EditorApplication.timeSinceStartup>SessionState.GetFloat(Active+".Deadline",0))throw new TimeoutException("Player appearance fixture did not enter Play Mode.");
                 if(!ready||!EditorApplication.isPlaying)return;
-                Check();Debug.Log("Original player appearance application lifecycle passed in Play Mode: self event registration/enable/disable/filtering, lite callback release/reinitialization/completion and original Clear behavior, data identity/runtime reuse, override restoration, observer order and exception boundaries, animation before asset loading, cached names, base-profession/sex/loop parameters and rule formatting. Player/protocol/resource/animation endpoints are fixtures; native character rendering and full profession page remain unbound.");Finish(0);
+                Check();Debug.Log("Original player appearance application lifecycle passed in Play Mode: self event registration/enable/disable/filtering, lite callback release/reinitialization/completion and original Clear behavior, data identity/runtime reuse, override restoration, observer order and exception boundaries, animation before asset loading, cached names, base-profession/sex/loop parameters and rule formatting. Player/protocol/resource/animation endpoints are fixtures in this lifecycle check.");Finish(0);
             }
             catch(Exception e){Debug.LogException(e);Finish(1);}
         }
         private static void Check()
         {
             var graph=new Bindings();var go=new GameObject("Original player appearance lifecycle fixture");
-            var original=JsonUtility.FromJson<RuleFixture>(System.IO.File.ReadAllText(ProfessionValidationWorkspace.Fixture("player-appearance-validation.json")));
+            var original=JsonUtility.FromJson<RuleFixture>(System.IO.File.ReadAllText(System.IO.Path.Combine(ProfessionValidationWorkspace.DirectoryPath,"player-appearance-validation.json")));
             var nativeRules=AssetDatabase.LoadAssetAtPath<AppearanceAnimNameCombineRule>(original.path);
             Require(nativeRules&&nativeRules.Rules.Count==original.rules.Length,"original animation-rule native asset binding");
             for(int i=0;i<original.rules.Length;i++)
@@ -68,7 +77,8 @@ namespace Zjcs.Editor.ProfessionUI
             graph.Raise(AppearanceOperateSource.ProfessionChange);Require(ReferenceEquals(runtime,player.AppearanceRuntimeData)&&graph.Events.Contains("build"),"other events reuse runtime object");
             int count=graph.Builds;go.SetActive(false);Require(graph.Subscribers==0,"disable unsubscribes self");graph.Raise(AppearanceOperateSource.Normal);Require(graph.Builds==count,"disabled self receives no refresh");go.SetActive(true);Require(graph.Subscribers==1&&graph.Builds==count+1,"enable registers then refreshes");
             var first=new Override("override-one");var second=new Override("override-two");player.SetRuntimeDataOverride(first);Require(runtime.SkinMap[SkinType.body]=="override-one"&&first.Calls==1,"override applies immediately");
-            player.SetRuntimeDataOverride(first);Require(first.Calls==1,"same override is no-op");player.SetRuntimeDataOverride(second);Require(second.Before=="base"&&runtime.SkinMap[SkinType.body]=="override-two","old changed skin restored before new override");player.SetRuntimeDataOverride(null);Require(runtime.SkinMap[SkinType.body]=="base","removing override restores original map entry");
+            Require(graph.LastOverrides.Count==1&&graph.LastOverrides[SkinType.body]==123,"override IDs collected before runtime build");
+            player.SetRuntimeDataOverride(first);Require(first.Calls==1,"same override is no-op");player.SetRuntimeDataOverride(second);Require(second.Before=="base"&&runtime.SkinMap[SkinType.body]=="override-two","runtime rebuilt before new override");player.SetRuntimeDataOverride(null);Require(runtime.SkinMap[SkinType.body]=="base"&&graph.LastOverrides.Count==0,"removing override rebuilds original data with no override IDs");
             count=graph.Builds;graph.Valid=false;player.Init(7);Require(player.Inited&&graph.Builds==count&&graph.Subscribers==1,"invalid self data skips refresh but completes init");graph.Valid=true;
             int exceptions=0;Application.LogCallback capture=(message,stack,type)=>{if(type==LogType.Exception)exceptions++;};Application.logMessageReceived+=capture;
             Action fault=()=>throw new InvalidOperationException("fixture observer failure");player.OnAppearanceRefreshed+=fault;
@@ -152,13 +162,14 @@ namespace Zjcs.Editor.ProfessionUI
         {
             private readonly string value;public int Calls;public string Before;
             public Override(string value){this.value=value;}
-            public void ApplyOverride(AppearanceRuntimeData runtime,object data,Dictionary<SkinType,string> changed=null)
-            {Calls++;Before=runtime.SkinMap[SkinType.body];changed.Clear();changed.Add(SkinType.body,Before);runtime.SkinMap[SkinType.body]=value;}
+            public void CollectOverrideSkins(Sex sex,Dictionary<SkinType,int> result){result[SkinType.body]=123;}
+            public void ApplyOverride(AppearanceRuntimeData runtime)
+            {Calls++;Before=runtime.SkinMap[SkinType.body];runtime.SkinMap[SkinType.body]=value;}
         }
         public sealed class Bindings:IProfessionPlayerAppearanceBindings,IProfessionPlayerAppearanceSource,IProfessionAppearanceCharacterBindings
         {
             public readonly List<string> Events=new List<string>();public readonly List<ProfessionLiteInfoCallback> Requests=new List<ProfessionLiteInfoCallback>();public readonly List<bool> Force=new List<bool>();
-            public List<string> Append=new List<string>{"append"};public object LastData;public List<string> LastAppend;public int Builds,BaseRequests;public bool Valid=true;
+            public List<string> Append=new List<string>{"append"};public object LastData;public List<string> LastAppend;public Dictionary<SkinType,int> LastOverrides;public int Builds,BaseRequests;public bool Valid=true;
             public IProfessionPlayerAppearanceSource MainPlayer=>this;public long Id=>7;public Sex Sex=>Sex.Male;public int Profession=>100;public object AppearanceData{get;}=new object();
             private Action<AppearanceOperateSource> handlers;public int Subscribers=>handlers?.GetInvocationList().Length??0;
             public event Action<AppearanceOperateSource> OnAppearanceUpdate{add{handlers+=value;}remove{handlers-=value;}}
@@ -172,8 +183,8 @@ namespace Zjcs.Editor.ProfessionUI
             }
             public bool IsAppearanceValid(object data)=>Valid;public IEnumerable<string> GetSkinNames(object data)=>new[]{"fixture"};
             public void GetLiteInfo(long id,ProfessionLiteInfoCallback callback,bool force){Requests.Add(callback);Force.Add(force);}
-            public void BuildAppearanceRuntimeData(Sex sex,int profession,object data,List<string> append,AppearanceRuntimeData target)
-            {Builds++;Events.Add("build");LastData=data;LastAppend=append;target.Sex=sex;target.SkinMap=target.SkinMap??new Dictionary<SkinType,string>();target.SkinMap.Clear();target.SkinMap.Add(SkinType.body,"base");target.AppendSkins=append;}
+            public void BuildAppearanceRuntimeData(Sex sex,int profession,object data,List<string> append,AppearanceRuntimeData target,IReadOnlyDictionary<SkinType,int> overrideSkins=null)
+            {Builds++;Events.Add("build");LastData=data;LastAppend=append;LastOverrides=overrideSkins==null?new Dictionary<SkinType,int>():overrideSkins.ToDictionary(x=>x.Key,x=>x.Value);target.Sex=sex;target.SkinMap=target.SkinMap??new Dictionary<SkinType,string>();target.SkinMap.Clear();target.SkinMap.Add(SkinType.body,"base");target.AppendSkins=append;}
             public int GetBaseProfession(int profession){BaseRequests++;return profession==0?100:profession;}
             public string GetProfessionIdStr(int profession)=>GetBaseProfession(profession).ToString();
             public IProfessionAppearanceCharacterAsset LoadAsset(string path){Events.Add("load");return new Handle(Config);}

@@ -92,7 +92,7 @@ namespace Zjcs.Editor.ProfessionUI
             public IProfessionPlayerAppearanceSource MainPlayer=>throw new InvalidOperationException("No player in weapon fixture.");public AppearanceConfig Config=>throw new InvalidOperationException("No config in weapon fixture.");public AppearanceAnimNameCombineRule AnimationRules=>throw new InvalidOperationException("No name-rule asset in weapon fixture.");
             public bool IsAppearanceValid(object data){throw new InvalidOperationException("Unused player data endpoint.");}public IEnumerable<string> GetSkinNames(object data){throw new InvalidOperationException("Unused player data endpoint.");}
             public void GetLiteInfo(long id,ProfessionLiteInfoCallback callback,bool force){throw new InvalidOperationException("Unused lite info endpoint.");}
-            public void BuildAppearanceRuntimeData(Sex sex,int profession,object data,List<string> append,AppearanceRuntimeData target){throw new InvalidOperationException("Unused player data endpoint.");}
+            public void BuildAppearanceRuntimeData(Sex sex,int profession,object data,List<string> append,AppearanceRuntimeData target,IReadOnlyDictionary<SkinType,int> overrideSkins=null){throw new InvalidOperationException("Unused player data endpoint.");}
         }
         private sealed class Handle:IProfessionAssetOperation<GameObject>
         {public bool IsValid=>false;public int Status=>0;public GameObject Result{get;}public event Action<IProfessionAssetOperation<GameObject>> Completed;public Handle(GameObject go){Result=go;}public void Dispose(){}}

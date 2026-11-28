@@ -142,8 +142,9 @@ namespace Zjcs.Offline.ProfessionUI
             if (forceUpdateInfo) Refresh(AppearanceOperateSource.Normal, false);
             callback?.Invoke(new ProfessionPlayerLiteAppearance { Sex = Sex, Profession = Profession, AppearanceData = appearance });
         }
-        public void BuildAppearanceRuntimeData(Sex sex, int profession, object data, List<string> appendSkins, AppearanceRuntimeData target)
-            => resolver.BuildAppearanceRuntimeData(sex, (Profession)profession, RequireData(data), appendSkins, target);
+        public void BuildAppearanceRuntimeData(Sex sex, int profession, object data, List<string> appendSkins, AppearanceRuntimeData target,
+            IReadOnlyDictionary<SkinType, int> overrideSkins = null)
+            => resolver.BuildAppearanceRuntimeData(sex, (Profession)profession, RequireData(data), appendSkins, target, overrideSkins);
 
         // Original AppearanceUtils.GetBaseProfession/GetProfessionIdStr and
         // ProfessionBaseInfoParser.GetProfessionsSerial, with explicit context.

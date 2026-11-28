@@ -61,7 +61,7 @@ public sealed class ProfessionAppearanceResolver
 		return appearanceRuntimeData;
 	}
 
-	public void BuildAppearanceRuntimeData(Sex sex, Profession profession, AppearanceData data, List<string> appendSkins, AppearanceRuntimeData runtimeData)
+	public void BuildAppearanceRuntimeData(Sex sex, Profession profession, AppearanceData data, List<string> appendSkins, AppearanceRuntimeData runtimeData, IReadOnlyDictionary<SkinType, int> overrideSkins = null)
 	{
 		if (runtimeData == null)
 		{
@@ -82,7 +82,7 @@ public sealed class ProfessionAppearanceResolver
 		Dictionary<SkinType, string> skinNameMap = runtimeData.SkinMap;
 		skinNameMap.Clear();
 		Dictionary<SkinType, int> skinIdDict = CollectionPool<Dictionary<SkinType, int>, KeyValuePair<SkinType, int>>.Get();
-		ResolveAppendAppearanceMutex(data, sex, sEffectiveSkinIds, sMutexLostTypes);
+		ResolveAppendAppearanceMutex(data.AppendAppearanceDict, data.AppendAppearanceWearTimeDict, sex, sEffectiveSkinIds, sMutexLostTypes, null, overrideSkins);
 		foreach (KeyValuePair<SkinType, SkinData> item in data.SkinMap)
 		{
 			if (TryGetFinalSkinId(data, item.Key, sex, profession, sEffectiveSkinIds, sMutexLostTypes, out var skinId))
@@ -313,7 +313,7 @@ public sealed class ProfessionAppearanceResolver
 		ResolveAppendAppearanceMutex(data?.AppendAppearanceDict, data?.AppendAppearanceWearTimeDict, sex, effectiveSkinIds, mutexLostTypes, cycleLostTypes);
 	}
 
-	public void ResolveAppendAppearanceMutex(Dictionary<SkinType, int> appendAppearanceDict, Dictionary<SkinType, DateTime> wearTimeDict, Sex sex, HashSet<int> effectiveSkinIds, HashSet<SkinType> mutexLostTypes = null, List<SkinType> cycleLostTypes = null)
+	public void ResolveAppendAppearanceMutex(Dictionary<SkinType, int> appendAppearanceDict, Dictionary<SkinType, DateTime> wearTimeDict, Sex sex, HashSet<int> effectiveSkinIds, HashSet<SkinType> mutexLostTypes = null, List<SkinType> cycleLostTypes = null, IReadOnlyDictionary<SkinType, int> overrideSkins = null)
 	{
 		effectiveSkinIds.Clear();
 		mutexLostTypes?.Clear();
@@ -332,7 +332,7 @@ public sealed class ProfessionAppearanceResolver
 			skinType = item.Key; num = item.Value;
 			SkinType skinType2 = skinType;
 			int num2 = num;
-			if (!appendAppearanceInfoParser.TryGetSkinId(num2, sex, out var skinId))
+			if ((overrideSkins != null && overrideSkins.ContainsKey(skinType2)) || !appendAppearanceInfoParser.TryGetSkinId(num2, sex, out var skinId))
 			{
 				continue;
 			}

@@ -24,8 +24,6 @@ public class AppearanceRuntimeDataOverride : IAppearanceRuntimeDataOverride
 
 	private List<int> mFemaleOverrideList;
 
-	private readonly HashSet<int> mEffectiveSkinIds = new HashSet<int>();
-
 	public AppearanceRuntimeDataOverride(IHomeFastHangUpProgressServices services, List<int> maleOverrideList, List<int> femaleOverrideList)
 	{
         this.services = services;
@@ -39,7 +37,7 @@ public class AppearanceRuntimeDataOverride : IAppearanceRuntimeDataOverride
 		UpdateOverride(list, list);
 	}
 
-	public void ApplyOverride(AppearanceRuntimeData runtimeData, object appearanceData, Dictionary<SkinType, string> modifiedSkinDict)
+	public void ApplyOverride(AppearanceRuntimeData runtimeData)
 	{
 		if (runtimeData == null)
 		{
@@ -50,21 +48,26 @@ public class AppearanceRuntimeDataOverride : IAppearanceRuntimeDataOverride
 		{
 			return;
 		}
-		modifiedSkinDict?.Clear();
-		services.AppearanceResolver.ResolveAppendAppearanceMutex((AppearanceData)appearanceData, runtimeData.Sex, mEffectiveSkinIds);
 		SpineSkinInfoParser spineSkinInfoParser = services.AppearanceTables.SpineSkinInfoParser;
 		foreach (int item in runtimeData2)
 		{
 			SpineSkinInfo spineSkinInfo = spineSkinInfoParser.Get(item);
-			SkinType skinType = spineSkinInfo.SkinType;
-			if (!services.AppearanceResolver.IsFilterSkinId(mEffectiveSkinIds, item))
-			{
-				if (modifiedSkinDict != null)
-				{
-					modifiedSkinDict[skinType] = (runtimeData.SkinMap.TryGetValue(skinType, out var value) ? value : "emptySkin");
-				}
-				runtimeData.SkinMap[skinType] = spineSkinInfo.SkinName;
-			}
+			runtimeData.SkinMap[spineSkinInfo.SkinType] = spineSkinInfo.SkinName;
+		}
+	}
+
+	public void CollectOverrideSkins(Sex sex, Dictionary<SkinType, int> result)
+	{
+		List<int> runtimeData = GetRuntimeData(sex);
+		if (runtimeData == null)
+		{
+			return;
+		}
+		SpineSkinInfoParser spineSkinInfoParser = services.AppearanceTables.SpineSkinInfoParser;
+		foreach (int item in runtimeData)
+		{
+			SpineSkinInfo spineSkinInfo = spineSkinInfoParser.Get(item);
+			result[spineSkinInfo.SkinType] = item;
 		}
 	}
 

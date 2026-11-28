@@ -33,13 +33,23 @@ namespace Zjcs.Editor.ProfessionUI
             try
             {
                 ProfessionValidationWorkspace.AssertIsolatedProject();
-                EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-                Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
-                SessionState.SetBool(Active, true);
-                SessionState.SetFloat(Active + ".Deadline", (float)(EditorApplication.timeSinceStartup + 120));
-                EditorApplication.EnterPlaymode();
+                Begin();
             }
             catch (Exception e) { Debug.LogException(e); Finish(1); }
+        }
+        public static void RunCurrentResourceTables()
+        {
+            try { ProfessionValidationWorkspace.AssertSourceProject(); Begin(); }
+            catch (Exception e) { Debug.LogException(e); Finish(1); }
+        }
+        private static void Begin()
+        {
+            ready = false;
+            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
+            SessionState.SetBool(Active, true);
+            SessionState.SetFloat(Active + ".Deadline", (float)(EditorApplication.timeSinceStartup + 120));
+            EditorApplication.EnterPlaymode();
         }
         private static void Update()
         {
@@ -49,18 +59,18 @@ namespace Zjcs.Editor.ProfessionUI
                 if (EditorApplication.timeSinceStartup > SessionState.GetFloat(Active + ".Deadline", 0)) throw new TimeoutException("Appearance configuration validation timed out.");
                 if (!ready || !EditorApplication.isPlaying) return;
                 Check();
-                Debug.Log("Original appearance resolution passed Play Mode: all seven pinned tables, 62 sex/profession defaults, all expanded blacklist/whitelist sets and ordered inherited allowed lists; original append/equipment/default precedence, bound-skin overwrite, dye and pool reuse, secondary-weapon null/zero/incompatible branches, ordered mutual exclusion and cycle propagation. Real player, character graphics, native page and Windows Player remain unbound.");
+                Debug.Log("Selected appearance resolution passed Play Mode: all seven tables, sex/profession defaults, expanded filters and inherited lists; append/equipment/default precedence, overrides, bound skins, dyes, pool reuse, ordered mutex and cycles. Rendering is checked by consuming UI and battle flows.");
                 Finish(0);
             }
             catch (Exception e) { Debug.LogException(e); Finish(1); }
         }
         private static void Check()
         {
-            var fixture = JsonUtility.FromJson<Fixture>(File.ReadAllText(ProfessionValidationWorkspace.Fixture("appearance-resolver-validation.json")));
+            var fixture = JsonUtility.FromJson<Fixture>(File.ReadAllText(Path.Combine(ProfessionValidationWorkspace.DirectoryPath, "appearance-resolver-validation.json")));
             var asset = Resources.Load<TextAsset>("ProfessionUI/appearance-tables");
             Require(asset && Hash(asset.bytes) == fixture.ConfigurationSha256, "packaged current table bytes");
             var tables = ProfessionAppearanceTables.Load(asset.text);
-            Require(tables.SpineSkinInfoParser.Count == 1723 && tables.CharacterSkinInfoParser.Rows.Length == 62 && tables.ProfessionBaseInfoParser.Count == 31 && tables.AppendAppearanceInfoParser.Count == 1567 && tables.CharacterSkinIdGroupInfoParser.Count == 48 && tables.CharacterSkinDyeInfoParser.Count == 3 && tables.CharacterSkinColorInfoParser.Count == 23, "all current row counts");
+            Require(tables.SpineSkinInfoParser.Count == 1849 && tables.CharacterSkinInfoParser.Rows.Length == 70 && tables.ProfessionBaseInfoParser.Count == 35 && tables.AppendAppearanceInfoParser.Count == 1693 && tables.CharacterSkinIdGroupInfoParser.Count == 48 && tables.CharacterSkinDyeInfoParser.Count == 3 && tables.CharacterSkinColorInfoParser.Count == 23, "all current row counts");
             var filter = new StringBuilder();
             foreach (var row in tables.SpineSkinInfoParser.GetAll())
                 filter.Append(row.Id).Append(':').Append(string.Join(",", row.BlackIdSet.OrderBy(x => x))).Append(':').Append(string.Join(",", row.WhiteIdSet.OrderBy(x => x))).Append('\n');
@@ -94,7 +104,7 @@ namespace Zjcs.Editor.ProfessionUI
                 resolver.BuildAppearanceRuntimeData(row.Sex, row.Profession, data, append, runtime);
                 Require(dyes.All(x => runtime.DyeMap.Values.Contains(x) || x.Count == 0), "old dye dictionaries recycled or reused");
             }
-            Require(fixture.Defaults.Length == 62 && runtimeSkins > 600, "all male/female profession default runtime data");
+            Require(fixture.Defaults.Length == 70 && runtimeSkins > 600, "all male/female profession default runtime data");
             CheckEquipment(tables, resolver);
             CheckMutex(tables, resolver);
             CheckDye(tables, resolver);
@@ -139,6 +149,9 @@ namespace Zjcs.Editor.ProfessionUI
             a.BlackIdSet.Add(b.Id); b.BlackIdSet.Add(a.Id);
             resolver.ResolveAppendAppearanceMutex(appearances, time, Sex.Male, effective, lost, cycles);
             Require(effective.SetEquals(new[] { a.Id }) && lost.SetEquals(new[] { b.SkinType }) && cycles.Count == 0, "equal-time mutual conflict uses lower item ID");
+            resolver.ResolveAppendAppearanceMutex(appearances, time, Sex.Male, effective, lost, cycles,
+                new Dictionary<SkinType, int> { { a.SkinType, a.Id } });
+            Require(effective.SetEquals(new[] { b.Id }) && lost.Count == 0 && cycles.Count == 0, "explicit skin override suppresses only the matching append type before mutex resolution");
             time[a.SkinType] = DateTime.MinValue.AddSeconds(1);
             resolver.ResolveAppendAppearanceMutex(appearances, time, Sex.Male, effective, lost, cycles);
             Require(effective.SetEquals(new[] { b.Id }) && lost.SetEquals(new[] { a.SkinType }), "earlier wear time precedes item ID");

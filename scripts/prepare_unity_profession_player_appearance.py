@@ -3,10 +3,13 @@ import hashlib
 import json
 from pathlib import Path
 import re
-import shutil
 
-from prepare_unity_profession_photographer import ROOT, CODE, RUNTIME, clean, record, save
-from prepare_unity_profession_native_inputs import CACHE
+from prepare_unity_profession_photographer import ROOT, RUNTIME, clean, record
+from validation_workspace import validation_directory
+
+def save(name, source, text):
+    from prepare_unity_profession_appearance_resolver import save as save_current
+    return save_current(name, source, text)
 
 
 def strip(text):
@@ -30,8 +33,11 @@ def logs(text):
 
 
 def build():
+    from official_apk import Apk
+    apk=Apk.current();CODE=apk.source.prepared_path/'official-code/client-source'
+    work=validation_directory()
     code_manifest=CODE.parent.parent/'code-manifest.json';manifest=json.loads(code_manifest.read_bytes())
-    if manifest['manifest']!='871_156598':raise ValueError('Player appearance code source changed')
+    if manifest['manifest']!='911_156995' or apk.version!=manifest['manifest']:raise ValueError('Player appearance code source changed')
     assemblies=[]
     for name in ('Assembly-CSharp.dll','Console.dll'):
         assembly=CODE.parent/'managed/decoded'/name
@@ -124,14 +130,14 @@ public static class ProfessionAppearanceAnimationNames
         for forbidden in ('GLogger','[Inject]','MeManager','using Common;','using Spine','ref appearanceAnimComponent','int.None'):
             if forbidden in text:raise ValueError('Unresolved player appearance dependency: '+forbidden)
     from official_apk import Apk
-    from map13_native_schemas import NativeSchemas
+    from current_component_schemas import CurrentSchemas
     from prepare_unity_profession_reward_sprites import Dumper,fields,source_header
     import yaml
     apk=Apk.current();bundle='defaultpackage_assets_scriptableconfig_modules_appearance.bundle'
-    if apk.version!='871_156598' or apk.index[bundle]!='2719b9183d3296a439780b070ce4743c':raise ValueError('Original animation-rule bundle changed')
+    if apk.version!='911_156995':raise ValueError('Original animation-rule bundle changed')
     original_asset=apk.asset(bundle,'/AppearanceAnimNameCombineRule.asset')
-    schemas=NativeSchemas(CODE.parent)
-    original,_=schemas.read(original_asset)
+    schemas=CurrentSchemas()
+    original=schemas.read(original_asset)
     def references(value,field=''):
         if isinstance(value,dict):
             if 'm_FileID' in value and 'm_PathID' in value:
@@ -144,25 +150,21 @@ public static class ProfessionAppearanceAnimationNames
     native=source_header();native.update(fields(dict(original,m_Script=dict(m_FileID=0,m_PathID=0))))
     native['m_Script']=dict(fileID=11500000,guid=hashlib.md5(b'zjcs-profession-ui-AppearanceAnimNameCombineRule').hexdigest(),type=3);native['m_EditorClassIdentifier']=''
     asset=ROOT/'unity/Assets/Official/ProfessionUI/Portrait/AppearanceAnimNameCombineRule.asset'
-    asset.write_text('%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!114 &11400000\n'+yaml.dump({'MonoBehaviour':native},Dumper=Dumper,sort_keys=False,allow_unicode=True,width=1000000),encoding='utf-8',newline='\n')
-    meta=asset.with_name(asset.name+'.meta');meta.write_text('fileFormatVersion: 2\nguid: '+hashlib.md5(b'zjcs:profession:871_156598:ScriptableConfig/Modules/Appearance/AppearanceAnimNameCombineRule.asset').hexdigest()+'\nNativeFormatImporter:\n  externalObjects: {}\n  mainObjectFileID: 11400000\n',encoding='utf-8',newline='\n')
-    fixture=CACHE/'typed/player-appearance-validation.json'
+    asset.write_text('%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!114 &11400000\n'+yaml.dump({'MonoBehaviour':native},Dumper=Dumper,sort_keys=False,allow_unicode=True,width=1000000),encoding='utf-8')
+    meta=asset.with_name(asset.name+'.meta')
+    if not meta.exists():meta.write_text('fileFormatVersion: 2\nguid: '+hashlib.md5(b'zjcs:profession:ScriptableConfig/Modules/Appearance/AppearanceAnimNameCombineRule.asset').hexdigest()+'\nNativeFormatImporter:\n  externalObjects: {}\n  mainObjectFileID: 11400000\n',encoding='utf-8')
+    fixture=work/'player-appearance-validation.json'
     fixture.write_text(json.dumps(dict(path=asset.relative_to(ROOT/'unity').as_posix(),rules=original['mRules']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     binding_files=[RUNTIME/(n+'.cs') for n in ('ProfessionPlayerAppearanceBindings','ProfessionAppearancePreviewBindings')];validation=ROOT/'unity/Assets/Game/Editor/ProfessionUI/ProfessionPlayerAppearanceValidation.cs'
-    closure=CACHE/'typed/native-bindings-main-dynamic.json';bound=json.loads(closure.read_bytes())
-    for name in ('PlayerAppearance','PlayerAnimationAppearance','ProfessionAppearance'):
-        row=next(v for k,v in bound['script_bindings'].items() if Path(k).stem==name)
-        if row is None or record(ROOT/row['path'])['sha256']!=row['sha256']:raise ValueError('Recheck native script closure before recording '+name)
-    closure_copy=CACHE/'typed/player-appearance-binding-closure.json';shutil.copyfile(closure,closure_copy)
-    proof=dict(format=1,manifest='871_156598',code_manifest=record(code_manifest),assemblies=assemblies,ports=ports,generator=record(Path(__file__)),
-        native_binding_closure=record(closure_copy),
+    proof=dict(format=1,manifest=apk.version,code_manifest=record(code_manifest),assemblies=assemblies,ports=ports,generator=record(Path(__file__)),
+        native_binding_scripts=[record(RUNTIME/(name+'.cs.meta')) for name in ('PlayerAppearance','PlayerAnimationAppearance','ProfessionAppearance')],
         additional_source=[record(CODE/'AppearanceSystem.Runtime/AppearanceUtils.cs')],
-        animation_rules=dict(source=apk.provenance(original_asset),payload_sha256=hashlib.sha256(original_asset.get_raw_data()).hexdigest(),original_fields=original,outputs=[record(asset),record(meta)]),fixture=record(fixture),
+        animation_rules=dict(source=apk.provenance(original_asset),payload_sha256=hashlib.sha256(original_asset.get_raw_data()).hexdigest(),original_fields=original,outputs=[record(asset),record(meta)]),fixture_sha256=hashlib.sha256(fixture.read_bytes()).hexdigest(),
         bindings=[record(p) for f in binding_files for p in (f,f.with_name(f.name+'.meta'))],validation=[record(validation),record(validation.with_name(validation.name+'.meta'))],
-        operation='Migrate full original PlayerAppearanceInfo, PlayerAppearance, PlayerAnimationAppearance, APlayerAppearanceInfo, ProfessionAppearance, runtime-data override contract, lite callback lifecycle, appearance-event/equipment enums and animation-format rule classes. Scope ProfessionUtils to its complete SetProfessionAppearance method: clone, default weapon overwrite/removal, appended rewards, runtime build, character apply and looping UI animation retain source order. Preserve registration, refresh/animation/load order, exact data identity, runtime object reuse, override restoration, event exception boundaries, cancellation and Clear behavior. Protocol AppearanceData and profession enum cross explicit bindings as object/int without serialization or substitute rules; clone dictionary views address the actual cloned object. Animation-name formatting is scoped to the original GetAnimName and GetFormatId methods; all seven rule records are recovered from the APK without changes. No skeleton SDK implementation is used.',
-        validated_scope='Isolated Unity 2022.3.57f1c2 Play Mode passed: self registration/enable/disable and event filtering, released/replaced/late lite callbacks including original Clear behavior, runtime/data identity, override restoration, observer order and exception boundary, animation before loading, cached names/loop/base-profession/sex and formatting; seven original rule records match every field/order and actual native deserialized lookup/format. Profession preview clones before default weapon/reward updates, retains original data, preserves missing-sex defaults and None behavior, and routes the looping UI animation after appearance application. Player/protocol/resource/animation endpoints and dictionary clone are fixtures. Native character rendering and full profession page remain unbound.',
-        limitations=['Source data construction, protocol player/lite-info providers, native character rendering and full profession UI are not installed by this application-layer port.'])
-    (ROOT/'assets/reference/profession-ui/player-appearance-source-manifest.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+        operation='Migrate full original PlayerAppearanceInfo, PlayerAppearance, PlayerAnimationAppearance, APlayerAppearanceInfo, ProfessionAppearance, runtime-data override contract, lite callback lifecycle, appearance-event/equipment enums and animation-format rule classes. Scope ProfessionUtils to its complete SetProfessionAppearance method: clone, default weapon overwrite/removal, appended rewards, runtime build, character apply and looping UI animation retain source order. Preserve registration, refresh/animation/load order, exact data identity, runtime object reuse, override-ID collection before mutex resolution, full runtime rebuild before override application, event exception boundaries, cancellation and Clear behavior. Protocol AppearanceData and profession enum cross explicit bindings as object/int without serialization or substitute rules; clone dictionary views address the actual cloned object. Animation-name formatting is scoped to the original GetAnimName and GetFormatId methods; all seven rule records are recovered from the APK without changes. No skeleton SDK implementation is used.',
+        application_overrides=[dict(source=record(CODE/'AppearanceSystem/AppearanceRuntimeDataOverride.cs'), runtime=record(ROOT/'unity/Assets/Game/Runtime/Official/HomeFastHangUpProgressUI/AppearanceRuntimeDataOverride.cs'), generator=record(ROOT/'scripts/prepare_home_fast_hangup_progress_runtime.py'))],
+        limitations=['This application-layer port preserves the original lifecycle and rule asset; protocol player and lite-info providers cross explicit local bindings.'])
+    (ROOT/'assets/reference/profession-ui/player-appearance-source-manifest.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print('Ported original player appearance lifecycle and animation-name rules.')
 
 

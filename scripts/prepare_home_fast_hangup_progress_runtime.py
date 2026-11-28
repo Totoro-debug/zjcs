@@ -12,6 +12,9 @@ def build():
 
     def read(name, resolved=False):
         path = CODE/('client-source-resolved' if resolved else 'client-source')/(name+'.cs')
+        if name == 'AppearanceSystem/AppearanceRuntimeDataOverride' and not resolved:
+            from official_source import OfficialSource
+            path = OfficialSource().prepared_path/'official-code/client-source'/(name+'.cs')
         inputs[path.relative_to(ROOT).as_posix()] = sha(path)
         if resolved:
             receipt = path.with_suffix('.decompilation.json')

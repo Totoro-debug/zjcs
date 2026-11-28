@@ -10,8 +10,6 @@ public class CharacterSkinInfoParser
 
 	public Dictionary<int, CharacterSkinInfo> SkinDict = new Dictionary<int, CharacterSkinInfo>();
 
-	private static List<int> sWeightList = new List<int>();
-
 	public void PostParse(ProfessionAppearanceTables tables)
 	{
 		SpineSkinInfoParser parser = tables.SpineSkinInfoParser;

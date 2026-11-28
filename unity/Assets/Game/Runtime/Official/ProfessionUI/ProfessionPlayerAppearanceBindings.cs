@@ -27,7 +27,8 @@ namespace Zjcs.Official.ProfessionUI
         bool IsAppearanceValid(object data);
         IEnumerable<string> GetSkinNames(object data);
         void GetLiteInfo(long playerId, ProfessionLiteInfoCallback callback, bool forceUpdateInfo);
-        void BuildAppearanceRuntimeData(Sex sex, int profession, object data, List<string> appendSkins, AppearanceRuntimeData target);
+        void BuildAppearanceRuntimeData(Sex sex, int profession, object data, List<string> appendSkins, AppearanceRuntimeData target,
+            IReadOnlyDictionary<SkinType, int> overrideSkins = null);
         int GetBaseProfession(int profession);
         string GetProfessionIdStr(int profession);
     }

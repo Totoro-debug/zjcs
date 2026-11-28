@@ -5,7 +5,9 @@ using System.Collections.Generic;
 
 public interface IAppearanceRuntimeDataOverride
 {
-	void ApplyOverride(AppearanceRuntimeData runtimeData, object appearanceData, Dictionary<SkinType, string> modifiedSkinDict = null);
+	void CollectOverrideSkins(Sex sex, Dictionary<SkinType, int> result);
+
+	void ApplyOverride(AppearanceRuntimeData runtimeData);
 }
 
 }

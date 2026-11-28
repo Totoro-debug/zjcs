@@ -13,13 +13,19 @@ namespace Zjcs.Editor.ProfessionUI
         internal static string DirectoryPath => RequiredPath("ZJCS_VALIDATION_DIR");
 
         internal static void AssertIsolatedProject()
+            => AssertProject(true);
+
+        internal static void AssertSourceProject()
+            => AssertProject(false);
+
+        private static void AssertProject(bool isolated)
         {
             string repository = Repository;
             string workspace = DirectoryPath;
             string root = Path.Combine(repository, "output", "validation");
             if (!Same(Directory.GetParent(workspace)?.FullName, root) ||
-                !Same(Application.dataPath, Path.Combine(workspace, "unity", "Assets")))
-                throw new InvalidOperationException("Profession validation requires its own output/validation workspace project.");
+                !Same(Application.dataPath, Path.Combine(isolated ? workspace : repository, "unity", "Assets")))
+                throw new InvalidOperationException("Profession validation project does not match its owned workspace mode.");
             var marker = JsonUtility.FromJson<Marker>(File.ReadAllText(Path.Combine(workspace, ".zjcs-validation.json")));
             if (marker == null || marker.format != 1 || !Same(marker.repository, repository))
                 throw new InvalidOperationException("Profession validation workspace marker does not match the repository.");

@@ -38,8 +38,8 @@ class CurrentConstructors(Constructors):
         return self.sources[name]
 
 
-def current_path(prior):
-    path = ROOT / prior.replace("871_156598", "884_156692")
+def current_path(prior, code):
+    path = code / prior.replace('\\', '/').split('/official-code/', 1)[1]
     if not path.is_file(): path = Path(str(path).replace("common-source\\Common\\", "common-source\\").replace("common-source/Common/", "common-source/"))
     assert path.is_file(), path
     return path
@@ -58,7 +58,7 @@ def projection(tables):
 
 def main():
     apk = Apk.current()
-    assert apk.version == "884_156692"
+    assert apk.version == "911_156995"
     code = ROOT / ".tools/source-packages/current" / apk.version / "official-code"
     code_receipt = code.parent / "code-manifest.json"
     original = json.loads(code_receipt.read_bytes())
@@ -80,7 +80,7 @@ def main():
     for name in ("appearance-resolver", "player-appearance"):
         prior = json.loads((ROOT / "assets/reference/profession-ui" / (name + "-source-manifest.json")).read_bytes())
         for row in prior["ports"]:
-            path = current_path(row["source"]["path"])
+            path = current_path(row["source"]["path"], code)
             if path.name == "CharacterSkinInfoParser.cs":
                 # The migrated parser never included random selection. Current
                 # PostParse/key/lookup bodies are identical after the recorded
@@ -106,7 +106,7 @@ def main():
             shared.append(dict(current=identity(path), historical=row["source"], runtime=identity(ROOT / row["runtime"]["path"]), comparison=comparison))
     defaults_prior = json.loads((ROOT / "assets/reference/profession-ui/skin-defaults-source-manifest.json").read_bytes())
     for row in defaults_prior["application"]:
-        path = current_path(row["path"])
+        path = current_path(row["path"], code)
         assert identity(path)["sha256"] == row["sha256"], path
         shared.append(dict(current=identity(path), historical=row, comparison="Entire original source byte identity"))
     destination = ROOT / "unity/Assets/Official/Combat/SceneCharacterAppearance/Resources/Combat/SceneAppearance"
@@ -153,7 +153,7 @@ def main():
         dependencies=[identity(ROOT / path) for path in ("assets/reference/battle-animation/scene-character-appearance-source-manifest.json", "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionAppearanceBindings.cs", "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceSkinDefaults.cs")],
         binding=dict(tables="Combat/SceneAppearance/appearance-tables", defaults="Combat/SceneAppearance/skin-defaults", animation_rules="Combat/SceneAppearance/AppearanceAnimNameCombineRule", player="Zjcs.Official.CombatAppearance.PlayerAppearance", append="AppendSkinType.Game from current AppearanceConfig"),
         operation="Fully decode nine selected current original tables, retain appearance-consumed fields and collection order, recover current animation formatting rules, reuse byte-verified application logic and bind the original player appearance lifecycle to the current scene character. Explicit configuration replaces only prefab field injection; refresh/override/event/clear ordering remains original.",
-        limits=["A native completed-pose producer is still required; this player appearance path does not implement Mecanim, full physics, animation mixing or the complete original prefab.", "Production battle input/save flow and Windows Player integration remain required."])
+        limits=["This receipt covers the player appearance lifecycle and its selected configuration; scene pose, rendering and animation resources have separate source receipts.", "Production battle input/save flow and Windows Player integration remain required."])
     write_changed(ROOT / "assets/reference/battle-animation/scene-player-appearance-source-manifest.json", json.dumps(proof, ensure_ascii=False, indent=2) + "\n")
     print("Current player lifecycle and selected ordered appearance inputs recovered.")
     print("Initial weapon skin IDs:", payloads["skin-defaults"]["InitialWeaponSwordSkinId"], payloads["skin-defaults"]["InitialWeaponWandSkinId"])

@@ -23,6 +23,18 @@ namespace Zjcs.Editor.Combat
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 600);
         }
 
+        public static void RunCurrentScenePlayerAppearance()
+        {
+            string root = Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT");
+            string work = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+            Require(!string.IsNullOrEmpty(root) && !string.IsNullOrEmpty(work)
+                && System.IO.Path.GetFullPath(Application.dataPath) == System.IO.Path.GetFullPath(System.IO.Path.Combine(root, "unity/Assets"))
+                && System.IO.Path.GetDirectoryName(System.IO.Path.GetFullPath(work)) == System.IO.Path.GetFullPath(System.IO.Path.Combine(root, "output/validation"))
+                && System.IO.File.Exists(System.IO.Path.Combine(work, ".zjcs-validation.json")), "owned current source validation workspace");
+            Begin(false); SessionState.SetBool(Key + ".scenePlayerAppearance", true);
+            SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 600);
+        }
+
         private static IEnumerator ScenePlayerAppearanceSteps(
             Func<GameObject, OfflineProfessionAppearanceBindings, ScenePlayer> createPlayer = null,
             Action<ScenePlayer> afterInit = null, string labelSuffix = "")
@@ -183,7 +195,8 @@ namespace Zjcs.Editor.Combat
                             "normal local snapshot refresh retains exact current default GPU appearance");
                         string hair = player.AppearanceRuntimeData.SkinMap[SkinType.hair];
                         string otherHair = native.State.Source.SkinNames.First(n => n.StartsWith("hair_", StringComparison.Ordinal) && n != hair);
-                        var hairOverride = new ScenePlayerHairOverride(otherHair);
+                        var hairOverride = new ScenePlayerHairOverride(otherHair,
+                            tables.SpineSkinInfoParser.GetAll().First(row => row.SkinName == otherHair).Id);
                         player.SetRuntimeDataOverride(hairOverride); independentRefreshes++; draw();
                         Require(player.AppearanceRuntimeData.SkinMap[SkinType.hair] == otherHair && observer.Calls == 3 && events == 2,
                             "original temporary override updates dependents without publishing a profile refresh event");
@@ -293,10 +306,11 @@ namespace Zjcs.Editor.Combat
         private sealed class ScenePlayerHairOverride : IAppearanceRuntimeDataOverride
         {
             private readonly string hair;
-            internal ScenePlayerHairOverride(string hair) { this.hair = hair; }
-            public void ApplyOverride(AppearanceRuntimeData data, object source, Dictionary<SkinType, string> modifiedSkinDict = null)
+            private readonly int id;
+            internal ScenePlayerHairOverride(string hair, int id) { this.hair = hair; this.id = id; }
+            public void CollectOverrideSkins(Sex sex, Dictionary<SkinType, int> result) { result[SkinType.hair] = id; }
+            public void ApplyOverride(AppearanceRuntimeData data)
             {
-                modifiedSkinDict[SkinType.hair] = data.SkinMap[SkinType.hair];
                 data.SkinMap[SkinType.hair] = hair;
             }
         }

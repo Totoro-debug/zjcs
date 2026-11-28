@@ -18,7 +18,7 @@ public class PlayerAppearance : PlayerAppearanceInfo
 
 	private IAppearanceRuntimeDataOverride mDataOverride;
 
-	private Dictionary<SkinType, string> mModifiedSkinDict;
+	private readonly Dictionary<SkinType, int> mOverrideSkins = new Dictionary<SkinType, int>();
 
 	protected Sex mSex;
 
@@ -38,13 +38,11 @@ public class PlayerAppearance : PlayerAppearanceInfo
 
 	protected void RefreshAppearanceImpl(Sex sex, int profession, object data)
 	{
-		List<string> appendSkins = PlayerBindings.Config.GetAppendSkins(AppendSkinType);
 		mAppearanceData = data;
 		if (mAppearanceRuntimeData == null)
 		{
 			mAppearanceRuntimeData = new AppearanceRuntimeData();
 		}
-		PlayerBindings.BuildAppearanceRuntimeData(sex, profession, data, appendSkins, mAppearanceRuntimeData);
 		mSex = sex;
 		mProfession = profession;
 		UpdateAppearance();
@@ -60,36 +58,23 @@ public class PlayerAppearance : PlayerAppearanceInfo
 
 	public void SetRuntimeDataOverride(IAppearanceRuntimeDataOverride runtimeDataOverride)
 	{
-		if (mDataOverride == runtimeDataOverride)
+		if (mDataOverride != runtimeDataOverride)
 		{
-			return;
-		}
-		mDataOverride = runtimeDataOverride;
-		if (mAppearanceRuntimeData == null)
-		{
-			return;
-		}
-		if (mModifiedSkinDict != null)
-		{
-			Dictionary<SkinType, string> skinMap = mAppearanceRuntimeData.SkinMap;
-			foreach (KeyValuePair<SkinType, string> item in mModifiedSkinDict)
+			mDataOverride = runtimeDataOverride;
+			if (mAppearanceRuntimeData != null)
 			{
-				skinMap[item.Key] = item.Value;
+				UpdateAppearance();
 			}
 		}
-		UpdateAppearance();
 	}
 
 	private void UpdateAppearance()
 	{
-		if (mDataOverride != null)
-		{
-			if (mModifiedSkinDict == null)
-			{
-				mModifiedSkinDict = new Dictionary<SkinType, string>();
-			}
-			mDataOverride.ApplyOverride(mAppearanceRuntimeData, mAppearanceData, mModifiedSkinDict);
-		}
+		mOverrideSkins.Clear();
+		mDataOverride?.CollectOverrideSkins(mSex, mOverrideSkins);
+		List<string> appendSkins = PlayerBindings.Config.GetAppendSkins(AppendSkinType);
+		PlayerBindings.BuildAppearanceRuntimeData(mSex, mProfession, mAppearanceData, appendSkins, mAppearanceRuntimeData, mOverrideSkins);
+		mDataOverride?.ApplyOverride(mAppearanceRuntimeData);
 		AppearanceCharacter.SetRuntimeData(mAppearanceRuntimeData);
 		foreach (APlayerAppearanceInfo mAppearanceInfo in mAppearanceInfoList)
 		{
@@ -105,7 +90,7 @@ public class PlayerAppearance : PlayerAppearanceInfo
 		base.Clear();
 		mAppearanceRuntimeData = null;
 		mAppearanceData = null;
-		mModifiedSkinDict?.Clear();
+		mOverrideSkins.Clear();
 		AppearanceCharacter.Release();
 	}
 }
