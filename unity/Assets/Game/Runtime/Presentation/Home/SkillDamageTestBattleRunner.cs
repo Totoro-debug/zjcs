@@ -84,8 +84,7 @@ namespace Zjcs.Presentation.Home
                 Options = OfficialMapBattleSessionOptionsBuilder.Create(stage, true, 3, 3, player.X, player.Y),
                 InitialStepDelay = 0f
             };
-            SkillDamageTestValidation.ConfigureGuardianBattleRequest(battleRequest);
-            SkillDamageTestValidation.ConfigureAcquiredBattleRandomInput(checkpoint);
+            SkillDamageTestValidation.ConfigureAcquiredBattleRequest(battleRequest);
             controller.Begin(battleRequest);
         }
 

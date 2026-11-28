@@ -14,7 +14,7 @@ from prepare_battle_live_monsters import sha, encoded
 
 
 def build(*, destination=None, resource_path="Combat/NativeMonsters/catalog", receipt_path=None,
-          reuse_verified_shader=False, presentation_resource_root=None):
+          reuse_verified_shader=False, presentation_resource_root=None, shader_cache=None):
     work = validation_directory()
     source = work / "live-monsters"
     proof_path = work / "live-monsters-source-manifest.json"
@@ -98,7 +98,8 @@ def build(*, destination=None, resource_path="Combat/NativeMonsters/catalog", re
         shader = dict(source=original["source"], path=shader_asset.relative_to(ROOT).as_posix(),
                       sha256=sha(shader_asset.read_bytes()), meta_sha256=sha(shader_meta.read_bytes()))
     else:
-        cache = ROOT / ".tools/source-packages/current" / apk.version / "native-conversion/all-assets/windows-shaders"
+        cache = (Path(shader_cache) if shader_cache is not None else
+                 ROOT / ".tools/source-packages/current" / apk.version / "native-conversion/all-assets/windows-shaders")
         shader_proof = cache / "source-manifest.json"
         shader_rows = json.loads(shader_proof.read_bytes())["shaders"]
         shader, = [row for row in shader_rows if row["source"]["name"] == "Universal Render Pipeline/Spine/SkeletonEffect-2D"]

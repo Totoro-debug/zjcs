@@ -319,7 +319,8 @@ namespace Zjcs.Combat.Official
             FightBattleStatusState status)
         {
             if (statusCatalog == null || owner == null || status == null
-                || status.Components?.Start == null) return;
+                || status.Components?.Start == null || status.Components.Start.Started) return;
+            status.Components.Start.Started = true;
             if (status.ClassId == 25111)
             {
                 ApplyElementHarmony(owner, status);

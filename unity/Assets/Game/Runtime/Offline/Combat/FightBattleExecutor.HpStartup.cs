@@ -60,6 +60,7 @@ namespace Zjcs.Combat.Official
             foreach (var owner in units)
                 foreach (var status in owner.Statuses)
                     if (IsPendingHpStart(owner, status) || IsPendingRoundStart(owner, status)
+                        || IsPendingConfiguredStatusStart(owner, status)
                         || IsPendingMoveScopeStart(owner, status)
                         || IsPendingLogicStart(status)
                         || IsPendingStackCountStart(owner, status)
@@ -181,6 +182,7 @@ namespace Zjcs.Combat.Official
                         for (int index = statuses.Count - 1; index >= 0; index--)
                             if (owner.Statuses.Contains(statuses[index])
                                 && (IsPendingHpStart(owner, statuses[index]) || IsPendingRoundStart(owner, statuses[index])
+                                    || IsPendingConfiguredStatusStart(owner, statuses[index])
                                     || IsPendingMoveScopeStart(owner, statuses[index])
                                     || IsPendingLogicStart(statuses[index])
                                     || IsPendingStackCountStart(owner, statuses[index])
@@ -188,6 +190,7 @@ namespace Zjcs.Combat.Official
                                     || IsPendingGlobalRoundStart(owner, statuses[index])))
                             {
                                 if (firstOwner == null) firstOwner = owner;
+                                changed += StartConfiguredStatus(owner, statuses[index]);
                                 changed += StartHpStatus(owner, statuses[index]);
                                 changed += StartRoundStatus(owner, statuses[index]);
                                 changed += StartGlobalRoundStatus(owner, statuses[index]);

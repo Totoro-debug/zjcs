@@ -63,6 +63,8 @@ namespace Zjcs.Offline.ProfessionUI
 
         // Skeleton reflection belongs outside the inherited bone frame, so it
         // also affects bones that suppress their parent's scale/reflection.
+        public float SkeletonFlipSign => skeletonFlipX == skeletonFlipY ? 1f : -1f;
+
         public void SetSkeletonFlip(bool flipX, bool flipY)
         {
             if (skeletonFlipX == flipX && skeletonFlipY == flipY) return;

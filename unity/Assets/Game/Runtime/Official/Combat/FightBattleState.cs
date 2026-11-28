@@ -769,6 +769,7 @@ namespace Zjcs.Combat.Official
     [Serializable]
     public sealed class FightBattleStatusStartComponentState
     {
+        public bool Started;
         public List<FightBattleStatusStateTrigger> Statuses = new List<FightBattleStatusStateTrigger>();
         public int ForbiddenTarget;
         public int ForbiddenStatusId;
@@ -1085,6 +1086,9 @@ namespace Zjcs.Combat.Official
         public bool KillSkillTargetDiePos;
         public bool KillSkillCustomOverflowDamage;
         public bool KillSkillUseCustomDamage;
+        public int KillSkillCustomDamagePropertyId;
+        public List<FightBattleKillDamageScale> KillSkillCharacterTypeDamageScales =
+            new List<FightBattleKillDamageScale>();
         public int KillSkillMaxCount = -1;
         public bool KillSkillResetCountEveryRound;
         public int KillSkillTriggeredCount;

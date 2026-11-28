@@ -135,7 +135,7 @@ namespace Zjcs.Offline.ProfessionUI
                     }
                     else if (Equals(component["type"], "BoneFollower") && bindBoneFollowers)
                     {
-                        if (Flag(fields, "followSkeletonFlip") || Flag(fields, "followParentWorldScale")
+                        if (Flag(fields, "followParentWorldScale")
                             || Int(fields, "maintainedAxisOrientation") != 1)
                             throw new NotSupportedException("Bind additional original native bone follower flags.");
                         boneFollowers.Add((go.transform, Resolve(renderers, references, "/skeletonRenderer"), fields));
@@ -157,6 +157,12 @@ namespace Zjcs.Offline.ProfessionUI
                 var native = (Zjcs.Official.ProfessionUI.IProfessionFollowerRenderer)follower.Renderer;
                 var bone = native.Skeleton.FindBone((string)follower.Fields["boneName"])
                     ?? throw new InvalidDataException("Original native attachment bone is absent.");
+                if (Flag(follower.Fields, "followSkeletonFlip"))
+                {
+                    ApplyFlippedBoneFollower(follower.Transform, follower.Renderer.transform, bone,
+                        follower.Fields, ((ProfessionNativeAppearanceSkeleton)native.Skeleton).Pose.SkeletonFlipSign);
+                    continue;
+                }
                 Vector3 point = follower.Renderer.transform.TransformPoint(new Vector3(bone.WorldX, bone.WorldY, 0));
                 Vector3 position = follower.Transform.position;
                 if (Flag(follower.Fields, "followXYPosition")) { position.x = point.x; position.y = point.y; }
@@ -173,6 +179,47 @@ namespace Zjcs.Offline.ProfessionUI
             }
             foreach (var follower in followers)
                 if (follower && follower.isActiveAndEnabled) follower.ForceUpdate();
+        }
+        // Spine.Unity.BoneFollower.LateUpdate: preserve its local-parent and
+        // world-parent branches, including skeleton and parent reflection signs.
+        internal static void ApplyFlippedBoneFollower(Transform target, Transform skeleton,
+            Zjcs.Official.ProfessionUI.IProfessionFollowerBone bone,
+            Dictionary<string, object> fields, float skeletonFlipSign)
+        {
+            bool scaleBone = Flag(fields, "followLocalScale");
+            float additionalFlip = 1f;
+            if (target.parent == skeleton)
+            {
+                var position = target.localPosition;
+                if (Flag(fields, "followXYPosition")) { position.x = bone.WorldX; position.y = bone.WorldY; }
+                if (Flag(fields, "followZPosition")) position.z = 0f;
+                target.localPosition = position;
+                if (Flag(fields, "followBoneRotation"))
+                    target.localRotation = Quaternion.Euler(0, 0,
+                        bone.WorldRotationX + (scaleBone && bone.ScaleX < 0 ? 180f : 0f));
+            }
+            else
+            {
+                var position = skeleton.TransformPoint(new Vector3(bone.WorldX, bone.WorldY, 0));
+                if (!Flag(fields, "followXYPosition")) { position.x = target.position.x; position.y = target.position.y; }
+                if (!Flag(fields, "followZPosition")) position.z = target.position.z;
+                var skeletonScale = skeleton.lossyScale;
+                var parentScale = target.parent ? target.parent.lossyScale : Vector3.one;
+                if (Flag(fields, "followBoneRotation"))
+                {
+                    float angle = bone.WorldRotationX;
+                    if (skeletonScale.x * skeletonScale.y < 0) angle = -angle;
+                    if (skeletonScale.x * parentScale.x < 0) angle += 180f;
+                    if (scaleBone && bone.ScaleX < 0) angle += 180f;
+                    var rotation = skeleton.rotation.eulerAngles;
+                    target.SetPositionAndRotation(position,
+                        Quaternion.Euler(rotation.x, rotation.y, rotation.z + angle));
+                }
+                else target.position = position;
+                additionalFlip = Mathf.Sign(skeletonScale.x * parentScale.x * skeletonScale.y * parentScale.y);
+            }
+            target.localScale = new Vector3(scaleBone ? bone.ScaleX : 1f,
+                (scaleBone ? bone.ScaleY : 1f) * skeletonFlipSign * additionalFlip, 1f);
         }
         public void RebindOriginalShadow(Transform shadow)
             => RebindOriginalSubtree(shadow);

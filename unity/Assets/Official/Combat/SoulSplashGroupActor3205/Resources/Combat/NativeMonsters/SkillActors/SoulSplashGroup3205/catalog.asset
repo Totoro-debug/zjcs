@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Name: Original full-binary battle monsters
+  m_EditorClassIdentifier: ''
+  m_Script: {fileID: 11500000, guid: 7c82caa682647b14ebcfc2dc80b360c8, type: 3}
+  inventory: {fileID: 4900000, guid: a74007fa8358540ebfac9fc8e362243c, type: 3}
+  shader: {fileID: 4800000, guid: c0b48704f3ce515b9349db61f3fbaddd, type: 3}
+  shaderBindings: []
+  bindings:
+  - File: 3205/model.bytes
+    Asset: {fileID: 4900000, guid: 8313fcea1bde5b0e8211fc9c8cd42e3f, type: 3}
+  - File: animators/AppearanceAssets/Monster/monster_3205/block_01.anim
+    Asset: {fileID: 7400000, guid: e12d0ebd33fb0ef346b7b9c2ed4a5048, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3205/die_01.anim
+    Asset: {fileID: 7400000, guid: 516156914d96eed5905cb1005381205d, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3205/floating_01.anim
+    Asset: {fileID: 7400000, guid: 337c68ba8138e44310e0ee01579c09ce, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3205/hit_01.anim
+    Asset: {fileID: 7400000, guid: d7cffde3c296e61e0b2f8d1748a01de5, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3205/hit_02.anim
+    Asset: {fileID: 7400000, guid: 8878dd6126814e35f59ee8ebd2af0d58, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3205/idle_01.anim
+    Asset: {fileID: 7400000, guid: 62402b89db2f6572807131f604bd54f8, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3205/monster_3205_Controller.controller
+    Asset: {fileID: 9100000, guid: 7f5321c101cba2dd51dc4203ce9a0e8b, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3205/run_01.anim
+    Asset: {fileID: 7400000, guid: 9564582d1866ed37cbdc383bdfc3d2c8, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3205/skill_01.anim
+    Asset: {fileID: 7400000, guid: 7f67513750d09f01304722c09d247f96, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3205/stun_01.anim
+    Asset: {fileID: 7400000, guid: d291b2a00c32baf5665bc059229af5b4, type: 2}
+  - File: textures/307a40a9a546b00f2d63b2c9753e69229d453bc1fa28c83f95570cf40ced9043.asset
+    Asset: {fileID: 2800000, guid: 44e7027e05de5718a26805e21ff9a891, type: 2}
+  - File: textures/4195e7fbf59e61baa9313ef84810f79e7f6123eb443d5cb0daadc8cf7cc0cec4.asset
+    Asset: {fileID: 2800000, guid: df84497f56db5ed99952ced42e3d239c, type: 2}
+  - File: textures/6d1ada22c64e611ee045988d78a0fe78b9d954042a07716ee1dc7417b20fbe15.asset
+    Asset: {fileID: 2800000, guid: 14742543b2fc53668aea665ce95fbb65, type: 2}
+  - File: textures/87eec55ac622d4084ca884b0b3470d8748f0ff36cacec305425fa44975de58a4.asset
+    Asset: {fileID: 2800000, guid: caa143fe374f599a819ce02e4641aebe, type: 2}
+  presentationResourceRoot: Combat/NativeMonsters/SkillActors/SoulSplashGroup3205

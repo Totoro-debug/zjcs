@@ -19,7 +19,8 @@ from verify_current_summon_properties import verify as verify_summon_properties
 
 
 def build(entity, *, cache, destination, resource_root, receipt_prefix, generator,
-          lifecycle_names=None, combat_tables=None):
+          lifecycle_names=None, combat_tables=None, verify_inherited_properties=True,
+          reuse_verified_shader=True, reuse_verified_playable_shader=True, entity_paths=None):
     work = validation_directory()
     source = OfficialSource()
     managed = cache / 'inputs/Managed'
@@ -29,7 +30,7 @@ def build(entity, *, cache, destination, resource_root, receipt_prefix, generato
     def receipt(kind):
         return receipts / (receipt_prefix + '-current-' + kind + '-source-manifest.json')
 
-    summon_properties = verify_summon_properties([entity])
+    summon_properties = verify_summon_properties([entity]) if verify_inherited_properties else None
     template_record = json.loads((receipts / 'live-monsters-source-manifest.json').read_bytes())['serializer_template_source']
     template = ROOT / template_record['path']
     if identity(template)['sha256'] != template_record['sha256']:
@@ -42,7 +43,8 @@ def build(entity, *, cache, destination, resource_root, receipt_prefix, generato
     extract_model([entity], conversion_cache=cache)
     model_receipt = receipt('actor')
     install_model(destination=destination, receipt_path=model_receipt, resource_path=resource_root + '/catalog',
-        presentation_resource_root=resource_root, reuse_verified_shader=True)
+        presentation_resource_root=resource_root, reuse_verified_shader=reuse_verified_shader,
+        shader_cache=cache / 'all-assets/windows-shaders')
     appearance_receipt = receipt('appearance')
     appearance = build_appearance([entity], destination=destination, native_root=destination,
         model_receipt=model_receipt, catalog_path='Resources/' + resource_root + '/appearance.asset',
@@ -79,8 +81,9 @@ def build(entity, *, cache, destination, resource_root, receipt_prefix, generato
         resource_root=resource_root + '/Shadows', generator=generator, conversion_cache=cache)
     role_receipt = receipt('role-views')
     build_role_views(entities_to_prepare=[entity], base=resources, receipt=role_receipt,
-        resource_root=resource_root, conversion_cache=cache, external_assets=verified_noise_mask_binding(cache),
-        lifecycle_names=lifecycle_names)
+        resource_root=resource_root, conversion_cache=cache,
+        external_assets=verified_noise_mask_binding(cache) if reuse_verified_playable_shader else None,
+        lifecycle_names=lifecycle_names, entity_paths=entity_paths)
     role_proof = json.loads(role_receipt.read_bytes())
     additional = (model_receipt, appearance_receipt, states_receipt, controllers_receipt, attachments_receipt, shadow_receipt)
     outputs = {row['path']: row for row in role_proof['outputs']}

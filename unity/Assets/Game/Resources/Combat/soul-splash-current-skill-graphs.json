@@ -1,0 +1,70 @@
+{
+  "manifest": "911_156995",
+  "skills": [
+    {
+      "skill_entity_id": 11280,
+      "entity_resource": "Combat/SoulSplashSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11280/11280",
+      "playables": []
+    }
+  ],
+  "hits": [
+    {
+      "hit_entity_id": 11281,
+      "client_type": "MyFightHitFixed",
+      "component_file_id": 114099118695303065,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "source_to_me_anchor": 0,
+      "flags": {
+        "ScopePlayableFollowDelay": true,
+        "ScopeZFollowHitZ": false,
+        "ShouldSetPlayableDirectinParamToSouceToMePlayable": false,
+        "IsApplyOffsetToPlayable": false
+      },
+      "playables": [
+        {
+          "field": "myPlayable",
+          "resource": "Combat/SoulSplashSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11280/playable11280"
+        }
+      ],
+      "entity_resource": "Combat/SoulSplashSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/11280/11281"
+    }
+  ],
+  "moves": [],
+  "damages": [
+    {
+      "damage_entity_id": 10023,
+      "entity_prefab": "Global/10023.prefab",
+      "entity_prefab_sha256": "7f4cb3b25059c41a8ad3854b804892777e111ea3aa2ca49d379538679db6628b",
+      "component_file_id": 114884547391421755,
+      "game_object_file_id": 1709254077376921,
+      "component_enabled": true,
+      "flags": {
+        "myShowZeroDamage": true,
+        "myHideDamage": false
+      },
+      "playables": [
+        {
+          "field": "myCommonPlayable",
+          "resource": "Combat/SoulSplashSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage_fire_HitEffect"
+        },
+        {
+          "field": "myDamagePlayable",
+          "resource": "Combat/SoulSplashSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_damage"
+        },
+        {
+          "field": "myBlockPlayable",
+          "resource": "Combat/SoulSplashSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_block"
+        },
+        {
+          "field": "myCritPlayable",
+          "resource": "Combat/SoulSplashSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/GlobalPlayable/playable_crit"
+        }
+      ],
+      "entity_resource": "Combat/SoulSplashSkillGraphs/Prefabs/EcEntity/Fight/FightSkill/Global/10023",
+      "skill_item_ids": [
+        10545
+      ]
+    }
+  ]
+}

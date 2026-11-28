@@ -43,6 +43,7 @@ namespace Zjcs.Presentation.Home
             supported |= active == 10065 && player.Wardrobe.Profession == 7 && itemId == 10519;
             supported |= active == 10065 && player.Wardrobe.Profession == 7 && itemId == 10574;
             supported |= active == 10065 && player.Wardrobe.Profession == 7 && itemId == 10590;
+            supported |= active == 10008 && player.Wardrobe.Profession == 7 && itemId == 10545;
             supported |= active == 10093 && player.Wardrobe.Profession == 13 && itemId == 10604;
             supported |= active == 10103 && player.Wardrobe.Profession == 17 && itemId == 10528;
             Require(supported && source.Player.Wardrobe.Profession == player.Wardrobe.Profession
@@ -90,6 +91,11 @@ namespace Zjcs.Presentation.Home
             ref int assaultHits, ref int soulBreakHits, ref int windHits, ref int flameHits,
             ref int fireLifeCures)
         {
+            if (itemId == 10545)
+            {
+                soulSplash.Observe(step, checkpoint);
+                return;
+            }
             if (itemId == 10590)
             {
                 VerifyAcquiredSoulGuardianStep(step, checkpoint, output);

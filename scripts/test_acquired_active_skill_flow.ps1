@@ -52,6 +52,17 @@ function Assert-AcquiredPassiveFlowEvidence([string]$Run, [int]$PassiveId) {
     $result = Get-Content -LiteralPath (Join-Path $Run 'result.json') -Raw | ConvertFrom-Json
     if (-not $result.passed) { throw 'The cultivated passive combat flow did not pass.' }
     $runtimeLog = Join-Path $Run 'runtime.log'
+    if ($PassiveId -eq 10545) {
+        foreach ($file in @('companion-soul-splash-checkpoint.json','companion-soul-splash-receipt.json',
+            'acquired-active-ui-splash-formation.png','acquired-active-ui-passive-battle.png')) {
+            if (-not(Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Soul Splash original group, actual kill or native fire evidence is missing.' }
+        }
+        $splash = Get-Content (Join-Path $Run 'companion-soul-splash-receipt.json') -Raw | ConvertFrom-Json
+        if ($splash.kills -ne 1 -or $splash.splashHits -lt 1 -or $splash.comparisons -lt 1 -or
+            $splash.overflow -le 0 -or $splash.customDamage -le 0 -or -not $splash.modifier -or
+            -not $splash.restored -or -not $splash.captured) { throw 'Soul Splash lost its actual single-segment bonus, sourced post-shield splash or restoration.' }
+        return
+    }
     if ($PassiveId -eq 10590) {
         foreach ($file in @('companion-soul-guardian-checkpoint.json','companion-soul-guardian-receipt.json','acquired-active-ui-passive-battle.png')) {
             if (-not(Test-Path -LiteralPath (Join-Path $Run $file))) { throw 'Soul Guardian actual cost, protection or native cast evidence is missing.' }
@@ -381,7 +392,7 @@ if ($SkillSkinId -gt 0 -and ((($SkillId -ne 10082 -or $SkillSkinId -ne 39521) -a
 if ($PassiveSave) {
     $PassiveSave = (Get-Item -LiteralPath $PassiveSave).FullName
     if (-not $PassiveSave.StartsWith($workspacePath + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
-        $SkillId -notin @(10017,10028,10032,10035,10047,10065,10068,10084,10088,10089,10091,10093,10095,10096,10098,10103) -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated passive cultivation save with its corresponding active skill.' }
+        $SkillId -notin @(10008,10017,10028,10032,10035,10047,10065,10068,10084,10088,10089,10091,10093,10095,10096,10098,10103) -or $AdditionalSkillIds.Count -gt 0) { throw 'Use the isolated passive cultivation save with its corresponding active skill.' }
     $passiveResult = Get-Content -LiteralPath (Join-Path (Split-Path -Parent $PassiveSave) 'result.json') -Raw | ConvertFrom-Json
     if (-not $passiveResult.passed) { throw 'The original passive cultivation flow has not passed.' }
     $passiveProfile = Get-Content -LiteralPath $PassiveSave -Raw | ConvertFrom-Json

@@ -28,7 +28,7 @@ ENTITIES = (3181, 3182, 3183, 3190, 3932, 3935)
 
 def main(*, entities_to_prepare=ENTITIES, base=BASE, receipt=RECEIPT,
          resource_root='Combat/SummonRoleViews', conversion_cache=None, external_assets=None,
-         lifecycle_names=None):
+         lifecycle_names=None, entity_paths=None):
     apk = Apk.current()
     if conversion_cache is None and apk.version != '884_156692':
         raise ValueError('Review summon role views for the selected version')
@@ -42,7 +42,8 @@ def main(*, entities_to_prepare=ENTITIES, base=BASE, receipt=RECEIPT,
     entities = json.loads((ROOT / 'unity/Assets/Official/Combat/battle-rules.json').read_bytes())['entities']
     character_components = {str(entity): {'FightRoleCharacterComponent': entities[str(entity)]['FightRoleCharacterComponent']}
                             for entity in entities_to_prepare}
-    selected_character_components = verify_selected_components(character_components, source_version=apk.version)
+    selected_character_components = verify_selected_components(character_components, source_version=apk.version,
+                                                               entity_paths=entity_paths)
     rows, sources, roots, originals = [], [], {}, {}
     native_outputs = json.loads((cache / (export_name + '-source-manifest.json')).read_bytes())['outputs']
     try:

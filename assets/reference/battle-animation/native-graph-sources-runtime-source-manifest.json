@@ -263,6 +263,14 @@
     {
       "path": "assets/reference/battle-animation/hunt-judgment-current-skill-graphs-source-manifest.json",
       "sha256": "ac94f17d49b35c46756b1166d87c8744a44f3f75ebe5fac7c777dd47645cd6fb"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/soul-splash-current-skill-graphs.json",
+      "sha256": "bcca50e6c6d71cbf280821f86417a70a99ee82339f71992942816689b724b521"
+    },
+    {
+      "path": "assets/reference/battle-animation/soul-splash-current-skill-graphs-source-manifest.json",
+      "sha256": "ffcd71aadbf630d43fdf6f2b643da64ca23ade6e2db4f9234bfbe6413b7d69e8"
     }
   ],
   "outputs": [
@@ -531,8 +539,16 @@
       "sha256": "1c185cceb310f1ffe52441d6e7623ebc0b3dadeb251bb0a0475f0d7d8c9b0897"
     },
     {
+      "path": "unity/Assets/Game/Resources/Combat/soul-splash-current-skill-graphs-source-manifest.json",
+      "sha256": "515044ceeab2b6d39b7fe52c8feb6e687ac2b292264647819a0c3a468c7609a4"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/soul-splash-current-skill-graphs-source-manifest.json.meta",
+      "sha256": "57250262fc30e0e29b04b6220162e633d27900f0098c9321a591f26312898cda"
+    },
+    {
       "path": "unity/Assets/Game/Resources/Combat/skill-native-graph-sources.json",
-      "sha256": "85d429c05d024a16f9d8acc7088da3125d1193cc0492f72f0cb157db817b39b6"
+      "sha256": "0ed90ac631028ce592bac5d0ef828fef64d4f9f973380b3cbe3ec915f05b4179"
     },
     {
       "path": "unity/Assets/Game/Resources/Combat/skill-native-graph-sources.json.meta",
@@ -541,7 +557,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_native_graph_sources.py",
-    "sha256": "c6d0cda5d971d6d575d122cd7007cd24d68f4b8db220e513f0a0393253f8c564"
+    "sha256": "5b9d3d1bb327b4f3bb845055ec1fdd51299022aa3e39af5f2775ccd480079b84"
   },
   "runtime": [
     {
@@ -551,7 +567,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeEntityLoader.cs",
-      "sha256": "724544e103a3e6c3fe67ae3076f60106930f0473169cd3ed48012e62225d9efd",
+      "sha256": "e192a1b644b71dbdec360923112c050dbad410b6acad06b86a1cf3c25d48042a",
       "normalization": "UTF-8, LF line endings"
     },
     {
@@ -565,5 +581,5 @@
       "normalization": "UTF-8, LF line endings"
     }
   ],
-  "operation": "Verify each original native payload against its existing conversion receipt; load source-consistent SHA256-verified catalogs and replace only declared migrated entities. Reject duplicate sources and overlapping migrations without a source-version feature gate."
+  "operation": "Verify each original native payload against its existing conversion receipt; load source-consistent SHA256-verified catalogs and replace only declared migrated entities. Reject duplicate sources and overlapping migrations; current damage bindings may declare distinct owning skill items while retaining the existing shared entity identity."
 }

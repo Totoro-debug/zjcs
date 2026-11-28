@@ -90,6 +90,7 @@ namespace Zjcs.Presentation.Home
             bool heavenlyRain = skillId == 10096;
             bool psychicWard = skillId == 10077;
             bool sageDarkBlast = skillId == 10103;
+            int fighterCompanion = FighterActiveCompanion(skillId);
             int destroyerCompanion = DestroyerActiveCompanion(skillId);
             bool flameSoul = destroyerCompanion == 10599;
             bool fireCore = destroyerCompanion == 10503;
@@ -100,11 +101,11 @@ namespace Zjcs.Presentation.Home
             bool fourthPromotion = surgingTide || waterBlade || lightSwordArray || diversionHarassment || heavenlyLightBlades || vortexSurge || hellfire || swordWindDance || soulPiercer || dreadShadow || destroyer || alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard;
             fourthPromotion |= fireLeap || flowingFire;
             bool statusSkill = swiftWind || asuraHand || crisisGuard || skillId == 10024 || skillId == 10046 || skillId == 10051 || skillId == 10066 || hellfire || battlecry || protectiveRunes || psychicWard;
-            bool thirdPromotion = hunt || swiftWind || extinction || asuraHand || eclipseSlashes || crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017 || warlockExplosion || warlockThunder || warlockWind || warlockWater || warlockMeteor;
+            bool thirdPromotion = fighterCompanion > 0 || hunt || swiftWind || extinction || asuraHand || eclipseSlashes || crisisGuard || starShatteringSlash || shieldCharge || holyPurification || skillId == 10017 || warlockExplosion || warlockThunder || warlockWind || warlockWater || warlockMeteor;
             Require(thirdPromotion || fourthPromotion || skillId == 10000 || skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10016 || skillId == 10018 || skillId == 10024 || skillId == 10026 || skillId == 10028 || skillId == 10035 || skillId == 10043 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10051 || skillId == 10053 || skillId == 10066,
                 "Select an implemented active-skill acquisition diagnostic.");
             fourthPromotion |= HasGuardianCompanion(skillId);
-            int profession = hunt || swiftWind || extinction || asuraHand || eclipseSlashes ? 7 : warlockExplosion || warlockThunder || warlockWind || warlockWater || warlockMeteor ? 12 : fireLeap || flowingFire ? 8 : alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
+            int profession = fighterCompanion > 0 || hunt || swiftWind || extinction || asuraHand || eclipseSlashes ? 7 : warlockExplosion || warlockThunder || warlockWind || warlockWater || warlockMeteor ? 12 : fireLeap || flowingFire ? 8 : alienation || chaosRune || rockSummon || voodooDoll || heavenlyRain || sageDarkBlast || psychicWard ? 17 : destroyer ? 13 : hellfire || swordWindDance || soulPiercer || dreadShadow ? 8 : fourthPromotion ? 4 : thirdPromotion ? 3 : skillId == 10000 || skillId == 10028 || skillId == 10035 ? 10 : skillId == 10010 || skillId == 10044 || skillId == 10046 || skillId == 10048 || skillId == 10049 || skillId == 10066 ? 2 : skillId == 10008 || skillId == 10009 || skillId == 10010 || skillId == 10011 || skillId == 10012 || skillId == 10013 || skillId == 10014 || skillId == 10015 || skillId == 10018 || skillId == 10024 || skillId == 10043 || skillId == 10051 ? 1 : 6;
             var assets = OfficialCharacterAssetCatalog.LoadDefault();
             var rules = assets.LoadSkillRules();
             var definition = rules.Skills.Single(value => value.ClassId == skillId);
@@ -136,6 +137,7 @@ namespace Zjcs.Presentation.Home
             if (asuraHand) PrepareAcquiredAsuraHand(player, output);
             int passiveCompanion = LoadAcquiredPassiveCompanion(player, skillId, output);
             BeginAcquiredGuardianValidation(passiveCompanion, output);
+            soulSplash = passiveCompanion == 10545 ? new AcquiredSoulSplash(output) : null;
             var sageRoundSecret = BeginAcquiredSageRoundSecretValidation(passiveCompanion, output);
             if (warlockWind) PrepareAcquiredWindRoar();
             if (warlockWater) PrepareAcquiredWaterVortex();
@@ -296,9 +298,9 @@ namespace Zjcs.Presentation.Home
             click(FlameFlowButton(value => value.name == "StageDamageTestBtn"));
             yield return new WaitForSecondsRealtime(.5f);
             var settings = FindObjectsOfType<Transform>().Single(value => value.name == "damage_test");
-            if (passiveCompanion == 10609 || warlockWater || warlockMeteor)
+            if (passiveCompanion == 10609 || warlockWater || warlockMeteor || passiveCompanion == 10545)
             {
-                int formation = warlockWater || warlockMeteor ? 4 : 3;
+                int formation = passiveCompanion == 10545 ? 2 : warlockWater || warlockMeteor ? 4 : 3;
                 var dropdown = settings.GetComponentsInChildren<Zjcs.Official.WorldUI.WorldUIDropdown>().Single();
                 Require(dropdown.ItemsKey.Count > formation, "The original group formation is missing.");
                 click(dropdown.DropdownButton);
@@ -308,14 +310,14 @@ namespace Zjcs.Presentation.Home
                 click(row.Button);
                 yield return new WaitForSecondsRealtime(.4f);
                 Require(dropdown.SelectedItemIndex == formation, "Original formation input did not select the requested monster group.");
-                yield return CaptureAcquiredActive(output, warlockWater ? "vortex-formation" : warlockMeteor ? "meteor-formation" : "tactical-formation");
+                yield return CaptureAcquiredActive(output, passiveCompanion == 10545 ? "splash-formation" : warlockWater ? "vortex-formation" : warlockMeteor ? "meteor-formation" : "tactical-formation");
             }
             foreach (string setting in new[] { "Round", "MonsterHp", "MonsterHurt" })
             {
                 var choice = settings.GetComponentsInChildren<Toggle>().Single(value =>
                     value.transform.parent.name == "ToggleText" && value.GetComponentsInParent<Transform>()
                         .Any(parent => parent.name == setting));
-                if (setting == "MonsterHp" && (waterBlade || soulPiercer || chaosRune || rockSummon || sageDarkBlast))
+                if (setting == "MonsterHp" && (waterBlade || soulPiercer || chaosRune || rockSummon || sageDarkBlast || passiveCompanion == 10545))
                     choice = settings.GetComponentsInChildren<Toggle>().Single(value => value != choice
                         && value.GetComponentsInParent<Transform>().Any(parent => parent.name == setting));
                 if (setting == "MonsterHurt" && (overloadProtection || psychicWard || passiveCompanion == 10580 || passiveCompanion == 10600 || passiveCompanion == 10590))
@@ -402,6 +404,7 @@ namespace Zjcs.Presentation.Home
             var rock = rockSummon ? new AcquiredRockSummon() : null;
             var doll = voodooDoll ? new AcquiredVoodooDoll() : null;
             if (passiveCompanion == 10590) PrepareAcquiredSoulGuardianCheckpoint(checkpoint);
+            soulSplash?.Prepare(checkpoint);
             PrepareAcquiredAffinity(checkpoint, passiveCompanion);
             battle.Controller.StepCompleted += step => {
                 if (swiftWind) VerifyAcquiredSwiftWindStep(step.Event, checkpoint);
@@ -1091,6 +1094,12 @@ namespace Zjcs.Presentation.Home
                         captured = true;
                     }
                 }
+                if (passiveCompanion == 10545 && !capturedPassive
+                    && IsNativeSkillParticleVisible("playable_damage_fire_HitEffect"))
+                {
+                    yield return CaptureAcquiredActive(output, "passive-battle");
+                    capturedPassive = true;
+                }
                 if (passiveCompanion == 10590 && !capturedPassive && soulGuardian.paid > 0
                     && IsNativeSkillParticleVisible("playable11870"))
                 {
@@ -1376,6 +1385,7 @@ namespace Zjcs.Presentation.Home
             if (passiveCompanion == 10519) CompleteAcquiredWildBladeSiphon(output);
             if (passiveCompanion == 10574) CompleteAcquiredJudgmentBlade(output);
             if (passiveCompanion == 10590) CompleteAcquiredSoulGuardian(output);
+            soulSplash?.Complete(capturedPassive);
             if (swiftWind) CompleteAcquiredSwiftWindDance(output);
             if (hunt) CompleteAcquiredHuntJudgment(output);
             if (extinction) CompleteAcquiredExtinctionBlade(output);

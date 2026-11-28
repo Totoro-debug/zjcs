@@ -1269,6 +1269,8 @@ namespace Zjcs.Combat.Official
                 KillSkillCustomOverflowDamage = killSkill != null
                     && Bool(killSkill, "IsCustomOverflowDamage"),
                 KillSkillUseCustomDamage = killSkill != null && Bool(killSkill, "IsUseCustomDamage"),
+                KillSkillCustomDamagePropertyId = ReadKillCustomDamageProperty(killSkill),
+                KillSkillCharacterTypeDamageScales = ReadKillDamageScales(killSkill),
                 KillSkillMaxCount = killSkill == null ? -1 : Int(killSkill, "MaxCount", -1),
                 KillSkillResetCountEveryRound = killSkill != null
                     && Bool(killSkill, "ResetCountEveryRound"),
@@ -3038,19 +3040,6 @@ namespace Zjcs.Combat.Official
                         || Int(custom, "UpperLimitPropType") != 0
                         || Int(custom, "UpperLimitPercent") != 0)) return false;
             }
-            return true;
-        }
-
-        private static bool SupportsKillSkill(Dictionary<string, object> component)
-        {
-            float rate = Float(component, "Rate", 1f);
-            int skillId = Int(component, "SkillEntId");
-            int statusId = Int(component, "StatusEntClassId");
-            if (rate < 0f || rate > 1f || skillId <= 0 && statusId <= 0
-                || skillId > 0 && statusId > 0
-                || Int(component, "MaxCount", -1) < -1
-                || Bool(component, "IsCustomOverflowDamage")
-                || Bool(component, "IsUseCustomDamage")) return false;
             return true;
         }
 

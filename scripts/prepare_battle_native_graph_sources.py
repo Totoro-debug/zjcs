@@ -51,6 +51,7 @@ def main():
         'swift-wind-dance-current-skill-graphs',
         'soul-guardian-current-skill-graphs',
         'hunt-judgment-current-skill-graphs',
+        'soul-splash-current-skill-graphs',
     )
     receipts = {
         'skill-native-graphs': 'skill-native-graph-assets-source-manifest',
@@ -60,6 +61,7 @@ def main():
     }
     inputs, outputs = [], []
     migrated_entities = {group: {} for group in ('skills', 'hits', 'damages', 'moves')}
+    scoped_entities = {}
     for name, receipt in receipts.items():
         path = directory / (name + '.json')
         proof_path = ROOT / 'assets/reference/battle-animation' / (receipt + '.json')
@@ -74,6 +76,18 @@ def main():
                 for row in data[group]:
                     class_id = row[id_key]
                     assert class_id > 0 and row['entity_resource'], 'Invalid native entity binding: ' + name
+                    owners = row.get('skill_item_ids')
+                    if owners is not None:
+                        assert group == 'damages' and owners and len(set(owners)) == len(owners)
+                        assert all(type(owner) is int and owner > 0 for owner in owners)
+                        evidence, = (entry for entry in proof['scoped_entities']['entities']
+                                     if entry['group'] == group and entry['entity_id'] == class_id)
+                        assert evidence['skill_item_ids'] == owners and evidence['resource'] == row['entity_resource']
+                        for owner in owners:
+                            key = (class_id, owner)
+                            assert key not in scoped_entities, 'Overlapping native damage skill scope'
+                            scoped_entities[key] = name
+                        continue
                     previous = migrated_entities[group].get(class_id)
                     assert previous is None, f'Overlapping native {group}:{class_id}: {previous}, {name}'
                     migrated_entities[group][class_id] = name
@@ -85,6 +99,9 @@ def main():
         else:
             assert json.loads(target.read_bytes()) == expected, 'Native catalog source metadata changed: ' + name
         outputs.extend((identity(target), identity(Path(str(target) + '.meta'))))
+    baseline = json.loads((directory / 'skill-native-graphs.json').read_bytes())
+    shared_damage_ids = {row['damage_entity_id'] for row in baseline['damages']} | set(migrated_entities['damages'])
+    assert all(class_id in shared_damage_ids for class_id, _ in scoped_entities), 'Scoped damage lacks a shared identity'
     index = dict(resources=['Combat/' + name for name in ('skill-native-graphs', *migrated_skill_catalogs)])
     path = directory / 'skill-native-graph-sources.json'
     if args.write:
@@ -100,7 +117,8 @@ def main():
                             'OfficialBattleSkillGraphCatalog', 'OfficialBattleSkillEntityViewCatalog')],
                   operation='Verify each original native payload against its existing conversion receipt; '
                             'load source-consistent SHA256-verified catalogs and replace only declared migrated entities. '
-                            'Reject duplicate sources and overlapping migrations without a source-version feature gate.')
+                            'Reject duplicate sources and overlapping migrations; current damage bindings may declare '
+                            'distinct owning skill items while retaining the existing shared entity identity.')
     receipt = ROOT / 'assets/reference/battle-animation/native-graph-sources-runtime-source-manifest.json'
     if args.write:
         write_changed(receipt, json.dumps(record, indent=2) + '\n')

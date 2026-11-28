@@ -13,7 +13,7 @@
 | [战士（一阶）](skills-warrior.md) | 已完成 |
 | [法师（一阶）](skills-mage.md) | 已完成 |
 | [骑士路线（二至四阶）](skills-knight.md) | 未完成 |
-| [斗士路线（二至四阶）](skills-fighter.md) | 未完成 |
+| [斗士路线（二至四阶）](skills-fighter.md) | 已完成 |
 | [术士路线（二至四阶）](skills-warlock.md) | 未完成 |
 | [贤者路线（二至四阶）](skills-sage.md) | 未完成 |
 

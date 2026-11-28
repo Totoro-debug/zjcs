@@ -1,0 +1,54 @@
+{
+  "entities": [
+    25024,
+    24471,
+    11280,
+    11281,
+    10023
+  ],
+  "code": [
+    "FightStatusComponentInfo",
+    "FightStatusKillSkillComponentInfo",
+    "FightStatusKillSkillCharacterTypeToDamageScale",
+    "FightStatusCustomDamageInfo",
+    "FightStatusStartComponentInfo",
+    "FightStatusHitDmgAddPerComponentInfo",
+    "FightSkillComponentInfo",
+    "FightHitFixedComponentInfo",
+    "FightDamageComponentInfo",
+    "FightKillEventArgs",
+    "FightStatusDieComponent",
+    "BattleFormulaHandler"
+  ],
+  "client_code": [
+    "MyFightStatusKillSkill",
+    "MyFightStatusStart",
+    "MyFightStatusHitDmgAddPer"
+  ],
+  "rule_pack_fragments": [
+    "FightSkill_part1.g.bytes",
+    "FightSkill_part64.g.bytes",
+    "FightSkill_part724.g.bytes",
+    "FightSkill_part751.g.bytes"
+  ],
+  "visibility_bundles": [
+    "25024",
+    "24471",
+    "11280",
+    "defaultpackage_assets_prefabs_ecentity_fight_fightskill_global_10023.bundle"
+  ],
+  "scope_numeric": true,
+  "current_managed_views": true,
+  "runtime_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10545.json"
+  ],
+  "baseline_rule_packs": [
+    "unity/Assets/Game/Resources/Combat/SkillRules/10543.json"
+  ],
+  "current_native_receipts": [
+    "assets/reference/battle-animation/soul-splash-current-skill-graphs-source-manifest.json",
+    "assets/reference/battle-animation/soul-splash-current-status-graphs-source-manifest.json",
+    "assets/reference/battle-animation/soul-splash-group-3205-current-role-views-source-manifest.json",
+    "assets/reference/battle-animation/soul-splash-group-3401-current-role-views-source-manifest.json"
+  ]
+}

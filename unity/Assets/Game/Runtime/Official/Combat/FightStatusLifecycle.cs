@@ -414,6 +414,9 @@ namespace Zjcs.Combat.Official
                 KillSkillTargetDiePos = template.KillSkillTargetDiePos,
                 KillSkillCustomOverflowDamage = template.KillSkillCustomOverflowDamage,
                 KillSkillUseCustomDamage = template.KillSkillUseCustomDamage,
+                KillSkillCustomDamagePropertyId = template.KillSkillCustomDamagePropertyId,
+                KillSkillCharacterTypeDamageScales =
+                    FightBattleKillDamageScale.CopyAll(template.KillSkillCharacterTypeDamageScales),
                 KillSkillMaxCount = template.KillSkillMaxCount,
                 KillSkillResetCountEveryRound = template.KillSkillResetCountEveryRound,
                 KillSkillTriggeredCount = template.KillSkillTriggeredCount,

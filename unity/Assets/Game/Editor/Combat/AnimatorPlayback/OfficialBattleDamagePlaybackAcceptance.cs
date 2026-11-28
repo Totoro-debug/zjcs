@@ -26,6 +26,13 @@ namespace Zjcs.Editor.Combat
         private const string Key = "Zjcs.NativeDamageAcceptance";
         static OfficialBattleDamagePlaybackAcceptance()
         {
+            EditorApplication.update += () =>
+            {
+                if (!SessionState.GetBool(Key + ".finished", false)
+                    || EditorApplication.isPlayingOrWillChangePlaymode) return;
+                SessionState.SetBool(Key + ".finished", false);
+                EditorApplication.Exit(SessionState.GetInt(Key + ".exit", 1));
+            };
             EditorApplication.playModeStateChanged += state =>
             {
                 if (!SessionState.GetBool(Key, false)) return;
@@ -51,6 +58,7 @@ namespace Zjcs.Editor.Combat
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             SessionState.SetInt(Key + ".exit", 1);
+            SessionState.SetBool(Key + ".finished", false);
             SessionState.SetBool(Key, true);
             EditorApplication.isPlaying = true;
         }
@@ -59,6 +67,7 @@ namespace Zjcs.Editor.Combat
             File.WriteAllText(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"),
                 "native-damage-result.json"), JsonUtility.ToJson(new Result { passed = failure == null, error = failure }, true));
             SessionState.SetInt(Key + ".exit", failure == null ? 0 : 1);
+            SessionState.SetBool(Key + ".finished", true);
             EditorApplication.isPlaying = false;
         }
         [Serializable] private sealed class Result { public bool passed; public string error; }
@@ -92,13 +101,19 @@ namespace Zjcs.Editor.Combat
             public override void AddPosUpdatedReceiver(IGridTransformPosUpdatedEventReceiver receiver) { }
             public override void RemovePosUpdatedReceiver(IGridTransformPosUpdatedEventReceiver receiver) { }
         }
-        private sealed class Services : IFightSkillViewServices
+        private sealed class Services : IFightSkillViewServices, IServiceProvider, IECViewInjection
         {
             public OfficialBattleSkillEntityPlayback Skills;
             public EcEntityIdentifier Missing;
             public readonly List<string> Notifications = new List<string>();
             public MyEntity GetEntity(EcEntityIdentifier id) => id.Equals(Missing) ? null : Skills.GetEntity(id);
             public Vector3 GridToPos(Pos2d position) => Skills.GridToPos(position);
+            public object GetService(Type type) => Skills.GetService(type);
+            public void Inject(object value)
+            {
+                Skills.Inject(value);
+                if (value is ECFightDamageView damage) damage.ViewServices = this;
+            }
         }
         private Camera cameraView;
         private OfflineBattleNativePlayableScope scope;
@@ -220,6 +235,51 @@ namespace Zjcs.Editor.Combat
             targetRole.FireDamageEvent(null); sourceRole.FireHitEvent(null);
             targetRole.OnDamage += onDamage; sourceRole.OnHit += onHit;
             damages = new OfficialBattleDamageEntityPlayback(root, root.GetComponentInChildren<MyContainer>(), services, scope);
+            var scopedCatalog = Resources.Load<TextAsset>("Combat/soul-splash-current-skill-graphs");
+            if (scopedCatalog)
+            {
+                var current = JsonUtility.FromJson<Catalog>(scopedCatalog.text).damages
+                    .Single(binding => binding.damage_entity_id == 10023);
+                var currentPrefab = Resources.Load<GameObject>(current.entity_resource).GetComponent<MyFightDamage>();
+                var sharedCatalog = JsonUtility.FromJson<Catalog>(Resources.Load<TextAsset>(
+                    "Combat/conqueror-passive-current-skill-graphs").text);
+                var shared = sharedCatalog.damages.Single(binding => binding.damage_entity_id == 10023);
+                var sharedPrefab = Resources.Load<GameObject>(shared.entity_resource).GetComponent<MyFightDamage>();
+                Require(currentPrefab.myCommonPlayable != sharedPrefab.myCommonPlayable,
+                    "The scoped regression requires distinct current and historical fire graph payloads.");
+                var scopedPool = new Dictionary<int, MyEntity>();
+                foreach (int item in new[] { 0, 10545, 0, 10545 })
+                {
+                    played.Clear(); services.Notifications.Clear();
+                    var state = new OfficialBattleDamageEntityData(new EcEntityIdentifier(7, ++serial), 10023,
+                        skillEntity.Id, targetEntity.Id, false, false, false,
+                        target.localPosition, Quaternion.identity, Vector3.one, new Grid());
+                    var entity = damages.Create(state, skillItemId: item);
+                    var expected = item == 10545 ? currentPrefab : sharedPrefab;
+                    var view = entity.GetComponent<MyFightDamage>();
+                    Require(view.myCommonPlayable == expected.myCommonPlayable
+                        && view.myDamagePlayable == expected.myDamagePlayable
+                        && view.myBlockPlayable == expected.myBlockPlayable
+                        && view.myCritPlayable == expected.myCritPlayable,
+                        "The source skill must select every native damage graph from its declared migration.");
+                    if (scopedPool.TryGetValue(item, out var prior))
+                        Require(ReferenceEquals(prior, entity), "Each skill scope retains its original FIFO pool.");
+                    scopedPool[item] = entity;
+                    if (scopedPool.Count == 2)
+                        Require(!ReferenceEquals(scopedPool[0], scopedPool[10545]),
+                            "Shared damage identities must not mix native instances between skill scopes.");
+                    Require(damages.Count == 1 && damages.GetEntity(state.Id) == entity
+                        && services.Notifications.SequenceEqual(new[] { "target", "source" }),
+                        "Scoped native damage retains live identity and original role notifications.");
+                    for (int frame = 0; frame < 15; frame++) { scope.Tick(1f / 60f); yield return null; }
+                    if (item == 10545) Capture("damage-scoped-fire-10545.png");
+                    damages.Remove(state.Id);
+                    Require(damages.Count == 0 && damages.GetEntity(state.Id) == null && !entity.gameObject.activeSelf,
+                        "Scoped native damage removes the correct instance to its own pool.");
+                    for (int frame = 0; frame < 45; frame++) { scope.Tick(1f / 60f); yield return null; }
+                }
+                Debug.Log("Scoped native damage passed: current and historical fire bindings, role notifications, isolated FIFO reuse and rendered current fire graph.");
+            }
             var catalog = JsonUtility.FromJson<Catalog>(Resources.Load<TextAsset>("Combat/skill-native-graphs").text);
             Require(catalog.damages.Length == 1368, "Complete selected original damage entity catalog, including Global.");
             var fields = new[] { "myCommonPlayable", "myDamagePlayable", "myBlockPlayable", "myCritPlayable", "myTriggerStatusPlayable" };

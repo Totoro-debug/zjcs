@@ -1256,7 +1256,8 @@ namespace Zjcs.Combat.Official
                             ref statusTriggerDuration, ref statusTriggerActionDuration);
                         if (target.Hp <= 0)
                             FightStatusTriggerRuntime.ApplyKillSkills(actor, target, skill, units,
-                                statusCatalog, random, configuredKillSkillInvocations);
+                                statusCatalog, random, configuredKillSkillInvocations,
+                                    new FightKillDamageContext(damage, castHit, checkpoint.IsPvp, formula));
                     }
                     else SynchronizeDeathForbidden(target);
                     if (configuredKillSkillInvocations.Count > 0)

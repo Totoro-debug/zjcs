@@ -18,7 +18,7 @@ namespace Zjcs.Presentation.Combat
     internal sealed class OfficialBattleNativeEntityLoader : IDisposable
     {
         [Serializable] private sealed class Catalog { public string manifest; public Binding[] hits; public Binding[] skills; public Binding[] moves; public Binding[] damages; }
-        [Serializable] private sealed class Binding { public int hit_entity_id; public int skill_entity_id; public int action_entity_id; public int damage_entity_id; public string entity_resource; }
+        [Serializable] private sealed class Binding { public int hit_entity_id; public int skill_entity_id; public int action_entity_id; public int damage_entity_id; public string entity_resource; public int[] skill_item_ids; }
         [Serializable] private sealed class Settings { public string manifest; public bool ECIsUseGameObjectPool; }
         private sealed class Lease : IDisposable
         {
@@ -112,6 +112,7 @@ namespace Zjcs.Presentation.Combat
         private readonly bool usePool;
         private readonly MyFightEntityLoadHandler loader;
         private readonly Dictionary<int, string> resources = new Dictionary<int, string>();
+        private readonly HashSet<int> skillScopes = new HashSet<int>();
         private readonly Dictionary<EcEntityIdentifier, ECViewEntityData> data = new Dictionary<EcEntityIdentifier, ECViewEntityData>();
         private readonly Dictionary<EcEntityIdentifier, MyEntity> live = new Dictionary<EcEntityIdentifier, MyEntity>();
         private bool disposed;
@@ -132,7 +133,7 @@ namespace Zjcs.Presentation.Combat
 
         public OfficialBattleNativeEntityLoader(Transform parent, MyContainer container,
             OfflineBattleNativePlayableScope scope, OfficialBattleNativeEntityKind kind,
-            Action<GameObject> prepareInstance, Action<MyEntity> prepareBound = null)
+            Action<GameObject> prepareInstance, Action<MyEntity> prepareBound = null, int skillItemId = 0)
         {
             if (!parent) throw new ArgumentNullException(nameof(parent));
             this.container = container ? container : throw new ArgumentNullException(nameof(container));
@@ -144,6 +145,7 @@ namespace Zjcs.Presentation.Combat
             if (settings == null)
                 throw new InvalidOperationException("Original native entity catalog/settings are unavailable.");
             var migrated = new HashSet<int>();
+            var scopedResources = new Dictionary<int, Dictionary<int, string>>();
             bool baseline = true;
             foreach (var asset in OfficialBattleNativeGraphSources.LoadAll())
             {
@@ -161,14 +163,39 @@ namespace Zjcs.Presentation.Combat
                         ? binding.skill_entity_id : kind == OfficialBattleNativeEntityKind.Hit
                         ? binding.hit_entity_id : kind == OfficialBattleNativeEntityKind.Damage
                         ? binding.damage_entity_id : binding.action_entity_id;
-                    if (classId <= 0
-                        || string.IsNullOrEmpty(binding.entity_resource) || !seen.Add(classId)
-                        || !baseline && !migrated.Add(classId))
+                    if (classId <= 0 || string.IsNullOrEmpty(binding.entity_resource) || !seen.Add(classId))
+                        throw new InvalidOperationException("Original native entity catalog contains an invalid binding.");
+                    if (binding.skill_item_ids != null && binding.skill_item_ids.Length > 0)
+                    {
+                        if (baseline || kind != OfficialBattleNativeEntityKind.Damage)
+                            throw new InvalidOperationException("Native skill scopes are supported only for migrated damage views.");
+                        var owners = new HashSet<int>();
+                        foreach (int owner in binding.skill_item_ids)
+                        {
+                            if (owner <= 0 || !owners.Add(owner))
+                                throw new InvalidOperationException("Original native entity scope requires distinct skill items.");
+                            if (!scopedResources.TryGetValue(owner, out var scoped))
+                                scopedResources.Add(owner, scoped = new Dictionary<int, string>());
+                            if (scoped.ContainsKey(classId))
+                                throw new InvalidOperationException("Original native entity scopes overlap.");
+                            scoped.Add(classId, binding.entity_resource);
+                            skillScopes.Add(owner);
+                        }
+                        continue;
+                    }
+                    if (!baseline && !migrated.Add(classId))
                         throw new InvalidOperationException("Original native entity catalog contains an invalid binding.");
                     resources[classId] = binding.entity_resource;
                 }
                 baseline = false;
             }
+            foreach (var owner in scopedResources)
+                foreach (var binding in owner.Value)
+                {
+                    if (!resources.ContainsKey(binding.Key))
+                        throw new InvalidOperationException("A scoped native entity requires an existing shared identity.");
+                    if (owner.Key == skillItemId) resources[binding.Key] = binding.Value;
+                }
             usePool = settings.ECIsUseGameObjectPool;
             entityRoot = new GameObject(kind == OfficialBattleNativeEntityKind.Skill ? "Battle native skill entities"
                 : kind == OfficialBattleNativeEntityKind.Hit ? "Battle native hit entities"
@@ -180,6 +207,7 @@ namespace Zjcs.Presentation.Combat
             loader = new MyFightEntityLoadHandler(bindings, bindings);
         }
         public int Count => live.Count;
+        internal bool SupportsSkillScope(int skillItemId) => skillScopes.Contains(skillItemId);
         public Transform EntitySlot => entityRoot.transform;
 
         public bool ContainsClass(int classId) => resources.ContainsKey(classId);

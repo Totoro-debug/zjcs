@@ -202,7 +202,7 @@ namespace Zjcs.Presentation.Combat
                 var target = views.GetEntity(damageState.TargetId);
                 var skill = views.GetEntity(damageState.SkillId);
                 var source = skill ? skill.GetComponent<MyFightSkill>()?.Source : null;
-                playback.Create(value.Data, value.Status);
+                playback.Create(value.Data, value.Status, value.Receipt.SkillItemId);
                 active.Add(new Active { Id = value.Data.Id, Remaining = value.Lifetime, Receipt = value.Receipt,
                     Data = value.Data, AwaitStatus = value.AwaitStatus,
                     Target = target ? target.gameObject : null, Source = source ? source.gameObject : null });
