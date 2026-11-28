@@ -70,6 +70,10 @@
 
 独立源码主城已验证实际中文渲染、八种品质文字分支、真实激活及冷重开、替换事件、套装成员导航标志、培养请求派发、只读任务、赐福快照、伙伴头像与加成条目，以及关闭重开和只读存档不落盘。来源见[详情控制器](../../assets/reference/treasure-detail-controls-source-manifest.json)、[原生资源](../../assets/reference/treasure-detail-native-source-manifest.json)与[配置及文本](../../assets/reference/treasure-detail-configuration-source-manifest.json)。培养、成员导航目标与获取途径仍通过显式宿主边界接入，完整目标窗口和连续流程继续迁移；本条不代表培养窗口已经完成。
 
+**培养分页选择器：完成当前原生子树范围。** 已迁移官方培养窗口中的元素翻页、四个物理槽位、选中框、空槽、原生图标及附加标记。只轮换已装备古遗物的元素，保留原始元素顺序、槽位字典枚举顺序、跳过空页、单页隐藏箭头及选择回调顺序；页面状态复用现有槽位与物品服务，不另建培养存档。
+
+独立源码主城已验证实际渲染与按钮射线点击、稀疏槽位、跨元素翻页与循环、空槽不派发、四槽位选择、重复打开的订阅清理，以及冷重开和页面操作不落盘。来源见[分页控制器](../../assets/reference/treasure-page-controls-source-manifest.json)与[原生分页资源](../../assets/reference/treasure-page-native-source-manifest.json)。强化、升星及觉醒页面仍待接通，选择器完成不代表完整培养窗口完成。
+
 战斗使用方案映射、失去本体时的全方案通知联动、批量培养、任务、收藏属性完整生效、完整原生面板及其余专属动画尚未完成验证，工作台的正式功能入口仍待接通，不能据此标记建筑完成。
 
 ## 自定义实现

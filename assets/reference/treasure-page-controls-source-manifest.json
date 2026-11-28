@@ -1,0 +1,33 @@
+{
+  "manifest": "911_156995",
+  "inputs": {
+    "scripts/prepare_treasure_page_controls.py": "56d40cd053424ad825bba17a5bbf7951b029d37f9cad6705152f807153cb201e",
+    ".tools/source-packages/current/911_156995/code-manifest.json": "a47317188c8d1f947b56ff1af73b4cd811a079860799915cf9103603afc200e9",
+    ".tools/source-packages/current/911_156995/official-code/managed/decoded/Assembly-CSharp.dll": "1e7eb15a1cead0c2e618e307a367119908485a5a658815a0fe39d98c0d3f31fe",
+    ".tools/source-packages/current/911_156995/official-code/managed/decoded/Console.dll": "5ff2019c868764f8e6afa6a5ff3bd569d4e3d39365a39dc0327a738391e8b64d",
+    ".tools/source-packages/current/911_156995/official-code/client-source/TreasurePageSelectItem.cs": "711e7ca5ba7977fce0029f8c61592e949c24c8c79e588de822c612859f6f069b",
+    ".tools/source-packages/current/911_156995/official-code/client-source/ItemIconTreasureSelectableItem.cs": "ce5cc21f85062e4e5e071390902d54972cb739500585b464596ac809651fbbc0",
+    ".tools/source-packages/current/911_156995/official-code/client-source/CountRedDotBase.cs": "9a5acf21bc64eaaf7dbbb1fbba1bed9e4a37f06fc12565431dc2e35203b89e77",
+    ".tools/source-packages/current/911_156995/official-code/client-source/CountRedDotImage.cs": "ac39ed1e6169b9d75de7bfd97b2d516cea752313a081824ae494ff403dca3bfe",
+    ".tools/source-packages/current/911_156995/official-code/client-source/TreasurePromotePanel.cs": "ab5cb0d5239f3bbd941a2fdae8ec45bc78c315f86dd385866b0a09e20fcf2aa1",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/LanguageUtils.cs": "9247a48d4b6bc6616ca676576ffdc7898e4c74b44aace89fb36f000a910d24b3",
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldCountRedDotImage.cs": "fa6a0fa46a541c983af18080148c088be281776307e1e16c336eeb1db5ca86fc",
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldCountRedDotImage.cs.meta": "06c64fb04248f8c139cc0798c33318740ed11cc1f551a50c6d82cf80f0bf13b9",
+    "unity/Assets/Game/Runtime/Official/TreasureSlotsUI/ITreasurePageServices.cs": "dfd734118a3fb51649171a105840194fc9a8a58711c92958ed138b54c1a30c64",
+    "unity/Assets/Game/Runtime/Official/TreasureSlotsUI/ITreasurePageServices.cs.meta": "ca155d3be180d2ed4cbe8f6a2731148bfadab501a42125ec9b711e07902b0816",
+    "unity/Assets/Game/Runtime/Offline/TreasureUI/OfflineTreasurePageServices.cs": "fb8d451f5bdf02f4106292a9269ae04c4e8bbba942ef6b5e502e6a599fec0248",
+    "unity/Assets/Game/Runtime/Offline/TreasureUI/OfflineTreasurePageServices.cs.meta": "5c38afc6cef1e22518a6ef3d783a5c2f252bd167ac877e4da3157b0aae1d497b",
+    "unity/Assets/Game/Runtime/Offline/TreasureUI/OfflineTreasurePageView.cs": "7be14a9367c45675f5c498f3036f462206208ef6eb53a2d8f822eb78a2f05220",
+    "unity/Assets/Game/Runtime/Offline/TreasureUI/OfflineTreasurePageView.cs.meta": "92533320eecdce0209bec4404767eb4e75909e03d3d862988e355e3aec18d553"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/TreasureSlotsUI/TreasurePageSelectItem.cs": "0b6895629400a956b9e673150a172799c1f3ea5926a375c86972c5038a974e56",
+    "unity/Assets/Game/Runtime/Official/TreasureSlotsUI/ItemIconTreasureSelectableItem.cs": "c7199025c6b25dee3246cb1a0d344ac0ffc75aaaaf4d637b3b7568656acbdbb4",
+    "unity/Assets/Game/Runtime/Official/TreasureSlotsUI/TreasurePageSelectItem.cs.meta": "eaf0eccb9a62c2cb29b1ca6df97d4c8d38523030419c558039cbe47f0cb4809c",
+    "unity/Assets/Game/Runtime/Official/TreasureSlotsUI/ItemIconTreasureSelectableItem.cs.meta": "684820b913b6c602d2b14a491d35042c5ca8695f64f357ddb4a8bf2549eb403b"
+  },
+  "adaptations": [
+    "Preserve original element menu order, equipped-slot iteration order, empty-page skipping, selection callback order, icon setup and enable/disable cleanup; the promotion owner enables the hierarchy before initialization.",
+    "Bind original shared slot wrappers and item/icon services to the existing saved local player; page selection never writes progression."
+  ]
+}
