@@ -7,10 +7,8 @@ $ErrorActionPreference = 'Stop'
 $repository = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $project = [IO.Path]::GetFullPath($ProjectPath)
 $validationBase = [IO.Path]::GetFullPath((Join-Path $repository 'output/validation'))
-if (-not $project.StartsWith($validationBase + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
-    -not (Test-Path -LiteralPath (Join-Path $project 'ProjectSettings/ProjectVersion.txt'))) {
-    throw 'Select an independent Unity project below output/validation; the shared main project is forbidden.'
-}
+. (Join-Path $PSScriptRoot 'assert_home_validation_project.ps1')
+Assert-HomeValidationProject -Repository $repository -Project $project
 $running = @(Get-CimInstance Win32_Process -Filter "Name = 'Unity.exe'" | Where-Object {
     $_.CommandLine -and $_.CommandLine.Replace('\', '/').Contains($project.Replace('\', '/'))
 })
@@ -59,7 +57,10 @@ foreach ($dirRelative in @(
         -Destination (Join-Path $project ($dirRelative + '.meta')) -Force
 }
 
-foreach ($manifestName in @('home-bed-native-source-manifest.json', 'home-diningtable-native-source-manifest.json', 'home-native-prefab-references-source-manifest.json', 'partner-dialogue-reward-assets-source-manifest.json')) {
+. (Join-Path $PSScriptRoot 'stage_current_home_furniture_validation.ps1')
+Sync-CurrentHomeFurnitureValidation -Repository $repository -Project $project
+
+foreach ($manifestName in @('home-native-prefab-references-source-manifest.json', 'partner-dialogue-reward-assets-source-manifest.json')) {
     $manifest = Get-Content -LiteralPath (Join-Path $repository ('assets/reference/' + $manifestName)) -Raw -Encoding UTF8 | ConvertFrom-Json
     foreach ($entry in $manifest.outputs.PSObject.Properties) {
         if (-not $entry.Name.StartsWith('unity/')) { continue }
@@ -117,7 +118,7 @@ $env:ZJCS_BATTLE_INPUT_AUTOMATION = '1'
 try {
     $importLog = Join-Path $work 'import.log'
     $importProcess = Start-UnityOnInternalDisplay -Editor $Editor -ArgumentList @(
-        '-batchmode', '-nographics', '-quit', '-muteAudio', '-job-worker-count', '2', '-gc-helper-count', '2',
+        '-batchmode', '-nographics', '-quit', '-noaudio', '-force-d3d11', '-job-worker-count', '2', '-gc-helper-count', '2',
         '-projectPath', ('"' + $project + '"'),
         '-executeMethod', 'HomeDiningTableRuntimeValidation.Import',
         '-logFile', ('"' + $importLog + '"')
@@ -129,7 +130,7 @@ try {
 
     $log = Join-Path $work 'unity.log'
     $process = Start-UnityOnInternalDisplay -Editor $Editor -ArgumentList @(
-        '-muteAudio', '-job-worker-count', '2', '-gc-helper-count', '2',
+        '-noaudio', '-force-d3d11', '-job-worker-count', '2', '-gc-helper-count', '2',
         '-projectPath', ('"' + $project + '"'),
         '-executeMethod', 'HomeDiningTableRuntimeValidation.Run',
         '-logFile', ('"' + $log + '"')

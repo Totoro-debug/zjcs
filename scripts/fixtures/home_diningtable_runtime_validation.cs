@@ -82,6 +82,7 @@ public static class HomeDiningTableRuntimeValidation
         {
             if (state == PlayModeStateChange.EnteredPlayMode && SessionState.GetBool(Active, false))
             {
+                ConfigurePortraitView();
                 AudioListener.volume = 0f;
                 Application.runInBackground = true;
                 Application.logMessageReceived += OnLog;
@@ -104,7 +105,7 @@ public static class HomeDiningTableRuntimeValidation
     public static void Import()
     {
         ValidateOwnedProject();
-        AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+        AssetDatabase.Refresh();
         Debug.Log("HOME_DININGTABLE_IMPORT_PASSED");
     }
 
@@ -112,11 +113,18 @@ public static class HomeDiningTableRuntimeValidation
     {
         ValidateOwnedProject();
         Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
-        ValidationGameView.Portrait(675, 1463);
+        ConfigurePortraitView();
         EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
         SessionState.SetBool(Active, true);
         SessionState.SetFloat(Active + ".Deadline", (float)EditorApplication.timeSinceStartup + 420f);
         EditorApplication.EnterPlaymode();
+    }
+
+    private static void ConfigurePortraitView()
+    {
+        typeof(Zjcs.Editor.Home.HomeAcceptanceLauncher)
+            .GetMethod("ConfigurePortraitGameView", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)
+            .Invoke(null, new object[] { 675, 1463 });
     }
 
     private static void ValidateOwnedProject()
@@ -375,6 +383,11 @@ public static class HomeDiningTableRuntimeValidation
 
     private static IEnumerator RunChecks()
     {
+        float viewDeadline = Time.realtimeSinceStartup + 15f;
+        while ((Screen.width != 675 || Screen.height != 1463) && Time.realtimeSinceStartup < viewDeadline)
+            yield return null;
+        Require(Screen.width == 675 && Screen.height == 1463,
+            "DiningTable validation requires the native portrait display surface: " + Screen.width + "x" + Screen.height);
         checksCount = 0;
         string saveRoot = Path.Combine(Work, "isolated-saves");
         var creation = CharacterCreationOfflineService.OpenDefault(saveRoot);

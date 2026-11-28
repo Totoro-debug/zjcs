@@ -7,13 +7,8 @@ $ErrorActionPreference='Stop'
 $repository=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $validation=Join-Path $repository 'output/validation'
 $project=(Get-Item -LiteralPath $ProjectPath).FullName.TrimEnd('\','/')
-if (-not $project.StartsWith($validation+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase) -or
-    -not (Test-Path -LiteralPath (Join-Path $project 'ProjectSettings/ProjectVersion.txt'))) { throw 'Use an independent source Unity project.' }
-$ancestor=[IO.DirectoryInfo]::new($project)
-while($ancestor.FullName -ne $validation) {
-    if ((Test-Path -LiteralPath (Join-Path $ancestor.FullName '.git')) -or ($ancestor.Attributes -band [IO.FileAttributes]::ReparsePoint)) { throw 'A worktree or linked project is forbidden.' }
-    $ancestor=$ancestor.Parent
-}
+. (Join-Path $PSScriptRoot 'assert_home_validation_project.ps1')
+Assert-HomeValidationProject -Repository $repository -Project $project
 if (@(Get-CimInstance Win32_Process -Filter "Name='Unity.exe'" | Where-Object {
     $_.CommandLine -and $_.CommandLine.Replace('\','/').Contains($project.Replace('\','/'))
 }).Count) { throw 'Do not stage into a running source project.' }
@@ -50,7 +45,10 @@ foreach($relative in @(
         $staged['unity/'+$path.Replace('\','/')]=$hash
     }
 }
-foreach($name in @('home-desk-native','home-native-prefab-references','home-tip-dot-catalog','treasure-tips')) {
+. (Join-Path $PSScriptRoot 'stage_current_home_furniture_validation.ps1')
+Sync-CurrentHomeFurnitureValidation -Repository $repository -Project $project
+
+foreach($name in @('home-native-prefab-references','home-tip-dot-catalog','treasure-tips')) {
     $receipt=Get-Content -LiteralPath (Join-Path $repository ('assets/reference/'+$name+'-source-manifest.json')) -Raw | ConvertFrom-Json
     foreach($entry in $receipt.outputs.PSObject.Properties) {
         if(-not $entry.Name.StartsWith('unity/')) { continue }
@@ -73,7 +71,7 @@ $env:ZJCS_REPOSITORY_ROOT=$repository
 $env:ZJCS_BATTLE_INPUT_AUTOMATION='1'
 foreach($phase in @('Import','Run')) {
     $log=Join-Path $work ($phase.ToLowerInvariant()+'.log')
-    $arguments=@('-muteAudio','-job-worker-count','2','-gc-helper-count','2','-projectPath',('"'+$project+'"'),'-executeMethod',('HomeDeskRuntimeValidation.'+$phase),'-logFile',('"'+$log+'"'))
+    $arguments=@('-noaudio','-force-d3d11','-job-worker-count','2','-gc-helper-count','2','-projectPath',('"'+$project+'"'),'-executeMethod',('HomeDeskRuntimeValidation.'+$phase),'-logFile',('"'+$log+'"'))
     if($phase -eq 'Import') { $arguments=@('-batchmode','-nographics','-quit')+$arguments }
     $process=Start-UnityOnInternalDisplay -Editor $Editor -ArgumentList $arguments
     Write-Output ('Desk '+$phase+' PID '+$process.Id+', output: '+$work)

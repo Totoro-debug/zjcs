@@ -47,6 +47,7 @@ public static class HomeBedRuntimeValidation
         {
             if (state == PlayModeStateChange.EnteredPlayMode && SessionState.GetBool(Active, false))
             {
+                ConfigurePortraitView();
                 AudioListener.volume = 0f;
                 Application.runInBackground = true;
                 Application.logMessageReceived += OnLog;
@@ -69,19 +70,67 @@ public static class HomeBedRuntimeValidation
     public static void Import()
     {
         ValidateOwnedProject();
-        AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+        AssetDatabase.Refresh();
+        ValidateNativeBedFields();
         Debug.Log("HOME_BED_IMPORT_PASSED");
+    }
+
+    private static void ValidateNativeBedFields()
+    {
+        const string folder = "Assets/Official/Home/Bed/Native/";
+        var names = new[] { "Bed", "Bed1stAnniversary", "BedChineseOdyssey", "BedChineseStyle", "BedChristmas", "BedHalloween", "BedNon_Human" };
+        var metadata = new HashSet<string> { "m_ObjectHideFlags", "m_CorrespondingSourceObject", "m_PrefabInstance", "m_PrefabAsset",
+            "m_GameObject", "m_Enabled", "m_EditorHideFlags", "m_Script", "m_Name", "m_EditorClassIdentifier",
+            "references" }; // Unity's managed-reference registry is serialized metadata, not a controller field.
+        int checkedFields = 0;
+        foreach (string name in names)
+        {
+            string path = folder + name + ".prefab";
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            Require(prefab != null, "Import selected Bed prefab: " + name);
+            foreach (Transform child in prefab.GetComponentsInChildren<Transform>(true))
+                Require(GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(child.gameObject) == 0,
+                    "Native Bed scripts bind on " + name + "/" + child.name);
+            string yaml = File.ReadAllText(path).Replace("\r\n", "\n");
+            foreach (MonoBehaviour component in prefab.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                string type = component.GetType().Name;
+                if (type != "BedFurniture" && type != "HomeMutex" && type != "HomeDayNight" && type != "EntityClickSound") continue;
+                Require(AssetDatabase.TryGetGUIDAndLocalFileIdentifier(component, out string _, out long id),
+                    "Native Bed component has its original local ID: " + type);
+                var block = System.Text.RegularExpressions.Regex.Match(yaml,
+                    "(?ms)^--- !u!114 &" + id + "\\nMonoBehaviour:\\n(.*?)(?=^--- !u!|\\z)");
+                Require(block.Success, "Find original serialized Bed component: " + name + "/" + type);
+                var serialized = new SerializedObject(component);
+                foreach (System.Text.RegularExpressions.Match field in System.Text.RegularExpressions.Regex.Matches(block.Groups[1].Value, "(?m)^  ([A-Za-z_][A-Za-z0-9_]*):"))
+                {
+                    string key = field.Groups[1].Value;
+                    if (metadata.Contains(key)) continue;
+                    Require(serialized.FindProperty(key) != null,
+                        "Selected native field is retained by the compiled controller: " + name + "/" + type + "." + key);
+                    checkedFields++;
+                }
+            }
+        }
+        Debug.Log("HOME_BED_NATIVE_FIELDS_PASSED: " + checkedFields + " original controller fields across all seven prefabs.");
     }
 
     public static void Run()
     {
         ValidateOwnedProject();
         Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
-        ValidationGameView.Portrait(675, 1463);
+        ConfigurePortraitView();
         EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
         SessionState.SetBool(Active, true);
         SessionState.SetFloat(Active + ".Deadline", (float)EditorApplication.timeSinceStartup + 480f);
         EditorApplication.EnterPlaymode();
+    }
+
+    private static void ConfigurePortraitView()
+    {
+        typeof(Zjcs.Editor.Home.HomeAcceptanceLauncher)
+            .GetMethod("ConfigurePortraitGameView", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)
+            .Invoke(null, new object[] { 675, 1463 });
     }
 
     private static void ValidateOwnedProject()
@@ -427,6 +476,11 @@ public static class HomeBedRuntimeValidation
 
     private static IEnumerator RunChecks()
     {
+        float viewDeadline = Time.realtimeSinceStartup + 15f;
+        while ((Screen.width != 675 || Screen.height != 1463) && Time.realtimeSinceStartup < viewDeadline)
+            yield return null;
+        Require(Screen.width == 675 && Screen.height == 1463,
+            "Bed validation requires the native portrait display surface: " + Screen.width + "x" + Screen.height);
         checksCount = 0;
         string saveRoot = Path.Combine(Work, "isolated-saves");
         var creation = CharacterCreationOfflineService.OpenDefault(saveRoot);
