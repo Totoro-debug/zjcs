@@ -48,12 +48,13 @@ def script_id(namespace, name):
 
 
 class PartnerCardBinding:
-    def __init__(self, work, *, recovery=None):
+    def __init__(self, work, *, recovery=None, resource_cache=None):
         if work.parent != ROOT / 'output/validation' or not (work / '.zjcs-validation.json').is_file():
             raise ValueError('Create an owned validation workspace before binding partner assets')
         self.work = work
         self.recovery = recovery if recovery is not None else PartnerNativeRecovery()
         self.cache = self.recovery.cache
+        self.resource_cache = Path(resource_cache).resolve() if resource_cache is not None else self.cache
         self.native = self.recovery.native
         self.proof, self.redirects, self.queue = {}, {}, []
         self.objects, self.scripts, self.class_ids = {}, {}, {}
@@ -80,7 +81,7 @@ class PartnerCardBinding:
                 self.by_name.setdefault(self.name_key(path.stem), []).append(path)
         print('Indexed native asset paths:', len(self.by_name), flush=True)
         for kind in ('textures', 'shaders'):
-            folder = self.cache / 'all-assets' / ('windows-' + kind)
+            folder = self.resource_cache / 'all-assets' / ('windows-' + kind)
             manifest_path = folder / 'source-manifest.json'
             data = json.loads(manifest_path.read_bytes())
             if data['manifest'] != self.recovery.apk.version or not data['completed']:
@@ -341,7 +342,7 @@ class PartnerCardBinding:
             row = rows[key]
             if sha(obj.get_raw_data()) != row['source']['object_sha256']:
                 raise ValueError('Original Windows resource identity changed')
-            folder = self.cache / 'all-assets' / ('windows-shaders' if obj.type.name == 'Shader' else 'windows-textures')
+            folder = self.resource_cache / 'all-assets' / ('windows-shaders' if obj.type.name == 'Shader' else 'windows-textures')
             record = row if obj.type.name == 'Shader' else row['outputs'][0]
             data = (folder / record['path']).read_bytes()
             if sha(data) != record['sha256']:
@@ -535,11 +536,16 @@ class PartnerCardBinding:
             original_sha256=sha(font_obj.get_raw_data()), font_data_sha256=sha(raw), output=target.as_posix(), guid=font_guid)
         for filename in ('MultiLanguageFontService.cs', 'FontAssetFontService.cs', 'MultiLanguageText.cs'):
             relative = Path('framework-firstpass-source') / filename
-            original = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
             selected = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code' / relative
-            if original.read_bytes() != selected.read_bytes():
+            reference_hashes = getattr(self, 'font_source_hashes', None)
+            if reference_hashes is None:
+                original = ROOT / '.tools/source-packages/current/884_156692/official-code' / relative
+                expected = sha(original.read_bytes())
+            else:
+                expected = reference_hashes[filename]
+            if sha(selected.read_bytes()) != expected:
                 raise ValueError('Original font source differs from selected version: ' + filename)
-            self.inputs[original.relative_to(ROOT).as_posix()] = sha(original.read_bytes())
+            self.inputs[selected.relative_to(ROOT).as_posix()] = expected
         return dict(region='CN', language='zh_CN', name=name, font_asset=pointer,
                     source_font=font_pointer, source_font_definition=definition, configs=configs)
 

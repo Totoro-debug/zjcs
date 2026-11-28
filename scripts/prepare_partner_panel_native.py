@@ -28,7 +28,7 @@ class PartnerPanelBinding(PartnerStarGodBinding):
     def controller(self, source_guid, obj):
         native = self.native_path(source_guid, obj)
         raw = native.read_bytes()
-        receipt_key = native.relative_to(self.cache / 'native-export-all').as_posix()
+        receipt_key = native.relative_to(self.cache / self.recovery.export_name).as_posix()
         meta = Path(str(native) + '.meta')
         if sha(raw) != self.checked[receipt_key] or sha(meta.read_bytes()) != self.checked[receipt_key + '.meta']:
             raise ValueError('Native panel animator differs from selected cache')

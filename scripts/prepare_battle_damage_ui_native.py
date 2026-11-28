@@ -20,7 +20,7 @@ class DamageBinding(RoundSceneBinding):
         # Original FightRoot.DamageFloatsRoot is a world-space subtree, not a
         # HUD canvas. Isolate that exact empty GameObject/Transform pair.
         path = self.native / 'Prefabs/EcEntity/Fight/FightStage/1000/game_1000.prefab'
-        key = path.relative_to(self.cache / 'native-export-all').as_posix()
+        key = path.relative_to(self.cache / self.recovery.export_name).as_posix()
         if sha(path.read_bytes()) != self.checked[key]: raise ValueError('Changed original FightRoot prefab')
         self.inputs[path.relative_to(ROOT).as_posix()] = self.checked[key]
         docs = documents(path.read_text(encoding='utf-8-sig'))
@@ -56,7 +56,7 @@ class DamageBinding(RoundSceneBinding):
             # original glyph rectangles, metrics and material references.
             path = self.native_path(source_guid, obj)
             for item in (path, Path(str(path) + '.meta')):
-                expected = self.checked[item.relative_to(self.cache / 'native-export-all').as_posix()]
+                expected = self.checked[item.relative_to(self.cache / self.recovery.export_name).as_posix()]
                 if sha(item.read_bytes()) != expected: raise ValueError('Changed original bitmap Font')
                 self.inputs[item.relative_to(ROOT).as_posix()] = expected
             data = documents(path.read_text(encoding='utf-8'))
@@ -84,7 +84,7 @@ class DamageBinding(RoundSceneBinding):
         for path, _, data, record in self.recovery.outputs:
             if data['unresolved']: raise ValueError('Unresolved original damage prefab')
             for item in (path, Path(str(path) + '.meta')):
-                expected = self.checked[item.relative_to(self.cache / 'native-export-all').as_posix()]
+                expected = self.checked[item.relative_to(self.cache / self.recovery.export_name).as_posix()]
                 if sha(item.read_bytes()) != expected: raise ValueError('Changed original damage prefab')
                 self.inputs[item.relative_to(ROOT).as_posix()] = expected
             docs = copy.deepcopy(data['documents'])
@@ -144,7 +144,7 @@ class DamageBinding(RoundSceneBinding):
                 if address.casefold() == row['path'].casefold() and ptr.deref().type.name == 'MonoBehaviour']
             path = self.native / relative
             for item in (path, Path(str(path) + '.meta')):
-                expected = self.checked[item.relative_to(self.cache / 'native-export-all').as_posix()]
+                expected = self.checked[item.relative_to(self.cache / self.recovery.export_name).as_posix()]
                 if sha(item.read_bytes()) != expected: raise ValueError('Changed original damage UI configuration: ' + name)
                 self.inputs[item.relative_to(ROOT).as_posix()] = expected
             docs = documents(path.read_text(encoding='utf-8-sig'))
@@ -174,8 +174,8 @@ class DamageBinding(RoundSceneBinding):
                 (json.dumps(data, ensure_ascii=False, indent=2) + '\n').encode()))
 
 
-def main():
-    binding = DamageBinding(validation_directory())
+def main(binding=None):
+    binding = binding if binding is not None else DamageBinding(validation_directory())
     prefabs = binding.extract()
     binding.damage_root()
     binding.script_guids.update(p['guid'] for p in binding.redirects.values() if p.get('guid'))
@@ -185,13 +185,21 @@ def main():
     # Own this closure: earlier UI modules can keep their material/font variants.
     aliases = {value: hashlib.md5(('zjcs:damage-ui-closure:' + value).encode()).hexdigest()
                for _, value, _ in binding.queue}
+    previous = json.loads(RECEIPT.read_bytes())['installed'] if RECEIPT.exists() else {}
+    for relative, value, _ in binding.queue:
+        meta = Path(str(DEST / relative) + '.meta')
+        if meta.is_file():
+            if sha(meta.read_bytes()) != previous.get(meta.relative_to(ROOT).as_posix()):
+                raise ValueError('Refusing changed damage UI metadata: ' + str(meta))
+            # Keep the installed identity when the new export gives an engine
+            # resource a different source GUID. All new pointers use this map.
+            aliases[value] = guid(meta)
     def remap(value):
         if isinstance(value, dict):
             return {key: aliases.get(child, child) if isinstance(key, str) and (key == 'guid' or key.endswith('GUID')) else remap(child)
                     for key, child in value.items()}
         if isinstance(value, list): return [remap(child) for child in value]
         return value
-    previous = json.loads(RECEIPT.read_bytes())['installed'] if RECEIPT.exists() else {}
     planned = []
     for relative, value, data in binding.queue:
         data = remap(data)
@@ -199,6 +207,9 @@ def main():
         path = DEST / relative
         if path.exists() and path.read_bytes() != raw and sha(path.read_bytes()) != previous.get(path.relative_to(ROOT).as_posix()):
             raise ValueError('Refusing changed damage UI asset overwrite: ' + str(path))
+        meta = Path(str(path) + '.meta')
+        if meta.exists() and guid(meta) != aliases[value]:
+            raise ValueError('Review existing damage UI GUID before replacement: ' + str(meta))
         planned.append((path, aliases[value], raw, data))
     planned_paths = {item for path, _, _, _ in planned for item in (path, Path(str(path) + '.meta'))}
     for relative, expected in previous.items():

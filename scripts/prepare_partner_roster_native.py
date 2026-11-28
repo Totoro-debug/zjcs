@@ -18,8 +18,8 @@ from validation_workspace import validation_directory
 
 
 class PartnerRosterBinding(PartnerGiftBinding):
-    def __init__(self, work):
-        super().__init__(work)
+    def __init__(self, work, *, recovery=None, resource_cache=None):
+        super().__init__(work, recovery=recovery, resource_cache=resource_cache)
         self.original_pointers = {}
         self.prefab_object_pointers = {}
         self.prefab_references = {}
