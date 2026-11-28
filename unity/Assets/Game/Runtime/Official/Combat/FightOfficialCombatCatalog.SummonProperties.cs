@@ -18,8 +18,13 @@ namespace Zjcs.Combat.Official
         private readonly Dictionary<int, Dictionary<int, Dictionary<int, long>>> summonRankFactors =
             new Dictionary<int, Dictionary<int, Dictionary<int, long>>>();
 
-        public bool HasSummonInheritance(int entityId) => summonFixedProps.ContainsKey(entityId)
-            && summonAdditions.ContainsKey(entityId);
+        public bool HasSummonInheritance(int entityId)
+        {
+            if (scopedSkillPropertyCatalogs.TryGetValue(entityId, out var scoped)
+                && scoped.summonFixedProps.ContainsKey(entityId))
+                return scoped.HasSummonInheritance(entityId);
+            return summonFixedProps.ContainsKey(entityId) && summonAdditions.ContainsKey(entityId);
+        }
 
         private sealed class SummonAddition
         {
@@ -64,6 +69,9 @@ namespace Zjcs.Combat.Official
             int skillRank, int subRank, IReadOnlyDictionary<int, long> source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
+            if (scopedSkillPropertyCatalogs.TryGetValue(entityId, out var scoped)
+                && scoped.summonFixedProps.ContainsKey(entityId))
+                return scoped.CalculateSummonInheritance(entityId, skillLevel, skillRank, subRank, source);
             if (!summonFixedProps.TryGetValue(entityId, out var fixedConfig))
             {
                 System.Diagnostics.Trace.TraceError("CalcSummonMonsterInheritProp summon monster fix prop config error, classId:{0}", entityId);

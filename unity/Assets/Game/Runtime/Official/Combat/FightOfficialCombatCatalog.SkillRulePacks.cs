@@ -46,19 +46,21 @@ namespace Zjcs.Combat.Official
             {
                 numeric = new FightOfficialCombatCatalog { skillPropertyNames = skillPropertyNames };
                 numeric.ParseSkillPropertyTables(pack);
+                if (Object(Required(pack, "tables"), "skill tables").ContainsKey("summon_monster_fix_prop"))
+                {
+                    numeric.ParseSummonPropertyTables(pack);
+                    foreach (var row in numeric.summonFixedProps)
+                    {
+                        if (!replacements.ContainsKey(row.Key) || !numeric.summonAdditions.ContainsKey(row.Key))
+                            throw new FormatException("Scoped summon inheritance refers outside its entity graph.");
+                        ValidateScopedNumericProperty(numeric, row.Value);
+                    }
+                }
                 foreach (var row in numeric.skillEntityProps)
                 {
                     if (!replacements.ContainsKey(row.Key))
                         throw new FormatException("Scoped skill properties refer outside their entity graph.");
-                    var prop = row.Value;
-                    if (prop.RankPropId > 0 && !numeric.skillPropTables.ContainsKey(prop.RankPropId))
-                        throw new FormatException("Scoped skill rank properties are missing.");
-                    if (prop.GroupLevelPropId <= 0) continue;
-                    if (!numeric.skillGroupLevels.TryGetValue(prop.GroupLevelPropId, out var levels))
-                        throw new FormatException("Scoped skill cultivation group is missing.");
-                    foreach (int id in levels.Values)
-                        if (id > 0 && !numeric.skillPropTables.ContainsKey(id))
-                            throw new FormatException("Scoped skill level properties are missing.");
+                    ValidateScopedNumericProperty(numeric, row.Value);
                 }
             }
             else ParseSkillPropertyTables(pack);
@@ -71,6 +73,19 @@ namespace Zjcs.Combat.Official
             }
             foreach (var pair in reportParents) reportSkillParents[pair.Key] = pair.Value;
             skillRulePackItems.Add(itemId);
+        }
+
+        private static void ValidateScopedNumericProperty(FightOfficialCombatCatalog numeric,
+            FightOfficialEntityProp prop)
+        {
+            if (prop.RankPropId > 0 && !numeric.skillPropTables.ContainsKey(prop.RankPropId))
+                throw new FormatException("Scoped skill rank properties are missing.");
+            if (prop.GroupLevelPropId <= 0) return;
+            if (!numeric.skillGroupLevels.TryGetValue(prop.GroupLevelPropId, out var levels))
+                throw new FormatException("Scoped skill cultivation group is missing.");
+            foreach (int id in levels.Values)
+                if (id > 0 && !numeric.skillPropTables.ContainsKey(id))
+                    throw new FormatException("Scoped skill level properties are missing.");
         }
     }
 }
