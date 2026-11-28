@@ -319,6 +319,7 @@ class HomeNativeFurnitureBinding(NativeSpineBinding):
 
 def rebuild_furniture_bundle(*, bundle, prefabs, dest, receipt_path, guid_prefix, install_prefix, script_path, scope):
     """Rebind an existing building from its verified source without replacing assets."""
+    import re
     from retained_native_binding import rebuild
 
     prior = json.loads(receipt_path.read_bytes())
@@ -335,13 +336,40 @@ def rebuild_furniture_bundle(*, bundle, prefabs, dest, receipt_path, guid_prefix
     class FurnitureReplay(HomeNativeFurnitureBinding):
         def build(self):
             outputs, staged, rows, selections = self.build_furniture_prefabs(bundle, prefabs, dest)
+            mapping = prior.get('replacement', {}).get('guid_rewrites', {})
+
+            def stable_pointers(value):
+                if isinstance(value, dict):
+                    return {key: mapping.get(item, item) if key == 'guid' and isinstance(item, str)
+                            else stable_pointers(item) for key, item in value.items()}
+                if isinstance(value, list):
+                    return [stable_pointers(item) for item in value]
+                return value
+
             rebuilt = {}
             for relative, expected in outputs.items():
                 path = dest / relative
                 key = path.relative_to(ROOT).as_posix()
-                if sha((staged / relative).read_bytes()) != expected or prior['outputs'].get(key) != expected:
+                raw = (staged / relative).read_bytes()
+                if sha(raw) != expected:
+                    raise ValueError('Staged furniture resource changed: ' + key)
+                if mapping:
+                    if relative.endswith('.meta'):
+                        original_guid = guid(staged / relative)
+                        if guid(path) != mapping.get(original_guid, original_guid):
+                            raise ValueError('Installed furniture importer identity changed: ' + key)
+                        raw = path.read_bytes()
+                    elif raw.startswith(b'%YAML'):
+                        raw = re.sub(rb'guid: ([a-f0-9]{32})',
+                            lambda match: ('guid: ' + mapping.get(match[1].decode(), match[1].decode())).encode(), raw)
+                    (staged / relative).write_bytes(raw)
+                    expected = sha(raw)
+                if prior['outputs'].get(key) != expected:
                     raise ValueError('Original furniture rebuild differs: ' + key)
                 rebuilt[key] = expected
+            if mapping:
+                rows = stable_pointers(rows)
+                self.proof = stable_pointers(self.proof)
             # Folder importer metadata is installed separately from the native
             # payload. Every other prior output must have been rebuilt above.
             for relative, expected in prior['outputs'].items():
@@ -359,6 +387,9 @@ def rebuild_furniture_bundle(*, bundle, prefabs, dest, receipt_path, guid_prefix
                 selections=selections, recovery=self.recovery.proof, native_scripts=self.script_sources,
                 resources=self.proof, audio=getattr(self, 'audio_proof', {}), prefab=rows[0]['pointer'],
                 prefabs=rows, outputs=rebuilt, scope=scope)
+            for key in ('replacement', 'retired_previous_outputs', 'retirement_generator_sha256', 'retirement_reference_scope'):
+                if key in prior:
+                    result[key] = prior[key]
             (work / receipt_path.name).write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
 
     def factory(stage):
