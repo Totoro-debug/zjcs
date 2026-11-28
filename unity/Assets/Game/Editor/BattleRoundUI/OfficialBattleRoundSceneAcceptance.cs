@@ -318,7 +318,9 @@ namespace Zjcs.Editor.BattleRound
      "Changing actors did not restore the previous actor's next-turn display time.");
     Require(playerCircle.Sprite.texture==timelineTexture,"Refreshing/restoring the public timeline duplicated the cached portrait texture.");
     camera.orthographicSize=8;yield return null;yield return null;CheckProjection();
-    scaler.referenceResolution=new Vector2(1080,2160);Canvas.ForceUpdateCanvases();yield return null;yield return null;CheckProjection();
+    scaler.referenceResolution=new Vector2(1080,2160);
+    // The current official scene captures the reference height when attached.
+    scene.SetAttachUI(anchor,camera);Canvas.ForceUpdateCanvases();yield return null;yield return null;CheckProjection();
     var animation=hudRoot.GetComponent<OfficialBattleHudAnimationPlayer>();animation.enabled=false;
     Require(animation.Play("/FightMainPanel","FightMainPanel_Show"),"Original main show animation missing.");
     animation.Tick(.325f);Canvas.ForceUpdateCanvases();yield return null;yield return null;CheckProjection();

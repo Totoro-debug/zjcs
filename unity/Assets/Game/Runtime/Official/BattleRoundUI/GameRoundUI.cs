@@ -288,10 +288,6 @@ public class GameRoundUI : UIBase
 
 	private void OnRoundDataUpdate(BattleRoundData data, BattleRoundUpdateState state)
 	{
-		if (!bindings.IsPlaying)
-		{
-			return;
-		}
 		if (!IsRoundAvailable(data.EntityId, out var entityNotExist))
 		{
 			if (entityNotExist)

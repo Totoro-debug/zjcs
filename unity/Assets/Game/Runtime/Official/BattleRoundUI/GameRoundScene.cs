@@ -1,96 +1,151 @@
+// Current official position, scale and cache implementation; Windows overlay/camera binding is explicit.
+namespace Zjcs.Official.BattleRoundUI
+{
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Zjcs.Official.BattleRoundUI
+[DefaultExecutionOrder(100)]
+public class GameRoundScene : MonoBehaviour
 {
-    // Official GameRoundScene, with the Windows overlay/camera binding kept here.
-    [DefaultExecutionOrder(100)]
-    public sealed class GameRoundScene : MonoBehaviour
-    {
-        [SerializeField] private float mSize = 5f;
-        [SerializeField] public Transform mIconRoot;
-        [SerializeField] public SpriteRenderer mLine;
-        [SerializeField] private float mZValue = -16f;
+	[SerializeField]
+	private float mSize = 5f;
 
-        private Transform mTransformCache;
-        private RectTransform mAttachUITrans;
-        private Canvas mCanvas;
-        private CanvasScaler mCanvasScaler;
-        private Camera mSceneCamera;
-        private Vector3 mLastPosition = Vector3.positiveInfinity;
-        private float mLastScale = -1f;
-        private static readonly Vector3 sFarPos = new Vector3(0f, 1000f, 0f);
+	[SerializeField]
+	public Transform mIconRoot;
 
-        public Transform IconRoot => mIconRoot;
-        public SpriteRenderer Line => mLine;
-        public Transform Transform => mTransformCache;
+	[SerializeField]
+	public SpriteRenderer mLine;
 
-        private void Awake()
-        {
-            mTransformCache = transform;
-            SetBarFarAway();
-        }
+	[SerializeField]
+	private float mZValue = -16f;
 
-        private void OnEnable() => Canvas.willRenderCanvases += FixedPosAndScale;
-        private void OnDisable() => Canvas.willRenderCanvases -= FixedPosAndScale;
+	private Transform mTransformCache;
 
-        private void OnDestroy()
-        {
-            mAttachUITrans = null;
-            mCanvas = null;
-            mCanvasScaler = null;
-            mSceneCamera = null;
-        }
+	private RectTransform mAttachUITrans;
 
-        public void SetVisible(bool visible)
-        {
-            enabled = visible;
-            if (!visible) SetBarFarAway();
-        }
+	private RectTransform mCanvasRect;
 
-        public void SetAttachUI(RectTransform uiTrans, Camera sceneCamera = null)
-        {
-            mAttachUITrans = uiTrans;
-            mCanvasScaler = uiTrans.GetComponentInParent<CanvasScaler>();
-            mCanvas = mCanvasScaler.GetComponent<Canvas>();
-            mSceneCamera = sceneCamera;
-            FixedPosAndScale();
-        }
+	private Camera mUICamera;
 
-        private void LateUpdate() => FixedPosAndScale();
+	private Camera mSceneCamera;
 
-        private void FixedPosAndScale()
-        {
-            Camera camera = mSceneCamera != null ? mSceneCamera : Camera.main;
-            if (!enabled || mTransformCache == null || mAttachUITrans == null || mCanvas == null || camera == null)
-                return;
-            Camera uiCamera = mCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : mCanvas.worldCamera;
-            Vector2 screen = RectTransformUtility.WorldToScreenPoint(uiCamera, mAttachUITrans.position);
-            Vector3 position = camera.ScreenToWorldPoint(new Vector3(screen.x, screen.y, Mathf.Abs(camera.transform.position.z)));
-            position.z = mZValue;
-            if (position != mLastPosition)
-            {
-                mLastPosition = position;
-                mTransformCache.position = position;
-            }
-            // Overlay canvas dimensions can change when the Windows viewport resizes.
-            RectTransform canvasRect = mCanvas.transform as RectTransform;
-            float height = canvasRect == null ? 0f : canvasRect.rect.height;
-            if (height <= Mathf.Epsilon || mSize <= Mathf.Epsilon || camera.orthographicSize <= Mathf.Epsilon)
-                return;
-            float scale = camera.orthographicSize / mSize * (mCanvasScaler.referenceResolution.y / height);
-            if (float.IsNaN(scale) || float.IsInfinity(scale)) return;
-            if (!Mathf.Approximately(scale, mLastScale))
-            {
-                mLastScale = scale;
-                mTransformCache.localScale = new Vector3(scale, scale, scale);
-            }
-        }
+	private Camera SceneCamera => mSceneCamera != null ? mSceneCamera : Camera.main;
 
-        private void SetBarFarAway()
-        {
-            mTransformCache.position = sFarPos;
-            mLastPosition = sFarPos;
-        }
-    }
+	private Vector3 mLastPosition = Vector3.positiveInfinity;
+
+	private float mLastOrthographicSize = -1f;
+
+	private float mReferenceHeight = -1f;
+
+	private float mLastCanvasHeight = -1f;
+
+	private static readonly Vector3 sFarPos = new Vector3(0f, 1000f, 0f);
+
+	public Transform IconRoot => mIconRoot;
+
+	public SpriteRenderer Line => mLine;
+
+	public Transform Transform => mTransformCache;
+
+	private void Awake()
+	{
+		mTransformCache = ((Component)this).transform;
+		SetBarFarAway();
+	}
+
+	private void OnEnable() => Canvas.willRenderCanvases += FixedPosAndScale;
+
+	private void OnDisable() => Canvas.willRenderCanvases -= FixedPosAndScale;
+
+	private void OnDestroy()
+	{
+		mAttachUITrans = null;
+		mCanvasRect = null;
+		mUICamera = null;
+		mSceneCamera = null;
+	}
+
+	public void SetVisible(bool visible)
+	{
+		((Behaviour)this).enabled = visible;
+		if (!visible)
+		{
+			SetBarFarAway();
+		}
+	}
+
+	public void SetAttachUI(RectTransform uiTrans, Camera sceneCamera = null)
+	{
+		mAttachUITrans = uiTrans;
+		mSceneCamera = sceneCamera;
+		CanvasScaler componentInParent = ((Component)uiTrans).GetComponentInParent<CanvasScaler>();
+		mCanvasRect = ((Component)componentInParent).GetComponent<RectTransform>();
+		mReferenceHeight = componentInParent.referenceResolution.y;
+		mUICamera = ((Component)componentInParent).GetComponent<Canvas>().worldCamera;
+		mLastCanvasHeight = -1f;
+		mLastOrthographicSize = -1f;
+	}
+
+	private void LateUpdate()
+	{
+		FixedPosAndScale();
+	}
+
+	private void FixedPosAndScale()
+	{
+		if (!((Object)(object)mTransformCache == (Object)null) && !((Object)(object)mAttachUITrans == (Object)null) && !((Object)(object)mCanvasRect == (Object)null))
+		{
+			Vector3 attachUIWorldPos = GetAttachUIWorldPos();
+			if (attachUIWorldPos != mLastPosition)
+			{
+				mLastPosition = attachUIWorldPos;
+				mTransformCache.position = attachUIWorldPos;
+			}
+			UpdateScale();
+		}
+	}
+
+	private void UpdateScale()
+	{
+		Camera main = SceneCamera;
+		if (!((Object)(object)main == (Object)null))
+		{
+			float orthographicSize = main.orthographicSize;
+			Rect rect = mCanvasRect.rect;
+			float height = rect.height;
+			if ((!Mathf.Approximately(height, mLastCanvasHeight) || !Mathf.Approximately(orthographicSize, mLastOrthographicSize)) && !(height <= 0f))
+			{
+				mLastCanvasHeight = height;
+				mLastOrthographicSize = orthographicSize;
+				float num = mReferenceHeight / height;
+				float num2 = orthographicSize / mSize * num;
+				mTransformCache.localScale = new Vector3(num2, num2, num2);
+			}
+		}
+	}
+
+	private Vector3 GetAttachUIWorldPos()
+	{
+		Vector2 val = RectTransformUtility.WorldToScreenPoint(mUICamera, ((Transform)mAttachUITrans).position);
+		Vector3 val2 = new Vector3(val.x, val.y, Mathf.Abs(((Component)SceneCamera).transform.position.z));
+		Vector3 result = SceneCamera.ScreenToWorldPoint(val2);
+		result.z = mZValue;
+		return result;
+	}
+
+	private void SetBarFarAway()
+	{
+		Vector3 val = (mTransformCache.position = sFarPos);
+		mLastPosition = val;
+	}
+
+	public GameRoundScene()
+	{
+	}
+
+	static GameRoundScene()
+	{
+	}
+}
+
 }

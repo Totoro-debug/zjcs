@@ -67,7 +67,7 @@ class RoundSceneBinding(SelectorBinding):
         self.recovery.finalize()
         native, _, card, record = self.recovery.outputs[-1]
         for path in (native, Path(str(native) + '.meta')):
-            key = path.relative_to(self.cache / 'native-export-all').as_posix()
+            key = path.relative_to(self.cache / self.recovery.export_name).as_posix()
             if sha(path.read_bytes()) != self.checked[key]: raise ValueError('Changed original UGUI round card source')
             self.inputs[path.relative_to(ROOT).as_posix()] = self.checked[key]
         if card['unresolved']: raise ValueError('Unresolved original UGUI round card fields')
@@ -155,7 +155,7 @@ class RoundSceneBinding(SelectorBinding):
         path = self.native / relative
         native_config = path
         for item in (path, Path(str(path)+'.meta')):
-            key = item.relative_to(self.cache/'native-export-all').as_posix()
+            key = item.relative_to(self.cache/self.recovery.export_name).as_posix()
             if sha(item.read_bytes()) != self.checked[key]: raise ValueError('Changed original battle portrait config')
             self.inputs[item.relative_to(ROOT).as_posix()] = self.checked[key]
         docs = native_documents(path.read_text(encoding='utf-8-sig'))
@@ -176,7 +176,7 @@ class RoundSceneBinding(SelectorBinding):
                 if kind == 'Texture2D':
                     sprite_path = self.native / 'Image' / (address + '.asset')
                     for native_input in (sprite_path, Path(str(sprite_path)+'.meta')):
-                        key = native_input.relative_to(self.cache/'native-export-all').as_posix()
+                        key = native_input.relative_to(self.cache/self.recovery.export_name).as_posix()
                         if sha(native_input.read_bytes()) != self.checked[key]: raise ValueError('Faction native texture pointer source changed')
                         self.inputs[native_input.relative_to(ROOT).as_posix()] = self.checked[key]
                     sprite_fields = native_documents(sprite_path.read_text(encoding='utf-8-sig'))[21300000]['Sprite']
@@ -235,7 +235,7 @@ class RoundSceneBinding(SelectorBinding):
         self.recovery.finalize()
         native, _, panel, record = self.recovery.outputs[0]
         for path in (native, Path(str(native) + '.meta')):
-            key = path.relative_to(self.cache / 'native-export-all').as_posix()
+            key = path.relative_to(self.cache / self.recovery.export_name).as_posix()
             if sha(path.read_bytes()) != self.checked[key]:
                 raise ValueError('Changed native round-scene source: ' + str(path))
             self.inputs[path.relative_to(ROOT).as_posix()] = self.checked[key]
@@ -255,7 +255,7 @@ class RoundSceneBinding(SelectorBinding):
         self.queue.append((Path('Resources/Combat/RoundUI/GameRoundScene.prefab'), value, self.replace(documents)))
         native, _, card, card_record = self.recovery.outputs[1]
         for path in (native, Path(str(native) + '.meta')):
-            key = path.relative_to(self.cache / 'native-export-all').as_posix()
+            key = path.relative_to(self.cache / self.recovery.export_name).as_posix()
             if sha(path.read_bytes()) != self.checked[key]:
                 raise ValueError('Changed original timeline card source: ' + str(path))
             self.inputs[path.relative_to(ROOT).as_posix()] = self.checked[key]
@@ -279,7 +279,7 @@ class RoundSceneBinding(SelectorBinding):
             operation='Restore all original native card objects and seven script bindings; preserve original fields, assets, animation and sorting. External entity data enters through the explicit local presentation seam.')
         native, _, round_ui, anchor_record = self.recovery.outputs[2]
         for path in (native, Path(str(native) + '.meta')):
-            key = path.relative_to(self.cache / 'native-export-all').as_posix()
+            key = path.relative_to(self.cache / self.recovery.export_name).as_posix()
             if sha(path.read_bytes()) != self.checked[key]:
                 raise ValueError('Changed original HUD anchor source: ' + str(path))
             self.inputs[path.relative_to(ROOT).as_posix()] = self.checked[key]
@@ -321,8 +321,8 @@ class RoundSceneBinding(SelectorBinding):
         return record
 
 
-def main():
-    binding = RoundSceneBinding(validation_directory())
+def main(binding=None):
+    binding = binding if binding is not None else RoundSceneBinding(validation_directory())
     record = binding.extract()
     binding.script_guids.update(pointer['guid'] for pointer in binding.redirects.values() if pointer.get('guid'))
     for _, _, data in binding.queue:
@@ -337,7 +337,14 @@ def main():
                 value = guid(meta)
                 if value in existing: raise ValueError('Shared native GUID collision: ' + value)
                 existing[value] = path
+    previous = json.loads(RECEIPT.read_bytes())['installed'] if RECEIPT.exists() else {}
     aliases = {}
+    for relative, value, _ in binding.queue:
+        meta = Path(str(DESTINATION / relative) + '.meta')
+        if meta.is_file():
+            if sha(meta.read_bytes()) != previous.get(meta.relative_to(ROOT).as_posix()):
+                raise ValueError('Refusing changed round-scene metadata: ' + str(meta))
+            aliases[value] = guid(meta)
     def own_references(data):
         if isinstance(data, dict):
             return {key: aliases.get(child, child) if isinstance(child, str)
@@ -355,7 +362,6 @@ def main():
                 aliases[value] = hashlib.md5(('zjcs:round-scene-variant:' + value).encode()).hexdigest()
                 changed = True
         if not changed: break
-    previous = json.loads(RECEIPT.read_bytes())['installed'] if RECEIPT.exists() else {}
     planned = []
     for relative, value, data in binding.queue:
         value, data = aliases.get(value, value), own_references(data)

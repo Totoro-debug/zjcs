@@ -23,8 +23,7 @@ def replace_body(text, name, body):
     return text[:start] + '\n' + body + '\n\t}' + text[end:]
 
 
-def main():
-    source = SOURCE / 'client-source/GameRoundUI.cs'
+def render(source):
     text = source.read_text('utf-8-sig')
     text = re.sub(r'^using (?:Common|Framework(?:\.[\w.]+)?);\n', '', text, flags=re.M)
     text = re.sub(r'^\s*//IL_[^\n]*\n', '', text, flags=re.M)
@@ -93,8 +92,13 @@ def main():
 \t\treturn bindings.ShowOnRoundProgress(entityId);''')
     if re.search(r'\b(?:mFight|mFightRoot|myGame|IGameObjectPoolItem|MyEntity|Parsers|GameStatus|MeManager|Inject)\b', text):
         raise ValueError('Unadapted manager dependency')
+    return '// Selected original client manager; only external driver/entity/loading queries are adapted.\nnamespace Zjcs.Official.BattleRoundUI\n{\nusing Zjcs.Official.ProfessionUI;\n' + text + '\n}\n'
+
+
+def main():
+    source = SOURCE / 'client-source/GameRoundUI.cs'
     target = DEST / 'GameRoundUI.cs'
-    target.write_text('// Selected original client manager; only external driver/entity/loading queries are adapted.\nnamespace Zjcs.Official.BattleRoundUI\n{\nusing Zjcs.Official.ProfessionUI;\n' + text + '\n}\n', 'utf8', newline='\n')
+    target.write_text(render(source), 'utf8', newline='\n')
     paths = [target, DEST/'BattleRoundUIBindings.cs']
     for path in paths:
         meta = Path(str(path)+'.meta')

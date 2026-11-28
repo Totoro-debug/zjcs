@@ -1,23 +1,36 @@
 {
-  "manifest": "884_156692",
+  "manifest": "911_156995",
   "inputs": {
-    ".tools/source-packages/current/884_156692/official-code/client-source/GameRoundUI.cs": "51d0626faf4f39f94180742d30b1266490c345bdbf6216ec49ff5c22addad757",
-    ".tools/source-packages/current/884_156692/official-code/client-source/GameUIBase.cs": "a672138a63be29bb02a1e5cc72347a375858c13ad6fc3c7ef8667a7816c93d35",
-    ".tools/source-packages/current/884_156692/official-code/common-source/Common/CharacterRoundDriverUpdateState.cs": "71d7b173e38f9524666b0f2f5fe5eecf58f0e1e959cd3f35157d8a44eb1c2f09",
-    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RoundRuntimeData.cs": "9e7e1833e64dfa2ff5241abe2f1f482462df7e64ec24a780e54d4cd3880d90fc",
-    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightRoundDriverComponent.cs": "b342e54c978aa08f0ec42e128d4ea7e269f0800b3a9e58ac6eae5fc9790ed7d4"
+    ".tools/source-packages/current/911_156995/official-code/client-source/GameRoundUI.cs": "f44e552bf501b6f02c9a39c479a755cfb5dbb16394dfaaa1ccbfc3236b41806f",
+    ".tools/source-packages/current/911_156995/official-code/client-source/GameUIBase.cs": "a672138a63be29bb02a1e5cc72347a375858c13ad6fc3c7ef8667a7816c93d35",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/CharacterRoundDriverUpdateState.cs": "71d7b173e38f9524666b0f2f5fe5eecf58f0e1e959cd3f35157d8a44eb1c2f09",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/RoundRuntimeData.cs": "2e62511b9d54175b54f47a042c07a9fd5f8b15b2d3e39349a30060a5052286ae",
+    ".tools/source-packages/current/911_156995/official-code/common-source/Common/FightRoundDriverComponent.cs": "b352d9f381b3712922756a9794bdb002faecd34926406025b204160a9e23a4bc",
+    ".tools/source-packages/current/911_156995/official-code/client-source/GameRoundScene.cs": "5d1111d53fa13c97c3a9b8b519ad486b276299d18c1199c3c87a8c6959507a49"
   },
   "outputs": {
-    "unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundUI.cs": "25035270c9d666b88a7dc6023a2772c9656343befd6ffe5337a66b2acc86177b",
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundUI.cs": "9707ebe6abc0ec3ebc220938cc9b210dd95247eb828917a9133690369b64e541",
     "unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundUI.cs.meta": "9a8fed402520d5e9ae293248fd5b5cb1e348745a5ac4348ff71dae2c43c94a45",
     "unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundUIBindings.cs": "28c3eb3e272a47d4adf2ec586e8c9d0fcfe91173d337ea64edb31e37ab3998ee",
-    "unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundUIBindings.cs.meta": "fbcc37e0156d16e3a3d3572939785ec0590ebccbfd415a0fff41b176cb7de2e6"
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/BattleRoundUIBindings.cs.meta": "fbcc37e0156d16e3a3d3572939785ec0590ebccbfd415a0fff41b176cb7de2e6",
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundScene.cs": "aeadb1cbb99e3793fd7600fe118bf01b5feb66ba19ea69c2786872bd22e6d728",
+    "unity/Assets/Game/Runtime/Official/BattleRoundUI/GameRoundScene.cs.meta": "5723f19db5cddef019ece6c88c88c65a9ce46de6f35db9413c8cc20388cbc7e6"
   },
-  "generator_sha256": "860fbbcf9b37ed3f0e279ff34abd24333398f13f5d0b27c006b06b9fa13a26c1",
+  "generator": {
+    "path": "scripts/prepare_current_round_ui.py",
+    "sha256": "8cdbcb6dfb633ac005aec300ed9981704ebc7be67f28355a3e4fd85c5d9bb461"
+  },
+  "manager_generator": {
+    "path": "scripts/prepare_battle_round_manager_runtime.py",
+    "sha256": "683dbe9e8d13d03ddacba58a5460f072545ffe794650d3d5ec02b913ef0dd2f1"
+  },
   "adaptations": [
     "Explicit local driver/entity/event projections replace live FightRoot and Common server proxies.",
     "The original GameUIBase initialized notification enters through Initialize and the existing UIBase lifecycle.",
     "PrepareCard supplies local entity/photograph bindings before the original Init/Refresh calls.",
-    "Original pooling, ordering, availability/waiting, death queue, minimum spacing, wrap and interpolation retained."
+    "Original pooling, ordering, availability/waiting, death queue, minimum spacing, wrap and interpolation retained.",
+    "Current original round updates run without an additional play-phase filter.",
+    "Current scene position/scale and cached reference-height/orthographic-size/canvas-height branches are preserved.",
+    "Explicit Windows battle camera and overlay UI camera boundary; update at canvas render as well as original LateUpdate."
   ]
 }
