@@ -1,7 +1,7 @@
 """Bind all original DiningTable prefabs, skins, components and resource closures."""
 from pathlib import Path
 
-from home_native_furniture_builder import install_furniture_bundle
+from home_native_furniture_builder import install_furniture_bundle, rebuild_furniture_bundle
 from official_apk import ROOT
 
 
@@ -19,8 +19,7 @@ PREFABS = (
 
 
 def build(ensure_cache: bool = False):
-    return install_furniture_bundle(
-        cache_name='home-diningtable-native',
+    options = dict(
         bundle=BUNDLE,
         prefabs=PREFABS,
         dest=DEST,
@@ -28,9 +27,11 @@ def build(ensure_cache: bool = False):
         guid_prefix='zjcs:home-diningtable-native:',
         install_prefix='native-diningtable-building',
         script_path=Path(__file__),
-        ensure_cache=ensure_cache,
         scope='Complete original DiningTable hierarchy (default and all 5 skin variants) with Spine bridges, time-drive elements, screen-shoot FadeProxy, TipDot linkers, HomeNpcChatEntry, DiningTableNpcPopClick and HomeNpcBubbleTip bindings.',
     )
+    if RECEIPT.exists():
+        return rebuild_furniture_bundle(**options)
+    return install_furniture_bundle(cache_name='home-diningtable-native', ensure_cache=ensure_cache, **options)
 
 
 if __name__ == '__main__':

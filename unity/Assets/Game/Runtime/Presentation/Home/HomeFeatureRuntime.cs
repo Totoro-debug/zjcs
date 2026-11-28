@@ -2133,7 +2133,10 @@ namespace Zjcs.Presentation.Home
             partnerConversations?.Source.SynchronizeCommittedState();
             partnerTipDots?.Refresh();
             SynchronizeHomeTipDots();
-            storage?.NotifyHomeChanged();
+            // Friendship and function conditions can change dialogue eligibility
+            // without advancing a conversation record. Refresh the native bubble
+            // through its dialogue event, without restarting furniture states.
+            storage?.NotifyDialogueChanged();
             hud?.RefreshAll();
         }
 

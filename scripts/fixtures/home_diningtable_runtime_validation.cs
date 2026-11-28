@@ -681,6 +681,9 @@ public static class HomeDiningTableRuntimeValidation
 
         home.Profile.Reload();
         Invoke(home, "RefreshPartnerDerivedState");
+        Require(!home.Rules.IsFunctionLimited(57)
+            && bubble.BubbleServices.TryFindActiveDialogueNpcClassId(out int unreadNpc) && unreadNpc == 8402,
+            "Committed unread dialogue is eligible before checking the native bubble refresh");
         yield return WaitFrames(6);
 
         SpriteRenderer bubbleIcon = Field<SpriteRenderer>(bubble, "mIcon");
