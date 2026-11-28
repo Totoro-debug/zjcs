@@ -68,20 +68,37 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
         for key, row in json.loads((COMBAT / (name + '.json')).read_bytes())['entities'].items():
             entities.setdefault(key, {}).update(row)
     from profession_skill_rule_baselines import read_verified_rule_pack, apply_rule_pack_baseline
-    rule_packs, baseline_packs = [], []
+    rule_packs, baseline_packs, summon_inputs = [], [], []
+    table_keys = {
+        'entity_prop': ('EntityId',),
+        'entity_prop_group_level': ('GroupId', 'SubRank'),
+        'summon_monster_fix_prop': ('EntityId',),
+        'summon_monster_add_prop': ('ClassId',),
+        'summon_rank_additive_factor': ('RankGroup', 'Rank'),
+    }
+    selected_summons = set(spec.get('summon_inheritance_entities', ()))
+    verified_summons = set()
     dependencies = list(spec.get('baseline_rule_packs', ()))
     for relative in dependencies + list(spec.get('runtime_rule_packs', ())):
         path, proof_path, pack, proof = read_verified_rule_pack(ROOT, relative)
         apply_rule_pack_baseline(entities, pack, relative)
         locations.update(proof['entity_locations'])
         for name, rows in pack['tables'].items():
-            keys = ('EntityId',) if name == 'entity_prop' else ('GroupId', 'SubRank')
+            assert name in table_keys, 'Unsupported skill rule pack table: ' + name
+            keys = table_keys[name]
             by_key = {tuple(row[key] for key in keys): row for row in skill_rules['tables'][name]}
             by_key.update({tuple(row[key] for key in keys): row for row in rows})
             skill_rules['tables'][name] = list(by_key.values())
+        pack_summons = {row['EntityId'] for row in pack['tables'].get('summon_monster_fix_prop', ())}
+        if pack_summons:
+            assert pack_summons <= selected_summons, 'Undeclared summon inheritance entities'
+            from verify_current_summon_properties import verify as verify_summon_properties
+            summon_inputs.append(verify_summon_properties(sorted(pack_summons), relative))
+            verified_summons.update(pack_summons)
         skill_rules['props'].update(pack['props'])
         selected_packs = baseline_packs if relative in dependencies else rule_packs
         selected_packs.append(dict(payload=identity(path), receipt=identity(proof_path), manifest=pack['manifest']))
+    assert verified_summons == selected_summons, 'Missing scoped summon inheritance rule pack'
     definitions = {str(key): copy.deepcopy(entities[str(key)]) for key in spec['entities']}
     defaults = []
     for key, components in definitions.items():
@@ -452,6 +469,8 @@ def build(item_id, spec=None, profession_ids=(3, 7, 12, 16)):
             result['rule_pack_reader'] = identity(ROOT / 'scripts/profession_skill_rule_baselines.py')
         if passive_pack is not None:
             result['current_passive_property_pack'] = passive_pack
+        if summon_inputs:
+            result['current_summon_inheritance'] = summon_inputs
     return result
 
 

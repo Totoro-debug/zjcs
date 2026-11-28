@@ -18,12 +18,17 @@ def identity(path):
     return dict(path=path.relative_to(ROOT).as_posix(), sha256=sha(path.read_bytes()))
 
 
-def verify(entities):
+def verify(entities, rule_pack=None):
     wanted = set(entities)
     if not wanted or any(not isinstance(entity, int) or entity <= 0 for entity in wanted):
         raise ValueError('Select positive original summon entity IDs')
     baseline_path = ROOT / 'unity/Assets/Official/Combat/skill-rules.json'
     baseline = json.loads(baseline_path.read_bytes())
+    scoped = rule_pack is not None
+    if scoped:
+        from profession_skill_rule_baselines import read_verified_rule_pack
+        baseline_path, _, baseline, _ = read_verified_rule_pack(ROOT, rule_pack)
+        assert baseline.get('scope_numeric') and all(str(entity) in baseline['entities'] for entity in wanted)
     proofs, selected = [], {}
     with Apk.current() as apk:
         code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
@@ -52,7 +57,18 @@ def verify(entities):
         prop_ids = {row['RankPropId'] for row in fixed} | {row['LevelPropId'] for row in groups}
         prop_ids.discard(0)
         raw = apk.reader.read('WwiseBnk', 'wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile')
-        props = decode_level_props(raw.data, prop_ids)
+        props = decode_level_props(raw.data, prop_ids, include_zero=scoped)
+        if scoped:
+            obj = apk.asset('config_luban', '/level_prop_default_value.g.bytes')
+            defaults_raw = obj.read().m_Script.encode('utf-8', 'surrogateescape')
+            for row in parser.table(defaults_raw, classes['level_prop_default_value']):
+                if row['ClassId'] not in prop_ids:
+                    continue
+                for prop_row in props[str(row['ClassId'])]['rows'].values():
+                    for property_id in row['PropTypes']:
+                        prop_row.setdefault(str(property_id), row['DefaultValue'])
+            proofs.append(dict(name='level_prop_default_value', source=apk.provenance(obj),
+                               payload_sha256=sha(defaults_raw)))
         if any(baseline['props'].get(key) != value for key, value in props.items()):
             raise ValueError('Current summon level/rank numeric curve differs')
         return dict(manifest=apk.version, entities=sorted(wanted), tables=proofs, rows=selected,
