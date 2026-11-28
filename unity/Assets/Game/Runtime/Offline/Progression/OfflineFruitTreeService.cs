@@ -49,6 +49,7 @@ namespace Zjcs.Offline.Progression
 
         public OfflineFruitTreeProgress State => profile.Save.Player.FruitTree;
         public double SpeedPerHourAt(long unixSeconds) => SpeedPerHourAt(State, unixSeconds);
+        public long CapacityAt(long unixSeconds) => CapacityAt(State, unixSeconds);
 
         public FruitTreeResult TryRepair(int furnitureType, int playerLevel, bool anyGoddessActive,
             long nowUnixSeconds, string receiptId, bool automatic = false)
