@@ -340,11 +340,22 @@ unity/Assets/Official/Shared/NpcImages/** -text
 # Exact-byte original treasure promotion windows and shared material controls.
 .gitattributes text eol=lf
 assets/reference/treasure-promote-*-source-manifest.json text eol=lf
+assets/reference/home-currency-actions-runtime-source-manifest.json text eol=lf
+assets/reference/home-currency-windows-native-source-manifest.json text eol=lf
+assets/reference/home-hud-currency-composition-source-manifest.json text eol=lf
+assets/reference/home-snow-effect-native-source-manifest.json text eol=lf
+assets/reference/home-top-bar-native-source-manifest.json text eol=lf
+assets/reference/partner-confirm-dialog-source-manifest.json text eol=lf
+assets/reference/partner-gift-services-source-manifest.json text eol=lf
+assets/reference/partner-input-dialog-source-manifest.json text eol=lf
+assets/reference/treasure-slot-levels-source-manifest.json text eol=lf
 scripts/prepare_treasure_promote*.py text eol=lf
 scripts/test_treasure_promote_native.ps1 text eol=lf
 scripts/fixtures/treasure_promote_native_validation.cs text eol=lf
 scripts/partner_gift_animator_binding.py text eol=lf
 scripts/prepare_treasure_slot_levels.py text eol=lf
+scripts/templates/treasure_cultivation/TreasureSlotLevelPorts.cs text eol=lf
+unity/Assets/Game/Runtime/Official/TreasureCultivation/OfficialTreasureSlotLevels.cs text eol=lf
 unity/Assets/Game/Runtime/Official/TreasurePromoteUI/** text eol=lf
 unity/Assets/Game/Runtime/Official/TreasurePromoteUI.meta text eol=lf
 unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionMaterialServices* text eol=lf
